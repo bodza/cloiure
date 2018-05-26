@@ -25,7 +25,6 @@ import giraaff.nodes.FixedGuardNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.FrameState;
-import giraaff.nodes.FullInfopointNode;
 import giraaff.nodes.IfNode;
 import giraaff.nodes.LogicNode;
 import giraaff.nodes.LoopBeginNode;
@@ -212,7 +211,7 @@ public class LoopEx
     {
         LoopBeginNode loopBegin = loopBegin();
         FixedNode next = loopBegin.next();
-        while (next instanceof FixedGuardNode || next instanceof ValueAnchorNode || next instanceof FullInfopointNode)
+        while (next instanceof FixedGuardNode || next instanceof ValueAnchorNode)
         {
             next = ((FixedWithNextNode) next).next();
         }

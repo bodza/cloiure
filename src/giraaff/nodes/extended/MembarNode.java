@@ -13,7 +13,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Creates a memory barrier.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public final class MembarNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<MembarNode> TYPE = NodeClass.create(MembarNode.class);
@@ -39,9 +39,9 @@ public final class MembarNode extends FixedWithNextNode implements LIRLowerable,
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        generator.getLIRGeneratorTool().emitMembar(barriers);
+        gen.getLIRGeneratorTool().emitMembar(barriers);
     }
 
     @NodeIntrinsic

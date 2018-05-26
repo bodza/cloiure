@@ -21,7 +21,7 @@ public class Graph
 {
     public static class Options
     {
-        // Option "Graal graph compression is performed when percent of live nodes falls below this value."
+        // @Option "Graal graph compression is performed when percent of live nodes falls below this value."
         public static final OptionKey<Integer> GraphCompressionThreshold = new OptionKey<>(70);
     }
 

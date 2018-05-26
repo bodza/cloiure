@@ -102,10 +102,10 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        Value value = generator.operand(input);
-        ValueKind<?> kind = generator.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
+        Value value = gen.operand(input);
+        ValueKind<?> kind = gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
 
         if (trackedPointer && LIRKind.isValue(kind) && !LIRKind.isValue(value))
         {
@@ -115,13 +115,13 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
 
         if (kind.equals(value.getValueKind()) && !(value instanceof ConstantValue))
         {
-            generator.setResult(this, value);
+            gen.setResult(this, value);
         }
         else
         {
-            AllocatableValue result = generator.getLIRGeneratorTool().newVariable(kind);
-            generator.getLIRGeneratorTool().emitMove(result, value);
-            generator.setResult(this, result);
+            AllocatableValue result = gen.getLIRGeneratorTool().newVariable(kind);
+            gen.getLIRGeneratorTool().emitMove(result, value);
+            gen.setResult(this, result);
         }
     }
 }

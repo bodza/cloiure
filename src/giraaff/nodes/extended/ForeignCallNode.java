@@ -31,7 +31,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Node for a {@linkplain ForeignCallDescriptor foreign} call.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowerable, DeoptimizingNode.DeoptDuring, MemoryCheckpoint.Multi
 {
     public static final NodeClass<ForeignCallNode> TYPE = NodeClass.create(ForeignCallNode.class);

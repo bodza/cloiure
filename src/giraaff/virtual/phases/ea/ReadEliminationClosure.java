@@ -359,8 +359,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                 for (int i = 1; i < states.size(); i++)
                 {
                     ValueNode value = states.get(i).getCacheEntry(identifier.duplicateWithObject(getPhiValueAt(phi, i)));
-                    // e.g. unsafe loads / stores with same identity and different access kinds see
-                    // mergeReadCache(states)
+                    // e.g. unsafe loads/stores with same identity, but different access kinds, see mergeReadCache(states)
                     if (value == null || !values[i - 1].stamp(NodeView.DEFAULT).isCompatible(value.stamp(NodeView.DEFAULT)))
                     {
                         return;

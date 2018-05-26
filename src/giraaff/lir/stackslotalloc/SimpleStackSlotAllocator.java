@@ -67,7 +67,6 @@ public class SimpleStackSlotAllocator extends AllocationPhase
                 inst.forEachInput(updateProc);
                 inst.forEachOutput(updateProc);
                 inst.forEachTemp(updateProc);
-                inst.forEachState(updateProc);
             }
         }
     }

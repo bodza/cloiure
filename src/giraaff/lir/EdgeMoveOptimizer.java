@@ -131,12 +131,6 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
                     return;
                 }
 
-                if (predInstructions.get(predInstructions.size() - 1).hasState())
-                {
-                    // can not optimize instructions that have debug info
-                    return;
-                }
-
                 // ignore the unconditional branch at the end of the block
                 List<LIRInstruction> seq = predInstructions.subList(0, predInstructions.size() - 1);
                 edgeInstructionSeqences.add(seq);
@@ -175,8 +169,7 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 
         /**
          * Moves the longest {@linkplain #same common} subsequence at the start of all successors of
-         * {@code block} to the end of {@code block} just prior to the branch instruction ending
-         * {@code block}.
+         * {@code block} to the end of {@code block} just prior to the branch instruction ending {@code block}.
          */
         private void optimizeMovesAtBlockBegin(AbstractBlockBase<?> block)
         {
@@ -185,21 +178,14 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 
             ArrayList<LIRInstruction> instructions = ir.getLIRforBlock(block);
 
-            LIRInstruction lastInstruction = instructions.get(instructions.size() - 1);
-            if (lastInstruction.hasState())
-            {
-                // cannot optimize instructions when debug info is needed
-                return;
-            }
-
-            LIRInstruction branch = lastInstruction;
+            LIRInstruction branch = instructions.get(instructions.size() - 1);
             if (!(branch instanceof StandardOp.BranchOp) || branch.hasOperands())
             {
-                // Only blocks that end with a conditional branch are optimized.
-                // In addition, a conditional branch with operands (including state) cannot
-                // be optimized. Moving a successor instruction before such a branch may
-                // interfere with the operands of the branch. For example, a successive move
-                // instruction may redefine an input operand of the branch.
+                // Only blocks that end with a conditional branch are optimized. In addition,
+                // a conditional branch with operands (including state) cannot be optimized.
+                // Moving a successor instruction before such a branch may interfere with
+                // the operands of the branch. For example, a successive move instruction
+                // may redefine an input operand of the branch.
                 return;
             }
 
@@ -214,8 +200,7 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 
                 if (sux.getPredecessorCount() != 1)
                 {
-                    // this can happen with switch-statements where multiple edges are between
-                    // the same blocks.
+                    // this can happen with switch-statements where multiple edges are between the same blocks
                     return;
                 }
 

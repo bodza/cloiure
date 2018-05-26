@@ -78,13 +78,13 @@ public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode i
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        generator.setResult(this, generateArithmetic(generator));
-        generator.emitOverflowCheckBranch(getOverflowSuccessor(), getNext(), stamp, probability(getOverflowSuccessor()));
+        gen.setResult(this, generateArithmetic(gen));
+        gen.emitOverflowCheckBranch(getOverflowSuccessor(), getNext(), stamp, probability(getOverflowSuccessor()));
     }
 
-    protected abstract Value generateArithmetic(NodeLIRBuilderTool generator);
+    protected abstract Value generateArithmetic(NodeLIRBuilderTool gen);
 
     static void lower(LoweringTool tool, IntegerExactArithmeticNode node)
     {

@@ -11,7 +11,7 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.Proxy;
 
-// NodeInfo.allowedUsageTypes = Guard
+// @NodeInfo.allowedUsageTypes "Guard"
 public final class GuardProxyNode extends ProxyNode implements GuardingNode, Proxy, LIRLowerable, Canonicalizable
 {
     public static final NodeClass<GuardProxyNode> TYPE = NodeClass.create(GuardProxyNode.class);
@@ -24,7 +24,7 @@ public final class GuardProxyNode extends ProxyNode implements GuardingNode, Pro
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
     }
 

@@ -30,7 +30,8 @@ public class AMD64Call
         @Def({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value result;
         @Use({OperandFlag.REG, OperandFlag.STACK}) protected Value[] parameters;
         @Temp({OperandFlag.REG, OperandFlag.STACK}) protected Value[] temps;
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         protected CallOp(LIRInstructionClass<? extends CallOp> c, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
         {
@@ -176,12 +177,10 @@ public class AMD64Call
         {
             emitAlignmentForDirectCall(crb, masm);
         }
-        int before = masm.position();
         int callPCOffset;
         if (scratch != null)
         {
-            // offset might not fit a 32-bit immediate, generate an
-            // indirect call with a 64-bit immediate
+            // offset might not fit a 32-bit immediate, generate an indirect call with a 64-bit immediate
             masm.movq(scratch, 0L);
             callPCOffset = masm.position();
             masm.call(scratch);
@@ -191,9 +190,7 @@ public class AMD64Call
             callPCOffset = masm.position();
             masm.call();
         }
-        int after = masm.position();
-        crb.recordDirectCall(before, after, callTarget, info);
-        crb.recordExceptionHandlers(after, info);
+        crb.recordExceptionHandlers(masm.position(), info);
         masm.ensureUniquePC();
         return callPCOffset;
     }
@@ -212,19 +209,13 @@ public class AMD64Call
 
     public static void directJmp(CompilationResultBuilder crb, AMD64MacroAssembler masm, InvokeTarget target)
     {
-        int before = masm.position();
         masm.jmp(0, true);
-        int after = masm.position();
-        crb.recordDirectCall(before, after, target, null);
         masm.ensureUniquePC();
     }
 
     public static void directConditionalJmp(CompilationResultBuilder crb, AMD64MacroAssembler masm, InvokeTarget target, ConditionFlag cond)
     {
-        int before = masm.position();
         masm.jcc(cond, 0, true);
-        int after = masm.position();
-        crb.recordDirectCall(before, after, target, null);
         masm.ensureUniquePC();
     }
 
@@ -232,9 +223,7 @@ public class AMD64Call
     {
         int before = masm.position();
         masm.call(dst);
-        int after = masm.position();
-        crb.recordIndirectCall(before, after, callTarget, info);
-        crb.recordExceptionHandlers(after, info);
+        crb.recordExceptionHandlers(masm.position(), info);
         masm.ensureUniquePC();
         return before;
     }

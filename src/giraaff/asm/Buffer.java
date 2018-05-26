@@ -28,11 +28,11 @@ final class Buffer
     }
 
     /**
-     * Closes this buffer. Any further operations on a closed buffer will result in a
-     * {@link NullPointerException}.
+     * Closes this buffer.
+     * Any further operations on a closed buffer will result in a {@link NullPointerException}.
      *
-     * @param trimmedCopy if {@code true}, then a copy of the underlying byte array up to (but not
-     *            including) {@code position()} is returned
+     * @param trimmedCopy if {@code true}, then a copy of the underlying byte array up to (but
+     *            not including) {@code position()} is returned
      * @return the data in this buffer or a trimmed copy if {@code trimmedCopy} is {@code true}
      */
     public byte[] close(boolean trimmedCopy)
@@ -40,8 +40,8 @@ final class Buffer
         byte[] result = data.array();
         if (trimmedCopy)
         {
-            // Make a copy even if result.length == data.position() since
-            // the API for trimmedCopy states a copy is always made
+            // Make a copy even if result.length == data.position(),
+            // since the API for trimmedCopy states a copy is always made.
             result = Arrays.copyOf(result, data.position());
         }
         data = null;

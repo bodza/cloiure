@@ -61,7 +61,7 @@ import giraaff.word.Word;
 /**
  * HotSpot specific backend.
  */
-public abstract class HotSpotBackend extends Backend implements FrameMap.ReferenceMapBuilderFactory
+public abstract class HotSpotBackend extends Backend
 {
     /**
      * Descriptor for {@link ExceptionHandlerStub}. This stub is called by the
@@ -372,10 +372,6 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
             if (save.supportsRemove())
             {
                 save.remove(destroyedRegisters);
-            }
-            if (cursor.getKey() != LIRFrameState.NO_STATE)
-            {
-                cursor.getKey().debugInfo().setCalleeSaveInfo(save.getMap(frameMap));
             }
         }
     }

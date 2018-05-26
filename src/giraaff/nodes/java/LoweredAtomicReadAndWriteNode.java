@@ -21,7 +21,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Represents the lowered version of an atomic read-and-write operation like
  * {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
     public static final NodeClass<LoweredAtomicReadAndWriteNode> TYPE = NodeClass.create(LoweredAtomicReadAndWriteNode.class);

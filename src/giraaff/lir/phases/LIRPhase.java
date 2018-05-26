@@ -14,7 +14,7 @@ public abstract class LIRPhase<C>
 {
     public static class Options
     {
-        // Option "Enable LIR level optimiztations."
+        // @Option "Enable LIR level optimiztations."
         public static final OptionKey<Boolean> LIROptimization = new OptionKey<>(true);
     }
 

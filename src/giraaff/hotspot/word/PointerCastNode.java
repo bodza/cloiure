@@ -32,10 +32,8 @@ public final class PointerCastNode extends FloatingNode implements LIRLowerable,
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        Value value = generator.operand(input);
-
-        generator.setResult(this, value);
+        gen.setResult(this, gen.operand(input));
     }
 }

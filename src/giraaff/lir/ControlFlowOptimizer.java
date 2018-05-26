@@ -49,7 +49,7 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
 
             // Block must have exactly one successor.
-            return instructions.size() == 2 && !instructions.get(instructions.size() - 1).hasState() && !block.isExceptionEntry();
+            return instructions.size() == 2 && !block.isExceptionEntry();
         }
 
         private void alignBlock(AbstractBlockBase<?> block)

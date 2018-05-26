@@ -411,8 +411,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
     }
 
     /**
-     * Gets the number of locked monitors in this frame state and all {@linkplain #outerFrameState()
-     * outer} frame states.
+     * Gets the number of locked monitors in this frame state and all {@linkplain #outerFrameState() outer} frame states.
      */
     public int nestedLockDepth()
     {

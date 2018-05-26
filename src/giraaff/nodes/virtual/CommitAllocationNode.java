@@ -25,7 +25,7 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.VirtualizableAllocation;
 import giraaff.nodes.spi.VirtualizerTool;
 
-// NodeInfo.allowedUsageTypes = Extension, Memory
+// @NodeInfo.allowedUsageTypes "Extension, Memory"
 public final class CommitAllocationNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Simplifiable, MemoryCheckpoint.Single
 {
     public static final NodeClass<CommitAllocationNode> TYPE = NodeClass.create(CommitAllocationNode.class);

@@ -15,7 +15,6 @@ import giraaff.hotspot.meta.HotSpotLoweringProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.lir.asm.CompilationResultBuilder;
-import giraaff.lir.framemap.ReferenceMapBuilder;
 import giraaff.nodes.StructuredGraph;
 import giraaff.options.OptionValues;
 
@@ -75,17 +74,13 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
     {
         if (config.useStackBanging)
         {
-            // Each code entry causes one stack bang n pages down the stack where n
-            // is configurable by StackShadowPages. The setting depends on the maximum
-            // depth of VM call stack or native before going back into java code,
-            // since only java code can raise a stack overflow exception using the
-            // stack banging mechanism. The VM and native code does not detect stack
-            // overflow.
-            // The code in JavaCalls::call() checks that there is at least n pages
-            // available, so all entry code needs to do is bang once for the end of
-            // this shadow zone.
-            // The entry code may need to bang additional pages if the framesize
-            // is greater than a page.
+            // Each code entry causes one stack bang n pages down the stack where n is configurable
+            // by StackShadowPages. The setting depends on the maximum depth of VM call stack or native
+            // before going back into java code, since only java code can raise a stack overflow exception
+            // using the stack banging mechanism. The VM and native code does not detect stack overflow.
+            // The code in JavaCalls::call() checks that there is at least n pages available, so all
+            // entry code needs to do is bang once for the end of this shadow zone.
+            // The entry code may need to bang additional pages if the framesize is greater than a page.
 
             int pageSize = config.vmPageSize;
             int bangEnd = NumUtil.roundUp(config.stackShadowPages * 4 * CodeUtil.K, pageSize);
@@ -93,7 +88,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
             // This is how far the previous frame's stack banging extended.
             int bangEndSafe = bangEnd;
 
-            int frameSize = Math.max(crb.frameMap.frameSize(), crb.compilationResult.getMaxInterpreterFrameSize());
+            int frameSize = crb.frameMap.frameSize();
             if (frameSize > pageSize)
             {
                 bangEnd += frameSize;
@@ -110,11 +105,4 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
     }
 
     protected abstract void bangStackWithOffset(CompilationResultBuilder crb, int bangOffset);
-
-    @Override
-    public ReferenceMapBuilder newReferenceMapBuilder(int totalFrameSize)
-    {
-        int uncompressedReferenceSize = getTarget().arch.getPlatformKind(JavaKind.Object).getSizeInBytes();
-        return new HotSpotReferenceMapBuilder(totalFrameSize, config.maxOopMapStackOffset, uncompressedReferenceSize);
-    }
 }

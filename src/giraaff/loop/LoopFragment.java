@@ -516,10 +516,9 @@ public abstract class LoopFragment
                 loopEarlyExit.setStateAfter(exitState);
                 merge.setStateAfter(originalExitState);
                 /*
-                 * Using the old exit's state as the merge's state is necessary because some of the
-                 * VirtualState nodes contained in the old exit's state may be shared by other
-                 * dominated VirtualStates. Those dominated virtual states need to see the
-                 * proxy->phi update that are applied below.
+                 * Using the old exit's state as the merge's state is necessary because some of the VirtualState
+                 * nodes contained in the old exit's state may be shared by other dominated VirtualStates.
+                 * Those dominated virtual states need to see the proxy->phi update that are applied below.
                  *
                  * We now update the original fragment's nodes accordingly:
                  */

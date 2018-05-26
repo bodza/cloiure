@@ -16,7 +16,6 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Local;
-import jdk.vm.ci.meta.LocalVariableTable;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaMethod.Parameter;
@@ -143,47 +142,6 @@ public class SnippetTemplate
             final boolean[] constantParameters;
             final boolean[] varargsParameters;
             final boolean[] nonNullParameters;
-
-            /**
-             * The parameter names, taken from the local variables table. Only used for assertion
-             * checking, so use only within an assert statement.
-             */
-            String[] names;
-
-            private boolean initNames(ResolvedJavaMethod method, int parameterCount)
-            {
-                names = new String[parameterCount];
-                Parameter[] params = method.getParameters();
-                if (params != null)
-                {
-                    for (int i = 0; i < names.length; i++)
-                    {
-                        if (params[i].isNamePresent())
-                        {
-                            names[i] = params[i].getName();
-                        }
-                    }
-                }
-                else
-                {
-                    int slotIdx = 0;
-                    LocalVariableTable localVariableTable = method.getLocalVariableTable();
-                    if (localVariableTable != null)
-                    {
-                        for (int i = 0; i < names.length; i++)
-                        {
-                            Local local = localVariableTable.getLocal(slotIdx, 0);
-                            if (local != null)
-                            {
-                                names[i] = local.getName();
-                            }
-                            JavaKind kind = method.getSignature().getParameterKind(i);
-                            slotIdx += kind.getSlotCount();
-                        }
-                    }
-                }
-                return true;
-            }
         }
 
         protected abstract Lazy lazy();
@@ -226,12 +184,7 @@ public class SnippetTemplate
 
         public String getParameterName(int paramIdx)
         {
-            String[] names = lazy().names;
-            if (names != null)
-            {
-                return names[paramIdx];
-            }
-            return null;
+            return "dunno";
         }
 
         @Override
@@ -520,7 +473,7 @@ public class SnippetTemplate
 
     static class Options
     {
-        // Option "Use a LRU cache for snippet templates."
+        // @Option "Use a LRU cache for snippet templates."
         public static final OptionKey<Boolean> UseSnippetTemplateCache = new OptionKey<>(true);
 
         static final OptionKey<Integer> MaxTemplatesPerSnippet = new OptionKey<>(50);

@@ -90,12 +90,6 @@ public abstract class LIRInstruction
         OperandFlag[] value() default OperandFlag.REG;
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    public static @interface State
-    {
-    }
-
     /**
      * Flags for an operand.
      */
@@ -198,12 +192,7 @@ public abstract class LIRInstruction
 
     public final boolean hasOperands()
     {
-        return instructionClass.hasOperands() || hasState() || destroysCallerSavedRegisters();
-    }
-
-    public final boolean hasState()
-    {
-        return instructionClass.hasState(this);
+        return instructionClass.hasOperands() || destroysCallerSavedRegisters();
     }
 
     public boolean destroysCallerSavedRegisters()
@@ -232,11 +221,6 @@ public abstract class LIRInstruction
         instructionClass.forEachDef(this, proc);
     }
 
-    public final void forEachState(InstructionValueProcedure proc)
-    {
-        instructionClass.forEachState(this, proc);
-    }
-
     // ValueProcedures
     public final void forEachInput(ValueProcedure proc)
     {
@@ -256,22 +240,6 @@ public abstract class LIRInstruction
     public final void forEachOutput(ValueProcedure proc)
     {
         instructionClass.forEachDef(this, proc);
-    }
-
-    public final void forEachState(ValueProcedure proc)
-    {
-        instructionClass.forEachState(this, proc);
-    }
-
-    // States
-    public final void forEachState(InstructionStateProcedure proc)
-    {
-        instructionClass.forEachState(this, proc);
-    }
-
-    public final void forEachState(StateProcedure proc)
-    {
-        instructionClass.forEachState(this, proc);
     }
 
     // InstructionValueConsumers
@@ -295,11 +263,6 @@ public abstract class LIRInstruction
         instructionClass.visitEachDef(this, proc);
     }
 
-    public final void visitEachState(InstructionValueConsumer proc)
-    {
-        instructionClass.visitEachState(this, proc);
-    }
-
     // ValueConsumers
     public final void visitEachInput(ValueConsumer proc)
     {
@@ -319,11 +282,6 @@ public abstract class LIRInstruction
     public final void visitEachOutput(ValueConsumer proc)
     {
         instructionClass.visitEachDef(this, proc);
-    }
-
-    public final void visitEachState(ValueConsumer proc)
-    {
-        instructionClass.visitEachState(this, proc);
     }
 
     @SuppressWarnings("unused")

@@ -37,7 +37,7 @@ public class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
 {
     public static class Options
     {
-        // Option "Use traps for null checks instead of explicit null-checks."
+        // @Option "Use traps for null checks instead of explicit null-checks."
         public static final OptionKey<Boolean> UseTrappingNullChecks = new OptionKey<>(true);
     }
 

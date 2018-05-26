@@ -65,10 +65,9 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        Value res = ((HotSpotLIRGenerator) generator.getLIRGeneratorTool()).emitLoadConfigValue(markId, generator.getLIRGeneratorTool().getLIRKind(stamp));
-        generator.setResult(this, res);
+        gen.setResult(this, ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadConfigValue(markId, gen.getLIRGeneratorTool().getLIRKind(stamp)));
     }
 
     @NodeIntrinsic

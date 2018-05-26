@@ -2,8 +2,6 @@ package giraaff.lir.phases;
 
 import giraaff.core.common.GraalOptions;
 import giraaff.lir.alloc.lsra.LinearScanPhase;
-import giraaff.lir.dfa.LocationMarkerPhase;
-import giraaff.lir.dfa.MarkBasePointersPhase;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.stackslotalloc.LSStackSlotAllocator;
 import giraaff.lir.stackslotalloc.SimpleStackSlotAllocator;
@@ -13,7 +11,6 @@ public class AllocationStage extends LIRPhaseSuite<AllocationContext>
 {
     public AllocationStage(OptionValues options)
     {
-        appendPhase(new MarkBasePointersPhase());
         appendPhase(new LinearScanPhase());
 
         // build frame map
@@ -25,8 +22,5 @@ public class AllocationStage extends LIRPhaseSuite<AllocationContext>
         {
             appendPhase(new SimpleStackSlotAllocator());
         }
-
-        // currently we mark locations only if we do register allocation
-        appendPhase(new LocationMarkerPhase());
     }
 }

@@ -52,9 +52,9 @@ public class OnStackReplacementPhase extends Phase
 {
     public static class Options
     {
-        // Option "Deoptimize OSR compiled code when the OSR entry loop is finished if there is no mature profile available for the rest of the method."
+        // @Option "Deoptimize OSR compiled code when the OSR entry loop is finished if there is no mature profile available for the rest of the method."
         public static final OptionKey<Boolean> DeoptAfterOSR = new OptionKey<>(true);
-        // Option "Support OSR compilations with locks. If DeoptAfterOSR is true we can per definition not have unbalaced enter/extis mappings. If DeoptAfterOSR is false insert artificial monitor enters after the OSRStart to have balanced enter/exits in the graph."
+        // @Option "Support OSR compilations with locks. If DeoptAfterOSR is true we can per definition not have unbalaced enter/extis mappings. If DeoptAfterOSR is false insert artificial monitor enters after the OSRStart to have balanced enter/exits in the graph."
         public static final OptionKey<Boolean> SupportOSRWithLocks = new OptionKey<>(true);
     }
 

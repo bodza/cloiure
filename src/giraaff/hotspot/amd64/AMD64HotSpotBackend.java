@@ -5,7 +5,6 @@ import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import jdk.vm.ci.meta.JavaKind;
@@ -70,7 +69,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
     @Override
     public FrameMap newFrameMap(RegisterConfig registerConfig)
     {
-        return new AMD64FrameMap(getCodeCache(), registerConfig, this);
+        return new AMD64FrameMap(getCodeCache(), registerConfig);
     }
 
     @Override
@@ -207,12 +206,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         DataBuilder dataBuilder = new HotSpotDataBuilder(getCodeCache().getTarget());
         CompilationResultBuilder crb = factory.createBuilder(getCodeCache(), getForeignCalls(), frameMap, masm, dataBuilder, frameContext, options, compilationResult);
         crb.setTotalFrameSize(frameMap.totalFrameSize());
-        crb.setMaxInterpreterFrameSize(gen.getMaxInterpreterFrameSize());
-        StackSlot deoptimizationRescueSlot = gen.getDeoptimizationRescueSlot();
-        if (deoptimizationRescueSlot != null && stub == null)
-        {
-            crb.compilationResult.setCustomStackAreaOffset(deoptimizationRescueSlot);
-        }
 
         if (stub != null)
         {

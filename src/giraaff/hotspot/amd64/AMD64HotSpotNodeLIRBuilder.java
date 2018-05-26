@@ -17,11 +17,11 @@ import jdk.vm.ci.meta.Value;
 import giraaff.core.amd64.AMD64NodeLIRBuilder;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallLinkage;
-import giraaff.core.gen.DebugInfoBuilder;
+import giraaff.core.gen.LockStackHolder;
 import giraaff.hotspot.HotSpotBackend;
-import giraaff.hotspot.HotSpotDebugInfoBuilder;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.hotspot.HotSpotLockStack;
+import giraaff.hotspot.HotSpotLockStackHolder;
 import giraaff.hotspot.HotSpotNodeLIRBuilder;
 import giraaff.hotspot.nodes.HotSpotDirectCallTargetNode;
 import giraaff.hotspot.nodes.HotSpotIndirectCallTargetNode;
@@ -30,7 +30,6 @@ import giraaff.lir.Variable;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.DirectCallTargetNode;
-import giraaff.nodes.FullInfopointNode;
 import giraaff.nodes.IndirectCallTargetNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ParameterNode;
@@ -47,7 +46,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
         super(graph, gen);
-        ((AMD64HotSpotLIRGenerator) gen).setDebugInfoBuilder(((HotSpotDebugInfoBuilder) getDebugInfoBuilder()));
+        ((AMD64HotSpotLIRGenerator) gen).setLockStackHolder(((HotSpotLockStackHolder) getLockStackHolder()));
     }
 
     private AMD64HotSpotLIRGenerator getGen()
@@ -56,10 +55,9 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     }
 
     @Override
-    protected DebugInfoBuilder createDebugInfoBuilder(StructuredGraph graph, NodeValueMap nodeValueMap)
+    protected LockStackHolder createLockStackHolder()
     {
-        HotSpotLockStack lockStack = new HotSpotLockStack(gen.getResult().getFrameMapBuilder(), LIRKind.value(AMD64Kind.QWORD));
-        return new HotSpotDebugInfoBuilder(nodeValueMap, lockStack, (HotSpotLIRGenerator) gen);
+        return new HotSpotLockStackHolder(new HotSpotLockStack(gen.getResult().getFrameMapBuilder(), LIRKind.value(AMD64Kind.QWORD)));
     }
 
     @Override
@@ -86,7 +84,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
 
         getGen().emitSaveRbp();
 
-        getGen().append(((HotSpotDebugInfoBuilder) getDebugInfoBuilder()).lockStack());
+        getGen().append(((HotSpotLockStackHolder) getLockStackHolder()).lockStack());
 
         for (ParameterNode param : graph.getNodes(ParameterNode.TYPE))
         {
@@ -156,17 +154,5 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         Register thread = getGen().getProviders().getRegisters().getThreadRegister();
         AMD64HotSpotJumpToExceptionHandlerInCallerOp op = new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, getGen().config.threadIsMethodHandleReturnOffset, thread);
         append(op);
-    }
-
-    @Override
-    public void visitFullInfopointNode(FullInfopointNode i)
-    {
-        if (i.getState() != null && i.getState().bci == BytecodeFrame.AFTER_BCI)
-        {
-        }
-        else
-        {
-            super.visitFullInfopointNode(i);
-        }
     }
 }

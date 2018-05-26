@@ -338,7 +338,8 @@ public class AMD64Binary
         @Use({OperandFlag.REG}) protected AllocatableValue x;
         @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue y;
 
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         public MemoryTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AMD64AddressValue y, LIRFrameState state)
         {
@@ -357,10 +358,6 @@ public class AMD64Binary
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
             AMD64Move.move(crb, masm, result, x);
-            if (state != null)
-            {
-                crb.recordImplicitException(masm.position(), state);
-            }
             opcode.emit(masm, size, ValueUtil.asRegister(result), y.toAddress());
         }
 
@@ -391,7 +388,8 @@ public class AMD64Binary
         @Use({OperandFlag.REG}) protected AllocatableValue x;
         @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue y;
 
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         public MemoryThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AMD64AddressValue y, LIRFrameState state)
         {
@@ -409,10 +407,6 @@ public class AMD64Binary
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (state != null)
-            {
-                crb.recordImplicitException(masm.position(), state);
-            }
             opcode.emit(masm, size, ValueUtil.asRegister(result), ValueUtil.asRegister(x), y.toAddress());
         }
 

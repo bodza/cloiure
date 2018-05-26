@@ -2,8 +2,6 @@ package giraaff.bytecode;
 
 import jdk.vm.ci.meta.ConstantPool;
 import jdk.vm.ci.meta.ExceptionHandler;
-import jdk.vm.ci.meta.LineNumberTable;
-import jdk.vm.ci.meta.LocalVariableTable;
 import jdk.vm.ci.meta.ProfilingInfo;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
@@ -67,18 +65,6 @@ public class ResolvedJavaMethodBytecode implements Bytecode
     public ConstantPool getConstantPool()
     {
         return method.getConstantPool();
-    }
-
-    @Override
-    public LineNumberTable getLineNumberTable()
-    {
-        return method.getLineNumberTable();
-    }
-
-    @Override
-    public LocalVariableTable getLocalVariableTable()
-    {
-        return method.getLocalVariableTable();
     }
 
     @Override

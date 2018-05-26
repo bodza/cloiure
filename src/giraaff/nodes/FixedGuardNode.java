@@ -11,7 +11,7 @@ import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-// NodeInfo.allowedUsageTypes = Guard
+// @NodeInfo.allowedUsageTypes "Guard"
 public final class FixedGuardNode extends AbstractFixedGuardNode implements Lowerable, IterableNodeType
 {
     public static final NodeClass<FixedGuardNode> TYPE = NodeClass.create(FixedGuardNode.class);

@@ -391,7 +391,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
             }
             else
             {
-                state = new LIRFrameState(null, null, null);
+                state = LIRFrameState.NO_STATE;
             }
         }
 

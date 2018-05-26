@@ -12,7 +12,7 @@ import giraaff.nodes.extended.ValueAnchorNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-// NodeInfo.allowedUsageTypes = Guard
+// @NodeInfo.allowedUsageTypes "Guard"
 public final class ConditionAnchorNode extends FixedWithNextNode implements Canonicalizable.Unary<Node>, Lowerable, GuardingNode
 {
     public static final NodeClass<ConditionAnchorNode> TYPE = NodeClass.create(ConditionAnchorNode.class);

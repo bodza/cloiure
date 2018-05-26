@@ -264,8 +264,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      * Once all loop-end-nodes for a given loop-node have been visited.
      *
      * <li>the state for that loop-node is updated based on the states of the loop-end-nodes</li>
-     * <li>entries in {@link #nodeStates} are pruned for the loop (they aren't going to be looked up
-     * again, anyway)</li>
+     * <li>entries in {@link #nodeStates} are pruned for the loop (they aren't going to be looked up again, anyway)</li>
      *
      * The entries removed by this method were inserted:
      *

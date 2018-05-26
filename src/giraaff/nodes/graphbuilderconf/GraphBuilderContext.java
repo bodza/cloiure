@@ -277,9 +277,8 @@ public interface GraphBuilderContext extends GraphBuilderTool
             Stamp stamp = receiverStamp.join(StampFactory.objectNonNull());
             FixedGuardNode fixedGuard = append(new FixedGuardNode(condition, DeoptimizationReason.NullCheckException, action, true));
             ValueNode nonNullReceiver = getGraph().addOrUniqueWithInputs(PiNode.create(value, stamp, fixedGuard));
-            // TODO: Propogating the non-null into the frame state would
-            // remove subsequent null-checks on the same value. However,
-            // it currently causes an assertion failure when merging states.
+            // TODO: Propogating the non-null into the frame state would remove subsequent null-checks on the same value.
+            // However, it currently causes an assertion failure when merging states.
             //
             // frameState.replace(value, nonNullReceiver);
             return nonNullReceiver;

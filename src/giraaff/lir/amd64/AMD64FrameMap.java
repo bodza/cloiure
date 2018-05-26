@@ -54,9 +54,9 @@ public class AMD64FrameMap extends FrameMap
 {
     private StackSlot rbpSpillSlot;
 
-    public AMD64FrameMap(CodeCacheProvider codeCache, RegisterConfig registerConfig, ReferenceMapBuilderFactory referenceMapFactory)
+    public AMD64FrameMap(CodeCacheProvider codeCache, RegisterConfig registerConfig)
     {
-        super(codeCache, registerConfig, referenceMapFactory);
+        super(codeCache, registerConfig);
         // (negative) offset relative to sp + total frame size
         initialSpillSize = returnAddressSize();
         spillSize = initialSpillSize;
@@ -100,10 +100,5 @@ public class AMD64FrameMap extends FrameMap
     {
         int size = spillSlotSize(LIRKind.value(AMD64Kind.QWORD));
         spillSize = initialSpillSize;
-    }
-
-    public StackSlot allocateDeoptimizationRescueSlot()
-    {
-        return allocateSpillSlot(LIRKind.value(AMD64Kind.QWORD));
     }
 }

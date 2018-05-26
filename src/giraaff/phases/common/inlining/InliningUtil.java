@@ -422,9 +422,8 @@ public class InliningUtil extends ValueMergeUtil
 
     private static void fixFrameStates(StructuredGraph graph, MergeNode originalMerge, PhiNode returnPhi)
     {
-        // It is possible that some of the frame states that came from AFTER_BCI reference a Phi
-        // node that was created to merge multiple returns. This can create cycles
-        // (see GR-3949 and GR-3957).
+        // It is possible that some of the frame states that came from AFTER_BCI reference a Phi node
+        // that was created to merge multiple returns. This can create cycles (see GR-3949 and GR-3957).
         // To detect this, we follow the control paths starting from the merge node,
         // split the Phi node inputs at merges and assign the proper input to each frame state.
         NodeMap<Node> seen = new NodeMap<>(graph);

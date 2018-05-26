@@ -1,7 +1,6 @@
 package giraaff.hotspot;
 
 import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.StackSlot;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
@@ -16,15 +15,7 @@ import giraaff.lir.gen.LIRGenerationResult;
 
 public class HotSpotLIRGenerationResult extends LIRGenerationResult
 {
-    /**
-     * The slot reserved for storing the original return address when a frame is marked for
-     * deoptimization. The return address slot in the callee is overwritten with the address of a
-     * deoptimization stub.
-     */
-    private StackSlot deoptimizationRescueSlot;
     protected final Object stub;
-
-    private int maxInterpreterFrameSize;
 
     /**
      * Map from debug infos that need to be updated with callee save information to the operations
@@ -46,25 +37,5 @@ public class HotSpotLIRGenerationResult extends LIRGenerationResult
     public Stub getStub()
     {
         return (Stub) stub;
-    }
-
-    public StackSlot getDeoptimizationRescueSlot()
-    {
-        return deoptimizationRescueSlot;
-    }
-
-    public final void setDeoptimizationRescueSlot(StackSlot stackSlot)
-    {
-        this.deoptimizationRescueSlot = stackSlot;
-    }
-
-    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize)
-    {
-        this.maxInterpreterFrameSize = maxInterpreterFrameSize;
-    }
-
-    public int getMaxInterpreterFrameSize()
-    {
-        return maxInterpreterFrameSize;
     }
 }

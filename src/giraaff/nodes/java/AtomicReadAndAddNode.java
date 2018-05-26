@@ -18,7 +18,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Represents an atomic read-and-add operation like
  * {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<AtomicReadAndAddNode> TYPE = NodeClass.create(AtomicReadAndAddNode.class);

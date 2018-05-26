@@ -56,9 +56,9 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
     public static native Object getObject(Object object);
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        generator.setResult(this, generator.operand(object));
+        gen.setResult(this, gen.operand(object));
     }
 
     @Override

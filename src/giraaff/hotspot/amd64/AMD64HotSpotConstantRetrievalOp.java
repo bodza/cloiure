@@ -28,7 +28,8 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
     @Temp protected AllocatableValue[] gotSlotOffsetParameters;
     @Temp protected AllocatableValue[] descriptionParameters;
     @Temp protected Value[] callTemps;
-    @State protected LIRFrameState frameState;
+    // @State
+    protected LIRFrameState state;
     private final ForeignCallLinkage callLinkage;
     private final Object[] notes;
 
@@ -55,12 +56,12 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         }
     }
 
-    public AMD64HotSpotConstantRetrievalOp(Constant[] constants, AllocatableValue[] constantDescriptions, LIRFrameState frameState, ForeignCallLinkage callLinkage, Object[] notes)
+    public AMD64HotSpotConstantRetrievalOp(Constant[] constants, AllocatableValue[] constantDescriptions, LIRFrameState state, ForeignCallLinkage callLinkage, Object[] notes)
     {
         super(TYPE);
         this.constantDescriptions = constantDescriptions;
         this.constants = constants;
-        this.frameState = frameState;
+        this.state = state;
         this.notes = notes;
 
         // call arguments
@@ -100,9 +101,6 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
             masm.movq(ValueUtil.asRegister(descriptionParameters[i]), ValueUtil.asRegister(constantDescriptions[i]));
         }
 
-        final int before = masm.position();
         masm.call();
-        final int after = masm.position();
-        crb.recordDirectCall(before, after, callLinkage, frameState);
     }
 }

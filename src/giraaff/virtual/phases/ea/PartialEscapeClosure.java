@@ -374,8 +374,8 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
 
     /**
      * This replaces all inputs that point to virtual or materialized values with the actual value,
-     * materializing if necessary. Also takes care of frame states, adding the necessary
-     * {@link VirtualObjectState}.
+     * materializing if necessary.
+     * Also takes care of frame states, adding the necessary {@link VirtualObjectState}.
      */
     private void processNodeInputs(ValueNode node, FixedNode insertBefore, BlockT state, GraphEffectList effects)
     {
@@ -1093,8 +1093,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         }
 
         /**
-         * Fill the inputs of the PhiNode corresponding to one {@link JavaKind#Object} entry in the
-         * virtual object.
+         * Fill the inputs of the PhiNode corresponding to one {@link JavaKind#Object} entry in the virtual object.
          *
          * @return true if materialization happened during the merge, false otherwise
          */
@@ -1127,10 +1126,10 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         }
 
         /**
-         * Examine a PhiNode and try to replace it with merging of virtual objects if all its inputs
-         * refer to virtual object states. In order for the merging to happen, all incoming object
-         * states need to be compatible and without object identity (meaning that their object
-         * identity if not used later on).
+         * Examine a PhiNode and try to replace it with merging of virtual objects if all its
+         * inputs refer to virtual object states. In order for the merging to happen, all incoming
+         * object states need to be compatible and without object identity (meaning that their
+         * object identity if not used later on).
          *
          * @param phi the PhiNode that should be processed
          * @param states the predecessor block states of the merge

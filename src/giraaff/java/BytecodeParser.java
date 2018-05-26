@@ -9,7 +9,6 @@ import java.util.List;
 
 import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.code.site.InfopointReason;
 import jdk.vm.ci.meta.ConstantPool;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.DeoptimizationAction;
@@ -21,7 +20,6 @@ import jdk.vm.ci.meta.JavaMethod;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.JavaTypeProfile;
 import jdk.vm.ci.meta.JavaTypeProfile.ProfiledType;
-import jdk.vm.ci.meta.LineNumberTable;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ProfilingInfo;
 import jdk.vm.ci.meta.RawConstant;
@@ -82,7 +80,6 @@ import giraaff.nodes.FixedGuardNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.FrameState;
-import giraaff.nodes.FullInfopointNode;
 import giraaff.nodes.IfNode;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.InvokeNode;
@@ -261,7 +258,7 @@ public class BytecodeParser implements GraphBuilderContext
                                         throw new GraalError("AFTER_BCI frame state within an intrinsic has a non-return value on the stack: %s", returnVal);
                                     }
 
-                                    // Swap the top-of-stack value with the return value
+                                    // Swap the top-of-stack value with the return value.
                                     ValueNode tos = frameStateBuilder.pop(returnKind);
                                     FrameState newFrameState = frameStateBuilder.create(parser.stream.nextBCI(), parser.getNonIntrinsicAncestor(), false, new JavaKind[] { returnKind }, new ValueNode[] { returnVal });
                                     frameState.replaceAndDelete(newFrameState);
@@ -269,11 +266,9 @@ public class BytecodeParser implements GraphBuilderContext
                                 }
                                 else if (returnKind != JavaKind.Void)
                                 {
-                                    // If the intrinsic returns a non-void value, then any frame
-                                    // state with an empty stack is invalid as it cannot
-                                    // be used to deoptimize to just after the call returns.
-                                    // These invalid frame states are expected to be removed
-                                    // by later compilation stages.
+                                    // If the intrinsic returns a non-void value, then any frame state with an empty stack
+                                    // is invalid as it cannot be used to deoptimize to just after the call returns.
+                                    // These invalid frame states are expected to be removed by later compilation stages.
                                     FrameState newFrameState = graph.add(new FrameState(BytecodeFrame.INVALID_FRAMESTATE_BCI));
                                     frameState.replaceAndDelete(newFrameState);
                                     sawInvalidFrameState = true;
@@ -392,10 +387,6 @@ public class BytecodeParser implements GraphBuilderContext
     protected final int entryBCI;
     private final BytecodeParser parent;
 
-    private LineNumberTable lnt;
-    private int previousLineNumber;
-    private int currentLineNumber;
-
     private ValueNode methodSynchronizedObject;
 
     private List<ReturnToCallerData> returnDataList;
@@ -437,12 +428,6 @@ public class BytecodeParser implements GraphBuilderContext
 
         eagerInitializing = graphBuilderConfig.eagerResolving();
         uninitializedIsError = graphBuilderConfig.unresolvedIsError();
-
-        if (graphBuilderConfig.insertFullInfopoints() && !parsingIntrinsic())
-        {
-            lnt = code.getLineNumberTable();
-            previousLineNumber = -1;
-        }
     }
 
     protected GraphBuilderPhase.Instance getGraphBuilderInstance()
@@ -546,8 +531,6 @@ public class BytecodeParser implements GraphBuilderContext
         }
 
         finishPrepare(lastInstr, 0);
-
-        genInfoPointNode(InfopointReason.METHOD_START, null);
 
         currentBlock = blockMap.getStartBlock();
         setEntryState(startBlock, frameState);
@@ -951,8 +934,6 @@ public class BytecodeParser implements GraphBuilderContext
 
     protected void genThrow()
     {
-        genInfoPointNode(InfopointReason.BYTECODE_POSITION, null);
-
         ValueNode exception = frameState.pop(JavaKind.Object);
         FixedGuardNode nullCheck = append(new FixedGuardNode(graph.addOrUniqueWithInputs(IsNullNode.create(exception)), DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, true));
         ValueNode nonNullException = graph.maybeAddOrUnique(PiNode.create(exception, exception.stamp(NodeView.DEFAULT).join(StampFactory.objectNonNull()), nullCheck));
@@ -1952,7 +1933,7 @@ public class BytecodeParser implements GraphBuilderContext
     {
         IntrinsicContext intrinsic = this.intrinsicContext;
 
-        if (intrinsic == null && !graphBuilderConfig.insertFullInfopoints() && targetMethod.equals(inlinedMethod) && (targetMethod.getModifiers() & (Modifier.STATIC | Modifier.SYNCHRONIZED)) == 0 && tryFastInlineAccessor(args, targetMethod))
+        if (intrinsic == null && targetMethod.equals(inlinedMethod) && (targetMethod.getModifiers() & (Modifier.STATIC | Modifier.SYNCHRONIZED)) == 0 && tryFastInlineAccessor(args, targetMethod))
         {
             return true;
         }
@@ -2247,7 +2228,6 @@ public class BytecodeParser implements GraphBuilderContext
                 append(new RegisterFinalizerNode(receiver));
             }
         }
-        genInfoPointNode(InfopointReason.METHOD_END, x);
         if (finalBarrierRequired)
         {
             /*
@@ -2825,26 +2805,10 @@ public class BytecodeParser implements GraphBuilderContext
         stream.setBCI(block.startBci);
         int bci = block.startBci;
 
-        // Reset line number for new block
-        if (graphBuilderConfig.insertFullInfopoints())
-        {
-            previousLineNumber = -1;
-        }
-
         while (bci < endBCI)
         {
             try
             {
-                if (graphBuilderConfig.insertFullInfopoints() && !parsingIntrinsic())
-                {
-                    currentLineNumber = lnt != null ? lnt.getLineNumber(bci) : -1;
-                    if (currentLineNumber != previousLineNumber)
-                    {
-                        genInfoPointNode(InfopointReason.BYTECODE_POSITION, null);
-                        previousLineNumber = currentLineNumber;
-                    }
-                }
-
                 // read the opcode
                 int opcode = stream.currentBC();
                 if (parent == null && bci == entryBCI)
@@ -2933,14 +2897,6 @@ public class BytecodeParser implements GraphBuilderContext
     protected FixedWithNextNode finishInstruction(FixedWithNextNode instr, FrameStateBuilder state)
     {
         return instr;
-    }
-
-    private void genInfoPointNode(InfopointReason reason, ValueNode escapedReturnValue)
-    {
-        if (!parsingIntrinsic() && graphBuilderConfig.insertFullInfopoints())
-        {
-            append(new FullInfopointNode(reason, createFrameState(bci(), null), escapedReturnValue));
-        }
     }
 
     protected void genIf(ValueNode x, Condition cond, ValueNode y)
@@ -4166,7 +4122,7 @@ public class BytecodeParser implements GraphBuilderContext
          * Javac does not allow use of "$assertionsDisabled" for a field name but Eclipse does, in
          * which case a suffix is added to the generated field.
          */
-        if ((parsingIntrinsic() || graphBuilderConfig.omitAssertions()) && resolvedField.isSynthetic() && resolvedField.getName().startsWith("$assertionsDisabled"))
+        if (resolvedField.isSynthetic() && resolvedField.getName().startsWith("$assertionsDisabled"))
         {
             frameState.push(field.getJavaKind(), ConstantNode.forBoolean(true, graph));
             return;

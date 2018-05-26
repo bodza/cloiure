@@ -16,7 +16,7 @@ import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-// NodeInfo.allowedUsageTypes = Extension
+// @NodeInfo.allowedUsageTypes "Extension"
 public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 {
     public static final NodeClass<CallTargetNode> TYPE = NodeClass.create(CallTargetNode.class);

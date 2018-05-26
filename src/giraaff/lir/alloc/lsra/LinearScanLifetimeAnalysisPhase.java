@@ -152,17 +152,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                         }
                     }
                 };
-                ValueConsumer stateConsumer = (operand, mode, flags) ->
-                {
-                    if (LinearScan.isVariableOrRegister(operand))
-                    {
-                        int operandNum = allocator.operandNumber(operand);
-                        if (!liveKillScratch.get(operandNum))
-                        {
-                            liveGenScratch.set(operandNum);
-                        }
-                    }
-                };
                 ValueConsumer defConsumer = (operand, mode, flags) ->
                 {
                     if (LIRValueUtil.isVariable(operand))
@@ -183,8 +172,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
                     op.visitEachInput(useConsumer);
                     op.visitEachAlive(useConsumer);
-                    // Add uses of live locals from interpreter's point of view for proper debug information generation.
-                    op.visitEachState(stateConsumer);
+
                     op.visitEachTemp(defConsumer);
                     op.visitEachOutput(defConsumer);
                 }
@@ -549,16 +537,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             }
         };
 
-        InstructionValueConsumer stateProc = (op, operand, mode, flags) ->
-        {
-            if (LinearScan.isVariableOrRegister(operand))
-            {
-                int opId = op.id();
-                int blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(opId)));
-                addUse((AllocatableValue) operand, blockFrom, opId + 1, RegisterPriority.None, operand.getValueKind());
-            }
-        };
-
         // create a list with all caller-save registers (cpu, fpu, xmm)
         RegisterArray callerSaveRegs = allocator.getRegisterAllocationConfig().getRegisterConfig().getCallerSaveRegisters();
 
@@ -615,14 +593,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 op.visitEachTemp(tempConsumer);
                 op.visitEachAlive(aliveConsumer);
                 op.visitEachInput(inputConsumer);
-
-                /*
-                 * Add uses of live locals from interpreter's point of view for proper
-                 * debug information generation. Treat these operands as temp values (if
-                 * the live range is extended to a call site, the value would be in a
-                 * register at the call otherwise).
-                 */
-                op.visitEachState(stateProc);
 
                 // special steps for some instructions (especially moves)
                 handleMethodArguments(op);

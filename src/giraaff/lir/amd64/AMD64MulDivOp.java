@@ -35,7 +35,8 @@ public class AMD64MulDivOp extends AMD64LIRInstruction
 
     @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue y;
 
-    @State protected LIRFrameState state;
+    // @State
+    protected LIRFrameState state;
 
     public AMD64MulDivOp(AMD64MOp opcode, OperandSize size, LIRKind resultKind, AllocatableValue x, AllocatableValue y)
     {
@@ -82,10 +83,6 @@ public class AMD64MulDivOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        if (state != null)
-        {
-            crb.recordImplicitException(masm.position(), state);
-        }
         if (ValueUtil.isRegister(y))
         {
             opcode.emit(masm, size, ValueUtil.asRegister(y));

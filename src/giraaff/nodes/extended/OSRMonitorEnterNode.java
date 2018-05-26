@@ -25,7 +25,7 @@ public class OSRMonitorEnterNode extends MonitorEnterNode implements LIRLowerabl
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
         // Nothing to do
     }

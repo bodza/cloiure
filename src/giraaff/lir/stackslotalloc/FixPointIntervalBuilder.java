@@ -162,20 +162,15 @@ final class FixPointIntervalBuilder
         }
 
         /**
-         * Process all values of an instruction bottom-up, i.e. definitions before usages. Values
-         * that start or end at the current operation are not included.
+         * Process all values of an instruction bottom-up, i.e. definitions before usages.
+         * Values that start or end at the current operation are not included.
          */
         private void processInstructionBottomUp(LIRInstruction op)
         {
-            // kills
             op.visitEachTemp(defConsumer);
             op.visitEachOutput(defConsumer);
 
-            // gen - values that are considered alive for this state
             op.visitEachAlive(useConsumer);
-            op.visitEachState(useConsumer);
-            // mark locations
-            // gen
             op.visitEachInput(useConsumer);
         }
 

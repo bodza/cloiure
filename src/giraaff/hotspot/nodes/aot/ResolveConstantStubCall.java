@@ -72,8 +72,8 @@ public class ResolveConstantStubCall extends DeoptimizingStubCall implements Can
     public void generate(NodeLIRBuilderTool gen)
     {
         Value stringValue = gen.operand(string);
-        Value result;
         LIRFrameState fs = gen.state(this);
+        Value result;
         if (constant instanceof HotSpotObjectConstant)
         {
             result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitObjectConstantRetrieval(constant, stringValue, fs);

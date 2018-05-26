@@ -17,7 +17,7 @@ import giraaff.nodes.spi.LoweringTool;
  * The {@code StringToBytesNode} transforms a compilation-time String into a byte array in the
  * compiled code.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public final class StringToBytesNode extends FixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<StringToBytesNode> TYPE = NodeClass.create(StringToBytesNode.class);

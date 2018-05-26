@@ -34,11 +34,11 @@ import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
-import giraaff.hotspot.HotSpotDebugInfoBuilder;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotLIRGenerationResult;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.hotspot.HotSpotLockStack;
+import giraaff.hotspot.HotSpotLockStackHolder;
 import giraaff.hotspot.meta.HotSpotConstantLoadAction;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.stubs.Stub;
@@ -74,7 +74,7 @@ import giraaff.util.GraalError;
 public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSpotLIRGenerator
 {
     final GraalHotSpotVMConfig config;
-    private HotSpotDebugInfoBuilder debugInfoBuilder;
+    private HotSpotLockStackHolder lockStackHolder;
 
     protected AMD64HotSpotLIRGenerator(HotSpotProviders providers, GraalHotSpotVMConfig config, LIRGenerationResult lirGenRes)
     {
@@ -224,7 +224,7 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
 
     private HotSpotLockStack getLockStack()
     {
-        return debugInfoBuilder.lockStack();
+        return lockStackHolder.lockStack();
     }
 
     private Register findPollOnReturnScratchRegister()
@@ -352,9 +352,9 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
         return ((HotSpotLIRGenerationResult) super.getResult());
     }
 
-    public void setDebugInfoBuilder(HotSpotDebugInfoBuilder debugInfoBuilder)
+    public void setLockStackHolder(HotSpotLockStackHolder lockStackHolder)
     {
-        this.debugInfoBuilder = debugInfoBuilder;
+        this.lockStackHolder = lockStackHolder;
     }
 
     @Override
@@ -374,13 +374,13 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
             }
         }
 
-        Variable result;
         LIRFrameState debugInfo = null;
         if (hotspotLinkage.needsDebugInfo())
         {
             debugInfo = state;
         }
 
+        Variable result;
         if (hotspotLinkage.needsJavaFrameAnchor())
         {
             Register thread = getProviders().getRegisters().getThreadRegister();
@@ -574,14 +574,7 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     public void beforeRegisterAllocation()
     {
         super.beforeRegisterAllocation();
-        boolean hasDebugInfo = getResult().getLIR().hasDebugInfo();
-        AllocatableValue savedRbp = saveRbp.finalize(hasDebugInfo);
-        if (hasDebugInfo)
-        {
-            getResult().setDeoptimizationRescueSlot(((AMD64FrameMapBuilder) getResult().getFrameMapBuilder()).allocateDeoptimizationRescueSlot());
-        }
-
-        getResult().setMaxInterpreterFrameSize(debugInfoBuilder.maxInterpreterFrameSize());
+        AllocatableValue savedRbp = saveRbp.finalize(false);
 
         for (AMD64HotSpotRestoreRbpOp op : epilogueOps)
         {

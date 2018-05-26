@@ -55,19 +55,19 @@ public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowe
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        LIRKind kind = generator.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
+        LIRKind kind = gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
         Value result = register.asValue(kind);
         if (incoming)
         {
-            generator.getLIRGeneratorTool().emitIncomingValues(new Value[] { result });
+            gen.getLIRGeneratorTool().emitIncomingValues(new Value[] { result });
         }
         if (!directUse)
         {
-            result = generator.getLIRGeneratorTool().emitMove(result);
+            result = gen.getLIRGeneratorTool().emitMove(result);
         }
-        generator.setResult(this, result);
+        gen.setResult(this, result);
     }
 
     @Override

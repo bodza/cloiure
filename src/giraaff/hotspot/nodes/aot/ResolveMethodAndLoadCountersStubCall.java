@@ -59,8 +59,6 @@ public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall i
         Value klassHintValue = gen.operand(klassHint);
         LIRFrameState fs = gen.state(this);
 
-        Value result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitResolveMethodAndLoadCounters(methodConstant, klassHintValue, methodDescriptionValue, fs);
-
-        gen.setResult(this, result);
+        gen.setResult(this, ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitResolveMethodAndLoadCounters(methodConstant, klassHintValue, methodDescriptionValue, fs));
     }
 }

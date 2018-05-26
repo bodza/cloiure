@@ -7,34 +7,34 @@ import giraaff.options.OptionKey;
  */
 public final class GraalOptions
 {
-    // Option "Use compiler intrinsifications."
+    // @Option "Use compiler intrinsifications."
     public static final OptionKey<Boolean> Intrinsify = new OptionKey<>(true);
 
-    // Option "Inline calls with monomorphic type profile."
+    // @Option "Inline calls with monomorphic type profile."
     public static final OptionKey<Boolean> InlineMonomorphicCalls = new OptionKey<>(true);
 
-    // Option "Inline calls with polymorphic type profile."
+    // @Option "Inline calls with polymorphic type profile."
     public static final OptionKey<Boolean> InlinePolymorphicCalls = new OptionKey<>(true);
 
-    // Option "Inline calls with megamorphic type profile (i.e., not all types could be recorded)."
+    // @Option "Inline calls with megamorphic type profile (i.e., not all types could be recorded)."
     public static final OptionKey<Boolean> InlineMegamorphicCalls = new OptionKey<>(true);
 
-    // Option "Maximum desired size of the compiler graph in nodes."
+    // @Option "Maximum desired size of the compiler graph in nodes."
     public static final OptionKey<Integer> MaximumDesiredSize = new OptionKey<>(20000);
 
-    // Option "Minimum probability for methods to be inlined for megamorphic type profiles."
+    // @Option "Minimum probability for methods to be inlined for megamorphic type profiles."
     public static final OptionKey<Double> MegamorphicInliningMinMethodProbability = new OptionKey<>(0.33D);
 
-    // Option "Maximum level of recursive inlining."
+    // @Option "Maximum level of recursive inlining."
     public static final OptionKey<Integer> MaximumRecursiveInlining = new OptionKey<>(5);
 
-    // Option "Graphs with less than this number of nodes are trivial and therefore always inlined."
+    // @Option "Graphs with less than this number of nodes are trivial and therefore always inlined."
     public static final OptionKey<Integer> TrivialInliningSize = new OptionKey<>(10);
 
-    // Option "Inlining is explored up to this number of nodes in the graph for each call site."
+    // @Option "Inlining is explored up to this number of nodes in the graph for each call site."
     public static final OptionKey<Integer> MaximumInliningSize = new OptionKey<>(300);
 
-    // Option "If the previous low-level graph size of the method exceeds the threshold, it is not inlined."
+    // @Option "If the previous low-level graph size of the method exceeds the threshold, it is not inlined."
     public static final OptionKey<Integer> SmallCompiledLowLevelGraphSize = new OptionKey<>(300);
 
     public static final OptionKey<Double> LimitInlinedInvokes = new OptionKey<>(5.0);
@@ -64,13 +64,13 @@ public final class GraalOptions
     public static final OptionKey<Boolean> ZapStackOnMethodEntry = new OptionKey<>(false);
     public static final OptionKey<Boolean> DeoptALot = new OptionKey<>(false);
 
-    // Option "Stress the code emitting explicit exception throwing code."
+    // @Option "Stress the code emitting explicit exception throwing code."
     public static final OptionKey<Boolean> StressExplicitExceptionCode = new OptionKey<>(false);
 
-    // Option "Stress the code emitting invokes with explicit exception edges."
+    // @Option "Stress the code emitting invokes with explicit exception edges."
     public static final OptionKey<Boolean> StressInvokeWithExceptionNode = new OptionKey<>(false);
 
-    // Option "Stress the code by emitting reads at earliest instead of latest point."
+    // @Option "Stress the code by emitting reads at earliest instead of latest point."
     public static final OptionKey<Boolean> StressTestEarlyReads = new OptionKey<>(false);
 
     // Register allocator debugging
@@ -106,9 +106,9 @@ public final class GraalOptions
     public static final OptionKey<Boolean> OptFilterProfiledTypes = new OptionKey<>(true);
     public static final OptionKey<Boolean> OptDevirtualizeInvokesOptimistically = new OptionKey<>(true);
 
-    // Option "Eagerly construct extra snippet info."
+    // @Option "Eagerly construct extra snippet info."
     public static final OptionKey<Boolean> EagerSnippets = new OptionKey<>(false);
 
-    // Option "Use a cache for snippet graphs."
+    // @Option "Use a cache for snippet graphs."
     public static final OptionKey<Boolean> UseSnippetGraphCache = new OptionKey<>(true);
 }

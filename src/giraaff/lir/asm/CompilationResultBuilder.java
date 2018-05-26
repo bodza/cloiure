@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import jdk.vm.ci.code.CodeCacheProvider;
-import jdk.vm.ci.code.DebugInfo;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.code.site.ConstantReference;
 import jdk.vm.ci.code.site.DataSectionReference;
-import jdk.vm.ci.code.site.InfopointReason;
 import jdk.vm.ci.code.site.Mark;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.InvokeTarget;
@@ -116,11 +114,6 @@ public class CompilationResultBuilder
         compilationResult.setTotalFrameSize(frameSize);
     }
 
-    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize)
-    {
-        compilationResult.setMaxInterpreterFrameSize(maxInterpreterFrameSize);
-    }
-
     public Mark recordMark(Object id)
     {
         return compilationResult.recordMark(asm.position(), id);
@@ -141,8 +134,7 @@ public class CompilationResultBuilder
         {
             for (ExceptionInfo ei : exceptionInfoList)
             {
-                int codeOffset = ei.codeOffset;
-                compilationResult.recordExceptionHandler(codeOffset, ei.exceptionEdge.label().position());
+                compilationResult.recordExceptionHandler(ei.codeOffset, ei.exceptionEdge.label().position());
             }
         }
         closeCompilationResult();
@@ -171,50 +163,19 @@ public class CompilationResultBuilder
         }
     }
 
-    public void recordImplicitException(int pcOffset, LIRFrameState info)
-    {
-        compilationResult.recordInfopoint(pcOffset, info.debugInfo(), InfopointReason.IMPLICIT_EXCEPTION);
-    }
-
-    public void recordDirectCall(int posBefore, int posAfter, InvokeTarget callTarget, LIRFrameState info)
-    {
-        DebugInfo debugInfo = info != null ? info.debugInfo() : null;
-        compilationResult.recordCall(posBefore, posAfter - posBefore, callTarget, debugInfo, true);
-    }
-
-    public void recordIndirectCall(int posBefore, int posAfter, InvokeTarget callTarget, LIRFrameState info)
-    {
-        DebugInfo debugInfo = info != null ? info.debugInfo() : null;
-        compilationResult.recordCall(posBefore, posAfter - posBefore, callTarget, debugInfo, false);
-    }
-
-    public void recordInfopoint(int pos, LIRFrameState info, InfopointReason reason)
-    {
-        // infopoints always need debug info
-        DebugInfo debugInfo = info.debugInfo();
-        recordInfopoint(pos, debugInfo, reason);
-    }
-
-    public void recordInfopoint(int pos, DebugInfo debugInfo, InfopointReason reason)
-    {
-        compilationResult.recordInfopoint(pos, debugInfo, reason);
-    }
-
     public void recordInlineDataInCode(Constant data)
     {
-        int pos = asm.position();
         if (data instanceof VMConstant)
         {
-            compilationResult.recordDataPatch(pos, new ConstantReference((VMConstant) data));
+            compilationResult.recordDataPatch(asm.position(), new ConstantReference((VMConstant) data));
         }
     }
 
     public void recordInlineDataInCodeWithNote(Constant data, Object note)
     {
-        int pos = asm.position();
         if (data instanceof VMConstant)
         {
-            compilationResult.recordDataPatchWithNote(pos, new ConstantReference((VMConstant) data), note);
+            compilationResult.recordDataPatchWithNote(asm.position(), new ConstantReference((VMConstant) data), note);
         }
     }
 

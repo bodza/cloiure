@@ -15,7 +15,7 @@ import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-// NodeInfo.allowedUsageTypes = Guard, Anchor
+// @NodeInfo.allowedUsageTypes "Guard, Anchor"
 public abstract class AbstractBeginNode extends FixedWithNextNode implements LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType
 {
     public static final NodeClass<AbstractBeginNode> TYPE = NodeClass.create(AbstractBeginNode.class);

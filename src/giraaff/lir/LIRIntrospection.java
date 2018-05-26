@@ -144,7 +144,6 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
     protected abstract static class LIRFieldsScanner extends FieldsScanner
     {
         public final EconomicMap<Class<? extends Annotation>, OperandModeAnnotation> valueAnnotations;
-        public final ArrayList<FieldsScanner.FieldInfo> states = new ArrayList<>();
 
         public LIRFieldsScanner(FieldsScanner.CalcOffset calc)
         {

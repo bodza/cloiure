@@ -23,7 +23,7 @@ import giraaff.nodeinfo.InputType;
 /**
  * The {@code InvokeNode} represents all kinds of method calls.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke, LIRLowerable, MemoryCheckpoint.Single, UncheckedInterfaceProvider
 {
     public static final NodeClass<InvokeNode> TYPE = NodeClass.create(InvokeNode.class);

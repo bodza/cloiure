@@ -108,8 +108,7 @@ public final class ReentrantBlockIterator
                     {
                         if (current.isLoopEnd())
                         {
-                            // nothing to do... loop ends only lead to loop begins we've already
-                            // visited
+                            // nothing to do... loop ends only lead to loop begins we've already visited
                             states.put(current.getEndNode(), state);
                         }
                         else

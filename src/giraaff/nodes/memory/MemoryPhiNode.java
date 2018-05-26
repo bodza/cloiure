@@ -13,7 +13,7 @@ import giraaff.nodes.ValueNode;
 /**
  * Memory {@code PhiNode}s merge memory dependencies at control flow merges.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public final class MemoryPhiNode extends PhiNode implements MemoryNode
 {
     public static final NodeClass<MemoryPhiNode> TYPE = NodeClass.create(MemoryPhiNode.class);

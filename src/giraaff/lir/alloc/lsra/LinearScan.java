@@ -47,7 +47,7 @@ public class LinearScan
 {
     public static class Options
     {
-        // Option "Enable spill position optimization."
+        // @Option "Enable spill position optimization."
         public static final OptionKey<Boolean> LIROptLSRAOptimizeSpillPosition = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
@@ -739,80 +739,6 @@ public class LinearScan
     protected LinearScanAssignLocationsPhase createAssignLocationsPhase()
     {
         return new LinearScanAssignLocationsPhase(this);
-    }
-
-    class CheckConsumer implements ValueConsumer
-    {
-        boolean ok;
-        Interval curInterval;
-
-        @Override
-        public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
-        {
-            if (ValueUtil.isRegister(operand))
-            {
-                if (intervalFor(operand) == curInterval)
-                {
-                    ok = true;
-                }
-            }
-        }
-    }
-
-    void verifyNoOopsInFixedIntervals()
-    {
-        CheckConsumer checkConsumer = new CheckConsumer();
-
-        Interval fixedIntervals;
-        Interval otherIntervals;
-        fixedIntervals = createUnhandledLists(IS_PRECOLORED_INTERVAL, null).getLeft();
-        // to ensure a walking until the last instruction id, add a dummy interval
-        // with a high operation id
-        otherIntervals = new Interval(Value.ILLEGAL, -1, intervalEndMarker, rangeEndMarker);
-        otherIntervals.addRange(Integer.MAX_VALUE - 2, Integer.MAX_VALUE - 1);
-        IntervalWalker iw = new IntervalWalker(this, fixedIntervals, otherIntervals);
-
-        for (AbstractBlockBase<?> block : sortedBlocks)
-        {
-            ArrayList<LIRInstruction> instructions = ir.getLIRforBlock(block);
-
-            for (int j = 0; j < instructions.size(); j++)
-            {
-                LIRInstruction op = instructions.get(j);
-
-                if (op.hasState())
-                {
-                    iw.walkBefore(op.id());
-                    boolean checkLive = true;
-
-                    /*
-                     * Make sure none of the fixed registers is live across an oopmap since we
-                     * can't handle that correctly.
-                     */
-                    if (checkLive)
-                    {
-                        for (Interval interval = iw.activeLists.get(RegisterBinding.Fixed); !interval.isEndMarker(); interval = interval.next)
-                        {
-                            if (interval.currentTo() > op.id() + 1)
-                            {
-                                /*
-                                 * This interval is live out of this op so make sure that this
-                                 * interval represents some value that's referenced by this op
-                                 * either as an input or output.
-                                 */
-                                checkConsumer.curInterval = interval;
-                                checkConsumer.ok = false;
-
-                                op.visitEachInput(checkConsumer);
-                                op.visitEachAlive(checkConsumer);
-                                op.visitEachTemp(checkConsumer);
-                                op.visitEachOutput(checkConsumer);
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public LIR getLIR()

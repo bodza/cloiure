@@ -22,7 +22,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 {
     public static class Options
     {
-        // Option "Enable spill move elimination."
+        // @Option "Enable spill move elimination."
         public static final OptionKey<Boolean> LIROptLSRAEliminateSpillMoves = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 

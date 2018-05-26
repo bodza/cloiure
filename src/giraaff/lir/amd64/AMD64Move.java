@@ -390,7 +390,8 @@ public class AMD64Move
         public static final LIRInstructionClass<NullCheckOp> TYPE = LIRInstructionClass.create(NullCheckOp.class);
 
         @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         public NullCheckOp(AMD64AddressValue address, LIRFrameState state)
         {
@@ -402,7 +403,6 @@ public class AMD64Move
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            crb.recordImplicitException(masm.position(), state);
             masm.nullCheck(address.toAddress());
         }
 

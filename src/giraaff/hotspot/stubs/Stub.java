@@ -4,10 +4,8 @@ import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.InstalledCode;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.site.Call;
 import jdk.vm.ci.code.site.ConstantReference;
 import jdk.vm.ci.code.site.DataPatch;
-import jdk.vm.ci.code.site.Infopoint;
 import jdk.vm.ci.hotspot.HotSpotCompiledCode;
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.meta.DefaultProfilingInfo;
@@ -212,11 +210,6 @@ public abstract class Stub
                     }
                 }
             }
-        }
-        for (Infopoint infopoint : compResult.getInfopoints())
-        {
-            Call call = (Call) infopoint;
-            HotSpotForeignCallLinkage callLinkage = (HotSpotForeignCallLinkage) call.target;
         }
         return true;
     }

@@ -67,45 +67,6 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
         return interval.location();
     }
 
-    private Value debugInfoProcedure(LIRInstruction op, Value operand)
-    {
-        if (LIRValueUtil.isVirtualStackSlot(operand))
-        {
-            return operand;
-        }
-        int tempOpId = op.id();
-        OperandMode mode = OperandMode.USE;
-        AbstractBlockBase<?> block = allocator.blockForId(tempOpId);
-        if (block.getSuccessorCount() == 1 && tempOpId == allocator.getLastLirInstructionId(block))
-        {
-            /*
-             * Generating debug information for the last instruction of a block. If this instruction
-             * is a branch, spill moves are inserted before this branch and so the wrong operand
-             * would be returned (spill moves at block boundaries are not considered in the live
-             * ranges of intervals).
-             *
-             * Solution: use the first opId of the branch target block instead.
-             */
-            final LIRInstruction instr = allocator.getLIR().getLIRforBlock(block).get(allocator.getLIR().getLIRforBlock(block).size() - 1);
-            if (instr instanceof StandardOp.JumpOp)
-            {
-                if (allocator.getBlockData(block).liveOut.get(allocator.operandNumber(operand)))
-                {
-                    tempOpId = allocator.getFirstLirInstructionId(block.getSuccessors()[0]);
-                    mode = OperandMode.DEF;
-                }
-            }
-        }
-
-        /*
-         * Get current location of operand. The operand must be live because debug information is
-         * considered when building the intervals if the interval is not live, colorLirOperand will
-         * cause an assert on failure.
-         */
-        Value result = colorLirOperand(op, (Variable) operand, mode);
-        return result;
-    }
-
     private void assignLocations(ArrayList<LIRInstruction> instructions)
     {
         int numInst = instructions.size();
@@ -145,14 +106,6 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
             return value;
         }
     };
-    private final InstructionValueProcedure debugInfoProc = new InstructionValueProcedure()
-    {
-        @Override
-        public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
-        {
-            return debugInfoProcedure(instruction, value);
-        }
-    };
 
     /**
      * Assigns the operand of an {@link LIRInstruction}.
@@ -181,9 +134,6 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
         op.forEachAlive(assignProc);
         op.forEachTemp(assignProc);
         op.forEachOutput(assignProc);
-
-        // compute reference map and debug information
-        op.forEachState(debugInfoProc);
 
         // remove useless moves
         if (ValueMoveOp.isValueMoveOp(op))

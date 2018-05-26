@@ -26,7 +26,7 @@ import giraaff.nodes.util.GraphUtil;
 /**
  * A call to the VM via a regular stub.
  */
-// NodeInfo.allowedUsageTypes = Memory
+// @NodeInfo.allowedUsageTypes "Memory"
 public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
 {
     public static final NodeClass<InitializeKlassStubCall> TYPE = NodeClass.create(InitializeKlassStubCall.class);
@@ -59,10 +59,7 @@ public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        Value stringValue = gen.operand(string);
-        LIRFrameState fs = gen.state(this);
-        Value result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, stringValue, fs);
-        gen.setResult(this, result);
+        gen.setResult(this, ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, gen.operand(string), gen.state(this)));
     }
 
     @Override

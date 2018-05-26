@@ -140,7 +140,8 @@ public class AMD64Unary
         @Def({OperandFlag.REG}) protected AllocatableValue result;
         @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue input;
 
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         public MemoryOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AMD64AddressValue input, LIRFrameState state)
         {
@@ -157,10 +158,6 @@ public class AMD64Unary
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (state != null)
-            {
-                crb.recordImplicitException(masm.position(), state);
-            }
             opcode.emit(masm, size, ValueUtil.asRegister(result), input.toAddress());
         }
 

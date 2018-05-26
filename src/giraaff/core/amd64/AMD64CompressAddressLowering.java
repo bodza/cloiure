@@ -67,10 +67,10 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
         }
 
         @Override
-        public void generate(NodeLIRBuilderTool generator)
+        public void generate(NodeLIRBuilderTool gen)
         {
-            LIRKind kind = generator.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
-            generator.setResult(this, heapBaseRegister.asValue(kind));
+            LIRKind kind = gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
+            gen.setResult(this, heapBaseRegister.asValue(kind));
         }
     }
 }

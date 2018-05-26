@@ -16,7 +16,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
     static class Options
     {
-        // Option "Determines whether to treat final fields with default values as constant."
+        // @Option "Determines whether to treat final fields with default values as constant."
         public static final OptionKey<Boolean> TrustFinalDefaultFields = new OptionKey<>(true);
     }
 

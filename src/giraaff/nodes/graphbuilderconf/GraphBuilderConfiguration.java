@@ -185,9 +185,7 @@ public class GraphBuilderConfiguration
     private final boolean eagerResolving;
     private final boolean unresolvedIsError;
     private final BytecodeExceptionMode bytecodeExceptionMode;
-    private final boolean omitAssertions;
     private final ResolvedJavaType[] skippedExceptionTypes;
-    private final boolean insertFullInfopoints;
     private final Plugins plugins;
 
     public enum BytecodeExceptionMode
@@ -210,13 +208,11 @@ public class GraphBuilderConfiguration
         Profile
     }
 
-    protected GraphBuilderConfiguration(boolean eagerResolving, boolean unresolvedIsError, BytecodeExceptionMode bytecodeExceptionMode, boolean omitAssertions, boolean insertFullInfopoints, ResolvedJavaType[] skippedExceptionTypes, Plugins plugins)
+    protected GraphBuilderConfiguration(boolean eagerResolving, boolean unresolvedIsError, BytecodeExceptionMode bytecodeExceptionMode, ResolvedJavaType[] skippedExceptionTypes, Plugins plugins)
     {
         this.eagerResolving = eagerResolving;
         this.unresolvedIsError = unresolvedIsError;
         this.bytecodeExceptionMode = bytecodeExceptionMode;
-        this.omitAssertions = omitAssertions;
-        this.insertFullInfopoints = insertFullInfopoints;
         this.skippedExceptionTypes = skippedExceptionTypes;
         this.plugins = plugins;
     }
@@ -229,7 +225,7 @@ public class GraphBuilderConfiguration
     public GraphBuilderConfiguration copy()
     {
         Plugins newPlugins = new Plugins(plugins);
-        GraphBuilderConfiguration result = new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, newPlugins);
+        GraphBuilderConfiguration result = new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, newPlugins);
         return result;
     }
 
@@ -241,33 +237,22 @@ public class GraphBuilderConfiguration
      */
     public GraphBuilderConfiguration withUnresolvedIsError(boolean newUnresolvedIsError)
     {
-        return new GraphBuilderConfiguration(eagerResolving, newUnresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, newUnresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withEagerResolving(boolean newEagerResolving)
     {
-        return new GraphBuilderConfiguration(newEagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(newEagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withSkippedExceptionTypes(ResolvedJavaType[] newSkippedExceptionTypes)
     {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, newSkippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, newSkippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withBytecodeExceptionMode(BytecodeExceptionMode newBytecodeExceptionMode)
     {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, newBytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
-    }
-
-    public GraphBuilderConfiguration withOmitAssertions(boolean newOmitAssertions)
-    {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, newOmitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
-    }
-
-    public GraphBuilderConfiguration withFullInfopoints(boolean newInsertFullInfopoints)
-    {
-        ResolvedJavaType[] newSkippedExceptionTypes = skippedExceptionTypes == EMPTY ? EMPTY : Arrays.copyOf(skippedExceptionTypes, skippedExceptionTypes.length);
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, newInsertFullInfopoints, newSkippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, newBytecodeExceptionMode, skippedExceptionTypes, plugins);
     }
 
     public ResolvedJavaType[] getSkippedExceptionTypes()
@@ -285,24 +270,14 @@ public class GraphBuilderConfiguration
         return bytecodeExceptionMode;
     }
 
-    public boolean omitAssertions()
-    {
-        return omitAssertions;
-    }
-
-    public boolean insertFullInfopoints()
-    {
-        return insertFullInfopoints;
-    }
-
     public static GraphBuilderConfiguration getDefault(Plugins plugins)
     {
-        return new GraphBuilderConfiguration(false, false, BytecodeExceptionMode.Profile, false, false, EMPTY, plugins);
+        return new GraphBuilderConfiguration(false, false, BytecodeExceptionMode.Profile, EMPTY, plugins);
     }
 
     public static GraphBuilderConfiguration getSnippetDefault(Plugins plugins)
     {
-        return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, false, false, EMPTY, plugins);
+        return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, EMPTY, plugins);
     }
 
     /**

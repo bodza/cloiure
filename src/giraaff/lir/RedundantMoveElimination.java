@@ -242,14 +242,14 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                     }
                     else
                     {
-                        // Merge the states of predecessor blocks
+                        // Merge the states of predecessor blocks.
                         for (AbstractBlockBase<?> predecessor : block.getPredecessors())
                         {
                             BlockData predData = blockData.get(predecessor);
                             newState |= mergeState(data.entryState, predData.exitState, valueNum);
                         }
                     }
-                    // Advance by the value numbers which are "consumed" by clearValues and mergeState
+                    // Advance by the value numbers which are "consumed" by clearValues and mergeState.
                     valueNum += data.entryState.length;
 
                     if (newState || firstRound)
@@ -388,23 +388,10 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             OutputValueConsumer outputValueConsumer = new OutputValueConsumer(valueNum);
 
             op.visitEachTemp(outputValueConsumer);
-            // Semantically the output values are written _after_ the temp values
+            // Semantically the output values are written _after_ the temp values.
             op.visitEachOutput(outputValueConsumer);
 
             valueNum = outputValueConsumer.opValueNum;
-
-            if (op.hasState())
-            {
-                /*
-                 * All instructions with framestates (mostly method calls), may do garbage
-                 * collection. GC will rewrite all object references which are live at this
-                 * point. So we can't rely on their values. It would be sufficient to just kill
-                 * all values which are referenced in the state (or all values which are not),
-                 * but for simplicity we kill all values.
-                 */
-                clearValuesOfKindObject(state, valueNum);
-                valueNum += state.length;
-            }
 
             return valueNum;
         }

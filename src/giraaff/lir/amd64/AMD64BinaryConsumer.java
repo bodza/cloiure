@@ -189,7 +189,8 @@ public class AMD64BinaryConsumer
         @Use({OperandFlag.REG}) protected AllocatableValue x;
         @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue y;
 
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         public MemoryRMOp(AMD64RMOp opcode, OperandSize size, AllocatableValue x, AMD64AddressValue y, LIRFrameState state)
         {
@@ -206,10 +207,6 @@ public class AMD64BinaryConsumer
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (state != null)
-            {
-                crb.recordImplicitException(masm.position(), state);
-            }
             opcode.emit(masm, size, ValueUtil.asRegister(x), y.toAddress());
         }
 
@@ -239,7 +236,8 @@ public class AMD64BinaryConsumer
         @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue x;
         @Use({OperandFlag.REG}) protected AllocatableValue y;
 
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         public MemoryMROp(AMD64MROp opcode, OperandSize size, AMD64AddressValue x, AllocatableValue y, LIRFrameState state)
         {
@@ -256,10 +254,6 @@ public class AMD64BinaryConsumer
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (state != null)
-            {
-                crb.recordImplicitException(masm.position(), state);
-            }
             opcode.emit(masm, size, x.toAddress(), ValueUtil.asRegister(y));
         }
 
@@ -288,7 +282,8 @@ public class AMD64BinaryConsumer
         @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue x;
         private final int y;
 
-        @State protected LIRFrameState state;
+        // @State
+        protected LIRFrameState state;
 
         public MemoryConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AMD64AddressValue x, int y, LIRFrameState state)
         {
@@ -315,10 +310,6 @@ public class AMD64BinaryConsumer
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (state != null)
-            {
-                crb.recordImplicitException(masm.position(), state);
-            }
             opcode.emit(masm, size, x.toAddress(), y);
         }
 

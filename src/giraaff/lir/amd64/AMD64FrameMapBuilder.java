@@ -27,9 +27,4 @@ public class AMD64FrameMapBuilder extends FrameMapBuilderImpl
     {
         ((AMD64FrameMap) getFrameMap()).freeRBPSpillSlot();
     }
-
-    public StackSlot allocateDeoptimizationRescueSlot()
-    {
-        return ((AMD64FrameMap) getFrameMap()).allocateDeoptimizationRescueSlot();
-    }
 }

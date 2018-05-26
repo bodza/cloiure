@@ -2,8 +2,6 @@ package giraaff.hotspot.stubs;
 
 import java.lang.reflect.Method;
 
-import jdk.vm.ci.meta.Local;
-import jdk.vm.ci.meta.LocalVariableTable;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
@@ -114,17 +112,6 @@ public abstract class SnippetStub extends Stub implements Snippets
     protected BytecodeProvider getReplacementsBytecodeProvider()
     {
         return providers.getReplacements().getDefaultReplacementBytecodeProvider();
-    }
-
-    protected boolean checkConstArg(int index, String expectedName)
-    {
-        LocalVariableTable lvt = method.getLocalVariableTable();
-        if (lvt != null)
-        {
-            Local local = lvt.getLocal(index, 0);
-            String actualName = local.getName();
-        }
-        return true;
     }
 
     protected Object[] makeConstArgs()

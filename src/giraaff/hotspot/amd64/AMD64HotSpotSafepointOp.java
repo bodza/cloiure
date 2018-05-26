@@ -3,7 +3,6 @@ package giraaff.hotspot.amd64;
 import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.site.InfopointReason;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
@@ -30,7 +29,8 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotSafepointOp> TYPE = LIRInstructionClass.create(AMD64HotSpotSafepointOp.class);
 
-    @State protected LIRFrameState state;
+    // @State
+    protected LIRFrameState state;
     @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) private AllocatableValue temp;
 
     private final GraalHotSpotVMConfig config;
@@ -86,21 +86,11 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
         {
             asm.movq(scratch, config.safepointPollingAddress);
             crb.recordMark(atReturn ? config.MARKID_POLL_RETURN_FAR : config.MARKID_POLL_FAR);
-            final int pos = asm.position();
-            if (state != null)
-            {
-                crb.recordInfopoint(pos, state, InfopointReason.SAFEPOINT);
-            }
             asm.testl(AMD64.rax, new AMD64Address(scratch));
         }
         else
         {
             crb.recordMark(atReturn ? config.MARKID_POLL_RETURN_NEAR : config.MARKID_POLL_NEAR);
-            final int pos = asm.position();
-            if (state != null)
-            {
-                crb.recordInfopoint(pos, state, InfopointReason.SAFEPOINT);
-            }
             // The C++ code transforms the polling page offset into an RIP displacement
             // to the real address at that offset in the polling page.
             asm.testl(AMD64.rax, new AMD64Address(AMD64.rip, 0));
@@ -111,11 +101,6 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
     {
         asm.movptr(scratch, new AMD64Address(thread, config.threadPollingPageOffset));
         crb.recordMark(atReturn ? config.MARKID_POLL_RETURN_FAR : config.MARKID_POLL_FAR);
-        final int pos = asm.position();
-        if (state != null)
-        {
-            crb.recordInfopoint(pos, state, InfopointReason.SAFEPOINT);
-        }
         asm.testl(AMD64.rax, new AMD64Address(scratch));
     }
 }

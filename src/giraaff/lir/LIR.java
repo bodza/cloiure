@@ -60,24 +60,6 @@ public final class LIR extends LIRGenerator.VariableProvider
         return options;
     }
 
-    /**
-     * Determines if any instruction in the LIR has debug info associated with it.
-     */
-    public boolean hasDebugInfo()
-    {
-        for (AbstractBlockBase<?> b : linearScanOrder())
-        {
-            for (LIRInstruction op : getLIRforBlock(b))
-            {
-                if (op.hasState())
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public ArrayList<LIRInstruction> getLIRforBlock(AbstractBlockBase<?> block)
     {
         return lirInstructions.get(block);
@@ -136,22 +118,6 @@ public final class LIR extends LIRGenerator.VariableProvider
             }
         }
         return null;
-    }
-
-    /**
-     * Gets the exception edge (if any) originating at a given operation.
-     */
-    public static LabelRef getExceptionEdge(LIRInstruction op)
-    {
-        final LabelRef[] exceptionEdge = { null };
-        op.forEachState(state ->
-        {
-            if (state.exceptionEdge != null)
-            {
-                exceptionEdge[0] = state.exceptionEdge;
-            }
-        });
-        return exceptionEdge[0];
     }
 
     public void resetLabels()

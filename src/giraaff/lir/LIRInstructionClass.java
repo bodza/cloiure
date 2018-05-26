@@ -24,13 +24,11 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     }
 
     private static final Class<LIRInstruction> INSTRUCTION_CLASS = LIRInstruction.class;
-    private static final Class<LIRFrameState> STATE_CLASS = LIRFrameState.class;
 
     private final Values uses;
     private final Values alives;
     private final Values temps;
     private final Values defs;
-    private final Fields states;
 
     private final boolean isMoveOp;
     private final boolean isValueMoveOp;
@@ -56,7 +54,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
         temps = new Values(ifs.valueAnnotations.get(LIRInstruction.Temp.class));
         defs = new Values(ifs.valueAnnotations.get(LIRInstruction.Def.class));
 
-        states = new Fields(ifs.states);
         data = new Fields(ifs.data);
 
         opcodeConstant = ifs.opcodeConstant;
@@ -117,8 +114,8 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
         protected EnumSet<OperandFlag> getFlags(Field field)
         {
             EnumSet<OperandFlag> result = EnumSet.noneOf(OperandFlag.class);
-            // Unfortunately, annotations cannot have class hierarchies or implement interfaces, so
-            // we have to duplicate the code for every operand mode.
+            // Unfortunately, annotations cannot have class hierarchies or implement interfaces,
+            // so we have to duplicate the code for every operand mode.
             // Unfortunately, annotations cannot have an EnumSet property, so we have to convert
             // from arrays to EnumSet manually.
             if (field.isAnnotationPresent(LIRInstruction.Use.class))
@@ -167,15 +164,7 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
         @Override
         protected void scanField(Field field, long offset)
         {
-            Class<?> type = field.getType();
-            if (STATE_CLASS.isAssignableFrom(type))
-            {
-                states.add(new FieldsScanner.FieldInfo(offset, field.getName(), type, field.getDeclaringClass()));
-            }
-            else
-            {
-                super.scanField(field, offset);
-            }
+            super.scanField(field, offset);
 
             if (field.getAnnotation(Opcode.class) != null)
             {
@@ -187,7 +176,7 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     @Override
     public Fields[] getAllFields()
     {
-        return new Fields[] { data, uses, alives, temps, defs, states };
+        return new Fields[] { data, uses, alives, temps, defs };
     }
 
     @Override
@@ -202,8 +191,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
         temps.appendFields(sb);
         sb.append("] def[");
         defs.appendFields(sb);
-        sb.append("] state[");
-        states.appendFields(sb);
         sb.append("] data[");
         data.appendFields(sb);
         sb.append("]");
@@ -239,18 +226,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     final boolean hasOperands()
     {
         return uses.getCount() > 0 || alives.getCount() > 0 || temps.getCount() > 0 || defs.getCount() > 0;
-    }
-
-    final boolean hasState(LIRInstruction obj)
-    {
-        for (int i = 0; i < states.getCount(); i++)
-        {
-            if (states.getObject(obj, i) != null)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     final void forEachUse(LIRInstruction obj, InstructionValueProcedure proc)
@@ -291,42 +266,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     final void visitEachDef(LIRInstruction obj, InstructionValueConsumer proc)
     {
         visitEach(obj, defs, OperandMode.DEF, proc);
-    }
-
-    final void forEachState(LIRInstruction obj, InstructionValueProcedure proc)
-    {
-        for (int i = 0; i < states.getCount(); i++)
-        {
-            LIRFrameState state = (LIRFrameState) states.getObject(obj, i);
-            if (state != null)
-            {
-                state.forEachState(obj, proc);
-            }
-        }
-    }
-
-    final void visitEachState(LIRInstruction obj, InstructionValueConsumer proc)
-    {
-        for (int i = 0; i < states.getCount(); i++)
-        {
-            LIRFrameState state = (LIRFrameState) states.getObject(obj, i);
-            if (state != null)
-            {
-                state.visitEachState(obj, proc);
-            }
-        }
-    }
-
-    final void forEachState(LIRInstruction obj, InstructionStateProcedure proc)
-    {
-        for (int i = 0; i < states.getCount(); i++)
-        {
-            LIRFrameState state = (LIRFrameState) states.getObject(obj, i);
-            if (state != null)
-            {
-                proc.doState(obj, state);
-            }
-        }
     }
 
     final Value forEachRegisterHint(LIRInstruction obj, OperandMode mode, InstructionValueProcedure proc)
@@ -375,39 +314,22 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
 
     String toString(LIRInstruction obj)
     {
-        StringBuilder result = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-        appendValues(result, obj, "", " = ", "(", ")", new String[] { "" }, defs);
-        result.append(String.valueOf(getOpcode(obj)).toUpperCase());
-        appendValues(result, obj, " ", "", "(", ")", new String[] { "", "~" }, uses, alives);
-        appendValues(result, obj, " ", "", "{", "}", new String[] { "" }, temps);
+        appendValues(sb, obj, "", " = ", "(", ")", new String[] { "" }, defs);
+        sb.append(String.valueOf(getOpcode(obj)).toUpperCase());
+        appendValues(sb, obj, " ", "", "(", ")", new String[] { "", "~" }, uses, alives);
+        appendValues(sb, obj, " ", "", "{", "}", new String[] { "" }, temps);
 
         for (int i = 0; i < data.getCount(); i++)
         {
-            if (i == opcodeIndex)
+            if (i != opcodeIndex)
             {
-                continue;
-            }
-            result.append(" ").append(data.getName(i)).append(": ").append(getFieldString(obj, i, data));
-        }
-
-        for (int i = 0; i < states.getCount(); i++)
-        {
-            LIRFrameState state = (LIRFrameState) states.getObject(obj, i);
-            if (state != null)
-            {
-                result.append(" ").append(states.getName(i)).append(" [bci:");
-                String sep = "";
-                for (BytecodeFrame cur = state.topFrame; cur != null; cur = cur.caller())
-                {
-                    result.append(sep).append(cur.getBCI());
-                    sep = ", ";
-                }
-                result.append("]");
+                sb.append(" ").append(data.getName(i)).append(": ").append(getFieldString(obj, i, data));
             }
         }
 
-        return result.toString();
+        return sb.toString();
     }
 
     final boolean isMoveOp()

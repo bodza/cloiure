@@ -27,7 +27,6 @@ import giraaff.graph.GraalGraphError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeMap;
 import giraaff.graph.iterators.NodeIterable;
-import giraaff.lir.FullInfopointOp;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LabelRef;
@@ -47,7 +46,6 @@ import giraaff.nodes.DeoptimizingNode;
 import giraaff.nodes.DirectCallTargetNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FrameState;
-import giraaff.nodes.FullInfopointNode;
 import giraaff.nodes.IfNode;
 import giraaff.nodes.IndirectCallTargetNode;
 import giraaff.nodes.Invoke;
@@ -82,7 +80,7 @@ import giraaff.util.GraalError;
 public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 {
     private final NodeMap<Value> nodeOperands;
-    private final DebugInfoBuilder debugInfoBuilder;
+    private final LockStackHolder lockStackHolder;
 
     protected final LIRGenerator gen;
 
@@ -92,13 +90,10 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     {
         this.gen = (LIRGenerator) gen;
         this.nodeOperands = graph.createNodeMap();
-        this.debugInfoBuilder = createDebugInfoBuilder(graph, this);
+        this.lockStackHolder = createLockStackHolder();
     }
 
-    protected DebugInfoBuilder createDebugInfoBuilder(StructuredGraph graph, NodeValueMap nodeValueMap)
-    {
-        return new DebugInfoBuilder(nodeValueMap);
-    }
+    protected abstract LockStackHolder createLockStackHolder();
 
     /**
      * Returns the operand that has been previously initialized by {@link #setResult(ValueNode, Value)} with the result
@@ -109,8 +104,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     @Override
     public Value operand(Node node)
     {
-        Value operand = getOperand(node);
-        return operand;
+        return getOperand(node);
     }
 
     @Override
@@ -628,25 +622,9 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         }
     }
 
-    public DebugInfoBuilder getDebugInfoBuilder()
+    public LockStackHolder getLockStackHolder()
     {
-        return debugInfoBuilder;
-    }
-
-    private static FrameState getFrameState(DeoptimizingNode deopt)
-    {
-        if (deopt instanceof DeoptimizingNode.DeoptBefore)
-        {
-            return ((DeoptimizingNode.DeoptBefore) deopt).stateBefore();
-        }
-        else if (deopt instanceof DeoptimizingNode.DeoptDuring)
-        {
-            return ((DeoptimizingNode.DeoptDuring) deopt).stateDuring();
-        }
-        else
-        {
-            return ((DeoptimizingNode.DeoptAfter) deopt).stateAfter();
-        }
+        return lockStackHolder;
     }
 
     @Override
@@ -656,7 +634,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         {
             return null;
         }
-        return stateFor(getFrameState(deopt));
+        return LIRFrameState.NO_STATE;
     }
 
     public LIRFrameState stateWithExceptionEdge(DeoptimizingNode deopt, LabelRef exceptionEdge)
@@ -665,34 +643,22 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         {
             return null;
         }
-        return stateForWithExceptionEdge(getFrameState(deopt), exceptionEdge);
+        return stateForWithExceptionEdge(exceptionEdge);
     }
 
-    public LIRFrameState stateFor(FrameState state)
-    {
-        return stateForWithExceptionEdge(state, null);
-    }
-
-    public LIRFrameState stateForWithExceptionEdge(FrameState state, LabelRef exceptionEdge)
+    public LIRFrameState stateForWithExceptionEdge(LabelRef exceptionEdge)
     {
         if (gen.needOnlyOopMaps())
         {
-            return new LIRFrameState(null, null, null);
+            return LIRFrameState.NO_STATE;
         }
-        return getDebugInfoBuilder().build(state, exceptionEdge);
+        return new LIRFrameState(exceptionEdge);
     }
 
     @Override
     public void emitOverflowCheckBranch(AbstractBeginNode overflowSuccessor, AbstractBeginNode next, Stamp stamp, double probability)
     {
-        LIRKind cmpKind = getLIRGeneratorTool().getLIRKind(stamp);
-        gen.emitOverflowCheckBranch(getLIRBlock(overflowSuccessor), getLIRBlock(next), cmpKind, probability);
-    }
-
-    @Override
-    public void visitFullInfopointNode(FullInfopointNode i)
-    {
-        append(new FullInfopointOp(stateFor(i.getState()), i.getReason()));
+        gen.emitOverflowCheckBranch(getLIRBlock(overflowSuccessor), getLIRBlock(next), getLIRGeneratorTool().getLIRKind(stamp), probability);
     }
 
     @Override

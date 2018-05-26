@@ -20,7 +20,7 @@ import giraaff.nodes.calc.BinaryArithmeticNode;
  * Represents an address that is composed of a base and an offset. The base can be either a
  * {@link JavaKind#Object}, a word-sized integer or another pointer. The offset must be a word-sized integer.
  */
-// NodeInfo.allowedUsageTypes = Association
+// @NodeInfo.allowedUsageTypes "Association"
 public class OffsetAddressNode extends AddressNode implements Canonicalizable
 {
     public static final NodeClass<OffsetAddressNode> TYPE = NodeClass.create(OffsetAddressNode.class);

@@ -17,7 +17,7 @@ import giraaff.nodes.spi.LoweringTool;
  * Represents an atomic compare-and-swap operation The result is a boolean that contains whether the
  * value matched the expected value.
  */
-// NodeInfo.allowedUsageTypes = Value, Memory
+// @NodeInfo.allowedUsageTypes "Value, Memory"
 public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<UnsafeCompareAndSwapNode> TYPE = NodeClass.create(UnsafeCompareAndSwapNode.class);

@@ -43,7 +43,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
 {
     public static class Options
     {
-        // Option "Use linear scan stack slot allocation."
+        // @Option "Use linear scan stack slot allocation."
         public static final NestedBooleanOptionKey LIROptLSStackSlotAllocator = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
@@ -336,7 +336,6 @@ public final class LSStackSlotAllocator extends AllocationPhase
             {
                 op.forEachInput(assignSlot);
                 op.forEachAlive(assignSlot);
-                op.forEachState(assignSlot);
 
                 op.forEachTemp(assignSlot);
                 op.forEachOutput(assignSlot);

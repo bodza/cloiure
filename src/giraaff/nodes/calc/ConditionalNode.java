@@ -292,9 +292,9 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator)
+    public void generate(NodeLIRBuilderTool gen)
     {
-        generator.emitConditional(this);
+        gen.emitConditional(this);
     }
 
     public ConditionalNode(StructuredGraph graph, CanonicalCondition condition, ValueNode x, ValueNode y)

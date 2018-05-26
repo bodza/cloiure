@@ -7,15 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import jdk.vm.ci.code.DebugInfo;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.site.Call;
 import jdk.vm.ci.code.site.ConstantReference;
 import jdk.vm.ci.code.site.DataPatch;
 import jdk.vm.ci.code.site.DataSectionReference;
 import jdk.vm.ci.code.site.ExceptionHandler;
-import jdk.vm.ci.code.site.Infopoint;
-import jdk.vm.ci.code.site.InfopointReason;
 import jdk.vm.ci.code.site.Mark;
 import jdk.vm.ci.code.site.Reference;
 import jdk.vm.ci.code.site.Site;
@@ -41,15 +36,11 @@ public class CompilationResult
 
     private final DataSection dataSection = new DataSection();
 
-    private final List<Infopoint> infopoints = new ArrayList<>();
     private final List<DataPatch> dataPatches = new ArrayList<>();
     private final List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
     private final List<Mark> marks = new ArrayList<>();
 
     private int totalFrameSize = -1;
-    private int maxInterpreterFrameSize = -1;
-
-    private StackSlot customStackArea = null;
 
     private final String name;
 
@@ -127,7 +118,6 @@ public class CompilationResult
         {
             CompilationResult that = (CompilationResult) obj;
             if (this.entryBCI == that.entryBCI &&
-                Objects.equals(this.customStackArea, that.customStackArea) &&
                 this.totalFrameSize == that.totalFrameSize &&
                 this.targetCodeSize == that.targetCodeSize &&
                 Objects.equals(this.name, that.name) &&
@@ -135,7 +125,6 @@ public class CompilationResult
                 Objects.equals(this.dataSection, that.dataSection) &&
                 Objects.equals(this.exceptionHandlers, that.exceptionHandlers) &&
                 Objects.equals(this.dataPatches, that.dataPatches) &&
-                Objects.equals(this.infopoints, that.infopoints) &&
                 Objects.equals(this.marks,  that.marks) &&
                 Arrays.equals(this.assumptions, that.assumptions) &&
                 Arrays.equals(targetCode, that.targetCode))
@@ -287,8 +276,7 @@ public class CompilationResult
     }
 
     /**
-     * Sets the total frame size in bytes. This includes the return address pushed onto the stack,
-     * if any.
+     * Sets the total frame size in bytes. This includes the return address pushed onto the stack, if any.
      *
      * @param size the size of the frame in bytes
      */
@@ -296,17 +284,6 @@ public class CompilationResult
     {
         checkOpen();
         totalFrameSize = size;
-    }
-
-    public int getMaxInterpreterFrameSize()
-    {
-        return maxInterpreterFrameSize;
-    }
-
-    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize)
-    {
-        checkOpen();
-        this.maxInterpreterFrameSize = maxInterpreterFrameSize;
     }
 
     /**
@@ -349,22 +326,6 @@ public class CompilationResult
     }
 
     /**
-     * Records a call in the code array.
-     *
-     * @param codePos the position of the call in the code array
-     * @param size the size of the call instruction
-     * @param target the being called
-     * @param debugInfo the debug info for the call
-     * @param direct specifies if this is a {@linkplain Call#direct direct} call
-     */
-    public void recordCall(int codePos, int size, InvokeTarget target, DebugInfo debugInfo, boolean direct)
-    {
-        checkOpen();
-        final Call call = new Call(target, codePos, size, direct, debugInfo);
-        addInfopoint(call);
-    }
-
-    /**
      * Records an exception handler for this method.
      *
      * @param codePos the position in the code that is covered by the handler
@@ -374,60 +335,6 @@ public class CompilationResult
     {
         checkOpen();
         exceptionHandlers.add(new ExceptionHandler(codePos, handlerPos));
-    }
-
-    /**
-     * Validate if the exception handler for codePos already exists and handlerPos is different.
-     *
-     * @return true if the validation is successful
-     */
-    private boolean validateExceptionHandlerAdd(int codePos, int handlerPos)
-    {
-        ExceptionHandler exHandler = getExceptionHandlerForCodePos(codePos);
-        return exHandler == null || exHandler.handlerPos == handlerPos;
-    }
-
-    /**
-     * Returns the first ExceptionHandler which matches codePos.
-     *
-     * @param codePos position to search for
-     * @return first matching ExceptionHandler
-     */
-    private ExceptionHandler getExceptionHandlerForCodePos(int codePos)
-    {
-        for (ExceptionHandler h : exceptionHandlers)
-        {
-            if (h.pcOffset == codePos)
-            {
-                return h;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Records an infopoint in the code array.
-     *
-     * @param codePos the position of the infopoint in the code array
-     * @param debugInfo the debug info for the infopoint
-     */
-    public void recordInfopoint(int codePos, DebugInfo debugInfo, InfopointReason reason)
-    {
-        addInfopoint(new Infopoint(codePos, debugInfo, reason));
-    }
-
-    /**
-     * Records a custom infopoint in the code section.
-     *
-     * Compiler implementations can use this method to record non-standard infopoints, which are not
-     * handled by dedicated methods like {@link #recordCall}.
-     *
-     * @param infopoint the infopoint to record, usually a derived class from {@link Infopoint}
-     */
-    public void addInfopoint(Infopoint infopoint)
-    {
-        checkOpen();
-        infopoints.add(infopoint);
     }
 
     /**
@@ -445,25 +352,6 @@ public class CompilationResult
     }
 
     /**
-     * Start of the custom stack area.
-     *
-     * @return the first stack slot of the custom stack area
-     */
-    public StackSlot getCustomStackArea()
-    {
-        return customStackArea;
-    }
-
-    /**
-     * @see #getCustomStackArea()
-     */
-    public void setCustomStackAreaOffset(StackSlot slot)
-    {
-        checkOpen();
-        customStackArea = slot;
-    }
-
-    /**
      * @return the machine code generated for this method
      */
     public byte[] getTargetCode()
@@ -477,18 +365,6 @@ public class CompilationResult
     public int getTargetCodeSize()
     {
         return targetCodeSize;
-    }
-
-    /**
-     * @return the list of infopoints, sorted by {@link Site#pcOffset}
-     */
-    public List<Infopoint> getInfopoints()
-    {
-        if (infopoints.isEmpty())
-        {
-            return Collections.emptyList();
-        }
-        return Collections.unmodifiableList(infopoints);
     }
 
     /**
@@ -549,15 +425,13 @@ public class CompilationResult
     }
 
     /**
-     * Clears the information in this object pertaining to generating code. That is, the
-     * {@linkplain #getMarks() marks}, {@linkplain #getInfopoints() infopoints},
-     * {@linkplain #getExceptionHandlers() exception handlers} and {@linkplain #getDataPatches() data patches}
-     * recorded in this object are cleared.
+     * Clears the information in this object pertaining to generating code.
+     * That is, the {@linkplain #getMarks() marks}, {@linkplain #getExceptionHandlers() exception handlers}
+     * and {@linkplain #getDataPatches() data patches} recorded in this object are cleared.
      */
     public void resetForEmittingCode()
     {
         checkOpen();
-        infopoints.clear();
         dataPatches.clear();
         exceptionHandlers.clear();
         marks.clear();

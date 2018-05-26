@@ -40,11 +40,11 @@ class UseEntry
     private static void replaceValue(LIRInstruction op, Value oldValue, Value newValue)
     {
         ValueProcedure proc = (value, mode, flags) -> value.identityEquals(oldValue) ? newValue : value;
+
         op.forEachAlive(proc);
         op.forEachInput(proc);
         op.forEachOutput(proc);
         op.forEachTemp(proc);
-        op.forEachState(proc);
     }
 
     public Value getValue()

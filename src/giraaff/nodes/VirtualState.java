@@ -8,7 +8,7 @@ import giraaff.nodeinfo.InputType;
  * Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
  * Subclasses of this class will be treated in a special way by the scheduler.
  */
-// NodeInfo.allowedUsageTypes = State
+// @NodeInfo.allowedUsageTypes "State"
 public abstract class VirtualState extends Node
 {
     protected VirtualState(NodeClass<? extends VirtualState> c)

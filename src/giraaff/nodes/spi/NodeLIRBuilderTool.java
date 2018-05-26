@@ -15,7 +15,6 @@ import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractEndNode;
 import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.DeoptimizingNode;
-import giraaff.nodes.FullInfopointNode;
 import giraaff.nodes.IfNode;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.LoopEndNode;
@@ -50,8 +49,6 @@ public interface NodeLIRBuilderTool extends NodeValueMap
     // These methods define the contract a runtime specific backend must provide.
 
     void visitSafepointNode(SafepointNode i);
-
-    void visitFullInfopointNode(FullInfopointNode i);
 
     LIRGeneratorTool getLIRGeneratorTool();
 

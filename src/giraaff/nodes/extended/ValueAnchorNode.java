@@ -20,7 +20,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * The ValueAnchor instruction keeps non-CFG (floating) nodes above a certain point in the graph.
  */
-// NodeInfo.allowedUsageTypes = Anchor, Guard
+// @NodeInfo.allowedUsageTypes "Anchor, Guard"
 public final class ValueAnchorNode extends FixedWithNextNode implements LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode
 {
     public static final NodeClass<ValueAnchorNode> TYPE = NodeClass.create(ValueAnchorNode.class);

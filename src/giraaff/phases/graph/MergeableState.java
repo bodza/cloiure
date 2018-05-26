@@ -36,8 +36,7 @@ public abstract class MergeableState<T>
      * This method is called after all {@link LoopEndNode}s belonging to a loop have been visited.
      *
      * @param loopBegin the begin node of the loop
-     * @param loopEndStates the states at the loop ends, sorted according to
-     *            {@link LoopBeginNode#orderedLoopEnds()}
+     * @param loopEndStates the states at the loop ends, sorted according to {@link LoopBeginNode#orderedLoopEnds()}
      */
     public void loopEnds(LoopBeginNode loopBegin, List<T> loopEndStates)
     {
