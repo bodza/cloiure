@@ -1,13 +1,11 @@
 package giraaff.hotspot.amd64;
 
 import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
@@ -21,7 +19,6 @@ import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.code.CompilationResult;
 import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.GraalOptions;
-import giraaff.core.common.LIRKind;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.target.Backend;
 import giraaff.hotspot.GraalHotSpotVMConfig;
@@ -29,7 +26,6 @@ import giraaff.hotspot.HotSpotDataBuilder;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.HotSpotHostBackend;
 import giraaff.hotspot.HotSpotLIRGenerationResult;
-import giraaff.hotspot.meta.HotSpotConstantLoadAction;
 import giraaff.hotspot.meta.HotSpotForeignCallsProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.stubs.Stub;
@@ -145,8 +141,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
                 if (!isStub)
                 {
                     emitStackOverflowCheck(crb);
-                    // assert asm.position() - verifiedEntryPointOffset >=
-                    // PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE;
                 }
                 if (!isStub && asm.position() == verifiedEntryPointOffset)
                 {
@@ -224,13 +218,13 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         RegisterConfig regConfig = frameMap.getRegisterConfig();
         Label verifiedEntry = new Label();
 
-        // Emit the prefix
+        // emit the prefix
         emitCodePrefix(installedCodeOwner, crb, asm, regConfig, verifiedEntry);
 
-        // Emit code for the LIR
+        // emit code for the LIR
         emitCodeBody(installedCodeOwner, crb, lir);
 
-        // Emit the suffix
+        // emit the suffix
         emitCodeSuffix(installedCodeOwner, crb, asm, frameMap);
     }
 
@@ -256,7 +250,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
                 AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src, config);
                 if (config.narrowKlassBase != 0)
                 {
-                    // The heap base register was destroyed above, so restore it
+                    // the heap base register was destroyed above, so restore it
                     asm.movq(providers.getRegisters().getHeapBaseRegister(), config.narrowOopBase);
                 }
                 asm.cmpq(inlineCacheKlass, register);
@@ -301,8 +295,8 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         }
         else
         {
-            // No need to emit the stubs for entries back into the method since
-            // it has no calls that can cause such "return" entries
+            // No need to emit the stubs for entries back into the method,
+            // since it has no calls that can cause such "return" entries.
         }
     }
 

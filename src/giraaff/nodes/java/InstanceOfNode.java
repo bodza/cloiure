@@ -119,8 +119,7 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
             ObjectStamp meetStamp = (ObjectStamp) checkedStamp.meet(inputStamp);
             if (checkedStamp.equals(meetStamp))
             {
-                // The check will always succeed, the union of the two stamps is equal to the
-                // checked stamp.
+                // The check will always succeed, the union of the two stamps is equal to the checked stamp.
                 return LogicConstantNode.tautology();
             }
             else if (checkedStamp.alwaysNull())
@@ -198,8 +197,7 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
                 ObjectStamp meetStamp = (ObjectStamp) checkedStamp.meet(inputStamp);
                 if (checkedStamp.equals(meetStamp))
                 {
-                    // The check will always succeed, the union of the two stamps is equal to the
-                    // checked stamp.
+                    // The check will always succeed, the union of the two stamps is equal to the checked stamp.
                     return TriState.TRUE;
                 }
             }

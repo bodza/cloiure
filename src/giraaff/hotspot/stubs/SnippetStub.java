@@ -81,8 +81,7 @@ public abstract class SnippetStub extends Stub implements Snippets
         plugins.prependParameterPlugin(new ConstantBindingParameterPlugin(makeConstArgs(), metaAccess, snippetReflection));
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
-        // Stubs cannot have optimistic assumptions since they have
-        // to be valid for the entire run of the VM.
+        // Stubs cannot have optimistic assumptions, since they have to be valid for the entire run of the VM.
         final StructuredGraph graph = new StructuredGraph.Builder(options).method(method).compilationId(compilationId).build();
         graph.disableUnsafeAccessTracking();
 

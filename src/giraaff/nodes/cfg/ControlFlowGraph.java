@@ -596,8 +596,8 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             }
             else if (id == BLOCK_ID_VISITED)
             {
-                // Second time we see this block: All successors have been processed, so add block
-                // to result list. Can safely reuse the stack for this.
+                // Second time we see this block: All successors have been processed,
+                // so add block to result list. Can safely reuse the stack for this.
                 --tos;
                 count++;
                 int index = numBlocks - count;
@@ -714,8 +714,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                             loop.addExit(exitBlock);
                         }
 
-                        // The following loop can add new blocks to the end of the loop's block
-                        // list.
+                        // The following loop can add new blocks to the end of the loop's block list.
                         int size = loop.getBlocks().size();
                         for (int i = 0; i < size; ++i)
                         {

@@ -66,7 +66,7 @@ public class NewInstanceStub extends SnippetStub
     }
 
     /**
-     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g., due to -XX:-UseTLAB).
+     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
      *
      * @param hub the hub of the object to be allocated
      * @param intArrayHub the hub for {@code int[].class}
@@ -77,7 +77,7 @@ public class NewInstanceStub extends SnippetStub
         // The type is known to be an instance so Klass::_layout_helper is the instance size as a raw number.
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         boolean inlineContiguousAllocationSupported = GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported();
-        if (inlineContiguousAllocationSupported && !HotSpotReplacementsUtil.useCMSIncrementalMode(GraalHotSpotVMConfig.INJECTED_VMCONFIG))
+        if (inlineContiguousAllocationSupported)
         {
             if (HotSpotReplacementsUtil.isInstanceKlassFullyInitialized(hub))
             {
@@ -103,8 +103,8 @@ public class NewInstanceStub extends SnippetStub
      * @param intArrayHub the hub for {@code int[].class}
      * @param sizeInBytes the size of the allocation
      *
-     * @return the newly allocated, uninitialized chunk of memory, or {@link WordFactory#zero()} if
-     *         the operation was unsuccessful
+     * @return the newly allocated, uninitialized chunk of memory,
+     *         or {@link WordFactory#zero()} if the operation was unsuccessful
      */
     static Word refillAllocate(Word thread, KlassPointer intArrayHub, int sizeInBytes)
     {
@@ -129,8 +129,7 @@ public class NewInstanceStub extends SnippetStub
 
         long tlabFreeSpaceInWords = tlabFreeSpaceInBytes >>> HotSpotReplacementsUtil.log2WordSize();
 
-        // Retain TLAB and allocate object in shared space if
-        // the amount free in the TLAB is too large to discard.
+        // retain TLAB and allocate object in shared space if the amount free in the TLAB is too large to discard
         Word refillWasteLimit = thread.readWord(HotSpotReplacementsUtil.tlabRefillWasteLimitOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.TLAB_REFILL_WASTE_LIMIT_LOCATION);
         if (tlabFreeSpaceInWords <= refillWasteLimit.rawValue())
         {
@@ -143,13 +142,11 @@ public class NewInstanceStub extends SnippetStub
                 thread.writeInt(HotSpotReplacementsUtil.tlabFastRefillWasteOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), wastage, HotSpotReplacementsUtil.TLAB_FAST_REFILL_WASTE_LOCATION);
             }
 
-            // if TLAB is currently allocated (top or end != null) then
-            // fill [top, end + alignment_reserve) with array object
+            // if TLAB is currently allocated (top or end != null), then fill [top, end + alignment_reserve) with array object
             if (top.notEqual(0))
             {
                 int headerSize = HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Int);
-                // just like the HotSpot assembler stubs, assumes that tlabFreeSpaceInInts fits in
-                // an int
+                // just like the HotSpot assembler stubs, assumes that tlabFreeSpaceInInts fits in an int
                 int tlabFreeSpaceInInts = (int) tlabFreeSpaceInBytes >>> 2;
                 int length = ((alignmentReserveInBytes - headerSize) >>> 2) + tlabFreeSpaceInInts;
                 NewObjectSnippets.formatArray(intArrayHub, 0, length, headerSize, top, intArrayMarkWord, false, false);
@@ -178,7 +175,7 @@ public class NewInstanceStub extends SnippetStub
         }
         else
         {
-            // Retain TLAB
+            // retain TLAB
             Word newRefillWasteLimit = refillWasteLimit.add(HotSpotReplacementsUtil.tlabRefillWasteIncrement(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
             thread.writeWord(HotSpotReplacementsUtil.tlabRefillWasteLimitOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), newRefillWasteLimit, HotSpotReplacementsUtil.TLAB_REFILL_WASTE_LIMIT_LOCATION);
 

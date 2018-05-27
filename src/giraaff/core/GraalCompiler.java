@@ -13,7 +13,6 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.code.CompilationResult;
 import giraaff.core.LIRGenerationPhase.LIRGenerationContext;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.alloc.ComputeBlockOrder;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;

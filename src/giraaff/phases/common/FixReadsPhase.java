@@ -247,7 +247,7 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
                 {
                     EconomicMap<ValueNode, Stamp> endMap = EconomicMap.create();
 
-                    // Process phis
+                    // process phis
                     for (ValuePhiNode phi : merge.valuePhis())
                     {
                         if (currentEndMap == null || currentEndMap.containsKey(phi))
@@ -284,8 +284,8 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
                             if (block == null || block.getId() <= mergeBlockDominator.getId())
                             {
                                 // Node with new stamp in path to the merge block dominator and that
-                                // at the same time was defined at least in the merge block
-                                // dominator (i.e., therefore can be used after the merge.)
+                                // at the same time was defined at least in the merge block dominator
+                                // (i.e. therefore can be used after the merge.)
 
                                 Stamp bestStamp = getBestStamp(nodeWithNewStamp);
 
@@ -294,8 +294,7 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
                                     Stamp otherEndsStamp = currentEndMap.get(nodeWithNewStamp);
                                     if (otherEndsStamp == null)
                                     {
-                                        // No stamp registered in one of the previously processed
-                                        // ends => skip.
+                                        // No stamp registered in one of the previously processed ends => skip.
                                         continue;
                                     }
                                     bestStamp = bestStamp.meet(otherEndsStamp);

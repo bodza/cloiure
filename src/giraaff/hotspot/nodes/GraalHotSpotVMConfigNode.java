@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.Fold.InjectedParameter;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;

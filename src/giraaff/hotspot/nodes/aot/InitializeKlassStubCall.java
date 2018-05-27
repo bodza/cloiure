@@ -11,7 +11,6 @@ import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.hotspot.word.KlassPointer;
-import giraaff.lir.LIRFrameState;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.DeoptimizingNode;
 import giraaff.nodes.FrameState;

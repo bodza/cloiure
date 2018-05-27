@@ -63,8 +63,7 @@ public class PropagateDeoptimizeProbabilityPhase extends BasePhase<PhaseContext>
 
                         if (controlSplitNode.getSuccessorCount() == reachableSuccessors.size() - 1)
                         {
-                            // All successors of this split lead to deopt, propagate reachability
-                            // further upwards.
+                            // All successors of this split lead to deopt, propagate reachability further upwards.
                             reachableSplits.removeKey(controlSplitNode);
                             stack.push(AbstractBeginNode.prevBegin((FixedNode) controlSplitNode.predecessor()));
                         }

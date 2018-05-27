@@ -38,9 +38,7 @@ public abstract class ArithmeticStamp extends Stamp
     public int hashCode()
     {
         final int prime = 31;
-        int result = 1;
-        result = prime * result + ops.hashCode();
-        return result;
+        return prime * 1 + ops.hashCode();
     }
 
     @Override

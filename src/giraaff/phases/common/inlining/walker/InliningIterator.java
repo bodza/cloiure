@@ -117,8 +117,7 @@ public class InliningIterator
             return null;
         }
 
-        FixedNode result = nodeQueue.removeFirst();
-        return result;
+        return nodeQueue.removeFirst();
     }
 
     private void queueMerge(AbstractEndNode end)

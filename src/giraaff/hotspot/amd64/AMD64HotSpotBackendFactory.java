@@ -49,10 +49,8 @@ import giraaff.word.WordTypes;
 
 public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
 {
-    @Override
-    public String getName()
+    public AMD64HotSpotBackendFactory()
     {
-        return "community";
     }
 
     @Override
@@ -62,7 +60,7 @@ public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
     }
 
     @Override
-    public HotSpotBackend createBackend(HotSpotGraalRuntimeProvider graalRuntime, CompilerConfiguration compilerConfiguration, HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotBackend host)
+    public HotSpotBackend createBackend(HotSpotGraalRuntimeProvider graalRuntime, CompilerConfiguration compilerConfiguration, HotSpotJVMCIRuntimeProvider jvmciRuntime)
     {
         OptionValues options = graalRuntime.getOptions();
         JVMCIBackend jvmci = jvmciRuntime.getHostJVMCIBackend();

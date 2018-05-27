@@ -31,7 +31,7 @@ public final class BitMap2D
         return map.size();
     }
 
-    // Returns number of full slots that have been allocated
+    // returns number of full slots that have been allocated
     public int sizeInSlots()
     {
         return map.size() / bitsPerSlot;

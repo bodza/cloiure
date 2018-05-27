@@ -1,117 +1,27 @@
 package giraaff.hotspot;
 
-import jdk.vm.ci.code.Architecture;
-import jdk.vm.ci.code.stack.StackIntrospection;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
-import jdk.vm.ci.runtime.JVMCIBackend;
 
-import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.Equivalence;
-
-import giraaff.api.replacements.SnippetReflectionProvider;
-import giraaff.core.common.GraalOptions;
-import giraaff.core.target.Backend;
-import giraaff.hotspot.CompilerConfigurationFactory.BackendMap;
+import giraaff.core.phases.CommunityCompilerConfiguration;
+import giraaff.hotspot.amd64.AMD64HotSpotBackendFactory;
 import giraaff.hotspot.meta.HotSpotProviders;
-import giraaff.nodes.spi.StampProvider;
 import giraaff.options.OptionValues;
-import giraaff.phases.tiers.CompilerConfiguration;
-import giraaff.runtime.RuntimeProvider;
-import giraaff.util.GraalError;
 
 /**
  * Singleton class holding the instance of the {@link GraalRuntime}.
  */
 public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
 {
-    private final String runtimeName;
-    private final String compilerConfigurationName;
-    private final HotSpotBackend hostBackend;
-
-    private final EconomicMap<Class<? extends Architecture>, HotSpotBackend> backends = EconomicMap.create(Equivalence.IDENTITY);
-
     private final GraalHotSpotVMConfig config;
-
     private final OptionValues options;
+    private final HotSpotBackend backend;
 
-    private final HotSpotGraalCompiler compiler;
-
-    /**
-     * @param nameQualifier a qualifier to be added to this runtime's {@linkplain #getName() name}
-     * @param compilerConfigurationFactory factory for the compiler configuration
-     *            {@link CompilerConfigurationFactory#selectFactory(String, OptionValues)}
-     */
-    HotSpotGraalRuntime(String nameQualifier, HotSpotJVMCIRuntime jvmciRuntime, CompilerConfigurationFactory compilerConfigurationFactory, OptionValues options)
+    public HotSpotGraalRuntime(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options)
     {
-        this.runtimeName = getClass().getSimpleName() + ":" + nameQualifier;
-        HotSpotVMConfigStore store = jvmciRuntime.getConfigStore();
-        config = new GraalHotSpotVMConfig(store);
-
+        this.config = new GraalHotSpotVMConfig(jvmciRuntime.getConfigStore());
         this.options = options;
-
-        if (config.useCMSGC)
-        {
-            // Graal doesn't work with the CMS collector (e.g. GR-6777)
-            // and is deprecated (http://openjdk.java.net/jeps/291).
-            throw new GraalError("Graal does not support the CMS collector");
-        }
-
-        CompilerConfiguration compilerConfiguration = compilerConfigurationFactory.createCompilerConfiguration();
-        compilerConfigurationName = compilerConfigurationFactory.getName();
-
-        compiler = new HotSpotGraalCompiler(jvmciRuntime, this, options);
-
-        BackendMap backendMap = compilerConfigurationFactory.createBackendMap();
-
-        JVMCIBackend hostJvmciBackend = jvmciRuntime.getHostJVMCIBackend();
-        Architecture hostArchitecture = hostJvmciBackend.getTarget().arch;
-
-        HotSpotBackendFactory factory = backendMap.getBackendFactory(hostArchitecture);
-        if (factory == null)
-        {
-            throw new GraalError("No backend available for host architecture \"%s\"", hostArchitecture);
-        }
-        hostBackend = registerBackend(factory.createBackend(this, compilerConfiguration, jvmciRuntime, null));
-
-        for (JVMCIBackend jvmciBackend : jvmciRuntime.getJVMCIBackends().values())
-        {
-            if (jvmciBackend == hostJvmciBackend)
-            {
-                continue;
-            }
-
-            Architecture gpuArchitecture = jvmciBackend.getTarget().arch;
-            factory = backendMap.getBackendFactory(gpuArchitecture);
-            if (factory == null)
-            {
-                throw new GraalError("No backend available for specified GPU architecture \"%s\"", gpuArchitecture);
-            }
-            registerBackend(factory.createBackend(this, compilerConfiguration, null, hostBackend));
-        }
-
-        // Complete initialization of backends
-        hostBackend.completeInitialization(jvmciRuntime, options);
-        for (HotSpotBackend backend : backends.getValues())
-        {
-            if (backend != hostBackend)
-            {
-                backend.completeInitialization(jvmciRuntime, options);
-            }
-        }
-    }
-
-    private HotSpotBackend registerBackend(HotSpotBackend backend)
-    {
-        Class<? extends Architecture> arch = backend.getTarget().arch.getClass();
-        HotSpotBackend oldValue = backends.put(arch, backend);
-        return backend;
-    }
-
-    @Override
-    public HotSpotProviders getHostProviders()
-    {
-        return getHostBackend().getProviders();
+        this.backend = new AMD64HotSpotBackendFactory().createBackend(this, new CommunityCompilerConfiguration(), jvmciRuntime);
+        this.backend.completeInitialization(jvmciRuntime, options);
     }
 
     @Override
@@ -127,54 +37,9 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
     }
 
     @Override
-    public String getName()
+    public HotSpotBackend getBackend()
     {
-        return runtimeName;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T getCapability(Class<T> clazz)
-    {
-        if (clazz == RuntimeProvider.class)
-        {
-            return (T) this;
-        }
-        else if (clazz == OptionValues.class)
-        {
-            return (T) getOptions();
-        }
-        else if (clazz == StackIntrospection.class)
-        {
-            return (T) this;
-        }
-        else if (clazz == SnippetReflectionProvider.class)
-        {
-            return (T) getHostProviders().getSnippetReflection();
-        }
-        else if (clazz == StampProvider.class)
-        {
-            return (T) getHostProviders().getStampProvider();
-        }
-        return null;
-    }
-
-    @Override
-    public HotSpotBackend getHostBackend()
-    {
-        return hostBackend;
-    }
-
-    @Override
-    public <T extends Architecture> Backend getBackend(Class<T> arch)
-    {
-        return backends.get(arch);
-    }
-
-    @Override
-    public String getCompilerConfigurationName()
-    {
-        return compilerConfigurationName;
+        return backend;
     }
 
     private boolean shutdown;

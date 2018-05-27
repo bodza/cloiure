@@ -48,9 +48,9 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
     /**
      * If a node has an alias, this means that it was replaced with another node during analysis.
-     * Nodes can be replaced by normal ("scalar") nodes, e.g., a LoadIndexedNode with a
-     * ConstantNode, or by virtual nodes, e.g., a NewInstanceNode with a VirtualInstanceNode. A node
-     * was replaced with a virtual value iff the alias is a subclass of VirtualObjectNode.
+     * Nodes can be replaced by normal ("scalar") nodes, e.g. a LoadIndexedNode with a ConstantNode,
+     * or by virtual nodes, e.g. a NewInstanceNode with a VirtualInstanceNode. A node was replaced
+     * with a virtual value iff the alias is a subclass of VirtualObjectNode.
      *
      * This alias map exists only once and is not part of the block state, so that during iterative
      * loop processing the alias of a node may be changed to another value.
@@ -63,7 +63,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     private final NodeBitMap hasScalarReplacedInputs;
 
     /*
-     * TODO: if it was possible to introduce your own subclasses of Block and Loop, these maps would
+     * TODO if it was possible to introduce your own subclasses of Block and Loop, these maps would
      * not be necessary. We could merge the GraphEffectsList logic into them.
      */
 
@@ -120,10 +120,9 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         final StructuredGraph graph = cfg.graph;
         final ArrayList<Node> obsoleteNodes = new ArrayList<>(0);
         final ArrayList<GraphEffectList> effectList = new ArrayList<>();
-        /*
-         * Effects are applied during a ordered iteration over the blocks to apply them in the
-         * correct order, e.g., apply the effect that adds a node to the graph before the node is used.
-         */
+
+        // Effects are applied during a ordered iteration over the blocks to apply them in the correct
+        // order, e.g. apply the effect that adds a node to the graph before the node is used.
         BlockIteratorClosure<Void> closure = new BlockIteratorClosure<Void>()
         {
             @Override
@@ -172,10 +171,8 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         {
             effects.apply(graph, obsoleteNodes, false);
         }
-        /*
-         * Effects that modify the cfg (e.g., removing a branch for an if that got a constant condition)
-         * need to be performed after all other effects, because they change phi value indexes.
-         */
+        // Effects that modify the cfg (e.g. removing a branch for an if that got a constant condition)
+        // need to be performed after all other effects, because they change phi value indexes.
         for (GraphEffectList effects : effectList)
         {
             effects.apply(graph, obsoleteNodes, true);
@@ -320,7 +317,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
          * finished, if not, another iteration is needed.
          *
          * This processing converges because the merge processing always makes the starting state
-         * more generic, e.g., adding phis instead of non-phi values.
+         * more generic, e.g. adding phis instead of non-phi values.
          */
         for (int iteration = 0; iteration < 10; iteration++)
         {

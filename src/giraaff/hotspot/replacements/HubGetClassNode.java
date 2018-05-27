@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
 import giraaff.graph.Node;

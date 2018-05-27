@@ -182,9 +182,7 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
     public int hashCode()
     {
         final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((encoding == null) ? 0 : encoding.hashCode());
-        return result;
+        return prime * super.hashCode() + ((encoding != null) ? encoding.hashCode() : 0);
     }
 
     @Override

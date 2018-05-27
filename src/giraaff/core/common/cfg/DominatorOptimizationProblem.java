@@ -35,8 +35,7 @@ public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
 
     public final AbstractBlockBase<?> getBlockForId(int id)
     {
-        AbstractBlockBase<?> block = blocks[id];
-        return block;
+        return blocks[id];
     }
 
     /**
@@ -75,8 +74,7 @@ public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
      */
     public final C getCost(AbstractBlockBase<?> block)
     {
-        C cost = costs.get(block);
-        return cost;
+        return costs.get(block);
     }
 
     /**

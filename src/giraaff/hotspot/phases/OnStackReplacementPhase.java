@@ -68,8 +68,7 @@ public class OnStackReplacementPhase extends Phase
     {
         if (graph.getEntryBCI() == JVMCICompiler.INVOCATION_ENTRY_BCI)
         {
-            // This happens during inlining in a OSR method, because the same phase plan will be
-            // used.
+            // This happens during inlining in a OSR method, because the same phase plan will be used.
             return;
         }
 
@@ -85,8 +84,8 @@ public class OnStackReplacementPhase extends Phase
         {
             /*
              * OSR with Locks: We do not have an OSR loop for the original OSR bci. Therefore we
-             * cannot decide where to deopt and which framestate will be used. In the worst case the
-             * framestate of the OSR entry would be used.
+             * cannot decide where to deopt and which framestate will be used. In the worst case
+             * the framestate of the OSR entry would be used.
              */
             throw new PermanentBailoutException("OSR compilation without OSR entry loop.");
         }
@@ -100,7 +99,7 @@ public class OnStackReplacementPhase extends Phase
         {
             osr = getEntryMarker(graph);
             LoopsData loops = new LoopsData(graph);
-            // Find the loop that contains the EntryMarker
+            // find the loop that contains the EntryMarker
             Loop<Block> l = loops.getCFG().getNodeToBlock().get(osr).getLoop();
             if (l == null)
             {
@@ -116,7 +115,7 @@ public class OnStackReplacementPhase extends Phase
             {
                 throw GraalError.shouldNotReachHere();
             }
-            // Peel the outermost loop first
+            // peel the outermost loop first
             while (l.getParent() != null)
             {
                 l = l.getParent();
@@ -186,8 +185,7 @@ public class OnStackReplacementPhase extends Phase
                     graph.addAfterFixed(osrStart, guard);
 
                     // Replace with a more specific type at usages.
-                    // We know that we are at the root,
-                    // so we need to replace the proxy in the state.
+                    // We know that we are at the root, so we need to replace the proxy in the state.
                     proxy.replaceAtMatchingUsages(osrLocal, n -> n == osrState);
                     osrLocal = graph.addOrUnique(new PiNode(osrLocal, narrowedStamp, guard));
                 }
@@ -262,7 +260,7 @@ public class OnStackReplacementPhase extends Phase
 
     private static LoopBeginNode osrLoop(EntryMarkerNode osr)
     {
-        // Check that there is an OSR loop for the OSR begin
+        // check that there is an OSR loop for the OSR begin
         LoopsData loops = new LoopsData(osr.graph());
         Loop<Block> l = loops.getCFG().getNodeToBlock().get(osr).getLoop();
         if (l == null)

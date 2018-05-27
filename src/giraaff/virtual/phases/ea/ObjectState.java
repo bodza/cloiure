@@ -79,8 +79,7 @@ public class ObjectState
                 /*
                  * Clear out entries that are default values anyway.
                  *
-                 * TODO: this should be propagated into ObjectState.entries, but that will take some
-                 * more refactoring.
+                 * TODO this should be propagated into ObjectState.entries, but that will take some more refactoring
                  */
                 ValueNode[] newEntries = entries.clone();
                 for (int i = 0; i < newEntries.length; i++)

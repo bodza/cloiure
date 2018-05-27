@@ -12,7 +12,6 @@ import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 

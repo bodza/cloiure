@@ -5,9 +5,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
@@ -26,7 +24,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.code.CompilationResult;
 import giraaff.code.DataSection;
-import giraaff.util.GraalError;
 
 public class HotSpotCompiledCodeBuilder
 {

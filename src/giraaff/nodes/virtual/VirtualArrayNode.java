@@ -88,7 +88,7 @@ public class VirtualArrayNode extends VirtualObjectNode implements ArrayLengthPr
         long offset;
         if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN && componentType.isPrimitive())
         {
-            // On big endian, we expect the value to be correctly aligned in memory
+            // on big endian, we expect the value to be correctly aligned in memory
             int componentByteCount = componentType.getJavaKind().getByteCount();
             offset = constantOffset - (componentByteCount - Math.min(componentByteCount, 4 + expectedEntryKind.getByteCount()));
         }

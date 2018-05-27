@@ -831,8 +831,8 @@ public final class BciBlockMapping
             {
                 if (h.isCatchAll())
                 {
-                    // Discard all information about succeeding exception handlers, since they can
-                    // never be reached.
+                    // Discard all information about succeeding exception handlers, since they
+                    // can never be reached.
                     dispatchBlocks = 0;
                     lastHandler = null;
                 }
@@ -869,11 +869,9 @@ public final class BciBlockMapping
 
             if (loop != 0)
             {
-                // There is a path from a loop end to the method entry that does not pass the loop
-                // header.
+                // There is a path from a loop end to the method entry that does not pass the loop header.
                 // Therefore, the loop is non reducible (has more than one entry).
-                // We don't want to compile such methods because the IR only supports structured
-                // loops.
+                // We don't want to compile such methods because the IR only supports structured loops.
                 throw new PermanentBailoutException("Non-reducible loop: %016x", loop);
             }
         } while (loopChanges);
@@ -887,8 +885,8 @@ public final class BciBlockMapping
 
         if (loop != 0)
         {
-            // There is a path from a loop end to the method entry that does not pass the loop
-            // header. Therefore, the loop is non reducible (has more than one entry).
+            // There is a path from a loop end to the method entry that does not pass the loop header.
+            // Therefore, the loop is non reducible (has more than one entry).
             // We don't want to compile such methods because the IR only supports structured loops.
             throw new PermanentBailoutException("Non-reducible loop");
         }
@@ -1028,18 +1026,14 @@ public final class BciBlockMapping
 
             if (block.isExceptionEntry)
             {
-                // Loops that are implicitly formed by an exception handler lead to all sorts of
-                // corner cases.
-                // Don't compile such methods for now, until we see a concrete case that allows
-                // checking for correctness.
+                // Loops that are implicitly formed by an exception handler lead to all sorts of corner cases.
+                // Don't compile such methods for now, until we see a concrete case that allows checking for correctness.
                 throw new PermanentBailoutException("Loop formed by an exception handler");
             }
             if (nextLoop >= LOOP_HEADER_MAX_CAPACITY)
             {
-                // This restriction can be removed by using a fall-back to a BitSet in case we have
-                // more than 64 loops
-                // Don't compile such methods for now, until we see a concrete case that allows
-                // checking for correctness.
+                // This restriction can be removed by using a fall-back to a BitSet in case we have more than 64 loops.
+                // Don't compile such methods for now, until we see a concrete case that allows checking for correctness.
                 throw new PermanentBailoutException("Too many loops in method");
             }
 

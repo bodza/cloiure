@@ -1,7 +1,6 @@
 package giraaff.hotspot;
 
 import giraaff.lir.gen.LIRGenerator;
-import giraaff.nodes.CompressionNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 

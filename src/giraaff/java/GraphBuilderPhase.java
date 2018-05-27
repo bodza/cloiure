@@ -11,6 +11,7 @@ import giraaff.nodes.graphbuilderconf.IntrinsicContext;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.phases.BasePhase;
 import giraaff.phases.OptimisticOptimizations;
+import giraaff.phases.Phase;
 import giraaff.phases.tiers.HighTierContext;
 
 /**
@@ -36,8 +37,7 @@ public class GraphBuilderPhase extends BasePhase<HighTierContext>
         return graphBuilderConfig;
     }
 
-    // Fully qualified name is a workaround for JDK-8056066
-    public static class Instance extends giraaff.phases.Phase
+    public static class Instance extends Phase
     {
         protected final MetaAccessProvider metaAccess;
         protected final StampProvider stampProvider;

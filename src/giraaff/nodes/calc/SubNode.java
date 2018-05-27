@@ -137,8 +137,8 @@ public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArit
             if (ArithmeticOpTable.forStamp(stamp).getAdd().isNeutral(c))
             {
                 /*
-                 * Note that for floating point numbers, + and - have different neutral elements. We
-                 * have to test for the neutral element of +, because we are doing this
+                 * Note that for floating point numbers, + and - have different neutral elements.
+                 * We have to test for the neutral element of +, because we are doing this
                  * transformation: 0 - x == (-x) + 0 == -x.
                  */
                 return NegateNode.create(forY, view);

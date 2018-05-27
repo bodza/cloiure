@@ -137,7 +137,7 @@ public final class TypeReference
                 {
                     return componentType.getArrayClass();
                 }
-                // Returns Object[].class
+                // returns Object[].class
                 return type.getSuperclass().getArrayClass();
             }
             if (type.isInterface())

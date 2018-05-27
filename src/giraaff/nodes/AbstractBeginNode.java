@@ -9,7 +9,6 @@ import giraaff.graph.IterableNodeType;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.iterators.NodeIterable;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.extended.AnchoringNode;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.spi.LIRLowerable;
@@ -37,8 +36,7 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
         {
             if (next instanceof AbstractBeginNode)
             {
-                AbstractBeginNode begin = (AbstractBeginNode) next;
-                return begin;
+                return (AbstractBeginNode) next;
             }
             next = next.predecessor();
         }

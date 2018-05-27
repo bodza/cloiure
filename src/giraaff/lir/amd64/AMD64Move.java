@@ -16,7 +16,6 @@ import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64Assembler.OperandSize;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.CompressEncoding;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.core.common.type.DataPointerConstant;
@@ -682,32 +681,30 @@ public class AMD64Move
     public static void const2reg(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, JavaConstant input)
     {
         /*
-         * Note: we use the kind of the input operand (and not the kind of the result operand)
-         * because they don't match in all cases. For example, an object constant can be loaded to a
-         * long register when unsafe casts occurred (e.g., for a write barrier where arithmetic
+         * Note: we use the kind of the input operand (and not the kind of the result operand),
+         * because they don't match in all cases. For example, an object constant can be loaded to
+         * a long register when unsafe casts occurred (e.g. for a write barrier where arithmetic
          * operations are then performed on the pointer).
          */
         switch (input.getJavaKind().getStackKind())
         {
             case Int:
-                // Do not optimize with an XOR as this instruction may be between
-                // a CMP and a Jcc in which case the XOR will modify the condition
-                // flags and interfere with the Jcc.
+                // Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
+                // in which case the XOR will modify the condition flags and interfere with the Jcc.
                 masm.movl(result, input.asInt());
 
                 break;
             case Long:
-                // Do not optimize with an XOR as this instruction may be between
-                // a CMP and a Jcc in which case the XOR will modify the condition
-                // flags and interfere with the Jcc.
+                // Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
+                // in which case the XOR will modify the condition flags and interfere with the Jcc.
                 if (input.asLong() == (int) input.asLong())
                 {
-                    // Sign extended to long
+                    // sign extended to long
                     masm.movslq(result, (int) input.asLong());
                 }
                 else if ((input.asLong() & 0xFFFFFFFFL) == input.asLong())
                 {
-                    // Zero extended to long
+                    // zero extended to long
                     masm.movl(result, (int) input.asLong());
                 }
                 else
@@ -738,9 +735,8 @@ public class AMD64Move
                 }
                 break;
             case Object:
-                // Do not optimize with an XOR as this instruction may be between
-                // a CMP and a Jcc in which case the XOR will modify the condition
-                // flags and interfere with the Jcc.
+                // Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
+                // in which case the XOR will modify the condition flags and interfere with the Jcc.
                 if (input.isNull())
                 {
                     masm.movq(result, 0x0L);

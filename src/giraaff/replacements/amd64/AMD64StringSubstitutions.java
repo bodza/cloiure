@@ -37,7 +37,7 @@ public class AMD64StringSubstitutions
      */
     static final ArrayOffsetProvider INJECTED = null;
 
-    // Only exists in JDK <= 8
+    // only exists in JDK <= 8
     @MethodSubstitution(isStatic = true, optional = true)
     public static int indexOf(char[] source, int sourceOffset, int sourceCount, @ConstantNodeParameter char[] target, int targetOffset, int targetCount, int origFromIndex)
     {

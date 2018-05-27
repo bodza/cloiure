@@ -570,8 +570,7 @@ public class Graph
             return null;
         }
 
-        Node result = cachedLeafNodes[leafId].get(node);
-        return result;
+        return cachedLeafNodes[leafId].get(node);
     }
 
     /**
@@ -584,7 +583,7 @@ public class Graph
         NodeClass<?> nodeClass = node.getNodeClass();
         if (nodeClass.isLeafNode())
         {
-            // Leaf node: look up in cache
+            // leaf node: look up in cache
             Node cachedNode = findNodeInCache(node);
             if (cachedNode != null && cachedNode != node)
             {
@@ -883,14 +882,14 @@ public class Graph
         }
         if (n == null)
         {
-            // Only dead nodes after this one
+            // only dead nodes after this one
             start.typeCacheNext = null;
             int nodeClassId = start.getNodeClass().iterableId();
             iterableNodesLast.set(nodeClassId, start);
         }
         else
         {
-            // Everything in between is dead
+            // everything in between is dead
             start.typeCacheNext = n;
         }
         return n;

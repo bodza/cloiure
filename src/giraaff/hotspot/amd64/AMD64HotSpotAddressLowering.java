@@ -1,7 +1,6 @@
 package giraaff.hotspot.amd64;
 
 import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.JavaKind;
 
 import org.graalvm.collections.EconomicMap;
 
@@ -9,13 +8,9 @@ import giraaff.asm.amd64.AMD64Address.Scale;
 import giraaff.core.amd64.AMD64AddressNode;
 import giraaff.core.amd64.AMD64CompressAddressLowering;
 import giraaff.core.common.CompressEncoding;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.IntegerStamp;
-import giraaff.core.common.type.ObjectStamp;
 import giraaff.graph.Node;
 import giraaff.hotspot.GraalHotSpotVMConfig;
-import giraaff.hotspot.nodes.GraalHotSpotVMConfigNode;
-import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.loop.BasicInductionVariable;
 import giraaff.loop.CountedLoopInfo;
 import giraaff.loop.DerivedInductionVariable;
@@ -121,9 +116,8 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
     @Override
     public void postProcess(AddressNode lowered)
     {
-        // Allow implicit zero extend for always positive input. This
-        // assumes that the upper bits of the operand is zero out by
-        // the backend.
+        // Allow implicit zero extend for always positive input. This assumes
+        // that the upper bits of the operand is zero out by the backend.
         AMD64AddressNode address = (AMD64AddressNode) lowered;
         address.setBase(tryImplicitZeroExtend(address.getBase()));
         address.setIndex(tryImplicitZeroExtend(address.getIndex()));

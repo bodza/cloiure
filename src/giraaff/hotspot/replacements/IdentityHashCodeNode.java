@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.JavaConstant;
 
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;

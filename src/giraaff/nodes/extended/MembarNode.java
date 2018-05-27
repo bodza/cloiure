@@ -4,7 +4,6 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.LIRLowerable;

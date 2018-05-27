@@ -31,7 +31,7 @@ public final class AcquiredCASLockNode extends FixedWithNextNode implements LIRL
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        // This is just a marker node so it generates nothing
+        // this is just a marker node, so it generates nothing
     }
 
     @NodeIntrinsic

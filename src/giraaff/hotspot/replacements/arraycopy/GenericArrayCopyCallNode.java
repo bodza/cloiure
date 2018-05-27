@@ -9,7 +9,6 @@ import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.nodes.GetObjectAddressNode;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
@@ -76,7 +75,7 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
             StructuredGraph graph = graph();
             ValueNode srcAddr = objectAddress(getSource());
             ValueNode destAddr = objectAddress(getDestination());
-            ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getHostBackend().getForeignCalls(), HotSpotBackend.GENERIC_ARRAYCOPY, srcAddr, srcPos, destAddr, destPos, length));
+            ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), HotSpotBackend.GENERIC_ARRAYCOPY, srcAddr, srcPos, destAddr, destPos, length));
             call.setStateAfter(stateAfter());
             graph.replaceFixedWithFixed(this, call);
         }

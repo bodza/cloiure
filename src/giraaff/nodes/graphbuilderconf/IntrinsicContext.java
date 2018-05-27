@@ -161,7 +161,7 @@ public class IntrinsicContext
             if (sideEffects.isAfterSideEffect())
             {
                 // Only the last side effect on any execution path in a replacement
-                // can inherit the stateAfter of the replaced node
+                // can inherit the stateAfter of the replaced node.
                 FrameState invalid = graph.add(new FrameState(BytecodeFrame.INVALID_FRAMESTATE_BCI));
                 for (StateSplit lastSideEffect : sideEffects.sideEffects())
                 {
@@ -184,21 +184,21 @@ public class IntrinsicContext
         {
             if (forStateSplit instanceof AbstractMergeNode)
             {
-                // Merge nodes always need a frame state
+                // merge nodes always need a frame state
                 if (sideEffects.isAfterSideEffect())
                 {
-                    // A merge after one or more side effects
+                    // a merge after one or more side effects
                     return graph.add(new FrameState(BytecodeFrame.AFTER_BCI));
                 }
                 else
                 {
-                    // A merge before any side effects
+                    // a merge before any side effects
                     return graph.add(new FrameState(BytecodeFrame.BEFORE_BCI));
                 }
             }
             else
             {
-                // Other non-side-effects do not need a state
+                // other non-side-effects do not need a state
                 return null;
             }
         }

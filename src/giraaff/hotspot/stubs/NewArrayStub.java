@@ -51,7 +51,7 @@ public class NewArrayStub extends SnippetStub
     }
 
     /**
-     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g., due to -XX:-UseTLAB).
+     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
      *
      * @param hub the hub of the object to be allocated
      * @param length the length of the array
@@ -70,7 +70,7 @@ public class NewArrayStub extends SnippetStub
         // check that array length is small enough for fast path.
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         boolean inlineContiguousAllocationSupported = GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported();
-        if (inlineContiguousAllocationSupported && !HotSpotReplacementsUtil.useCMSIncrementalMode(GraalHotSpotVMConfig.INJECTED_VMCONFIG) && length >= 0 && length <= NewObjectSnippets.MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
+        if (inlineContiguousAllocationSupported && length >= 0 && length <= NewObjectSnippets.MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
         {
             Word memory = NewInstanceStub.refillAllocate(thread, intArrayHub, sizeInBytes);
             if (memory.notEqual(0))

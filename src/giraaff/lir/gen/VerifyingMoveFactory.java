@@ -1,14 +1,10 @@
 package giraaff.lir.gen;
 
-import java.util.EnumSet;
-
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 
 /**
@@ -39,28 +35,24 @@ public final class VerifyingMoveFactory implements MoveFactory
     @Override
     public LIRInstruction createMove(AllocatableValue result, Value input)
     {
-        LIRInstruction inst = inner.createMove(result, input);
-        return inst;
+        return inner.createMove(result, input);
     }
 
     @Override
     public LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input)
     {
-        LIRInstruction inst = inner.createStackMove(result, input);
-        return inst;
+        return inner.createStackMove(result, input);
     }
 
     @Override
     public LIRInstruction createLoad(AllocatableValue result, Constant input)
     {
-        LIRInstruction inst = inner.createLoad(result, input);
-        return inst;
+        return inner.createLoad(result, input);
     }
 
     @Override
     public LIRInstruction createStackLoad(AllocatableValue result, Constant input)
     {
-        LIRInstruction inst = inner.createStackLoad(result, input);
-        return inst;
+        return inner.createStackLoad(result, input);
     }
 }

@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.calc.Condition;
@@ -135,8 +134,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
                         boolean multiUsage = (convertX.asNode().hasMoreThanOneUsage() || convertY.asNode().hasMoreThanOneUsage());
                         if ((forX instanceof ZeroExtendNode || forX instanceof SignExtendNode) && multiUsage)
                         {
-                            // Do not perform for zero or sign extend if there are multiple usages
-                            // of the value.
+                            // Do not perform for zero or sign extend if there are multiple usages of the value.
                             return null;
                         }
                         return duplicateModified(convertX.getValue(), convertY.getValue(), unorderedIsTrue, view);
@@ -167,8 +165,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
                 boolean multiUsage = (convert.asNode().hasMoreThanOneUsage() && convert.getValue().hasExactlyOneUsage());
                 if ((convert instanceof ZeroExtendNode || convert instanceof SignExtendNode) && multiUsage)
                 {
-                    // Do not perform for zero or sign extend if it could introduce
-                    // new live values.
+                    // Do not perform for zero or sign extend if it could introduce new live values.
                     return null;
                 }
 

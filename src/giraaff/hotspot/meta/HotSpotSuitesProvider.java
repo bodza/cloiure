@@ -1,22 +1,13 @@
 package giraaff.hotspot.meta;
 
-import java.util.ListIterator;
-
-import giraaff.core.common.GraalOptions;
-import giraaff.core.phases.HighTier.Options;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.phases.WriteBarrierAdditionPhase;
 import giraaff.java.SuitesProviderBase;
 import giraaff.lir.phases.LIRSuites;
 import giraaff.options.OptionValues;
-import giraaff.phases.BasePhase;
 import giraaff.phases.PhaseSuite;
-import giraaff.phases.common.CanonicalizerPhase;
-import giraaff.phases.common.LoweringPhase;
-import giraaff.phases.common.inlining.InliningPhase;
 import giraaff.phases.tiers.HighTierContext;
-import giraaff.phases.tiers.MidTierContext;
 import giraaff.phases.tiers.Suites;
 import giraaff.phases.tiers.SuitesCreator;
 

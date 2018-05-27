@@ -27,7 +27,6 @@ import giraaff.core.amd64.AMD64ArithmeticLIRGenerator;
 import giraaff.core.amd64.AMD64LIRGenerator;
 import giraaff.core.amd64.AMD64MoveFactoryBase.BackupSlotProvider;
 import giraaff.core.common.CompressEncoding;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallLinkage;
@@ -262,7 +261,7 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     @Override
     public boolean needOnlyOopMaps()
     {
-        // Stubs only need oop maps
+        // stubs only need oop maps
         return getResult().getStub() != null;
     }
 
@@ -514,8 +513,7 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     {
         Value[] argLocations = new Value[args.length];
         getResult().getFrameMapBuilder().callsMethod(nativeCallingConvention);
-        // TODO(mg): in case a native function uses floating point varargs, the ABI requires that
-        // RAX contains the length of the varargs
+        // TODO in case a native function uses floating point varargs, the ABI requires that RAX contains the length of the varargs
         PrimitiveConstant intConst = JavaConstant.forInt(numberOfFloatingPointArguments);
         AllocatableValue numberOfFloatingPointArgumentsRegister = AMD64.rax.asValue(LIRKind.value(AMD64Kind.DWORD));
         emitMoveConstant(numberOfFloatingPointArgumentsRegister, intConst);

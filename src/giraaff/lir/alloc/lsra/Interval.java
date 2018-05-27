@@ -374,8 +374,7 @@ public final class Interval
             IntList childList = list;
             list = IntList.copy(this.list, listSplitIndex, len);
             childList.setSize(listSplitIndex);
-            UsePosList child = new UsePosList(childList);
-            return child;
+            return new UsePosList(childList);
         }
 
         /**
@@ -979,9 +978,9 @@ public final class Interval
     private RegisterPriority adaptPriority(RegisterPriority priority)
     {
         /*
-         * In case of re-materialized values we require that use-operands are registers, because we
-         * don't have the value in a stack location. (Note that ShouldHaveRegister means that the
-         * operand can also be a StackSlot).
+         * In case of re-materialized values we require that use-operands are registers,
+         * because we don't have the value in a stack location.
+         * (Note that ShouldHaveRegister means that the operand can also be a StackSlot).
          */
         if (priority == RegisterPriority.ShouldHaveRegister && canMaterialize())
         {
@@ -990,7 +989,7 @@ public final class Interval
         return priority;
     }
 
-    // Note: use positions are sorted descending . first use has highest index
+    // note: use positions are sorted descending = first use has highest index
     int firstUsage(RegisterPriority minRegisterPriority)
     {
         for (int i = usePosList.size() - 1; i >= 0; --i)
@@ -1053,8 +1052,7 @@ public final class Interval
         // do not add use positions for precolored intervals because they are never used
         if (registerPriority != RegisterPriority.None && LIRValueUtil.isVariable(operand))
         {
-            // Note: addUse is called in descending order, so list gets sorted
-            // automatically by just appending new use positions
+            // note: addUse is called in descending order, so list gets sorted automatically by just appending new use positions
             int len = usePosList.size();
             if (len == 0 || usePosList.usePos(len - 1) > pos)
             {
@@ -1095,7 +1093,7 @@ public final class Interval
         // insert new interval in children-list of parent
         if (parent.splitChildren.isEmpty())
         {
-            // Create new non-shared list
+            // create new non-shared list
             parent.splitChildren = new ArrayList<>(4);
             parent.splitChildren.add(this);
         }

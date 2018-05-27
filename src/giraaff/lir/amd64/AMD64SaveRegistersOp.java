@@ -154,7 +154,6 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
      */
     private static int indexForStackSlot(FrameMap frameMap, StackSlot slot)
     {
-        int value = frameMap.offsetForStackSlot(slot) / frameMap.getTarget().wordSize;
-        return value;
+        return frameMap.offsetForStackSlot(slot) / frameMap.getTarget().wordSize;
     }
 }

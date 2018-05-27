@@ -144,7 +144,7 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
             {
                 len = IntegerConvertNode.convert(len, StampFactory.forKind(JavaKind.Long), graph(), NodeView.DEFAULT);
             }
-            ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getHostBackend().getForeignCalls(), desc, srcAddr, destAddr, len));
+            ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), desc, srcAddr, destAddr, len));
             call.setStateAfter(stateAfter());
             graph.replaceFixedWithFixed(this, call);
         }
@@ -220,7 +220,7 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
         JavaKind componentKind = elementKind;
         if (srcPos == destPos)
         {
-            // Can treat as disjoint
+            // can treat as disjoint
             disjoint = true;
         }
         PrimitiveConstant constantSrc = (PrimitiveConstant) srcPos.stamp(NodeView.DEFAULT).asConstant();

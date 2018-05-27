@@ -8,7 +8,6 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampPair;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.ValueNode;

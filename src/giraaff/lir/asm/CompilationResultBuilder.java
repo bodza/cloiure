@@ -13,7 +13,6 @@ import jdk.vm.ci.code.site.ConstantReference;
 import jdk.vm.ci.code.site.DataSectionReference;
 import jdk.vm.ci.code.site.Mark;
 import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.InvokeTarget;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.VMConstant;
 import jdk.vm.ci.meta.Value;
@@ -36,7 +35,6 @@ import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.LabelRef;
 import giraaff.lir.framemap.FrameMap;
-import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
@@ -129,7 +127,7 @@ public class CompilationResultBuilder
         int position = asm.position();
         compilationResult.setTargetCode(asm.close(false), position);
 
-        // Record exception handlers if they exist
+        // record exception handlers if they exist
         if (exceptionInfoList != null)
         {
             for (ExceptionInfo ei : exceptionInfoList)

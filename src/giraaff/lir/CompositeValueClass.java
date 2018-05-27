@@ -30,8 +30,7 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
         @Override
         protected CompositeValueClass<?> computeValue(Class<?> type)
         {
-            CompositeValueClass<?> compositeValueClass = new CompositeValueClass<>(type);
-            return compositeValueClass;
+            return new CompositeValueClass<>(type);
         }
     };
 

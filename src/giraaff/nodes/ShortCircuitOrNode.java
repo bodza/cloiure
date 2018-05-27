@@ -192,7 +192,7 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
             }
         }
 
-        // Check whether !X => Y constant
+        // check whether !X => Y constant
         if (forX instanceof UnaryOpLogicNode && forY instanceof UnaryOpLogicNode)
         {
             UnaryOpLogicNode unaryX = (UnaryOpLogicNode) forX;

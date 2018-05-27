@@ -446,9 +446,9 @@ public abstract class Node implements Cloneable, NodeInterface
      */
     public boolean removeUsage(Node node)
     {
-        // For large graphs, usage removal is performance critical.
-        // Furthermore, it is critical that this method maintains the invariant that the usage list
-        // has no null element preceding a non-null element.
+        // For large graphs, usage removal is critical for performance.
+        // Furthermore, it is critical that this method maintains the invariant,
+        // that the usage list has no null element preceding a non-null element.
         if (usage0 == node)
         {
             movUsageFromEndToIndexZero();
@@ -597,7 +597,7 @@ public abstract class Node implements Cloneable, NodeInterface
     {
         if (annotation == null || clazz.isInstance(annotation))
         {
-            // Replace the current value
+            // replace the current value
             this.annotation = value;
         }
         else if (annotation.getClass() == Object[].class)
@@ -936,7 +936,7 @@ public abstract class Node implements Cloneable, NodeInterface
         }
         else
         {
-            // The direct edges are already null
+            // the direct edges are already null
             getNodeClass().getEdges(type).initializeLists(newNode, this);
         }
     }

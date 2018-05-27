@@ -9,7 +9,6 @@ import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.lir.VirtualStackSlot;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.extended.MonitorEnter;
 import giraaff.nodes.memory.AbstractMemoryCheckpoint;
 import giraaff.nodes.memory.MemoryCheckpoint;

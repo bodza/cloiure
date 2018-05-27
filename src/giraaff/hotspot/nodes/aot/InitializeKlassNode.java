@@ -3,7 +3,6 @@ package giraaff.hotspot.nodes.aot;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;

@@ -221,10 +221,9 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
             return null;
         }
 
-        // In lambda forms we erase signature types to avoid resolving issues
-        // involving class loaders. When we optimize a method handle invoke
-        // to a direct call we must cast the receiver and arguments to its
-        // actual types.
+        // In lambda forms we erase signature types to avoid resolving issues involving
+        // class loaders. When we optimize a method handle invoke to a direct call
+        // we must cast the receiver and arguments to its actual types.
         Signature signature = target.getSignature();
         final boolean isStatic = target.isStatic();
         final int receiverSkip = isStatic ? 0 : 1;
@@ -238,11 +237,11 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         else
         {
             ResolvedJavaType targetType = target.getDeclaringClass();
-            // Try to bind based on the declaredType
+            // try to bind based on the declaredType
             AssumptionResult<ResolvedJavaMethod> concreteMethod = targetType.findUniqueConcreteMethod(target);
             if (concreteMethod == null)
             {
-                // Try to get the most accurate receiver type
+                // try to get the most accurate receiver type
                 if (intrinsicMethod == IntrinsicMethod.LINK_TO_VIRTUAL || intrinsicMethod == IntrinsicMethod.LINK_TO_INTERFACE)
                 {
                     ValueNode receiver = getReceiver(originalArguments);
@@ -262,24 +261,23 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
 
         if (realTarget != null)
         {
-            // Don't mutate the passed in arguments
+            // don't mutate the passed in arguments
             ValueNode[] arguments = originalArguments.clone();
 
-            // Cast receiver to its type.
+            // cast receiver to its type
             if (!isStatic)
             {
                 JavaType receiverType = target.getDeclaringClass();
                 maybeCastArgument(adder, arguments, 0, receiverType);
             }
 
-            // Cast reference arguments to its type.
+            // cast reference arguments to its type
             for (int index = 0; index < signature.getParameterCount(false); index++)
             {
                 JavaType parameterType = signature.getParameterType(index, target.getDeclaringClass());
                 maybeCastArgument(adder, arguments, receiverSkip + index, parameterType);
             }
-            InvokeNode invoke = createTargetInvokeNode(assumptions, intrinsicMethod, realTarget, original, bci, returnStamp, arguments);
-            return invoke;
+            return createTargetInvokeNode(assumptions, intrinsicMethod, realTarget, original, bci, returnStamp, arguments);
         }
         return null;
     }
@@ -347,8 +345,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         InvokeKind targetInvokeKind = target.isStatic() ? InvokeKind.Static : InvokeKind.Special;
         JavaType targetReturnType = target.getSignature().getReturnType(null);
 
-        // MethodHandleLinkTo* nodes have a trailing MemberName argument which
-        // needs to be popped.
+        // MethodHandleLinkTo* nodes have a trailing MemberName argument which needs to be popped.
         ValueNode[] targetArguments;
         switch (intrinsicMethod)
         {
@@ -368,10 +365,9 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
 
         MethodCallTargetNode callTarget = ResolvedMethodHandleCallTargetNode.create(targetInvokeKind, target, targetArguments, targetReturnStamp, original, arguments, returnStamp);
 
-        // The call target can have a different return type than the invoker,
-        // e.g. the target returns an Object but the invoker void. In this case
-        // we need to use the stamp of the invoker. Note: always using the
-        // invoker's stamp would be wrong because it's a less concrete type
+        // The call target can have a different return type than the invoker, e.g. the target returns
+        // an Object but the invoker void. In this case we need to use the stamp of the invoker.
+        // Note: always using the invoker's stamp would be wrong because it's a less concrete type
         // (usually java.lang.Object).
         if (returnStamp.getTrustedStamp().getStackKind() == JavaKind.Void)
         {

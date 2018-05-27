@@ -11,7 +11,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.target.Backend;
@@ -37,7 +36,6 @@ import giraaff.hotspot.stubs.NewInstanceStub;
 import giraaff.hotspot.stubs.NullPointerExceptionStub;
 import giraaff.hotspot.stubs.OutOfBoundsExceptionStub;
 import giraaff.hotspot.stubs.Stub;
-import giraaff.hotspot.stubs.StubUtil;
 import giraaff.hotspot.stubs.UnwindExceptionToCallerStub;
 import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.java.ForeignCallDescriptors;
@@ -93,7 +91,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
     static
     {
-        // Populate the EnumMap instances
+        // populate the EnumMap instances
         for (int i = 0; i < arraycopyDescriptors.length; i++)
         {
             for (int j = 0; j < arraycopyDescriptors[i].length; j++)
@@ -139,7 +137,8 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         // c_rarg2 - element count, treated as ssize_t, can be zero
         // c_rarg3 - size_t ckoff (super_check_offset)
         // c_rarg4 - oop ckval (super_klass)
-        // return: 0 = success, n = number of copied elements xor'd with -1.
+        // Return:
+        // 0 = success, n = number of copied elements xor'd with -1.
         ForeignCallDescriptor desc = new ForeignCallDescriptor(name, int.class, Word.class, Word.class, Word.class, Word.class, Word.class);
         LocationIdentity killed = NamedLocationIdentity.any();
         registerForeignCall(desc, routine, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, killed);
@@ -218,7 +217,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPRECALL, c.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPOSTCALL, c.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
-        // Cannot be a leaf as VM acquires Thread_lock which requires thread_in_vm state
+        // cannot be a leaf, as VM acquires Thread_lock which requires thread_in_vm state
         linkForeignCall(options, providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, c.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
 
         registerArrayCopy(JavaKind.Byte, c.jbyteArraycopy, c.jbyteAlignedArraycopy, c.jbyteDisjointArraycopy, c.jbyteAlignedDisjointArraycopy);
@@ -238,14 +237,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         registerForeignCall(HotSpotBackend.GENERIC_ARRAYCOPY, c.genericArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         registerForeignCall(HotSpotBackend.UNSAFE_ARRAYCOPY, c.unsafeArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
 
-        if (c.useMultiplyToLenIntrinsic())
-        {
-            registerForeignCall(HotSpotBackend.MULTIPLY_TO_LEN, c.multiplyToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
-        }
-        if (c.useSHA1Intrinsics())
-        {
-            registerForeignCall(HotSpotBackend.SHA_IMPL_COMPRESS, c.sha1ImplCompress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
-        }
         if (c.useSHA256Intrinsics())
         {
             registerForeignCall(HotSpotBackend.SHA2_IMPL_COMPRESS, c.sha256ImplCompress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
@@ -254,9 +245,18 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         {
             registerForeignCall(HotSpotBackend.SHA5_IMPL_COMPRESS, c.sha512ImplCompress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         }
+
         if (c.useMulAddIntrinsic())
         {
             registerForeignCall(HotSpotBackend.MUL_ADD, c.mulAdd, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+        }
+        if (c.useMultiplyToLenIntrinsic())
+        {
+            registerForeignCall(HotSpotBackend.MULTIPLY_TO_LEN, c.multiplyToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+        }
+        if (c.useSquareToLenIntrinsic())
+        {
+            registerForeignCall(HotSpotBackend.SQUARE_TO_LEN, c.squareToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
         }
         if (c.useMontgomeryMultiplyIntrinsic())
         {
@@ -266,21 +266,16 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         {
             registerForeignCall(HotSpotBackend.MONTGOMERY_SQUARE, c.montgomerySquare, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
         }
-        if (c.useSquareToLenIntrinsic())
-        {
-            registerForeignCall(HotSpotBackend.SQUARE_TO_LEN, c.squareToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
-        }
 
         if (c.useAESIntrinsics)
         {
             /*
-             * When the java.ext.dirs property is modified then the crypto classes might not be
-             * found. If that's the case we ignore the ClassNotFoundException and continue since we
-             * cannot replace a non-existing method anyway.
+             * When the java.ext.dirs property is modified, the crypto classes might not be found.
+             * In that case we ignore the ClassNotFoundException and continue, since we cannot replace a non-existing method anyway.
              */
             try
             {
-                // These stubs do callee saving
+                // these stubs do callee saving
                 registerForeignCall(HotSpotBackend.ENCRYPT_BLOCK, c.aescryptEncryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
                 registerForeignCall(HotSpotBackend.DECRYPT_BLOCK, c.aescryptDecryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
                 registerForeignCall(HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY, c.aescryptDecryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
@@ -294,7 +289,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
             }
             try
             {
-                // These stubs do callee saving
+                // these stubs do callee saving
                 registerForeignCall(HotSpotBackend.ENCRYPT, c.cipherBlockChainingEncryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
                 registerForeignCall(HotSpotBackend.DECRYPT, c.cipherBlockChainingDecryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
                 registerForeignCall(HotSpotBackend.DECRYPT_WITH_ORIGINAL_KEY, c.cipherBlockChainingDecryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));

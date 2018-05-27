@@ -61,7 +61,7 @@ public class BridgeMethodUtils
                 {
                     if (calledAbstractMethodErrorConstructor)
                     {
-                        // This is a miranda method
+                        // this is a miranda method
                         return null;
                     }
                 }

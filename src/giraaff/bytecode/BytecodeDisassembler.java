@@ -45,7 +45,7 @@ public class BytecodeDisassembler
     /**
      * Disassembles the bytecode of a given method in a {@code javap}-like format.
      *
-     * @return {@code null} if {@code method} has no bytecode (e.g., it is native or abstract)
+     * @return {@code null} if {@code method} has no bytecode (e.g. it is native or abstract)
      */
     public String disassemble(ResolvedJavaMethod method)
     {
@@ -55,7 +55,7 @@ public class BytecodeDisassembler
     /**
      * Disassembles the bytecode of a given method in a {@code javap}-like format.
      *
-     * @return {@code null} if {@code method} has no bytecode (e.g., it is native or abstract)
+     * @return {@code null} if {@code method} has no bytecode (e.g. it is native or abstract)
      */
     public String disassemble(ResolvedJavaMethod method, int startBci, int endBci)
     {
@@ -307,20 +307,17 @@ public class BytecodeDisassembler
                         case Bytecodes.INVOKESTATIC:
                         {
                             int cpi = stream.readCPI();
-                            JavaMethod callee = cp.lookupMethod(cpi, opcode);
-                            return callee;
+                            return cp.lookupMethod(cpi, opcode);
                         }
                         case Bytecodes.INVOKEINTERFACE:
                         {
                             int cpi = stream.readCPI();
-                            JavaMethod callee = cp.lookupMethod(cpi, opcode);
-                            return callee;
+                            return cp.lookupMethod(cpi, opcode);
                         }
                         case Bytecodes.INVOKEDYNAMIC:
                         {
                             int cpi = stream.readCPI4();
-                            JavaMethod callee = cp.lookupMethod(cpi, opcode);
-                            return callee;
+                            return cp.lookupMethod(cpi, opcode);
                         }
                         default:
                             throw new InternalError(BytecodeDisassembler.disassembleOne(method, invokeBci));

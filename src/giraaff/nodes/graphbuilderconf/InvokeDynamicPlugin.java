@@ -35,7 +35,7 @@ public interface InvokeDynamicPlugin extends GraphBuilderPlugin
     boolean supportsDynamicInvoke(GraphBuilderContext builder, int cpi, int opcode);
 
     /**
-     * Notifies this object of the value and context of the dynamic method target (e.g., A HotSpot
+     * Notifies this object of the value and context of the dynamic method target (e.g. a HotSpot
      * adapter method) for a resolved dynamic invoke.
      *
      * @param builder context for the invoke

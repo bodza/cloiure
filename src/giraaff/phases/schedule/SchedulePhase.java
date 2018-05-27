@@ -188,8 +188,7 @@ public final class SchedulePhase extends Phase
                         LocationIdentity constrainingLocation = null;
                         if (currentNode instanceof FloatingReadNode)
                         {
-                            // We are scheduling a floating read node => check memory
-                            // anti-dependencies.
+                            // We are scheduling a floating read node => check memory anti-dependencies.
                             FloatingReadNode floatingReadNode = (FloatingReadNode) currentNode;
                             LocationIdentity location = floatingReadNode.getLocationIdentity();
                             if (location.isMutable())
@@ -206,8 +205,7 @@ public final class SchedulePhase extends Phase
                                     previousIndex = i;
                                     if (killed.contains(location))
                                     {
-                                        // Earliest block kills location => we need to stay within
-                                        // earliest block.
+                                        // Earliest block kills location => we need to stay within earliest block.
                                         latestBlock = currentBlock;
                                     }
                                 }
@@ -216,8 +214,7 @@ public final class SchedulePhase extends Phase
 
                         if (latestBlock == null)
                         {
-                            // We are not constraint within earliest block => calculate optimized
-                            // schedule.
+                            // We are not constraint within earliest block => calculate optimized schedule.
                             calcLatestBlock(currentBlock, strategy, currentNode, currentNodeMap, constrainingLocation, watchListMap, latestBlockToNodesMap, visited, immutableGraph);
                         }
                         else
@@ -274,8 +271,7 @@ public final class SchedulePhase extends Phase
                 Block currentBlock = dominatorChain.get(i);
                 if (currentBlock.getLoopDepth() > lastBlock.getLoopDepth())
                 {
-                    // We are entering a loop boundary. The new loops must not kill the location for
-                    // the crossing to be safe.
+                    // We are entering a loop boundary. The new loops must not kill the location for the crossing to be safe.
                     if (currentBlock.getLoop() != null && ((HIRLoop) currentBlock.getLoop()).canKill(location))
                     {
                         break;
@@ -294,8 +290,7 @@ public final class SchedulePhase extends Phase
                 LocationIdentity locationIdentity = ((KillingBeginNode) lastBlock.getBeginNode()).getLocationIdentity();
                 if ((locationIdentity.isAny() || locationIdentity.equals(location)) && lastBlock != earliestBlock)
                 {
-                    // The begin of this block kills the location, so we *have* to schedule the node
-                    // in the dominating block.
+                    // The begin of this block kills the location, so we *have* to schedule the node in the dominating block.
                     lastBlock = lastBlock.getDominator();
                 }
             }
@@ -359,8 +354,7 @@ public final class SchedulePhase extends Phase
                 {
                     unprocessed.clear(proxy);
                     ValueNode value = proxy.value();
-                    // if multiple proxies reference the same value, schedule the value of a
-                    // proxy once
+                    // if multiple proxies reference the same value, schedule the value of a proxy once
                     if (value != null && nodeMap.get(value) == b && unprocessed.isMarked(value))
                     {
                         sortIntoList(value, b, result, nodeMap, unprocessed, null);
@@ -909,10 +903,10 @@ public final class SchedulePhase extends Phase
                 }
             }
 
-            // Create lists for each block
+            // create lists for each block
             for (Block b : cfg.reversePostOrder())
             {
-                // Count nodes in block
+                // count nodes in block
                 int totalCount = 0;
                 for (FixedNode current : b.getBeginNode().getBlockNodes())
                 {
@@ -920,7 +914,7 @@ public final class SchedulePhase extends Phase
                     totalCount += microBlock.getNodeCount() + 1;
                 }
 
-                // Initialize with begin node, it is always the first node.
+                // initialize with begin node, it is always the first node
                 ArrayList<Node> nodes = new ArrayList<>(totalCount);
                 blockToNodes.put(b, nodes);
 

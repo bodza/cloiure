@@ -14,10 +14,8 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
 
-import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.UnmodifiableMapCursor;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.calc.Condition;
 import giraaff.core.common.cfg.AbstractBlockBase;
@@ -70,7 +68,6 @@ import giraaff.nodes.extended.IntegerSwitchNode;
 import giraaff.nodes.extended.SwitchNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
-import giraaff.nodes.spi.NodeValueMap;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
@@ -643,11 +640,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         {
             return null;
         }
-        return stateForWithExceptionEdge(exceptionEdge);
-    }
-
-    public LIRFrameState stateForWithExceptionEdge(LabelRef exceptionEdge)
-    {
         if (gen.needOnlyOopMaps())
         {
             return LIRFrameState.NO_STATE;

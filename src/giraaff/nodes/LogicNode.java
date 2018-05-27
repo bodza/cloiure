@@ -3,7 +3,6 @@ package giraaff.nodes;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node.IndirectCanonicalization;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.calc.FloatingNode;
 
 // @NodeInfo.allowedUsageTypes "Condition"

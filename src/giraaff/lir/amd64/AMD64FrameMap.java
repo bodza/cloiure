@@ -98,7 +98,6 @@ public class AMD64FrameMap extends FrameMap
 
     void freeRBPSpillSlot()
     {
-        int size = spillSlotSize(LIRKind.value(AMD64Kind.QWORD));
         spillSize = initialSpillSize;
     }
 }

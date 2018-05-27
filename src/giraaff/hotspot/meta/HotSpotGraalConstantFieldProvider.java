@@ -1,18 +1,12 @@
 package giraaff.hotspot.meta;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.GraalHotSpotVMConfig;
-import giraaff.options.OptionValues;
-import giraaff.util.GraalError;
 
 /**
  * Extends {@link HotSpotConstantFieldProvider} to override the implementation of

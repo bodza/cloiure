@@ -138,16 +138,16 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         emit8ByteCompare(crb, masm, result, array1, array2, length, trueLabel, falseLabel);
         emitTailCompares(masm, result, array1, array2, length, trueLabel, falseLabel);
 
-        // Return true
+        // return true
         masm.bind(trueLabel);
         masm.movl(result, 1);
         masm.jmpb(done);
 
-        // Return false
+        // return false
         masm.bind(falseLabel);
         masm.xorl(result, result);
 
-        // That's it
+        // that's it
         masm.bind(done);
     }
 
@@ -183,7 +183,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         Label loopCheck = new Label();
         Label nanCheck = new Label();
 
-        // Compare 16-byte vectors
+        // compare 16-byte vectors
         masm.andl(result, SSE4_1_VECTOR_SIZE - 1); // tail count (in bytes)
         masm.andl(length, ~(SSE4_1_VECTOR_SIZE - 1)); // vector count (in bytes)
         masm.jcc(ConditionFlag.Zero, compareTail);
@@ -192,7 +192,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         masm.leaq(array2, new AMD64Address(array2, length, Scale.Times1, 0));
         masm.negq(length);
 
-        // Align the main loop
+        // align the main loop
         masm.align(crb.target.wordSize * 2);
         masm.bind(loop);
         masm.movdqu(vector1, new AMD64Address(array1, length, Scale.Times1, 0));
@@ -267,7 +267,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         Label loopCheck = new Label();
         Label nanCheck = new Label();
 
-        // Compare 16-byte vectors
+        // compare 16-byte vectors
         masm.andl(result, AVX_VECTOR_SIZE - 1); // tail count (in bytes)
         masm.andl(length, ~(AVX_VECTOR_SIZE - 1)); // vector count (in bytes)
         masm.jcc(ConditionFlag.Zero, compareTail);
@@ -276,7 +276,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         masm.leaq(array2, new AMD64Address(array2, length, Scale.Times1, 0));
         masm.negq(length);
 
-        // Align the main loop
+        // align the main loop
         masm.align(crb.target.wordSize * 2);
         masm.bind(loop);
         masm.vmovdqu(vector1, new AMD64Address(array1, length, Scale.Times1, 0));
@@ -349,7 +349,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         masm.leaq(array2, new AMD64Address(array2, length, Scale.Times1, 0));
         masm.negq(length);
 
-        // Align the main loop
+        // align the main loop
         masm.align(crb.target.wordSize * 2);
         masm.bind(loop);
         masm.movq(temp, new AMD64Address(array1, length, Scale.Times1, 0));
@@ -500,7 +500,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 
         if (!skipBitwiseCompare)
         {
-            // Bitwise compare
+            // bitwise compare
             Register temp = ValueUtil.asRegister(temp4);
 
             if (kind == JavaKind.Float)
@@ -532,14 +532,14 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 
         masm.movq(i, range);
         masm.negq(i);
-        // Align the main loop
+        // align the main loop
         masm.align(crb.target.wordSize * 2);
         masm.bind(loop);
         emitFloatCompare(masm, base1, base2, index, offset, falseLabel, kind.getByteCount() == range);
         masm.addq(index, kind.getByteCount());
         masm.addq(i, kind.getByteCount());
         masm.jccb(ConditionFlag.NotZero, loop);
-        // Floats within the range are equal, revert change to the register index
+        // floats within the range are equal: revert change to the register index
         masm.subq(index, range);
     }
 }

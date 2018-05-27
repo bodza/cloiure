@@ -4,13 +4,10 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterValue;
 import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.hotspot.GraalHotSpotVMConfig;
@@ -48,7 +45,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
         }
         else
         {
-            // Don't waste a register if it's unneeded
+            // don't waste a register if it's unneeded
             temp = Value.ILLEGAL;
         }
     }

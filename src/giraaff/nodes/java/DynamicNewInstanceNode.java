@@ -5,7 +5,6 @@ import java.lang.reflect.Modifier;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;

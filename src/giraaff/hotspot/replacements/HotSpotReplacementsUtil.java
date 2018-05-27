@@ -23,7 +23,6 @@ import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.hotspot.GraalHotSpotVMConfig;
-import giraaff.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.CanonicalizableLocation;
@@ -768,12 +767,6 @@ public class HotSpotReplacementsUtil
     public static boolean useG1GC(@InjectedParameter GraalHotSpotVMConfig config)
     {
         return config.useG1GC;
-    }
-
-    @Fold
-    public static boolean useCMSIncrementalMode(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.cmsIncrementalMode;
     }
 
     @Fold

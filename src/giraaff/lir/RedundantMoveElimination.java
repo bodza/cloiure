@@ -299,11 +299,10 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 BlockData data = blockData.get(block);
                 boolean hasDead = false;
 
-                // Reuse the entry state for iteration, we don't need it later.
+                // reuse the entry state for iteration, we don't need it later
                 int[] iterState = data.entryState;
 
-                // Add the values which are "consumed" by clearValues and
-                // mergeState in solveDataFlow
+                // add the values which are "consumed" by clearValues and mergeState in solveDataFlow
                 int valueNum = data.entryValueNum + data.entryState.length;
 
                 int numInsts = instructions.size();
@@ -321,7 +320,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                             hasDead = true;
                         }
                     }
-                    // It doesn't harm if updateState is also called for a deleted move
+                    // it doesn't harm if updateState is also called for a deleted move
                     valueNum = updateState(iterState, op, valueNum);
                 }
                 if (hasDead)
@@ -338,7 +337,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         {
             if (isEligibleMove(op))
             {
-                // Handle the special case of a move instruction
+                // handle the special case of a move instruction
                 ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
                 int sourceIdx = getStateIdx(moveOp.getInput());
                 int destIdx = getStateIdx(moveOp.getResult());
@@ -391,9 +390,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             // Semantically the output values are written _after_ the temp values.
             op.visitEachOutput(outputValueConsumer);
 
-            valueNum = outputValueConsumer.opValueNum;
-
-            return valueNum;
+            return outputValueConsumer.opValueNum;
         }
 
         /**

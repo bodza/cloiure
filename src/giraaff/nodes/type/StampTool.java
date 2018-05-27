@@ -95,7 +95,7 @@ public class StampTool
         // n <| c, where c is a strictly positive constant
         if (y.lowerBound() == y.upperBound() && y.isStrictlyPositive())
         {
-            // The test proves that n is positive and less than c, [0..c-1]
+            // the test proves that n is positive and less than c, [0..c-1]
             return StampFactory.forInteger(y.getBits(), 0, y.lowerBound() - 1);
         }
         return null;

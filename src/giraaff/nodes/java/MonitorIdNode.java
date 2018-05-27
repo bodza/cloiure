@@ -3,7 +3,6 @@ package giraaff.nodes.java;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.IterableNodeType;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;

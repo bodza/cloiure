@@ -116,8 +116,7 @@ public class ReadNode extends FloatableAccessNode implements LIRLowerableAccess,
             if (locationIdentity instanceof CanonicalizableLocation)
             {
                 CanonicalizableLocation canonicalize = (CanonicalizableLocation) locationIdentity;
-                ValueNode result = canonicalize.canonicalizeRead(read, address, object, tool);
-                return result;
+                return canonicalize.canonicalizeRead(read, address, object, tool);
             }
         }
         return read;

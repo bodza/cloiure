@@ -260,8 +260,7 @@ public class ComputeInliningRelevance
         {
             double invokeProbability = nodeProbabilities.applyAsDouble(invoke.asNode());
 
-            double relevance = (invokeProbability / getFastPathMinProbability()) * Math.min(1.0, getScopeRelevanceWithinParent());
-            return relevance;
+            return (invokeProbability / getFastPathMinProbability()) * Math.min(1.0, getScopeRelevanceWithinParent());
         }
     }
 

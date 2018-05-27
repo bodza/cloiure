@@ -317,8 +317,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                 AnchoringNode newAnchor = anchor;
                 if (parent != null && b.getLoop() != parent.block.getLoop() && !b.isLoopHeader())
                 {
-                    // We are exiting a loop => cannot reuse the anchor without inserting loop
-                    // proxies.
+                    // We are exiting a loop => cannot reuse the anchor without inserting loop proxies.
                     newAnchor = b.getBeginNode();
                 }
                 return new ProcessFrame(b, activeGuards, newAnchor, this);
@@ -354,8 +353,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                     continue;
                 }
 
-                // Cache the next node to be able to reconstruct the previous of the next node
-                // after lowering.
+                // Cache the next node to be able to reconstruct the previous of the next node after lowering.
                 FixedNode nextNode = null;
                 if (node instanceof FixedWithNextNode)
                 {
@@ -378,8 +376,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
 
                 if (!nextNode.isAlive())
                 {
-                    // can happen when the rest of the block is killed by lowering
-                    // (e.g. by an unconditional deopt)
+                    // can happen when the rest of the block is killed by lowering (e.g. by an unconditional deopt)
                     break;
                 }
                 else
@@ -387,7 +384,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                     Node nextLastFixed = nextNode.predecessor();
                     if (!(nextLastFixed instanceof FixedWithNextNode))
                     {
-                        // insert begin node, to have a valid last fixed for next lowerable node.
+                        // Insert begin node, to have a valid last fixed for next lowerable node.
                         // This is about lowering a FixedWithNextNode to a control split while this
                         // FixedWithNextNode is followed by some kind of BeginNode.
                         // For example the when a FixedGuard followed by a loop exit is lowered to a

@@ -66,7 +66,7 @@ public class HotSpotSnippetReflectionProvider implements SnippetReflectionProvid
         }
     }
 
-    // Lazily initialized
+    // lazily initialized
     private Class<?> wordTypesType;
     private Class<?> runtimeType;
     private Class<?> configType;
@@ -74,7 +74,7 @@ public class HotSpotSnippetReflectionProvider implements SnippetReflectionProvid
     @Override
     public <T> T getInjectedNodeIntrinsicParameter(Class<T> type)
     {
-        // Need to test all fields since there no guarantee under the JMM
+        // Need to test all fields since there is no guarantee under the JMM
         // about the order in which these fields are written.
         GraalHotSpotVMConfig config = runtime.getVMConfig();
         if (configType == null || wordTypesType == null || runtimeType == null)

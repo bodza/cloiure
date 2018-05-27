@@ -301,8 +301,7 @@ public class MoveResolver
         spillInterval.setKind(fromInterval.kind());
 
         // add a dummy range because real position is difficult to calculate
-        // Note: this range is a special case when the integrity of the allocation is
-        // checked
+        // note: this range is a special case when the integrity of the allocation is checked
         spillInterval.addRange(1, 2);
 
         spillInterval.assignLocation(spillSlot);
@@ -349,7 +348,7 @@ public class MoveResolver
         }
         if (ValueUtil.isIllegal(fromInterval.location()) && fromInterval.canMaterialize())
         {
-            // Instead of a reload, re-materialize the value
+            // instead of a reload, re-materialize the value
             Constant rematValue = fromInterval.getMaterializedValue();
             addMapping(rematValue, toInterval);
             return;

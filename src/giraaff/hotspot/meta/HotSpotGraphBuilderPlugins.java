@@ -19,7 +19,6 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.StampFactory;
@@ -43,7 +42,6 @@ import giraaff.hotspot.replacements.ReflectionGetCallerClassNode;
 import giraaff.hotspot.replacements.ReflectionSubstitutions;
 import giraaff.hotspot.replacements.SHA2Substitutions;
 import giraaff.hotspot.replacements.SHA5Substitutions;
-import giraaff.hotspot.replacements.SHASubstitutions;
 import giraaff.hotspot.replacements.ThreadSubstitutions;
 import giraaff.hotspot.replacements.arraycopy.ArrayCopyNode;
 import giraaff.hotspot.word.HotSpotWordTypes;
@@ -65,7 +63,6 @@ import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 import giraaff.nodes.graphbuilderconf.InvocationPlugins;
 import giraaff.nodes.graphbuilderconf.InvocationPlugins.Registration;
-import giraaff.nodes.graphbuilderconf.NodeIntrinsicPluginFactory;
 import giraaff.nodes.java.InstanceOfDynamicNode;
 import giraaff.nodes.memory.HeapAccess.BarrierType;
 import giraaff.nodes.memory.ReadNode;
@@ -78,10 +75,8 @@ import giraaff.options.OptionValues;
 import giraaff.phases.tiers.CompilerConfiguration;
 import giraaff.replacements.InlineDuringParsingPlugin;
 import giraaff.replacements.MethodHandlePlugin;
-import giraaff.replacements.NodeIntrinsificationProvider;
 import giraaff.replacements.ReplacementsImpl;
 import giraaff.replacements.StandardGraphBuilderPlugins;
-import giraaff.util.GraalServices;
 import giraaff.word.WordOperationPlugin;
 import giraaff.word.WordTypes;
 
@@ -98,7 +93,6 @@ public class HotSpotGraphBuilderPlugins
         InvocationPlugins invocationPlugins = new HotSpotInvocationPlugins(config, compilerConfiguration);
 
         Plugins plugins = new Plugins(invocationPlugins);
-        NodeIntrinsificationProvider nodeIntrinsificationProvider = new NodeIntrinsificationProvider(metaAccess, snippetReflection, foreignCalls, lowerer, wordTypes);
         HotSpotWordOperationPlugin wordOperationPlugin = new HotSpotWordOperationPlugin(snippetReflection, wordTypes);
         HotSpotNodePlugin nodePlugin = new HotSpotNodePlugin(wordOperationPlugin);
 
@@ -133,11 +127,6 @@ public class HotSpotGraphBuilderPlugins
                 registerUnsafePlugins(invocationPlugins, replacementBytecodeProvider);
                 StandardGraphBuilderPlugins.registerInvocationPlugins(metaAccess, snippetReflection, invocationPlugins, replacementBytecodeProvider, true);
                 registerArrayPlugins(invocationPlugins, replacementBytecodeProvider);
-
-                for (NodeIntrinsicPluginFactory factory : GraalServices.load(NodeIntrinsicPluginFactory.class))
-                {
-                    factory.registerPlugins(invocationPlugins, nodeIntrinsificationProvider);
-                }
             }
         });
         return plugins;
@@ -482,11 +471,6 @@ public class HotSpotGraphBuilderPlugins
 
     private static void registerSHAPlugins(InvocationPlugins plugins, GraalHotSpotVMConfig config, BytecodeProvider bytecodeProvider)
     {
-        if (config.useSHA1Intrinsics())
-        {
-            Registration r = new Registration(plugins, "sun.security.provider.SHA", bytecodeProvider);
-            r.registerMethodSubstitution(SHASubstitutions.class, SHASubstitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
-        }
         if (config.useSHA256Intrinsics())
         {
             Registration r = new Registration(plugins, "sun.security.provider.SHA2", bytecodeProvider);

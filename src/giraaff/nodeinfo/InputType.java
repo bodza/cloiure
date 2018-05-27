@@ -27,12 +27,12 @@ public enum InputType
      */
     Anchor,
     /**
-     * Inputs that represent an association between nodes, e.g., a phi and the merge or a loop begin
+     * Inputs that represent an association between nodes, e.g. a phi and the merge or a loop begin
      * and loop exits and ends.
      */
     Association,
     /**
-     * Inputs that connect tightly coupled nodes, e.g., an InvokeNode and its CallTargetNode.
+     * Inputs that connect tightly coupled nodes, e.g. an InvokeNode and its CallTargetNode.
      */
     Extension,
     /**

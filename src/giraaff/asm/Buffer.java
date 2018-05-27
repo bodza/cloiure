@@ -115,8 +115,7 @@ final class Buffer
     {
         final int len = arr.length;
         ensureSize(pos + len);
-        // Write directly into the underlying array so as to not
-        // change the ByteBuffer's position
+        // Write directly into the underlying array so as to not change the ByteBuffer's position.
         System.arraycopy(arr, 0, data.array(), pos, len);
     }
 

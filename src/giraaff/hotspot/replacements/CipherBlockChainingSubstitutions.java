@@ -36,9 +36,8 @@ public class CipherBlockChainingSubstitutions
     {
         try
         {
-            // Need to use the system class loader as com.sun.crypto.provider.FeedbackCipher
-            // is normally loaded by the extension class loader which is not delegated
-            // to by the JVMCI class loader.
+            // Need to use the system class loader as com.sun.crypto.provider.FeedbackCipher is normally loaded
+            // by the extension class loader, which is not delegated to by the JVMCI class loader.
             ClassLoader cl = ClassLoader.getSystemClassLoader();
 
             feedbackCipherClass = Class.forName("com.sun.crypto.provider.FeedbackCipher", true, cl);

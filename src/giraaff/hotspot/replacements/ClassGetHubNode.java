@@ -94,7 +94,7 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
             }
             if (clazz instanceof HubGetClassNode)
             {
-                // Replace: _klass._java_mirror._klass -> _klass
+                // replace: _klass._java_mirror._klass -> _klass
                 return ((HubGetClassNode) clazz).getHub();
             }
             if (self == null)

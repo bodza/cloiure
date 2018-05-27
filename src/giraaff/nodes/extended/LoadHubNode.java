@@ -3,7 +3,6 @@ package giraaff.nodes.extended;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.TypeReference;

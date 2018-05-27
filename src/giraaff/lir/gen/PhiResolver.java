@@ -158,12 +158,9 @@ public class PhiResolver
         buffer.finish();
     }
 
-    public void move(Value dest, Value src)
+    public void move(Value dst, Value src)
     {
-        // tty.print("move "); src.print(); tty.print(" to "); dest.print(); tty.cr();
-        PhiResolverNode srcNode = sourceNode(src);
-        PhiResolverNode destNode = destinationNode(dest);
-        srcNode.destinations.add(destNode);
+        sourceNode(src).destinations.add(destinationNode(dst));
     }
 
     private PhiResolverNode createNode(Value operand, boolean source)
@@ -177,8 +174,7 @@ public class PhiResolver
                 node = new PhiResolverNode(operand);
                 operandToNodeMap.put(operand, node);
             }
-            // Make sure that all variables show up in the list when
-            // they are used as the source of a move.
+            // Make sure that all variables show up in the list when they are used as the source of a move.
             if (source)
             {
                 if (!variableOperands.contains(node))

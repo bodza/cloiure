@@ -116,14 +116,14 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         {
             if (b.parsingIntrinsic() || BytecodeParserOptions.InlineDuringParsing.getValue(b.getOptions()) || BytecodeParserOptions.InlineIntrinsicsDuringParsing.getValue(b.getOptions()))
             {
-                // Forced inlining of intrinsics
+                // forced inlining of intrinsics
                 return InlineInfo.createIntrinsicInlineInfo(subst.getMethod(), method, subst.getOrigin());
             }
             return null;
         }
         if (b.parsingIntrinsic())
         {
-            // Force inlining when parsing replacements
+            // force inlining when parsing replacements
             return InlineInfo.createIntrinsicInlineInfo(method, null, defaultBytecodeProvider);
         }
         return null;
@@ -354,11 +354,11 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
                             }
                         }
                     }
-                    // Not an exception constructor call
+                    // not an exception constructor call
                     return true;
                 }
             }
-            // Not a StateSplit
+            // not a StateSplit
             return false;
         }
 
@@ -367,12 +367,10 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
          */
         protected StructuredGraph buildInitialGraph(BytecodeProvider bytecodeProvider, final ResolvedJavaMethod methodToParse, Object[] args)
         {
-            // Replacements cannot have optimistic assumptions since they have
-            // to be valid for the entire run of the VM.
+            // replacements cannot have optimistic assumptions since they have to be valid for the entire run of the VM
             final StructuredGraph graph = new StructuredGraph.Builder(replacements.options).method(methodToParse).build();
 
-            // Replacements are not user code so they do not participate in unsafe access
-            // tracking
+            // replacements are not user code so they do not participate in unsafe access tracking
             graph.disableUnsafeAccessTracking();
 
             MetaAccessProvider metaAccess = replacements.providers.getMetaAccess();
@@ -388,12 +386,12 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             Snippet snippetAnnotation = method.getAnnotation(Snippet.class);
             if (snippetAnnotation == null)
             {
-                // Post-parse inlined intrinsic
+                // post-parse inlined intrinsic
                 initialIntrinsicContext = new IntrinsicContext(substitutedMethod, method, bytecodeProvider, CompilationContext.INLINE_AFTER_PARSING);
             }
             else
             {
-                // Snippet
+                // snippet
                 ResolvedJavaMethod original = substitutedMethod != null ? substitutedMethod : method;
                 initialIntrinsicContext = new IntrinsicContext(original, method, bytecodeProvider, CompilationContext.INLINE_AFTER_PARSING, snippetAnnotation.allowPartialIntrinsicArgumentMismatch());
             }

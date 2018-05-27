@@ -127,7 +127,7 @@ public abstract class LIRInstruction
         HINT,
 
         /**
-         * The value can be uninitialized, e.g., a stack slot that has not written to before. This
+         * The value can be uninitialized, e.g. a stack slot that has not written to before. This
          * is only used to avoid false positives in verification code.
          */
         UNINITIALIZED,

@@ -98,7 +98,7 @@ public class Classfile
             skipped += s;
             if (s == 0 && skipped != n)
             {
-                // Check for EOF (i.e., truncated class file)
+                // check for EOF (i.e. truncated class file)
                 if (stream.read() == -1)
                 {
                     throw new IOException("truncated stream");
@@ -120,13 +120,12 @@ public class Classfile
             if (code == null && attributeName.equals("Code"))
             {
                 ResolvedJavaMethod method = cp.context.findMethod(type, name, descriptor, isStatic);
-                // Even if we will discard the Code attribute (see below), we still
-                // need to parse it to reach the following class file content.
+                // Even if we will discard the Code attribute (see below), we still need to parse it
+                // to reach the following class file content.
                 code = new ClassfileBytecode(method, stream, cp);
                 if (method == null)
                 {
-                    // This is a method hidden from reflection
-                    // (see sun.reflect.Reflection.filterMethods)
+                    // this is a method hidden from reflection (see sun.reflect.Reflection.filterMethods)
                     code = null;
                 }
             }

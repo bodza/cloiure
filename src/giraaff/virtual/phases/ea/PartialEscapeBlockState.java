@@ -91,8 +91,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public ObjectState getObjectState(int object)
     {
-        ObjectState state = objectStates[object];
-        return state;
+        return objectStates[object];
     }
 
     public ObjectState getObjectStateOptional(int object)
@@ -105,8 +104,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
      */
     public ObjectState getObjectState(VirtualObjectNode object)
     {
-        ObjectState state = objectStates[object.getObjectId()];
-        return state;
+        return objectStates[object.getObjectId()];
     }
 
     public ObjectState getObjectStateOptional(VirtualObjectNode object)

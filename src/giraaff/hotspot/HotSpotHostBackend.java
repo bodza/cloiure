@@ -4,7 +4,6 @@ import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.runtime.JVMCICompiler;
 

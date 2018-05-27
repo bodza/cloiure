@@ -358,7 +358,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
         else
         {
-            // Dead value - make vacuous interval also add register priority for dead intervals
+            // dead value - make vacuous interval also add register priority for dead intervals
             interval.addRange(defPos, defPos + 1);
             interval.addUsePos(defPos, registerPriority);
         }
@@ -548,7 +548,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             final int blockFrom = allocator.getFirstLirInstructionId(block);
             int blockTo = allocator.getLastLirInstructionId(block);
 
-            // Update intervals for operands live at the end of this block;
+            // update intervals for operands live at the end of this block
             BitSet live = allocator.getBlockData(block).liveOut;
             for (int operandNum = live.nextSetBit(0); operandNum >= 0; operandNum = live.nextSetBit(operandNum + 1))
             {
@@ -568,7 +568,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             }
 
             /*
-             * Iterate all instructions of the block in reverse order. definitions of
+             * Iterate all instructions of the block in reverse order. Definitions of
              * intervals are processed before uses.
              */
             for (int j = instructions.size() - 1; j >= 0; j--)

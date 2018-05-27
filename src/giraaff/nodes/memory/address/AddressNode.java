@@ -3,7 +3,6 @@ package giraaff.nodes.memory.address;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node.IndirectCanonicalization;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodeinfo.StructuralInput;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.FloatingNode;

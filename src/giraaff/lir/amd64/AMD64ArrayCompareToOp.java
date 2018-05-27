@@ -146,8 +146,8 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         {
             masm.shrl(cnt2, 1);
         }
-        // Compute the minimum of the string lengths and the difference of the string lengths (stack).
-        // Do the conditional move stuff
+        // Compute the minimum of the string lengths and the difference of the string lengths (stack),
+        // then do the conditional move stuff.
         masm.movl(result, cnt1);
         masm.subl(cnt1, cnt2);
         masm.push(cnt1);
@@ -158,13 +158,13 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         masm.jcc(ConditionFlag.Zero, LENGTH_DIFF_LABEL);
         if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
         {
-            // Load first bytes
+            // load first bytes
             masm.movzbl(result, new AMD64Address(str1, 0)); // result = str1[0]
             masm.movzbl(cnt1, new AMD64Address(str2, 0)); // cnt1 = str2[0]
         }
         else if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
         {
-            // Load first characters
+            // load first characters
             masm.movzwl(result, new AMD64Address(str1, 0));
             masm.movzwl(cnt1, new AMD64Address(str2, 0));
         }
@@ -178,13 +178,13 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
         if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
         {
-            // Divide length by 2 to get number of chars
+            // divide length by 2 to get number of chars
             masm.shrl(cnt2, 1);
         }
         masm.cmpl(cnt2, 1);
         masm.jcc(ConditionFlag.Equal, LENGTH_DIFF_LABEL);
 
-        // Check if the strings start at the same location and setup scale and stride
+        // check if the strings start at the same location and setup scale and stride
         if (kind1 == kind2)
         {
             masm.cmpptr(str1, str2);
@@ -279,13 +279,13 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             masm.jccb(ConditionFlag.AboveEqual, COMPARE_WIDE_VECTORS);
             masm.addl(cnt1, stride);
 
-            // Compare the characters at index in cnt1
+            // compare the characters at index in cnt1
             masm.bind(COMPARE_INDEX_CHAR); // cnt1 has the offset of the mismatching character
             loadNextElements(masm, result, cnt2, str1, str2, scale, scale1, scale2, cnt1);
             masm.subl(result, cnt2);
             masm.jmp(POP_LABEL);
 
-            // Setup the registers to start vector comparison loop
+            // setup the registers to start vector comparison loop
             masm.bind(COMPARE_WIDE_VECTORS);
             if (kind1 == kind2)
             {
@@ -302,7 +302,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             masm.jcc(ConditionFlag.Zero, COMPARE_WIDE_TAIL);
             masm.negq(result);
 
-            // In a loop, compare 16-chars (32-bytes) at once using (vpxor+vptest)
+            // in a loop, compare 16-chars (32-bytes) at once using (vpxor+vptest)
             masm.bind(COMPARE_WIDE_VECTORS_LOOP);
 
             if (supportsAVX512VLBW(crb.target)) // trying 64 bytes fast loop
@@ -381,7 +381,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             }
             masm.jmp(COMPARE_16_CHARS);
 
-            // Compare tail chars, length between 1 to 15 chars
+            // compare tail chars, length between 1 to 15 chars
             masm.bind(COMPARE_TAIL_LONG);
             masm.movl(cnt2, result);
             masm.cmpl(cnt2, stride);
@@ -423,8 +423,8 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             Label COMPARE_TAIL = new Label();
 
             int pcmpmask = 0x19;
-            // Setup to compare 8-char (16-byte) vectors,
-            // start from first character again because it has aligned address.
+            // setup to compare 8-char (16-byte) vectors,
+            // start from first character again because it has aligned address
             masm.movl(result, cnt2);
             masm.andl(cnt2, ~(stride - 1)); // cnt2 holds the vector count
             if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
@@ -466,8 +466,8 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
                 masm.pmovzxbw(vec1, new AMD64Address(str1, result, scale1));
                 masm.pcmpestri(vec1, new AMD64Address(str2, result, scale2), pcmpmask);
             }
-            // After pcmpestri cnt1(rcx) contains mismatched element index
 
+            // after pcmpestri cnt1(rcx) contains mismatched element index
             masm.jccb(ConditionFlag.Below, VECTOR_NOT_EQUAL); // CF==1
             masm.addq(result, stride);
             masm.subq(cnt2, stride);
@@ -492,7 +492,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             }
             masm.jccb(ConditionFlag.AboveEqual, LENGTH_DIFF_LABEL);
 
-            // Mismatched characters in the vectors
+            // mismatched characters in the vectors
             masm.bind(VECTOR_NOT_EQUAL);
             masm.addq(cnt1, result);
             loadNextElements(masm, result, cnt2, str1, str2, scale, scale1, scale2, cnt1);
@@ -501,10 +501,10 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
             masm.bind(COMPARE_TAIL); // limit is zero
             masm.movl(cnt2, result);
-            // Fallthru to tail compare
+            // fallthrough to tail compare
         }
 
-        // Shift str2 and str1 to the end of the arrays, negate min
+        // shift str2 and str1 to the end of the arrays, negate min
         if (kind1 == kind2)
         {
             masm.leaq(str1, new AMD64Address(str1, cnt2, scale));
@@ -518,7 +518,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         masm.decrementl(cnt2); // first character was compared already
         masm.negq(cnt2);
 
-        // Compare the rest of the elements
+        // compare the rest of the elements
         masm.bind(WHILE_HEAD_LABEL);
         loadNextElements(masm, result, cnt1, str1, str2, scale, scale1, scale2, cnt2);
         masm.subl(result, cnt1);
@@ -526,12 +526,12 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         masm.incrementq(cnt2, 1);
         masm.jccb(ConditionFlag.NotZero, WHILE_HEAD_LABEL);
 
-        // Strings are equal up to min length. Return the length difference.
+        // strings are equal up to min length: return the length difference
         masm.bind(LENGTH_DIFF_LABEL);
         masm.pop(result);
         if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
         {
-            // Divide diff by 2 to get number of chars
+            // divide diff by 2 to get number of chars
             masm.sarl(result, 1);
         }
         masm.jmpb(DONE_LABEL);
@@ -545,7 +545,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             masm.bsfq(cnt2, cnt1);
             if (kind1 != JavaKind.Byte && kind2 != JavaKind.Byte)
             {
-                // Divide diff by 2 to get number of chars
+                // divide diff by 2 to get number of chars
                 masm.sarl(cnt2, 1);
             }
             masm.addq(result, cnt2);
@@ -568,11 +568,11 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             masm.jmpb(POP_LABEL);
         }
 
-        // Discard the stored length difference
+        // discard the stored length difference
         masm.bind(POP_LABEL);
         masm.pop(cnt1);
 
-        // That's it
+        // that's it
         masm.bind(DONE_LABEL);
         if (kind1 == JavaKind.Char && kind2 == JavaKind.Byte)
         {

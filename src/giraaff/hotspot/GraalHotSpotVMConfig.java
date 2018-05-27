@@ -1,6 +1,7 @@
 package giraaff.hotspot;
 
 import jdk.vm.ci.common.JVMCIError;
+import jdk.vm.ci.hotspot.HotSpotVMConfigAccess;
 import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
 
 import giraaff.core.common.CompressEncoding;
@@ -9,9 +10,15 @@ import giraaff.hotspot.nodes.GraalHotSpotVMConfigNode;
 /**
  * Used to access native configuration details.
  */
-public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
+public final class GraalHotSpotVMConfig extends HotSpotVMConfigAccess
 {
-    GraalHotSpotVMConfig(HotSpotVMConfigStore store)
+    /**
+     * Sentinel value to use for an {@linkplain InjectedParameter injected}
+     * {@link GraalHotSpotVMConfig} parameter to a {@linkplain Fold foldable} method.
+     */
+    public static final GraalHotSpotVMConfig INJECTED_VMCONFIG = null;
+
+    public GraalHotSpotVMConfig(HotSpotVMConfigStore store)
     {
         super(store);
 
@@ -47,14 +54,14 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final boolean useCRC32CIntrinsics = getFlag("UseCRC32CIntrinsics", Boolean.class);
     public final boolean threadLocalHandshakes = getFlag("ThreadLocalHandshakes", Boolean.class, false);
 
-    private final boolean useMultiplyToLenIntrinsic = getFlag("UseMultiplyToLenIntrinsic", Boolean.class);
-    private final boolean useSHA1Intrinsics = getFlag("UseSHA1Intrinsics", Boolean.class);
     private final boolean useSHA256Intrinsics = getFlag("UseSHA256Intrinsics", Boolean.class);
     private final boolean useSHA512Intrinsics = getFlag("UseSHA512Intrinsics", Boolean.class);
-    private final boolean useMontgomeryMultiplyIntrinsic = getFlag("UseMontgomeryMultiplyIntrinsic", Boolean.class, false);
-    private final boolean useMontgomerySquareIntrinsic = getFlag("UseMontgomerySquareIntrinsic", Boolean.class, false);
-    private final boolean useMulAddIntrinsic = getFlag("UseMulAddIntrinsic", Boolean.class, false);
-    private final boolean useSquareToLenIntrinsic = getFlag("UseSquareToLenIntrinsic", Boolean.class, false);
+
+    private final boolean useMulAddIntrinsic = getFlag("UseMulAddIntrinsic", Boolean.class);
+    private final boolean useMultiplyToLenIntrinsic = getFlag("UseMultiplyToLenIntrinsic", Boolean.class);
+    private final boolean useSquareToLenIntrinsic = getFlag("UseSquareToLenIntrinsic", Boolean.class);
+    private final boolean useMontgomeryMultiplyIntrinsic = getFlag("UseMontgomeryMultiplyIntrinsic", Boolean.class);
+    private final boolean useMontgomerySquareIntrinsic = getFlag("UseMontgomerySquareIntrinsic", Boolean.class);
 
     /*
      * These are methods because in some JDKs the flags are visible but the stubs themselves haven't
@@ -63,11 +70,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public boolean useMultiplyToLenIntrinsic()
     {
         return useMultiplyToLenIntrinsic && multiplyToLen != 0;
-    }
-
-    public boolean useSHA1Intrinsics()
-    {
-        return useSHA1Intrinsics && sha1ImplCompress != 0;
     }
 
     public boolean useSHA256Intrinsics()
@@ -111,7 +113,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     }
 
     public final boolean useG1GC = getFlag("UseG1GC", Boolean.class);
-    public final boolean useCMSGC = getFlag("UseConcMarkSweepGC", Boolean.class);
 
     public final int allocatePrefetchStyle = getFlag("AllocatePrefetchStyle", Integer.class);
     public final int allocatePrefetchInstr = getFlag("AllocatePrefetchInstr", Integer.class);
@@ -285,8 +286,8 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
         return javaThreadAnchorOffset + getFieldOffset("JavaFrameAnchor::_flags", Integer.class, "int");
     }
 
-    public final int frameInterpreterFrameSenderSpOffset = getConstant("frame::interpreter_frame_sender_sp_offset", Integer.class, null);
-    public final int frameInterpreterFrameLastSpOffset = getConstant("frame::interpreter_frame_last_sp_offset", Integer.class, null);
+    public final int frameInterpreterFrameSenderSpOffset = getConstant("frame::interpreter_frame_sender_sp_offset", Integer.class);
+    public final int frameInterpreterFrameLastSpOffset = getConstant("frame::interpreter_frame_last_sp_offset", Integer.class);
 
     public final int osThreadInterruptedOffset = getFieldOffset("OSThread::_interrupted", Integer.class, "jint");
 
@@ -302,7 +303,7 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final int monitorMask = getConstant("markOopDesc::monitor_value", Integer.class, -1);
     public final int biasedLockPattern = getConstant("markOopDesc::biased_lock_pattern", Integer.class);
 
-    // This field has no type in vmStructs.cpp
+    // this field has no type in vmStructs.cpp
     public final int objectMonitorOwner = getFieldOffset("ObjectMonitor::_owner", Integer.class, null, -1);
     public final int objectMonitorRecursions = getFieldOffset("ObjectMonitor::_recursions", Integer.class, "intptr_t", -1);
     public final int objectMonitorCxq = getFieldOffset("ObjectMonitor::_cxq", Integer.class, "ObjectWaiter*", -1);
@@ -457,12 +458,10 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
 
     public final boolean tlabStats = getFlag("TLABStats", Boolean.class);
 
-    // FIXME This is only temporary until the GC code is changed.
+    // FIXME this is only temporary until the GC code is changed
     public final boolean inlineContiguousAllocationSupported = getFieldValue("CompilerToVM::Data::_supports_inline_contig_alloc", Boolean.class);
     public final long heapEndAddress = getFieldValue("CompilerToVM::Data::_heap_end_addr", Long.class, "HeapWord**");
     public final long heapTopAddress = getFieldValue("CompilerToVM::Data::_heap_top_addr", Long.class, "HeapWord* volatile*");
-
-    public final boolean cmsIncrementalMode = getFlag("CMSIncrementalMode", Boolean.class, false);
 
     public final long inlineCacheMissStub = getFieldValue("CompilerToVM::Data::SharedRuntime_ic_miss_stub", Long.class, "address");
 
@@ -479,16 +478,15 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final long updateBytesCRC32Stub = getFieldValue("StubRoutines::_updateBytesCRC32", Long.class, "address");
     public final long crcTableAddress = getFieldValue("StubRoutines::_crc_table_adr", Long.class, "address");
 
-    public final long sha1ImplCompress = getFieldValue("StubRoutines::_sha1_implCompress", Long.class, "address", 0L);
     public final long sha256ImplCompress = getFieldValue("StubRoutines::_sha256_implCompress", Long.class, "address", 0L);
     public final long sha512ImplCompress = getFieldValue("StubRoutines::_sha512_implCompress", Long.class, "address", 0L);
-    public final long multiplyToLen = getFieldValue("StubRoutines::_multiplyToLen", Long.class, "address", null);
-
     public final long updateBytesCRC32C = getFieldValue("StubRoutines::_updateBytesCRC32C", Long.class, "address", 0L);
-    public final long squareToLen = getFieldValue("StubRoutines::_squareToLen", Long.class, "address", null);
-    public final long mulAdd = getFieldValue("StubRoutines::_mulAdd", Long.class, "address", null);
-    public final long montgomeryMultiply = getFieldValue("StubRoutines::_montgomeryMultiply", Long.class, "address", null);
-    public final long montgomerySquare = getFieldValue("StubRoutines::_montgomerySquare", Long.class, "address", null);
+
+    public final long multiplyToLen = getFieldValue("StubRoutines::_multiplyToLen", Long.class, "address");
+    public final long squareToLen = getFieldValue("StubRoutines::_squareToLen", Long.class, "address");
+    public final long mulAdd = getFieldValue("StubRoutines::_mulAdd", Long.class, "address");
+    public final long montgomeryMultiply = getFieldValue("StubRoutines::_montgomeryMultiply", Long.class, "address");
+    public final long montgomerySquare = getFieldValue("StubRoutines::_montgomerySquare", Long.class, "address");
 
     public final long jbyteArraycopy = getFieldValue("StubRoutines::_jbyte_arraycopy", Long.class, "address");
     public final long jshortArraycopy = getFieldValue("StubRoutines::_jshort_arraycopy", Long.class, "address");
@@ -564,16 +562,10 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final int MARKID_POLL_FAR = getConstant("CodeInstaller::POLL_FAR", Integer.class);
     public final int MARKID_POLL_RETURN_FAR = getConstant("CodeInstaller::POLL_RETURN_FAR", Integer.class);
     public final int MARKID_CARD_TABLE_ADDRESS = getConstant("CodeInstaller::CARD_TABLE_ADDRESS", Integer.class);
-
-    /**
-     * The following constants are given default values here since they are missing in the native
-     * JVMCI-8 code but are still required for {@link GraalHotSpotVMConfigNode#canonical} to work in
-     * a JDK8 environment.
-     */
-    public final int MARKID_HEAP_TOP_ADDRESS = getConstant("CodeInstaller::HEAP_TOP_ADDRESS", Integer.class, 17);
-    public final int MARKID_HEAP_END_ADDRESS = getConstant("CodeInstaller::HEAP_END_ADDRESS", Integer.class, 18);
-    public final int MARKID_NARROW_KLASS_BASE_ADDRESS = getConstant("CodeInstaller::NARROW_KLASS_BASE_ADDRESS", Integer.class, 19);
-    public final int MARKID_CRC_TABLE_ADDRESS = getConstant("CodeInstaller::CRC_TABLE_ADDRESS", Integer.class, 21);
-    public final int MARKID_LOG_OF_HEAP_REGION_GRAIN_BYTES = getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES", Integer.class, 22);
-    public final int MARKID_INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED = getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class, 23);
+    public final int MARKID_HEAP_TOP_ADDRESS = getConstant("CodeInstaller::HEAP_TOP_ADDRESS", Integer.class);
+    public final int MARKID_HEAP_END_ADDRESS = getConstant("CodeInstaller::HEAP_END_ADDRESS", Integer.class);
+    public final int MARKID_NARROW_KLASS_BASE_ADDRESS = getConstant("CodeInstaller::NARROW_KLASS_BASE_ADDRESS", Integer.class);
+    public final int MARKID_CRC_TABLE_ADDRESS = getConstant("CodeInstaller::CRC_TABLE_ADDRESS", Integer.class);
+    public final int MARKID_LOG_OF_HEAP_REGION_GRAIN_BYTES = getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES", Integer.class);
+    public final int MARKID_INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED = getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class);
 }

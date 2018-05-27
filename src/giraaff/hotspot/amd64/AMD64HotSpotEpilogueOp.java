@@ -33,7 +33,7 @@ abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD
     {
         if (ValueUtil.isStackSlot(savedRbp))
         {
-            // Restoring RBP from the stack must be done before the frame is removed
+            // restoring RBP from the stack must be done before the frame is removed
             masm.movq(AMD64.rbp, (AMD64Address) crb.asAddress(savedRbp));
         }
         else

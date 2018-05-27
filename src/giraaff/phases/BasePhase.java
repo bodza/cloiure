@@ -1,9 +1,6 @@
 package giraaff.phases;
 
-import giraaff.graph.Graph.Mark;
 import giraaff.nodes.StructuredGraph;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 
 /**
  * Base class for all compiler phases. Subclasses should be stateless. There will be one global

@@ -3,30 +3,19 @@ package giraaff.hotspot;
 import jdk.vm.ci.code.TargetDescription;
 
 import giraaff.api.runtime.GraalRuntime;
-import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.options.OptionValues;
-import giraaff.runtime.RuntimeProvider;
 
 /**
  * Configuration information for the HotSpot Graal runtime.
  */
-public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvider
+public interface HotSpotGraalRuntimeProvider extends GraalRuntime
 {
     default TargetDescription getTarget()
     {
-        return getHostBackend().getTarget();
+        return getBackend().getTarget();
     }
 
-    HotSpotProviders getHostProviders();
-
-    @Override
-    default String getName()
-    {
-        return getClass().getSimpleName();
-    }
-
-    @Override
-    HotSpotBackend getHostBackend();
+    HotSpotBackend getBackend();
 
     GraalHotSpotVMConfig getVMConfig();
 
@@ -39,10 +28,4 @@ public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvid
      * This runtime has been requested to shutdown.
      */
     boolean isShutdown();
-
-    /**
-     * Returns the unique compiler configuration name that is in use. Useful for users to find out
-     * which configuration is in use.
-     */
-    String getCompilerConfigurationName();
 }

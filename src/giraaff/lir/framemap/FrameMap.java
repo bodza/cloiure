@@ -160,7 +160,7 @@ public abstract class FrameMap
 
     /**
      * Computes the final size of this frame. After this method has been called, methods that change
-     * the frame size cannot be called anymore, e.g., no more spill slots or outgoing arguments can
+     * the frame size cannot be called anymore, e.g. no more spill slots or outgoing arguments can
      * be requested.
      */
     public void finish()

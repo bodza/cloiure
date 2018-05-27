@@ -16,7 +16,6 @@ import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.StandardOp;
 import giraaff.lir.StandardOp.MoveOp;
 import giraaff.lir.StandardOp.ValueMoveOp;
 import giraaff.lir.Variable;

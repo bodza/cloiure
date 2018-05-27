@@ -41,7 +41,7 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
     {
         leaveFrameAndRestoreRbp(crb, masm);
 
-        // Discard the return address, thus completing restoration of caller frame
+        // discard the return address, thus completing restoration of caller frame
         masm.incrementq(AMD64.rsp, 8);
 
         masm.jmp(ValueUtil.asRegister(handlerInCallerPc));

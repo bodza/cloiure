@@ -164,8 +164,7 @@ public abstract class ScopedPostOrderNodeIterator
             return null;
         }
 
-        FixedNode result = nodeQueue.removeFirst();
-        return result;
+        return nodeQueue.removeFirst();
     }
 
     private void queueMerge(AbstractEndNode end)

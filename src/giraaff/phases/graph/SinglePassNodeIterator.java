@@ -374,7 +374,6 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
 
     private T pruneEntry(FixedNode x)
     {
-        T result = nodeStates.removeKey(x);
-        return result;
+        return nodeStates.removeKey(x);
     }
 }

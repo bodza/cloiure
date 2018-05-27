@@ -468,8 +468,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     Stamp oldStamp = phi.stamp(NodeView.DEFAULT);
                     if (oldStamp.tryImproveWith(bestPossibleStamp) != null)
                     {
-                        // Need to be careful to not run into stamp update cycles with the iterative
-                        // canonicalization.
+                        // Need to be careful to not run into stamp update cycles with the iterative canonicalization.
                         boolean allow = false;
                         if (bestPossibleStamp instanceof ObjectStamp)
                         {
@@ -691,7 +690,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
          * we are not implicitly creating a dependency on a pi node that is responsible for that
          * stamp. For now, we are conservatively only using the stamps of constants. Under certain
          * circumstances, we may also be able to use the stamp of the value after skipping pi nodes
-         * (e.g., the stamp of a parameter after inlining, or the stamp of a fixed node that can
+         * (e.g. the stamp of a parameter after inlining, or the stamp of a fixed node that can
          * never be replaced with a pi node via canonicalization).
          */
         private static Stamp getOtherSafeStamp(ValueNode x)
@@ -850,7 +849,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     condition.safeDelete();
                     return false;
                 };
-                // Move the later test up
+                // move the later test up
                 return rewireGuards(otherGuard, outcome, null, guardedValueStamp, rewirer);
             }
             return false;
@@ -1247,7 +1246,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         {
             if (!ok)
             {
-                // Abort the recursion
+                // abort the recursion
                 return curNode;
             }
             if (!(curNode instanceof ValueNode))

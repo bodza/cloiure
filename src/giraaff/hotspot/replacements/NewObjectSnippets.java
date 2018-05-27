@@ -17,7 +17,6 @@ import org.graalvm.word.WordFactory;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.api.replacements.Snippet.VarargsParameter;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.calc.UnsignedMath;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.StampFactory;
@@ -49,14 +48,12 @@ import giraaff.nodes.java.NewInstanceNode;
 import giraaff.nodes.java.NewMultiArrayNode;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
-import giraaff.replacements.nodes.CStringConstant;
 import giraaff.replacements.nodes.ExplodeLoopNode;
 import giraaff.word.Word;
 
@@ -79,7 +76,7 @@ public class NewObjectSnippets implements Snippets
         GraalHotSpotVMConfig config = HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
         if (config.allocatePrefetchStyle > 0)
         {
-            // Insert a prefetch for each allocation only on the fast-path
+            // Insert a prefetch for each allocation only on the fast-path.
             // Generate several prefetch instructions.
             int lines = isArray ? config.allocatePrefetchLines : config.allocateInstancePrefetchLines;
             int stepSize = config.allocatePrefetchStepSize;
@@ -101,7 +98,6 @@ public class NewObjectSnippets implements Snippets
 
     public static Object allocateInstanceHelper(int size, KlassPointer hub, Word prototypeMarkWord, boolean fillContents, Register threadRegister, boolean constantSize, String typeContext, OptionValues options)
     {
-        Object result;
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         Word top = HotSpotReplacementsUtil.readTlabTop(thread);
         Word end = HotSpotReplacementsUtil.readTlabEnd(thread);
@@ -110,13 +106,12 @@ public class NewObjectSnippets implements Snippets
         {
             HotSpotReplacementsUtil.writeTlabTop(thread, newTop);
             emitPrefetchAllocate(newTop, false);
-            result = formatObject(hub, size, top, prototypeMarkWord, fillContents, constantSize);
+            return formatObject(hub, size, top, prototypeMarkWord, fillContents, constantSize);
         }
         else
         {
-            result = newInstance(HotSpotBackend.NEW_INSTANCE, hub);
+            return newInstance(HotSpotBackend.NEW_INSTANCE, hub);
         }
-        return result;
     }
 
     @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
@@ -220,8 +215,7 @@ public class NewObjectSnippets implements Snippets
     @Snippet
     public static Object allocateArrayDynamic(Class<?> elementType, Class<?> voidClass, int length, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter JavaKind knownElementKind, @ConstantParameter int knownLayoutHelper, Word prototypeMarkWord, @ConstantParameter OptionValues options)
     {
-        Object result = allocateArrayDynamicImpl(elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord, options);
-        return result;
+        return allocateArrayDynamicImpl(elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord, options);
     }
 
     private static Object allocateArrayDynamicImpl(Class<?> elementType, Class<?> voidClass, int length, boolean fillContents, Register threadRegister, JavaKind knownElementKind, int knownLayoutHelper, Word prototypeMarkWord, OptionValues options)
@@ -530,8 +524,7 @@ public class NewObjectSnippets implements Snippets
 
         private static int instanceSize(HotSpotResolvedObjectType type)
         {
-            int size = type.instanceSize();
-            return size;
+            return type.instanceSize();
         }
     }
 }

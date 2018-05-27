@@ -624,7 +624,7 @@ public final class ArithmeticOpTable
          * Applies this operation to {@code a} and {@code b}.
          *
          * @return the result of applying this operation or {@code null} if applying it would raise
-         *         an exception (e.g., {@link ArithmeticException} for dividing by 0)
+         *         an exception (e.g. {@link ArithmeticException} for dividing by 0)
          */
         public abstract Constant foldConstant(Constant a, Constant b);
 

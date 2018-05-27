@@ -110,11 +110,9 @@ public class FloatingReadPhase extends Phase
     }
 
     /**
-     * @param createFloatingReads specifies whether {@link FloatableAccessNode}s like
-     *            {@link ReadNode} should be converted into floating nodes (e.g.,
-     *            {@link FloatingReadNode}s) where possible
-     * @param createMemoryMapNodes a {@link MemoryMapNode} will be created for each return if this
-     *            is true
+     * @param createFloatingReads specifies whether {@link FloatableAccessNode}s like {@link ReadNode}
+     *            should be converted into floating nodes (e.g. {@link FloatingReadNode}s) where possible
+     * @param createMemoryMapNodes a {@link MemoryMapNode} will be created for each return if this is true
      */
     public FloatingReadPhase(boolean createFloatingReads, boolean createMemoryMapNodes)
     {

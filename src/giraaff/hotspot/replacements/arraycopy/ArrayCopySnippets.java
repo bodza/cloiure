@@ -1,7 +1,6 @@
 package giraaff.hotspot.replacements.arraycopy;
 
 import java.lang.reflect.Method;
-import java.util.EnumMap;
 
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.DeoptimizationAction;
@@ -308,7 +307,7 @@ public class ArrayCopySnippets implements Snippets
                     }
                     else
                     {
-                        // one object is an object array, the other one is a primitive array.
+                        // one object is an object array, the other one is a primitive array:
                         // this copy will always fail - use the native call right away
                         snippetInfo = arraycopyNativeSnippet;
                         arrayTypeCheck = ArrayCopyTypeCheck.UNDEFINED_ARRAY_TYPE_CHECK;
@@ -320,7 +319,7 @@ public class ArrayCopySnippets implements Snippets
                     if (nonNullComponentType.isPrimitive())
                     {
                         // one involved object is a primitive array - it is sufficient to directly
-                        // compare the hub.
+                        // compare the hub
                         snippetInfo = arraycopyExactSnippet;
                         arrayTypeCheck = ArrayCopyTypeCheck.HUB_BASED_ARRAY_TYPE_CHECK;
                         elementKind = nonNullComponentType.getJavaKind();
@@ -328,15 +327,14 @@ public class ArrayCopySnippets implements Snippets
                     else
                     {
                         // one involved object is an object array - the other array's element type
-                        // may be primitive or object, hence we compare the layout helper.
+                        // may be primitive or object, hence we compare the layout helper
                         snippetInfo = arraycopyCheckcastSnippet;
                         arrayTypeCheck = ArrayCopyTypeCheck.LAYOUT_HELPER_BASED_ARRAY_TYPE_CHECK;
                     }
                 }
             }
 
-            // a few special cases that are easier to handle when all other variables already have a
-            // value
+            // a few special cases that are easier to handle when all other variables already have a value
             if (snippetInfo != arraycopyNativeSnippet && snippetInfo != arraycopyGenericSnippet && arraycopy.getLength().isConstant() && arraycopy.getLength().asJavaConstant().asLong() == 0)
             {
                 // Copying 0 element between object arrays with conflicting types will not throw an
@@ -454,7 +452,7 @@ public class ArrayCopySnippets implements Snippets
                     {
                         throw new GraalError("unexpected invoke %s in snippet", call.targetMethod());
                     }
-                    // Here we need to fix the bci of the invoke
+                    // here we need to fix the bci of the invoke
                     InvokeNode newInvoke = graph.add(new InvokeNode(invoke.callTarget(), arraycopy.getBci()));
                     if (arraycopy.stateDuring() != null)
                     {

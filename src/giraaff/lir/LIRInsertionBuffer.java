@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * A buffer to enqueue updates to a list. This avoids frequent re-sizing of the list and copying of
  * list elements when insertions are done at multiple positions of the list. Additionally, it
- * ensures that the list is not modified while it is, e.g., iterated, and instead only modified once
+ * ensures that the list is not modified while it is, e.g. iterated, and instead only modified once
  * after the iteration is done.
  *
  * The buffer uses internal data structures to store the enqueued updates. To avoid allocations, a
@@ -64,7 +64,7 @@ public final class LIRInsertionBuffer
      * Enqueue a new instruction that will be appended to the instruction list when
      * {@link #finish()} is called. The new instruction is added <b>before</b> the existing
      * instruction with the given index. This method can only be called with increasing values of
-     * index, e.g., once an instruction was appended with index 4, subsequent instructions can only
+     * index, e.g. once an instruction was appended with index 4, subsequent instructions can only
      * be appended with index 4 or higher.
      */
     public void append(int index, LIRInstruction op)

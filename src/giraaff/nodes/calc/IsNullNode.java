@@ -106,7 +106,7 @@ public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, 
     @Override
     public Stamp getSucceedingStampForValue(boolean negated)
     {
-        // Ignore any more precise input stamp since canonicalization will skip through PiNodes
+        // ignore any more precise input stamp, since canonicalization will skip through PiNodes
         AbstractPointerStamp pointerStamp = (AbstractPointerStamp) getValue().stamp(NodeView.DEFAULT).unrestricted();
         return negated ? pointerStamp.asNonNull() : pointerStamp.asAlwaysNull();
     }

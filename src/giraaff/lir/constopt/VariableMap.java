@@ -9,7 +9,7 @@ import giraaff.lir.Variable;
 /**
  * Maps variables to a generic type.
  *
- * TODO (je) evaluate data structure
+ * TODO evaluate data structure
  */
 class VariableMap<T>
 {

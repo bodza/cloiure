@@ -2,7 +2,6 @@ package giraaff.nodes.extended;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;

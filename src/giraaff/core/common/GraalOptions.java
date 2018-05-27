@@ -73,7 +73,7 @@ public final class GraalOptions
     // @Option "Stress the code by emitting reads at earliest instead of latest point."
     public static final OptionKey<Boolean> StressTestEarlyReads = new OptionKey<>(false);
 
-    // Register allocator debugging
+    // register allocator debugging
     public static final OptionKey<Boolean> ConditionalElimination = new OptionKey<>(true);
     public static final OptionKey<Boolean> RawConditionalElimination = new OptionKey<>(true);
     public static final OptionKey<Boolean> ReplaceInputsWithConstantsBasedOnStamps = new OptionKey<>(true);
@@ -88,7 +88,7 @@ public final class GraalOptions
     public static final OptionKey<Boolean> ResolveClassBeforeStaticInvoke = new OptionKey<>(false);
     public static final OptionKey<Boolean> CanOmitFrame = new OptionKey<>(true);
 
-    // Runtime settings
+    // runtime settings
     public static final OptionKey<Boolean> SupportJsrBytecodes = new OptionKey<>(true);
     public static final OptionKey<Boolean> OptAssumptions = new OptionKey<>(true);
     public static final OptionKey<Boolean> OptConvertDeoptsToGuards = new OptionKey<>(true);

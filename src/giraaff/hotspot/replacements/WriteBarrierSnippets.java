@@ -13,7 +13,6 @@ import org.graalvm.word.WordFactory;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.CompressEncoding;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
@@ -170,8 +169,7 @@ public class WriteBarrierSnippets implements Snippets
         final int logOfHeapRegionGrainBytes = GraalHotSpotVMConfigNode.logOfHeapRegionGrainBytes();
         UnsignedWord xorResult = (oop.xor(writtenValue)).unsignedShiftRight(logOfHeapRegionGrainBytes);
 
-        // Calculate the address of the card to be enqueued to the
-        // thread local card queue.
+        // Calculate the address of the card to be enqueued to the thread local card queue.
         UnsignedWord cardBase = oop.unsignedShiftRight(HotSpotReplacementsUtil.cardTableShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
         final long startAddress = GraalHotSpotVMConfigNode.cardTableAddress();
         int displacement = 0;
@@ -291,14 +289,13 @@ public class WriteBarrierSnippets implements Snippets
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByteReload != HotSpotReplacementsUtil.dirtyCardValue(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))
                 {
                     cardAddress.writeByte(0, (byte) 0, GC_CARD_LOCATION);
-                    // If the thread local card queue is full, issue a native call which will
-                    // initialize a new one and add the card entry.
+                    // If the thread local card queue is full, issue a native call which will initialize
+                    // a new one and add the card entry.
                     if (indexValue != 0)
                     {
                         indexValue = indexValue - HotSpotReplacementsUtil.wordSize();
                         Word logAddress = bufferAddress.add(WordFactory.unsigned(indexValue));
-                        // Log the object to be scanned as well as update
-                        // the card queue's next index.
+                        // Log the object to be scanned as well as update the card queue's next index.
                         logAddress.writeWord(0, cardAddress, GC_LOG_LOCATION);
                         indexAddress.writeWord(0, WordFactory.unsigned(indexValue), GC_INDEX_LOCATION);
                     }

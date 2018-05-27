@@ -14,7 +14,6 @@ import jdk.vm.ci.meta.TriState;
 
 import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.replacements.classfile.ClassfileConstant.Utf8;
 import giraaff.util.GraalError;
 
 /**

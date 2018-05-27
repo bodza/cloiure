@@ -278,7 +278,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
         }
         else
         {
-            // It is likely an OSRLocal without valid stamp
+            // it is likely an OSRLocal without valid stamp
             return JavaKind.Illegal;
         }
     }
@@ -316,8 +316,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
         if (load.index().isConstant())
         {
             int index = ((JavaConstant) load.index().asConstant()).asInt();
-            // BALOAD (with elementKind being Byte) can be used to retrieve values from boolean
-            // arrays.
+            // BALOAD (with elementKind being Byte) can be used to retrieve values from boolean arrays.
             JavaKind elementKind = load.elementKind();
             if (elementKind == JavaKind.Byte)
             {

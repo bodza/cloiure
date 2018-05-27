@@ -53,11 +53,11 @@ public final class IntegerStamp extends PrimitiveStamp
 
     public static IntegerStamp create(int bits, long lowerBoundInput, long upperBoundInput, long downMask, long upMask)
     {
-        // Set lower bound, use masks to make it more precise
+        // Set lower bound, use masks to make it more precise.
         long minValue = minValueForMasks(bits, downMask, upMask);
         long lowerBoundTmp = Math.max(lowerBoundInput, minValue);
 
-        // Set upper bound, use masks to make it more precise
+        // Set upper bound, use masks to make it more precise.
         long maxValue = maxValueForMasks(bits, downMask, upMask);
         long upperBoundTmp = Math.min(upperBoundInput, maxValue);
 
@@ -708,7 +708,7 @@ public final class IntegerStamp extends PrimitiveStamp
                             }
                             if (stamp.lowerBound() != CodeUtil.minValue(bits))
                             {
-                                // TODO(ls) check if the mask calculation is correct...
+                                // TODO check if the mask calculation is correct
                                 return StampFactory.forInteger(bits, -stamp.upperBound(), -stamp.lowerBound());
                             }
                             else

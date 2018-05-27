@@ -22,7 +22,6 @@ import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.StubForeignCallNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.nodes.ConstantNode;
-import giraaff.nodes.InvokeNode;
 import giraaff.nodes.ParameterNode;
 import giraaff.nodes.ReturnNode;
 import giraaff.nodes.StructuredGraph;

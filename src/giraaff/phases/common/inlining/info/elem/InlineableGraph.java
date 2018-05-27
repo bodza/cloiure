@@ -74,9 +74,8 @@ public class InlineableGraph implements Inlineable
         }
         else
         {
-            // TODO (chaeubl): if args are not more concrete, inlining should be avoided
-            // in most cases or we could at least use the previous graph size + invoke
-            // probability to check the inlining
+            // TODO if args are not more concrete, inlining should be avoided in most cases or we
+            // could at least use the previous graph size + invoke probability to check the inlining
             return false;
         }
     }

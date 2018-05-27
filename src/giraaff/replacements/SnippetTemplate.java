@@ -293,7 +293,7 @@ public class SnippetTemplate
         {
             Varargs varargs = new Varargs(componentType, argStamp, value);
             values[nextParamIdx] = varargs;
-            // A separate template is necessary for every distinct array length
+            // a separate template is necessary for every distinct array length
             cacheKey.setParam(nextParamIdx, varargs.length);
             nextParamIdx++;
             return this;
@@ -611,7 +611,7 @@ public class SnippetTemplate
 
         PhaseContext phaseContext = new PhaseContext(providers);
 
-        // Copy snippet graph, replacing constant parameters with given arguments
+        // copy snippet graph replacing constant parameters with given arguments
         final StructuredGraph snippetCopy = new StructuredGraph.Builder(options).name(snippetGraph.name).method(snippetGraph.method()).build();
         if (!snippetGraph.isUnsafeAccessTrackingEnabled())
         {
@@ -669,7 +669,7 @@ public class SnippetTemplate
         }
         snippetCopy.addDuplicates(snippetGraph.getNodes(), snippetGraph, snippetGraph.getNodeCount(), nodeReplacements);
 
-        // Gather the template parameters
+        // gather the template parameters
         parameters = new Object[parameterCount];
         for (int i = 0; i < parameterCount; i++)
         {
@@ -685,7 +685,7 @@ public class SnippetTemplate
                 Stamp stamp = varargs.stamp;
                 for (int j = 0; j < length; j++)
                 {
-                    // Use a decimal friendly numbering make it more obvious how values map
+                    // use a decimal friendly numbering make it more obvious how values map
                     int idx = (i + 1) * 10000 + j;
                     ParameterNode local = snippetCopy.addOrUnique(new ParameterNode(idx, StampPair.createSingle(stamp)));
                     params[j] = local;
@@ -720,7 +720,7 @@ public class SnippetTemplate
                 ParameterNode local = snippetCopy.getParameter(i);
                 if (local == null)
                 {
-                    // Parameter value was eliminated
+                    // parameter value was eliminated
                     parameters[i] = UNUSED_PARAMETER;
                 }
                 else
@@ -733,7 +733,7 @@ public class SnippetTemplate
         explodeLoops(snippetCopy, phaseContext);
 
         GuardsStage guardsStage = args.cacheKey.guardsStage;
-        // Perform lowering on the snippet
+        // perform lowering on the snippet
         if (!guardsStage.allowsFloatingGuards())
         {
             new GuardLoweringPhase().apply(snippetCopy, null);
@@ -796,8 +796,7 @@ public class SnippetTemplate
         }
         else
         {
-            // Find out if all the return memory maps point to the anchor (i.e., there's no kill
-            // anywhere)
+            // find out if all the return memory maps point to the anchor (i.e. there's no kill anywhere)
             boolean needsMemoryMaps = false;
             for (ReturnNode retNode : snippet.getNodes(ReturnNode.TYPE))
             {
@@ -815,9 +814,9 @@ public class SnippetTemplate
             }
             else
             {
-                // Check that all those memory maps where the only usages of the anchor
+                // check that all those memory maps where the only usages of the anchor
                 needsAnchor = anchor.usages().filter(NodePredicates.isNotA(MemoryMapNode.class)).isNotEmpty();
-                // Remove the useless memory map
+                // remove the useless memory map
                 MemoryMapNode memoryMap = null;
                 for (ReturnNode retNode : snippet.getNodes(ReturnNode.TYPE))
                 {
@@ -899,13 +898,13 @@ public class SnippetTemplate
 
     public static void explodeLoops(final StructuredGraph snippetCopy, PhaseContext phaseContext)
     {
-        // Do any required loop explosion
+        // do any required loop explosion
         boolean exploded = false;
         do
         {
             exploded = false;
             ExplodeLoopNode explodeLoop = snippetCopy.getNodes().filter(ExplodeLoopNode.class).first();
-            if (explodeLoop != null) // Earlier canonicalization may have removed the loop altogether
+            if (explodeLoop != null) // earlier canonicalization may have removed the loop altogether
             {
                 LoopBeginNode loopBegin = explodeLoop.findLoopBegin();
                 if (loopBegin != null)
@@ -1097,7 +1096,7 @@ public class SnippetTemplate
         }
         if (returnNode == null)
         {
-            // The snippet terminates control flow
+            // the snippet terminates control flow
             return true;
         }
         MemoryMapNode memoryMap = returnNode.getMemoryMap();
@@ -1337,7 +1336,7 @@ public class SnippetTemplate
      */
     public UnmodifiableEconomicMap<Node, Node> instantiate(MetaAccessProvider metaAccess, FixedNode replacee, UsageReplacer replacer, Arguments args, boolean killReplacee)
     {
-        // Inline the snippet nodes, replacing parameters with the given args in the process
+        // inline the snippet nodes replacing parameters with the given args in the process
         StartNode entryPointNode = snippet.start();
         FixedNode firstCFGNode = entryPointNode.next();
         StructuredGraph replaceeGraph = replacee.graph();
@@ -1345,7 +1344,7 @@ public class SnippetTemplate
         replacements.put(entryPointNode, AbstractBeginNode.prevBegin(replacee));
         UnmodifiableEconomicMap<Node, Node> duplicates = inlineSnippet(replacee, replaceeGraph, replacements);
 
-        // Re-wire the control flow graph around the replacee
+        // re-wire the control flow graph around the replacee
         FixedNode firstCFGNodeDuplicate = (FixedNode) duplicates.get(firstCFGNode);
         replacee.replaceAtPredecessor(firstCFGNodeDuplicate);
 
@@ -1419,7 +1418,7 @@ public class SnippetTemplate
 
         rewireMemoryGraph(replacee, duplicates);
 
-        // Replace all usages of the replacee with the value returned by the snippet
+        // replace all usages of the replacee with the value returned by the snippet
         ValueNode returnValue = null;
         if (returnNode != null && !(replacee instanceof ControlSinkNode))
         {
@@ -1448,7 +1447,7 @@ public class SnippetTemplate
 
         if (killReplacee)
         {
-            // Remove the replacee from its graph
+            // remove the replacee from its graph
             GraphUtil.killCFG(replacee);
         }
 
@@ -1519,7 +1518,7 @@ public class SnippetTemplate
      */
     public void instantiate(MetaAccessProvider metaAccess, FloatingNode replacee, UsageReplacer replacer, LoweringTool tool, Arguments args)
     {
-        // Inline the snippet nodes, replacing parameters with the given args in the process
+        // inline the snippet nodes replacing parameters with the given args in the process
         StartNode entryPointNode = snippet.start();
         FixedNode firstCFGNode = entryPointNode.next();
         StructuredGraph replaceeGraph = replacee.graph();
@@ -1538,7 +1537,7 @@ public class SnippetTemplate
 
         rewireMemoryGraph(replacee, duplicates);
 
-        // Replace all usages of the replacee with the value returned by the snippet
+        // replace all usages of the replacee with the value returned by the snippet
         ReturnNode returnDuplicate = (ReturnNode) duplicates.get(returnNode);
         ValueNode returnValue = returnDuplicate.result();
         replacer.replace(replacee, returnValue);
@@ -1560,7 +1559,7 @@ public class SnippetTemplate
      */
     public void instantiate(MetaAccessProvider metaAccess, FloatingNode replacee, UsageReplacer replacer, Arguments args)
     {
-        // Inline the snippet nodes, replacing parameters with the given args in the process
+        // inline the snippet nodes replacing parameters with the given args in the process
         StartNode entryPointNode = snippet.start();
         StructuredGraph replaceeGraph = replacee.graph();
         EconomicMap<Node, Node> replacements = bind(replaceeGraph, metaAccess, args);
@@ -1585,7 +1584,7 @@ public class SnippetTemplate
 
         rewireMemoryGraph(replacee, duplicates);
 
-        // Replace all usages of the replacee with the value returned by the snippet
+        // replace all usages of the replacee with the value returned by the snippet
         ValueNode returnValue = (ValueNode) duplicates.get(returnNode.result());
         replacer.replace(replacee, returnValue);
     }

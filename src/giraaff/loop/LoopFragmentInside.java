@@ -104,7 +104,7 @@ public class LoopFragmentInside extends LoopFragment
     @SuppressWarnings("unused")
     public void appendInside(LoopEx loop)
     {
-        // TODO (gd)
+        // TODO
     }
 
     @Override
@@ -174,7 +174,7 @@ public class LoopFragmentInside extends LoopFragment
 
         placeNewSegmentAndCleanup(loop);
 
-        // Remove any safepoints from the original copy leaving only the duplicated one
+        // remove any safepoints from the original copy leaving only the duplicated one
         for (SafepointNode safepoint : loop.whole().nodes().filter(SafepointNode.class))
         {
             graph().removeFixed(safepoint);
@@ -184,7 +184,7 @@ public class LoopFragmentInside extends LoopFragment
         StructuredGraph graph = mainLoopBegin.graph();
         if (updateLimit)
         {
-            // Now use the previous unrollFactor to update the exit condition to power of two
+            // use the previous unrollFactor to update the exit condition to power of two
             InductionVariable iv = loop.counted().getCounter();
             CompareNode compareNode = (CompareNode) loop.counted().getLimitTest().condition();
             ValueNode compareBound;
@@ -222,7 +222,7 @@ public class LoopFragmentInside extends LoopFragment
     {
         CountedLoopInfo mainCounted = loop.counted();
         LoopBeginNode mainLoopBegin = loop.loopBegin();
-        // Discard the segment entry and its flow, after if merging it into the loop
+        // discard the segment entry and its flow after if merging it into the loop
         StructuredGraph graph = mainLoopBegin.graph();
         IfNode loopTest = mainCounted.getLimitTest();
         IfNode newSegmentTest = getDuplicatedNode(loopTest);
@@ -398,7 +398,7 @@ public class LoopFragmentInside extends LoopFragment
     @Override
     protected void finishDuplication()
     {
-        // TODO (gd) ?
+        // TODO
     }
 
     @Override

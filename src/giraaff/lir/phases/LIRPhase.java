@@ -53,7 +53,6 @@ public abstract class LIRPhase<C>
 
     public final CharSequence getName()
     {
-        CharSequence name = createName();
-        return name;
+        return createName();
     }
 }

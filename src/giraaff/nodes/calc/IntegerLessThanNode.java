@@ -85,8 +85,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         {
             if (newX.stamp(view) instanceof FloatStamp && newY.stamp(view) instanceof FloatStamp)
             {
-                return new FloatLessThanNode(newX, newY, unorderedIsTrue); // TODO: Is the last arg
-                                                                           // supposed to be true?
+                return new FloatLessThanNode(newX, newY, unorderedIsTrue); // TODO Is the last arg supposed to be true?
             }
             else if (newX.stamp(view) instanceof IntegerStamp && newY.stamp(view) instanceof IntegerStamp)
             {

@@ -4,12 +4,10 @@ import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
-import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.graph.Node;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
-import giraaff.hotspot.amd64.AMD64HotSpotForeignCallsProvider;
 import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;

@@ -139,7 +139,7 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     public HotSpotForeignCallLinkage lookupForeignCall(ForeignCallDescriptor descriptor)
     {
         HotSpotForeignCallLinkage callTarget = foreignCalls.get(descriptor);
-        callTarget.finalizeAddress(runtime.getHostBackend());
+        callTarget.finalizeAddress(runtime.getBackend());
         return callTarget;
     }
 

@@ -2,16 +2,13 @@ package giraaff.hotspot.amd64;
 
 import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterValue;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.ValueUtil;
-import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.amd64.AMD64NodeLIRBuilder;
@@ -31,12 +28,10 @@ import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.DirectCallTargetNode;
 import giraaff.nodes.IndirectCallTargetNode;
-import giraaff.nodes.NodeView;
 import giraaff.nodes.ParameterNode;
 import giraaff.nodes.SafepointNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
-import giraaff.nodes.spi.NodeValueMap;
 
 /**
  * LIR generator specialized for AMD64 HotSpot.

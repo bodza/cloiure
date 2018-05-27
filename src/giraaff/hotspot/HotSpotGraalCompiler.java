@@ -43,7 +43,7 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
     private final HotSpotJVMCIRuntimeProvider jvmciRuntime;
     private final HotSpotGraalRuntimeProvider graalRuntime;
 
-    HotSpotGraalCompiler(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider graalRuntime, OptionValues options)
+    public HotSpotGraalCompiler(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider graalRuntime)
     {
         this.jvmciRuntime = jvmciRuntime;
         this.graalRuntime = graalRuntime;
@@ -74,7 +74,7 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
 
     public StructuredGraph createGraph(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)
     {
-        HotSpotBackend backend = graalRuntime.getHostBackend();
+        HotSpotBackend backend = graalRuntime.getBackend();
         HotSpotProviders providers = backend.getProviders();
         final boolean isOSR = entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
         StructuredGraph graph = method.isNative() || isOSR ? null : getIntrinsicGraph(method, providers, compilationId, options);
@@ -93,7 +93,7 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
 
     public CompilationResult compileHelper(CompilationResultBuilderFactory crbf, CompilationResult result, StructuredGraph graph, ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, OptionValues options)
     {
-        HotSpotBackend backend = graalRuntime.getHostBackend();
+        HotSpotBackend backend = graalRuntime.getBackend();
         HotSpotProviders providers = backend.getProviders();
         final boolean isOSR = entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
 

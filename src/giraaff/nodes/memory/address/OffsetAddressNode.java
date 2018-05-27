@@ -9,7 +9,6 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;

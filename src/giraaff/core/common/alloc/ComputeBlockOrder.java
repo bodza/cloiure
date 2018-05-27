@@ -122,8 +122,7 @@ public final class ComputeBlockOrder
         {
             if (!mostLikelySuccessor.isLoopHeader() && mostLikelySuccessor.getPredecessorCount() > 1)
             {
-                // We are at a merge. Check probabilities of predecessors that are not yet
-                // scheduled.
+                // We are at a merge. Check probabilities of predecessors that are not yet scheduled.
                 double unscheduledSum = 0.0;
                 for (T pred : mostLikelySuccessor.getPredecessors())
                 {
@@ -153,8 +152,8 @@ public final class ComputeBlockOrder
         T block = initialBlock;
         while (block != null)
         {
-            // Skip loop headers if there is only a single loop end block to
-            // make the backward jump be a conditional jump.
+            // Skip loop headers if there is only a single loop end block to make
+            // the backward jump be a conditional jump.
             if (!skipLoopHeader(block))
             {
                 // Align unskipped loop headers as they are the target of the backward jump.
@@ -172,9 +171,8 @@ public final class ComputeBlockOrder
                 // Add the header immediately afterwards.
                 addBlock(loop.getHeader(), order);
 
-                // Make sure the loop successors of the loop header are aligned
-                // as they are the target
-                // of the backward jump.
+                // Make sure the loop successors of the loop header are aligned,
+                // as they are the target of the backward jump.
                 for (T successor : loop.getHeader().getSuccessors())
                 {
                     if (successor.getLoopDepth() == block.getLoopDepth())
@@ -252,8 +250,8 @@ public final class ComputeBlockOrder
         @Override
         public int compare(T a, T b)
         {
-            // Loop blocks before any loop exit block. The only exception are blocks that are
-            // (almost) impossible to reach.
+            // Loop blocks before any loop exit block. The only exception are
+            // blocks that are (almost) impossible to reach.
             if (a.probability() > EPSILON && b.probability() > EPSILON)
             {
                 int diff = b.getLoopDepth() - a.getLoopDepth();

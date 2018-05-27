@@ -161,12 +161,12 @@ class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
             {
                 if (accessKind.needsTwoSlots())
                 {
-                    // Storing double word value two int slots
+                    // storing double word value two int slots
                     state.setEntry(virtual.getObjectId(), index + 1, getIllegalConstant());
                 }
                 else if (oldValue.getStackKind() == JavaKind.Double || oldValue.getStackKind() == JavaKind.Long)
                 {
-                    // Splitting double word constant by storing over it with an int
+                    // splitting double word constant by storing over it with an int
                     ValueNode secondHalf = UnpackEndianHalfNode.create(oldValue, false, NodeView.DEFAULT);
                     addNode(secondHalf);
                     state.setEntry(virtual.getObjectId(), index + 1, secondHalf);
@@ -174,7 +174,7 @@ class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
             }
             if (oldValue.isConstant() && oldValue.asConstant().equals(JavaConstant.forIllegal()))
             {
-                // Storing into second half of double, so replace previous value
+                // storing into second half of double, so replace previous value
                 ValueNode previous = getEntry(virtual, index - 1);
                 ValueNode firstHalf = UnpackEndianHalfNode.create(previous, true, NodeView.DEFAULT);
                 addNode(firstHalf);
@@ -182,7 +182,7 @@ class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
             }
             return true;
         }
-        // Should only occur if there are mismatches between the entry and access kind
+        // should only occur if there are mismatches between the entry and access kind
         return false;
     }
 

@@ -165,10 +165,9 @@ public interface InvocationPlugin extends GraphBuilderPlugin
      * @param argsIncludingReceiver all arguments to the invocation include the receiver in position
      *            0 if {@code targetMethod} is not static
      * @return {@code true} if this plugin handled the invocation of {@code targetMethod}
-     *         {@code false} if the graph builder should process the invoke further (e.g., by
-     *         inlining it or creating an {@link Invoke} node). A plugin that does not handle an
-     *         invocation must not modify the graph being constructed unless it is a
-     *         {@linkplain InvocationPlugin#isDecorator() decorator}.
+     *         {@code false} if the graph builder should process the invoke further (e.g. by inlining it
+     *         or creating an {@link Invoke} node). A plugin that does not handle an invocation must not modify
+     *         the graph being constructed unless it is a {@linkplain InvocationPlugin#isDecorator() decorator}.
      */
     default boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] argsIncludingReceiver)
     {

@@ -54,8 +54,7 @@ public class SimpleStackSlotAllocator extends AllocationPhase
         {
             if (LIRValueUtil.isVirtualStackSlot(value))
             {
-                StackSlot stackSlot = mapping[LIRValueUtil.asVirtualStackSlot(value).getId()];
-                return stackSlot;
+                return mapping[LIRValueUtil.asVirtualStackSlot(value).getId()];
             }
             return value;
         };

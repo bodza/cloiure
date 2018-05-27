@@ -186,17 +186,17 @@ public class StandardGraphBuilderPlugins
                 String kindName = kind.name();
                 String getName = "get" + kindName;
                 String putName = "put" + kindName;
-                // Object-based accesses
+                // object-based accesses
                 r.register3(getName, Receiver.class, Object.class, long.class, new UnsafeGetPlugin(kind, false));
                 r.register4(putName, Receiver.class, Object.class, long.class, javaClass, new UnsafePutPlugin(kind, false));
-                // Volatile object-based accesses
+                // volatile object-based accesses
                 r.register3(getName + "Volatile", Receiver.class, Object.class, long.class, new UnsafeGetPlugin(kind, true));
                 r.register4(putName + "Volatile", Receiver.class, Object.class, long.class, javaClass, new UnsafePutPlugin(kind, true));
-                // Ordered object-based accesses
+                // ordered object-based accesses
                 r.register4("put" + kindName + "Release", Receiver.class, Object.class, long.class, javaClass, UnsafePutPlugin.putOrdered(kind));
                 if (kind != JavaKind.Boolean && kind != JavaKind.Object)
                 {
-                    // Raw accesses to memory addresses
+                    // raw accesses to memory addresses
                     r.register2(getName, Receiver.class, long.class, new UnsafeGetPlugin(kind, false));
                     r.register3(putName, Receiver.class, long.class, kind.toJavaClass(), new UnsafePutPlugin(kind, false));
                 }
@@ -215,7 +215,7 @@ public class StandardGraphBuilderPlugins
                 @Override
                 public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode object, ValueNode offset, ValueNode expected, ValueNode x)
                 {
-                    // Emits a null-check for the otherwise unused receiver
+                    // emits a null-check for the otherwise unused receiver
                     unsafe.get();
                     b.addPush(JavaKind.Int, new UnsafeCompareAndSwapNode(object, offset, expected, x, kind, LocationIdentity.any()));
                     b.getGraph().markUnsafeAccess();
@@ -229,7 +229,7 @@ public class StandardGraphBuilderPlugins
             @Override
             public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode clazz)
             {
-                // Emits a null-check for the otherwise unused receiver
+                // emits a null-check for the otherwise unused receiver
                 unsafe.get();
                 b.addPush(JavaKind.Object, new DynamicNewInstanceNode(b.nullCheckedValue(clazz, DeoptimizationAction.None), true));
                 return true;
@@ -663,8 +663,7 @@ public class StandardGraphBuilderPlugins
                 ResolvedJavaMethod rootMethod = b.getGraph().method();
                 if (b.getMetaAccess().lookupJavaType(BoxingSnippets.class).isAssignableFrom(rootMethod.getDeclaringClass()))
                 {
-                    // Disable invocation plugins for boxing snippets so that the
-                    // original JDK methods are inlined
+                    // disable invocation plugins for boxing snippets, so that the original JDK methods are inlined
                     return false;
                 }
             }
@@ -696,8 +695,7 @@ public class StandardGraphBuilderPlugins
                 ResolvedJavaMethod rootMethod = b.getGraph().method();
                 if (b.getMetaAccess().lookupJavaType(BoxingSnippets.class).isAssignableFrom(rootMethod.getDeclaringClass()))
                 {
-                    // Disable invocation plugins for unboxing snippets so that the
-                    // original JDK methods are inlined
+                    // disable invocation plugins for unboxing snippets, so that the original JDK methods are inlined
                     return false;
                 }
             }
@@ -727,7 +725,7 @@ public class StandardGraphBuilderPlugins
         @Override
         public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode address)
         {
-            // Emits a null-check for the otherwise unused receiver
+            // emits a null-check for the otherwise unused receiver
             unsafe.get();
             b.addPush(returnKind, new UnsafeMemoryLoadNode(address, returnKind, NamedLocationIdentity.OFF_HEAP_LOCATION));
             b.getGraph().markUnsafeAccess();
@@ -737,7 +735,7 @@ public class StandardGraphBuilderPlugins
         @Override
         public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode object, ValueNode offset)
         {
-            // Emits a null-check for the otherwise unused receiver
+            // emits a null-check for the otherwise unused receiver
             unsafe.get();
             if (isVolatile)
             {
@@ -783,7 +781,7 @@ public class StandardGraphBuilderPlugins
         @Override
         public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode address, ValueNode value)
         {
-            // Emits a null-check for the otherwise unused receiver
+            // emits a null-check for the otherwise unused receiver
             unsafe.get();
             b.add(new UnsafeMemoryStoreNode(address, value, kind, NamedLocationIdentity.OFF_HEAP_LOCATION));
             b.getGraph().markUnsafeAccess();
@@ -793,7 +791,7 @@ public class StandardGraphBuilderPlugins
         @Override
         public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode object, ValueNode offset, ValueNode value)
         {
-            // Emits a null-check for the otherwise unused receiver
+            // emits a null-check for the otherwise unused receiver
             unsafe.get();
             if (hasBarrier)
             {
@@ -822,7 +820,7 @@ public class StandardGraphBuilderPlugins
         @Override
         public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe)
         {
-            // Emits a null-check for the otherwise unused receiver
+            // emits a null-check for the otherwise unused receiver
             unsafe.get();
             b.add(new MembarNode(barriers));
             return true;

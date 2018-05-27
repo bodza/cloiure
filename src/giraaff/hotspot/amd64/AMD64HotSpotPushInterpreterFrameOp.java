@@ -47,21 +47,21 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
         final Register initialInfoRegister = ValueUtil.asRegister(initialInfo);
         final int wordSize = 8;
 
-        // We'll push PC and BP by hand.
+        // we'll push PC and BP by hand
         masm.subq(frameSizeRegister, 2 * wordSize);
 
-        // Push return address.
+        // push return address
         masm.push(framePcRegister);
 
-        // Prolog
+        // prolog
         masm.push(initialInfoRegister);
         masm.movq(initialInfoRegister, AMD64.rsp);
         masm.subq(AMD64.rsp, frameSizeRegister);
 
-        // This value is corrected by layout_activation_impl.
+        // this value is corrected by layout_activation_impl
         masm.movptr(new AMD64Address(initialInfoRegister, config.frameInterpreterFrameLastSpOffset * wordSize), 0);
 
-        // Make the frame walkable.
+        // make the frame walkable
         masm.movq(new AMD64Address(initialInfoRegister, config.frameInterpreterFrameSenderSpOffset * wordSize), senderSpRegister);
     }
 }

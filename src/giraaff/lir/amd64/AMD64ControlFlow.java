@@ -255,7 +255,7 @@ public class AMD64ControlFlow
                 masm.movl(idxScratchReg, indexReg);
             }
 
-            // Compare index against jump table bounds
+            // compare index against jump table bounds
             int highKey = lowKey + targets.length - 1;
             if (lowKey != 0)
             {
@@ -268,34 +268,34 @@ public class AMD64ControlFlow
                 masm.cmpl(idxScratchReg, highKey);
             }
 
-            // Jump to default target if index is not within the jump table
+            // jump to default target if index is not within the jump table
             if (defaultTarget != null)
             {
                 masm.jcc(ConditionFlag.Above, defaultTarget.label());
             }
 
-            // Set scratch to address of jump table
+            // set scratch to address of jump table
             masm.leaq(scratchReg, new AMD64Address(AMD64.rip, 0));
             final int afterLea = masm.position();
 
-            // Load jump table entry into scratch and jump to it
+            // load jump table entry into scratch and jump to it
             masm.movslq(idxScratchReg, new AMD64Address(scratchReg, idxScratchReg, Scale.Times4, 0));
             masm.addq(scratchReg, idxScratchReg);
             masm.jmp(scratchReg);
 
-            // Inserting padding so that jump table address is 4-byte aligned
+            // inserting padding, so that jump table address is 4-byte aligned
             if ((masm.position() & 0x3) != 0)
             {
                 masm.nop(4 - (masm.position() & 0x3));
             }
 
-            // Patch LEA instruction above now that we know the position of the jump table
+            // patch LEA instruction above now that we know the position of the jump table
             // TODO this is ugly and should be done differently
             final int jumpTablePos = masm.position();
             final int leaDisplacementPosition = afterLea - 4;
             masm.emitInt(jumpTablePos - afterLea, leaDisplacementPosition);
 
-            // Emit jump table entries
+            // emit jump table entries
             for (LabelRef target : targets)
             {
                 Label label = target.label();

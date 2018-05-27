@@ -28,7 +28,7 @@ public class LIRGenerationResult
     private CompilationIdentifier compilationId;
 
     /**
-     * Stores comments about a {@link LIRInstruction} , e.g., which phase created it.
+     * Stores comments about a {@link LIRInstruction} , e.g. which phase created it.
      */
     private EconomicMap<LIRInstruction, String> comments;
 

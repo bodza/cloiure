@@ -58,7 +58,6 @@ public abstract class LoopTransformations
 
     public static void fullUnroll(LoopEx loop, PhaseContext context, CanonicalizerPhase canonicalizer)
     {
-        // assert loop.isCounted(); //TODO (gd) strengthen : counted with known trip count
         LoopBeginNode loopBegin = loop.loopBegin();
         StructuredGraph graph = loopBegin.graph();
         int initialNodeCount = graph.getNodeCount();
@@ -100,12 +99,12 @@ public abstract class LoopTransformations
         while (successors.hasNext())
         {
             Position position = successors.next();
-            // create a new loop duplicate and connect it.
+            // create a new loop duplicate and connect it
             LoopFragmentWhole duplicateLoop = originalLoop.duplicate();
             AbstractBeginNode newBegin = BeginNode.begin(duplicateLoop.entryPoint());
             position.set(newControlSplit, newBegin);
 
-            // For each cloned ControlSplitNode, simplify the proper path
+            // for each cloned ControlSplitNode, simplify the proper path
             for (ControlSplitNode controlSplitNode : controlSplitNodeSet)
             {
                 ControlSplitNode duplicatedControlSplit = duplicateLoop.getDuplicatedNode(controlSplitNode);
@@ -128,7 +127,7 @@ public abstract class LoopTransformations
             }
         }
 
-        // TODO (gd) probabilities need some amount of fixup.. (probably also in other transforms)
+        // TODO probabilities need some amount of fixup (probably also in other transforms)
     }
 
     public static void partialUnroll(LoopEx loop)
@@ -213,7 +212,7 @@ public abstract class LoopTransformations
         LoopExitNode preLoopExitNode = preLoopBegin.getSingleLoopExit();
         FixedNode continuationNode = preLoopExitNode.next();
 
-        // Each duplication is inserted after the original, ergo create the post loop first
+        // each duplication is inserted after the original, ergo create the post loop first
         LoopFragmentWhole mainLoop = preLoop.duplicate();
         LoopFragmentWhole postLoop = preLoop.duplicate();
         preLoopBegin.incrementSplits();
@@ -228,7 +227,7 @@ public abstract class LoopTransformations
         AbstractMergeNode postMergeNode = postEndNode.merge();
         LoopExitNode postLoopExitNode = postLoopBegin.getSingleLoopExit();
 
-        // Update the main loop phi initialization to carry from the pre loop
+        // update the main loop phi initialization to carry from the pre loop
         for (PhiNode prePhiNode : preLoopBegin.phis())
         {
             PhiNode mainPhiNode = mainLoop.getDuplicatedNode(prePhiNode);
@@ -239,27 +238,27 @@ public abstract class LoopTransformations
         AbstractMergeNode mainMergeNode = mainEndNode.merge();
         AbstractEndNode postEntryNode = postLoopBegin.forwardEnd();
 
-        // In the case of no Bounds tests, we just flow right into the main loop
+        // in the case of no Bounds tests, we just flow right into the main loop
         AbstractBeginNode mainLandingNode = BeginNode.begin(postEntryNode);
         LoopExitNode mainLoopExitNode = mainLoopBegin.getSingleLoopExit();
         mainLoopExitNode.setNext(mainLandingNode);
         preLoopExitNode.setNext(mainLoopBegin.forwardEnd());
 
-        // Add and update any phi edges as per merge usage as needed and update usages
+        // add and update any phi edges as per merge usage as needed and update usages
         processPreLoopPhis(loop, mainLoop, postLoop);
         continuationNode.predecessor().clearSuccessors();
         postLoopExitNode.setNext(continuationNode);
         cleanupMerge(postMergeNode, postLoopExitNode);
         cleanupMerge(mainMergeNode, mainLandingNode);
 
-        // Change the preLoop to execute one iteration for now
+        // change the preLoop to execute one iteration for now
         updateMainLoopLimit(preLimit, preIv, mainLoop);
         updatePreLoopLimit(preLimit, preIv, preCounted);
         preLoopBegin.setLoopFrequency(1);
         mainLoopBegin.setLoopFrequency(Math.max(0.0, mainLoopBegin.loopFrequency() - 2));
         postLoopBegin.setLoopFrequency(Math.max(0.0, postLoopBegin.loopFrequency() - 1));
 
-        // The pre and post loops don't require safepoints at all
+        // the pre and post loops don't require safepoints at all
         for (SafepointNode safepoint : preLoop.nodes().filter(SafepointNode.class))
         {
             graph.removeFixed(safepoint);
@@ -295,7 +294,7 @@ public abstract class LoopTransformations
             PhiNode mainPhiNode = mainLoop.getDuplicatedNode(prePhiNode);
             postPhiNode.setValueAt(0, mainPhiNode);
 
-            // Build a work list to update the pre loop phis to the post loops phis
+            // build a work list to update the pre loop phis to the post loops phis
             for (Node usage : prePhiNode.usages().snapshot())
             {
                 if (usage == mainPhiNode)
@@ -327,7 +326,7 @@ public abstract class LoopTransformations
     private static EndNode getBlockEndAfterLoopExit(LoopBeginNode curLoopBegin)
     {
         FixedNode node = curLoopBegin.getSingleLoopExit().next();
-        // Find the last node after the exit blocks starts
+        // find the last node after the exit blocks starts
         return getBlockEnd(node);
     }
 
@@ -343,7 +342,7 @@ public abstract class LoopTransformations
 
     private static void updateMainLoopLimit(IfNode preLimit, InductionVariable preIv, LoopFragmentWhole mainLoop)
     {
-        // Update the main loops limit test to be different than the post loop
+        // update the main loops limit test to be different than the post loop
         StructuredGraph graph = preLimit.graph();
         IfNode mainLimit = mainLoop.getDuplicatedNode(preLimit);
         LogicNode ifTest = mainLimit.condition();
@@ -360,7 +359,7 @@ public abstract class LoopTransformations
         {
             mainStride = mainLoop.getDuplicatedNode(preStride);
         }
-        // Fetch the bounds to pose lowering the range by one
+        // fetch the bounds to pose lowering the range by one
         ValueNode ub = null;
         if (compareNode.getX() == mainPhi)
         {
@@ -378,22 +377,22 @@ public abstract class LoopTransformations
         // Preloop always performs at least one iteration, so remove that from the main loop.
         ValueNode newLimit = MathUtil.sub(graph, ub, mainStride);
 
-        // Re-wire the condition with the new limit
+        // re-wire the condition with the new limit
         compareNode.replaceFirstInput(ub, newLimit);
     }
 
     private static void updatePreLoopLimit(IfNode preLimit, InductionVariable preIv, CountedLoopInfo preCounted)
     {
-        // Update the pre loops limit test
+        // update the pre loops limit test
         StructuredGraph graph = preLimit.graph();
         LogicNode ifTest = preLimit.condition();
         CompareNode compareNode = (CompareNode) ifTest;
         ValueNode prePhi = preIv.valueNode();
-        // Make new limit one iteration
+        // make new limit one iteration
         ValueNode initIv = preCounted.getStart();
         ValueNode newLimit = MathUtil.add(graph, initIv, preIv.strideNode());
 
-        // Fetch the variable we are not replacing and configure the one we are
+        // fetch the variable we are not replacing and configure the one we are
         ValueNode ub;
         if (compareNode.getX() == prePhi)
         {
@@ -407,7 +406,7 @@ public abstract class LoopTransformations
         {
             throw GraalError.shouldNotReachHere();
         }
-        // Re-wire the condition with the new limit
+        // re-wire the condition with the new limit
         if (preIv.direction() == Direction.Up)
         {
             compareNode.replaceFirstInput(ub, graph.unique(new ConditionalNode(graph.unique(new IntegerLessThanNode(newLimit, ub)), newLimit, ub)));
@@ -454,7 +453,7 @@ public abstract class LoopTransformations
                     }
                     else if (switchNode.value() == invariantValue && firstSwitch.structureEquals(switchNode))
                     {
-                        // Only collect switches which test the same values in the same order
+                        // only collect switches which test the same values in the same order
                         controls.add(switchNode);
                     }
                 }
@@ -481,9 +480,8 @@ public abstract class LoopTransformations
         }
         if (loopBegin.isMainLoop() || loopBegin.isSimpleLoop())
         {
-            // Flow-less loops to partial unroll for now. 3 blocks corresponds to an if that either
-            // exits or continues the loop. There might be fixed and floating work within the loop
-            // as well.
+            // Flow-less loops to partial unroll for now. 3 blocks corresponds to an if that either exits
+            // or continues the loop. There might be fixed and floating work within the loop as well.
             if (loop.loop().getBlocks().size() < 3)
             {
                 return true;

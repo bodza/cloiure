@@ -294,14 +294,11 @@ public class BytecodeParser implements GraphBuilderContext
                         }
                         else if (frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
                         {
-                            // This is a frame state for the entry point to an exception
-                            // dispatcher in an intrinsic. For example, the invoke denoting
-                            // a partial intrinsic exit will have an edge to such a
-                            // dispatcher if the profile for the original invoke being
-                            // intrinsified indicates an exception was seen. As per JVM
-                            // bytecode semantics, the interpreter expects a single
-                            // value on the stack on entry to an exception handler,
-                            // namely the exception object.
+                            // This is a frame state for the entry point to an exception dispatcher in an intrinsic.
+                            // For example, the invoke denoting a partial intrinsic exit will have an edge to such a
+                            // dispatcher if the profile for the original invoke being intrinsified indicates an
+                            // exception was seen. As per JVM bytecode semantics, the interpreter expects a single
+                            // value on the stack on entry to an exception handler, namely the exception object.
                             ValueNode exceptionValue = frameState.stackAt(0);
                             ExceptionObjectNode exceptionObject = (ExceptionObjectNode) GraphUtil.unproxify(exceptionValue);
                             FrameStateBuilder dispatchState = parser.frameState.copy();
@@ -464,7 +461,7 @@ public class BytecodeParser implements GraphBuilderContext
     {
         if (bytecodeProvider.shouldRecordMethodDependencies())
         {
-            // Record method dependency in the graph
+            // record method dependency in the graph
             graph.recordMethod(method);
         }
 
@@ -1152,7 +1149,7 @@ public class BytecodeParser implements GraphBuilderContext
             {
                 invokeDynamicPlugin.recordDynamicMethod(this, cpi, opcode, target);
 
-                // Will perform runtime type checks and static initialization
+                // will perform runtime type checks and static initialization
                 FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
                 appendixNode = invokeDynamicPlugin.genAppendixNode(this, cpi, opcode, appendix, stateBefore);
             }
@@ -1393,7 +1390,7 @@ public class BytecodeParser implements GraphBuilderContext
             }
             else
             {
-                // We are parsing the intrinsic for the root compilation or for inlining,
+                // We are parsing the intrinsic for the root compilation or for inlining.
                 // This call is a partial intrinsic exit, and we do not have profile information
                 // for this callsite. We also have to assume that the call needs an exception
                 // edge. Finally, we know that this intrinsic is parsed for late inlining,
@@ -1409,7 +1406,7 @@ public class BytecodeParser implements GraphBuilderContext
             }
             else
             {
-                // The original call to the intrinsic must have been devirtualized
+                // The original call to the intrinsic must have been devirtualized,
                 // otherwise we wouldn't be here.
                 invokeKind = InvokeKind.Special;
             }
@@ -1631,7 +1628,7 @@ public class BytecodeParser implements GraphBuilderContext
         ResolvedJavaType receiverType = StampTool.typeOrNull(intrinsicReceiver);
         if (receiverType == null)
         {
-            // The verifier guarantees it to be at least type declaring targetMethod
+            // the verifier guarantees it to be at least type declaring targetMethod
             receiverType = targetMethod.getDeclaringClass();
         }
         ResolvedJavaMethod resolvedMethod = receiverType.resolveMethod(targetMethod, method.getDeclaringClass());
@@ -1657,15 +1654,14 @@ public class BytecodeParser implements GraphBuilderContext
                     {
                         if (newProfile.getTypes().length == 0)
                         {
-                            // All profiled types select the intrinsic so
-                            // emit a fixed guard instead of an if-then-else.
+                            // all profiled types select the intrinsic, so emit a fixed guard instead of an if-then-else
                             lastInstr = append(new FixedGuardNode(compare, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile, false));
                             return new IntrinsicGuard(currentLastInstr, intrinsicReceiver, mark, null, null);
                         }
                     }
                     else
                     {
-                        // No profiled types select the intrinsic so emit a virtual call
+                        // no profiled types select the intrinsic, so emit a virtual call
                         return null;
                     }
                     profile = newProfile;
@@ -1680,7 +1676,7 @@ public class BytecodeParser implements GraphBuilderContext
         }
         else
         {
-            // Receiver selects an overriding method so emit a virtual call
+            // receiver selects an overriding method, so emit a virtual call
             return null;
         }
     }
@@ -1740,7 +1736,7 @@ public class BytecodeParser implements GraphBuilderContext
                 if (intrinsicGuard.nonIntrinsicBranch != null)
                 {
                     // Intrinsic emitted: emit a virtual call to the target method and
-                    // merge it with the intrinsic branch
+                    // merge it with the intrinsic branch.
                     EndNode intrinsicEnd = append(new EndNode());
 
                     FrameStateBuilder intrinsicState = null;
@@ -1773,7 +1769,7 @@ public class BytecodeParser implements GraphBuilderContext
             else
             {
                 // Intrinsic was not applied: remove intrinsic guard
-                // and restore the original receiver node in the arguments array
+                // and restore the original receiver node in the arguments array.
                 intrinsicGuard.lastInstr.setNext(null);
                 GraphUtil.removeNewNodes(graph, intrinsicGuard.mark);
                 lastInstr = intrinsicGuard.lastInstr;
@@ -1875,9 +1871,9 @@ public class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        // There was no inline plugin with a definite answer to whether or not
-        // to inline. If we're parsing an intrinsic, then we need to enforce the
-        // invariant here that methods are always force inlined in intrinsics/snippets.
+        // There was no inline plugin with a definite answer to whether or not to inline.
+        // If we're parsing an intrinsic, then we need to enforce the invariant here
+        // that methods are always force inlined in intrinsics/snippets.
         if (parsingIntrinsic())
         {
             if (inline(targetMethod, targetMethod, this.bytecodeProvider, args))
@@ -1925,8 +1921,7 @@ public class BytecodeParser implements GraphBuilderContext
         {
             receiver.get();
         }
-        boolean res = inline(targetMethod, substitute, intrinsicBytecodeProvider, args);
-        return res;
+        return inline(targetMethod, substitute, intrinsicBytecodeProvider, args);
     }
 
     private boolean inline(ResolvedJavaMethod targetMethod, ResolvedJavaMethod inlinedMethod, BytecodeProvider intrinsicBytecodeProvider, ValueNode[] args)
@@ -1942,10 +1937,8 @@ public class BytecodeParser implements GraphBuilderContext
         {
             if (intrinsic.isCompilationRoot())
             {
-                // A root compiled intrinsic needs to deoptimize
-                // if the slow path is taken. During frame state
-                // assignment, the deopt node will get its stateBefore
-                // from the start node of the intrinsic
+                // A root compiled intrinsic needs to deoptimize if the slow path is taken. During frame state
+                // assignment, the deopt node will get its stateBefore from the start node of the intrinsic.
                 append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.RuntimeConstraint));
                 return true;
             }
@@ -1957,9 +1950,8 @@ public class BytecodeParser implements GraphBuilderContext
                 }
                 if (canInlinePartialIntrinsicExit() && BytecodeParserOptions.InlinePartialIntrinsicExitDuringParsing.getValue(options))
                 {
-                    // Otherwise inline the original method. Any frame state created
-                    // during the inlining will exclude frame(s) in the
-                    // intrinsic method (see FrameStateBuilder.create(int bci)).
+                    // Otherwise inline the original method. Any frame state created during the inlining
+                    // will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
                     notifyBeforeInline(inlinedMethod);
                     parseAndInlineCallee(intrinsic.getOriginalMethod(), args, null);
                     notifyAfterInline(inlinedMethod);
@@ -2105,11 +2097,10 @@ public class BytecodeParser implements GraphBuilderContext
         /*
          * Method handleException will call createTarget, which wires this exception edge to the
          * corresponding exception dispatch block in the caller. In the case where it wires to the
-         * caller's unwind block, any FrameState created meanwhile, e.g., FrameState for
-         * LoopExitNode, would be instantiated with AFTER_EXCEPTION_BCI. Such frame states should
-         * not be fixed by IntrinsicScope.close, as they denote the states of the caller. Thus, the
-         * following code should be placed outside the IntrinsicScope, so that correctly created
-         * FrameStates are not replaced.
+         * caller's unwind block, any FrameState created meanwhile, e.g. FrameState for LoopExitNode,
+         * would be instantiated with AFTER_EXCEPTION_BCI. Such frame states should not be fixed by
+         * IntrinsicScope.close, as they denote the states of the caller. Thus, the following code
+         * should be placed outside the IntrinsicScope, so that correctly created FrameStates are not replaced.
          */
         if (calleeBeforeUnwindNode != null)
         {
@@ -2590,9 +2581,7 @@ public class BytecodeParser implements GraphBuilderContext
     private AbstractBeginNode createBlockTarget(double probability, BciBlock block, FrameStateBuilder stateAfter)
     {
         FixedNode target = createTarget(probability, block, stateAfter);
-        AbstractBeginNode begin = BeginNode.begin(target);
-
-        return begin;
+        return BeginNode.begin(target);
     }
 
     private ValueNode synchronizedObject(FrameStateBuilder state, ResolvedJavaMethod target)
@@ -2609,7 +2598,7 @@ public class BytecodeParser implements GraphBuilderContext
 
     protected void processBlock(BciBlock block)
     {
-        // Ignore blocks that have no predecessors by the time their bytecodes are parsed
+        // ignore blocks that have no predecessors by the time their bytecodes are parsed
         FixedWithNextNode firstInstruction = getFirstInstruction(block);
         if (firstInstruction == null)
         {
@@ -2826,7 +2815,7 @@ public class BytecodeParser implements GraphBuilderContext
             }
             catch (BailoutException e)
             {
-                // Don't wrap bailouts as parser errors
+                // don't wrap bailouts as parser errors
                 throw e;
             }
             catch (Throwable e)
@@ -3174,8 +3163,7 @@ public class BytecodeParser implements GraphBuilderContext
         int currentBC = stream.currentBC();
         if (currentBC >= Bytecodes.ICONST_0 && currentBC <= Bytecodes.ICONST_5)
         {
-            int constValue = currentBC - Bytecodes.ICONST_0;
-            return constValue;
+            return currentBC - Bytecodes.ICONST_0;
         }
         return -1;
     }
@@ -3594,9 +3582,9 @@ public class BytecodeParser implements GraphBuilderContext
     private static void initialize(ResolvedJavaType resolvedType)
     {
         /*
-         * Since we're potentially triggering class initialization here, we need synchronization to
-         * mitigate the potential for class initialization related deadlock being caused by the
-         * compiler (e.g., https://github.com/graalvm/graal-core/pull/232/files#r90788550).
+         * Since we're potentially triggering class initialization here, we need synchronization
+         * to mitigate the potential for class initialization related deadlock being caused by
+         * the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
          */
         synchronized (BytecodeParser.class)
         {
@@ -3607,15 +3595,13 @@ public class BytecodeParser implements GraphBuilderContext
     protected JavaType lookupType(int cpi, int bytecode)
     {
         maybeEagerlyResolve(cpi, bytecode);
-        JavaType result = constantPool.lookupType(cpi, bytecode);
-        return result;
+        return constantPool.lookupType(cpi, bytecode);
     }
 
     private JavaMethod lookupMethod(int cpi, int opcode)
     {
         maybeEagerlyResolve(cpi, opcode);
-        JavaMethod result = constantPool.lookupMethod(cpi, opcode);
-        return result;
+        return constantPool.lookupMethod(cpi, opcode);
     }
 
     protected JavaField lookupField(int cpi, int opcode)
@@ -3629,8 +3615,7 @@ public class BytecodeParser implements GraphBuilderContext
                 ResolvedJavaType declaringClass = ((ResolvedJavaField) result).getDeclaringClass();
                 if (!declaringClass.isInitialized())
                 {
-                    // Even with eager initialization, superinterfaces are not always initialized.
-                    // See StaticInterfaceFieldTest
+                    // even with eager initialization, superinterfaces are not always initialized (see StaticInterfaceFieldTest)
                     initialize(declaringClass);
                 }
             }
@@ -3641,8 +3626,7 @@ public class BytecodeParser implements GraphBuilderContext
     private Object lookupConstant(int cpi, int opcode)
     {
         maybeEagerlyResolve(cpi, opcode);
-        Object result = constantPool.lookupConstant(cpi);
-        return result;
+        return constantPool.lookupConstant(cpi);
     }
 
     protected void maybeEagerlyResolve(int cpi, int bytecode)
@@ -3656,7 +3640,7 @@ public class BytecodeParser implements GraphBuilderContext
             /*
              * Since we're potentially triggering class initialization here, we need synchronization
              * to mitigate the potential for class initialization related deadlock being caused by
-             * the compiler (e.g., https://github.com/graalvm/graal-core/pull/232/files#r90788550).
+             * the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
              */
             synchronized (BytecodeParser.class)
             {

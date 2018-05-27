@@ -99,7 +99,7 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin
      * {@link InlineInfo#getMethodToInline method} is inlined. Note that it can be a different
      * method than the one specified here as the parameter, which allows method substitutions.
      *
-     * Non-null return value with a null {@link InlineInfo#getMethodToInline method}, e.g.,
+     * Non-null return value with a null {@link InlineInfo#getMethodToInline method}, e.g.
      * {@link InlineInfo#DO_NOT_INLINE_WITH_EXCEPTION}: The method is not inlined, and other plugins
      * with a lower priority cannot overwrite this decision.
      *

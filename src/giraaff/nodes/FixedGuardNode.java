@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.JavaConstant;
 import giraaff.graph.IterableNodeType;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.SimplifierTool;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 

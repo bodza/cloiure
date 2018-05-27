@@ -45,9 +45,8 @@ public class AESCryptSubstitutions
     {
         try
         {
-            // Need to use the system class loader as com.sun.crypto.provider.AESCrypt
-            // is normally loaded by the extension class loader which is not delegated
-            // to by the JVMCI class loader.
+            // Need to use the system class loader as com.sun.crypto.provider.AESCrypt is normally loaded
+            // by the extension class loader, which is not delegated to by the JVMCI class loader.
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             AESCryptClass = Class.forName("com.sun.crypto.provider.AESCrypt", true, cl);
             kOffset = UnsafeAccess.UNSAFE.objectFieldOffset(AESCryptClass.getDeclaredField("K"));

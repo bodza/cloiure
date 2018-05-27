@@ -10,7 +10,6 @@ import jdk.vm.ci.meta.Constant;
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.CompressEncoding;
-import giraaff.core.common.GraalOptions;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;

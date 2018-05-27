@@ -14,7 +14,6 @@ import jdk.vm.ci.meta.Value;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.LIRKind;
-import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
@@ -46,9 +45,9 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
         TargetDescription target = providers.getCodeCache().getTarget();
         PlatformKind word = target.arch.getWordKind();
 
-        // The calling convention for the exception handler stub is (only?) defined in
-        // TemplateInterpreterGenerator::generate_throw_exception()
-        // in templateInterpreter_x86_64.cpp around line 1923
+        // The calling convention for the exception handler stub is (only?)
+        // defined in TemplateInterpreterGenerator::generate_throw_exception()
+        // in templateInterpreter_x86_64.cpp around line 1923.
         RegisterValue exception = AMD64.rax.asValue(LIRKind.reference(word));
         RegisterValue exceptionPc = AMD64.rdx.asValue(LIRKind.value(word));
         CallingConvention exceptionCc = new CallingConvention(0, Value.ILLEGAL, exception, exceptionPc);
@@ -57,7 +56,7 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
 
         if (config.useCRC32Intrinsics)
         {
-            // This stub does callee saving
+            // this stub does callee saving
             registerForeignCall(CRC32Substitutions.UPDATE_BYTES_CRC32, config.updateBytesCRC32Stub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
         }
         if (config.useCRC32CIntrinsics)

@@ -411,8 +411,7 @@ public class InvocationPlugins
 
         public MethodSubstitutionPlugin createMethodSubstitution(Class<?> substituteDeclaringClass, String substituteName, Type... argumentTypes)
         {
-            MethodSubstitutionPlugin plugin = new MethodSubstitutionPlugin(methodSubstitutionBytecodeProvider, substituteDeclaringClass, substituteName, argumentTypes);
-            return plugin;
+            return new MethodSubstitutionPlugin(methodSubstitutionBytecodeProvider, substituteDeclaringClass, substituteName, argumentTypes);
         }
     }
 
@@ -1130,8 +1129,7 @@ public class InvocationPlugins
             }
             if (testExtensions != null)
             {
-                // Avoid the synchronization in the common case that there
-                // are no test extensions.
+                // Avoid the synchronization in the common case that there are no test extensions.
                 synchronized (this)
                 {
                     if (testExtensions != null)
@@ -1228,11 +1226,9 @@ public class InvocationPlugins
     {
         try
         {
-            // Need to use the system class loader to handle classes
-            // loaded by the application class loader which is not
-            // delegated to by the JVMCI class loader.
-            ClassLoader cl = ClassLoader.getSystemClassLoader();
-            return Class.forName(className, false, cl);
+            // Need to use the system class loader to handle classes loaded by the application
+            // class loader, which is not delegated to by the JVMCI class loader.
+            return Class.forName(className, false, ClassLoader.getSystemClassLoader());
         }
         catch (ClassNotFoundException e)
         {

@@ -2,7 +2,6 @@ package giraaff.nodes;
 
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 
 /**
  * Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.

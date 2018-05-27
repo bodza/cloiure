@@ -176,7 +176,7 @@ public class AMD64GraphBuilderPlugins
                 @Override
                 public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode object, ValueNode offset, ValueNode value)
                 {
-                    // Emits a null-check for the otherwise unused receiver
+                    // emits a null-check for the otherwise unused receiver
                     unsafe.get();
                     b.addPush(kind, new AtomicReadAndWriteNode(object, offset, value, kind, LocationIdentity.any()));
                     b.getGraph().markUnsafeAccess();
@@ -190,7 +190,7 @@ public class AMD64GraphBuilderPlugins
                     @Override
                     public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode object, ValueNode offset, ValueNode delta)
                     {
-                        // Emits a null-check for the otherwise unused receiver
+                        // emits a null-check for the otherwise unused receiver
                         unsafe.get();
                         AddressNode address = b.add(new OffsetAddressNode(object, offset));
                         b.addPush(kind, new AtomicReadAndAddNode(address, delta, LocationIdentity.any()));

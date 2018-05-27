@@ -4,7 +4,6 @@ import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ValueNode;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.nodes.BasicArrayCopyNode;

@@ -23,8 +23,7 @@ public final class SSALinearScan extends LinearScan
     @Override
     protected MoveResolver createMoveResolver()
     {
-        SSAMoveResolver moveResolver = new SSAMoveResolver(this);
-        return moveResolver;
+        return new SSAMoveResolver(this);
     }
 
     @Override

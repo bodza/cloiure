@@ -21,7 +21,6 @@ import giraaff.asm.amd64.AMD64Assembler.AMD64RMOp;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64Assembler.OperandSize;
 import giraaff.asm.amd64.AMD64Assembler.SSEOp;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.calc.Condition;
@@ -304,9 +303,8 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
                 }
                 else if (finalCondition != Condition.EQ && finalCondition != Condition.NE)
                 {
-                    // negating EQ and NE does not make any sense as we would need to negate
-                    // unorderedIsTrue as well (otherwise, we would no longer fulfill the Java
-                    // NaN semantics)
+                    // negating EQ and NE does not make any sense as we would need to negate unorderedIsTrue
+                    // as well (otherwise, we would no longer fulfill the Java NaN semantics)
                     finalCondition = finalCondition.negate();
                     finalTrueValue = falseValue;
                     finalFalseValue = trueValue;

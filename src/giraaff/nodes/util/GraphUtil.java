@@ -20,7 +20,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
-import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
 
 import giraaff.bytecode.Bytecode;
@@ -62,7 +61,6 @@ import giraaff.nodes.spi.ValueProxy;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
 
 public class GraphUtil
@@ -188,17 +186,17 @@ public class GraphUtil
         EconomicSet<Node> markedNodes = EconomicSet.create();
         EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges = EconomicMap.create();
 
-        // Detach this node from CFG
+        // detach this node from CFG
         node.replaceAtPredecessor(null);
 
         markFixedNodes(node, markedNodes, unmarkedMerges);
 
         fixSurvivingAffectedMerges(markedNodes, unmarkedMerges);
 
-        // Mark non-fixed nodes
+        // mark non-fixed nodes
         markUsages(markedNodes);
 
-        // Detach marked nodes from non-marked nodes
+        // detach marked nodes from non-marked nodes
         for (Node marked : markedNodes)
         {
             for (Node input : marked.inputs())
@@ -210,7 +208,7 @@ public class GraphUtil
                 }
             }
         }
-        // Kill marked nodes
+        // kill marked nodes
         for (Node marked : markedNodes)
         {
             if (marked.isAlive())
@@ -420,8 +418,7 @@ public class GraphUtil
 
     private static void normalizeLoopBegin(LoopBeginNode begin)
     {
-        // Delete unnecessary loop phi functions, i.e., phi functions where all inputs are either
-        // the same or the phi itself.
+        // Delete unnecessary loop phi functions, i.e. phi functions where all inputs are either the same or the phi itself.
         for (PhiNode phi : begin.phis().snapshot())
         {
             GraphUtil.checkRedundantPhi(phi);
@@ -660,8 +657,7 @@ public class GraphUtil
      */
     public static ValueNode originalValue(ValueNode value)
     {
-        ValueNode result = originalValueSimple(value);
-        return result;
+        return originalValueSimple(value);
     }
 
     private static ValueNode originalValueSimple(ValueNode value)

@@ -226,8 +226,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             double probabilityB = (1.0 - this.trueSuccessorProbability) * nextIf.trueSuccessorProbability;
             if (this.trueSuccessorProbability < probabilityB)
             {
-                // Reordering of those two if statements is beneficial from the point of view of
-                // their probabilities.
+                // Reordering of those two if statements is beneficial from the point of view of their probabilities.
                 if (prepareForSwap(tool, condition(), nextIf.condition()))
                 {
                     // Reordering is allowed from (if1 => begin => if2) to (if2 => begin => if1).
@@ -338,8 +337,8 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
 
         // The reference equality check is usually more efficient compared to a boxing check.
-        // The success of the reference equals must therefore be relatively rare, otherwise it makes
-        // no sense to eliminate it.
+        // The success of the reference equals must therefore be relatively rare, otherwise
+        // it makes no sense to eliminate it.
         if (getTrueSuccessorProbability() > 0.4)
         {
             return false;
@@ -604,7 +603,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                         return false;
                     }
                 }
-                // They go to the same MergeNode and merge the same values
+                // they go to the same MergeNode and merge the same values
                 return true;
             }
         }
@@ -614,7 +613,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             DeoptimizeNode deopt2 = (DeoptimizeNode) next2;
             if (deopt1.getReason() == deopt2.getReason() && deopt1.getAction() == deopt2.getAction())
             {
-                // Same deoptimization reason and action.
+                // same deoptimization reason and action
                 return true;
             }
         }
@@ -624,7 +623,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             LoopExitNode exit2 = (LoopExitNode) next2;
             if (exit1.loopBegin() == exit2.loopBegin() && exit1.stateAfter() == exit2.stateAfter() && exit1.stateAfter() == null && sameDestination(exit1, exit2))
             {
-                // Exit the same loop and end up at the same place.
+                // exit the same loop and end up at the same place
                 return true;
             }
         }
@@ -634,7 +633,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             ReturnNode exit2 = (ReturnNode) next2;
             if (exit1.result() == exit2.result())
             {
-                // Exit the same loop and end up at the same place.
+                // exit the same loop and end up at the same place
                 return true;
             }
         }
@@ -779,7 +778,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 }
                 if (distinct == 0)
                 {
-                    // Multiple phis but merging same values for true and false, so simply delete the path
+                    // multiple phis, but merging same values for true and false, so simply delete the path
                     removeThroughFalseBranch(tool, merge);
                     return true;
                 }
@@ -974,7 +973,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     {
         if (graph().getGuardsStage().areFrameStatesAtSideEffects())
         {
-            // Disabled until we make sure we have no FrameState-less merges at this stage
+            // disabled until we make sure we have no FrameState-less merges at this stage
             return false;
         }
 
@@ -985,7 +984,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         MergeNode merge = (MergeNode) predecessor();
         if (merge.forwardEndCount() == 1)
         {
-            // Don't bother.
+            // don't bother
             return false;
         }
         if (merge.usages().count() != 1 || merge.phis().count() != 1)
@@ -994,17 +993,17 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
         if (merge.stateAfter() != null)
         {
-            // We'll get the chance to simplify this after frame state assignment.
+            // we'll get the chance to simplify this after frame state assignment
             return false;
         }
         PhiNode phi = merge.phis().first();
         if (phi.usages().count() != 1)
         {
-            // For simplicity the below code assumes assumes the phi goes dead at the end so skip this case.
+            // for simplicity, the code below assumes that phi goes dead at the end, so skip this case
             return false;
         }
 
-        // Check that the condition uses the phi and that there is only one user of the condition expression.
+        // check that the condition uses the phi and that there is only one user of the condition expression
         if (!conditionUses(condition(), phi))
         {
             return false;
@@ -1012,11 +1011,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
         /*
          * We could additionally filter for the case that at least some of the Phi inputs or one of
-         * the condition inputs are constants but there are cases where a non-constant is
-         * simplifiable, usually where the stamp allows the question to be answered.
+         * the condition inputs are constants but there are cases where a non-constant is simplifiable,
+         * usually where the stamp allows the question to be answered.
          */
 
-        // Each successor of the if gets a new merge if needed.
+        // each successor of the if gets a new merge if needed
         MergeNode trueMerge = null;
         MergeNode falseMerge = null;
 
@@ -1046,7 +1045,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             }
             else if (result != condition)
             {
-                // Build a new IfNode using the new condition
+                // build a new IfNode using the new condition
                 BeginNode trueBegin = graph().add(new BeginNode());
                 BeginNode falseBegin = graph().add(new BeginNode());
 
@@ -1297,8 +1296,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             return false;
         }
 
-        // Only consider merges with a single usage that is both a phi and an operand of the
-        // comparison
+        // only consider merges with a single usage that is both a phi and an operand of the comparison
         NodeIterable<Node> mergeUsages = merge.usages();
         if (mergeUsages.count() != 1)
         {
@@ -1310,7 +1308,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             return false;
         }
 
-        // Ensure phi is used by at most the comparison and the merge's frame state (if any)
+        // ensure phi is used by at most the comparison and the merge's frame state (if any)
         ValuePhiNode phi = (ValuePhiNode) singleUsage;
         NodeIterable<Node> phiUsages = phi.usages();
         if (phiUsages.count() > 2)
@@ -1538,8 +1536,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             }
             else
             {
-                // Need a new phi in case the frame state is used by more than the merge being
-                // removed.
+                // need a new phi in case the frame state is used by more than the merge being removed
                 NodeView view = NodeView.from(tool);
                 AbstractMergeNode newMerge = graph().add(new MergeNode());
                 PhiNode oldPhi = (PhiNode) oldMerge.usages().first();

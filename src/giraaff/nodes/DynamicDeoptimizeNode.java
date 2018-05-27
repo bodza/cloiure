@@ -66,8 +66,7 @@ public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implemen
         {
             JavaConstant constant = actionAndReason.asJavaConstant();
             JavaConstant speculationConstant = speculation.asJavaConstant();
-            DeoptimizeNode newDeopt = new DeoptimizeNode(tool.getMetaAccess().decodeDeoptAction(constant), tool.getMetaAccess().decodeDeoptReason(constant), tool.getMetaAccess().decodeDebugId(constant), speculationConstant, stateBefore());
-            return newDeopt;
+            return new DeoptimizeNode(tool.getMetaAccess().decodeDeoptAction(constant), tool.getMetaAccess().decodeDeoptReason(constant), tool.getMetaAccess().decodeDebugId(constant), speculationConstant, stateBefore());
         }
         return this;
     }

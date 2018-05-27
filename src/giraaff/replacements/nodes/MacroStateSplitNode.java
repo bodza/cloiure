@@ -66,7 +66,7 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
             {
                 throw new GraalError("unexpected invoke %s in snippet", getClass().getSimpleName());
             }
-            // Here we need to fix the bci of the invoke
+            // here we need to fix the bci of the invoke
             InvokeNode newInvoke = snippetGraph.add(new InvokeNode(invoke.callTarget(), bci()));
             newInvoke.setStateAfter(invoke.stateAfter());
             snippetGraph.replaceFixedWithFixed((InvokeNode) invoke.asNode(), newInvoke);

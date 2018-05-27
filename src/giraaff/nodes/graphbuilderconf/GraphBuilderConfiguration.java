@@ -225,8 +225,7 @@ public class GraphBuilderConfiguration
     public GraphBuilderConfiguration copy()
     {
         Plugins newPlugins = new Plugins(plugins);
-        GraphBuilderConfiguration result = new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, newPlugins);
-        return result;
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, newPlugins);
     }
 
     /**

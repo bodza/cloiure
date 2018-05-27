@@ -70,7 +70,7 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
     @Override
     public boolean inlineOnly()
     {
-        // Conservatively assume MacroNodes may be used in a substitution
+        // conservatively assume MacroNodes may be used in a substitution
         return true;
     }
 

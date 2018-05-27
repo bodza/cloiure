@@ -2,7 +2,6 @@ package giraaff.nodes;
 
 import giraaff.graph.IterableNodeType;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.util.GraalError;

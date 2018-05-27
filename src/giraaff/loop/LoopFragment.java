@@ -75,7 +75,7 @@ public abstract class LoopFragment
 
     public void disconnect()
     {
-        // TODO (gd) possibly abstract
+        // TODO possibly abstract
     }
 
     public boolean contains(Node n)
@@ -184,7 +184,7 @@ public abstract class LoopFragment
         }
         else
         {
-            // TODO (gd) apply fix ?
+            // TODO apply fix?
         }
     }
 

@@ -8,23 +8,14 @@ import java.util.List;
 import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 
-import org.graalvm.word.Pointer;
-import org.graalvm.word.WordFactory;
-
 import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.Fold.InjectedParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.nodes.DeoptimizeCallerNode;
 import giraaff.hotspot.nodes.StubForeignCallNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
-import giraaff.hotspot.word.KlassPointer;
-import giraaff.nodes.PiNode;
-import giraaff.nodes.SnippetAnchorNode;
-import giraaff.nodes.extended.GuardingNode;
-import giraaff.replacements.nodes.CStringConstant;
 import giraaff.word.Word;
 
 /**
@@ -34,8 +25,7 @@ public class StubUtil
 {
     public static ForeignCallDescriptor newDescriptor(Class<?> stubClass, String name, Class<?> resultType, Class<?>... argumentTypes)
     {
-        ForeignCallDescriptor d = new ForeignCallDescriptor(name, resultType, argumentTypes);
-        return d;
+        return new ForeignCallDescriptor(name, resultType, argumentTypes);
     }
 
     /**

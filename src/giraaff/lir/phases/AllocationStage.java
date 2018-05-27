@@ -1,6 +1,5 @@
 package giraaff.lir.phases;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.lir.alloc.lsra.LinearScanPhase;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.stackslotalloc.LSStackSlotAllocator;

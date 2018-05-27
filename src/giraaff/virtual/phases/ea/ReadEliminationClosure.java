@@ -303,9 +303,8 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                 for (int i = 1; i < states.size(); i++)
                 {
                     ValueNode otherValue = states.get(i).readCache.get(key);
-                    // E.g. unsafe loads / stores with different access kinds have different stamps
-                    // although location, object and offset are the same. In this case we cannot
-                    // create a phi nor can we set a common value.
+                    // E.g. unsafe loads/stores with different access kinds have different stamps although location,
+                    // object and offset are the same. In this case we cannot create a phi nor can we set a common value.
                     if (otherValue == null || !value.stamp(NodeView.DEFAULT).isCompatible(otherValue.stamp(NodeView.DEFAULT)))
                     {
                         value = null;

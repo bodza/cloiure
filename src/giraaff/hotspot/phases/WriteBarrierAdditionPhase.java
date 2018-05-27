@@ -93,7 +93,7 @@ public class WriteBarrierAdditionPhase extends Phase
         final boolean alwaysNull = StampTool.isPointerAlwaysNull(value);
         if (alwaysNull)
         {
-            // Serial barrier isn't needed for null value
+            // serial barrier isn't needed for null value
             return;
         }
         graph.addAfterFixed(node, graph.add(new SerialWriteBarrier(address, precise)));

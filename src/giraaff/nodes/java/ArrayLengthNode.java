@@ -82,7 +82,7 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
     {
         if (value.isConstant())
         {
-            // No proxy needed
+            // no proxy needed
             return value;
         }
         if (originalValue instanceof ValueProxyNode)
@@ -111,7 +111,7 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
         ValueNode length = GraphUtil.arrayLength(originalArray);
         if (length != null)
         {
-            // Ensure that any proxies on the original value end up on the length value
+            // ensure that any proxies on the original value end up on the length value
             return reproxyValue(originalArray, length);
         }
         return readArrayLengthConstant(originalArray, constantReflection);

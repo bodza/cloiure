@@ -89,7 +89,7 @@ public class InliningPhase extends AbstractInliningPhase
             {
                 if (limit > 0 && count == limit)
                 {
-                    // Limit the amount of exploration which is done
+                    // limit the amount of exploration which is done
                     break;
                 }
             }

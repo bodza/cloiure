@@ -76,7 +76,7 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
             WriteNode write = (WriteNode) lastLocationAccess;
             if (write.getAddress() == getAddress() && write.getAccessStamp().isCompatible(getAccessStamp()))
             {
-                // Same memory location with no intervening write
+                // same memory location with no intervening write
                 return write.value();
             }
         }

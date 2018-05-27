@@ -9,8 +9,6 @@ import jdk.vm.ci.meta.PlatformKind;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
-import giraaff.core.common.GraalOptions;
-
 /**
  * Configuration for register allocation. This is different to {@link RegisterConfig}.
  */
@@ -52,8 +50,7 @@ public class RegisterAllocationConfig
         PlatformKind.Key key = kind.getKey();
         if (categorized.containsKey(key))
         {
-            AllocatableRegisters val = categorized.get(key);
-            return val;
+            return categorized.get(key);
         }
         AllocatableRegisters ret = createAllocatableRegisters(registerConfig.filterAllocatableRegisters(kind, getAllocatableRegisters()));
         categorized.put(key, ret);

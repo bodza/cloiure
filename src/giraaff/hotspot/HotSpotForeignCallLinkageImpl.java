@@ -282,8 +282,7 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
         {
             if (stub != null)
             {
-                // The stub will do the JavaFrameAnchor management
-                // around the runtime call(s) it makes
+                // the stub will do the JavaFrameAnchor management around the runtime call(s) it makes
                 return false;
             }
             else

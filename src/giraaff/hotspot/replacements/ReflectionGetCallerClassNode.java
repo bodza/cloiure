@@ -59,8 +59,7 @@ public final class ReflectionGetCallerClassNode extends MacroStateSplitNode impl
     }
 
     /**
-     * If inlining is deep enough this method returns a {@link ConstantNode} of the caller class by
-     * walking the stack.
+     * If inlining is deep enough this method returns a {@link ConstantNode} of the caller class by walking the stack.
      *
      * @return ConstantNode of the caller class, or null
      */
@@ -69,9 +68,9 @@ public final class ReflectionGetCallerClassNode extends MacroStateSplitNode impl
         // Walk back up the frame states to find the caller at the required depth.
         FrameState state = stateAfter();
 
-        // Cf. JVM_GetCallerClass
-        // NOTE: Start the loop at depth 1 because the current frame state does
-        // not include the Reflection.getCallerClass() frame.
+        // cf. JVM_GetCallerClass
+        // NOTE: Start the loop at depth 1 because the current frame state does not
+        // include the Reflection.getCallerClass() frame.
         for (int n = 1; state != null; state = state.outerFrameState(), n++)
         {
             HotSpotResolvedJavaMethod method = (HotSpotResolvedJavaMethod) state.getMethod();

@@ -2,30 +2,21 @@ package giraaff.hotspot.replacements;
 
 import java.util.List;
 
-import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.code.MemoryBarriers;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
-import org.graalvm.word.LocationIdentity;
 import org.graalvm.word.Pointer;
 import org.graalvm.word.WordFactory;
 
 import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
-import giraaff.bytecode.Bytecode;
-import giraaff.bytecode.ResolvedJavaMethodBytecode;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.core.common.type.StampFactory;
-import giraaff.core.common.type.StampPair;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.graph.iterators.NodeIterable;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
@@ -37,26 +28,16 @@ import giraaff.hotspot.nodes.FastAcquireBiasedLockNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.replacements.HotspotSnippetsOptions;
 import giraaff.hotspot.word.KlassPointer;
-import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.DeoptimizeNode;
-import giraaff.nodes.FrameState;
-import giraaff.nodes.InvokeNode;
-import giraaff.nodes.NamedLocationIdentity;
-import giraaff.nodes.NodeView;
-import giraaff.nodes.ReturnNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.ValueNode;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.extended.MembarNode;
-import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.java.MonitorExitNode;
 import giraaff.nodes.java.RawMonitorEnterNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.nodes.type.StampTool;
 import giraaff.options.OptionValues;
-import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -149,7 +130,7 @@ public class MonitorSnippets implements Snippets
     @Snippet
     public static void monitorenter(Object object, KlassPointer hub, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter Register stackPointerRegister, @ConstantParameter OptionValues options)
     {
-        // Load the mark word - this includes a null-check on object
+        // load the mark word - this includes a null-check on object
         final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
 
         final Word lock = BeginLockScopeNode.beginLockScope(lockDepth);
@@ -166,7 +147,7 @@ public class MonitorSnippets implements Snippets
         }
         if (inlineFastLockSupported(options) && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, mark.and(HotSpotReplacementsUtil.monitorMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).notEqual(0)))
         {
-            // Inflated case
+            // inflated case
             if (tryEnterInflated(object, lock, mark, threadRegister, options))
             {
                 return;
@@ -174,17 +155,16 @@ public class MonitorSnippets implements Snippets
         }
         else
         {
-            // Create the unlocked mark word pattern
+            // create the unlocked mark word pattern
             Word unlockedMark = mark.or(HotSpotReplacementsUtil.unlockedMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
 
-            // Copy this unlocked mark word into the lock slot on the stack
+            // copy this unlocked mark word into the lock slot on the stack
             lock.writeWord(HotSpotReplacementsUtil.lockDisplacedMarkOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), unlockedMark, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
 
             // make sure previous store does not float below compareAndSwap
             MembarNode.memoryBarrier(MemoryBarriers.STORE_STORE);
 
-            // Test if the object's mark word is unlocked, and if so, store the
-            // (address of) the lock slot into the object's mark word.
+            // Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
             Word currentMark = objectPointer.compareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), unlockedMark, lock, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, currentMark.equal(unlockedMark)))
             {
@@ -212,7 +192,7 @@ public class MonitorSnippets implements Snippets
                 final Word stackPointer = HotSpotReplacementsUtil.registerAsWord(stackPointerRegister).add(HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).stackBias);
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, currentMark.subtract(stackPointer).and(alignedMask.subtract(HotSpotReplacementsUtil.pageSize())).equal(0)))
                 {
-                    // Recursively locked => write 0 to the lock slot
+                    // recursively locked => write 0 to the lock slot
                     lock.writeWord(HotSpotReplacementsUtil.lockDisplacedMarkOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), WordFactory.zero(), HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
                     return;
                 }
@@ -224,84 +204,68 @@ public class MonitorSnippets implements Snippets
 
     private static boolean tryEnterBiased(Object object, KlassPointer hub, Word lock, Word mark, Register threadRegister, OptionValues options)
     {
-        // See whether the lock is currently biased toward our thread and
-        // whether the epoch is still valid.
-        // Note that the runtime guarantees sufficient alignment of JavaThread
-        // pointers to allow age to be placed into low bits.
+        // See whether the lock is currently biased toward our thread and whether the epoch is still valid.
+        // Note that the runtime guarantees sufficient alignment of JavaThread pointers to allow age to be placed into low bits.
         final Word biasableLockBits = mark.and(HotSpotReplacementsUtil.biasedLockMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
 
-        // Check whether the bias pattern is present in the object's mark word
-        // and the bias owner and the epoch are both still current.
+        // Check whether the bias pattern is present in the object's mark word and the bias owner and the epoch are both still current.
         final Word prototypeMarkWord = hub.readWord(HotSpotReplacementsUtil.prototypeMarkWordOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
         final Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         final Word tmp = prototypeMarkWord.or(thread).xor(mark).and(~HotSpotReplacementsUtil.ageMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
         if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, tmp.equal(0)))
         {
-            // Object is already biased to current thread -> done
+            // object is already biased to current thread -> done
             FastAcquireBiasedLockNode.mark(object);
             return true;
         }
 
-        // Now check to see whether biasing is enabled for this object
+        // now check to see whether biasing is enabled for this object
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, biasableLockBits.equal(WordFactory.unsigned(HotSpotReplacementsUtil.biasedLockPattern(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))))
         {
             Pointer objectPointer = Word.objectToTrackedPointer(object);
-            // At this point we know that the mark word has the bias pattern and
-            // that we are not the bias owner in the current epoch. We need to
-            // figure out more details about the state of the mark word in order to
-            // know what operations can be legally performed on the object's
-            // mark word.
+            // At this point we know that the mark word has the bias pattern and that we are not the bias owner in the
+            // current epoch. We need to figure out more details about the state of the mark word in order to know what
+            // operations can be legally performed on the object's mark word.
 
-            // If the low three bits in the xor result aren't clear, that means
-            // the prototype header is no longer biasable and we have to revoke
-            // the bias on this object.
+            // If the low three bits in the xor result aren't clear, that means the prototype header is no longer biasable
+            // and we have to revoke the bias on this object.
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, tmp.and(HotSpotReplacementsUtil.biasedLockMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).equal(0)))
             {
-                // Biasing is still enabled for object's type. See whether the
-                // epoch of the current bias is still valid, meaning that the epoch
-                // bits of the mark word are equal to the epoch bits of the
-                // prototype mark word. (Note that the prototype mark word's epoch bits
-                // only change at a safepoint.) If not, attempt to rebias the object
-                // toward the current thread. Note that we must be absolutely sure
-                // that the current epoch is invalid in order to do this because
-                // otherwise the manipulations it performs on the mark word are
-                // illegal.
+                // Biasing is still enabled for object's type. See whether the epoch of the current bias is still valid,
+                // meaning that the epoch bits of the mark word are equal to the epoch bits of the prototype mark word.
+                // (Note that the prototype mark word's epoch bits only change at a safepoint.) If not, attempt to rebias
+                // the object toward the current thread. Note that we must be absolutely sure that the current epoch is
+                // invalid in order to do this, because otherwise the manipulations it performs on the mark word are illegal.
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, tmp.and(HotSpotReplacementsUtil.epochMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).equal(0)))
                 {
-                    // The epoch of the current bias is still valid but we know nothing
-                    // about the owner; it might be set or it might be clear. Try to
-                    // acquire the bias of the object using an atomic operation. If this
-                    // fails we will go in to the runtime to revoke the object's bias.
-                    // Note that we first construct the presumed unbiased header so we
-                    // don't accidentally blow away another thread's valid bias.
+                    // The epoch of the current bias is still valid but we know nothing about the owner, it might be
+                    // set or it might be clear. Try to acquire the bias of the object using an atomic operation. If
+                    // this fails we will go in to the runtime to revoke the object's bias. Note that we first construct
+                    // the presumed unbiased header so we don't accidentally blow away another thread's valid bias.
                     Word unbiasedMark = mark.and(HotSpotReplacementsUtil.biasedLockMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG) | HotSpotReplacementsUtil.ageMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG) | HotSpotReplacementsUtil.epochMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
                     Word biasedMark = unbiasedMark.or(thread);
                     if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), unbiasedMark, biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                     {
-                        // Object is now biased to current thread -> done
+                        // object is now biased to current thread -> done
                         return true;
                     }
-                    // If the biasing toward our thread failed, this means that another thread
-                    // owns the bias and we need to revoke that bias. The revocation will occur
-                    // in the interpreter runtime.
+                    // If the biasing toward our thread failed, this means that another thread owns the bias
+                    // and we need to revoke that bias. The revocation will occur in the interpreter runtime.
                 }
                 else
                 {
-                    // At this point we know the epoch has expired, meaning that the
-                    // current bias owner, if any, is actually invalid. Under these
-                    // circumstances _only_, are we allowed to use the current mark word
-                    // value as the comparison value when doing the CAS to acquire the
-                    // bias in the current epoch. In other words, we allow transfer of
-                    // the bias from one thread to another directly in this situation.
+                    // At this point we know the epoch has expired, meaning that the current bias owner, if any, is
+                    // actually invalid. Under these circumstances *only*, are we allowed to use the current mark word
+                    // value as the comparison value when doing the CAS to acquire the bias in the current epoch. In
+                    // other words, we allow transfer of the bias from one thread to another directly in this situation.
                     Word biasedMark = prototypeMarkWord.or(thread);
                     if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), mark, biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                     {
-                        // Object is now biased to current thread -> done
+                        // object is now biased to current thread -> done
                         return true;
                     }
-                    // If the biasing toward our thread failed, then another thread
-                    // succeeded in biasing it toward itself and we need to revoke that
-                    // bias. The revocation will occur in the runtime in the slow case.
+                    // If the biasing toward our thread failed, then another thread succeeded in biasing it toward itself
+                    // and we need to revoke that bias. The revocation will occur in the runtime in the slow case.
                 }
                 // slow-path runtime-call
                 monitorenterStubC(MONITORENTER, object, lock);
@@ -309,25 +273,21 @@ public class MonitorSnippets implements Snippets
             }
             else
             {
-                // The prototype mark word doesn't have the bias bit set any
-                // more, indicating that objects of this data type are not supposed
-                // to be biased any more. We are going to try to reset the mark of
-                // this object to the prototype value and fall through to the
-                // CAS-based locking scheme. Note that if our CAS fails, it means
-                // that another thread raced us for the privilege of revoking the
-                // bias of this particular object, so it's okay to continue in the
-                // normal locking code.
+                // The prototype mark word doesn't have the bias bit set any more, indicating that objects of this
+                // data type are not supposed to be biased any more. We are going to try to reset the mark of this
+                // object to the prototype value and fall through to the CAS-based locking scheme. Note that if our
+                // CAS fails, it means that another thread raced us for the privilege of revoking the bias of this
+                // particular object, so it's okay to continue in the normal locking code.
                 Word result = objectPointer.compareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), mark, prototypeMarkWord, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
-                // Fall through to the normal CAS-based lock, because no matter what
-                // the result of the above CAS, some thread must have succeeded in
-                // removing the bias bit from the object's header.
+                // Fall through to the normal CAS-based lock, because no matter what the result of the above CAS,
+                // some thread must have succeeded in removing the bias bit from the object's header.
                 return false;
             }
         }
         else
         {
-            // Biasing not enabled -> fall through to lightweight locking
+            // biasing not enabled -> fall through to lightweight locking
             return false;
         }
     }
@@ -378,8 +338,7 @@ public class MonitorSnippets implements Snippets
         {
             DeoptimizeNode.deopt(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.NullCheckException);
         }
-        // BeginLockScope nodes do not read from object so a use of object
-        // cannot float about the null check above
+        // BeginLockScope nodes do not read from object, so a use of object cannot float about the null check above.
         final Word lock = BeginLockScopeNode.beginLockScope(lockDepth);
         monitorenterStubC(MONITORENTER, object, lock);
     }
@@ -390,12 +349,11 @@ public class MonitorSnippets implements Snippets
         final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
         if (HotSpotReplacementsUtil.useBiasedLocking(GraalHotSpotVMConfig.INJECTED_VMCONFIG))
         {
-            // Check for biased locking unlock case, which is a no-op
+            // Check for biased locking unlock case, which is a no-op.
             // Note: we do not have to check the thread ID for two reasons.
-            // First, the interpreter checks for IllegalMonitorStateException at
-            // a higher level. Second, if the bias was revoked while we held the
-            // lock, the object could not be rebiased toward another thread, so
-            // the bias bit would be clear.
+            // First, the interpreter checks for IllegalMonitorStateException at a higher level.
+            // Second, if the bias was revoked while we held the lock, the object could not be
+            // rebiased toward another thread, so the bias bit would be clear.
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, mark.and(HotSpotReplacementsUtil.biasedLockMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).equal(WordFactory.unsigned(HotSpotReplacementsUtil.biasedLockPattern(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))))
             {
                 EndLockScopeNode.endLockScope();
@@ -405,20 +363,20 @@ public class MonitorSnippets implements Snippets
 
         final Word lock = CurrentLockNode.currentLock(lockDepth);
 
-        // Load displaced mark
+        // load displaced mark
         final Word displacedMark = lock.readWord(HotSpotReplacementsUtil.lockDisplacedMarkOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
 
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, displacedMark.equal(0)))
         {
-            // Recursive locking => done
+            // recursive locking => done
         }
         else
         {
             if (!tryExitInflated(object, mark, lock, threadRegister, options))
             {
-                // Test if object's mark word is pointing to the displaced mark word, and if so, restore
-                // the displaced mark in the object - if the object's mark word is not pointing to
-                // the displaced mark word, do unlocking via runtime call.
+                // Test if object's mark word is pointing to the displaced mark word, and if so,
+                // restore the displaced mark in the object - if the object's mark word is not
+                // pointing to the displaced mark word, do unlocking via runtime call.
                 Pointer objectPointer = Word.objectToTrackedPointer(object);
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), lock, displacedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                 {
@@ -426,7 +384,7 @@ public class MonitorSnippets implements Snippets
                 }
                 else
                 {
-                    // The object's mark word was not pointing to the displaced header
+                    // the object's mark word was not pointing to the displaced header
                     monitorexitStubC(MONITOREXIT, object, lock);
                 }
             }
@@ -452,7 +410,7 @@ public class MonitorSnippets implements Snippets
         }
         if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, mark.and(HotSpotReplacementsUtil.monitorMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).notEqual(0)))
         {
-            // Inflated case
+            // inflated case
             // mark is a pointer to the ObjectMonitor + monitorMask
             Word monitor = mark.subtract(HotSpotReplacementsUtil.monitorMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
             int ownerOffset = HotSpotReplacementsUtil.objectMonitorOwnerOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
@@ -470,8 +428,7 @@ public class MonitorSnippets implements Snippets
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, cxq.or(entryList).equal(0)))
                 {
                     // cxq == 0 && entryList == 0
-                    // Nobody is waiting, success
-                    // release_store
+                    // nobody is waiting, success
                     MembarNode.memoryBarrier(MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_STORE);
                     monitor.writeWord(ownerOffset, WordFactory.zero());
                     return true;

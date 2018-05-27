@@ -57,7 +57,7 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
             y = tmp;
             if (graph() != null)
             {
-                // See if this node already exists
+                // see if this node already exists
                 LogicNode duplicate = graph().findDuplicate(this);
                 if (duplicate != null)
                 {

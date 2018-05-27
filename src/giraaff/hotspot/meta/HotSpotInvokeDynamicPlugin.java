@@ -88,9 +88,8 @@ public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
         ConstantPool constantPool = builder.getCode().getConstantPool();
         if (isResolvedDynamicInvokeMH == null)
         {
-            // If older JVMCI, but HotSpotInvokeDynamicPlugin is being
-            // used for testing, return true so that we continue along the
-            // plugin path.
+            // For older JVMCI, when HotSpotInvokeDynamicPlugin is being used for testing,
+            // return true, so that we can continue along the plugin path.
             return true;
         }
         return isResolvedDynamicInvoke(constantPool, index, opcode);

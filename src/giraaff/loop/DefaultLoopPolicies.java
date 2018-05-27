@@ -127,7 +127,7 @@ public class DefaultLoopPolicies implements LoopPolicies
             {
                 return false;
             }
-            // Check whether we're allowed to unroll this loop
+            // check whether we're allowed to unroll this loop
             for (Node node : loop.inside().nodes())
             {
                 if (node instanceof ControlFlowAnchorNode)

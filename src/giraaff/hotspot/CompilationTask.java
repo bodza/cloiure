@@ -211,8 +211,8 @@ public class CompilationTask
         if (installAsDefault)
         {
             // If there is already compiled code for this method on our level we simply return.
-            // JVMCI compiles are always at the highest compile level, even in non-tiered mode so we
-            // only need to check for that value.
+            // JVMCI compiles are always at the highest compile level, even in non-tiered mode,
+            // so we only need to check for that value.
             if (method.hasCodeAtLevel(entryBCI, config.compilationLevelFullOptimization))
             {
                 return HotSpotCompilationRequestResult.failure("Already compiled", false);
@@ -263,7 +263,7 @@ public class CompilationTask
     private void installMethod(final CompilationResult compResult)
     {
         final CodeCacheProvider codeCache = jvmciRuntime.getHostJVMCIBackend().getCodeCache();
-        HotSpotBackend backend = compiler.getGraalRuntime().getHostBackend();
+        HotSpotBackend backend = compiler.getGraalRuntime().getBackend();
         installedCode = (HotSpotInstalledCode) backend.createInstalledCode(getRequest().getMethod(), getRequest(), compResult, getRequest().getMethod().getSpeculationLog(), null, installAsDefault);
     }
 

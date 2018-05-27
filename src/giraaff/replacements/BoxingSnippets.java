@@ -9,9 +9,7 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.api.replacements.Snippet;
-import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.api.replacements.SnippetReflectionProvider;
-import giraaff.core.common.GraalOptions;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.PiNode;
 import giraaff.nodes.ValueNode;

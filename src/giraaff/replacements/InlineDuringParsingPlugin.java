@@ -26,7 +26,7 @@ public final class InlineDuringParsingPlugin implements InlineInvokePlugin
     {
         if (method.hasBytecodes() && method.getDeclaringClass().isLinked() && method.canBeInlined())
         {
-            // Test force inlining first
+            // test force inlining first
             if (method.shouldBeInlined())
             {
                 return InlineInfo.createStandardInlineInfo(method);

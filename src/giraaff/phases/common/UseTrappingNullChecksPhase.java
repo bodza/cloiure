@@ -67,8 +67,7 @@ public class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
         {
             AbstractMergeNode merge = (AbstractMergeNode) predecessor;
 
-            // Process each predecessor at the merge, unpacking the reasons and speculations as
-            // needed.
+            // Process each predecessor at the merge, unpacking the reasons and speculations as needed.
             ValueNode reason = deopt.getActionAndReason();
             ValuePhiNode reasonPhi = null;
             List<ValueNode> reasons = null;

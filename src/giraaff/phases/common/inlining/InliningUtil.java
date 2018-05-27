@@ -18,7 +18,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
@@ -266,8 +265,7 @@ public class InliningUtil extends ValueMergeUtil
         }
         for (Invoke exit : partialIntrinsicExits)
         {
-            // A partial intrinsic exit must be replaced with a call to
-            // the intrinsified method.
+            // A partial intrinsic exit must be replaced with a call to the intrinsified method.
             Invoke dup = (Invoke) duplicates.get(exit.asNode());
             if (dup instanceof InvokeNode)
             {
@@ -399,7 +397,7 @@ public class InliningUtil extends ValueMergeUtil
             GraphUtil.killCFG(invoke.next());
         }
 
-        // Copy assumptions from inlinee to caller
+        // copy assumptions from inlinee to caller
         Assumptions assumptions = graph.getAssumptions();
         if (assumptions != null)
         {
@@ -409,7 +407,7 @@ public class InliningUtil extends ValueMergeUtil
             }
         }
 
-        // Copy inlined methods from inlinee to caller
+        // copy inlined methods from inlinee to caller
         graph.updateMethods(inlineGraph);
 
         if (inlineGraph.hasUnsafeAccess())
@@ -538,20 +536,18 @@ public class InliningUtil extends ValueMergeUtil
         else if ((frameState.bci == BytecodeFrame.UNWIND_BCI && frameState.graph().getGuardsStage() == GuardsStage.FLOATING_GUARDS) || frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
         {
             /*
-             * This path converts the frame states relevant for exception unwinding to
-             * deoptimization. This is only allowed in configurations when Graal compiles code for
-             * speculative execution (e.g., JIT compilation in HotSpot) but not when compiled code
-             * must be deoptimization free (e.g., AOT compilation for native image generation).
-             * There is currently no global flag in StructuredGraph to distinguish such modes, but
-             * the GuardsStage during inlining indicates the mode in which Graal operates.
+             * This path converts the frame states relevant for exception unwinding to deoptimization.
+             * This is only allowed in configurations when Graal compiles code for speculative execution
+             * (e.g. JIT compilation in HotSpot) but not when compiled code must be deoptimization free
+             * (e.g. AOT compilation for native image generation). There is currently no global flag in StructuredGraph
+             * to distinguish such modes, but the GuardsStage during inlining indicates the mode in which Graal operates.
              */
             handleMissingAfterExceptionFrameState(frameState, invoke, replacements, alwaysDuplicateStateAfter);
             return frameState;
         }
         else if (frameState.bci == BytecodeFrame.BEFORE_BCI)
         {
-            // This is an intrinsic. Deoptimizing within an intrinsic
-            // must re-execute the intrinsified invocation
+            // This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
             ValueNode[] invokeArgs = invokeArgsList.isEmpty() ? NO_ARGS : invokeArgsList.toArray(new ValueNode[invokeArgsList.size()]);
             FrameState stateBeforeCall = stateAtReturn.duplicateModifiedBeforeCall(invoke.bci(), invokeReturnKind, invokeTargetMethod.getSignature().toParameterKinds(!invokeTargetMethod.isStatic()), invokeArgs);
             frameState.replaceAndDelete(stateBeforeCall);
@@ -575,34 +571,31 @@ public class InliningUtil extends ValueMergeUtil
         FrameState stateAfterReturn = stateAtReturn;
         if (frameState.getCode() == null)
         {
-            // This is a frame state for a side effect within an intrinsic
-            // that was parsed for post-parse intrinsification
+            // this is a frame state for a side effect within an intrinsic that was parsed for post-parse intrinsification
             for (Node usage : frameState.usages())
             {
                 if (usage instanceof ForeignCallNode)
                 {
-                    // A foreign call inside an intrinsic needs to have
-                    // the BCI of the invoke being intrinsified
+                    // a foreign call inside an intrinsic needs to have the BCI of the invoke being intrinsified
                     ForeignCallNode foreign = (ForeignCallNode) usage;
                     foreign.setBci(invoke.bci());
                 }
             }
         }
 
-        // pop return kind from invoke's stateAfter and replace with this frameState's return
-        // value (top of stack)
+        // pop return kind from invoke's stateAfter and replace with this frameState's return value (top of stack)
         if (frameState.stackSize() > 0 && (alwaysDuplicateStateAfter || stateAfterReturn.stackAt(0) != frameState.stackAt(0)))
         {
-            // A non-void return value.
+            // a non-void return value
             stateAfterReturn = stateAtReturn.duplicateModified(invokeReturnKind, invokeReturnKind, frameState.stackAt(0));
         }
         else
         {
-            // A void return value.
+            // a void return value
             stateAfterReturn = stateAtReturn.duplicate();
         }
 
-        // Return value does no longer need to be limited by the monitor exit.
+        // return value does no longer need to be limited by the monitor exit
         for (MonitorExitNode n : frameState.usages().filter(MonitorExitNode.class))
         {
             n.clearEscapedReturnValue();
@@ -654,11 +647,9 @@ public class InliningUtil extends ValueMergeUtil
                     }
                     else if (fixedStateSplit instanceof ExceptionObjectNode)
                     {
-                        // The target invoke does not have an exception edge. This means that the
-                        // bytecode parser made the wrong assumption of making an
-                        // InvokeWithExceptionNode for the partial intrinsic exit. We therefore
-                        // replace the InvokeWithExceptionNode with a normal
-                        // InvokeNode -- the deoptimization occurs when the invoke throws.
+                        // The target invoke does not have an exception edge. This means that the bytecode parser made the wrong
+                        // assumption of making an InvokeWithExceptionNode for the partial intrinsic exit. We therefore replace the
+                        // InvokeWithExceptionNode with a normal InvokeNode -- the deoptimization occurs when the invoke throws.
                         InvokeWithExceptionNode oldInvoke = (InvokeWithExceptionNode) fixedStateSplit.predecessor();
                         FrameState oldFrameState = oldInvoke.stateAfter();
                         InvokeNode newInvoke = oldInvoke.replaceWithInvoke();

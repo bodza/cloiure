@@ -4,10 +4,7 @@ import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.InstalledCode;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.site.ConstantReference;
-import jdk.vm.ci.code.site.DataPatch;
 import jdk.vm.ci.hotspot.HotSpotCompiledCode;
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.meta.DefaultProfilingInfo;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.TriState;
@@ -17,7 +14,6 @@ import org.graalvm.collections.EconomicSet;
 import giraaff.code.CompilationResult;
 import giraaff.core.GraalCompiler;
 import giraaff.core.common.CompilationIdentifier;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.target.Backend;
 import giraaff.hotspot.HotSpotCompiledCodeBuilder;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
@@ -30,7 +26,6 @@ import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.Suites;
-import giraaff.util.CollectionsUtil;
 
 /**
  * Base class for implementing some low level code providing the out-of-line slow path for a snippet
@@ -52,19 +47,6 @@ public abstract class Stub
      * The registers destroyed by this stub (from the caller's perspective).
      */
     private EconomicSet<Register> destroyedCallerRegisters;
-
-    private static boolean checkRegisterSetEquivalency(EconomicSet<Register> a, EconomicSet<Register> b)
-    {
-        if (a == b)
-        {
-            return true;
-        }
-        if (a.size() != b.size())
-        {
-            return false;
-        }
-        return CollectionsUtil.allMatch(a, e -> b.contains(e));
-    }
 
     public void initDestroyedCallerRegisters(EconomicSet<Register> registers)
     {
@@ -153,12 +135,11 @@ public abstract class Stub
 
     private CompilationResult buildCompilationResult(final Backend backend)
     {
-        CompilationIdentifier compilationId = getStubCompilationId();
+        CompilationIdentifier compilationId = new StubCompilationIdentifier(this);
         final StructuredGraph graph = getGraph(compilationId);
         CompilationResult compResult = new CompilationResult(compilationId, toString());
 
-        // Stubs cannot be recompiled so they cannot be compiled with assumptions
-
+        // stubs cannot be recompiled, so they cannot be compiled with assumptions
         if (!(graph.start() instanceof StubStartNode))
         {
             StubStartNode newStart = graph.add(new StubStartNode(Stub.this));
@@ -171,47 +152,6 @@ public abstract class Stub
         LIRSuites lirSuites = createLIRSuites();
         GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, compResult, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
         return compResult;
-    }
-
-    /**
-     * Gets a {@link CompilationResult} that can be used for code generation. Required for AOT.
-     */
-    public CompilationResult getCompilationResult(final Backend backend)
-    {
-        return buildCompilationResult(backend);
-    }
-
-    public CompilationIdentifier getStubCompilationId()
-    {
-        return new StubCompilationIdentifier(this);
-    }
-
-    /**
-     * Checks the conditions a compilation must satisfy to be installed as a RuntimeStub.
-     */
-    private boolean checkStubInvariants(CompilationResult compResult)
-    {
-        // Stubs cannot be recompiled so they cannot be compiled with
-        // assumptions and there is no point in recording evol_method dependencies
-
-        for (DataPatch data : compResult.getDataPatches())
-        {
-            if (data.reference instanceof ConstantReference)
-            {
-                ConstantReference ref = (ConstantReference) data.reference;
-                if (ref.getConstant() instanceof HotSpotMetaspaceConstant)
-                {
-                    HotSpotMetaspaceConstant c = (HotSpotMetaspaceConstant) ref.getConstant();
-                    if (c.asResolvedJavaType() != null && c.asResolvedJavaType().getName().equals("[I"))
-                    {
-                        // special handling for NewArrayStub
-                        // embedding the type '[I' is safe, since it is never unloaded
-                        continue;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     protected Suites createSuites()

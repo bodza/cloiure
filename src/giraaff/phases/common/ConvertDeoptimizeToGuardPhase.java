@@ -177,7 +177,7 @@ public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
                 else if (current.predecessor() instanceof IfNode)
                 {
                     IfNode ifNode = (IfNode) current.predecessor();
-                    // Prioritize the source position of the IfNode
+                    // prioritize the source position of the IfNode
                     StructuredGraph graph = ifNode.graph();
                     LogicNode conditionNode = ifNode.condition();
                     boolean negateGuardCondition = current == ifNode.trueSuccessor();

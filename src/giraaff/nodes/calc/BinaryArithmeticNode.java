@@ -305,7 +305,7 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
             y = tmp;
             if (graph() != null)
             {
-                // See if this node already exists
+                // see if this node already exists
                 BinaryNode duplicate = graph().findDuplicate(this);
                 if (duplicate != null)
                 {

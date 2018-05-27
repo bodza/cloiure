@@ -68,7 +68,7 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 
             if (instantiation.isInitialized())
             {
-                // No need to re-instantiate the snippet - just re-use its result
+                // no need to re-instantiate the snippet - just re-use its result
                 replacer.replaceUsingInstantiation();
             }
             else
@@ -167,7 +167,7 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
             }
             if (condition == null || (!(condition instanceof CompareNode)) || ((CompareNode) condition).getY() != testValue)
             {
-                // Re-use previously generated condition if the trueValue for the test is the same
+                // re-use previously generated condition if the trueValue for the test is the same
                 condition = CompareNode.createCompareNode(result.graph(), CanonicalCondition.EQ, result, testValue, null, NodeView.DEFAULT);
             }
             return condition;

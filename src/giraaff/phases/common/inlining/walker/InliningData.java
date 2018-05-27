@@ -181,7 +181,7 @@ public class InliningData
         ObjectStamp receiverStamp = (ObjectStamp) callTarget.receiver().stamp(NodeView.DEFAULT);
         if (receiverStamp.alwaysNull())
         {
-            // Don't inline if receiver is known to be null
+            // don't inline if receiver is known to be null
             return null;
         }
         ResolvedJavaType contextType = invoke.getContextType();
@@ -748,7 +748,7 @@ public class InliningData
             popInvocation();
             if (tryToInline(currentInvocation, inliningDepth() + 1))
             {
-                // Report real progress only if we inline into the root graph
+                // report real progress only if we inline into the root graph
                 return currentGraph().graph() == rootGraph;
             }
             return false;

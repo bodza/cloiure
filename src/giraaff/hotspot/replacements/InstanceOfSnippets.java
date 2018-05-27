@@ -13,7 +13,6 @@ import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.api.replacements.Snippet.NonNullParameter;
 import giraaff.api.replacements.Snippet.VarargsParameter;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampFactory;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
@@ -64,8 +63,7 @@ public class InstanceOfSnippets implements Snippets
         {
             if (!nullSeen)
             {
-                // See comment below for other deoptimization path; the
-                // same reasoning applies here.
+                // See comment below for other deoptimization path, the same reasoning applies here.
                 DeoptimizeNode.deopt(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.OptimizedTypeCheckViolated);
             }
             return falseValue;
@@ -83,10 +81,9 @@ public class InstanceOfSnippets implements Snippets
                 return positive ? trueValue : falseValue;
             }
         }
-        // This maybe just be a rare event but it might also indicate a phase change
-        // in the application. Ideally we want to use DeoptimizationAction.None for
-        // the former but the cost is too high if indeed it is the latter. As such,
-        // we defensively opt for InvalidateReprofile.
+        // This maybe just be a rare event but it might also indicate a phase change in the application.
+        // Ideally we want to use DeoptimizationAction.None for the former but the cost is too high if
+        // indeed it is the latter. As such, we defensively opt for InvalidateReprofile.
         DeoptimizeNode.deopt(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.OptimizedTypeCheckViolated);
         return falseValue;
     }

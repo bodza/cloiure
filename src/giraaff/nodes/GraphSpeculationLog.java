@@ -59,8 +59,7 @@ public final class GraphSpeculationLog implements SpeculationLog
                 }
                 catch (IllegalArgumentException e)
                 {
-                    // The speculation was disabled by another thread in between
-                    // the call to log.maySpeculate and log.speculate
+                    // the speculation was disabled by another thread in between the call to log.maySpeculate and log.speculate
                     speculation = null;
                 }
             }
@@ -73,8 +72,7 @@ public final class GraphSpeculationLog implements SpeculationLog
     {
         if (maySpeculate(reason))
         {
-            JavaConstant speculation = speculations.get(reason);
-            return speculation;
+            return speculations.get(reason);
         }
         throw new IllegalArgumentException("Cannot make speculation with reason " + reason + " as it is known to fail");
     }

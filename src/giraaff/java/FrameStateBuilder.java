@@ -288,7 +288,7 @@ public final class FrameStateBuilder implements SideEffectsState
             return parser.intrinsicContext.createFrameState(parser.getGraph(), this, forStateSplit);
         }
 
-        // Skip intrinsic frames
+        // skip intrinsic frames
         return create(bci, parser != null ? parser.getNonIntrinsicAncestor() : null, false, null, null);
     }
 
@@ -304,8 +304,7 @@ public final class FrameStateBuilder implements SideEffectsState
         }
         if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI && parent != null)
         {
-            FrameState newFrameState = outerFrameState.duplicateModified(outerFrameState.bci, true, false, JavaKind.Void, new JavaKind[] { JavaKind.Object }, new ValueNode[] { stack[0] });
-            return newFrameState;
+            return outerFrameState.duplicateModified(outerFrameState.bci, true, false, JavaKind.Void, new JavaKind[] { JavaKind.Object }, new ValueNode[] { stack[0] });
         }
         if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
         {
@@ -405,8 +404,7 @@ public final class FrameStateBuilder implements SideEffectsState
         {
             if (otherValue == null || otherValue == FrameState.TWO_SLOT_MARKER || otherValue.isDeleted() || currentValue.getStackKind() != otherValue.getStackKind())
             {
-                // This phi must be dead anyway, add input of correct stack kind to keep the graph
-                // invariants.
+                // This phi must be dead anyway, add input of correct stack kind to keep the graph invariants.
                 ((PhiNode) currentValue).addInput(ConstantNode.defaultForKind(currentValue.getStackKind(), graph));
             }
             else
@@ -720,8 +718,7 @@ public final class FrameStateBuilder implements SideEffectsState
      */
     public ValueNode loadLocal(int i, JavaKind slotKind)
     {
-        ValueNode x = locals[i];
-        return x;
+        return locals[i];
     }
 
     /**
@@ -787,8 +784,7 @@ public final class FrameStateBuilder implements SideEffectsState
         {
             ValueNode s = xpop();
         }
-        ValueNode x = xpop();
-        return x;
+        return xpop();
     }
 
     private void xpush(ValueNode x)
@@ -798,14 +794,12 @@ public final class FrameStateBuilder implements SideEffectsState
 
     private ValueNode xpop()
     {
-        ValueNode result = stack[--stackSize];
-        return result;
+        return stack[--stackSize];
     }
 
     private ValueNode xpeek()
     {
-        ValueNode result = stack[stackSize - 1];
-        return result;
+        return stack[stackSize - 1];
     }
 
     /**

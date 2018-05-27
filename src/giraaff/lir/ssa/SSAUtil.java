@@ -99,14 +99,12 @@ public final class SSAUtil
     public static int phiOutIndex(LIR lir, AbstractBlockBase<?> block)
     {
         ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-        int index = instructions.size() - 1;
-        return index;
+        return instructions.size() - 1;
     }
 
     public static LabelOp phiIn(LIR lir, AbstractBlockBase<?> block)
     {
-        LabelOp label = (LabelOp) lir.getLIRforBlock(block).get(0);
-        return label;
+        return (LabelOp) lir.getLIRforBlock(block).get(0);
     }
 
     public static void removePhiOut(LIR lir, AbstractBlockBase<?> block)

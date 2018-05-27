@@ -282,17 +282,16 @@ class LinearScanWalker extends IntervalWalker
 
     void insertMove(int operandId, Interval srcIt, Interval dstIt)
     {
-        // output all moves here. When source and target are equal, the move is
-        // optimized away later in assignRegNums
-
+        // Output all moves here. When source and target are equal, the move is optimized
+        // away later in assignRegNums.
         int opId = (operandId + 1) & ~1;
         AbstractBlockBase<?> opBlock = allocator.blockForId(opId);
 
-        // calculate index of instruction inside instruction list of current block
-        // the minimal index (for a block with no spill moves) can be calculated because the
-        // numbering of instructions is known.
-        // When the block already contains spill moves, the index must be increased until the
-        // correct index is reached.
+        // Calculate index of instruction inside instruction list of current block.
+        // The minimal index (for a block with no spill moves) can be calculated, because
+        // the numbering of instructions is known.
+        // When the block already contains spill moves, the index must be increased until
+        // the correct index is reached.
         ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(opBlock);
         int index = (opId - instructions.get(0).id()) >> 1;
 
@@ -311,8 +310,7 @@ class LinearScanWalker extends IntervalWalker
         int fromBlockNr = minBlock.getLinearScanNumber();
         int toBlockNr = maxBlock.getLinearScanNumber();
 
-        // Try to split at end of maxBlock. If this would be after
-        // maxSplitPos, then use the begin of maxBlock
+        // Try to split at end of maxBlock. If this would be after maxSplitPos, then use the begin of maxBlock.
         int optimalSplitPos = allocator.getLastLirInstructionId(maxBlock) + 2;
         if (optimalSplitPos > maxSplitPos)
         {
@@ -345,16 +343,14 @@ class LinearScanWalker extends IntervalWalker
         }
         else
         {
-            // reason for using minSplitPos - 1: when the minimal split pos is exactly at the
-            // beginning of a block, then minSplitPos is also a possible split position.
-            // Use the block before as minBlock, because then minBlock.lastLirInstructionId() + 2 ==
-            // minSplitPos
+            // Reason for using minSplitPos - 1: when the minimal split pos is exactly at the beginning of a block,
+            // then minSplitPos is also a possible split position.
+            // Use the block before as minBlock, because then minBlock.lastLirInstructionId() + 2 == minSplitPos.
             AbstractBlockBase<?> minBlock = allocator.blockForId(minSplitPos - 1);
 
-            // reason for using maxSplitPos - 1: otherwise there would be an assert on failure
-            // when an interval ends at the end of the last block of the method
-            // (in this case, maxSplitPos == allocator().maxLirOpId() + 2, and there is no
-            // block at this opId)
+            // Reason for using maxSplitPos - 1: otherwise there would be an assert on failure when an interval
+            // ends at the end of the last block of the method
+            // (in this case, maxSplitPos == allocator().maxLirOpId() + 2, and there is no block at this opId).
             AbstractBlockBase<?> maxBlock = allocator.blockForId(maxSplitPos - 1);
 
             if (minBlock == maxBlock)
@@ -367,32 +363,26 @@ class LinearScanWalker extends IntervalWalker
                 if (interval.hasHoleBetween(maxSplitPos - 1, maxSplitPos) && !allocator.isBlockBegin(maxSplitPos))
                 {
                     // Do not move split position if the interval has a hole before maxSplitPos.
-                    // Intervals resulting from Phi-Functions have more than one definition (marked
-                    // as mustHaveRegister) with a hole before each definition. When the register is
-                    // needed
-                    // for the second definition : an earlier reloading is unnecessary.
+                    // Intervals resulting from Phi-functions have more than one definition (marked
+                    // as mustHaveRegister) with a hole before each definition. When the register
+                    // is needed for the second definition, an earlier reloading is unnecessary.
                     optimalSplitPos = maxSplitPos;
                 }
                 else
                 {
                     // seach optimal block boundary between minSplitPos and maxSplitPos
-
                     if (doLoopOptimization)
                     {
-                        // Loop optimization: if a loop-end marker is found between min- and
-                        // max-position :
-                        // then split before this loop
+                        // Loop optimization: if a loop-end marker is found between min- and max-position,
+                        // then split before this loop.
                         int loopEndPos = interval.nextUsageExact(RegisterPriority.LiveAtLoopEnd, allocator.getLastLirInstructionId(minBlock) + 2);
 
                         if (loopEndPos < maxSplitPos)
                         {
-                            // loop-end marker found between min- and max-position
-                            // if it is not the end marker for the same loop as the min-position :
-                            // then move
-                            // the max-position to this loop block.
-                            // Desired result: uses tagged as shouldHaveRegister inside a loop cause
-                            // a reloading
-                            // of the interval (normally, only mustHaveRegister causes a reloading)
+                            // Loop-end marker found between min- and max-position. If it is not the end marker
+                            // for the same loop as the min-position, move the max-position to this loop block.
+                            // Desired result: uses tagged as shouldHaveRegister inside a loop cause a reloading
+                            // of the interval (normally, only mustHaveRegister causes a reloading).
                             AbstractBlockBase<?> loopBlock = allocator.blockForId(loopEndPos);
 
                             int maxSpillPos = allocator.getLastLirInstructionId(loopBlock) + 2;
@@ -476,9 +466,9 @@ class LinearScanWalker extends IntervalWalker
             handleSpillSlot(interval);
             changeSpillState(interval, minSplitPos);
 
-            // Also kick parent intervals out of register to memory when they have no use
-            // position. This avoids short interval in register surrounded by intervals in
-            // memory . avoid useless moves from memory to register and back
+            // Also kick parent intervals out of register to memory when they have no use position.
+            // This avoids short interval in register surrounded by intervals in memory.
+            // Avoid useless moves from memory to register and back.
             Interval parent = interval;
             while (parent != null && parent.isSplitChild())
             {
@@ -626,17 +616,15 @@ class LinearScanWalker extends IntervalWalker
         int currentPos = currentPosition;
         if (interval.state == State.Inactive)
         {
-            // the interval is currently inactive, so no spill slot is needed for now.
-            // when the split part is activated, the interval has a new chance to get a register,
-            // so in the best case no stack slot is necessary
+            // The interval is currently inactive, so no spill slot is needed for now.
+            // When the split part is activated, the interval has a new chance to get a register,
+            // so in the best case no stack slot is necessary.
             splitBeforeUsage(interval, currentPos + 1, currentPos + 1);
         }
         else
         {
-            // search the position where the interval must have a register and split
-            // at the optimal position before.
-            // The new created part is added to the unhandled list and will get a register
-            // when it is activated
+            // Search the position where the interval must have a register and split at the optimal position before.
+            // The new created part is added to the unhandled list and will get a register when it is activated.
             int minSplitPos = currentPos + 1;
             int maxSplitPos = Math.min(interval.nextUsage(RegisterPriority.MustHaveRegister, minSplitPos), interval.to());
 
@@ -735,7 +723,7 @@ class LinearScanWalker extends IntervalWalker
         }
     }
 
-    // Split an Interval and spill it to memory so that cur can be placed in a register
+    // split an Interval and spill it to memory so that cur can be placed in a register
     void allocLockedRegister(Interval interval)
     {
         // the register must be free at least until this position
@@ -833,10 +821,9 @@ class LinearScanWalker extends IntervalWalker
         {
             // fast calculation of intervals that can never get a register because the
             // the next instruction is a call that blocks all registers
-            // Note: this only works if a call kills all registers
+            // note: this only works if a call kills all registers
 
-            // check if this interval is the result of a split operation
-            // (an interval got a register until this position)
+            // check if this interval is the result of a split operation (an interval got a register until this position)
             int pos = interval.from();
             if (CodeUtil.isOdd(pos))
             {

@@ -16,7 +16,6 @@ import org.graalvm.collections.Equivalence;
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.util.GraalServices;
 
 /**
  * A {@link BytecodeProvider} that provides bytecode properties of a {@link ResolvedJavaMethod} as
@@ -30,7 +29,7 @@ import giraaff.util.GraalServices;
  *
  * A combination of {@link Class#forName(String)} and an existing {@link MetaAccessProvider} is used
  * to resolve constant pool references. This opens up the opportunity for linkage errors if the
- * referee is structurally changed through redefinition (e.g., a referred to method is renamed or
+ * referee is structurally changed through redefinition (e.g. a referred to method is renamed or
  * deleted). This will result in an appropriate {@link LinkageError} being thrown. The only way to
  * avoid this is to have a completely isolated {@code jdk.vm.ci.meta} implementation for parsing
  * snippet/intrinsic bytecodes.
@@ -80,6 +79,14 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     }
 
     /**
+     * Gets the class file bytes for {@code c}.
+     */
+    private static InputStream getClassfileAsStream(Class<?> c) throws IOException
+    {
+        return c.getModule().getResourceAsStream(c.getName().replace('.', '/') + ".class");
+    }
+
+    /**
      * Gets a {@link Classfile} created by parsing the class file bytes for {@code c}.
      *
      * @throws NoClassDefFoundError if the class file cannot be found
@@ -92,7 +99,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             try
             {
                 ResolvedJavaType type = metaAccess.lookupJavaType(c);
-                InputStream in = GraalServices.getClassfileAsStream(c);
+                InputStream in = getClassfileAsStream(c);
                 if (in != null)
                 {
                     DataInputStream stream = new DataInputStream(in);
@@ -239,14 +246,14 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
 
             if (name.equals("<clinit>"))
             {
-                // No need to cache <clinit> as it will be looked up at most once
+                // no need to cache <clinit> as it will be looked up at most once
                 return type.getClassInitializer();
             }
             if (!name.equals("<init>"))
             {
                 if (methods == null)
                 {
-                    // Racy initialization is safe since 'methods' is volatile
+                    // racy initialization is safe since 'methods' is volatile
                     methods = createMethodMap(type.getDeclaredMethods());
                 }
 
@@ -256,7 +263,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             {
                 if (constructors == null)
                 {
-                    // Racy initialization is safe since instanceFields is volatile
+                    // racy initialization is safe since instanceFields is volatile
                     constructors = createMethodMap(type.getDeclaredConstructors());
                 }
                 return constructors.get(key);
@@ -289,7 +296,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             {
                 if (staticFields == null)
                 {
-                    // Racy initialization is safe since staticFields is volatile
+                    // racy initialization is safe since staticFields is volatile
                     staticFields = createFieldMap(type.getStaticFields());
                 }
                 return staticFields.get(key);
@@ -298,7 +305,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             {
                 if (instanceFields == null)
                 {
-                    // Racy initialization is safe since instanceFields is volatile
+                    // racy initialization is safe since instanceFields is volatile
                     instanceFields = createFieldMap(type.getInstanceFields(false));
                 }
                 return instanceFields.get(key);

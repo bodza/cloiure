@@ -451,7 +451,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
     protected ValueNode readOp(GraphBuilderContext b, JavaKind readKind, AddressNode address, LocationIdentity location, Opcode op)
     {
-        final BarrierType barrier = (op == Opcode.READ_BARRIERED ? BarrierType.PRECISE : BarrierType.NONE);
+        final BarrierType barrier = (op == Opcode.READ_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
         final boolean compressible = (op == Opcode.READ_OBJECT || op == Opcode.READ_BARRIERED);
 
         return readOp(b, readKind, address, location, barrier, compressible);
@@ -463,30 +463,26 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
          * A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float above
          * an explicit zero check on its base address or any other test that ensures the read is safe.
          */
-        JavaReadNode read = b.add(new JavaReadNode(readKind, address, location, barrierType, compressible));
-        return read;
+        return b.add(new JavaReadNode(readKind, address, location, barrierType, compressible));
     }
 
     protected void writeOp(GraphBuilderContext b, JavaKind writeKind, AddressNode address, LocationIdentity location, ValueNode value, Opcode op)
     {
-        final BarrierType barrier = (op == Opcode.WRITE_BARRIERED ? BarrierType.PRECISE : BarrierType.NONE);
+        final BarrierType barrier = (op == Opcode.WRITE_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
         final boolean compressible = (op == Opcode.WRITE_OBJECT || op == Opcode.WRITE_BARRIERED);
         b.add(new JavaWriteNode(writeKind, address, location, value, barrier, compressible));
     }
 
     protected AbstractCompareAndSwapNode casOp(JavaKind writeKind, JavaKind returnKind, AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue)
     {
-        boolean isLogic = returnKind == JavaKind.Boolean;
-        AbstractCompareAndSwapNode cas;
-        if (isLogic)
+        if (returnKind == JavaKind.Boolean)
         {
-            cas = new LogicCompareAndSwapNode(address, expectedValue, newValue, location);
+            return new LogicCompareAndSwapNode(address, expectedValue, newValue, location);
         }
         else
         {
-            cas = new ValueCompareAndSwapNode(address, expectedValue, newValue, location);
+            return new ValueCompareAndSwapNode(address, expectedValue, newValue, location);
         }
-        return cas;
     }
 
     public AddressNode makeAddress(GraphBuilderContext b, ValueNode base, ValueNode offset)

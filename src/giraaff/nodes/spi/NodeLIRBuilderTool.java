@@ -28,7 +28,7 @@ import giraaff.options.OptionValues;
 
 public interface NodeLIRBuilderTool extends NodeValueMap
 {
-    // TODO (je) remove and move into the Node
+    // TODO remove and move into the Node
     LIRFrameState state(DeoptimizingNode deopt);
 
     void emitIf(IfNode i);

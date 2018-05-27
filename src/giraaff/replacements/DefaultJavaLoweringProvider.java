@@ -14,7 +14,6 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import org.graalvm.word.LocationIdentity;
@@ -22,7 +21,6 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.api.directives.GraalDirectives;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.SnippetReflectionProvider;
-import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.ObjectStamp;
@@ -56,7 +54,6 @@ import giraaff.nodes.calc.UnpackEndianHalfNode;
 import giraaff.nodes.calc.ZeroExtendNode;
 import giraaff.nodes.extended.BoxNode;
 import giraaff.nodes.extended.FixedValueAnchorNode;
-import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.extended.GuardedUnsafeLoadNode;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.extended.JavaReadNode;
@@ -558,8 +555,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         ReadNode memoryRead = graph.add(new ReadNode(address, load.getLocationIdentity(), loadStamp, BarrierType.NONE));
         if (guard == null)
         {
-            // An unsafe read must not float otherwise it may float above
-            // a test guaranteeing the read is safe.
+            // An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
             memoryRead.setForceFixed(true);
         }
         else
@@ -578,8 +574,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         Stamp loadStamp = loadStamp(load.stamp(NodeView.DEFAULT), readKind, false);
         AddressNode address = graph.addOrUniqueWithInputs(OffsetAddressNode.create(load.getAddress()));
         ReadNode memoryRead = graph.add(new ReadNode(address, load.getLocationIdentity(), loadStamp, BarrierType.NONE));
-        // An unsafe read must not float otherwise it may float above
-        // a test guaranteeing the read is safe.
+        // An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
         memoryRead.setForceFixed(true);
         ValueNode readValue = performBooleanCoercionIfNecessary(implicitLoadConvert(graph, readKind, memoryRead, false), readKind);
         load.replaceAtUsages(readValue);
@@ -631,8 +626,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         ValueNode readValue = implicitLoadConvert(graph, valueKind, memoryRead, read.isCompressible());
         if (guard == null)
         {
-            // An unsafe read must not float otherwise it may float above
-            // a test guaranteeing the read is safe.
+            // An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
             memoryRead.setForceFixed(true);
         }
         else
@@ -807,7 +801,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
             List<MonitorIdNode> locks = commit.getLocks(objIndex);
             if (locks.size() > 1)
             {
-                // Ensure that the lock operations are performed in lock depth order
+                // ensure that the lock operations are performed in lock depth order
                 ArrayList<MonitorIdNode> newList = new ArrayList<>(locks);
                 newList.sort((a, b) -> Integer.compare(a.getLockDepth(), b.getLockDepth()));
                 locks = newList;

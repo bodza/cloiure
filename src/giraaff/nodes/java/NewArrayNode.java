@@ -119,8 +119,7 @@ public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableA
                     return;
                 }
             }
-            // Should be areFrameStatesAtSideEffects but currently SVM will complain about
-            // RuntimeConstraint
+            // should be areFrameStatesAtSideEffects, but currently SVM will complain about RuntimeConstraint
             if (graph().getGuardsStage().allowsFloatingGuards())
             {
                 LogicNode lengthNegativeCondition = CompareNode.createCompareNode(graph(), CanonicalCondition.LT, length(), ConstantNode.forInt(0, graph()), tool.getConstantReflection(), view);

@@ -363,8 +363,7 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
                     else
                     {
                         FixedWithNextNode fixedWithNext = (FixedWithNextNode) fixed;
-                        // When removing a fixed node, new canonicalization
-                        // opportunities for its successor may arise
+                        // when removing a fixed node, new canonicalization opportunities for its successor may arise
                         tool.addToWorkList(fixedWithNext.next());
                         if (canonical == null)
                         {

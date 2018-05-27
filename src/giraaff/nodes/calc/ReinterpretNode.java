@@ -58,9 +58,7 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
         c.serialize(buffer);
 
         buffer.rewind();
-        SerializableConstant ret = ((ArithmeticStamp) stamp).deserialize(buffer);
-
-        return ret;
+        return ((ArithmeticStamp) stamp).deserialize(buffer);
     }
 
     @Override

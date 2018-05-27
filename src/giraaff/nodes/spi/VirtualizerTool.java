@@ -61,7 +61,7 @@ public interface VirtualizerTool
      * materialized, the replacement if the give value was replaced, otherwise the given value.
      *
      * Replacements via {@link #replaceWithValue(ValueNode)} are not immediately committed. This
-     * method can be used to determine if a value was replaced by another one (e.g., a load field by
+     * method can be used to determine if a value was replaced by another one (e.g. a load field by
      * the loaded value).
      */
     ValueNode getAlias(ValueNode value);

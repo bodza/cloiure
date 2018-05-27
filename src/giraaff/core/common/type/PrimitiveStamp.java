@@ -54,9 +54,7 @@ public abstract class PrimitiveStamp extends ArithmeticStamp
     public int hashCode()
     {
         final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + bits;
-        return result;
+        return prime * super.hashCode() + bits;
     }
 
     @Override

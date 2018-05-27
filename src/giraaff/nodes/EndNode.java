@@ -1,7 +1,6 @@
 package giraaff.nodes;
 
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 
 // @NodeInfo.allowedUsageTypes "Association"
 public final class EndNode extends AbstractEndNode

@@ -3,7 +3,6 @@ package giraaff.nodes;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.memory.MemoryCheckpoint;
 
 // @NodeInfo.allowedUsageTypes "Memory"

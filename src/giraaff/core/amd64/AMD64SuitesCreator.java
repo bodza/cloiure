@@ -20,7 +20,7 @@ public class AMD64SuitesCreator extends DefaultSuitesCreator
         LIRSuites lirSuites = super.createLIRSuites(options);
         if (StackMoveOptimizationPhase.Options.LIROptStackMoveOptimizer.getValue(options))
         {
-            // Note: this phase must be inserted *after* RedundantMoveElimination
+            // note: this phase must be inserted *after* RedundantMoveElimination
             lirSuites.getPostAllocationOptimizationStage().appendPhase(new StackMoveOptimizationPhase());
         }
         return lirSuites;

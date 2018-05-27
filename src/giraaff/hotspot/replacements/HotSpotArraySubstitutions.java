@@ -20,7 +20,7 @@ public class HotSpotArraySubstitutions
     {
         if (componentType == null || HotSpotReplacementsUtil.loadKlassFromObject(componentType, HotSpotReplacementsUtil.arrayKlassOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION).isNull())
         {
-            // Exit the intrinsic here for the case where the array class does not exist
+            // exit the intrinsic here for the case where the array class does not exist
             return newInstance(componentType, length);
         }
         return DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(componentType), length);

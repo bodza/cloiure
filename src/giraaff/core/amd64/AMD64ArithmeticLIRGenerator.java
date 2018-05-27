@@ -26,7 +26,6 @@ import giraaff.asm.amd64.AMD64Assembler.AMD64Shift;
 import giraaff.asm.amd64.AMD64Assembler.AVXOp;
 import giraaff.asm.amd64.AMD64Assembler.OperandSize;
 import giraaff.asm.amd64.AMD64Assembler.SSEOp;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.calc.FloatConvert;
@@ -504,8 +503,7 @@ public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implemen
 
     protected Value emitZeroExtendMemory(AMD64Kind memoryKind, int resultBits, AMD64AddressValue address, LIRFrameState state)
     {
-        // Issue a zero extending load of the proper bit size and set the result to
-        // the proper kind.
+        // Issue a zero extending load of the proper bit size and set the result to the proper kind.
         Variable result = getLIRGen().newVariable(LIRKind.value(resultBits <= 32 ? AMD64Kind.DWORD : AMD64Kind.QWORD));
         switch (memoryKind)
         {

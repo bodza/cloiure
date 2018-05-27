@@ -36,7 +36,6 @@ import giraaff.hotspot.replacements.BigIntegerSubstitutions;
 import giraaff.hotspot.replacements.CipherBlockChainingSubstitutions;
 import giraaff.hotspot.replacements.SHA2Substitutions;
 import giraaff.hotspot.replacements.SHA5Substitutions;
-import giraaff.hotspot.replacements.SHASubstitutions;
 import giraaff.hotspot.stubs.ExceptionHandlerStub;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.hotspot.stubs.UnwindExceptionToCallerStub;
@@ -53,7 +52,6 @@ import giraaff.lir.ValueConsumer;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.nodes.UnwindNode;
 import giraaff.nodes.extended.ForeignCallNode;
-import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
 import giraaff.phases.tiers.SuitesProvider;
 import giraaff.word.Word;
@@ -182,19 +180,6 @@ public abstract class HotSpotBackend extends Backend
 
     @NodeIntrinsic(ForeignCallNode.class)
     private static native void implSquareToLen(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word xAddr, int len, Word zAddr, int zLen);
-
-    /**
-     * @see SHASubstitutions#implCompress0
-     */
-    public static final ForeignCallDescriptor SHA_IMPL_COMPRESS = new ForeignCallDescriptor("shaImplCompress", void.class, Word.class, Object.class);
-
-    public static void shaImplCompressStub(Word bufAddr, Object state)
-    {
-        shaImplCompressStub(HotSpotBackend.SHA_IMPL_COMPRESS, bufAddr, state);
-    }
-
-    @NodeIntrinsic(ForeignCallNode.class)
-    private static native void shaImplCompressStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word bufAddr, Object state);
 
     /**
      * @see SHA2Substitutions#implCompress0
@@ -333,7 +318,7 @@ public abstract class HotSpotBackend extends Backend
             {
                 if (op instanceof LabelOp)
                 {
-                    // Don't consider this as a definition
+                    // don't consider this as a definition
                 }
                 else
                 {

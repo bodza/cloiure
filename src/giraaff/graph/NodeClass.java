@@ -32,7 +32,6 @@ import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
@@ -420,8 +419,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             {
                 if (INPUT_LIST_CLASS.isAssignableFrom(type))
                 {
-                    // NodeInputList fields should not be final since they are
-                    // written (via Unsafe) in clearInputs()
+                    // NodeInputList fields should not be final, since they are written (via Unsafe) in clearInputs()
                     GraalError.guarantee(!Modifier.isFinal(modifiers), "NodeInputList input field %s should not be final", field);
                     GraalError.guarantee(!Modifier.isPublic(modifiers), "NodeInputList input field %s should not be public", field);
                 }
@@ -446,8 +444,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             {
                 if (SUCCESSOR_LIST_CLASS.isAssignableFrom(type))
                 {
-                    // NodeSuccessorList fields should not be final since they are
-                    // written (via Unsafe) in clearSuccessors()
+                    // NodeSuccessorList fields should not be final, since they are written (via Unsafe) in clearSuccessors()
                     GraalError.guarantee(!Modifier.isFinal(modifiers), "NodeSuccessorList successor field % should not be final", field);
                     GraalError.guarantee(!Modifier.isPublic(modifiers), "NodeSuccessorList successor field %s should not be public", field);
                 }
@@ -907,12 +904,12 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         int denseThreshold = oldGraph.getNodeCount() + oldGraph.getNodesDeletedSinceLastCompression() >> 4;
         if (estimatedNodeCount > denseThreshold)
         {
-            // Use dense map
+            // use dense map
             newNodes = new NodeMap<>(oldGraph);
         }
         else
         {
-            // Use sparse map
+            // use sparse map
             newNodes = EconomicMap.create(Equivalence.IDENTITY);
         }
         createNodeDuplicates(graph, nodes, replacements, newNodes);

@@ -13,7 +13,6 @@ import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.hotspot.nodes.GetObjectAddressNode;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.NodeView;
@@ -116,7 +115,7 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
             {
                 len = IntegerConvertNode.convert(len, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
             }
-            ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getHostBackend().getForeignCalls(), desc, srcAddr, destAddr, len, superCheckOffset, destElemKlass));
+            ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), desc, srcAddr, destAddr, len, superCheckOffset, destElemKlass));
             call.setStateAfter(stateAfter());
             graph.replaceFixedWithFixed(this, call);
         }

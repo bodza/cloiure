@@ -32,7 +32,7 @@ public final class LoopEndNode extends AbstractEndNode
      *
      * Note that 1) is a hard correctness issue: emitting a safepoint in uninterruptible code is a
      * bug, i.e., it is not allowed to set the flag back to true once it is false. To ensure that
-     * loop ends that are created late, e.g., during control flow simplifications, have no
+     * loop ends that are created late, e.g. during control flow simplifications, have no
      * safepoints in such cases, the safepoints are actually disabled for the
      * {@link LoopBeginNode#canEndsSafepoint loop begin}. New loop ends inherit the flag value from
      * the loop begin.

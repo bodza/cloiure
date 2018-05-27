@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.CompressEncoding;
-import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.AbstractObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;

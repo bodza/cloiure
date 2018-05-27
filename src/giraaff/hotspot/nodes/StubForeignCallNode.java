@@ -13,7 +13,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;

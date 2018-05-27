@@ -97,7 +97,7 @@ public class LoopFragmentWhole extends LoopFragment
     @Override
     protected void finishDuplication()
     {
-        // TODO (gd) ?
+        // TODO
     }
 
     void cleanupLoopExits()
@@ -147,6 +147,6 @@ public class LoopFragmentWhole extends LoopFragment
     @Override
     public void insertBefore(LoopEx loop)
     {
-        // TODO Auto-generated method stub
+        // TODO auto-generated method stub
     }
 }

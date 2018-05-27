@@ -3,7 +3,6 @@ package giraaff.lir.alloc.lsra;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.EnumSet;
 
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterArray;
@@ -21,13 +20,10 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.ValueConsumer;
 import giraaff.lir.Variable;
 import giraaff.lir.VirtualStackSlot;
-import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
@@ -188,15 +184,13 @@ public class LinearScan
 
     public int getFirstLirInstructionId(AbstractBlockBase<?> block)
     {
-        int result = ir.getLIRforBlock(block).get(0).id();
-        return result;
+        return ir.getLIRforBlock(block).get(0).id();
     }
 
     public int getLastLirInstructionId(AbstractBlockBase<?> block)
     {
         ArrayList<LIRInstruction> instructions = ir.getLIRforBlock(block);
-        int result = instructions.get(instructions.size() - 1).id();
-        return result;
+        return instructions.get(instructions.size() - 1).id();
     }
 
     public MoveFactory getSpillMoveFactory()
@@ -206,8 +200,7 @@ public class LinearScan
 
     protected MoveResolver createMoveResolver()
     {
-        MoveResolver moveResolver = new MoveResolver(this);
-        return moveResolver;
+        return new MoveResolver(this);
     }
 
     public static boolean isVariableOrRegister(Value value)
@@ -224,8 +217,7 @@ public class LinearScan
     {
         if (ValueUtil.isRegister(operand))
         {
-            int number = ValueUtil.asRegister(operand).number;
-            return number;
+            return ValueUtil.asRegister(operand).number;
         }
         return firstVariableNumber + ((Variable) operand).index;
     }
@@ -358,11 +350,10 @@ public class LinearScan
             intervals = Arrays.copyOf(intervals, intervals.length + (intervals.length >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT) + 1);
         }
         intervalsSize++;
-        // Note that these variables are not managed and must therefore never be inserted into the LIR
+        // note: these variables are not managed and must therefore never be inserted into the LIR
         Variable variable = new Variable(source.kind(), numVariables++);
 
-        Interval interval = createInterval(variable);
-        return interval;
+        return createInterval(variable);
     }
 
     // access to block list (sorted in linear scan order)
@@ -453,8 +444,7 @@ public class LinearScan
      */
     public LIRInstruction instructionForId(int opId)
     {
-        LIRInstruction instr = opIdToInstructionMap[opIdToIndex(opId)];
-        return instr;
+        return opIdToInstructionMap[opIdToIndex(opId)];
     }
 
     /**

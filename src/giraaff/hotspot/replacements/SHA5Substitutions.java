@@ -29,9 +29,8 @@ public class SHA5Substitutions
     {
         try
         {
-            // Need to use the system class loader as com.sun.crypto.provider.AESCrypt
-            // is normally loaded by the extension class loader which is not delegated
-            // to by the JVMCI class loader.
+            // Need to use the system class loader as com.sun.crypto.provider.AESCrypt is normally loaded
+            // by the extension class loader, which is not delegated to by the JVMCI class loader.
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             shaClass = Class.forName("sun.security.provider.SHA5", true, cl);
             stateOffset = UnsafeAccess.UNSAFE.objectFieldOffset(shaClass.getDeclaredField("state"));

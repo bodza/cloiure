@@ -6,7 +6,6 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.memory.MemoryCheckpoint;

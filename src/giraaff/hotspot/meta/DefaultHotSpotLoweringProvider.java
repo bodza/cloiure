@@ -529,9 +529,8 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                     ValueNode hub = createReadHub(graph, receiver, tool);
 
                     ReadNode metaspaceMethod = createReadVirtualMethod(graph, hub, hsMethod, receiverType);
-                    // We use LocationNode.ANY_LOCATION for the reads that access the
-                    // compiled code entry as HotSpot does not guarantee they are final
-                    // values.
+                    // We use LocationNode.ANY_LOCATION for the reads that access the compiled
+                    // code entry as HotSpot does not guarantee they are final values.
                     int methodCompiledEntryOffset = runtime.getVMConfig().methodCompiledEntryOffset;
                     AddressNode address = createOffsetAddress(graph, metaspaceMethod, methodCompiledEntryOffset);
                     ReadNode compiledEntry = graph.add(new ReadNode(address, LocationIdentity.any(), StampFactory.forKind(wordKind), BarrierType.NONE));
@@ -810,8 +809,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         // entry as HotSpot does not guarantee that this is a final value.
         Stamp methodStamp = MethodPointerStamp.methodNonNull();
         AddressNode address = createOffsetAddress(graph, hub, vtableEntryOffset);
-        ReadNode metaspaceMethod = graph.add(new ReadNode(address, LocationIdentity.any(), methodStamp, BarrierType.NONE));
-        return metaspaceMethod;
+        return graph.add(new ReadNode(address, LocationIdentity.any(), methodStamp, BarrierType.NONE));
     }
 
     @Override
