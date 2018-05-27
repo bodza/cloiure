@@ -90,7 +90,7 @@ public class HotSpotGraphBuilderPlugins
      */
     public static Plugins create(CompilerConfiguration compilerConfiguration, GraalHotSpotVMConfig config, HotSpotWordTypes wordTypes, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, SnippetReflectionProvider snippetReflection, ForeignCallsProvider foreignCalls, LoweringProvider lowerer, StampProvider stampProvider, ReplacementsImpl replacements)
     {
-        InvocationPlugins invocationPlugins = new HotSpotInvocationPlugins(config, compilerConfiguration);
+        InvocationPlugins invocationPlugins = new HotSpotInvocationPlugins(config);
 
         Plugins plugins = new Plugins(invocationPlugins);
         HotSpotWordOperationPlugin wordOperationPlugin = new HotSpotWordOperationPlugin(snippetReflection, wordTypes);

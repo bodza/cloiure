@@ -17,6 +17,7 @@
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.runtime=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.services=ALL-UNNAMED"
+                    "--add-exports=jdk.internal.vm.compiler/org.graalvm.word=ALL-UNNAMED"
                "-XX:+UnlockExperimentalVMOptions"
                "-XX:+EnableJVMCI"]
     :javac-options ["-g"
