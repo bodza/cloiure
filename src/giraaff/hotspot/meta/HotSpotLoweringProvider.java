@@ -1,6 +1,5 @@
 package giraaff.hotspot.meta;
 
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.nodes.spi.LoweringProvider;
 import giraaff.options.OptionValues;
 
@@ -9,5 +8,5 @@ import giraaff.options.OptionValues;
  */
 public interface HotSpotLoweringProvider extends LoweringProvider
 {
-    void initialize(OptionValues options, HotSpotProviders providers, GraalHotSpotVMConfig config);
+    void initialize(OptionValues options, HotSpotProviders providers);
 }

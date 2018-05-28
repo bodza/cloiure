@@ -153,7 +153,6 @@ public class NumUtil
     }
 
     /**
-     *
      * @param n Number of bits that should be set to 1. Must be between 0 and 32 (inclusive).
      * @return A number with n bits set to 1.
      */
@@ -170,7 +169,6 @@ public class NumUtil
     }
 
     /**
-     *
      * @param n Number of bits that should be set to 1. Must be between 0 and 64 (inclusive).
      * @return A number with n bits set to 1.
      */

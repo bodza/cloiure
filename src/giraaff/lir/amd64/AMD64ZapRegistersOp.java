@@ -17,7 +17,7 @@ import giraaff.lir.framemap.FrameMap;
 /**
  * Writes well known garbage values to registers.
  */
-@Opcode("ZAP_REGISTER")
+@Opcode
 public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
 {
     public static final LIRInstructionClass<AMD64ZapRegistersOp> TYPE = LIRInstructionClass.create(AMD64ZapRegistersOp.class);

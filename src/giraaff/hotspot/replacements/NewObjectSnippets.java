@@ -73,14 +73,13 @@ public class NewObjectSnippets implements Snippets
 
     public static void emitPrefetchAllocate(Word address, boolean isArray)
     {
-        GraalHotSpotVMConfig config = HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
-        if (config.allocatePrefetchStyle > 0)
+        if (GraalHotSpotVMConfig.allocatePrefetchStyle > 0)
         {
             // Insert a prefetch for each allocation only on the fast-path.
             // Generate several prefetch instructions.
-            int lines = isArray ? config.allocatePrefetchLines : config.allocateInstancePrefetchLines;
-            int stepSize = config.allocatePrefetchStepSize;
-            int distance = config.allocatePrefetchDistance;
+            int lines = isArray ? GraalHotSpotVMConfig.allocatePrefetchLines : GraalHotSpotVMConfig.allocateInstancePrefetchLines;
+            int stepSize = GraalHotSpotVMConfig.allocatePrefetchStepSize;
+            int distance = GraalHotSpotVMConfig.allocatePrefetchDistance;
             ExplodeLoopNode.explodeLoop();
             for (int i = 0; i < lines; i++)
             {
@@ -102,7 +101,7 @@ public class NewObjectSnippets implements Snippets
         Word top = HotSpotReplacementsUtil.readTlabTop(thread);
         Word end = HotSpotReplacementsUtil.readTlabEnd(thread);
         Word newTop = top.add(size);
-        if (HotSpotReplacementsUtil.useTLAB(GraalHotSpotVMConfig.INJECTED_VMCONFIG) && BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
+        if (GraalHotSpotVMConfig.useTLAB && BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
         {
             HotSpotReplacementsUtil.writeTlabTop(thread, newTop);
             emitPrefetchAllocate(newTop, false);
@@ -152,7 +151,7 @@ public class NewObjectSnippets implements Snippets
                  */
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, (layoutHelper & 1) == 0))
                 {
-                    Word prototypeMarkWord = nonNullHub.readWord(HotSpotReplacementsUtil.prototypeMarkWordOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
+                    Word prototypeMarkWord = nonNullHub.readWord(GraalHotSpotVMConfig.prototypeMarkWordOffset, HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
                     /*
                      * FIXME(je,ds): we should actually pass typeContext instead of "" but late
                      * binding of parameters is not yet supported by the GraphBuilderPlugin system.
@@ -183,7 +182,7 @@ public class NewObjectSnippets implements Snippets
         Word top = HotSpotReplacementsUtil.readTlabTop(thread);
         Word end = HotSpotReplacementsUtil.readTlabEnd(thread);
         Word newTop = top.add(allocationSize);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, skipNegativeCheck || UnsignedMath.belowThan(length, MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)) && HotSpotReplacementsUtil.useTLAB(GraalHotSpotVMConfig.INJECTED_VMCONFIG) && BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, skipNegativeCheck || UnsignedMath.belowThan(length, MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)) && GraalHotSpotVMConfig.useTLAB && BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
         {
             HotSpotReplacementsUtil.writeTlabTop(thread, newTop);
             emitPrefetchAllocate(newTop, true);
@@ -226,7 +225,7 @@ public class NewObjectSnippets implements Snippets
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
 
-        KlassPointer klass = HotSpotReplacementsUtil.loadKlassFromObject(elementType, HotSpotReplacementsUtil.arrayKlassOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION);
+        KlassPointer klass = HotSpotReplacementsUtil.loadKlassFromObject(elementType, GraalHotSpotVMConfig.arrayKlassOffset, HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION);
         if (klass.isNull())
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
@@ -256,8 +255,8 @@ public class NewObjectSnippets implements Snippets
         //    ebt is the BasicType of the elements
         //    esz is the element size in bytes
 
-        int headerSize = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperHeaderSizeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperHeaderSizeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
-        int log2ElementSize = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperLog2ElementSizeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperLog2ElementSizeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
+        int headerSize = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperHeaderSizeShift) & GraalHotSpotVMConfig.layoutHelperHeaderSizeMask;
+        int log2ElementSize = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperLog2ElementSizeShift) & GraalHotSpotVMConfig.layoutHelperLog2ElementSizeMask;
 
         Object result = allocateArrayImpl(nonNullKlass, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, false, "dynamic type", true, options);
         return PiArrayNode.piArrayCastToSnippetReplaceeStamp(result, length);
@@ -354,11 +353,11 @@ public class NewObjectSnippets implements Snippets
      */
     protected static Object formatObject(KlassPointer hub, int size, Word memory, Word compileTimePrototypeMarkWord, boolean fillContents, boolean constantSize)
     {
-        Word prototypeMarkWord = HotSpotReplacementsUtil.useBiasedLocking(GraalHotSpotVMConfig.INJECTED_VMCONFIG) ? hub.readWord(HotSpotReplacementsUtil.prototypeMarkWordOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION) : compileTimePrototypeMarkWord;
+        Word prototypeMarkWord = GraalHotSpotVMConfig.useBiasedLocking ? hub.readWord(GraalHotSpotVMConfig.prototypeMarkWordOffset, HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION) : compileTimePrototypeMarkWord;
         HotSpotReplacementsUtil.initializeObjectHeader(memory, prototypeMarkWord, hub);
         if (fillContents)
         {
-            zeroMemory(size, memory, constantSize, HotSpotReplacementsUtil.instanceHeaderSize(GraalHotSpotVMConfig.INJECTED_VMCONFIG), false);
+            zeroMemory(size, memory, constantSize, HotSpotReplacementsUtil.instanceHeaderSize(), false);
         }
         MembarNode.memoryBarrier(MemoryBarriers.STORE_STORE, LocationIdentity.init());
         return memory.toObjectNonNull();
@@ -369,7 +368,7 @@ public class NewObjectSnippets implements Snippets
      */
     public static Object formatArray(KlassPointer hub, int allocationSize, int length, int headerSize, Word memory, Word prototypeMarkWord, boolean fillContents, boolean maybeUnroll)
     {
-        memory.writeInt(HotSpotReplacementsUtil.arrayLengthOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), length, LocationIdentity.init());
+        memory.writeInt(GraalHotSpotVMConfig.arrayLengthOffset, length, LocationIdentity.init());
         // store hub last as the concurrent garbage collectors assume length is valid if hub field is not null
         HotSpotReplacementsUtil.initializeObjectHeader(memory, prototypeMarkWord, hub);
         if (fillContents)
@@ -387,12 +386,10 @@ public class NewObjectSnippets implements Snippets
         private final SnippetInfo allocateArrayDynamic = snippet(NewObjectSnippets.class, "allocateArrayDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         private final SnippetInfo allocateInstanceDynamic = snippet(NewObjectSnippets.class, "allocateInstanceDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         private final SnippetInfo newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
-        private final GraalHotSpotVMConfig config;
 
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target, GraalHotSpotVMConfig config)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);
-            this.config = config;
         }
 
         /**

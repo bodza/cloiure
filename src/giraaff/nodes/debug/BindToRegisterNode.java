@@ -11,6 +11,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class BindToRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<BindToRegisterNode> TYPE = NodeClass.create(BindToRegisterNode.class);
+
     @Input ValueNode value;
 
     public BindToRegisterNode(ValueNode value)

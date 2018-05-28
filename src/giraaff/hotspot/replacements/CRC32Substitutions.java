@@ -9,13 +9,10 @@ import org.graalvm.word.WordBase;
 import org.graalvm.word.WordFactory;
 
 import giraaff.api.replacements.ClassSubstitution;
-import giraaff.api.replacements.Fold;
-import giraaff.api.replacements.Fold.InjectedParameter;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.hotspot.nodes.GraalHotSpotVMConfigNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
@@ -28,15 +25,6 @@ import giraaff.word.Word;
 @ClassSubstitution(CRC32.class)
 public class CRC32Substitutions
 {
-    /**
-     * Gets the address of {@code StubRoutines::x86::_crc_table} in {@code stubRoutines_x86.hpp}.
-     */
-    @Fold
-    static long crcTableAddress(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.crcTableAddress;
-    }
-
     /**
      * Removed in 9.
      */

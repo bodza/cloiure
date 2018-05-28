@@ -20,7 +20,7 @@ import giraaff.lir.framemap.FrameMap;
 /**
  * Saves registers to stack slots.
  */
-@Opcode("SAVE_REGISTER")
+@Opcode
 public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
 {
     public static final LIRInstructionClass<AMD64SaveRegistersOp> TYPE = LIRInstructionClass.create(AMD64SaveRegistersOp.class);
@@ -41,9 +41,7 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
     protected final boolean supportsRemove;
 
     /**
-     *
-     * @param savedRegisters the registers saved by this operation which may be subject to
-     *            {@linkplain #remove(EconomicSet) pruning}
+     * @param savedRegisters the registers saved by this operation which may be subject to {@linkplain #remove(EconomicSet) pruning}
      * @param savedRegisterLocations the slots to which the registers are saved
      * @param supportsRemove determines if registers can be {@linkplain #remove(EconomicSet) pruned}
      */

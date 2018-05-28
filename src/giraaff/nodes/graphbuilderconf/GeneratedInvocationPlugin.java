@@ -7,14 +7,12 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.api.replacements.Fold;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.nodes.ValueNode;
 import giraaff.util.GraalError;
 
 /**
- * Abstract class for a plugin generated for a method annotated by {@link NodeIntrinsic} or
- * {@link Fold}.
+ * Abstract class for a plugin generated for a method annotated by {@link NodeIntrinsic} or {@link Fold}.
  */
 public abstract class GeneratedInvocationPlugin implements InvocationPlugin
 {

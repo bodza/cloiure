@@ -30,7 +30,7 @@ import giraaff.util.UnsafeAccess;
  * Emits code which compares two arrays lexicographically. If the CPU supports any vector
  * instructions specialized code is emitted to leverage these instructions.
  */
-@Opcode("ARRAY_COMPARE_TO")
+@Opcode
 public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ArrayCompareToOp> TYPE = LIRInstructionClass.create(AMD64ArrayCompareToOp.class);

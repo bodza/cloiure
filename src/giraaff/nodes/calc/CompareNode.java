@@ -26,6 +26,7 @@ import giraaff.options.OptionValues;
 public abstract class CompareNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>
 {
     public static final NodeClass<CompareNode> TYPE = NodeClass.create(CompareNode.class);
+
     protected final CanonicalCondition condition;
     protected final boolean unorderedIsTrue;
 

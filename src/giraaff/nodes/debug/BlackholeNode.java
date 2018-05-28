@@ -10,6 +10,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class BlackholeNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<BlackholeNode> TYPE = NodeClass.create(BlackholeNode.class);
+
     @Input ValueNode value;
 
     public BlackholeNode(ValueNode value)

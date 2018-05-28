@@ -25,6 +25,7 @@ import giraaff.nodes.virtual.VirtualArrayNode;
 public final class ArrayLengthNode extends FixedWithNextNode implements Canonicalizable.Unary<ValueNode>, Lowerable, Virtualizable
 {
     public static final NodeClass<ArrayLengthNode> TYPE = NodeClass.create(ArrayLengthNode.class);
+
     @Input ValueNode array;
 
     public ValueNode array()

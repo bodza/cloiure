@@ -17,19 +17,17 @@ import giraaff.nodes.CallTargetNode.InvokeKind;
  * A direct call that complies with the conventions for such calls in HotSpot. In particular, for
  * calls using an inline cache, a MOVE instruction is emitted just prior to the aligned direct call.
  */
-@Opcode("CALL_DIRECT")
+@Opcode
 final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
 {
     public static final LIRInstructionClass<AMD64HotspotDirectVirtualCallOp> TYPE = LIRInstructionClass.create(AMD64HotspotDirectVirtualCallOp.class);
 
     private final InvokeKind invokeKind;
-    private final GraalHotSpotVMConfig config;
 
-    AMD64HotspotDirectVirtualCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind, GraalHotSpotVMConfig config)
+    AMD64HotspotDirectVirtualCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind)
     {
         super(TYPE, target, result, parameters, temps, state);
         this.invokeKind = invokeKind;
-        this.config = config;
     }
 
     @Override
@@ -37,9 +35,9 @@ final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
     {
         // The mark for an invocation that uses an inline cache must be placed
         // at the instruction that loads the Klass from the inline cache.
-        crb.recordMark(invokeKind == InvokeKind.Virtual ? config.MARKID_INVOKEVIRTUAL : config.MARKID_INVOKEINTERFACE);
+        crb.recordMark(invokeKind == InvokeKind.Virtual ? GraalHotSpotVMConfig.invokevirtualMark : GraalHotSpotVMConfig.invokeinterfaceMark);
         // This must be emitted exactly like this to ensure, it's patchable.
-        masm.movq(AMD64.rax, config.nonOopBits);
+        masm.movq(AMD64.rax, GraalHotSpotVMConfig.nonOopBits);
         int offset = super.emitCall(crb, masm);
         crb.recordInvokeVirtualOrInterfaceCallOp(offset);
     }

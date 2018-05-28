@@ -10,7 +10,7 @@ import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
-@Opcode("BSWAP")
+@Opcode
 public final class AMD64ByteSwapOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ByteSwapOp> TYPE = LIRInstructionClass.create(AMD64ByteSwapOp.class);

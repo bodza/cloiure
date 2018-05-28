@@ -45,7 +45,6 @@ import giraaff.phases.tiers.PhaseContext;
  * This is currently only done for branches that start from a {@link IfNode}. If it encounters a
  * branch starting at an other kind of {@link ControlSplitNode}, it will only bring the
  * {@link DeoptimizeNode} as close to the {@link ControlSplitNode} as possible.
- *
  */
 public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
 {

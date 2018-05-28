@@ -18,7 +18,7 @@ public class HotSpotArraySubstitutions
     @MethodSubstitution
     public static Object newInstance(Class<?> componentType, int length)
     {
-        if (componentType == null || HotSpotReplacementsUtil.loadKlassFromObject(componentType, HotSpotReplacementsUtil.arrayKlassOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION).isNull())
+        if (componentType == null || HotSpotReplacementsUtil.loadKlassFromObject(componentType, GraalHotSpotVMConfig.arrayKlassOffset, HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION).isNull())
         {
             // exit the intrinsic here for the case where the array class does not exist
             return newInstance(componentType, length);

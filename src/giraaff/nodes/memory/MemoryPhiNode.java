@@ -17,6 +17,7 @@ import giraaff.nodes.ValueNode;
 public final class MemoryPhiNode extends PhiNode implements MemoryNode
 {
     public static final NodeClass<MemoryPhiNode> TYPE = NodeClass.create(MemoryPhiNode.class);
+
     @Input(InputType.Memory) NodeInputList<ValueNode> values;
     protected final LocationIdentity locationIdentity;
 

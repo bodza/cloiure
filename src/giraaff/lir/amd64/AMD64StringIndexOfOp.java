@@ -12,9 +12,7 @@ import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGeneratorTool;
 
-/**
-  */
-@Opcode("AMD64_STRING_INDEX_OF")
+@Opcode
 public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64StringIndexOfOp> TYPE = LIRInstructionClass.create(AMD64StringIndexOfOp.class);

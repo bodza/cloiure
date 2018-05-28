@@ -21,6 +21,7 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint implements MemoryCheckpoint, DeoptimizingNode.DeoptBefore, DeoptimizingNode.DeoptAfter
 {
     public static final NodeClass<AccessMonitorNode> TYPE = NodeClass.create(AccessMonitorNode.class);
+
     @OptionalInput(InputType.State) FrameState stateBefore;
     @Input ValueNode object;
     @Input(InputType.Association) MonitorIdNode monitorId;

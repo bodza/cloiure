@@ -8,7 +8,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Emits a pause.
  */
-@Opcode("PAUSE")
+@Opcode
 public final class AMD64PauseOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64PauseOp> TYPE = LIRInstructionClass.create(AMD64PauseOp.class);

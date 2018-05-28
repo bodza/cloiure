@@ -14,6 +14,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class ReturnNode extends ControlSinkNode implements LIRLowerable, IterableNodeType
 {
     public static final NodeClass<ReturnNode> TYPE = NodeClass.create(ReturnNode.class);
+
     @OptionalInput ValueNode result;
     @OptionalInput(InputType.Extension) MemoryMapNode memoryMap;
 

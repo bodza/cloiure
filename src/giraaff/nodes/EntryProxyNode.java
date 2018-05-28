@@ -13,6 +13,7 @@ import giraaff.nodes.spi.ValueProxy;
 public final class EntryProxyNode extends FloatingNode implements ValueProxy
 {
     public static final NodeClass<EntryProxyNode> TYPE = NodeClass.create(EntryProxyNode.class);
+
     @Input(InputType.Association) EntryMarkerNode proxyPoint;
     @Input ValueNode value;
 

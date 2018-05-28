@@ -7,6 +7,7 @@ import giraaff.nodeinfo.InputType;
 public abstract class DeoptimizingFixedWithNextNode extends FixedWithNextNode implements DeoptimizingNode.DeoptBefore
 {
     public static final NodeClass<DeoptimizingFixedWithNextNode> TYPE = NodeClass.create(DeoptimizingFixedWithNextNode.class);
+
     @OptionalInput(InputType.State) protected FrameState stateBefore;
 
     protected DeoptimizingFixedWithNextNode(NodeClass<? extends DeoptimizingFixedWithNextNode> c, Stamp stamp)

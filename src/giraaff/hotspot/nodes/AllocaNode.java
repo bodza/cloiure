@@ -21,6 +21,7 @@ import giraaff.word.WordTypes;
 public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<AllocaNode> TYPE = NodeClass.create(AllocaNode.class);
+
     /**
      * The number of slots in block.
      */

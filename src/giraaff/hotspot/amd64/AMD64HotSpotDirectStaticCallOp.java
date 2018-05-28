@@ -16,25 +16,23 @@ import giraaff.nodes.CallTargetNode.InvokeKind;
  * A direct call that complies with the conventions for such calls in HotSpot. It doesn't use an
  * inline cache so it's just a patchable call site.
  */
-@Opcode("CALL_DIRECT")
+@Opcode
 final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
 {
     public static final LIRInstructionClass<AMD64HotSpotDirectStaticCallOp> TYPE = LIRInstructionClass.create(AMD64HotSpotDirectStaticCallOp.class);
 
     private final InvokeKind invokeKind;
-    private final GraalHotSpotVMConfig config;
 
-    AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind, GraalHotSpotVMConfig config)
+    AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind)
     {
         super(TYPE, target, result, parameters, temps, state);
         this.invokeKind = invokeKind;
-        this.config = config;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        crb.recordMark(invokeKind == InvokeKind.Static ? config.MARKID_INVOKESTATIC : config.MARKID_INVOKESPECIAL);
+        crb.recordMark(invokeKind == InvokeKind.Static ? GraalHotSpotVMConfig.invokestaticMark : GraalHotSpotVMConfig.invokespecialMark);
         super.emitCode(crb, masm);
     }
 }

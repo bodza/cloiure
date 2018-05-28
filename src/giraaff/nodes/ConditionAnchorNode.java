@@ -16,6 +16,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class ConditionAnchorNode extends FixedWithNextNode implements Canonicalizable.Unary<Node>, Lowerable, GuardingNode
 {
     public static final NodeClass<ConditionAnchorNode> TYPE = NodeClass.create(ConditionAnchorNode.class);
+
     @Input(InputType.Condition) LogicNode condition;
     protected boolean negated;
 

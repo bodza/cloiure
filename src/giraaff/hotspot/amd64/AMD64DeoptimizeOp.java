@@ -10,7 +10,7 @@ import giraaff.lir.amd64.AMD64BlockEndOp;
 import giraaff.lir.amd64.AMD64Call;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-@Opcode("DEOPT")
+@Opcode
 final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements BlockEndOp
 {
     public static final LIRInstructionClass<AMD64DeoptimizeOp> TYPE = LIRInstructionClass.create(AMD64DeoptimizeOp.class);

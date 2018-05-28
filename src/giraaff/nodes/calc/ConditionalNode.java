@@ -28,6 +28,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class ConditionalNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<ConditionalNode> TYPE = NodeClass.create(ConditionalNode.class);
+
     @Input(InputType.Condition) LogicNode condition;
     @Input(InputType.Value) ValueNode trueValue;
     @Input(InputType.Value) ValueNode falseValue;

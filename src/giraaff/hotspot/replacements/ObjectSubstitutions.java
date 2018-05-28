@@ -19,25 +19,4 @@ public class ObjectSubstitutions
     {
         return IdentityHashCodeNode.identityHashCode(thisObj);
     }
-
-    @MethodSubstitution(isStatic = false)
-    public static void notify(final Object thisObj)
-    {
-        if (!fastNotifyStub(HotSpotHostForeignCallsProvider.NOTIFY, thisObj))
-        {
-            notify(thisObj);
-        }
-    }
-
-    @MethodSubstitution(isStatic = false)
-    public static void notifyAll(final Object thisObj)
-    {
-        if (!fastNotifyStub(HotSpotHostForeignCallsProvider.NOTIFY_ALL, thisObj))
-        {
-            notifyAll(thisObj);
-        }
-    }
-
-    @NodeIntrinsic(ForeignCallNode.class)
-    public static native boolean fastNotifyStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object o);
 }

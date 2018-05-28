@@ -23,6 +23,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<GenericArrayCopyCallNode> TYPE = NodeClass.create(GenericArrayCopyCallNode.class);
+
     @Input ValueNode src;
     @Input ValueNode srcPos;
     @Input ValueNode dest;

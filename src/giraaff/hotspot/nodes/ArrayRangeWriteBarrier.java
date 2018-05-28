@@ -9,6 +9,7 @@ import giraaff.nodes.spi.Lowerable;
 public abstract class ArrayRangeWriteBarrier extends WriteBarrier implements Lowerable
 {
     public static final NodeClass<ArrayRangeWriteBarrier> TYPE = NodeClass.create(ArrayRangeWriteBarrier.class);
+
     @Input(InputType.Association) AddressNode address;
     @Input ValueNode length;
 

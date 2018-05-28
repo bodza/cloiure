@@ -22,6 +22,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class StoreIndexedNode extends AccessIndexedNode implements StateSplit, Lowerable, Virtualizable
 {
     public static final NodeClass<StoreIndexedNode> TYPE = NodeClass.create(StoreIndexedNode.class);
+
     @Input ValueNode value;
     @OptionalInput(InputType.State) FrameState stateAfter;
 

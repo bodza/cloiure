@@ -145,10 +145,8 @@ public class CompilationTask
         this.installAsDefault = installAsDefault;
 
         // Disable inlining if HotSpot has it disabled unless it's been explicitly set in Graal.
-        HotSpotGraalRuntimeProvider graalRuntime = compiler.getGraalRuntime();
-        GraalHotSpotVMConfig config = graalRuntime.getVMConfig();
         OptionValues newOptions = options;
-        if (!config.inline)
+        if (!GraalHotSpotVMConfig.inline)
         {
             EconomicMap<OptionKey<?>, Object> m = OptionValues.newOptionMap();
             if (Options.Inline.getValue(options) && !Options.Inline.hasBeenSet(options))
@@ -199,8 +197,6 @@ public class CompilationTask
 
     public HotSpotCompilationRequestResult runCompilation()
     {
-        HotSpotGraalRuntimeProvider graalRuntime = compiler.getGraalRuntime();
-        GraalHotSpotVMConfig config = graalRuntime.getVMConfig();
         int entryBCI = getEntryBCI();
         boolean isOSR = entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
         HotSpotResolvedJavaMethod method = getMethod();
@@ -213,7 +209,7 @@ public class CompilationTask
             // If there is already compiled code for this method on our level we simply return.
             // JVMCI compiles are always at the highest compile level, even in non-tiered mode,
             // so we only need to check for that value.
-            if (method.hasCodeAtLevel(entryBCI, config.compilationLevelFullOptimization))
+            if (method.hasCodeAtLevel(entryBCI, GraalHotSpotVMConfig.compilationLevelFullOptimization))
             {
                 return HotSpotCompilationRequestResult.failure("Already compiled", false);
             }
@@ -245,7 +241,7 @@ public class CompilationTask
                 {
                     compilationEvent.setMethod(method.format("%H.%n(%p)"));
                     compilationEvent.setCompileId(getId());
-                    compilationEvent.setCompileLevel(config.compilationLevelFullOptimization);
+                    compilationEvent.setCompileLevel(GraalHotSpotVMConfig.compilationLevelFullOptimization);
                     compilationEvent.setSucceeded(compilation.result != null && installedCode != null);
                     compilationEvent.setIsOsr(isOSR);
                     compilationEvent.setCodeSize(codeSize);

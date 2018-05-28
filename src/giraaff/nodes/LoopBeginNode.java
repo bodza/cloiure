@@ -17,6 +17,7 @@ import giraaff.nodes.util.GraphUtil;
 public final class LoopBeginNode extends AbstractMergeNode implements IterableNodeType, LIRLowerable
 {
     public static final NodeClass<LoopBeginNode> TYPE = NodeClass.create(LoopBeginNode.class);
+
     protected double loopFrequency;
     protected double loopOrigFrequency;
     protected int nextEndIndex;

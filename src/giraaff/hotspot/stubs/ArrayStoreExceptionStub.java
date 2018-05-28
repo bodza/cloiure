@@ -11,8 +11,6 @@ import giraaff.hotspot.word.KlassPointer;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
-/**
- */
 public class ArrayStoreExceptionStub extends CreateExceptionStub
 {
     public ArrayStoreExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)

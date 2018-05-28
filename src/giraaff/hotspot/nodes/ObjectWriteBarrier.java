@@ -8,6 +8,7 @@ import giraaff.nodes.memory.address.AddressNode;
 public abstract class ObjectWriteBarrier extends WriteBarrier
 {
     public static final NodeClass<ObjectWriteBarrier> TYPE = NodeClass.create(ObjectWriteBarrier.class);
+
     @Input(InputType.Association) protected AddressNode address;
     @OptionalInput protected ValueNode value;
     protected final boolean precise;

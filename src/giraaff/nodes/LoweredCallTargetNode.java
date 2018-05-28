@@ -10,6 +10,7 @@ import giraaff.graph.NodeClass;
 public abstract class LoweredCallTargetNode extends CallTargetNode
 {
     public static final NodeClass<LoweredCallTargetNode> TYPE = NodeClass.create(LoweredCallTargetNode.class);
+
     protected final JavaType[] signature;
     protected final CallingConvention.Type callType;
 

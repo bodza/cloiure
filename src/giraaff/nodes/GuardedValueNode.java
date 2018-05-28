@@ -23,6 +23,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class GuardedValueNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, Canonicalizable, ValueProxy
 {
     public static final NodeClass<GuardedValueNode> TYPE = NodeClass.create(GuardedValueNode.class);
+
     @Input ValueNode object;
 
     public GuardedValueNode(ValueNode object, GuardingNode guard)

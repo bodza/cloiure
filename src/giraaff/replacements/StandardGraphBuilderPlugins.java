@@ -470,26 +470,6 @@ public class StandardGraphBuilderPlugins
         });
     }
 
-    public static final class StringIndexOfConstantPlugin implements InvocationPlugin
-    {
-        @Override
-        public boolean inlineOnly()
-        {
-            return true;
-        }
-
-        @Override
-        public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode source, ValueNode sourceOffset, ValueNode sourceCount, ValueNode target, ValueNode targetOffset, ValueNode targetCount, ValueNode origFromIndex)
-        {
-            if (target.isConstant())
-            {
-                b.addPush(JavaKind.Int, new StringIndexOfNode(b.getInvokeKind(), targetMethod, b.bci(), b.getInvokeReturnStamp(b.getAssumptions()), source, sourceOffset, sourceCount, target, targetOffset, targetCount, origFromIndex));
-                return true;
-            }
-            return false;
-        }
-    }
-
     public static class UnsignedMathPlugin implements InvocationPlugin
     {
         private final Condition condition;

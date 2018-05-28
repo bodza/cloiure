@@ -19,6 +19,7 @@ import giraaff.options.OptionValues;
 public final class IntegerBelowNode extends IntegerLowerThanNode
 {
     public static final NodeClass<IntegerBelowNode> TYPE = NodeClass.create(IntegerBelowNode.class);
+
     private static final BelowOp OP = new BelowOp();
 
     public IntegerBelowNode(ValueNode x, ValueNode y)

@@ -5,7 +5,6 @@ import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.api.replacements.Fold;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
@@ -32,15 +31,9 @@ public class CreateExceptionStub extends SnippetStub
         super(snippetMethodName, options, providers, linkage);
     }
 
-    @Fold
-    static String getInternalClassName(Class<?> cls)
-    {
-        return cls.getName().replace('.', '/');
-    }
-
     private static Word classAsCString(Class<?> cls)
     {
-        return CStringConstant.cstring(getInternalClassName(cls));
+        return CStringConstant.cstring(cls.getName().replace('.', '/'));
     }
 
     protected static Object createException(Register threadRegister, Class<? extends Throwable> exception)
@@ -83,10 +76,10 @@ public class CreateExceptionStub extends SnippetStub
     @NodeIntrinsic(StubForeignCallNode.class)
     private static native void throwClassCastException(@ConstantNodeParameter ForeignCallDescriptor d, Word thread, Word type, KlassPointer objKlass, KlassPointer targetKlass);
 
-    public static void registerForeignCalls(GraalHotSpotVMConfig c, HotSpotForeignCallsProviderImpl foreignCalls)
+    public static void registerForeignCalls(HotSpotForeignCallsProviderImpl foreignCalls)
     {
-        foreignCalls.registerForeignCall(THROW_AND_POST_JVMTI_EXCEPTION, c.throwAndPostJvmtiExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
-        foreignCalls.registerForeignCall(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, c.throwKlassExternalNameExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
-        foreignCalls.registerForeignCall(THROW_CLASS_CAST_EXCEPTION, c.throwClassCastExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        foreignCalls.registerForeignCall(THROW_AND_POST_JVMTI_EXCEPTION, GraalHotSpotVMConfig.throwAndPostJvmtiExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        foreignCalls.registerForeignCall(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, GraalHotSpotVMConfig.throwKlassExternalNameExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        foreignCalls.registerForeignCall(THROW_CLASS_CAST_EXCEPTION, GraalHotSpotVMConfig.throwClassCastExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
     }
 }

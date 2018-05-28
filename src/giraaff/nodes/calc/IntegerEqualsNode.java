@@ -29,6 +29,7 @@ import giraaff.util.GraalError;
 public final class IntegerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<IntegerEqualsNode> TYPE = NodeClass.create(IntegerEqualsNode.class);
+
     private static final IntegerEqualsOp OP = new IntegerEqualsOp();
 
     public IntegerEqualsNode(ValueNode x, ValueNode y)

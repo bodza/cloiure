@@ -23,6 +23,7 @@ import giraaff.util.GraalError;
 public final class FloatEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<FloatEqualsNode> TYPE = NodeClass.create(FloatEqualsNode.class);
+
     private static final FloatEqualsOp OP = new FloatEqualsOp();
 
     public FloatEqualsNode(ValueNode x, ValueNode y)

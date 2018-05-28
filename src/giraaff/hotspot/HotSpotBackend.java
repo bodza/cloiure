@@ -9,7 +9,6 @@ import jdk.vm.ci.code.RegisterSaveLayout;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Value;
@@ -63,7 +62,7 @@ public abstract class HotSpotBackend extends Backend
 {
     /**
      * Descriptor for {@link ExceptionHandlerStub}. This stub is called by the
-     * {@linkplain GraalHotSpotVMConfig#MARKID_EXCEPTION_HANDLER_ENTRY exception handler} in a
+     * {@linkplain GraalHotSpotVMConfig#exceptionHandlerEntryMark exception handler} in a
      * compiled method.
      */
     public static final ForeignCallDescriptor EXCEPTION_HANDLER = new ForeignCallDescriptor("exceptionHandler", void.class, Object.class, Word.class);
@@ -283,7 +282,7 @@ public abstract class HotSpotBackend extends Backend
      * Performs any remaining initialization that was deferred until the {@linkplain #getRuntime()
      * runtime} object was initialized and this backend was registered with it.
      */
-    public void completeInitialization(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options)
+    public void completeInitialization(OptionValues options)
     {
     }
 

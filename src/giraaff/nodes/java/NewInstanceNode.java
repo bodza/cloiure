@@ -22,6 +22,7 @@ import giraaff.nodes.virtual.VirtualInstanceNode;
 public class NewInstanceNode extends AbstractNewObjectNode implements VirtualizableAllocation
 {
     public static final NodeClass<NewInstanceNode> TYPE = NodeClass.create(NewInstanceNode.class);
+
     protected final ResolvedJavaType instanceClass;
 
     public NewInstanceNode(ResolvedJavaType type, boolean fillContents)

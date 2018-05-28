@@ -21,6 +21,7 @@ import giraaff.word.WordTypes;
 public final class DimensionsNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<DimensionsNode> TYPE = NodeClass.create(DimensionsNode.class);
+
     protected final int rank;
 
     public DimensionsNode(@InjectedNodeParameter WordTypes wordTypes, int rank)

@@ -34,6 +34,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable
 {
     public static final NodeClass<NewArrayNode> TYPE = NodeClass.create(NewArrayNode.class);
+
     private final ResolvedJavaType elementType;
 
     public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents)

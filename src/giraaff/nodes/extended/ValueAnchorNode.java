@@ -24,6 +24,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class ValueAnchorNode extends FixedWithNextNode implements LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode
 {
     public static final NodeClass<ValueAnchorNode> TYPE = NodeClass.create(ValueAnchorNode.class);
+
     @OptionalInput(InputType.Guard) ValueNode anchored;
 
     public ValueAnchorNode(ValueNode value)

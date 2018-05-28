@@ -31,8 +31,7 @@ public class HotSpotDataBuilder extends DataBuilder
     {
         if (JavaConstant.isNull(constant))
         {
-            boolean compressed = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(constant);
-            int size = compressed ? 4 : target.wordSize;
+            int size = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(constant) ? 4 : target.wordSize;
             return ZeroData.create(size, size);
         }
         else if (constant instanceof VMConstant)
@@ -65,8 +64,7 @@ public class HotSpotDataBuilder extends DataBuilder
         }
         else if (constant instanceof SerializableConstant)
         {
-            SerializableConstant s = (SerializableConstant) constant;
-            return new SerializableData(s);
+            return new SerializableData((SerializableConstant) constant);
         }
         else
         {

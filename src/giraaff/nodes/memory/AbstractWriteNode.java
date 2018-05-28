@@ -17,6 +17,7 @@ import giraaff.nodes.memory.address.AddressNode;
 public abstract class AbstractWriteNode extends FixedAccessNode implements StateSplit, MemoryCheckpoint.Single, MemoryAccess, GuardingNode
 {
     public static final NodeClass<AbstractWriteNode> TYPE = NodeClass.create(AbstractWriteNode.class);
+
     @Input ValueNode value;
     @OptionalInput(InputType.State) FrameState stateAfter;
     @OptionalInput(InputType.Memory) Node lastLocationAccess;

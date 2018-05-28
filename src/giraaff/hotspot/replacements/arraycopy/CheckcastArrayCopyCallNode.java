@@ -33,6 +33,7 @@ import giraaff.word.Word;
 public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<CheckcastArrayCopyCallNode> TYPE = NodeClass.create(CheckcastArrayCopyCallNode.class);
+
     @Input ValueNode src;
     @Input ValueNode srcPos;
     @Input ValueNode dest;

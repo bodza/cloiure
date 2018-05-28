@@ -13,6 +13,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class UnwindNode extends ControlSinkNode implements Lowerable, LIRLowerable
 {
     public static final NodeClass<UnwindNode> TYPE = NodeClass.create(UnwindNode.class);
+
     @Input ValueNode exception;
 
     public ValueNode exception()

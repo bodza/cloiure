@@ -19,6 +19,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<AtomicReadAndWriteNode> TYPE = NodeClass.create(AtomicReadAndWriteNode.class);
+
     @Input ValueNode object;
     @Input ValueNode offset;
     @Input ValueNode newValue;

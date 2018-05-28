@@ -4,8 +4,6 @@ import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
 import giraaff.lir.alloc.lsra.Interval.RegisterBindingLists;
 import giraaff.lir.alloc.lsra.Interval.State;
 
-/**
- */
 public class IntervalWalker
 {
     protected final LinearScan allocator;

@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.graph.Node;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -26,10 +25,10 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     }
 
     @Override
-    public void initialize(OptionValues options, HotSpotProviders providers, GraalHotSpotVMConfig config)
+    public void initialize(OptionValues options, HotSpotProviders providers)
     {
         convertSnippets = new AMD64ConvertSnippets.Templates(options, providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
-        super.initialize(options, providers, config);
+        super.initialize(options, providers);
     }
 
     @Override

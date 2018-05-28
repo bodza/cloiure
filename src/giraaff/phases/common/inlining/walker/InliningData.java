@@ -444,7 +444,6 @@ public class InliningData
     }
 
     /**
-     *
      * This method attempts:
      *
      * <li>to inline at the callsite given by <code>calleeInvocation</code>, where that callsite

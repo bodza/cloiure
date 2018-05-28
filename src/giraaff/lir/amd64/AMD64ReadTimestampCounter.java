@@ -14,7 +14,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * AMD64 rdtsc operation. The result is in EDX:EAX.
  */
-@Opcode("RDTSC")
+@Opcode
 public class AMD64ReadTimestampCounter extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ReadTimestampCounter> TYPE = LIRInstructionClass.create(AMD64ReadTimestampCounter.class);

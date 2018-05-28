@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.JavaKind;
 
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -30,7 +29,7 @@ public class StringToBytesSnippets implements Snippets
 {
     public static final LocationIdentity CSTRING_LOCATION = NamedLocationIdentity.immutable("CString location");
 
-    @Fold
+    // @Fold
     static long arrayBaseOffset()
     {
         return UnsafeAccess.UNSAFE.arrayBaseOffset(char[].class);

@@ -34,6 +34,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
     public static final NodeClass<ArrayEqualsNode> TYPE = NodeClass.create(ArrayEqualsNode.class);
+
     /** {@link JavaKind} of the arrays to compare. */
     protected final JavaKind kind;
 

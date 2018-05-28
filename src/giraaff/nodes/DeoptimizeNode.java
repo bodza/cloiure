@@ -18,6 +18,7 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
     public static final int DEFAULT_DEBUG_ID = 0;
 
     public static final NodeClass<DeoptimizeNode> TYPE = NodeClass.create(DeoptimizeNode.class);
+
     protected DeoptimizationAction action;
     protected DeoptimizationReason reason;
     protected int debugId;

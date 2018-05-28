@@ -22,6 +22,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class JavaReadNode extends FixedAccessNode implements Lowerable, GuardingNode, Canonicalizable
 {
     public static final NodeClass<JavaReadNode> TYPE = NodeClass.create(JavaReadNode.class);
+
     protected final JavaKind readKind;
     protected final boolean compressible;
 

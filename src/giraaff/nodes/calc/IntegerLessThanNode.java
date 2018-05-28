@@ -28,6 +28,7 @@ import giraaff.util.GraalError;
 public final class IntegerLessThanNode extends IntegerLowerThanNode
 {
     public static final NodeClass<IntegerLessThanNode> TYPE = NodeClass.create(IntegerLessThanNode.class);
+
     private static final LessThanOp OP = new LessThanOp();
 
     public IntegerLessThanNode(ValueNode x, ValueNode y)

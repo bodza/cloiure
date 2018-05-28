@@ -28,6 +28,7 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
 import giraaff.graph.Node;
+import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.CompressionNode.CompressionOp;
 import giraaff.nodes.ConstantNode;
@@ -116,7 +117,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     private final boolean useCompressedOops;
 
     private BoxingSnippets.Templates boxingSnippets;
-    private ConstantStringIndexOfSnippets.Templates indexOfSnippets;
 
     public DefaultJavaLoweringProvider(MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, TargetDescription target, boolean useCompressedOops)
     {
@@ -129,7 +129,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     public void initialize(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection)
     {
         boxingSnippets = new BoxingSnippets.Templates(options, providers, snippetReflection, target);
-        indexOfSnippets = new ConstantStringIndexOfSnippets.Templates(options, providers, snippetReflection, target);
     }
 
     public final TargetDescription getTarget()
@@ -213,10 +212,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             boxingSnippets.lower((UnboxNode) n, tool);
         }
-        else if (n instanceof StringIndexOfNode)
-        {
-            lowerIndexOf((StringIndexOfNode) n);
-        }
         else if (n instanceof UnpackEndianHalfNode)
         {
             lowerSecondHalf((UnpackEndianHalfNode) n);
@@ -231,28 +226,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     {
         ByteOrder byteOrder = target.arch.getByteOrder();
         n.lower(byteOrder);
-    }
-
-    private void lowerIndexOf(StringIndexOfNode n)
-    {
-        if (n.getArgument(3).isConstant())
-        {
-            SnippetLowering lowering = new SnippetLowering()
-            {
-                @Override
-                public void lower(SnippetLowerableMemoryNode node, LoweringTool tool)
-                {
-                    if (tool.getLoweringStage() != LoweringTool.StandardLoweringStage.LOW_TIER)
-                    {
-                        return;
-                    }
-                    indexOfSnippets.lower(node, tool);
-                }
-            };
-            SnippetLowerableMemoryNode snippetLower = new SnippetLowerableMemoryNode(lowering, NamedLocationIdentity.getArrayLocation(JavaKind.Char), n.stamp(NodeView.DEFAULT), n.toArgumentArray());
-            n.graph().add(snippetLower);
-            n.graph().replaceFixedWithFixed(n, snippetLower);
-        }
     }
 
     protected AddressNode createOffsetAddress(StructuredGraph graph, ValueNode object, long offset)
@@ -437,7 +410,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     {
         StructuredGraph graph = array.graph();
         ValueNode canonicalArray = this.createNullCheckedValue(GraphUtil.skipPiWhileNonNull(array), before, tool);
-        AddressNode address = createOffsetAddress(graph, canonicalArray, arrayLengthOffset());
+        AddressNode address = createOffsetAddress(graph, canonicalArray, GraalHotSpotVMConfig.arrayLengthOffset);
         ReadNode readArrayLength = graph.add(new ReadNode(address, NamedLocationIdentity.ARRAY_LENGTH_LOCATION, StampFactory.positiveInt(), BarrierType.NONE));
         graph.addBeforeFixed(before, readArrayLength);
         return readArrayLength;
@@ -934,8 +907,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     }
 
     public abstract ValueNode staticFieldBase(StructuredGraph graph, ResolvedJavaField field);
-
-    public abstract int arrayLengthOffset();
 
     @Override
     public int arrayScalingFactor(JavaKind elementKind)

@@ -10,7 +10,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Removes the current frame and tail calls the uncommon trap routine.
  */
-@Opcode("DEOPT_CALLER")
+@Opcode
 final class AMD64HotSpotDeoptimizeCallerOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     public static final LIRInstructionClass<AMD64HotSpotDeoptimizeCallerOp> TYPE = LIRInstructionClass.create(AMD64HotSpotDeoptimizeCallerOp.class);

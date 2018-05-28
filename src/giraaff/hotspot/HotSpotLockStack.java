@@ -19,6 +19,7 @@ import giraaff.lir.framemap.FrameMapBuilder;
 public class HotSpotLockStack extends LIRInstruction
 {
     public static final LIRInstructionClass<HotSpotLockStack> TYPE = LIRInstructionClass.create(HotSpotLockStack.class);
+
     private static final AllocatableValue[] EMPTY = new AllocatableValue[0];
 
     @Def({OperandFlag.STACK}) private AllocatableValue[] locks;

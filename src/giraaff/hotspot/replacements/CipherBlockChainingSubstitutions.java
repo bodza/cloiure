@@ -8,7 +8,6 @@ import org.graalvm.word.Pointer;
 import org.graalvm.word.WordFactory;
 
 import giraaff.api.replacements.ClassSubstitution;
-import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
@@ -52,7 +51,7 @@ public class CipherBlockChainingSubstitutions
         }
     }
 
-    @Fold
+    // @Fold
     static Class<?> getAESCryptClass()
     {
         return AESCryptSubstitutions.AESCryptClass;

@@ -62,20 +62,19 @@ public class NewArrayStub extends SnippetStub
     private static Object newArray(KlassPointer hub, int length, boolean fillContents, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
     {
         int layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(hub);
-        int log2ElementSize = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperLog2ElementSizeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperLog2ElementSizeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
-        int headerSize = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperHeaderSizeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperHeaderSizeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
-        int elementKind = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperElementTypeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperElementTypeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
+        int log2ElementSize = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperLog2ElementSizeShift) & GraalHotSpotVMConfig.layoutHelperLog2ElementSizeMask;
+        int headerSize = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperHeaderSizeShift) & GraalHotSpotVMConfig.layoutHelperHeaderSizeMask;
+        int elementKind = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperElementTypeShift) & GraalHotSpotVMConfig.layoutHelperElementTypeMask;
         int sizeInBytes = HotSpotReplacementsUtil.arrayAllocationSize(length, headerSize, log2ElementSize);
 
         // check that array length is small enough for fast path.
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        boolean inlineContiguousAllocationSupported = GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported();
-        if (inlineContiguousAllocationSupported && length >= 0 && length <= NewObjectSnippets.MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
+        if (GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported() && length >= 0 && length <= NewObjectSnippets.MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
         {
             Word memory = NewInstanceStub.refillAllocate(thread, intArrayHub, sizeInBytes);
             if (memory.notEqual(0))
             {
-                return NewObjectSnippets.formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(HotSpotReplacementsUtil.arrayPrototypeMarkWord(GraalHotSpotVMConfig.INJECTED_VMCONFIG)), fillContents, false);
+                return NewObjectSnippets.formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(GraalHotSpotVMConfig.arrayPrototypeMarkWord), fillContents, false);
             }
         }
 

@@ -15,7 +15,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Patch the return address of the current frame.
  */
-@Opcode("PATCH_RETURN")
+@Opcode
 final class AMD64HotSpotPatchReturnAddressOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotPatchReturnAddressOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPatchReturnAddressOp.class);

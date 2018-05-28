@@ -3,8 +3,6 @@ package giraaff.hotspot.nodes;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.api.replacements.Fold;
-import giraaff.api.replacements.Fold.InjectedParameter;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;
@@ -25,16 +23,14 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
 {
     public static final NodeClass<GraalHotSpotVMConfigNode> TYPE = NodeClass.create(GraalHotSpotVMConfigNode.class);
 
-    private final GraalHotSpotVMConfig config;
     protected final int markId;
 
     /**
      * Constructor for {@link #areConfigValuesConstant()}.
      */
-    public GraalHotSpotVMConfigNode(@InjectedNodeParameter GraalHotSpotVMConfig config)
+    public GraalHotSpotVMConfigNode()
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));
-        this.config = config;
         this.markId = 0;
     }
 
@@ -43,10 +39,9 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
      *
      * @param markId id of the config value
      */
-    public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp stamp, @InjectedNodeParameter GraalHotSpotVMConfig config, int markId)
+    public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp stamp, int markId)
     {
         super(TYPE, stamp);
-        this.config = config;
         this.markId = markId;
     }
 
@@ -56,10 +51,9 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
      * @param markId id of the config value
      * @param kind explicit type of the node
      */
-    public GraalHotSpotVMConfigNode(GraalHotSpotVMConfig config, int markId, JavaKind kind)
+    public GraalHotSpotVMConfigNode(int markId, JavaKind kind)
     {
         super(TYPE, StampFactory.forKind(kind));
-        this.config = config;
         this.markId = markId;
     }
 
@@ -83,7 +77,7 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
 
     public static long cardTableAddress()
     {
-        return loadLongConfigValue(cardTableAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
+        return loadLongConfigValue(GraalHotSpotVMConfig.cardTableAddressMark);
     }
 
     public static boolean isCardTableAddressConstant()
@@ -93,63 +87,27 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
 
     public static long heapTopAddress()
     {
-        return loadLongConfigValue(heapTopAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
+        return loadLongConfigValue(GraalHotSpotVMConfig.heapTopAddressMark);
     }
 
     public static long heapEndAddress()
     {
-        return loadLongConfigValue(heapEndAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
+        return loadLongConfigValue(GraalHotSpotVMConfig.heapEndAddressMark);
     }
 
     public static long crcTableAddress()
     {
-        return loadLongConfigValue(crcTableAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
+        return loadLongConfigValue(GraalHotSpotVMConfig.crcTableAddressMark);
     }
 
     public static int logOfHeapRegionGrainBytes()
     {
-        return loadIntConfigValue(logOfHeapRegionGrainBytesMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
+        return loadIntConfigValue(GraalHotSpotVMConfig.logOfHeapRegionGrainBytesMark);
     }
 
     public static boolean inlineContiguousAllocationSupported()
     {
-        return loadByteConfigValue(inlineContiguousAllocationSupportedMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) != 0;
-    }
-
-    @Fold
-    public static int cardTableAddressMark(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.MARKID_CARD_TABLE_ADDRESS;
-    }
-
-    @Fold
-    public static int heapTopAddressMark(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.MARKID_HEAP_TOP_ADDRESS;
-    }
-
-    @Fold
-    public static int heapEndAddressMark(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.MARKID_HEAP_END_ADDRESS;
-    }
-
-    @Fold
-    public static int crcTableAddressMark(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.MARKID_CRC_TABLE_ADDRESS;
-    }
-
-    @Fold
-    public static int logOfHeapRegionGrainBytesMark(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.MARKID_LOG_OF_HEAP_REGION_GRAIN_BYTES;
-    }
-
-    @Fold
-    public static int inlineContiguousAllocationSupportedMark(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.MARKID_INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED;
+        return loadByteConfigValue(GraalHotSpotVMConfig.inlineContiguousAllocationSupportedMark) != 0;
     }
 
     @Override
@@ -159,29 +117,29 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
         {
             return ConstantNode.forBoolean(true);
         }
-        if (markId == config.MARKID_CARD_TABLE_ADDRESS)
+        if (markId == GraalHotSpotVMConfig.cardTableAddressMark)
         {
-            return ConstantNode.forLong(config.cardtableStartAddress);
+            return ConstantNode.forLong(GraalHotSpotVMConfig.cardTableAddress);
         }
-        else if (markId == config.MARKID_HEAP_TOP_ADDRESS)
+        else if (markId == GraalHotSpotVMConfig.heapTopAddressMark)
         {
-            return ConstantNode.forLong(config.heapTopAddress);
+            return ConstantNode.forLong(GraalHotSpotVMConfig.heapTopAddress);
         }
-        else if (markId == config.MARKID_HEAP_END_ADDRESS)
+        else if (markId == GraalHotSpotVMConfig.heapEndAddressMark)
         {
-            return ConstantNode.forLong(config.heapEndAddress);
+            return ConstantNode.forLong(GraalHotSpotVMConfig.heapEndAddress);
         }
-        else if (markId == config.MARKID_CRC_TABLE_ADDRESS)
+        else if (markId == GraalHotSpotVMConfig.crcTableAddressMark)
         {
-            return ConstantNode.forLong(config.crcTableAddress);
+            return ConstantNode.forLong(GraalHotSpotVMConfig.crcTableAddress);
         }
-        else if (markId == config.MARKID_LOG_OF_HEAP_REGION_GRAIN_BYTES)
+        else if (markId == GraalHotSpotVMConfig.logOfHeapRegionGrainBytesMark)
         {
-            return ConstantNode.forInt(config.logOfHRGrainBytes);
+            return ConstantNode.forInt(GraalHotSpotVMConfig.logOfHeapRegionGrainBytes);
         }
-        else if (markId == config.MARKID_INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED)
+        else if (markId == GraalHotSpotVMConfig.inlineContiguousAllocationSupportedMark)
         {
-            return ConstantNode.forBoolean(config.inlineContiguousAllocationSupported);
+            return ConstantNode.forBoolean(GraalHotSpotVMConfig.inlineContiguousAllocationSupported);
         }
         return this;
     }

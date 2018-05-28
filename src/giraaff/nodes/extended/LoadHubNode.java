@@ -26,6 +26,7 @@ import giraaff.nodes.type.StampTool;
 public final class LoadHubNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
     public static final NodeClass<LoadHubNode> TYPE = NodeClass.create(LoadHubNode.class);
+
     @Input ValueNode value;
 
     public ValueNode getValue()

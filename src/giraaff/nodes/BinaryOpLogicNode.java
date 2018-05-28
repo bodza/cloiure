@@ -13,6 +13,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Binary<ValueNode>
 {
     public static final NodeClass<BinaryOpLogicNode> TYPE = NodeClass.create(BinaryOpLogicNode.class);
+
     @Input protected ValueNode x;
     @Input protected ValueNode y;
 

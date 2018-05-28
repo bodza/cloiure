@@ -13,6 +13,7 @@ import giraaff.nodes.util.GraphUtil;
 public class ValuePhiNode extends PhiNode implements ArrayLengthProvider
 {
     public static final NodeClass<ValuePhiNode> TYPE = NodeClass.create(ValuePhiNode.class);
+
     @Input protected NodeInputList<ValueNode> values;
 
     public ValuePhiNode(Stamp stamp, AbstractMergeNode merge)

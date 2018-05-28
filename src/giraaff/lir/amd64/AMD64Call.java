@@ -62,7 +62,7 @@ public class AMD64Call
         }
     }
 
-    @Opcode("CALL_DIRECT")
+    @Opcode
     public static class DirectCallOp extends MethodCallOp
     {
         public static final LIRInstructionClass<DirectCallOp> TYPE = LIRInstructionClass.create(DirectCallOp.class);
@@ -89,7 +89,7 @@ public class AMD64Call
         }
     }
 
-    @Opcode("CALL_INDIRECT")
+    @Opcode
     public static class IndirectCallOp extends MethodCallOp
     {
         public static final LIRInstructionClass<IndirectCallOp> TYPE = LIRInstructionClass.create(IndirectCallOp.class);
@@ -133,7 +133,7 @@ public class AMD64Call
         }
     }
 
-    @Opcode("NEAR_FOREIGN_CALL")
+    @Opcode
     public static final class DirectNearForeignCallOp extends ForeignCallOp
     {
         public static final LIRInstructionClass<DirectNearForeignCallOp> TYPE = LIRInstructionClass.create(DirectNearForeignCallOp.class);
@@ -150,7 +150,7 @@ public class AMD64Call
         }
     }
 
-    @Opcode("FAR_FOREIGN_CALL")
+    @Opcode
     public static final class DirectFarForeignCallOp extends ForeignCallOp
     {
         public static final LIRInstructionClass<DirectFarForeignCallOp> TYPE = LIRInstructionClass.create(DirectFarForeignCallOp.class);

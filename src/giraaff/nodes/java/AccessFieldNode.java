@@ -16,6 +16,7 @@ import giraaff.nodes.spi.LoweringTool;
 public abstract class AccessFieldNode extends FixedWithNextNode implements Lowerable
 {
     public static final NodeClass<AccessFieldNode> TYPE = NodeClass.create(AccessFieldNode.class);
+
     @OptionalInput ValueNode object;
 
     protected final ResolvedJavaField field;

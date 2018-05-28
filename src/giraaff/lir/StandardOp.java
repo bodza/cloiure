@@ -51,6 +51,7 @@ public class StandardOp
     public static final class LabelOp extends LIRInstruction
     {
         public static final LIRInstructionClass<LabelOp> TYPE = LIRInstructionClass.create(LabelOp.class);
+
         public static final EnumSet<OperandFlag> incomingFlags = EnumSet.of(OperandFlag.REG, OperandFlag.STACK);
 
         /**
@@ -168,6 +169,7 @@ public class StandardOp
     public static class JumpOp extends LIRInstruction implements BlockEndOp
     {
         public static final LIRInstructionClass<JumpOp> TYPE = LIRInstructionClass.create(JumpOp.class);
+
         public static final EnumSet<OperandFlag> outgoingFlags = EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST, OperandFlag.OUTGOING);
 
         @Alive({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST, OperandFlag.OUTGOING}) private Value[] outgoingValues;
@@ -365,7 +367,7 @@ public class StandardOp
         }
     }
 
-    @Opcode("BLACKHOLE")
+    @Opcode
     public static final class BlackholeOp extends LIRInstruction
     {
         public static final LIRInstructionClass<BlackholeOp> TYPE = LIRInstructionClass.create(BlackholeOp.class);
@@ -404,7 +406,7 @@ public class StandardOp
         }
     }
 
-    @Opcode("SPILLREGISTERS")
+    @Opcode
     public static final class SpillRegistersOp extends LIRInstruction
     {
         public static final LIRInstructionClass<SpillRegistersOp> TYPE = LIRInstructionClass.create(SpillRegistersOp.class);

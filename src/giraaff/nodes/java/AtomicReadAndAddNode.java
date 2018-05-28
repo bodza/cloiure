@@ -22,6 +22,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<AtomicReadAndAddNode> TYPE = NodeClass.create(AtomicReadAndAddNode.class);
+
     @Input(InputType.Association) AddressNode address;
     @Input ValueNode delta;
 

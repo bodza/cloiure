@@ -33,6 +33,7 @@ public class AMD64ControlFlow
     public static final class ReturnOp extends AMD64BlockEndOp implements BlockEndOp
     {
         public static final LIRInstructionClass<ReturnOp> TYPE = LIRInstructionClass.create(ReturnOp.class);
+
         @Use({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value x;
 
         public ReturnOp(Value x)
@@ -61,6 +62,7 @@ public class AMD64ControlFlow
     public static class BranchOp extends AMD64BlockEndOp implements StandardOp.BranchOp
     {
         public static final LIRInstructionClass<BranchOp> TYPE = LIRInstructionClass.create(BranchOp.class);
+
         protected final ConditionFlag condition;
         protected final LabelRef trueDestination;
         protected final LabelRef falseDestination;
@@ -131,6 +133,7 @@ public class AMD64ControlFlow
     public static final class FloatBranchOp extends BranchOp
     {
         public static final LIRInstructionClass<FloatBranchOp> TYPE = LIRInstructionClass.create(FloatBranchOp.class);
+
         protected boolean unorderedIsTrue;
 
         public FloatBranchOp(Condition condition, boolean unorderedIsTrue, LabelRef trueDestination, LabelRef falseDestination, double trueDestinationProbability)
@@ -149,6 +152,7 @@ public class AMD64ControlFlow
     public static class StrategySwitchOp extends AMD64BlockEndOp
     {
         public static final LIRInstructionClass<StrategySwitchOp> TYPE = LIRInstructionClass.create(StrategySwitchOp.class);
+
         protected final Constant[] keyConstants;
         private final LabelRef[] keyTargets;
         private LabelRef defaultTarget;
@@ -225,6 +229,7 @@ public class AMD64ControlFlow
     public static final class TableSwitchOp extends AMD64BlockEndOp
     {
         public static final LIRInstructionClass<TableSwitchOp> TYPE = LIRInstructionClass.create(TableSwitchOp.class);
+
         private final int lowKey;
         private final LabelRef defaultTarget;
         private final LabelRef[] targets;
@@ -317,10 +322,11 @@ public class AMD64ControlFlow
         }
     }
 
-    @Opcode("SETcc")
+    @Opcode
     public static final class CondSetOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<CondSetOp> TYPE = LIRInstructionClass.create(CondSetOp.class);
+
         @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
         private final ConditionFlag condition;
 
@@ -338,10 +344,11 @@ public class AMD64ControlFlow
         }
     }
 
-    @Opcode("SETcc")
+    @Opcode
     public static final class FloatCondSetOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<FloatCondSetOp> TYPE = LIRInstructionClass.create(FloatCondSetOp.class);
+
         @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
         private final ConditionFlag condition;
 
@@ -359,10 +366,11 @@ public class AMD64ControlFlow
         }
     }
 
-    @Opcode("CMOVE")
+    @Opcode
     public static final class CondMoveOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<CondMoveOp> TYPE = LIRInstructionClass.create(CondMoveOp.class);
+
         @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
         @Alive({OperandFlag.REG}) protected Value trueValue;
         @Use({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST}) protected Value falseValue;
@@ -384,10 +392,11 @@ public class AMD64ControlFlow
         }
     }
 
-    @Opcode("CMOVE")
+    @Opcode
     public static final class FloatCondMoveOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<FloatCondMoveOp> TYPE = LIRInstructionClass.create(FloatCondMoveOp.class);
+
         @Def({OperandFlag.REG}) protected Value result;
         @Alive({OperandFlag.REG}) protected Value trueValue;
         @Alive({OperandFlag.REG}) protected Value falseValue;

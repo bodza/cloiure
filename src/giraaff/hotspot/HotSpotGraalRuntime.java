@@ -12,22 +12,14 @@ import giraaff.options.OptionValues;
  */
 public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
 {
-    private final GraalHotSpotVMConfig config;
     private final OptionValues options;
     private final HotSpotBackend backend;
 
-    public HotSpotGraalRuntime(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options)
+    public HotSpotGraalRuntime(OptionValues options)
     {
-        this.config = new GraalHotSpotVMConfig(jvmciRuntime.getConfigStore());
         this.options = options;
-        this.backend = new AMD64HotSpotBackendFactory().createBackend(this, new CommunityCompilerConfiguration(), jvmciRuntime);
-        this.backend.completeInitialization(jvmciRuntime, options);
-    }
-
-    @Override
-    public GraalHotSpotVMConfig getVMConfig()
-    {
-        return config;
+        this.backend = new AMD64HotSpotBackendFactory().createBackend(this, new CommunityCompilerConfiguration(), HotSpotJVMCIRuntime.runtime());
+        this.backend.completeInitialization(options);
     }
 
     @Override

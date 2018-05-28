@@ -22,7 +22,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * For the methods with untrusted interface types, a {@code null} reference will be constructed for
  * untrusted interface types. Examples for interface types that cannot be trusted are types for
  * parameters, fields, and return values. They are not checked by the Java verifier.
- *
  */
 public final class TypeReference
 {

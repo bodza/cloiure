@@ -10,6 +10,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class StoreHubNode extends FixedWithNextNode implements Lowerable
 {
     public static final NodeClass<StoreHubNode> TYPE = NodeClass.create(StoreHubNode.class);
+
     @Input ValueNode value;
     @Input ValueNode object;
 

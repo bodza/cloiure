@@ -14,6 +14,7 @@ import giraaff.nodes.extended.GuardingNode;
 public abstract class ProxyNode extends FloatingNode implements ValueNumberable
 {
     public static final NodeClass<ProxyNode> TYPE = NodeClass.create(ProxyNode.class);
+
     @Input(InputType.Association) LoopExitNode loopExit;
 
     protected ProxyNode(NodeClass<? extends ProxyNode> c, Stamp stamp, LoopExitNode proxyPoint)

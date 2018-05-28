@@ -59,21 +59,4 @@ public interface SnippetReflectionProvider
      * @return the boxed copy of {@code value}
      */
     JavaConstant forBoxed(JavaKind kind, Object value);
-
-    /**
-     * Gets the value to bind to an injected parameter in a node intrinsic.
-     *
-     * @param type the type of a parameter in a node intrinsic constructor
-     * @return the value that should be bound to the parameter when invoking the constructor or null
-     *         if this provider cannot provide a value of the requested type
-     */
-    <T> T getInjectedNodeIntrinsicParameter(Class<T> type);
-
-    /**
-     * Get the original Java class corresponding to a {@link ResolvedJavaType}.
-     *
-     * @param type the type for which the original Java class is requested
-     * @return the original Java class corresponding to the {@code type} parameter
-     */
-    Class<?> originalClass(ResolvedJavaType type);
 }

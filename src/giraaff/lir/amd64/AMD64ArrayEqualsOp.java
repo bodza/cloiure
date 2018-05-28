@@ -28,7 +28,7 @@ import giraaff.lir.gen.LIRGeneratorTool;
  * Emits code which compares two arrays of the same length. If the CPU supports any vector
  * instructions specialized code is emitted to leverage these instructions.
  */
-@Opcode("ARRAY_EQUALS")
+@Opcode
 public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ArrayEqualsOp> TYPE = LIRInstructionClass.create(AMD64ArrayEqualsOp.class);

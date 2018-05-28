@@ -25,6 +25,7 @@ import giraaff.options.OptionValues;
 public abstract class IntegerLowerThanNode extends CompareNode
 {
     public static final NodeClass<IntegerLowerThanNode> TYPE = NodeClass.create(IntegerLowerThanNode.class);
+
     private final LowerOp op;
 
     protected IntegerLowerThanNode(NodeClass<? extends CompareNode> c, ValueNode x, ValueNode y, LowerOp op)

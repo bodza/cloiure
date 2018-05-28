@@ -28,6 +28,7 @@ import giraaff.nodes.virtual.VirtualBoxingNode;
 public class BoxNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<BoxNode> TYPE = NodeClass.create(BoxNode.class);
+
     @Input private ValueNode value;
     protected final JavaKind boxingKind;
 

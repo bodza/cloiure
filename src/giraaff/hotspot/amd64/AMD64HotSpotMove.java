@@ -103,20 +103,18 @@ public class AMD64HotSpotMove
         public static final LIRInstructionClass<BaseMove> TYPE = LIRInstructionClass.create(BaseMove.class);
 
         @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
-        private final GraalHotSpotVMConfig config;
 
-        public BaseMove(AllocatableValue result, GraalHotSpotVMConfig config)
+        public BaseMove(AllocatableValue result)
         {
             super(TYPE);
             this.result = result;
-            this.config = config;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
             masm.movq(ValueUtil.asRegister(result), masm.getPlaceholder(-1));
-            crb.recordMark(config.MARKID_NARROW_KLASS_BASE_ADDRESS);
+            crb.recordMark(GraalHotSpotVMConfig.narrowKlassBaseAddressMark);
         }
     }
 
@@ -178,9 +176,9 @@ public class AMD64HotSpotMove
         }
     }
 
-    public static void decodeKlassPointer(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register register, Register scratch, AMD64Address address, GraalHotSpotVMConfig config)
+    public static void decodeKlassPointer(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register register, Register scratch, AMD64Address address)
     {
-        CompressEncoding encoding = config.getKlassEncoding();
+        CompressEncoding encoding = GraalHotSpotVMConfig.klassEncoding;
         masm.movl(register, address);
         if (encoding.getShift() != 0)
         {

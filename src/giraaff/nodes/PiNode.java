@@ -36,6 +36,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy
 {
     public static final NodeClass<PiNode> TYPE = NodeClass.create(PiNode.class);
+
     @Input ValueNode object;
     protected Stamp piStamp;
 
@@ -297,6 +298,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
     public static class Placeholder extends FloatingGuardedNode
     {
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
+
         @Input ValueNode object;
 
         public ValueNode object()

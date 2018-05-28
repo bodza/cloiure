@@ -17,6 +17,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
 {
     public static final NodeClass<MonitorIdNode> TYPE = NodeClass.create(MonitorIdNode.class);
+
     protected int lockDepth;
     protected boolean eliminated;
 

@@ -16,6 +16,7 @@ import giraaff.nodes.util.GraphUtil;
 public final class PiArrayNode extends PiNode implements ArrayLengthProvider
 {
     public static final NodeClass<PiArrayNode> TYPE = NodeClass.create(PiArrayNode.class);
+
     @Input ValueNode length;
 
     @Override
@@ -53,6 +54,7 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
     public static class Placeholder extends PiNode.Placeholder
     {
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
+
         @Input ValueNode length;
 
         protected Placeholder(ValueNode object, ValueNode length)

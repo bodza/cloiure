@@ -17,7 +17,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Pushes an interpreter frame to the stack.
  */
-@Opcode("PUSH_INTERPRETER_FRAME")
+@Opcode
 final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotPushInterpreterFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPushInterpreterFrameOp.class);
@@ -26,16 +26,14 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
     @Alive(OperandFlag.REG) AllocatableValue framePc;
     @Alive(OperandFlag.REG) AllocatableValue senderSp;
     @Alive(OperandFlag.REG) AllocatableValue initialInfo;
-    private final GraalHotSpotVMConfig config;
 
-    AMD64HotSpotPushInterpreterFrameOp(AllocatableValue frameSize, AllocatableValue framePc, AllocatableValue senderSp, AllocatableValue initialInfo, GraalHotSpotVMConfig config)
+    AMD64HotSpotPushInterpreterFrameOp(AllocatableValue frameSize, AllocatableValue framePc, AllocatableValue senderSp, AllocatableValue initialInfo)
     {
         super(TYPE);
         this.frameSize = frameSize;
         this.framePc = framePc;
         this.senderSp = senderSp;
         this.initialInfo = initialInfo;
-        this.config = config;
     }
 
     @Override
@@ -59,9 +57,9 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
         masm.subq(AMD64.rsp, frameSizeRegister);
 
         // this value is corrected by layout_activation_impl
-        masm.movptr(new AMD64Address(initialInfoRegister, config.frameInterpreterFrameLastSpOffset * wordSize), 0);
+        masm.movptr(new AMD64Address(initialInfoRegister, GraalHotSpotVMConfig.frameInterpreterFrameLastSpOffset * wordSize), 0);
 
         // make the frame walkable
-        masm.movq(new AMD64Address(initialInfoRegister, config.frameInterpreterFrameSenderSpOffset * wordSize), senderSpRegister);
+        masm.movq(new AMD64Address(initialInfoRegister, GraalHotSpotVMConfig.frameInterpreterFrameSenderSpOffset * wordSize), senderSpRegister);
     }
 }

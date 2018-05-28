@@ -17,6 +17,7 @@ import giraaff.nodes.spi.VirtualizerTool;
 public final class AllocatedObjectNode extends FloatingNode implements Virtualizable, ArrayLengthProvider
 {
     public static final NodeClass<AllocatedObjectNode> TYPE = NodeClass.create(AllocatedObjectNode.class);
+
     @Input VirtualObjectNode virtualObject;
     @Input(InputType.Extension) CommitAllocationNode commit;
 

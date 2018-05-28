@@ -40,7 +40,6 @@ import giraaff.hotspot.stubs.UnwindExceptionToCallerStub;
 import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.java.ForeignCallDescriptors;
 import giraaff.options.OptionValues;
-import giraaff.util.GraalError;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
@@ -51,9 +50,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 {
     public static final ForeignCallDescriptor JAVA_TIME_MILLIS = new ForeignCallDescriptor("javaTimeMillis", long.class);
     public static final ForeignCallDescriptor JAVA_TIME_NANOS = new ForeignCallDescriptor("javaTimeNanos", long.class);
-
-    public static final ForeignCallDescriptor NOTIFY = new ForeignCallDescriptor("object_notify", boolean.class, Object.class);
-    public static final ForeignCallDescriptor NOTIFY_ALL = new ForeignCallDescriptor("object_notifyAll", boolean.class, Object.class);
 
     public HotSpotHostForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
     {
@@ -174,26 +170,24 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
     public void initialize(HotSpotProviders providers, OptionValues options)
     {
-        GraalHotSpotVMConfig c = runtime.getVMConfig();
+        registerForeignCall(HotSpotHostBackend.DEOPTIMIZATION_HANDLER, GraalHotSpotVMConfig.handleDeoptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER, GraalHotSpotVMConfig.uncommonTrapStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(HotSpotBackend.IC_MISS_HANDLER, GraalHotSpotVMConfig.inlineCacheMissStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
-        registerForeignCall(HotSpotHostBackend.DEOPTIMIZATION_HANDLER, c.handleDeoptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER, c.uncommonTrapStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(HotSpotBackend.IC_MISS_HANDLER, c.inlineCacheMissStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(JAVA_TIME_MILLIS, GraalHotSpotVMConfig.javaTimeMillisAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(JAVA_TIME_NANOS, GraalHotSpotVMConfig.javaTimeNanosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
-        registerForeignCall(JAVA_TIME_MILLIS, c.javaTimeMillisAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(JAVA_TIME_NANOS, c.javaTimeNanosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(Backend.ARITHMETIC_FREM, GraalHotSpotVMConfig.fremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(Backend.ARITHMETIC_DREM, GraalHotSpotVMConfig.dremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
 
-        registerForeignCall(Backend.ARITHMETIC_FREM, c.fremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(Backend.ARITHMETIC_DREM, c.dremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(LOAD_AND_CLEAR_EXCEPTION, GraalHotSpotVMConfig.loadAndClearExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
 
-        registerForeignCall(LOAD_AND_CLEAR_EXCEPTION, c.loadAndClearExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(ExceptionHandlerStub.EXCEPTION_HANDLER_FOR_PC, GraalHotSpotVMConfig.exceptionHandlerForPcAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(UnwindExceptionToCallerStub.EXCEPTION_HANDLER_FOR_RETURN_ADDRESS, GraalHotSpotVMConfig.exceptionHandlerForReturnAddressAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(NewArrayStub.NEW_ARRAY_C, GraalHotSpotVMConfig.newArrayAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(NewInstanceStub.NEW_INSTANCE_C, GraalHotSpotVMConfig.newInstanceAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
 
-        registerForeignCall(ExceptionHandlerStub.EXCEPTION_HANDLER_FOR_PC, c.exceptionHandlerForPcAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-        registerForeignCall(UnwindExceptionToCallerStub.EXCEPTION_HANDLER_FOR_RETURN_ADDRESS, c.exceptionHandlerForReturnAddressAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-        registerForeignCall(NewArrayStub.NEW_ARRAY_C, c.newArrayAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-        registerForeignCall(NewInstanceStub.NEW_INSTANCE_C, c.newInstanceAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-
-        CreateExceptionStub.registerForeignCalls(c, this);
+        CreateExceptionStub.registerForeignCalls(this);
 
         link(new NewInstanceStub(options, providers, registerStubCall(HotSpotBackend.NEW_INSTANCE, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
         link(new NewArrayStub(options, providers, registerStubCall(HotSpotBackend.NEW_ARRAY, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
@@ -204,103 +198,76 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         link(new NullPointerExceptionStub(options, providers, registerStubCall(RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
         link(new OutOfBoundsExceptionStub(options, providers, registerStubCall(RuntimeCalls.CREATE_OUT_OF_BOUNDS_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
 
-        linkForeignCall(options, providers, IDENTITY_HASHCODE, c.identityHashCodeAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
-        linkForeignCall(options, providers, ForeignCallDescriptors.REGISTER_FINALIZER, c.registerFinalizerAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(options, providers, MonitorSnippets.MONITORENTER, c.monitorenterAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(options, providers, MonitorSnippets.MONITOREXIT, c.monitorexitAddress, PREPEND_THREAD, Transition.STACK_INSPECTABLE_LEAF, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(options, providers, HotSpotBackend.NEW_MULTI_ARRAY, c.newMultiArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
-        linkForeignCall(options, providers, NOTIFY, c.notifyAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(options, providers, NOTIFY_ALL, c.notifyAllAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(options, providers, NewObjectSnippets.DYNAMIC_NEW_ARRAY, c.dynamicNewArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
-        linkForeignCall(options, providers, NewObjectSnippets.DYNAMIC_NEW_INSTANCE, c.dynamicNewInstanceAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
-        linkForeignCall(options, providers, OSR_MIGRATION_END, c.osrMigrationEndAddress, DONT_PREPEND_THREAD, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NO_LOCATIONS);
-        linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPRECALL, c.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPOSTCALL, c.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(options, providers, IDENTITY_HASHCODE, GraalHotSpotVMConfig.identityHashCodeAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
+        linkForeignCall(options, providers, ForeignCallDescriptors.REGISTER_FINALIZER, GraalHotSpotVMConfig.registerFinalizerAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(options, providers, MonitorSnippets.MONITORENTER, GraalHotSpotVMConfig.monitorenterAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(options, providers, MonitorSnippets.MONITOREXIT, GraalHotSpotVMConfig.monitorexitAddress, PREPEND_THREAD, Transition.STACK_INSPECTABLE_LEAF, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(options, providers, HotSpotBackend.NEW_MULTI_ARRAY, GraalHotSpotVMConfig.newMultiArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        linkForeignCall(options, providers, NewObjectSnippets.DYNAMIC_NEW_ARRAY, GraalHotSpotVMConfig.dynamicNewArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
+        linkForeignCall(options, providers, NewObjectSnippets.DYNAMIC_NEW_INSTANCE, GraalHotSpotVMConfig.dynamicNewInstanceAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
+        linkForeignCall(options, providers, OSR_MIGRATION_END, GraalHotSpotVMConfig.osrMigrationEndAddress, DONT_PREPEND_THREAD, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPRECALL, GraalHotSpotVMConfig.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPOSTCALL, GraalHotSpotVMConfig.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
         // cannot be a leaf, as VM acquires Thread_lock which requires thread_in_vm state
-        linkForeignCall(options, providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, c.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(options, providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, GraalHotSpotVMConfig.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
 
-        registerArrayCopy(JavaKind.Byte, c.jbyteArraycopy, c.jbyteAlignedArraycopy, c.jbyteDisjointArraycopy, c.jbyteAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Boolean, c.jbyteArraycopy, c.jbyteAlignedArraycopy, c.jbyteDisjointArraycopy, c.jbyteAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Char, c.jshortArraycopy, c.jshortAlignedArraycopy, c.jshortDisjointArraycopy, c.jshortAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Short, c.jshortArraycopy, c.jshortAlignedArraycopy, c.jshortDisjointArraycopy, c.jshortAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Int, c.jintArraycopy, c.jintAlignedArraycopy, c.jintDisjointArraycopy, c.jintAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Float, c.jintArraycopy, c.jintAlignedArraycopy, c.jintDisjointArraycopy, c.jintAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Long, c.jlongArraycopy, c.jlongAlignedArraycopy, c.jlongDisjointArraycopy, c.jlongAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Double, c.jlongArraycopy, c.jlongAlignedArraycopy, c.jlongDisjointArraycopy, c.jlongAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Object, c.oopArraycopy, c.oopAlignedArraycopy, c.oopDisjointArraycopy, c.oopAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Object, c.oopArraycopyUninit, c.oopAlignedArraycopyUninit, c.oopDisjointArraycopyUninit, c.oopAlignedDisjointArraycopyUninit, true);
+        registerArrayCopy(JavaKind.Byte, GraalHotSpotVMConfig.jbyteArraycopy, GraalHotSpotVMConfig.jbyteAlignedArraycopy, GraalHotSpotVMConfig.jbyteDisjointArraycopy, GraalHotSpotVMConfig.jbyteAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Boolean, GraalHotSpotVMConfig.jbyteArraycopy, GraalHotSpotVMConfig.jbyteAlignedArraycopy, GraalHotSpotVMConfig.jbyteDisjointArraycopy, GraalHotSpotVMConfig.jbyteAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Char, GraalHotSpotVMConfig.jshortArraycopy, GraalHotSpotVMConfig.jshortAlignedArraycopy, GraalHotSpotVMConfig.jshortDisjointArraycopy, GraalHotSpotVMConfig.jshortAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Short, GraalHotSpotVMConfig.jshortArraycopy, GraalHotSpotVMConfig.jshortAlignedArraycopy, GraalHotSpotVMConfig.jshortDisjointArraycopy, GraalHotSpotVMConfig.jshortAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Int, GraalHotSpotVMConfig.jintArraycopy, GraalHotSpotVMConfig.jintAlignedArraycopy, GraalHotSpotVMConfig.jintDisjointArraycopy, GraalHotSpotVMConfig.jintAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Float, GraalHotSpotVMConfig.jintArraycopy, GraalHotSpotVMConfig.jintAlignedArraycopy, GraalHotSpotVMConfig.jintDisjointArraycopy, GraalHotSpotVMConfig.jintAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Long, GraalHotSpotVMConfig.jlongArraycopy, GraalHotSpotVMConfig.jlongAlignedArraycopy, GraalHotSpotVMConfig.jlongDisjointArraycopy, GraalHotSpotVMConfig.jlongAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Double, GraalHotSpotVMConfig.jlongArraycopy, GraalHotSpotVMConfig.jlongAlignedArraycopy, GraalHotSpotVMConfig.jlongDisjointArraycopy, GraalHotSpotVMConfig.jlongAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Object, GraalHotSpotVMConfig.oopArraycopy, GraalHotSpotVMConfig.oopAlignedArraycopy, GraalHotSpotVMConfig.oopDisjointArraycopy, GraalHotSpotVMConfig.oopAlignedDisjointArraycopy);
+        registerArrayCopy(JavaKind.Object, GraalHotSpotVMConfig.oopArraycopyUninit, GraalHotSpotVMConfig.oopAlignedArraycopyUninit, GraalHotSpotVMConfig.oopDisjointArraycopyUninit, GraalHotSpotVMConfig.oopAlignedDisjointArraycopyUninit, true);
 
-        registerCheckcastArraycopyDescriptor(true, c.checkcastArraycopyUninit);
-        registerCheckcastArraycopyDescriptor(false, c.checkcastArraycopy);
+        registerCheckcastArraycopyDescriptor(true, GraalHotSpotVMConfig.checkcastArraycopyUninit);
+        registerCheckcastArraycopyDescriptor(false, GraalHotSpotVMConfig.checkcastArraycopy);
 
-        registerForeignCall(HotSpotBackend.GENERIC_ARRAYCOPY, c.genericArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
-        registerForeignCall(HotSpotBackend.UNSAFE_ARRAYCOPY, c.unsafeArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
+        registerForeignCall(HotSpotBackend.GENERIC_ARRAYCOPY, GraalHotSpotVMConfig.genericArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
+        registerForeignCall(HotSpotBackend.UNSAFE_ARRAYCOPY, GraalHotSpotVMConfig.unsafeArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
 
-        if (c.useSHA256Intrinsics())
+        if (GraalHotSpotVMConfig.useSHA256Intrinsics)
         {
-            registerForeignCall(HotSpotBackend.SHA2_IMPL_COMPRESS, c.sha256ImplCompress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
+            registerForeignCall(HotSpotBackend.SHA2_IMPL_COMPRESS, GraalHotSpotVMConfig.sha256ImplCompress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         }
-        if (c.useSHA512Intrinsics())
+        if (GraalHotSpotVMConfig.useSHA512Intrinsics)
         {
-            registerForeignCall(HotSpotBackend.SHA5_IMPL_COMPRESS, c.sha512ImplCompress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
-        }
-
-        if (c.useMulAddIntrinsic())
-        {
-            registerForeignCall(HotSpotBackend.MUL_ADD, c.mulAdd, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
-        }
-        if (c.useMultiplyToLenIntrinsic())
-        {
-            registerForeignCall(HotSpotBackend.MULTIPLY_TO_LEN, c.multiplyToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
-        }
-        if (c.useSquareToLenIntrinsic())
-        {
-            registerForeignCall(HotSpotBackend.SQUARE_TO_LEN, c.squareToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
-        }
-        if (c.useMontgomeryMultiplyIntrinsic())
-        {
-            registerForeignCall(HotSpotBackend.MONTGOMERY_MULTIPLY, c.montgomeryMultiply, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
-        }
-        if (c.useMontgomerySquareIntrinsic())
-        {
-            registerForeignCall(HotSpotBackend.MONTGOMERY_SQUARE, c.montgomerySquare, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+            registerForeignCall(HotSpotBackend.SHA5_IMPL_COMPRESS, GraalHotSpotVMConfig.sha512ImplCompress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         }
 
-        if (c.useAESIntrinsics)
+        if (GraalHotSpotVMConfig.useMulAddIntrinsic)
         {
-            /*
-             * When the java.ext.dirs property is modified, the crypto classes might not be found.
-             * In that case we ignore the ClassNotFoundException and continue, since we cannot replace a non-existing method anyway.
-             */
-            try
-            {
-                // these stubs do callee saving
-                registerForeignCall(HotSpotBackend.ENCRYPT_BLOCK, c.aescryptEncryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-                registerForeignCall(HotSpotBackend.DECRYPT_BLOCK, c.aescryptDecryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-                registerForeignCall(HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY, c.aescryptDecryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-            }
-            catch (GraalError e)
-            {
-                if (!(e.getCause() instanceof ClassNotFoundException))
-                {
-                    throw e;
-                }
-            }
-            try
-            {
-                // these stubs do callee saving
-                registerForeignCall(HotSpotBackend.ENCRYPT, c.cipherBlockChainingEncryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-                registerForeignCall(HotSpotBackend.DECRYPT, c.cipherBlockChainingDecryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-                registerForeignCall(HotSpotBackend.DECRYPT_WITH_ORIGINAL_KEY, c.cipherBlockChainingDecryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-            }
-            catch (GraalError e)
-            {
-                if (!(e.getCause() instanceof ClassNotFoundException))
-                {
-                    throw e;
-                }
-            }
+            registerForeignCall(HotSpotBackend.MUL_ADD, GraalHotSpotVMConfig.mulAdd, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+        }
+        if (GraalHotSpotVMConfig.useMultiplyToLenIntrinsic)
+        {
+            registerForeignCall(HotSpotBackend.MULTIPLY_TO_LEN, GraalHotSpotVMConfig.multiplyToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+        }
+        if (GraalHotSpotVMConfig.useSquareToLenIntrinsic)
+        {
+            registerForeignCall(HotSpotBackend.SQUARE_TO_LEN, GraalHotSpotVMConfig.squareToLen, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+        }
+        if (GraalHotSpotVMConfig.useMontgomeryMultiplyIntrinsic)
+        {
+            registerForeignCall(HotSpotBackend.MONTGOMERY_MULTIPLY, GraalHotSpotVMConfig.montgomeryMultiply, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+        }
+        if (GraalHotSpotVMConfig.useMontgomerySquareIntrinsic)
+        {
+            registerForeignCall(HotSpotBackend.MONTGOMERY_SQUARE, GraalHotSpotVMConfig.montgomerySquare, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
+        }
+
+        if (GraalHotSpotVMConfig.useAESIntrinsics)
+        {
+            registerForeignCall(HotSpotBackend.ENCRYPT_BLOCK, GraalHotSpotVMConfig.aescryptEncryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+            registerForeignCall(HotSpotBackend.DECRYPT_BLOCK, GraalHotSpotVMConfig.aescryptDecryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+            registerForeignCall(HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY, GraalHotSpotVMConfig.aescryptDecryptBlockStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+
+            registerForeignCall(HotSpotBackend.ENCRYPT, GraalHotSpotVMConfig.cipherBlockChainingEncryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+            registerForeignCall(HotSpotBackend.DECRYPT, GraalHotSpotVMConfig.cipherBlockChainingDecryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+            registerForeignCall(HotSpotBackend.DECRYPT_WITH_ORIGINAL_KEY, GraalHotSpotVMConfig.cipherBlockChainingDecryptAESCryptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
         }
     }
 

@@ -26,11 +26,11 @@ public class ThreadSubstitutions
     public static boolean isInterrupted(final Thread thisObject, boolean clearInterrupted)
     {
         Word javaThread = CurrentJavaThreadNode.get();
-        Object thread = javaThread.readObject(HotSpotReplacementsUtil.threadObjectOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION);
+        Object thread = javaThread.readObject(GraalHotSpotVMConfig.threadObjectOffset, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION);
         if (thisObject == thread)
         {
-            Word osThread = javaThread.readWord(HotSpotReplacementsUtil.osThreadOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION);
-            boolean interrupted = osThread.readInt(HotSpotReplacementsUtil.osThreadInterruptedOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), LocationIdentity.any()) != 0;
+            Word osThread = javaThread.readWord(GraalHotSpotVMConfig.osThreadOffset, HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION);
+            boolean interrupted = osThread.readInt(GraalHotSpotVMConfig.osThreadInterruptedOffset, LocationIdentity.any()) != 0;
             if (!interrupted || !clearInterrupted)
             {
                 return interrupted;

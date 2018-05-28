@@ -16,6 +16,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class MembarNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<MembarNode> TYPE = NodeClass.create(MembarNode.class);
+
     protected final int barriers;
     protected final LocationIdentity location;
 

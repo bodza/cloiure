@@ -11,6 +11,7 @@ import giraaff.nodeinfo.InputType;
 public final class LogicNegationNode extends LogicNode implements Canonicalizable.Unary<LogicNode>
 {
     public static final NodeClass<LogicNegationNode> TYPE = NodeClass.create(LogicNegationNode.class);
+
     @Input(InputType.Condition) LogicNode value;
 
     public LogicNegationNode(LogicNode value)

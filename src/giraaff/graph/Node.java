@@ -1108,7 +1108,6 @@ public abstract class Node implements Cloneable, NodeInterface
     /**
      * Determines if this node is equal to the other node while ignoring differences in
      * {@linkplain Successor control-flow} edges.
-     *
      */
     public boolean dataFlowEquals(Node other)
     {

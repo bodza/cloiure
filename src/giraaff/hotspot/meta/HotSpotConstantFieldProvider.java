@@ -14,18 +14,15 @@ import giraaff.options.OptionValues;
  */
 public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
 {
-    private final GraalHotSpotVMConfig config;
-
-    public HotSpotConstantFieldProvider(GraalHotSpotVMConfig config, MetaAccessProvider metaAccess)
+    public HotSpotConstantFieldProvider(MetaAccessProvider metaAccess)
     {
         super(metaAccess);
-        this.config = config;
     }
 
     @Override
     protected boolean isStableField(ResolvedJavaField field, ConstantFieldTool<?> tool)
     {
-        if (!config.foldStableValues)
+        if (!GraalHotSpotVMConfig.foldStableValues)
         {
             return false;
         }

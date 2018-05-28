@@ -17,6 +17,7 @@ import giraaff.word.Word;
 public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode implements LIRLowerable
 {
     public static final NodeClass<JumpToExceptionHandlerInCallerNode> TYPE = NodeClass.create(JumpToExceptionHandlerInCallerNode.class);
+
     @Input ValueNode handlerInCallerPc;
     @Input ValueNode exception;
     @Input ValueNode exceptionPc;

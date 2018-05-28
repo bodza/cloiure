@@ -22,7 +22,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * _from_compiled_entry is the address of an C2I adapter. Such adapters expect the target method to
  * be in RBX.
  */
-@Opcode("CALL_INDIRECT")
+@Opcode
 final class AMD64IndirectCallOp extends IndirectCallOp
 {
     public static final LIRInstructionClass<AMD64IndirectCallOp> TYPE = LIRInstructionClass.create(AMD64IndirectCallOp.class);
@@ -34,19 +34,16 @@ final class AMD64IndirectCallOp extends IndirectCallOp
 
     @Use({OperandFlag.REG}) protected Value metaspaceMethod;
 
-    private final GraalHotSpotVMConfig config;
-
-    AMD64IndirectCallOp(ResolvedJavaMethod targetMethod, Value result, Value[] parameters, Value[] temps, Value metaspaceMethod, Value targetAddress, LIRFrameState state, GraalHotSpotVMConfig config)
+    AMD64IndirectCallOp(ResolvedJavaMethod targetMethod, Value result, Value[] parameters, Value[] temps, Value metaspaceMethod, Value targetAddress, LIRFrameState state)
     {
         super(TYPE, targetMethod, result, parameters, temps, targetAddress, state);
         this.metaspaceMethod = metaspaceMethod;
-        this.config = config;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        crb.recordMark(config.MARKID_INLINE_INVOKE);
+        crb.recordMark(GraalHotSpotVMConfig.inlineInvokeMark);
         Register callReg = ValueUtil.asRegister(targetAddress);
         int pcOffset = AMD64Call.indirectCall(crb, masm, callReg, callTarget, state);
         crb.recordInlineInvokeCallOp(pcOffset);

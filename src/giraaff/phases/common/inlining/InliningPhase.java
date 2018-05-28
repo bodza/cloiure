@@ -67,12 +67,10 @@ public class InliningPhase extends AbstractInliningPhase
     }
 
     /**
-     *
      * This method sets in motion the inlining machinery.
      *
      * @see InliningData
      * @see InliningData#moveForward()
-     *
      */
     @Override
     protected void run(final StructuredGraph graph, final HighTierContext context)

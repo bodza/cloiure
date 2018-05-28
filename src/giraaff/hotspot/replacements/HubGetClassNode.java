@@ -27,6 +27,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class HubGetClassNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
     public static final NodeClass<HubGetClassNode> TYPE = NodeClass.create(HubGetClassNode.class);
+
     @Input protected ValueNode hub;
 
     public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode hub)

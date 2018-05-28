@@ -47,6 +47,7 @@ import giraaff.util.GraalError;
 public abstract class MacroNode extends FixedWithNextNode implements Lowerable, Invokable
 {
     public static final NodeClass<MacroNode> TYPE = NodeClass.create(MacroNode.class);
+
     @Input protected NodeInputList<ValueNode> arguments;
 
     protected final int bci;

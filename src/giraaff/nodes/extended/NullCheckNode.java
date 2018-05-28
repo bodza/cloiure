@@ -11,6 +11,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class NullCheckNode extends DeoptimizingFixedWithNextNode implements LIRLowerable, GuardingNode
 {
     public static final NodeClass<NullCheckNode> TYPE = NodeClass.create(NullCheckNode.class);
+
     @Input ValueNode object;
 
     public NullCheckNode(ValueNode object)

@@ -27,6 +27,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class StubForeignCallNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Multi
 {
     public static final NodeClass<StubForeignCallNode> TYPE = NodeClass.create(StubForeignCallNode.class);
+
     @Input NodeInputList<ValueNode> arguments;
     protected final ForeignCallsProvider foreignCalls;
 

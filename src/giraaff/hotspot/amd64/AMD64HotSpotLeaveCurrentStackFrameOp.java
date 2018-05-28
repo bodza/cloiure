@@ -18,7 +18,7 @@ import giraaff.lir.framemap.FrameMap;
  * Pops the current frame off the stack including the return address and restores the return
  * registers stored on the stack.
  */
-@Opcode("LEAVE_CURRENT_STACK_FRAME")
+@Opcode
 final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
 {
     public static final LIRInstructionClass<AMD64HotSpotLeaveCurrentStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveCurrentStackFrameOp.class);

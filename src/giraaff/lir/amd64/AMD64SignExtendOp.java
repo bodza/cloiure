@@ -11,7 +11,7 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-@Opcode("CDQ")
+@Opcode
 public class AMD64SignExtendOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64SignExtendOp> TYPE = LIRInstructionClass.create(AMD64SignExtendOp.class);

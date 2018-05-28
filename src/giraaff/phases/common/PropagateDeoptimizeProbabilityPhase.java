@@ -17,7 +17,6 @@ import giraaff.phases.tiers.PhaseContext;
 
 /**
  * This phase will make sure that the branch leading towards this deopt has 0.0 probability.
- *
  */
 public class PropagateDeoptimizeProbabilityPhase extends BasePhase<PhaseContext>
 {

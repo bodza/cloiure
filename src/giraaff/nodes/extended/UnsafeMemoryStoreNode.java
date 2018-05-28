@@ -18,6 +18,7 @@ import giraaff.nodes.spi.LoweringTool;
 public class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<UnsafeMemoryStoreNode> TYPE = NodeClass.create(UnsafeMemoryStoreNode.class);
+
     @Input protected ValueNode value;
     @Input protected ValueNode address;
     protected final JavaKind kind;

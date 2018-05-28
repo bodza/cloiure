@@ -31,6 +31,7 @@ import giraaff.nodes.extended.GuardingNode;
 public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
 {
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);
+
     @Input(InputType.Condition) protected LogicNode condition;
     protected DeoptimizationReason reason;
     protected DeoptimizationAction action;

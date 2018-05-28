@@ -19,10 +19,4 @@ public class HotSpotReplacementsImpl extends ReplacementsImpl
     {
         super(options, providers, snippetReflection, bytecodeProvider, target);
     }
-
-    @Override
-    protected boolean hasGenericInvocationPluginAnnotation(ResolvedJavaMethod method)
-    {
-        return method.getAnnotation(HotSpotOperation.class) != null || super.hasGenericInvocationPluginAnnotation(method);
-    }
 }

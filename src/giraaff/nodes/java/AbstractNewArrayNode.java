@@ -12,6 +12,7 @@ import giraaff.nodes.spi.ArrayLengthProvider;
 public abstract class AbstractNewArrayNode extends AbstractNewObjectNode implements ArrayLengthProvider
 {
     public static final NodeClass<AbstractNewArrayNode> TYPE = NodeClass.create(AbstractNewArrayNode.class);
+
     @Input protected ValueNode length;
 
     @Override

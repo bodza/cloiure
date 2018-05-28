@@ -33,6 +33,7 @@ import giraaff.nodes.type.StampTool;
 public class MethodCallTargetNode extends CallTargetNode implements IterableNodeType, Simplifiable
 {
     public static final NodeClass<MethodCallTargetNode> TYPE = NodeClass.create(MethodCallTargetNode.class);
+
     protected JavaTypeProfile profile;
 
     public MethodCallTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, JavaTypeProfile profile)

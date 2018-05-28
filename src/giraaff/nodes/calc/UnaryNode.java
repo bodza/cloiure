@@ -12,6 +12,7 @@ import giraaff.nodes.ValueNode;
 public abstract class UnaryNode extends FloatingNode implements Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<UnaryNode> TYPE = NodeClass.create(UnaryNode.class);
+
     @Input protected ValueNode value;
 
     @Override

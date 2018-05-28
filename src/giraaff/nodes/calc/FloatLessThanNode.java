@@ -22,6 +22,7 @@ import giraaff.util.GraalError;
 public final class FloatLessThanNode extends CompareNode
 {
     public static final NodeClass<FloatLessThanNode> TYPE = NodeClass.create(FloatLessThanNode.class);
+
     private static final FloatLessThanOp OP = new FloatLessThanOp();
 
     public FloatLessThanNode(ValueNode x, ValueNode y, boolean unorderedIsTrue)

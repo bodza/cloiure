@@ -26,7 +26,7 @@ public class ReflectionSubstitutions
         }
         else
         {
-            return klass.readInt(HotSpotReplacementsUtil.klassAccessFlagsOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION) & HotSpotReplacementsUtil.jvmAccWrittenFlags(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
+            return klass.readInt(GraalHotSpotVMConfig.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION) & GraalHotSpotVMConfig.jvmAccWrittenFlags;
         }
     }
 }

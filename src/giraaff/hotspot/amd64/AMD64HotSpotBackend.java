@@ -50,9 +50,9 @@ import giraaff.options.OptionValues;
  */
 public class AMD64HotSpotBackend extends HotSpotHostBackend
 {
-    public AMD64HotSpotBackend(GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
+    public AMD64HotSpotBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
     {
-        super(config, runtime, providers);
+        super(runtime, providers);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
     @Override
     public LIRGeneratorTool newLIRGenerator(LIRGenerationResult lirGenRes)
     {
-        return new AMD64HotSpotLIRGenerator(getProviders(), config, lirGenRes);
+        return new AMD64HotSpotLIRGenerator(getProviders(), lirGenRes);
     }
 
     @Override
@@ -137,12 +137,12 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
             }
             else
             {
-                int verifiedEntryPointOffset = asm.position();
+                int verifiedEntryPosition = asm.position();
                 if (!isStub)
                 {
                     emitStackOverflowCheck(crb);
                 }
-                if (!isStub && asm.position() == verifiedEntryPointOffset)
+                if (!isStub && asm.position() == verifiedEntryPosition)
                 {
                     asm.subqWide(AMD64.rsp, frameSize);
                 }
@@ -238,20 +238,20 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         HotSpotProviders providers = getProviders();
         if (installedCodeOwner != null && !installedCodeOwner.isStatic())
         {
-            crb.recordMark(config.MARKID_UNVERIFIED_ENTRY);
+            crb.recordMark(GraalHotSpotVMConfig.unverifiedEntryMark);
             CallingConvention cc = regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[] { providers.getMetaAccess().lookupJavaType(Object.class) }, this);
             Register inlineCacheKlass = AMD64.rax; // see definition of IC_Klass in c1_LIRAssembler_x86.cpp
             Register receiver = ValueUtil.asRegister(cc.getArgument(0));
-            AMD64Address src = new AMD64Address(receiver, config.hubOffset);
+            AMD64Address src = new AMD64Address(receiver, GraalHotSpotVMConfig.hubOffset);
 
-            if (config.useCompressedClassPointers)
+            if (GraalHotSpotVMConfig.useCompressedClassPointers)
             {
                 Register register = AMD64.r10;
-                AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src, config);
-                if (config.narrowKlassBase != 0)
+                AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src);
+                if (GraalHotSpotVMConfig.narrowKlassBase != 0)
                 {
                     // the heap base register was destroyed above, so restore it
-                    asm.movq(providers.getRegisters().getHeapBaseRegister(), config.narrowOopBase);
+                    asm.movq(providers.getRegisters().getHeapBaseRegister(), GraalHotSpotVMConfig.narrowOopBase);
                 }
                 asm.cmpq(inlineCacheKlass, register);
             }
@@ -262,10 +262,10 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
             AMD64Call.directConditionalJmp(crb, asm, getForeignCalls().lookupForeignCall(IC_MISS_HANDLER), ConditionFlag.NotEqual);
         }
 
-        asm.align(config.codeEntryAlignment);
-        crb.recordMark(config.MARKID_OSR_ENTRY);
+        asm.align(GraalHotSpotVMConfig.codeEntryAlignment);
+        crb.recordMark(GraalHotSpotVMConfig.osrEntryMark);
         asm.bind(verifiedEntry);
-        crb.recordMark(config.MARKID_VERIFIED_ENTRY);
+        crb.recordMark(GraalHotSpotVMConfig.verifiedEntryMark);
     }
 
     /**
@@ -288,9 +288,9 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         if (!frameContext.isStub)
         {
             HotSpotForeignCallsProvider foreignCalls = providers.getForeignCalls();
-            crb.recordMark(config.MARKID_EXCEPTION_HANDLER_ENTRY);
+            crb.recordMark(GraalHotSpotVMConfig.exceptionHandlerEntryMark);
             AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(EXCEPTION_HANDLER), null, false, null);
-            crb.recordMark(config.MARKID_DEOPT_HANDLER_ENTRY);
+            crb.recordMark(GraalHotSpotVMConfig.deoptHandlerEntryMark);
             AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(DEOPTIMIZATION_HANDLER), null, false, null);
         }
         else

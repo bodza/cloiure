@@ -13,6 +13,7 @@ import giraaff.nodes.ValueNode;
 public class VirtualInstanceNode extends VirtualObjectNode
 {
     public static final NodeClass<VirtualInstanceNode> TYPE = NodeClass.create(VirtualInstanceNode.class);
+
     protected final ResolvedJavaType type;
     protected final ResolvedJavaField[] fields;
 

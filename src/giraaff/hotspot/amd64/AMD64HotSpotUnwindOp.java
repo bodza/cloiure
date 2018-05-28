@@ -20,7 +20,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Removes the current frame and jumps to the {@link UnwindExceptionToCallerStub}.
  */
-@Opcode("UNWIND")
+@Opcode
 final class AMD64HotSpotUnwindOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     public static final LIRInstructionClass<AMD64HotSpotUnwindOp> TYPE = LIRInstructionClass.create(AMD64HotSpotUnwindOp.class);

@@ -30,6 +30,7 @@ import giraaff.util.GraalError;
 public final class ObjectEqualsNode extends PointerEqualsNode implements Virtualizable
 {
     public static final NodeClass<ObjectEqualsNode> TYPE = NodeClass.create(ObjectEqualsNode.class);
+
     private static final ObjectEqualsOp OP = new ObjectEqualsOp();
 
     public ObjectEqualsNode(ValueNode x, ValueNode y)

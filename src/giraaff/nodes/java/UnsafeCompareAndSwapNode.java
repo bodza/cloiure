@@ -20,6 +20,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<UnsafeCompareAndSwapNode> TYPE = NodeClass.create(UnsafeCompareAndSwapNode.class);
+
     @Input ValueNode object;
     @Input ValueNode offset;
     @Input ValueNode expected;

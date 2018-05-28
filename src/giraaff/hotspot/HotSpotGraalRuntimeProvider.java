@@ -17,8 +17,6 @@ public interface HotSpotGraalRuntimeProvider extends GraalRuntime
 
     HotSpotBackend getBackend();
 
-    GraalHotSpotVMConfig getVMConfig();
-
     /**
      * Gets the option values associated with this runtime.
      */

@@ -400,6 +400,7 @@ public class SnippetTemplate
     static final class VarargsPlaceholderNode extends FloatingNode implements ArrayLengthProvider
     {
         public static final NodeClass<VarargsPlaceholderNode> TYPE = NodeClass.create(VarargsPlaceholderNode.class);
+
         protected final Varargs varargs;
 
         protected VarargsPlaceholderNode(Varargs varargs, MetaAccessProvider metaAccess)

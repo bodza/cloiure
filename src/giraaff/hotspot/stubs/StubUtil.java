@@ -8,8 +8,6 @@ import java.util.List;
 import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 
-import giraaff.api.replacements.Fold;
-import giraaff.api.replacements.Fold.InjectedParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.hotspot.GraalHotSpotVMConfig;
@@ -61,11 +59,5 @@ public class StubUtil
             }
             DeoptimizeCallerNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
-    }
-
-    @Fold
-    static int hubOffset(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.hubOffset;
     }
 }

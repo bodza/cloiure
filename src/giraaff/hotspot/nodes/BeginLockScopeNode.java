@@ -27,6 +27,7 @@ import giraaff.word.WordTypes;
 public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single
 {
     public static final NodeClass<BeginLockScopeNode> TYPE = NodeClass.create(BeginLockScopeNode.class);
+
     protected int lockDepth;
 
     public BeginLockScopeNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth)

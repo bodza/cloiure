@@ -20,6 +20,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class DirectStoreNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<DirectStoreNode> TYPE = NodeClass.create(DirectStoreNode.class);
+
     @Input protected ValueNode address;
     @Input protected ValueNode value;
     protected final JavaKind kind;

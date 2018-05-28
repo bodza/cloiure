@@ -7,7 +7,6 @@ import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -20,7 +19,7 @@ import giraaff.options.OptionValues;
 import giraaff.word.Word;
 
 /**
- * Stub called by the {@linkplain GraalHotSpotVMConfig#MARKID_EXCEPTION_HANDLER_ENTRY exception
+ * Stub called by the {@linkplain GraalHotSpotVMConfig#exceptionHandlerEntryMark exception
  * handler entry point} in a compiled method. This entry point is used when returning to a method to
  * handle an exception thrown by a callee. It is not used for routing implicit exceptions.
  * Therefore, it does not need to save any registers as HotSpot uses a caller save convention.

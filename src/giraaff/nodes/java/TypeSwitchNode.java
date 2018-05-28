@@ -32,6 +32,7 @@ import giraaff.nodes.util.GraphUtil;
 public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Simplifiable
 {
     public static final NodeClass<TypeSwitchNode> TYPE = NodeClass.create(TypeSwitchNode.class);
+
     protected final ResolvedJavaType[] keys;
     protected final Constant[] hubs;
 

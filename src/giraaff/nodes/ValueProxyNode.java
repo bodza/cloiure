@@ -13,6 +13,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class ValueProxyNode extends ProxyNode implements Canonicalizable, Virtualizable, ValueProxy
 {
     public static final NodeClass<ValueProxyNode> TYPE = NodeClass.create(ValueProxyNode.class);
+
     @Input ValueNode value;
     private final boolean loopPhiProxy;
 

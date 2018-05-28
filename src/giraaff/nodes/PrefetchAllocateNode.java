@@ -11,6 +11,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class PrefetchAllocateNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<PrefetchAllocateNode> TYPE = NodeClass.create(PrefetchAllocateNode.class);
+
     @Input(InputType.Association) AddressNode address;
 
     public PrefetchAllocateNode(ValueNode address)

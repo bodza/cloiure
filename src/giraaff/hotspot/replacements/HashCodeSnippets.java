@@ -34,14 +34,14 @@ public class HashCodeSnippets implements Snippets
 
     static int computeHashCode(final Object x)
     {
-        Word mark = HotSpotReplacementsUtil.loadWordFromObject(x, HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
+        Word mark = HotSpotReplacementsUtil.loadWordFromObject(x, GraalHotSpotVMConfig.markOffset);
 
         // this code is independent from biased locking (although it does not look that way)
-        final Word biasedLock = mark.and(HotSpotReplacementsUtil.biasedLockMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(HotSpotReplacementsUtil.unlockedMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))))
+        final Word biasedLock = mark.and(GraalHotSpotVMConfig.biasedLockMaskInPlace);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(GraalHotSpotVMConfig.unlockedMask))))
         {
-            int hash = (int) mark.unsignedShiftRight(HotSpotReplacementsUtil.identityHashCodeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).rawValue();
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, hash != HotSpotReplacementsUtil.uninitializedIdentityHashCodeValue(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))
+            int hash = (int) mark.unsignedShiftRight(GraalHotSpotVMConfig.identityHashCodeShift).rawValue();
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, hash != GraalHotSpotVMConfig.uninitializedIdentityHashCodeValue))
             {
                 return hash;
             }

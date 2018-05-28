@@ -19,6 +19,7 @@ import giraaff.nodes.extended.GuardingNode;
 public final class DynamicPiNode extends PiNode
 {
     public static final NodeClass<DynamicPiNode> TYPE = NodeClass.create(DynamicPiNode.class);
+
     @Input ValueNode typeMirror;
     private final boolean exact;
 

@@ -15,7 +15,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * Sets up the arguments for an exception handler in the callers frame, removes the current frame
  * and jumps to the handler.
  */
-@Opcode("JUMP_TO_EXCEPTION_HANDLER_IN_CALLER")
+@Opcode
 final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     public static final LIRInstructionClass<AMD64HotSpotJumpToExceptionHandlerInCallerOp> TYPE = LIRInstructionClass.create(AMD64HotSpotJumpToExceptionHandlerInCallerOp.class);

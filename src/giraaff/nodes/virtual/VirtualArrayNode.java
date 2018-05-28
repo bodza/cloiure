@@ -17,6 +17,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public class VirtualArrayNode extends VirtualObjectNode implements ArrayLengthProvider
 {
     public static final NodeClass<VirtualArrayNode> TYPE = NodeClass.create(VirtualArrayNode.class);
+
     protected final ResolvedJavaType componentType;
     protected final int length;
 

@@ -17,6 +17,7 @@ import giraaff.nodes.ValueNode;
 public final class LoadSnippetVarargParameterNode extends FixedWithNextNode implements Canonicalizable
 {
     public static final NodeClass<LoadSnippetVarargParameterNode> TYPE = NodeClass.create(LoadSnippetVarargParameterNode.class);
+
     @Input ValueNode index;
 
     @Input NodeInputList<ParameterNode> parameters;

@@ -52,7 +52,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("MOVE")
+    @Opcode
     public static final class MoveToRegOp extends AbstractMoveOp
     {
         public static final LIRInstructionClass<MoveToRegOp> TYPE = LIRInstructionClass.create(MoveToRegOp.class);
@@ -80,7 +80,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("MOVE")
+    @Opcode
     public static final class MoveFromRegOp extends AbstractMoveOp
     {
         public static final LIRInstructionClass<MoveFromRegOp> TYPE = LIRInstructionClass.create(MoveFromRegOp.class);
@@ -108,7 +108,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("MOVE")
+    @Opcode
     public static class MoveFromConstOp extends AMD64LIRInstruction implements LoadConstantOp
     {
         public static final LIRInstructionClass<MoveFromConstOp> TYPE = LIRInstructionClass.create(MoveFromConstOp.class);
@@ -149,7 +149,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("STACKMOVE")
+    @Opcode
     public static final class AMD64StackMove extends AMD64LIRInstruction implements ValueMoveOp
     {
         public static final LIRInstructionClass<AMD64StackMove> TYPE = LIRInstructionClass.create(AMD64StackMove.class);
@@ -211,7 +211,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("MULTISTACKMOVE")
+    @Opcode
     public static final class AMD64MultiStackMove extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<AMD64MultiStackMove> TYPE = LIRInstructionClass.create(AMD64MultiStackMove.class);
@@ -256,7 +256,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("STACKMOVE")
+    @Opcode
     public static final class AMD64PushPopStackMove extends AMD64LIRInstruction implements ValueMoveOp
     {
         public static final LIRInstructionClass<AMD64PushPopStackMove> TYPE = LIRInstructionClass.create(AMD64PushPopStackMove.class);
@@ -418,7 +418,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("CAS")
+    @Opcode
     public static final class CompareAndSwapOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<CompareAndSwapOp> TYPE = LIRInstructionClass.create(CompareAndSwapOp.class);
@@ -461,7 +461,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("ATOMIC_READ_AND_ADD")
+    @Opcode
     public static final class AtomicReadAndAddOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<AtomicReadAndAddOp> TYPE = LIRInstructionClass.create(AtomicReadAndAddOp.class);
@@ -503,7 +503,7 @@ public class AMD64Move
         }
     }
 
-    @Opcode("ATOMIC_READ_AND_WRITE")
+    @Opcode
     public static final class AtomicReadAndWriteOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<AtomicReadAndWriteOp> TYPE = LIRInstructionClass.create(AtomicReadAndWriteOp.class);

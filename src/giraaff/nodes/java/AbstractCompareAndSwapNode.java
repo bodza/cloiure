@@ -21,6 +21,7 @@ import giraaff.nodes.memory.address.AddressNode;
 public abstract class AbstractCompareAndSwapNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
     public static final NodeClass<AbstractCompareAndSwapNode> TYPE = NodeClass.create(AbstractCompareAndSwapNode.class);
+
     @Input ValueNode expectedValue;
     @Input ValueNode newValue;
     @OptionalInput(InputType.State) FrameState stateAfter;

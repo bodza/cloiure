@@ -14,7 +14,6 @@ import org.graalvm.word.LocationIdentity;
 import org.graalvm.word.WordFactory;
 
 import giraaff.api.directives.GraalDirectives;
-import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.graph.Node;
@@ -122,7 +121,7 @@ public class ArrayCopySnippets implements Snippets
         System.arraycopy(src, srcPos, dest, destPos, length);
     }
 
-    @Fold
+    // @Fold
     static LocationIdentity getArrayLocation(JavaKind kind)
     {
         return NamedLocationIdentity.getArrayLocation(kind);
@@ -171,8 +170,8 @@ public class ArrayCopySnippets implements Snippets
             }
             else
             {
-                KlassPointer destElemKlass = destKlass.readKlassPointer(HotSpotReplacementsUtil.arrayClassElementOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION);
-                Word superCheckOffset = WordFactory.signed(destElemKlass.readInt(HotSpotReplacementsUtil.superCheckOffsetOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION));
+                KlassPointer destElemKlass = destKlass.readKlassPointer(GraalHotSpotVMConfig.arrayClassElementOffset, HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION);
+                Word superCheckOffset = WordFactory.signed(destElemKlass.readInt(GraalHotSpotVMConfig.superCheckOffsetOffset, HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION));
 
                 int copiedElements = CheckcastArrayCopyCallNode.checkcastArraycopy(nonNullSrc, srcPos, nonNullDest, destPos, length, superCheckOffset, destElemKlass, false);
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, copiedElements != 0))

@@ -8,6 +8,7 @@ import giraaff.nodes.calc.FloatingNode;
 public abstract class AbstractLocalNode extends FloatingNode
 {
     public static final NodeClass<AbstractLocalNode> TYPE = NodeClass.create(AbstractLocalNode.class);
+
     protected final int index;
 
     protected AbstractLocalNode(NodeClass<? extends AbstractLocalNode> c, int index, Stamp stamp)

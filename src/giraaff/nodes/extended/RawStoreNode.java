@@ -27,6 +27,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, Lowerable, Virtualizable, MemoryCheckpoint.Single
 {
     public static final NodeClass<RawStoreNode> TYPE = NodeClass.create(RawStoreNode.class);
+
     @Input ValueNode value;
     @OptionalInput(InputType.State) FrameState stateAfter;
     private final boolean needsBarrier;

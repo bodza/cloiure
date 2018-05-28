@@ -27,6 +27,7 @@ import giraaff.options.OptionValues;
 public class PointerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<PointerEqualsNode> TYPE = NodeClass.create(PointerEqualsNode.class);
+
     private static final PointerEqualsOp OP = new PointerEqualsOp();
 
     public PointerEqualsNode(ValueNode x, ValueNode y)

@@ -14,17 +14,14 @@ import giraaff.nodes.graphbuilderconf.InvocationPlugins;
  */
 final class HotSpotInvocationPlugins extends InvocationPlugins
 {
-    private final GraalHotSpotVMConfig config;
-
-    HotSpotInvocationPlugins(GraalHotSpotVMConfig config)
+    HotSpotInvocationPlugins()
     {
-        this.config = config;
     }
 
     @Override
     public void register(InvocationPlugin plugin, Type declaringClass, String name, Type... argumentTypes)
     {
-        if (!config.usePopCountInstruction)
+        if (!GraalHotSpotVMConfig.usePopCountInstruction)
         {
             if (name.equals("bitCount"))
             {

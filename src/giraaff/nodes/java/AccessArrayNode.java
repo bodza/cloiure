@@ -11,6 +11,7 @@ import giraaff.nodes.ValueNode;
 public abstract class AccessArrayNode extends FixedWithNextNode
 {
     public static final NodeClass<AccessArrayNode> TYPE = NodeClass.create(AccessArrayNode.class);
+
     @Input protected ValueNode array;
 
     public ValueNode array()

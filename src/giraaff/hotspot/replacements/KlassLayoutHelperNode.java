@@ -32,26 +32,25 @@ import giraaff.nodes.spi.LoweringTool;
 public final class KlassLayoutHelperNode extends FloatingNode implements Canonicalizable, Lowerable
 {
     public static final NodeClass<KlassLayoutHelperNode> TYPE = NodeClass.create(KlassLayoutHelperNode.class);
-    @Input protected ValueNode klass;
-    protected final GraalHotSpotVMConfig config;
 
-    public KlassLayoutHelperNode(@InjectedNodeParameter GraalHotSpotVMConfig config, ValueNode klass)
+    @Input protected ValueNode klass;
+
+    public KlassLayoutHelperNode(ValueNode klass)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.config = config;
         this.klass = klass;
     }
 
-    public static ValueNode create(GraalHotSpotVMConfig config, ValueNode klass, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess)
+    public static ValueNode create(ValueNode klass, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess)
     {
         Stamp stamp = StampFactory.forKind(JavaKind.Int);
-        return canonical(null, config, klass, stamp, constantReflection, metaAccess);
+        return canonical(null, klass, stamp, constantReflection, metaAccess);
     }
 
     @SuppressWarnings("unused")
-    public static boolean intrinsify(GraphBuilderContext b, ResolvedJavaMethod method, @InjectedNodeParameter GraalHotSpotVMConfig config, ValueNode klass)
+    public static boolean intrinsify(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode klass)
     {
-        ValueNode valueNode = create(config, klass, b.getConstantReflection(), b.getMetaAccess());
+        ValueNode valueNode = create(klass, b.getConstantReflection(), b.getMetaAccess());
         b.push(JavaKind.Int, b.append(valueNode));
         return true;
     }
@@ -72,11 +71,11 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
                     if (!type.isArray() && !type.isInterface())
                     {
                         // Definitely some form of instance type.
-                        return updateStamp(StampFactory.forInteger(JavaKind.Int, config.klassLayoutHelperNeutralValue, Integer.MAX_VALUE));
+                        return updateStamp(StampFactory.forInteger(JavaKind.Int, GraalHotSpotVMConfig.klassLayoutHelperNeutralValue, Integer.MAX_VALUE));
                     }
                     if (type.isArray())
                     {
-                        return updateStamp(StampFactory.forInteger(JavaKind.Int, Integer.MIN_VALUE, config.klassLayoutHelperNeutralValue - 1));
+                        return updateStamp(StampFactory.forInteger(JavaKind.Int, Integer.MIN_VALUE, GraalHotSpotVMConfig.klassLayoutHelperNeutralValue - 1));
                     }
                 }
             }
@@ -93,18 +92,18 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
         }
         else
         {
-            return canonical(this, config, klass, stamp(NodeView.DEFAULT), tool.getConstantReflection(), tool.getMetaAccess());
+            return canonical(this, klass, stamp(NodeView.DEFAULT), tool.getConstantReflection(), tool.getMetaAccess());
         }
     }
 
-    private static ValueNode canonical(KlassLayoutHelperNode klassLayoutHelperNode, GraalHotSpotVMConfig config, ValueNode klass, Stamp stamp, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess)
+    private static ValueNode canonical(KlassLayoutHelperNode klassLayoutHelperNode, ValueNode klass, Stamp stamp, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess)
     {
         KlassLayoutHelperNode self = klassLayoutHelperNode;
         if (klass.isConstant())
         {
             if (!klass.asConstant().isDefaultForKind())
             {
-                Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), klass.asConstant(), config.klassLayoutHelperOffset);
+                Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), klass.asConstant(), GraalHotSpotVMConfig.klassLayoutHelperOffset);
                 return ConstantNode.forConstant(stamp, constant, metaAccess);
             }
         }
@@ -119,14 +118,14 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
                 if (type != null && type.isArray() && !type.getComponentType().isPrimitive())
                 {
                     // The layout for all object arrays is the same.
-                    Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), type.klass(), config.klassLayoutHelperOffset);
+                    Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), type.klass(), GraalHotSpotVMConfig.klassLayoutHelperOffset);
                     return ConstantNode.forConstant(stamp, constant, metaAccess);
                 }
             }
         }
         if (self == null)
         {
-            self = new KlassLayoutHelperNode(config, klass);
+            self = new KlassLayoutHelperNode(klass);
         }
         return self;
     }

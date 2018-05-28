@@ -23,6 +23,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class UnboxNode extends FixedWithNextNode implements Virtualizable, Lowerable, Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<UnboxNode> TYPE = NodeClass.create(UnboxNode.class);
+
     @Input protected ValueNode value;
     protected final JavaKind boxingKind;
 

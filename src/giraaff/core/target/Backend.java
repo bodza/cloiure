@@ -288,7 +288,6 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
          * @param compilationResult the code about to be installed
          * @param predefinedInstalledCode a pre-allocated {@link InstalledCode} object that will be
          *            used as a reference to the installed code. May be {@code null}.
-         *
          */
         public void preProcess(CompilationResult compilationResult, InstalledCode predefinedInstalledCode)
         {

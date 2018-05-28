@@ -17,6 +17,7 @@ import giraaff.word.Word;
 public final class JumpToExceptionHandlerNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<JumpToExceptionHandlerNode> TYPE = NodeClass.create(JumpToExceptionHandlerNode.class);
+
     @Input ValueNode address;
 
     public JumpToExceptionHandlerNode(ValueNode address)

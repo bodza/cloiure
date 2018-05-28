@@ -15,6 +15,7 @@ import giraaff.nodes.spi.Proxy;
 public final class GuardProxyNode extends ProxyNode implements GuardingNode, Proxy, LIRLowerable, Canonicalizable
 {
     public static final NodeClass<GuardProxyNode> TYPE = NodeClass.create(GuardProxyNode.class);
+
     @OptionalInput(InputType.Guard) GuardingNode value;
 
     public GuardProxyNode(GuardingNode value, LoopExitNode proxyPoint)

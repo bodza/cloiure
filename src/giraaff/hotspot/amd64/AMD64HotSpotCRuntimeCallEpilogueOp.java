@@ -9,7 +9,7 @@ import giraaff.lir.Opcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-@Opcode("CRUNTIME_CALL_EPILOGUE")
+@Opcode
 final class AMD64HotSpotCRuntimeCallEpilogueOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotCRuntimeCallEpilogueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotCRuntimeCallEpilogueOp.class);
@@ -31,7 +31,7 @@ final class AMD64HotSpotCRuntimeCallEpilogueOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        // reset last Java frame:
+        // reset last Java frame
         masm.movslq(new AMD64Address(thread, threadLastJavaSpOffset), 0);
         masm.movslq(new AMD64Address(thread, threadLastJavaFpOffset), 0);
         masm.movslq(new AMD64Address(thread, threadLastJavaPcOffset), 0);

@@ -14,9 +14,9 @@ import giraaff.hotspot.GraalHotSpotVMConfig;
  */
 public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvider
 {
-    public HotSpotGraalConstantFieldProvider(GraalHotSpotVMConfig config, MetaAccessProvider metaAccess)
+    public HotSpotGraalConstantFieldProvider(MetaAccessProvider metaAccess)
     {
-        super(config, metaAccess);
+        super(metaAccess);
         this.metaAccess = metaAccess;
     }
 

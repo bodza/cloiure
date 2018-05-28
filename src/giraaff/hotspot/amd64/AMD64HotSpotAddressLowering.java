@@ -37,12 +37,10 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
 
     private final long heapBase;
     private final Register heapBaseRegister;
-    private final GraalHotSpotVMConfig config;
 
-    public AMD64HotSpotAddressLowering(GraalHotSpotVMConfig config, Register heapBaseRegister, OptionValues options)
+    public AMD64HotSpotAddressLowering(Register heapBaseRegister, OptionValues options)
     {
-        this.heapBase = config.getOopEncoding().getBase();
-        this.config = config;
+        this.heapBase = GraalHotSpotVMConfig.oopEncoding.getBase();
         if (heapBase == 0)
         {
             this.heapBaseRegister = null;

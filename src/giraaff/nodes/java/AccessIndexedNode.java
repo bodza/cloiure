@@ -15,6 +15,7 @@ import giraaff.nodes.spi.LoweringTool;
 public abstract class AccessIndexedNode extends AccessArrayNode implements Lowerable
 {
     public static final NodeClass<AccessIndexedNode> TYPE = NodeClass.create(AccessIndexedNode.class);
+
     @Input protected ValueNode index;
     protected final JavaKind elementKind;
 

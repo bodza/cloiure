@@ -1,6 +1,5 @@
 package giraaff.hotspot.meta;
 
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.phases.WriteBarrierAdditionPhase;
 import giraaff.java.SuitesProviderBase;
@@ -16,15 +15,13 @@ import giraaff.phases.tiers.SuitesCreator;
  */
 public class HotSpotSuitesProvider extends SuitesProviderBase
 {
-    protected final GraalHotSpotVMConfig config;
     protected final HotSpotGraalRuntimeProvider runtime;
 
     private final SuitesCreator defaultSuitesCreator;
 
-    public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime)
+    public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntimeProvider runtime)
     {
         this.defaultSuitesCreator = defaultSuitesCreator;
-        this.config = config;
         this.runtime = runtime;
         this.defaultGraphBuilderSuite = createGraphBuilderSuite();
     }
@@ -34,7 +31,7 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     {
         Suites ret = defaultSuitesCreator.createSuites(options);
 
-        ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase(config));
+        ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase());
 
         return ret;
     }

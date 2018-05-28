@@ -144,7 +144,7 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
         {
             if (clazz.getAnnotation(Opcode.class) != null)
             {
-                opcodeConstant = clazz.getAnnotation(Opcode.class).value();
+                opcodeConstant = null;
             }
             opcodeField = null;
 

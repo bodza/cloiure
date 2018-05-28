@@ -17,6 +17,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public abstract class VirtualObjectNode extends ValueNode implements LIRLowerable, IterableNodeType
 {
     public static final NodeClass<VirtualObjectNode> TYPE = NodeClass.create(VirtualObjectNode.class);
+
     protected boolean hasIdentity;
     private int objectId = -1;
 

@@ -15,6 +15,7 @@ import giraaff.core.amd64.AMD64NodeLIRBuilder;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.gen.LockStackHolder;
+import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.hotspot.HotSpotLockStack;
@@ -93,7 +94,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     {
         LIRFrameState info = state(i);
         Register thread = getGen().getProviders().getRegisters().getThreadRegister();
-        append(new AMD64HotSpotSafepointOp(info, getGen().config, this, thread));
+        append(new AMD64HotSpotSafepointOp(info, this, thread));
     }
 
     @Override
@@ -102,12 +103,12 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         InvokeKind invokeKind = ((HotSpotDirectCallTargetNode) callTarget).invokeKind();
         if (invokeKind.isIndirect())
         {
-            append(new AMD64HotspotDirectVirtualCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind, getGen().config));
+            append(new AMD64HotspotDirectVirtualCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind));
         }
         else
         {
             HotSpotResolvedJavaMethod resolvedMethod = (HotSpotResolvedJavaMethod) callTarget.targetMethod();
-            append(new AMD64HotSpotDirectStaticCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind, getGen().config));
+            append(new AMD64HotSpotDirectStaticCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind));
         }
     }
 
@@ -122,7 +123,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
             AllocatableValue targetAddressDst = AMD64.rax.asValue(targetAddressSrc.getValueKind());
             gen.emitMove(metaspaceMethodDst, metaspaceMethodSrc);
             gen.emitMove(targetAddressDst, targetAddressSrc);
-            append(new AMD64IndirectCallOp(callTarget.targetMethod(), result, parameters, temps, metaspaceMethodDst, targetAddressDst, callState, getGen().config));
+            append(new AMD64IndirectCallOp(callTarget.targetMethod(), result, parameters, temps, metaspaceMethodDst, targetAddressDst, callState));
         }
         else
         {
@@ -147,7 +148,6 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         gen.emitMove(exceptionFixed, operand(exception));
         gen.emitMove(exceptionPcFixed, operand(exceptionPc));
         Register thread = getGen().getProviders().getRegisters().getThreadRegister();
-        AMD64HotSpotJumpToExceptionHandlerInCallerOp op = new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, getGen().config.threadIsMethodHandleReturnOffset, thread);
-        append(op);
+        append(new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, GraalHotSpotVMConfig.threadIsMethodHandleReturnOffset, thread));
     }
 }

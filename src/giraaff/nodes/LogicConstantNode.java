@@ -11,6 +11,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class LogicConstantNode extends LogicNode implements LIRLowerable
 {
     public static final NodeClass<LogicConstantNode> TYPE = NodeClass.create(LogicConstantNode.class);
+
     protected final boolean value;
 
     public LogicConstantNode(boolean value)

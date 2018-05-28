@@ -19,6 +19,7 @@ import giraaff.nodes.spi.NodeValueMap;
 public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeInterface
 {
     public static final NodeClass<ValueNode> TYPE = NodeClass.create(ValueNode.class);
+
     /**
      * The kind of this value. This is {@link JavaKind#Void} for instructions that produce no value.
      * This kind is guaranteed to be a {@linkplain JavaKind#getStackKind() stack kind}.

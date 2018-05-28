@@ -12,6 +12,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class MaterializedObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
     public static final NodeClass<MaterializedObjectState> TYPE = NodeClass.create(MaterializedObjectState.class);
+
     @Input ValueNode materializedValue;
 
     public ValueNode materializedValue()

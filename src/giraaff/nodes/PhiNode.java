@@ -21,6 +21,7 @@ import giraaff.nodes.calc.FloatingNode;
 public abstract class PhiNode extends FloatingNode implements Canonicalizable
 {
     public static final NodeClass<PhiNode> TYPE = NodeClass.create(PhiNode.class);
+
     @Input(InputType.Association) protected AbstractMergeNode merge;
 
     protected PhiNode(NodeClass<? extends PhiNode> c, Stamp stamp, AbstractMergeNode merge)

@@ -20,6 +20,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<ReadRegisterNode> TYPE = NodeClass.create(ReadRegisterNode.class);
+
     /**
      * The fixed register to access.
      */

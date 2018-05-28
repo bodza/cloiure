@@ -25,11 +25,8 @@ import giraaff.util.GraalError;
 
 public class WriteBarrierAdditionPhase extends Phase
 {
-    private GraalHotSpotVMConfig config;
-
-    public WriteBarrierAdditionPhase(GraalHotSpotVMConfig config)
+    public WriteBarrierAdditionPhase()
     {
-        this.config = config;
     }
 
     @Override
@@ -110,7 +107,7 @@ public class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
                 boolean precise = barrierType == BarrierType.PRECISE;
-                if (config.useG1GC)
+                if (GraalHotSpotVMConfig.useG1GC)
                 {
                     if (!node.getLocationIdentity().isInit())
                     {
@@ -139,7 +136,7 @@ public class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
                 boolean precise = barrierType == BarrierType.PRECISE;
-                if (config.useG1GC)
+                if (GraalHotSpotVMConfig.useG1GC)
                 {
                     addG1PreWriteBarrier(node, node.getAddress(), null, true, node.getNullCheck(), graph);
                     addG1PostWriteBarrier(node, node.getAddress(), node.getNewValue(), precise, graph);
@@ -165,7 +162,7 @@ public class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
                 boolean precise = barrierType == BarrierType.PRECISE;
-                if (config.useG1GC)
+                if (GraalHotSpotVMConfig.useG1GC)
                 {
                     addG1PreWriteBarrier(node, node.getAddress(), node.getExpectedValue(), false, false, graph);
                     addG1PostWriteBarrier(node, node.getAddress(), node.getNewValue(), precise, graph);
@@ -182,7 +179,7 @@ public class WriteBarrierAdditionPhase extends Phase
 
     private void addArrayRangeBarriers(ArrayRangeWrite write, StructuredGraph graph)
     {
-        if (config.useG1GC)
+        if (GraalHotSpotVMConfig.useG1GC)
         {
             if (!write.isInitialization())
             {

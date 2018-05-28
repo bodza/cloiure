@@ -13,6 +13,7 @@ import giraaff.nodes.extended.GuardingNode;
 public final class GuardPhiNode extends PhiNode implements GuardingNode
 {
     public static final NodeClass<GuardPhiNode> TYPE = NodeClass.create(GuardPhiNode.class);
+
     @OptionalInput(InputType.Guard) NodeInputList<ValueNode> values;
 
     public GuardPhiNode(AbstractMergeNode merge)

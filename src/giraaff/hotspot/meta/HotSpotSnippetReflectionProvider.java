@@ -8,7 +8,6 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.api.replacements.SnippetReflectionProvider;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.word.WordTypes;
 
@@ -64,44 +63,5 @@ public class HotSpotSnippetReflectionProvider implements SnippetReflectionProvid
         {
             return JavaConstant.forBoxedPrimitive(value);
         }
-    }
-
-    // lazily initialized
-    private Class<?> wordTypesType;
-    private Class<?> runtimeType;
-    private Class<?> configType;
-
-    @Override
-    public <T> T getInjectedNodeIntrinsicParameter(Class<T> type)
-    {
-        // Need to test all fields since there is no guarantee under the JMM
-        // about the order in which these fields are written.
-        GraalHotSpotVMConfig config = runtime.getVMConfig();
-        if (configType == null || wordTypesType == null || runtimeType == null)
-        {
-            wordTypesType = wordTypes.getClass();
-            runtimeType = runtime.getClass();
-            configType = config.getClass();
-        }
-
-        if (type.isAssignableFrom(wordTypesType))
-        {
-            return type.cast(wordTypes);
-        }
-        if (type.isAssignableFrom(runtimeType))
-        {
-            return type.cast(runtime);
-        }
-        if (type.isAssignableFrom(configType))
-        {
-            return type.cast(config);
-        }
-        return null;
-    }
-
-    @Override
-    public Class<?> originalClass(ResolvedJavaType type)
-    {
-        return ((HotSpotResolvedJavaType) type).mirror();
     }
 }

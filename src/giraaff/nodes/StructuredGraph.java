@@ -45,7 +45,6 @@ public final class StructuredGraph extends Graph
      * The different stages of the compilation of a {@link Graph} regarding the status of
      * {@link GuardNode guards}, {@link DeoptimizingNode deoptimizations} and {@link FrameState
      * framestates}. The stage of a graph progresses monotonously.
-     *
      */
     public enum GuardsStage
     {
@@ -900,7 +899,6 @@ public final class StructuredGraph extends Graph
     }
 
     /**
-     *
      * @return true if the graph contains only a {@link StartNode} and {@link ReturnNode}
      */
     public boolean isTrivial()

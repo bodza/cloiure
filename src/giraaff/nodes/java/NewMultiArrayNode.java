@@ -19,6 +19,7 @@ import giraaff.nodes.spi.LoweringTool;
 public class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements Lowerable, ArrayLengthProvider
 {
     public static final NodeClass<NewMultiArrayNode> TYPE = NodeClass.create(NewMultiArrayNode.class);
+
     @Input protected NodeInputList<ValueNode> dimensions;
     protected final ResolvedJavaType type;
 

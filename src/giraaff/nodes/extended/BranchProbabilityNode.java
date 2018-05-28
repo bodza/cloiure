@@ -24,6 +24,7 @@ import giraaff.util.GraalError;
 public final class BranchProbabilityNode extends FloatingNode implements Simplifiable, Lowerable
 {
     public static final NodeClass<BranchProbabilityNode> TYPE = NodeClass.create(BranchProbabilityNode.class);
+
     public static final double LIKELY_PROBABILITY = 0.6;
     public static final double NOT_LIKELY_PROBABILITY = 1 - LIKELY_PROBABILITY;
 

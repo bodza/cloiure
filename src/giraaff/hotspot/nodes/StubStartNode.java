@@ -10,6 +10,7 @@ import giraaff.nodes.StartNode;
 public final class StubStartNode extends StartNode
 {
     public static final NodeClass<StubStartNode> TYPE = NodeClass.create(StubStartNode.class);
+
     protected final Stub stub;
 
     public StubStartNode(Stub stub)

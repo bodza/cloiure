@@ -14,7 +14,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * Performs a hard-coded tail call to the specified target, which normally should be an
  * {@link InstalledCode} instance.
  */
-@Opcode("TAILCALL")
+@Opcode
 public final class AMD64TailcallOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64TailcallOp> TYPE = LIRInstructionClass.create(AMD64TailcallOp.class);

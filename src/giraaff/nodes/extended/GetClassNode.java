@@ -25,6 +25,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class GetClassNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
     public static final NodeClass<GetClassNode> TYPE = NodeClass.create(GetClassNode.class);
+
     @Input ValueNode object;
 
     public ValueNode getObject()

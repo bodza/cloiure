@@ -331,7 +331,6 @@ public final class Interval
     /**
      * List of use positions. Each entry in the list records the use position and register priority
      * associated with the use position. The entries in the list are in descending order of use position.
-     *
      */
     public static final class UsePosList
     {

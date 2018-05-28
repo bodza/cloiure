@@ -41,7 +41,6 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
     @Override
     public void initialize(HotSpotProviders providers, OptionValues options)
     {
-        GraalHotSpotVMConfig config = runtime.getVMConfig();
         TargetDescription target = providers.getCodeCache().getTarget();
         PlatformKind word = target.arch.getWordKind();
 
@@ -54,14 +53,13 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER, 0L, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER, HotSpotForeignCallLinkage.JUMP_ADDRESS, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
 
-        if (config.useCRC32Intrinsics)
+        if (GraalHotSpotVMConfig.useCRC32Intrinsics)
         {
-            // this stub does callee saving
-            registerForeignCall(CRC32Substitutions.UPDATE_BYTES_CRC32, config.updateBytesCRC32Stub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
+            registerForeignCall(CRC32Substitutions.UPDATE_BYTES_CRC32, GraalHotSpotVMConfig.updateBytesCRC32Stub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
         }
-        if (config.useCRC32CIntrinsics)
+        if (GraalHotSpotVMConfig.useCRC32CIntrinsics)
         {
-            registerForeignCall(CRC32CSubstitutions.UPDATE_BYTES_CRC32C, config.updateBytesCRC32C, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
+            registerForeignCall(CRC32CSubstitutions.UPDATE_BYTES_CRC32C, GraalHotSpotVMConfig.updateBytesCRC32C, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
         }
 
         super.initialize(providers, options);

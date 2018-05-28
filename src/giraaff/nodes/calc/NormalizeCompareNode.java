@@ -22,6 +22,7 @@ import giraaff.nodes.ValueNode;
 public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType
 {
     public static final NodeClass<NormalizeCompareNode> TYPE = NodeClass.create(NormalizeCompareNode.class);
+
     protected final boolean isUnorderedLess;
 
     public NormalizeCompareNode(ValueNode x, ValueNode y, JavaKind kind, boolean isUnorderedLess)

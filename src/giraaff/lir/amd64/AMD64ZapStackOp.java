@@ -11,7 +11,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Writes well known garbage values to stack slots.
  */
-@Opcode("ZAP_STACK")
+@Opcode
 public final class AMD64ZapStackOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ZapStackOp> TYPE = LIRInstructionClass.create(AMD64ZapStackOp.class);

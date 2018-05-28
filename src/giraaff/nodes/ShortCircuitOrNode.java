@@ -13,6 +13,7 @@ import giraaff.nodes.spi.ValueProxy;
 public final class ShortCircuitOrNode extends LogicNode implements IterableNodeType, Canonicalizable.Binary<LogicNode>
 {
     public static final NodeClass<ShortCircuitOrNode> TYPE = NodeClass.create(ShortCircuitOrNode.class);
+
     @Input(InputType.Condition) LogicNode x;
     @Input(InputType.Condition) LogicNode y;
     protected boolean xNegated;

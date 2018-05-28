@@ -9,6 +9,7 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 public final class KillingBeginNode extends AbstractBeginNode implements MemoryCheckpoint.Single
 {
     public static final NodeClass<KillingBeginNode> TYPE = NodeClass.create(KillingBeginNode.class);
+
     protected LocationIdentity locationIdentity;
 
     public KillingBeginNode(LocationIdentity locationIdentity)

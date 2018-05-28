@@ -9,7 +9,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.SnippetReflectionProvider;
@@ -89,16 +88,6 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         return graphBuilderPlugins;
     }
 
-    protected boolean hasGeneratedInvocationPluginAnnotation(ResolvedJavaMethod method)
-    {
-        return method.getAnnotation(Node.NodeIntrinsic.class) != null || method.getAnnotation(Fold.class) != null;
-    }
-
-    protected boolean hasGenericInvocationPluginAnnotation(ResolvedJavaMethod method)
-    {
-        return method.getAnnotation(Word.Operation.class) != null;
-    }
-
     private static final int MAX_GRAPH_INLINING_DEPTH = 100; // more than enough
 
     /**
@@ -137,15 +126,6 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             IntrinsicContext intrinsic = b.getIntrinsic();
             if (!intrinsic.isCallToOriginal(method))
             {
-                if (hasGeneratedInvocationPluginAnnotation(method))
-                {
-                    throw new GraalError("%s should have been handled by a %s", method.format("%H.%n(%p)"), GeneratedInvocationPlugin.class.getSimpleName());
-                }
-                if (hasGenericInvocationPluginAnnotation(method))
-                {
-                    throw new GraalError("%s should have been handled by %s", method.format("%H.%n(%p)"), WordOperationPlugin.class.getSimpleName());
-                }
-
                 throw new GraalError("All non-recursive calls in the intrinsic %s must be inlined or intrinsified: found call to %s", intrinsic.getIntrinsicMethod().format("%H.%n(%p)"), method.format("%h.%n(%p)"));
             }
         }
@@ -297,8 +277,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
 
         /**
          * The original method which {@link #method} is substituting. Calls to {@link #method} or
-         * {@link #substitutedMethod} will be replaced with a forced inline of
-         * {@link #substitutedMethod}.
+         * {@link #substitutedMethod} will be replaced with a forced inline of {@link #substitutedMethod}.
          */
         protected final ResolvedJavaMethod substitutedMethod;
 

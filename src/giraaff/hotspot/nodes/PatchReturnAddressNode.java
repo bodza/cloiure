@@ -15,6 +15,7 @@ import giraaff.word.Word;
 public final class PatchReturnAddressNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<PatchReturnAddressNode> TYPE = NodeClass.create(PatchReturnAddressNode.class);
+
     @Input ValueNode address;
 
     public PatchReturnAddressNode(ValueNode address)

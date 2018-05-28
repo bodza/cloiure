@@ -15,6 +15,7 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
+import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.hotspot.nodes.GetObjectAddressNode;
@@ -41,6 +42,7 @@ import giraaff.nodes.spi.LoweringTool;
 public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single, MemoryAccess, Canonicalizable
 {
     public static final NodeClass<ArrayCopyCallNode> TYPE = NodeClass.create(ArrayCopyCallNode.class);
+
     @Input protected ValueNode src;
     @Input protected ValueNode srcPos;
     @Input protected ValueNode dest;
@@ -212,7 +214,7 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
 
     boolean isHeapWordAligned(JavaConstant value, JavaKind kind)
     {
-        return (HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(kind) + (long) value.asInt() * HotSpotJVMCIRuntimeProvider.getArrayIndexScale(kind)) % runtime.getVMConfig().heapWordSize == 0;
+        return (HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(kind) + (long) value.asInt() * HotSpotJVMCIRuntimeProvider.getArrayIndexScale(kind)) % GraalHotSpotVMConfig.heapWordSize == 0;
     }
 
     public void updateAlignedDisjoint()

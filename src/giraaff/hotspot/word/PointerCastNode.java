@@ -18,6 +18,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class PointerCastNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable
 {
     public static final NodeClass<PointerCastNode> TYPE = NodeClass.create(PointerCastNode.class);
+
     @Input ValueNode input;
 
     public PointerCastNode(Stamp stamp, ValueNode input)

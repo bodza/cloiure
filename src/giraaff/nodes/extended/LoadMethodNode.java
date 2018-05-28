@@ -27,6 +27,7 @@ import giraaff.util.GraalError;
 public final class LoadMethodNode extends FixedWithNextNode implements Lowerable, Canonicalizable
 {
     public static final NodeClass<LoadMethodNode> TYPE = NodeClass.create(LoadMethodNode.class);
+
     @Input ValueNode hub;
     protected final ResolvedJavaMethod method;
     protected final ResolvedJavaType receiverType;

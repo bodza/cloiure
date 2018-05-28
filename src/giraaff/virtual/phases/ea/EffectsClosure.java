@@ -303,7 +303,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
          * outer most loop into the current loop. We strip the initial loop state for the inner most
          * loops and do the first iteration with the (possible) changes from outer loops. If there
          * are no changes we only have to do 1 iteration and are done.
-         *
          */
         BlockT initialStateRemovedKilledLocations = stripKilledLoopLocations(loop, cloneState(initialState));
         BlockT loopEntryState = initialStateRemovedKilledLocations;
