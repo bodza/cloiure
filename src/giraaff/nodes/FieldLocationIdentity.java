@@ -5,12 +5,15 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 
 import org.graalvm.word.LocationIdentity;
 
-public class FieldLocationIdentity extends LocationIdentity implements FormatWithToString
+// @class FieldLocationIdentity
+public final class FieldLocationIdentity extends LocationIdentity implements FormatWithToString
 {
     private final ResolvedJavaField inner;
 
+    // @cons
     public FieldLocationIdentity(ResolvedJavaField inner)
     {
+        super();
         this.inner = inner;
     }
 

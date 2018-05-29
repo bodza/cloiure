@@ -6,12 +6,15 @@ import java.util.ListIterator;
 /**
  * Allows storing of arbitrary data.
  */
+// @class GenericContext
 public class GenericContext
 {
     private ArrayList<Object> context;
 
+    // @cons
     public GenericContext()
     {
+        super();
         context = null;
     }
 

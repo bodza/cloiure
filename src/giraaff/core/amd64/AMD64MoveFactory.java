@@ -24,8 +24,10 @@ import giraaff.lir.amd64.AMD64Move.MoveFromRegOp;
 import giraaff.lir.amd64.AMD64Move.MoveToRegOp;
 import giraaff.util.GraalError;
 
+// @class AMD64MoveFactory
 public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
 {
+    // @cons
     public AMD64MoveFactory(BackupSlotProvider backupSlotProvider)
     {
         super(backupSlotProvider);

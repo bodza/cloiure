@@ -20,6 +20,7 @@ import giraaff.core.common.FieldsScanner;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstruction.OperandMode;
 
+// @class LIRIntrospection
 abstract class LIRIntrospection<T> extends FieldIntrospection<T>
 {
     private static final Class<Value> VALUE_CLASS = Value.class;
@@ -29,22 +30,26 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
     private static final Class<StackSlot> STACK_SLOT_CLASS = StackSlot.class;
     private static final Class<Value[]> VALUE_ARRAY_CLASS = Value[].class;
 
+    // @cons
     LIRIntrospection(Class<T> clazz)
     {
         super(clazz);
     }
 
-    protected static class Values extends Fields
+    // @class LIRIntrospection.Values
+    protected static final class Values extends Fields
     {
         private final int directCount;
         private final EnumSet<OperandFlag>[] flags;
 
+        // @cons
         public Values(OperandModeAnnotation mode)
         {
             this(mode.directCount, mode.values);
         }
 
         @SuppressWarnings({"unchecked"})
+        // @cons
         public Values(int directCount, ArrayList<ValueFieldInfo> fields)
         {
             super(fields);
@@ -92,10 +97,12 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
      */
     protected Values values;
 
-    protected static class ValueFieldInfo extends FieldsScanner.FieldInfo
+    // @class LIRIntrospection.ValueFieldInfo
+    protected static final class ValueFieldInfo extends FieldsScanner.FieldInfo
     {
         final EnumSet<OperandFlag> flags;
 
+        // @cons
         public ValueFieldInfo(long offset, String name, Class<?> type, Class<?> declaringClass, EnumSet<OperandFlag> flags)
         {
             super(offset, name, type, declaringClass);
@@ -132,7 +139,8 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
         }
     }
 
-    protected static class OperandModeAnnotation
+    // @class LIRIntrospection.OperandModeAnnotation
+    protected static final class OperandModeAnnotation
     {
         /**
          * Number of non-array fields in {@link #values}.
@@ -141,10 +149,12 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
         public final ArrayList<ValueFieldInfo> values = new ArrayList<>();
     }
 
+    // @class LIRIntrospection.LIRFieldsScanner
     protected abstract static class LIRFieldsScanner extends FieldsScanner
     {
         public final EconomicMap<Class<? extends Annotation>, OperandModeAnnotation> valueAnnotations;
 
+        // @cons
         public LIRFieldsScanner(FieldsScanner.CalcOffset calc)
         {
             super(calc);

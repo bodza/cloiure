@@ -4,13 +4,16 @@ import java.util.Iterator;
 
 import giraaff.graph.Node;
 
-public class PredicatedProxyNodeIterator<T extends Node> extends NodeIterator<T>
+// @class PredicatedProxyNodeIterator
+public final class PredicatedProxyNodeIterator<T extends Node> extends NodeIterator<T>
 {
     private final Iterator<T> iterator;
     private final NodePredicate predicate;
 
+    // @cons
     public PredicatedProxyNodeIterator(Iterator<T> iterator, NodePredicate predicate)
     {
+        super();
         this.iterator = iterator;
         this.predicate = predicate;
     }

@@ -9,10 +9,12 @@ import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.util.HashSetNodeEventListener;
 import giraaff.phases.tiers.PhaseContext;
 
-public class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
+// @class LoopPartialUnrollPhase
+public final class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
 {
     private final CanonicalizerPhase canonicalizer;
 
+    // @cons
     public LoopPartialUnrollPhase(LoopPolicies policies, CanonicalizerPhase canonicalizer)
     {
         super(policies);

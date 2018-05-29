@@ -9,6 +9,7 @@ import giraaff.nodes.ValueNode;
 /**
  * The {@code BinaryNode} class is the base of arithmetic and logic operations with two inputs.
  */
+// @class BinaryNode
 public abstract class BinaryNode extends FloatingNode implements Canonicalizable.Binary<ValueNode>
 {
     public static final NodeClass<BinaryNode> TYPE = NodeClass.create(BinaryNode.class);
@@ -47,6 +48,7 @@ public abstract class BinaryNode extends FloatingNode implements Canonicalizable
      * @param x the first input instruction
      * @param y the second input instruction
      */
+    // @cons
     protected BinaryNode(NodeClass<? extends BinaryNode> c, Stamp stamp, ValueNode x, ValueNode y)
     {
         super(c, stamp);

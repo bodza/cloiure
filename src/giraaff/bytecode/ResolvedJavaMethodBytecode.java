@@ -9,26 +9,22 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Direct access to the bytecode of a {@link ResolvedJavaMethod} that will reflect any
  * instrumentation and rewriting performed on the {@link ResolvedJavaMethod}.
  */
-public class ResolvedJavaMethodBytecode implements Bytecode
+// @class ResolvedJavaMethodBytecode
+public final class ResolvedJavaMethodBytecode implements Bytecode
 {
     private final ResolvedJavaMethod method;
-    private final BytecodeProvider origin;
 
+    // @cons
     public ResolvedJavaMethodBytecode(ResolvedJavaMethod method)
     {
-        this(method, ResolvedJavaMethodBytecodeProvider.INSTANCE);
-    }
-
-    public ResolvedJavaMethodBytecode(ResolvedJavaMethod method, BytecodeProvider origin)
-    {
+        super();
         this.method = method;
-        this.origin = origin;
     }
 
     @Override
     public BytecodeProvider getOrigin()
     {
-        return origin;
+        return ResolvedJavaMethodBytecodeProvider.INSTANCE;
     }
 
     @Override

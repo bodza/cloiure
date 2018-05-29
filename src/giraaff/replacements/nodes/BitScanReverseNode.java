@@ -22,10 +22,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Determines the index of the most significant "1" bit. Note that the result is undefined if the
  * input is zero.
  */
+// @class BitScanReverseNode
 public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<BitScanReverseNode> TYPE = NodeClass.create(BitScanReverseNode.class);
 
+    // @cons
     public BitScanReverseNode(ValueNode value)
     {
         super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) value.stamp(NodeView.DEFAULT)).getBits()), value);

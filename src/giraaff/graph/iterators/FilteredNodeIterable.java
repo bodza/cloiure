@@ -4,13 +4,16 @@ import java.util.Iterator;
 
 import giraaff.graph.Node;
 
-public class FilteredNodeIterable<T extends Node> implements NodeIterable<T>
+// @class FilteredNodeIterable
+public final class FilteredNodeIterable<T extends Node> implements NodeIterable<T>
 {
     protected final NodeIterable<T> nodeIterable;
     protected NodePredicate predicate = NodePredicates.alwaysTrue();
 
+    // @cons
     public FilteredNodeIterable(NodeIterable<T> nodeIterable)
     {
+        super();
         this.nodeIterable = nodeIterable;
     }
 

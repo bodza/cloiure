@@ -6,6 +6,7 @@ package giraaff.nodes.spi;
  * nodes that have some interaction with virtualized nodes. However, the virtualized nodes might
  * have been re-materialized in the meantime.
  */
+// @iface Virtualizable
 public interface Virtualizable
 {
     /**

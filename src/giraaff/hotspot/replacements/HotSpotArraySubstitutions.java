@@ -13,7 +13,8 @@ import giraaff.nodes.java.DynamicNewArrayNode;
  * Substitutions for {@link Array} methods.
  */
 @ClassSubstitution(Array.class)
-public class HotSpotArraySubstitutions
+// @class HotSpotArraySubstitutions
+public final class HotSpotArraySubstitutions
 {
     @MethodSubstitution
     public static Object newInstance(Class<?> componentType, int length)
@@ -24,5 +25,11 @@ public class HotSpotArraySubstitutions
             return newInstance(componentType, length);
         }
         return DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(componentType), length);
+    }
+
+    // @cons
+    private HotSpotArraySubstitutions()
+    {
+        super();
     }
 }

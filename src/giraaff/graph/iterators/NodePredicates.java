@@ -2,6 +2,7 @@ package giraaff.graph.iterators;
 
 import giraaff.graph.Node;
 
+// @class NodePredicates
 public abstract class NodePredicates
 {
     private static final TautologyPredicate TAUTOLOGY = new TautologyPredicate();
@@ -33,6 +34,7 @@ public abstract class NodePredicates
         return new PositiveTypePredicate(clazz);
     }
 
+    // @class NodePredicates.TautologyPredicate
     static final class TautologyPredicate implements NodePredicate
     {
         @Override
@@ -48,6 +50,7 @@ public abstract class NodePredicates
         }
     }
 
+    // @class NodePredicates.ContradictionPredicate
     static final class ContradictionPredicate implements NodePredicate
     {
         @Override
@@ -63,13 +66,16 @@ public abstract class NodePredicates
         }
     }
 
+    // @class NodePredicates.AndPredicate
     static final class AndPredicate implements NodePredicate
     {
         private final NodePredicate a;
         private final NodePredicate b;
 
+        // @cons
         AndPredicate(NodePredicate a, NodePredicate b)
         {
+            super();
             this.a = a;
             this.b = b;
         }
@@ -81,12 +87,15 @@ public abstract class NodePredicates
         }
     }
 
+    // @class NodePredicates.NotPredicate
     static final class NotPredicate implements NodePredicate
     {
         private final NodePredicate a;
 
+        // @cons
         NotPredicate(NodePredicate n)
         {
+            super();
             this.a = n;
         }
 
@@ -103,6 +112,7 @@ public abstract class NodePredicates
         }
     }
 
+    // @class NodePredicates.IsNullPredicate
     static final class IsNullPredicate implements NodePredicate
     {
         @Override
@@ -112,18 +122,23 @@ public abstract class NodePredicates
         }
     }
 
+    // @class NodePredicates.PositiveTypePredicate
     public static final class PositiveTypePredicate implements NodePredicate
     {
         private final Class<?> type;
         private PositiveTypePredicate or;
 
+        // @cons
         PositiveTypePredicate(Class<?> type)
         {
+            super();
             this.type = type;
         }
 
+        // @cons
         public PositiveTypePredicate(NegativeTypePredicate a)
         {
+            super();
             type = a.type;
             if (a.nor != null)
             {
@@ -157,18 +172,23 @@ public abstract class NodePredicates
         }
     }
 
+    // @class NodePredicates.NegativeTypePredicate
     public static final class NegativeTypePredicate implements NodePredicate
     {
         private final Class<?> type;
         private NegativeTypePredicate nor;
 
+        // @cons
         NegativeTypePredicate(Class<?> type)
         {
+            super();
             this.type = type;
         }
 
+        // @cons
         public NegativeTypePredicate(PositiveTypePredicate a)
         {
+            super();
             type = a.type;
             if (a.or != null)
             {

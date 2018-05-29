@@ -50,7 +50,8 @@ import giraaff.util.GraalError;
  * <a href="http://dl.acm.org/citation.cfm?id=583821"> Fast subtype checking in the HotSpot JVM</a>
  * by Cliff Click and John Rose.
  */
-public class InstanceOfSnippets implements Snippets
+// @class InstanceOfSnippets
+public final class InstanceOfSnippets implements Snippets
 {
     /**
      * A test against a set of hints derived from a profile with 100% precise coverage of seen
@@ -221,7 +222,8 @@ public class InstanceOfSnippets implements Snippets
         return falseValue;
     }
 
-    public static class Templates extends InstanceOfSnippetsTemplates
+    // @class InstanceOfSnippets.Templates
+    public static final class Templates extends InstanceOfSnippetsTemplates
     {
         private final SnippetInfo instanceofWithProfile = snippet(InstanceOfSnippets.class, "instanceofWithProfile");
         private final SnippetInfo instanceofExact = snippet(InstanceOfSnippets.class, "instanceofExact");
@@ -230,6 +232,7 @@ public class InstanceOfSnippets implements Snippets
         private final SnippetInfo instanceofDynamic = snippet(InstanceOfSnippets.class, "instanceofDynamic", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
         private final SnippetInfo isAssignableFrom = snippet(InstanceOfSnippets.class, "isAssignableFrom", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);
@@ -319,5 +322,11 @@ public class InstanceOfSnippets implements Snippets
                 throw GraalError.shouldNotReachHere();
             }
         }
+    }
+
+    // @cons
+    private InstanceOfSnippets()
+    {
+        super();
     }
 }

@@ -7,6 +7,7 @@ import giraaff.nodes.ValueNode;
  * builder should see through the proxy for doing some checks. Optimizations should not see through
  * this proxy and therefore should only test for {@link ValueProxy}.
  */
+// @iface LimitedValueProxy
 public interface LimitedValueProxy extends Proxy
 {
     @Override

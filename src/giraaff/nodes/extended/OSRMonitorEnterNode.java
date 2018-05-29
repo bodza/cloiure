@@ -9,10 +9,12 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.VirtualizerTool;
 
-public class OSRMonitorEnterNode extends MonitorEnterNode implements LIRLowerable
+// @class OSRMonitorEnterNode
+public final class OSRMonitorEnterNode extends MonitorEnterNode implements LIRLowerable
 {
     public static final NodeClass<OSRMonitorEnterNode> TYPE = NodeClass.create(OSRMonitorEnterNode.class);
 
+    // @cons
     public OSRMonitorEnterNode(ValueNode object, MonitorIdNode monitorId)
     {
         super(TYPE, object, monitorId);

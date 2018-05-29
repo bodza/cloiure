@@ -10,13 +10,16 @@ import giraaff.nodes.extended.ForeignCallNode;
 /**
  * {@link InvocationPlugin} for converting a method call directly to a foreign call.
  */
+// @class ForeignCallPlugin
 public final class ForeignCallPlugin implements InvocationPlugin
 {
     private final ForeignCallsProvider foreignCalls;
     private final ForeignCallDescriptor descriptor;
 
+    // @cons
     public ForeignCallPlugin(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor)
     {
+        super();
         this.foreignCalls = foreignCalls;
         this.descriptor = descriptor;
     }

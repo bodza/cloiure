@@ -43,16 +43,20 @@ import giraaff.util.GraalError;
  * Plugins that are not guaranteed to be made during initialization must use
  * {@link LateRegistration}.
  */
+// @class InvocationPlugins
 public class InvocationPlugins
 {
-    public static class InvocationPluginReceiver implements InvocationPlugin.Receiver
+    // @class InvocationPlugins.InvocationPluginReceiver
+    public static final class InvocationPluginReceiver implements InvocationPlugin.Receiver
     {
         private final GraphBuilderContext parser;
         private ValueNode[] args;
         private ValueNode value;
 
+        // @cons
         public InvocationPluginReceiver(GraphBuilderContext parser)
         {
+            super();
             this.parser = parser;
         }
 
@@ -95,12 +99,15 @@ public class InvocationPlugins
     /**
      * A symbol for an already resolved method.
      */
-    public static class ResolvedJavaSymbol implements Type
+    // @class InvocationPlugins.ResolvedJavaSymbol
+    public static final class ResolvedJavaSymbol implements Type
     {
         private final ResolvedJavaType resolved;
 
+        // @cons
         public ResolvedJavaSymbol(ResolvedJavaType type)
         {
+            super();
             this.resolved = type;
         }
 
@@ -119,14 +126,17 @@ public class InvocationPlugins
     /**
      * A symbol that is lazily {@linkplain OptionalLazySymbol#resolve() resolved} to a {@link Type}.
      */
-    static class OptionalLazySymbol implements Type
+    // @class InvocationPlugins.OptionalLazySymbol
+    static final class OptionalLazySymbol implements Type
     {
         private static final Class<?> MASK_NULL = OptionalLazySymbol.class;
         private final String name;
         private Class<?> resolved;
 
+        // @cons
         OptionalLazySymbol(String name)
         {
+            super();
             this.name = name;
         }
 
@@ -161,7 +171,8 @@ public class InvocationPlugins
      * Utility for {@linkplain InvocationPlugins#register(InvocationPlugin, Class, String, Class...)
      * registration} of invocation plugins.
      */
-    public static class Registration implements MethodSubstitutionRegistry
+    // @class InvocationPlugins.Registration
+    public static final class Registration implements MethodSubstitutionRegistry
     {
         private final InvocationPlugins plugins;
         private final Type declaringType;
@@ -182,8 +193,10 @@ public class InvocationPlugins
          * @param declaringType the class declaring the methods for which plugins will be registered
          *            via this object
          */
+        // @cons
         public Registration(InvocationPlugins plugins, Type declaringType)
         {
+            super();
             this.plugins = plugins;
             this.declaringType = declaringType;
             this.methodSubstitutionBytecodeProvider = null;
@@ -199,8 +212,10 @@ public class InvocationPlugins
          * @param methodSubstitutionBytecodeProvider provider used to get the bytecodes to parse for
          *            method substitutions
          */
+        // @cons
         public Registration(InvocationPlugins plugins, Type declaringType, BytecodeProvider methodSubstitutionBytecodeProvider)
         {
+            super();
             this.plugins = plugins;
             this.declaringType = declaringType;
             this.methodSubstitutionBytecodeProvider = methodSubstitutionBytecodeProvider;
@@ -216,8 +231,10 @@ public class InvocationPlugins
          * @param methodSubstitutionBytecodeProvider provider used to get the bytecodes to parse for
          *            method substitutions
          */
+        // @cons
         public Registration(InvocationPlugins plugins, String declaringClassName, BytecodeProvider methodSubstitutionBytecodeProvider)
         {
+            super();
             this.plugins = plugins;
             this.declaringType = new OptionalLazySymbol(declaringClassName);
             this.methodSubstitutionBytecodeProvider = methodSubstitutionBytecodeProvider;
@@ -419,7 +436,8 @@ public class InvocationPlugins
      * Utility for registering plugins after Graal may have been initialized. Registrations made via
      * this class are not finalized until {@link #close} is called.
      */
-    public static class LateRegistration implements AutoCloseable
+    // @class InvocationPlugins.LateRegistration
+    public static final class LateRegistration implements AutoCloseable
     {
         private InvocationPlugins plugins;
         private final List<Binding> bindings = new ArrayList<>();
@@ -433,8 +451,10 @@ public class InvocationPlugins
          * @param declaringType the class declaring the methods for which plugins will be registered
          *            via this object
          */
+        // @cons
         public LateRegistration(InvocationPlugins plugins, Type declaringType)
         {
+            super();
             this.plugins = plugins;
             this.declaringType = declaringType;
         }
@@ -471,7 +491,8 @@ public class InvocationPlugins
     /**
      * Associates an {@link InvocationPlugin} with the details of a method it substitutes.
      */
-    public static class Binding
+    // @class InvocationPlugins.Binding
+    public static final class Binding
     {
         /**
          * The plugin this binding is for.
@@ -501,8 +522,10 @@ public class InvocationPlugins
          */
         private Binding next;
 
+        // @cons
         Binding(InvocationPlugin data, boolean isStatic, String name, Type... argumentTypes)
         {
+            super();
             this.plugin = data;
             this.isStatic = isStatic;
             this.name = name;
@@ -516,8 +539,10 @@ public class InvocationPlugins
             this.argumentsDescriptor = buf.toString();
         }
 
+        // @cons
         Binding(ResolvedJavaMethod resolved, InvocationPlugin data)
         {
+            super();
             this.plugin = data;
             this.isStatic = resolved.isStatic();
             this.name = resolved.getName();
@@ -569,6 +594,7 @@ public class InvocationPlugins
     /**
      * Per-class bindings.
      */
+    // @class InvocationPlugins.ClassPlugins
     static class ClassPlugins
     {
         /**
@@ -636,15 +662,18 @@ public class InvocationPlugins
         }
     }
 
-    static class LateClassPlugins extends ClassPlugins
+    // @class InvocationPlugins.LateClassPlugins
+    static final class LateClassPlugins extends ClassPlugins
     {
         static final String CLOSED_LATE_CLASS_PLUGIN = "-----";
 
         private final String className;
         private final LateClassPlugins next;
 
+        // @cons
         LateClassPlugins(LateClassPlugins next, String className)
         {
+            super();
             this.next = next;
             this.className = className;
         }
@@ -770,8 +799,10 @@ public class InvocationPlugins
     }
 
     @SuppressWarnings("serial")
-    static class InvocationPlugRegistrationError extends GraalError
+    // @class InvocationPlugins.InvocationPlugRegistrationError
+    static final class InvocationPlugRegistrationError extends GraalError
     {
+        // @cons
         InvocationPlugRegistrationError(Throwable cause)
         {
             super(cause);
@@ -970,6 +1001,7 @@ public class InvocationPlugins
     /**
      * Creates a set of invocation plugins with no parent.
      */
+    // @cons
     public InvocationPlugins()
     {
         this(null);
@@ -980,8 +1012,10 @@ public class InvocationPlugins
      *
      * @param parent if non-null, this object will be searched first when looking up plugins
      */
+    // @cons
     public InvocationPlugins(InvocationPlugins parent)
     {
+        super();
         InvocationPlugins p = parent;
         this.parent = p;
         this.registrations = EconomicMap.create();
@@ -992,8 +1026,10 @@ public class InvocationPlugins
      * Creates a closed set of invocation plugins for a set of resolved methods. Such an object
      * cannot have further plugins registered.
      */
+    // @cons
     public InvocationPlugins(Map<ResolvedJavaMethod, InvocationPlugin> plugins, InvocationPlugins parent)
     {
+        super();
         this.parent = parent;
         this.registrations = null;
         this.deferredRegistrations = null;

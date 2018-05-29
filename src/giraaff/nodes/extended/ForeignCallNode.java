@@ -32,7 +32,8 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Node for a {@linkplain ForeignCallDescriptor foreign} call.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
-public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowerable, DeoptimizingNode.DeoptDuring, MemoryCheckpoint.Multi
+// @class ForeignCallNode
+public final class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowerable, DeoptimizingNode.DeoptDuring, MemoryCheckpoint.Multi
 {
     public static final NodeClass<ForeignCallNode> TYPE = NodeClass.create(ForeignCallNode.class);
 
@@ -83,11 +84,13 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         return true;
     }
 
+    // @cons
     public ForeignCallNode(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, ValueNode... arguments)
     {
         this(TYPE, foreignCalls, descriptor, arguments);
     }
 
+    // @cons
     public ForeignCallNode(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, Stamp stamp, List<ValueNode> arguments)
     {
         super(TYPE, stamp);
@@ -96,6 +99,7 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         this.foreignCalls = foreignCalls;
     }
 
+    // @cons
     public ForeignCallNode(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, Stamp stamp)
     {
         super(TYPE, stamp);
@@ -104,6 +108,7 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         this.foreignCalls = foreignCalls;
     }
 
+    // @cons
     protected ForeignCallNode(NodeClass<? extends ForeignCallNode> c, ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, ValueNode... arguments)
     {
         super(c, StampFactory.forKind(JavaKind.fromJavaClass(descriptor.getResultType())));

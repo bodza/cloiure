@@ -24,7 +24,8 @@ import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
 
-public class BoxingSnippets implements Snippets
+// @class BoxingSnippets
+public final class BoxingSnippets implements Snippets
 {
     @Snippet
     public static Object booleanValueOf(boolean value)
@@ -155,11 +156,13 @@ public class BoxingSnippets implements Snippets
         return null;
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class BoxingSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final EnumMap<JavaKind, SnippetInfo> boxSnippets = new EnumMap<>(JavaKind.class);
         private final EnumMap<JavaKind, SnippetInfo> unboxSnippets = new EnumMap<>(JavaKind.class);
 
+        // @cons
         public Templates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
             super(options, providers, snippetReflection, target);

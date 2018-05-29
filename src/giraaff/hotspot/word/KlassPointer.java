@@ -10,6 +10,7 @@ import giraaff.word.Word.Operation;
 /**
  * Marker type for a metaspace pointer to a type.
  */
+// @class KlassPointer
 public abstract class KlassPointer extends MetaspacePointer
 {
     @HotSpotOperation(opcode = HotspotOpcode.POINTER_EQ)

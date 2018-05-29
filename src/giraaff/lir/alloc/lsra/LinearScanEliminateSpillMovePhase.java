@@ -18,9 +18,11 @@ import giraaff.lir.phases.LIRPhase;
 import giraaff.options.NestedBooleanOptionKey;
 import giraaff.options.OptionKey;
 
+// @class LinearScanEliminateSpillMovePhase
 public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 {
-    public static class Options
+    // @class LinearScanEliminateSpillMovePhase.Options
+    public static final class Options
     {
         // @Option "Enable spill move elimination."
         public static final OptionKey<Boolean> LIROptLSRAEliminateSpillMoves = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
@@ -37,8 +39,10 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 
     protected final LinearScan allocator;
 
+    // @cons
     protected LinearScanEliminateSpillMovePhase(LinearScan allocator)
     {
+        super();
         this.allocator = allocator;
     }
 

@@ -17,6 +17,7 @@ import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.type.StampTool;
 
+// @class UnsafeAccessNode
 public abstract class UnsafeAccessNode extends FixedWithNextNode implements Canonicalizable
 {
     public static final NodeClass<UnsafeAccessNode> TYPE = NodeClass.create(UnsafeAccessNode.class);
@@ -27,6 +28,7 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
     protected final LocationIdentity locationIdentity;
     protected final boolean forceAnyLocation;
 
+    // @cons
     protected UnsafeAccessNode(NodeClass<? extends UnsafeAccessNode> c, Stamp stamp, ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, boolean forceAnyLocation)
     {
         super(c, stamp);

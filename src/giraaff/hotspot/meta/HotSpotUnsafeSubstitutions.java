@@ -9,7 +9,8 @@ import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.word.Word;
 
 @ClassSubstitution(className = { "jdk.internal.misc.Unsafe", "sun.misc.Unsafe" })
-public class HotSpotUnsafeSubstitutions
+// @class HotSpotUnsafeSubstitutions
+public final class HotSpotUnsafeSubstitutions
 {
     public static final String copyMemoryName = "copyMemory0";
 
@@ -21,5 +22,11 @@ public class HotSpotUnsafeSubstitutions
         Word dstAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(destBase, destOffset));
         Word size = WordFactory.signed(bytes);
         HotSpotBackend.unsafeArraycopy(srcAddr, dstAddr, size);
+    }
+
+    // @cons
+    private HotSpotUnsafeSubstitutions()
+    {
+        super();
     }
 }

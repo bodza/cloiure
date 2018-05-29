@@ -25,6 +25,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * The {@code ConditionalNode} class represents a comparison that yields one of two (eagerly
  * evaluated) values.
  */
+// @class ConditionalNode
 public final class ConditionalNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<ConditionalNode> TYPE = NodeClass.create(ConditionalNode.class);
@@ -38,11 +39,13 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
         return condition;
     }
 
+    // @cons
     public ConditionalNode(LogicNode condition)
     {
         this(condition, ConstantNode.forInt(1, condition.graph()), ConstantNode.forInt(0, condition.graph()));
     }
 
+    // @cons
     public ConditionalNode(LogicNode condition, ValueNode trueValue, ValueNode falseValue)
     {
         super(TYPE, trueValue.stamp(NodeView.DEFAULT).meet(falseValue.stamp(NodeView.DEFAULT)));
@@ -298,6 +301,7 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
         gen.emitConditional(this);
     }
 
+    // @cons
     public ConditionalNode(StructuredGraph graph, CanonicalCondition condition, ValueNode x, ValueNode y)
     {
         this(CompareNode.createCompareNode(graph, condition, x, y, null, NodeView.DEFAULT));

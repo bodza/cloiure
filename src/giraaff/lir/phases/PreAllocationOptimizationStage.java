@@ -5,10 +5,13 @@ import giraaff.lir.constopt.ConstantLoadOptimization;
 import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
 import giraaff.options.OptionValues;
 
-public class PreAllocationOptimizationStage extends LIRPhaseSuite<PreAllocationOptimizationContext>
+// @class PreAllocationOptimizationStage
+public final class PreAllocationOptimizationStage extends LIRPhaseSuite<PreAllocationOptimizationContext>
 {
+    // @cons
     public PreAllocationOptimizationStage(OptionValues options)
     {
+        super();
         if (ConstantLoadOptimization.Options.LIROptConstantLoadOptimization.getValue(options))
         {
             appendPhase(new ConstantLoadOptimization());

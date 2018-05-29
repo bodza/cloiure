@@ -1,6 +1,13 @@
 package giraaff.asm;
 
-public class AsmOptions
+// @class AsmOptions
+public final class AsmOptions
 {
     public static int InitialCodeBufferSize = 232;
+
+    // @cons
+    private AsmOptions()
+    {
+        super();
+    }
 }

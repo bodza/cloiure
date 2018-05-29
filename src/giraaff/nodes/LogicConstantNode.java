@@ -8,12 +8,14 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * The {@code LogicConstantNode} represents a boolean constant.
  */
+// @class LogicConstantNode
 public final class LogicConstantNode extends LogicNode implements LIRLowerable
 {
     public static final NodeClass<LogicConstantNode> TYPE = NodeClass.create(LogicConstantNode.class);
 
     protected final boolean value;
 
+    // @cons
     public LogicConstantNode(boolean value)
     {
         super(TYPE);

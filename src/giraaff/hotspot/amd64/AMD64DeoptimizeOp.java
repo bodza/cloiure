@@ -11,6 +11,7 @@ import giraaff.lir.amd64.AMD64Call;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 @Opcode
+// @class AMD64DeoptimizeOp
 final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements BlockEndOp
 {
     public static final LIRInstructionClass<AMD64DeoptimizeOp> TYPE = LIRInstructionClass.create(AMD64DeoptimizeOp.class);
@@ -18,6 +19,7 @@ final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements BlockEndOp
     // @State
     private LIRFrameState state;
 
+    // @cons
     AMD64DeoptimizeOp(LIRFrameState state)
     {
         super(TYPE);

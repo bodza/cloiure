@@ -44,6 +44,7 @@ import giraaff.util.GraalError;
  * <li>Otherwise, the macro node is replaced with an {@link InvokeNode}. Note that this is only
  * possible if the macro node is a {@link MacroStateSplitNode}.</li>
  */
+// @class MacroNode
 public abstract class MacroNode extends FixedWithNextNode implements Lowerable, Invokable
 {
     public static final NodeClass<MacroNode> TYPE = NodeClass.create(MacroNode.class);
@@ -55,6 +56,7 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
     protected final StampPair returnStamp;
     protected final InvokeKind invokeKind;
 
+    // @cons
     protected MacroNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
     {
         super(c, returnStamp.getTrustedStamp());

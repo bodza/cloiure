@@ -46,12 +46,14 @@ import giraaff.util.GraalError;
 /**
  * Node for invocation methods defined on the class {@link MethodHandle}.
  */
+// @class MethodHandleNode
 public final class MethodHandleNode extends MacroStateSplitNode implements Simplifiable
 {
     public static final NodeClass<MethodHandleNode> TYPE = NodeClass.create(MethodHandleNode.class);
 
     protected final IntrinsicMethod intrinsicMethod;
 
+    // @cons
     public MethodHandleNode(IntrinsicMethod intrinsicMethod, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
     {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);
@@ -89,12 +91,15 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     /**
      * A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
      */
+    // @class MethodHandleNode.GraphAdder
     public abstract static class GraphAdder
     {
         private final StructuredGraph graph;
 
+        // @cons
         public GraphAdder(StructuredGraph graph)
         {
+            super();
             this.graph = graph;
         }
 

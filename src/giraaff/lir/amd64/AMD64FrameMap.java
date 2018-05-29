@@ -50,10 +50,12 @@ import giraaff.lir.framemap.FrameMap;
  * call-free methods also have this space reserved. Then the VM can use the memory at offset 0
  * relative to the stack pointer.
  */
-public class AMD64FrameMap extends FrameMap
+// @class AMD64FrameMap
+public final class AMD64FrameMap extends FrameMap
 {
     private StackSlot rbpSpillSlot;
 
+    // @cons
     public AMD64FrameMap(CodeCacheProvider codeCache, RegisterConfig registerConfig)
     {
         super(codeCache, registerConfig);

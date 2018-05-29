@@ -14,6 +14,7 @@ import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.memory.address.AddressNode;
 
 // @NodeInfo.allowedUsageTypes "Memory, Guard"
+// @class AbstractWriteNode
 public abstract class AbstractWriteNode extends FixedAccessNode implements StateSplit, MemoryCheckpoint.Single, MemoryAccess, GuardingNode
 {
     public static final NodeClass<AbstractWriteNode> TYPE = NodeClass.create(AbstractWriteNode.class);
@@ -46,6 +47,7 @@ public abstract class AbstractWriteNode extends FixedAccessNode implements State
         return value;
     }
 
+    // @cons
     protected AbstractWriteNode(NodeClass<? extends AbstractWriteNode> c, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType)
     {
         super(c, address, location, StampFactory.forVoid(), barrierType);

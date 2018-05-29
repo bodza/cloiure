@@ -27,6 +27,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * {@link Word#toObject()} operations. It has an impact on the pointer maps for the GC, so it must
  * not be scheduled or optimized away.
  */
+// @class WordCastNode
 public final class WordCastNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable
 {
     public static final NodeClass<WordCastNode> TYPE = NodeClass.create(WordCastNode.class);
@@ -59,11 +60,13 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
         return new WordCastNode(StampFactory.forKind(wordKind), input, false);
     }
 
+    // @cons
     protected WordCastNode(Stamp stamp, ValueNode input)
     {
         this(stamp, input, true);
     }
 
+    // @cons
     protected WordCastNode(Stamp stamp, ValueNode input, boolean trackedPointer)
     {
         super(TYPE, stamp);

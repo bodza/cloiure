@@ -29,6 +29,7 @@ import giraaff.util.GraalError;
  * The description consists of (inclusive) lower and upper bounds and up (may be set) and down
  * (always set) bit-masks.
  */
+// @class IntegerStamp
 public final class IntegerStamp extends PrimitiveStamp
 {
     private final long lowerBound;
@@ -36,6 +37,7 @@ public final class IntegerStamp extends PrimitiveStamp
     private final long downMask;
     private final long upMask;
 
+    // @cons
     private IntegerStamp(int bits, long lowerBound, long upperBound, long downMask, long upMask)
     {
         super(bits, OPS);

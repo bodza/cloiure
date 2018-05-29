@@ -13,6 +13,7 @@ import giraaff.options.OptionValues;
 /**
  * Used by a {@link GraphBuilderPlugin} to interface with an object that builds a graph.
  */
+// @iface GraphBuilderTool
 public interface GraphBuilderTool
 {
     /**

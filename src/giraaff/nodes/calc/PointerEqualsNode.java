@@ -24,12 +24,14 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 
+// @class PointerEqualsNode
 public class PointerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<PointerEqualsNode> TYPE = NodeClass.create(PointerEqualsNode.class);
 
     private static final PointerEqualsOp OP = new PointerEqualsOp();
 
+    // @cons
     public PointerEqualsNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
@@ -45,6 +47,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
         return new PointerEqualsNode(x, y);
     }
 
+    // @cons
     protected PointerEqualsNode(NodeClass<? extends PointerEqualsNode> c, ValueNode x, ValueNode y)
     {
         super(c, CanonicalCondition.EQ, false, x, y);
@@ -62,6 +65,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
         return this;
     }
 
+    // @class PointerEqualsNode.PointerEqualsOp
     public static class PointerEqualsOp extends CompareOp
     {
         /**

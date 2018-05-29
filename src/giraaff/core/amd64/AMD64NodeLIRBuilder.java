@@ -22,14 +22,17 @@ import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
+// @class AMD64NodeLIRBuilder
 public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {
-    public static class Options
+    // @class AMD64NodeLIRBuilder.Options
+    public static final class Options
     {
         // @Option "AMD64: Emit lfence instructions at the beginning of basic blocks."
         public static final OptionKey<Boolean> MitigateSpeculativeExecutionAttacks = new OptionKey<>(false);
     }
 
+    // @cons
     public AMD64NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
         super(graph, gen);

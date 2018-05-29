@@ -12,7 +12,8 @@ import giraaff.nodes.extended.ForeignCallNode;
  * Substitutions for {@link java.lang.Object} methods.
  */
 @ClassSubstitution(Object.class)
-public class ObjectSubstitutions
+// @class ObjectSubstitutions
+public final class ObjectSubstitutions
 {
     @MethodSubstitution(isStatic = false)
     public static int hashCode(final Object thisObj)

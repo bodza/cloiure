@@ -20,7 +20,8 @@ import giraaff.replacements.Snippets;
  * Snippets used for conversion operations on AMD64 where the AMD64 instruction used does not match
  * the semantics of the JVM specification.
  */
-public class AMD64ConvertSnippets implements Snippets
+// @class AMD64ConvertSnippets
+public final class AMD64ConvertSnippets implements Snippets
 {
     /**
      * Converts a float to an int.
@@ -142,13 +143,15 @@ public class AMD64ConvertSnippets implements Snippets
         return result;
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class AMD64ConvertSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo f2i;
         private final SnippetInfo f2l;
         private final SnippetInfo d2i;
         private final SnippetInfo d2l;
 
+        // @cons
         public Templates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
             super(options, providers, snippetReflection, target);

@@ -29,7 +29,8 @@ import giraaff.word.Word;
  * Substitutions for {@code com.sun.crypto.provider.AESCrypt} methods.
  */
 @ClassSubstitution(className = "com.sun.crypto.provider.AESCrypt", optional = true)
-public class AESCryptSubstitutions
+// @class AESCryptSubstitutions
+public final class AESCryptSubstitutions
 {
     static final long kOffset;
     static final long lastKeyOffset;
@@ -147,4 +148,10 @@ public class AESCryptSubstitutions
 
     @NodeIntrinsic(ForeignCallNode.class)
     public static native void decryptBlockWithOriginalKeyStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key, Pointer originalKey);
+
+    // @cons
+    private AESCryptSubstitutions()
+    {
+        super();
+    }
 }

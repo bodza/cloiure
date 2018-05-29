@@ -3,7 +3,8 @@ package giraaff.graph;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T>
+// @class TypedGraphNodeIterator
+final class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T>
 {
     private final Graph graph;
     private final int[] ids;
@@ -12,8 +13,10 @@ class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T>
     private int currentIdIndex;
     private boolean needsForward;
 
+    // @cons
     TypedGraphNodeIterator(NodeClass<?> clazz, Graph graph)
     {
+        super();
         this.graph = graph;
         ids = clazz.iterableIds();
         currentIdIndex = 0;

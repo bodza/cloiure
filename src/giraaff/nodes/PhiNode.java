@@ -18,12 +18,14 @@ import giraaff.nodes.calc.FloatingNode;
  * corresponds to the loop's predecessor, while the rest of the values correspond to the
  * {@link LoopEndNode}s.
  */
+// @class PhiNode
 public abstract class PhiNode extends FloatingNode implements Canonicalizable
 {
     public static final NodeClass<PhiNode> TYPE = NodeClass.create(PhiNode.class);
 
     @Input(InputType.Association) protected AbstractMergeNode merge;
 
+    // @cons
     protected PhiNode(NodeClass<? extends PhiNode> c, Stamp stamp, AbstractMergeNode merge)
     {
         super(c, stamp);

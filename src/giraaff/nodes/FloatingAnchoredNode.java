@@ -6,17 +6,20 @@ import giraaff.nodeinfo.InputType;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.extended.AnchoringNode;
 
+// @class FloatingAnchoredNode
 public abstract class FloatingAnchoredNode extends FloatingNode
 {
     public static final NodeClass<FloatingAnchoredNode> TYPE = NodeClass.create(FloatingAnchoredNode.class);
 
     @Input(InputType.Anchor) protected AnchoringNode anchor;
 
+    // @cons
     public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> c, Stamp stamp)
     {
         super(c, stamp);
     }
 
+    // @cons
     public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> c, Stamp stamp, AnchoringNode anchor)
     {
         super(c, stamp);

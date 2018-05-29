@@ -16,15 +16,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Writes a given {@linkplain #value() value} a {@linkplain FixedAccessNode memory location}.
  */
-public class WriteNode extends AbstractWriteNode implements LIRLowerableAccess, Canonicalizable
+// @class WriteNode
+public final class WriteNode extends AbstractWriteNode implements LIRLowerableAccess, Canonicalizable
 {
     public static final NodeClass<WriteNode> TYPE = NodeClass.create(WriteNode.class);
 
+    // @cons
     public WriteNode(AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType)
     {
         super(TYPE, address, location, value, barrierType);
     }
 
+    // @cons
     protected WriteNode(NodeClass<? extends WriteNode> c, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType)
     {
         super(c, address, location, value, barrierType);

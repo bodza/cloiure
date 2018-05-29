@@ -9,12 +9,14 @@ import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 /**
  * This interface can be used to generate AMD64 LIR for arithmetic operations.
  */
+// @iface AMD64ArithmeticLIRGeneratorTool
 public interface AMD64ArithmeticLIRGeneratorTool extends ArithmeticLIRGeneratorTool
 {
     Value emitCountLeadingZeros(Value value);
 
     Value emitCountTrailingZeros(Value value);
 
+    // @enum AMD64ArithmeticLIRGeneratorTool.RoundingMode
     enum RoundingMode
     {
         NEAREST(0),

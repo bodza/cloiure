@@ -34,6 +34,7 @@ import giraaff.util.CollectionsUtil;
 /**
  * Information about arithmetic operations.
  */
+// @class ArithmeticOpTable
 public final class ArithmeticOpTable
 {
     private final UnaryOp<Neg> neg;
@@ -99,6 +100,7 @@ public final class ArithmeticOpTable
 
     public static final ArithmeticOpTable EMPTY = new ArithmeticOpTable(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
+    // @iface ArithmeticOpTable.ArithmeticOpWrapper
     public interface ArithmeticOpWrapper
     {
         <OP> UnaryOp<OP> wrapUnaryOp(UnaryOp<OP> op);
@@ -156,8 +158,10 @@ public final class ArithmeticOpTable
         return new ArithmeticOpTable(neg, add, sub, mul, mulHigh, umulHigh, div, rem, not, and, or, xor, shl, shr, ushr, abs, sqrt, zeroExtend, signExtend, narrow, floatConvert);
     }
 
+    // @cons
     protected ArithmeticOpTable(UnaryOp<Neg> neg, BinaryOp<Add> add, BinaryOp<Sub> sub, BinaryOp<Mul> mul, BinaryOp<MulHigh> mulHigh, BinaryOp<UMulHigh> umulHigh, BinaryOp<Div> div, BinaryOp<Rem> rem, UnaryOp<Not> not, BinaryOp<And> and, BinaryOp<Or> or, BinaryOp<Xor> xor, ShiftOp<Shl> shl, ShiftOp<Shr> shr, ShiftOp<UShr> ushr, UnaryOp<Abs> abs, UnaryOp<Sqrt> sqrt, IntegerConvertOp<ZeroExtend> zeroExtend, IntegerConvertOp<SignExtend> signExtend, IntegerConvertOp<Narrow> narrow, FloatConvertOp... floatConvert)
     {
+        super();
         this.neg = neg;
         this.add = add;
         this.sub = sub;
@@ -422,12 +426,15 @@ public final class ArithmeticOpTable
         return getClass().getSimpleName() + "[" + toString(neg, add, sub, mul, mulHigh, umulHigh, div, rem, not, and, or, xor, shl, shr, ushr, abs, sqrt, zeroExtend, signExtend, narrow) + ",floatConvert[" + toString(floatConvert) + "]]";
     }
 
+    // @class ArithmeticOpTable.Op
     public abstract static class Op
     {
         private final String operator;
 
+        // @cons
         protected Op(String operator)
         {
+            super();
             this.operator = operator;
         }
 
@@ -470,40 +477,50 @@ public final class ArithmeticOpTable
     /**
      * Describes a unary arithmetic operation.
      */
+    // @class ArithmeticOpTable.UnaryOp
     public abstract static class UnaryOp<T> extends Op
     {
+        // @class ArithmeticOpTable.UnaryOp.Neg
         public abstract static class Neg extends UnaryOp<Neg>
         {
+            // @cons
             protected Neg()
             {
                 super("-");
             }
         }
 
+        // @class ArithmeticOpTable.UnaryOp.Not
         public abstract static class Not extends UnaryOp<Not>
         {
+            // @cons
             protected Not()
             {
                 super("~");
             }
         }
 
+        // @class ArithmeticOpTable.UnaryOp.Abs
         public abstract static class Abs extends UnaryOp<Abs>
         {
+            // @cons
             protected Abs()
             {
                 super("ABS");
             }
         }
 
+        // @class ArithmeticOpTable.UnaryOp.Sqrt
         public abstract static class Sqrt extends UnaryOp<Sqrt>
         {
+            // @cons
             protected Sqrt()
             {
                 super("SQRT");
             }
         }
 
+        // @cons
         protected UnaryOp(String operation)
         {
             super(operation);
@@ -528,82 +545,103 @@ public final class ArithmeticOpTable
     /**
      * Describes a binary arithmetic operation.
      */
+    // @class ArithmeticOpTable.BinaryOp
     public abstract static class BinaryOp<T> extends Op
     {
+        // @class ArithmeticOpTable.BinaryOp.Add
         public abstract static class Add extends BinaryOp<Add>
         {
+            // @cons
             protected Add(boolean associative, boolean commutative)
             {
                 super("+", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.Sub
         public abstract static class Sub extends BinaryOp<Sub>
         {
+            // @cons
             protected Sub(boolean associative, boolean commutative)
             {
                 super("-", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.Mul
         public abstract static class Mul extends BinaryOp<Mul>
         {
+            // @cons
             protected Mul(boolean associative, boolean commutative)
             {
                 super("*", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.MulHigh
         public abstract static class MulHigh extends BinaryOp<MulHigh>
         {
+            // @cons
             protected MulHigh(boolean associative, boolean commutative)
             {
                 super("*H", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.UMulHigh
         public abstract static class UMulHigh extends BinaryOp<UMulHigh>
         {
+            // @cons
             protected UMulHigh(boolean associative, boolean commutative)
             {
                 super("|*H|", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.Div
         public abstract static class Div extends BinaryOp<Div>
         {
+            // @cons
             protected Div(boolean associative, boolean commutative)
             {
                 super("/", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.Rem
         public abstract static class Rem extends BinaryOp<Rem>
         {
+            // @cons
             protected Rem(boolean associative, boolean commutative)
             {
                 super("%", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.And
         public abstract static class And extends BinaryOp<And>
         {
+            // @cons
             protected And(boolean associative, boolean commutative)
             {
                 super("&", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.Or
         public abstract static class Or extends BinaryOp<Or>
         {
+            // @cons
             protected Or(boolean associative, boolean commutative)
             {
                 super("|", associative, commutative);
             }
         }
 
+        // @class ArithmeticOpTable.BinaryOp.Xor
         public abstract static class Xor extends BinaryOp<Xor>
         {
+            // @cons
             protected Xor(boolean associative, boolean commutative)
             {
                 super("^", associative, commutative);
@@ -613,6 +651,7 @@ public final class ArithmeticOpTable
         private final boolean associative;
         private final boolean commutative;
 
+        // @cons
         protected BinaryOp(String operation, boolean associative, boolean commutative)
         {
             super(operation);
@@ -747,32 +786,40 @@ public final class ArithmeticOpTable
      * Describes a shift operation. The right argument of a shift operation always has kind
      * {@link JavaKind#Int}.
      */
+    // @class ArithmeticOpTable.ShiftOp
     public abstract static class ShiftOp<OP> extends Op
     {
+        // @class ArithmeticOpTable.ShiftOp.Shl
         public abstract static class Shl extends ShiftOp<Shl>
         {
+            // @cons
             public Shl()
             {
                 super("<<");
             }
         }
 
+        // @class ArithmeticOpTable.ShiftOp.Shr
         public abstract static class Shr extends ShiftOp<Shr>
         {
+            // @cons
             public Shr()
             {
                 super(">>");
             }
         }
 
+        // @class ArithmeticOpTable.ShiftOp.UShr
         public abstract static class UShr extends ShiftOp<UShr>
         {
+            // @cons
             public UShr()
             {
                 super(">>>");
             }
         }
 
+        // @cons
         protected ShiftOp(String operation)
         {
             super(operation);
@@ -794,10 +841,12 @@ public final class ArithmeticOpTable
         public abstract int getShiftAmountMask(Stamp s);
     }
 
+    // @class ArithmeticOpTable.FloatConvertOp
     public abstract static class FloatConvertOp extends UnaryOp<FloatConvertOp>
     {
         private final FloatConvert op;
 
+        // @cons
         protected FloatConvertOp(FloatConvert op)
         {
             super(op.name());
@@ -846,26 +895,33 @@ public final class ArithmeticOpTable
         }
     }
 
+    // @class ArithmeticOpTable.IntegerConvertOp
     public abstract static class IntegerConvertOp<T> extends Op
     {
+        // @class ArithmeticOpTable.IntegerConvertOp.ZeroExtend
         public abstract static class ZeroExtend extends IntegerConvertOp<ZeroExtend>
         {
+            // @cons
             protected ZeroExtend()
             {
                 super("ZeroExtend");
             }
         }
 
+        // @class ArithmeticOpTable.IntegerConvertOp.SignExtend
         public abstract static class SignExtend extends IntegerConvertOp<SignExtend>
         {
+            // @cons
             protected SignExtend()
             {
                 super("SignExtend");
             }
         }
 
+        // @class ArithmeticOpTable.IntegerConvertOp.Narrow
         public abstract static class Narrow extends IntegerConvertOp<Narrow>
         {
+            // @cons
             protected Narrow()
             {
                 super("Narrow");
@@ -878,6 +934,7 @@ public final class ArithmeticOpTable
             }
         }
 
+        // @cons
         protected IntegerConvertOp(String op)
         {
             super(op);

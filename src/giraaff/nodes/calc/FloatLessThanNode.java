@@ -19,12 +19,14 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
+// @class FloatLessThanNode
 public final class FloatLessThanNode extends CompareNode
 {
     public static final NodeClass<FloatLessThanNode> TYPE = NodeClass.create(FloatLessThanNode.class);
 
     private static final FloatLessThanOp OP = new FloatLessThanOp();
 
+    // @cons
     public FloatLessThanNode(ValueNode x, ValueNode y, boolean unorderedIsTrue)
     {
         super(TYPE, CanonicalCondition.LT, unorderedIsTrue, x, y);
@@ -62,7 +64,8 @@ public final class FloatLessThanNode extends CompareNode
         return this;
     }
 
-    public static class FloatLessThanOp extends CompareOp
+    // @class FloatLessThanNode.FloatLessThanOp
+    public static final class FloatLessThanOp extends CompareOp
     {
         @Override
         public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)

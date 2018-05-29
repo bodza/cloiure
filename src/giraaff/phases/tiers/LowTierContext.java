@@ -4,10 +4,12 @@ import jdk.vm.ci.code.TargetDescription;
 
 import giraaff.phases.util.Providers;
 
-public class LowTierContext extends PhaseContext
+// @class LowTierContext
+public final class LowTierContext extends PhaseContext
 {
     private final TargetProvider target;
 
+    // @cons
     public LowTierContext(Providers copyFrom, TargetProvider target)
     {
         super(copyFrom);

@@ -15,12 +15,14 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Cast between Word and metaspace pointers exposed by the {@link HotspotOpcode#FROM_POINTER} and
  * {@link HotspotOpcode#TO_KLASS_POINTER} operations.
  */
+// @class PointerCastNode
 public final class PointerCastNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable
 {
     public static final NodeClass<PointerCastNode> TYPE = NodeClass.create(PointerCastNode.class);
 
     @Input ValueNode input;
 
+    // @cons
     public PointerCastNode(Stamp stamp, ValueNode input)
     {
         super(TYPE, stamp);

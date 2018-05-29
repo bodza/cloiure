@@ -39,6 +39,7 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class ArrayCopyCallNode
 public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single, MemoryAccess, Canonicalizable
 {
     public static final NodeClass<ArrayCopyCallNode> TYPE = NodeClass.create(ArrayCopyCallNode.class);
@@ -63,16 +64,19 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
 
     protected final HotSpotGraalRuntimeProvider runtime;
 
+    // @cons
     public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, boolean aligned, boolean disjoint, boolean uninitialized)
     {
         this(runtime, src, srcPos, dest, destPos, length, elementKind, null, aligned, disjoint, uninitialized);
     }
 
+    // @cons
     public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, boolean disjoint)
     {
         this(runtime, src, srcPos, dest, destPos, length, elementKind, null, false, disjoint, false);
     }
 
+    // @cons
     protected ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, LocationIdentity locationIdentity, boolean aligned, boolean disjoint, boolean uninitialized)
     {
         super(TYPE, StampFactory.forVoid());

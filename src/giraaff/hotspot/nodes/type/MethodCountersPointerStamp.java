@@ -8,6 +8,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.Stamp;
 
+// @class MethodCountersPointerStamp
 public final class MethodCountersPointerStamp extends MetaspacePointerStamp
 {
     private static final MethodCountersPointerStamp METHOD_COUNTERS = new MethodCountersPointerStamp(false, false);
@@ -26,6 +27,7 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
         return METHOD_COUNTERS_NON_NULL;
     }
 
+    // @cons
     private MethodCountersPointerStamp(boolean nonNull, boolean alwaysNull)
     {
         super(nonNull, alwaysNull);

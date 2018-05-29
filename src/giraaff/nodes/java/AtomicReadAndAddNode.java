@@ -19,6 +19,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class AtomicReadAndAddNode
 public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<AtomicReadAndAddNode> TYPE = NodeClass.create(AtomicReadAndAddNode.class);
@@ -28,6 +29,7 @@ public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint impleme
 
     protected final LocationIdentity locationIdentity;
 
+    // @cons
     public AtomicReadAndAddNode(AddressNode address, ValueNode delta, LocationIdentity locationIdentity)
     {
         super(TYPE, StampFactory.forKind(delta.getStackKind()));

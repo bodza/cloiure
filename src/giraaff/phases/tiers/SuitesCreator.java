@@ -6,6 +6,7 @@ import giraaff.options.OptionValues;
 /**
  * Interface used for composing {@link SuitesProvider}s.
  */
+// @iface SuitesCreator
 public interface SuitesCreator extends SuitesProvider
 {
     /**

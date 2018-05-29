@@ -20,10 +20,12 @@ import giraaff.nodes.type.StampTool;
 /**
  * Count the number of trailing zeros using the {@code tzcntq} or {@code tzcntl} instructions.
  */
+// @class AMD64CountTrailingZerosNode
 public final class AMD64CountTrailingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<AMD64CountTrailingZerosNode> TYPE = NodeClass.create(AMD64CountTrailingZerosNode.class);
 
+    // @cons
     public AMD64CountTrailingZerosNode(ValueNode value)
     {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);

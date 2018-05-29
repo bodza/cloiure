@@ -17,12 +17,14 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * only be guaranteed if used in a snippet that is instantiated after frame state assignment.
  * {@link ComputeObjectAddressNode} should generally be used in preference to this node.
  */
+// @class GetObjectAddressNode
 public final class GetObjectAddressNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<GetObjectAddressNode> TYPE = NodeClass.create(GetObjectAddressNode.class);
 
     @Input ValueNode object;
 
+    // @cons
     public GetObjectAddressNode(ValueNode obj)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Long));

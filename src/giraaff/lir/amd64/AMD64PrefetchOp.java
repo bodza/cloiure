@@ -6,6 +6,7 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
+// @class AMD64PrefetchOp
 public final class AMD64PrefetchOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64PrefetchOp> TYPE = LIRInstructionClass.create(AMD64PrefetchOp.class);
@@ -13,6 +14,7 @@ public final class AMD64PrefetchOp extends AMD64LIRInstruction
     private final int instr; // AllocatePrefetchInstr
     @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
 
+    // @cons
     public AMD64PrefetchOp(AMD64AddressValue address, int instr)
     {
         super(TYPE);

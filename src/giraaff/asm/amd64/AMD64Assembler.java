@@ -22,6 +22,7 @@ import giraaff.util.GraalError;
 /**
  * This class implements an assembler that can encode most X86 instructions.
  */
+// @class AMD64Assembler
 public class AMD64Assembler extends Assembler
 {
     private static final int MinEncodingNeedsRex = 8;
@@ -29,6 +30,7 @@ public class AMD64Assembler extends Assembler
     /**
      * The x86 condition codes used for conditional jumps/moves.
      */
+    // @enum AMD64Assembler.ConditionFlag
     public enum ConditionFlag
     {
         Zero(0x4, "|zero|"),
@@ -124,83 +126,97 @@ public class AMD64Assembler extends Assembler
     /**
      * Constants for X86 prefix bytes.
      */
-    private static class Prefix
+    // @class AMD64Assembler.Prefix
+    private static final class Prefix
     {
-        private static final int REX = 0x40;
-        private static final int REXB = 0x41;
-        private static final int REXX = 0x42;
-        private static final int REXXB = 0x43;
-        private static final int REXR = 0x44;
-        private static final int REXRB = 0x45;
-        private static final int REXRX = 0x46;
-        private static final int REXRXB = 0x47;
-        private static final int REXW = 0x48;
-        private static final int REXWB = 0x49;
-        private static final int REXWX = 0x4A;
-        private static final int REXWXB = 0x4B;
-        private static final int REXWR = 0x4C;
-        private static final int REXWRB = 0x4D;
-        private static final int REXWRX = 0x4E;
-        private static final int REXWRXB = 0x4F;
-        private static final int VEX_3BYTES = 0xC4;
-        private static final int VEX_2BYTES = 0xC5;
+        private static final int
+            REX        = 0x40,
+            REXB       = 0x41,
+            REXX       = 0x42,
+            REXXB      = 0x43,
+            REXR       = 0x44,
+            REXRB      = 0x45,
+            REXRX      = 0x46,
+            REXRXB     = 0x47,
+            REXW       = 0x48,
+            REXWB      = 0x49,
+            REXWX      = 0x4A,
+            REXWXB     = 0x4B,
+            REXWR      = 0x4C,
+            REXWRB     = 0x4D,
+            REXWRX     = 0x4E,
+            REXWRXB    = 0x4F,
+            VEX_3BYTES = 0xC4,
+            VEX_2BYTES = 0xC5;
     }
 
-    private static class VexPrefix
+    // @class AMD64Assembler.VexPrefix
+    private static final class VexPrefix
     {
-        private static final int VEX_R = 0x80;
-        private static final int VEX_W = 0x80;
+        private static final int
+            VEX_R = 0x80,
+            VEX_W = 0x80;
     }
 
-    private static class VexSimdPrefix
+    // @class AMD64Assembler.VexSimdPrefix
+    private static final class VexSimdPrefix
     {
-        private static final int VEX_SIMD_NONE = 0x0;
-        private static final int VEX_SIMD_66 = 0x1;
-        private static final int VEX_SIMD_F3 = 0x2;
-        private static final int VEX_SIMD_F2 = 0x3;
+        private static final int
+            VEX_SIMD_NONE = 0x0,
+            VEX_SIMD_66   = 0x1,
+            VEX_SIMD_F3   = 0x2,
+            VEX_SIMD_F2   = 0x3;
     }
 
-    private static class VexOpcode
+    // @class AMD64Assembler.VexOpcode
+    private static final class VexOpcode
     {
-        private static final int VEX_OPCODE_NONE = 0x0;
-        private static final int VEX_OPCODE_0F = 0x1;
-        private static final int VEX_OPCODE_0F_38 = 0x2;
-        private static final int VEX_OPCODE_0F_3A = 0x3;
+        private static final int
+            VEX_OPCODE_NONE  = 0x0,
+            VEX_OPCODE_0F    = 0x1,
+            VEX_OPCODE_0F_38 = 0x2,
+            VEX_OPCODE_0F_3A = 0x3;
     }
 
-    public static class AvxVectorLen
+    // @class AMD64Assembler.AvxVectorLen
+    public static final class AvxVectorLen
     {
-        public static final int AVX_128bit = 0x0;
-        public static final int AVX_256bit = 0x1;
-        public static final int AVX_512bit = 0x2;
-        public static final int AVX_NoVec = 0x4;
+        public static final int
+            AVX_128bit = 0x0,
+            AVX_256bit = 0x1,
+            AVX_512bit = 0x2,
+            AVX_NoVec  = 0x4;
     }
 
-    public static class EvexTupleType
+    // @class AMD64Assembler.EvexTupleType
+    public static final class EvexTupleType
     {
-        public static final int EVEX_FV = 0;
-        public static final int EVEX_HV = 4;
-        public static final int EVEX_FVM = 6;
-        public static final int EVEX_T1S = 7;
-        public static final int EVEX_T1F = 11;
-        public static final int EVEX_T2 = 13;
-        public static final int EVEX_T4 = 15;
-        public static final int EVEX_T8 = 17;
-        public static final int EVEX_HVM = 18;
-        public static final int EVEX_QVM = 19;
-        public static final int EVEX_OVM = 20;
-        public static final int EVEX_M128 = 21;
-        public static final int EVEX_DUP = 22;
-        public static final int EVEX_ETUP = 23;
+        public static final int
+            EVEX_FV   =  0,
+            EVEX_HV   =  4,
+            EVEX_FVM  =  6,
+            EVEX_T1S  =  7,
+            EVEX_T1F  = 11,
+            EVEX_T2   = 13,
+            EVEX_T4   = 15,
+            EVEX_T8   = 17,
+            EVEX_HVM  = 18,
+            EVEX_QVM  = 19,
+            EVEX_OVM  = 20,
+            EVEX_M128 = 21,
+            EVEX_DUP  = 22,
+            EVEX_ETUP = 23;
     }
 
-    public static class EvexInputSizeInBits
+    // @class AMD64Assembler.EvexInputSizeInBits
+    public static final class EvexInputSizeInBits
     {
-        public static final int EVEX_8bit = 0;
-        public static final int EVEX_16bit = 1;
-        public static final int EVEX_32bit = 2;
-        public static final int EVEX_64bit = 3;
-        public static final int EVEX_NObit = 4;
+        public static final int
+            EVEX_8bit  = 0,
+            EVEX_16bit = 1,
+            EVEX_32bit = 2,
+            EVEX_64bit = 3,
+            EVEX_NObit = 4;
     }
 
     private AMD64InstructionAttr curAttributes;
@@ -218,6 +234,7 @@ public class AMD64Assembler extends Assembler
     /**
      * The x86 operand sizes.
      */
+    // @enum AMD64Assembler.OperandSize
     public enum OperandSize
     {
         BYTE(1, AMD64Kind.BYTE)
@@ -361,6 +378,7 @@ public class AMD64Assembler extends Assembler
     /**
      * Operand size and register type constraints.
      */
+    // @enum AMD64Assembler.OpAssertion
     private enum OpAssertion
     {
         ByteAssertion(AMD64.CPU, AMD64.CPU, OperandSize.BYTE),
@@ -405,6 +423,7 @@ public class AMD64Assembler extends Assembler
     /**
      * Constructs an assembler for the AMD64 architecture.
      */
+    // @cons
     public AMD64Assembler(TargetDescription target)
     {
         super(target);
@@ -627,6 +646,7 @@ public class AMD64Assembler extends Assembler
     /**
      * Base class for AMD64 opcodes.
      */
+    // @class AMD64Assembler.AMD64Op
     public static class AMD64Op
     {
         protected static final int P_0F = 0x0F;
@@ -645,13 +665,16 @@ public class AMD64Assembler extends Assembler
         private final OpAssertion assertion;
         private final CPUFeature feature;
 
+        // @cons
         protected AMD64Op(String opcode, int prefix1, int prefix2, int op, OpAssertion assertion, CPUFeature feature)
         {
             this(opcode, prefix1, prefix2, op, assertion == OpAssertion.ByteAssertion, assertion == OpAssertion.ByteAssertion, assertion, feature);
         }
 
+        // @cons
         protected AMD64Op(String opcode, int prefix1, int prefix2, int op, boolean dstIsByte, boolean srcIsByte, OpAssertion assertion, CPUFeature feature)
         {
+            super();
             this.opcode = opcode;
             this.prefix1 = prefix1;
             this.prefix2 = prefix2;
@@ -704,10 +727,12 @@ public class AMD64Assembler extends Assembler
     /**
      * Base class for AMD64 opcodes with immediate operands.
      */
+    // @class AMD64Assembler.AMD64ImmOp
     public static class AMD64ImmOp extends AMD64Op
     {
         private final boolean immIsByte;
 
+        // @cons
         protected AMD64ImmOp(String opcode, boolean immIsByte, int prefix, int op, OpAssertion assertion)
         {
             super(opcode, 0, prefix, op, assertion, null);
@@ -742,13 +767,16 @@ public class AMD64Assembler extends Assembler
     /**
      * Opcode with operand order of either RM or MR for 2 address forms.
      */
+    // @class AMD64Assembler.AMD64RROp
     public abstract static class AMD64RROp extends AMD64Op
     {
+        // @cons
         protected AMD64RROp(String opcode, int prefix1, int prefix2, int op, OpAssertion assertion, CPUFeature feature)
         {
             super(opcode, prefix1, prefix2, op, assertion, feature);
         }
 
+        // @cons
         protected AMD64RROp(String opcode, int prefix1, int prefix2, int op, boolean dstIsByte, boolean srcIsByte, OpAssertion assertion, CPUFeature feature)
         {
             super(opcode, prefix1, prefix2, op, dstIsByte, srcIsByte, assertion, feature);
@@ -760,13 +788,16 @@ public class AMD64Assembler extends Assembler
     /**
      * Opcode with operand order of either RM or MR for 3 address forms.
      */
+    // @class AMD64Assembler.AMD64RRROp
     public abstract static class AMD64RRROp extends AMD64Op
     {
+        // @cons
         protected AMD64RRROp(String opcode, int prefix1, int prefix2, int op, OpAssertion assertion, CPUFeature feature)
         {
             super(opcode, prefix1, prefix2, op, assertion, feature);
         }
 
+        // @cons
         protected AMD64RRROp(String opcode, int prefix1, int prefix2, int op, boolean dstIsByte, boolean srcIsByte, OpAssertion assertion, CPUFeature feature)
         {
             super(opcode, prefix1, prefix2, op, dstIsByte, srcIsByte, assertion, feature);
@@ -778,6 +809,7 @@ public class AMD64Assembler extends Assembler
     /**
      * Opcode with operand order of RM.
      */
+    // @class AMD64Assembler.AMD64RMOp
     public static class AMD64RMOp extends AMD64RROp
     {
         public static final AMD64RMOp IMUL   = new AMD64RMOp("IMUL",         P_0F, 0xAF, OpAssertion.ByteOrLargerAssertion);
@@ -804,41 +836,49 @@ public class AMD64Assembler extends Assembler
         public static final AMD64RMOp TESTB  = new AMD64RMOp("TEST",               0x84, OpAssertion.ByteAssertion);
         public static final AMD64RMOp TEST   = new AMD64RMOp("TEST",               0x85);
 
+        // @cons
         protected AMD64RMOp(String opcode, int op)
         {
             this(opcode, 0, op);
         }
 
+        // @cons
         protected AMD64RMOp(String opcode, int op, OpAssertion assertion)
         {
             this(opcode, 0, op, assertion);
         }
 
+        // @cons
         protected AMD64RMOp(String opcode, int prefix, int op)
         {
             this(opcode, 0, prefix, op, null);
         }
 
+        // @cons
         protected AMD64RMOp(String opcode, int prefix, int op, OpAssertion assertion)
         {
             this(opcode, 0, prefix, op, assertion, null);
         }
 
+        // @cons
         protected AMD64RMOp(String opcode, int prefix, int op, OpAssertion assertion, CPUFeature feature)
         {
             this(opcode, 0, prefix, op, assertion, feature);
         }
 
+        // @cons
         protected AMD64RMOp(String opcode, int prefix, int op, boolean dstIsByte, boolean srcIsByte, OpAssertion assertion)
         {
             super(opcode, 0, prefix, op, dstIsByte, srcIsByte, assertion, null);
         }
 
+        // @cons
         protected AMD64RMOp(String opcode, int prefix1, int prefix2, int op, CPUFeature feature)
         {
             this(opcode, prefix1, prefix2, op, OpAssertion.WordOrLargerAssertion, feature);
         }
 
+        // @cons
         protected AMD64RMOp(String opcode, int prefix1, int prefix2, int op, OpAssertion assertion, CPUFeature feature)
         {
             super(opcode, prefix1, prefix2, op, assertion, feature);
@@ -1030,43 +1070,52 @@ public class AMD64Assembler extends Assembler
     /**
      * Opcode with operand order of RM.
      */
+    // @class AMD64Assembler.AMD64RRMOp
     public static class AMD64RRMOp extends AMD64RRROp
     {
+        // @cons
         protected AMD64RRMOp(String opcode, int op)
         {
             this(opcode, 0, op);
         }
 
+        // @cons
         protected AMD64RRMOp(String opcode, int op, OpAssertion assertion)
         {
             this(opcode, 0, op, assertion);
         }
 
+        // @cons
         protected AMD64RRMOp(String opcode, int prefix, int op)
         {
             this(opcode, 0, prefix, op, null);
         }
 
+        // @cons
         protected AMD64RRMOp(String opcode, int prefix, int op, OpAssertion assertion)
         {
             this(opcode, 0, prefix, op, assertion, null);
         }
 
+        // @cons
         protected AMD64RRMOp(String opcode, int prefix, int op, OpAssertion assertion, CPUFeature feature)
         {
             this(opcode, 0, prefix, op, assertion, feature);
         }
 
+        // @cons
         protected AMD64RRMOp(String opcode, int prefix, int op, boolean dstIsByte, boolean srcIsByte, OpAssertion assertion)
         {
             super(opcode, 0, prefix, op, dstIsByte, srcIsByte, assertion, null);
         }
 
+        // @cons
         protected AMD64RRMOp(String opcode, int prefix1, int prefix2, int op, CPUFeature feature)
         {
             this(opcode, prefix1, prefix2, op, OpAssertion.WordOrLargerAssertion, feature);
         }
 
+        // @cons
         protected AMD64RRMOp(String opcode, int prefix1, int prefix2, int op, OpAssertion assertion, CPUFeature feature)
         {
             super(opcode, prefix1, prefix2, op, assertion, feature);
@@ -1160,45 +1209,52 @@ public class AMD64Assembler extends Assembler
     /**
      * Opcode with operand order of MR.
      */
-    public static class AMD64MROp extends AMD64RROp
+    // @class AMD64Assembler.AMD64MROp
+    public static final class AMD64MROp extends AMD64RROp
     {
-        public static final AMD64MROp MOVB   = new AMD64MROp("MOVB",               0x88, OpAssertion.ByteAssertion);
-        public static final AMD64MROp MOV    = new AMD64MROp("MOV",                0x89);
+        public static final AMD64MROp MOVB   = new AMD64MROp("MOVB",             0x88, OpAssertion.ByteAssertion);
+        public static final AMD64MROp MOV    = new AMD64MROp("MOV",              0x89);
 
         // MOVD and MOVQ are the same opcode, just with different operand size prefix.
         // Note that as MR opcodes, they have reverse operand order, so the IntToFloatingAssertion must be used.
-        public static final AMD64MROp MOVD   = new AMD64MROp("MOVD",   0x66, P_0F, 0x7E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
-        public static final AMD64MROp MOVQ   = new AMD64MROp("MOVQ",   0x66, P_0F, 0x7E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
+        public static final AMD64MROp MOVD   = new AMD64MROp("MOVD", 0x66, P_0F, 0x7E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
+        public static final AMD64MROp MOVQ   = new AMD64MROp("MOVQ", 0x66, P_0F, 0x7E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
 
         // MOVSS and MOVSD are the same opcode, just with different operand size prefix.
-        public static final AMD64MROp MOVSS  = new AMD64MROp("MOVSS",        P_0F, 0x11, OpAssertion.FloatAssertion, CPUFeature.SSE);
-        public static final AMD64MROp MOVSD  = new AMD64MROp("MOVSD",        P_0F, 0x11, OpAssertion.FloatAssertion, CPUFeature.SSE);
+        public static final AMD64MROp MOVSS  = new AMD64MROp("MOVSS",      P_0F, 0x11, OpAssertion.FloatAssertion, CPUFeature.SSE);
+        public static final AMD64MROp MOVSD  = new AMD64MROp("MOVSD",      P_0F, 0x11, OpAssertion.FloatAssertion, CPUFeature.SSE);
 
+        // @cons
         protected AMD64MROp(String opcode, int op)
         {
             this(opcode, 0, op);
         }
 
+        // @cons
         protected AMD64MROp(String opcode, int op, OpAssertion assertion)
         {
             this(opcode, 0, op, assertion);
         }
 
+        // @cons
         protected AMD64MROp(String opcode, int prefix, int op)
         {
             this(opcode, prefix, op, OpAssertion.WordOrLargerAssertion);
         }
 
+        // @cons
         protected AMD64MROp(String opcode, int prefix, int op, OpAssertion assertion)
         {
             this(opcode, prefix, op, assertion, null);
         }
 
+        // @cons
         protected AMD64MROp(String opcode, int prefix, int op, OpAssertion assertion, CPUFeature feature)
         {
             this(opcode, 0, prefix, op, assertion, feature);
         }
 
+        // @cons
         protected AMD64MROp(String opcode, int prefix1, int prefix2, int op, OpAssertion assertion, CPUFeature feature)
         {
             super(opcode, prefix1, prefix2, op, assertion, feature);
@@ -1349,7 +1405,8 @@ public class AMD64Assembler extends Assembler
     /**
      * Opcodes with operand order of M.
      */
-    public static class AMD64MOp extends AMD64Op
+    // @class AMD64Assembler.AMD64MOp
+    public static final class AMD64MOp extends AMD64Op
     {
         public static final AMD64MOp NOT  = new AMD64MOp("NOT",  0xF7, 2);
         public static final AMD64MOp NEG  = new AMD64MOp("NEG",  0xF7, 3);
@@ -1364,21 +1421,25 @@ public class AMD64Assembler extends Assembler
 
         private final int ext;
 
+        // @cons
         protected AMD64MOp(String opcode, int op, int ext)
         {
             this(opcode, 0, op, ext);
         }
 
+        // @cons
         protected AMD64MOp(String opcode, int prefix, int op, int ext)
         {
             this(opcode, prefix, op, ext, OpAssertion.WordOrLargerAssertion);
         }
 
+        // @cons
         protected AMD64MOp(String opcode, int op, int ext, OpAssertion assertion)
         {
             this(opcode, 0, op, ext, assertion);
         }
 
+        // @cons
         protected AMD64MOp(String opcode, int prefix, int op, int ext, OpAssertion assertion)
         {
             super(opcode, 0, prefix, op, assertion, null);
@@ -1401,7 +1462,8 @@ public class AMD64Assembler extends Assembler
     /**
      * Opcodes with operand order of MI.
      */
-    public static class AMD64MIOp extends AMD64ImmOp
+    // @class AMD64Assembler.AMD64MIOp
+    public static final class AMD64MIOp extends AMD64ImmOp
     {
         public static final AMD64MIOp MOVB = new AMD64MIOp("MOVB", true,  0xC6, 0, OpAssertion.ByteAssertion);
         public static final AMD64MIOp MOV  = new AMD64MIOp("MOV",  false, 0xC7, 0);
@@ -1409,16 +1471,19 @@ public class AMD64Assembler extends Assembler
 
         private final int ext;
 
+        // @cons
         protected AMD64MIOp(String opcode, boolean immIsByte, int op, int ext)
         {
             this(opcode, immIsByte, op, ext, OpAssertion.WordOrLargerAssertion);
         }
 
+        // @cons
         protected AMD64MIOp(String opcode, boolean immIsByte, int op, int ext, OpAssertion assertion)
         {
             this(opcode, immIsByte, 0, op, ext, assertion);
         }
 
+        // @cons
         protected AMD64MIOp(String opcode, boolean immIsByte, int prefix, int op, int ext, OpAssertion assertion)
         {
             super(opcode, immIsByte, prefix, op, assertion);
@@ -1446,18 +1511,21 @@ public class AMD64Assembler extends Assembler
      * We only have one form of round as the operation is always treated with single variant input,
      * making its extension to 3 address forms redundant.
      */
-    public static class AMD64RMIOp extends AMD64ImmOp
+    // @class AMD64Assembler.AMD64RMIOp
+    public static final class AMD64RMIOp extends AMD64ImmOp
     {
         public static final AMD64RMIOp IMUL    = new AMD64RMIOp("IMUL", false, 0x69);
         public static final AMD64RMIOp IMUL_SX = new AMD64RMIOp("IMUL", true,  0x6B);
         public static final AMD64RMIOp ROUNDSS = new AMD64RMIOp("ROUNDSS", true, P_0F3A, 0x0A, OpAssertion.PackedDoubleAssertion);
         public static final AMD64RMIOp ROUNDSD = new AMD64RMIOp("ROUNDSD", true, P_0F3A, 0x0B, OpAssertion.PackedDoubleAssertion);
 
+        // @cons
         protected AMD64RMIOp(String opcode, boolean immIsByte, int op)
         {
             this(opcode, immIsByte, 0, op, OpAssertion.WordOrLargerAssertion);
         }
 
+        // @cons
         protected AMD64RMIOp(String opcode, boolean immIsByte, int prefix, int op, OpAssertion assertion)
         {
             super(opcode, immIsByte, prefix, op, assertion);
@@ -1613,7 +1681,8 @@ public class AMD64Assembler extends Assembler
         }
     }
 
-    public static class SSEOp extends AMD64RMOp
+    // @class AMD64Assembler.SSEOp
+    public static final class SSEOp extends AMD64RMOp
     {
         public static final SSEOp CVTSI2SS  = new SSEOp("CVTSI2SS",  0xF3, P_0F, 0x2A, OpAssertion.IntToFloatAssertion);
         public static final SSEOp CVTSI2SD  = new SSEOp("CVTSI2SS",  0xF2, P_0F, 0x2A, OpAssertion.IntToFloatAssertion);
@@ -1634,45 +1703,52 @@ public class AMD64Assembler extends Assembler
         public static final SSEOp DIV       = new SSEOp("DIV",             P_0F, 0x5E);
         public static final SSEOp MAX       = new SSEOp("MAX",             P_0F, 0x5F);
 
+        // @cons
         protected SSEOp(String opcode, int prefix, int op)
         {
             this(opcode, prefix, op, OpAssertion.FloatAssertion);
         }
 
+        // @cons
         protected SSEOp(String opcode, int prefix, int op, OpAssertion assertion)
         {
             this(opcode, 0, prefix, op, assertion);
         }
 
+        // @cons
         protected SSEOp(String opcode, int mandatoryPrefix, int prefix, int op, OpAssertion assertion)
         {
             super(opcode, mandatoryPrefix, prefix, op, assertion, CPUFeature.SSE2);
         }
     }
 
-    public static class AVXOp extends AMD64RRMOp
+    // @class AMD64Assembler.AVXOp
+    public static final class AVXOp extends AMD64RRMOp
     {
-        public static final AVXOp AND       = new AVXOp("AND",             P_0F, 0x54, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp ANDN      = new AVXOp("ANDN",            P_0F, 0x55, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp OR        = new AVXOp("OR",              P_0F, 0x56, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp XOR       = new AVXOp("XOR",             P_0F, 0x57, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp ADD       = new AVXOp("ADD",             P_0F, 0x58);
-        public static final AVXOp MUL       = new AVXOp("MUL",             P_0F, 0x59);
-        public static final AVXOp SUB       = new AVXOp("SUB",             P_0F, 0x5C);
-        public static final AVXOp MIN       = new AVXOp("MIN",             P_0F, 0x5D);
-        public static final AVXOp DIV       = new AVXOp("DIV",             P_0F, 0x5E);
-        public static final AVXOp MAX       = new AVXOp("MAX",             P_0F, 0x5F);
+        public static final AVXOp AND  = new AVXOp("AND",  P_0F, 0x54, OpAssertion.PackedFloatAssertion);
+        public static final AVXOp ANDN = new AVXOp("ANDN", P_0F, 0x55, OpAssertion.PackedFloatAssertion);
+        public static final AVXOp OR   = new AVXOp("OR",   P_0F, 0x56, OpAssertion.PackedFloatAssertion);
+        public static final AVXOp XOR  = new AVXOp("XOR",  P_0F, 0x57, OpAssertion.PackedFloatAssertion);
+        public static final AVXOp ADD  = new AVXOp("ADD",  P_0F, 0x58);
+        public static final AVXOp MUL  = new AVXOp("MUL",  P_0F, 0x59);
+        public static final AVXOp SUB  = new AVXOp("SUB",  P_0F, 0x5C);
+        public static final AVXOp MIN  = new AVXOp("MIN",  P_0F, 0x5D);
+        public static final AVXOp DIV  = new AVXOp("DIV",  P_0F, 0x5E);
+        public static final AVXOp MAX  = new AVXOp("MAX",  P_0F, 0x5F);
 
+        // @cons
         protected AVXOp(String opcode, int prefix, int op)
         {
             this(opcode, prefix, op, OpAssertion.FloatAssertion);
         }
 
+        // @cons
         protected AVXOp(String opcode, int prefix, int op, OpAssertion assertion)
         {
             this(opcode, 0, prefix, op, assertion);
         }
 
+        // @cons
         protected AVXOp(String opcode, int mandatoryPrefix, int prefix, int op, OpAssertion assertion)
         {
             super(opcode, mandatoryPrefix, prefix, op, assertion, CPUFeature.AVX);
@@ -1682,6 +1758,7 @@ public class AMD64Assembler extends Assembler
     /**
      * Arithmetic operation with operand order of RM, MR or MI.
      */
+    // @class AMD64Assembler.AMD64BinaryArithmetic
     public static final class AMD64BinaryArithmetic
     {
         public static final AMD64BinaryArithmetic ADD = new AMD64BinaryArithmetic("ADD", 0);
@@ -1702,8 +1779,10 @@ public class AMD64Assembler extends Assembler
         private final AMD64MROp mrOp;
         private final AMD64RMOp rmOp;
 
+        // @cons
         private AMD64BinaryArithmetic(String opcode, int code)
         {
+            super();
             int baseOp = code << 3;
 
             byteImmOp = new AMD64MIOp(opcode, true, 0, 0x80, code, OpAssertion.ByteAssertion);
@@ -1760,6 +1839,7 @@ public class AMD64Assembler extends Assembler
     /**
      * Shift operation with operand order of M1, MC or MI.
      */
+    // @class AMD64Assembler.AMD64Shift
     public static final class AMD64Shift
     {
         public static final AMD64Shift ROL = new AMD64Shift("ROL", 0);
@@ -1774,8 +1854,10 @@ public class AMD64Assembler extends Assembler
         public final AMD64MOp mcOp;
         public final AMD64MIOp miOp;
 
+        // @cons
         private AMD64Shift(String opcode, int code)
         {
+            super();
             m1Op = new AMD64MOp(opcode, 0, 0xD1, code, OpAssertion.WordOrLargerAssertion);
             mcOp = new AMD64MOp(opcode, 0, 0xD3, code, OpAssertion.WordOrLargerAssertion);
             miOp = new AMD64MIOp(opcode, true, 0, 0xC1, code, OpAssertion.WordOrLargerAssertion);
@@ -2296,8 +2378,8 @@ public class AMD64Assembler extends Assembler
     }
 
     /**
-     * New CPUs require use of movsd and movss to avoid partial register stall when loading from
-     * memory. But for old Opteron use movlpd instead of movsd. The selection is done in
+     * New CPUs require use of movsd and movss to avoid partial register stall when loading from memory.
+     * But for old Opteron use movlpd instead of movsd. The selection is done in
      * {@link AMD64MacroAssembler#movdbl(Register, AMD64Address)} and
      * {@link AMD64MacroAssembler#movflt(Register, Register)}.
      */

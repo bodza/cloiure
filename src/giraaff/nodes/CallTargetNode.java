@@ -16,10 +16,12 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @NodeInfo.allowedUsageTypes "Extension"
+// @class CallTargetNode
 public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 {
     public static final NodeClass<CallTargetNode> TYPE = NodeClass.create(CallTargetNode.class);
 
+    // @enum CallTargetNode.InvokeKind
     public enum InvokeKind
     {
         Interface(false),
@@ -60,6 +62,7 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
     protected InvokeKind invokeKind;
     protected final StampPair returnStamp;
 
+    // @cons
     protected CallTargetNode(NodeClass<? extends CallTargetNode> c, ValueNode[] arguments, ResolvedJavaMethod targetMethod, InvokeKind invokeKind, StampPair returnStamp)
     {
         super(c, StampFactory.forVoid());

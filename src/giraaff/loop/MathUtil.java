@@ -15,7 +15,8 @@ import giraaff.nodes.calc.UnsignedDivNode;
 /**
  * Utility methods to perform integer math with some obvious constant folding first.
  */
-public class MathUtil
+// @class MathUtil
+public final class MathUtil
 {
     private static boolean isConstantOne(ValueNode v1)
     {
@@ -94,5 +95,11 @@ public class MathUtil
             graph.addBeforeFixed(before, fixedDiv);
         }
         return div;
+    }
+
+    // @cons
+    private MathUtil()
+    {
+        super();
     }
 }

@@ -5,6 +5,7 @@ import org.graalvm.word.LocationIdentity;
 /**
  * Maps a {@linkplain LocationIdentity location} to the last node that (potentially) wrote to the location.
  */
+// @iface MemoryMap
 public interface MemoryMap
 {
     /**

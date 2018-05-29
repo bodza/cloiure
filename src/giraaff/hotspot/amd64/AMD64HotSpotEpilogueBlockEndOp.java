@@ -11,8 +11,10 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * @see AMD64HotSpotEpilogueOp
  */
+// @class AMD64HotSpotEpilogueBlockEndOp
 abstract class AMD64HotSpotEpilogueBlockEndOp extends AMD64BlockEndOp implements AMD64HotSpotRestoreRbpOp
 {
+    // @cons
     protected AMD64HotSpotEpilogueBlockEndOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueBlockEndOp> c)
     {
         super(c);

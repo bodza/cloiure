@@ -28,10 +28,12 @@ import giraaff.hotspot.replacements.CRC32Substitutions;
 import giraaff.options.OptionValues;
 import giraaff.word.WordTypes;
 
-public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsProvider
+// @class AMD64HotSpotForeignCallsProvider
+public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsProvider
 {
     private final Value[] nativeABICallerSaveRegisters;
 
+    // @cons
     public AMD64HotSpotForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, Value[] nativeABICallerSaveRegisters)
     {
         super(jvmciRuntime, runtime, metaAccess, codeCache, wordTypes);

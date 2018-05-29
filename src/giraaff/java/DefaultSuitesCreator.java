@@ -9,10 +9,12 @@ import giraaff.phases.tiers.CompilerConfiguration;
 import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.Suites;
 
+// @class DefaultSuitesCreator
 public class DefaultSuitesCreator extends SuitesProviderBase
 {
     private final CompilerConfiguration compilerConfiguration;
 
+    // @cons
     public DefaultSuitesCreator(CompilerConfiguration compilerConfiguration, Plugins plugins)
     {
         super();

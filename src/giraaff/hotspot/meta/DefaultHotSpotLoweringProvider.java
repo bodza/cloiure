@@ -132,6 +132,7 @@ import giraaff.util.GraalError;
 /**
  * HotSpot implementation of {@link LoweringProvider}.
  */
+// @class DefaultHotSpotLoweringProvider
 public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider implements HotSpotLoweringProvider
 {
     protected final HotSpotGraalRuntimeProvider runtime;
@@ -149,6 +150,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     protected HashCodeSnippets.Templates hashCodeSnippets;
     protected ResolveConstantSnippets.Templates resolveConstantSnippets;
 
+    // @cons
     public DefaultHotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
     {
         super(metaAccess, foreignCalls, target, GraalHotSpotVMConfig.useCompressedOops);
@@ -693,6 +695,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
     }
 
+    // @class DefaultHotSpotLoweringProvider.Exceptions
     static final class Exceptions
     {
         protected static final ArrayIndexOutOfBoundsException cachedArrayIndexOutOfBoundsException;
@@ -707,6 +710,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
     }
 
+    // @class DefaultHotSpotLoweringProvider.RuntimeCalls
     public static final class RuntimeCalls
     {
         public static final ForeignCallDescriptor CREATE_ARRAY_STORE_EXCEPTION = new ForeignCallDescriptor("createArrayStoreException", ArrayStoreException.class, Object.class);

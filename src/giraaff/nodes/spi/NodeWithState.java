@@ -7,6 +7,7 @@ import giraaff.nodes.FrameState;
 /**
  * Interface for nodes which have {@link FrameState} nodes as input.
  */
+// @iface NodeWithState
 public interface NodeWithState extends FixedNodeInterface
 {
     default NodeIterable<FrameState> states()

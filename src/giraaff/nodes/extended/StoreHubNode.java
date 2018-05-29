@@ -7,6 +7,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
+// @class StoreHubNode
 public final class StoreHubNode extends FixedWithNextNode implements Lowerable
 {
     public static final NodeClass<StoreHubNode> TYPE = NodeClass.create(StoreHubNode.class);
@@ -24,6 +25,7 @@ public final class StoreHubNode extends FixedWithNextNode implements Lowerable
         return object;
     }
 
+    // @cons
     public StoreHubNode(ValueNode object, ValueNode value)
     {
         super(TYPE, StampFactory.forVoid());

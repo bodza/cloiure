@@ -11,20 +11,24 @@ import giraaff.nodes.memory.address.AddressNode;
 /**
  * An {@link FixedAccessNode} that can be converted to a {@link FloatingAccessNode}.
  */
+// @class FloatableAccessNode
 public abstract class FloatableAccessNode extends FixedAccessNode
 {
     public static final NodeClass<FloatableAccessNode> TYPE = NodeClass.create(FloatableAccessNode.class);
 
+    // @cons
     protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp)
     {
         super(c, address, location, stamp);
     }
 
+    // @cons
     protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType)
     {
         super(c, address, location, stamp, guard, barrierType, false, null);
     }
 
+    // @cons
     protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck, FrameState stateBefore)
     {
         super(c, address, location, stamp, guard, barrierType, nullCheck, stateBefore);

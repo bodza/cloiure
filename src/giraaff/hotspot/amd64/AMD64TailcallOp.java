@@ -15,6 +15,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * {@link InstalledCode} instance.
  */
 @Opcode
+// @class AMD64TailcallOp
 public final class AMD64TailcallOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64TailcallOp> TYPE = LIRInstructionClass.create(AMD64TailcallOp.class);
@@ -22,6 +23,7 @@ public final class AMD64TailcallOp extends AMD64LIRInstruction
     @Use protected Value target;
     @Alive protected Value[] parameters;
 
+    // @cons
     public AMD64TailcallOp(Value[] parameters, Value target)
     {
         super(TYPE);

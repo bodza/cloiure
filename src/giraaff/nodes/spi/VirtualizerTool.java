@@ -21,6 +21,7 @@ import giraaff.util.GraalError;
  *
  * See also {@link Virtualizable}.
  */
+// @iface VirtualizerTool
 public interface VirtualizerTool
 {
     /**

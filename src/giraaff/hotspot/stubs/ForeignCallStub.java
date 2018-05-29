@@ -43,7 +43,8 @@ import giraaff.word.WordTypes;
  * {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during
  * the foreign call.
  */
-public class ForeignCallStub extends Stub
+// @class ForeignCallStub
+public final class ForeignCallStub extends Stub
 {
     private final HotSpotJVMCIRuntimeProvider jvmciRuntime;
 
@@ -70,6 +71,7 @@ public class ForeignCallStub extends Stub
      *            be re-executed.
      * @param killedLocations the memory locations killed by the stub call
      */
+    // @cons
     public ForeignCallStub(OptionValues options, HotSpotJVMCIRuntimeProvider runtime, HotSpotProviders providers, long address, ForeignCallDescriptor descriptor, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
     {
         super(options, providers, HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, transition, reexecutable, killedLocations));

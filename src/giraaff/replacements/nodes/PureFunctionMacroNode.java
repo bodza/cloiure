@@ -17,10 +17,12 @@ import giraaff.nodes.ValueNode;
  * This node class can be used to create {@link MacroNode}s for simple pure functions like
  * {@link System#identityHashCode(Object)}.
  */
+// @class PureFunctionMacroNode
 public abstract class PureFunctionMacroNode extends MacroStateSplitNode implements Canonicalizable
 {
     public static final NodeClass<PureFunctionMacroNode> TYPE = NodeClass.create(PureFunctionMacroNode.class);
 
+    // @cons
     public PureFunctionMacroNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
     {
         super(c, invokeKind, targetMethod, bci, returnStamp, arguments);

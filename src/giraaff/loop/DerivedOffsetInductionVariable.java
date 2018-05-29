@@ -11,11 +11,13 @@ import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.calc.SubNode;
 import giraaff.util.GraalError;
 
-public class DerivedOffsetInductionVariable extends DerivedInductionVariable
+// @class DerivedOffsetInductionVariable
+public final class DerivedOffsetInductionVariable extends DerivedInductionVariable
 {
     private final ValueNode offset;
     private final BinaryArithmeticNode<?> value;
 
+    // @cons
     public DerivedOffsetInductionVariable(LoopEx loop, InductionVariable base, ValueNode offset, BinaryArithmeticNode<?> value)
     {
         super(loop, base);

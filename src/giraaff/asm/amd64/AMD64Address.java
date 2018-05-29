@@ -9,6 +9,7 @@ import giraaff.asm.AbstractAddress;
  * register, an index register, a displacement and a scale. Note that the base and index registers
  * may be a variable that will get a register assigned later by the register allocator.
  */
+// @class AMD64Address
 public final class AMD64Address extends AbstractAddress
 {
     private final Register base;
@@ -28,6 +29,7 @@ public final class AMD64Address extends AbstractAddress
      *
      * @param base the base register
      */
+    // @cons
     public AMD64Address(Register base)
     {
         this(base, Register.None, Scale.Times1, 0);
@@ -39,6 +41,7 @@ public final class AMD64Address extends AbstractAddress
      * @param base the base register
      * @param displacement the displacement
      */
+    // @cons
     public AMD64Address(Register base, int displacement)
     {
         this(base, Register.None, Scale.Times1, displacement);
@@ -51,6 +54,7 @@ public final class AMD64Address extends AbstractAddress
      * @param index the index register
      * @param scale the scaling factor
      */
+    // @cons
     public AMD64Address(Register base, Register index, Scale scale)
     {
         this(base, index, scale, 0, -1);
@@ -65,13 +69,16 @@ public final class AMD64Address extends AbstractAddress
      * @param scale the scaling factor
      * @param displacement the displacement
      */
+    // @cons
     public AMD64Address(Register base, Register index, Scale scale, int displacement)
     {
         this(base, index, scale, displacement, -1);
     }
 
+    // @cons
     AMD64Address(Register base, Register index, Scale scale, int displacement, int instructionStartPosition)
     {
+        super();
         this.base = base;
         this.index = index;
         this.scale = scale;
@@ -82,6 +89,7 @@ public final class AMD64Address extends AbstractAddress
     /**
      * A scaling factor used in the SIB addressing mode.
      */
+    // @enum AMD64Address.Scale
     public enum Scale
     {
         Times1(1, 0),

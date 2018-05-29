@@ -5,13 +5,16 @@ import java.util.function.BiConsumer;
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.code.Register;
 
-public class RegisterMap<T>
+// @class RegisterMap
+public final class RegisterMap<T>
 {
     private final Object[] values;
     private final Architecture architecture;
 
+    // @cons
     public RegisterMap(Architecture arch)
     {
+        super();
         this.values = new Object[arch.getRegisters().size()];
         this.architecture = arch;
     }

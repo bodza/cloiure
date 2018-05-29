@@ -49,10 +49,12 @@ import giraaff.virtual.phases.ea.ReadEliminationBlockState.UnsafeLoadCacheEntry;
  * This closure initially handled a set of nodes that is disjunct from {@link PEReadEliminationClosure},
  * but over time both have evolved so that there's a significant overlap.
  */
+// @class ReadEliminationClosure
 public final class ReadEliminationClosure extends EffectsClosure<ReadEliminationBlockState>
 {
     private final boolean considerGuards;
 
+    // @cons
     public ReadEliminationClosure(ControlFlowGraph cfg, boolean considerGuards)
     {
         super(null, cfg);
@@ -271,10 +273,12 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
         return new ReadEliminationMergeProcessor(merge);
     }
 
-    private class ReadEliminationMergeProcessor extends EffectsClosure<ReadEliminationBlockState>.MergeProcessor
+    // @class ReadEliminationClosure.ReadEliminationMergeProcessor
+    private final class ReadEliminationMergeProcessor extends EffectsClosure<ReadEliminationBlockState>.MergeProcessor
     {
         private final EconomicMap<Object, ValuePhiNode> materializedPhis = EconomicMap.create(Equivalence.DEFAULT);
 
+        // @cons
         ReadEliminationMergeProcessor(Block mergeBlock)
         {
             super(mergeBlock);

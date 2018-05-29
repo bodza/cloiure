@@ -24,6 +24,7 @@ import giraaff.util.GraalError;
 /**
  * Loads a method from the virtual method table of a given hub.
  */
+// @class LoadMethodNode
 public final class LoadMethodNode extends FixedWithNextNode implements Lowerable, Canonicalizable
 {
     public static final NodeClass<LoadMethodNode> TYPE = NodeClass.create(LoadMethodNode.class);
@@ -42,6 +43,7 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
         return hub;
     }
 
+    // @cons
     public LoadMethodNode(@InjectedNodeParameter Stamp stamp, ResolvedJavaMethod method, ResolvedJavaType receiverType, ResolvedJavaType callerType, ValueNode hub)
     {
         super(TYPE, stamp);

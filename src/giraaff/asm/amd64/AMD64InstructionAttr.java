@@ -7,10 +7,13 @@ import jdk.vm.ci.code.TargetDescription;
 /**
  * Attributes for instructions for SSE through EVEX, also including address components.
  */
-public class AMD64InstructionAttr
+// @class AMD64InstructionAttr
+public final class AMD64InstructionAttr
 {
+    // @cons
     AMD64InstructionAttr(int inVectorLen, boolean inRexVexW, boolean inLegacyMode, boolean inNoRegMask, boolean inUsesVl, TargetDescription target)
     {
+        super();
         avxVectorLen = inVectorLen;
         rexVexW = inRexVexW;
         this.target = target;

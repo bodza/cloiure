@@ -3,12 +3,15 @@ package giraaff.options;
 /**
  * A key for an option. The value for an option is obtained from an {@link OptionValues} object.
  */
+// @class OptionKey
 public class OptionKey<T>
 {
     private final T defaultValue;
 
+    // @cons
     public OptionKey(T defaultValue)
     {
+        super();
         this.defaultValue = defaultValue;
     }
 

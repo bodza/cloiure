@@ -15,8 +15,10 @@ import giraaff.core.common.cfg.PropertyConsumable;
 /**
  * Represents a dominator (sub-)tree for a constant definition.
  */
-public class ConstantTree extends PrintableDominatorOptimizationProblem<ConstantTree.Flags, ConstantTree.NodeCost>
+// @class ConstantTree
+public final class ConstantTree extends PrintableDominatorOptimizationProblem<ConstantTree.Flags, ConstantTree.NodeCost>
 {
+    // @enum ConstantTree.Flags
     public enum Flags
     {
         SUBTREE,
@@ -28,14 +30,17 @@ public class ConstantTree extends PrintableDominatorOptimizationProblem<Constant
     /**
      * Costs associated with a block.
      */
-    public static class NodeCost implements PropertyConsumable
+    // @class ConstantTree.NodeCost
+    public static final class NodeCost implements PropertyConsumable
     {
         private List<UseEntry> usages;
         private double bestCost;
         private int numMat;
 
+        // @cons
         public NodeCost(double bestCost, List<UseEntry> usages, int numMat)
         {
+            super();
             this.bestCost = bestCost;
             this.usages = usages;
             this.numMat = numMat;
@@ -91,6 +96,7 @@ public class ConstantTree extends PrintableDominatorOptimizationProblem<Constant
 
     private final BlockMap<List<UseEntry>> blockMap;
 
+    // @cons
     public ConstantTree(AbstractControlFlowGraph<?> cfg, DefUseTree tree)
     {
         super(Flags.class, cfg);

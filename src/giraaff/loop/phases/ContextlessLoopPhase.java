@@ -4,8 +4,10 @@ import giraaff.loop.LoopPolicies;
 import giraaff.nodes.StructuredGraph;
 import giraaff.phases.tiers.PhaseContext;
 
+// @class ContextlessLoopPhase
 public abstract class ContextlessLoopPhase<P extends LoopPolicies> extends LoopPhase<P>
 {
+    // @cons
     public ContextlessLoopPhase(P policies)
     {
         super(policies);

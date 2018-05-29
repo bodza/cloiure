@@ -12,7 +12,8 @@ import giraaff.bytecode.Bytecodes;
 /**
  * Utility for producing a {@code javap}-like disassembly of bytecode.
  */
-public class BytecodeDisassembler
+// @class BytecodeDisassembler
+public final class BytecodeDisassembler
 {
     /**
      * Specifies if the disassembly for a single instruction can span multiple lines.
@@ -21,17 +22,21 @@ public class BytecodeDisassembler
 
     private final boolean newLine;
 
+    // @cons
     public BytecodeDisassembler(boolean multiline, boolean newLine)
     {
+        super();
         this.multiline = multiline;
         this.newLine = newLine;
     }
 
+    // @cons
     public BytecodeDisassembler(boolean multiline)
     {
         this(multiline, true);
     }
 
+    // @cons
     public BytecodeDisassembler()
     {
         this(true, true);

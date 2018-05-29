@@ -18,10 +18,12 @@ import giraaff.nodes.util.GraphUtil;
  * Node representing an exact integer substraction that will throw an {@link ArithmeticException} in
  * case the addition would overflow the 32 bit range.
  */
+// @class IntegerSubExactNode
 public final class IntegerSubExactNode extends SubNode implements IntegerExactArithmeticNode
 {
     public static final NodeClass<IntegerSubExactNode> TYPE = NodeClass.create(IntegerSubExactNode.class);
 
+    // @cons
     public IntegerSubExactNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y);

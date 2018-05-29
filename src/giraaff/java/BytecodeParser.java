@@ -174,13 +174,15 @@ import giraaff.util.GraalError;
 /**
  * The {@code GraphBuilder} class parses the bytecode of a method and builds the IR graph.
  */
-public class BytecodeParser implements GraphBuilderContext
+// @class BytecodeParser
+public final class BytecodeParser implements GraphBuilderContext
 {
     /**
      * A scoped object for tasks to be performed after parsing an intrinsic such as processing
      * {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frames states.
      */
-    static class IntrinsicScope implements AutoCloseable
+    // @class BytecodeParser.IntrinsicScope
+    static final class IntrinsicScope implements AutoCloseable
     {
         FrameState stateBefore;
         final Mark mark;
@@ -192,8 +194,10 @@ public class BytecodeParser implements GraphBuilderContext
          *
          * @param parser the parsing context of the intrinsic
          */
+        // @cons
         IntrinsicScope(BytecodeParser parser)
         {
+            super();
             this.parser = parser;
             mark = null;
         }
@@ -204,8 +208,10 @@ public class BytecodeParser implements GraphBuilderContext
          * @param parser the parsing context of the (non-intrinsic) method calling the intrinsic
          * @param args the arguments to the call
          */
+        // @cons
         IntrinsicScope(BytecodeParser parser, JavaKind[] argSlotKinds, ValueNode[] args)
         {
+            super();
             this.parser = parser;
             mark = parser.getGraph().getMark();
             stateBefore = parser.frameState.create(parser.bci(), parser.getNonIntrinsicAncestor(), false, argSlotKinds, args);
@@ -325,39 +331,48 @@ public class BytecodeParser implements GraphBuilderContext
         }
     }
 
-    private static class Target
+    // @class BytecodeParser.Target
+    private static final class Target
     {
         FixedNode fixed;
         FrameStateBuilder state;
 
+        // @cons
         Target(FixedNode fixed, FrameStateBuilder state)
         {
+            super();
             this.fixed = fixed;
             this.state = state;
         }
     }
 
     @SuppressWarnings("serial")
-    public static class BytecodeParserError extends GraalError
+    // @class BytecodeParser.BytecodeParserError
+    public static final class BytecodeParserError extends GraalError
     {
+        // @cons
         public BytecodeParserError(Throwable cause)
         {
             super(cause);
         }
 
+        // @cons
         public BytecodeParserError(String msg, Object... args)
         {
             super(msg, args);
         }
     }
 
-    protected static class ReturnToCallerData
+    // @class BytecodeParser.ReturnToCallerData
+    protected static final class ReturnToCallerData
     {
         protected final ValueNode returnValue;
         protected final FixedWithNextNode beforeReturnNode;
 
+        // @cons
         protected ReturnToCallerData(ValueNode returnValue, FixedWithNextNode beforeReturnNode)
         {
+            super();
             this.returnValue = returnValue;
             this.beforeReturnNode = beforeReturnNode;
         }
@@ -402,9 +417,11 @@ public class BytecodeParser implements GraphBuilderContext
     private final boolean eagerInitializing;
     private final boolean uninitializedIsError;
 
+    // @cons
     protected BytecodeParser(GraphBuilderPhase.Instance graphBuilderInstance, StructuredGraph graph, BytecodeParser parent, ResolvedJavaMethod method, int entryBCI, IntrinsicContext intrinsicContext)
     {
-        this.bytecodeProvider = intrinsicContext == null ? new ResolvedJavaMethodBytecodeProvider() : intrinsicContext.getBytecodeProvider();
+        super();
+        this.bytecodeProvider = intrinsicContext == null ? ResolvedJavaMethodBytecodeProvider.INSTANCE : intrinsicContext.getBytecodeProvider();
         this.code = bytecodeProvider.getBytecode(method);
         this.method = code.getMethod();
         this.graphBuilderInstance = graphBuilderInstance;
@@ -1229,14 +1246,17 @@ public class BytecodeParser implements GraphBuilderContext
         }
     }
 
-    static class CurrentInvoke
+    // @class BytecodeParser.CurrentInvoke
+    static final class CurrentInvoke
     {
         final ValueNode[] args;
         final InvokeKind kind;
         final JavaType returnType;
 
+        // @cons
         CurrentInvoke(ValueNode[] args, InvokeKind kind, JavaType returnType)
         {
+            super();
             this.args = args;
             this.kind = kind;
             this.returnType = returnType;
@@ -1529,6 +1549,7 @@ public class BytecodeParser implements GraphBuilderContext
      * omitted or included. An included edge can handle the exception or transfer execution to the
      * interpreter for handling (deoptimize).
      */
+    // @enum BytecodeParser.ExceptionEdgeAction
     protected enum ExceptionEdgeAction
     {
         OMIT,
@@ -1584,7 +1605,8 @@ public class BytecodeParser implements GraphBuilderContext
         }
     }
 
-    protected static class IntrinsicGuard
+    // @class BytecodeParser.IntrinsicGuard
+    protected static final class IntrinsicGuard
     {
         final FixedWithNextNode lastInstr;
         final Mark mark;
@@ -1592,8 +1614,10 @@ public class BytecodeParser implements GraphBuilderContext
         final ValueNode receiver;
         final JavaTypeProfile profile;
 
+        // @cons
         public IntrinsicGuard(FixedWithNextNode lastInstr, ValueNode receiver, Mark mark, AbstractBeginNode nonIntrinsicBranch, JavaTypeProfile profile)
         {
+            super();
             this.lastInstr = lastInstr;
             this.receiver = receiver;
             this.mark = mark;
@@ -4209,13 +4233,16 @@ public class BytecodeParser implements GraphBuilderContext
         return true;
     }
 
-    static class SuccessorInfo
+    // @class BytecodeParser.SuccessorInfo
+    static final class SuccessorInfo
     {
         final int blockIndex;
         int actualIndex;
 
+        // @cons
         SuccessorInfo(int blockSuccessorIndex)
         {
+            super();
             this.blockIndex = blockSuccessorIndex;
             actualIndex = -1;
         }
@@ -4419,14 +4446,14 @@ public class BytecodeParser implements GraphBuilderContext
             case Bytecodes.ALOAD_1:         // fall through
             case Bytecodes.ALOAD_2:         // fall through
             case Bytecodes.ALOAD_3:         loadLocalObject(opcode - Bytecodes.ALOAD_0); break;
-            case Bytecodes.IALOAD:          genLoadIndexed(JavaKind.Int   ); break;
-            case Bytecodes.LALOAD:          genLoadIndexed(JavaKind.Long  ); break;
-            case Bytecodes.FALOAD:          genLoadIndexed(JavaKind.Float ); break;
+            case Bytecodes.IALOAD:          genLoadIndexed(JavaKind.Int); break;
+            case Bytecodes.LALOAD:          genLoadIndexed(JavaKind.Long); break;
+            case Bytecodes.FALOAD:          genLoadIndexed(JavaKind.Float); break;
             case Bytecodes.DALOAD:          genLoadIndexed(JavaKind.Double); break;
             case Bytecodes.AALOAD:          genLoadIndexed(JavaKind.Object); break;
-            case Bytecodes.BALOAD:          genLoadIndexed(JavaKind.Byte  ); break;
-            case Bytecodes.CALOAD:          genLoadIndexed(JavaKind.Char  ); break;
-            case Bytecodes.SALOAD:          genLoadIndexed(JavaKind.Short ); break;
+            case Bytecodes.BALOAD:          genLoadIndexed(JavaKind.Byte); break;
+            case Bytecodes.CALOAD:          genLoadIndexed(JavaKind.Char); break;
+            case Bytecodes.SALOAD:          genLoadIndexed(JavaKind.Short); break;
             case Bytecodes.ISTORE:          storeLocal(JavaKind.Int, stream.readLocalIndex()); break;
             case Bytecodes.LSTORE:          storeLocal(JavaKind.Long, stream.readLocalIndex()); break;
             case Bytecodes.FSTORE:          storeLocal(JavaKind.Float, stream.readLocalIndex()); break;
@@ -4452,14 +4479,14 @@ public class BytecodeParser implements GraphBuilderContext
             case Bytecodes.ASTORE_1:        // fall through
             case Bytecodes.ASTORE_2:        // fall through
             case Bytecodes.ASTORE_3:        storeLocal(JavaKind.Object, opcode - Bytecodes.ASTORE_0); break;
-            case Bytecodes.IASTORE:         genStoreIndexed(JavaKind.Int   ); break;
-            case Bytecodes.LASTORE:         genStoreIndexed(JavaKind.Long  ); break;
-            case Bytecodes.FASTORE:         genStoreIndexed(JavaKind.Float ); break;
+            case Bytecodes.IASTORE:         genStoreIndexed(JavaKind.Int); break;
+            case Bytecodes.LASTORE:         genStoreIndexed(JavaKind.Long); break;
+            case Bytecodes.FASTORE:         genStoreIndexed(JavaKind.Float); break;
             case Bytecodes.DASTORE:         genStoreIndexed(JavaKind.Double); break;
             case Bytecodes.AASTORE:         genStoreIndexed(JavaKind.Object); break;
-            case Bytecodes.BASTORE:         genStoreIndexed(JavaKind.Byte  ); break;
-            case Bytecodes.CASTORE:         genStoreIndexed(JavaKind.Char  ); break;
-            case Bytecodes.SASTORE:         genStoreIndexed(JavaKind.Short ); break;
+            case Bytecodes.BASTORE:         genStoreIndexed(JavaKind.Byte); break;
+            case Bytecodes.CASTORE:         genStoreIndexed(JavaKind.Char); break;
+            case Bytecodes.SASTORE:         genStoreIndexed(JavaKind.Short); break;
             case Bytecodes.POP:             // fall through
             case Bytecodes.POP2:            // fall through
             case Bytecodes.DUP:             // fall through
@@ -4616,10 +4643,5 @@ public class BytecodeParser implements GraphBuilderContext
             ancestor = ancestor.parent;
         }
         return ancestor;
-    }
-
-    static String nSpaces(int n)
-    {
-        return n == 0 ? "" : String.format("%" + n + "s", "");
     }
 }

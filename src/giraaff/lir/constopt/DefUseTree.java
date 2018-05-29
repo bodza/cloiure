@@ -15,14 +15,17 @@ import giraaff.lir.Variable;
 /**
  * Represents def-use tree of a constant.
  */
-class DefUseTree
+// @class DefUseTree
+final class DefUseTree
 {
     private final LoadConstantOp instruction;
     private final AbstractBlockBase<?> block;
     private final List<UseEntry> uses;
 
+    // @cons
     DefUseTree(LIRInstruction instruction, AbstractBlockBase<?> block)
     {
+        super();
         this.instruction = LoadConstantOp.asLoadConstantOp(instruction);
         this.block = block;
         this.uses = new ArrayList<>();

@@ -2,8 +2,10 @@ package giraaff.nodes.graphbuilderconf;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
+// @iface LoopExplosionPlugin
 public interface LoopExplosionPlugin extends GraphBuilderPlugin
 {
+    // @enum LoopExplosionPlugin.LoopExplosionKind
     enum LoopExplosionKind
     {
         /**

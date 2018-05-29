@@ -20,10 +20,12 @@ import giraaff.nodes.spi.LoweringTool;
  * against instances. This is used, for instance, to intrinsify
  * {@link Class#isAssignableFrom(Class)} .
  */
+// @class ClassIsAssignableFromNode
 public final class ClassIsAssignableFromNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {
     public static final NodeClass<ClassIsAssignableFromNode> TYPE = NodeClass.create(ClassIsAssignableFromNode.class);
 
+    // @cons
     public ClassIsAssignableFromNode(ValueNode thisClass, ValueNode otherClass)
     {
         super(TYPE, thisClass, otherClass);

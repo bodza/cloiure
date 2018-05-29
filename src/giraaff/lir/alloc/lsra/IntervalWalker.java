@@ -4,6 +4,7 @@ import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
 import giraaff.lir.alloc.lsra.Interval.RegisterBindingLists;
 import giraaff.lir.alloc.lsra.Interval.State;
 
+// @class IntervalWalker
 public class IntervalWalker
 {
     protected final LinearScan allocator;
@@ -61,8 +62,10 @@ public class IntervalWalker
      * @param unhandledFixed the list of unhandled {@linkplain RegisterBinding#Fixed fixed} intervals
      * @param unhandledAny the list of unhandled {@linkplain RegisterBinding#Any non-fixed} intervals
      */
+    // @cons
     IntervalWalker(LinearScan allocator, Interval unhandledFixed, Interval unhandledAny)
     {
+        super();
         this.allocator = allocator;
 
         unhandledLists = new RegisterBindingLists(unhandledFixed, unhandledAny, allocator.intervalEndMarker);

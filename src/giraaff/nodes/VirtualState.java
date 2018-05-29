@@ -8,8 +8,10 @@ import giraaff.graph.NodeClass;
  * Subclasses of this class will be treated in a special way by the scheduler.
  */
 // @NodeInfo.allowedUsageTypes "State"
+// @class VirtualState
 public abstract class VirtualState extends Node
 {
+    // @cons
     protected VirtualState(NodeClass<? extends VirtualState> c)
     {
         super(c);
@@ -17,11 +19,13 @@ public abstract class VirtualState extends Node
 
     public static final NodeClass<VirtualState> TYPE = NodeClass.create(VirtualState.class);
 
+    // @class VirtualState.NodeClosure
     public abstract static class NodeClosure<T extends Node>
     {
         public abstract void apply(Node usage, T node);
     }
 
+    // @iface VirtualState.VirtualClosure
     public interface VirtualClosure
     {
         void apply(VirtualState node);

@@ -15,12 +15,14 @@ import giraaff.word.WordTypes;
 /**
  * Intrinsic for getting the lock in the current {@linkplain BeginLockScopeNode lock scope}.
  */
+// @class CurrentLockNode
 public final class CurrentLockNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<CurrentLockNode> TYPE = NodeClass.create(CurrentLockNode.class);
 
     protected int lockDepth;
 
+    // @cons
     public CurrentLockNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth)
     {
         super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));

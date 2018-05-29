@@ -8,6 +8,7 @@ import giraaff.phases.PhaseSuite;
  * Main interface providing access to suites used for compilation.
  */
 
+// @iface SuitesProvider
 public interface SuitesProvider
 {
     /**

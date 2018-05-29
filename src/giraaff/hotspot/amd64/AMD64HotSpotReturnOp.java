@@ -15,6 +15,7 @@ import giraaff.lir.gen.DiagnosticLIRGeneratorTool.ZapStackArgumentSpaceBeforeIns
  * Returns from a function.
  */
 @Opcode
+// @class AMD64HotSpotReturnOp
 final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implements ZapStackArgumentSpaceBeforeInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotReturnOp> TYPE = LIRInstructionClass.create(AMD64HotSpotReturnOp.class);
@@ -24,6 +25,7 @@ final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implemen
     private final Register thread;
     private final Register scratchForSafepointOnReturn;
 
+    // @cons
     AMD64HotSpotReturnOp(Value value, boolean isStub, Register thread, Register scratchForSafepointOnReturn)
     {
         super(TYPE);

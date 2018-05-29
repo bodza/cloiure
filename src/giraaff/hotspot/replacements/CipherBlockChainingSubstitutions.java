@@ -25,7 +25,8 @@ import giraaff.word.Word;
  * Substitutions for {@code com.sun.crypto.provider.CipherBlockChaining} methods.
  */
 @ClassSubstitution(className = "com.sun.crypto.provider.CipherBlockChaining", optional = true)
-public class CipherBlockChainingSubstitutions
+// @class CipherBlockChainingSubstitutions
+public final class CipherBlockChainingSubstitutions
 {
     private static final long embeddedCipherOffset;
     private static final long rOffset;
@@ -204,4 +205,10 @@ public class CipherBlockChainingSubstitutions
 
     @NodeIntrinsic(ForeignCallNode.class)
     public static native void decryptAESCryptWithOriginalKeyStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key, Pointer r, int inLength, Pointer originalKey);
+
+    // @cons
+    private CipherBlockChainingSubstitutions()
+    {
+        super();
+    }
 }

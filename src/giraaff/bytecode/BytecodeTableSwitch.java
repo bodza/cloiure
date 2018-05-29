@@ -3,7 +3,8 @@ package giraaff.bytecode;
 /**
  * A utility for processing {@link Bytecodes#TABLESWITCH} bytecodes.
  */
-public class BytecodeTableSwitch extends BytecodeSwitch
+// @class BytecodeTableSwitch
+public final class BytecodeTableSwitch extends BytecodeSwitch
 {
     private static final int OFFSET_TO_LOW_KEY = 4;
     private static final int OFFSET_TO_HIGH_KEY = 8;
@@ -16,6 +17,7 @@ public class BytecodeTableSwitch extends BytecodeSwitch
      * @param stream the {@code BytecodeStream} containing the switch instruction
      * @param bci the index in the stream of the switch instruction
      */
+    // @cons
     public BytecodeTableSwitch(BytecodeStream stream, int bci)
     {
         super(stream, bci);

@@ -22,6 +22,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Emits a safepoint poll.
  */
 @Opcode
+// @class AMD64HotSpotSafepointOp
 public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotSafepointOp> TYPE = LIRInstructionClass.create(AMD64HotSpotSafepointOp.class);
@@ -32,6 +33,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 
     private final Register thread;
 
+    // @cons
     public AMD64HotSpotSafepointOp(LIRFrameState state, NodeLIRBuilderTool tool, Register thread)
     {
         super(TYPE);

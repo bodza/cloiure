@@ -64,7 +64,8 @@ import giraaff.word.WordTypes;
  * subsystems that employ manual graph creation (as opposed to {@linkplain GraphBuilderPhase
  * bytecode parsing} based graph creation).
  */
-public class GraphKit implements GraphBuilderTool
+// @class GraphKit
+public final class GraphKit implements GraphBuilderTool
 {
     protected final Providers providers;
     protected final StructuredGraph graph;
@@ -74,12 +75,15 @@ public class GraphKit implements GraphBuilderTool
 
     private final List<Structure> structures;
 
+    // @class GraphKit.Structure
     protected abstract static class Structure
     {
     }
 
+    // @cons
     public GraphKit(ResolvedJavaMethod stubMethod, Providers providers, WordTypes wordTypes, Plugins graphBuilderPlugins, CompilationIdentifier compilationId, String name)
     {
+        super();
         this.providers = providers;
         StructuredGraph.Builder builder = new StructuredGraph.Builder(new OptionValues(OptionValues.newOptionMap())).compilationId(compilationId);
         if (name != null)
@@ -386,6 +390,7 @@ public class GraphKit implements GraphBuilderTool
         structures.remove(structures.size() - 1);
     }
 
+    // @enum GraphKit.IfState
     protected enum IfState
     {
         CONDITION,
@@ -394,7 +399,8 @@ public class GraphKit implements GraphBuilderTool
         FINISHED
     }
 
-    static class IfStructure extends Structure
+    // @class GraphKit.IfStructure
+    static final class IfStructure extends Structure
     {
         protected IfState state;
         protected FixedNode thenPart;
@@ -507,8 +513,10 @@ public class GraphKit implements GraphBuilderTool
         return merge;
     }
 
-    static class InvokeWithExceptionStructure extends Structure
+    // @class GraphKit.InvokeWithExceptionStructure
+    static final class InvokeWithExceptionStructure extends Structure
     {
+        // @enum GraphKit.InvokeWithExceptionStructure.State
         protected enum State
         {
             INVOKE,

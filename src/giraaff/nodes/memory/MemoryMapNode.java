@@ -20,6 +20,7 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @NodeInfo.allowedUsageTypes "Extension, Memory"
+// @class MemoryMapNode
 public final class MemoryMapNode extends FloatingNode implements MemoryMap, MemoryNode, LIRLowerable
 {
     public static final NodeClass<MemoryMapNode> TYPE = NodeClass.create(MemoryMapNode.class);
@@ -27,6 +28,7 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
     protected final List<LocationIdentity> locationIdentities;
     @Input(InputType.Memory) NodeInputList<ValueNode> nodes;
 
+    // @cons
     public MemoryMapNode(EconomicMap<LocationIdentity, MemoryNode> mmap)
     {
         super(TYPE, StampFactory.forVoid());

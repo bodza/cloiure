@@ -27,15 +27,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * of a primitive value to some other incompatible stamp. The new stamp must have the same width as
  * the old stamp.
  */
+// @class ReinterpretNode
 public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<ReinterpretNode> TYPE = NodeClass.create(ReinterpretNode.class);
 
+    // @cons
     protected ReinterpretNode(JavaKind to, ValueNode value)
     {
         this(StampFactory.forKind(to), value);
     }
 
+    // @cons
     protected ReinterpretNode(Stamp to, ValueNode value)
     {
         super(TYPE, getReinterpretStamp(to, value.stamp(NodeView.DEFAULT)), value);

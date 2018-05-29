@@ -25,7 +25,8 @@ import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
-public class CompilationTask
+// @class CompilationTask
+public final class CompilationTask
 {
     private static final EventProvider eventProvider;
 
@@ -62,13 +63,16 @@ public class CompilationTask
     private final boolean useProfilingInfo;
     private final OptionValues options;
 
+    // @class CompilationTask.HotSpotCompilationWrapper
     final class HotSpotCompilationWrapper extends CompilationWrapper<HotSpotCompilationRequestResult>
     {
         private final EventProvider.CompilationEvent compilationEvent;
         CompilationResult result;
 
+        // @cons
         HotSpotCompilationWrapper(EventProvider.CompilationEvent compilationEvent)
         {
+            super();
             this.compilationEvent = compilationEvent;
         }
 
@@ -136,8 +140,10 @@ public class CompilationTask
         }
     }
 
+    // @cons
     public CompilationTask(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalCompiler compiler, HotSpotCompilationRequest request, boolean useProfilingInfo, boolean installAsDefault, OptionValues options)
     {
+        super();
         this.jvmciRuntime = jvmciRuntime;
         this.compiler = compiler;
         this.compilationId = new HotSpotCompilationIdentifier(request);

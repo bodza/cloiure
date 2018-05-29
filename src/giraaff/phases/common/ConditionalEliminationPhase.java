@@ -74,18 +74,22 @@ import giraaff.phases.schedule.SchedulePhase;
 import giraaff.phases.schedule.SchedulePhase.SchedulingStrategy;
 import giraaff.phases.tiers.PhaseContext;
 
-public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
+// @class ConditionalEliminationPhase
+public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 {
     private final boolean fullSchedule;
     private final boolean moveGuards;
 
+    // @cons
     public ConditionalEliminationPhase(boolean fullSchedule)
     {
         this(fullSchedule, true);
     }
 
+    // @cons
     public ConditionalEliminationPhase(boolean fullSchedule, boolean moveGuards)
     {
+        super();
         this.fullSchedule = fullSchedule;
         this.moveGuards = moveGuards;
     }
@@ -126,7 +130,8 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         return new Instance(graph, blockToNodes, nodeToBlock, context);
     }
 
-    public static class MoveGuardsUpwards implements ControlFlowGraph.RecursiveVisitor<Block>
+    // @class ConditionalEliminationPhase.MoveGuardsUpwards
+    public static final class MoveGuardsUpwards implements ControlFlowGraph.RecursiveVisitor<Block>
     {
         Block anchorBlock;
 
@@ -207,6 +212,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         }
     }
 
+    // @class ConditionalEliminationPhase.PhiInfoElement
     private static final class PhiInfoElement
     {
         private EconomicMap<EndNode, InfoElement> infoElements;
@@ -230,7 +236,8 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         }
     }
 
-    public static class Instance implements ControlFlowGraph.RecursiveVisitor<Integer>
+    // @class ConditionalEliminationPhase.Instance
+    public static final class Instance implements ControlFlowGraph.RecursiveVisitor<Integer>
     {
         protected final NodeMap<InfoElement> map;
         protected final BlockMap<List<Node>> blockToNodes;
@@ -245,8 +252,10 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
          */
         private Deque<DeoptimizingGuard> pendingTests;
 
+        // @cons
         public Instance(StructuredGraph graph, BlockMap<List<Node>> blockToNodes, NodeMap<Block> nodeToBlock, PhaseContext context)
         {
+            super();
             this.graph = graph;
             this.blockToNodes = blockToNodes;
             this.nodeToBlock = nodeToBlock;
@@ -1222,6 +1231,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     }
 
     @FunctionalInterface
+    // @iface ConditionalEliminationPhase.InfoElementProvider
     protected interface InfoElementProvider
     {
         Iterable<InfoElement> getInfoElements(ValueNode value);
@@ -1230,13 +1240,16 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     /**
      * Checks for safe nodes when moving pending tests up.
      */
-    static class InputFilter extends Node.EdgeVisitor
+    // @class ConditionalEliminationPhase.InputFilter
+    static final class InputFilter extends Node.EdgeVisitor
     {
         boolean ok;
         private ValueNode value;
 
+        // @cons
         InputFilter(ValueNode value)
         {
+            super();
             this.value = value;
             this.ok = true;
         }
@@ -1272,6 +1285,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     }
 
     @FunctionalInterface
+    // @iface ConditionalEliminationPhase.GuardRewirer
     protected interface GuardRewirer
     {
         /**
@@ -1286,6 +1300,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         boolean rewire(GuardingNode guard, boolean result, Stamp guardedValueStamp, ValueNode newInput);
     }
 
+    // @class ConditionalEliminationPhase.InfoElement
     protected static final class InfoElement
     {
         private final Stamp stamp;
@@ -1293,8 +1308,10 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         private final ValueNode proxifiedInput;
         private final InfoElement parent;
 
+        // @cons
         public InfoElement(Stamp stamp, GuardingNode guard, ValueNode proxifiedInput, InfoElement parent)
         {
+            super();
             this.stamp = stamp;
             this.guard = guard;
             this.proxifiedInput = proxifiedInput;

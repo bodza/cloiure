@@ -17,6 +17,7 @@ import giraaff.lir.Variable;
  * is set, the instruction must set the flags register; if false, the instruction may or may not
  * set the flags register.
  */
+// @iface ArithmeticLIRGeneratorTool
 public interface ArithmeticLIRGeneratorTool
 {
     Value emitNegate(Value input);

@@ -14,12 +14,14 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
+// @enum AMD64Arithmetic
 public enum AMD64Arithmetic
 {
     FREM,
     DREM;
 
-    public static class FPDivRemOp extends AMD64LIRInstruction
+    // @class AMD64Arithmetic.FPDivRemOp
+    public static final class FPDivRemOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<FPDivRemOp> TYPE = LIRInstructionClass.create(FPDivRemOp.class);
 
@@ -29,6 +31,7 @@ public enum AMD64Arithmetic
         @Use protected AllocatableValue y;
         @Temp protected AllocatableValue raxTemp;
 
+        // @cons
         public FPDivRemOp(AMD64Arithmetic opcode, AllocatableValue result, AllocatableValue x, AllocatableValue y)
         {
             super(TYPE);

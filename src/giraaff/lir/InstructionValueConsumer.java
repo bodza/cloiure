@@ -12,6 +12,7 @@ import giraaff.lir.LIRInstruction.OperandMode;
  * {@link InstructionValueProcedure} for a version that can modify values.
  */
 @FunctionalInterface
+// @iface InstructionValueConsumer
 public interface InstructionValueConsumer
 {
     /**

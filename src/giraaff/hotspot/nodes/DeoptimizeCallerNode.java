@@ -13,6 +13,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Removes the current frame and tail calls the uncommon trap routine.
  */
+// @class DeoptimizeCallerNode
 public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLowerable
 {
     public static final NodeClass<DeoptimizeCallerNode> TYPE = NodeClass.create(DeoptimizeCallerNode.class);
@@ -20,6 +21,7 @@ public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLo
     protected final DeoptimizationAction action;
     protected final DeoptimizationReason reason;
 
+    // @cons
     public DeoptimizeCallerNode(DeoptimizationAction action, DeoptimizationReason reason)
     {
         super(TYPE, StampFactory.forVoid());

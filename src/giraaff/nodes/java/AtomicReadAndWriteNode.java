@@ -16,6 +16,7 @@ import giraaff.nodes.spi.LoweringTool;
  * Represents an atomic read-and-write operation like
  * {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  */
+// @class AtomicReadAndWriteNode
 public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<AtomicReadAndWriteNode> TYPE = NodeClass.create(AtomicReadAndWriteNode.class);
@@ -27,6 +28,7 @@ public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint imple
     protected final JavaKind valueKind;
     protected final LocationIdentity locationIdentity;
 
+    // @cons
     public AtomicReadAndWriteNode(ValueNode object, ValueNode offset, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity)
     {
         super(TYPE, StampFactory.forKind(newValue.getStackKind()));

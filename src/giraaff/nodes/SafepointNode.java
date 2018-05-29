@@ -10,10 +10,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Marks a position in the graph where a safepoint should be emitted.
  */
+// @class SafepointNode
 public final class SafepointNode extends DeoptimizingFixedWithNextNode implements Lowerable, LIRLowerable
 {
     public static final NodeClass<SafepointNode> TYPE = NodeClass.create(SafepointNode.class);
 
+    // @cons
     public SafepointNode()
     {
         super(TYPE, StampFactory.forVoid());

@@ -6,12 +6,14 @@ import jdk.vm.ci.meta.ProfilingInfo;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.util.Providers;
 
-public class MidTierContext extends PhaseContext
+// @class MidTierContext
+public final class MidTierContext extends PhaseContext
 {
     private final TargetProvider target;
     private final OptimisticOptimizations optimisticOpts;
     private final ProfilingInfo profilingInfo;
 
+    // @cons
     public MidTierContext(Providers copyFrom, TargetProvider target, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo)
     {
         super(copyFrom);

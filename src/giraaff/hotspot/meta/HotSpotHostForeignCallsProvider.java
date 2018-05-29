@@ -46,11 +46,13 @@ import giraaff.word.WordTypes;
 /**
  * HotSpot implementation of {@link ForeignCallsProvider}.
  */
+// @class HotSpotHostForeignCallsProvider
 public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCallsProviderImpl
 {
     public static final ForeignCallDescriptor JAVA_TIME_MILLIS = new ForeignCallDescriptor("javaTimeMillis", long.class);
     public static final ForeignCallDescriptor JAVA_TIME_NANOS = new ForeignCallDescriptor("javaTimeNanos", long.class);
 
+    // @cons
     public HotSpotHostForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
     {
         super(jvmciRuntime, runtime, metaAccess, codeCache, wordTypes);

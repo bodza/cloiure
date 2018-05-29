@@ -16,6 +16,7 @@ import giraaff.nodes.spi.NodeValueMap;
 /**
  * This class represents a value within the graph, including local variables, phis, and all other instructions.
  */
+// @class ValueNode
 public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeInterface
 {
     public static final NodeClass<ValueNode> TYPE = NodeClass.create(ValueNode.class);
@@ -26,6 +27,7 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
      */
     protected Stamp stamp;
 
+    // @cons
     public ValueNode(NodeClass<? extends ValueNode> c, Stamp stamp)
     {
         super(c);

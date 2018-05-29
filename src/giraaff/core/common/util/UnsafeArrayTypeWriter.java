@@ -13,19 +13,23 @@ import giraaff.util.UnsafeAccess;
  * architectures that support unaligned memory accesses; the value {@code false} is the safe
  * fallback that works on every hardware.
  */
+// @class UnsafeArrayTypeWriter
 public abstract class UnsafeArrayTypeWriter implements TypeWriter
 {
     private static final int MIN_CHUNK_LENGTH = 200;
     private static final int MAX_CHUNK_LENGTH = 16000;
 
-    static class Chunk
+    // @class UnsafeArrayTypeWriter.Chunk
+    static final class Chunk
     {
         protected final byte[] data;
         protected int size;
         protected Chunk next;
 
+        // @cons
         protected Chunk(int arrayLength)
         {
+            super();
             data = new byte[arrayLength];
         }
     }
@@ -46,8 +50,10 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
         }
     }
 
+    // @cons
     protected UnsafeArrayTypeWriter()
     {
+        super();
         firstChunk = new Chunk(MIN_CHUNK_LENGTH);
         writeChunk = firstChunk;
     }
@@ -116,6 +122,7 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
     }
 }
 
+// @class UnalignedUnsafeArrayTypeWriter
 final class UnalignedUnsafeArrayTypeWriter extends UnsafeArrayTypeWriter
 {
     @Override
@@ -140,6 +147,7 @@ final class UnalignedUnsafeArrayTypeWriter extends UnsafeArrayTypeWriter
     }
 }
 
+// @class AlignedUnsafeArrayTypeWriter
 final class AlignedUnsafeArrayTypeWriter extends UnsafeArrayTypeWriter
 {
     @Override

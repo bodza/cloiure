@@ -7,6 +7,7 @@ import giraaff.nodeinfo.InputType;
 /**
  * Provides an implementation of {@link StateSplit}.
  */
+// @class AbstractStateSplit
 public abstract class AbstractStateSplit extends FixedWithNextNode implements StateSplit
 {
     public static final NodeClass<AbstractStateSplit> TYPE = NodeClass.create(AbstractStateSplit.class);
@@ -32,11 +33,13 @@ public abstract class AbstractStateSplit extends FixedWithNextNode implements St
         return true;
     }
 
+    // @cons
     protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> c, Stamp stamp)
     {
         this(c, stamp, null);
     }
 
+    // @cons
     protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> c, Stamp stamp, FrameState stateAfter)
     {
         super(c, stamp);

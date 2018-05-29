@@ -41,6 +41,7 @@ import giraaff.phases.graph.ReentrantBlockIterator.BlockIteratorClosure;
 import giraaff.phases.graph.ReentrantBlockIterator.LoopInfo;
 import giraaff.util.GraalError;
 
+// @class EffectsClosure
 public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> extends EffectsPhase.Closure<BlockT>
 {
     protected final ControlFlowGraph cfg;
@@ -89,8 +90,10 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
     protected boolean changed;
 
+    // @cons
     public EffectsClosure(ScheduleResult schedule, ControlFlowGraph cfg)
     {
+        super();
         this.schedule = schedule;
         this.cfg = cfg;
         this.aliases = cfg.graph.createNodeMap();
@@ -417,6 +420,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     /**
      * The main workhorse for merging states, both for loops and for normal merges.
      */
+    // @class EffectsClosure.MergeProcessor
     protected abstract class MergeProcessor
     {
         private final Block mergeBlock;
@@ -432,8 +436,10 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         private int[] stateIndexes;
         protected BlockT newState;
 
+        // @cons
         public MergeProcessor(Block mergeBlock)
         {
+            super();
             this.mergeBlock = mergeBlock;
             this.merge = (AbstractMergeNode) mergeBlock.getBeginNode();
             this.mergeEffects = new GraphEffectList();
@@ -521,6 +527,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         return (result == null || result instanceof VirtualObjectNode) ? node : result;
     }
 
+    // @class EffectsClosure.LoopKillCache
     protected static final class LoopKillCache
     {
         private int visits;
@@ -528,8 +535,10 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         private EconomicSet<LocationIdentity> killedLocations;
         private boolean killsAll;
 
+        // @cons
         protected LoopKillCache(int visits)
         {
+            super();
             this.visits = visits;
         }
 

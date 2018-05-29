@@ -12,15 +12,18 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-public class SignedRemNode extends IntegerDivRemNode implements LIRLowerable
+// @class SignedRemNode
+public final class SignedRemNode extends IntegerDivRemNode implements LIRLowerable
 {
     public static final NodeClass<SignedRemNode> TYPE = NodeClass.create(SignedRemNode.class);
 
+    // @cons
     protected SignedRemNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
     }
 
+    // @cons
     protected SignedRemNode(NodeClass<? extends SignedRemNode> c, ValueNode x, ValueNode y)
     {
         super(c, IntegerStamp.OPS.getRem().foldStamp(x.stamp(NodeView.DEFAULT), y.stamp(NodeView.DEFAULT)), Op.REM, Type.SIGNED, x, y);

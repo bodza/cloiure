@@ -8,10 +8,12 @@ import giraaff.graph.NodeClass;
  * The {@code ControlSplitNode} is a base class for all instructions that split the control flow
  * (ie. have more than one successor).
  */
+// @class ControlSplitNode
 public abstract class ControlSplitNode extends FixedNode implements IterableNodeType
 {
     public static final NodeClass<ControlSplitNode> TYPE = NodeClass.create(ControlSplitNode.class);
 
+    // @cons
     protected ControlSplitNode(NodeClass<? extends ControlSplitNode> c, Stamp stamp)
     {
         super(c, stamp);

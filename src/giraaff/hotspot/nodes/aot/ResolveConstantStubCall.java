@@ -24,7 +24,8 @@ import giraaff.nodes.util.GraphUtil;
 /**
  * A call to the VM via a regular stub.
  */
-public class ResolveConstantStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
+// @class ResolveConstantStubCall
+public final class ResolveConstantStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<ResolveConstantStubCall> TYPE = NodeClass.create(ResolveConstantStubCall.class);
 
@@ -33,6 +34,7 @@ public class ResolveConstantStubCall extends DeoptimizingStubCall implements Can
     protected Constant constant;
     protected HotSpotConstantLoadAction action;
 
+    // @cons
     public ResolveConstantStubCall(ValueNode value, ValueNode string)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));
@@ -41,6 +43,7 @@ public class ResolveConstantStubCall extends DeoptimizingStubCall implements Can
         this.action = HotSpotConstantLoadAction.RESOLVE;
     }
 
+    // @cons
     public ResolveConstantStubCall(ValueNode value, ValueNode string, HotSpotConstantLoadAction action)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));

@@ -11,12 +11,14 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.nodes.BasicArrayCopyNode;
 
+// @class ArrayCopyNode
 public final class ArrayCopyNode extends BasicArrayCopyNode implements Lowerable
 {
     public static final NodeClass<ArrayCopyNode> TYPE = NodeClass.create(ArrayCopyNode.class);
 
     private JavaKind elementKind;
 
+    // @cons
     public ArrayCopyNode(int bci, ValueNode src, ValueNode srcPos, ValueNode dst, ValueNode dstPos, ValueNode length)
     {
         super(TYPE, src, srcPos, dst, dstPos, length, null, bci);

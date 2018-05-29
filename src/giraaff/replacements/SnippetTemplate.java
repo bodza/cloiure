@@ -105,6 +105,7 @@ import giraaff.util.GraalError;
  *
  * Snippet templates can be managed in a cache maintained by {@link AbstractTemplates}.
  */
+// @class SnippetTemplate
 public class SnippetTemplate
 {
     private boolean mayRemoveLocation = false;
@@ -114,6 +115,7 @@ public class SnippetTemplate
      * method that needs to be computed only once. The {@link SnippetInfo} should be created once
      * per snippet and then cached.
      */
+    // @class SnippetTemplate.SnippetInfo
     public abstract static class SnippetInfo
     {
         protected final ResolvedJavaMethod method;
@@ -123,10 +125,13 @@ public class SnippetTemplate
         /**
          * Lazily constructed parts of {@link SnippetInfo}.
          */
-        static class Lazy
+        // @class SnippetTemplate.SnippetInfo.Lazy
+        static final class Lazy
         {
+            // @cons
             Lazy(ResolvedJavaMethod method)
             {
+                super();
                 int count = method.getSignature().getParameterCount(false);
                 constantParameters = new boolean[count];
                 varargsParameters = new boolean[count];
@@ -146,8 +151,10 @@ public class SnippetTemplate
 
         protected abstract Lazy lazy();
 
+        // @cons
         protected SnippetInfo(ResolvedJavaMethod method, LocationIdentity[] privateLocations)
         {
+            super();
             this.method = method;
             this.privateLocations = privateLocations;
         }
@@ -194,10 +201,12 @@ public class SnippetTemplate
         }
     }
 
-    protected static class LazySnippetInfo extends SnippetInfo
+    // @class SnippetTemplate.LazySnippetInfo
+    protected static final class LazySnippetInfo extends SnippetInfo
     {
         protected final AtomicReference<Lazy> lazy = new AtomicReference<>(null);
 
+        // @cons
         protected LazySnippetInfo(ResolvedJavaMethod method, LocationIdentity[] privateLocations)
         {
             super(method, privateLocations);
@@ -214,10 +223,12 @@ public class SnippetTemplate
         }
     }
 
-    protected static class EagerSnippetInfo extends SnippetInfo
+    // @class SnippetTemplate.EagerSnippetInfo
+    protected static final class EagerSnippetInfo extends SnippetInfo
     {
         protected final Lazy lazy;
 
+        // @cons
         protected EagerSnippetInfo(ResolvedJavaMethod method, LocationIdentity[] privateLocations)
         {
             super(method, privateLocations);
@@ -249,7 +260,8 @@ public class SnippetTemplate
      * distinct array length. The actual values are bound when the {@link SnippetTemplate} is
      * {@link SnippetTemplate#instantiate instantiated}
      */
-    public static class Arguments
+    // @class SnippetTemplate.Arguments
+    public static final class Arguments
     {
         protected final SnippetInfo info;
         protected final CacheKey cacheKey;
@@ -259,8 +271,10 @@ public class SnippetTemplate
 
         protected int nextParamIdx;
 
+        // @cons
         public Arguments(SnippetInfo info, GuardsStage guardsStage, LoweringTool.LoweringStage loweringStage)
         {
+            super();
             this.info = info;
             this.cacheKey = new CacheKey(info, guardsStage, loweringStage);
             this.values = new Object[info.getParameterCount()];
@@ -332,15 +346,18 @@ public class SnippetTemplate
     /**
      * Wrapper for the prototype value of a {@linkplain VarargsParameter varargs} parameter.
      */
-    static class Varargs
+    // @class SnippetTemplate.Varargs
+    static final class Varargs
     {
         protected final Class<?> componentType;
         protected final Stamp stamp;
         protected final Object value;
         protected final int length;
 
+        // @cons
         protected Varargs(Class<?> componentType, Stamp stamp, Object value)
         {
+            super();
             this.componentType = componentType;
             this.stamp = stamp;
             this.value = value;
@@ -397,12 +414,14 @@ public class SnippetTemplate
         }
     }
 
+    // @class SnippetTemplate.VarargsPlaceholderNode
     static final class VarargsPlaceholderNode extends FloatingNode implements ArrayLengthProvider
     {
         public static final NodeClass<VarargsPlaceholderNode> TYPE = NodeClass.create(VarargsPlaceholderNode.class);
 
         protected final Varargs varargs;
 
+        // @cons
         protected VarargsPlaceholderNode(Varargs varargs, MetaAccessProvider metaAccess)
         {
             super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(metaAccess.lookupJavaType(varargs.componentType).getArrayClass())));
@@ -416,7 +435,8 @@ public class SnippetTemplate
         }
     }
 
-    static class CacheKey
+    // @class SnippetTemplate.CacheKey
+    static final class CacheKey
     {
         private final ResolvedJavaMethod method;
         private final Object[] values;
@@ -424,8 +444,10 @@ public class SnippetTemplate
         private final LoweringTool.LoweringStage loweringStage;
         private int hash;
 
+        // @cons
         protected CacheKey(SnippetInfo info, GuardsStage guardsStage, LoweringTool.LoweringStage loweringStage)
         {
+            super();
             this.method = info.method;
             this.guardsStage = guardsStage;
             this.loweringStage = loweringStage;
@@ -472,7 +494,8 @@ public class SnippetTemplate
         }
     }
 
-    static class Options
+    // @class SnippetTemplate.Options
+    static final class Options
     {
         // @Option "Use a LRU cache for snippet templates."
         public static final OptionKey<Boolean> UseSnippetTemplateCache = new OptionKey<>(true);
@@ -483,6 +506,7 @@ public class SnippetTemplate
     /**
      * Base class for snippet classes. It provides a cache for {@link SnippetTemplate}s.
      */
+    // @class SnippetTemplate.AbstractTemplates
     public abstract static class AbstractTemplates
     {
         protected final OptionValues options;
@@ -491,8 +515,10 @@ public class SnippetTemplate
         protected final TargetDescription target;
         private final Map<CacheKey, SnippetTemplate> templates;
 
+        // @cons
         protected AbstractTemplates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
+            super();
             this.options = options;
             this.providers = providers;
             this.snippetReflection = snippetReflection;
@@ -558,10 +584,12 @@ public class SnippetTemplate
         }
     }
 
+    // @class SnippetTemplate.LRUCache
     private static final class LRUCache<K, V> extends LinkedHashMap<K, V>
     {
         private final int maxCacheSize;
 
+        // @cons
         LRUCache(int initialCapacity, int maxCacheSize)
         {
             super(initialCapacity, 0.75F, true);
@@ -599,8 +627,10 @@ public class SnippetTemplate
     /**
      * Creates a snippet template.
      */
+    // @cons
     protected SnippetTemplate(OptionValues options, final Providers providers, SnippetReflectionProvider snippetReflection, Arguments args, Node replacee)
     {
+        super();
         this.snippetReflection = snippetReflection;
         this.info = args.info;
 
@@ -1064,6 +1094,7 @@ public class SnippetTemplate
      * replacement logic can be used to handle mismatches between the stamp of the node being
      * lowered and the stamp of the snippet's return value.
      */
+    // @iface SnippetTemplate.UsageReplacer
     public interface UsageReplacer
     {
         /**
@@ -1144,13 +1175,16 @@ public class SnippetTemplate
         return true;
     }
 
+    // @class SnippetTemplate.MemoryInputMap
     private static class MemoryInputMap implements MemoryMap
     {
         private final LocationIdentity locationIdentity;
         private final MemoryNode lastLocationAccess;
 
+        // @cons
         MemoryInputMap(ValueNode replacee)
         {
+            super();
             if (replacee instanceof MemoryAccess)
             {
                 MemoryAccess access = (MemoryAccess) replacee;
@@ -1191,10 +1225,12 @@ public class SnippetTemplate
         }
     }
 
-    private class MemoryOutputMap extends MemoryInputMap
+    // @class SnippetTemplate.MemoryOutputMap
+    private final class MemoryOutputMap extends MemoryInputMap
     {
         private final UnmodifiableEconomicMap<Node, Node> duplicates;
 
+        // @cons
         MemoryOutputMap(ValueNode replacee, UnmodifiableEconomicMap<Node, Node> duplicates)
         {
             super(replacee);

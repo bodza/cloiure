@@ -5,6 +5,7 @@ import giraaff.nodes.spi.NodeWithState;
 /**
  * Interface implemented by nodes which may need {@linkplain FrameState deoptimization information}.
  */
+// @iface DeoptimizingNode
 public interface DeoptimizingNode extends NodeWithState
 {
     /**
@@ -15,6 +16,7 @@ public interface DeoptimizingNode extends NodeWithState
     /**
      * Interface for nodes that need a {@link FrameState} for deoptimizing to a point before their execution.
      */
+    // @iface DeoptimizingNode.DeoptBefore
     public interface DeoptBefore extends DeoptimizingNode
     {
         /**
@@ -28,6 +30,7 @@ public interface DeoptimizingNode extends NodeWithState
     /**
      * Interface for nodes that need a {@link FrameState} for deoptimizing to a point after their execution.
      */
+    // @iface DeoptimizingNode.DeoptAfter
     public interface DeoptAfter extends DeoptimizingNode, StateSplit
     {
     }
@@ -36,6 +39,7 @@ public interface DeoptimizingNode extends NodeWithState
      * Interface for nodes that need a special {@link FrameState} for deoptimizing during their
      * execution (e.g. {@link Invoke}).
      */
+    // @iface DeoptimizingNode.DeoptDuring
     public interface DeoptDuring extends DeoptimizingNode, StateSplit
     {
         FrameState stateDuring();

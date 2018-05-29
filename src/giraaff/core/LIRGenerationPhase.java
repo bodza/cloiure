@@ -16,8 +16,10 @@ import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-public class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGenerationContext>
+// @class LIRGenerationPhase
+public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGenerationContext>
 {
+    // @class LIRGenerationPhase.LIRGenerationContext
     public static final class LIRGenerationContext
     {
         private final NodeLIRBuilderTool nodeLirBuilder;
@@ -25,13 +27,21 @@ public class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGeneratio
         private final StructuredGraph graph;
         private final ScheduleResult schedule;
 
+        // @cons
         public LIRGenerationContext(LIRGeneratorTool lirGen, NodeLIRBuilderTool nodeLirBuilder, StructuredGraph graph, ScheduleResult schedule)
         {
+            super();
             this.nodeLirBuilder = nodeLirBuilder;
             this.lirGen = lirGen;
             this.graph = graph;
             this.schedule = schedule;
         }
+    }
+
+    // @cons
+    public LIRGenerationPhase()
+    {
+        super();
     }
 
     @Override

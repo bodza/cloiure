@@ -26,8 +26,10 @@ import giraaff.word.Word;
  *
  * The descriptor for a call to this stub is {@link HotSpotBackend#EXCEPTION_HANDLER}.
  */
-public class ExceptionHandlerStub extends SnippetStub
+// @class ExceptionHandlerStub
+public final class ExceptionHandlerStub extends SnippetStub
 {
+    // @cons
     public ExceptionHandlerStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super("exceptionHandler", options, providers, linkage);

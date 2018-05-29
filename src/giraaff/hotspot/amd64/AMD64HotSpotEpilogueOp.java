@@ -15,8 +15,10 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Superclass for operations that use the value of RBP saved in a method's prologue.
  */
+// @class AMD64HotSpotEpilogueOp
 abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD64HotSpotRestoreRbpOp
 {
+    // @cons
     protected AMD64HotSpotEpilogueOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueOp> c)
     {
         super(c);

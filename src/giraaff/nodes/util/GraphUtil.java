@@ -63,7 +63,8 @@ import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.options.OptionValues;
 
-public class GraphUtil
+// @class GraphUtil
+public final class GraphUtil
 {
     private static void markFixedNodes(FixedNode node, EconomicSet<Node> markedNodes, EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges)
     {
@@ -829,6 +830,7 @@ public class GraphUtil
         };
     }
 
+    // @class GraphUtil.DefaultSimplifierTool
     private static final class DefaultSimplifierTool implements SimplifierTool
     {
         private final MetaAccessProvider metaAccess;
@@ -839,8 +841,10 @@ public class GraphUtil
         private final OptionValues options;
         private final LoweringProvider loweringProvider;
 
+        // @cons
         DefaultSimplifierTool(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider)
         {
+            super();
             this.metaAccess = metaAccess;
             this.constantReflection = constantReflection;
             this.constantFieldProvider = constantFieldProvider;
@@ -1032,5 +1036,11 @@ public class GraphUtil
         VirtualArrayNode newVirtualArray = virtualArrayProvider.apply(newComponentType, newLengthInt);
         tool.createVirtualObject(newVirtualArray, newEntryState, Collections.<MonitorIdNode> emptyList(), false);
         tool.replaceWithVirtual(newVirtualArray);
+    }
+
+    // @cons
+    private GraphUtil()
+    {
+        super();
     }
 }

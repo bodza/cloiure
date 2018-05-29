@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.Value;
 import giraaff.graph.Node;
 import giraaff.nodes.ValueNode;
 
+// @iface NodeValueMap
 public interface NodeValueMap
 {
     /**

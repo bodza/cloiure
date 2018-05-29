@@ -18,6 +18,7 @@ import giraaff.nodes.memory.MemoryCheckpoint;
  * throws a {@link BailoutException} instead during graph building.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class AccessMonitorNode
 public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint implements MemoryCheckpoint, DeoptimizingNode.DeoptBefore, DeoptimizingNode.DeoptAfter
 {
     public static final NodeClass<AccessMonitorNode> TYPE = NodeClass.create(AccessMonitorNode.class);
@@ -66,6 +67,7 @@ public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint impleme
      *
      * @param object the instruction producing the object
      */
+    // @cons
     protected AccessMonitorNode(NodeClass<? extends AccessMonitorNode> c, ValueNode object, MonitorIdNode monitorId)
     {
         super(c, StampFactory.forVoid());

@@ -6,15 +6,18 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
 
+// @class BeginNode
 public final class BeginNode extends AbstractBeginNode implements Simplifiable
 {
     public static final NodeClass<BeginNode> TYPE = NodeClass.create(BeginNode.class);
 
+    // @cons
     public BeginNode()
     {
         super(TYPE, StampFactory.forVoid());
     }
 
+    // @cons
     public BeginNode(Stamp stamp)
     {
         super(TYPE, stamp);

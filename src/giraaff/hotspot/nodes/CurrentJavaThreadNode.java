@@ -17,15 +17,18 @@ import giraaff.word.WordTypes;
 /**
  * Gets the address of the C++ JavaThread object for the current thread.
  */
+// @class CurrentJavaThreadNode
 public final class CurrentJavaThreadNode extends FloatingNode implements LIRLowerable
 {
     public static final NodeClass<CurrentJavaThreadNode> TYPE = NodeClass.create(CurrentJavaThreadNode.class);
 
+    // @cons
     public CurrentJavaThreadNode(@InjectedNodeParameter WordTypes wordTypes)
     {
         this(wordTypes.getWordKind());
     }
 
+    // @cons
     public CurrentJavaThreadNode(JavaKind wordKind)
     {
         super(TYPE, StampFactory.forKind(wordKind));

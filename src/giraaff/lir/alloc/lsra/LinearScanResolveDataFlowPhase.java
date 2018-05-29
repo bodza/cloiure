@@ -16,12 +16,15 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
  *
  * Insert moves at edges between blocks if intervals have been split.
  */
+// @class LinearScanResolveDataFlowPhase
 public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
 {
     protected final LinearScan allocator;
 
+    // @cons
     protected LinearScanResolveDataFlowPhase(LinearScan allocator)
     {
+        super();
         this.allocator = allocator;
     }
 

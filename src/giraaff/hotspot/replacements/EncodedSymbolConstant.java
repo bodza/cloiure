@@ -16,11 +16,13 @@ import giraaff.core.common.type.DataPointerConstant;
 /**
  * Represents an encoded representation of a constant.
  */
+// @class EncodedSymbolConstant
 public final class EncodedSymbolConstant extends DataPointerConstant
 {
     private final Constant constant;
     private byte[] bytes;
 
+    // @cons
     public EncodedSymbolConstant(Constant constant)
     {
         super(1);

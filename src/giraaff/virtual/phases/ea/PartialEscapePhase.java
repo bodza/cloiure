@@ -14,9 +14,11 @@ import giraaff.phases.BasePhase;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.tiers.PhaseContext;
 
-public class PartialEscapePhase extends EffectsPhase<PhaseContext>
+// @class PartialEscapePhase
+public final class PartialEscapePhase extends EffectsPhase<PhaseContext>
 {
-    static class Options
+    // @class PartialEscapePhase.Options
+    static final class Options
     {
         public static final OptionKey<Boolean> OptEarlyReadElimination = new OptionKey<>(true);
     }
@@ -24,16 +26,19 @@ public class PartialEscapePhase extends EffectsPhase<PhaseContext>
     private final boolean readElimination;
     private final BasePhase<PhaseContext> cleanupPhase;
 
+    // @cons
     public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, OptionValues options)
     {
         this(iterative, Options.OptEarlyReadElimination.getValue(options), canonicalizer, null, options);
     }
 
+    // @cons
     public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options)
     {
         this(iterative, Options.OptEarlyReadElimination.getValue(options), canonicalizer, cleanupPhase, options);
     }
 
+    // @cons
     public PartialEscapePhase(boolean iterative, boolean readElimination, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options)
     {
         super(iterative ? GraalOptions.EscapeAnalysisIterations.getValue(options) : 1, canonicalizer);

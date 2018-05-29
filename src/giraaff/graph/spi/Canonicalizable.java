@@ -21,6 +21,7 @@ import giraaff.graph.Node;
  * Non-cyclic graphs (DAGs) of newly created nodes (i.e., one newly created node with an input to
  * another newly created node) will be handled correctly.
  */
+// @iface Canonicalizable
 public interface Canonicalizable
 {
     /**
@@ -52,6 +53,7 @@ public interface Canonicalizable
      *
      * @param <T> the common supertype of all inputs of this node
      */
+    // @iface Canonicalizable.Unary
     public interface Unary<T extends Node> extends Canonicalizable
     {
         /**
@@ -84,6 +86,7 @@ public interface Canonicalizable
      *
      * @param <T> the common supertype of all inputs of this node
      */
+    // @iface Canonicalizable.Binary
     public interface Binary<T extends Node> extends Canonicalizable
     {
         /**
@@ -120,6 +123,7 @@ public interface Canonicalizable
      * operation is commutative. It is used to improve GVN by trying to merge nodes with the same
      * inputs in different order.
      */
+    // @iface Canonicalizable.BinaryCommutative
     public interface BinaryCommutative<T extends Node> extends Binary<T>
     {
         /**

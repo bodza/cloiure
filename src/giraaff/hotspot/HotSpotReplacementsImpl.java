@@ -13,8 +13,10 @@ import giraaff.replacements.ReplacementsImpl;
 /**
  * Filters certain method substitutions based on whether there is underlying hardware support for them.
  */
-public class HotSpotReplacementsImpl extends ReplacementsImpl
+// @class HotSpotReplacementsImpl
+public final class HotSpotReplacementsImpl extends ReplacementsImpl
 {
+    // @cons
     public HotSpotReplacementsImpl(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
     {
         super(options, providers, snippetReflection, bytecodeProvider, target);

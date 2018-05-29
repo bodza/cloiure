@@ -7,16 +7,19 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.tiers.PhaseContext;
 
-public class EarlyReadEliminationPhase extends EffectsPhase<PhaseContext>
+// @class EarlyReadEliminationPhase
+public final class EarlyReadEliminationPhase extends EffectsPhase<PhaseContext>
 {
     private final boolean considerGuards;
 
+    // @cons
     public EarlyReadEliminationPhase(CanonicalizerPhase canonicalizer)
     {
         super(1, canonicalizer, true);
         this.considerGuards = true;
     }
 
+    // @cons
     public EarlyReadEliminationPhase(CanonicalizerPhase canonicalizer, boolean considerGuards)
     {
         super(1, canonicalizer, true);

@@ -29,7 +29,8 @@ import giraaff.replacements.StandardGraphBuilderPlugins.UnsafeGetPlugin;
 import giraaff.replacements.StandardGraphBuilderPlugins.UnsafePutPlugin;
 import giraaff.replacements.nodes.BitCountNode;
 
-public class AMD64GraphBuilderPlugins
+// @class AMD64GraphBuilderPlugins
+public final class AMD64GraphBuilderPlugins
 {
     public static void register(Plugins plugins, BytecodeProvider replacementsBytecodeProvider, AMD64 arch)
     {

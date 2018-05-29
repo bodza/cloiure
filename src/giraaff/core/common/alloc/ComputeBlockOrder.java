@@ -29,6 +29,7 @@ import giraaff.core.common.cfg.Loop;
  * algorithm sets the linear scan order number of the block that corresponds to its index in the
  * linear scan order.
  */
+// @class ComputeBlockOrder
 public final class ComputeBlockOrder
 {
     /**
@@ -243,7 +244,8 @@ public final class ComputeBlockOrder
     /**
      * Comparator for sorting blocks based on loop depth and probability.
      */
-    private static class BlockOrderComparator<T extends AbstractBlockBase<T>> implements Comparator<T>
+    // @class ComputeBlockOrder.BlockOrderComparator
+    private static final class BlockOrderComparator<T extends AbstractBlockBase<T>> implements Comparator<T>
     {
         private static final double EPSILON = 1E-6;
 

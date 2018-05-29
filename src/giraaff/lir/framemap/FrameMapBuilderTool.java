@@ -7,6 +7,7 @@ import giraaff.lir.VirtualStackSlot;
 /**
  * A {@link FrameMapBuilder} that allows access to the underlying {@link FrameMap}.
  */
+// @class FrameMapBuilderTool
 public abstract class FrameMapBuilderTool extends FrameMapBuilder
 {
     /**

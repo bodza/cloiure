@@ -8,12 +8,14 @@ import giraaff.nodeinfo.InputType;
 /**
  * Logic node that negates its argument.
  */
+// @class LogicNegationNode
 public final class LogicNegationNode extends LogicNode implements Canonicalizable.Unary<LogicNode>
 {
     public static final NodeClass<LogicNegationNode> TYPE = NodeClass.create(LogicNegationNode.class);
 
     @Input(InputType.Condition) LogicNode value;
 
+    // @cons
     public LogicNegationNode(LogicNode value)
     {
         super(TYPE);

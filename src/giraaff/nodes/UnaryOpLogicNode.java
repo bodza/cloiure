@@ -8,6 +8,7 @@ import giraaff.graph.spi.Canonicalizable;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class UnaryOpLogicNode
 public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<UnaryOpLogicNode> TYPE = NodeClass.create(UnaryOpLogicNode.class);
@@ -20,6 +21,7 @@ public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable
         return value;
     }
 
+    // @cons
     public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> c, ValueNode value)
     {
         super(c);

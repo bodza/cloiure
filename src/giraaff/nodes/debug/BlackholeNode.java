@@ -7,12 +7,14 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class BlackholeNode
 public final class BlackholeNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<BlackholeNode> TYPE = NodeClass.create(BlackholeNode.class);
 
     @Input ValueNode value;
 
+    // @cons
     public BlackholeNode(ValueNode value)
     {
         super(TYPE, StampFactory.forVoid());

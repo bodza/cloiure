@@ -5,6 +5,7 @@ import giraaff.core.common.LIRKind;
 /**
  * This interface can be used to access platform and VM specific kinds.
  */
+// @iface LIRKindTool
 public interface LIRKindTool
 {
     /**

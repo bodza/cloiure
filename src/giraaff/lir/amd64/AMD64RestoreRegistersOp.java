@@ -16,7 +16,8 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * Restores registers from stack slots.
  */
 @Opcode
-public class AMD64RestoreRegistersOp extends AMD64LIRInstruction
+// @class AMD64RestoreRegistersOp
+public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64RestoreRegistersOp> TYPE = LIRInstructionClass.create(AMD64RestoreRegistersOp.class);
 
@@ -30,11 +31,13 @@ public class AMD64RestoreRegistersOp extends AMD64LIRInstruction
      */
     private final AMD64SaveRegistersOp save;
 
+    // @cons
     public AMD64RestoreRegistersOp(AllocatableValue[] values, AMD64SaveRegistersOp save)
     {
         this(TYPE, values, save);
     }
 
+    // @cons
     protected AMD64RestoreRegistersOp(LIRInstructionClass<? extends AMD64RestoreRegistersOp> c, AllocatableValue[] values, AMD64SaveRegistersOp save)
     {
         super(c);

@@ -16,8 +16,10 @@ import giraaff.nodes.CompressionNode.CompressionOp;
 import giraaff.nodes.type.NarrowOopStamp;
 import giraaff.util.GraalError;
 
+// @class HotSpotNarrowOopStamp
 public final class HotSpotNarrowOopStamp extends NarrowOopStamp
 {
+    // @cons
     private HotSpotNarrowOopStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull, CompressEncoding encoding)
     {
         super(type, exactType, nonNull, alwaysNull, encoding);

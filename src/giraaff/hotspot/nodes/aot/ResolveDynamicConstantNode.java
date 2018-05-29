@@ -11,12 +11,14 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
 // @NodeInfo.allowedUsageTypes "Memory"
-public class ResolveDynamicConstantNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
+// @class ResolveDynamicConstantNode
+public final class ResolveDynamicConstantNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<ResolveDynamicConstantNode> TYPE = NodeClass.create(ResolveDynamicConstantNode.class);
 
     @Input ValueNode value;
 
+    // @cons
     public ResolveDynamicConstantNode(Stamp valueStamp, ValueNode value)
     {
         super(TYPE, valueStamp);

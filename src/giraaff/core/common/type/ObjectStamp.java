@@ -8,8 +8,10 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 
+// @class ObjectStamp
 public class ObjectStamp extends AbstractObjectStamp
 {
+    // @cons
     public ObjectStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull)
     {
         super(type, exactType, nonNull, alwaysNull);

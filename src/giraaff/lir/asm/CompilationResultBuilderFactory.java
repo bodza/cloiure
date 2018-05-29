@@ -11,6 +11,7 @@ import giraaff.options.OptionValues;
 /**
  * Factory class for creating {@link CompilationResultBuilder}s.
  */
+// @iface CompilationResultBuilderFactory
 public interface CompilationResultBuilderFactory
 {
     /**

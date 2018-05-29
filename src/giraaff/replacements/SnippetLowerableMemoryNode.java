@@ -14,10 +14,12 @@ import giraaff.nodes.memory.MemoryNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-public class SnippetLowerableMemoryNode extends FixedWithNextNode implements Lowerable, MemoryAccess
+// @class SnippetLowerableMemoryNode
+public final class SnippetLowerableMemoryNode extends FixedWithNextNode implements Lowerable, MemoryAccess
 {
     public static final NodeClass<SnippetLowerableMemoryNode> TYPE = NodeClass.create(SnippetLowerableMemoryNode.class);
 
+    // @iface SnippetLowerableMemoryNode.SnippetLowering
     public interface SnippetLowering
     {
         void lower(SnippetLowerableMemoryNode node, LoweringTool tool);
@@ -28,6 +30,7 @@ public class SnippetLowerableMemoryNode extends FixedWithNextNode implements Low
     private final LocationIdentity locationIdentity;
     SnippetLowering lowering;
 
+    // @cons
     public SnippetLowerableMemoryNode(SnippetLowering lowering, LocationIdentity locationIdentity, Stamp stamp, ValueNode... arguments)
     {
         super(TYPE, stamp);

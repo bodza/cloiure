@@ -5,6 +5,7 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.nodes.extended.GuardedNode;
 import giraaff.nodes.memory.address.AddressNode;
 
+// @iface Access
 public interface Access extends GuardedNode, HeapAccess
 {
     AddressNode getAddress();

@@ -46,6 +46,7 @@ import giraaff.options.OptionValues;
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
  */
+// @class LIRGenerator
 public abstract class LIRGenerator implements LIRGeneratorTool
 {
     private final LIRKindTool lirKindTool;
@@ -59,8 +60,10 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     protected final ArithmeticLIRGenerator arithmeticLIRGen;
     private final MoveFactory moveFactory;
 
+    // @cons
     public LIRGenerator(LIRKindTool lirKindTool, ArithmeticLIRGenerator arithmeticLIRGen, MoveFactory moveFactory, CodeGenProviders providers, LIRGenerationResult res)
     {
+        super();
         this.lirKindTool = lirKindTool;
         this.arithmeticLIRGen = arithmeticLIRGen;
         this.res = res;
@@ -147,6 +150,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     /**
      * Hide {@link #nextVariable()} from other users.
      */
+    // @class LIRGenerator.VariableProvider
     public abstract static class VariableProvider
     {
         private int numVariables;
@@ -308,10 +312,13 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         return ops.get(ops.size() - 1) instanceof BlockEndOp;
     }
 
+    // @class LIRGenerator.BlockScopeImpl
     private final class BlockScopeImpl extends BlockScope
     {
+        // @cons
         private BlockScopeImpl(AbstractBlockBase<?> block)
         {
+            super();
             currentBlock = block;
         }
 

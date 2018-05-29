@@ -12,8 +12,10 @@ import giraaff.util.GraalError;
 /**
  * Stub to allocate a {@link NullPointerException} thrown by a bytecode.
  */
-public class NullPointerExceptionStub extends CreateExceptionStub
+// @class NullPointerExceptionStub
+public final class NullPointerExceptionStub extends CreateExceptionStub
 {
+    // @cons
     public NullPointerExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super("createNullPointerException", options, providers, linkage);

@@ -23,16 +23,20 @@ import giraaff.phases.tiers.HighTierContext;
 import giraaff.virtual.phases.ea.EarlyReadEliminationPhase;
 import giraaff.virtual.phases.ea.PartialEscapePhase;
 
-public class HighTier extends PhaseSuite<HighTierContext>
+// @class HighTier
+public final class HighTier extends PhaseSuite<HighTierContext>
 {
-    public static class Options
+    // @class HighTier.Options
+    public static final class Options
     {
         // @Option "Enable inlining."
         public static final OptionKey<Boolean> Inline = new OptionKey<>(true);
     }
 
+    // @cons
     public HighTier(OptionValues options)
     {
+        super();
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
         appendPhase(canonicalizer);
 

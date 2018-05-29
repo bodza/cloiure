@@ -17,12 +17,15 @@ import giraaff.phases.tiers.HighTierContext;
 /**
  * Parses the bytecodes of a method and builds the IR graph.
  */
-public class GraphBuilderPhase extends BasePhase<HighTierContext>
+// @class GraphBuilderPhase
+public final class GraphBuilderPhase extends BasePhase<HighTierContext>
 {
     private final GraphBuilderConfiguration graphBuilderConfig;
 
+    // @cons
     public GraphBuilderPhase(GraphBuilderConfiguration config)
     {
+        super();
         this.graphBuilderConfig = config;
     }
 
@@ -37,7 +40,8 @@ public class GraphBuilderPhase extends BasePhase<HighTierContext>
         return graphBuilderConfig;
     }
 
-    public static class Instance extends Phase
+    // @class GraphBuilderPhase.Instance
+    public static final class Instance extends Phase
     {
         protected final MetaAccessProvider metaAccess;
         protected final StampProvider stampProvider;
@@ -47,8 +51,10 @@ public class GraphBuilderPhase extends BasePhase<HighTierContext>
         protected final OptimisticOptimizations optimisticOpts;
         private final IntrinsicContext initialIntrinsicContext;
 
+        // @cons
         public Instance(MetaAccessProvider metaAccess, StampProvider stampProvider, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, GraphBuilderConfiguration graphBuilderConfig, OptimisticOptimizations optimisticOpts, IntrinsicContext initialIntrinsicContext)
         {
+            super();
             this.graphBuilderConfig = graphBuilderConfig;
             this.optimisticOpts = optimisticOpts;
             this.metaAccess = metaAccess;

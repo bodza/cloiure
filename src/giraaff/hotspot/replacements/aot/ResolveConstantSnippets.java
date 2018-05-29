@@ -37,7 +37,8 @@ import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.util.GraalError;
 
-public class ResolveConstantSnippets implements Snippets
+// @class ResolveConstantSnippets
+public final class ResolveConstantSnippets implements Snippets
 {
     @Snippet
     public static Object resolveObjectConstant(Object constant)
@@ -105,7 +106,8 @@ public class ResolveConstantSnippets implements Snippets
         return result;
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class ResolveConstantSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo resolveObjectConstant = snippet(ResolveConstantSnippets.class, "resolveObjectConstant");
         private final SnippetInfo resolveDynamicConstant = snippet(ResolveConstantSnippets.class, "resolveDynamicConstant");
@@ -114,6 +116,7 @@ public class ResolveConstantSnippets implements Snippets
         private final SnippetInfo initializeKlass = snippet(ResolveConstantSnippets.class, "initializeKlass");
         private final SnippetInfo pureInitializeKlass = snippet(ResolveConstantSnippets.class, "pureInitializeKlass");
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);
@@ -223,5 +226,11 @@ public class ResolveConstantSnippets implements Snippets
                 GraphUtil.killWithUnusedFloatingInputs(resolveMethodAndLoadCountersNode);
             }
         }
+    }
+
+    // @cons
+    private ResolveConstantSnippets()
+    {
+        super();
     }
 }

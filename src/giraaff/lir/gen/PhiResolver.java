@@ -34,12 +34,14 @@ import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
  *  r1 := r2           r2 := r3
  * </pre>
  */
-public class PhiResolver
+// @class PhiResolver
+public final class PhiResolver
 {
     /**
      * Tracks a data flow dependency between a source operand and any number of the destination operands.
      */
-    static class PhiResolverNode
+    // @class PhiResolver.PhiResolverNode
+    static final class PhiResolverNode
     {
         /**
          * A source operand whose value flows into the {@linkplain #destinations destination} operands.
@@ -66,8 +68,10 @@ public class PhiResolver
          */
         boolean startNode;
 
+        // @cons
         PhiResolverNode(Value operand)
         {
+            super();
             this.operand = operand;
             destinations = new ArrayList<>(4);
         }
@@ -121,8 +125,10 @@ public class PhiResolver
         return new PhiResolver(gen, buffer, instructions, insertBefore);
     }
 
+    // @cons
     protected PhiResolver(LIRGeneratorTool gen, LIRInsertionBuffer buffer, List<LIRInstruction> instructions, int insertBefore)
     {
+        super();
         this.gen = gen;
         moveFactory = gen.getSpillMoveFactory();
         temp = Value.ILLEGAL;

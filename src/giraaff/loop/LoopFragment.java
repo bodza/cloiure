@@ -40,6 +40,7 @@ import giraaff.nodes.virtual.CommitAllocationNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.util.GraalError;
 
+// @class LoopFragment
 public abstract class LoopFragment
 {
     private final LoopEx loop;
@@ -48,14 +49,17 @@ public abstract class LoopFragment
     protected boolean nodesReady;
     private EconomicMap<Node, Node> duplicationMap;
 
+    // @cons
     public LoopFragment(LoopEx loop)
     {
         this(loop, null);
         this.nodesReady = true;
     }
 
+    // @cons
     public LoopFragment(LoopEx loop, LoopFragment original)
     {
+        super();
         this.loop = loop;
         this.original = original;
         this.nodesReady = false;
@@ -299,14 +303,17 @@ public abstract class LoopFragment
         }
     }
 
-    static class WorkListEntry
+    // @class LoopFragment.WorkListEntry
+    static final class WorkListEntry
     {
         final Iterator<Node> usages;
         final Node n;
         boolean isLoopNode;
 
+        // @cons
         WorkListEntry(Node n, NodeBitMap loopNodes)
         {
+            super();
             this.n = n;
             this.usages = n.usages().iterator();
             this.isLoopNode = loopNodes.isMarked(n);

@@ -8,8 +8,10 @@ import giraaff.lir.alloc.lsra.Interval;
 import giraaff.lir.alloc.lsra.LinearScan;
 import giraaff.lir.alloc.lsra.LinearScanEliminateSpillMovePhase;
 
-public class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpillMovePhase
+// @class SSALinearScanEliminateSpillMovePhase
+public final class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpillMovePhase
 {
+    // @cons
     SSALinearScanEliminateSpillMovePhase(LinearScan allocator)
     {
         super(allocator);

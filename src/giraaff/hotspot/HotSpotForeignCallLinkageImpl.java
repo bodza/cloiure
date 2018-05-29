@@ -29,7 +29,8 @@ import giraaff.word.WordTypes;
 /**
  * The details required to link a HotSpot runtime or stub call.
  */
-public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget implements HotSpotForeignCallLinkage
+// @class HotSpotForeignCallLinkageImpl
+public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget implements HotSpotForeignCallLinkage
 {
     /**
      * The descriptor of the call.
@@ -120,6 +121,7 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
         return javaType;
     }
 
+    // @cons
     public HotSpotForeignCallLinkageImpl(ForeignCallDescriptor descriptor, long address, RegisterEffect effect, Transition transition, CallingConvention outgoingCallingConvention, CallingConvention incomingCallingConvention, boolean reexecutable, LocationIdentity... killedLocations)
     {
         super(address);

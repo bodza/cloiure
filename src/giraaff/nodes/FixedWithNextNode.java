@@ -6,6 +6,7 @@ import giraaff.graph.NodeClass;
 /**
  * Base class of all nodes that are fixed within the control flow graph and have an immediate successor.
  */
+// @class FixedWithNextNode
 public abstract class FixedWithNextNode extends FixedNode
 {
     public static final NodeClass<FixedWithNextNode> TYPE = NodeClass.create(FixedWithNextNode.class);
@@ -23,6 +24,7 @@ public abstract class FixedWithNextNode extends FixedNode
         next = x;
     }
 
+    // @cons
     public FixedWithNextNode(NodeClass<? extends FixedWithNextNode> c, Stamp stamp)
     {
         super(c, stamp);

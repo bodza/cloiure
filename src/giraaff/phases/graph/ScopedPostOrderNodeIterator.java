@@ -19,6 +19,7 @@ import giraaff.nodes.LoopEndNode;
 import giraaff.nodes.LoopExitNode;
 import giraaff.nodes.StructuredGraph;
 
+// @class ScopedPostOrderNodeIterator
 public abstract class ScopedPostOrderNodeIterator
 {
     private final Deque<FixedNode> nodeQueue;
@@ -27,8 +28,10 @@ public abstract class ScopedPostOrderNodeIterator
 
     protected FixedNode currentScopeStart;
 
+    // @cons
     public ScopedPostOrderNodeIterator(StructuredGraph graph)
     {
+        super();
         this.queuedNodes = graph.createNodeBitMap();
         this.nodeQueue = new ArrayDeque<>();
         this.scopes = getScopes(graph);

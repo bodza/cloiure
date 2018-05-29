@@ -16,6 +16,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * The {@code StoreFieldNode} represents a write to a static or instance field.
  */
+// @class StoreFieldNode
 public final class StoreFieldNode extends AccessFieldNode implements StateSplit, Virtualizable
 {
     public static final NodeClass<StoreFieldNode> TYPE = NodeClass.create(StoreFieldNode.class);
@@ -47,12 +48,14 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
         return value;
     }
 
+    // @cons
     public StoreFieldNode(ValueNode object, ResolvedJavaField field, ValueNode value)
     {
         super(TYPE, StampFactory.forVoid(), object, field);
         this.value = value;
     }
 
+    // @cons
     public StoreFieldNode(ValueNode object, ResolvedJavaField field, ValueNode value, FrameState stateAfter)
     {
         super(TYPE, StampFactory.forVoid(), object, field);

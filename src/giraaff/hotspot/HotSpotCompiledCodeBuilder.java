@@ -25,7 +25,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import giraaff.code.CompilationResult;
 import giraaff.code.DataSection;
 
-public class HotSpotCompiledCodeBuilder
+// @class HotSpotCompiledCodeBuilder
+public final class HotSpotCompiledCodeBuilder
 {
     public static HotSpotCompiledCode createCompiledCode(CodeCacheProvider codeCache, ResolvedJavaMethod method, HotSpotCompilationRequest compRequest, CompilationResult compResult)
     {
@@ -83,7 +84,8 @@ public class HotSpotCompiledCodeBuilder
         }
     }
 
-    static class SiteComparator implements Comparator<Site>
+    // @class HotSpotCompiledCodeBuilder.SiteComparator
+    static final class SiteComparator implements Comparator<Site>
     {
         @Override
         public int compare(Site s1, Site s2)
@@ -107,14 +109,20 @@ public class HotSpotCompiledCodeBuilder
     /**
      * HotSpot expects sites to be presented in ascending order of PC (see {@code DebugInformationRecorder::add_new_pc_offset}).
      */
-    private static Site[] getSortedSites(CodeCacheProvider codeCache, CompilationResult target)
+    private static Site[] getSortedSites(CodeCacheProvider codeCache, CompilationResult result)
     {
-        List<Site> sites = new ArrayList<>(target.getExceptionHandlers().size() + target.getDataPatches().size() + target.getMarks().size());
-        sites.addAll(target.getExceptionHandlers());
-        sites.addAll(target.getDataPatches());
-        sites.addAll(target.getMarks());
+        List<Site> sites = new ArrayList<>(result.getExceptionHandlers().size() + result.getDataPatches().size() + result.getMarks().size());
+        sites.addAll(result.getExceptionHandlers());
+        sites.addAll(result.getDataPatches());
+        sites.addAll(result.getMarks());
 
         Collections.sort(sites, new SiteComparator());
         return sites.toArray(new Site[sites.size()]);
+    }
+
+    // @cons
+    private HotSpotCompiledCodeBuilder()
+    {
+        super();
     }
 }

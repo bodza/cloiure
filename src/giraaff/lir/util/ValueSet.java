@@ -2,6 +2,7 @@ package giraaff.lir.util;
 
 import jdk.vm.ci.meta.Value;
 
+// @class ValueSet
 public abstract class ValueSet<S extends ValueSet<S>>
 {
     public abstract void put(Value v);

@@ -57,12 +57,14 @@ import giraaff.phases.tiers.PhaseContext;
 /**
  * This phase lowers {@link FloatingReadNode FloatingReadNodes} into corresponding fixed reads.
  */
-public class FixReadsPhase extends BasePhase<LowTierContext>
+// @class FixReadsPhase
+public final class FixReadsPhase extends BasePhase<LowTierContext>
 {
     protected boolean replaceInputsWithConstants;
     protected Phase schedulePhase;
 
-    private static class FixReadsClosure extends ScheduledNodeIterator
+    // @class FixReadsPhase.FixReadsClosure
+    private static final class FixReadsClosure extends ScheduledNodeIterator
     {
         @Override
         protected void processNode(Node node)
@@ -101,7 +103,8 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
         }
     }
 
-    protected static class RawConditionalEliminationVisitor implements RecursiveVisitor<Integer>
+    // @class FixReadsPhase.RawConditionalEliminationVisitor
+    protected static final class RawConditionalEliminationVisitor implements RecursiveVisitor<Integer>
     {
         protected final NodeMap<StampElement> stampMap;
         protected final NodeStack undoOperations;
@@ -112,8 +115,10 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
         private final BlockMap<Integer> blockActionStart;
         private final EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>> endMaps;
 
+        // @cons
         protected RawConditionalEliminationVisitor(StructuredGraph graph, ScheduleResult schedule, MetaAccessProvider metaAccess, boolean replaceInputsWithConstants)
         {
+            super();
             this.graph = graph;
             this.schedule = schedule;
             this.metaAccess = metaAccess;
@@ -535,8 +540,10 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
         }
     }
 
+    // @cons
     public FixReadsPhase(boolean replaceInputsWithConstants, Phase schedulePhase)
     {
+        super();
         this.replaceInputsWithConstants = replaceInputsWithConstants;
         this.schedulePhase = schedulePhase;
     }
@@ -558,12 +565,15 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
         graph.setAfterFixReadPhase(true);
     }
 
-    public static class RawCEPhase extends BasePhase<LowTierContext>
+    // @class FixReadsPhase.RawCEPhase
+    public static final class RawCEPhase extends BasePhase<LowTierContext>
     {
         private final boolean replaceInputsWithConstants;
 
+        // @cons
         public RawCEPhase(boolean replaceInputsWithConstants)
         {
+            super();
             this.replaceInputsWithConstants = replaceInputsWithConstants;
         }
 
@@ -591,13 +601,16 @@ public class FixReadsPhase extends BasePhase<LowTierContext>
         return new RawConditionalEliminationVisitor(graph, schedule, context.getMetaAccess(), replaceInputsWithConstants);
     }
 
+    // @class FixReadsPhase.StampElement
     protected static final class StampElement
     {
         private final Stamp stamp;
         private final StampElement parent;
 
+        // @cons
         public StampElement(Stamp stamp, StampElement parent)
         {
+            super();
             this.stamp = stamp;
             this.parent = parent;
         }

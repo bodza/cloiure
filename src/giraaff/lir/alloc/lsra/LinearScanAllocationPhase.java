@@ -6,6 +6,7 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.LIRPhase;
 
+// @class LinearScanAllocationPhase
 abstract class LinearScanAllocationPhase
 {
     final CharSequence getName()

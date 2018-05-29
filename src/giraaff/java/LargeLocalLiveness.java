@@ -4,6 +4,7 @@ import java.util.BitSet;
 
 import giraaff.java.BciBlockMapping.BciBlock;
 
+// @class LargeLocalLiveness
 public final class LargeLocalLiveness extends LocalLiveness
 {
     private BitSet[] localsLiveIn;
@@ -12,6 +13,7 @@ public final class LargeLocalLiveness extends LocalLiveness
     private BitSet[] localsLiveKill;
     private BitSet[] localsChangedInLoop;
 
+    // @cons
     public LargeLocalLiveness(BciBlock[] blocks, int maxLocals, int loopCount)
     {
         super(blocks);

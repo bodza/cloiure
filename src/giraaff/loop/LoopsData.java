@@ -16,14 +16,17 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.cfg.ControlFlowGraph;
 
-public class LoopsData
+// @class LoopsData
+public final class LoopsData
 {
     private final EconomicMap<LoopBeginNode, LoopEx> loopBeginToEx = EconomicMap.create(Equivalence.IDENTITY);
     private final ControlFlowGraph cfg;
     private final List<LoopEx> loops;
 
+    // @cons
     public LoopsData(final StructuredGraph graph)
     {
+        super();
         cfg = ControlFlowGraph.compute(graph, true, true, true, true);
         loops = new ArrayList<>(cfg.getLoops().size());
         for (Loop<Block> loop : cfg.getLoops())

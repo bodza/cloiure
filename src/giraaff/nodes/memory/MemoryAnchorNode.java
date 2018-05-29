@@ -11,10 +11,12 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class MemoryAnchorNode
 public final class MemoryAnchorNode extends FixedWithNextNode implements LIRLowerable, MemoryNode, Canonicalizable
 {
     public static final NodeClass<MemoryAnchorNode> TYPE = NodeClass.create(MemoryAnchorNode.class);
 
+    // @cons
     public MemoryAnchorNode()
     {
         super(TYPE, StampFactory.forVoid());

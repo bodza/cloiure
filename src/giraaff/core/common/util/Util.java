@@ -12,7 +12,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * The {@code Util} class contains a motley collection of utility methods used throughout the compiler.
  */
-public class Util
+// @class Util
+public final class Util
 {
     /**
      * Statically cast an object to an arbitrary Object type. Dynamically checked.
@@ -150,5 +151,11 @@ public class Util
     public static void setAccessible(Executable executable, boolean flag)
     {
         executable.setAccessible(flag);
+    }
+
+    // @cons
+    private Util()
+    {
+        super();
     }
 }

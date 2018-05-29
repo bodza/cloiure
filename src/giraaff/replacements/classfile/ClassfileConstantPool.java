@@ -20,12 +20,14 @@ import giraaff.replacements.classfile.ClassfileConstant.Primitive;
 import giraaff.replacements.classfile.ClassfileConstant.Utf8;
 import giraaff.util.GraalError;
 
-class ClassfileConstantPool implements ConstantPool
+// @class ClassfileConstantPool
+final class ClassfileConstantPool implements ConstantPool
 {
     final ClassfileConstant[] entries;
     final ClassfileBytecodeProvider context;
 
-    public static class Bytecodes
+    // @class ClassfileConstantPool.Bytecodes
+    public static final class Bytecodes
     {
         public static final int GETSTATIC = 178; // 0xB2
         public static final int PUTSTATIC = 179; // 0xB3
@@ -36,10 +38,18 @@ class ClassfileConstantPool implements ConstantPool
         public static final int INVOKESTATIC = 184; // 0xB8
         public static final int INVOKEINTERFACE = 185; // 0xB9
         public static final int INVOKEDYNAMIC = 186; // 0xBA
+
+        // @cons
+        private Bytecodes()
+        {
+            super();
+        }
     }
 
+    // @cons
     ClassfileConstantPool(DataInputStream stream, ClassfileBytecodeProvider context) throws IOException
     {
+        super();
         this.context = context;
         byte tag;
 

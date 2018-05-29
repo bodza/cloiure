@@ -32,6 +32,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
  * Load of a value from a location specified as an offset relative to an object. No null check is
  * performed before the load.
  */
+// @class RawLoadNode
 public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtualizable, Canonicalizable
 {
     public static final NodeClass<RawLoadNode> TYPE = NodeClass.create(RawLoadNode.class);
@@ -39,11 +40,13 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
     /**
      * This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
      */
+    // @cons
     public RawLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity)
     {
         this(object, offset, accessKind, locationIdentity, false);
     }
 
+    // @cons
     public RawLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, boolean forceAnyLocation)
     {
         super(TYPE, StampFactory.forKind(accessKind.getStackKind()), object, offset, accessKind, locationIdentity, forceAnyLocation);
@@ -53,11 +56,13 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
      * This constructor exists for node intrinsics that need a stamp based on the return type of the
      * {@link giraaff.graph.Node.NodeIntrinsic} annotated method.
      */
+    // @cons
     public RawLoadNode(@InjectedNodeParameter Stamp stamp, ValueNode object, ValueNode offset, LocationIdentity locationIdentity, JavaKind accessKind)
     {
         super(TYPE, stamp, object, offset, accessKind, locationIdentity, false);
     }
 
+    // @cons
     protected RawLoadNode(NodeClass<? extends RawLoadNode> c, ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity)
     {
         super(c, StampFactory.forKind(accessKind.getStackKind()), object, offset, accessKind, locationIdentity, false);

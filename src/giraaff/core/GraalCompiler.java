@@ -47,12 +47,14 @@ import giraaff.util.GraalError;
 /**
  * Static methods for orchestrating the compilation of a {@linkplain StructuredGraph graph}.
  */
-public class GraalCompiler
+// @class GraalCompiler
+public final class GraalCompiler
 {
     /**
      * Encapsulates all the inputs to a {@linkplain GraalCompiler#compile(Request) compilation}.
      */
-    public static class Request<T extends CompilationResult>
+    // @class GraalCompiler.Request
+    public static final class Request
     {
         public final StructuredGraph graph;
         public final ResolvedJavaMethod installedCodeOwner;
@@ -63,7 +65,7 @@ public class GraalCompiler
         public final ProfilingInfo profilingInfo;
         public final Suites suites;
         public final LIRSuites lirSuites;
-        public final T compilationResult;
+        public final CompilationResult compilationResult;
         public final CompilationResultBuilderFactory factory;
 
         /**
@@ -71,8 +73,10 @@ public class GraalCompiler
          * @param installedCodeOwner the method the compiled code will be associated with once
          *            installed. This argument can be null.
          */
-        public Request(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, T compilationResult, CompilationResultBuilderFactory factory)
+        // @cons
+        public Request(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, CompilationResult compilationResult, CompilationResultBuilderFactory factory)
         {
+            super();
             this.graph = graph;
             this.installedCodeOwner = installedCodeOwner;
             this.providers = providers;
@@ -91,7 +95,7 @@ public class GraalCompiler
          *
          * @return the result of the compilation
          */
-        public T execute()
+        public CompilationResult execute()
         {
             return GraalCompiler.compile(this);
         }
@@ -105,9 +109,9 @@ public class GraalCompiler
      *            installed. This argument can be null.
      * @return the result of the compilation
      */
-    public static <T extends CompilationResult> T compileGraph(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, T compilationResult, CompilationResultBuilderFactory factory)
+    public static CompilationResult compileGraph(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, CompilationResult compilationResult, CompilationResultBuilderFactory factory)
     {
-        return compile(new Request<>(graph, installedCodeOwner, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, suites, lirSuites, compilationResult, factory));
+        return compile(new Request(graph, installedCodeOwner, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, suites, lirSuites, compilationResult, factory));
     }
 
     /**
@@ -115,7 +119,7 @@ public class GraalCompiler
      *
      * @return the result of the compilation
      */
-    public static <T extends CompilationResult> T compile(Request<T> r)
+    public static CompilationResult compile(Request r)
     {
         emitFrontEnd(r.providers, r.backend, r.graph, r.graphBuilderSuite, r.optimisticOpts, r.profilingInfo, r.suites);
         emitBackEnd(r.graph, null, r.installedCodeOwner, r.backend, r.compilationResult, r.factory, null, r.lirSuites);
@@ -145,7 +149,7 @@ public class GraalCompiler
         suites.getLowTier().apply(graph, lowTierContext);
     }
 
-    public static <T extends CompilationResult> void emitBackEnd(StructuredGraph graph, Object stub, ResolvedJavaMethod installedCodeOwner, Backend backend, T compilationResult, CompilationResultBuilderFactory factory, RegisterConfig registerConfig, LIRSuites lirSuites)
+    public static void emitBackEnd(StructuredGraph graph, Object stub, ResolvedJavaMethod installedCodeOwner, Backend backend, CompilationResult compilationResult, CompilationResultBuilderFactory factory, RegisterConfig registerConfig, LIRSuites lirSuites)
     {
         LIRGenerationResult lirGen = emitLIR(backend, graph, stub, registerConfig, lirSuites);
         compilationResult.setHasUnsafeAccess(graph.hasUnsafeAccess());
@@ -186,7 +190,7 @@ public class GraalCompiler
         return emitLowLevel(backend.getTarget(), lirGenRes, lirGen, lirSuites, backend.newRegisterAllocationConfig(registerConfig));
     }
 
-    protected static <T extends CompilationResult> String getCompilationUnitName(StructuredGraph graph, T compilationResult)
+    protected static String getCompilationUnitName(StructuredGraph graph, CompilationResult compilationResult)
     {
         if (compilationResult != null && compilationResult.getName() != null)
         {
@@ -230,5 +234,11 @@ public class GraalCompiler
             compilationResult.setBytecodeSize(bytecodeSize);
         }
         crb.finish();
+    }
+
+    // @cons
+    private GraalCompiler()
+    {
+        super();
     }
 }

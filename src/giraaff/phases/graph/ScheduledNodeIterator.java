@@ -15,6 +15,7 @@ import giraaff.nodes.cfg.Block;
  * While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
  * {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
  */
+// @class ScheduledNodeIterator
 public abstract class ScheduledNodeIterator
 {
     private FixedWithNextNode lastFixed;

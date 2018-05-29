@@ -39,12 +39,14 @@ import giraaff.nodes.spi.LoweringTool;
  * handled by
  * {@link ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool)}.
  */
+// @class ClassGetHubNode
 public final class ClassGetHubNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
     public static final NodeClass<ClassGetHubNode> TYPE = NodeClass.create(ClassGetHubNode.class);
 
     @Input protected ValueNode clazz;
 
+    // @cons
     public ClassGetHubNode(ValueNode clazz)
     {
         super(TYPE, KlassPointerStamp.klass());

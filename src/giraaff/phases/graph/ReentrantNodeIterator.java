@@ -21,20 +21,25 @@ import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.LoopEndNode;
 import giraaff.nodes.LoopExitNode;
 
+// @class ReentrantNodeIterator
 public final class ReentrantNodeIterator
 {
-    public static class LoopInfo<StateT>
+    // @class ReentrantNodeIterator.LoopInfo
+    public static final class LoopInfo<StateT>
     {
         public final EconomicMap<LoopEndNode, StateT> endStates;
         public final EconomicMap<LoopExitNode, StateT> exitStates;
 
+        // @cons
         public LoopInfo(int endCount, int exitCount)
         {
+            super();
             endStates = EconomicMap.create(Equivalence.IDENTITY, endCount);
             exitStates = EconomicMap.create(Equivalence.IDENTITY, exitCount);
         }
     }
 
+    // @class ReentrantNodeIterator.NodeIteratorClosure
     public abstract static class NodeIteratorClosure<StateT>
     {
         protected abstract StateT processNode(FixedNode node, StateT currentState);
@@ -54,8 +59,10 @@ public final class ReentrantNodeIterator
         }
     }
 
+    // @cons
     private ReentrantNodeIterator()
     {
+        super();
         // no instances allowed
     }
 

@@ -14,6 +14,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class VirtualObjectNode
 public abstract class VirtualObjectNode extends ValueNode implements LIRLowerable, IterableNodeType
 {
     public static final NodeClass<VirtualObjectNode> TYPE = NodeClass.create(VirtualObjectNode.class);
@@ -21,6 +22,7 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
     protected boolean hasIdentity;
     private int objectId = -1;
 
+    // @cons
     protected VirtualObjectNode(NodeClass<? extends VirtualObjectNode> c, ResolvedJavaType type, boolean hasIdentity)
     {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)));

@@ -18,6 +18,7 @@ import giraaff.nodes.spi.LoweringTool;
  * Write a raw memory location according to Java field or array write semantics. It will perform
  * write barriers, implicit conversions and optionally oop compression.
  */
+// @class JavaWriteNode
 public final class JavaWriteNode extends AbstractWriteNode implements Lowerable, StateSplit, MemoryAccess, MemoryCheckpoint.Single
 {
     public static final NodeClass<JavaWriteNode> TYPE = NodeClass.create(JavaWriteNode.class);
@@ -25,6 +26,7 @@ public final class JavaWriteNode extends AbstractWriteNode implements Lowerable,
     protected final JavaKind writeKind;
     protected final boolean compressible;
 
+    // @cons
     public JavaWriteNode(JavaKind writeKind, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType, boolean compressible)
     {
         super(TYPE, address, location, value, barrierType);

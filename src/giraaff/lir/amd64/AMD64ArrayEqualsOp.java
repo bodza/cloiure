@@ -29,6 +29,7 @@ import giraaff.lir.gen.LIRGeneratorTool;
  * instructions specialized code is emitted to leverage these instructions.
  */
 @Opcode
+// @class AMD64ArrayEqualsOp
 public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ArrayEqualsOp> TYPE = LIRInstructionClass.create(AMD64ArrayEqualsOp.class);
@@ -52,6 +53,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
     @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value vectorTemp1;
     @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value vectorTemp2;
 
+    // @cons
     public AMD64ArrayEqualsOp(LIRGeneratorTool tool, JavaKind kind, Value result, Value array1, Value array2, Value length)
     {
         super(TYPE);

@@ -13,10 +13,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Absolute value.
  */
+// @class AbsNode
 public final class AbsNode extends UnaryArithmeticNode<Abs> implements ArithmeticLIRLowerable, NarrowableArithmeticNode
 {
     public static final NodeClass<AbsNode> TYPE = NodeClass.create(AbsNode.class);
 
+    // @cons
     public AbsNode(ValueNode x)
     {
         super(TYPE, ArithmeticOpTable::getAbs, x);

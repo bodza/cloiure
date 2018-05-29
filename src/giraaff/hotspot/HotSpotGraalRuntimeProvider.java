@@ -8,6 +8,7 @@ import giraaff.options.OptionValues;
 /**
  * Configuration information for the HotSpot Graal runtime.
  */
+// @iface HotSpotGraalRuntimeProvider
 public interface HotSpotGraalRuntimeProvider extends GraalRuntime
 {
     default TargetDescription getTarget()

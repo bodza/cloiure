@@ -14,15 +14,18 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-public class FloatDivNode extends BinaryArithmeticNode<Div>
+// @class FloatDivNode
+public final class FloatDivNode extends BinaryArithmeticNode<Div>
 {
     public static final NodeClass<FloatDivNode> TYPE = NodeClass.create(FloatDivNode.class);
 
+    // @cons
     public FloatDivNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
     }
 
+    // @cons
     protected FloatDivNode(NodeClass<? extends FloatDivNode> c, ValueNode x, ValueNode y)
     {
         super(c, ArithmeticOpTable::getDiv, x, y);

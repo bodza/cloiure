@@ -17,12 +17,14 @@ import giraaff.word.Word;
 /**
  * Represents a compile-time constant zero-terminated UTF-8 string installed with the generated code.
  */
+// @class CStringConstant
 public final class CStringConstant extends DataPointerConstant
 {
     private static final Charset UTF8 = Charset.forName("utf8");
 
     private final String string;
 
+    // @cons
     public CStringConstant(String string)
     {
         super(1);

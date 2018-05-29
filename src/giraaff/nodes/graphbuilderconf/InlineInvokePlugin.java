@@ -12,11 +12,13 @@ import giraaff.nodes.ValueNode;
  * {@link #notifyNotInlined non-inlined} invocations (i.e., those for which an {@link Invoke} node
  * is created).
  */
+// @iface InlineInvokePlugin
 public interface InlineInvokePlugin extends GraphBuilderPlugin
 {
     /**
      * Result of a {@link #shouldInlineInvoke inlining decision}.
      */
+    // @class InlineInvokePlugin.InlineInfo
     final class InlineInfo
     {
         /**
@@ -51,8 +53,10 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin
             return new InlineInfo(methodToInline, originalMethod, intrinsicBytecodeProvider);
         }
 
+        // @cons
         private InlineInfo(ResolvedJavaMethod methodToInline, ResolvedJavaMethod originalMethod, BytecodeProvider intrinsicBytecodeProvider)
         {
+            super();
             this.methodToInline = methodToInline;
             this.originalMethod = originalMethod;
             this.intrinsicBytecodeProvider = intrinsicBytecodeProvider;

@@ -7,12 +7,15 @@ import org.graalvm.collections.Pair;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 
+// @class LinearScanRegisterAllocationPhase
 public final class LinearScanRegisterAllocationPhase extends LinearScanAllocationPhase
 {
     private final LinearScan allocator;
 
+    // @cons
     LinearScanRegisterAllocationPhase(LinearScan allocator)
     {
+        super();
         this.allocator = allocator;
     }
 

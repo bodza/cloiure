@@ -16,7 +16,8 @@ import giraaff.lir.framemap.FrameMapBuilder;
  * Manages allocation and re-use of lock slots in a scoped manner. The slots are used in HotSpot's
  * lightweight locking mechanism to store the mark word of an object being locked.
  */
-public class HotSpotLockStack extends LIRInstruction
+// @class HotSpotLockStack
+public final class HotSpotLockStack extends LIRInstruction
 {
     public static final LIRInstructionClass<HotSpotLockStack> TYPE = LIRInstructionClass.create(HotSpotLockStack.class);
 
@@ -26,6 +27,7 @@ public class HotSpotLockStack extends LIRInstruction
     private final FrameMapBuilder frameMapBuilder;
     private final LIRKind slotKind;
 
+    // @cons
     public HotSpotLockStack(FrameMapBuilder frameMapBuilder, LIRKind slotKind)
     {
         super(TYPE);

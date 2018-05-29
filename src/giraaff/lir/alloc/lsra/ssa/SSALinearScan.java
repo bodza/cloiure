@@ -13,8 +13,10 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 import giraaff.lir.ssa.SSAUtil;
 
+// @class SSALinearScan
 public final class SSALinearScan extends LinearScan
 {
+    // @cons
     public SSALinearScan(TargetDescription target, LIRGenerationResult res, MoveFactory spillMoveFactory, RegisterAllocationConfig regAllocConfig, AbstractBlockBase<?>[] sortedBlocks, boolean neverSpillConstants)
     {
         super(target, res, spillMoveFactory, regAllocConfig, sortedBlocks, neverSpillConstants);

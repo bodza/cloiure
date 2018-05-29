@@ -24,8 +24,10 @@ import giraaff.word.Word;
 /**
  * Base class for stubs that create a runtime exception.
  */
+// @class CreateExceptionStub
 public class CreateExceptionStub extends SnippetStub
 {
+    // @cons
     protected CreateExceptionStub(String snippetMethodName, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super(snippetMethodName, options, providers, linkage);

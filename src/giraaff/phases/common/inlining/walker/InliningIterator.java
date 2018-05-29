@@ -26,14 +26,17 @@ import giraaff.nodes.java.MethodCallTargetNode;
  * {@link Invoke} nodes with {@link MethodCallTargetNode}. Such list of callsites is returned by
  * {@link #apply()}
  */
-public class InliningIterator
+// @class InliningIterator
+public final class InliningIterator
 {
     private final StartNode start;
     private final Deque<FixedNode> nodeQueue;
     private final NodeBitMap queuedNodes;
 
+    // @cons
     public InliningIterator(StructuredGraph graph)
     {
+        super();
         this.start = graph.start();
         this.nodeQueue = new ArrayDeque<>();
         this.queuedNodes = graph.createNodeBitMap();

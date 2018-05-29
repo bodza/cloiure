@@ -7,13 +7,16 @@ import jdk.vm.ci.meta.JavaKind;
 /**
  * Abstract base class of all pointer types.
  */
+// @class AbstractPointerStamp
 public abstract class AbstractPointerStamp extends Stamp
 {
     private final boolean nonNull;
     private final boolean alwaysNull;
 
+    // @cons
     protected AbstractPointerStamp(boolean nonNull, boolean alwaysNull)
     {
+        super();
         this.nonNull = nonNull;
         this.alwaysNull = alwaysNull;
     }

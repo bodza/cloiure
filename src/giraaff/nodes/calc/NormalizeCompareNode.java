@@ -19,12 +19,14 @@ import giraaff.nodes.ValueNode;
  * Returns -1, 0, or 1 if either x &lt; y, x == y, or x &gt; y. If the comparison is undecided (one
  * of the inputs is NaN), the result is 1 if isUnorderedLess is false and -1 if isUnorderedLess is true.
  */
+// @class NormalizeCompareNode
 public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType
 {
     public static final NodeClass<NormalizeCompareNode> TYPE = NodeClass.create(NormalizeCompareNode.class);
 
     protected final boolean isUnorderedLess;
 
+    // @cons
     public NormalizeCompareNode(ValueNode x, ValueNode y, JavaKind kind, boolean isUnorderedLess)
     {
         super(TYPE, StampFactory.forInteger(kind, -1, 1), x, y);

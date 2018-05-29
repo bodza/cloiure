@@ -12,8 +12,10 @@ import giraaff.options.OptionValues;
 /**
  * Implements the default constant folding semantics for Java fields in the HotSpot VM.
  */
+// @class HotSpotConstantFieldProvider
 public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
 {
+    // @cons
     public HotSpotConstantFieldProvider(MetaAccessProvider metaAccess)
     {
         super(metaAccess);

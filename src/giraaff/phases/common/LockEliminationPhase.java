@@ -10,7 +10,8 @@ import giraaff.nodes.java.RawMonitorEnterNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.Phase;
 
-public class LockEliminationPhase extends Phase
+// @class LockEliminationPhase
+public final class LockEliminationPhase extends Phase
 {
     @Override
     protected void run(StructuredGraph graph)

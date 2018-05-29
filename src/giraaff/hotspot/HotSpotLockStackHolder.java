@@ -5,10 +5,12 @@ import giraaff.core.gen.LockStackHolder;
 /**
  * Extends {@link LockStackHolder} to allocate the extra debug information required for locks.
  */
-public class HotSpotLockStackHolder extends LockStackHolder
+// @class HotSpotLockStackHolder
+public final class HotSpotLockStackHolder extends LockStackHolder
 {
     private final HotSpotLockStack lockStack;
 
+    // @cons
     public HotSpotLockStackHolder(HotSpotLockStack lockStack)
     {
         super();

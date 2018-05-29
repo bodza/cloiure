@@ -3,6 +3,7 @@ package giraaff.lir.alloc.lsra;
 /**
  * Represents a range of integers from a start (inclusive) to an end (exclusive.
  */
+// @class Range
 public final class Range
 {
     /**
@@ -32,8 +33,10 @@ public final class Range
      * @param to the end of the range, exclusive
      * @param next link to the next range in a linked list
      */
+    // @cons
     Range(int from, int to, Range next)
     {
+        super();
         this.from = from;
         this.to = to;
         this.next = next;

@@ -23,6 +23,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * be in RBX.
  */
 @Opcode
+// @class AMD64IndirectCallOp
 final class AMD64IndirectCallOp extends IndirectCallOp
 {
     public static final LIRInstructionClass<AMD64IndirectCallOp> TYPE = LIRInstructionClass.create(AMD64IndirectCallOp.class);
@@ -34,6 +35,7 @@ final class AMD64IndirectCallOp extends IndirectCallOp
 
     @Use({OperandFlag.REG}) protected Value metaspaceMethod;
 
+    // @cons
     AMD64IndirectCallOp(ResolvedJavaMethod targetMethod, Value result, Value[] parameters, Value[] temps, Value metaspaceMethod, Value targetAddress, LIRFrameState state)
     {
         super(TYPE, targetMethod, result, parameters, temps, targetAddress, state);

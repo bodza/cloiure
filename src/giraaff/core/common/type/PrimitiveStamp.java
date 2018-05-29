@@ -6,10 +6,12 @@ import jdk.vm.ci.meta.MemoryAccessProvider;
 /**
  * Type describing primitive values.
  */
+// @class PrimitiveStamp
 public abstract class PrimitiveStamp extends ArithmeticStamp
 {
     private final int bits;
 
+    // @cons
     protected PrimitiveStamp(int bits, ArithmeticOpTable ops)
     {
         super(ops);

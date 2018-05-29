@@ -13,6 +13,7 @@ import giraaff.lir.LIRValueUtil;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.util.GraalError;
 
+// @class MoveResolver
 public class MoveResolver
 {
     private final LinearScan allocator;
@@ -79,8 +80,10 @@ public class MoveResolver
         return allocator;
     }
 
+    // @cons
     protected MoveResolver(LinearScan allocator)
     {
+        super();
         this.allocator = allocator;
         this.multipleReadsAllowed = false;
         this.mappingFrom = new ArrayList<>(8);

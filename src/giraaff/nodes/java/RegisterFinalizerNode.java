@@ -25,6 +25,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * This node is used to perform the finalizer registration at the end of the java.lang.Object constructor.
  */
+// @class RegisterFinalizerNode
 public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter
 {
     public static final NodeClass<RegisterFinalizerNode> TYPE = NodeClass.create(RegisterFinalizerNode.class);
@@ -32,6 +33,7 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
     @OptionalInput(InputType.State) FrameState deoptState;
     @Input ValueNode value;
 
+    // @cons
     public RegisterFinalizerNode(ValueNode value)
     {
         super(TYPE, StampFactory.forVoid());

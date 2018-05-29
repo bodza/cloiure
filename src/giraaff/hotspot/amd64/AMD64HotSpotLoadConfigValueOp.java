@@ -8,6 +8,7 @@ import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
+// @class AMD64HotSpotLoadConfigValueOp
 public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotLoadConfigValueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLoadConfigValueOp.class);
@@ -15,6 +16,7 @@ public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
     @Def({OperandFlag.REG}) protected AllocatableValue result;
     private final int markId;
 
+    // @cons
     public AMD64HotSpotLoadConfigValueOp(int markId, AllocatableValue result)
     {
         super(TYPE);

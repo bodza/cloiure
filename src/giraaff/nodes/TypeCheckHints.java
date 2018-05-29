@@ -13,12 +13,14 @@ import giraaff.core.common.type.TypeReference;
  * Utility for deriving hint types for a type check instruction (e.g. checkcast or instanceof) based
  * on the target type of the check and any profiling information available for the instruction.
  */
-public class TypeCheckHints
+// @class TypeCheckHints
+public final class TypeCheckHints
 {
     /**
      * A receiver type profiled in a type check instruction.
      */
-    public static class Hint
+    // @class TypeCheckHints.Hint
+    public static final class Hint
     {
         /**
          * A type seen while profiling a type check instruction.
@@ -30,8 +32,10 @@ public class TypeCheckHints
          */
         public final boolean positive;
 
+        // @cons
         Hint(ResolvedJavaType type, boolean positive)
         {
+            super();
             this.type = type;
             this.positive = positive;
         }
@@ -73,8 +77,10 @@ public class TypeCheckHints
      *            will be null
      * @param maxHints the maximum length of {@link #hints}
      */
+    // @cons
     public TypeCheckHints(TypeReference targetType, JavaTypeProfile profile, Assumptions assumptions, double minHintHitProbability, int maxHints)
     {
+        super();
         this.profile = profile;
         if (targetType != null && targetType.isExact())
         {

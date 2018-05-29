@@ -24,18 +24,21 @@ import giraaff.word.WordTypes;
  * check on the object.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class BeginLockScopeNode
 public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single
 {
     public static final NodeClass<BeginLockScopeNode> TYPE = NodeClass.create(BeginLockScopeNode.class);
 
     protected int lockDepth;
 
+    // @cons
     public BeginLockScopeNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth)
     {
         super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
         this.lockDepth = lockDepth;
     }
 
+    // @cons
     public BeginLockScopeNode(JavaKind kind, int lockDepth)
     {
         super(TYPE, StampFactory.forKind(kind));

@@ -6,6 +6,7 @@ import giraaff.nodes.ValueNodeInterface;
  * Interface implemented by nodes that can replace themselves with lower level nodes during a phase
  * that transforms a graph to replace higher level nodes with lower level nodes.
  */
+// @iface Lowerable
 public interface Lowerable extends ValueNodeInterface
 {
     /**

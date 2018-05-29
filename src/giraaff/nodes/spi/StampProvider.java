@@ -7,6 +7,7 @@ import giraaff.nodes.extended.LoadHubNode;
 /**
  * Provides a capability for creating platform dependent stamps.
  */
+// @iface StampProvider
 public interface StampProvider
 {
     /**

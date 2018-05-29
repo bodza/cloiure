@@ -33,9 +33,11 @@ import giraaff.util.GraalError;
  * This Phase processes the graph in post order, assigning the {@link FrameState} from the last
  * {@link StateSplit} node to {@link DeoptimizingNode DeoptimizingNodes}.
  */
-public class FrameStateAssignmentPhase extends Phase
+// @class FrameStateAssignmentPhase
+public final class FrameStateAssignmentPhase extends Phase
 {
-    private static class FrameStateAssignmentClosure extends NodeIteratorClosure<FrameState>
+    // @class FrameStateAssignmentPhase.FrameStateAssignmentClosure
+    private static final class FrameStateAssignmentClosure extends NodeIteratorClosure<FrameState>
     {
         @Override
         protected FrameState processNode(FixedNode node, FrameState previousState)

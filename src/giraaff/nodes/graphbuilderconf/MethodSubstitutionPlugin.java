@@ -25,6 +25,7 @@ import giraaff.util.GraalError;
  * recommended practice is to use {@link MethodSubstitutionPlugin} only for complex
  * intrinsifications which is typically those using non-straight-line control flow.
  */
+// @class MethodSubstitutionPlugin
 public final class MethodSubstitutionPlugin implements InvocationPlugin
 {
     private ResolvedJavaMethod cachedSubstitute;
@@ -58,8 +59,10 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
      *            static, then {@code parameters[0]} must be the {@link Class} value denoting
      *            {@link InvocationPlugin.Receiver}
      */
+    // @cons
     public MethodSubstitutionPlugin(BytecodeProvider bytecodeProvider, Class<?> declaringClass, String name, Type... parameters)
     {
+        super();
         this.bytecodeProvider = bytecodeProvider;
         this.declaringClass = declaringClass;
         this.name = name;

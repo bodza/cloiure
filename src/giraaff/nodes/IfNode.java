@@ -46,6 +46,7 @@ import giraaff.util.GraalError;
  * The {@code IfNode} represents a branch that can go one of two directions depending on the outcome
  * of a comparison.
  */
+// @class IfNode
 public final class IfNode extends ControlSplitNode implements Simplifiable, LIRLowerable
 {
     public static final NodeClass<IfNode> TYPE = NodeClass.create(IfNode.class);
@@ -66,11 +67,13 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         condition = x;
     }
 
+    // @cons
     public IfNode(LogicNode condition, FixedNode trueSuccessor, FixedNode falseSuccessor, double trueSuccessorProbability)
     {
         this(condition, BeginNode.begin(trueSuccessor), BeginNode.begin(falseSuccessor), trueSuccessorProbability);
     }
 
+    // @cons
     public IfNode(LogicNode condition, AbstractBeginNode trueSuccessor, AbstractBeginNode falseSuccessor, double trueSuccessorProbability)
     {
         super(TYPE, StampFactory.forVoid());

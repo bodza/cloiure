@@ -22,12 +22,14 @@ import giraaff.util.GraalError;
  * This is an extension of {@link MacroNode} that is a {@link StateSplit} and a
  * {@link MemoryCheckpoint}.
  */
+// @class MacroStateSplitNode
 public abstract class MacroStateSplitNode extends MacroNode implements StateSplit, MemoryCheckpoint.Single
 {
     public static final NodeClass<MacroStateSplitNode> TYPE = NodeClass.create(MacroStateSplitNode.class);
 
     @OptionalInput(InputType.State) protected FrameState stateAfter;
 
+    // @cons
     protected MacroStateSplitNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
     {
         super(c, invokeKind, targetMethod, bci, returnStamp, arguments);

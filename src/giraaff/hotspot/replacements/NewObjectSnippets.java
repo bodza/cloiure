@@ -60,8 +60,10 @@ import giraaff.word.Word;
 /**
  * Snippets used for implementing NEW, ANEWARRAY and NEWARRAY.
  */
-public class NewObjectSnippets implements Snippets
+// @class NewObjectSnippets
+public final class NewObjectSnippets implements Snippets
 {
+    // @enum NewObjectSnippets.ProfileContext
     enum ProfileContext
     {
         AllocatingMethod,
@@ -379,7 +381,8 @@ public class NewObjectSnippets implements Snippets
         return memory.toObjectNonNull();
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class NewObjectSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo allocateInstance = snippet(NewObjectSnippets.class, "allocateInstance", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         private final SnippetInfo allocateArray = snippet(NewObjectSnippets.class, "allocateArray", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
@@ -387,6 +390,7 @@ public class NewObjectSnippets implements Snippets
         private final SnippetInfo allocateInstanceDynamic = snippet(NewObjectSnippets.class, "allocateInstanceDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         private final SnippetInfo newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);
@@ -523,5 +527,11 @@ public class NewObjectSnippets implements Snippets
         {
             return type.instanceSize();
         }
+    }
+
+    // @cons
+    private NewObjectSnippets()
+    {
+        super();
     }
 }

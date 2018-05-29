@@ -13,6 +13,7 @@ import giraaff.lir.constopt.ConstantTree.NodeCost;
 /**
  * Analyzes a {@link ConstantTree} and marks potential materialization positions.
  */
+// @class ConstantTreeAnalyzer
 public final class ConstantTreeAnalyzer
 {
     private final ConstantTree tree;
@@ -25,8 +26,10 @@ public final class ConstantTreeAnalyzer
         return tree.getCost(startBlock);
     }
 
+    // @cons
     private ConstantTreeAnalyzer(ConstantTree tree)
     {
+        super();
         this.tree = tree;
         this.visited = new BitSet(tree.size());
     }

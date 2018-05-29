@@ -1,5 +1,6 @@
 package giraaff.core.common.cfg;
 
+// @class AbstractBlockBase
 public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
 {
     protected int id;
@@ -17,8 +18,10 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
     private boolean align;
     private int linearScanNumber;
 
+    // @cons
     protected AbstractBlockBase()
     {
+        super();
         this.id = AbstractControlFlowGraph.BLOCK_ID_INITIAL;
         this.linearScanNumber = -1;
         this.domNumber = -1;

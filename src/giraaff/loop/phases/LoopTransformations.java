@@ -43,10 +43,13 @@ import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.tiers.PhaseContext;
 import giraaff.util.GraalError;
 
+// @class LoopTransformations
 public abstract class LoopTransformations
 {
+    // @cons
     private LoopTransformations()
     {
+        super();
         // does not need to be instantiated
     }
 

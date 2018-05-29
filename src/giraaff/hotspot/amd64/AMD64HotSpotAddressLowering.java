@@ -30,7 +30,8 @@ import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.options.OptionValues;
 
-public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
+// @class AMD64HotSpotAddressLowering
+public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
 {
     private static final int ADDRESS_BITS = 64;
     private static final int INT_BITS = 32;
@@ -38,8 +39,10 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
     private final long heapBase;
     private final Register heapBaseRegister;
 
+    // @cons
     public AMD64HotSpotAddressLowering(Register heapBaseRegister, OptionValues options)
     {
+        super();
         this.heapBase = GraalHotSpotVMConfig.oopEncoding.getBase();
         if (heapBase == 0)
         {
@@ -163,8 +166,7 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
     }
 
     /**
-     * Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) ->
-     * Add(SignExtend(a), SignExtend(cst)).
+     * Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
      */
     private static void optimizeAdd(ZeroExtendNode zeroExtendNode, ConstantNode constant, ValueNode other, LoopEx loop)
     {

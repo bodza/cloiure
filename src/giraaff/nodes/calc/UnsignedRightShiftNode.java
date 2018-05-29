@@ -14,10 +14,12 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class UnsignedRightShiftNode
 public final class UnsignedRightShiftNode extends ShiftNode<UShr>
 {
     public static final NodeClass<UnsignedRightShiftNode> TYPE = NodeClass.create(UnsignedRightShiftNode.class);
 
+    // @cons
     public UnsignedRightShiftNode(ValueNode x, ValueNode y)
     {
         super(TYPE, ArithmeticOpTable::getUShr, x, y);

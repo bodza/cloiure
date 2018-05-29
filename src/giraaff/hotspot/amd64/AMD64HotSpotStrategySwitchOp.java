@@ -14,10 +14,12 @@ import giraaff.lir.SwitchStrategy;
 import giraaff.lir.amd64.AMD64ControlFlow;
 import giraaff.lir.asm.CompilationResultBuilder;
 
+// @class AMD64HotSpotStrategySwitchOp
 final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitchOp
 {
     public static final LIRInstructionClass<AMD64HotSpotStrategySwitchOp> TYPE = LIRInstructionClass.create(AMD64HotSpotStrategySwitchOp.class);
 
+    // @cons
     AMD64HotSpotStrategySwitchOp(SwitchStrategy strategy, LabelRef[] keyTargets, LabelRef defaultTarget, Value key, Value scratch)
     {
         super(TYPE, strategy, keyTargets, defaultTarget, key, scratch);
@@ -29,8 +31,10 @@ final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitch
         strategy.run(new HotSpotSwitchClosure(ValueUtil.asRegister(key), crb, masm));
     }
 
-    public class HotSpotSwitchClosure extends SwitchClosure
+    // @class AMD64HotSpotStrategySwitchOp.HotSpotSwitchClosure
+    public final class HotSpotSwitchClosure extends SwitchClosure
     {
+        // @cons
         protected HotSpotSwitchClosure(Register keyRegister, CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
             super(keyRegister, crb, masm);

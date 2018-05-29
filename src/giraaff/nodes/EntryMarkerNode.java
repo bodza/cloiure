@@ -11,10 +11,12 @@ import giraaff.util.GraalError;
  * by the graph builder.
  */
 // @NodeInfo.allowedUsageTypes "Association"
+// @class EntryMarkerNode
 public final class EntryMarkerNode extends BeginStateSplitNode implements IterableNodeType, LIRLowerable
 {
     public static final NodeClass<EntryMarkerNode> TYPE = NodeClass.create(EntryMarkerNode.class);
 
+    // @cons
     public EntryMarkerNode()
     {
         super(TYPE);

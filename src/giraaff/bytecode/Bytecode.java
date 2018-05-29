@@ -12,6 +12,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * instrumentation and VM rewriting, this indirection can be used to enable access to the original
  * bytecode of a method (i.e., as defined in a class file).
  */
+// @iface Bytecode
 public interface Bytecode
 {
     /**

@@ -18,15 +18,18 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
+// @class SubNode
 public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArithmeticNode
 {
     public static final NodeClass<SubNode> TYPE = NodeClass.create(SubNode.class);
 
+    // @cons
     public SubNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
     }
 
+    // @cons
     protected SubNode(NodeClass<? extends SubNode> c, ValueNode x, ValueNode y)
     {
         super(c, ArithmeticOpTable::getSub, x, y);

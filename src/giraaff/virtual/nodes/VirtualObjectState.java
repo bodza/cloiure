@@ -12,6 +12,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * This class encapsulated the virtual state of an escape analyzed object.
  */
+// @class VirtualObjectState
 public final class VirtualObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
     public static final NodeClass<VirtualObjectState> TYPE = NodeClass.create(VirtualObjectState.class);
@@ -23,12 +24,14 @@ public final class VirtualObjectState extends EscapeObjectState implements Node.
         return values;
     }
 
+    // @cons
     public VirtualObjectState(VirtualObjectNode object, ValueNode[] values)
     {
         super(TYPE, object);
         this.values = new NodeInputList<>(this, values);
     }
 
+    // @cons
     public VirtualObjectState(VirtualObjectNode object, List<ValueNode> values)
     {
         super(TYPE, object);

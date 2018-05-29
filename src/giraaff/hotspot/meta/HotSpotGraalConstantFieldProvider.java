@@ -12,8 +12,10 @@ import giraaff.hotspot.GraalHotSpotVMConfig;
  * Extends {@link HotSpotConstantFieldProvider} to override the implementation of
  * {@link #readConstantField} with Graal specific semantics.
  */
-public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvider
+// @class HotSpotGraalConstantFieldProvider
+public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvider
 {
+    // @cons
     public HotSpotGraalConstantFieldProvider(MetaAccessProvider metaAccess)
     {
         super(metaAccess);

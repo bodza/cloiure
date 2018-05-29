@@ -8,7 +8,8 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
  * Using a separate class for such descriptors prevents an access from triggering unwanted class
  * initialization during runtime initialization.
  */
-public class ForeignCallDescriptors
+// @class ForeignCallDescriptors
+public final class ForeignCallDescriptors
 {
     /**
      * @see RegisterFinalizerNode

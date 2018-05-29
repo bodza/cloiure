@@ -22,7 +22,8 @@ import giraaff.nodes.util.GraphUtil;
 /**
  * A call to the VM via a regular stub.
  */
-public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
+// @class ResolveMethodAndLoadCountersStubCall
+public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<ResolveMethodAndLoadCountersStubCall> TYPE = NodeClass.create(ResolveMethodAndLoadCountersStubCall.class);
 
@@ -31,6 +32,7 @@ public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall i
     @Input protected ValueNode methodDescription;
     protected Constant methodConstant;
 
+    // @cons
     public ResolveMethodAndLoadCountersStubCall(ValueNode method, ValueNode klassHint, ValueNode methodDescription)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());

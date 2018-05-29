@@ -13,14 +13,17 @@ import giraaff.phases.tiers.SuitesCreator;
 /**
  * HotSpot implementation of {@link SuitesCreator}.
  */
+// @class HotSpotSuitesProvider
 public class HotSpotSuitesProvider extends SuitesProviderBase
 {
     protected final HotSpotGraalRuntimeProvider runtime;
 
     private final SuitesCreator defaultSuitesCreator;
 
+    // @cons
     public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntimeProvider runtime)
     {
+        super();
         this.defaultSuitesCreator = defaultSuitesCreator;
         this.runtime = runtime;
         this.defaultGraphBuilderSuite = createGraphBuilderSuite();

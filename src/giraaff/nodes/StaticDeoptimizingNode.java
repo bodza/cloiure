@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.JavaConstant;
 
 import giraaff.util.GraalError;
 
+// @iface StaticDeoptimizingNode
 public interface StaticDeoptimizingNode extends ValueNodeInterface
 {
     DeoptimizationReason getReason();
@@ -23,6 +24,7 @@ public interface StaticDeoptimizingNode extends ValueNodeInterface
      *
      * This enum is {@link Comparable} and orders its element from highest priority to lowest priority.
      */
+    // @enum StaticDeoptimizingNode.GuardPriority
     enum GuardPriority
     {
         Speculation,

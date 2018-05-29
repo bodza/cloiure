@@ -16,7 +16,8 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * AMD64 shift/rotate operation. This operation has a single operand for the first input and output.
  * The second input must be in the RCX register.
  */
-public class AMD64ShiftOp extends AMD64LIRInstruction
+// @class AMD64ShiftOp
+public final class AMD64ShiftOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ShiftOp> TYPE = LIRInstructionClass.create(AMD64ShiftOp.class);
 
@@ -27,6 +28,7 @@ public class AMD64ShiftOp extends AMD64LIRInstruction
     @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue x;
     @Alive({OperandFlag.REG}) protected AllocatableValue y;
 
+    // @cons
     public AMD64ShiftOp(AMD64MOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y)
     {
         super(TYPE);

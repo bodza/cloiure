@@ -11,6 +11,7 @@ import giraaff.lir.LIRInstruction.OperandMode;
  * Similar to {@link InstructionValueProcedure} but without an {@link LIRInstruction} parameter.
  */
 @FunctionalInterface
+// @iface ValueProcedure
 public interface ValueProcedure extends InstructionValueProcedure
 {
     /**

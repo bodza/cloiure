@@ -9,13 +9,16 @@ import jdk.vm.ci.code.TargetDescription;
 
 import giraaff.lir.gen.LIRGenerationResult;
 
+// @class LIRPhaseSuite
 public class LIRPhaseSuite<C> extends LIRPhase<C>
 {
     private List<LIRPhase<C>> phases;
     private boolean immutable;
 
+    // @cons
     public LIRPhaseSuite()
     {
+        super();
         phases = new ArrayList<>();
     }
 

@@ -8,6 +8,7 @@ import giraaff.lir.alloc.lsra.ssa.SSALinearScan;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 
+// @class LinearScanPhase
 public final class LinearScanPhase extends RegisterAllocationPhase
 {
     @Override

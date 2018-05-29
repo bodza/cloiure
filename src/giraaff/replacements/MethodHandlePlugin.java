@@ -16,13 +16,16 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.graphbuilderconf.NodePlugin;
 import giraaff.replacements.nodes.MethodHandleNode;
 
-public class MethodHandlePlugin implements NodePlugin
+// @class MethodHandlePlugin
+public final class MethodHandlePlugin implements NodePlugin
 {
     private final MethodHandleAccessProvider methodHandleAccess;
     private final boolean safeForDeoptimization;
 
+    // @cons
     public MethodHandlePlugin(MethodHandleAccessProvider methodHandleAccess, boolean safeForDeoptimization)
     {
+        super();
         this.methodHandleAccess = methodHandleAccess;
         this.safeForDeoptimization = safeForDeoptimization;
     }

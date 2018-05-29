@@ -10,6 +10,7 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.graphbuilderconf.InlineInvokePlugin;
 import giraaff.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo;
 
+// @class InlineDuringParsingPlugin
 public final class InlineDuringParsingPlugin implements InlineInvokePlugin
 {
     /**

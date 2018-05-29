@@ -9,6 +9,7 @@ import giraaff.util.UnsafeAccess;
 /**
  * Describes fields in a class, primarily for access via {@link Unsafe}.
  */
+// @class Fields
 public class Fields
 {
     /**
@@ -35,8 +36,10 @@ public class Fields
         return new Fields(scanner.data);
     }
 
+    // @cons
     public Fields(ArrayList<? extends FieldsScanner.FieldInfo> fields)
     {
+        super();
         Collections.sort(fields);
         this.offsets = new long[fields.size()];
         this.names = new String[offsets.length];
@@ -74,6 +77,7 @@ public class Fields
      * within {@link Fields#copy(Object, Object, ObjectTransformer)}.
      */
     @FunctionalInterface
+    // @iface Fields.ObjectTransformer
     public interface ObjectTransformer
     {
         Object apply(int index, Object from);

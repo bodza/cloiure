@@ -2,6 +2,7 @@ package giraaff.core.common.calc;
 
 import giraaff.util.GraalError;
 
+// @enum FloatConvert
 public enum FloatConvert
 {
     F2I(FloatConvertCategory.FloatingPointToInteger, 32),

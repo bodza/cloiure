@@ -9,6 +9,7 @@ import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.asm.CompilationResultBuilder;
 
+// @class AMD64CCall
 public final class AMD64CCall extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64CCall> TYPE = LIRInstructionClass.create(AMD64CCall.class);
@@ -18,6 +19,7 @@ public final class AMD64CCall extends AMD64LIRInstruction
     @Use({OperandFlag.REG}) protected Value functionPtr;
     @Use({OperandFlag.REG}) protected Value numberOfFloatingPointArguments;
 
+    // @cons
     public AMD64CCall(Value result, Value functionPtr, Value numberOfFloatingPointArguments, Value[] parameters)
     {
         super(TYPE);

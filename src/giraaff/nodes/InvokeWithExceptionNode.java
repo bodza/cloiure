@@ -18,6 +18,7 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.nodeinfo.InputType;
 
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class InvokeWithExceptionNode
 public final class InvokeWithExceptionNode extends ControlSplitNode implements Invoke, MemoryCheckpoint.Single, LIRLowerable, UncheckedInterfaceProvider
 {
     public static final NodeClass<InvokeWithExceptionNode> TYPE = NodeClass.create(InvokeWithExceptionNode.class);
@@ -35,6 +36,7 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     protected boolean useForInlining;
     protected double exceptionProbability;
 
+    // @cons
     public InvokeWithExceptionNode(CallTargetNode callTarget, AbstractBeginNode exceptionEdge, int bci)
     {
         super(TYPE, callTarget.returnStamp().getTrustedStamp());

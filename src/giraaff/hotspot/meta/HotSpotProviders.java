@@ -17,7 +17,8 @@ import giraaff.phases.util.Providers;
  * Extends {@link Providers} to include a number of extra capabilities used by the HotSpot parts of
  * the compiler.
  */
-public class HotSpotProviders extends Providers
+// @class HotSpotProviders
+public final class HotSpotProviders extends Providers
 {
     private final SuitesProvider suites;
     private final HotSpotRegistersProvider registers;
@@ -25,6 +26,7 @@ public class HotSpotProviders extends Providers
     private final HotSpotWordTypes wordTypes;
     private final Plugins graphBuilderPlugins;
 
+    // @cons
     public HotSpotProviders(MetaAccessProvider metaAccess, HotSpotCodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantField, HotSpotForeignCallsProvider foreignCalls, LoweringProvider lowerer, Replacements replacements, SuitesProvider suites, HotSpotRegistersProvider registers, SnippetReflectionProvider snippetReflection, HotSpotWordTypes wordTypes, Plugins graphBuilderPlugins)
     {
         super(metaAccess, codeCache, constantReflection, constantField, foreignCalls, lowerer, replacements, new HotSpotStampProvider());

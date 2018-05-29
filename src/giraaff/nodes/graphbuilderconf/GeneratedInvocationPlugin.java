@@ -14,6 +14,7 @@ import giraaff.util.GraalError;
 /**
  * Abstract class for a plugin generated for a method annotated by {@link NodeIntrinsic} or {@link Fold}.
  */
+// @class GeneratedInvocationPlugin
 public abstract class GeneratedInvocationPlugin implements InvocationPlugin
 {
     /**

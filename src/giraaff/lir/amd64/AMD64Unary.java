@@ -20,12 +20,14 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * AMD64 LIR instructions that have one input and one output.
  */
-public class AMD64Unary
+// @class AMD64Unary
+public final class AMD64Unary
 {
     /**
      * Instruction with a single operand that is both input and output.
      */
-    public static class MOp extends AMD64LIRInstruction
+    // @class AMD64Unary.MOp
+    public static final class MOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<MOp> TYPE = LIRInstructionClass.create(MOp.class);
 
@@ -35,6 +37,7 @@ public class AMD64Unary
         @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
         @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue value;
 
+        // @cons
         public MOp(AMD64MOp opcode, OperandSize size, AllocatableValue result, AllocatableValue value)
         {
             super(TYPE);
@@ -56,7 +59,8 @@ public class AMD64Unary
     /**
      * Instruction with separate input and output operands, and an operand encoding of RM.
      */
-    public static class RMOp extends AMD64LIRInstruction
+    // @class AMD64Unary.RMOp
+    public static final class RMOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<RMOp> TYPE = LIRInstructionClass.create(RMOp.class);
 
@@ -66,6 +70,7 @@ public class AMD64Unary
         @Def({OperandFlag.REG}) protected AllocatableValue result;
         @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue value;
 
+        // @cons
         public RMOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue value)
         {
             super(TYPE);
@@ -93,7 +98,8 @@ public class AMD64Unary
     /**
      * Instruction with separate input and output operands, and an operand encoding of MR.
      */
-    public static class MROp extends AMD64LIRInstruction
+    // @class AMD64Unary.MROp
+    public static final class MROp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<MROp> TYPE = LIRInstructionClass.create(MROp.class);
 
@@ -103,6 +109,7 @@ public class AMD64Unary
         @Def({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue result;
         @Use({OperandFlag.REG}) protected AllocatableValue value;
 
+        // @cons
         public MROp(AMD64MROp opcode, OperandSize size, AllocatableValue result, AllocatableValue value)
         {
             super(TYPE);
@@ -130,7 +137,8 @@ public class AMD64Unary
     /**
      * Instruction with a {@link AMD64AddressValue memory} operand.
      */
-    public static class MemoryOp extends AMD64LIRInstruction implements ImplicitNullCheck
+    // @class AMD64Unary.MemoryOp
+    public static final class MemoryOp extends AMD64LIRInstruction implements ImplicitNullCheck
     {
         public static final LIRInstructionClass<MemoryOp> TYPE = LIRInstructionClass.create(MemoryOp.class);
 
@@ -143,6 +151,7 @@ public class AMD64Unary
         // @State
         protected LIRFrameState state;
 
+        // @cons
         public MemoryOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AMD64AddressValue input, LIRFrameState state)
         {
             super(TYPE);

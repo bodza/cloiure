@@ -40,7 +40,8 @@ import giraaff.util.GraalError;
  * Implementation of {@link GraphBuilderContext} used to produce a graph for a method based on an
  * {@link InvocationPlugin} for the method.
  */
-public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
+// @class IntrinsicGraphBuilder
+public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
 {
     protected final MetaAccessProvider metaAccess;
     protected final ConstantReflectionProvider constantReflection;
@@ -54,13 +55,16 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
     protected ValueNode[] arguments;
     protected ValueNode returnValue;
 
+    // @cons
     public IntrinsicGraphBuilder(OptionValues options, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci)
     {
         this(options, metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci, AllowAssumptions.YES);
     }
 
+    // @cons
     protected IntrinsicGraphBuilder(OptionValues options, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions)
     {
+        super();
         this.metaAccess = metaAccess;
         this.constantReflection = constantReflection;
         this.constantFieldProvider = constantFieldProvider;

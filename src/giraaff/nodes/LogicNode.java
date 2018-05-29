@@ -6,10 +6,12 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.calc.FloatingNode;
 
 // @NodeInfo.allowedUsageTypes "Condition"
+// @class LogicNode
 public abstract class LogicNode extends FloatingNode implements IndirectCanonicalization
 {
     public static final NodeClass<LogicNode> TYPE = NodeClass.create(LogicNode.class);
 
+    // @cons
     public LogicNode(NodeClass<? extends LogicNode> c)
     {
         super(c, StampFactory.forVoid());

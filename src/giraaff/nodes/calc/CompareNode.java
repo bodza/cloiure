@@ -23,6 +23,7 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.options.OptionValues;
 
+// @class CompareNode
 public abstract class CompareNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>
 {
     public static final NodeClass<CompareNode> TYPE = NodeClass.create(CompareNode.class);
@@ -36,6 +37,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
      * @param x the instruction producing the first input to the instruction
      * @param y the instruction that produces the second input to this instruction
      */
+    // @cons
     protected CompareNode(NodeClass<? extends CompareNode> c, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode x, ValueNode y)
     {
         super(c, x, y);
@@ -93,6 +95,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         return condition == CanonicalCondition.EQ;
     }
 
+    // @class CompareNode.CompareOp
     public abstract static class CompareOp
     {
         public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)

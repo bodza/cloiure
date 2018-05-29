@@ -6,6 +6,7 @@ import java.util.Map;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.UnmodifiableMapCursor;
 
+// @class EffectsBlockState
 public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
 {
     /**
@@ -14,13 +15,17 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
      */
     private boolean dead;
 
+    // @cons
     public EffectsBlockState()
     {
+        super();
         // emtpy
     }
 
+    // @cons
     public EffectsBlockState(EffectsBlockState<T> other)
     {
+        super();
         this.dead = other.dead;
     }
 

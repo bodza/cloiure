@@ -24,6 +24,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
  * Store of a value at a location specified as an offset relative to an object. No null check is
  * performed before the store.
  */
+// @class RawStoreNode
 public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, Lowerable, Virtualizable, MemoryCheckpoint.Single
 {
     public static final NodeClass<RawStoreNode> TYPE = NodeClass.create(RawStoreNode.class);
@@ -32,16 +33,19 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
     @OptionalInput(InputType.State) FrameState stateAfter;
     private final boolean needsBarrier;
 
+    // @cons
     public RawStoreNode(ValueNode object, ValueNode offset, ValueNode value, JavaKind accessKind, LocationIdentity locationIdentity)
     {
         this(object, offset, value, accessKind, locationIdentity, true);
     }
 
+    // @cons
     public RawStoreNode(ValueNode object, ValueNode offset, ValueNode value, JavaKind accessKind, LocationIdentity locationIdentity, boolean needsBarrier)
     {
         this(object, offset, value, accessKind, locationIdentity, needsBarrier, null, false);
     }
 
+    // @cons
     public RawStoreNode(ValueNode object, ValueNode offset, ValueNode value, JavaKind accessKind, LocationIdentity locationIdentity, boolean needsBarrier, FrameState stateAfter, boolean forceAnyLocation)
     {
         super(TYPE, StampFactory.forVoid(), object, offset, accessKind, locationIdentity, forceAnyLocation);

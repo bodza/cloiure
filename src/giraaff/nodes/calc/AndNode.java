@@ -20,10 +20,12 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
+// @class AndNode
 public final class AndNode extends BinaryArithmeticNode<And> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {
     public static final NodeClass<AndNode> TYPE = NodeClass.create(AndNode.class);
 
+    // @cons
     public AndNode(ValueNode x, ValueNode y)
     {
         super(TYPE, ArithmeticOpTable::getAnd, x, y);

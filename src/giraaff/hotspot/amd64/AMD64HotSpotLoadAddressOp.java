@@ -11,6 +11,7 @@ import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
+// @class AMD64HotSpotLoadAddressOp
 public final class AMD64HotSpotLoadAddressOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotLoadAddressOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLoadAddressOp.class);
@@ -19,6 +20,7 @@ public final class AMD64HotSpotLoadAddressOp extends AMD64LIRInstruction
     private final Constant constant;
     private final Object note;
 
+    // @cons
     public AMD64HotSpotLoadAddressOp(AllocatableValue result, Constant constant, Object note)
     {
         super(TYPE);

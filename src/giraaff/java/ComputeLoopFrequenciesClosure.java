@@ -15,12 +15,15 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.phases.Phase;
 import giraaff.phases.graph.ReentrantNodeIterator;
 
+// @class ComputeLoopFrequenciesClosure
 public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.NodeIteratorClosure<Double>
 {
     private static final ComputeLoopFrequenciesClosure INSTANCE = new ComputeLoopFrequenciesClosure();
 
+    // @cons
     private ComputeLoopFrequenciesClosure()
     {
+        super();
         // nothing to do
     }
 
@@ -85,7 +88,8 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
         }
     }
 
-    public static class ComputeLoopFrequencyPhase extends Phase
+    // @class ComputeLoopFrequenciesClosure.ComputeLoopFrequencyPhase
+    public static final class ComputeLoopFrequencyPhase extends Phase
     {
         @Override
         protected void run(StructuredGraph graph)

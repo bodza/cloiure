@@ -83,7 +83,8 @@ import giraaff.word.WordTypes;
 /**
  * Defines the {@link Plugins} used when running on HotSpot.
  */
-public class HotSpotGraphBuilderPlugins
+// @class HotSpotGraphBuilderPlugins
+public final class HotSpotGraphBuilderPlugins
 {
     /**
      * Creates a {@link Plugins} object that should be used when running on HotSpot.
@@ -490,5 +491,11 @@ public class HotSpotGraphBuilderPlugins
             r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateBytes", int.class, byte[].class, int.class, int.class);
             r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateDirectByteBuffer", int.class, long.class, int.class, int.class);
         }
+    }
+
+    // @cons
+    private HotSpotGraphBuilderPlugins()
+    {
+        super();
     }
 }

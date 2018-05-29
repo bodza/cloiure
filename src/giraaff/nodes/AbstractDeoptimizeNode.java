@@ -13,12 +13,14 @@ import giraaff.nodeinfo.InputType;
  * After this node, execution will continue using a fallback execution engine (such as an
  * interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
  */
+// @class AbstractDeoptimizeNode
 public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements IterableNodeType, DeoptimizingNode.DeoptBefore
 {
     public static final NodeClass<AbstractDeoptimizeNode> TYPE = NodeClass.create(AbstractDeoptimizeNode.class);
 
     @OptionalInput(InputType.State) FrameState stateBefore;
 
+    // @cons
     protected AbstractDeoptimizeNode(NodeClass<? extends AbstractDeoptimizeNode> c, FrameState stateBefore)
     {
         super(c, StampFactory.forVoid());

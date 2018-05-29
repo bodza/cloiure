@@ -30,6 +30,7 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.word.Word;
 
 // @NodeInfo.allowedUsageTypes "Memory, Value"
+// @class CheckcastArrayCopyCallNode
 public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<CheckcastArrayCopyCallNode> TYPE = NodeClass.create(CheckcastArrayCopyCallNode.class);
@@ -46,6 +47,7 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
 
     protected final HotSpotGraalRuntimeProvider runtime;
 
+    // @cons
     protected CheckcastArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, ValueNode superCheckOffset, ValueNode destElemKlass, boolean uninit)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));

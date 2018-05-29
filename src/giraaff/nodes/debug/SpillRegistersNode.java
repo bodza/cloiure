@@ -7,12 +7,14 @@ import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class SpillRegistersNode
 public final class SpillRegistersNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<SpillRegistersNode> TYPE = NodeClass.create(SpillRegistersNode.class);
 
     protected Object unique;
 
+    // @cons
     public SpillRegistersNode()
     {
         super(TYPE, StampFactory.forVoid());

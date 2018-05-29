@@ -19,15 +19,18 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class MulNode
 public class MulNode extends BinaryArithmeticNode<Mul> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {
     public static final NodeClass<MulNode> TYPE = NodeClass.create(MulNode.class);
 
+    // @cons
     public MulNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
     }
 
+    // @cons
     protected MulNode(NodeClass<? extends MulNode> c, ValueNode x, ValueNode y)
     {
         super(c, ArithmeticOpTable::getMul, x, y);

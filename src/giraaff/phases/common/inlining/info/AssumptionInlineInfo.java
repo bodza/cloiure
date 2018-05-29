@@ -15,10 +15,12 @@ import giraaff.phases.util.Providers;
  * Represents an inlining opportunity where the current class hierarchy leads to a monomorphic
  * target method, but for which an assumption has to be registered because of non-final classes.
  */
-public class AssumptionInlineInfo extends ExactInlineInfo
+// @class AssumptionInlineInfo
+public final class AssumptionInlineInfo extends ExactInlineInfo
 {
     private final AssumptionResult<?> takenAssumption;
 
+    // @cons
     public AssumptionInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, AssumptionResult<?> takenAssumption)
     {
         super(invoke, concrete);

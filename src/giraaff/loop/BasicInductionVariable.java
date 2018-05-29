@@ -16,13 +16,15 @@ import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.calc.SubNode;
 import giraaff.util.GraalError;
 
-public class BasicInductionVariable extends InductionVariable
+// @class BasicInductionVariable
+public final class BasicInductionVariable extends InductionVariable
 {
     private final ValuePhiNode phi;
     private final ValueNode init;
     private ValueNode rawStride;
     private BinaryArithmeticNode<?> op;
 
+    // @cons
     public BasicInductionVariable(LoopEx loop, ValuePhiNode phi, ValueNode init, ValueNode rawStride, BinaryArithmeticNode<?> op)
     {
         super(loop);

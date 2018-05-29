@@ -44,6 +44,7 @@ import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
+// @class FrameStateBuilder
 public final class FrameStateBuilder implements SideEffectsState
 {
     private static final ValueNode[] EMPTY_ARRAY = new ValueNode[0];
@@ -79,6 +80,7 @@ public final class FrameStateBuilder implements SideEffectsState
      * @param method the method whose frame is simulated
      * @param graph the target graph of Graal nodes created by the builder
      */
+    // @cons
     public FrameStateBuilder(GraphBuilderTool tool, ResolvedJavaMethod method, StructuredGraph graph)
     {
         this(tool, new ResolvedJavaMethodBytecode(method), graph);
@@ -90,8 +92,10 @@ public final class FrameStateBuilder implements SideEffectsState
      * @param code the bytecode in which the frame exists
      * @param graph the target graph of Graal nodes created by the builder
      */
+    // @cons
     public FrameStateBuilder(GraphBuilderTool tool, Bytecode code, StructuredGraph graph)
     {
+        super();
         this.tool = tool;
         if (tool instanceof BytecodeParser)
         {
@@ -227,8 +231,10 @@ public final class FrameStateBuilder implements SideEffectsState
         }
     }
 
+    // @cons
     private FrameStateBuilder(FrameStateBuilder other)
     {
+        super();
         this.parser = other.parser;
         this.tool = other.tool;
         this.code = other.code;

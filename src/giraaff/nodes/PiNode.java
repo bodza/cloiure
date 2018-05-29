@@ -33,6 +33,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
  * input is as narrow or narrower than the {@link PiNode}'s type. The {@link PiNode}, and therefore
  * also the scheduling restriction enforced by the guard, will go away.
  */
+// @class PiNode
 public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy
 {
     public static final NodeClass<PiNode> TYPE = NodeClass.create(PiNode.class);
@@ -45,6 +46,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
         return object;
     }
 
+    // @cons
     protected PiNode(NodeClass<? extends PiNode> c, ValueNode object, Stamp stamp, GuardingNode guard)
     {
         super(c, stamp, guard);
@@ -53,21 +55,25 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
         inferStamp();
     }
 
+    // @cons
     public PiNode(ValueNode object, Stamp stamp)
     {
         this(object, stamp, null);
     }
 
+    // @cons
     public PiNode(ValueNode object, Stamp stamp, ValueNode guard)
     {
         this(TYPE, object, stamp, (GuardingNode) guard);
     }
 
+    // @cons
     public PiNode(ValueNode object, ValueNode guard)
     {
         this(object, AbstractPointerStamp.pointerNonNull(object.stamp(NodeView.DEFAULT)), guard);
     }
 
+    // @cons
     public PiNode(ValueNode object, ResolvedJavaType toType, boolean exactType, boolean nonNull)
     {
         this(object, StampFactory.object(exactType ? TypeReference.createExactTrusted(toType) : TypeReference.createWithoutAssumptions(toType), nonNull || StampTool.isPointerNonNull(object.stamp(NodeView.DEFAULT))));
@@ -295,6 +301,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
      * A placeholder node in a snippet that will be replaced with a {@link PiNode} when the snippet
      * is instantiated.
      */
+    // @class PiNode.Placeholder
     public static class Placeholder extends FloatingGuardedNode
     {
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
@@ -306,12 +313,14 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
             return object;
         }
 
+        // @cons
         protected Placeholder(NodeClass<? extends Placeholder> c, ValueNode object)
         {
             super(c, PlaceholderStamp.SINGLETON, null);
             this.object = object;
         }
 
+        // @cons
         public Placeholder(ValueNode object)
         {
             this(TYPE, object);
@@ -333,6 +342,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
      * A stamp for {@link Placeholder} nodes which are only used in snippets. It is replaced by an
      * actual stamp when the snippet is instantiated.
      */
+    // @class PiNode.PlaceholderStamp
     public static final class PlaceholderStamp extends ObjectStamp
     {
         private static final PlaceholderStamp SINGLETON = new PlaceholderStamp();
@@ -342,6 +352,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
             return SINGLETON;
         }
 
+        // @cons
         private PlaceholderStamp()
         {
             super(null, false, false, false);

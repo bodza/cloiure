@@ -19,29 +19,36 @@ import giraaff.lir.amd64.AMD64Move.AMD64PushPopStackMove;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 
+// @class AMD64MoveFactoryBase
 public abstract class AMD64MoveFactoryBase implements MoveFactory
 {
     private final BackupSlotProvider backupSlotProvider;
 
-    private static class RegisterBackupPair
+    // @class AMD64MoveFactoryBase.RegisterBackupPair
+    private static final class RegisterBackupPair
     {
         public final Register register;
         public final VirtualStackSlot backupSlot;
 
+        // @cons
         RegisterBackupPair(Register register, VirtualStackSlot backupSlot)
         {
+            super();
             this.register = register;
             this.backupSlot = backupSlot;
         }
     }
 
+    // @class AMD64MoveFactoryBase.BackupSlotProvider
     public static final class BackupSlotProvider
     {
         private final FrameMapBuilder frameMapBuilder;
         private EconomicMap<PlatformKind.Key, RegisterBackupPair> categorized;
 
+        // @cons
         public BackupSlotProvider(FrameMapBuilder frameMapBuilder)
         {
+            super();
             this.frameMapBuilder = frameMapBuilder;
         }
 
@@ -73,8 +80,10 @@ public abstract class AMD64MoveFactoryBase implements MoveFactory
         }
     }
 
+    // @cons
     public AMD64MoveFactoryBase(BackupSlotProvider backupSlotProvider)
     {
+        super();
         this.backupSlotProvider = backupSlotProvider;
     }
 

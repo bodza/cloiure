@@ -25,12 +25,14 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * AMD64 LIR instructions that have two input operands, but no output operand.
  */
-public class AMD64BinaryConsumer
+// @class AMD64BinaryConsumer
+public final class AMD64BinaryConsumer
 {
     /**
      * Instruction that has two {@link AllocatableValue} operands.
      */
-    public static class Op extends AMD64LIRInstruction
+    // @class AMD64BinaryConsumer.Op
+    public static final class Op extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<Op> TYPE = LIRInstructionClass.create(Op.class);
 
@@ -40,6 +42,7 @@ public class AMD64BinaryConsumer
         @Use({OperandFlag.REG}) protected AllocatableValue x;
         @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue y;
 
+        // @cons
         public Op(AMD64RMOp opcode, OperandSize size, AllocatableValue x, AllocatableValue y)
         {
             super(TYPE);
@@ -67,6 +70,7 @@ public class AMD64BinaryConsumer
     /**
      * Instruction that has one {@link AllocatableValue} operand and one 32-bit immediate operand.
      */
+    // @class AMD64BinaryConsumer.ConstOp
     public static class ConstOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<ConstOp> TYPE = LIRInstructionClass.create(ConstOp.class);
@@ -77,16 +81,19 @@ public class AMD64BinaryConsumer
         @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue x;
         private final int y;
 
+        // @cons
         public ConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AllocatableValue x, int y)
         {
             this(opcode.getMIOpcode(size, NumUtil.isByte(y)), size, x, y);
         }
 
+        // @cons
         public ConstOp(AMD64MIOp opcode, OperandSize size, AllocatableValue x, int y)
         {
             this(TYPE, opcode, size, x, y);
         }
 
+        // @cons
         protected ConstOp(LIRInstructionClass<? extends ConstOp> c, AMD64MIOp opcode, OperandSize size, AllocatableValue x, int y)
         {
             super(c);
@@ -115,12 +122,14 @@ public class AMD64BinaryConsumer
      * Instruction that has one {@link AllocatableValue} operand and one 32-bit immediate operand
      * that needs to be patched at runtime.
      */
-    public static class VMConstOp extends ConstOp
+    // @class AMD64BinaryConsumer.VMConstOp
+    public static final class VMConstOp extends ConstOp
     {
         public static final LIRInstructionClass<VMConstOp> TYPE = LIRInstructionClass.create(VMConstOp.class);
 
         protected final VMConstant c;
 
+        // @cons
         public VMConstOp(AMD64MIOp opcode, AllocatableValue x, VMConstant c)
         {
             super(TYPE, opcode, OperandSize.DWORD, x, 0xDEADDEAD);
@@ -139,7 +148,8 @@ public class AMD64BinaryConsumer
      * Instruction that has one {@link AllocatableValue} operand and one
      * {@link DataSectionReference} operand.
      */
-    public static class DataOp extends AMD64LIRInstruction
+    // @class AMD64BinaryConsumer.DataOp
+    public static final class DataOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<DataOp> TYPE = LIRInstructionClass.create(DataOp.class);
 
@@ -151,11 +161,13 @@ public class AMD64BinaryConsumer
 
         private final int alignment;
 
+        // @cons
         public DataOp(AMD64RMOp opcode, OperandSize size, AllocatableValue x, Constant y)
         {
             this(opcode, size, x, y, size.getBytes());
         }
 
+        // @cons
         public DataOp(AMD64RMOp opcode, OperandSize size, AllocatableValue x, Constant y, int alignment)
         {
             super(TYPE);
@@ -179,7 +191,8 @@ public class AMD64BinaryConsumer
      * Instruction that has an {@link AllocatableValue} as first input and a
      * {@link AMD64AddressValue memory} operand as second input.
      */
-    public static class MemoryRMOp extends AMD64LIRInstruction implements ImplicitNullCheck
+    // @class AMD64BinaryConsumer.MemoryRMOp
+    public static final class MemoryRMOp extends AMD64LIRInstruction implements ImplicitNullCheck
     {
         public static final LIRInstructionClass<MemoryRMOp> TYPE = LIRInstructionClass.create(MemoryRMOp.class);
 
@@ -192,6 +205,7 @@ public class AMD64BinaryConsumer
         // @State
         protected LIRFrameState state;
 
+        // @cons
         public MemoryRMOp(AMD64RMOp opcode, OperandSize size, AllocatableValue x, AMD64AddressValue y, LIRFrameState state)
         {
             super(TYPE);
@@ -226,7 +240,8 @@ public class AMD64BinaryConsumer
      * Instruction that has a {@link AMD64AddressValue memory} operand as first input and an
      * {@link AllocatableValue} as second input.
      */
-    public static class MemoryMROp extends AMD64LIRInstruction implements ImplicitNullCheck
+    // @class AMD64BinaryConsumer.MemoryMROp
+    public static final class MemoryMROp extends AMD64LIRInstruction implements ImplicitNullCheck
     {
         public static final LIRInstructionClass<MemoryMROp> TYPE = LIRInstructionClass.create(MemoryMROp.class);
 
@@ -239,6 +254,7 @@ public class AMD64BinaryConsumer
         // @State
         protected LIRFrameState state;
 
+        // @cons
         public MemoryMROp(AMD64MROp opcode, OperandSize size, AMD64AddressValue x, AllocatableValue y, LIRFrameState state)
         {
             super(TYPE);
@@ -272,6 +288,7 @@ public class AMD64BinaryConsumer
     /**
      * Instruction that has one {@link AMD64AddressValue memory} operand and one 32-bit immediate operand.
      */
+    // @class AMD64BinaryConsumer.MemoryConstOp
     public static class MemoryConstOp extends AMD64LIRInstruction implements ImplicitNullCheck
     {
         public static final LIRInstructionClass<MemoryConstOp> TYPE = LIRInstructionClass.create(MemoryConstOp.class);
@@ -285,16 +302,19 @@ public class AMD64BinaryConsumer
         // @State
         protected LIRFrameState state;
 
+        // @cons
         public MemoryConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AMD64AddressValue x, int y, LIRFrameState state)
         {
             this(opcode.getMIOpcode(size, NumUtil.isByte(y)), size, x, y, state);
         }
 
+        // @cons
         public MemoryConstOp(AMD64MIOp opcode, OperandSize size, AMD64AddressValue x, int y, LIRFrameState state)
         {
             this(TYPE, opcode, size, x, y, state);
         }
 
+        // @cons
         protected MemoryConstOp(LIRInstructionClass<? extends MemoryConstOp> c, AMD64MIOp opcode, OperandSize size, AMD64AddressValue x, int y, LIRFrameState state)
         {
             super(c);
@@ -334,12 +354,14 @@ public class AMD64BinaryConsumer
      * Instruction that has one {@link AMD64AddressValue memory} operand and one 32-bit immediate
      * operand that needs to be patched at runtime.
      */
-    public static class MemoryVMConstOp extends MemoryConstOp
+    // @class AMD64BinaryConsumer.MemoryVMConstOp
+    public static final class MemoryVMConstOp extends MemoryConstOp
     {
         public static final LIRInstructionClass<MemoryVMConstOp> TYPE = LIRInstructionClass.create(MemoryVMConstOp.class);
 
         protected final VMConstant c;
 
+        // @cons
         public MemoryVMConstOp(AMD64MIOp opcode, AMD64AddressValue x, VMConstant c, LIRFrameState state)
         {
             super(TYPE, opcode, OperandSize.DWORD, x, 0xDEADDEAD, state);

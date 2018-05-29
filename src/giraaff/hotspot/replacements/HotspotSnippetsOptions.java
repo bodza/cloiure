@@ -5,7 +5,8 @@ import giraaff.options.OptionKey;
 /**
  * Options related to HotSpot snippets in this package.
  */
-public class HotspotSnippetsOptions
+// @class HotspotSnippetsOptions
+public final class HotspotSnippetsOptions
 {
     // @Option "If the probability that a type check will hit one the profiled types (up to TypeCheckMaxHints) is below this value, the type check will be compiled without profiling info."
     public static final OptionKey<Double> TypeCheckMinProfileHitProbability = new OptionKey<>(0.5);
@@ -18,4 +19,10 @@ public class HotspotSnippetsOptions
 
     // @Option "Handle simple cases for inflated monitors in the fast-path."
     public static final OptionKey<Boolean> SimpleFastInflatedLocking = new OptionKey<>(true);
+
+    // @cons
+    private HotspotSnippetsOptions()
+    {
+        super();
+    }
 }

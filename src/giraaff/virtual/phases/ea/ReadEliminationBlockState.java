@@ -11,17 +11,21 @@ import giraaff.nodes.ValueNode;
 /**
  * This class maintains a set of known values, identified by base object, locations and offset.
  */
+// @class ReadEliminationBlockState
 public final class ReadEliminationBlockState extends EffectsBlockState<ReadEliminationBlockState>
 {
     final EconomicMap<CacheEntry<?>, ValueNode> readCache;
 
+    // @class ReadEliminationBlockState.CacheEntry
     abstract static class CacheEntry<T>
     {
         public final ValueNode object;
         public final T identity;
 
+        // @cons
         CacheEntry(ValueNode object, T identity)
         {
+            super();
             this.object = object;
             this.identity = identity;
         }
@@ -57,8 +61,10 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         public abstract LocationIdentity getIdentity();
     }
 
+    // @class ReadEliminationBlockState.LoadCacheEntry
     static final class LoadCacheEntry extends CacheEntry<LocationIdentity>
     {
+        // @cons
         LoadCacheEntry(ValueNode object, LocationIdentity identity)
         {
             super(object, identity);
@@ -87,10 +93,12 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
      * CacheEntry describing an Unsafe memory reference. The memory location and the location
      * identity are separate so both must be considered when looking for optimizable memory accesses.
      */
+    // @class ReadEliminationBlockState.UnsafeLoadCacheEntry
     static final class UnsafeLoadCacheEntry extends CacheEntry<ValueNode>
     {
         private final LocationIdentity locationIdentity;
 
+        // @cons
         UnsafeLoadCacheEntry(ValueNode object, ValueNode location, LocationIdentity locationIdentity)
         {
             super(object, location);
@@ -139,13 +147,17 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         }
     }
 
+    // @cons
     public ReadEliminationBlockState()
     {
+        super();
         readCache = EconomicMap.create(Equivalence.DEFAULT);
     }
 
+    // @cons
     public ReadEliminationBlockState(ReadEliminationBlockState other)
     {
+        super();
         readCache = EconomicMap.create(Equivalence.DEFAULT, other.readCache);
     }
 

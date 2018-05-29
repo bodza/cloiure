@@ -27,6 +27,7 @@ import giraaff.nodes.util.GraphUtil;
 /**
  * Compares two arrays lexicographically.
  */
+// @class ArrayCompareToNode
 public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
     public static final NodeClass<ArrayCompareToNode> TYPE = NodeClass.create(ArrayCompareToNode.class);
@@ -51,6 +52,7 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
 
     @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
 
+    // @cons
     public ArrayCompareToNode(ValueNode array1, ValueNode array2, ValueNode length1, ValueNode length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));

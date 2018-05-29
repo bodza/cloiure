@@ -17,12 +17,14 @@ import giraaff.nodes.CallTargetNode.InvokeKind;
  * inline cache so it's just a patchable call site.
  */
 @Opcode
+// @class AMD64HotSpotDirectStaticCallOp
 final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
 {
     public static final LIRInstructionClass<AMD64HotSpotDirectStaticCallOp> TYPE = LIRInstructionClass.create(AMD64HotSpotDirectStaticCallOp.class);
 
     private final InvokeKind invokeKind;
 
+    // @cons
     AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind)
     {
         super(TYPE, target, result, parameters, temps, state);

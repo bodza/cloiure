@@ -16,6 +16,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * and jumps to the handler.
  */
 @Opcode
+// @class AMD64HotSpotJumpToExceptionHandlerInCallerOp
 final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     public static final LIRInstructionClass<AMD64HotSpotJumpToExceptionHandlerInCallerOp> TYPE = LIRInstructionClass.create(AMD64HotSpotJumpToExceptionHandlerInCallerOp.class);
@@ -26,6 +27,7 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
     private final Register thread;
     private final int isMethodHandleReturnOffset;
 
+    // @cons
     AMD64HotSpotJumpToExceptionHandlerInCallerOp(AllocatableValue handlerInCallerPc, AllocatableValue exception, AllocatableValue exceptionPc, int isMethodHandleReturnOffset, Register thread)
     {
         super(TYPE);

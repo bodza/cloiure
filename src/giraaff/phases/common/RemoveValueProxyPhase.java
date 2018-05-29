@@ -7,7 +7,8 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.Phase;
 
-public class RemoveValueProxyPhase extends Phase
+// @class RemoveValueProxyPhase
+public final class RemoveValueProxyPhase extends Phase
 {
     @Override
     protected void run(StructuredGraph graph)

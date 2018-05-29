@@ -13,14 +13,17 @@ import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.common.inlining.info.InlineInfo;
 import giraaff.phases.common.inlining.info.elem.Inlineable;
 
+// @class AbstractInliningPolicy
 public abstract class AbstractInliningPolicy implements InliningPolicy
 {
     public static final float RelevanceCapForInlining = 1.0f;
     public static final float CapInheritedRelevance = 1.0f;
     protected final Map<Invoke, Double> hints;
 
+    // @cons
     public AbstractInliningPolicy(Map<Invoke, Double> hints)
     {
+        super();
         this.hints = hints;
     }
 

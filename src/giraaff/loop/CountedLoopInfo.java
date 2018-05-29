@@ -23,7 +23,8 @@ import giraaff.nodes.calc.IntegerLessThanNode;
 import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.extended.GuardingNode;
 
-public class CountedLoopInfo
+// @class CountedLoopInfo
+public final class CountedLoopInfo
 {
     private final LoopEx loop;
     private InductionVariable iv;
@@ -32,8 +33,10 @@ public class CountedLoopInfo
     private AbstractBeginNode body;
     private IfNode ifNode;
 
+    // @cons
     CountedLoopInfo(LoopEx loop, InductionVariable iv, IfNode ifNode, ValueNode end, boolean oneOff, AbstractBeginNode body)
     {
+        super();
         this.loop = loop;
         this.iv = iv;
         this.end = end;

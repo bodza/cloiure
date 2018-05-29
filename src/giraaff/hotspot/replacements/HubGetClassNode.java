@@ -24,12 +24,14 @@ import giraaff.nodes.spi.LoweringTool;
  * Read {@code Klass::_java_mirror} and incorporate non-null type information into stamp. This is
  * also used by {@link ClassGetHubNode} to eliminate chains of {@code klass._java_mirror._klass}.
  */
+// @class HubGetClassNode
 public final class HubGetClassNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
     public static final NodeClass<HubGetClassNode> TYPE = NodeClass.create(HubGetClassNode.class);
 
     @Input protected ValueNode hub;
 
+    // @cons
     public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode hub)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(metaAccess.lookupJavaType(Class.class))));

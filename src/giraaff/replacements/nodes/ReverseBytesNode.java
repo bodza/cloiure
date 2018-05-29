@@ -17,10 +17,12 @@ import giraaff.nodes.calc.UnaryNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class ReverseBytesNode
 public final class ReverseBytesNode extends UnaryNode implements LIRLowerable
 {
     public static final NodeClass<ReverseBytesNode> TYPE = NodeClass.create(ReverseBytesNode.class);
 
+    // @cons
     public ReverseBytesNode(ValueNode value)
     {
         super(TYPE, StampFactory.forKind(value.getStackKind()), value);

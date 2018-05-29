@@ -25,6 +25,7 @@ import giraaff.util.GraalError;
 /**
  * The {@code ConstantNode} represents a {@link Constant constant}.
  */
+// @class ConstantNode
 public final class ConstantNode extends FloatingNode implements LIRLowerable
 {
     public static final NodeClass<ConstantNode> TYPE = NodeClass.create(ConstantNode.class);
@@ -44,11 +45,13 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      *
      * @param value the constant
      */
+    // @cons
     public ConstantNode(Constant value, Stamp stamp)
     {
         this(value, stamp, 0, false);
     }
 
+    // @cons
     private ConstantNode(Constant value, Stamp stamp, int stableDimension, boolean isDefaultStable)
     {
         super(TYPE, stamp);

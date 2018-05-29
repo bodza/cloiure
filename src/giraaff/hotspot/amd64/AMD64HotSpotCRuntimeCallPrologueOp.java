@@ -11,6 +11,7 @@ import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 @Opcode
+// @class AMD64HotSpotCRuntimeCallPrologueOp
 final class AMD64HotSpotCRuntimeCallPrologueOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotCRuntimeCallPrologueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotCRuntimeCallPrologueOp.class);
@@ -18,6 +19,7 @@ final class AMD64HotSpotCRuntimeCallPrologueOp extends AMD64LIRInstruction
     private final int threadLastJavaSpOffset;
     private final Register thread;
 
+    // @cons
     AMD64HotSpotCRuntimeCallPrologueOp(int threadLastJavaSpOffset, Register thread)
     {
         super(TYPE);

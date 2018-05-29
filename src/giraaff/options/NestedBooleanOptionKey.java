@@ -9,11 +9,13 @@ package giraaff.options;
  * If {@link #masterOption} is set, this value equals to {@link #initialValue}.
  * Otherwise, if {@link #masterOption} is {@code false}, this option is {@code false}.
  */
-public class NestedBooleanOptionKey extends OptionKey<Boolean>
+// @class NestedBooleanOptionKey
+public final class NestedBooleanOptionKey extends OptionKey<Boolean>
 {
     private final OptionKey<Boolean> masterOption;
     private final Boolean initialValue;
 
+    // @cons
     public NestedBooleanOptionKey(OptionKey<Boolean> masterOption, Boolean initialValue)
     {
         super(null);

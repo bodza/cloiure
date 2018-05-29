@@ -13,7 +13,8 @@ import giraaff.nodes.java.NewArrayNode;
 import giraaff.replacements.Snippets;
 import giraaff.util.GraalError;
 
-public class ObjectCloneSnippets implements Snippets
+// @class ObjectCloneSnippets
+public final class ObjectCloneSnippets implements Snippets
 {
     public static final EnumMap<JavaKind, Method> arrayCloneMethods = new EnumMap<>(JavaKind.class);
 

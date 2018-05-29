@@ -11,9 +11,11 @@ import giraaff.lir.alloc.lsra.Interval.RegisterPriority;
 import giraaff.lir.alloc.lsra.Interval.State;
 import giraaff.options.OptionKey;
 
-public class OptimizingLinearScanWalker extends LinearScanWalker
+// @class OptimizingLinearScanWalker
+public final class OptimizingLinearScanWalker extends LinearScanWalker
 {
-    public static class Options
+    // @class OptimizingLinearScanWalker.Options
+    public static final class Options
     {
         // @Option "Enable LSRA optimization."
         public static final OptionKey<Boolean> LSRAOptimization = new OptionKey<>(false);
@@ -21,6 +23,7 @@ public class OptimizingLinearScanWalker extends LinearScanWalker
         public static final OptionKey<Boolean> LSRAOptSplitOnly = new OptionKey<>(false);
     }
 
+    // @cons
     OptimizingLinearScanWalker(LinearScan allocator, Interval unhandledFixedFirst, Interval unhandledAnyFirst)
     {
         super(allocator, unhandledFixedFirst, unhandledAnyFirst);

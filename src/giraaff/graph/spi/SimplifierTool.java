@@ -5,6 +5,7 @@ import giraaff.graph.Node;
 /**
  * @see Simplifiable
  */
+// @iface SimplifierTool
 public interface SimplifierTool extends CanonicalizerTool
 {
     void deleteBranch(Node branch);

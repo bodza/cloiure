@@ -12,16 +12,20 @@ import org.graalvm.collections.Equivalence;
 /**
  * Configuration for register allocation. This is different to {@link RegisterConfig}.
  */
+// @class RegisterAllocationConfig
 public class RegisterAllocationConfig
 {
+    // @class RegisterAllocationConfig.AllocatableRegisters
     public static final class AllocatableRegisters
     {
         public final Register[] allocatableRegisters;
         public final int minRegisterNumber;
         public final int maxRegisterNumber;
 
+        // @cons
         public AllocatableRegisters(RegisterArray allocatableRegisters, int minRegisterNumber, int maxRegisterNumber)
         {
+            super();
             this.allocatableRegisters = allocatableRegisters.toArray();
             this.minRegisterNumber = minRegisterNumber;
             this.maxRegisterNumber = maxRegisterNumber;
@@ -37,8 +41,10 @@ public class RegisterAllocationConfig
     private final EconomicMap<PlatformKind.Key, AllocatableRegisters> categorized = EconomicMap.create(Equivalence.DEFAULT);
     private RegisterArray cachedRegisters;
 
+    // @cons
     public RegisterAllocationConfig(RegisterConfig registerConfig)
     {
+        super();
         this.registerConfig = registerConfig;
     }
 

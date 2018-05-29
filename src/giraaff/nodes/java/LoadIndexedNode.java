@@ -27,6 +27,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * The {@code LoadIndexedNode} represents a read from an element of an array.
  */
+// @class LoadIndexedNode
 public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable, Canonicalizable
 {
     public static final NodeClass<LoadIndexedNode> TYPE = NodeClass.create(LoadIndexedNode.class);
@@ -38,6 +39,7 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
      * @param index the instruction producing the index
      * @param elementKind the element type
      */
+    // @cons
     public LoadIndexedNode(Assumptions assumptions, ValueNode array, ValueNode index, JavaKind elementKind)
     {
         this(TYPE, createStamp(assumptions, array, elementKind), array, index, elementKind);
@@ -53,6 +55,7 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
         return new LoadIndexedNode(assumptions, array, index, elementKind);
     }
 
+    // @cons
     protected LoadIndexedNode(NodeClass<? extends LoadIndexedNode> c, Stamp stamp, ValueNode array, ValueNode index, JavaKind elementKind)
     {
         super(c, stamp, array, index, elementKind);

@@ -37,8 +37,10 @@ import giraaff.word.WordTypes;
 /**
  * Extends {@link WordOperationPlugin} to handle {@linkplain HotSpotOperation HotSpot word operations}.
  */
-class HotSpotWordOperationPlugin extends WordOperationPlugin
+// @class HotSpotWordOperationPlugin
+final class HotSpotWordOperationPlugin extends WordOperationPlugin
 {
+    // @cons
     HotSpotWordOperationPlugin(SnippetReflectionProvider snippetReflection, WordTypes wordTypes)
     {
         super(snippetReflection, wordTypes);

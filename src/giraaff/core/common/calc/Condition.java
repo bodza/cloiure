@@ -10,6 +10,7 @@ import giraaff.util.GraalError;
 /**
  * Condition codes used in conditionals.
  */
+// @enum Condition
 public enum Condition
 {
     /**
@@ -69,14 +70,17 @@ public enum Condition
         this.operator = operator;
     }
 
+    // @class Condition.CanonicalizedCondition
     public static final class CanonicalizedCondition
     {
         private final CanonicalCondition canonicalCondition;
         private final boolean mirror;
         private final boolean negate;
 
+        // @cons
         private CanonicalizedCondition(CanonicalCondition canonicalCondition, boolean mirror, boolean negate)
         {
+            super();
             this.canonicalCondition = canonicalCondition;
             this.mirror = mirror;
             this.negate = negate;

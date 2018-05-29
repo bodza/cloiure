@@ -48,8 +48,10 @@ import giraaff.options.OptionValues;
 /**
  * HotSpot AMD64 specific backend.
  */
-public class AMD64HotSpotBackend extends HotSpotHostBackend
+// @class AMD64HotSpotBackend
+public final class AMD64HotSpotBackend extends HotSpotHostBackend
 {
+    // @cons
     public AMD64HotSpotBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
     {
         super(runtime, providers);
@@ -105,13 +107,16 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
     /**
      * Emits code at the verified entry point and return point(s) of a method.
      */
-    class HotSpotFrameContext implements FrameContext
+    // @class AMD64HotSpotBackend.HotSpotFrameContext
+    final class HotSpotFrameContext implements FrameContext
     {
         final boolean isStub;
         final boolean omitFrame;
 
+        // @cons
         HotSpotFrameContext(boolean isStub, boolean omitFrame)
         {
+            super();
             this.isStub = isStub;
             this.omitFrame = omitFrame;
         }

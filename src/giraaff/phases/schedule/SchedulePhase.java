@@ -51,8 +51,10 @@ import giraaff.nodes.spi.ValueProxy;
 import giraaff.options.OptionValues;
 import giraaff.phases.Phase;
 
+// @class SchedulePhase
 public final class SchedulePhase extends Phase
 {
+    // @enum SchedulePhase.SchedulingStrategy
     public enum SchedulingStrategy
     {
         EARLIEST_WITH_GUARD_ORDER,
@@ -76,23 +78,28 @@ public final class SchedulePhase extends Phase
 
     private final boolean immutableGraph;
 
+    // @cons
     public SchedulePhase(OptionValues options)
     {
         this(false, options);
     }
 
+    // @cons
     public SchedulePhase(boolean immutableGraph, OptionValues options)
     {
         this(GraalOptions.OptScheduleOutOfLoops.getValue(options) ? SchedulingStrategy.LATEST_OUT_OF_LOOPS : SchedulingStrategy.LATEST, immutableGraph);
     }
 
+    // @cons
     public SchedulePhase(SchedulingStrategy strategy)
     {
         this(strategy, false);
     }
 
+    // @cons
     public SchedulePhase(SchedulingStrategy strategy, boolean immutableGraph)
     {
+        super();
         this.selectedStrategy = strategy;
         this.immutableGraph = immutableGraph;
     }
@@ -110,7 +117,8 @@ public final class SchedulePhase extends Phase
         inst.run(graph, strategy, false);
     }
 
-    public static class Instance
+    // @class SchedulePhase.Instance
+    public static final class Instance
     {
         private static final double IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR = 2;
         /**
@@ -120,13 +128,16 @@ public final class SchedulePhase extends Phase
         protected BlockMap<List<Node>> blockToNodesMap;
         protected NodeMap<Block> nodeToBlockMap;
 
+        // @cons
         public Instance()
         {
             this(null);
         }
 
+        // @cons
         public Instance(ControlFlowGraph cfg)
         {
+            super();
             this.cfg = cfg;
         }
 
@@ -666,15 +677,18 @@ public final class SchedulePhase extends Phase
          * Micro block that is allocated for each fixed node and captures all floating nodes that
          * need to be scheduled immediately after the corresponding fixed node.
          */
-        private static class MicroBlock
+        // @class SchedulePhase.Instance.MicroBlock
+        private static final class MicroBlock
         {
             private final int id;
             private int nodeCount;
             private NodeEntry head;
             private NodeEntry tail;
 
+            // @cons
             MicroBlock(int id)
             {
+                super();
                 this.id = id;
             }
 
@@ -763,13 +777,16 @@ public final class SchedulePhase extends Phase
         /**
          * Entry in the linked list of nodes.
          */
-        private static class NodeEntry
+        // @class SchedulePhase.Instance.NodeEntry
+        private static final class NodeEntry
         {
             private final Node node;
             private NodeEntry next;
 
+            // @cons
             NodeEntry(Node node)
             {
+                super();
                 this.node = node;
                 this.next = null;
             }
@@ -1026,7 +1043,8 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        private static class GuardOrder
+        // @class SchedulePhase.Instance.GuardOrder
+        private static final class GuardOrder
         {
             /**
              * After an earliest schedule, this will re-sort guards to honor their

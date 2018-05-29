@@ -4,7 +4,8 @@ package giraaff.graph;
  * This error represents a failed verification of a node . It must only be used for conditions that
  * should never occur during normal operation.
  */
-public class VerificationError extends GraalGraphError
+// @class VerificationError
+public final class VerificationError extends GraalGraphError
 {
     /**
      * This constructor creates a {@link VerificationError} with a message assembled via
@@ -15,6 +16,7 @@ public class VerificationError extends GraalGraphError
      * @param args parameters to String.format - parameters that implement {@link Iterable} will be
      *            expanded into a [x, x, ...] representation.
      */
+    // @cons
     public VerificationError(String msg, Object... args)
     {
         super(msg, args);

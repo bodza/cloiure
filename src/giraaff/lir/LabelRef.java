@@ -14,6 +14,7 @@ import giraaff.lir.StandardOp.JumpOp;
  * successor-index-of-B)}. That is, indirectly by storing the index into the successor list of A.
  * Note therefore that the successor list cannot be re-ordered.
  */
+// @class LabelRef
 public final class LabelRef
 {
     private final LIR lir;
@@ -38,8 +39,10 @@ public final class LabelRef
      * @param block The base block that contains the successor list.
      * @param suxIndex The index of the successor.
      */
+    // @cons
     private LabelRef(final LIR lir, final AbstractBlockBase<?> block, final int suxIndex)
     {
+        super();
         this.lir = lir;
         this.block = block;
         this.suxIndex = suxIndex;

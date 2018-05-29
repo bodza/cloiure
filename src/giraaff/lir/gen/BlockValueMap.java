@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.cfg.AbstractBlockBase;
 
+// @iface BlockValueMap
 public interface BlockValueMap
 {
     void accessOperand(Value operand, AbstractBlockBase<?> block);

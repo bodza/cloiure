@@ -7,12 +7,14 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class OpaqueNode
 public final class OpaqueNode extends FloatingNode implements LIRLowerable
 {
     public static final NodeClass<OpaqueNode> TYPE = NodeClass.create(OpaqueNode.class);
 
     @Input protected ValueNode value;
 
+    // @cons
     public OpaqueNode(ValueNode value)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT).unrestricted());

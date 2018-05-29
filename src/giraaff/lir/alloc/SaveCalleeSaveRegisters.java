@@ -21,7 +21,8 @@ import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.lir.phases.PreAllocationOptimizationPhase;
 import giraaff.lir.util.RegisterMap;
 
-public class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhase
+// @class SaveCalleeSaveRegisters
+public final class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhase
 {
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PreAllocationOptimizationContext context)

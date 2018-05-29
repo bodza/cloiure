@@ -19,7 +19,8 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Represents {@link GraalHotSpotVMConfig} values that may change after compilation.
  */
-public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerable, Canonicalizable
+// @class GraalHotSpotVMConfigNode
+public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerable, Canonicalizable
 {
     public static final NodeClass<GraalHotSpotVMConfigNode> TYPE = NodeClass.create(GraalHotSpotVMConfigNode.class);
 
@@ -28,6 +29,7 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
     /**
      * Constructor for {@link #areConfigValuesConstant()}.
      */
+    // @cons
     public GraalHotSpotVMConfigNode()
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));
@@ -39,6 +41,7 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
      *
      * @param markId id of the config value
      */
+    // @cons
     public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp stamp, int markId)
     {
         super(TYPE, stamp);
@@ -51,6 +54,7 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
      * @param markId id of the config value
      * @param kind explicit type of the node
      */
+    // @cons
     public GraalHotSpotVMConfigNode(int markId, JavaKind kind)
     {
         super(TYPE, StampFactory.forKind(kind));

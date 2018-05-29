@@ -19,7 +19,8 @@ import giraaff.word.Word;
 /**
  * A collection of methods used in {@link Stub}s.
  */
-public class StubUtil
+// @class StubUtil
+public final class StubUtil
 {
     public static ForeignCallDescriptor newDescriptor(Class<?> stubClass, String name, Class<?> resultType, Class<?>... argumentTypes)
     {

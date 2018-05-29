@@ -29,6 +29,7 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
+// @class BasicArrayCopyNode
 public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virtualizable, MemoryCheckpoint.Single, MemoryAccess, Lowerable, DeoptimizingNode.DeoptDuring
 {
     public static final NodeClass<BasicArrayCopyNode> TYPE = NodeClass.create(BasicArrayCopyNode.class);
@@ -49,6 +50,7 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
 
     protected int bci;
 
+    // @cons
     public BasicArrayCopyNode(NodeClass<? extends AbstractMemoryCheckpoint> type, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, int bci)
     {
         super(type, StampFactory.forKind(JavaKind.Void));
@@ -57,6 +59,7 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
         this.elementKind = elementKind != JavaKind.Illegal ? elementKind : null;
     }
 
+    // @cons
     public BasicArrayCopyNode(NodeClass<? extends AbstractMemoryCheckpoint> type, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind)
     {
         super(type, StampFactory.forKind(JavaKind.Void));

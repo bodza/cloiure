@@ -1,12 +1,15 @@
 package giraaff.core.common.cfg;
 
-public class BlockMap<T>
+// @class BlockMap
+public final class BlockMap<T>
 {
     private final T[] data;
 
     @SuppressWarnings("unchecked")
+    // @cons
     public BlockMap(AbstractControlFlowGraph<?> cfg)
     {
+        super();
         data = (T[]) new Object[cfg.getBlocks().length];
     }
 

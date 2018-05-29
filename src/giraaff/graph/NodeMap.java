@@ -7,18 +7,21 @@ import java.util.function.BiFunction;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.MapCursor;
 
-public class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
+// @class NodeMap
+public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
 {
     private static final int MIN_REALLOC_SIZE = 16;
 
     protected Object[] values;
 
+    // @cons
     public NodeMap(Graph graph)
     {
         super(graph);
         this.values = new Object[graph.nodeIdCount()];
     }
 
+    // @cons
     public NodeMap(NodeMap<T> copyFrom)
     {
         super(copyFrom.graph);

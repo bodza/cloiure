@@ -9,10 +9,12 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.DirectCallTargetNode;
 import giraaff.nodes.ValueNode;
 
+// @class HotSpotDirectCallTargetNode
 public final class HotSpotDirectCallTargetNode extends DirectCallTargetNode
 {
     public static final NodeClass<HotSpotDirectCallTargetNode> TYPE = NodeClass.create(HotSpotDirectCallTargetNode.class);
 
+    // @cons
     public HotSpotDirectCallTargetNode(ValueNode[] arguments, StampPair returnStamp, JavaType[] signature, ResolvedJavaMethod target, Type callType, InvokeKind invokeKind)
     {
         super(TYPE, arguments, returnStamp, signature, target, callType, invokeKind);

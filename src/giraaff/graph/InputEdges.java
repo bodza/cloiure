@@ -6,11 +6,13 @@ import giraaff.graph.Edges.Type;
 import giraaff.graph.NodeClass.InputInfo;
 import giraaff.nodeinfo.InputType;
 
+// @class InputEdges
 public final class InputEdges extends Edges
 {
     private final InputType[] inputTypes;
     private final boolean[] isOptional;
 
+    // @cons
     public InputEdges(int directCount, ArrayList<InputInfo> edges)
     {
         super(Type.Inputs, directCount, edges);

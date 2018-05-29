@@ -9,6 +9,7 @@ import java.util.RandomAccess;
 
 import giraaff.graph.iterators.NodeIterable;
 
+// @class NodeList
 public abstract class NodeList<T extends Node> extends AbstractList<T> implements NodeIterable<T>, RandomAccess
 {
     protected static final Node[] EMPTY_NODE_ARRAY = new Node[0];
@@ -18,23 +19,29 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     private int size;
     protected final int initialSize;
 
+    // @cons
     protected NodeList(Node self)
     {
+        super();
         this.self = self;
         this.nodes = EMPTY_NODE_ARRAY;
         this.initialSize = 0;
     }
 
+    // @cons
     protected NodeList(Node self, int initialSize)
     {
+        super();
         this.self = self;
         this.size = initialSize;
         this.initialSize = initialSize;
         this.nodes = new Node[initialSize];
     }
 
+    // @cons
     protected NodeList(Node self, T[] elements)
     {
+        super();
         this.self = self;
         if (elements == null || elements.length == 0)
         {
@@ -54,8 +61,10 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
     }
 
+    // @cons
     protected NodeList(Node self, List<? extends T> elements)
     {
+        super();
         this.self = self;
         if (elements == null || elements.isEmpty())
         {
@@ -75,8 +84,10 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
     }
 
+    // @cons
     protected NodeList(Node self, Collection<? extends NodeInterface> elements)
     {
+        super();
         this.self = self;
         if (elements == null || elements.isEmpty())
         {
@@ -458,13 +469,16 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         return new SubList<>(this, startIndex);
     }
 
+    // @class NodeList.SubList
     public static final class SubList<R extends Node> extends AbstractList<R> implements NodeIterable<R>, RandomAccess
     {
         private final NodeList<R> list;
         private final int offset;
 
+        // @cons
         private SubList(NodeList<R> list, int offset)
         {
+            super();
             this.list = list;
             this.offset = offset;
         }
@@ -493,14 +507,17 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
     }
 
+    // @class NodeList.NodeListIterator
     private static final class NodeListIterator<R extends Node> implements Iterator<R>
     {
         private final NodeList<R> list;
         private final int expectedModCount;
         private int index;
 
+        // @cons
         private NodeListIterator(NodeList<R> list, int startIndex)
         {
+            super();
             this.list = list;
             this.expectedModCount = list.modCount;
             this.index = startIndex;

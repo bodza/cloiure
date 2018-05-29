@@ -16,6 +16,7 @@ import giraaff.nodes.extended.GuardingNode;
  * A {@link PiNode} where the type is not yet known. If the type becomes known at a later point in
  * the compilation, this can canonicalize to a regular {@link PiNode}.
  */
+// @class DynamicPiNode
 public final class DynamicPiNode extends PiNode
 {
     public static final NodeClass<DynamicPiNode> TYPE = NodeClass.create(DynamicPiNode.class);
@@ -23,6 +24,7 @@ public final class DynamicPiNode extends PiNode
     @Input ValueNode typeMirror;
     private final boolean exact;
 
+    // @cons
     protected DynamicPiNode(ValueNode object, GuardingNode guard, ValueNode typeMirror, boolean exact)
     {
         super(TYPE, object, StampFactory.object(), guard);

@@ -7,9 +7,11 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.type.StampPair;
 
-public class GraphBuilderConfiguration
+// @class GraphBuilderConfiguration
+public final class GraphBuilderConfiguration
 {
-    public static class Plugins
+    // @class GraphBuilderConfiguration.Plugins
+    public static final class Plugins
     {
         private final InvocationPlugins invocationPlugins;
         private NodePlugin[] nodePlugins;
@@ -24,8 +26,10 @@ public class GraphBuilderConfiguration
          * {@code copyFrom} become the {@linkplain InvocationPlugins#getParent() default}
          * {@linkplain #getInvocationPlugins() invocation plugins} in this object.
          */
+        // @cons
         public Plugins(Plugins copyFrom)
         {
+            super();
             this.invocationPlugins = new InvocationPlugins(copyFrom.invocationPlugins);
             this.nodePlugins = copyFrom.nodePlugins;
             this.parameterPlugins = copyFrom.parameterPlugins;
@@ -41,8 +45,10 @@ public class GraphBuilderConfiguration
          * @param invocationPlugins the {@linkplain #getInvocationPlugins() invocation plugins} in
          *            this object
          */
+        // @cons
         public Plugins(InvocationPlugins invocationPlugins)
         {
+            super();
             this.invocationPlugins = invocationPlugins;
             this.nodePlugins = new NodePlugin[0];
             this.parameterPlugins = new ParameterPlugin[0];
@@ -188,6 +194,7 @@ public class GraphBuilderConfiguration
     private final ResolvedJavaType[] skippedExceptionTypes;
     private final Plugins plugins;
 
+    // @enum GraphBuilderConfiguration.BytecodeExceptionMode
     public enum BytecodeExceptionMode
     {
         /**
@@ -208,8 +215,10 @@ public class GraphBuilderConfiguration
         Profile
     }
 
+    // @cons
     protected GraphBuilderConfiguration(boolean eagerResolving, boolean unresolvedIsError, BytecodeExceptionMode bytecodeExceptionMode, ResolvedJavaType[] skippedExceptionTypes, Plugins plugins)
     {
+        super();
         this.eagerResolving = eagerResolving;
         this.unresolvedIsError = unresolvedIsError;
         this.bytecodeExceptionMode = bytecodeExceptionMode;

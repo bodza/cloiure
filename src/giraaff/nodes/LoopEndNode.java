@@ -11,6 +11,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * LoopEnd nodes represent a loop back-edge. When a LoopEnd is reached, execution continues at the
  * {@linkplain #loopBegin() loop header}.
  */
+// @class LoopEndNode
 public final class LoopEndNode extends AbstractEndNode
 {
     public static final NodeClass<LoopEndNode> TYPE = NodeClass.create(LoopEndNode.class);
@@ -39,6 +40,7 @@ public final class LoopEndNode extends AbstractEndNode
      */
     boolean canSafepoint;
 
+    // @cons
     public LoopEndNode(LoopBeginNode begin)
     {
         super(TYPE);

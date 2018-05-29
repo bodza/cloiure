@@ -6,18 +6,23 @@ import java.util.List;
 
 import org.graalvm.word.LocationIdentity;
 
-public class LocationSet
+// @class LocationSet
+public final class LocationSet
 {
     private LocationIdentity firstLocation;
     private List<LocationIdentity> list;
 
+    // @cons
     public LocationSet()
     {
+        super();
         list = null;
     }
 
+    // @cons
     public LocationSet(LocationSet other)
     {
+        super();
         this.firstLocation = other.firstLocation;
         if (other.list != null && other.list.size() > 0)
         {

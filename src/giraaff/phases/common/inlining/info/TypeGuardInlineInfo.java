@@ -28,12 +28,14 @@ import giraaff.phases.util.Providers;
  * receiver, but for which the receiver type cannot be proven. A type check guard will be generated
  * if this inlining is performed.
  */
-public class TypeGuardInlineInfo extends AbstractInlineInfo
+// @class TypeGuardInlineInfo
+public final class TypeGuardInlineInfo extends AbstractInlineInfo
 {
     private final ResolvedJavaMethod concrete;
     private final ResolvedJavaType type;
     private Inlineable inlineableElement;
 
+    // @cons
     public TypeGuardInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, ResolvedJavaType type)
     {
         super(invoke);

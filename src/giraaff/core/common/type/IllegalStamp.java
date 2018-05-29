@@ -16,10 +16,13 @@ import giraaff.util.GraalError;
  * {@link JavaKind#Long} and {@link JavaKind#Double} values. It can only appear in framestates or
  * virtual objects.
  */
+// @class IllegalStamp
 public final class IllegalStamp extends Stamp
 {
+    // @cons
     private IllegalStamp()
     {
+        super();
     }
 
     @Override

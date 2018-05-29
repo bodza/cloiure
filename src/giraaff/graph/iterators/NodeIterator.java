@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import giraaff.graph.Node;
 
+// @class NodeIterator
 public abstract class NodeIterator<T extends Node> implements Iterator<T>
 {
     protected T current;

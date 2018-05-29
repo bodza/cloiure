@@ -17,6 +17,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Access the value of a specific register.
  */
+// @class ReadRegisterNode
 public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<ReadRegisterNode> TYPE = NodeClass.create(ReadRegisterNode.class);
@@ -39,6 +40,7 @@ public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowe
      */
     protected final boolean incoming;
 
+    // @cons
     public ReadRegisterNode(Register register, JavaKind kind, boolean directUse, boolean incoming)
     {
         super(TYPE, StampFactory.forKind(kind));
@@ -47,6 +49,7 @@ public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowe
         this.incoming = incoming;
     }
 
+    // @cons
     public ReadRegisterNode(@InjectedNodeParameter Stamp stamp, Register register, boolean directUse, boolean incoming)
     {
         super(TYPE, stamp);

@@ -15,6 +15,7 @@ import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.phases.common.AddressLoweringPhase.AddressLowering;
 
+// @class AMD64AddressLowering
 public class AMD64AddressLowering extends AddressLowering
 {
     private static final int ADDRESS_BITS = 64;

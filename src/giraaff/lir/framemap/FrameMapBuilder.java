@@ -15,6 +15,7 @@ import giraaff.lir.gen.LIRGenerationResult;
  * A {@link FrameMapBuilder} is used to collect all information necessary to
  * {@linkplain #buildFrameMap create} a {@link FrameMap}.
  */
+// @class FrameMapBuilder
 public abstract class FrameMapBuilder
 {
     /**

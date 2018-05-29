@@ -10,6 +10,7 @@ import giraaff.lir.StandardOp.NullCheck;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
 
+// @class NullCheckOptimizer
 public final class NullCheckOptimizer extends PostAllocationOptimizationPhase
 {
     @Override

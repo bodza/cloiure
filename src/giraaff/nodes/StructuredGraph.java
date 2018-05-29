@@ -39,6 +39,7 @@ import giraaff.options.OptionValues;
  * A graph that contains at least one distinguished node : the {@link #start() start} node. This
  * node is the start of the control flow of the graph.
  */
+// @class StructuredGraph
 public final class StructuredGraph extends Graph
 {
     /**
@@ -46,6 +47,7 @@ public final class StructuredGraph extends Graph
      * {@link GuardNode guards}, {@link DeoptimizingNode deoptimizations} and {@link FrameState
      * framestates}. The stage of a graph progresses monotonously.
      */
+    // @enum StructuredGraph.GuardsStage
     public enum GuardsStage
     {
         /**
@@ -93,6 +95,7 @@ public final class StructuredGraph extends Graph
     /**
      * Constants denoting whether or not {@link Assumption}s can be made while processing a graph.
      */
+    // @enum StructuredGraph.AllowAssumptions
     public enum AllowAssumptions
     {
         YES,
@@ -108,14 +111,17 @@ public final class StructuredGraph extends Graph
         }
     }
 
-    public static class ScheduleResult
+    // @class StructuredGraph.ScheduleResult
+    public static final class ScheduleResult
     {
         private final ControlFlowGraph cfg;
         private final NodeMap<Block> nodeToBlockMap;
         private final BlockMap<List<Node>> blockToNodesMap;
 
+        // @cons
         public ScheduleResult(ControlFlowGraph cfg, NodeMap<Block> nodeToBlockMap, BlockMap<List<Node>> blockToNodesMap)
         {
+            super();
             this.cfg = cfg;
             this.nodeToBlockMap = nodeToBlockMap;
             this.blockToNodesMap = blockToNodesMap;
@@ -145,7 +151,8 @@ public final class StructuredGraph extends Graph
     /**
      * Object used to create a {@link StructuredGraph}.
      */
-    public static class Builder
+    // @class StructuredGraph.Builder
+    public static final class Builder
     {
         private String name;
         private final Assumptions assumptions;
@@ -159,8 +166,10 @@ public final class StructuredGraph extends Graph
         /**
          * Creates a builder for a graph.
          */
+        // @cons
         public Builder(OptionValues options, AllowAssumptions allowAssumptions)
         {
+            super();
             this.options = options;
             this.assumptions = allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
         }
@@ -168,8 +177,10 @@ public final class StructuredGraph extends Graph
         /**
          * Creates a builder for a graph that does not support {@link Assumptions}.
          */
+        // @cons
         public Builder(OptionValues options)
         {
+            super();
             this.options = options;
             this.assumptions = null;
         }
@@ -281,6 +292,7 @@ public final class StructuredGraph extends Graph
 
     private EconomicSet<ResolvedJavaField> fields = null;
 
+    // @enum StructuredGraph.UnsafeAccessState
     private enum UnsafeAccessState
     {
         NO_ACCESS,
@@ -294,6 +306,7 @@ public final class StructuredGraph extends Graph
 
     public static final boolean NO_PROFILING_INFO = false;
 
+    // @cons
     private StructuredGraph(String name, ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)
     {
         super(name, options);

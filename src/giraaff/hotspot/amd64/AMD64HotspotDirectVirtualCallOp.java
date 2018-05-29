@@ -18,12 +18,14 @@ import giraaff.nodes.CallTargetNode.InvokeKind;
  * calls using an inline cache, a MOVE instruction is emitted just prior to the aligned direct call.
  */
 @Opcode
+// @class AMD64HotspotDirectVirtualCallOp
 final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
 {
     public static final LIRInstructionClass<AMD64HotspotDirectVirtualCallOp> TYPE = LIRInstructionClass.create(AMD64HotspotDirectVirtualCallOp.class);
 
     private final InvokeKind invokeKind;
 
+    // @cons
     AMD64HotspotDirectVirtualCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind)
     {
         super(TYPE, target, result, parameters, temps, state);

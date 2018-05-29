@@ -15,14 +15,17 @@ import java.util.stream.Stream;
  *            information needed to calculate the solution. Note that {@code C} should not contain
  *            boolean flags. Use an enum entry in {@code E} instead.
  */
+// @class DominatorOptimizationProblem
 public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
 {
     private AbstractBlockBase<?>[] blocks;
     private EnumMap<E, BitSet> flags;
     private BlockMap<C> costs;
 
+    // @cons
     protected DominatorOptimizationProblem(Class<E> flagType, AbstractControlFlowGraph<?> cfg)
     {
+        super();
         this.blocks = cfg.getBlocks();
         flags = new EnumMap<>(flagType);
         costs = new BlockMap<>(cfg);

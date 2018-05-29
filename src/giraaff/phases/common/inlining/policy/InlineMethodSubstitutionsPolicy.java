@@ -10,6 +10,7 @@ import giraaff.phases.common.inlining.walker.MethodInvocation;
 /**
  * Inline every method which would be replaced by a substitution. Useful for testing purposes.
  */
+// @class InlineMethodSubstitutionsPolicy
 public final class InlineMethodSubstitutionsPolicy extends InlineEverythingPolicy
 {
     @Override

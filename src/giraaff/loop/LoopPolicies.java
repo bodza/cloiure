@@ -7,6 +7,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import giraaff.nodes.ControlSplitNode;
 import giraaff.nodes.cfg.ControlFlowGraph;
 
+// @iface LoopPolicies
 public interface LoopPolicies
 {
     boolean shouldPeel(LoopEx loop, ControlFlowGraph cfg, MetaAccessProvider metaAccess);

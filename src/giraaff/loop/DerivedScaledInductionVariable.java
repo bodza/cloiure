@@ -10,11 +10,13 @@ import giraaff.nodes.calc.IntegerConvertNode;
 import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.util.GraphUtil;
 
-public class DerivedScaledInductionVariable extends DerivedInductionVariable
+// @class DerivedScaledInductionVariable
+public final class DerivedScaledInductionVariable extends DerivedInductionVariable
 {
     private final ValueNode scale;
     private final ValueNode value;
 
+    // @cons
     public DerivedScaledInductionVariable(LoopEx loop, InductionVariable base, ValueNode scale, ValueNode value)
     {
         super(loop, base);
@@ -22,6 +24,7 @@ public class DerivedScaledInductionVariable extends DerivedInductionVariable
         this.value = value;
     }
 
+    // @cons
     public DerivedScaledInductionVariable(LoopEx loop, InductionVariable base, NegateNode value)
     {
         super(loop, base);

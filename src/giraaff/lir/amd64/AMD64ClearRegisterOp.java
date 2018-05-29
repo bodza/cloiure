@@ -12,7 +12,8 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-public class AMD64ClearRegisterOp extends AMD64LIRInstruction
+// @class AMD64ClearRegisterOp
+public final class AMD64ClearRegisterOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ClearRegisterOp> TYPE = LIRInstructionClass.create(AMD64ClearRegisterOp.class);
 
@@ -21,6 +22,7 @@ public class AMD64ClearRegisterOp extends AMD64LIRInstruction
 
     @Def({OperandFlag.REG}) protected AllocatableValue result;
 
+    // @cons
     public AMD64ClearRegisterOp(OperandSize size, AllocatableValue result)
     {
         super(TYPE);

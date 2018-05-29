@@ -3,6 +3,7 @@ package giraaff.core.common.util;
 /**
  * Provides low-level sequential write access for signed and unsigned values of size 1, 2, 4, and 8 bytes.
  */
+// @iface TypeWriter
 public interface TypeWriter
 {
     /**

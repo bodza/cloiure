@@ -13,6 +13,7 @@ import giraaff.nodes.LogicNode;
 import giraaff.nodes.extended.AnchoringNode;
 import giraaff.nodes.extended.GuardingNode;
 
+// @iface LoweringTool
 public interface LoweringTool
 {
     MetaAccessProvider getMetaAccess();
@@ -41,6 +42,7 @@ public interface LoweringTool
     /**
      * Marker interface lowering stages.
      */
+    // @iface LoweringTool.LoweringStage
     interface LoweringStage
     {
     }
@@ -49,6 +51,7 @@ public interface LoweringTool
      * The lowering stages used in a standard Graal phase plan. Lowering is called 3 times, during
      * every tier of compilation.
      */
+    // @enum LoweringTool.StandardLoweringStage implements LoweringStage
     enum StandardLoweringStage implements LoweringStage
     {
         HIGH_TIER,

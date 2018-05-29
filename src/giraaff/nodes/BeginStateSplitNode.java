@@ -10,17 +10,20 @@ import giraaff.nodeinfo.InputType;
  * TODO this not needed until {@link AbstractBeginNode} no longer implements {@link StateSplit}
  * which is not possible until loop peeling works without requiring begin nodes to have frames states.
  */
+// @class BeginStateSplitNode
 public abstract class BeginStateSplitNode extends AbstractBeginNode implements StateSplit
 {
     public static final NodeClass<BeginStateSplitNode> TYPE = NodeClass.create(BeginStateSplitNode.class);
 
     @OptionalInput(InputType.State) protected FrameState stateAfter;
 
+    // @cons
     protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c)
     {
         super(c);
     }
 
+    // @cons
     protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c, Stamp stamp)
     {
         super(c, stamp);

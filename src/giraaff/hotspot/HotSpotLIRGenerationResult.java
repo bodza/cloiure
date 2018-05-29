@@ -13,7 +13,8 @@ import giraaff.lir.StandardOp.SaveRegistersOp;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 
-public class HotSpotLIRGenerationResult extends LIRGenerationResult
+// @class HotSpotLIRGenerationResult
+public final class HotSpotLIRGenerationResult extends LIRGenerationResult
 {
     protected final Object stub;
 
@@ -23,6 +24,7 @@ public class HotSpotLIRGenerationResult extends LIRGenerationResult
      */
     private EconomicMap<LIRFrameState, SaveRegistersOp> calleeSaveInfo = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
 
+    // @cons
     public HotSpotLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention, Object stub)
     {
         super(compilationId, lir, frameMapBuilder, callingConvention);

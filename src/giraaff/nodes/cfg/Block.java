@@ -19,6 +19,7 @@ import giraaff.nodes.LoopEndNode;
 import giraaff.nodes.LoopExitNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
 
+// @class Block
 public final class Block extends AbstractBlockBase<Block>
 {
     public static final Block[] EMPTY_ARRAY = new Block[0];
@@ -34,8 +35,10 @@ public final class Block extends AbstractBlockBase<Block>
     private LocationSet killLocations;
     private LocationSet killLocationsBetweenThisAndDominator;
 
+    // @cons
     public Block(AbstractBeginNode node)
     {
+        super();
         this.beginNode = node;
     }
 
@@ -138,12 +141,15 @@ public final class Block extends AbstractBlockBase<Block>
         return postdominator;
     }
 
-    private class NodeIterator implements Iterator<FixedNode>
+    // @class Block.NodeIterator
+    private final class NodeIterator implements Iterator<FixedNode>
     {
         private FixedNode cur;
 
+        // @cons
         NodeIterator()
         {
+            super();
             cur = getBeginNode();
         }
 

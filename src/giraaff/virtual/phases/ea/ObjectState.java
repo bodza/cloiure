@@ -18,7 +18,8 @@ import giraaff.virtual.nodes.VirtualObjectState;
  * the fields or array elements (called "entries") and the lock count if the object is still
  * virtual. If the object was materialized, it contains the current materialized value.
  */
-public class ObjectState
+// @class ObjectState
+public final class ObjectState
 {
     private ValueNode[] entries;
     private ValueNode materializedValue;
@@ -33,6 +34,7 @@ public class ObjectState
      */
     boolean copyOnWrite;
 
+    // @cons
     public ObjectState(ValueNode[] entries, List<MonitorIdNode> locks, boolean ensureVirtualized)
     {
         this(entries, (LockState) null, ensureVirtualized);
@@ -42,22 +44,28 @@ public class ObjectState
         }
     }
 
+    // @cons
     public ObjectState(ValueNode[] entries, LockState locks, boolean ensureVirtualized)
     {
+        super();
         this.entries = entries;
         this.locks = locks;
         this.ensureVirtualized = ensureVirtualized;
     }
 
+    // @cons
     public ObjectState(ValueNode materializedValue, LockState locks, boolean ensureVirtualized)
     {
+        super();
         this.materializedValue = materializedValue;
         this.locks = locks;
         this.ensureVirtualized = ensureVirtualized;
     }
 
+    // @cons
     private ObjectState(ObjectState other)
     {
+        super();
         entries = other.entries == null ? null : other.entries.clone();
         materializedValue = other.materializedValue;
         locks = other.locks;

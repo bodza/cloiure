@@ -6,8 +6,10 @@ import jdk.vm.ci.code.CompilationRequest;
  * A unique identifier for a compilation. Compiled code can be mapped to a single compilation id.
  * The reverse is not true since the compiler might bailout in which case no code is installed.
  */
+// @iface CompilationIdentifier
 public interface CompilationIdentifier
 {
+    // @enum CompilationIdentifier.Verbosity
     enum Verbosity
     {
         /**

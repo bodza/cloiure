@@ -10,10 +10,13 @@ import java.util.function.Predicate;
 /**
  * This class contains utility methods for commonly used functional patterns for collections.
  */
+// @class CollectionsUtil
 public final class CollectionsUtil
 {
+    // @cons
     private CollectionsUtil()
     {
+        super();
     }
 
     /**

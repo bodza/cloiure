@@ -17,6 +17,7 @@ import giraaff.nodes.spi.LoweringTool;
  * value matched the expected value.
  */
 // @NodeInfo.allowedUsageTypes "Value, Memory"
+// @class UnsafeCompareAndSwapNode
 public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<UnsafeCompareAndSwapNode> TYPE = NodeClass.create(UnsafeCompareAndSwapNode.class);
@@ -29,6 +30,7 @@ public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint imp
     private final JavaKind valueKind;
     private final LocationIdentity locationIdentity;
 
+    // @cons
     public UnsafeCompareAndSwapNode(ValueNode object, ValueNode offset, ValueNode expected, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean.getStackKind()));

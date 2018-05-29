@@ -10,23 +10,27 @@ import giraaff.nodes.util.GraphUtil;
 /**
  * Value {@link PhiNode}s merge data flow values at control flow merges.
  */
-public class ValuePhiNode extends PhiNode implements ArrayLengthProvider
+// @class ValuePhiNode
+public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
 {
     public static final NodeClass<ValuePhiNode> TYPE = NodeClass.create(ValuePhiNode.class);
 
     @Input protected NodeInputList<ValueNode> values;
 
+    // @cons
     public ValuePhiNode(Stamp stamp, AbstractMergeNode merge)
     {
         this(TYPE, stamp, merge);
     }
 
+    // @cons
     protected ValuePhiNode(NodeClass<? extends ValuePhiNode> c, Stamp stamp, AbstractMergeNode merge)
     {
         super(c, stamp, merge);
         values = new NodeInputList<>(this);
     }
 
+    // @cons
     public ValuePhiNode(Stamp stamp, AbstractMergeNode merge, ValueNode[] values)
     {
         super(TYPE, stamp, merge);

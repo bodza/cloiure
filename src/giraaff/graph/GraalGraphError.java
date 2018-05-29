@@ -5,6 +5,7 @@ import giraaff.util.GraalError;
 /**
  * This error is the graph/node aware extension of {@link GraalError}.
  */
+// @class GraalGraphError
 public class GraalGraphError extends GraalError
 {
     private Node node;
@@ -19,6 +20,7 @@ public class GraalGraphError extends GraalError
      * @param args parameters to String.format - parameters that implement {@link Iterable} will be
      *            expanded into a [x, x, ...] representation.
      */
+    // @cons
     public GraalGraphError(String msg, Object... args)
     {
         super(msg, args);
@@ -29,6 +31,7 @@ public class GraalGraphError extends GraalError
      *
      * @param cause the original exception that contains additional information on this error
      */
+    // @cons
     public GraalGraphError(Throwable cause)
     {
         super(cause);
@@ -39,6 +42,7 @@ public class GraalGraphError extends GraalError
      *
      * @param e the original GraalError
      */
+    // @cons
     protected GraalGraphError(GraalError e)
     {
         super(e);

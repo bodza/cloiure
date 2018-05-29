@@ -20,6 +20,7 @@ import giraaff.nodes.spi.LoweringTool;
  * A node that represents an exception thrown implicitly by a Java bytecode. It can be lowered to
  * either a {@linkplain ForeignCallDescriptor foreign} call or a pre-allocated exception object.
  */
+// @class BytecodeExceptionNode
 public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<BytecodeExceptionNode> TYPE = NodeClass.create(BytecodeExceptionNode.class);
@@ -27,6 +28,7 @@ public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implem
     protected final Class<? extends Throwable> exceptionClass;
     @Input NodeInputList<ValueNode> arguments;
 
+    // @cons
     public BytecodeExceptionNode(MetaAccessProvider metaAccess, Class<? extends Throwable> exceptionClass, ValueNode... arguments)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(metaAccess.lookupJavaType(exceptionClass))));

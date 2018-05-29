@@ -14,7 +14,8 @@ import giraaff.nodes.java.ArrayLengthNode;
  * Substitutions for {@link java.lang.reflect.Array} methods.
  */
 @ClassSubstitution(Array.class)
-public class ArraySubstitutions
+// @class ArraySubstitutions
+public final class ArraySubstitutions
 {
     @MethodSubstitution
     public static int getLength(Object array)

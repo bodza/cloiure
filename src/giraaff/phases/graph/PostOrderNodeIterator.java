@@ -36,6 +36,7 @@ import giraaff.nodes.StructuredGraph;
  *
  * @param <T> the type of {@link MergeableState} handled by this PostOrderNodeIterator
  */
+// @class PostOrderNodeIterator
 public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
 {
     private final NodeBitMap visitedEnds;
@@ -45,8 +46,10 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
 
     protected T state;
 
+    // @cons
     public PostOrderNodeIterator(FixedNode start, T initialState)
     {
+        super();
         StructuredGraph graph = start.graph();
         visitedEnds = graph.createNodeBitMap();
         nodeQueue = new ArrayDeque<>();

@@ -2,6 +2,7 @@ package giraaff.nodes.spi;
 
 import giraaff.nodes.ValueNode;
 
+// @iface ArrayLengthProvider
 public interface ArrayLengthProvider
 {
     /**

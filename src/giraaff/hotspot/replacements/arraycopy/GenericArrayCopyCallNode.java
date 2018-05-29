@@ -20,6 +20,7 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
 // @NodeInfo.allowedUsageTypes "Memory, Value"
+// @class GenericArrayCopyCallNode
 public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<GenericArrayCopyCallNode> TYPE = NodeClass.create(GenericArrayCopyCallNode.class);
@@ -32,6 +33,7 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
 
     protected final HotSpotGraalRuntimeProvider runtime;
 
+    // @cons
     protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));

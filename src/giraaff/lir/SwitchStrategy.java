@@ -19,8 +19,10 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * reached). The strategy returned by this method will have its averageEffort set, while a strategy
  * constructed directly will not.
  */
+// @class SwitchStrategy
 public abstract class SwitchStrategy
 {
+    // @iface SwitchStrategy.SwitchClosure
     private interface SwitchClosure
     {
         /**
@@ -69,6 +71,7 @@ public abstract class SwitchStrategy
      * Backends can subclass this abstract class and generate code for switch strategies by
      * implementing the {@link #conditionalJump(int, Condition, Label)} method.
      */
+    // @class SwitchStrategy.BaseSwitchClosure
     public abstract static class BaseSwitchClosure implements SwitchClosure
     {
         private final CompilationResultBuilder crb;
@@ -76,8 +79,10 @@ public abstract class SwitchStrategy
         private final LabelRef[] keyTargets;
         private final LabelRef defaultTarget;
 
+        // @cons
         public BaseSwitchClosure(CompilationResultBuilder crb, Assembler masm, LabelRef[] keyTargets, LabelRef defaultTarget)
         {
+            super();
             this.crb = crb;
             this.masm = masm;
             this.keyTargets = keyTargets;
@@ -147,7 +152,8 @@ public abstract class SwitchStrategy
      * This closure is used internally to determine the average effort for a certain strategy on a
      * given switch instruction.
      */
-    private class EffortClosure implements SwitchClosure
+    // @class SwitchStrategy.EffortClosure
+    private final class EffortClosure implements SwitchClosure
     {
         private int defaultEffort;
         private int defaultCount;
@@ -155,8 +161,10 @@ public abstract class SwitchStrategy
         private final int[] keyCounts = new int[keyProbabilities.length];
         private final LabelRef[] keyTargets;
 
+        // @cons
         EffortClosure(LabelRef[] keyTargets)
         {
+            super();
             this.keyTargets = keyTargets;
         }
 
@@ -208,8 +216,10 @@ public abstract class SwitchStrategy
     private double averageEffort = -1;
     private EffortClosure effortClosure;
 
+    // @cons
     public SwitchStrategy(double[] keyProbabilities)
     {
+        super();
         this.keyProbabilities = keyProbabilities;
     }
 
@@ -259,11 +269,13 @@ public abstract class SwitchStrategy
      * This strategy orders the keys according to their probability and creates one equality
      * comparison per key.
      */
-    public static class SequentialStrategy extends SwitchStrategy
+    // @class SwitchStrategy.SequentialStrategy
+    public static final class SequentialStrategy extends SwitchStrategy
     {
         private final Integer[] indexes;
         private final Constant[] keyConstants;
 
+        // @cons
         public SequentialStrategy(final double[] keyProbabilities, Constant[] keyConstants)
         {
             super(keyProbabilities);
@@ -308,10 +320,12 @@ public abstract class SwitchStrategy
     /**
      * Base class for strategies that rely on primitive integer keys.
      */
+    // @class SwitchStrategy.PrimitiveStrategy
     private abstract static class PrimitiveStrategy extends SwitchStrategy
     {
         protected final JavaConstant[] keyConstants;
 
+        // @cons
         protected PrimitiveStrategy(double[] keyProbabilities, JavaConstant[] keyConstants)
         {
             super(keyProbabilities);
@@ -343,10 +357,12 @@ public abstract class SwitchStrategy
      * This strategy divides the keys into ranges of successive keys with the same target and
      * creates comparisons for these ranges.
      */
-    public static class RangesStrategy extends PrimitiveStrategy
+    // @class SwitchStrategy.RangesStrategy
+    public static final class RangesStrategy extends PrimitiveStrategy
     {
         private final Integer[] indexes;
 
+        // @cons
         public RangesStrategy(final double[] keyProbabilities, JavaConstant[] keyConstants)
         {
             super(keyProbabilities, keyConstants);
@@ -418,12 +434,14 @@ public abstract class SwitchStrategy
     /**
      * This strategy recursively subdivides the list of keys to create a binary search based on probabilities.
      */
-    public static class BinaryStrategy extends PrimitiveStrategy
+    // @class SwitchStrategy.BinaryStrategy
+    public static final class BinaryStrategy extends PrimitiveStrategy
     {
         private static final double MIN_PROBABILITY = 0.00001;
 
         private final double[] probabilitySums;
 
+        // @cons
         public BinaryStrategy(double[] keyProbabilities, JavaConstant[] keyConstants)
         {
             super(keyProbabilities, keyConstants);

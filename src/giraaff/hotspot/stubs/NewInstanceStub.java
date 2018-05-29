@@ -32,8 +32,10 @@ import giraaff.word.Word;
  * If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
  * runtime for to complete the allocation.
  */
-public class NewInstanceStub extends SnippetStub
+// @class NewInstanceStub
+public final class NewInstanceStub extends SnippetStub
 {
+    // @cons
     public NewInstanceStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super("newInstance", options, providers, linkage);

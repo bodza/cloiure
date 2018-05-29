@@ -22,6 +22,7 @@ import giraaff.nodes.spi.StampInverter;
 /**
  * An {@code IntegerConvert} converts an integer to an integer of different width.
  */
+// @class IntegerConvertNode
 public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements ArithmeticOperation, ConvertNode, ArithmeticLIRLowerable, StampInverter
 {
     @SuppressWarnings("rawtypes") public static final NodeClass<IntegerConvertNode> TYPE = NodeClass.create(IntegerConvertNode.class);
@@ -32,10 +33,12 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     protected final int inputBits;
     protected final int resultBits;
 
+    // @iface IntegerConvertNode.SerializableIntegerConvertFunction
     protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, IntegerConvertOp<T>>
     {
     }
 
+    // @cons
     protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> c, SerializableIntegerConvertFunction<OP> getOp, SerializableIntegerConvertFunction<REV> getReverseOp, int inputBits, int resultBits, ValueNode input)
     {
         super(c, getOp.apply(ArithmeticOpTable.forStamp(input.stamp(NodeView.DEFAULT))).foldStamp(inputBits, resultBits, input.stamp(NodeView.DEFAULT)), input);

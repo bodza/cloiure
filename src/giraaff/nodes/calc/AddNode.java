@@ -16,15 +16,18 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class AddNode
 public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {
     public static final NodeClass<AddNode> TYPE = NodeClass.create(AddNode.class);
 
+    // @cons
     public AddNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
     }
 
+    // @cons
     protected AddNode(NodeClass<? extends AddNode> c, ValueNode x, ValueNode y)
     {
         super(c, ArithmeticOpTable::getAdd, x, y);

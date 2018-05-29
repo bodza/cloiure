@@ -17,10 +17,12 @@ import giraaff.nodes.ValueNode;
  * expression "(x &amp; y) == 0", meaning that it will return true if (and only if) no bit is set in
  * both x and y.
  */
+// @class IntegerTestNode
 public final class IntegerTestNode extends BinaryOpLogicNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<IntegerTestNode> TYPE = NodeClass.create(IntegerTestNode.class);
 
+    // @cons
     public IntegerTestNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y);

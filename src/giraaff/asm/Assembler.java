@@ -12,6 +12,7 @@ import jdk.vm.ci.code.TargetDescription;
 /**
  * The platform-independent base class for the assembler.
  */
+// @class Assembler
 public abstract class Assembler
 {
     public final TargetDescription target;
@@ -22,8 +23,10 @@ public abstract class Assembler
      */
     private final Buffer codeBuffer;
 
+    // @cons
     public Assembler(TargetDescription target)
     {
+        super();
         this.target = target;
         this.codeBuffer = new Buffer(target.arch.getByteOrder());
     }
@@ -221,12 +224,14 @@ public abstract class Assembler
         return hint;
     }
 
-    public static class LabelHint
+    // @class Assembler.LabelHint
+    public static final class LabelHint
     {
         private Label label;
         private int forPosition;
         private int capturedTarget = -1;
 
+        // @cons
         protected LabelHint(Label label, int lastPosition)
         {
             super();

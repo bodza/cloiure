@@ -14,12 +14,15 @@ import giraaff.phases.common.inlining.info.elem.Inlineable;
 import giraaff.phases.common.inlining.info.elem.InlineableGraph;
 import giraaff.phases.tiers.HighTierContext;
 
+// @class AbstractInlineInfo
 public abstract class AbstractInlineInfo implements InlineInfo
 {
     protected final Invoke invoke;
 
+    // @cons
     public AbstractInlineInfo(Invoke invoke)
     {
+        super();
         this.invoke = invoke;
     }
 

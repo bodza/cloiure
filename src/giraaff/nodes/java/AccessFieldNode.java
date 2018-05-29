@@ -13,6 +13,7 @@ import giraaff.nodes.spi.LoweringTool;
 /**
  * The base class of all instructions that access fields.
  */
+// @class AccessFieldNode
 public abstract class AccessFieldNode extends FixedWithNextNode implements Lowerable
 {
     public static final NodeClass<AccessFieldNode> TYPE = NodeClass.create(AccessFieldNode.class);
@@ -32,6 +33,7 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
      * @param object the instruction producing the receiver object
      * @param field the compiler interface representation of the field
      */
+    // @cons
     public AccessFieldNode(NodeClass<? extends AccessFieldNode> c, Stamp stamp, ValueNode object, ResolvedJavaField field)
     {
         super(c, stamp);

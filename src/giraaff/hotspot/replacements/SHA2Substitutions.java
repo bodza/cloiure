@@ -17,7 +17,8 @@ import giraaff.util.UnsafeAccess;
 import giraaff.word.Word;
 
 @ClassSubstitution(className = "sun.security.provider.SHA2", optional = true)
-public class SHA2Substitutions
+// @class SHA2Substitutions
+public final class SHA2Substitutions
 {
     static final long stateOffset;
 

@@ -24,10 +24,12 @@ import giraaff.nodeinfo.InputType;
  * throw instruction or implicit exception).
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class ExceptionObjectNode
 public final class ExceptionObjectNode extends BeginStateSplitNode implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<ExceptionObjectNode> TYPE = NodeClass.create(ExceptionObjectNode.class);
 
+    // @cons
     public ExceptionObjectNode(MetaAccessProvider metaAccess)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createTrustedWithoutAssumptions(metaAccess.lookupJavaType(Throwable.class))));

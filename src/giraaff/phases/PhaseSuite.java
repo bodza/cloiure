@@ -10,13 +10,16 @@ import giraaff.nodes.StructuredGraph;
 /**
  * A compiler phase that can apply an ordered collection of phases to a graph.
  */
+// @class PhaseSuite
 public class PhaseSuite<C> extends BasePhase<C>
 {
     private List<BasePhase<? super C>> phases;
     private boolean immutable;
 
+    // @cons
     public PhaseSuite()
     {
+        super();
         this.phases = new ArrayList<>();
     }
 

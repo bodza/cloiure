@@ -12,16 +12,20 @@ import giraaff.util.GraalError;
 /**
  * Utility for default constant folding semantics for Java fields.
  */
+// @class JavaConstantFieldProvider
 public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
-    static class Options
+    // @class JavaConstantFieldProvider.Options
+    static final class Options
     {
         // @Option "Determines whether to treat final fields with default values as constant."
         public static final OptionKey<Boolean> TrustFinalDefaultFields = new OptionKey<>(true);
     }
 
+    // @cons
     protected JavaConstantFieldProvider(MetaAccessProvider metaAccess)
     {
+        super();
         try
         {
             this.stringValueField = metaAccess.lookupJavaField(String.class.getDeclaredField("value"));

@@ -7,6 +7,7 @@ import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.Suites;
 import giraaff.phases.tiers.SuitesCreator;
 
+// @class SuitesProviderBase
 public abstract class SuitesProviderBase implements SuitesCreator
 {
     protected PhaseSuite<HighTierContext> defaultGraphBuilderSuite;

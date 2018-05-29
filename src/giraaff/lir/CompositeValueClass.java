@@ -20,6 +20,7 @@ import giraaff.util.GraalError;
  * <li>The offsets of fields annotated with {@link Component} as well as methods for iterating over
  * such fields.</li>
  */
+// @class CompositeValueClass
 public final class CompositeValueClass<T> extends FieldIntrospection<T>
 {
     /**
@@ -42,6 +43,7 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
 
     private final Values values;
 
+    // @cons
     private CompositeValueClass(Class<T> clazz)
     {
         super(clazz);
@@ -53,8 +55,10 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
         data = new Fields(vfs.data);
     }
 
-    private static class CompositeValueFieldsScanner extends LIRFieldsScanner
+    // @class CompositeValueClass.CompositeValueFieldsScanner
+    private static final class CompositeValueFieldsScanner extends LIRFieldsScanner
     {
+        // @cons
         CompositeValueFieldsScanner(FieldsScanner.CalcOffset calc)
         {
             super(calc);

@@ -28,10 +28,12 @@ import giraaff.nodes.spi.VirtualizableAllocation;
 import giraaff.nodes.type.StampTool;
 import giraaff.replacements.nodes.BasicObjectCloneNode;
 
+// @class ObjectCloneNode
 public final class ObjectCloneNode extends BasicObjectCloneNode implements VirtualizableAllocation, ArrayLengthProvider
 {
     public static final NodeClass<ObjectCloneNode> TYPE = NodeClass.create(ObjectCloneNode.class);
 
+    // @cons
     public ObjectCloneNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode receiver)
     {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, receiver);

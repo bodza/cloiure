@@ -4,6 +4,7 @@ package giraaff.bytecode;
  * An abstract class that provides the state and methods common to {@link Bytecodes#LOOKUPSWITCH}
  * and {@link Bytecodes#TABLESWITCH} instructions.
  */
+// @class BytecodeSwitch
 public abstract class BytecodeSwitch
 {
     /**
@@ -26,8 +27,10 @@ public abstract class BytecodeSwitch
      * @param stream the {@code BytecodeStream} containing the switch instruction
      * @param bci the index in the stream of the switch instruction
      */
+    // @cons
     public BytecodeSwitch(BytecodeStream stream, int bci)
     {
+        super();
         this.stream = stream;
         this.bci = bci;
         this.alignedBci = (bci + 4) & 0xfffffffc;

@@ -8,14 +8,17 @@ import giraaff.util.GraalError;
 /**
  * {@link CompilationIdentifier} for {@linkplain Stub stub compilations}.
  */
-public class StubCompilationIdentifier implements CompilationIdentifier
+// @class StubCompilationIdentifier
+public final class StubCompilationIdentifier implements CompilationIdentifier
 {
     private static final AtomicLong uniqueStubIds = new AtomicLong();
     private final long id;
     private final Stub stub;
 
+    // @cons
     public StubCompilationIdentifier(Stub stub)
     {
+        super();
         this.id = uniqueStubIds.getAndIncrement();
         this.stub = stub;
     }

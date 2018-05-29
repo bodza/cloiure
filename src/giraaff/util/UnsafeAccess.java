@@ -7,6 +7,7 @@ import sun.misc.Unsafe;
 /**
  * Public access to the {@link Unsafe} capability.
  */
+// @class UnsafeAccess
 public final class UnsafeAccess
 {
     public static final Unsafe UNSAFE = initUnsafe();

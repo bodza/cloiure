@@ -9,16 +9,19 @@ import giraaff.core.common.type.DataPointerConstant;
 /**
  * Class for chunks of data that go into the data section.
  */
-public class ArrayDataPointerConstant extends DataPointerConstant
+// @class ArrayDataPointerConstant
+public final class ArrayDataPointerConstant extends DataPointerConstant
 {
     private final byte[] data;
 
+    // @cons
     public ArrayDataPointerConstant(byte[] array, int alignment)
     {
         super(alignment);
         data = array.clone();
     }
 
+    // @cons
     public ArrayDataPointerConstant(short[] array, int alignment)
     {
         super(alignment);
@@ -28,6 +31,7 @@ public class ArrayDataPointerConstant extends DataPointerConstant
         data = byteBuffer.array();
     }
 
+    // @cons
     public ArrayDataPointerConstant(int[] array, int alignment)
     {
         super(alignment);
@@ -37,6 +41,7 @@ public class ArrayDataPointerConstant extends DataPointerConstant
         data = byteBuffer.array();
     }
 
+    // @cons
     public ArrayDataPointerConstant(float[] array, int alignment)
     {
         super(alignment);
@@ -46,6 +51,7 @@ public class ArrayDataPointerConstant extends DataPointerConstant
         data = byteBuffer.array();
     }
 
+    // @cons
     public ArrayDataPointerConstant(double[] array, int alignment)
     {
         super(alignment);
@@ -55,6 +61,7 @@ public class ArrayDataPointerConstant extends DataPointerConstant
         data = byteBuffer.array();
     }
 
+    // @cons
     public ArrayDataPointerConstant(long[] array, int alignment)
     {
         super(alignment);

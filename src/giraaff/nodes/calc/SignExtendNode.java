@@ -16,15 +16,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * The {@code SignExtendNode} converts an integer to a wider integer using sign extension.
  */
+// @class SignExtendNode
 public final class SignExtendNode extends IntegerConvertNode<SignExtend, Narrow>
 {
     public static final NodeClass<SignExtendNode> TYPE = NodeClass.create(SignExtendNode.class);
 
+    // @cons
     public SignExtendNode(ValueNode input, int resultBits)
     {
         this(input, PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)), resultBits);
     }
 
+    // @cons
     public SignExtendNode(ValueNode input, int inputBits, int resultBits)
     {
         super(TYPE, ArithmeticOpTable::getSignExtend, ArithmeticOpTable::getNarrow, inputBits, resultBits, input);

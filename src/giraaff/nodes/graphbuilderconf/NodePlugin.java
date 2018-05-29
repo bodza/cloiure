@@ -9,6 +9,7 @@ import jdk.vm.ci.meta.Signature;
 
 import giraaff.nodes.ValueNode;
 
+// @iface NodePlugin
 public interface NodePlugin extends GraphBuilderPlugin
 {
     /**

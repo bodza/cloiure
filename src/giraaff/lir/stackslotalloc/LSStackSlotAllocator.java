@@ -39,9 +39,11 @@ import giraaff.options.NestedBooleanOptionKey;
  * stack slot must be marked with the {@link OperandFlag#UNINITIALIZED}. Otherwise the stack slot might be reused
  * and its content destroyed.
  */
+// @class LSStackSlotAllocator
 public final class LSStackSlotAllocator extends AllocationPhase
 {
-    public static class Options
+    // @class LSStackSlotAllocator.Options
+    public static final class Options
     {
         // @Option "Use linear scan stack slot allocation."
         public static final NestedBooleanOptionKey LIROptLSStackSlotAllocator = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
@@ -62,6 +64,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
         }
     }
 
+    // @class LSStackSlotAllocator.Allocator
     private static final class Allocator
     {
         private final LIR lir;
@@ -72,8 +75,10 @@ public final class LSStackSlotAllocator extends AllocationPhase
         private final AbstractBlockBase<?>[] sortedBlocks;
         private final int maxOpId;
 
+        // @cons
         private Allocator(LIR lir, FrameMapBuilderTool frameMapBuilder)
         {
+            super();
             this.lir = lir;
             this.frameMapBuilder = frameMapBuilder;
             this.stackSlotMap = new StackInterval[frameMapBuilder.getNumberOfStackSlots()];
@@ -190,6 +195,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
             current.setLocation(location);
         }
 
+        // @enum LSStackSlotAllocator.Allocator.SlotSize
         private enum SlotSize
         {
             Size1,

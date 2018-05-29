@@ -17,7 +17,8 @@ import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.word.Word;
 
-public class UnsafeLoadSnippets implements Snippets
+// @class UnsafeLoadSnippets
+public final class UnsafeLoadSnippets implements Snippets
 {
     @Snippet
     public static Object lowerUnsafeLoad(Object object, long offset)
@@ -33,10 +34,12 @@ public class UnsafeLoadSnippets implements Snippets
         }
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class UnsafeLoadSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo unsafeLoad = snippet(UnsafeLoadSnippets.class, "lowerUnsafeLoad");
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);

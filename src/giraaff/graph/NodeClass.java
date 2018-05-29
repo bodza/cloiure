@@ -42,6 +42,7 @@ import giraaff.util.UnsafeAccess;
  * for iterating over such fields.</li>
  * <li>The identifier for an {@link IterableNodeType} class.</li>
  */
+// @class NodeClass
 public final class NodeClass<T> extends FieldIntrospection<T>
 {
     public static final long MAX_EDGES = 8;
@@ -136,11 +137,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     private final int leafId;
 
+    // @cons
     public NodeClass(Class<T> clazz, NodeClass<? super T> superNodeClass)
     {
         this(clazz, superNodeClass, new FieldsScanner.DefaultCalcOffset(), null, 0);
     }
 
+    // @cons
     public NodeClass(Class<T> clazz, NodeClass<? super T> superNodeClass, FieldsScanner.CalcOffset calcOffset, int[] presetIterableIds, int presetIterableId)
     {
         super(clazz);
@@ -332,8 +335,10 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     /**
      * Describes a field representing an input or successor edge in a node.
      */
+    // @class NodeClass.EdgeInfo
     protected static class EdgeInfo extends FieldsScanner.FieldInfo
     {
+        // @cons
         public EdgeInfo(long offset, String name, Class<?> type, Class<?> declaringClass)
         {
             super(offset, name, type, declaringClass);
@@ -366,11 +371,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     /**
      * Describes a field representing an {@linkplain Type#Inputs input} edge in a node.
      */
-    protected static class InputInfo extends EdgeInfo
+    // @class NodeClass.InputInfo
+    protected static final class InputInfo extends EdgeInfo
     {
         final InputType inputType;
         final boolean optional;
 
+        // @cons
         public InputInfo(long offset, String name, Class<?> type, Class<?> declaringClass, InputType inputType, boolean optional)
         {
             super(offset, name, type, declaringClass);
@@ -385,13 +392,15 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    protected static class NodeFieldsScanner extends FieldsScanner
+    // @class NodeClass.NodeFieldsScanner
+    protected static final class NodeFieldsScanner extends FieldsScanner
     {
         public final ArrayList<InputInfo> inputs = new ArrayList<>();
         public final ArrayList<EdgeInfo> successors = new ArrayList<>();
         int directInputs;
         int directSuccessors;
 
+        // @cons
         protected NodeFieldsScanner(FieldsScanner.CalcOffset calc, NodeClass<?> superNodeClass)
         {
             super(calc);
@@ -893,6 +902,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return getClazz();
     }
 
+    // @iface NodeClass.InplaceUpdateClosure
     interface InplaceUpdateClosure
     {
         Node replacement(Node node, Edges.Type type);
@@ -1055,14 +1065,17 @@ public final class NodeClass<T> extends FieldIntrospection<T>
      * An iterator of this type will not return null values, unless edges are modified concurrently.
      * Concurrent modifications are detected by an assertion on a best-effort basis.
      */
-    private static class RawEdgesIterator implements Iterator<Node>
+    // @class NodeClass.RawEdgesIterator
+    private static final class RawEdgesIterator implements Iterator<Node>
     {
         protected final Node node;
         protected long mask;
         protected Node nextValue;
 
+        // @cons
         RawEdgesIterator(Node node, long mask)
         {
+            super();
             this.node = node;
             this.mask = mask;
         }

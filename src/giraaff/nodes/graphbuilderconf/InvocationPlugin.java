@@ -14,6 +14,7 @@ import giraaff.util.GraalError;
 /**
  * Plugin for handling a specific method invocation.
  */
+// @iface InvocationPlugin
 public interface InvocationPlugin extends GraphBuilderPlugin
 {
     /**
@@ -21,6 +22,7 @@ public interface InvocationPlugin extends GraphBuilderPlugin
      * {@link InvocationPlugins#put(InvocationPlugin, boolean, boolean, Class, String, Class...)} to
      * denote the receiver argument for such a non-static method.
      */
+    // @iface InvocationPlugin.Receiver
     public interface Receiver
     {
         /**

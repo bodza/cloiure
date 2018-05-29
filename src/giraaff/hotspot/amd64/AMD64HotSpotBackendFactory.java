@@ -46,10 +46,13 @@ import giraaff.replacements.amd64.AMD64GraphBuilderPlugins;
 import giraaff.replacements.classfile.ClassfileBytecodeProvider;
 import giraaff.word.WordTypes;
 
-public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
+// @class AMD64HotSpotBackendFactory
+public final class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
 {
+    // @cons
     public AMD64HotSpotBackendFactory()
     {
+        super();
     }
 
     @Override

@@ -21,10 +21,13 @@ import giraaff.phases.common.LoopSafepointInsertionPhase;
 import giraaff.phases.common.LoweringPhase;
 import giraaff.phases.tiers.MidTierContext;
 
-public class MidTier extends PhaseSuite<MidTierContext>
+// @class MidTier
+public final class MidTier extends PhaseSuite<MidTierContext>
 {
+    // @cons
     public MidTier(OptionValues options)
     {
+        super();
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
 
         appendPhase(new LockEliminationPhase());

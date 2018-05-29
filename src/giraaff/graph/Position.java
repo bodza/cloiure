@@ -5,6 +5,7 @@ import giraaff.nodeinfo.InputType;
 /**
  * Describes an edge slot for a {@link NodeClass}.
  */
+// @class Position
 public final class Position
 {
     /**
@@ -23,8 +24,10 @@ public final class Position
      */
     private final int subIndex;
 
+    // @cons
     public Position(Edges edges, int index, int subIndex)
     {
+        super();
         this.edges = edges;
         this.index = index;
         this.subIndex = subIndex;

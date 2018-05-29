@@ -10,12 +10,14 @@ import giraaff.nodes.spi.LoweringTool;
 /**
  * The {@code AbstractNewObjectNode} is the base class for the new instance and new array nodes.
  */
+// @class AbstractNewObjectNode
 public abstract class AbstractNewObjectNode extends DeoptimizingFixedWithNextNode implements Lowerable
 {
     public static final NodeClass<AbstractNewObjectNode> TYPE = NodeClass.create(AbstractNewObjectNode.class);
 
     protected final boolean fillContents;
 
+    // @cons
     protected AbstractNewObjectNode(NodeClass<? extends AbstractNewObjectNode> c, Stamp stamp, boolean fillContents, FrameState stateBefore)
     {
         super(c, stamp, stateBefore);

@@ -3,7 +3,8 @@ package giraaff.bytecode;
 /**
  * A collection of utility methods for dealing with bytes, particularly in byte arrays.
  */
-public class Bytes
+// @class Bytes
+public final class Bytes
 {
     /**
      * Gets a signed 1-byte value.
@@ -83,5 +84,11 @@ public class Bytes
         {
             return beS2(data, bci);
         }
+    }
+
+    // @cons
+    private Bytes()
+    {
+        super();
     }
 }

@@ -23,7 +23,8 @@ import giraaff.nodes.spi.LoweringTool;
  * The {@code InstanceOfDynamicNode} represents a type check where the type being checked is not
  * known at compile time. This is used, for instance, to intrinsify {@link Class#isInstance(Object)}.
  */
-public class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
+// @class InstanceOfDynamicNode
+public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {
     public static final NodeClass<InstanceOfDynamicNode> TYPE = NodeClass.create(InstanceOfDynamicNode.class);
 
@@ -45,6 +46,7 @@ public class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonica
         return create(assumptions, constantReflection, mirror, object, allowNull, false);
     }
 
+    // @cons
     protected InstanceOfDynamicNode(ValueNode mirror, ValueNode object, boolean allowNull, boolean exact)
     {
         super(TYPE, mirror, object);

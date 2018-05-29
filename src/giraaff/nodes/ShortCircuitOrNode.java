@@ -10,6 +10,7 @@ import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.ValueProxy;
 
+// @class ShortCircuitOrNode
 public final class ShortCircuitOrNode extends LogicNode implements IterableNodeType, Canonicalizable.Binary<LogicNode>
 {
     public static final NodeClass<ShortCircuitOrNode> TYPE = NodeClass.create(ShortCircuitOrNode.class);
@@ -20,6 +21,7 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
     protected boolean yNegated;
     protected double shortCircuitProbability;
 
+    // @cons
     public ShortCircuitOrNode(LogicNode x, boolean xNegated, LogicNode y, boolean yNegated, double shortCircuitProbability)
     {
         super(TYPE);

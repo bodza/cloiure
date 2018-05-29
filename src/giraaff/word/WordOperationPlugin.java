@@ -59,14 +59,17 @@ import giraaff.word.Word.Operation;
  * A plugin for calls to {@linkplain Operation word operations}, as well as all other nodes that
  * need special handling for {@link Word} types.
  */
+// @class WordOperationPlugin
 public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvokePlugin
 {
     protected final WordTypes wordTypes;
     protected final JavaKind wordKind;
     protected final SnippetReflectionProvider snippetReflection;
 
+    // @cons
     public WordOperationPlugin(SnippetReflectionProvider snippetReflection, WordTypes wordTypes)
     {
+        super();
         this.snippetReflection = snippetReflection;
         this.wordTypes = wordTypes;
         this.wordKind = wordTypes.getWordKind();

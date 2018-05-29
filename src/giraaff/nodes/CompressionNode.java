@@ -20,10 +20,12 @@ import giraaff.util.GraalError;
 /**
  * Compress or uncompress an oop or metaspace pointer.
  */
+// @class CompressionNode
 public abstract class CompressionNode extends UnaryNode implements ConvertNode, LIRLowerable
 {
     public static final NodeClass<CompressionNode> TYPE = NodeClass.create(CompressionNode.class);
 
+    // @enum CompressionNode.CompressionOp
     public enum CompressionOp
     {
         Compress,
@@ -33,6 +35,7 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     protected final CompressionOp op;
     protected final CompressEncoding encoding;
 
+    // @cons
     public CompressionNode(NodeClass<? extends UnaryNode> c, CompressionOp op, ValueNode input, Stamp stamp, CompressEncoding encoding)
     {
         super(c, stamp, input);

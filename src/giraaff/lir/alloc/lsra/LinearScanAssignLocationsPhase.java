@@ -25,12 +25,15 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 /**
  * Phase 7: Assign register numbers back to LIR.
  */
-public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
+// @class LinearScanAssignLocationsPhase
+public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
 {
     protected final LinearScan allocator;
 
+    // @cons
     public LinearScanAssignLocationsPhase(LinearScan allocator)
     {
+        super();
         this.allocator = allocator;
     }
 

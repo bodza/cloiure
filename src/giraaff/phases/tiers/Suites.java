@@ -8,6 +8,7 @@ import giraaff.lir.phases.LIRSuites;
 import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 
+// @class Suites
 public final class Suites
 {
     private final PhaseSuite<HighTierContext> highTier;
@@ -30,8 +31,10 @@ public final class Suites
         return lowTier;
     }
 
+    // @cons
     public Suites(PhaseSuite<HighTierContext> highTier, PhaseSuite<MidTierContext> midTier, PhaseSuite<LowTierContext> lowTier)
     {
+        super();
         this.highTier = highTier;
         this.midTier = midTier;
         this.lowTier = lowTier;

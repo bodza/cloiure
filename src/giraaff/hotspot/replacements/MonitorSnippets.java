@@ -122,7 +122,8 @@ import giraaff.word.Word;
  * Note that {@code Thread::allocate} enforces {@code JavaThread} objects to be aligned
  * appropriately to comply with the layouts above.
  */
-public class MonitorSnippets implements Snippets
+// @class MonitorSnippets
+public final class MonitorSnippets implements Snippets
 {
     @Snippet
     public static void monitorenter(Object object, KlassPointer hub, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter Register stackPointerRegister, @ConstantParameter OptionValues options)
@@ -442,7 +443,8 @@ public class MonitorSnippets implements Snippets
         EndLockScopeNode.endLockScope();
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class MonitorSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo monitorenter = snippet(MonitorSnippets.class, "monitorenter");
         private final SnippetInfo monitorexit = snippet(MonitorSnippets.class, "monitorexit");
@@ -451,6 +453,7 @@ public class MonitorSnippets implements Snippets
 
         private final boolean useFastLocking;
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target, boolean useFastLocking)
         {
             super(options, providers, providers.getSnippetReflection(), target);
@@ -513,4 +516,10 @@ public class MonitorSnippets implements Snippets
 
     @NodeIntrinsic(ForeignCallNode.class)
     public static native void monitorexitStubC(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object object, Word lock);
+
+    // @cons
+    private MonitorSnippets()
+    {
+        super();
+    }
 }

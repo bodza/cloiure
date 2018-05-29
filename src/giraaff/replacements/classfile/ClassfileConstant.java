@@ -11,6 +11,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 import giraaff.bytecode.Bytecodes;
 import giraaff.util.GraalError;
 
+// @class ClassfileConstant
 abstract class ClassfileConstant
 {
     public static final byte CONSTANT_Utf8               = 1;
@@ -31,8 +32,10 @@ abstract class ClassfileConstant
 
     final byte tag;
 
+    // @cons
     ClassfileConstant(byte tag)
     {
+        super();
         this.tag = tag;
     }
 
@@ -49,11 +52,13 @@ abstract class ClassfileConstant
         return getClass().getSimpleName();
     }
 
-    static class ClassRef extends ClassfileConstant
+    // @class ClassfileConstant.ClassRef
+    static final class ClassRef extends ClassfileConstant
     {
         final int nameIndex;
         private ResolvedJavaType type;
 
+        // @cons
         ClassRef(DataInputStream stream) throws IOException
         {
             super(CONSTANT_Class);
@@ -78,11 +83,13 @@ abstract class ClassfileConstant
         }
     }
 
+    // @class ClassfileConstant.MemberRef
     static class MemberRef extends ClassfileConstant
     {
         final int classIndex;
         final int nameAndTypeIndex;
 
+        // @cons
         MemberRef(byte tag, DataInputStream stream) throws IOException
         {
             super(tag);
@@ -97,10 +104,12 @@ abstract class ClassfileConstant
         }
     }
 
+    // @class ClassfileConstant.ExecutableRef
     static class ExecutableRef extends MemberRef
     {
         private ResolvedJavaMethod method;
 
+        // @cons
         ExecutableRef(byte tag, DataInputStream stream) throws IOException
         {
             super(tag, stream);
@@ -148,26 +157,32 @@ abstract class ClassfileConstant
         }
     }
 
-    static class MethodRef extends ExecutableRef
+    // @class ClassfileConstant.MethodRef
+    static final class MethodRef extends ExecutableRef
     {
+        // @cons
         MethodRef(DataInputStream stream) throws IOException
         {
             super(CONSTANT_Methodref, stream);
         }
     }
 
-    static class InterfaceMethodRef extends ExecutableRef
+    // @class ClassfileConstant.InterfaceMethodRef
+    static final class InterfaceMethodRef extends ExecutableRef
     {
+        // @cons
         InterfaceMethodRef(DataInputStream stream) throws IOException
         {
             super(CONSTANT_InterfaceMethodref, stream);
         }
     }
 
-    static class FieldRef extends MemberRef
+    // @class ClassfileConstant.FieldRef
+    static final class FieldRef extends MemberRef
     {
         private ResolvedJavaField field;
 
+        // @cons
         FieldRef(DataInputStream stream) throws IOException
         {
             super(CONSTANT_Fieldref, stream);
@@ -191,10 +206,12 @@ abstract class ClassfileConstant
         }
     }
 
-    static class Primitive extends ClassfileConstant
+    // @class ClassfileConstant.Primitive
+    static final class Primitive extends ClassfileConstant
     {
         final JavaConstant value;
 
+        // @cons
         Primitive(byte tag, JavaConstant value)
         {
             super(tag);
@@ -202,11 +219,13 @@ abstract class ClassfileConstant
         }
     }
 
-    static class StringRef extends ClassfileConstant
+    // @class ClassfileConstant.StringRef
+    static final class StringRef extends ClassfileConstant
     {
         final int stringIndex;
         JavaConstant value;
 
+        // @cons
         StringRef(DataInputStream stream) throws IOException
         {
             super(ClassfileConstant.CONSTANT_String);
@@ -223,13 +242,15 @@ abstract class ClassfileConstant
         }
     }
 
-    static class NameAndType extends ClassfileConstant
+    // @class ClassfileConstant.NameAndType
+    static final class NameAndType extends ClassfileConstant
     {
         final int nameIndex;
         final int typeIndex;
         private String name;
         private String type;
 
+        // @cons
         NameAndType(DataInputStream stream) throws IOException
         {
             super(ClassfileConstant.CONSTANT_NameAndType);
@@ -256,10 +277,12 @@ abstract class ClassfileConstant
         }
     }
 
-    static class Utf8 extends ClassfileConstant
+    // @class ClassfileConstant.Utf8
+    static final class Utf8 extends ClassfileConstant
     {
         final String value;
 
+        // @cons
         Utf8(String value)
         {
             super(CONSTANT_Utf8);
@@ -267,10 +290,12 @@ abstract class ClassfileConstant
         }
     }
 
-    static class Unsupported extends ClassfileConstant
+    // @class ClassfileConstant.Unsupported
+    static final class Unsupported extends ClassfileConstant
     {
         final String name;
 
+        // @cons
         Unsupported(byte tag, String name)
         {
             super(tag);

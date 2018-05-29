@@ -18,8 +18,10 @@ import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
-public class AMD64HotSpotMove
+// @class AMD64HotSpotMove
+public final class AMD64HotSpotMove
 {
+    // @class AMD64HotSpotMove.HotSpotLoadObjectConstantOp
     public static final class HotSpotLoadObjectConstantOp extends AMD64LIRInstruction implements LoadConstantOp
     {
         public static final LIRInstructionClass<HotSpotLoadObjectConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadObjectConstantOp.class);
@@ -27,6 +29,7 @@ public class AMD64HotSpotMove
         @Def({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue result;
         private final HotSpotObjectConstant input;
 
+        // @cons
         public HotSpotLoadObjectConstantOp(AllocatableValue result, HotSpotObjectConstant input)
         {
             super(TYPE);
@@ -98,12 +101,14 @@ public class AMD64HotSpotMove
         }
     }
 
+    // @class AMD64HotSpotMove.BaseMove
     public static final class BaseMove extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<BaseMove> TYPE = LIRInstructionClass.create(BaseMove.class);
 
         @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
 
+        // @cons
         public BaseMove(AllocatableValue result)
         {
             super(TYPE);
@@ -118,6 +123,7 @@ public class AMD64HotSpotMove
         }
     }
 
+    // @class AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp
     public static final class HotSpotLoadMetaspaceConstantOp extends AMD64LIRInstruction implements LoadConstantOp
     {
         public static final LIRInstructionClass<HotSpotLoadMetaspaceConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadMetaspaceConstantOp.class);
@@ -125,6 +131,7 @@ public class AMD64HotSpotMove
         @Def({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue result;
         private final HotSpotMetaspaceConstant input;
 
+        // @cons
         public HotSpotLoadMetaspaceConstantOp(AllocatableValue result, HotSpotMetaspaceConstant input)
         {
             super(TYPE);
@@ -189,5 +196,11 @@ public class AMD64HotSpotMove
             masm.movq(scratch, encoding.getBase());
             masm.addq(register, scratch);
         }
+    }
+
+    // @cons
+    private AMD64HotSpotMove()
+    {
+        super();
     }
 }

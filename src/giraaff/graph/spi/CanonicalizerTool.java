@@ -8,6 +8,7 @@ import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.graph.Node;
 import giraaff.options.OptionValues;
 
+// @iface CanonicalizerTool
 public interface CanonicalizerTool
 {
     Assumptions getAssumptions();

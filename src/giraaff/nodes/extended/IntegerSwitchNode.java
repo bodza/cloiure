@@ -36,18 +36,21 @@ import giraaff.nodes.util.GraphUtil;
  * The {@code IntegerSwitchNode} represents a switch on integer keys, with a sorted array of key
  * values. The actual implementation of the switch will be decided by the backend.
  */
+// @class IntegerSwitchNode
 public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable, Simplifiable
 {
     public static final NodeClass<IntegerSwitchNode> TYPE = NodeClass.create(IntegerSwitchNode.class);
 
     protected final int[] keys;
 
+    // @cons
     public IntegerSwitchNode(ValueNode value, AbstractBeginNode[] successors, int[] keys, double[] keyProbabilities, int[] keySuccessors)
     {
         super(TYPE, value, successors, keySuccessors, keyProbabilities);
         this.keys = keys;
     }
 
+    // @cons
     public IntegerSwitchNode(ValueNode value, int successorCount, int[] keys, double[] keyProbabilities, int[] keySuccessors)
     {
         this(value, new AbstractBeginNode[successorCount], keys, keyProbabilities, keySuccessors);
@@ -134,14 +137,17 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         }
     }
 
+    // @class IntegerSwitchNode.KeyData
     static final class KeyData
     {
         final int key;
         final double keyProbability;
         final int keySuccessor;
 
+        // @cons
         KeyData(int key, double keyProbability, int keySuccessor)
         {
+            super();
             this.key = key;
             this.keyProbability = keyProbability;
             this.keySuccessor = keySuccessor;

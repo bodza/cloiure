@@ -11,6 +11,7 @@ import giraaff.options.OptionValues;
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
  */
+// @class ArithmeticLIRGenerator
 public abstract class ArithmeticLIRGenerator implements ArithmeticLIRGeneratorTool
 {
     LIRGenerator lirGen;

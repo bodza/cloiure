@@ -27,12 +27,14 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
+// @class ObjectEqualsNode
 public final class ObjectEqualsNode extends PointerEqualsNode implements Virtualizable
 {
     public static final NodeClass<ObjectEqualsNode> TYPE = NodeClass.create(ObjectEqualsNode.class);
 
     private static final ObjectEqualsOp OP = new ObjectEqualsOp();
 
+    // @cons
     public ObjectEqualsNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y);
@@ -78,7 +80,8 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
         return this;
     }
 
-    public static class ObjectEqualsOp extends PointerEqualsOp
+    // @class ObjectEqualsNode.ObjectEqualsOp
+    public static final class ObjectEqualsOp extends PointerEqualsOp
     {
         @Override
         protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)

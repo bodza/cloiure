@@ -7,6 +7,7 @@ import giraaff.nodes.FrameState;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.address.AddressNode;
 
+// @class G1PreWriteBarrier
 public final class G1PreWriteBarrier extends ObjectWriteBarrier implements DeoptimizingNode.DeoptBefore
 {
     public static final NodeClass<G1PreWriteBarrier> TYPE = NodeClass.create(G1PreWriteBarrier.class);
@@ -15,6 +16,7 @@ public final class G1PreWriteBarrier extends ObjectWriteBarrier implements Deopt
     protected final boolean nullCheck;
     protected final boolean doLoad;
 
+    // @cons
     public G1PreWriteBarrier(AddressNode address, ValueNode expectedObject, boolean doLoad, boolean nullCheck)
     {
         super(TYPE, address, expectedObject, true);

@@ -28,6 +28,7 @@ import giraaff.util.GraalError;
  *
  * This can be used as debug or deoptimization information.
  */
+// @class FrameState
 public final class FrameState extends VirtualState implements IterableNodeType
 {
     public static final NodeClass<FrameState> TYPE = NodeClass.create(FrameState.class);
@@ -39,10 +40,12 @@ public final class FrameState extends VirtualState implements IterableNodeType
      */
     public static final ValueNode TWO_SLOT_MARKER = new TwoSlotMarker();
 
+    // @class FrameState.TwoSlotMarker
     private static final class TwoSlotMarker extends ValueNode
     {
         public static final NodeClass<TwoSlotMarker> TYPE = NodeClass.create(TwoSlotMarker.class);
 
+        // @cons
         protected TwoSlotMarker()
         {
             super(TYPE, StampFactory.forKind(JavaKind.Illegal));
@@ -81,6 +84,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
      */
     protected final Bytecode code;
 
+    // @cons
     public FrameState(FrameState outerFrameState, Bytecode code, int bci, int localsSize, int stackSize, int lockSize, boolean rethrowException, boolean duringCall, List<MonitorIdNode> monitorIds, List<EscapeObjectState> virtualObjectMappings)
     {
         super(TYPE);
@@ -118,6 +122,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
         this.duringCall = duringCall;
     }
 
+    // @cons
     public FrameState(FrameState outerFrameState, Bytecode code, int bci, List<ValueNode> values, int localsSize, int stackSize, boolean rethrowException, boolean duringCall, List<MonitorIdNode> monitorIds, List<EscapeObjectState> virtualObjectMappings)
     {
         this(outerFrameState, code, bci, localsSize, stackSize, values.size() - localsSize - stackSize, rethrowException, duringCall, monitorIds, virtualObjectMappings);
@@ -127,6 +132,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
         }
     }
 
+    // @cons
     public FrameState(int bci)
     {
         this(null, null, bci, 0, 0, 0, false, false, null, Collections.<EscapeObjectState> emptyList());
@@ -139,12 +145,14 @@ public final class FrameState extends VirtualState implements IterableNodeType
      *
      * @param bci this must be {@link BytecodeFrame#AFTER_BCI}
      */
+    // @cons
     public FrameState(int bci, ValueNode returnValueOrExceptionObject)
     {
         this(null, null, bci, 0, returnValueOrExceptionObject.getStackKind().getSlotCount(), 0, returnValueOrExceptionObject instanceof ExceptionObjectNode, false, null, Collections.<EscapeObjectState> emptyList());
         this.values.initialize(0, returnValueOrExceptionObject);
     }
 
+    // @cons
     public FrameState(FrameState outerFrameState, Bytecode code, int bci, ValueNode[] locals, ValueNode[] stack, int stackSize, ValueNode[] locks, List<MonitorIdNode> monitorIds, boolean rethrowException, boolean duringCall)
     {
         this(outerFrameState, code, bci, locals.length, stackSize, locks.length, rethrowException, duringCall, monitorIds, Collections.<EscapeObjectState> emptyList());

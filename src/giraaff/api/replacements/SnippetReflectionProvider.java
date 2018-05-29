@@ -13,6 +13,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  *
  * This interface must not be used in Graal code that is not related to snippet processing.
  */
+// @iface SnippetReflectionProvider
 public interface SnippetReflectionProvider
 {
     /**

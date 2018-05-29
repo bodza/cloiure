@@ -20,17 +20,20 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * The {@code ZeroExtendNode} converts an integer to a wider integer using zero extension.
  */
+// @class ZeroExtendNode
 public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
 {
     public static final NodeClass<ZeroExtendNode> TYPE = NodeClass.create(ZeroExtendNode.class);
 
     private final boolean inputAlwaysPositive;
 
+    // @cons
     public ZeroExtendNode(ValueNode input, int resultBits)
     {
         this(input, PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)), resultBits, false);
     }
 
+    // @cons
     public ZeroExtendNode(ValueNode input, int inputBits, int resultBits, boolean inputAlwaysPositive)
     {
         super(TYPE, ArithmeticOpTable::getZeroExtend, ArithmeticOpTable::getNarrow, inputBits, resultBits, input);

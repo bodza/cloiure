@@ -14,10 +14,12 @@ import giraaff.nodes.spi.StampInverter;
 /**
  * Binary negation of long or integer values.
  */
+// @class NotNode
 public final class NotNode extends UnaryArithmeticNode<Not> implements ArithmeticLIRLowerable, NarrowableArithmeticNode, StampInverter
 {
     public static final NodeClass<NotNode> TYPE = NodeClass.create(NotNode.class);
 
+    // @cons
     protected NotNode(ValueNode x)
     {
         super(TYPE, ArithmeticOpTable::getNot, x);

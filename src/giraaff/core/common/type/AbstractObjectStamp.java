@@ -13,11 +13,13 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * Type describing all pointers to Java objects.
  */
+// @class AbstractObjectStamp
 public abstract class AbstractObjectStamp extends AbstractPointerStamp
 {
     private final ResolvedJavaType type;
     private final boolean exactType;
 
+    // @cons
     protected AbstractObjectStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull)
     {
         super(nonNull, alwaysNull);

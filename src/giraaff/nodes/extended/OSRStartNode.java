@@ -6,10 +6,12 @@ import giraaff.nodes.StartNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
+// @class OSRStartNode
 public final class OSRStartNode extends StartNode implements Lowerable
 {
     public static final NodeClass<OSRStartNode> TYPE = NodeClass.create(OSRStartNode.class);
 
+    // @cons
     public OSRStartNode()
     {
         super(TYPE);

@@ -14,6 +14,7 @@ import giraaff.nodes.spi.LoweringTool;
  * A high-level intrinsic for getting an address inside of an object. During lowering it will be
  * moved next to any uses to avoid creating a derived pointer that is live across a safepoint.
  */
+// @class ComputeObjectAddressNode
 public final class ComputeObjectAddressNode extends FixedWithNextNode implements Lowerable, ControlFlowAnchored
 {
     public static final NodeClass<ComputeObjectAddressNode> TYPE = NodeClass.create(ComputeObjectAddressNode.class);
@@ -21,6 +22,7 @@ public final class ComputeObjectAddressNode extends FixedWithNextNode implements
     @Input ValueNode object;
     @Input ValueNode offset;
 
+    // @cons
     public ComputeObjectAddressNode(ValueNode obj, ValueNode offset)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Long));

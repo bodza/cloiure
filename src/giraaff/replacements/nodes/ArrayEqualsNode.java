@@ -31,6 +31,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * Compares two arrays with the same length.
  */
+// @class ArrayEqualsNode
 public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
     public static final NodeClass<ArrayEqualsNode> TYPE = NodeClass.create(ArrayEqualsNode.class);
@@ -49,6 +50,7 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
 
     @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
 
+    // @cons
     public ArrayEqualsNode(ValueNode array1, ValueNode array2, ValueNode length, @ConstantNodeParameter JavaKind kind)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));

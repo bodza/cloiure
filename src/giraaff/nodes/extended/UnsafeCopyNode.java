@@ -14,6 +14,7 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
  * Copy a value at a location specified as an offset relative to a source object to another location
  * specified as an offset relative to destination object. No null checks are performed.
  */
+// @class UnsafeCopyNode
 public final class UnsafeCopyNode
 {
     public static boolean intrinsify(GraphBuilderContext b, @SuppressWarnings("unused") ResolvedJavaMethod targetMethod, ValueNode sourceObject, ValueNode sourceOffset, ValueNode destinationObject, ValueNode destinationOffset, JavaKind accessKind, LocationIdentity locationIdentity)

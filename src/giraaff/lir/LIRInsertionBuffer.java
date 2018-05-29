@@ -16,6 +16,7 @@ import java.util.List;
  *
  * Note: This class does not depend on LIRInstruction, so we could make it a generic utility class.
  */
+// @class LIRInsertionBuffer
 public final class LIRInsertionBuffer
 {
     /**
@@ -36,8 +37,10 @@ public final class LIRInsertionBuffer
      */
     private final List<LIRInstruction> ops;
 
+    // @cons
     public LIRInsertionBuffer()
     {
+        super();
         indexAndCount = new int[8];
         ops = new ArrayList<>(4);
     }

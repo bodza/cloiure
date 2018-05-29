@@ -14,18 +14,21 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * from the {@link MonitorExitNode} and from the {@link FrameState}.
  */
 // @NodeInfo.allowedUsageTypes "Association"
-public class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
+// @class MonitorIdNode
+public final class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
 {
     public static final NodeClass<MonitorIdNode> TYPE = NodeClass.create(MonitorIdNode.class);
 
     protected int lockDepth;
     protected boolean eliminated;
 
+    // @cons
     public MonitorIdNode(int lockDepth)
     {
         this(TYPE, lockDepth);
     }
 
+    // @cons
     protected MonitorIdNode(NodeClass<? extends MonitorIdNode> c, int lockDepth)
     {
         super(c, StampFactory.forVoid());

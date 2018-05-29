@@ -5,6 +5,7 @@ import java.util.BitSet;
 /**
  * This class implements a two-dimensional bitmap.
  */
+// @class BitMap2D
 public final class BitMap2D
 {
     private BitSet map;
@@ -20,8 +21,10 @@ public final class BitMap2D
         return true;
     }
 
+    // @cons
     public BitMap2D(int sizeInSlots, int bitsPerSlot)
     {
+        super();
         map = new BitSet(sizeInSlots * bitsPerSlot);
         this.bitsPerSlot = bitsPerSlot;
     }

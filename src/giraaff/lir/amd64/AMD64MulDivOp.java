@@ -20,7 +20,8 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * AMD64 mul/div operation. This operation has a single operand for the second input. The first
  * input must be in RAX for mul and in RDX:RAX for div. The result is in RDX:RAX.
  */
-public class AMD64MulDivOp extends AMD64LIRInstruction
+// @class AMD64MulDivOp
+public final class AMD64MulDivOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64MulDivOp> TYPE = LIRInstructionClass.create(AMD64MulDivOp.class);
 
@@ -38,11 +39,13 @@ public class AMD64MulDivOp extends AMD64LIRInstruction
     // @State
     protected LIRFrameState state;
 
+    // @cons
     public AMD64MulDivOp(AMD64MOp opcode, OperandSize size, LIRKind resultKind, AllocatableValue x, AllocatableValue y)
     {
         this(opcode, size, resultKind, Value.ILLEGAL, x, y, null);
     }
 
+    // @cons
     public AMD64MulDivOp(AMD64MOp opcode, OperandSize size, LIRKind resultKind, AllocatableValue highX, AllocatableValue lowX, AllocatableValue y, LIRFrameState state)
     {
         super(TYPE);

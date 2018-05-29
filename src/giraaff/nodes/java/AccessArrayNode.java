@@ -8,6 +8,7 @@ import giraaff.nodes.ValueNode;
 /**
  * This the base class of all array operations.
  */
+// @class AccessArrayNode
 public abstract class AccessArrayNode extends FixedWithNextNode
 {
     public static final NodeClass<AccessArrayNode> TYPE = NodeClass.create(AccessArrayNode.class);
@@ -24,6 +25,7 @@ public abstract class AccessArrayNode extends FixedWithNextNode
      *
      * @param array the instruction that produces the array object value
      */
+    // @cons
     public AccessArrayNode(NodeClass<? extends AccessArrayNode> c, Stamp stamp, ValueNode array)
     {
         super(c, stamp);

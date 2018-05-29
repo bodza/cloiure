@@ -1,18 +1,23 @@
 package giraaff.java;
 
-public class JsrScope
+// @class JsrScope
+public final class JsrScope
 {
     public static final JsrScope EMPTY_SCOPE = new JsrScope();
 
     private final long scope;
 
+    // @cons
     private JsrScope(long scope)
     {
+        super();
         this.scope = scope;
     }
 
+    // @cons
     public JsrScope()
     {
+        super();
         this.scope = 0;
     }
 

@@ -27,9 +27,11 @@ import giraaff.options.NestedBooleanOptionKey;
  * Note: this phase must be inserted <b>after</b> {@link RedundantMoveElimination} phase because
  * {@link AMD64MultiStackMove} are not probably detected.
  */
-public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
+// @class StackMoveOptimizationPhase
+public final class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 {
-    public static class Options
+    // @class StackMoveOptimizationPhase.Options
+    public static final class Options
     {
         public static final NestedBooleanOptionKey LIROptStackMoveOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
@@ -45,6 +47,7 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
         }
     }
 
+    // @class StackMoveOptimizationPhase.Closure
     private static class Closure
     {
         private static final int NONE = -1;

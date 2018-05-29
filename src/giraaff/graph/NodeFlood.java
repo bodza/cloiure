@@ -4,14 +4,17 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Queue;
 
+// @class NodeFlood
 public final class NodeFlood implements Iterable<Node>
 {
     private final NodeBitMap visited;
     private final Queue<Node> worklist;
     private int totalMarkedCount;
 
+    // @cons
     public NodeFlood(Graph graph)
     {
+        super();
         visited = graph.createNodeBitMap();
         worklist = new ArrayDeque<>();
     }
@@ -54,12 +57,15 @@ public final class NodeFlood implements Iterable<Node>
         return visited.isNew(node);
     }
 
-    private static class QueueConsumingIterator implements Iterator<Node>
+    // @class NodeFlood.QueueConsumingIterator
+    private static final class QueueConsumingIterator implements Iterator<Node>
     {
         private final Queue<Node> queue;
 
+        // @cons
         QueueConsumingIterator(Queue<Node> queue)
         {
+            super();
             this.queue = queue;
         }
 
@@ -88,14 +94,17 @@ public final class NodeFlood implements Iterable<Node>
         return new QueueConsumingIterator(worklist);
     }
 
-    private static class UnmarkedNodeIterator implements Iterator<Node>
+    // @class NodeFlood.UnmarkedNodeIterator
+    private static final class UnmarkedNodeIterator implements Iterator<Node>
     {
         private final NodeBitMap visited;
         private Iterator<Node> nodes;
         private Node nextNode;
 
+        // @cons
         UnmarkedNodeIterator(NodeBitMap visited, Iterator<Node> nodes)
         {
+            super();
             this.visited = visited;
             this.nodes = nodes;
             forward();

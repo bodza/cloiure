@@ -19,7 +19,8 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 /**
  * Compute probabilities for fixed nodes on the fly and cache them at {@link AbstractBeginNode}s.
  */
-public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
+// @class FixedNodeProbabilityCache
+public final class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
 {
     private final EconomicMap<FixedNode, Double> cache = EconomicMap.create(Equivalence.IDENTITY);
 

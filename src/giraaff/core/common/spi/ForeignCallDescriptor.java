@@ -15,14 +15,17 @@ import java.util.Arrays;
  * standard Java call if the foreign routine is a normal Java method and the runtime supports
  * linking Java calls at arbitrary bytecodes.</li>
  */
-public class ForeignCallDescriptor
+// @class ForeignCallDescriptor
+public final class ForeignCallDescriptor
 {
     private final String name;
     private final Class<?> resultType;
     private final Class<?>[] argumentTypes;
 
+    // @cons
     public ForeignCallDescriptor(String name, Class<?> resultType, Class<?>... argumentTypes)
     {
+        super();
         this.name = name;
         this.resultType = resultType;
         this.argumentTypes = argumentTypes;

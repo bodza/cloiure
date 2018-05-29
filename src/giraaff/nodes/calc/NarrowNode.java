@@ -18,15 +18,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * The {@code NarrowNode} converts an integer to a narrower integer.
  */
+// @class NarrowNode
 public final class NarrowNode extends IntegerConvertNode<Narrow, SignExtend>
 {
     public static final NodeClass<NarrowNode> TYPE = NodeClass.create(NarrowNode.class);
 
+    // @cons
     public NarrowNode(ValueNode input, int resultBits)
     {
         this(input, PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)), resultBits);
     }
 
+    // @cons
     public NarrowNode(ValueNode input, int inputBits, int resultBits)
     {
         super(TYPE, ArithmeticOpTable::getNarrow, ArithmeticOpTable::getSignExtend, inputBits, resultBits, input);

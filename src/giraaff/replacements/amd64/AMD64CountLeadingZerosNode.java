@@ -20,10 +20,12 @@ import giraaff.nodes.type.StampTool;
 /**
  * Count the number of leading zeros using the {@code lzcntq} or {@code lzcntl} instructions.
  */
+// @class AMD64CountLeadingZerosNode
 public final class AMD64CountLeadingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<AMD64CountLeadingZerosNode> TYPE = NodeClass.create(AMD64CountLeadingZerosNode.class);
 
+    // @cons
     public AMD64CountLeadingZerosNode(ValueNode value)
     {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);

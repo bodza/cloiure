@@ -3,7 +3,8 @@ package giraaff.graph;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class NodeUsageIterator implements Iterator<Node>
+// @class NodeUsageIterator
+final class NodeUsageIterator implements Iterator<Node>
 {
     final Node node;
     int index = -1;
@@ -31,8 +32,10 @@ class NodeUsageIterator implements Iterator<Node>
         }
     }
 
+    // @cons
     NodeUsageIterator(Node node)
     {
+        super();
         this.node = node;
         advance();
     }

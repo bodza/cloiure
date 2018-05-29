@@ -22,6 +22,7 @@ import giraaff.nodes.virtual.VirtualArrayNode;
 /**
  * The {@code ArrayLength} instruction gets the length of an array.
  */
+// @class ArrayLengthNode
 public final class ArrayLengthNode extends FixedWithNextNode implements Canonicalizable.Unary<ValueNode>, Lowerable, Virtualizable
 {
     public static final NodeClass<ArrayLengthNode> TYPE = NodeClass.create(ArrayLengthNode.class);
@@ -39,6 +40,7 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
         return array;
     }
 
+    // @cons
     public ArrayLengthNode(ValueNode array)
     {
         super(TYPE, StampFactory.positiveInt());

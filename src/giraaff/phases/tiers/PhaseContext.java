@@ -9,6 +9,7 @@ import giraaff.nodes.spi.Replacements;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.phases.util.Providers;
 
+// @class PhaseContext
 public class PhaseContext
 {
     private final MetaAccessProvider metaAccess;
@@ -18,8 +19,10 @@ public class PhaseContext
     private final Replacements replacements;
     private final StampProvider stampProvider;
 
+    // @cons
     public PhaseContext(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, LoweringProvider lowerer, Replacements replacements, StampProvider stampProvider)
     {
+        super();
         this.metaAccess = metaAccess;
         this.constantReflection = constantReflection;
         this.constantFieldProvider = constantFieldProvider;
@@ -28,6 +31,7 @@ public class PhaseContext
         this.stampProvider = stampProvider;
     }
 
+    // @cons
     public PhaseContext(Providers providers)
     {
         this(providers.getMetaAccess(), providers.getConstantReflection(), providers.getConstantFieldProvider(), providers.getLowerer(), providers.getReplacements(), providers.getStampProvider());

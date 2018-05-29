@@ -9,6 +9,7 @@ import giraaff.core.common.LIRKind;
 /**
  * Details about a set of supported {@link ForeignCallDescriptor foreign calls}.
  */
+// @iface ForeignCallsProvider
 public interface ForeignCallsProvider extends ValueKindFactory<LIRKind>
 {
     /**

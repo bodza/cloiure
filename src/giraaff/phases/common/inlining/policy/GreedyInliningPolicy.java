@@ -11,8 +11,10 @@ import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.common.inlining.info.InlineInfo;
 import giraaff.phases.common.inlining.walker.MethodInvocation;
 
-public class GreedyInliningPolicy extends AbstractInliningPolicy
+// @class GreedyInliningPolicy
+public final class GreedyInliningPolicy extends AbstractInliningPolicy
 {
+    // @cons
     public GreedyInliningPolicy(Map<Invoke, Double> hints)
     {
         super(hints);

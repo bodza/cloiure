@@ -14,8 +14,10 @@ import giraaff.util.GraalError;
  * Type describing pointers to raw memory. This stamp is used for example for direct pointers to
  * fields or array elements.
  */
-public class RawPointerStamp extends AbstractPointerStamp
+// @class RawPointerStamp
+public final class RawPointerStamp extends AbstractPointerStamp
 {
+    // @cons
     protected RawPointerStamp()
     {
         super(false, false);

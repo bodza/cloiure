@@ -23,8 +23,10 @@ import giraaff.word.Word;
  * Stub called by an {@link UnwindNode}. This stub executes in the frame of the method throwing an
  * exception and completes by jumping to the exception handler in the calling frame.
  */
-public class UnwindExceptionToCallerStub extends SnippetStub
+// @class UnwindExceptionToCallerStub
+public final class UnwindExceptionToCallerStub extends SnippetStub
 {
+    // @cons
     public UnwindExceptionToCallerStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super("unwindExceptionToCaller", options, providers, linkage);

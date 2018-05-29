@@ -23,6 +23,7 @@ import giraaff.lir.alloc.lsra.Interval.SpillState;
 import giraaff.lir.alloc.lsra.Interval.State;
 import giraaff.util.GraalError;
 
+// @class LinearScanWalker
 class LinearScanWalker extends IntervalWalker
 {
     protected Register[] availableRegs;
@@ -62,6 +63,7 @@ class LinearScanWalker extends IntervalWalker
         return allocator.blockForId(opId);
     }
 
+    // @cons
     LinearScanWalker(LinearScan allocator, Interval unhandledFixedFirst, Interval unhandledAnyFirst)
     {
         super(allocator, unhandledFixedFirst, unhandledAnyFirst);

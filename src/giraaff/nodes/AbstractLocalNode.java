@@ -5,12 +5,14 @@ import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.calc.FloatingNode;
 
+// @class AbstractLocalNode
 public abstract class AbstractLocalNode extends FloatingNode
 {
     public static final NodeClass<AbstractLocalNode> TYPE = NodeClass.create(AbstractLocalNode.class);
 
     protected final int index;
 
+    // @cons
     protected AbstractLocalNode(NodeClass<? extends AbstractLocalNode> c, int index, Stamp stamp)
     {
         super(c, stamp);

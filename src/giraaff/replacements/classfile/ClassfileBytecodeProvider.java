@@ -34,6 +34,7 @@ import giraaff.bytecode.BytecodeProvider;
  * avoid this is to have a completely isolated {@code jdk.vm.ci.meta} implementation for parsing
  * snippet/intrinsic bytecodes.
  */
+// @class ClassfileBytecodeProvider
 public final class ClassfileBytecodeProvider implements BytecodeProvider
 {
     private final ClassLoader loader;
@@ -44,16 +45,20 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     final MetaAccessProvider metaAccess;
     final SnippetReflectionProvider snippetReflection;
 
+    // @cons
     public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection)
     {
+        super();
         this.metaAccess = metaAccess;
         this.snippetReflection = snippetReflection;
         ClassLoader cl = getClass().getClassLoader();
         this.loader = cl == null ? ClassLoader.getSystemClassLoader() : cl;
     }
 
+    // @cons
     public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection, ClassLoader loader)
     {
+        super();
         this.metaAccess = metaAccess;
         this.snippetReflection = snippetReflection;
         this.loader = loader;
@@ -159,13 +164,16 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     /**
      * Name and type of a field.
      */
+    // @class ClassfileBytecodeProvider.FieldKey
     static final class FieldKey
     {
         final String name;
         final String type;
 
+        // @cons
         FieldKey(String name, String type)
         {
+            super();
             this.name = name;
             this.type = type;
         }
@@ -197,13 +205,16 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     /**
      * Name and descriptor of a method.
      */
+    // @class ClassfileBytecodeProvider.MethodKey
     static final class MethodKey
     {
         final String name;
         final String descriptor;
 
+        // @cons
         MethodKey(String name, String descriptor)
         {
+            super();
             this.name = name;
             this.descriptor = descriptor;
         }
@@ -235,6 +246,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     /**
      * Method cache for a {@link ResolvedJavaType}.
      */
+    // @class ClassfileBytecodeProvider.MethodsCache
     static final class MethodsCache
     {
         volatile EconomicMap<MethodKey, ResolvedJavaMethod> constructors;
@@ -284,6 +296,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     /**
      * Field cache for a {@link ResolvedJavaType}.
      */
+    // @class ClassfileBytecodeProvider.FieldsCache
     static final class FieldsCache
     {
         volatile EconomicMap<FieldKey, ResolvedJavaField> instanceFields;

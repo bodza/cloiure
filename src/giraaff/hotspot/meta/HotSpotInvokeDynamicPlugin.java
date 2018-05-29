@@ -21,7 +21,8 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.graphbuilderconf.InvokeDynamicPlugin;
 import giraaff.util.GraalError;
 
-public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
+// @class HotSpotInvokeDynamicPlugin
+public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
 {
     private static final Class<? extends ConstantPool> hscp;
     private static final MethodHandle isResolvedDynamicInvokeMH;
@@ -65,17 +66,21 @@ public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
     private final DynamicTypeStore dynoStore;
     private final boolean treatAppendixAsConstant;
 
+    // @cons
     public HotSpotInvokeDynamicPlugin(DynamicTypeStore dynoStore, boolean treatAppendixAsConstant)
     {
+        super();
         this.dynoStore = dynoStore;
         this.treatAppendixAsConstant = treatAppendixAsConstant;
     }
 
+    // @cons
     public HotSpotInvokeDynamicPlugin(DynamicTypeStore dynoStore)
     {
         this(dynoStore, true);
     }
 
+    // @cons
     public HotSpotInvokeDynamicPlugin()
     {
         this(null);
@@ -141,6 +146,7 @@ public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
         return resolveNode;
     }
 
+    // @iface HotSpotInvokeDynamicPlugin.DynamicTypeStore
     public interface DynamicTypeStore
     {
         void recordAdapter(int opcode, HotSpotResolvedObjectType holder, int cpi, HotSpotResolvedJavaMethod adapter);

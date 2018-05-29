@@ -15,7 +15,8 @@ import giraaff.lir.StandardOp.MoveOp;
 import giraaff.lir.StandardOp.ValueMoveOp;
 import giraaff.util.GraalError;
 
-public class LIRInstructionClass<T> extends LIRIntrospection<T>
+// @class LIRInstructionClass
+public final class LIRInstructionClass<T> extends LIRIntrospection<T>
 {
     public static <T extends LIRInstruction> LIRInstructionClass<T> create(Class<T> c)
     {
@@ -36,11 +37,13 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     private String opcodeConstant;
     private int opcodeIndex;
 
+    // @cons
     private LIRInstructionClass(Class<T> clazz)
     {
         this(clazz, new FieldsScanner.DefaultCalcOffset());
     }
 
+    // @cons
     public LIRInstructionClass(Class<T> clazz, FieldsScanner.CalcOffset calcOffset)
     {
         super(clazz);
@@ -90,7 +93,8 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
         }
     }
 
-    private static class LIRInstructionFieldsScanner extends LIRFieldsScanner
+    // @class LIRInstructionClass.LIRInstructionFieldsScanner
+    private static final class LIRInstructionFieldsScanner extends LIRFieldsScanner
     {
         private String opcodeConstant;
 
@@ -99,6 +103,7 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
          */
         private FieldsScanner.FieldInfo opcodeField;
 
+        // @cons
         LIRInstructionFieldsScanner(FieldsScanner.CalcOffset calc)
         {
             super(calc);

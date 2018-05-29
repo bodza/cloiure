@@ -31,6 +31,7 @@ import giraaff.phases.tiers.Suites;
  * Base class for implementing some low level code providing the out-of-line slow path for a snippet
  * and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java method.
  */
+// @class Stub
 public abstract class Stub
 {
     /**
@@ -79,8 +80,10 @@ public abstract class Stub
      *
      * @param linkage linkage details for a call to the stub
      */
+    // @cons
     public Stub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
+        super();
         this.linkage = linkage;
         this.options = options;
         this.providers = providers;

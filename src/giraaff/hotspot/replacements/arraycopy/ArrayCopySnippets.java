@@ -47,8 +47,10 @@ import giraaff.replacements.nodes.ExplodeLoopNode;
 import giraaff.util.GraalError;
 import giraaff.word.Word;
 
-public class ArrayCopySnippets implements Snippets
+// @class ArrayCopySnippets
+public final class ArrayCopySnippets implements Snippets
 {
+    // @enum ArrayCopySnippets.ArrayCopyTypeCheck
     private enum ArrayCopyTypeCheck
     {
         UNDEFINED_ARRAY_TYPE_CHECK,
@@ -236,7 +238,8 @@ public class ArrayCopySnippets implements Snippets
         }
     }
 
-    public static class Templates extends SnippetTemplate.AbstractTemplates
+    // @class ArrayCopySnippets.Templates
+    public static final class Templates extends SnippetTemplate.AbstractTemplates
     {
         private final SnippetInfo arraycopyGenericSnippet = snippet("arraycopyGenericSnippet");
         private final SnippetInfo arraycopyUnrolledSnippet = snippet("arraycopyUnrolledSnippet");
@@ -250,6 +253,7 @@ public class ArrayCopySnippets implements Snippets
 
         private ResolvedJavaMethod originalArraycopy;
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);
@@ -489,5 +493,11 @@ public class ArrayCopySnippets implements Snippets
             }
             return originalArraycopy;
         }
+    }
+
+    // @cons
+    private ArrayCopySnippets()
+    {
+        super();
     }
 }

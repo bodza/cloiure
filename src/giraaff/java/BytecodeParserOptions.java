@@ -5,7 +5,8 @@ import giraaff.options.OptionKey;
 /**
  * Options related to {@link BytecodeParser}.
  */
-public class BytecodeParserOptions
+// @class BytecodeParserOptions
+public final class BytecodeParserOptions
 {
     // @Option "Inlines trivial methods during bytecode parsing."
     public static final OptionKey<Boolean> InlineDuringParsing = new OptionKey<>(true);

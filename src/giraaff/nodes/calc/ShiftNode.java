@@ -19,10 +19,12 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 /**
  * The {@code ShiftOp} class represents shift operations.
  */
+// @class ShiftNode
 public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, NarrowableArithmeticNode
 {
     @SuppressWarnings("rawtypes") public static final NodeClass<ShiftNode> TYPE = NodeClass.create(ShiftNode.class);
 
+    // @iface ShiftNode.SerializableShiftFunction
     protected interface SerializableShiftFunction<T> extends Function<ArithmeticOpTable, ShiftOp<T>>
     {
     }
@@ -35,6 +37,7 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
      * @param x the first input value
      * @param s the second input value
      */
+    // @cons
     protected ShiftNode(NodeClass<? extends ShiftNode<OP>> c, SerializableShiftFunction<OP> getOp, ValueNode x, ValueNode s)
     {
         super(c, getOp.apply(ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT))).foldStamp(x.stamp(NodeView.DEFAULT), (IntegerStamp) s.stamp(NodeView.DEFAULT)), x, s);

@@ -12,12 +12,14 @@ import giraaff.word.Word;
 /**
  * Modifies the return address of the current frame.
  */
+// @class PatchReturnAddressNode
 public final class PatchReturnAddressNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<PatchReturnAddressNode> TYPE = NodeClass.create(PatchReturnAddressNode.class);
 
     @Input ValueNode address;
 
+    // @cons
     public PatchReturnAddressNode(ValueNode address)
     {
         super(TYPE, StampFactory.forVoid());

@@ -53,7 +53,8 @@ import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.DirectStoreNode;
 import giraaff.word.Word;
 
-public class WriteBarrierSnippets implements Snippets
+// @class WriteBarrierSnippets
+public final class WriteBarrierSnippets implements Snippets
 {
     public static final LocationIdentity GC_CARD_LOCATION = NamedLocationIdentity.mutable("GC-Card");
     public static final LocationIdentity GC_LOG_LOCATION = NamedLocationIdentity.mutable("GC-Log");
@@ -343,7 +344,8 @@ public class WriteBarrierSnippets implements Snippets
     @NodeIntrinsic(ForeignCallNode.class)
     public static native void g1PostBarrierStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word card);
 
-    public static class Templates extends AbstractTemplates
+    // @class WriteBarrierSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo serialImpreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialImpreciseWriteBarrier", GC_CARD_LOCATION);
         private final SnippetInfo serialPreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialPreciseWriteBarrier", GC_CARD_LOCATION);
@@ -356,6 +358,7 @@ public class WriteBarrierSnippets implements Snippets
 
         private final CompressEncoding oopEncoding;
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target, CompressEncoding oopEncoding)
         {
             super(options, providers, providers.getSnippetReflection(), target);

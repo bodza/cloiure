@@ -28,7 +28,8 @@ import giraaff.nodes.extended.GuardingNode;
  * control flow would have reached the guarded node (without taking exceptions into account).
  */
 // @NodeInfo.allowedUsageTypes "Guard"
-public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
+// @class GuardNode
+public final class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
 {
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);
 
@@ -38,11 +39,13 @@ public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, 
     protected JavaConstant speculation;
     protected boolean negated;
 
+    // @cons
     public GuardNode(LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation)
     {
         this(TYPE, condition, anchor, reason, action, negated, speculation);
     }
 
+    // @cons
     protected GuardNode(NodeClass<? extends GuardNode> c, LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation)
     {
         super(c, StampFactory.forVoid(), anchor);

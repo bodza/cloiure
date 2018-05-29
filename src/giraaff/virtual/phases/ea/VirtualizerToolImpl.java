@@ -30,7 +30,8 @@ import giraaff.options.OptionValues;
 /**
  * Forwards calls from {@link VirtualizerTool} to the actual {@link PartialEscapeBlockState}.
  */
-class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
+// @class VirtualizerToolImpl
+final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
 {
     private final MetaAccessProvider metaAccess;
     private final ConstantReflectionProvider constantReflection;
@@ -41,8 +42,10 @@ class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     private final LoweringProvider loweringProvider;
     private ConstantNode illegalConstant;
 
+    // @cons
     VirtualizerToolImpl(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, PartialEscapeClosure<?> closure, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider)
     {
+        super();
         this.metaAccess = metaAccess;
         this.constantReflection = constantReflection;
         this.constantFieldProvider = constantFieldProvider;

@@ -14,6 +14,7 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
+// @class LoopBeginNode
 public final class LoopBeginNode extends AbstractMergeNode implements IterableNodeType, LIRLowerable
 {
     public static final NodeClass<LoopBeginNode> TYPE = NodeClass.create(LoopBeginNode.class);
@@ -27,6 +28,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     protected LoopType loopType;
     protected int unrollFactor;
 
+    // @enum LoopBeginNode.LoopType
     public enum LoopType
     {
         SIMPLE_LOOP,
@@ -42,6 +44,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     @OptionalInput(InputType.Guard) GuardingNode overflowGuard;
 
+    // @cons
     public LoopBeginNode()
     {
         super(TYPE);

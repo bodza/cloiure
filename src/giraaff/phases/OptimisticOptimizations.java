@@ -9,11 +9,13 @@ import jdk.vm.ci.meta.ProfilingInfo;
 import giraaff.core.common.GraalOptions;
 import giraaff.options.OptionValues;
 
+// @class OptimisticOptimizations
 public final class OptimisticOptimizations
 {
     public static final OptimisticOptimizations ALL = new OptimisticOptimizations(EnumSet.allOf(Optimization.class));
     public static final OptimisticOptimizations NONE = new OptimisticOptimizations(EnumSet.noneOf(Optimization.class));
 
+    // @enum OptimisticOptimizations.Optimization
     public enum Optimization
     {
         RemoveNeverExecutedCode,
@@ -26,8 +28,10 @@ public final class OptimisticOptimizations
 
     private final Set<Optimization> enabledOpts;
 
+    // @cons
     public OptimisticOptimizations(ProfilingInfo info, OptionValues options)
     {
+        super();
         this.enabledOpts = EnumSet.noneOf(Optimization.class);
 
         enabledOpts.add(Optimization.UseExceptionProbabilityForOperations);
@@ -66,8 +70,10 @@ public final class OptimisticOptimizations
         return new OptimisticOptimizations(newOptimizations);
     }
 
+    // @cons
     private OptimisticOptimizations(Set<Optimization> enabledOpts)
     {
+        super();
         this.enabledOpts = enabledOpts;
     }
 

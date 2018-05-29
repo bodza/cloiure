@@ -7,7 +7,8 @@ import giraaff.nodes.AbstractMergeNode;
  * stack (i.e. first-in / last-out), or as a sorted list, where blocks can be sorted by a supplied
  * number. The latter usage lends itself naturally to iterative dataflow analysis problems.
  */
-public class BlockWorkList
+// @class BlockWorkList
+public final class BlockWorkList
 {
     AbstractMergeNode[] workList;
     int[] workListNumbers;

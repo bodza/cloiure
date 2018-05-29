@@ -25,7 +25,8 @@ import giraaff.nodes.calc.NormalizeCompareNode;
 import giraaff.phases.Phase;
 import giraaff.util.GraalError;
 
-public class ExpandLogicPhase extends Phase
+// @class ExpandLogicPhase
+public final class ExpandLogicPhase extends Phase
 {
     private static final double EPSILON = 1E-6;
 

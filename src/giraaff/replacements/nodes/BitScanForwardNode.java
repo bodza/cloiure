@@ -22,10 +22,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Determines the index of the least significant "1" bit. Note that the result is undefined if the
  * input is zero.
  */
+// @class BitScanForwardNode
 public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<BitScanForwardNode> TYPE = NodeClass.create(BitScanForwardNode.class);
 
+    // @cons
     public BitScanForwardNode(ValueNode value)
     {
         super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) value.stamp(NodeView.DEFAULT)).getBits()), value);

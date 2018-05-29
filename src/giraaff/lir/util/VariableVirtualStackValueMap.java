@@ -5,13 +5,16 @@ import jdk.vm.ci.meta.Value;
 import giraaff.lir.LIRValueUtil;
 import giraaff.util.GraalError;
 
-public class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K, T>
+// @class VariableVirtualStackValueMap
+public final class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K, T>
 {
     private final Object[] variables;
     private final Object[] slots;
 
+    // @cons
     public VariableVirtualStackValueMap(int initialVariableCapacity, int initialStackSlotCapacity)
     {
+        super();
         variables = new Object[initialVariableCapacity];
         slots = new Object[initialStackSlotCapacity];
     }

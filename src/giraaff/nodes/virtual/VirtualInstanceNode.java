@@ -10,6 +10,7 @@ import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.ValueNode;
 
+// @class VirtualInstanceNode
 public class VirtualInstanceNode extends VirtualObjectNode
 {
     public static final NodeClass<VirtualInstanceNode> TYPE = NodeClass.create(VirtualInstanceNode.class);
@@ -17,21 +18,25 @@ public class VirtualInstanceNode extends VirtualObjectNode
     protected final ResolvedJavaType type;
     protected final ResolvedJavaField[] fields;
 
+    // @cons
     public VirtualInstanceNode(ResolvedJavaType type, boolean hasIdentity)
     {
         this(type, type.getInstanceFields(true), hasIdentity);
     }
 
+    // @cons
     public VirtualInstanceNode(ResolvedJavaType type, ResolvedJavaField[] fields, boolean hasIdentity)
     {
         this(TYPE, type, fields, hasIdentity);
     }
 
+    // @cons
     protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> c, ResolvedJavaType type, boolean hasIdentity)
     {
         this(c, type, type.getInstanceFields(true), hasIdentity);
     }
 
+    // @cons
     protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> c, ResolvedJavaType type, ResolvedJavaField[] fields, boolean hasIdentity)
     {
         super(c, type, hasIdentity);

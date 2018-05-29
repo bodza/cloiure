@@ -17,8 +17,15 @@ import giraaff.phases.tiers.MidTierContext;
 /**
  * The default configuration for the community edition of Graal.
  */
-public class CommunityCompilerConfiguration implements CompilerConfiguration
+// @class CommunityCompilerConfiguration
+public final class CommunityCompilerConfiguration implements CompilerConfiguration
 {
+    // @cons
+    public CommunityCompilerConfiguration()
+    {
+        super();
+    }
+
     @Override
     public PhaseSuite<HighTierContext> createHighTier(OptionValues options)
     {

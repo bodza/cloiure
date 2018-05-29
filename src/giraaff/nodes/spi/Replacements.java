@@ -13,6 +13,7 @@ import giraaff.options.OptionValues;
 /**
  * Interface for managing replacements.
  */
+// @iface Replacements
 public interface Replacements
 {
     OptionValues getOptions();

@@ -52,6 +52,7 @@ import giraaff.util.GraalError;
 import giraaff.word.Word;
 import giraaff.word.WordOperationPlugin;
 
+// @class ReplacementsImpl
 public class ReplacementsImpl implements Replacements, InlineInvokePlugin
 {
     protected final OptionValues options;
@@ -131,8 +132,10 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         }
     }
 
+    // @cons
     public ReplacementsImpl(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
     {
+        super();
         this.options = options;
         this.providers = providers.copyWith(this);
         this.snippetReflection = snippetReflection;
@@ -263,7 +266,8 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     /**
      * Creates and preprocesses a graph for a replacement.
      */
-    public static class GraphMaker
+    // @class ReplacementsImpl.GraphMaker
+    public static final class GraphMaker
     {
         /**
          * The replacements object that the graphs are created for.
@@ -281,8 +285,10 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
          */
         protected final ResolvedJavaMethod substitutedMethod;
 
+        // @cons
         protected GraphMaker(ReplacementsImpl replacements, ResolvedJavaMethod substitute, ResolvedJavaMethod substitutedMethod)
         {
+            super();
             this.replacements = replacements;
             this.method = substitute;
             this.substitutedMethod = substitutedMethod;

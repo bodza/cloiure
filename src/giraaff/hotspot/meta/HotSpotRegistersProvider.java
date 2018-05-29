@@ -5,6 +5,7 @@ import jdk.vm.ci.code.Register;
 /**
  * Special registers reserved by HotSpot for frequently used values.
  */
+// @iface HotSpotRegistersProvider
 public interface HotSpotRegistersProvider
 {
     /**

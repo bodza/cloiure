@@ -9,6 +9,7 @@ import giraaff.nodes.ValueNode;
 /**
  * {@link GraphBuilderPlugin} interface for static compilation mode, allowing references to dynamic types.
  */
+// @iface InvokeDynamicPlugin
 public interface InvokeDynamicPlugin extends GraphBuilderPlugin
 {
     /**

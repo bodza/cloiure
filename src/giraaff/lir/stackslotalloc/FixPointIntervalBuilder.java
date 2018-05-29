@@ -25,6 +25,7 @@ import giraaff.lir.VirtualStackSlot;
 /**
  * Calculates the stack intervals using a worklist-based backwards data-flow analysis.
  */
+// @class FixPointIntervalBuilder
 final class FixPointIntervalBuilder
 {
     private final BlockMap<BitSet> liveInMap;
@@ -34,8 +35,10 @@ final class FixPointIntervalBuilder
     private final StackInterval[] stackSlotMap;
     private final EconomicSet<LIRInstruction> usePos;
 
+    // @cons
     FixPointIntervalBuilder(LIR lir, StackInterval[] stackSlotMap, int maxOpId)
     {
+        super();
         this.lir = lir;
         this.stackSlotMap = stackSlotMap;
         this.maxOpId = maxOpId;
@@ -147,12 +150,15 @@ final class FixPointIntervalBuilder
         }
     }
 
+    // @class FixPointIntervalBuilder.BlockClosure
     private final class BlockClosure
     {
         private final BitSet currentSet;
 
+        // @cons
         private BlockClosure(BitSet set)
         {
+            super();
             currentSet = set;
         }
 

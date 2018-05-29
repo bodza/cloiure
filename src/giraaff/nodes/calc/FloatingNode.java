@@ -5,10 +5,12 @@ import giraaff.graph.Node.ValueNumberable;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
 
+// @class FloatingNode
 public abstract class FloatingNode extends ValueNode implements ValueNumberable
 {
     public static final NodeClass<FloatingNode> TYPE = NodeClass.create(FloatingNode.class);
 
+    // @cons
     public FloatingNode(NodeClass<? extends FloatingNode> c, Stamp stamp)
     {
         super(c, stamp);

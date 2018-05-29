@@ -10,13 +10,16 @@ import giraaff.nodes.java.MonitorIdNode;
  * The class implements a simple linked list of MonitorIdNodes, which can be used to describe the
  * current lock state of an object.
  */
+// @class LockState
 public final class LockState
 {
     public final MonitorIdNode monitorId;
     public final LockState next;
 
+    // @cons
     public LockState(MonitorIdNode monitorId, LockState next)
     {
+        super();
         this.monitorId = monitorId;
         this.next = next;
     }

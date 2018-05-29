@@ -11,6 +11,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
 @Opcode
+// @class AMD64ByteSwapOp
 public final class AMD64ByteSwapOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ByteSwapOp> TYPE = LIRInstructionClass.create(AMD64ByteSwapOp.class);
@@ -18,6 +19,7 @@ public final class AMD64ByteSwapOp extends AMD64LIRInstruction
     @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
     @Use protected Value input;
 
+    // @cons
     public AMD64ByteSwapOp(Value result, Value input)
     {
         super(TYPE);

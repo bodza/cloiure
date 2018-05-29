@@ -58,8 +58,10 @@ import giraaff.options.OptionValues;
  * The algorithms and analysis in this class are conservative and do not use any assumptions or
  * profiling information.
  */
+// @class BciBlockMapping
 public final class BciBlockMapping
 {
+    // @class BciBlockMapping.BciBlock
     public static class BciBlock implements Cloneable
     {
         int id;
@@ -77,7 +79,8 @@ public final class BciBlockMapping
         long loops;
         JSRData jsrData;
 
-        public static class JSRData implements Cloneable
+        // @class BciBlockMapping.BciBlock.JSRData
+        public static final class JSRData implements Cloneable
         {
             public EconomicMap<JsrScope, BciBlock> jsrAlternatives;
             public JsrScope jsrScope = JsrScope.EMPTY_SCOPE;
@@ -99,8 +102,10 @@ public final class BciBlockMapping
             }
         }
 
+        // @cons
         BciBlock(int startBci)
         {
+            super();
             this.startBci = startBci;
             this.successors = new ArrayList<>();
         }
@@ -434,7 +439,8 @@ public final class BciBlockMapping
         }
     }
 
-    public static class ExceptionDispatchBlock extends BciBlock
+    // @class BciBlockMapping.ExceptionDispatchBlock
+    public static final class ExceptionDispatchBlock extends BciBlock
     {
         public final ExceptionHandler handler;
         public final int deoptBci;
@@ -442,6 +448,7 @@ public final class BciBlockMapping
         /**
          * Constructor for a normal dispatcher.
          */
+        // @cons
         ExceptionDispatchBlock(ExceptionHandler handler, int deoptBci)
         {
             super(handler.getHandlerBCI());
@@ -453,6 +460,7 @@ public final class BciBlockMapping
         /**
          * Constructor for the method unwind dispatcher.
          */
+        // @cons
         ExceptionDispatchBlock(int deoptBci)
         {
             super(deoptBci);
@@ -487,8 +495,10 @@ public final class BciBlockMapping
     /**
      * Creates a new BlockMap instance from {@code code}.
      */
+    // @cons
     private BciBlockMapping(Bytecode code)
     {
+        super();
         this.code = code;
         this.exceptionHandlers = code.getExceptionHandlers();
     }

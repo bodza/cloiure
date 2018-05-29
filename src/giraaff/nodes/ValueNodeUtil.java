@@ -3,19 +3,13 @@ package giraaff.nodes;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import jdk.vm.ci.meta.JavaKind;
-
 import giraaff.graph.Node;
 import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.memory.MemoryNode;
 
-public class ValueNodeUtil
+// @class ValueNodeUtil
+public final class ValueNodeUtil
 {
-    public static ValueNode assertKind(JavaKind kind, ValueNode x)
-    {
-        return x;
-    }
-
     public static RuntimeException shouldNotReachHere(String msg)
     {
         throw new InternalError("should not reach here: " + msg);
@@ -24,31 +18,6 @@ public class ValueNodeUtil
     public static RuntimeException shouldNotReachHere()
     {
         throw new InternalError("should not reach here");
-    }
-
-    public static ValueNode assertLong(ValueNode x)
-    {
-        return x;
-    }
-
-    public static ValueNode assertInt(ValueNode x)
-    {
-        return x;
-    }
-
-    public static ValueNode assertFloat(ValueNode x)
-    {
-        return x;
-    }
-
-    public static ValueNode assertObject(ValueNode x)
-    {
-        return x;
-    }
-
-    public static ValueNode assertDouble(ValueNode x)
-    {
-        return x;
     }
 
     @SuppressWarnings("unchecked")
@@ -89,5 +58,11 @@ public class ValueNodeUtil
         {
             return node.asNode();
         }
+    }
+
+    // @cons
+    private ValueNodeUtil()
+    {
+        super();
     }
 }

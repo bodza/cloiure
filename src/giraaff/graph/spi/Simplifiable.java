@@ -8,6 +8,7 @@ package giraaff.graph.spi;
  * {@link SimplifierTool#addToWorkList(giraaff.graph.Node)} for each node that might be
  * influenced (in terms of simplification and canonicalization) by the actions performed in simplify.
  */
+// @iface Simplifiable
 public interface Simplifiable
 {
     void simplify(SimplifierTool tool);

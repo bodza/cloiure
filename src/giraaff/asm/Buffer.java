@@ -7,12 +7,15 @@ import java.util.Arrays;
 /**
  * Code buffer management for the assembler.
  */
+// @class Buffer
 final class Buffer
 {
     protected ByteBuffer data;
 
+    // @cons
     Buffer(ByteOrder order)
     {
+        super();
         data = ByteBuffer.allocate(AsmOptions.InitialCodeBufferSize);
         data.order(order);
     }

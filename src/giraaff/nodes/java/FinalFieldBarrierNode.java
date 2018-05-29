@@ -13,12 +13,14 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-public class FinalFieldBarrierNode extends FixedWithNextNode implements Virtualizable, Lowerable
+// @class FinalFieldBarrierNode
+public final class FinalFieldBarrierNode extends FixedWithNextNode implements Virtualizable, Lowerable
 {
     public static final NodeClass<FinalFieldBarrierNode> TYPE = NodeClass.create(FinalFieldBarrierNode.class);
 
     @OptionalInput private ValueNode value;
 
+    // @cons
     public FinalFieldBarrierNode(ValueNode value)
     {
         super(TYPE, StampFactory.forVoid());

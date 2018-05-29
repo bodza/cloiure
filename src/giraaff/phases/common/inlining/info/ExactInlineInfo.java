@@ -13,12 +13,14 @@ import giraaff.phases.util.Providers;
  * Represents an inlining opportunity where the compiler can statically determine a monomorphic
  * target method and therefore is able to determine the called method exactly.
  */
+// @class ExactInlineInfo
 public class ExactInlineInfo extends AbstractInlineInfo
 {
     protected final ResolvedJavaMethod concrete;
     private Inlineable inlineableElement;
     private boolean suppressNullCheck;
 
+    // @cons
     public ExactInlineInfo(Invoke invoke, ResolvedJavaMethod concrete)
     {
         super(invoke);

@@ -19,6 +19,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * The {@code StoreIndexedNode} represents a write to an array element.
  */
+// @class StoreIndexedNode
 public final class StoreIndexedNode extends AccessIndexedNode implements StateSplit, Lowerable, Virtualizable
 {
     public static final NodeClass<StoreIndexedNode> TYPE = NodeClass.create(StoreIndexedNode.class);
@@ -50,6 +51,7 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
         return value;
     }
 
+    // @cons
     public StoreIndexedNode(ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value)
     {
         super(TYPE, StampFactory.forVoid(), array, index, elementKind);

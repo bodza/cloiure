@@ -9,6 +9,7 @@ import giraaff.nodes.FloatingGuardedNode;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.memory.address.AddressNode;
 
+// @class FloatingAccessNode
 public abstract class FloatingAccessNode extends FloatingGuardedNode implements Access, MemoryAccess
 {
     public static final NodeClass<FloatingAccessNode> TYPE = NodeClass.create(FloatingAccessNode.class);
@@ -18,6 +19,7 @@ public abstract class FloatingAccessNode extends FloatingGuardedNode implements 
 
     protected BarrierType barrierType;
 
+    // @cons
     protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp)
     {
         super(c, stamp);
@@ -25,6 +27,7 @@ public abstract class FloatingAccessNode extends FloatingGuardedNode implements 
         this.location = location;
     }
 
+    // @cons
     protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType)
     {
         super(c, stamp, guard);

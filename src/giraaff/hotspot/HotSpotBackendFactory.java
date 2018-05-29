@@ -5,6 +5,7 @@ import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 
 import giraaff.phases.tiers.CompilerConfiguration;
 
+// @iface HotSpotBackendFactory
 public interface HotSpotBackendFactory
 {
     /**

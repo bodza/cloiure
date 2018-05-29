@@ -5,18 +5,22 @@ import java.util.Iterator;
 /**
  * Iterates over the nodes in a given graph.
  */
-class GraphNodeIterator implements Iterator<Node>
+// @class GraphNodeIterator
+final class GraphNodeIterator implements Iterator<Node>
 {
     private final Graph graph;
     private int index;
 
+    // @cons
     GraphNodeIterator(Graph graph)
     {
         this(graph, 0);
     }
 
+    // @cons
     GraphNodeIterator(Graph graph, int index)
     {
+        super();
         this.graph = graph;
         this.index = index - 1;
         forward();

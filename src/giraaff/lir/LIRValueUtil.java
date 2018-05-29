@@ -11,6 +11,7 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
 
+// @class LIRValueUtil
 public final class LIRValueUtil
 {
     public static boolean isVariable(Value value)

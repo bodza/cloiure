@@ -25,18 +25,21 @@ import giraaff.nodes.virtual.VirtualBoxingNode;
  * This node represents the boxing of a primitive value. This corresponds to a call to the valueOf
  * methods in Integer, Long, etc.
  */
-public class BoxNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Canonicalizable.Unary<ValueNode>
+// @class BoxNode
+public final class BoxNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<BoxNode> TYPE = NodeClass.create(BoxNode.class);
 
     @Input private ValueNode value;
     protected final JavaKind boxingKind;
 
+    // @cons
     public BoxNode(ValueNode value, ResolvedJavaType resultType, JavaKind boxingKind)
     {
         this(TYPE, value, resultType, boxingKind);
     }
 
+    // @cons
     public BoxNode(NodeClass<? extends BoxNode> c, ValueNode value, ResolvedJavaType resultType, JavaKind boxingKind)
     {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(resultType)));

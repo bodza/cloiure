@@ -12,6 +12,7 @@ import giraaff.lir.LIRInstruction;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.lir.framemap.FrameMapBuilder;
 
+// @class LIRGenerationResult
 public class LIRGenerationResult
 {
     private final LIR lir;
@@ -32,8 +33,10 @@ public class LIRGenerationResult
      */
     private EconomicMap<LIRInstruction, String> comments;
 
+    // @cons
     public LIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention)
     {
+        super();
         this.lir = lir;
         this.frameMapBuilder = frameMapBuilder;
         this.callingConvention = callingConvention;

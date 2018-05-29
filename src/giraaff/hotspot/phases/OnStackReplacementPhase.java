@@ -48,9 +48,11 @@ import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.util.GraalError;
 
-public class OnStackReplacementPhase extends Phase
+// @class OnStackReplacementPhase
+public final class OnStackReplacementPhase extends Phase
 {
-    public static class Options
+    // @class OnStackReplacementPhase.Options
+    public static final class Options
     {
         // @Option "Deoptimize OSR compiled code when the OSR entry loop is finished if there is no mature profile available for the rest of the method."
         public static final OptionKey<Boolean> DeoptAfterOSR = new OptionKey<>(true);
@@ -61,6 +63,12 @@ public class OnStackReplacementPhase extends Phase
     private static boolean supportOSRWithLocks(OptionValues options)
     {
         return Options.SupportOSRWithLocks.getValue(options);
+    }
+
+    // @cons
+    public OnStackReplacementPhase()
+    {
+        super();
     }
 
     @Override
@@ -275,14 +283,17 @@ public class OnStackReplacementPhase extends Phase
         return osr.stateAfter().locksSize() != 0;
     }
 
-    private static class OSRLocalSpeculationReason implements SpeculationLog.SpeculationReason
+    // @class OnStackReplacementPhase.OSRLocalSpeculationReason
+    private static final class OSRLocalSpeculationReason implements SpeculationLog.SpeculationReason
     {
         private int bci;
         private Stamp speculatedStamp;
         private int localIndex;
 
+        // @cons
         OSRLocalSpeculationReason(int bci, Stamp speculatedStamp, int localIndex)
         {
+            super();
             this.bci = bci;
             this.speculatedStamp = speculatedStamp;
             this.localIndex = localIndex;

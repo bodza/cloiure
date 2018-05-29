@@ -4,12 +4,14 @@ import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.util.Providers;
 
-public class HighTierContext extends PhaseContext
+// @class HighTierContext
+public final class HighTierContext extends PhaseContext
 {
     private final PhaseSuite<HighTierContext> graphBuilderSuite;
 
     private final OptimisticOptimizations optimisticOpts;
 
+    // @cons
     public HighTierContext(Providers providers, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts)
     {
         super(providers);

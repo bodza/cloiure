@@ -23,13 +23,16 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * untrusted interface types. Examples for interface types that cannot be trusted are types for
  * parameters, fields, and return values. They are not checked by the Java verifier.
  */
+// @class TypeReference
 public final class TypeReference
 {
     private final ResolvedJavaType type;
     private final boolean exactReference;
 
+    // @cons
     private TypeReference(ResolvedJavaType type, boolean exactReference)
     {
+        super();
         this.type = type;
         this.exactReference = exactReference;
     }

@@ -10,7 +10,8 @@ import giraaff.core.common.spi.ConstantFieldProvider.ConstantFieldTool;
 import giraaff.nodes.ConstantNode;
 import giraaff.options.OptionValues;
 
-public class ConstantFoldUtil
+// @class ConstantFoldUtil
+public final class ConstantFoldUtil
 {
     public static ConstantNode tryConstantFold(ConstantFieldProvider fieldProvider, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, ResolvedJavaField field, JavaConstant receiver, OptionValues options)
     {
@@ -68,5 +69,11 @@ public class ConstantFoldUtil
                 return options;
             }
         });
+    }
+
+    // @cons
+    private ConstantFoldUtil()
+    {
+        super();
     }
 }

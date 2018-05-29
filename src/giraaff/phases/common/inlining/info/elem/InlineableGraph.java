@@ -32,14 +32,17 @@ import giraaff.phases.tiers.HighTierContext;
  * @see giraaff.phases.common.inlining.walker.InliningData#moveForward()
  * @see giraaff.phases.common.inlining.walker.CallsiteHolderExplorable
  */
-public class InlineableGraph implements Inlineable
+// @class InlineableGraph
+public final class InlineableGraph implements Inlineable
 {
     private final StructuredGraph graph;
 
     private FixedNodeProbabilityCache probabilites = new FixedNodeProbabilityCache();
 
+    // @cons
     public InlineableGraph(final ResolvedJavaMethod method, final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer)
     {
+        super();
         StructuredGraph original = getOriginalGraph(method, context, canonicalizer, invoke.asNode().graph(), invoke.bci());
         // TODO copying the graph is only necessary if it is modified or if it contains any invokes
         this.graph = (StructuredGraph) original.copy();

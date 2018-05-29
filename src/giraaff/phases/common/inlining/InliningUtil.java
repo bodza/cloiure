@@ -72,7 +72,8 @@ import giraaff.phases.common.util.HashSetNodeEventListener;
 import giraaff.phases.util.ValueMergeUtil;
 import giraaff.util.GraalError;
 
-public class InliningUtil extends ValueMergeUtil
+// @class InliningUtil
+public final class InliningUtil extends ValueMergeUtil
 {
     public static void replaceInvokeCallTarget(Invoke invoke, StructuredGraph graph, InvokeKind invokeKind, ResolvedJavaMethod targetMethod)
     {
@@ -777,5 +778,11 @@ public class InliningUtil extends ValueMergeUtil
     public static int getNodeCount(StructuredGraph graph)
     {
         return graph.getNodeCount();
+    }
+
+    // @cons
+    private InliningUtil()
+    {
+        super();
     }
 }

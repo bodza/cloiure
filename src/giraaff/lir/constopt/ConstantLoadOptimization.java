@@ -33,9 +33,11 @@ import giraaff.options.NestedBooleanOptionKey;
  * a constant, which is potentially scheduled into a block with high probability, with one or more
  * definitions in blocks with a lower probability.
  */
+// @class ConstantLoadOptimization
 public final class ConstantLoadOptimization extends PreAllocationOptimizationPhase
 {
-    public static class Options
+    // @class ConstantLoadOptimization.Options
+    public static final class Options
     {
         // @Option "Enable constant load optimization."
         public static final NestedBooleanOptionKey LIROptConstantLoadOptimization = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
@@ -48,6 +50,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         new Optimization(lirGenRes.getLIR(), lirGen).apply();
     }
 
+    // @class ConstantLoadOptimization.Optimization
     private static final class Optimization
     {
         private final LIR lir;
@@ -58,8 +61,10 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         private final BlockMap<List<UseEntry>> blockMap;
         private final BlockMap<LIRInsertionBuffer> insertionBuffers;
 
+        // @cons
         private Optimization(LIR lir, LIRGeneratorTool lirGen)
         {
+            super();
             this.lir = lir;
             this.lirGen = lirGen;
             this.map = new VariableMap<>();

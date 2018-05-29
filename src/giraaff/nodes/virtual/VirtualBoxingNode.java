@@ -9,17 +9,20 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.extended.BoxNode;
 import giraaff.nodes.spi.VirtualizerTool;
 
-public class VirtualBoxingNode extends VirtualInstanceNode
+// @class VirtualBoxingNode
+public final class VirtualBoxingNode extends VirtualInstanceNode
 {
     public static final NodeClass<VirtualBoxingNode> TYPE = NodeClass.create(VirtualBoxingNode.class);
 
     protected final JavaKind boxingKind;
 
+    // @cons
     public VirtualBoxingNode(ResolvedJavaType type, JavaKind boxingKind)
     {
         this(TYPE, type, boxingKind);
     }
 
+    // @cons
     public VirtualBoxingNode(NodeClass<? extends VirtualBoxingNode> c, ResolvedJavaType type, JavaKind boxingKind)
     {
         super(c, type, false);

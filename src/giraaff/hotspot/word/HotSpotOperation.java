@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface HotSpotOperation
 {
+    // @enum HotSpotOperation.HotspotOpcode
     enum HotspotOpcode
     {
         FROM_POINTER,

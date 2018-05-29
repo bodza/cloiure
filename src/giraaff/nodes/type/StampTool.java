@@ -19,7 +19,8 @@ import giraaff.nodes.ValueNode;
 /**
  * Helper class that is used to keep all stamp-related operations in one place.
  */
-public class StampTool
+// @class StampTool
+public final class StampTool
 {
     public static Stamp meet(Iterable<? extends ValueNode> values)
     {
@@ -277,5 +278,11 @@ public class StampTool
             return ((AbstractObjectStamp) stamp).isExactType();
         }
         return false;
+    }
+
+    // @cons
+    private StampTool()
+    {
+        super();
     }
 }

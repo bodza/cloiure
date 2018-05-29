@@ -13,6 +13,7 @@ import giraaff.nodes.util.GraphUtil;
  * that reads the array length, such as an {@link ArrayLengthNode}, can be canonicalized based on
  * this information.
  */
+// @class PiArrayNode
 public final class PiArrayNode extends PiNode implements ArrayLengthProvider
 {
     public static final NodeClass<PiArrayNode> TYPE = NodeClass.create(PiArrayNode.class);
@@ -25,6 +26,7 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
         return length;
     }
 
+    // @cons
     public PiArrayNode(ValueNode object, ValueNode length, Stamp stamp)
     {
         super(TYPE, object, stamp, null);
@@ -51,12 +53,14 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
      * A placeholder node in a snippet that will be replaced with a {@link PiArrayNode} when the
      * snippet is instantiated.
      */
-    public static class Placeholder extends PiNode.Placeholder
+    // @class PiArrayNode.Placeholder
+    public static final class Placeholder extends PiNode.Placeholder
     {
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
 
         @Input ValueNode length;
 
+        // @cons
         protected Placeholder(ValueNode object, ValueNode length)
         {
             super(TYPE, object);

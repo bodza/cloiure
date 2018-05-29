@@ -30,15 +30,18 @@ import giraaff.util.GraalError;
 /**
  * Reads an {@linkplain FixedAccessNode accessed} value.
  */
-public class ReadNode extends FloatableAccessNode implements LIRLowerableAccess, Canonicalizable, Virtualizable, GuardingNode
+// @class ReadNode
+public final class ReadNode extends FloatableAccessNode implements LIRLowerableAccess, Canonicalizable, Virtualizable, GuardingNode
 {
     public static final NodeClass<ReadNode> TYPE = NodeClass.create(ReadNode.class);
 
+    // @cons
     public ReadNode(AddressNode address, LocationIdentity location, Stamp stamp, BarrierType barrierType)
     {
         this(TYPE, address, location, stamp, null, barrierType, false, null);
     }
 
+    // @cons
     protected ReadNode(NodeClass<? extends ReadNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck, FrameState stateBefore)
     {
         super(c, address, location, stamp, guard, barrierType, nullCheck, stateBefore);

@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 
 import giraaff.graph.iterators.NodeIterable;
 
+// @class NodeBitMap
 public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Node>
 {
     private static final int SHIFT = 6;
@@ -15,6 +16,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     private int nodeCount;
     private int counter;
 
+    // @cons
     public NodeBitMap(Graph graph)
     {
         super(graph);
@@ -32,6 +34,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
         return counter;
     }
 
+    // @cons
     private NodeBitMap(NodeBitMap other)
     {
         super(other.graph);
@@ -241,13 +244,16 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
      * This iterator only returns nodes that are marked in the {@link NodeBitMap} and are alive in
      * the corresponding {@link Graph}.
      */
-    private class MarkedNodeIterator implements Iterator<Node>
+    // @class NodeBitMap.MarkedNodeIterator
+    private final class MarkedNodeIterator implements Iterator<Node>
     {
         private int currentNodeId;
         private Node currentNode;
 
+        // @cons
         MarkedNodeIterator()
         {
+            super();
             currentNodeId = -1;
             forward();
         }

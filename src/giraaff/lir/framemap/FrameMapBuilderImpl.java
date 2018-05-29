@@ -18,6 +18,7 @@ import giraaff.util.GraalError;
 /**
  * A FrameMapBuilder that records allocation.
  */
+// @class FrameMapBuilderImpl
 public class FrameMapBuilderImpl extends FrameMapBuilderTool
 {
     private final RegisterConfig registerConfig;
@@ -27,8 +28,10 @@ public class FrameMapBuilderImpl extends FrameMapBuilderTool
     private final List<CallingConvention> calls;
     private int numStackSlots;
 
+    // @cons
     public FrameMapBuilderImpl(FrameMap frameMap, CodeCacheProvider codeCache, RegisterConfig registerConfig)
     {
+        super();
         this.registerConfig = registerConfig == null ? codeCache.getRegisterConfig() : registerConfig;
         this.codeCache = codeCache;
         this.frameMap = frameMap;

@@ -6,6 +6,7 @@ import java.util.Locale;
 /**
  * Indicates a condition that should never occur during normal operation.
  */
+// @class GraalError
 public class GraalError extends Error
 {
     private final ArrayList<String> context = new ArrayList<>();
@@ -132,6 +133,7 @@ public class GraalError extends Error
      *
      * @param msg the message that will be associated with the error
      */
+    // @cons
     public GraalError(String msg)
     {
         super(msg);
@@ -146,6 +148,7 @@ public class GraalError extends Error
      * @param args parameters to String.format - parameters that implement {@link Iterable} will be
      *            expanded into a [x, x, ...] representation.
      */
+    // @cons
     public GraalError(String msg, Object... args)
     {
         super(format(msg, args));
@@ -156,6 +159,7 @@ public class GraalError extends Error
      *
      * @param cause the original exception that contains additional information on this error
      */
+    // @cons
     public GraalError(Throwable cause)
     {
         super(cause);
@@ -167,6 +171,7 @@ public class GraalError extends Error
      *
      * @param e the original {@link GraalError}
      */
+    // @cons
     public GraalError(GraalError e)
     {
         super(e);

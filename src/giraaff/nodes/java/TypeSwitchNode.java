@@ -29,6 +29,7 @@ import giraaff.nodes.util.GraphUtil;
  * The {@code TypeSwitchNode} performs a lookup based on the type of the input value. The type
  * comparison is an exact type comparison, not an instanceof.
  */
+// @class TypeSwitchNode
 public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Simplifiable
 {
     public static final NodeClass<TypeSwitchNode> TYPE = NodeClass.create(TypeSwitchNode.class);
@@ -36,6 +37,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
     protected final ResolvedJavaType[] keys;
     protected final Constant[] hubs;
 
+    // @cons
     public TypeSwitchNode(ValueNode value, AbstractBeginNode[] successors, ResolvedJavaType[] keys, double[] keyProbabilities, int[] keySuccessors, ConstantReflectionProvider constantReflection)
     {
         super(TYPE, value, successors, keySuccessors, keyProbabilities);

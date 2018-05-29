@@ -29,7 +29,8 @@ import giraaff.nodes.type.StampTool;
 /**
  * The {@code InstanceOfNode} represents an instanceof test.
  */
-public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtualizable
+// @class InstanceOfNode
+public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtualizable
 {
     public static final NodeClass<InstanceOfNode> TYPE = NodeClass.create(InstanceOfNode.class);
 
@@ -38,11 +39,13 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
     private JavaTypeProfile profile;
     @OptionalInput(InputType.Anchor) protected AnchoringNode anchor;
 
+    // @cons
     private InstanceOfNode(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
     {
         this(TYPE, checkedStamp, object, profile, anchor);
     }
 
+    // @cons
     protected InstanceOfNode(NodeClass<? extends InstanceOfNode> c, ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
     {
         super(c, object);

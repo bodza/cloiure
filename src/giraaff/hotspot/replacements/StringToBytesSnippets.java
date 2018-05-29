@@ -25,7 +25,8 @@ import giraaff.util.UnsafeAccess;
 /**
  * The {@code StringToBytesSnippets} contains a snippet for lowering {@link StringToBytesNode}.
  */
-public class StringToBytesSnippets implements Snippets
+// @class StringToBytesSnippets
+public final class StringToBytesSnippets implements Snippets
 {
     public static final LocationIdentity CSTRING_LOCATION = NamedLocationIdentity.immutable("CString location");
 
@@ -49,10 +50,12 @@ public class StringToBytesSnippets implements Snippets
         return array;
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class StringToBytesSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo create;
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);

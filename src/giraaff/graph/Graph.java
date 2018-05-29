@@ -17,14 +17,17 @@ import giraaff.util.GraalError;
 /**
  * This class is a graph container, it contains the set of nodes that belong to this graph.
  */
+// @class Graph
 public class Graph
 {
-    public static class Options
+    // @class Graph.Options
+    public static final class Options
     {
         // @Option "Graal graph compression is performed when percent of live nodes falls below this value."
         public static final OptionKey<Integer> GraphCompressionThreshold = new OptionKey<>(70);
     }
 
+    // @enum Graph.FreezeState
     private enum FreezeState
     {
         Unfrozen,
@@ -98,6 +101,7 @@ public class Graph
     /**
      * Creates an empty Graph with no name.
      */
+    // @cons
     public Graph(OptionValues options)
     {
         this(null, options);
@@ -110,8 +114,10 @@ public class Graph
      *
      * @param name the name of the graph, used for debugging purposes
      */
+    // @cons
     public Graph(String name, OptionValues options)
     {
+        super();
         nodes = new Node[INITIAL_NODES_SIZE];
         iterableNodesFirst = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
         iterableNodesLast = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
@@ -274,6 +280,7 @@ public class Graph
         return addHelper(node);
     }
 
+    // @class Graph.AddInputsFilter
     private final class AddInputsFilter extends Node.EdgeVisitor
     {
         @Override
@@ -306,6 +313,7 @@ public class Graph
     /**
      * The type of events sent to a {@link NodeEventListener}.
      */
+    // @enum Graph.NodeEvent
     public enum NodeEvent
     {
         /**
@@ -332,6 +340,7 @@ public class Graph
     /**
      * Client interested in one or more node related events.
      */
+    // @class Graph.NodeEventListener
     public abstract static class NodeEventListener
     {
         /**
@@ -412,10 +421,13 @@ public class Graph
      * Registers a given {@link NodeEventListener} with the enclosing graph until this object is
      * {@linkplain #close() closed}.
      */
+    // @class Graph.NodeEventScope
     public final class NodeEventScope implements AutoCloseable
     {
+        // @cons
         NodeEventScope(NodeEventListener listener)
         {
+            super();
             if (nodeEventListener == null)
             {
                 nodeEventListener = listener;
@@ -440,13 +452,16 @@ public class Graph
         }
     }
 
-    private static class ChainedNodeEventListener extends NodeEventListener
+    // @class Graph.ChainedNodeEventListener
+    private static final class ChainedNodeEventListener extends NodeEventListener
     {
         NodeEventListener head;
         NodeEventListener next;
 
+        // @cons
         ChainedNodeEventListener(NodeEventListener head, NodeEventListener next)
         {
+            super();
             this.head = head;
             this.next = next;
         }
@@ -642,10 +657,12 @@ public class Graph
     /**
      * A snapshot of the {@linkplain Graph#getNodeCount() live node count} in a graph.
      */
-    public static class Mark extends NodeIdAccessor
+    // @class Graph.Mark
+    public static final class Mark extends NodeIdAccessor
     {
         private final int value;
 
+        // @cons
         Mark(Graph graph)
         {
             super(graph);
@@ -743,10 +760,12 @@ public class Graph
         };
     }
 
+    // @class Graph.PlaceHolderNode
     static final class PlaceHolderNode extends Node
     {
         public static final NodeClass<PlaceHolderNode> TYPE = NodeClass.create(PlaceHolderNode.class);
 
+        // @cons
         protected PlaceHolderNode()
         {
             super(TYPE);
@@ -1054,17 +1073,21 @@ public class Graph
         return addDuplicates(newNodes, oldGraph, estimatedNodeCount, replacements);
     }
 
+    // @iface Graph.DuplicationReplacement
     public interface DuplicationReplacement
     {
         Node replacement(Node original);
     }
 
+    // @class Graph.MapReplacement
     private static final class MapReplacement implements DuplicationReplacement
     {
         private final EconomicMap<Node, Node> map;
 
+        // @cons
         MapReplacement(EconomicMap<Node, Node> map)
         {
+            super();
             this.map = map;
         }
 

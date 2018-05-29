@@ -74,6 +74,7 @@ import giraaff.util.GraalError;
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
  */
+// @class NodeLIRBuilder
 public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 {
     private final NodeMap<Value> nodeOperands;
@@ -83,8 +84,10 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     private ValueNode currentInstruction;
 
+    // @cons
     public NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
+        super();
         this.gen = (LIRGenerator) gen;
         this.nodeOperands = graph.createNodeMap();
         this.lockStackHolder = createLockStackHolder();

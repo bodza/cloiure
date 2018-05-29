@@ -7,6 +7,7 @@ import java.util.List;
 
 import giraaff.graph.Node;
 
+// @iface NodeIterable
 public interface NodeIterable<T extends Node> extends Iterable<T>
 {
     @SuppressWarnings("unchecked")

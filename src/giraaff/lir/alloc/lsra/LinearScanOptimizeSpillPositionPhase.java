@@ -15,12 +15,15 @@ import giraaff.lir.alloc.lsra.Interval.SpillState;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 
+// @class LinearScanOptimizeSpillPositionPhase
 public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAllocationPhase
 {
     private final LinearScan allocator;
 
+    // @cons
     LinearScanOptimizeSpillPositionPhase(LinearScan allocator)
     {
+        super();
         this.allocator = allocator;
     }
 
@@ -141,13 +144,16 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
     /**
      * Iterate over all {@link AbstractBlockBase blocks} of an interval.
      */
-    private class IntervalBlockIterator implements Iterator<AbstractBlockBase<?>>
+    // @class LinearScanOptimizeSpillPositionPhase.IntervalBlockIterator
+    private final class IntervalBlockIterator implements Iterator<AbstractBlockBase<?>>
     {
         Range range;
         AbstractBlockBase<?> block;
 
+        // @cons
         IntervalBlockIterator(Interval interval)
         {
+            super();
             range = interval.first();
             block = allocator.blockForId(range.from);
         }

@@ -18,6 +18,7 @@ import giraaff.util.GraalError;
 /**
  * The {@code SwitchNode} class is the base of both lookup and table switches.
  */
+// @class SwitchNode
 public abstract class SwitchNode extends ControlSplitNode
 {
     public static final NodeClass<SwitchNode> TYPE = NodeClass.create(SwitchNode.class);
@@ -35,6 +36,7 @@ public abstract class SwitchNode extends ControlSplitNode
      * @param value the instruction that provides the value to be switched over
      * @param successors the list of successors of this switch
      */
+    // @cons
     protected SwitchNode(NodeClass<? extends SwitchNode> c, ValueNode value, AbstractBeginNode[] successors, int[] keySuccessors, double[] keyProbabilities)
     {
         super(c, StampFactory.forVoid());

@@ -7,7 +7,8 @@ import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 
 @ClassSubstitution(className = "java.math.BigInteger", optional = true)
-public class BigIntegerSubstitutions
+// @class BigIntegerSubstitutions
+public final class BigIntegerSubstitutions
 {
     @MethodSubstitution(isStatic = false)
     static int[] multiplyToLen(@SuppressWarnings("unused") Object receiver, int[] x, int xlen, int[] y, int ylen, int[] zIn)
@@ -68,5 +69,11 @@ public class BigIntegerSubstitutions
     {
         HotSpotBackend.implSquareToLen(HotSpotReplacementsUtil.arrayStart(x), len, HotSpotReplacementsUtil.arrayStart(z), zLen);
         return z;
+    }
+
+    // @cons
+    private BigIntegerSubstitutions()
+    {
+        super();
     }
 }

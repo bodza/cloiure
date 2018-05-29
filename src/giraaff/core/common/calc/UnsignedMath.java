@@ -4,7 +4,8 @@ package giraaff.core.common.calc;
  * Utilities for unsigned comparisons. All methods have correct, but slow, standard Java
  * implementations so that they can be used with compilers not supporting the intrinsics.
  */
-public class UnsignedMath
+// @class UnsignedMath
+public final class UnsignedMath
 {
     /**
      * Unsigned comparison aboveThan for two numbers.
@@ -68,5 +69,11 @@ public class UnsignedMath
     public static boolean belowOrEqual(long a, long b)
     {
         return Long.compareUnsigned(a, b) <= 0;
+    }
+
+    // @cons
+    private UnsignedMath()
+    {
+        super();
     }
 }

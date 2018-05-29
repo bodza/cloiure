@@ -34,12 +34,14 @@ import giraaff.options.OptionValues;
 /**
  * The {@code LoadFieldNode} represents a read of a static or instance field.
  */
+// @class LoadFieldNode
 public final class LoadFieldNode extends AccessFieldNode implements Canonicalizable.Unary<ValueNode>, Virtualizable, UncheckedInterfaceProvider
 {
     public static final NodeClass<LoadFieldNode> TYPE = NodeClass.create(LoadFieldNode.class);
 
     private final Stamp uncheckedStamp;
 
+    // @cons
     protected LoadFieldNode(StampPair stamp, ValueNode object, ResolvedJavaField field)
     {
         super(TYPE, stamp.getTrustedStamp(), object, field);

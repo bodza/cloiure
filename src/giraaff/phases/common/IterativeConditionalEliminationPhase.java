@@ -10,15 +10,18 @@ import giraaff.phases.BasePhase;
 import giraaff.phases.common.util.HashSetNodeEventListener;
 import giraaff.phases.tiers.PhaseContext;
 
-public class IterativeConditionalEliminationPhase extends BasePhase<PhaseContext>
+// @class IterativeConditionalEliminationPhase
+public final class IterativeConditionalEliminationPhase extends BasePhase<PhaseContext>
 {
     private static final int MAX_ITERATIONS = 256;
 
     private final CanonicalizerPhase canonicalizer;
     private final boolean fullSchedule;
 
+    // @cons
     public IterativeConditionalEliminationPhase(CanonicalizerPhase canonicalizer, boolean fullSchedule)
     {
+        super();
         this.canonicalizer = canonicalizer;
         this.fullSchedule = fullSchedule;
     }

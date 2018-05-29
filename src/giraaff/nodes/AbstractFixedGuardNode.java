@@ -13,6 +13,7 @@ import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.util.GraphUtil;
 
+// @class AbstractFixedGuardNode
 public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNode implements Simplifiable, GuardingNode, DeoptimizingGuard
 {
     public static final NodeClass<AbstractFixedGuardNode> TYPE = NodeClass.create(AbstractFixedGuardNode.class);
@@ -42,6 +43,7 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
         this.negated = negated;
     }
 
+    // @cons
     protected AbstractFixedGuardNode(NodeClass<? extends AbstractFixedGuardNode> c, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
     {
         super(c, StampFactory.forVoid());

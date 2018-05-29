@@ -11,6 +11,7 @@ import giraaff.lir.LIRInstruction.OperandMode;
  * Non-modifying version of {@link ValueProcedure}.
  */
 @FunctionalInterface
+// @iface ValueConsumer
 public interface ValueConsumer extends InstructionValueConsumer
 {
     /**

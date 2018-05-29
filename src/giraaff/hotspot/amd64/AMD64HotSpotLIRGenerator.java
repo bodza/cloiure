@@ -70,20 +70,24 @@ import giraaff.util.GraalError;
 /**
  * LIR generator specialized for AMD64 HotSpot.
  */
-public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSpotLIRGenerator
+// @class AMD64HotSpotLIRGenerator
+public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSpotLIRGenerator
 {
     private HotSpotLockStackHolder lockStackHolder;
 
+    // @cons
     protected AMD64HotSpotLIRGenerator(HotSpotProviders providers, LIRGenerationResult lirGenRes)
     {
         this(providers, lirGenRes, new BackupSlotProvider(lirGenRes.getFrameMapBuilder()));
     }
 
+    // @cons
     private AMD64HotSpotLIRGenerator(HotSpotProviders providers, LIRGenerationResult lirGenRes, BackupSlotProvider backupSlotProvider)
     {
         this(new AMD64HotSpotLIRKindTool(), new AMD64ArithmeticLIRGenerator(), new AMD64HotSpotMoveFactory(backupSlotProvider), providers, lirGenRes);
     }
 
+    // @cons
     protected AMD64HotSpotLIRGenerator(LIRKindTool lirKindTool, AMD64ArithmeticLIRGenerator arithmeticLIRGen, MoveFactory moveFactory, HotSpotProviders providers, LIRGenerationResult lirGenRes)
     {
         super(lirKindTool, arithmeticLIRGen, moveFactory, providers, lirGenRes);
@@ -98,7 +102,8 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     /**
      * Utility for emitting the instruction to save RBP.
      */
-    class SaveRbp
+    // @class AMD64HotSpotLIRGenerator.SaveRbp
+    final class SaveRbp
     {
         final NoOp placeholder;
 
@@ -107,8 +112,10 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
          */
         final StackSlot reservedSlot;
 
+        // @cons
         SaveRbp(NoOp placeholder)
         {
+            super();
             this.placeholder = placeholder;
             AMD64FrameMapBuilder frameMapBuilder = (AMD64FrameMapBuilder) getResult().getFrameMapBuilder();
             this.reservedSlot = frameMapBuilder.allocateRBPSpillSlot();
@@ -156,12 +163,14 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
      * of the stack slot might be inserted after stack slot allocation. This dummy instruction
      * ensures that the stack slot is alive and gets a real stack slot assigned.
      */
+    // @class AMD64HotSpotLIRGenerator.RescueSlotDummyOp
     private static final class RescueSlotDummyOp extends LIRInstruction
     {
         public static final LIRInstructionClass<RescueSlotDummyOp> TYPE = LIRInstructionClass.create(RescueSlotDummyOp.class);
 
         @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) private AllocatableValue slot;
 
+        // @cons
         RescueSlotDummyOp(FrameMapBuilder frameMapBuilder, LIRKind kind)
         {
             super(TYPE);

@@ -5,6 +5,7 @@ import jdk.vm.ci.code.CompilationRequest;
 /**
  * A {@link CompilationIdentifier} based on a {@link CompilationRequest}.
  */
+// @iface CompilationRequestIdentifier
 public interface CompilationRequestIdentifier extends CompilationIdentifier
 {
     CompilationRequest getRequest();

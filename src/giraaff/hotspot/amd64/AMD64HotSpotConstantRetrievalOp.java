@@ -18,6 +18,7 @@ import giraaff.lir.ValueProcedure;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
+// @class AMD64HotSpotConstantRetrievalOp
 public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotConstantRetrievalOp> TYPE = LIRInstructionClass.create(AMD64HotSpotConstantRetrievalOp.class);
@@ -33,12 +34,15 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
     private final ForeignCallLinkage callLinkage;
     private final Object[] notes;
 
-    private class CollectTemporaries implements ValueProcedure
+    // @class AMD64HotSpotConstantRetrievalOp.CollectTemporaries
+    private final class CollectTemporaries implements ValueProcedure
     {
         ArrayList<Value> values = new ArrayList<>();
 
+        // @cons
         CollectTemporaries()
         {
+            super();
             forEachTemp(this);
         }
 
@@ -56,6 +60,7 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         }
     }
 
+    // @cons
     public AMD64HotSpotConstantRetrievalOp(Constant[] constants, AllocatableValue[] constantDescriptions, LIRFrameState state, ForeignCallLinkage callLinkage, Object[] notes)
     {
         super(TYPE);

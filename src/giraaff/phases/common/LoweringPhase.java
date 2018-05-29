@@ -51,14 +51,17 @@ import giraaff.util.GraalError;
 /**
  * Processes all {@link Lowerable} nodes to do their lowering.
  */
-public class LoweringPhase extends BasePhase<PhaseContext>
+// @class LoweringPhase
+public final class LoweringPhase extends BasePhase<PhaseContext>
 {
+    // @class LoweringPhase.DummyGuardHandle
     static final class DummyGuardHandle extends ValueNode implements GuardedNode
     {
         public static final NodeClass<DummyGuardHandle> TYPE = NodeClass.create(DummyGuardHandle.class);
 
         @Input(InputType.Guard) GuardingNode guard;
 
+        // @cons
         protected DummyGuardHandle(GuardingNode guard)
         {
             super(TYPE, StampFactory.forVoid());
@@ -85,6 +88,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         }
     }
 
+    // @class LoweringPhase.LoweringToolImpl
     final class LoweringToolImpl implements LoweringTool
     {
         private final PhaseContext context;
@@ -92,8 +96,10 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         private AnchoringNode guardAnchor;
         private FixedWithNextNode lastFixedNode;
 
+        // @cons
         LoweringToolImpl(PhaseContext context, AnchoringNode guardAnchor, NodeBitMap activeGuards, FixedWithNextNode lastFixedNode)
         {
+            super();
             this.context = context;
             this.guardAnchor = guardAnchor;
             this.activeGuards = activeGuards;
@@ -204,8 +210,10 @@ public class LoweringPhase extends BasePhase<PhaseContext>
     private final CanonicalizerPhase canonicalizer;
     private final LoweringTool.LoweringStage loweringStage;
 
+    // @cons
     public LoweringPhase(CanonicalizerPhase canonicalizer, LoweringTool.LoweringStage loweringStage)
     {
+        super();
         this.canonicalizer = canonicalizer;
         this.loweringStage = loweringStage;
     }
@@ -236,12 +244,14 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         incrementalCanonicalizer.apply(graph, context);
     }
 
+    // @enum LoweringPhase.LoweringMode
     private enum LoweringMode
     {
         LOWERING,
         VERIFY_LOWERING
     }
 
+    // @class LoweringPhase.Round
     private final class Round extends Phase
     {
         private final PhaseContext context;
@@ -249,8 +259,10 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         private ScheduleResult schedule;
         private final SchedulePhase schedulePhase;
 
+        // @cons
         private Round(PhaseContext context, LoweringMode mode, OptionValues options)
         {
+            super();
             this.context = context;
             this.mode = mode;
 
@@ -288,11 +300,13 @@ public class LoweringPhase extends BasePhase<PhaseContext>
             LoweringPhase.processBlock(rootFrame);
         }
 
-        private class ProcessFrame extends Frame<ProcessFrame>
+        // @class LoweringPhase.Round.ProcessFrame
+        private final class ProcessFrame extends Frame<ProcessFrame>
         {
             private final NodeBitMap activeGuards;
             private AnchoringNode anchor;
 
+            // @cons
             ProcessFrame(Block block, NodeBitMap activeGuards, AnchoringNode anchor, ProcessFrame parent)
             {
                 super(block, parent);
@@ -431,6 +445,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         }
     }
 
+    // @enum LoweringPhase.ProcessBlockState
     enum ProcessBlockState
     {
         ST_ENTER,
@@ -627,6 +642,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         }
     }
 
+    // @class LoweringPhase.Frame
     public abstract static class Frame<T extends Frame<?>>
     {
         protected final Block block;
@@ -634,8 +650,10 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         Block dominated;
         final Block alwaysReachedBlock;
 
+        // @cons
         public Frame(Block block, T parent)
         {
+            super();
             this.block = block;
             this.alwaysReachedBlock = block.getPostdominator();
             this.dominated = block.getFirstDominated();

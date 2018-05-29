@@ -18,6 +18,7 @@ import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstruction.OperandMode;
 
+// @class AMD64AddressValue
 public final class AMD64AddressValue extends CompositeValue
 {
     @Component({OperandFlag.REG, OperandFlag.ILLEGAL}) protected AllocatableValue base;
@@ -27,11 +28,13 @@ public final class AMD64AddressValue extends CompositeValue
 
     private static final EnumSet<OperandFlag> flags = EnumSet.of(OperandFlag.REG, OperandFlag.ILLEGAL);
 
+    // @cons
     public AMD64AddressValue(ValueKind<?> kind, AllocatableValue base, int displacement)
     {
         this(kind, base, Value.ILLEGAL, Scale.Times1, displacement);
     }
 
+    // @cons
     public AMD64AddressValue(ValueKind<?> kind, AllocatableValue base, AllocatableValue index, Scale scale, int displacement)
     {
         super(kind);

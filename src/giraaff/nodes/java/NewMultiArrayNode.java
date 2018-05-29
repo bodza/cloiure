@@ -16,7 +16,8 @@ import giraaff.nodes.spi.LoweringTool;
 /**
  * The {@code NewMultiArrayNode} represents an allocation of a multi-dimensional object array.
  */
-public class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements Lowerable, ArrayLengthProvider
+// @class NewMultiArrayNode
+public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements Lowerable, ArrayLengthProvider
 {
     public static final NodeClass<NewMultiArrayNode> TYPE = NodeClass.create(NewMultiArrayNode.class);
 
@@ -38,11 +39,13 @@ public class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements 
         return dimensions;
     }
 
+    // @cons
     public NewMultiArrayNode(ResolvedJavaType type, ValueNode[] dimensions)
     {
         this(TYPE, type, dimensions);
     }
 
+    // @cons
     protected NewMultiArrayNode(NodeClass<? extends NewMultiArrayNode> c, ResolvedJavaType type, ValueNode[] dimensions)
     {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)));

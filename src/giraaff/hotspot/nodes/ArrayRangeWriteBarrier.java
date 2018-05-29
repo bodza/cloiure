@@ -6,6 +6,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.Lowerable;
 
+// @class ArrayRangeWriteBarrier
 public abstract class ArrayRangeWriteBarrier extends WriteBarrier implements Lowerable
 {
     public static final NodeClass<ArrayRangeWriteBarrier> TYPE = NodeClass.create(ArrayRangeWriteBarrier.class);
@@ -15,6 +16,7 @@ public abstract class ArrayRangeWriteBarrier extends WriteBarrier implements Low
 
     private final int elementStride;
 
+    // @cons
     protected ArrayRangeWriteBarrier(NodeClass<? extends ArrayRangeWriteBarrier> c, AddressNode address, ValueNode length, int elementStride)
     {
         super(c);

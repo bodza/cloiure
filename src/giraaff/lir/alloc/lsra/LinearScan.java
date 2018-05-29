@@ -39,15 +39,18 @@ import giraaff.util.GraalError;
  * <a href="http://doi.acm.org/10.1145/1064979.1064998" > "Optimized Interval Splitting in a Linear
  * Scan Register Allocator"</a> by Christian Wimmer and Hanspeter Moessenboeck.
  */
+// @class LinearScan
 public class LinearScan
 {
-    public static class Options
+    // @class LinearScan.Options
+    public static final class Options
     {
         // @Option "Enable spill position optimization."
         public static final OptionKey<Boolean> LIROptLSRAOptimizeSpillPosition = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
-    public static class BlockData
+    // @class LinearScan.BlockData
+    public static final class BlockData
     {
         /**
          * Bit map specifying which operands are live upon entry to this block. These are values
@@ -147,8 +150,10 @@ public class LinearScan
     public final Range rangeEndMarker;
     private final LIRGenerationResult res;
 
+    // @cons
     protected LinearScan(TargetDescription target, LIRGenerationResult res, MoveFactory spillMoveFactory, RegisterAllocationConfig regAllocConfig, AbstractBlockBase<?>[] sortedBlocks, boolean neverSpillConstants)
     {
+        super();
         this.ir = res.getLIR();
         this.res = res;
         this.moveFactory = spillMoveFactory;
@@ -479,6 +484,7 @@ public class LinearScan
         return instructionForId(opId).destroysCallerSavedRegisters();
     }
 
+    // @class LinearScan.IntervalPredicate
     abstract static class IntervalPredicate
     {
         abstract boolean apply(Interval i);

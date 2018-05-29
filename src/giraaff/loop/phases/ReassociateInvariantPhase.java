@@ -10,7 +10,8 @@ import giraaff.phases.Phase;
  * Rearrange {@link BinaryArithmeticNode#isAssociative() associative binary operations} so that
  * invariant parts of the expression can move outside of the loop.
  */
-public class ReassociateInvariantPhase extends Phase
+// @class ReassociateInvariantPhase
+public final class ReassociateInvariantPhase extends Phase
 {
     @Override
     protected void run(StructuredGraph graph)

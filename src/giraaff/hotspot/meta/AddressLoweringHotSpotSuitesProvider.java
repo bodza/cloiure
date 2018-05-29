@@ -15,10 +15,12 @@ import giraaff.phases.tiers.SuitesCreator;
 /**
  * Subclass to factor out management of address lowering.
  */
-public class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesProvider
+// @class AddressLoweringHotSpotSuitesProvider
+public final class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesProvider
 {
     private final Phase addressLowering;
 
+    // @cons
     public AddressLoweringHotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntimeProvider runtime, Phase addressLowering)
     {
         super(defaultSuitesCreator, runtime);

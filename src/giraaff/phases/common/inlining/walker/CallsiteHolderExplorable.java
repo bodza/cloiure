@@ -29,6 +29,7 @@ import giraaff.phases.graph.FixedNodeProbabilityCache;
  *
  * @see InliningData#moveForward()
  */
+// @class CallsiteHolderExplorable
 public final class CallsiteHolderExplorable extends CallsiteHolder
 {
     /**
@@ -49,8 +50,10 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
     private final ToDoubleFunction<FixedNode> probabilities;
     private final ComputeInliningRelevance computeInliningRelevance;
 
+    // @cons
     public CallsiteHolderExplorable(StructuredGraph graph, double probability, double relevance, BitSet freshlyInstantiatedArguments, LinkedList<Invoke> invokes)
     {
+        super();
         this.graph = graph;
         this.probability = probability;
         this.relevance = relevance;

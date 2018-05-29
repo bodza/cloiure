@@ -21,6 +21,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * A {@code FloatConvert} converts between integers and floating point numbers according to Java semantics.
  */
+// @class FloatConvertNode
 public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ConvertNode, Lowerable, ArithmeticLIRLowerable
 {
     public static final NodeClass<FloatConvertNode> TYPE = NodeClass.create(FloatConvertNode.class);
@@ -37,6 +38,7 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
         }
     }
 
+    // @cons
     public FloatConvertNode(FloatConvert op, ValueNode input)
     {
         super(TYPE, getOps.get(op), input);

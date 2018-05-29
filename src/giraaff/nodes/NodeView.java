@@ -22,11 +22,13 @@ import giraaff.graph.spi.CanonicalizerTool;
  * }
  * </pre>
  */
+// @iface NodeView
 public interface NodeView
 {
     NodeView DEFAULT = new Default();
 
-    class Default implements NodeView
+    // @class NodeView.Default
+    final class Default implements NodeView
     {
         @Override
         public Stamp stamp(ValueNode node)

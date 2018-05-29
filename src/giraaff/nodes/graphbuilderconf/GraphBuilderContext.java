@@ -31,6 +31,7 @@ import giraaff.nodes.type.StampTool;
  * Used by a {@link GraphBuilderPlugin} to interface with an object that parses the bytecode of a
  * single {@linkplain #getMethod() method} as part of building a {@linkplain #getGraph() graph}.
  */
+// @iface GraphBuilderContext
 public interface GraphBuilderContext extends GraphBuilderTool
 {
     /**
@@ -297,6 +298,7 @@ public interface GraphBuilderContext extends GraphBuilderTool
      * keep a chain of {@link GraphBuilderContext} instances normally available through
      * {@linkplain #getParent()}. Examples of such approaches are partial evaluation and incremental inlining.
      */
+    // @iface GraphBuilderContext.ExternalInliningContext
     interface ExternalInliningContext
     {
         int getInlinedDepth();

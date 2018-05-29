@@ -5,8 +5,10 @@ import java.util.function.BiConsumer;
 /**
  * A {@linkplain PrintableCFG printable} {@link DominatorOptimizationProblem}.
  */
+// @class PrintableDominatorOptimizationProblem
 public abstract class PrintableDominatorOptimizationProblem<E extends Enum<E>, C extends PropertyConsumable> extends DominatorOptimizationProblem<E, C> implements PrintableCFG
 {
+    // @cons
     protected PrintableDominatorOptimizationProblem(Class<E> keyType, AbstractControlFlowGraph<?> cfg)
     {
         super(keyType, cfg);

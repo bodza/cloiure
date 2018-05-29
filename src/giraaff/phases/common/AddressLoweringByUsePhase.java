@@ -21,8 +21,10 @@ import giraaff.phases.Phase;
 /**
  * Created by adinn on 09/05/17.
  */
-public class AddressLoweringByUsePhase extends Phase
+// @class AddressLoweringByUsePhase
+public final class AddressLoweringByUsePhase extends Phase
 {
+    // @class AddressLoweringByUsePhase.AddressLoweringByUse
     public abstract static class AddressLoweringByUse
     {
         public abstract AddressNode lower(ValueNode use, Stamp stamp, AddressNode address);
@@ -32,8 +34,10 @@ public class AddressLoweringByUsePhase extends Phase
 
     private final AddressLoweringByUse lowering;
 
+    // @cons
     public AddressLoweringByUsePhase(AddressLoweringByUse lowering)
     {
+        super();
         this.lowering = lowering;
     }
 

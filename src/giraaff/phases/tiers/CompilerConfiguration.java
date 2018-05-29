@@ -7,6 +7,7 @@ import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizati
 import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 
+// @iface CompilerConfiguration
 public interface CompilerConfiguration
 {
     PhaseSuite<HighTierContext> createHighTier(OptionValues options);

@@ -21,10 +21,12 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.nodes.MacroStateSplitNode;
 import giraaff.util.GraalError;
 
+// @class ReflectionGetCallerClassNode
 public final class ReflectionGetCallerClassNode extends MacroStateSplitNode implements Canonicalizable, Lowerable
 {
     public static final NodeClass<ReflectionGetCallerClassNode> TYPE = NodeClass.create(ReflectionGetCallerClassNode.class);
 
+    // @cons
     public ReflectionGetCallerClassNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
     {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);

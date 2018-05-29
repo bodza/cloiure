@@ -17,12 +17,15 @@ import giraaff.code.DataSection.ZeroData;
 import giraaff.lir.asm.DataBuilder;
 import giraaff.util.GraalError;
 
-public class HotSpotDataBuilder extends DataBuilder
+// @class HotSpotDataBuilder
+public final class HotSpotDataBuilder extends DataBuilder
 {
     private final TargetDescription target;
 
+    // @cons
     public HotSpotDataBuilder(TargetDescription target)
     {
+        super();
         this.target = target;
     }
 

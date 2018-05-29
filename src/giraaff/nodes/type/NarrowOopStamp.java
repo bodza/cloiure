@@ -12,10 +12,12 @@ import giraaff.core.common.type.AbstractObjectStamp;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 
+// @class NarrowOopStamp
 public abstract class NarrowOopStamp extends AbstractObjectStamp
 {
     private final CompressEncoding encoding;
 
+    // @cons
     protected NarrowOopStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull, CompressEncoding encoding)
     {
         super(type, exactType, nonNull, alwaysNull);

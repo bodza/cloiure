@@ -29,6 +29,7 @@ import giraaff.word.WordTypes;
 /**
  * HotSpot implementation of {@link HotSpotForeignCallsProvider}.
  */
+// @class HotSpotForeignCallsProviderImpl
 public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignCallsProvider
 {
     public static final ForeignCallDescriptor OSR_MIGRATION_END = new ForeignCallDescriptor("OSR_migration_end", void.class, long.class);
@@ -43,8 +44,10 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     protected final CodeCacheProvider codeCache;
     protected final WordTypes wordTypes;
 
+    // @cons
     public HotSpotForeignCallsProviderImpl(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
     {
+        super();
         this.jvmciRuntime = jvmciRuntime;
         this.runtime = runtime;
         this.metaAccess = metaAccess;

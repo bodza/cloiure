@@ -15,13 +15,16 @@ import org.graalvm.collections.EconomicMap;
  * A {@link GraphSpeculationLog} must only be used by a single thread and is typically closely
  * coupled with a {@link StructuredGraph} (hence the name).
  */
+// @class GraphSpeculationLog
 public final class GraphSpeculationLog implements SpeculationLog
 {
     private final SpeculationLog log;
     private final EconomicMap<SpeculationReason, JavaConstant> speculations;
 
+    // @cons
     public GraphSpeculationLog(SpeculationLog log)
     {
+        super();
         this.log = log;
         this.speculations = EconomicMap.create();
     }

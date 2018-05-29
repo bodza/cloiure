@@ -12,6 +12,7 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class DynamicDeoptimizeNode
 public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implements LIRLowerable, Lowerable, Canonicalizable
 {
     public static final NodeClass<DynamicDeoptimizeNode> TYPE = NodeClass.create(DynamicDeoptimizeNode.class);
@@ -19,6 +20,7 @@ public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implemen
     @Input ValueNode actionAndReason;
     @Input ValueNode speculation;
 
+    // @cons
     public DynamicDeoptimizeNode(ValueNode actionAndReason, ValueNode speculation)
     {
         super(TYPE, null);

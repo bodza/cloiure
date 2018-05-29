@@ -23,16 +23,19 @@ import giraaff.util.GraalError;
  * A collection of machine-independent LIR operations, as well as interfaces to be implemented for
  * specific kinds or LIR operations.
  */
-public class StandardOp
+// @class StandardOp
+public final class StandardOp
 {
     /**
      * A block delimiter. Every well formed block must contain exactly one such operation and it
      * must be the last operation in the block.
      */
+    // @iface StandardOp.BlockEndOp
     public interface BlockEndOp
     {
     }
 
+    // @iface StandardOp.NullCheck
     public interface NullCheck
     {
         Value getCheckedValue();
@@ -40,6 +43,7 @@ public class StandardOp
         LIRFrameState getState();
     }
 
+    // @iface StandardOp.ImplicitNullCheck
     public interface ImplicitNullCheck
     {
         boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit);
@@ -48,6 +52,7 @@ public class StandardOp
     /**
      * LIR operation that defines the position of a label.
      */
+    // @class StandardOp.LabelOp
     public static final class LabelOp extends LIRInstruction
     {
         public static final LIRInstructionClass<LabelOp> TYPE = LIRInstructionClass.create(LabelOp.class);
@@ -67,6 +72,7 @@ public class StandardOp
         private final boolean align;
         private int numbPhis;
 
+        // @cons
         public LabelOp(Label label, boolean align)
         {
             super(TYPE);
@@ -166,7 +172,8 @@ public class StandardOp
     /**
      * LIR operation that is an unconditional jump to a {@link #destination()}.
      */
-    public static class JumpOp extends LIRInstruction implements BlockEndOp
+    // @class StandardOp.JumpOp
+    public static final class JumpOp extends LIRInstruction implements BlockEndOp
     {
         public static final LIRInstructionClass<JumpOp> TYPE = LIRInstructionClass.create(JumpOp.class);
 
@@ -176,11 +183,13 @@ public class StandardOp
 
         private final LabelRef destination;
 
+        // @cons
         public JumpOp(LabelRef destination)
         {
             this(TYPE, destination);
         }
 
+        // @cons
         protected JumpOp(LIRInstructionClass<? extends JumpOp> c, LabelRef destination)
         {
             super(c);
@@ -231,6 +240,7 @@ public class StandardOp
     /**
      * Marker interface for a LIR operation that is a conditional jump.
      */
+    // @iface StandardOp.BranchOp
     public interface BranchOp extends BlockEndOp
     {
     }
@@ -238,6 +248,7 @@ public class StandardOp
     /**
      * Marker interface for a LIR operation that moves a value to {@link #getResult()}.
      */
+    // @iface StandardOp.MoveOp
     public interface MoveOp
     {
         AllocatableValue getResult();
@@ -256,6 +267,7 @@ public class StandardOp
     /**
      * Marker interface for a LIR operation that moves some non-constant value to another location.
      */
+    // @iface StandardOp.ValueMoveOp
     public interface ValueMoveOp extends MoveOp
     {
         AllocatableValue getInput();
@@ -274,6 +286,7 @@ public class StandardOp
     /**
      * Marker interface for a LIR operation that loads a {@link #getConstant()}.
      */
+    // @iface StandardOp.LoadConstantOp
     public interface LoadConstantOp extends MoveOp
     {
         Constant getConstant();
@@ -294,6 +307,7 @@ public class StandardOp
      * {@linkplain #remove(EconomicSet) pruned} and a mapping from registers to the frame slots in
      * which they are saved can be {@linkplain #getMap(FrameMap) retrieved}.
      */
+    // @iface StandardOp.SaveRegistersOp
     public interface SaveRegistersOp
     {
         /**
@@ -324,6 +338,7 @@ public class StandardOp
      * A LIR operation that does nothing. If the operation records its position, it can be
      * subsequently {@linkplain #replace(LIR, LIRInstruction) replaced}.
      */
+    // @class StandardOp.NoOp
     public static final class NoOp extends LIRInstruction
     {
         public static final LIRInstructionClass<NoOp> TYPE = LIRInstructionClass.create(NoOp.class);
@@ -338,6 +353,7 @@ public class StandardOp
          */
         final int index;
 
+        // @cons
         public NoOp(AbstractBlockBase<?> block, int index)
         {
             super(TYPE);
@@ -368,12 +384,14 @@ public class StandardOp
     }
 
     @Opcode
+    // @class StandardOp.BlackholeOp
     public static final class BlackholeOp extends LIRInstruction
     {
         public static final LIRInstructionClass<BlackholeOp> TYPE = LIRInstructionClass.create(BlackholeOp.class);
 
         @Use({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST}) private Value value;
 
+        // @cons
         public BlackholeOp(Value value)
         {
             super(TYPE);
@@ -387,12 +405,14 @@ public class StandardOp
         }
     }
 
+    // @class StandardOp.BindToRegisterOp
     public static final class BindToRegisterOp extends LIRInstruction
     {
         public static final LIRInstructionClass<BindToRegisterOp> TYPE = LIRInstructionClass.create(BindToRegisterOp.class);
 
         @Use({OperandFlag.REG}) private Value value;
 
+        // @cons
         public BindToRegisterOp(Value value)
         {
             super(TYPE);
@@ -407,10 +427,12 @@ public class StandardOp
     }
 
     @Opcode
+    // @class StandardOp.SpillRegistersOp
     public static final class SpillRegistersOp extends LIRInstruction
     {
         public static final LIRInstructionClass<SpillRegistersOp> TYPE = LIRInstructionClass.create(SpillRegistersOp.class);
 
+        // @cons
         public SpillRegistersOp()
         {
             super(TYPE);
@@ -429,6 +451,7 @@ public class StandardOp
         }
     }
 
+    // @class StandardOp.StackMove
     public static final class StackMove extends LIRInstruction implements ValueMoveOp
     {
         public static final LIRInstructionClass<StackMove> TYPE = LIRInstructionClass.create(StackMove.class);
@@ -436,6 +459,7 @@ public class StandardOp
         @Def({OperandFlag.STACK, OperandFlag.HINT}) protected AllocatableValue result;
         @Use({OperandFlag.STACK}) protected AllocatableValue input;
 
+        // @cons
         public StackMove(AllocatableValue result, AllocatableValue input)
         {
             super(TYPE);

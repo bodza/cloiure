@@ -24,6 +24,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * Node for a {@linkplain ForeignCallDescriptor foreign} call from within a stub.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class StubForeignCallNode
 public final class StubForeignCallNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Multi
 {
     public static final NodeClass<StubForeignCallNode> TYPE = NodeClass.create(StubForeignCallNode.class);
@@ -33,6 +34,7 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
 
     protected final ForeignCallDescriptor descriptor;
 
+    // @cons
     public StubForeignCallNode(@InjectedNodeParameter ForeignCallsProvider foreignCalls, @InjectedNodeParameter Stamp stamp, ForeignCallDescriptor descriptor, ValueNode... arguments)
     {
         super(TYPE, stamp);

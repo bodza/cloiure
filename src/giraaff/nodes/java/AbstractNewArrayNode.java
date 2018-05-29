@@ -9,6 +9,7 @@ import giraaff.nodes.spi.ArrayLengthProvider;
 /**
  * The {@code AbstractNewArrayNode} is used for all 1-dimensional array allocations.
  */
+// @class AbstractNewArrayNode
 public abstract class AbstractNewArrayNode extends AbstractNewObjectNode implements ArrayLengthProvider
 {
     public static final NodeClass<AbstractNewArrayNode> TYPE = NodeClass.create(AbstractNewArrayNode.class);
@@ -21,6 +22,7 @@ public abstract class AbstractNewArrayNode extends AbstractNewObjectNode impleme
         return length;
     }
 
+    // @cons
     protected AbstractNewArrayNode(NodeClass<? extends AbstractNewArrayNode> c, Stamp stamp, ValueNode length, boolean fillContents, FrameState stateBefore)
     {
         super(c, stamp, fillContents, stateBefore);

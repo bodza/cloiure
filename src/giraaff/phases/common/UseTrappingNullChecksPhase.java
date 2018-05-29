@@ -33,9 +33,11 @@ import giraaff.options.OptionKey;
 import giraaff.phases.BasePhase;
 import giraaff.phases.tiers.LowTierContext;
 
-public class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
+// @class UseTrappingNullChecksPhase
+public final class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
 {
-    public static class Options
+    // @class UseTrappingNullChecksPhase.Options
+    public static final class Options
     {
         // @Option "Use traps for null checks instead of explicit null-checks."
         public static final OptionKey<Boolean> UseTrappingNullChecks = new OptionKey<>(true);

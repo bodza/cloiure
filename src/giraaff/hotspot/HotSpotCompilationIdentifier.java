@@ -10,12 +10,15 @@ import giraaff.util.GraalError;
 /**
  * {@link CompilationIdentifier} for a {@linkplain HotSpotCompilationRequest hotspot compilation request}.
  */
-public class HotSpotCompilationIdentifier implements CompilationRequestIdentifier
+// @class HotSpotCompilationIdentifier
+public final class HotSpotCompilationIdentifier implements CompilationRequestIdentifier
 {
     private final HotSpotCompilationRequest request;
 
+    // @cons
     public HotSpotCompilationIdentifier(HotSpotCompilationRequest request)
     {
+        super();
         this.request = request;
     }
 

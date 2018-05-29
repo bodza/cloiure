@@ -12,7 +12,8 @@ import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 @Opcode
-public class AMD64SignExtendOp extends AMD64LIRInstruction
+// @class AMD64SignExtendOp
+public final class AMD64SignExtendOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64SignExtendOp> TYPE = LIRInstructionClass.create(AMD64SignExtendOp.class);
 
@@ -23,6 +24,7 @@ public class AMD64SignExtendOp extends AMD64LIRInstruction
 
     @Use({OperandFlag.REG}) protected AllocatableValue input;
 
+    // @cons
     public AMD64SignExtendOp(OperandSize size, LIRKind resultKind, AllocatableValue input)
     {
         super(TYPE);

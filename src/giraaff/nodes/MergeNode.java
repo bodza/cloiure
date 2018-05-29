@@ -5,10 +5,12 @@ import giraaff.graph.NodeClass;
 /**
  * Denotes the merging of multiple control-flow paths.
  */
+// @class MergeNode
 public final class MergeNode extends AbstractMergeNode
 {
     public static final NodeClass<MergeNode> TYPE = NodeClass.create(MergeNode.class);
 
+    // @cons
     public MergeNode()
     {
         super(TYPE);

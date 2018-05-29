@@ -30,11 +30,13 @@ import giraaff.lir.SwitchStrategy;
 import giraaff.lir.Variable;
 import giraaff.util.GraalError;
 
+// @iface LIRGeneratorTool
 public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindFactory<LIRKind>
 {
     /**
      * Factory for creating moves.
      */
+    // @iface LIRGeneratorTool.MoveFactory
     public interface MoveFactory
     {
         /**
@@ -61,6 +63,7 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
         LIRInstruction createStackLoad(AllocatableValue result, Constant input);
     }
 
+    // @class LIRGeneratorTool.BlockScope
     abstract class BlockScope implements AutoCloseable
     {
         public abstract AbstractBlockBase<?> getCurrentBlock();

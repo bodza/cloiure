@@ -16,6 +16,7 @@ import giraaff.core.common.spi.LIRKindTool;
 import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.Stamp;
 
+// @class KlassPointerStamp
 public final class KlassPointerStamp extends MetaspacePointerStamp
 {
     private static final KlassPointerStamp KLASS = new KlassPointerStamp(false, false);
@@ -41,11 +42,13 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
         return KLASS_ALWAYS_NULL;
     }
 
+    // @cons
     private KlassPointerStamp(boolean nonNull, boolean alwaysNull)
     {
         this(nonNull, alwaysNull, null);
     }
 
+    // @cons
     private KlassPointerStamp(boolean nonNull, boolean alwaysNull, CompressEncoding encoding)
     {
         super(nonNull, alwaysNull);

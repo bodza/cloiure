@@ -1,11 +1,14 @@
 package giraaff.core.common.util;
 
+// @class UnsignedLong
 public final class UnsignedLong
 {
     private final long value;
 
+    // @cons
     public UnsignedLong(long value)
     {
+        super();
         this.value = value;
     }
 

@@ -15,6 +15,7 @@ import giraaff.word.Word.Operation;
  * checks. However, these methods use read- or write barriers. When the VM uses compressed pointers,
  * then readObject and writeObject methods access compressed pointers.
  */
+// @class BarrieredAccess
 public final class BarrieredAccess
 {
     /**

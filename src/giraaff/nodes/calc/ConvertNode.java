@@ -10,6 +10,7 @@ import giraaff.nodes.ValueNodeInterface;
 /**
  * Represents a conversion between primitive types.
  */
+// @iface ConvertNode
 public interface ConvertNode extends ValueNodeInterface
 {
     ValueNode getValue();

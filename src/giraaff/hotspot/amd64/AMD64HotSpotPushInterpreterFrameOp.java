@@ -18,6 +18,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * Pushes an interpreter frame to the stack.
  */
 @Opcode
+// @class AMD64HotSpotPushInterpreterFrameOp
 final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotPushInterpreterFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPushInterpreterFrameOp.class);
@@ -27,6 +28,7 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
     @Alive(OperandFlag.REG) AllocatableValue senderSp;
     @Alive(OperandFlag.REG) AllocatableValue initialInfo;
 
+    // @cons
     AMD64HotSpotPushInterpreterFrameOp(AllocatableValue frameSize, AllocatableValue framePc, AllocatableValue senderSp, AllocatableValue initialInfo)
     {
         super(TYPE);

@@ -46,7 +46,8 @@ import giraaff.phases.tiers.PhaseContext;
  * branch starting at an other kind of {@link ControlSplitNode}, it will only bring the
  * {@link DeoptimizeNode} as close to the {@link ControlSplitNode} as possible.
  */
-public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
+// @class ConvertDeoptimizeToGuardPhase
+public final class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
 {
     @Override
     protected void run(final StructuredGraph graph, PhaseContext context)

@@ -18,12 +18,14 @@ import giraaff.word.WordTypes;
 /**
  * Intrinsic for allocating an on-stack array of integers to hold the dimensions of a multianewarray instruction.
  */
+// @class DimensionsNode
 public final class DimensionsNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<DimensionsNode> TYPE = NodeClass.create(DimensionsNode.class);
 
     protected final int rank;
 
+    // @cons
     public DimensionsNode(@InjectedNodeParameter WordTypes wordTypes, int rank)
     {
         super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));

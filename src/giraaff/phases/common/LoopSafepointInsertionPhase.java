@@ -10,7 +10,8 @@ import giraaff.phases.Phase;
 /**
  * Adds safepoints to loops.
  */
-public class LoopSafepointInsertionPhase extends Phase
+// @class LoopSafepointInsertionPhase
+public final class LoopSafepointInsertionPhase extends Phase
 {
     @Override
     protected void run(StructuredGraph graph)

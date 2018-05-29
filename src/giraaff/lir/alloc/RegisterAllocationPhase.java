@@ -5,6 +5,7 @@ import giraaff.lir.phases.AllocationPhase;
 /**
  * Marker class for register allocation phases.
  */
+// @class RegisterAllocationPhase
 public abstract class RegisterAllocationPhase extends AllocationPhase
 {
     private boolean neverSpillConstants;

@@ -58,6 +58,7 @@ import giraaff.word.Word;
 /**
  * HotSpot specific backend.
  */
+// @class HotSpotBackend
 public abstract class HotSpotBackend extends Backend
 {
     /**
@@ -267,6 +268,7 @@ public abstract class HotSpotBackend extends Backend
     public static final ForeignCallDescriptor INVOCATION_EVENT = new ForeignCallDescriptor("invocation_event", void.class, MethodCountersPointer.class);
     public static final ForeignCallDescriptor BACKEDGE_EVENT = new ForeignCallDescriptor("backedge_event", void.class, MethodCountersPointer.class, int.class, int.class);
 
+    // @cons
     public HotSpotBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
     {
         super(providers);

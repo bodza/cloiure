@@ -11,6 +11,7 @@ import giraaff.hotspot.stubs.Stub;
 /**
  * The details required to link a HotSpot runtime or stub call.
  */
+// @iface HotSpotForeignCallLinkage
 public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTarget
 {
     /**
@@ -18,6 +19,7 @@ public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTar
      * call will always destroy {@link HotSpotForeignCallLinkage#getOutgoingCallingConvention() its}
      * {@linkplain ForeignCallLinkage#getTemporaries() temporary} registers.
      */
+    // @enum HotSpotForeignCallLinkage.RegisterEffect
     enum RegisterEffect
     {
         DESTROYS_REGISTERS,
@@ -29,6 +31,7 @@ public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTar
      * {@code JavaFrameAnchor} prologue and epilogue is required around the call. A leaf function
      * does not lock, GC or throw exceptions.
      */
+    // @enum HotSpotForeignCallLinkage.Transition
     enum Transition
     {
         /**

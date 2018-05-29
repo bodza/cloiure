@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
  * Represents a control-flow graph where each node can be annotated with arbitrary property pairs of
  * the form ({@linkplain String name}, {@linkplain String value}).
  */
+// @iface PrintableCFG
 public interface PrintableCFG
 {
     AbstractBlockBase<?>[] getBlocks();

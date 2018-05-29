@@ -15,7 +15,8 @@ import giraaff.nodes.spi.LoweringTool;
 /**
  * Store of a value at a location specified as an absolute address.
  */
-public class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerable, MemoryCheckpoint.Single
+// @class UnsafeMemoryStoreNode
+public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<UnsafeMemoryStoreNode> TYPE = NodeClass.create(UnsafeMemoryStoreNode.class);
 
@@ -24,6 +25,7 @@ public class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerab
     protected final JavaKind kind;
     protected final LocationIdentity locationIdentity;
 
+    // @cons
     public UnsafeMemoryStoreNode(ValueNode address, ValueNode value, JavaKind kind, LocationIdentity locationIdentity)
     {
         super(TYPE, StampFactory.forVoid());

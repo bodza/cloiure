@@ -19,22 +19,26 @@ import giraaff.nodes.virtual.VirtualInstanceNode;
 /**
  * The {@code NewInstanceNode} represents the allocation of an instance class object.
  */
-public class NewInstanceNode extends AbstractNewObjectNode implements VirtualizableAllocation
+// @class NewInstanceNode
+public final class NewInstanceNode extends AbstractNewObjectNode implements VirtualizableAllocation
 {
     public static final NodeClass<NewInstanceNode> TYPE = NodeClass.create(NewInstanceNode.class);
 
     protected final ResolvedJavaType instanceClass;
 
+    // @cons
     public NewInstanceNode(ResolvedJavaType type, boolean fillContents)
     {
         this(TYPE, type, fillContents, null);
     }
 
+    // @cons
     public NewInstanceNode(ResolvedJavaType type, boolean fillContents, FrameState stateBefore)
     {
         this(TYPE, type, fillContents, stateBefore);
     }
 
+    // @cons
     protected NewInstanceNode(NodeClass<? extends NewInstanceNode> c, ResolvedJavaType type, boolean fillContents, FrameState stateBefore)
     {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)), fillContents, stateBefore);

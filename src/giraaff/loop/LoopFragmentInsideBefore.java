@@ -3,10 +3,12 @@ package giraaff.loop;
 import giraaff.graph.NodeBitMap;
 import giraaff.nodes.FixedNode;
 
-public class LoopFragmentInsideBefore extends LoopFragmentInside
+// @class LoopFragmentInsideBefore
+public final class LoopFragmentInsideBefore extends LoopFragmentInside
 {
     private final FixedNode point;
 
+    // @cons
     public LoopFragmentInsideBefore(LoopEx loop, FixedNode point)
     {
         super(loop);
@@ -14,6 +16,7 @@ public class LoopFragmentInsideBefore extends LoopFragmentInside
     }
 
     // duplicates lazily
+    // @cons
     public LoopFragmentInsideBefore(LoopFragmentInsideBefore original)
     {
         super(original);

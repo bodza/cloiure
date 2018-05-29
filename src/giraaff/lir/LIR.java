@@ -14,6 +14,7 @@ import giraaff.options.OptionValues;
  * This class implements the overall container for the LIR graph and directs its construction,
  * optimization, and finalization.
  */
+// @class LIR
 public final class LIR extends LIRGenerator.VariableProvider
 {
     private final AbstractControlFlowGraph<?> cfg;
@@ -41,8 +42,10 @@ public final class LIR extends LIRGenerator.VariableProvider
     /**
      * Creates a new LIR instance for the specified compilation.
      */
+    // @cons
     public LIR(AbstractControlFlowGraph<?> cfg, AbstractBlockBase<?>[] linearScanOrder, AbstractBlockBase<?>[] codeEmittingOrder, OptionValues options)
     {
+        super();
         this.cfg = cfg;
         this.codeEmittingOrder = codeEmittingOrder;
         this.linearScanOrder = linearScanOrder;

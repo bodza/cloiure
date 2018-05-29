@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.AllocatableValue;
 import giraaff.core.common.LIRKind;
 import giraaff.lir.Variable;
 
+// @iface AMD64HotSpotRestoreRbpOp
 public interface AMD64HotSpotRestoreRbpOp
 {
     /**

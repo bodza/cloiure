@@ -43,15 +43,19 @@ import giraaff.util.GraalError;
  *
  * @see CompilationResultBuilderFactory
  */
-public class CompilationResultBuilder
+// @class CompilationResultBuilder
+public final class CompilationResultBuilder
 {
-    private static class ExceptionInfo
+    // @class CompilationResultBuilder.ExceptionInfo
+    private static final class ExceptionInfo
     {
         public final int codeOffset;
         public final LabelRef exceptionEdge;
 
+        // @cons
         ExceptionInfo(int pcOffset, LabelRef exceptionEdge)
         {
+            super();
             this.codeOffset = pcOffset;
             this.exceptionEdge = exceptionEdge;
         }
@@ -88,13 +92,16 @@ public class CompilationResultBuilder
     private Consumer<LIRInstruction> beforeOp;
     private Consumer<LIRInstruction> afterOp;
 
+    // @cons
     public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, CompilationResult compilationResult)
     {
         this(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, options, compilationResult, EconomicMap.create(Equivalence.DEFAULT));
     }
 
+    // @cons
     public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache)
     {
+        super();
         this.target = codeCache.getTarget();
         this.codeCache = codeCache;
         this.foreignCalls = foreignCalls;

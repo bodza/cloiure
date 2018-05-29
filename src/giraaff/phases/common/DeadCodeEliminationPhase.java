@@ -8,14 +8,17 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.options.OptionKey;
 import giraaff.phases.Phase;
 
-public class DeadCodeEliminationPhase extends Phase
+// @class DeadCodeEliminationPhase
+public final class DeadCodeEliminationPhase extends Phase
 {
-    public static class Options
+    // @class DeadCodeEliminationPhase.Options
+    public static final class Options
     {
         // @Option "Disable optional dead code eliminations."
         public static final OptionKey<Boolean> ReduceDCE = new OptionKey<>(true);
     }
 
+    // @enum DeadCodeEliminationPhase.Optionality
     public enum Optionality
     {
         Optional,
@@ -26,6 +29,7 @@ public class DeadCodeEliminationPhase extends Phase
      * Creates a dead code elimination phase that will be run irrespective of
      * {@link Options#ReduceDCE}.
      */
+    // @cons
     public DeadCodeEliminationPhase()
     {
         this(Optionality.Required);
@@ -35,8 +39,10 @@ public class DeadCodeEliminationPhase extends Phase
      * Creates a dead code elimination phase that will be run only if it is
      * {@linkplain Optionality#Required non-optional} or {@link Options#ReduceDCE} is false.
      */
+    // @cons
     public DeadCodeEliminationPhase(Optionality optionality)
     {
+        super();
         this.optional = optionality == Optionality.Optional;
     }
 

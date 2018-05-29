@@ -17,20 +17,25 @@ import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.cfg.Block;
 
+// @class ReentrantBlockIterator
 public final class ReentrantBlockIterator
 {
-    public static class LoopInfo<StateT>
+    // @class ReentrantBlockIterator.LoopInfo
+    public static final class LoopInfo<StateT>
     {
         public final List<StateT> endStates;
         public final List<StateT> exitStates;
 
+        // @cons
         public LoopInfo(int endCount, int exitCount)
         {
+            super();
             endStates = new ArrayList<>(endCount);
             exitStates = new ArrayList<>(exitCount);
         }
     }
 
+    // @class ReentrantBlockIterator.BlockIteratorClosure
     public abstract static class BlockIteratorClosure<StateT>
     {
         protected abstract StateT getInitialState();
@@ -44,8 +49,10 @@ public final class ReentrantBlockIterator
         protected abstract List<StateT> processLoop(Loop<Block> loop, StateT initialState);
     }
 
+    // @cons
     private ReentrantBlockIterator()
     {
+        super();
         // no instances allowed
     }
 

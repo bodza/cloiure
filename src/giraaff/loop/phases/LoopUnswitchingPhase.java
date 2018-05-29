@@ -8,8 +8,10 @@ import giraaff.loop.LoopsData;
 import giraaff.nodes.ControlSplitNode;
 import giraaff.nodes.StructuredGraph;
 
-public class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies>
+// @class LoopUnswitchingPhase
+public final class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies>
 {
+    // @cons
     public LoopUnswitchingPhase(LoopPolicies policies)
     {
         super(policies);

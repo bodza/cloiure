@@ -29,12 +29,14 @@ import giraaff.nodes.spi.LoweringTool;
  * Read {@code Klass::_layout_helper} and incorporate any useful stamp information based on any type
  * information in {@code klass}.
  */
+// @class KlassLayoutHelperNode
 public final class KlassLayoutHelperNode extends FloatingNode implements Canonicalizable, Lowerable
 {
     public static final NodeClass<KlassLayoutHelperNode> TYPE = NodeClass.create(KlassLayoutHelperNode.class);
 
     @Input protected ValueNode klass;
 
+    // @cons
     public KlassLayoutHelperNode(ValueNode klass)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));

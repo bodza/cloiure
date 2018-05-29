@@ -11,8 +11,10 @@ import giraaff.hotspot.word.KlassPointer;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
-public class ClassCastExceptionStub extends CreateExceptionStub
+// @class ClassCastExceptionStub
+public final class ClassCastExceptionStub extends CreateExceptionStub
 {
+    // @cons
     public ClassCastExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super("createClassCastException", options, providers, linkage);

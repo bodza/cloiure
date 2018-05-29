@@ -15,10 +15,12 @@ import giraaff.nodes.spi.StampInverter;
 /**
  * The {@code NegateNode} node negates its operand.
  */
+// @class NegateNode
 public final class NegateNode extends UnaryArithmeticNode<Neg> implements NarrowableArithmeticNode, StampInverter
 {
     public static final NodeClass<NegateNode> TYPE = NodeClass.create(NegateNode.class);
 
+    // @cons
     public NegateNode(ValueNode value)
     {
         super(TYPE, ArithmeticOpTable::getNeg, value);

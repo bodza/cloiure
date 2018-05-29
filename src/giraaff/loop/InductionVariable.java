@@ -9,8 +9,10 @@ import giraaff.util.GraalError;
 /**
  * This class describes a value node that is an induction variable in a counted loop.
  */
+// @class InductionVariable
 public abstract class InductionVariable
 {
+    // @enum InductionVariable.Direction
     public enum Direction
     {
         Up,
@@ -34,8 +36,10 @@ public abstract class InductionVariable
 
     protected final LoopEx loop;
 
+    // @cons
     public InductionVariable(LoopEx loop)
     {
+        super();
         this.loop = loop;
     }
 

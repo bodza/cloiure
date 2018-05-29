@@ -11,12 +11,15 @@ import giraaff.lir.Variable;
  *
  * TODO evaluate data structure
  */
-class VariableMap<T>
+// @class VariableMap
+final class VariableMap<T>
 {
     private final ArrayList<T> content;
 
+    // @cons
     VariableMap()
     {
+        super();
         content = new ArrayList<>();
     }
 

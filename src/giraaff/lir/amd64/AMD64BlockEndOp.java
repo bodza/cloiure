@@ -6,10 +6,12 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.StandardOp.BlockEndOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 
+// @class AMD64BlockEndOp
 public abstract class AMD64BlockEndOp extends LIRInstruction implements BlockEndOp
 {
     public static final LIRInstructionClass<AMD64BlockEndOp> TYPE = LIRInstructionClass.create(AMD64BlockEndOp.class);
 
+    // @cons
     protected AMD64BlockEndOp(LIRInstructionClass<? extends AMD64BlockEndOp> c)
     {
         super(c);

@@ -31,22 +31,26 @@ import giraaff.nodes.virtual.VirtualObjectNode;
  * The {@code NewArrayNode} is used for all array allocations where the element type is know at
  * compile time.
  */
-public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable
+// @class NewArrayNode
+public final class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable
 {
     public static final NodeClass<NewArrayNode> TYPE = NodeClass.create(NewArrayNode.class);
 
     private final ResolvedJavaType elementType;
 
+    // @cons
     public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents)
     {
         this(elementType, length, fillContents, null);
     }
 
+    // @cons
     public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore)
     {
         this(TYPE, elementType, length, fillContents, stateBefore);
     }
 
+    // @cons
     protected NewArrayNode(NodeClass<? extends NewArrayNode> c, ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore)
     {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(elementType.getArrayClass())), length, fillContents, stateBefore);

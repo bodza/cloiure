@@ -9,14 +9,17 @@ import giraaff.lir.ValueProcedure;
 /**
  * Represents a usage of a constant.
  */
-class UseEntry
+// @class UseEntry
+final class UseEntry
 {
     private final AbstractBlockBase<?> block;
     private final LIRInstruction instruction;
     private final Value value;
 
+    // @cons
     UseEntry(AbstractBlockBase<?> block, LIRInstruction instruction, Value value)
     {
+        super();
         this.block = block;
         this.instruction = instruction;
         this.value = value;

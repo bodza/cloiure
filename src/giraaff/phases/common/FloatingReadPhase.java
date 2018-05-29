@@ -48,28 +48,35 @@ import giraaff.phases.graph.ReentrantNodeIterator;
 import giraaff.phases.graph.ReentrantNodeIterator.LoopInfo;
 import giraaff.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
 
-public class FloatingReadPhase extends Phase
+// @class FloatingReadPhase
+public final class FloatingReadPhase extends Phase
 {
     private boolean createFloatingReads;
     private boolean createMemoryMapNodes;
 
-    public static class MemoryMapImpl implements MemoryMap
+    // @class FloatingReadPhase.MemoryMapImpl
+    public static final class MemoryMapImpl implements MemoryMap
     {
         private final EconomicMap<LocationIdentity, MemoryNode> lastMemorySnapshot;
 
+        // @cons
         public MemoryMapImpl(MemoryMapImpl memoryMap)
         {
+            super();
             lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT, memoryMap.lastMemorySnapshot);
         }
 
+        // @cons
         public MemoryMapImpl(StartNode start)
         {
             this();
             lastMemorySnapshot.put(LocationIdentity.any(), start);
         }
 
+        // @cons
         public MemoryMapImpl()
         {
+            super();
             lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT);
         }
 
@@ -104,6 +111,7 @@ public class FloatingReadPhase extends Phase
         }
     }
 
+    // @cons
     public FloatingReadPhase()
     {
         this(true, false);
@@ -114,8 +122,10 @@ public class FloatingReadPhase extends Phase
      *            should be converted into floating nodes (e.g. {@link FloatingReadNode}s) where possible
      * @param createMemoryMapNodes a {@link MemoryMapNode} will be created for each return if this is true
      */
+    // @cons
     public FloatingReadPhase(boolean createFloatingReads, boolean createMemoryMapNodes)
     {
+        super();
         this.createFloatingReads = createFloatingReads;
         this.createMemoryMapNodes = createMemoryMapNodes;
     }
@@ -291,14 +301,17 @@ public class FloatingReadPhase extends Phase
         return newState;
     }
 
-    public static class FloatingReadClosure extends NodeIteratorClosure<MemoryMapImpl>
+    // @class FloatingReadPhase.FloatingReadClosure
+    public static final class FloatingReadClosure extends NodeIteratorClosure<MemoryMapImpl>
     {
         private final EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops;
         private boolean createFloatingReads;
         private boolean createMemoryMapNodes;
 
+        // @cons
         public FloatingReadClosure(EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops, boolean createFloatingReads, boolean createMemoryMapNodes)
         {
+            super();
             this.modifiedInLoops = modifiedInLoops;
             this.createFloatingReads = createFloatingReads;
             this.createMemoryMapNodes = createMemoryMapNodes;

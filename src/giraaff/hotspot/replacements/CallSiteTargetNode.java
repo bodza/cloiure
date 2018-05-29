@@ -19,10 +19,12 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.nodes.MacroStateSplitNode;
 
+// @class CallSiteTargetNode
 public final class CallSiteTargetNode extends MacroStateSplitNode implements Canonicalizable, Lowerable
 {
     public static final NodeClass<CallSiteTargetNode> TYPE = NodeClass.create(CallSiteTargetNode.class);
 
+    // @cons
     public CallSiteTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode receiver)
     {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, receiver);

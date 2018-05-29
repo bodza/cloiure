@@ -15,10 +15,12 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.options.OptionValues;
 import giraaff.replacements.amd64.AMD64ConvertSnippets;
 
-public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
+// @class AMD64HotSpotLoweringProvider
+public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
 {
     private AMD64ConvertSnippets.Templates convertSnippets;
 
+    // @cons
     public AMD64HotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
     {
         super(runtime, metaAccess, foreignCalls, registers, constantReflection, target);

@@ -15,6 +15,7 @@ import giraaff.word.Word.Operation;
 /**
  * Marker type for a metaspace pointer.
  */
+// @class MetaspacePointer
 public abstract class MetaspacePointer
 {
     @HotSpotOperation(opcode = HotspotOpcode.IS_NULL)

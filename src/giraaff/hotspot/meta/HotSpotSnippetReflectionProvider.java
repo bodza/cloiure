@@ -11,14 +11,17 @@ import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.word.WordTypes;
 
-public class HotSpotSnippetReflectionProvider implements SnippetReflectionProvider
+// @class HotSpotSnippetReflectionProvider
+public final class HotSpotSnippetReflectionProvider implements SnippetReflectionProvider
 {
     private final HotSpotGraalRuntimeProvider runtime;
     private final HotSpotConstantReflectionProvider constantReflection;
     private final WordTypes wordTypes;
 
+    // @cons
     public HotSpotSnippetReflectionProvider(HotSpotGraalRuntimeProvider runtime, HotSpotConstantReflectionProvider constantReflection, WordTypes wordTypes)
     {
+        super();
         this.runtime = runtime;
         this.constantReflection = constantReflection;
         this.wordTypes = wordTypes;

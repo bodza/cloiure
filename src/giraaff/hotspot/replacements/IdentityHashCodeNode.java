@@ -17,12 +17,14 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-public class IdentityHashCodeNode extends FixedWithNextNode implements Canonicalizable, Lowerable, MemoryCheckpoint.Single
+// @class IdentityHashCodeNode
+public final class IdentityHashCodeNode extends FixedWithNextNode implements Canonicalizable, Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<IdentityHashCodeNode> TYPE = NodeClass.create(IdentityHashCodeNode.class);
 
     @Input ValueNode object;
 
+    // @cons
     public IdentityHashCodeNode(ValueNode object)
     {
         super(TYPE, StampFactory.forInteger(32));

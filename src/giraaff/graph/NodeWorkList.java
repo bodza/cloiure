@@ -5,12 +5,15 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+// @class NodeWorkList
 public abstract class NodeWorkList implements Iterable<Node>
 {
     protected final Queue<Node> worklist;
 
+    // @cons
     private NodeWorkList(Graph graph, boolean fill)
     {
+        super();
         if (fill)
         {
             ArrayDeque<Node> deque = new ArrayDeque<>(graph.getNodeCount());
@@ -41,6 +44,7 @@ public abstract class NodeWorkList implements Iterable<Node>
 
     public abstract boolean contains(Node node);
 
+    // @class NodeWorkList.QueueConsumingIterator
     private abstract class QueueConsumingIterator implements Iterator<Node>
     {
         protected void dropDeleted()
@@ -58,6 +62,7 @@ public abstract class NodeWorkList implements Iterable<Node>
         }
     }
 
+    // @class NodeWorkList.IterativeNodeWorkList
     public static final class IterativeNodeWorkList extends NodeWorkList
     {
         private static final int EXPLICIT_BITMAP_THRESHOLD = 10;
@@ -68,6 +73,7 @@ public abstract class NodeWorkList implements Iterable<Node>
         private Node lastPull;
         private Node lastChain;
 
+        // @cons
         public IterativeNodeWorkList(Graph graph, boolean fill, int iterationLimitPerNode)
         {
             super(graph, fill);
@@ -212,10 +218,12 @@ public abstract class NodeWorkList implements Iterable<Node>
         }
     }
 
+    // @class NodeWorkList.SingletonNodeWorkList
     public static final class SingletonNodeWorkList extends NodeWorkList
     {
         protected final NodeBitMap visited;
 
+        // @cons
         public SingletonNodeWorkList(Graph graph)
         {
             super(graph, false);

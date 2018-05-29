@@ -9,6 +9,7 @@ import jdk.vm.ci.meta.ValueKind;
  * Represents a value that is yet to be bound to a machine location (such as a {@link RegisterValue}
  * or {@link StackSlot}) by a register allocator.
  */
+// @class Variable
 public final class Variable extends AllocatableValue
 {
     /**
@@ -21,6 +22,7 @@ public final class Variable extends AllocatableValue
     /**
      * Creates a new variable.
      */
+    // @cons
     public Variable(ValueKind<?> kind, int index)
     {
         super(kind);

@@ -13,6 +13,7 @@ import giraaff.nodes.ReturnNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
 
+// @class ValueMergeUtil
 public class ValueMergeUtil
 {
     public static ValueNode mergeReturns(AbstractMergeNode merge, List<? extends ReturnNode> returnNodes)

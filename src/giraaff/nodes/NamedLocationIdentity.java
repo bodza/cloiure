@@ -10,6 +10,7 @@ import org.graalvm.word.LocationIdentity;
 /**
  * A {@link LocationIdentity} with a name.
  */
+// @class NamedLocationIdentity
 public class NamedLocationIdentity extends LocationIdentity implements FormatWithToString
 {
     /**
@@ -30,8 +31,10 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
     private final String name;
     private final boolean immutable;
 
+    // @cons
     protected NamedLocationIdentity(String name, boolean immutable)
     {
+        super();
         this.name = name;
         this.immutable = immutable;
     }

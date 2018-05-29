@@ -17,12 +17,14 @@ import giraaff.nodes.virtual.VirtualObjectNode;
  * The {@code RawMonitorEnterNode} represents the acquisition of a monitor. The object needs to
  * already be non-null and the hub is an additional parameter to the node.
  */
+// @class RawMonitorEnterNode
 public final class RawMonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
 {
     public static final NodeClass<RawMonitorEnterNode> TYPE = NodeClass.create(RawMonitorEnterNode.class);
 
     @Input ValueNode hub;
 
+    // @cons
     public RawMonitorEnterNode(ValueNode object, ValueNode hub, MonitorIdNode monitorId)
     {
         super(TYPE, object, monitorId);

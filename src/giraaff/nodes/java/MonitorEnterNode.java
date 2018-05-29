@@ -16,15 +16,18 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * The {@code MonitorEnterNode} represents the acquisition of a monitor.
  */
+// @class MonitorEnterNode
 public class MonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
 {
     public static final NodeClass<MonitorEnterNode> TYPE = NodeClass.create(MonitorEnterNode.class);
 
+    // @cons
     public MonitorEnterNode(ValueNode object, MonitorIdNode monitorId)
     {
         this(TYPE, object, monitorId);
     }
 
+    // @cons
     public MonitorEnterNode(NodeClass<? extends MonitorEnterNode> c, ValueNode object, MonitorIdNode monitorId)
     {
         super(c, object, monitorId);

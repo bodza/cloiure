@@ -24,6 +24,7 @@ import giraaff.util.GraalError;
  * This interface defines the contract a HotSpot backend LIR generator needs to fulfill in addition
  * to abstract methods from {@link LIRGenerator} and {@link LIRGeneratorTool}.
  */
+// @iface HotSpotLIRGenerator
 public interface HotSpotLIRGenerator extends LIRGeneratorTool
 {
     /**

@@ -14,6 +14,7 @@ import giraaff.nodes.ValueNode;
  * Memory {@code PhiNode}s merge memory dependencies at control flow merges.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class MemoryPhiNode
 public final class MemoryPhiNode extends PhiNode implements MemoryNode
 {
     public static final NodeClass<MemoryPhiNode> TYPE = NodeClass.create(MemoryPhiNode.class);
@@ -21,6 +22,7 @@ public final class MemoryPhiNode extends PhiNode implements MemoryNode
     @Input(InputType.Memory) NodeInputList<ValueNode> values;
     protected final LocationIdentity locationIdentity;
 
+    // @cons
     public MemoryPhiNode(AbstractMergeNode merge, LocationIdentity locationIdentity)
     {
         super(TYPE, StampFactory.forVoid(), merge);
@@ -28,6 +30,7 @@ public final class MemoryPhiNode extends PhiNode implements MemoryNode
         this.values = new NodeInputList<>(this);
     }
 
+    // @cons
     public MemoryPhiNode(AbstractMergeNode merge, LocationIdentity locationIdentity, ValueNode[] values)
     {
         super(TYPE, StampFactory.forVoid(), merge);

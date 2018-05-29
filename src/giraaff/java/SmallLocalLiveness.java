@@ -2,6 +2,7 @@ package giraaff.java;
 
 import giraaff.java.BciBlockMapping.BciBlock;
 
+// @class SmallLocalLiveness
 public final class SmallLocalLiveness extends LocalLiveness
 {
     // local n is represented by the bit accessible as (1 << n)
@@ -13,6 +14,7 @@ public final class SmallLocalLiveness extends LocalLiveness
     private final long[] localsChangedInLoop;
     private final int maxLocals;
 
+    // @cons
     public SmallLocalLiveness(BciBlock[] blocks, int maxLocals, int loopCount)
     {
         super(blocks);

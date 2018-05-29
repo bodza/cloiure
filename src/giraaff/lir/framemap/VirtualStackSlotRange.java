@@ -11,11 +11,13 @@ import giraaff.lir.VirtualStackSlot;
  * Represents a {@link #getSlots() numbered} range of {@link VirtualStackSlot virtual stack slot} of
  * size {@link TargetDescription#wordSize}.
  */
-public class VirtualStackSlotRange extends VirtualStackSlot
+// @class VirtualStackSlotRange
+public final class VirtualStackSlotRange extends VirtualStackSlot
 {
     private final BitSet objects;
     private final int slots;
 
+    // @cons
     public VirtualStackSlotRange(int id, int slots, BitSet objects, LIRKind kind)
     {
         super(id, kind);

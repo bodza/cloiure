@@ -8,8 +8,10 @@ import giraaff.options.OptionValues;
 /**
  * Implements the logic that decides whether a field read should be constant folded.
  */
+// @iface ConstantFieldProvider
 public interface ConstantFieldProvider
 {
+    // @iface ConstantFieldProvider.ConstantFieldTool
     public interface ConstantFieldTool<T>
     {
         OptionValues getOptions();

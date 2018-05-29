@@ -8,10 +8,12 @@ import jdk.vm.ci.meta.ValueKind;
  * {@link VirtualStackSlot}s are stack slots that are not yet fixed to specific frame offset. They
  * are replaced by real {@link StackSlot}s with a fixed position in the frame before code emission.
  */
+// @class VirtualStackSlot
 public abstract class VirtualStackSlot extends AllocatableValue
 {
     private final int id;
 
+    // @cons
     public VirtualStackSlot(int id, ValueKind<?> kind)
     {
         super(kind);

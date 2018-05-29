@@ -32,12 +32,15 @@ import giraaff.word.WordOperationPlugin;
  *
  * Constant folding of field loads.
  */
+// @class HotSpotNodePlugin
 public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
 {
     protected final WordOperationPlugin wordOperationPlugin;
 
+    // @cons
     public HotSpotNodePlugin(WordOperationPlugin wordOperationPlugin)
     {
+        super();
         this.wordOperationPlugin = wordOperationPlugin;
     }
 

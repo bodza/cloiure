@@ -3,6 +3,7 @@ package giraaff.core.common.cfg;
 import java.util.ArrayList;
 import java.util.List;
 
+// @class Loop
 public abstract class Loop<T extends AbstractBlockBase<T>>
 {
     private final Loop<T> parent;
@@ -14,8 +15,10 @@ public abstract class Loop<T extends AbstractBlockBase<T>>
     private final List<T> blocks;
     private final List<T> exits;
 
+    // @cons
     protected Loop(Loop<T> parent, int index, T header)
     {
+        super();
         this.parent = parent;
         if (parent != null)
         {

@@ -14,10 +14,12 @@ import giraaff.nodes.LoopBeginNode;
  *
  * @see VarargsParameter
  */
+// @class ExplodeLoopNode
 public final class ExplodeLoopNode extends FixedWithNextNode
 {
     public static final NodeClass<ExplodeLoopNode> TYPE = NodeClass.create(ExplodeLoopNode.class);
 
+    // @cons
     public ExplodeLoopNode()
     {
         super(TYPE, StampFactory.forVoid());

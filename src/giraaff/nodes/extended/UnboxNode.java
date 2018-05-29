@@ -20,6 +20,7 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
+// @class UnboxNode
 public final class UnboxNode extends FixedWithNextNode implements Virtualizable, Lowerable, Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<UnboxNode> TYPE = NodeClass.create(UnboxNode.class);
@@ -33,6 +34,7 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
         return value;
     }
 
+    // @cons
     public UnboxNode(ValueNode value, JavaKind boxingKind)
     {
         super(TYPE, StampFactory.forKind(boxingKind.getStackKind()));

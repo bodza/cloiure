@@ -17,6 +17,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.options.OptionValues;
 import giraaff.virtual.phases.ea.EffectList.Effect;
 
+// @class PartialEscapeBlockState
 public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<T>> extends EffectsBlockState<T>
 {
     private static final ObjectState[] EMPTY_ARRAY = new ObjectState[0];
@@ -46,7 +47,8 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
         return false;
     }
 
-    private static class RefCount
+    // @class PartialEscapeBlockState.RefCount
+    private static final class RefCount
     {
         private int refCount = 1;
     }
@@ -62,26 +64,32 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
      * Final subclass of PartialEscapeBlockState, for performance and to make everything behave
      * nicely with generics.
      */
+    // @class PartialEscapeBlockState.Final
     public static final class Final extends PartialEscapeBlockState<Final>
     {
+        // @cons
         public Final(OptionValues options)
         {
             super(options);
         }
 
+        // @cons
         public Final(Final other)
         {
             super(other);
         }
     }
 
+    // @cons
     protected PartialEscapeBlockState(OptionValues options)
     {
+        super();
         objectStates = EMPTY_ARRAY;
         arrayRefCount = new RefCount();
         this.options = options;
     }
 
+    // @cons
     protected PartialEscapeBlockState(PartialEscapeBlockState<T> other)
     {
         super(other);

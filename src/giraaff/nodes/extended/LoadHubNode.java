@@ -23,6 +23,7 @@ import giraaff.nodes.type.StampTool;
 /**
  * Loads an object's hub. The object is not null-checked by this operation.
  */
+// @class LoadHubNode
 public final class LoadHubNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
     public static final NodeClass<LoadHubNode> TYPE = NodeClass.create(LoadHubNode.class);
@@ -50,11 +51,13 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
         return new LoadHubNode(stamp, value);
     }
 
+    // @cons
     public LoadHubNode(@InjectedNodeParameter StampProvider stampProvider, ValueNode value)
     {
         this(hubStamp(stampProvider, value), value);
     }
 
+    // @cons
     public LoadHubNode(Stamp stamp, ValueNode value)
     {
         super(TYPE, stamp);

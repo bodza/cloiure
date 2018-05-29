@@ -12,7 +12,8 @@ import org.graalvm.collections.UnmodifiableMapCursor;
 /**
  * A context for obtaining values for {@link OptionKey}s.
  */
-public class OptionValues
+// @class OptionValues
+public final class OptionValues
 {
     private final UnmodifiableEconomicMap<OptionKey<?>, Object> values;
 
@@ -21,8 +22,10 @@ public class OptionValues
         return values.containsKey(key);
     }
 
+    // @cons
     public OptionValues(OptionValues initialValues, UnmodifiableEconomicMap<OptionKey<?>, Object> extraPairs)
     {
+        super();
         EconomicMap<OptionKey<?>, Object> map = newOptionMap();
         if (initialValues != null)
         {
@@ -32,6 +35,7 @@ public class OptionValues
         this.values = map;
     }
 
+    // @cons
     public OptionValues(OptionValues initialValues, OptionKey<?> key1, Object value1, Object... extraPairs)
     {
         this(initialValues, asMap(key1, value1, extraPairs));
@@ -73,8 +77,10 @@ public class OptionValues
         return map;
     }
 
+    // @cons
     public OptionValues(UnmodifiableEconomicMap<OptionKey<?>, Object> values)
     {
+        super();
         EconomicMap<OptionKey<?>, Object> map = newOptionMap();
         initMap(map, values);
         this.values = map;

@@ -23,7 +23,8 @@ import giraaff.nodes.StartNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.phases.common.inlining.InliningUtil;
 
-public class ComputeInliningRelevance
+// @class ComputeInliningRelevance
+public final class ComputeInliningRelevance
 {
     private static final double EPSILON = 1d / Integer.MAX_VALUE;
     private static final double UNINITIALIZED = -1D;
@@ -46,8 +47,10 @@ public class ComputeInliningRelevance
      */
     private Scope rootScope;
 
+    // @cons
     public ComputeInliningRelevance(StructuredGraph graph, ToDoubleFunction<FixedNode> nodeProbabilities)
     {
+        super();
         this.graph = graph;
         this.nodeProbabilities = nodeProbabilities;
     }
@@ -152,7 +155,8 @@ public class ComputeInliningRelevance
      * not include child loops, i.e., the iteration in {@link #process(NodeWorkList)} explicitly
      * excludes the nodes of child loops.
      */
-    private class Scope
+    // @class ComputeInliningRelevance.Scope
+    private final class Scope
     {
         public final FixedNode start;
         public final Scope parent; // can be null for the outermost scope
@@ -166,8 +170,10 @@ public class ComputeInliningRelevance
          */
         private double scopeRelevanceWithinParent = UNINITIALIZED;
 
+        // @cons
         Scope(FixedNode start, Scope parent)
         {
+            super();
             this.start = start;
             this.parent = parent;
         }

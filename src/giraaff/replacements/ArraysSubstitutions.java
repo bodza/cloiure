@@ -10,7 +10,8 @@ import giraaff.replacements.nodes.ArrayEqualsNode;
  * Substitutions for {@link java.util.Arrays} methods.
  */
 @ClassSubstitution(Arrays.class)
-public class ArraysSubstitutions
+// @class ArraysSubstitutions
+public final class ArraysSubstitutions
 {
     @MethodSubstitution
     public static boolean equals(boolean[] a, boolean[] a2)

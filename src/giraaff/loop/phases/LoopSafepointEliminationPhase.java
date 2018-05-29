@@ -11,7 +11,8 @@ import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.phases.BasePhase;
 import giraaff.phases.tiers.MidTierContext;
 
-public class LoopSafepointEliminationPhase extends BasePhase<MidTierContext>
+// @class LoopSafepointEliminationPhase
+public final class LoopSafepointEliminationPhase extends BasePhase<MidTierContext>
 {
     @Override
     protected void run(StructuredGraph graph, MidTierContext context)

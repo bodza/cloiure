@@ -8,12 +8,14 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class BindToRegisterNode
 public final class BindToRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<BindToRegisterNode> TYPE = NodeClass.create(BindToRegisterNode.class);
 
     @Input ValueNode value;
 
+    // @cons
     public BindToRegisterNode(ValueNode value)
     {
         super(TYPE, StampFactory.forVoid());

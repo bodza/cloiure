@@ -9,12 +9,14 @@ import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.nodes.BasicArrayCopyNode;
 
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class ArrayCopyWithSlowPathNode
 public final class ArrayCopyWithSlowPathNode extends BasicArrayCopyNode
 {
     public static final NodeClass<ArrayCopyWithSlowPathNode> TYPE = NodeClass.create(ArrayCopyWithSlowPathNode.class);
 
     private final SnippetTemplate.SnippetInfo snippet;
 
+    // @cons
     public ArrayCopyWithSlowPathNode(ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, SnippetTemplate.SnippetInfo snippet, JavaKind elementKind)
     {
         super(TYPE, src, srcPos, dest, destPos, length, elementKind, BytecodeFrame.INVALID_FRAMESTATE_BCI);

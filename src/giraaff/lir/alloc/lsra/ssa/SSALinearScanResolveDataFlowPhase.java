@@ -14,8 +14,10 @@ import giraaff.lir.alloc.lsra.MoveResolver;
 import giraaff.lir.ssa.SSAUtil;
 import giraaff.lir.ssa.SSAUtil.PhiValueVisitor;
 
-class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowPhase
+// @class SSALinearScanResolveDataFlowPhase
+final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowPhase
 {
+    // @cons
     SSALinearScanResolveDataFlowPhase(LinearScan allocator)
     {
         super(allocator);

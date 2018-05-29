@@ -4,6 +4,7 @@ package giraaff.api.directives;
  * Directives that influence the compilation of methods by Graal. They don't influence the semantics
  * of the code, but they are useful for unit testing and benchmarking.
  */
+// @class GraalDirectives
 public final class GraalDirectives
 {
     public static final double LIKELY_PROBABILITY = 0.75;

@@ -34,7 +34,8 @@ import giraaff.phases.BasePhase;
 import giraaff.phases.Phase;
 import giraaff.phases.tiers.PhaseContext;
 
-public class CanonicalizerPhase extends BasePhase<PhaseContext>
+// @class CanonicalizerPhase
+public final class CanonicalizerPhase extends BasePhase<PhaseContext>
 {
     private static final int MAX_ITERATION_PER_NODE = 10;
 
@@ -43,6 +44,7 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
     private boolean simplify = true;
     private final CustomCanonicalizer customCanonicalizer;
 
+    // @class CanonicalizerPhase.CustomCanonicalizer
     public abstract static class CustomCanonicalizer
     {
         public Node canonicalize(Node node)
@@ -56,13 +58,16 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
         }
     }
 
+    // @cons
     public CanonicalizerPhase()
     {
         this(null);
     }
 
+    // @cons
     public CanonicalizerPhase(CustomCanonicalizer customCanonicalizer)
     {
+        super();
         this.customCanonicalizer = customCanonicalizer;
     }
 
@@ -115,6 +120,7 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
         return NodeView.DEFAULT;
     }
 
+    // @class CanonicalizerPhase.Instance
     private final class Instance extends Phase
     {
         private final Mark newNodesMark;
@@ -124,23 +130,28 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
         private NodeWorkList workList;
         private Tool tool;
 
+        // @cons
         private Instance(PhaseContext context)
         {
             this(context, null, null);
         }
 
+        // @cons
         private Instance(PhaseContext context, Iterable<? extends Node> workingSet)
         {
             this(context, workingSet, null);
         }
 
+        // @cons
         private Instance(PhaseContext context, Mark newNodesMark)
         {
             this(context, null, newNodesMark);
         }
 
+        // @cons
         private Instance(PhaseContext context, Iterable<? extends Node> workingSet, Mark newNodesMark)
         {
+            super();
             this.newNodesMark = newNodesMark;
             this.context = context;
             this.initWorkingSet = workingSet;
@@ -316,20 +327,20 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
             return false;
         }
 
-//     cases:                                           original node:
-//                                         |Floating|Fixed-unconnected|Fixed-connected|
-//                                         --------------------------------------------
-//                                     null|   1    |        X        |       3       |
-//                                         --------------------------------------------
-//                                 Floating|   2    |        X        |       4       |
-//       canonical node:                   --------------------------------------------
-//                        Fixed-unconnected|   X    |        X        |       5       |
-//                                         --------------------------------------------
-//                          Fixed-connected|   2    |        X        |       6       |
-//                                         --------------------------------------------
-//                              ControlSink|   X    |        X        |       7       |
-//                                         --------------------------------------------
-//       X: must not happen (checked with assertions)
+        // cases:                                           original node:
+        //                                     |Floating|Fixed-unconnected|Fixed-connected|
+        //                                     --------------------------------------------
+        //                                 null|   1    |        X        |       3       |
+        //                                     --------------------------------------------
+        //                             Floating|   2    |        X        |       4       |
+        //   canonical node:                   --------------------------------------------
+        //                    Fixed-unconnected|   X    |        X        |       5       |
+        //                                     --------------------------------------------
+        //                      Fixed-connected|   2    |        X        |       6       |
+        //                                     --------------------------------------------
+        //                          ControlSink|   X    |        X        |       7       |
+        //                                     --------------------------------------------
+        //   X: must not happen (checked with assertions)
 
         private boolean performReplacement(final Node node, Node newCanonical)
         {
@@ -418,14 +429,17 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
             return false;
         }
 
+        // @class CanonicalizerPhase.Instance.Tool
         private final class Tool implements SimplifierTool, NodeView
         {
             private final Assumptions assumptions;
             private final OptionValues options;
             private NodeView nodeView;
 
+            // @cons
             Tool(Assumptions assumptions, OptionValues options)
             {
+                super();
                 this.assumptions = assumptions;
                 this.options = options;
                 this.nodeView = getNodeView();

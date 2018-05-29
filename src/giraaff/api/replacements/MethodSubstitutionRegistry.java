@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 /**
  * A registry for {@link MethodSubstitution}s.
  */
+// @iface MethodSubstitutionRegistry
 public interface MethodSubstitutionRegistry
 {
     /**

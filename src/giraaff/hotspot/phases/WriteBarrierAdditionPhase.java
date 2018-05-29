@@ -23,10 +23,13 @@ import giraaff.nodes.type.StampTool;
 import giraaff.phases.Phase;
 import giraaff.util.GraalError;
 
-public class WriteBarrierAdditionPhase extends Phase
+// @class WriteBarrierAdditionPhase
+public final class WriteBarrierAdditionPhase extends Phase
 {
+    // @cons
     public WriteBarrierAdditionPhase()
     {
+        super();
     }
 
     @Override

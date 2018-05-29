@@ -19,10 +19,12 @@ import giraaff.nodes.virtual.VirtualInstanceNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.options.OptionValues;
 
+// @class PEReadEliminationBlockState
 public final class PEReadEliminationBlockState extends PartialEscapeBlockState<PEReadEliminationBlockState>
 {
     final EconomicMap<ReadCacheEntry, ValueNode> readCache;
 
+    // @class PEReadEliminationBlockState.ReadCacheEntry
     static final class ReadCacheEntry
     {
         public final LocationIdentity identity;
@@ -33,8 +35,10 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         // This flag does not affect hashCode or equals implementations.
         public final boolean overflowAccess;
 
+        // @cons
         ReadCacheEntry(LocationIdentity identity, ValueNode object, int index, JavaKind kind, boolean overflowAccess)
         {
+            super();
             this.identity = identity;
             this.object = object;
             this.index = index;
@@ -69,12 +73,14 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         }
     }
 
+    // @cons
     public PEReadEliminationBlockState(OptionValues options)
     {
         super(options);
         readCache = EconomicMap.create(Equivalence.DEFAULT);
     }
 
+    // @cons
     public PEReadEliminationBlockState(PEReadEliminationBlockState other)
     {
         super(other);

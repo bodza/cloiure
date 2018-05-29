@@ -19,7 +19,8 @@ import giraaff.word.Word;
  * Substitutions for java.util.zip.CRC32C.
  */
 @ClassSubstitution(className = "java.util.zip.CRC32C", optional = true)
-public class CRC32CSubstitutions
+// @class CRC32CSubstitutions
+public final class CRC32CSubstitutions
 {
     public static final ForeignCallDescriptor UPDATE_BYTES_CRC32C = new ForeignCallDescriptor("updateBytesCRC32C", int.class, int.class, WordBase.class, int.class);
 
@@ -38,5 +39,11 @@ public class CRC32CSubstitutions
     {
         WordBase bufAddr = WordFactory.unsigned(addr).add(off);
         return updateBytesCRC32(UPDATE_BYTES_CRC32C, crc, bufAddr, end - off);
+    }
+
+    // @cons
+    private CRC32CSubstitutions()
+    {
+        super();
     }
 }

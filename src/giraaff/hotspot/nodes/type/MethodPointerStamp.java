@@ -10,6 +10,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.Stamp;
 
+// @class MethodPointerStamp
 public final class MethodPointerStamp extends MetaspacePointerStamp
 {
     private static final MethodPointerStamp METHOD = new MethodPointerStamp(false, false);
@@ -28,6 +29,7 @@ public final class MethodPointerStamp extends MetaspacePointerStamp
         return METHOD_NON_NULL;
     }
 
+    // @cons
     private MethodPointerStamp(boolean nonNull, boolean alwaysNull)
     {
         super(nonNull, alwaysNull);

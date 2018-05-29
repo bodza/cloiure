@@ -12,8 +12,10 @@ import giraaff.core.common.NumUtil;
 /**
  * This class implements commonly used X86 code patterns.
  */
-public class AMD64MacroAssembler extends AMD64Assembler
+// @class AMD64MacroAssembler
+public final class AMD64MacroAssembler extends AMD64Assembler
 {
+    // @cons
     public AMD64MacroAssembler(TargetDescription target)
     {
         super(target);

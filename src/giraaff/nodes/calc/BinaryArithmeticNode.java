@@ -23,16 +23,19 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeValueMap;
 import giraaff.util.GraalError;
 
+// @class BinaryArithmeticNode
 public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, Canonicalizable.Binary<ValueNode>
 {
     @SuppressWarnings("rawtypes") public static final NodeClass<BinaryArithmeticNode> TYPE = NodeClass.create(BinaryArithmeticNode.class);
 
+    // @iface BinaryArithmeticNode.SerializableBinaryFunction
     protected interface SerializableBinaryFunction<T> extends Function<ArithmeticOpTable, BinaryOp<T>>
     {
     }
 
     protected final SerializableBinaryFunction<OP> getOp;
 
+    // @cons
     protected BinaryArithmeticNode(NodeClass<? extends BinaryArithmeticNode<OP>> c, SerializableBinaryFunction<OP> getOp, ValueNode x, ValueNode y)
     {
         super(c, getOp.apply(ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT))).foldStamp(x.stamp(NodeView.DEFAULT), y.stamp(NodeView.DEFAULT)), x, y);
@@ -118,6 +121,7 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
         return SubNode.create(v1, v2, view);
     }
 
+    // @enum BinaryArithmeticNode.ReassociateMatch
     private enum ReassociateMatch
     {
         x,

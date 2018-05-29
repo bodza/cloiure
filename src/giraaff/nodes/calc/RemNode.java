@@ -13,15 +13,18 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-public class RemNode extends BinaryArithmeticNode<Rem> implements Lowerable
+// @class RemNode
+public final class RemNode extends BinaryArithmeticNode<Rem> implements Lowerable
 {
     public static final NodeClass<RemNode> TYPE = NodeClass.create(RemNode.class);
 
+    // @cons
     protected RemNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
     }
 
+    // @cons
     protected RemNode(NodeClass<? extends RemNode> c, ValueNode x, ValueNode y)
     {
         super(c, ArithmeticOpTable::getRem, x, y);

@@ -20,12 +20,14 @@ import giraaff.nodes.virtual.VirtualObjectNode;
  *
  * A GuardedValueNode will only go away if its guard is null or {@link StructuredGraph#start()}.
  */
+// @class GuardedValueNode
 public final class GuardedValueNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, Canonicalizable, ValueProxy
 {
     public static final NodeClass<GuardedValueNode> TYPE = NodeClass.create(GuardedValueNode.class);
 
     @Input ValueNode object;
 
+    // @cons
     public GuardedValueNode(ValueNode object, GuardingNode guard)
     {
         super(TYPE, object.stamp(NodeView.DEFAULT), guard);

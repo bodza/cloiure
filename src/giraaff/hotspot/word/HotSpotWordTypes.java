@@ -14,7 +14,8 @@ import giraaff.word.WordTypes;
 /**
  * Extends {@link WordTypes} with information about HotSpot metaspace pointer types.
  */
-public class HotSpotWordTypes extends WordTypes
+// @class HotSpotWordTypes
+public final class HotSpotWordTypes extends WordTypes
 {
     /**
      * Resolved type for {@link MetaspacePointer}.
@@ -36,6 +37,7 @@ public class HotSpotWordTypes extends WordTypes
      */
     private final ResolvedJavaType methodCountersPointerType;
 
+    // @cons
     public HotSpotWordTypes(MetaAccessProvider metaAccess, JavaKind wordKind)
     {
         super(metaAccess, wordKind);

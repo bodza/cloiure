@@ -11,8 +11,10 @@ import giraaff.nodes.FixedNodeInterface;
  * represented by location identities (i.e. change a value at one or more locations that belong to
  * these location identities).
  */
+// @iface MemoryCheckpoint
 public interface MemoryCheckpoint extends MemoryNode, FixedNodeInterface
 {
+    // @iface MemoryCheckpoint.Single
     interface Single extends MemoryCheckpoint
     {
         /**
@@ -24,6 +26,7 @@ public interface MemoryCheckpoint extends MemoryNode, FixedNodeInterface
         LocationIdentity getLocationIdentity();
     }
 
+    // @iface MemoryCheckpoint.Multi
     interface Multi extends MemoryCheckpoint
     {
         /**
@@ -35,7 +38,8 @@ public interface MemoryCheckpoint extends MemoryNode, FixedNodeInterface
         LocationIdentity[] getLocationIdentities();
     }
 
-    class TypeAssertion
+    // @class MemoryCheckpoint.TypeAssertion
+    final class TypeAssertion
     {
         public static boolean correctType(Node node)
         {

@@ -12,15 +12,18 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-public class UnsignedDivNode extends IntegerDivRemNode implements LIRLowerable
+// @class UnsignedDivNode
+public final class UnsignedDivNode extends IntegerDivRemNode implements LIRLowerable
 {
     public static final NodeClass<UnsignedDivNode> TYPE = NodeClass.create(UnsignedDivNode.class);
 
+    // @cons
     public UnsignedDivNode(ValueNode x, ValueNode y)
     {
         this(TYPE, x, y);
     }
 
+    // @cons
     protected UnsignedDivNode(NodeClass<? extends UnsignedDivNode> c, ValueNode x, ValueNode y)
     {
         super(c, x.stamp(NodeView.DEFAULT).unrestricted(), Op.DIV, Type.UNSIGNED, x, y);

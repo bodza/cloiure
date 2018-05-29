@@ -43,8 +43,10 @@ import giraaff.replacements.SnippetTemplate.UsageReplacer;
  * {@link IfNode}. This avoids materializing the instanceof test as a boolean which is then retested
  * by the {@link IfNode}.
  */
+// @class InstanceOfSnippetsTemplates
 public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 {
+    // @cons
     public InstanceOfSnippetsTemplates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
     {
         super(options, providers, snippetReflection, target);
@@ -132,6 +134,7 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
      * The result of instantiating an instanceof snippet. This enables a snippet instantiation to be
      * re-used which reduces compile time and produces better code.
      */
+    // @class InstanceOfSnippetsTemplates.Instantiation
     public static final class Instantiation
     {
         private ValueNode result;
@@ -196,6 +199,7 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     /**
      * Replaces a usage of an {@link InstanceOfNode} or {@link InstanceOfDynamicNode}.
      */
+    // @class InstanceOfSnippetsTemplates.InstanceOfUsageReplacer
     public abstract static class InstanceOfUsageReplacer implements UsageReplacer
     {
         public final Instantiation instantiation;
@@ -203,8 +207,10 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
         public final ValueNode trueValue;
         public final ValueNode falseValue;
 
+        // @cons
         public InstanceOfUsageReplacer(Instantiation instantiation, FloatingNode instanceOf, ValueNode trueValue, ValueNode falseValue)
         {
+            super();
             this.instantiation = instantiation;
             this.instanceOf = instanceOf;
             this.trueValue = trueValue;
@@ -221,10 +227,12 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
      * Replaces the usage of an {@link InstanceOfNode} or {@link InstanceOfDynamicNode} that does
      * not materialize the result of the type test.
      */
-    public static class NonMaterializationUsageReplacer extends InstanceOfUsageReplacer
+    // @class InstanceOfSnippetsTemplates.NonMaterializationUsageReplacer
+    public static final class NonMaterializationUsageReplacer extends InstanceOfUsageReplacer
     {
         private final Node usage;
 
+        // @cons
         public NonMaterializationUsageReplacer(Instantiation instantiation, ValueNode trueValue, ValueNode falseValue, FloatingNode instanceOf, Node usage)
         {
             super(instantiation, instanceOf, trueValue, falseValue);
@@ -250,10 +258,12 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
      * Replaces the usage of an {@link InstanceOfNode} or {@link InstanceOfDynamicNode} that does
      * materializes the result of the type test.
      */
-    public static class MaterializationUsageReplacer extends InstanceOfUsageReplacer
+    // @class InstanceOfSnippetsTemplates.MaterializationUsageReplacer
+    public static final class MaterializationUsageReplacer extends InstanceOfUsageReplacer
     {
         public final ConditionalNode usage;
 
+        // @cons
         public MaterializationUsageReplacer(Instantiation instantiation, ValueNode trueValue, ValueNode falseValue, FloatingNode instanceOf, ConditionalNode usage)
         {
             super(instantiation, instanceOf, trueValue, falseValue);

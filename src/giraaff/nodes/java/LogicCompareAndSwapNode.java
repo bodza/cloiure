@@ -20,15 +20,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  *
  * This version returns a boolean indicating is the CAS was successful or not.
  */
+// @class LogicCompareAndSwapNode
 public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode
 {
     public static final NodeClass<LogicCompareAndSwapNode> TYPE = NodeClass.create(LogicCompareAndSwapNode.class);
 
+    // @cons
     public LogicCompareAndSwapNode(ValueNode address, ValueNode expectedValue, ValueNode newValue, LocationIdentity location)
     {
         this((AddressNode) address, location, expectedValue, newValue, BarrierType.NONE);
     }
 
+    // @cons
     public LogicCompareAndSwapNode(AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue, BarrierType barrierType)
     {
         super(TYPE, address, location, expectedValue, newValue, barrierType, StampFactory.forKind(JavaKind.Boolean.getStackKind()));

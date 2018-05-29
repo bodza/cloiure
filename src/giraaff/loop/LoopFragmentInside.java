@@ -43,6 +43,7 @@ import giraaff.nodes.memory.MemoryPhiNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
+// @class LoopFragmentInside
 public class LoopFragmentInside extends LoopFragment
 {
     /**
@@ -79,11 +80,13 @@ public class LoopFragmentInside extends LoopFragment
         }
     };
 
+    // @cons
     public LoopFragmentInside(LoopEx loop)
     {
         super(loop);
     }
 
+    // @cons
     public LoopFragmentInside(LoopFragmentInside original)
     {
         super(null, original);

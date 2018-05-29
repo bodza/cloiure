@@ -21,12 +21,14 @@ import giraaff.util.GraalError;
 /**
  * Round floating-point value.
  */
+// @class AMD64RoundNode
 public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<AMD64RoundNode> TYPE = NodeClass.create(AMD64RoundNode.class);
 
     private final RoundingMode mode;
 
+    // @cons
     public AMD64RoundNode(ValueNode value, RoundingMode mode)
     {
         super(TYPE, roundStamp((FloatStamp) value.stamp(NodeView.DEFAULT), mode), value);

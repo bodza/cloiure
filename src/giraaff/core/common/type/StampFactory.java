@@ -13,7 +13,8 @@ import jdk.vm.ci.meta.Signature;
 import giraaff.core.common.NumUtil;
 import giraaff.util.GraalError;
 
-public class StampFactory
+// @class StampFactory
+public final class StampFactory
 {
     private static final Stamp[] stampCache = new Stamp[JavaKind.values().length];
     private static final Stamp[] emptyStampCache = new Stamp[JavaKind.values().length];
@@ -357,5 +358,11 @@ public class StampFactory
         {
             return StampPair.createSingle(StampFactory.forKind(returnType.getJavaKind()));
         }
+    }
+
+    // @cons
+    private StampFactory()
+    {
+        super();
     }
 }

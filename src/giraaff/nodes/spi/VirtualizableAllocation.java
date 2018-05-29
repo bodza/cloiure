@@ -9,6 +9,7 @@ package giraaff.nodes.spi;
  * interface can therefore be used for object allocations, for which virtualization introduces new
  * virtualized objects.
  */
+// @iface VirtualizableAllocation
 public interface VirtualizableAllocation extends Virtualizable
 {
 }

@@ -43,6 +43,7 @@ import giraaff.phases.util.Providers;
 /**
  * Represents a compiler backend for Graal.
  */
+// @class Backend
 public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKind>
 {
     private final Providers providers;
@@ -51,8 +52,10 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     public static final ForeignCallDescriptor ARITHMETIC_FREM = new ForeignCallDescriptor("arithmeticFrem", float.class, float.class, float.class);
     public static final ForeignCallDescriptor ARITHMETIC_DREM = new ForeignCallDescriptor("arithmeticDrem", double.class, double.class, double.class);
 
+    // @cons
     protected Backend(Providers providers)
     {
+        super();
         this.providers = providers;
         this.codeInstallationTaskFactories = new ArrayList<>();
     }
@@ -280,6 +283,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     /**
      * Encapsulates custom tasks done before and after code installation.
      */
+    // @class Backend.CodeInstallationTask
     public abstract static class CodeInstallationTask
     {
         /**
@@ -315,6 +319,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     /**
      * Creates code installation tasks.
      */
+    // @class Backend.CodeInstallationTaskFactory
     public abstract static class CodeInstallationTaskFactory
     {
         public abstract CodeInstallationTask create();

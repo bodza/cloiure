@@ -24,6 +24,7 @@ import giraaff.nodeinfo.InputType;
  * The {@code InvokeNode} represents all kinds of method calls.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class InvokeNode
 public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke, LIRLowerable, MemoryCheckpoint.Single, UncheckedInterfaceProvider
 {
     public static final NodeClass<InvokeNode> TYPE = NodeClass.create(InvokeNode.class);
@@ -35,11 +36,13 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     protected boolean polymorphic;
     protected boolean useForInlining;
 
+    // @cons
     public InvokeNode(CallTargetNode callTarget, int bci)
     {
         this(callTarget, bci, callTarget.returnStamp().getTrustedStamp());
     }
 
+    // @cons
     public InvokeNode(CallTargetNode callTarget, int bci, Stamp stamp)
     {
         super(TYPE, stamp);

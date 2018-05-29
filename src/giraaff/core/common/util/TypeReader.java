@@ -3,6 +3,7 @@ package giraaff.core.common.util;
 /**
  * Provides low-level read access for signed and unsigned values of size 1, 2, 4, and 8 bytes.
  */
+// @iface TypeReader
 public interface TypeReader
 {
     /** Returns the next byte index to be read. */

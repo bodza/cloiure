@@ -16,10 +16,13 @@ import giraaff.phases.schedule.SchedulePhase;
 import giraaff.phases.schedule.SchedulePhase.SchedulingStrategy;
 import giraaff.phases.tiers.LowTierContext;
 
-public class LowTier extends PhaseSuite<LowTierContext>
+// @class LowTier
+public final class LowTier extends PhaseSuite<LowTierContext>
 {
+    // @cons
     public LowTier(OptionValues options)
     {
+        super();
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
 
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.LOW_TIER));

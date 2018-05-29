@@ -11,12 +11,15 @@ import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
  * Wrapper for {@link MoveFactory} that checks that the instructions created adhere to the contract
  * of {@link MoveFactory}.
  */
+// @class VerifyingMoveFactory
 public final class VerifyingMoveFactory implements MoveFactory
 {
     private final MoveFactory inner;
 
+    // @cons
     public VerifyingMoveFactory(MoveFactory inner)
     {
+        super();
         this.inner = inner;
     }
 

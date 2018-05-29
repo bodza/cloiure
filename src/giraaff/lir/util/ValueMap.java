@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.Value;
 /**
  * A map interface to map {@link Value}s to other objects.
  */
+// @class ValueMap
 public abstract class ValueMap<K extends Value, T>
 {
     /**

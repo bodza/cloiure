@@ -3,6 +3,7 @@ package giraaff.lir.asm;
 /**
  * Code for managing a method's native frame.
  */
+// @iface FrameContext
 public interface FrameContext
 {
     /**

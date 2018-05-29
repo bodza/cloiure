@@ -8,10 +8,12 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class AbstractEndNode
 public abstract class AbstractEndNode extends FixedNode implements LIRLowerable
 {
     public static final NodeClass<AbstractEndNode> TYPE = NodeClass.create(AbstractEndNode.class);
 
+    // @cons
     protected AbstractEndNode(NodeClass<? extends AbstractEndNode> c)
     {
         super(c, StampFactory.forVoid());

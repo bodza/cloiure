@@ -8,10 +8,12 @@ import giraaff.lir.asm.CompilationResultBuilder;
 /**
  * Convenience class to provide AMD64MacroAssembler for the {@link #emitCode} method.
  */
+// @class AMD64LIRInstruction
 public abstract class AMD64LIRInstruction extends LIRInstruction
 {
     public static final LIRInstructionClass<AMD64LIRInstruction> TYPE = LIRInstructionClass.create(AMD64LIRInstruction.class);
 
+    // @cons
     protected AMD64LIRInstruction(LIRInstructionClass<? extends AMD64LIRInstruction> c)
     {
         super(c);

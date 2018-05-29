@@ -12,8 +12,10 @@ import giraaff.core.amd64.AMD64MoveFactory;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 
-public class AMD64HotSpotMoveFactory extends AMD64MoveFactory
+// @class AMD64HotSpotMoveFactory
+public final class AMD64HotSpotMoveFactory extends AMD64MoveFactory
 {
+    // @cons
     public AMD64HotSpotMoveFactory(BackupSlotProvider backupSlotProvider)
     {
         super(backupSlotProvider);

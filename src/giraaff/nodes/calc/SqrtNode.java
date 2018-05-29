@@ -13,10 +13,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Square root.
  */
+// @class SqrtNode
 public final class SqrtNode extends UnaryArithmeticNode<Sqrt> implements ArithmeticLIRLowerable
 {
     public static final NodeClass<SqrtNode> TYPE = NodeClass.create(SqrtNode.class);
 
+    // @cons
     protected SqrtNode(ValueNode x)
     {
         super(TYPE, ArithmeticOpTable::getSqrt, x);

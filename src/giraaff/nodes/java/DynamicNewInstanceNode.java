@@ -13,7 +13,8 @@ import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.ValueNode;
 
-public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Canonicalizable
+// @class DynamicNewInstanceNode
+public final class DynamicNewInstanceNode extends AbstractNewObjectNode implements Canonicalizable
 {
     public static final NodeClass<DynamicNewInstanceNode> TYPE = NodeClass.create(DynamicNewInstanceNode.class);
 
@@ -25,11 +26,13 @@ public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Can
      */
     @OptionalInput ValueNode classClass;
 
+    // @cons
     public DynamicNewInstanceNode(ValueNode clazz, boolean fillContents)
     {
         this(TYPE, clazz, fillContents, null);
     }
 
+    // @cons
     protected DynamicNewInstanceNode(NodeClass<? extends DynamicNewInstanceNode> c, ValueNode clazz, boolean fillContents, FrameState stateBefore)
     {
         super(c, StampFactory.objectNonNull(), fillContents, stateBefore);

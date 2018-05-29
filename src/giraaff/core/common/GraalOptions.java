@@ -5,6 +5,7 @@ import giraaff.options.OptionKey;
 /**
  * This class encapsulates options that control the behavior of the Graal compiler.
  */
+// @class GraalOptions
 public final class GraalOptions
 {
     // @Option "Use compiler intrinsifications."

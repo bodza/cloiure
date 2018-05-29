@@ -11,20 +11,24 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
 // @NodeInfo.allowedUsageTypes "Guard"
+// @class FixedGuardNode
 public final class FixedGuardNode extends AbstractFixedGuardNode implements Lowerable, IterableNodeType
 {
     public static final NodeClass<FixedGuardNode> TYPE = NodeClass.create(FixedGuardNode.class);
 
+    // @cons
     public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action)
     {
         this(condition, deoptReason, action, JavaConstant.NULL_POINTER, false);
     }
 
+    // @cons
     public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, boolean negated)
     {
         this(condition, deoptReason, action, JavaConstant.NULL_POINTER, negated);
     }
 
+    // @cons
     public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
     {
         super(TYPE, condition, deoptReason, action, speculation, negated);

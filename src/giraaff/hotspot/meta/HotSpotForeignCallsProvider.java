@@ -10,6 +10,7 @@ import giraaff.hotspot.stubs.Stub;
 /**
  * HotSpot extension of {@link ForeignCallsProvider}.
  */
+// @iface HotSpotForeignCallsProvider
 public interface HotSpotForeignCallsProvider extends ForeignCallsProvider
 {
     /**

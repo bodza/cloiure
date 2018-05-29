@@ -6,12 +6,14 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.memory.MemoryCheckpoint;
 
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class KillingBeginNode
 public final class KillingBeginNode extends AbstractBeginNode implements MemoryCheckpoint.Single
 {
     public static final NodeClass<KillingBeginNode> TYPE = NodeClass.create(KillingBeginNode.class);
 
     protected LocationIdentity locationIdentity;
 
+    // @cons
     public KillingBeginNode(LocationIdentity locationIdentity)
     {
         super(TYPE);

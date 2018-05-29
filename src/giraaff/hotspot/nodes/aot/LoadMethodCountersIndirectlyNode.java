@@ -20,13 +20,15 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
-public class LoadMethodCountersIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
+// @class LoadMethodCountersIndirectlyNode
+public final class LoadMethodCountersIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<LoadMethodCountersIndirectlyNode> TYPE = NodeClass.create(LoadMethodCountersIndirectlyNode.class);
 
     @OptionalInput protected ValueNode value;
     protected Constant constant;
 
+    // @cons
     public LoadMethodCountersIndirectlyNode(ValueNode value)
     {
         super(TYPE, MethodCountersPointerStamp.methodCounters());

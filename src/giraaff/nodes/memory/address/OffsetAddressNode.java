@@ -20,13 +20,15 @@ import giraaff.nodes.calc.BinaryArithmeticNode;
  * {@link JavaKind#Object}, a word-sized integer or another pointer. The offset must be a word-sized integer.
  */
 // @NodeInfo.allowedUsageTypes "Association"
-public class OffsetAddressNode extends AddressNode implements Canonicalizable
+// @class OffsetAddressNode
+public final class OffsetAddressNode extends AddressNode implements Canonicalizable
 {
     public static final NodeClass<OffsetAddressNode> TYPE = NodeClass.create(OffsetAddressNode.class);
 
     @Input ValueNode base;
     @Input ValueNode offset;
 
+    // @cons
     public OffsetAddressNode(ValueNode base, ValueNode offset)
     {
         super(TYPE);

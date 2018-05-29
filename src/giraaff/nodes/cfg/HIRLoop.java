@@ -5,10 +5,12 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.cfg.Loop;
 import giraaff.nodes.LoopBeginNode;
 
+// @class HIRLoop
 public final class HIRLoop extends Loop<Block>
 {
     private LocationSet killLocations;
 
+    // @cons
     protected HIRLoop(Loop<Block> parent, int index, Block header)
     {
         super(parent, index, header);

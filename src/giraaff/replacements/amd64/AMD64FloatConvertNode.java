@@ -16,12 +16,14 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * of the {@link FloatConvertNode} which, on AMD64 needs a {@link AMD64FloatConvertNode} plus some
  * fixup code that handles the corner cases that differ between AMD64 and Java.
  */
+// @class AMD64FloatConvertNode
 public final class AMD64FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ArithmeticLIRLowerable
 {
     public static final NodeClass<AMD64FloatConvertNode> TYPE = NodeClass.create(AMD64FloatConvertNode.class);
 
     protected final FloatConvert op;
 
+    // @cons
     public AMD64FloatConvertNode(FloatConvert op, ValueNode value)
     {
         super(TYPE, table -> table.getFloatConvert(op), value);

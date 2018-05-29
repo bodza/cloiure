@@ -7,10 +7,12 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.tiers.PhaseContext;
 
-public class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
+// @class LoopFullUnrollPhase
+public final class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
 {
     private final CanonicalizerPhase canonicalizer;
 
+    // @cons
     public LoopFullUnrollPhase(CanonicalizerPhase canonicalizer, LoopPolicies policies)
     {
         super(policies);

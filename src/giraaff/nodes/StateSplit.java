@@ -5,6 +5,7 @@ import giraaff.nodes.spi.NodeWithState;
 /**
  * A state split is a node that may have a frame state associated with it.
  */
+// @iface StateSplit
 public interface StateSplit extends NodeWithState
 {
     /**

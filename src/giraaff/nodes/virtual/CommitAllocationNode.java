@@ -24,6 +24,7 @@ import giraaff.nodes.spi.VirtualizableAllocation;
 import giraaff.nodes.spi.VirtualizerTool;
 
 // @NodeInfo.allowedUsageTypes "Extension, Memory"
+// @class CommitAllocationNode
 public final class CommitAllocationNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Simplifiable, MemoryCheckpoint.Single
 {
     public static final NodeClass<CommitAllocationNode> TYPE = NodeClass.create(CommitAllocationNode.class);
@@ -34,6 +35,7 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
     protected ArrayList<Integer> lockIndexes = new ArrayList<>(Arrays.asList(0));
     protected ArrayList<Boolean> ensureVirtual = new ArrayList<>();
 
+    // @cons
     public CommitAllocationNode()
     {
         super(TYPE, StampFactory.forVoid());

@@ -10,16 +10,20 @@ import giraaff.options.OptionKey;
  * Base class for all {@link LIR low-level} phases. Subclasses should be stateless. There will be
  * one global instance for each phase that is shared for all compilations.
  */
+// @class LIRPhase
 public abstract class LIRPhase<C>
 {
-    public static class Options
+    // @class LIRPhase.Options
+    public static final class Options
     {
         // @Option "Enable LIR level optimiztations."
         public static final OptionKey<Boolean> LIROptimization = new OptionKey<>(true);
     }
 
+    // @cons
     public LIRPhase()
     {
+        super();
     }
 
     public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, C context)

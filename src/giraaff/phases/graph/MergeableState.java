@@ -8,6 +8,7 @@ import giraaff.nodes.ControlSplitNode;
 import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.LoopEndNode;
 
+// @class MergeableState
 public abstract class MergeableState<T>
 {
     @Override

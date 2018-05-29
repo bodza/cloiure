@@ -12,10 +12,13 @@ import giraaff.core.common.spi.LIRKindTool;
 /**
  * A stamp is the basis for a type system.
  */
+// @class Stamp
 public abstract class Stamp
 {
+    // @cons
     protected Stamp()
     {
+        super();
     }
 
     /**

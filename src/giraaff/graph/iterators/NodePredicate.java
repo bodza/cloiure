@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 import giraaff.graph.Node;
 import giraaff.graph.iterators.NodePredicates.AndPredicate;
 
+// @iface NodePredicate
 public interface NodePredicate extends Predicate<Node>
 {
     boolean apply(Node n);

@@ -5,6 +5,7 @@ import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.address.AddressNode;
 
+// @iface ArrayRangeWrite
 public interface ArrayRangeWrite extends NodeInterface
 {
     AddressNode getAddress();

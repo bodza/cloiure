@@ -49,7 +49,8 @@ import giraaff.phases.util.Providers;
  * information suggests a reasonable amount of different receiver types and different methods. If an
  * unknown type is encountered a deoptimization is triggered.
  */
-public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
+// @class MultiTypeGuardInlineInfo
+public final class MultiTypeGuardInlineInfo extends AbstractInlineInfo
 {
     private final List<ResolvedJavaMethod> concretes;
     private final double[] methodProbabilities;
@@ -59,6 +60,7 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     private final double notRecordedTypeProbability;
     private final Inlineable[] inlineableElements;
 
+    // @cons
     public MultiTypeGuardInlineInfo(Invoke invoke, ArrayList<ResolvedJavaMethod> concretes, ArrayList<ProfiledType> ptypes, ArrayList<Integer> typesToConcretes, double notRecordedTypeProbability)
     {
         super(invoke);
@@ -457,8 +459,7 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
             ResolvedJavaType leastCommonType = getLeastCommonType();
             ResolvedJavaType contextType = invoke.getContextType();
             // check if we have a common base type that implements the interface -> in that case
-            // we have a vtable entry for the interface method and can use a less expensive
-            // virtual call
+            // we have a vtable entry for the interface method and can use a less expensive virtual call
             if (!leastCommonType.isInterface() && targetMethod.getDeclaringClass().isAssignableFrom(leastCommonType))
             {
                 ResolvedJavaMethod baseClassTargetMethod = leastCommonType.resolveConcreteMethod(targetMethod, contextType);

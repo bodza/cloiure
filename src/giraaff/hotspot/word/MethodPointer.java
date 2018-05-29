@@ -7,6 +7,7 @@ import giraaff.hotspot.word.HotSpotOperation.HotspotOpcode;
 /**
  * Marker type for a metaspace pointer to a method.
  */
+// @class MethodPointer
 public abstract class MethodPointer extends MetaspacePointer
 {
     @HotSpotOperation(opcode = HotspotOpcode.POINTER_EQ)

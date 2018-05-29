@@ -22,6 +22,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class LoweredAtomicReadAndWriteNode
 public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
     public static final NodeClass<LoweredAtomicReadAndWriteNode> TYPE = NodeClass.create(LoweredAtomicReadAndWriteNode.class);
@@ -29,6 +30,7 @@ public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode impleme
     @Input ValueNode newValue;
     @OptionalInput(InputType.State) FrameState stateAfter;
 
+    // @cons
     public LoweredAtomicReadAndWriteNode(AddressNode address, LocationIdentity location, ValueNode newValue, BarrierType barrierType)
     {
         super(TYPE, address, location, newValue.stamp(NodeView.DEFAULT).unrestricted(), barrierType);

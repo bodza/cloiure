@@ -70,8 +70,10 @@ import giraaff.util.GraalError;
 /**
  * This class implements the AMD64 specific portion of the LIR generator.
  */
+// @class AMD64LIRGenerator
 public abstract class AMD64LIRGenerator extends LIRGenerator
 {
+    // @cons
     public AMD64LIRGenerator(LIRKindTool lirKindTool, AMD64ArithmeticLIRGenerator arithmeticLIRGen, MoveFactory moveFactory, Providers providers, LIRGenerationResult lirGenRes)
     {
         super(lirKindTool, arithmeticLIRGen, moveFactory, providers, lirGenRes);

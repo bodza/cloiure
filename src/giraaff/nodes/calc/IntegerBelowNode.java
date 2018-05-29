@@ -16,12 +16,14 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.options.OptionValues;
 
+// @class IntegerBelowNode
 public final class IntegerBelowNode extends IntegerLowerThanNode
 {
     public static final NodeClass<IntegerBelowNode> TYPE = NodeClass.create(IntegerBelowNode.class);
 
     private static final BelowOp OP = new BelowOp();
 
+    // @cons
     public IntegerBelowNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y, OP);
@@ -54,7 +56,8 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
         return this;
     }
 
-    public static class BelowOp extends LowerOp
+    // @class IntegerBelowNode.BelowOp
+    public static final class BelowOp extends LowerOp
     {
         @Override
         protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)

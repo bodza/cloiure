@@ -8,11 +8,10 @@ import giraaff.replacements.nodes.ArrayCompareToNode;
 
 /**
  * Substitutions for {@code java.lang.StringLatin1} methods.
- *
- * Since JDK 9.
  */
 @ClassSubstitution(className = "java.lang.StringLatin1", optional = true)
-public class AMD64StringLatin1Substitutions
+// @class AMD64StringLatin1Substitutions
+public final class AMD64StringLatin1Substitutions
 {
     /**
      * @param value is byte[]

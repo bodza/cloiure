@@ -23,10 +23,12 @@ import giraaff.nodes.util.GraphUtil;
 /**
  * An IsNullNode will be true if the supplied value is null, and false if it is non-null.
  */
+// @class IsNullNode
 public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, Virtualizable
 {
     public static final NodeClass<IsNullNode> TYPE = NodeClass.create(IsNullNode.class);
 
+    // @cons
     public IsNullNode(ValueNode object)
     {
         super(TYPE, object);

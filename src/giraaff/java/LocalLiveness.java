@@ -8,6 +8,7 @@ import giraaff.java.BciBlockMapping.BciBlock;
  * Encapsulates the liveness calculation, so that subclasses for locals &le; 64 and locals &gt; 64
  * can be implemented.
  */
+// @class LocalLiveness
 public abstract class LocalLiveness
 {
     protected final BciBlock[] blocks;
@@ -19,8 +20,10 @@ public abstract class LocalLiveness
         return liveness;
     }
 
+    // @cons
     protected LocalLiveness(BciBlock[] blocks)
     {
+        super();
         this.blocks = blocks;
     }
 

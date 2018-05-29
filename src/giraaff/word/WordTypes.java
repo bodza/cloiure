@@ -18,6 +18,7 @@ import giraaff.word.Word.Operation;
 /**
  * Encapsulates information for Java types representing raw words (as opposed to Objects).
  */
+// @class WordTypes
 public class WordTypes
 {
     /**
@@ -47,8 +48,10 @@ public class WordTypes
 
     private final JavaKind wordKind;
 
+    // @cons
     public WordTypes(MetaAccessProvider metaAccess, JavaKind wordKind)
     {
+        super();
         this.wordKind = wordKind;
         this.wordBaseType = metaAccess.lookupJavaType(WordBase.class);
         this.wordImplType = metaAccess.lookupJavaType(Word.class);

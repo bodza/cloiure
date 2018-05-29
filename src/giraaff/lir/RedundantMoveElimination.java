@@ -30,6 +30,7 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 /**
  * Removes move instructions, where the destination value is already in place.
  */
+// @class RedundantMoveElimination
 public final class RedundantMoveElimination extends PostAllocationOptimizationPhase
 {
     @Override
@@ -50,10 +51,13 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
      * The value numbers also contain information if it is an object kind value or not: if the
      * number is negative it is an object kind value.
      */
+    // @class RedundantMoveElimination.BlockData
     private static final class BlockData
     {
+        // @cons
         BlockData(int stateSize)
         {
+            super();
             entryState = new int[stateSize];
             exitState = new int[stateSize];
         }
@@ -76,6 +80,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         int entryValueNum;
     }
 
+    // @class RedundantMoveElimination.Optimization
     private static final class Optimization
     {
         EconomicMap<AbstractBlockBase<?>, BlockData> blockData = EconomicMap.create(Equivalence.IDENTITY);
@@ -100,8 +105,10 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         // Pseudo value for a not yet assigned location.
         static final int INIT_VALUE = 0;
 
+        // @cons
         Optimization(FrameMap frameMap)
         {
+            super();
             this.frameMap = frameMap;
         }
 
@@ -363,12 +370,15 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             }
 
             // Value procedure for the instruction's output and temp values
-            class OutputValueConsumer implements ValueConsumer
+            // @class RedundantMoveElimination.Optimization.*OutputValueConsumer
+            final class OutputValueConsumer implements ValueConsumer
             {
                 int opValueNum;
 
+                // @cons
                 OutputValueConsumer(int opValueNum)
                 {
+                    super();
                     this.opValueNum = opValueNum;
                 }
 

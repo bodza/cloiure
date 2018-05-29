@@ -7,12 +7,15 @@ import jdk.vm.ci.meta.SerializableConstant;
 /**
  * Type describing values that support arithmetic operations.
  */
+// @class ArithmeticStamp
 public abstract class ArithmeticStamp extends Stamp
 {
     private final ArithmeticOpTable ops;
 
+    // @cons
     protected ArithmeticStamp(ArithmeticOpTable ops)
     {
+        super();
         this.ops = ops;
     }
 

@@ -17,12 +17,14 @@ import giraaff.lir.framemap.FrameMap;
 import giraaff.lir.framemap.FrameMapBuilderTool;
 import giraaff.util.GraalError;
 
+// @class SSAMoveResolver
 public final class SSAMoveResolver extends MoveResolver
 {
     private static final int STACK_SLOT_IN_CALLER_FRAME_IDX = -1;
     private int[] stackBlocked;
     private final int firstVirtualStackIndex;
 
+    // @cons
     public SSAMoveResolver(LinearScan allocator)
     {
         super(allocator);

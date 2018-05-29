@@ -6,8 +6,10 @@ import giraaff.loop.LoopsData;
 import giraaff.nodes.StructuredGraph;
 import giraaff.phases.tiers.PhaseContext;
 
-public class LoopPeelingPhase extends LoopPhase<LoopPolicies>
+// @class LoopPeelingPhase
+public final class LoopPeelingPhase extends LoopPhase<LoopPolicies>
 {
+    // @cons
     public LoopPeelingPhase(LoopPolicies policies)
     {
         super(policies);

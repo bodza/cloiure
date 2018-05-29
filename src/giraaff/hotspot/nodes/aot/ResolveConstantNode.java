@@ -8,13 +8,15 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-public class ResolveConstantNode extends DeoptimizingFixedWithNextNode implements Lowerable
+// @class ResolveConstantNode
+public final class ResolveConstantNode extends DeoptimizingFixedWithNextNode implements Lowerable
 {
     public static final NodeClass<ResolveConstantNode> TYPE = NodeClass.create(ResolveConstantNode.class);
 
     @Input ValueNode value;
     protected HotSpotConstantLoadAction action;
 
+    // @cons
     public ResolveConstantNode(ValueNode value, HotSpotConstantLoadAction action)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));
@@ -22,6 +24,7 @@ public class ResolveConstantNode extends DeoptimizingFixedWithNextNode implement
         this.action = action;
     }
 
+    // @cons
     public ResolveConstantNode(ValueNode value)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));

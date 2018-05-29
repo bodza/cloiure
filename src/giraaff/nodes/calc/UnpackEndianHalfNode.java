@@ -17,12 +17,14 @@ import giraaff.nodes.spi.LoweringTool;
 /**
  * Produces the platform dependent first or second half of a long or double value as an int.
  */
+// @class UnpackEndianHalfNode
 public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
 {
     public static final NodeClass<UnpackEndianHalfNode> TYPE = NodeClass.create(UnpackEndianHalfNode.class);
 
     private final boolean firstHalf;
 
+    // @cons
     protected UnpackEndianHalfNode(ValueNode value, boolean firstHalf)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int), value);

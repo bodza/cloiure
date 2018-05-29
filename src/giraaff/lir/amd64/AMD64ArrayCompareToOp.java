@@ -31,6 +31,7 @@ import giraaff.util.UnsafeAccess;
  * instructions specialized code is emitted to leverage these instructions.
  */
 @Opcode
+// @class AMD64ArrayCompareToOp
 public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ArrayCompareToOp> TYPE = LIRInstructionClass.create(AMD64ArrayCompareToOp.class);
@@ -52,6 +53,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
     @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value vectorTemp1;
 
+    // @cons
     public AMD64ArrayCompareToOp(LIRGeneratorTool tool, JavaKind kind1, JavaKind kind2, Value result, Value array1, Value array2, Value length1, Value length2)
     {
         super(TYPE);

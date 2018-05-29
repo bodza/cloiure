@@ -52,12 +52,15 @@ import giraaff.util.GraalError;
 /**
  * This class implements the AMD64 specific portion of the LIR generator.
  */
-public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implements AMD64ArithmeticLIRGeneratorTool
+// @class AMD64ArithmeticLIRGenerator
+public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implements AMD64ArithmeticLIRGeneratorTool
 {
     private static final RegisterValue RCX_I = AMD64.rcx.asValue(LIRKind.value(AMD64Kind.DWORD));
 
+    // @cons
     public AMD64ArithmeticLIRGenerator()
     {
+        super();
     }
 
     @Override

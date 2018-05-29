@@ -11,6 +11,7 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 /**
  * This class performs basic optimizations on the control flow graph after LIR generation.
  */
+// @class ControlFlowOptimizer
 public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
 {
     /**
@@ -23,12 +24,15 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
         new Optimizer(lir).deleteEmptyBlocks(lir.codeEmittingOrder());
     }
 
+    // @class ControlFlowOptimizer.Optimizer
     private static final class Optimizer
     {
         private final LIR lir;
 
+        // @cons
         private Optimizer(LIR lir)
         {
+            super();
             this.lir = lir;
         }
 

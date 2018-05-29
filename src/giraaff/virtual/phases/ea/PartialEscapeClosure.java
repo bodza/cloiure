@@ -54,6 +54,7 @@ import giraaff.nodes.virtual.AllocatedObjectNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.virtual.nodes.VirtualObjectState;
 
+// @class PartialEscapeClosure
 public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockState<BlockT>> extends EffectsClosure<BlockT>
 {
     /**
@@ -103,14 +104,17 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         return delta != 0;
     }
 
+    // @class PartialEscapeClosure.CollectVirtualObjectsClosure
     private final class CollectVirtualObjectsClosure extends NodeClosure<ValueNode>
     {
         private final EconomicSet<VirtualObjectNode> virtual;
         private final GraphEffectList effects;
         private final BlockT state;
 
+        // @cons
         private CollectVirtualObjectsClosure(EconomicSet<VirtualObjectNode> virtual, GraphEffectList effects, BlockT state)
         {
+            super();
             this.virtual = virtual;
             this.effects = effects;
             this.state = state;
@@ -144,8 +148,10 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
      * Final subclass of PartialEscapeClosure, for performance and to make everything behave nicely
      * with generics.
      */
+    // @class PartialEscapeClosure.Final
     public static final class Final extends PartialEscapeClosure<PartialEscapeBlockState.Final>
     {
+        // @cons
         public Final(ScheduleResult schedule, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, LoweringProvider loweringProvider)
         {
             super(schedule, metaAccess, constantReflection, constantFieldProvider, loweringProvider);
@@ -164,11 +170,13 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         }
     }
 
+    // @cons
     public PartialEscapeClosure(ScheduleResult schedule, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider)
     {
         this(schedule, metaAccess, constantReflection, constantFieldProvider, null);
     }
 
+    // @cons
     public PartialEscapeClosure(ScheduleResult schedule, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, LoweringProvider loweringProvider)
     {
         super(schedule, schedule.getCFG());
@@ -675,6 +683,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         return new MergeProcessor(merge);
     }
 
+    // @class PartialEscapeClosure.MergeProcessor
     protected class MergeProcessor extends EffectsClosure<BlockT>.MergeProcessor
     {
         private EconomicMap<Object, ValuePhiNode> materializedPhis;
@@ -682,6 +691,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         private EconomicMap<ValuePhiNode, VirtualObjectNode> valueObjectVirtuals;
         private final boolean needsCaching;
 
+        // @cons
         public MergeProcessor(Block mergeBlock)
         {
             super(mergeBlock);

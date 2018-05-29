@@ -9,11 +9,13 @@ import giraaff.util.UnsafeAccess;
 /**
  * Scans the fields in a class hierarchy.
  */
+// @class FieldsScanner
 public class FieldsScanner
 {
     /**
      * Determines the offset (in bytes) of a field.
      */
+    // @iface FieldsScanner.CalcOffset
     public interface CalcOffset
     {
         long getOffset(Field field);
@@ -22,7 +24,8 @@ public class FieldsScanner
     /**
      * Determines the offset (in bytes) of a field using {@link Unsafe#objectFieldOffset(Field)}.
      */
-    public static class DefaultCalcOffset implements CalcOffset
+    // @class FieldsScanner.DefaultCalcOffset
+    public static final class DefaultCalcOffset implements CalcOffset
     {
         @Override
         public long getOffset(Field field)
@@ -34,6 +37,7 @@ public class FieldsScanner
     /**
      * Describes a field in a class during {@linkplain FieldsScanner scanning}.
      */
+    // @class FieldsScanner.FieldInfo
     public static class FieldInfo implements Comparable<FieldInfo>
     {
         public final long offset;
@@ -41,8 +45,10 @@ public class FieldsScanner
         public final Class<?> type;
         public final Class<?> declaringClass;
 
+        // @cons
         public FieldInfo(long offset, String name, Class<?> type, Class<?> declaringClass)
         {
+            super();
             this.offset = offset;
             this.name = name;
             this.type = type;
@@ -73,8 +79,10 @@ public class FieldsScanner
      */
     public final ArrayList<FieldsScanner.FieldInfo> data = new ArrayList<>();
 
+    // @cons
     public FieldsScanner(FieldsScanner.CalcOffset calc)
     {
+        super();
         this.calc = calc;
     }
 

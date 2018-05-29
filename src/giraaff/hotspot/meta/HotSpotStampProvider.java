@@ -6,8 +6,15 @@ import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.nodes.type.MethodPointerStamp;
 import giraaff.nodes.spi.StampProvider;
 
-public class HotSpotStampProvider implements StampProvider
+// @class HotSpotStampProvider
+public final class HotSpotStampProvider implements StampProvider
 {
+    // @cons
+    public HotSpotStampProvider()
+    {
+        super();
+    }
+
     @Override
     public Stamp createHubStamp(ObjectStamp object)
     {

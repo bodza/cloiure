@@ -18,7 +18,8 @@ import giraaff.phases.common.inlining.info.elem.InlineableGraph;
  *
  * @see InliningData#moveForward()
  */
-public class MethodInvocation
+// @class MethodInvocation
+public final class MethodInvocation
 {
     private final InlineInfo callee;
     private final double probability;
@@ -44,8 +45,10 @@ public class MethodInvocation
 
     private final int sizeFreshArgs;
 
+    // @cons
     public MethodInvocation(InlineInfo info, double probability, double relevance, BitSet freshlyInstantiatedArguments)
     {
+        super();
         this.callee = info;
         this.probability = probability;
         this.relevance = relevance;

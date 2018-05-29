@@ -13,8 +13,10 @@ import giraaff.util.GraalError;
  * An {@link EffectList} can be used to maintain a list of {@link Effect}s and backtrack to a
  * previous state by truncating the list.
  */
+// @class EffectList
 public class EffectList implements Iterable<EffectList.Effect>
 {
+    // @iface EffectList.Effect
     public interface Effect
     {
         default boolean isVisible()
@@ -30,6 +32,7 @@ public class EffectList implements Iterable<EffectList.Effect>
         void apply(StructuredGraph graph, ArrayList<Node> obsoleteNodes);
     }
 
+    // @iface EffectList.SimpleEffect
     public interface SimpleEffect extends Effect
     {
         @Override
@@ -47,8 +50,10 @@ public class EffectList implements Iterable<EffectList.Effect>
     private Effect[] effects = EMPTY_ARRAY;
     private int size;
 
+    // @cons
     public EffectList()
     {
+        super();
     }
 
     private void enlarge(int elements)

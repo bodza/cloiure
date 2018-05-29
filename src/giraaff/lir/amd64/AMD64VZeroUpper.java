@@ -12,12 +12,14 @@ import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-public class AMD64VZeroUpper extends AMD64LIRInstruction
+// @class AMD64VZeroUpper
+public final class AMD64VZeroUpper extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64VZeroUpper> TYPE = LIRInstructionClass.create(AMD64VZeroUpper.class);
 
     @Temp protected final RegisterValue[] xmmRegisters;
 
+    // @cons
     public AMD64VZeroUpper(Value[] exclude)
     {
         super(TYPE);

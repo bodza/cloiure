@@ -5,6 +5,7 @@ import java.util.ArrayList;
 /**
  * This class represents a label within assembly code.
  */
+// @class Label
 public final class Label
 {
     private int position = -1;
@@ -26,12 +27,16 @@ public final class Label
         return position;
     }
 
+    // @cons
     public Label()
     {
+        super();
     }
 
+    // @cons
     public Label(int id)
     {
+        super();
         blockId = id;
     }
 

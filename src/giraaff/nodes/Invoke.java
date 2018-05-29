@@ -9,6 +9,7 @@ import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.type.StampTool;
 
+// @iface Invoke
 public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDuring, FixedNodeInterface, Invokable
 {
     FixedNode next();

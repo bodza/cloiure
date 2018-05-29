@@ -51,6 +51,7 @@ import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.options.OptionValues;
 import giraaff.virtual.phases.ea.PEReadEliminationBlockState.ReadCacheEntry;
 
+// @class PEReadEliminationClosure
 public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadEliminationBlockState>
 {
     private static final EnumMap<JavaKind, LocationIdentity> UNBOX_LOCATIONS;
@@ -64,6 +65,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
         }
     }
 
+    // @cons
     public PEReadEliminationClosure(ScheduleResult schedule, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, LoweringProvider loweringProvider)
     {
         super(schedule, metaAccess, constantReflection, constantFieldProvider, loweringProvider);
@@ -435,8 +437,10 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
         return new ReadEliminationMergeProcessor(merge);
     }
 
-    private class ReadEliminationMergeProcessor extends MergeProcessor
+    // @class PEReadEliminationClosure.ReadEliminationMergeProcessor
+    private final class ReadEliminationMergeProcessor extends MergeProcessor
     {
+        // @cons
         ReadEliminationMergeProcessor(Block mergeBlock)
         {
             super(mergeBlock);

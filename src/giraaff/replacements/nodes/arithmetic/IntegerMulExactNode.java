@@ -17,10 +17,12 @@ import giraaff.nodes.spi.LoweringTool;
  * Node representing an exact integer multiplication that will throw an {@link ArithmeticException}
  * in case the addition would overflow the 32 bit range.
  */
+// @class IntegerMulExactNode
 public final class IntegerMulExactNode extends MulNode implements IntegerExactArithmeticNode
 {
     public static final NodeClass<IntegerMulExactNode> TYPE = NodeClass.create(IntegerMulExactNode.class);
 
+    // @cons
     public IntegerMulExactNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y);

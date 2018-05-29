@@ -10,12 +10,14 @@ import giraaff.nodes.memory.address.AddressNode;
  * {@code UnsafeLoadNode}). The return value of the read is passed to the snippet implementing the
  * read barrier and consequently is added to the SATB queue if the concurrent marker is enabled.
  */
+// @class G1ReferentFieldReadBarrier
 public final class G1ReferentFieldReadBarrier extends ObjectWriteBarrier
 {
     public static final NodeClass<G1ReferentFieldReadBarrier> TYPE = NodeClass.create(G1ReferentFieldReadBarrier.class);
 
     protected final boolean doLoad;
 
+    // @cons
     public G1ReferentFieldReadBarrier(AddressNode address, ValueNode expectedObject, boolean doLoad)
     {
         super(TYPE, address, expectedObject, true);

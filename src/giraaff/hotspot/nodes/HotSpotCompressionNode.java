@@ -14,10 +14,12 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.util.GraalError;
 
+// @class HotSpotCompressionNode
 public final class HotSpotCompressionNode extends CompressionNode
 {
     public static final NodeClass<HotSpotCompressionNode> TYPE = NodeClass.create(HotSpotCompressionNode.class);
 
+    // @cons
     public HotSpotCompressionNode(CompressionOp op, ValueNode input, CompressEncoding encoding)
     {
         super(TYPE, op, input, HotSpotNarrowOopStamp.mkStamp(op, input.stamp(NodeView.DEFAULT), encoding), encoding);

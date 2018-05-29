@@ -10,13 +10,16 @@ import giraaff.options.OptionValues;
 /**
  * Singleton class holding the instance of the {@link GraalRuntime}.
  */
+// @class HotSpotGraalRuntime
 public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
 {
     private final OptionValues options;
     private final HotSpotBackend backend;
 
+    // @cons
     public HotSpotGraalRuntime(OptionValues options)
     {
+        super();
         this.options = options;
         this.backend = new AMD64HotSpotBackendFactory().createBackend(this, new CommunityCompilerConfiguration(), HotSpotJVMCIRuntime.runtime());
         this.backend.completeInitialization(options);

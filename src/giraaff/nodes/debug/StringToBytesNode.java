@@ -17,12 +17,14 @@ import giraaff.nodes.spi.LoweringTool;
  * compiled code.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
+// @class StringToBytesNode
 public final class StringToBytesNode extends FixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<StringToBytesNode> TYPE = NodeClass.create(StringToBytesNode.class);
 
     private final String value;
 
+    // @cons
     public StringToBytesNode(String value, Stamp stamp)
     {
         super(TYPE, stamp);

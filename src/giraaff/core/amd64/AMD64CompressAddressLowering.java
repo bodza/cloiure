@@ -14,6 +14,7 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class AMD64CompressAddressLowering
 public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
 {
     @Override
@@ -54,12 +55,14 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
 
     protected abstract boolean improveUncompression(AMD64AddressNode addr, CompressionNode compression, ValueNode other);
 
-    public static class HeapBaseNode extends FloatingNode implements LIRLowerable
+    // @class AMD64CompressAddressLowering.HeapBaseNode
+    public static final class HeapBaseNode extends FloatingNode implements LIRLowerable
     {
         public static final NodeClass<HeapBaseNode> TYPE = NodeClass.create(HeapBaseNode.class);
 
         private final Register heapBaseRegister;
 
+        // @cons
         public HeapBaseNode(Register heapBaseRegister)
         {
             super(TYPE, StampFactory.pointer());

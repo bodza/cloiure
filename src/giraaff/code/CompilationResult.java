@@ -26,7 +26,8 @@ import giraaff.core.common.CompilationIdentifier;
  * Represents the output from compiling a method, including the compiled machine code, associated
  * data and references, relocation information, deoptimization information, etc.
  */
-public class CompilationResult
+// @class CompilationResult
+public final class CompilationResult
 {
     private boolean closed;
 
@@ -72,17 +73,21 @@ public class CompilationResult
 
     private boolean hasUnsafeAccess;
 
+    // @cons
     public CompilationResult(CompilationIdentifier compilationId)
     {
         this(compilationId, compilationId.toString(CompilationIdentifier.Verbosity.NAME));
     }
 
+    // @cons
     public CompilationResult(CompilationIdentifier compilationId, String name)
     {
+        super();
         this.compilationId = compilationId;
         this.name = name;
     }
 
+    // @cons
     public CompilationResult(String name)
     {
         this(null, name);

@@ -1,5 +1,6 @@
 package giraaff.nodeinfo;
 
+// @enum Verbosity
 public enum Verbosity
 {
     /**

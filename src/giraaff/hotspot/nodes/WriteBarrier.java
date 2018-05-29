@@ -6,10 +6,12 @@ import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
+// @class WriteBarrier
 public abstract class WriteBarrier extends FixedWithNextNode implements Lowerable
 {
     public static final NodeClass<WriteBarrier> TYPE = NodeClass.create(WriteBarrier.class);
 
+    // @cons
     protected WriteBarrier(NodeClass<? extends WriteBarrier> c)
     {
         super(c, StampFactory.forVoid());

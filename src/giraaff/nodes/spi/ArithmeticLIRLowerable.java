@@ -2,6 +2,7 @@ package giraaff.nodes.spi;
 
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 
+// @iface ArithmeticLIRLowerable
 public interface ArithmeticLIRLowerable extends LIRLowerable
 {
     @Override

@@ -17,8 +17,10 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.nodes.virtual.EscapeObjectState;
 import giraaff.phases.common.DeadCodeEliminationPhase;
 
+// @class GraphEffectList
 public final class GraphEffectList extends EffectList
 {
+    // @cons
     public GraphEffectList()
     {
         super();

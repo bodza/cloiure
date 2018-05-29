@@ -3,10 +3,13 @@ package giraaff.core;
 /**
  * Wrapper for a compilation that centralizes what action to take when an uncaught exception occurs during compilation.
  */
+// @class CompilationWrapper
 public abstract class CompilationWrapper<T>
 {
+    // @cons
     public CompilationWrapper()
     {
+        super();
     }
 
     /**

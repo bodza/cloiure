@@ -9,6 +9,7 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.ValueProxy;
 
+// @class FixedValueAnchorNode
 public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowerable, ValueProxy, GuardingNode
 {
     public static final NodeClass<FixedValueAnchorNode> TYPE = NodeClass.create(FixedValueAnchorNode.class);
@@ -21,17 +22,20 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
         return object;
     }
 
+    // @cons
     protected FixedValueAnchorNode(NodeClass<? extends FixedValueAnchorNode> c, ValueNode object)
     {
         super(c, object.stamp(NodeView.DEFAULT));
         this.object = object;
     }
 
+    // @cons
     public FixedValueAnchorNode(ValueNode object)
     {
         this(TYPE, object);
     }
 
+    // @cons
     public FixedValueAnchorNode(ValueNode object, Stamp predefinedStamp)
     {
         super(TYPE, predefinedStamp);

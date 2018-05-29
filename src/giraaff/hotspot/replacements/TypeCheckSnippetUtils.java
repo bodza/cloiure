@@ -18,7 +18,8 @@ import giraaff.word.Word;
 /**
  * Utilities and common code paths used by the type check snippets.
  */
-public class TypeCheckSnippetUtils
+// @class TypeCheckSnippetUtils
+public final class TypeCheckSnippetUtils
 {
     static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull)
     {
@@ -77,7 +78,8 @@ public class TypeCheckSnippetUtils
     /**
      * A set of type check hints ordered by decreasing probabilities.
      */
-    public static class Hints
+    // @class TypeCheckSnippetUtils.Hints
+    public static final class Hints
     {
         /**
          * The hubs of the hint types.
@@ -90,8 +92,10 @@ public class TypeCheckSnippetUtils
          */
         public final boolean[] isPositive;
 
+        // @cons
         Hints(ConstantNode[] hints, boolean[] hintIsPositive)
         {
+            super();
             this.hubs = hints;
             this.isPositive = hintIsPositive;
         }

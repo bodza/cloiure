@@ -20,10 +20,12 @@ import giraaff.nodes.spi.LoweringTool;
  * Node representing an exact integer addition that will throw an {@link ArithmeticException} in
  * case the addition would overflow the 32 bit range.
  */
+// @class IntegerAddExactNode
 public final class IntegerAddExactNode extends AddNode implements IntegerExactArithmeticNode
 {
     public static final NodeClass<IntegerAddExactNode> TYPE = NodeClass.create(IntegerAddExactNode.class);
 
+    // @cons
     public IntegerAddExactNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y);

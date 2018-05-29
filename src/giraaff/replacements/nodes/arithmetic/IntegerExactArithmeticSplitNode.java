@@ -20,6 +20,7 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class IntegerExactArithmeticSplitNode
 public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode implements Simplifiable, LIRLowerable
 {
     public static final NodeClass<IntegerExactArithmeticSplitNode> TYPE = NodeClass.create(IntegerExactArithmeticSplitNode.class);
@@ -29,6 +30,7 @@ public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode i
     @Input ValueNode x;
     @Input ValueNode y;
 
+    // @cons
     protected IntegerExactArithmeticSplitNode(NodeClass<? extends IntegerExactArithmeticSplitNode> c, Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor)
     {
         super(c, stamp);

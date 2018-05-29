@@ -9,10 +9,12 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-public class RandomSeedNode extends FloatingNode implements LIRLowerable
+// @class RandomSeedNode
+public final class RandomSeedNode extends FloatingNode implements LIRLowerable
 {
     public static final NodeClass<RandomSeedNode> TYPE = NodeClass.create(RandomSeedNode.class);
 
+    // @cons
     public RandomSeedNode()
     {
         super(TYPE, StampFactory.intValue());

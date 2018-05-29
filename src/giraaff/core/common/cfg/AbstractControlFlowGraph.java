@@ -2,6 +2,7 @@ package giraaff.core.common.cfg;
 
 import java.util.Collection;
 
+// @iface AbstractControlFlowGraph
 public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
 {
     int BLOCK_ID_INITIAL = -1;

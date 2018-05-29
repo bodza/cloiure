@@ -7,8 +7,10 @@ import jdk.vm.ci.code.StackSlot;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.lir.framemap.FrameMapBuilderImpl;
 
-public class AMD64FrameMapBuilder extends FrameMapBuilderImpl
+// @class AMD64FrameMapBuilder
+public final class AMD64FrameMapBuilder extends FrameMapBuilderImpl
 {
+    // @cons
     public AMD64FrameMapBuilder(FrameMap frameMap, CodeCacheProvider codeCache, RegisterConfig registerConfig)
     {
         super(frameMap, codeCache, registerConfig);

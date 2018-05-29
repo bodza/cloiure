@@ -5,7 +5,8 @@ import jdk.vm.ci.code.CodeUtil;
 /**
  * A collection of static utility functions that check ranges of numbers.
  */
-public class NumUtil
+// @class NumUtil
+public final class NumUtil
 {
     public static boolean isShiftCount(int x)
     {
@@ -229,5 +230,11 @@ public class NumUtil
     public static boolean sameSign(long a, long b)
     {
         return a < 0 == b < 0;
+    }
+
+    // @cons
+    private NumUtil()
+    {
+        super();
     }
 }

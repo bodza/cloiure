@@ -5,17 +5,24 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * {@link BytecodeProvider} that returns {@link ResolvedJavaMethodBytecode} objects.
  */
-public class ResolvedJavaMethodBytecodeProvider implements BytecodeProvider
+// @class ResolvedJavaMethodBytecodeProvider
+public final class ResolvedJavaMethodBytecodeProvider implements BytecodeProvider
 {
     /**
      * A state-less, shared {@link ResolvedJavaMethodBytecodeProvider} instance.
      */
     public static final ResolvedJavaMethodBytecodeProvider INSTANCE = new ResolvedJavaMethodBytecodeProvider();
 
+    // @cons
+    private ResolvedJavaMethodBytecodeProvider()
+    {
+        super();
+    }
+
     @Override
     public Bytecode getBytecode(ResolvedJavaMethod method)
     {
-        return new ResolvedJavaMethodBytecode(method, this);
+        return new ResolvedJavaMethodBytecode(method);
     }
 
     @Override

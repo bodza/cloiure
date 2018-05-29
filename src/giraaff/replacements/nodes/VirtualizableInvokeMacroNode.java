@@ -13,10 +13,12 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * A helper class to allow elimination of byte code instrumentation that could interfere with escape analysis.
  */
-public class VirtualizableInvokeMacroNode extends MacroStateSplitNode implements Virtualizable
+// @class VirtualizableInvokeMacroNode
+public final class VirtualizableInvokeMacroNode extends MacroStateSplitNode implements Virtualizable
 {
     public static final NodeClass<VirtualizableInvokeMacroNode> TYPE = NodeClass.create(VirtualizableInvokeMacroNode.class);
 
+    // @cons
     public VirtualizableInvokeMacroNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
     {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);

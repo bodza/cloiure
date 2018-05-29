@@ -15,15 +15,18 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @NodeInfo.allowedUsageTypes "Guard, Anchor"
+// @class AbstractBeginNode
 public abstract class AbstractBeginNode extends FixedWithNextNode implements LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType
 {
     public static final NodeClass<AbstractBeginNode> TYPE = NodeClass.create(AbstractBeginNode.class);
 
+    // @cons
     protected AbstractBeginNode(NodeClass<? extends AbstractBeginNode> c)
     {
         this(c, StampFactory.forVoid());
     }
 
+    // @cons
     protected AbstractBeginNode(NodeClass<? extends AbstractBeginNode> c, Stamp stamp)
     {
         super(c, stamp);
@@ -93,12 +96,15 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
         };
     }
 
-    private class BlockNodeIterator implements Iterator<FixedNode>
+    // @class AbstractBeginNode.BlockNodeIterator
+    private final class BlockNodeIterator implements Iterator<FixedNode>
     {
         private FixedNode current;
 
+        // @cons
         BlockNodeIterator(FixedNode next)
         {
+            super();
             this.current = next;
         }
 

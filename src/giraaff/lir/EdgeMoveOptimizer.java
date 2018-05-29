@@ -30,6 +30,7 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
  * Because this optimization works best when a block contains only a few moves, it has a huge impact
  * on the number of blocks that are totally empty.
  */
+// @class EdgeMoveOptimizer
 public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 {
     @Override
@@ -55,13 +56,16 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
         }
     }
 
+    // @class EdgeMoveOptimizer.Optimizer
     private static final class Optimizer
     {
         private final List<List<LIRInstruction>> edgeInstructionSeqences;
         private LIR ir;
 
+        // @cons
         Optimizer(LIR ir)
         {
+            super();
             this.ir = ir;
             edgeInstructionSeqences = new ArrayList<>(4);
         }

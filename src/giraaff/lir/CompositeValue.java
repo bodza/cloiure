@@ -17,6 +17,7 @@ import giraaff.lir.LIRInstruction.OperandMode;
  * intended to support addresses and not general arbitrary nesting of composite values. Because of
  * the possibility of sharing of CompositeValues they should be immutable.
  */
+// @class CompositeValue
 public abstract class CompositeValue extends Value
 {
     @Retention(RetentionPolicy.RUNTIME)
@@ -26,6 +27,7 @@ public abstract class CompositeValue extends Value
         OperandFlag[] value() default OperandFlag.REG;
     }
 
+    // @cons
     public CompositeValue(ValueKind<?> kind)
     {
         super(kind);

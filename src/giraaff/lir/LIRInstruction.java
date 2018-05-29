@@ -25,11 +25,13 @@ import giraaff.lir.gen.LIRGenerationResult;
 /**
  * The base class for an {@code LIRInstruction}.
  */
+// @class LIRInstruction
 public abstract class LIRInstruction
 {
     /**
      * Constants denoting how a LIR instruction uses an operand.
      */
+    // @enum LIRInstruction.OperandMode
     public enum OperandMode
     {
         /**
@@ -93,6 +95,7 @@ public abstract class LIRInstruction
     /**
      * Flags for an operand.
      */
+    // @enum LIRInstruction.OperandFlag
     public enum OperandFlag
     {
         /**
@@ -167,8 +170,10 @@ public abstract class LIRInstruction
     /**
      * Constructs a new LIR instruction.
      */
+    // @cons
     public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> c)
     {
+        super();
         instructionClass = c;
         id = -1;
     }

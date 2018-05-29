@@ -19,17 +19,20 @@ import giraaff.core.common.type.ArithmeticOpTable.FloatConvertOp;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp;
 import giraaff.util.GraalError;
 
-public class FloatStamp extends PrimitiveStamp
+// @class FloatStamp
+public final class FloatStamp extends PrimitiveStamp
 {
     private final double lowerBound;
     private final double upperBound;
     private final boolean nonNaN;
 
+    // @cons
     protected FloatStamp(int bits)
     {
         this(bits, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, false);
     }
 
+    // @cons
     public FloatStamp(int bits, double lowerBound, double upperBound, boolean nonNaN)
     {
         super(bits, OPS);

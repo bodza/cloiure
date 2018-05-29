@@ -19,6 +19,7 @@ import giraaff.nodes.spi.LoweringTool;
  * Read a raw memory location according to Java field or array read semantics. It will perform read
  * barriers, implicit conversions and optionally oop uncompression.
  */
+// @class JavaReadNode
 public final class JavaReadNode extends FixedAccessNode implements Lowerable, GuardingNode, Canonicalizable
 {
     public static final NodeClass<JavaReadNode> TYPE = NodeClass.create(JavaReadNode.class);
@@ -26,6 +27,7 @@ public final class JavaReadNode extends FixedAccessNode implements Lowerable, Gu
     protected final JavaKind readKind;
     protected final boolean compressible;
 
+    // @cons
     public JavaReadNode(JavaKind readKind, AddressNode address, LocationIdentity location, BarrierType barrierType, boolean compressible)
     {
         super(TYPE, address, location, StampFactory.forKind(readKind), barrierType);

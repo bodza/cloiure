@@ -6,6 +6,7 @@ import giraaff.nodes.Invoke;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.tiers.HighTierContext;
 
+// @iface Inlineable
 public interface Inlineable
 {
     static Inlineable getInlineableElement(final ResolvedJavaMethod method, Invoke invoke, HighTierContext context, CanonicalizerPhase canonicalizer)

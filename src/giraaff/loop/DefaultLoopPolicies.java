@@ -26,9 +26,11 @@ import giraaff.nodes.java.TypeSwitchNode;
 import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
 
-public class DefaultLoopPolicies implements LoopPolicies
+// @class DefaultLoopPolicies
+public final class DefaultLoopPolicies implements LoopPolicies
 {
-    public static class Options
+    // @class DefaultLoopPolicies.Options
+    public static final class Options
     {
         public static final OptionKey<Integer> LoopUnswitchMaxIncrease = new OptionKey<>(500);
         public static final OptionKey<Integer> LoopUnswitchTrivial = new OptionKey<>(10);
@@ -160,6 +162,7 @@ public class DefaultLoopPolicies implements LoopPolicies
         return loopBegin.unswitches() <= GraalOptions.LoopMaxUnswitch.getValue(options);
     }
 
+    // @class DefaultLoopPolicies.CountingClosure
     private static final class CountingClosure implements VirtualClosure
     {
         int count;

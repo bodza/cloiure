@@ -15,6 +15,7 @@ import giraaff.word.Word.Operation;
  * barriers. When the VM uses compressed pointers, then readObject and writeObject methods access
  * compressed pointers.
  */
+// @class ObjectAccess
 public final class ObjectAccess
 {
     /**

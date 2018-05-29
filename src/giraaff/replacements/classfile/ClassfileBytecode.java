@@ -21,7 +21,8 @@ import giraaff.util.GraalError;
  * {@linkplain java.lang.instrument.Instrumentation instrumentation} or other rewriting performed on
  * the bytecode.
  */
-public class ClassfileBytecode implements Bytecode
+// @class ClassfileBytecode
+public final class ClassfileBytecode implements Bytecode
 {
     private static final int EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES = 8;
 
@@ -35,8 +36,10 @@ public class ClassfileBytecode implements Bytecode
 
     private byte[] exceptionTableBytes;
 
+    // @cons
     public ClassfileBytecode(ResolvedJavaMethod method, DataInputStream stream, ClassfileConstantPool constantPool) throws IOException
     {
+        super();
         this.method = method;
         this.constantPool = constantPool;
         maxStack = stream.readUnsignedShort();

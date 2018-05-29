@@ -18,7 +18,8 @@ import giraaff.nodes.ValueNode;
  * The {@code DynamicNewArrayNode} is used for allocation of arrays when the type is not a
  * compile-time constant.
  */
-public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonicalizable
+// @class DynamicNewArrayNode
+public final class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonicalizable
 {
     public static final NodeClass<DynamicNewArrayNode> TYPE = NodeClass.create(DynamicNewArrayNode.class);
 
@@ -36,11 +37,13 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
      */
     protected final JavaKind knownElementKind;
 
+    // @cons
     public DynamicNewArrayNode(ValueNode elementType, ValueNode length, boolean fillContents)
     {
         this(TYPE, elementType, length, fillContents, null, null, null);
     }
 
+    // @cons
     public DynamicNewArrayNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode elementType, ValueNode length, boolean fillContents, JavaKind knownElementKind)
     {
         this(TYPE, elementType, length, fillContents, knownElementKind, null, metaAccess);
@@ -56,6 +59,7 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
         return StampFactory.objectNonNull();
     }
 
+    // @cons
     protected DynamicNewArrayNode(NodeClass<? extends DynamicNewArrayNode> c, ValueNode elementType, ValueNode length, boolean fillContents, JavaKind knownElementKind, FrameState stateBefore, MetaAccessProvider metaAccess)
     {
         super(c, computeStamp(knownElementKind, metaAccess), length, fillContents, stateBefore);

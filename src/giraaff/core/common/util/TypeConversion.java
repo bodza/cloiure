@@ -3,7 +3,8 @@ package giraaff.core.common.util;
 /**
  * Provides low-level value checks and conversion for signed and unsigned values of size 1, 2, and 4 bytes.
  */
-public class TypeConversion
+// @class TypeConversion
+public final class TypeConversion
 {
     public static boolean isS1(long value)
     {
@@ -63,5 +64,11 @@ public class TypeConversion
     public static int asU4(long value)
     {
         return (int) value;
+    }
+
+    // @cons
+    private TypeConversion()
+    {
+        super();
     }
 }

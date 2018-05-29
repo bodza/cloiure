@@ -15,6 +15,7 @@ import giraaff.nodes.ValueNode;
  * easily represented. The anchored value is usually part of the FrameState since this forces uses
  * of the value below this node so they will consume this frame state instead of an earlier one.
  */
+// @class StateSplitProxyNode
 public final class StateSplitProxyNode extends FixedValueAnchorNode implements Canonicalizable, StateSplit
 {
     public static final NodeClass<StateSplitProxyNode> TYPE = NodeClass.create(StateSplitProxyNode.class);
@@ -25,11 +26,13 @@ public final class StateSplitProxyNode extends FixedValueAnchorNode implements C
      */
     private final boolean delayElimination;
 
+    // @cons
     public StateSplitProxyNode(ValueNode object)
     {
         this(object, false);
     }
 
+    // @cons
     public StateSplitProxyNode(ValueNode object, boolean delayElimination)
     {
         super(TYPE, object);

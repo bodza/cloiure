@@ -17,6 +17,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * A special purpose store node that differs from {@link RawStoreNode} in that it is not a
  * {@link StateSplit} and takes a computed address instead of an object.
  */
+// @class DirectStoreNode
 public final class DirectStoreNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<DirectStoreNode> TYPE = NodeClass.create(DirectStoreNode.class);
@@ -25,6 +26,7 @@ public final class DirectStoreNode extends FixedWithNextNode implements LIRLower
     @Input protected ValueNode value;
     protected final JavaKind kind;
 
+    // @cons
     public DirectStoreNode(ValueNode address, ValueNode value, JavaKind kind)
     {
         super(TYPE, StampFactory.forVoid());

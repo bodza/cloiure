@@ -10,6 +10,7 @@ import giraaff.nodes.memory.address.AddressNode;
 /**
  * Provides a capability for replacing a higher node with one or more lower level nodes.
  */
+// @iface LoweringProvider
 public interface LoweringProvider extends ArrayOffsetProvider
 {
     void lower(Node n, LoweringTool tool);

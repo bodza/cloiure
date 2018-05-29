@@ -8,16 +8,19 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
+// @class IntegerDivRemNode
 public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lowerable
 {
     public static final NodeClass<IntegerDivRemNode> TYPE = NodeClass.create(IntegerDivRemNode.class);
 
+    // @enum IntegerDivRemNode.Op
     public enum Op
     {
         DIV,
         REM
     }
 
+    // @enum IntegerDivRemNode.Type
     public enum Type
     {
         SIGNED,
@@ -28,6 +31,7 @@ public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lower
     private final Type type;
     private final boolean canDeopt;
 
+    // @cons
     protected IntegerDivRemNode(NodeClass<? extends IntegerDivRemNode> c, Stamp stamp, Op op, Type type, ValueNode x, ValueNode y)
     {
         super(c, stamp, x, y);

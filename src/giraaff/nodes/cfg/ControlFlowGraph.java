@@ -23,6 +23,7 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.StructuredGraph.GuardsStage;
 import giraaff.util.GraalError;
 
+// @class ControlFlowGraph
 public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 {
     /**
@@ -42,6 +43,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     private List<Loop<Block>> loops;
     private int maxDominatorDepth;
 
+    // @iface ControlFlowGraph.RecursiveVisitor
     public interface RecursiveVisitor<V>
     {
         V enter(Block b);
@@ -179,10 +181,13 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         return block;
     }
 
+    // @class ControlFlowGraph.DeferredExit
     public static final class DeferredExit
     {
+        // @cons
         public DeferredExit(Block block, DeferredExit next)
         {
+            super();
             this.block = block;
             this.next = next;
         }
@@ -321,8 +326,10 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         return dominator != null && b.getLoop() != dominator.getLoop() && (!b.isLoopHeader() || dominator.getLoopDepth() >= b.getLoopDepth());
     }
 
+    // @cons
     private ControlFlowGraph(StructuredGraph graph)
     {
+        super();
         this.graph = graph;
         this.nodeToBlock = graph.createNodeMap();
     }

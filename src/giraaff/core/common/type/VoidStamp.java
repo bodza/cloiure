@@ -13,10 +13,13 @@ import giraaff.util.GraalError;
 /**
  * Singleton stamp representing the value of type {@code void}.
  */
+// @class VoidStamp
 public final class VoidStamp extends Stamp
 {
+    // @cons
     private VoidStamp()
     {
+        super();
     }
 
     @Override

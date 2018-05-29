@@ -24,11 +24,13 @@ import giraaff.util.GraalError;
 /**
  * Represents an interval in the {@linkplain LinearScan linear scan register allocator}.
  */
+// @class Interval
 public final class Interval
 {
     /**
      * A set of interval lists, one per {@linkplain RegisterBinding binding} type.
      */
+    // @class Interval.RegisterBindingLists
     static final class RegisterBindingLists
     {
         /**
@@ -46,8 +48,10 @@ public final class Interval
          */
         public Interval stack;
 
+        // @cons
         RegisterBindingLists(Interval fixed, Interval any, Interval stack)
         {
+            super();
             this.fixed = fixed;
             this.any = any;
             this.stack = stack;
@@ -187,6 +191,7 @@ public final class Interval
      * increasing order of priority are are used to optimize spilling when multiple overlapping
      * intervals compete for limited registers.
      */
+    // @enum Interval.RegisterPriority
     public enum RegisterPriority
     {
         /**
@@ -232,6 +237,7 @@ public final class Interval
      * Constants denoting whether an interval is bound to a specific register. This models platform
      * dependencies on register usage for certain instructions.
      */
+    // @enum Interval.RegisterBinding
     enum RegisterBinding
     {
         /**
@@ -256,6 +262,7 @@ public final class Interval
      * Constants denoting the linear-scan states an interval may be in with respect to the
      * {@linkplain Interval#from() start} {@code position} of the interval being processed.
      */
+    // @enum Interval.State
     enum State
     {
         /**
@@ -283,6 +290,7 @@ public final class Interval
     /**
      * Constants used in optimization of spilling of an interval.
      */
+    // @enum Interval.SpillState
     public enum SpillState
     {
         /**
@@ -332,6 +340,7 @@ public final class Interval
      * List of use positions. Each entry in the list records the use position and register priority
      * associated with the use position. The entries in the list are in descending order of use position.
      */
+    // @class Interval.UsePosList
     public static final class UsePosList
     {
         private IntList list;
@@ -341,13 +350,17 @@ public final class Interval
          *
          * @param initialCapacity the initial capacity of the list in terms of entries
          */
+        // @cons
         public UsePosList(int initialCapacity)
         {
+            super();
             list = new IntList(initialCapacity * 2);
         }
 
+        // @cons
         private UsePosList(IntList list)
         {
+            super();
             this.list = list;
         }
 
@@ -742,8 +755,10 @@ public final class Interval
         return current.intersectsAt(it.current);
     }
 
+    // @cons
     Interval(AllocatableValue operand, int operandNumber, Interval intervalEndMarker, Range rangeEndMarker)
     {
+        super();
         this.operand = operand;
         this.operandNumber = operandNumber;
         if (ValueUtil.isRegister(operand))

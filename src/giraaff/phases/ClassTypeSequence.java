@@ -4,12 +4,15 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
+// @class ClassTypeSequence
 final class ClassTypeSequence implements JavaType, CharSequence
 {
     private final Class<?> clazz;
 
+    // @cons
     ClassTypeSequence(Class<?> clazz)
     {
+        super();
         this.clazz = clazz;
     }
 

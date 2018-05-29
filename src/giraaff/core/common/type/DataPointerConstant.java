@@ -6,12 +6,15 @@ import jdk.vm.ci.meta.SerializableConstant;
 /**
  * Base class for {@link Constant constants} that represent a pointer to the data section.
  */
+// @class DataPointerConstant
 public abstract class DataPointerConstant implements SerializableConstant
 {
     private final int alignment;
 
+    // @cons
     protected DataPointerConstant(int alignment)
     {
+        super();
         this.alignment = alignment;
     }
 

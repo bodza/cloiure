@@ -9,9 +9,11 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimiza
 import giraaff.options.NestedBooleanOptionKey;
 import giraaff.options.OptionValues;
 
-public class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocationOptimizationContext>
+// @class PostAllocationOptimizationStage
+public final class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocationOptimizationContext>
 {
-    public static class Options
+    // @class PostAllocationOptimizationStage.Options
+    public static final class Options
     {
         public static final NestedBooleanOptionKey LIROptEdgeMoveOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
         public static final NestedBooleanOptionKey LIROptControlFlowOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
@@ -19,8 +21,10 @@ public class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocatio
         public static final NestedBooleanOptionKey LIROptNullCheckOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
+    // @cons
     public PostAllocationOptimizationStage(OptionValues options)
     {
+        super();
         if (Options.LIROptEdgeMoveOptimizer.getValue(options))
         {
             appendPhase(new EdgeMoveOptimizer());

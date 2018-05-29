@@ -14,12 +14,14 @@ import giraaff.word.Word;
  * Jumps to the exception handler specified by {@link #address}. This node is specific for the
  * {@link ExceptionHandlerStub} and should not be used elswhere.
  */
+// @class JumpToExceptionHandlerNode
 public final class JumpToExceptionHandlerNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<JumpToExceptionHandlerNode> TYPE = NodeClass.create(JumpToExceptionHandlerNode.class);
 
     @Input ValueNode address;
 
+    // @cons
     public JumpToExceptionHandlerNode(ValueNode address)
     {
         super(TYPE, StampFactory.forVoid());

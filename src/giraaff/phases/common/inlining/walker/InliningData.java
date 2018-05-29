@@ -65,7 +65,8 @@ import giraaff.util.GraalError;
  *
  * @see #moveForward()
  */
-public class InliningData
+// @class InliningData
+public final class InliningData
 {
     /**
      * Call hierarchy from outer most call (i.e., compilation unit) to inner most callee.
@@ -81,8 +82,10 @@ public class InliningData
 
     private int maxGraphs;
 
+    // @cons
     public InliningData(StructuredGraph rootGraph, HighTierContext context, int maxMethodPerInlining, CanonicalizerPhase canonicalizer, InliningPolicy inliningPolicy, LinkedList<Invoke> rootInvokes)
     {
+        super();
         this.context = context;
         this.maxMethodPerInlining = maxMethodPerInlining;
         this.canonicalizer = canonicalizer;

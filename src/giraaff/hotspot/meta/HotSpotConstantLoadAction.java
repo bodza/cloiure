@@ -1,5 +1,6 @@
 package giraaff.hotspot.meta;
 
+// @enum HotSpotConstantLoadAction
 public enum HotSpotConstantLoadAction
 {
     RESOLVE(0),

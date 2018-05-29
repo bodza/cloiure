@@ -18,6 +18,7 @@ import giraaff.phases.util.Providers;
  * weight is the amortized weight of the additional code - so smaller is better. The level is the
  * number of nested inlinings that lead to this invoke.
  */
+// @iface InlineInfo
 public interface InlineInfo
 {
     /**

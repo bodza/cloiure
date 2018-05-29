@@ -1,5 +1,6 @@
 package giraaff.graph;
 
+// @class NodeStack
 public final class NodeStack
 {
     private static final int DEFAULT_INITIAL_SIZE = 8;
@@ -7,13 +8,16 @@ public final class NodeStack
     protected Node[] values;
     public int tos;
 
+    // @cons
     public NodeStack()
     {
         this(DEFAULT_INITIAL_SIZE);
     }
 
+    // @cons
     public NodeStack(int initialSize)
     {
+        super();
         values = new Node[initialSize];
     }
 

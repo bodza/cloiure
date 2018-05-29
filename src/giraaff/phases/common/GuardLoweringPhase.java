@@ -32,14 +32,18 @@ import giraaff.phases.tiers.MidTierContext;
  * null checks performed by access to the objects that need to be null checked. The second phase
  * does the actual control-flow expansion of the remaining {@link GuardNode GuardNodes}.
  */
-public class GuardLoweringPhase extends BasePhase<MidTierContext>
+// @class GuardLoweringPhase
+public final class GuardLoweringPhase extends BasePhase<MidTierContext>
 {
-    private static class LowerGuards extends ScheduledNodeIterator
+    // @class GuardLoweringPhase.LowerGuards
+    private static final class LowerGuards extends ScheduledNodeIterator
     {
         private final Block block;
 
+        // @cons
         LowerGuards(Block block)
         {
+            super();
             this.block = block;
         }
 

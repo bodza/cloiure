@@ -39,7 +39,8 @@ import giraaff.word.Word;
  * must not cause a deoptimization as the runtime/interpreter would not have a valid location to
  * find the exception object to be rethrown.
  */
-public class LoadExceptionObjectSnippets implements Snippets
+// @class LoadExceptionObjectSnippets
+public final class LoadExceptionObjectSnippets implements Snippets
 {
     @Snippet
     public static Object loadException(@ConstantParameter Register threadRegister)
@@ -51,11 +52,13 @@ public class LoadExceptionObjectSnippets implements Snippets
         return PiNode.piCastToSnippetReplaceeStamp(exception);
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class LoadExceptionObjectSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", HotSpotReplacementsUtil.EXCEPTION_OOP_LOCATION, HotSpotReplacementsUtil.EXCEPTION_PC_LOCATION);
         private final HotSpotWordTypes wordTypes;
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);
@@ -82,5 +85,11 @@ public class LoadExceptionObjectSnippets implements Snippets
                 template(loadExceptionObject, args).instantiate(providers.getMetaAccess(), loadExceptionObject, SnippetTemplate.DEFAULT_REPLACER, args);
             }
         }
+    }
+
+    // @cons
+    private LoadExceptionObjectSnippets()
+    {
+        super();
     }
 }

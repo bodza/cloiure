@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
+// @enum CanonicalCondition
 public enum CanonicalCondition
 {
     EQ(Condition.EQ),

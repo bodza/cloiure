@@ -13,13 +13,16 @@ import jdk.vm.ci.meta.VMConstant;
 
 import giraaff.code.DataSection.Data;
 
+// @class DataSection
 public final class DataSection implements Iterable<Data>
 {
+    // @iface DataSection.Patches
     public interface Patches
     {
         void registerPatch(int position, VMConstant c);
     }
 
+    // @class DataSection.Data
     public abstract static class Data
     {
         private int alignment;
@@ -27,8 +30,10 @@ public final class DataSection implements Iterable<Data>
 
         private DataSectionReference ref;
 
+        // @cons
         protected Data(int alignment, int size)
         {
+            super();
             this.alignment = alignment;
             this.size = size;
 
@@ -89,10 +94,12 @@ public final class DataSection implements Iterable<Data>
         }
     }
 
+    // @class DataSection.RawData
     public static final class RawData extends Data
     {
         private final byte[] data;
 
+        // @cons
         public RawData(byte[] data, int alignment)
         {
             super(alignment, data.length);
@@ -106,15 +113,18 @@ public final class DataSection implements Iterable<Data>
         }
     }
 
+    // @class DataSection.SerializableData
     public static final class SerializableData extends Data
     {
         private final SerializableConstant constant;
 
+        // @cons
         public SerializableData(SerializableConstant constant)
         {
             this(constant, 1);
         }
 
+        // @cons
         public SerializableData(SerializableConstant constant, int alignment)
         {
             super(alignment, constant.getSerializedSize());
@@ -129,8 +139,10 @@ public final class DataSection implements Iterable<Data>
         }
     }
 
+    // @class DataSection.ZeroData
     public static class ZeroData extends Data
     {
+        // @cons
         protected ZeroData(int alignment, int size)
         {
             super(alignment, size);
@@ -202,10 +214,12 @@ public final class DataSection implements Iterable<Data>
         }
     }
 
+    // @class DataSection.PackedData
     public static final class PackedData extends Data
     {
         private final Data[] nested;
 
+        // @cons
         private PackedData(int alignment, int size, Data[] nested)
         {
             super(alignment, size);

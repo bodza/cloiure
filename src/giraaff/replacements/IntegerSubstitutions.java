@@ -6,7 +6,8 @@ import giraaff.replacements.nodes.BitScanForwardNode;
 import giraaff.replacements.nodes.BitScanReverseNode;
 
 @ClassSubstitution(Integer.class)
-public class IntegerSubstitutions
+// @class IntegerSubstitutions
+public final class IntegerSubstitutions
 {
     @MethodSubstitution
     public static int numberOfLeadingZeros(int i)

@@ -13,11 +13,13 @@ import giraaff.util.UnsafeAccess;
  * Describes {@link Node} fields representing the set of inputs for the node or the set of the
  * node's successors.
  */
+// @class Edges
 public abstract class Edges extends Fields
 {
     /**
      * Constants denoting whether a set of edges are inputs or successors.
      */
+    // @enum Edges.Type
     public enum Type
     {
         Inputs,
@@ -27,6 +29,7 @@ public abstract class Edges extends Fields
     private final int directCount;
     private final Type type;
 
+    // @cons
     public Edges(Type type, int directCount, ArrayList<? extends FieldsScanner.FieldInfo> edges)
     {
         super(edges);
@@ -268,7 +271,8 @@ public abstract class Edges extends Fields
      * An iterator of this type will not return null values, unless edges are modified concurrently.
      * Concurrent modifications are detected by an assertion on a best-effort basis.
      */
-    private static class EdgesIterator implements Iterator<Position>
+    // @class Edges.EdgesIterator
+    private static final class EdgesIterator implements Iterator<Position>
     {
         protected final Node node;
         protected final Edges edges;
@@ -281,8 +285,10 @@ public abstract class Edges extends Fields
         /**
          * Creates an iterator that will iterate over some given edges in a given node.
          */
+        // @cons
         EdgesIterator(Node node, Edges edges)
         {
+            super();
             this.node = node;
             this.edges = edges;
             index = Node.NOT_ITERABLE;

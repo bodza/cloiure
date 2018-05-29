@@ -6,10 +6,12 @@ import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 @Opcode
+// @class AMD64LFenceOp
 public final class AMD64LFenceOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64LFenceOp> TYPE = LIRInstructionClass.create(AMD64LFenceOp.class);
 
+    // @cons
     public AMD64LFenceOp()
     {
         super(TYPE);

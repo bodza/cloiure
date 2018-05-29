@@ -26,7 +26,8 @@ import giraaff.util.GraalError;
  * A call to the VM via a regular stub.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
-public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
+// @class ResolveDynamicStubCall
+public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
 {
     public static final NodeClass<ResolveDynamicStubCall> TYPE = NodeClass.create(ResolveDynamicStubCall.class);
 
@@ -34,6 +35,7 @@ public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements 
     @OptionalInput(InputType.State) protected FrameState stateBefore;
     protected Constant constant;
 
+    // @cons
     public ResolveDynamicStubCall(ValueNode value)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));

@@ -30,17 +30,20 @@ import giraaff.nodes.extended.ValueAnchorNode;
 import giraaff.nodes.spi.UncheckedInterfaceProvider;
 import giraaff.nodes.type.StampTool;
 
+// @class MethodCallTargetNode
 public class MethodCallTargetNode extends CallTargetNode implements IterableNodeType, Simplifiable
 {
     public static final NodeClass<MethodCallTargetNode> TYPE = NodeClass.create(MethodCallTargetNode.class);
 
     protected JavaTypeProfile profile;
 
+    // @cons
     public MethodCallTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, JavaTypeProfile profile)
     {
         this(TYPE, invokeKind, targetMethod, arguments, returnStamp, profile);
     }
 
+    // @cons
     protected MethodCallTargetNode(NodeClass<? extends MethodCallTargetNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, JavaTypeProfile profile)
     {
         super(c, arguments, targetMethod, invokeKind, returnStamp);

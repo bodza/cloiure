@@ -35,6 +35,7 @@ import giraaff.util.UnsafeAccess;
  *
  * Nodes which are be value numberable should implement the {@link ValueNumberable} interface.
  */
+// @class Node
 public abstract class Node implements Cloneable, NodeInterface
 {
     public static final NodeClass<?> TYPE = null;
@@ -148,6 +149,7 @@ public abstract class Node implements Cloneable, NodeInterface
      * can be replaced by another node of the same type that has exactly the same data values as
      * well as the same {@linkplain Node#inputs() inputs} and {@linkplain Node#successors() successors}.
      */
+    // @iface Node.ValueNumberable
     public interface ValueNumberable
     {
     }
@@ -156,6 +158,7 @@ public abstract class Node implements Cloneable, NodeInterface
      * Marker interface for nodes that contains other nodes. When the inputs to this node changes,
      * users of this node should also be placed on the work list for canonicalization.
      */
+    // @iface Node.IndirectCanonicalization
     public interface IndirectCanonicalization
     {
     }
@@ -185,8 +188,10 @@ public abstract class Node implements Cloneable, NodeInterface
     public static final int NODE_LIST = -2;
     public static final int NOT_ITERABLE = -1;
 
+    // @cons
     public Node(NodeClass<? extends Node> c)
     {
+        super();
         init(c);
     }
 
@@ -246,6 +251,7 @@ public abstract class Node implements Cloneable, NodeInterface
         return nodeClass.getInputEdges().getPositionsIterable(this);
     }
 
+    // @class Node.EdgeVisitor
     public abstract static class EdgeVisitor
     {
         public abstract Node apply(Node source, Node target);

@@ -3,13 +3,16 @@ package giraaff.core.common;
 /**
  * A compact representation of the different encoding strategies for Objects and metadata.
  */
+// @class CompressEncoding
 public final class CompressEncoding
 {
     private final long base;
     private final int shift;
 
+    // @cons
     public CompressEncoding(long base, int shift)
     {
+        super();
         this.base = base;
         this.shift = shift;
     }

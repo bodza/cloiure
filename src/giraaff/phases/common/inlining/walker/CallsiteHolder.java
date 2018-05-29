@@ -8,6 +8,7 @@ import giraaff.nodes.StructuredGraph;
  * Information about a graph that will potentially be inlined. This includes tracking the
  * invocations in graph that will subject to inlining themselves.
  */
+// @class CallsiteHolder
 public abstract class CallsiteHolder
 {
     /**

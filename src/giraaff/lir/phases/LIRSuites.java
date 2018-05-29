@@ -11,20 +11,24 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
 
-public class LIRSuites
+// @class LIRSuites
+public final class LIRSuites
 {
     private final LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage;
     private final LIRPhaseSuite<AllocationContext> allocStage;
     private final LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage;
     private boolean immutable;
 
+    // @cons
     public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage, LIRPhaseSuite<AllocationContext> allocStage, LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage)
     {
+        super();
         this.preAllocOptStage = preAllocOptStage;
         this.allocStage = allocStage;
         this.postAllocStage = postAllocStage;
     }
 
+    // @cons
     public LIRSuites(LIRSuites other)
     {
         this(other.getPreAllocationOptimizationStage().copy(), other.getAllocationStage().copy(), other.getPostAllocationOptimizationStage().copy());

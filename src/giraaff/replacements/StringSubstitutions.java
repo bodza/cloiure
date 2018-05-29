@@ -10,7 +10,8 @@ import giraaff.replacements.nodes.ArrayEqualsNode;
  * Substitutions for {@link java.lang.String} methods.
  */
 @ClassSubstitution(String.class)
-public class StringSubstitutions
+// @class StringSubstitutions
+public final class StringSubstitutions
 {
     @MethodSubstitution(isStatic = false)
     public static boolean equals(final String thisString, Object obj)

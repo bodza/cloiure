@@ -15,13 +15,16 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.cfg.Block;
 
-public class LoopFragmentWhole extends LoopFragment
+// @class LoopFragmentWhole
+public final class LoopFragmentWhole extends LoopFragment
 {
+    // @cons
     public LoopFragmentWhole(LoopEx loop)
     {
         super(loop);
     }
 
+    // @cons
     public LoopFragmentWhole(LoopFragmentWhole original)
     {
         super(null, original);

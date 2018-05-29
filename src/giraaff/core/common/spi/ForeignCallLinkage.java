@@ -7,6 +7,7 @@ import jdk.vm.ci.meta.Value;
 /**
  * The runtime specific details of a {@linkplain ForeignCallDescriptor foreign} call.
  */
+// @iface ForeignCallLinkage
 public interface ForeignCallLinkage extends InvokeTarget
 {
     /**

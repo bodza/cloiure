@@ -11,15 +11,18 @@ import giraaff.nodes.calc.FloatingNode;
  * Base class for nodes that deal with addressing calculation.
  */
 // @NodeInfo.allowedUsageTypes "Association"
+// @class AddressNode
 public abstract class AddressNode extends FloatingNode implements IndirectCanonicalization
 {
     public static final NodeClass<AddressNode> TYPE = NodeClass.create(AddressNode.class);
 
+    // @cons
     protected AddressNode(NodeClass<? extends AddressNode> c)
     {
         super(c, StampFactory.pointer());
     }
 
+    // @class AddressNode.Address
     public abstract static class Address extends StructuralInput.Association
     {
     }

@@ -16,7 +16,8 @@ import giraaff.graph.Node.IndirectCanonicalization;
  * A simple {@link NodeEventListener} implementation that accumulates event nodes in a
  * {@link HashSet}.
  */
-public class HashSetNodeEventListener extends NodeEventListener
+// @class HashSetNodeEventListener
+public final class HashSetNodeEventListener extends NodeEventListener
 {
     private final EconomicSet<Node> nodes;
     private final Set<NodeEvent> filter;
@@ -24,8 +25,10 @@ public class HashSetNodeEventListener extends NodeEventListener
     /**
      * Creates a {@link NodeEventListener} that collects nodes from all events.
      */
+    // @cons
     public HashSetNodeEventListener()
     {
+        super();
         this.nodes = EconomicSet.create(Equivalence.IDENTITY);
         this.filter = EnumSet.allOf(NodeEvent.class);
     }
@@ -33,8 +36,10 @@ public class HashSetNodeEventListener extends NodeEventListener
     /**
      * Creates a {@link NodeEventListener} that collects nodes from all events that match a given filter.
      */
+    // @cons
     public HashSetNodeEventListener(Set<NodeEvent> filter)
     {
+        super();
         this.nodes = EconomicSet.create(Equivalence.IDENTITY);
         this.filter = filter;
     }

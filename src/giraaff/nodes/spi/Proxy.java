@@ -9,6 +9,7 @@ import giraaff.graph.NodeInterface;
  *
  * For some algorithms it is necessary or advantageous to see through these proxies.
  */
+// @iface Proxy
 public interface Proxy extends NodeInterface
 {
     Node getOriginalNode();

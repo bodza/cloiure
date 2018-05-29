@@ -37,8 +37,10 @@ import giraaff.nodes.ValueNode;
 /**
  * LIR generator specialized for AMD64 HotSpot.
  */
-public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder
+// @class AMD64HotSpotNodeLIRBuilder
+public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder
 {
+    // @cons
     public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
         super(graph, gen);

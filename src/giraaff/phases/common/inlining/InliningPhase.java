@@ -13,9 +13,11 @@ import giraaff.phases.common.inlining.policy.InliningPolicy;
 import giraaff.phases.common.inlining.walker.InliningData;
 import giraaff.phases.tiers.HighTierContext;
 
-public class InliningPhase extends AbstractInliningPhase
+// @class InliningPhase
+public final class InliningPhase extends AbstractInliningPhase
 {
-    public static class Options
+    // @class InliningPhase.Options
+    public static final class Options
     {
         // @Option "Unconditionally inline intrinsics."
         public static final OptionKey<Boolean> AlwaysInlineIntrinsics = new OptionKey<>(false);
@@ -35,18 +37,22 @@ public class InliningPhase extends AbstractInliningPhase
 
     private int maxMethodPerInlining = Integer.MAX_VALUE;
 
+    // @cons
     public InliningPhase(CanonicalizerPhase canonicalizer)
     {
         this(new GreedyInliningPolicy(null), canonicalizer);
     }
 
+    // @cons
     public InliningPhase(Map<Invoke, Double> hints, CanonicalizerPhase canonicalizer)
     {
         this(new GreedyInliningPolicy(hints), canonicalizer);
     }
 
+    // @cons
     public InliningPhase(InliningPolicy policy, CanonicalizerPhase canonicalizer)
     {
+        super();
         this.inliningPolicy = policy;
         this.canonicalizer = canonicalizer;
     }

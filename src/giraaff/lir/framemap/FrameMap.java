@@ -25,6 +25,7 @@ import giraaff.core.common.PermanentBailoutException;
  * stack pointer, while spill slots are indexed from the beginning of the frame (and the total frame
  * size has to be added to get the actual offset from the stack pointer).
  */
+// @class FrameMap
 public abstract class FrameMap
 {
     private final TargetDescription target;
@@ -74,8 +75,10 @@ public abstract class FrameMap
      * Creates a new frame map for the specified method. The given registerConfig is optional, in
      * case null is passed the default RegisterConfig from the CodeCacheProvider will be used.
      */
+    // @cons
     public FrameMap(CodeCacheProvider codeCache, RegisterConfig registerConfig)
     {
+        super();
         this.target = codeCache.getTarget();
         this.registerConfig = registerConfig == null ? codeCache.getRegisterConfig() : registerConfig;
         this.frameSize = -1;

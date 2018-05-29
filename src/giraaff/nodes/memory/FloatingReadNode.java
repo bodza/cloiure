@@ -19,22 +19,26 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * A floating read of a value from memory specified in terms of an object base and an object
  * relative location. This node does not null check the object.
  */
+// @class FloatingReadNode
 public final class FloatingReadNode extends FloatingAccessNode implements LIRLowerableAccess, Canonicalizable
 {
     public static final NodeClass<FloatingReadNode> TYPE = NodeClass.create(FloatingReadNode.class);
 
     @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
 
+    // @cons
     public FloatingReadNode(AddressNode address, LocationIdentity location, MemoryNode lastLocationAccess, Stamp stamp)
     {
         this(address, location, lastLocationAccess, stamp, null, BarrierType.NONE);
     }
 
+    // @cons
     public FloatingReadNode(AddressNode address, LocationIdentity location, MemoryNode lastLocationAccess, Stamp stamp, GuardingNode guard)
     {
         this(address, location, lastLocationAccess, stamp, guard, BarrierType.NONE);
     }
 
+    // @cons
     public FloatingReadNode(AddressNode address, LocationIdentity location, MemoryNode lastLocationAccess, Stamp stamp, GuardingNode guard, BarrierType barrierType)
     {
         super(TYPE, address, location, stamp, guard, barrierType);

@@ -19,6 +19,7 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 
+// @class EnsureVirtualizedNode
 public final class EnsureVirtualizedNode extends FixedWithNextNode implements Virtualizable, Lowerable
 {
     public static final NodeClass<EnsureVirtualizedNode> TYPE = NodeClass.create(EnsureVirtualizedNode.class);
@@ -26,6 +27,7 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
     @Input ValueNode object;
     private final boolean localOnly;
 
+    // @cons
     public EnsureVirtualizedNode(ValueNode object, boolean localOnly)
     {
         super(TYPE, StampFactory.forVoid());

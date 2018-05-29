@@ -19,10 +19,12 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
+// @class XorNode
 public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCommutative<ValueNode>, NarrowableArithmeticNode
 {
     public static final NodeClass<XorNode> TYPE = NodeClass.create(XorNode.class);
 
+    // @cons
     public XorNode(ValueNode x, ValueNode y)
     {
         super(TYPE, ArithmeticOpTable::getXor, x, y);

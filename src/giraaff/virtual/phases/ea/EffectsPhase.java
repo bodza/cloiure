@@ -17,8 +17,10 @@ import giraaff.phases.graph.ReentrantBlockIterator;
 import giraaff.phases.schedule.SchedulePhase;
 import giraaff.phases.tiers.PhaseContext;
 
+// @class EffectsPhase
 public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends BasePhase<PhaseContextT>
 {
+    // @class EffectsPhase.Closure
     public abstract static class Closure<T> extends ReentrantBlockIterator.BlockIteratorClosure<T>
     {
         public abstract boolean hasChanged();
@@ -32,13 +34,16 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
     protected final CanonicalizerPhase canonicalizer;
     private final boolean unscheduled;
 
+    // @cons
     protected EffectsPhase(int maxIterations, CanonicalizerPhase canonicalizer)
     {
         this(maxIterations, canonicalizer, false);
     }
 
+    // @cons
     protected EffectsPhase(int maxIterations, CanonicalizerPhase canonicalizer, boolean unscheduled)
     {
+        super();
         this.maxIterations = maxIterations;
         this.canonicalizer = canonicalizer;
         this.unscheduled = unscheduled;

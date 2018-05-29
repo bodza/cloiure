@@ -1,5 +1,6 @@
 package giraaff.core.common;
 
+// @class FieldIntrospection
 public abstract class FieldIntrospection<T>
 {
     private final Class<T> clazz;
@@ -9,8 +10,10 @@ public abstract class FieldIntrospection<T>
      */
     protected Fields data;
 
+    // @cons
     public FieldIntrospection(Class<T> clazz)
     {
+        super();
         this.clazz = clazz;
     }
 

@@ -6,10 +6,13 @@ import giraaff.lir.stackslotalloc.LSStackSlotAllocator;
 import giraaff.lir.stackslotalloc.SimpleStackSlotAllocator;
 import giraaff.options.OptionValues;
 
-public class AllocationStage extends LIRPhaseSuite<AllocationContext>
+// @class AllocationStage
+public final class AllocationStage extends LIRPhaseSuite<AllocationContext>
 {
+    // @cons
     public AllocationStage(OptionValues options)
     {
+        super();
         appendPhase(new LinearScanPhase());
 
         // build frame map

@@ -16,10 +16,13 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.phases.graph.StatelessPostOrderNodeIterator;
 import giraaff.util.GraalError;
 
+// @class GraphOrder
 public final class GraphOrder
 {
+    // @cons
     private GraphOrder()
     {
+        super();
     }
 
     private static List<Node> createOrder(StructuredGraph graph)

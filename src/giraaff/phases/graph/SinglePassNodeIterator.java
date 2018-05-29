@@ -45,6 +45,7 @@ import giraaff.nodes.StructuredGraph;
  *
  * @param <T> the type of {@link MergeableState} handled by this SinglePassNodeIterator
  */
+// @class SinglePassNodeIterator
 public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
 {
     private final NodeBitMap visitedEnds;
@@ -91,13 +92,16 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      * <li>a successor of a control-split node, in which case the state on entry to it (the
      * successor) is also stored in the item, see {@link #nextQueuedNode()}</li>
      */
+    // @class SinglePassNodeIterator.PathStart
     private static final class PathStart<U>
     {
         private final AbstractBeginNode node;
         private final U stateOnEntry;
 
+        // @cons
         private PathStart(AbstractBeginNode node, U stateOnEntry)
         {
+            super();
             this.node = node;
             this.stateOnEntry = stateOnEntry;
         }
@@ -119,8 +123,10 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
         }
     }
 
+    // @cons
     public SinglePassNodeIterator(StartNode start, T initialState)
     {
+        super();
         StructuredGraph graph = start.graph();
         visitedEnds = graph.createNodeBitMap();
         nodeQueue = new ArrayDeque<>();

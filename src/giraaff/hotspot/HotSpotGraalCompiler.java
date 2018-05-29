@@ -38,13 +38,16 @@ import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.Suites;
 
-public class HotSpotGraalCompiler implements GraalJVMCICompiler
+// @class HotSpotGraalCompiler
+public final class HotSpotGraalCompiler implements GraalJVMCICompiler
 {
     private final HotSpotJVMCIRuntimeProvider jvmciRuntime;
     private final HotSpotGraalRuntimeProvider graalRuntime;
 
+    // @cons
     public HotSpotGraalCompiler(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider graalRuntime)
     {
+        super();
         this.jvmciRuntime = jvmciRuntime;
         this.graalRuntime = graalRuntime;
     }

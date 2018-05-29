@@ -8,10 +8,12 @@ import jdk.vm.ci.meta.ValueKind;
 /**
  * Represents an inlined {@link Constant} value.
  */
-public class ConstantValue extends Value
+// @class ConstantValue
+public final class ConstantValue extends Value
 {
     private final Constant constant;
 
+    // @cons
     public ConstantValue(ValueKind<?> kind, Constant constant)
     {
         super(kind);

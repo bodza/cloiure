@@ -14,6 +14,7 @@ import giraaff.word.Word;
  * Sets up the {@linkplain HotSpotBackend#EXCEPTION_HANDLER_IN_CALLER arguments} expected by an
  * exception handler in the caller's frame, removes the current frame and jumps to said handler.
  */
+// @class JumpToExceptionHandlerInCallerNode
 public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode implements LIRLowerable
 {
     public static final NodeClass<JumpToExceptionHandlerInCallerNode> TYPE = NodeClass.create(JumpToExceptionHandlerInCallerNode.class);
@@ -22,6 +23,7 @@ public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode im
     @Input ValueNode exception;
     @Input ValueNode exceptionPc;
 
+    // @cons
     public JumpToExceptionHandlerInCallerNode(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc)
     {
         super(TYPE, StampFactory.forVoid());

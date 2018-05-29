@@ -14,8 +14,10 @@ import giraaff.word.Word;
 /**
  * Stub to allocate an {@link ArrayIndexOutOfBoundsException} thrown by a bytecode.
  */
-public class OutOfBoundsExceptionStub extends CreateExceptionStub
+// @class OutOfBoundsExceptionStub
+public final class OutOfBoundsExceptionStub extends CreateExceptionStub
 {
+    // @cons
     public OutOfBoundsExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super("createOutOfBoundsException", options, providers, linkage);

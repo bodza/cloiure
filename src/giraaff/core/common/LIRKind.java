@@ -40,6 +40,7 @@ import giraaff.core.common.alloc.RegisterAllocationConfig;
  * can not track, {@link LIRKind#unknownReference} can be used. In most cases,
  * {@link LIRKind#combine} should be used instead, since it is able to detect this automatically.
  */
+// @class LIRKind
 public final class LIRKind extends ValueKind<LIRKind>
 {
     /**
@@ -59,6 +60,7 @@ public final class LIRKind extends ValueKind<LIRKind>
 
     public static final LIRKind Illegal = unknownReference(ValueKind.Illegal.getPlatformKind());
 
+    // @cons
     private LIRKind(PlatformKind platformKind, int referenceMask, int referenceCompressionMask, AllocatableValue derivedReferenceBase)
     {
         super(platformKind);

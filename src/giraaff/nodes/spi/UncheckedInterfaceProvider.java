@@ -2,6 +2,7 @@ package giraaff.nodes.spi;
 
 import giraaff.core.common.type.Stamp;
 
+// @iface UncheckedInterfaceProvider
 public interface UncheckedInterfaceProvider
 {
     /**

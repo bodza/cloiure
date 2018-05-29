@@ -5,10 +5,13 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import giraaff.nodes.StructuredGraph;
 import giraaff.util.GraalError;
 
+// @class VirtualUtil
 public final class VirtualUtil
 {
+    // @cons
     private VirtualUtil()
     {
+        super();
         GraalError.shouldNotReachHere();
     }
 

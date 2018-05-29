@@ -5,6 +5,7 @@ package giraaff.bytecode;
  * prone. For example, it handles the {@link Bytecodes#WIDE} instruction and wide variants of
  * instructions internally.
  */
+// @class BytecodeStream
 public final class BytecodeStream
 {
     private final byte[] code;
@@ -17,8 +18,10 @@ public final class BytecodeStream
      *
      * @param code the array of bytes that contains the bytecode
      */
+    // @cons
     public BytecodeStream(byte[] code)
     {
+        super();
         this.code = code;
         setBCI(0);
     }

@@ -3,7 +3,8 @@ package giraaff.bytecode;
 /**
  * A utility for processing {@link Bytecodes#LOOKUPSWITCH} bytecodes.
  */
-public class BytecodeLookupSwitch extends BytecodeSwitch
+// @class BytecodeLookupSwitch
+public final class BytecodeLookupSwitch extends BytecodeSwitch
 {
     private static final int OFFSET_TO_NUMBER_PAIRS = 4;
     private static final int OFFSET_TO_FIRST_PAIR_MATCH = 8;
@@ -16,6 +17,7 @@ public class BytecodeLookupSwitch extends BytecodeSwitch
      * @param stream the {@code BytecodeStream} containing the switch instruction
      * @param bci the index in the stream of the switch instruction
      */
+    // @cons
     public BytecodeLookupSwitch(BytecodeStream stream, int bci)
     {
         super(stream, bci);

@@ -109,6 +109,7 @@ import giraaff.util.GraalError;
  * VM-independent lowerings for standard Java nodes.
  * VM-specific methods are abstract and must be implemented by VM-specific subclasses.
  */
+// @class DefaultJavaLoweringProvider
 public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 {
     protected final MetaAccessProvider metaAccess;
@@ -118,8 +119,10 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 
     private BoxingSnippets.Templates boxingSnippets;
 
+    // @cons
     public DefaultJavaLoweringProvider(MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, TargetDescription target, boolean useCompressedOops)
     {
+        super();
         this.metaAccess = metaAccess;
         this.foreignCalls = foreignCalls;
         this.target = target;

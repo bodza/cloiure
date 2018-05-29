@@ -35,6 +35,7 @@ import giraaff.nodes.memory.address.AddressNode.Address;
 import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
+// @class Word
 public abstract class Word implements SignedWord, UnsignedWord, Pointer
 {
     static
@@ -66,6 +67,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     /**
      * The canonical {@link Operation} represented by a method in the {@link Word} class.
      */
+    // @enum Word.Opcode
     public enum Opcode
     {
         NODE_CLASS,
@@ -90,7 +92,8 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
         TO_RAW_VALUE,
     }
 
-    static class BoxFactoryImpl extends WordBoxFactory
+    // @class Word.BoxFactoryImpl
+    static final class BoxFactoryImpl extends WordBoxFactory
     {
         static void initialize()
         {
@@ -1353,6 +1356,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     }
 }
 
+// @class HostedWord
 final class HostedWord extends Word
 {
     private static final int SMALL_FROM = -1;
@@ -1370,8 +1374,10 @@ final class HostedWord extends Word
 
     private final long rawValue;
 
+    // @cons
     private HostedWord(long rawValue)
     {
+        super();
         this.rawValue = rawValue;
     }
 

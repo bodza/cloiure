@@ -6,6 +6,7 @@ import giraaff.graph.spi.Canonicalizable;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
 import giraaff.nodes.ValueNode;
 
+// @class FixedBinaryNode
 public abstract class FixedBinaryNode extends DeoptimizingFixedWithNextNode implements Canonicalizable.Binary<ValueNode>
 {
     public static final NodeClass<FixedBinaryNode> TYPE = NodeClass.create(FixedBinaryNode.class);
@@ -13,6 +14,7 @@ public abstract class FixedBinaryNode extends DeoptimizingFixedWithNextNode impl
     @Input protected ValueNode x;
     @Input protected ValueNode y;
 
+    // @cons
     public FixedBinaryNode(NodeClass<? extends FixedBinaryNode> c, Stamp stamp, ValueNode x, ValueNode y)
     {
         super(c, stamp);

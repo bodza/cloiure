@@ -9,13 +9,15 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-public class ResolveMethodAndLoadCountersNode extends DeoptimizingFixedWithNextNode implements Lowerable
+// @class ResolveMethodAndLoadCountersNode
+public final class ResolveMethodAndLoadCountersNode extends DeoptimizingFixedWithNextNode implements Lowerable
 {
     public static final NodeClass<ResolveMethodAndLoadCountersNode> TYPE = NodeClass.create(ResolveMethodAndLoadCountersNode.class);
 
     ResolvedJavaMethod method;
     @Input ValueNode hub;
 
+    // @cons
     public ResolveMethodAndLoadCountersNode(ResolvedJavaMethod method, ValueNode hub)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());

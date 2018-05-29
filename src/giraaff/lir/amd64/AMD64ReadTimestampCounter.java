@@ -15,13 +15,15 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * AMD64 rdtsc operation. The result is in EDX:EAX.
  */
 @Opcode
-public class AMD64ReadTimestampCounter extends AMD64LIRInstruction
+// @class AMD64ReadTimestampCounter
+public final class AMD64ReadTimestampCounter extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ReadTimestampCounter> TYPE = LIRInstructionClass.create(AMD64ReadTimestampCounter.class);
 
     @Def({OperandFlag.REG}) protected AllocatableValue highResult;
     @Def({OperandFlag.REG}) protected AllocatableValue lowResult;
 
+    // @cons
     public AMD64ReadTimestampCounter()
     {
         super(TYPE);

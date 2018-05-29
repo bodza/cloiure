@@ -13,6 +13,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGeneratorTool;
 
 @Opcode
+// @class AMD64StringIndexOfOp
 public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64StringIndexOfOp> TYPE = LIRInstructionClass.create(AMD64StringIndexOfOp.class);
@@ -31,6 +32,7 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
 
     private final int vmPageSize;
 
+    // @cons
     public AMD64StringIndexOfOp(LIRGeneratorTool tool, Value result, Value charPtr1, Value charPtr2, RegisterValue cnt1, RegisterValue cnt2, RegisterValue temp1, RegisterValue vectorTemp1, int intCnt2, int vmPageSize)
     {
         super(TYPE);

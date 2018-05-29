@@ -19,12 +19,14 @@ import giraaff.lir.framemap.FrameMap;
  * registers stored on the stack.
  */
 @Opcode
+// @class AMD64HotSpotLeaveCurrentStackFrameOp
 final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
 {
     public static final LIRInstructionClass<AMD64HotSpotLeaveCurrentStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveCurrentStackFrameOp.class);
 
     private final SaveRegistersOp saveRegisterOp;
 
+    // @cons
     AMD64HotSpotLeaveCurrentStackFrameOp(SaveRegistersOp saveRegisterOp)
     {
         super(TYPE);

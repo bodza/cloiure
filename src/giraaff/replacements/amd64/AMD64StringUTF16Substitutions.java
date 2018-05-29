@@ -8,11 +8,10 @@ import giraaff.replacements.nodes.ArrayCompareToNode;
 
 /**
  * Substitutions for {@code java.lang.StringUTF16} methods.
- *
- * Since JDK 9.
  */
 @ClassSubstitution(className = "java.lang.StringUTF16", optional = true)
-public class AMD64StringUTF16Substitutions
+// @class AMD64StringUTF16Substitutions
+public final class AMD64StringUTF16Substitutions
 {
     /**
      * @param value is char[]

@@ -7,8 +7,10 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import giraaff.options.OptionValues;
 import giraaff.phases.tiers.CompilerConfiguration;
 
+// @class AMD64SuitesCreator
 public class AMD64SuitesCreator extends DefaultSuitesCreator
 {
+    // @cons
     public AMD64SuitesCreator(CompilerConfiguration compilerConfiguration, Plugins plugins)
     {
         super(compilerConfiguration, plugins);

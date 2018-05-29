@@ -7,10 +7,13 @@ import giraaff.nodes.StructuredGraph;
  * instance for each compiler phase that is shared for all compilations. VM-, target- and
  * compilation-specific data can be passed with a context object.
  */
+// @class BasePhase
 public abstract class BasePhase<C>
 {
+    // @cons
     protected BasePhase()
     {
+        super();
     }
 
     public final void apply(final StructuredGraph graph, final C context)

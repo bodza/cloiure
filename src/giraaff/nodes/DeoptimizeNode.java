@@ -13,6 +13,7 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class DeoptimizeNode
 public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowerable, LIRLowerable, StaticDeoptimizingNode
 {
     public static final int DEFAULT_DEBUG_ID = 0;
@@ -24,16 +25,19 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
     protected int debugId;
     protected final JavaConstant speculation;
 
+    // @cons
     public DeoptimizeNode(DeoptimizationAction action, DeoptimizationReason reason)
     {
         this(action, reason, DEFAULT_DEBUG_ID, JavaConstant.NULL_POINTER, null);
     }
 
+    // @cons
     public DeoptimizeNode(DeoptimizationAction action, DeoptimizationReason reason, JavaConstant speculation)
     {
         this(action, reason, DEFAULT_DEBUG_ID, speculation, null);
     }
 
+    // @cons
     public DeoptimizeNode(DeoptimizationAction action, DeoptimizationReason reason, int debugId, JavaConstant speculation, FrameState stateBefore)
     {
         super(TYPE, stateBefore);

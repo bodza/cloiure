@@ -16,6 +16,7 @@ import giraaff.phases.tiers.PhaseContext;
 /**
  * A set of providers, some of which may not be present (i.e., null).
  */
+// @class Providers
 public class Providers implements CodeGenProviders
 {
     private final MetaAccessProvider metaAccess;
@@ -27,8 +28,10 @@ public class Providers implements CodeGenProviders
     private final Replacements replacements;
     private final StampProvider stampProvider;
 
+    // @cons
     public Providers(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, ForeignCallsProvider foreignCalls, LoweringProvider lowerer, Replacements replacements, StampProvider stampProvider)
     {
+        super();
         this.metaAccess = metaAccess;
         this.codeCache = codeCache;
         this.constantReflection = constantReflection;
@@ -39,11 +42,13 @@ public class Providers implements CodeGenProviders
         this.stampProvider = stampProvider;
     }
 
+    // @cons
     public Providers(Providers copyFrom)
     {
         this(copyFrom.getMetaAccess(), copyFrom.getCodeCache(), copyFrom.getConstantReflection(), copyFrom.getConstantFieldProvider(), copyFrom.getForeignCalls(), copyFrom.getLowerer(), copyFrom.getReplacements(), copyFrom.getStampProvider());
     }
 
+    // @cons
     public Providers(PhaseContext copyFrom)
     {
         this(copyFrom.getMetaAccess(), null, copyFrom.getConstantReflection(), copyFrom.getConstantFieldProvider(), null, copyFrom.getLowerer(), copyFrom.getReplacements(), copyFrom.getStampProvider());

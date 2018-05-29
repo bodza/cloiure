@@ -24,7 +24,8 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Represents an address of the form [base + index*scale + displacement]. Both base and index are optional.
  */
-public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLowerable
+// @class AMD64AddressNode
+public final class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLowerable
 {
     public static final NodeClass<AMD64AddressNode> TYPE = NodeClass.create(AMD64AddressNode.class);
 
@@ -35,11 +36,13 @@ public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLo
 
     private int displacement;
 
+    // @cons
     public AMD64AddressNode(ValueNode base)
     {
         this(base, null);
     }
 
+    // @cons
     public AMD64AddressNode(ValueNode base, ValueNode index)
     {
         super(TYPE);

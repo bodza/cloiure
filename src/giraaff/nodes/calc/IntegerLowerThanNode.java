@@ -22,12 +22,14 @@ import giraaff.options.OptionValues;
  * Common super-class for "a < b" comparisons both {@linkplain IntegerLowerThanNode signed} and
  * {@linkplain IntegerBelowNode unsigned}.
  */
+// @class IntegerLowerThanNode
 public abstract class IntegerLowerThanNode extends CompareNode
 {
     public static final NodeClass<IntegerLowerThanNode> TYPE = NodeClass.create(IntegerLowerThanNode.class);
 
     private final LowerOp op;
 
+    // @cons
     protected IntegerLowerThanNode(NodeClass<? extends CompareNode> c, ValueNode x, ValueNode y, LowerOp op)
     {
         super(c, op.getCondition(), false, x, y);
@@ -117,6 +119,7 @@ public abstract class IntegerLowerThanNode extends CompareNode
         return getOp().tryFold(xStampGeneric, yStampGeneric);
     }
 
+    // @class IntegerLowerThanNode.LowerOp
     public abstract static class LowerOp extends CompareOp
     {
         @Override

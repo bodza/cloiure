@@ -19,6 +19,7 @@ import giraaff.options.OptionValues;
 /**
  * Common functionality of HotSpot host backends.
  */
+// @class HotSpotHostBackend
 public abstract class HotSpotHostBackend extends HotSpotBackend
 {
     /**
@@ -31,6 +32,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
      */
     public static final ForeignCallDescriptor UNCOMMON_TRAP_HANDLER = new ForeignCallDescriptor("uncommonTrapHandler", void.class);
 
+    // @cons
     public HotSpotHostBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
     {
         super(runtime, providers);

@@ -14,6 +14,7 @@ import giraaff.nodes.spi.VirtualizerTool;
  * Selects one object from a {@link CommitAllocationNode}. The object is identified by its
  * {@link VirtualObjectNode}.
  */
+// @class AllocatedObjectNode
 public final class AllocatedObjectNode extends FloatingNode implements Virtualizable, ArrayLengthProvider
 {
     public static final NodeClass<AllocatedObjectNode> TYPE = NodeClass.create(AllocatedObjectNode.class);
@@ -21,6 +22,7 @@ public final class AllocatedObjectNode extends FloatingNode implements Virtualiz
     @Input VirtualObjectNode virtualObject;
     @Input(InputType.Extension) CommitAllocationNode commit;
 
+    // @cons
     public AllocatedObjectNode(VirtualObjectNode virtualObject)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(virtualObject.type())));

@@ -18,6 +18,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
  * a synchronized method, then the return value of the method will be referenced via the edge
  * {@link #escapedReturnValue}, so that it will be materialized before releasing the monitor.
  */
+// @class MonitorExitNode
 public final class MonitorExitNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint.Single
 {
     public static final NodeClass<MonitorExitNode> TYPE = NodeClass.create(MonitorExitNode.class);
@@ -28,6 +29,7 @@ public final class MonitorExitNode extends AccessMonitorNode implements Virtuali
      */
     @OptionalInput ValueNode escapedReturnValue;
 
+    // @cons
     public MonitorExitNode(ValueNode object, MonitorIdNode monitorId, ValueNode escapedReturnValue)
     {
         super(TYPE, object, monitorId);

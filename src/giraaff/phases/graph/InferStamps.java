@@ -7,7 +7,8 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
 
-public class InferStamps
+// @class InferStamps
+public final class InferStamps
 {
     /**
      * Infer the stamps for all Object nodes in the graph, to make the stamps as precise as

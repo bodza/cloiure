@@ -21,7 +21,8 @@ import giraaff.nodes.java.ExceptionObjectNode;
  * through the JVM state since intrinsics can employ non-Java kinds to represent values such as raw
  * machine words and pointers.
  */
-public class IntrinsicContext
+// @class IntrinsicContext
+public final class IntrinsicContext
 {
     /**
      * Method being intrinsified.
@@ -42,13 +43,16 @@ public class IntrinsicContext
 
     final boolean allowPartialIntrinsicArgumentMismatch;
 
+    // @cons
     public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext)
     {
         this(method, intrinsic, bytecodeProvider, compilationContext, false);
     }
 
+    // @cons
     public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext, boolean allowPartialIntrinsicArgumentMismatch)
     {
+        super();
         this.originalMethod = method;
         this.intrinsicMethod = intrinsic;
         this.bytecodeProvider = bytecodeProvider;
@@ -113,6 +117,7 @@ public class IntrinsicContext
     /**
      * Denotes the compilation context in which an intrinsic is being parsed.
      */
+    // @enum IntrinsicContext.CompilationContext
     public enum CompilationContext
     {
         /**
@@ -136,6 +141,7 @@ public class IntrinsicContext
      * Models the state of a graph in terms of {@link StateSplit#hasSideEffect() side effects} that
      * are control flow predecessors of the current point in a graph.
      */
+    // @iface IntrinsicContext.SideEffectsState
     public interface SideEffectsState
     {
         /**

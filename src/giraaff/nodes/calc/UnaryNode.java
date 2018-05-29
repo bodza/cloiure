@@ -9,6 +9,7 @@ import giraaff.nodes.ValueNode;
 /**
  * The {@code UnaryNode} class is the base of arithmetic and bit logic operations with exactly one input.
  */
+// @class UnaryNode
 public abstract class UnaryNode extends FloatingNode implements Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<UnaryNode> TYPE = NodeClass.create(UnaryNode.class);
@@ -33,6 +34,7 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
      * @param stamp the result type of this instruction
      * @param value the input instruction
      */
+    // @cons
     protected UnaryNode(NodeClass<? extends UnaryNode> c, Stamp stamp, ValueNode value)
     {
         super(c, stamp);

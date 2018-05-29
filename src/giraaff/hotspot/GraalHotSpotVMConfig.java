@@ -8,6 +8,7 @@ import giraaff.core.common.CompressEncoding;
 /**
  * Native configuration details.
  */
+// @class GraalHotSpotVMConfig
 public final class GraalHotSpotVMConfig
 {
     private static final HotSpotVMConfigAccess c = new HotSpotVMConfigAccess(HotSpotJVMCIRuntime.runtime().getConfigStore());
@@ -380,7 +381,9 @@ public final class GraalHotSpotVMConfig
         logOfHeapRegionGrainBytesMark           = c.getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES",         Integer.class),
         inlineContiguousAllocationSupportedMark = c.getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class);
 
+    // @cons
     private GraalHotSpotVMConfig()
     {
+        super();
     }
 }

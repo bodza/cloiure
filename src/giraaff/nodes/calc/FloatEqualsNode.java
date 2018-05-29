@@ -20,12 +20,14 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
+// @class FloatEqualsNode
 public final class FloatEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<FloatEqualsNode> TYPE = NodeClass.create(FloatEqualsNode.class);
 
     private static final FloatEqualsOp OP = new FloatEqualsOp();
 
+    // @cons
     public FloatEqualsNode(ValueNode x, ValueNode y)
     {
         super(TYPE, CanonicalCondition.EQ, false, x, y);
@@ -80,7 +82,8 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
         return this;
     }
 
-    public static class FloatEqualsOp extends CompareOp
+    // @class FloatEqualsNode.FloatEqualsOp
+    public static final class FloatEqualsOp extends CompareOp
     {
         @Override
         public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)

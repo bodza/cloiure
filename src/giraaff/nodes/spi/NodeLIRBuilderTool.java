@@ -26,6 +26,7 @@ import giraaff.nodes.cfg.Block;
 import giraaff.nodes.extended.SwitchNode;
 import giraaff.options.OptionValues;
 
+// @iface NodeLIRBuilderTool
 public interface NodeLIRBuilderTool extends NodeValueMap
 {
     // TODO remove and move into the Node

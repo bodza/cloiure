@@ -5,12 +5,15 @@ import jdk.vm.ci.meta.Value;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
+// @class GenericValueMap
 public final class GenericValueMap<T> extends ValueMap<Value, T>
 {
     private final EconomicMap<Value, T> data;
 
+    // @cons
     public GenericValueMap()
     {
+        super();
         data = EconomicMap.create(Equivalence.DEFAULT);
     }
 

@@ -20,7 +20,8 @@ import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.word.Word;
 
-public class HashCodeSnippets implements Snippets
+// @class HashCodeSnippets
+public final class HashCodeSnippets implements Snippets
 {
     @Snippet
     public static int identityHashCodeSnippet(final Object thisObj)
@@ -49,10 +50,12 @@ public class HashCodeSnippets implements Snippets
         return HotSpotReplacementsUtil.identityHashCode(HotSpotForeignCallsProviderImpl.IDENTITY_HASHCODE, x);
     }
 
-    public static class Templates extends AbstractTemplates
+    // @class HashCodeSnippets.Templates
+    public static final class Templates extends AbstractTemplates
     {
         private final SnippetInfo identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
+        // @cons
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
             super(options, providers, providers.getSnippetReflection(), target);
@@ -66,5 +69,11 @@ public class HashCodeSnippets implements Snippets
             SnippetTemplate template = template(node, args);
             template.instantiate(providers.getMetaAccess(), node, SnippetTemplate.DEFAULT_REPLACER, args);
         }
+    }
+
+    // @cons
+    private HashCodeSnippets()
+    {
+        super();
     }
 }

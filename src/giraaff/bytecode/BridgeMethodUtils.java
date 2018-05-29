@@ -11,21 +11,16 @@ import giraaff.bytecode.Bytecodes;
  * Utilities for working around the absence of method annotations and parameter annotations on
  * bridge methods where the bridged methods have method annotations or parameter annotations. Not
  * all Java compilers copy method annotations and parameter annotations to bridge methods.
- *
- * @see <a href="http://bugs.java.com/view_bug.do?bug_id=6695379">6695379</a>
- * @see <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=495396">495396</a>
- * @see <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=427745">427745</a>
  */
-public class BridgeMethodUtils
+// @class BridgeMethodUtils
+public final class BridgeMethodUtils
 {
     /**
      * Gets the method bridged to by a {@linkplain ResolvedJavaMethod#isBridge() bridge} method. The
-     * value returned is the method called by {@code method} that has the same name as
-     * {@code bridge}.
+     * value returned is the method called by {@code method} that has the same name as {@code bridge}.
      *
      * @param bridge a bridge method
-     * @return the method called by {@code bridge} whose name is the same as
-     *         {@code bridge.getName()}
+     * @return the method called by {@code bridge} whose name is the same as {@code bridge.getName()}
      */
     public static ResolvedJavaMethod getBridgedMethod(ResolvedJavaMethod bridge)
     {
@@ -165,5 +160,11 @@ public class BridgeMethodUtils
             }
         }
         return a;
+    }
+
+    // @cons
+    private BridgeMethodUtils()
+    {
+        super();
     }
 }

@@ -7,6 +7,7 @@ import java.util.Arrays;
  *
  * This class avoids the boxing/unboxing incurred by {@code ArrayList<Integer>}.
  */
+// @class IntList
 public final class IntList
 {
     private static final int[] EMPTY_INT_ARRAY = new int[0];
@@ -17,8 +18,10 @@ public final class IntList
     /**
      * Creates an int list with a specified initial capacity.
      */
+    // @cons
     public IntList(int initialCapacity)
     {
+        super();
         array = new int[initialCapacity];
     }
 
@@ -29,8 +32,10 @@ public final class IntList
      * @param initialSize the initial {@linkplain #size() size} of the list (must be less than or
      *            equal to {@code array.length}
      */
+    // @cons
     public IntList(int[] array, int initialSize)
     {
+        super();
         this.array = array;
         this.size = initialSize;
     }

@@ -15,7 +15,8 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase;
 import giraaff.util.GraalError;
 
-public class SimpleStackSlotAllocator extends AllocationPhase
+// @class SimpleStackSlotAllocator
+public final class SimpleStackSlotAllocator extends AllocationPhase
 {
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)

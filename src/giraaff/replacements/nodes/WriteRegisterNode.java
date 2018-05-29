@@ -14,6 +14,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 /**
  * Changes the value of a specific register.
  */
+// @class WriteRegisterNode
 public final class WriteRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<WriteRegisterNode> TYPE = NodeClass.create(WriteRegisterNode.class);
@@ -28,6 +29,7 @@ public final class WriteRegisterNode extends FixedWithNextNode implements LIRLow
      */
     @Input ValueNode value;
 
+    // @cons
     public WriteRegisterNode(Register register, ValueNode value)
     {
         super(TYPE, StampFactory.forVoid());

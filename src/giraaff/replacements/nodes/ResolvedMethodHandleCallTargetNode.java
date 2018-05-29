@@ -26,6 +26,7 @@ import giraaff.util.GraalError;
  * methods. An {@linkplain MethodHandleNode#tryResolveTargetInvoke resolved} {@link MethodHandle}
  * invocation drops these arguments which means the interpreter won't find them.
  */
+// @class ResolvedMethodHandleCallTargetNode
 public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNode implements Lowerable
 {
     public static final NodeClass<ResolvedMethodHandleCallTargetNode> TYPE = NodeClass.create(ResolvedMethodHandleCallTargetNode.class);
@@ -43,6 +44,7 @@ public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNo
     protected final StampPair originalReturnStamp;
     @Input NodeInputList<ValueNode> originalArguments;
 
+    // @cons
     protected ResolvedMethodHandleCallTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, ResolvedJavaMethod originalTargetMethod, ValueNode[] originalArguments, StampPair originalReturnStamp)
     {
         super(TYPE, invokeKind, targetMethod, arguments, returnStamp, null);

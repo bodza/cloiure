@@ -15,12 +15,14 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.word.Word;
 
+// @class EncodedSymbolNode
 public final class EncodedSymbolNode extends FloatingNode implements Canonicalizable
 {
     public static final NodeClass<EncodedSymbolNode> TYPE = NodeClass.create(EncodedSymbolNode.class);
 
     @OptionalInput protected ValueNode value;
 
+    // @cons
     public EncodedSymbolNode(@InjectedNodeParameter Stamp stamp, ValueNode value)
     {
         super(TYPE, stamp);

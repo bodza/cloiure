@@ -52,7 +52,8 @@ import giraaff.nodes.extended.ValueAnchorNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
-public class LoopEx
+// @class LoopEx
+public final class LoopEx
 {
     private final Loop<Block> loop;
     private LoopFragmentInside inside;
@@ -61,8 +62,10 @@ public class LoopEx
     private LoopsData data;
     private EconomicMap<Node, InductionVariable> ivs;
 
+    // @cons
     LoopEx(Loop<Block> loop, LoopsData data)
     {
+        super();
         this.loop = loop;
         this.data = data;
     }
@@ -160,12 +163,15 @@ public class LoopEx
         return (isCounted() ? "CountedLoop [" + counted() + "] " : "Loop ") + "(depth=" + loop().getDepth() + ") " + loopBegin();
     }
 
-    private class InvariantPredicate implements NodePredicate
+    // @class LoopEx.InvariantPredicate
+    private final class InvariantPredicate implements NodePredicate
     {
         private final Graph.Mark mark;
 
+        // @cons
         InvariantPredicate()
         {
+            super();
             this.mark = loopBegin().graph().getMark();
         }
 

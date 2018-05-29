@@ -3,6 +3,7 @@ package giraaff.nodes.spi;
 import giraaff.core.common.type.Stamp;
 import giraaff.nodes.ValueNode;
 
+// @iface StampInverter
 public interface StampInverter
 {
     /**

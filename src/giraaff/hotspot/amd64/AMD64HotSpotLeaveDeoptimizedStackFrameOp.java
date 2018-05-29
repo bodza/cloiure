@@ -15,6 +15,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
  * Pops a deoptimized stack frame off the stack including the return address.
  */
 @Opcode
+// @class AMD64HotSpotLeaveDeoptimizedStackFrameOp
 final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogueOp
 {
     public static final LIRInstructionClass<AMD64HotSpotLeaveDeoptimizedStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveDeoptimizedStackFrameOp.class);
@@ -22,6 +23,7 @@ final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogu
     @Use(OperandFlag.REG) AllocatableValue frameSize;
     @Use(OperandFlag.REG) AllocatableValue framePointer;
 
+    // @cons
     AMD64HotSpotLeaveDeoptimizedStackFrameOp(AllocatableValue frameSize, AllocatableValue initialInfo)
     {
         super(TYPE);

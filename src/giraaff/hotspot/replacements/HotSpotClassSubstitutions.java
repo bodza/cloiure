@@ -14,7 +14,8 @@ import giraaff.nodes.SnippetAnchorNode;
  * Substitutions for {@link java.lang.Class} methods.
  */
 @ClassSubstitution(Class.class)
-public class HotSpotClassSubstitutions
+// @class HotSpotClassSubstitutions
+public final class HotSpotClassSubstitutions
 {
     @MethodSubstitution(isStatic = false)
     public static int getModifiers(final Class<?> thisObj)
@@ -123,5 +124,11 @@ public class HotSpotClassSubstitutions
             // Class for primitive type
         }
         return null;
+    }
+
+    // @cons
+    private HotSpotClassSubstitutions()
+    {
+        super();
     }
 }

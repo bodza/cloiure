@@ -48,8 +48,10 @@ import giraaff.lir.ValueConsumer;
  *   ...
  * </pre>
  */
+// @class SSAUtil
 public final class SSAUtil
 {
+    // @iface SSAUtil.PhiValueVisitor
     public interface PhiValueVisitor
     {
         /**

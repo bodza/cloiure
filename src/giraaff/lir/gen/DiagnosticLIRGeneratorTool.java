@@ -8,6 +8,7 @@ import jdk.vm.ci.meta.JavaConstant;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.StandardOp.SaveRegistersOp;
 
+// @iface DiagnosticLIRGeneratorTool
 public interface DiagnosticLIRGeneratorTool
 {
     /**
@@ -37,6 +38,7 @@ public interface DiagnosticLIRGeneratorTool
      * Marker interface for {@link LIRInstruction instructions} that should be succeeded with a
      * {@link DiagnosticLIRGeneratorTool#createZapRegisters() ZapRegisterOp} if assertions are enabled.
      */
+    // @iface DiagnosticLIRGeneratorTool.ZapRegistersAfterInstruction
     interface ZapRegistersAfterInstruction
     {
     }
@@ -45,6 +47,7 @@ public interface DiagnosticLIRGeneratorTool
      * Marker interface for {@link LIRInstruction instructions} that should be preceded with a
      * {@link DiagnosticLIRGeneratorTool#zapArgumentSpace ZapArgumentSpaceOp} if assertions are enabled.
      */
+    // @iface DiagnosticLIRGeneratorTool.ZapStackArgumentSpaceBeforeInstruction
     interface ZapStackArgumentSpaceBeforeInstruction
     {
     }

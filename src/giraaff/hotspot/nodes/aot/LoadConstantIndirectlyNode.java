@@ -20,7 +20,8 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
-public class LoadConstantIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
+// @class LoadConstantIndirectlyNode
+public final class LoadConstantIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<LoadConstantIndirectlyNode> TYPE = NodeClass.create(LoadConstantIndirectlyNode.class);
 
@@ -28,6 +29,7 @@ public class LoadConstantIndirectlyNode extends FloatingNode implements Canonica
     protected Constant constant;
     protected HotSpotConstantLoadAction action;
 
+    // @cons
     public LoadConstantIndirectlyNode(ValueNode value)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));
@@ -36,6 +38,7 @@ public class LoadConstantIndirectlyNode extends FloatingNode implements Canonica
         this.action = HotSpotConstantLoadAction.RESOLVE;
     }
 
+    // @cons
     public LoadConstantIndirectlyNode(ValueNode value, HotSpotConstantLoadAction action)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));

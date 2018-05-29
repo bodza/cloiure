@@ -7,6 +7,7 @@ import giraaff.nodes.spi.Replacements;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.common.inlining.walker.MethodInvocation;
 
+// @class InlineEverythingPolicy
 public class InlineEverythingPolicy implements InliningPolicy
 {
     @Override

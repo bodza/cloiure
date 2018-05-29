@@ -10,8 +10,10 @@ import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.util.GraalError;
 
+// @class MetaspacePointerStamp
 public abstract class MetaspacePointerStamp extends AbstractPointerStamp
 {
+    // @cons
     protected MetaspacePointerStamp(boolean nonNull, boolean alwaysNull)
     {
         super(nonNull, alwaysNull);

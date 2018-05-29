@@ -9,6 +9,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * This class encapsulated the materialized state of an escape analyzed object.
  */
+// @class MaterializedObjectState
 public final class MaterializedObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
     public static final NodeClass<MaterializedObjectState> TYPE = NodeClass.create(MaterializedObjectState.class);
@@ -20,6 +21,7 @@ public final class MaterializedObjectState extends EscapeObjectState implements 
         return materializedValue;
     }
 
+    // @cons
     public MaterializedObjectState(VirtualObjectNode object, ValueNode materializedValue)
     {
         super(TYPE, object);

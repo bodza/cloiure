@@ -16,8 +16,10 @@ import giraaff.lir.alloc.lsra.LinearScan;
 import giraaff.lir.alloc.lsra.LinearScanLifetimeAnalysisPhase;
 import giraaff.lir.ssa.SSAUtil;
 
-public class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetimeAnalysisPhase
+// @class SSALinearScanLifetimeAnalysisPhase
+public final class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetimeAnalysisPhase
 {
+    // @cons
     SSALinearScanLifetimeAnalysisPhase(LinearScan linearScan)
     {
         super(linearScan);

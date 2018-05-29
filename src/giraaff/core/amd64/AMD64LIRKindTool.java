@@ -6,6 +6,7 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.util.GraalError;
 
+// @class AMD64LIRKindTool
 public abstract class AMD64LIRKindTool implements LIRKindTool
 {
     @Override

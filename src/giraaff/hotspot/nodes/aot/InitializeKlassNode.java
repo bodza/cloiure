@@ -11,12 +11,14 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
 // @NodeInfo.allowedUsageTypes "Memory"
-public class InitializeKlassNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
+// @class InitializeKlassNode
+public final class InitializeKlassNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<InitializeKlassNode> TYPE = NodeClass.create(InitializeKlassNode.class);
 
     @Input ValueNode value;
 
+    // @cons
     public InitializeKlassNode(ValueNode value)
     {
         super(TYPE, value.stamp(NodeView.DEFAULT));

@@ -88,7 +88,8 @@ import giraaff.util.GraalError;
 /**
  * Provides non-runtime specific {@link InvocationPlugin}s.
  */
-public class StandardGraphBuilderPlugins
+// @class StandardGraphBuilderPlugins
+public final class StandardGraphBuilderPlugins
 {
     public static void registerInvocationPlugins(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection, InvocationPlugins plugins, BytecodeProvider bytecodeProvider, boolean allowDeoptimization)
     {
@@ -109,24 +110,6 @@ public class StandardGraphBuilderPlugins
         registerEdgesPlugins(metaAccess, plugins);
         registerGraalDirectivesPlugins(plugins);
         registerBoxingPlugins(plugins);
-        registerJMHBlackholePlugins(plugins, bytecodeProvider);
-        registerJFRThrowablePlugins(plugins, bytecodeProvider);
-        registerMethodHandleImplPlugins(plugins, snippetReflection, bytecodeProvider);
-        registerJcovCollectPlugins(plugins, bytecodeProvider);
-    }
-
-    private static final Field STRING_VALUE_FIELD;
-
-    static
-    {
-        try
-        {
-            STRING_VALUE_FIELD = String.class.getDeclaredField("value");
-        }
-        catch (NoSuchFieldException e)
-        {
-            throw new GraalError(e);
-        }
     }
 
     private static void registerStringPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider, SnippetReflectionProvider snippetReflection)
@@ -470,12 +453,15 @@ public class StandardGraphBuilderPlugins
         });
     }
 
-    public static class UnsignedMathPlugin implements InvocationPlugin
+    // @class StandardGraphBuilderPlugins.UnsignedMathPlugin
+    public static final class UnsignedMathPlugin implements InvocationPlugin
     {
         private final Condition condition;
 
+        // @cons
         public UnsignedMathPlugin(Condition condition)
         {
+            super();
             this.condition = condition;
         }
 
@@ -626,12 +612,15 @@ public class StandardGraphBuilderPlugins
         }
     }
 
-    public static class BoxPlugin implements InvocationPlugin
+    // @class StandardGraphBuilderPlugins.BoxPlugin
+    public static final class BoxPlugin implements InvocationPlugin
     {
         private final JavaKind kind;
 
+        // @cons
         BoxPlugin(JavaKind kind)
         {
+            super();
             this.kind = kind;
         }
 
@@ -658,12 +647,15 @@ public class StandardGraphBuilderPlugins
         }
     }
 
-    public static class UnboxPlugin implements InvocationPlugin
+    // @class StandardGraphBuilderPlugins.UnboxPlugin
+    public static final class UnboxPlugin implements InvocationPlugin
     {
         private final JavaKind kind;
 
+        // @cons
         UnboxPlugin(JavaKind kind)
         {
+            super();
             this.kind = kind;
         }
 
@@ -691,13 +683,16 @@ public class StandardGraphBuilderPlugins
         }
     }
 
-    public static class UnsafeGetPlugin implements InvocationPlugin
+    // @class StandardGraphBuilderPlugins.UnsafeGetPlugin
+    public static final class UnsafeGetPlugin implements InvocationPlugin
     {
         private final JavaKind returnKind;
         private final boolean isVolatile;
 
+        // @cons
         public UnsafeGetPlugin(JavaKind returnKind, boolean isVolatile)
         {
+            super();
             this.returnKind = returnKind;
             this.isVolatile = isVolatile;
         }
@@ -732,18 +727,21 @@ public class StandardGraphBuilderPlugins
         }
     }
 
-    public static class UnsafePutPlugin implements InvocationPlugin
+    // @class StandardGraphBuilderPlugins.UnsafePutPlugin
+    public static final class UnsafePutPlugin implements InvocationPlugin
     {
         private final JavaKind kind;
         private final boolean hasBarrier;
         private final int preWrite;
         private final int postWrite;
 
+        // @cons
         public UnsafePutPlugin(JavaKind kind, boolean isVolatile)
         {
             this(kind, isVolatile, MemoryBarriers.JMM_PRE_VOLATILE_WRITE, MemoryBarriers.JMM_POST_VOLATILE_WRITE);
         }
 
+        // @cons
         private UnsafePutPlugin(JavaKind kind, boolean hasBarrier, int preWrite, int postWrite)
         {
             super();
@@ -788,12 +786,15 @@ public class StandardGraphBuilderPlugins
         }
     }
 
-    public static class UnsafeFencePlugin implements InvocationPlugin
+    // @class StandardGraphBuilderPlugins.UnsafeFencePlugin
+    public static final class UnsafeFencePlugin implements InvocationPlugin
     {
         private final int barriers;
 
+        // @cons
         public UnsafeFencePlugin(int barriers)
         {
+            super();
             this.barriers = barriers;
         }
 
@@ -807,12 +808,15 @@ public class StandardGraphBuilderPlugins
         }
     }
 
+    // @class StandardGraphBuilderPlugins.DirectiveSpeculationReason
     private static final class DirectiveSpeculationReason implements SpeculationLog.SpeculationReason
     {
         private final BytecodePosition pos;
 
+        // @cons
         private DirectiveSpeculationReason(BytecodePosition pos)
         {
+            super();
             this.pos = pos;
         }
 
@@ -984,126 +988,9 @@ public class StandardGraphBuilderPlugins
         });
     }
 
-    private static void registerJMHBlackholePlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    // @cons
+    private StandardGraphBuilderPlugins()
     {
-        InvocationPlugin blackholePlugin = new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver blackhole, ValueNode value)
-            {
-                blackhole.get();
-                b.add(new BlackholeNode(value));
-                return true;
-            }
-
-            @Override
-            public boolean isDecorator()
-            {
-                return true;
-            }
-        };
-        String[] names = { "org.openjdk.jmh.infra.Blackhole", "org.openjdk.jmh.logic.BlackHole" };
-        for (String name : names)
-        {
-            Registration r = new Registration(plugins, name, bytecodeProvider);
-            for (JavaKind kind : JavaKind.values())
-            {
-                if ((kind.isPrimitive() && kind != JavaKind.Void) || kind == JavaKind.Object)
-                {
-                    Class<?> javaClass = kind == JavaKind.Object ? Object.class : kind.toJavaClass();
-                    r.registerOptional2("consume", Receiver.class, javaClass, blackholePlugin);
-                }
-            }
-            r.registerOptional2("consume", Receiver.class, Object[].class, blackholePlugin);
-        }
-    }
-
-    private static void registerJFRThrowablePlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
-    {
-        Registration r = new Registration(plugins, "oracle.jrockit.jfr.jdkevents.ThrowableTracer", bytecodeProvider);
-        r.register2("traceThrowable", Throwable.class, String.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode throwable, ValueNode message)
-            {
-                b.add(new VirtualizableInvokeMacroNode(b.getInvokeKind(), targetMethod, b.bci(), b.getInvokeReturnStamp(b.getAssumptions()), throwable, message));
-                return true;
-            }
-
-            @Override
-            public boolean inlineOnly()
-            {
-                return true;
-            }
-        });
-    }
-
-    private static void registerMethodHandleImplPlugins(InvocationPlugins plugins, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider)
-    {
-        Registration r = new Registration(plugins, "java.lang.invoke.MethodHandleImpl", bytecodeProvider);
-        r.register2("profileBoolean", boolean.class, int[].class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode result, ValueNode counters)
-            {
-                if (result.isConstant())
-                {
-                    b.push(JavaKind.Boolean, result);
-                    return true;
-                }
-                if (counters.isConstant())
-                {
-                    ValueNode newResult = result;
-                    int[] ctrs = snippetReflection.asObject(int[].class, (JavaConstant) counters.asConstant());
-                    if (ctrs != null && ctrs.length == 2)
-                    {
-                        int falseCount = ctrs[0];
-                        int trueCount = ctrs[1];
-                        int totalCount = trueCount + falseCount;
-
-                        if (totalCount == 0)
-                        {
-                            b.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.TransferToInterpreter));
-                        }
-                        else if (falseCount == 0 || trueCount == 0)
-                        {
-                            boolean expected = falseCount == 0;
-                            LogicNode condition = b.addWithInputs(IntegerEqualsNode.create(b.getConstantReflection(), b.getMetaAccess(), b.getOptions(), null, result, b.add(ConstantNode.forBoolean(!expected)), NodeView.DEFAULT));
-                            b.append(new FixedGuardNode(condition, DeoptimizationReason.UnreachedCode, DeoptimizationAction.InvalidateReprofile, true));
-                            newResult = b.add(ConstantNode.forBoolean(expected));
-                        }
-                        else
-                        {
-                            // We cannot use BranchProbabilityNode here since there's no guarantee
-                            // the result of MethodHandleImpl.profileBoolean() is used as the
-                            // test in an 'if' statement (as required by BranchProbabilityNode).
-                        }
-                    }
-                    b.addPush(JavaKind.Boolean, newResult);
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
-    /**
-     * Registers a plugin to ignore {@code com.sun.tdk.jcov.runtime.Collect.hit} within an intrinsic.
-     */
-    private static void registerJcovCollectPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
-    {
-        Registration r = new Registration(plugins, "com.sun.tdk.jcov.runtime.Collect", bytecodeProvider);
-        r.register1("hit", int.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode object)
-            {
-                if (b.parsingIntrinsic())
-                {
-                    return true;
-                }
-                return false;
-            }
-        });
+        super();
     }
 }

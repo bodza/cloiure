@@ -17,7 +17,8 @@ import giraaff.word.Word;
  * Substitutions for {@link java.lang.Thread} methods.
  */
 @ClassSubstitution(Thread.class)
-public class ThreadSubstitutions
+// @class ThreadSubstitutions
+public final class ThreadSubstitutions
 {
     /**
      * hidden in 9.

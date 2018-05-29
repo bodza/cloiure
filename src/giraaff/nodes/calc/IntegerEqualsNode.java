@@ -26,12 +26,14 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
+// @class IntegerEqualsNode
 public final class IntegerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<IntegerEqualsNode> TYPE = NodeClass.create(IntegerEqualsNode.class);
 
     private static final IntegerEqualsOp OP = new IntegerEqualsOp();
 
+    // @cons
     public IntegerEqualsNode(ValueNode x, ValueNode y)
     {
         super(TYPE, CanonicalCondition.EQ, false, x, y);
@@ -93,7 +95,8 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
         return this;
     }
 
-    public static class IntegerEqualsOp extends CompareOp
+    // @class IntegerEqualsNode.IntegerEqualsOp
+    public static final class IntegerEqualsOp extends CompareOp
     {
         @Override
         protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)

@@ -13,7 +13,8 @@ import giraaff.hotspot.word.KlassPointer;
  * Substitutions for {@link sun.reflect.Reflection} methods.
  */
 @ClassSubstitution(className = { "jdk.internal.reflect.Reflection", "sun.reflect.Reflection" }, optional = true)
-public class ReflectionSubstitutions
+// @class ReflectionSubstitutions
+public final class ReflectionSubstitutions
 {
     @MethodSubstitution
     public static int getClassAccessFlags(Class<?> aClass)

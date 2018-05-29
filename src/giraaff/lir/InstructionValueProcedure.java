@@ -12,6 +12,7 @@ import giraaff.lir.LIRInstruction.OperandMode;
  * the old value.
  */
 @FunctionalInterface
+// @iface InstructionValueProcedure
 public interface InstructionValueProcedure
 {
     /**

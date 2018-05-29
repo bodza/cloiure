@@ -13,7 +13,8 @@ import giraaff.nodes.graphbuilderconf.ParameterPlugin;
 /**
  * A {@link ParameterPlugin} that binds constant values to some parameters.
  */
-public class ConstantBindingParameterPlugin implements ParameterPlugin
+// @class ConstantBindingParameterPlugin
+public final class ConstantBindingParameterPlugin implements ParameterPlugin
 {
     private final Object[] constantArgs;
     private final MetaAccessProvider metaAccess;
@@ -24,8 +25,10 @@ public class ConstantBindingParameterPlugin implements ParameterPlugin
      * equal to that of a non-null object in {@code constantArgs} (from which the
      * {@link ConstantNode} is created if it isn't already a {@link ConstantNode}).
      */
+    // @cons
     public ConstantBindingParameterPlugin(Object[] constantArgs, MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection)
     {
+        super();
         this.constantArgs = constantArgs;
         this.metaAccess = metaAccess;
         this.snippetReflection = snippetReflection;

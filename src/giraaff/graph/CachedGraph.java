@@ -8,13 +8,16 @@ import org.graalvm.collections.UnmodifiableEconomicMap;
  * This class is a container of a graph that needs to be readonly and optionally a lazily created
  * mutable copy of the graph.
  */
+// @class CachedGraph
 public final class CachedGraph<G extends Graph>
 {
     private final G readonlyCopy;
     private G mutableCopy;
 
+    // @cons
     private CachedGraph(G readonlyCopy, G mutableCopy)
     {
+        super();
         this.readonlyCopy = readonlyCopy;
         this.mutableCopy = mutableCopy;
     }

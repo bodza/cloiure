@@ -4,12 +4,15 @@ import java.util.Iterator;
 
 import giraaff.graph.iterators.NodeIterable;
 
-class NodeUsageIterable implements NodeIterable<Node>
+// @class NodeUsageIterable
+final class NodeUsageIterable implements NodeIterable<Node>
 {
     private final Node node;
 
+    // @cons
     NodeUsageIterable(Node node)
     {
+        super();
         this.node = node;
     }
 

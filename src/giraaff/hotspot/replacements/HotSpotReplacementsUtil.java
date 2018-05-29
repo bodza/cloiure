@@ -46,10 +46,13 @@ import giraaff.word.Word;
 /**
  * A collection of methods used in HotSpot snippets, substitutions and stubs.
  */
+// @class HotSpotReplacementsUtil
 public final class HotSpotReplacementsUtil
 {
+    // @class HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity
     abstract static class HotSpotOptimizingLocationIdentity extends NamedLocationIdentity implements CanonicalizableLocation
     {
+        // @cons
         HotSpotOptimizingLocationIdentity(String name)
         {
             super(name, true);
@@ -525,7 +528,9 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity METASPACE_ARRAY_LENGTH_LOCATION = NamedLocationIdentity.immutable("MetaspaceArrayLength");
     public static final LocationIdentity SECONDARY_SUPERS_ELEMENT_LOCATION = NamedLocationIdentity.immutable("SecondarySupersElement");
 
+    // @cons
     private HotSpotReplacementsUtil()
     {
+        super();
     }
 }

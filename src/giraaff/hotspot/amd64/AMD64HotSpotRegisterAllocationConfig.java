@@ -10,7 +10,8 @@ import jdk.vm.ci.code.RegisterConfig;
 
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 
-class AMD64HotSpotRegisterAllocationConfig extends RegisterAllocationConfig
+// @class AMD64HotSpotRegisterAllocationConfig
+final class AMD64HotSpotRegisterAllocationConfig extends RegisterAllocationConfig
 {
     /**
      * Specify priority of register selection within phases of register allocation. Highest priority
@@ -30,6 +31,7 @@ class AMD64HotSpotRegisterAllocationConfig extends RegisterAllocationConfig
         AMD64.xmm8, AMD64.xmm9, AMD64.xmm10, AMD64.xmm11, AMD64.xmm12, AMD64.xmm13, AMD64.xmm14, AMD64.xmm15
     };
 
+    // @cons
     AMD64HotSpotRegisterAllocationConfig(RegisterConfig registerConfig)
     {
         super(registerConfig);

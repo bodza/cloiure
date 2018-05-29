@@ -9,6 +9,7 @@ import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodeinfo.InputType;
 
 // @NodeInfo.allowedUsageTypes "Association"
+// @class LoopExitNode
 public final class LoopExitNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable
 {
     public static final NodeClass<LoopExitNode> TYPE = NodeClass.create(LoopExitNode.class);
@@ -20,6 +21,7 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
      */
     @Input(InputType.Association) AbstractBeginNode loopBegin;
 
+    // @cons
     public LoopExitNode(LoopBeginNode loop)
     {
         super(TYPE);

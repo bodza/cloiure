@@ -15,6 +15,7 @@ import giraaff.nodes.memory.address.AddressNode;
  * Accesses a value at an memory address specified by an {@linkplain #address address}. The access
  * does not include a null check on the object.
  */
+// @class FixedAccessNode
 public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode implements Access, IterableNodeType
 {
     public static final NodeClass<FixedAccessNode> TYPE = NodeClass.create(FixedAccessNode.class);
@@ -56,16 +57,19 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
         this.nullCheck = check;
     }
 
+    // @cons
     protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp)
     {
         this(c, address, location, stamp, BarrierType.NONE);
     }
 
+    // @cons
     protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, BarrierType barrierType)
     {
         this(c, address, location, stamp, null, barrierType, false, null);
     }
 
+    // @cons
     protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck, FrameState stateBefore)
     {
         super(c, stamp, stateBefore);

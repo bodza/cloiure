@@ -4,6 +4,7 @@ package giraaff.nodes.calc;
  * Marker interface for nodes where it is valid to apply a {@link NarrowNode} to its inputs and do a
  * narrow operation instead of doing the wide operation and applying the {@link NarrowNode} to the result.
  */
+// @iface NarrowableArithmeticNode
 public interface NarrowableArithmeticNode
 {
     /**

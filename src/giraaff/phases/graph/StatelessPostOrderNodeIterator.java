@@ -21,14 +21,17 @@ import giraaff.nodes.LoopEndNode;
  *
  * No changes to the fixed nodes are expected during the iteration, they cause undefined behavior.
  */
+// @class StatelessPostOrderNodeIterator
 public abstract class StatelessPostOrderNodeIterator
 {
     private final NodeBitMap visitedEnds;
     private final Deque<AbstractBeginNode> nodeQueue;
     private final FixedNode start;
 
+    // @cons
     public StatelessPostOrderNodeIterator(FixedNode start)
     {
+        super();
         visitedEnds = start.graph().createNodeBitMap();
         nodeQueue = new ArrayDeque<>();
         this.start = start;

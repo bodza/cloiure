@@ -11,6 +11,7 @@ import giraaff.nodes.memory.MemoryMapNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class ReturnNode
 public final class ReturnNode extends ControlSinkNode implements LIRLowerable, IterableNodeType
 {
     public static final NodeClass<ReturnNode> TYPE = NodeClass.create(ReturnNode.class);
@@ -23,11 +24,13 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
         return result;
     }
 
+    // @cons
     public ReturnNode(ValueNode result)
     {
         this(result, null);
     }
 
+    // @cons
     public ReturnNode(ValueNode result, MemoryMapNode memoryMap)
     {
         super(TYPE, StampFactory.forVoid());

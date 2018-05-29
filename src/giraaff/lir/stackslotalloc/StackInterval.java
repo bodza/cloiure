@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.ValueKind;
 
 import giraaff.lir.VirtualStackSlot;
 
+// @class StackInterval
 public final class StackInterval
 {
     private static final int INVALID_START = Integer.MAX_VALUE;
@@ -16,8 +17,10 @@ public final class StackInterval
     private int to = INVALID_END;
     private StackSlot location;
 
+    // @cons
     public StackInterval(VirtualStackSlot operand, ValueKind<?> kind)
     {
+        super();
         this.operand = operand;
         this.kind = kind;
     }

@@ -25,12 +25,14 @@ import giraaff.nodes.ValueNode;
 import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
+// @class IntegerLessThanNode
 public final class IntegerLessThanNode extends IntegerLowerThanNode
 {
     public static final NodeClass<IntegerLessThanNode> TYPE = NodeClass.create(IntegerLessThanNode.class);
 
     private static final LessThanOp OP = new LessThanOp();
 
+    // @cons
     public IntegerLessThanNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y, OP);
@@ -79,7 +81,8 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         return (((x ^ y) & (x ^ r)) < 0) || r > maxValue;
     }
 
-    public static class LessThanOp extends LowerOp
+    // @class IntegerLessThanNode.LessThanOp
+    public static final class LessThanOp extends LowerOp
     {
         @Override
         protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)

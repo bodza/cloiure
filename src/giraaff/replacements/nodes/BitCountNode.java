@@ -16,10 +16,12 @@ import giraaff.nodes.calc.UnaryNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class BitCountNode
 public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<BitCountNode> TYPE = NodeClass.create(BitCountNode.class);
 
+    // @cons
     public BitCountNode(ValueNode value)
     {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);

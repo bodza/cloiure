@@ -5,11 +5,13 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.IntegerConvertNode;
 
-public class DerivedConvertedInductionVariable extends DerivedInductionVariable
+// @class DerivedConvertedInductionVariable
+public final class DerivedConvertedInductionVariable extends DerivedInductionVariable
 {
     private final Stamp stamp;
     private final ValueNode value;
 
+    // @cons
     public DerivedConvertedInductionVariable(LoopEx loop, InductionVariable base, Stamp stamp, ValueNode value)
     {
         super(loop, base);

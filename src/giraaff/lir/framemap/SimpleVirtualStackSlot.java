@@ -7,8 +7,10 @@ import giraaff.lir.VirtualStackSlot;
 /**
  * Represents a {@link VirtualStackSlot virtual stack slot} for a specific {@link ValueKind kind}.
  */
-public class SimpleVirtualStackSlot extends VirtualStackSlot
+// @class SimpleVirtualStackSlot
+public final class SimpleVirtualStackSlot extends VirtualStackSlot
 {
+    // @cons
     public SimpleVirtualStackSlot(int id, ValueKind<?> kind)
     {
         super(id, kind);

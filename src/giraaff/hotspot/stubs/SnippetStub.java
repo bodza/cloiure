@@ -38,6 +38,7 @@ import giraaff.util.GraalError;
 /**
  * Base class for a stub defined by a snippet.
  */
+// @class SnippetStub
 public abstract class SnippetStub extends Stub implements Snippets
 {
     protected final ResolvedJavaMethod method;
@@ -49,6 +50,7 @@ public abstract class SnippetStub extends Stub implements Snippets
      *            this object
      * @param linkage linkage details for a call to the stub
      */
+    // @cons
     public SnippetStub(String snippetMethodName, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         this(null, snippetMethodName, options, providers, linkage);
@@ -63,6 +65,7 @@ public abstract class SnippetStub extends Stub implements Snippets
      *            {@code snippetDeclaringClass}
      * @param linkage linkage details for a call to the stub
      */
+    // @cons
     public SnippetStub(Class<? extends Snippets> snippetDeclaringClass, String snippetMethodName, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super(options, providers, linkage);

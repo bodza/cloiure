@@ -12,10 +12,12 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.MulNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class IntegerMulExactSplitNode
 public final class IntegerMulExactSplitNode extends IntegerExactArithmeticSplitNode
 {
     public static final NodeClass<IntegerMulExactSplitNode> TYPE = NodeClass.create(IntegerMulExactSplitNode.class);
 
+    // @cons
     public IntegerMulExactSplitNode(Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor)
     {
         super(TYPE, stamp, x, y, next, overflowSuccessor);

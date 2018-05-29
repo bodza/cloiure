@@ -17,7 +17,8 @@ import giraaff.replacements.classfile.ClassfileConstant.Utf8;
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Code attributes</a>
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">Constant Pool</a>
  */
-public class Classfile
+// @class Classfile
+public final class Classfile
 {
     private final ResolvedJavaType type;
     private final List<ClassfileBytecode> codeAttributes;
@@ -32,8 +33,10 @@ public class Classfile
      *
      * @throws NoClassDefFoundError if there is an IO error while parsing the class file
      */
+    // @cons
     public Classfile(ResolvedJavaType type, DataInputStream stream, ClassfileBytecodeProvider context) throws IOException
     {
+        super();
         this.type = type;
 
         // magic

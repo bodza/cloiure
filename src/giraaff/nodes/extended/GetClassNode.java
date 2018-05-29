@@ -22,6 +22,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 /**
  * Loads an object's class (i.e., this node can be created for {@code object.getClass()}).
  */
+// @class GetClassNode
 public final class GetClassNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
     public static final NodeClass<GetClassNode> TYPE = NodeClass.create(GetClassNode.class);
@@ -33,6 +34,7 @@ public final class GetClassNode extends FloatingNode implements Lowerable, Canon
         return object;
     }
 
+    // @cons
     public GetClassNode(Stamp stamp, ValueNode object)
     {
         super(TYPE, stamp);

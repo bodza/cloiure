@@ -1,5 +1,6 @@
 package giraaff.nodeinfo;
 
+// @enum InputType
 public enum InputType
 {
     /**

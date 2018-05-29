@@ -16,10 +16,12 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.BinaryArithmeticNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// @class IntegerMulHighNode
 public final class IntegerMulHighNode extends BinaryArithmeticNode<MulHigh> implements Canonicalizable.BinaryCommutative<ValueNode>
 {
     public static final NodeClass<IntegerMulHighNode> TYPE = NodeClass.create(IntegerMulHighNode.class);
 
+    // @cons
     public IntegerMulHighNode(ValueNode x, ValueNode y)
     {
         super(TYPE, ArithmeticOpTable::getMulHigh, x, y);

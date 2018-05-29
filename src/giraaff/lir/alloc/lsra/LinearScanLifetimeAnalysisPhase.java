@@ -35,12 +35,15 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.util.GraalError;
 
+// @class LinearScanLifetimeAnalysisPhase
 public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 {
     protected final LinearScan allocator;
 
+    // @cons
     protected LinearScanLifetimeAnalysisPhase(LinearScan linearScan)
     {
+        super();
         allocator = linearScan;
     }
 
