@@ -5,7 +5,6 @@ import java.lang.ref.Reference;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaField;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.meta.JavaConstant;
@@ -28,8 +27,8 @@ import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.graph.Node;
 import giraaff.graph.NodeInputList;
-import giraaff.hotspot.GraalHotSpotVMConfig;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import giraaff.hotspot.nodes.BeginLockScopeNode;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
@@ -135,7 +134,7 @@ import giraaff.util.GraalError;
 // @class DefaultHotSpotLoweringProvider
 public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider implements HotSpotLoweringProvider
 {
-    protected final HotSpotGraalRuntimeProvider runtime;
+    protected final HotSpotGraalRuntime runtime;
     protected final HotSpotRegistersProvider registers;
     protected final HotSpotConstantReflectionProvider constantReflection;
 
@@ -151,9 +150,9 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     protected ResolveConstantSnippets.Templates resolveConstantSnippets;
 
     // @cons
-    public DefaultHotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
+    public DefaultHotSpotLoweringProvider(HotSpotGraalRuntime runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
     {
-        super(metaAccess, foreignCalls, target, GraalHotSpotVMConfig.useCompressedOops);
+        super(metaAccess, foreignCalls, target, HotSpotRuntime.useCompressedOops);
         this.runtime = runtime;
         this.registers = registers;
         this.constantReflection = constantReflection;
@@ -166,8 +165,8 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
         instanceofSnippets = new InstanceOfSnippets.Templates(options, providers, target);
         newObjectSnippets = new NewObjectSnippets.Templates(options, providers, target);
-        monitorSnippets = new MonitorSnippets.Templates(options, providers, target, GraalHotSpotVMConfig.useFastLocking);
-        writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, providers, target, GraalHotSpotVMConfig.useCompressedOops ? GraalHotSpotVMConfig.oopEncoding : null);
+        monitorSnippets = new MonitorSnippets.Templates(options, providers, target, HotSpotRuntime.useFastLocking);
+        writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, providers, target, HotSpotRuntime.useCompressedOops ? HotSpotRuntime.oopEncoding : null);
         exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(options, providers, target);
         unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(options, providers, target);
         arraycopySnippets = new ArrayCopySnippets.Templates(options, providers, target);
@@ -467,7 +466,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             return;
         }
         StructuredGraph graph = n.graph();
-        AddressNode address = createOffsetAddress(graph, n.getHub(), GraalHotSpotVMConfig.klassLayoutHelperOffset);
+        AddressNode address = createOffsetAddress(graph, n.getHub(), HotSpotRuntime.klassLayoutHelperOffset);
         n.replaceAtUsagesAndDelete(graph.unique(new FloatingReadNode(address, HotSpotReplacementsUtil.KLASS_LAYOUT_HELPER_LOCATION, null, n.stamp(NodeView.DEFAULT), null, BarrierType.NONE)));
     }
 
@@ -479,7 +478,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
 
         StructuredGraph graph = n.graph();
-        AddressNode address = createOffsetAddress(graph, n.getHub(), GraalHotSpotVMConfig.classMirrorOffset);
+        AddressNode address = createOffsetAddress(graph, n.getHub(), HotSpotRuntime.classMirrorOffset);
         FloatingReadNode read = graph.unique(new FloatingReadNode(address, HotSpotReplacementsUtil.CLASS_MIRROR_LOCATION, null, StampFactory.forKind(target.wordJavaKind), null, BarrierType.NONE));
         address = createOffsetAddress(graph, read, 0);
         read = graph.unique(new FloatingReadNode(address, HotSpotReplacementsUtil.CLASS_MIRROR_HANDLE_LOCATION, null, n.stamp(NodeView.DEFAULT), null, BarrierType.NONE));
@@ -494,7 +493,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
 
         StructuredGraph graph = n.graph();
-        AddressNode address = createOffsetAddress(graph, n.getValue(), GraalHotSpotVMConfig.klassOffset);
+        AddressNode address = createOffsetAddress(graph, n.getValue(), HotSpotRuntime.klassOffset);
         FloatingReadNode read = graph.unique(new FloatingReadNode(address, HotSpotReplacementsUtil.CLASS_KLASS_LOCATION, null, n.stamp(NodeView.DEFAULT), null, BarrierType.NONE));
         n.replaceAtUsagesAndDelete(read);
     }
@@ -528,7 +527,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                     ReadNode metaspaceMethod = createReadVirtualMethod(graph, hub, hsMethod, receiverType);
                     // We use LocationNode.ANY_LOCATION for the reads that access the compiled
                     // code entry as HotSpot does not guarantee they are final values.
-                    AddressNode address = createOffsetAddress(graph, metaspaceMethod, GraalHotSpotVMConfig.methodCompiledEntryOffset);
+                    AddressNode address = createOffsetAddress(graph, metaspaceMethod, HotSpotRuntime.methodCompiledEntryOffset);
                     ReadNode compiledEntry = graph.add(new ReadNode(address, LocationIdentity.any(), StampFactory.forKind(wordKind), BarrierType.NONE));
 
                     loweredCallTarget = graph.add(new HotSpotIndirectCallTargetNode(metaspaceMethod, compiledEntry, parameters.toArray(new ValueNode[parameters.size()]), callTarget.returnStamp(), signature, callTarget.targetMethod(), HotSpotCallingConventionType.JavaCall, callTarget.invokeKind()));
@@ -549,13 +548,13 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     @Override
     protected Stamp loadCompressedStamp(ObjectStamp stamp)
     {
-        return HotSpotNarrowOopStamp.compressed(stamp, GraalHotSpotVMConfig.oopEncoding);
+        return HotSpotNarrowOopStamp.compressed(stamp, HotSpotRuntime.oopEncoding);
     }
 
     @Override
     protected ValueNode newCompressionNode(CompressionOp op, ValueNode value)
     {
-        return new HotSpotCompressionNode(op, value, GraalHotSpotVMConfig.oopEncoding);
+        return new HotSpotCompressionNode(op, value, HotSpotRuntime.oopEncoding);
     }
 
     @Override
@@ -573,7 +572,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
          * Anchor the read of the element klass to the cfg, because it is only valid when arrayClass
          * is an object class, which might not be the case in other parts of the compiled method.
          */
-        AddressNode address = createOffsetAddress(graph, arrayHub, GraalHotSpotVMConfig.arrayClassElementOffset);
+        AddressNode address = createOffsetAddress(graph, arrayHub, HotSpotRuntime.arrayClassElementOffset);
         return graph.unique(new FloatingReadNode(address, HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION, null, KlassPointerStamp.klassNonNull(), AbstractBeginNode.prevBegin(anchor)));
     }
 
@@ -618,13 +617,13 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     @Override
     public BarrierType fieldInitializationBarrier(JavaKind entryKind)
     {
-        return (entryKind == JavaKind.Object && !GraalHotSpotVMConfig.useDeferredInitBarriers) ? BarrierType.IMPRECISE : BarrierType.NONE;
+        return (entryKind == JavaKind.Object && !HotSpotRuntime.useDeferredInitBarriers) ? BarrierType.IMPRECISE : BarrierType.NONE;
     }
 
     @Override
     public BarrierType arrayInitializationBarrier(JavaKind entryKind)
     {
-        return (entryKind == JavaKind.Object && !GraalHotSpotVMConfig.useDeferredInitBarriers) ? BarrierType.PRECISE : BarrierType.NONE;
+        return (entryKind == JavaKind.Object && !HotSpotRuntime.useDeferredInitBarriers) ? BarrierType.PRECISE : BarrierType.NONE;
     }
 
     private void lowerOSRStartNode(OSRStartNode osrStart)
@@ -680,7 +679,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                 graph.addBeforeFixed(migrationEnd, beginLockScope);
 
                 // write the displaced mark to the correct stack slot
-                AddressNode addressDisplacedMark = createOffsetAddress(graph, beginLockScope, GraalHotSpotVMConfig.lockDisplacedMarkOffset);
+                AddressNode addressDisplacedMark = createOffsetAddress(graph, beginLockScope, HotSpotRuntime.lockDisplacedMarkOffset);
                 WriteNode writeStackSlot = graph.add(new WriteNode(addressDisplacedMark, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION, loadDisplacedHeader, BarrierType.NONE));
                 graph.addBeforeFixed(migrationEnd, writeStackSlot);
 
@@ -780,7 +779,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
     private boolean addReadBarrier(RawLoadNode load)
     {
-        if (GraalHotSpotVMConfig.useG1GC && load.graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS && load.object().getStackKind() == JavaKind.Object && load.accessKind() == JavaKind.Object && !StampTool.isPointerAlwaysNull(load.object()))
+        if (HotSpotRuntime.useG1GC && load.graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS && load.object().getStackKind() == JavaKind.Object && load.accessKind() == JavaKind.Object && !StampTool.isPointerAlwaysNull(load.object()))
         {
             ResolvedJavaType type = StampTool.typeOrNull(load.object());
             if (type != null && !type.isArray())
@@ -814,17 +813,17 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
 
         KlassPointerStamp hubStamp = KlassPointerStamp.klassNonNull();
-        if (GraalHotSpotVMConfig.useCompressedClassPointers)
+        if (HotSpotRuntime.useCompressedClassPointers)
         {
-            hubStamp = hubStamp.compressed(GraalHotSpotVMConfig.klassEncoding);
+            hubStamp = hubStamp.compressed(HotSpotRuntime.klassEncoding);
         }
 
-        AddressNode address = createOffsetAddress(graph, object, GraalHotSpotVMConfig.hubOffset);
-        LocationIdentity hubLocation = GraalHotSpotVMConfig.useCompressedClassPointers ? HotSpotReplacementsUtil.COMPRESSED_HUB_LOCATION : HotSpotReplacementsUtil.HUB_LOCATION;
+        AddressNode address = createOffsetAddress(graph, object, HotSpotRuntime.hubOffset);
+        LocationIdentity hubLocation = HotSpotRuntime.useCompressedClassPointers ? HotSpotReplacementsUtil.COMPRESSED_HUB_LOCATION : HotSpotReplacementsUtil.HUB_LOCATION;
         FloatingReadNode memoryRead = graph.unique(new FloatingReadNode(address, hubLocation, null, hubStamp, null, BarrierType.NONE));
-        if (GraalHotSpotVMConfig.useCompressedClassPointers)
+        if (HotSpotRuntime.useCompressedClassPointers)
         {
-            return HotSpotCompressionNode.uncompress(memoryRead, GraalHotSpotVMConfig.klassEncoding);
+            return HotSpotCompressionNode.uncompress(memoryRead, HotSpotRuntime.klassEncoding);
         }
         else
         {
@@ -835,12 +834,12 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     private WriteNode createWriteHub(StructuredGraph graph, ValueNode object, ValueNode value)
     {
         ValueNode writeValue = value;
-        if (GraalHotSpotVMConfig.useCompressedClassPointers)
+        if (HotSpotRuntime.useCompressedClassPointers)
         {
-            writeValue = HotSpotCompressionNode.compress(value, GraalHotSpotVMConfig.klassEncoding);
+            writeValue = HotSpotCompressionNode.compress(value, HotSpotRuntime.klassEncoding);
         }
 
-        AddressNode address = createOffsetAddress(graph, object, GraalHotSpotVMConfig.hubOffset);
+        AddressNode address = createOffsetAddress(graph, object, HotSpotRuntime.hubOffset);
         return graph.add(new WriteNode(address, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, writeValue, BarrierType.NONE));
     }
 
@@ -849,7 +848,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     {
         HotSpotResolvedJavaField loadField = (HotSpotResolvedJavaField) f;
         BarrierType barrierType = BarrierType.NONE;
-        if (GraalHotSpotVMConfig.useG1GC && loadField.getJavaKind() == JavaKind.Object && metaAccess.lookupJavaType(Reference.class).equals(loadField.getDeclaringClass()) && loadField.getName().equals("referent"))
+        if (HotSpotRuntime.useG1GC && loadField.getJavaKind() == JavaKind.Object && metaAccess.lookupJavaType(Reference.class).equals(loadField.getDeclaringClass()) && loadField.getName().equals("referent"))
         {
             barrierType = BarrierType.PRECISE;
         }
@@ -866,7 +865,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     @Override
     public int arrayScalingFactor(JavaKind kind)
     {
-        if (GraalHotSpotVMConfig.useCompressedOops && kind == JavaKind.Object)
+        if (HotSpotRuntime.useCompressedOops && kind == JavaKind.Object)
         {
             return super.arrayScalingFactor(JavaKind.Int);
         }
@@ -879,7 +878,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     @Override
     public int arrayBaseOffset(JavaKind kind)
     {
-        return HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(kind);
+        return HotSpotRuntime.getArrayBaseOffset(kind);
     }
 
     @Override

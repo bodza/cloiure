@@ -9,14 +9,14 @@ import jdk.vm.ci.code.Register;
 public final class RegisterMap<T>
 {
     private final Object[] values;
-    private final Architecture architecture;
+    private final Architecture arch;
 
     // @cons
     public RegisterMap(Architecture arch)
     {
         super();
         this.values = new Object[arch.getRegisters().size()];
-        this.architecture = arch;
+        this.arch = arch;
     }
 
     @SuppressWarnings("unchecked")
@@ -43,7 +43,7 @@ public final class RegisterMap<T>
             T value = (T) values[i];
             if (value != null)
             {
-                consumer.accept(architecture.getRegisters().get(i), value);
+                consumer.accept(arch.getRegisters().get(i), value);
             }
         }
     }

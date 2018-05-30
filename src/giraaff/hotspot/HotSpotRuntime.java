@@ -1,17 +1,27 @@
 package giraaff.hotspot;
 
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.hotspot.HotSpotVMConfigAccess;
+import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.CompressEncoding;
 
 /**
  * Native configuration details.
  */
-// @class GraalHotSpotVMConfig
-public final class GraalHotSpotVMConfig
+// @class HotSpotRuntime
+public final class HotSpotRuntime
 {
-    private static final HotSpotVMConfigAccess c = new HotSpotVMConfigAccess(HotSpotJVMCIRuntime.runtime().getConfigStore());
+    // @cons
+    private HotSpotRuntime()
+    {
+        super();
+    }
+
+    public static final HotSpotJVMCIRuntime JVMCI = HotSpotJVMCIRuntime.runtime();
+
+    private static final HotSpotVMConfigAccess c = new HotSpotVMConfigAccess(JVMCI.getConfigStore());
 
     public static final boolean
         inline                         = c.getFlag("Inline",                         Boolean.class),
@@ -381,9 +391,13 @@ public final class GraalHotSpotVMConfig
         logOfHeapRegionGrainBytesMark           = c.getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES",         Integer.class),
         inlineContiguousAllocationSupportedMark = c.getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class);
 
-    // @cons
-    private GraalHotSpotVMConfig()
+    public static final int getArrayBaseOffset(JavaKind kind)
     {
-        super();
+        return HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(kind);
+    }
+
+    public static final int getArrayIndexScale(JavaKind kind)
+    {
+        return HotSpotJVMCIRuntimeProvider.getArrayIndexScale(kind);
     }
 }

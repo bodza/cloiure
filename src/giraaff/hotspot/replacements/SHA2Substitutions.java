@@ -1,6 +1,5 @@
 package giraaff.hotspot.replacements;
 
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.JavaKind;
 
 import org.graalvm.word.LocationIdentity;
@@ -9,6 +8,7 @@ import org.graalvm.word.WordFactory;
 import giraaff.api.replacements.ClassSubstitution;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.hotspot.HotSpotBackend;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.nodes.PiNode;
 import giraaff.nodes.extended.RawLoadNode;
@@ -47,8 +47,8 @@ public final class SHA2Substitutions
     {
         Object realReceiver = PiNode.piCastNonNull(receiver, shaClass);
         Object state = RawLoadNode.load(realReceiver, stateOffset, JavaKind.Object, LocationIdentity.any());
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + ofs));
-        Word stateAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(state, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Int)));
+        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + ofs));
+        Word stateAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(state, HotSpotRuntime.getArrayBaseOffset(JavaKind.Int)));
         HotSpotBackend.sha2ImplCompressStub(bufAddr, stateAddr);
     }
 }

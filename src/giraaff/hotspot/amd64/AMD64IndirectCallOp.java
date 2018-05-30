@@ -7,7 +7,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
@@ -45,7 +45,7 @@ final class AMD64IndirectCallOp extends IndirectCallOp
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        crb.recordMark(GraalHotSpotVMConfig.inlineInvokeMark);
+        crb.recordMark(HotSpotRuntime.inlineInvokeMark);
         Register callReg = ValueUtil.asRegister(targetAddress);
         int pcOffset = AMD64Call.indirectCall(crb, masm, callReg, callTarget, state);
         crb.recordInlineInvokeCallOp(pcOffset);

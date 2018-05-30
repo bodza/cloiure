@@ -17,7 +17,7 @@ import giraaff.api.directives.GraalDirectives;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.graph.Node;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.word.KlassPointer;
@@ -50,6 +50,12 @@ import giraaff.word.Word;
 // @class ArrayCopySnippets
 public final class ArrayCopySnippets implements Snippets
 {
+    // @cons
+    private ArrayCopySnippets()
+    {
+        super();
+    }
+
     // @enum ArrayCopySnippets.ArrayCopyTypeCheck
     private enum ArrayCopyTypeCheck
     {
@@ -172,8 +178,8 @@ public final class ArrayCopySnippets implements Snippets
             }
             else
             {
-                KlassPointer destElemKlass = destKlass.readKlassPointer(GraalHotSpotVMConfig.arrayClassElementOffset, HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION);
-                Word superCheckOffset = WordFactory.signed(destElemKlass.readInt(GraalHotSpotVMConfig.superCheckOffsetOffset, HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION));
+                KlassPointer destElemKlass = destKlass.readKlassPointer(HotSpotRuntime.arrayClassElementOffset, HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION);
+                Word superCheckOffset = WordFactory.signed(destElemKlass.readInt(HotSpotRuntime.superCheckOffsetOffset, HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION));
 
                 int copiedElements = CheckcastArrayCopyCallNode.checkcastArraycopy(nonNullSrc, srcPos, nonNullDest, destPos, length, superCheckOffset, destElemKlass, false);
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, copiedElements != 0))
@@ -493,11 +499,5 @@ public final class ArrayCopySnippets implements Snippets
             }
             return originalArraycopy;
         }
-    }
-
-    // @cons
-    private ArrayCopySnippets()
-    {
-        super();
     }
 }

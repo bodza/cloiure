@@ -2,8 +2,6 @@ package giraaff.hotspot.replacements;
 
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.code.Register;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
 import jdk.vm.ci.meta.Assumptions;
@@ -20,7 +18,7 @@ import giraaff.core.common.type.TypeReference;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.CanonicalizableLocation;
@@ -49,6 +47,12 @@ import giraaff.word.Word;
 // @class HotSpotReplacementsUtil
 public final class HotSpotReplacementsUtil
 {
+    // @cons
+    private HotSpotReplacementsUtil()
+    {
+        super();
+    }
+
     // @class HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity
     abstract static class HotSpotOptimizingLocationIdentity extends NamedLocationIdentity implements CanonicalizableLocation
     {
@@ -124,49 +128,49 @@ public final class HotSpotReplacementsUtil
 
     public static final Object readExceptionOop(Word thread)
     {
-        return thread.readObject(GraalHotSpotVMConfig.threadExceptionOopOffset, EXCEPTION_OOP_LOCATION);
+        return thread.readObject(HotSpotRuntime.threadExceptionOopOffset, EXCEPTION_OOP_LOCATION);
     }
 
     public static final Word readExceptionPc(Word thread)
     {
-        return thread.readWord(GraalHotSpotVMConfig.threadExceptionPcOffset, EXCEPTION_PC_LOCATION);
+        return thread.readWord(HotSpotRuntime.threadExceptionPcOffset, EXCEPTION_PC_LOCATION);
     }
 
     public static final void writeExceptionOop(Word thread, Object value)
     {
-        thread.writeObject(GraalHotSpotVMConfig.threadExceptionOopOffset, value, EXCEPTION_OOP_LOCATION);
+        thread.writeObject(HotSpotRuntime.threadExceptionOopOffset, value, EXCEPTION_OOP_LOCATION);
     }
 
     public static final void writeExceptionPc(Word thread, Word value)
     {
-        thread.writeWord(GraalHotSpotVMConfig.threadExceptionPcOffset, value, EXCEPTION_PC_LOCATION);
+        thread.writeWord(HotSpotRuntime.threadExceptionPcOffset, value, EXCEPTION_PC_LOCATION);
     }
 
     public static final Word readTlabTop(Word thread)
     {
-        return thread.readWord(GraalHotSpotVMConfig.threadTlabTopOffset, TLAB_TOP_LOCATION);
+        return thread.readWord(HotSpotRuntime.threadTlabTopOffset, TLAB_TOP_LOCATION);
     }
 
     public static final Word readTlabEnd(Word thread)
     {
-        return thread.readWord(GraalHotSpotVMConfig.threadTlabEndOffset, TLAB_END_LOCATION);
+        return thread.readWord(HotSpotRuntime.threadTlabEndOffset, TLAB_END_LOCATION);
     }
 
     public static final Word readTlabStart(Word thread)
     {
-        return thread.readWord(GraalHotSpotVMConfig.threadTlabStartOffset, TLAB_START_LOCATION);
+        return thread.readWord(HotSpotRuntime.threadTlabStartOffset, TLAB_START_LOCATION);
     }
 
     public static final void writeTlabTop(Word thread, Word top)
     {
-        thread.writeWord(GraalHotSpotVMConfig.threadTlabTopOffset, top, TLAB_TOP_LOCATION);
+        thread.writeWord(HotSpotRuntime.threadTlabTopOffset, top, TLAB_TOP_LOCATION);
     }
 
     public static final void initializeTlab(Word thread, Word start, Word end)
     {
-        thread.writeWord(GraalHotSpotVMConfig.threadTlabStartOffset, start, TLAB_START_LOCATION);
-        thread.writeWord(GraalHotSpotVMConfig.threadTlabTopOffset, start, TLAB_TOP_LOCATION);
-        thread.writeWord(GraalHotSpotVMConfig.threadTlabEndOffset, end, TLAB_END_LOCATION);
+        thread.writeWord(HotSpotRuntime.threadTlabStartOffset, start, TLAB_START_LOCATION);
+        thread.writeWord(HotSpotRuntime.threadTlabTopOffset, start, TLAB_TOP_LOCATION);
+        thread.writeWord(HotSpotRuntime.threadTlabEndOffset, end, TLAB_END_LOCATION);
     }
 
     /**
@@ -176,8 +180,8 @@ public final class HotSpotReplacementsUtil
      */
     public static final Object clearPendingException(Word thread)
     {
-        Object result = thread.readObject(GraalHotSpotVMConfig.pendingExceptionOffset, PENDING_EXCEPTION_LOCATION);
-        thread.writeObject(GraalHotSpotVMConfig.pendingExceptionOffset, null, PENDING_EXCEPTION_LOCATION);
+        Object result = thread.readObject(HotSpotRuntime.pendingExceptionOffset, PENDING_EXCEPTION_LOCATION);
+        thread.writeObject(HotSpotRuntime.pendingExceptionOffset, null, PENDING_EXCEPTION_LOCATION);
         return result;
     }
 
@@ -188,7 +192,7 @@ public final class HotSpotReplacementsUtil
      */
     public static final int readPendingDeoptimization(Word thread)
     {
-        return thread.readInt(GraalHotSpotVMConfig.pendingDeoptimizationOffset, PENDING_DEOPTIMIZATION_LOCATION);
+        return thread.readInt(HotSpotRuntime.pendingDeoptimizationOffset, PENDING_DEOPTIMIZATION_LOCATION);
     }
 
     /**
@@ -196,7 +200,7 @@ public final class HotSpotReplacementsUtil
      */
     public static final void writePendingDeoptimization(Word thread, int value)
     {
-        thread.writeInt(GraalHotSpotVMConfig.pendingDeoptimizationOffset, value, PENDING_DEOPTIMIZATION_LOCATION);
+        thread.writeInt(HotSpotRuntime.pendingDeoptimizationOffset, value, PENDING_DEOPTIMIZATION_LOCATION);
     }
 
     /**
@@ -206,8 +210,8 @@ public final class HotSpotReplacementsUtil
      */
     public static final Object getAndClearObjectResult(Word thread)
     {
-        Object result = thread.readObject(GraalHotSpotVMConfig.objectResultOffset, OBJECT_RESULT_LOCATION);
-        thread.writeObject(GraalHotSpotVMConfig.objectResultOffset, null, OBJECT_RESULT_LOCATION);
+        Object result = thread.readObject(HotSpotRuntime.objectResultOffset, OBJECT_RESULT_LOCATION);
+        thread.writeObject(HotSpotRuntime.objectResultOffset, null, OBJECT_RESULT_LOCATION);
         return result;
     }
 
@@ -222,13 +226,13 @@ public final class HotSpotReplacementsUtil
     // @Fold
     public static final JavaKind getWordKind()
     {
-        return HotSpotJVMCIRuntime.runtime().getHostJVMCIBackend().getCodeCache().getTarget().wordJavaKind;
+        return HotSpotRuntime.JVMCI.getHostJVMCIBackend().getCodeCache().getTarget().wordJavaKind;
     }
 
     // @Fold
     public static final int wordSize()
     {
-        return HotSpotJVMCIRuntime.runtime().getHostJVMCIBackend().getCodeCache().getTarget().wordSize;
+        return HotSpotRuntime.JVMCI.getHostJVMCIBackend().getCodeCache().getTarget().wordSize;
     }
 
     // @Fold
@@ -282,7 +286,7 @@ public final class HotSpotReplacementsUtil
          * sure these are still ints and haven't changed.
          */
         final int layoutHelper = readLayoutHelper(klassNonNull);
-        final int layoutHelperNeutralValue = GraalHotSpotVMConfig.klassLayoutHelperNeutralValue;
+        final int layoutHelperNeutralValue = HotSpotRuntime.klassLayoutHelperNeutralValue;
         return (layoutHelper < layoutHelperNeutralValue);
     }
 
@@ -324,25 +328,25 @@ public final class HotSpotReplacementsUtil
 
     public static final void initializeObjectHeader(Word memory, Word markWord, KlassPointer hub)
     {
-        memory.writeWord(GraalHotSpotVMConfig.markOffset, markWord, MARK_WORD_LOCATION);
+        memory.writeWord(HotSpotRuntime.markOffset, markWord, MARK_WORD_LOCATION);
         StoreHubNode.write(memory, hub);
     }
 
     // @Fold
     public static final int arrayBaseOffset(JavaKind elementKind)
     {
-        return HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(elementKind);
+        return HotSpotRuntime.getArrayBaseOffset(elementKind);
     }
 
     // @Fold
     public static final int arrayIndexScale(JavaKind elementKind)
     {
-        return HotSpotJVMCIRuntimeProvider.getArrayIndexScale(elementKind);
+        return HotSpotRuntime.getArrayIndexScale(elementKind);
     }
 
     public static final Word arrayStart(int[] a)
     {
-        return WordFactory.unsigned(ComputeObjectAddressNode.get(a, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Int)));
+        return WordFactory.unsigned(ComputeObjectAddressNode.get(a, HotSpotRuntime.getArrayBaseOffset(JavaKind.Int)));
     }
 
     /**
@@ -358,7 +362,7 @@ public final class HotSpotReplacementsUtil
      */
     public static final int arrayAllocationSize(int length, int headerSize, int log2ElementSize)
     {
-        int alignment = GraalHotSpotVMConfig.objectAlignment;
+        int alignment = HotSpotRuntime.objectAlignment;
         int size = (length << log2ElementSize) + headerSize + (alignment - 1);
         int mask = ~(alignment - 1);
         return size & mask;
@@ -366,7 +370,7 @@ public final class HotSpotReplacementsUtil
 
     public static final int instanceHeaderSize()
     {
-        return GraalHotSpotVMConfig.useCompressedClassPointers ? (2 * wordSize()) - 4 : 2 * wordSize();
+        return HotSpotRuntime.useCompressedClassPointers ? (2 * wordSize()) - 4 : 2 * wordSize();
     }
 
     public static final LocationIdentity KLASS_SUPER_CHECK_OFFSET_LOCATION = NamedLocationIdentity.immutable("Klass::_super_check_offset");
@@ -441,12 +445,12 @@ public final class HotSpotReplacementsUtil
      */
     public static final boolean isInstanceKlassFullyInitialized(KlassPointer hub)
     {
-        return readInstanceKlassState(hub) == GraalHotSpotVMConfig.instanceKlassStateFullyInitialized;
+        return readInstanceKlassState(hub) == HotSpotRuntime.instanceKlassStateFullyInitialized;
     }
 
     private static final byte readInstanceKlassState(KlassPointer hub)
     {
-        return hub.readByte(GraalHotSpotVMConfig.instanceKlassInitStateOffset, CLASS_STATE_LOCATION);
+        return hub.readByte(HotSpotRuntime.instanceKlassInitStateOffset, CLASS_STATE_LOCATION);
     }
 
     public static final LocationIdentity KLASS_MODIFIER_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_modifier_flags");
@@ -527,10 +531,4 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity PRIMARY_SUPERS_LOCATION = NamedLocationIdentity.immutable("PrimarySupers");
     public static final LocationIdentity METASPACE_ARRAY_LENGTH_LOCATION = NamedLocationIdentity.immutable("MetaspaceArrayLength");
     public static final LocationIdentity SECONDARY_SUPERS_ELEMENT_LOCATION = NamedLocationIdentity.immutable("SecondarySupersElement");
-
-    // @cons
-    private HotSpotReplacementsUtil()
-    {
-        super();
-    }
 }

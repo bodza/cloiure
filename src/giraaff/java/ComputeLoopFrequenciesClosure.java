@@ -24,7 +24,6 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
     private ComputeLoopFrequenciesClosure()
     {
         super();
-        // nothing to do
     }
 
     @Override

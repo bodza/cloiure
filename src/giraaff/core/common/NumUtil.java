@@ -8,6 +8,12 @@ import jdk.vm.ci.code.CodeUtil;
 // @class NumUtil
 public final class NumUtil
 {
+    // @cons
+    private NumUtil()
+    {
+        super();
+    }
+
     public static boolean isShiftCount(int x)
     {
         return 0 <= x && x < 32;
@@ -230,11 +236,5 @@ public final class NumUtil
     public static boolean sameSign(long a, long b)
     {
         return a < 0 == b < 0;
-    }
-
-    // @cons
-    private NumUtil()
-    {
-        super();
     }
 }

@@ -16,7 +16,6 @@ public abstract class StructuralInput
     private StructuralInput()
     {
         super();
-        throw new Error("Illegal instance of StructuralInput. This class should be used in snippets only.");
     }
 
     @Retention(RetentionPolicy.RUNTIME)

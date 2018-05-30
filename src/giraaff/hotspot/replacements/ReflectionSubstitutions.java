@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import giraaff.api.directives.GraalDirectives;
 import giraaff.api.replacements.ClassSubstitution;
 import giraaff.api.replacements.MethodSubstitution;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.word.KlassPointer;
 
@@ -27,7 +27,7 @@ public final class ReflectionSubstitutions
         }
         else
         {
-            return klass.readInt(GraalHotSpotVMConfig.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION) & GraalHotSpotVMConfig.jvmAccWrittenFlags;
+            return klass.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION) & HotSpotRuntime.jvmAccWrittenFlags;
         }
     }
 }

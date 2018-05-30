@@ -1,17 +1,17 @@
 package giraaff.hotspot;
 
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
+import jdk.vm.ci.code.TargetDescription;
 
+import giraaff.api.runtime.GraalRuntime;
 import giraaff.core.phases.CommunityCompilerConfiguration;
 import giraaff.hotspot.amd64.AMD64HotSpotBackendFactory;
-import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.options.OptionValues;
 
 /**
  * Singleton class holding the instance of the {@link GraalRuntime}.
  */
 // @class HotSpotGraalRuntime
-public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
+public final class HotSpotGraalRuntime implements GraalRuntime
 {
     private final OptionValues options;
     private final HotSpotBackend backend;
@@ -21,32 +21,22 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
     {
         super();
         this.options = options;
-        this.backend = new AMD64HotSpotBackendFactory().createBackend(this, new CommunityCompilerConfiguration(), HotSpotJVMCIRuntime.runtime());
+        this.backend = new AMD64HotSpotBackendFactory().createBackend(this, new CommunityCompilerConfiguration());
         this.backend.completeInitialization(options);
     }
 
-    @Override
-    public OptionValues getOptions()
+    public final OptionValues getOptions()
     {
         return options;
     }
 
-    @Override
-    public HotSpotBackend getBackend()
+    public final HotSpotBackend getBackend()
     {
         return backend;
     }
 
-    private boolean shutdown;
-
-    void shutdown()
+    public final TargetDescription getTarget()
     {
-        shutdown = true;
-    }
-
-    @Override
-    public boolean isShutdown()
-    {
-        return shutdown;
+        return getBackend().getTarget();
     }
 }

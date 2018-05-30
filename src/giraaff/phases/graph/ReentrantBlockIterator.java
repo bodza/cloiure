@@ -20,6 +20,12 @@ import giraaff.nodes.cfg.Block;
 // @class ReentrantBlockIterator
 public final class ReentrantBlockIterator
 {
+    // @cons
+    private ReentrantBlockIterator()
+    {
+        super();
+    }
+
     // @class ReentrantBlockIterator.LoopInfo
     public static final class LoopInfo<StateT>
     {
@@ -47,13 +53,6 @@ public final class ReentrantBlockIterator
         protected abstract StateT cloneState(StateT oldState);
 
         protected abstract List<StateT> processLoop(Loop<Block> loop, StateT initialState);
-    }
-
-    // @cons
-    private ReentrantBlockIterator()
-    {
-        super();
-        // no instances allowed
     }
 
     public static <StateT> LoopInfo<StateT> processLoop(BlockIteratorClosure<StateT> closure, Loop<Block> loop, StateT initialState)

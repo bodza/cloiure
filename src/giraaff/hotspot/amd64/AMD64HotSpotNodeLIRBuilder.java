@@ -15,12 +15,12 @@ import giraaff.core.amd64.AMD64NodeLIRBuilder;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.gen.LockStackHolder;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.hotspot.HotSpotLockStack;
 import giraaff.hotspot.HotSpotLockStackHolder;
 import giraaff.hotspot.HotSpotNodeLIRBuilder;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.HotSpotDirectCallTargetNode;
 import giraaff.hotspot.nodes.HotSpotIndirectCallTargetNode;
 import giraaff.lir.LIRFrameState;
@@ -150,6 +150,6 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
         gen.emitMove(exceptionFixed, operand(exception));
         gen.emitMove(exceptionPcFixed, operand(exceptionPc));
         Register thread = getGen().getProviders().getRegisters().getThreadRegister();
-        append(new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, GraalHotSpotVMConfig.threadIsMethodHandleReturnOffset, thread));
+        append(new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, HotSpotRuntime.threadIsMethodHandleReturnOffset, thread));
     }
 }

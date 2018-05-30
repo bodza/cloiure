@@ -4,7 +4,7 @@ import java.lang.reflect.Modifier;
 
 import giraaff.api.replacements.ClassSubstitution;
 import giraaff.api.replacements.MethodSubstitution;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.PiNode;
@@ -17,6 +17,12 @@ import giraaff.nodes.SnippetAnchorNode;
 // @class HotSpotClassSubstitutions
 public final class HotSpotClassSubstitutions
 {
+    // @cons
+    private HotSpotClassSubstitutions()
+    {
+        super();
+    }
+
     @MethodSubstitution(isStatic = false)
     public static int getModifiers(final Class<?> thisObj)
     {
@@ -28,7 +34,7 @@ public final class HotSpotClassSubstitutions
         }
         else
         {
-            return klass.readInt(GraalHotSpotVMConfig.klassModifierFlagsOffset, HotSpotReplacementsUtil.KLASS_MODIFIER_FLAGS_LOCATION);
+            return klass.readInt(HotSpotRuntime.klassModifierFlagsOffset, HotSpotReplacementsUtil.KLASS_MODIFIER_FLAGS_LOCATION);
         }
     }
 
@@ -43,7 +49,7 @@ public final class HotSpotClassSubstitutions
         }
         else
         {
-            int accessFlags = klass.readInt(GraalHotSpotVMConfig.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
+            int accessFlags = klass.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
             return (accessFlags & Modifier.INTERFACE) != 0;
         }
     }
@@ -78,7 +84,7 @@ public final class HotSpotClassSubstitutions
         if (!klass.isNull())
         {
             KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
-            int accessFlags = klassNonNull.readInt(GraalHotSpotVMConfig.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
+            int accessFlags = klassNonNull.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
             if ((accessFlags & Modifier.INTERFACE) == 0)
             {
                 if (HotSpotReplacementsUtil.klassIsArray(klassNonNull))
@@ -87,7 +93,7 @@ public final class HotSpotClassSubstitutions
                 }
                 else
                 {
-                    KlassPointer superKlass = klassNonNull.readKlassPointer(GraalHotSpotVMConfig.klassSuperKlassOffset, HotSpotReplacementsUtil.KLASS_SUPER_KLASS_LOCATION);
+                    KlassPointer superKlass = klassNonNull.readKlassPointer(HotSpotRuntime.klassSuperKlassOffset, HotSpotReplacementsUtil.KLASS_SUPER_KLASS_LOCATION);
                     if (superKlass.isNull())
                     {
                         return null;
@@ -116,7 +122,7 @@ public final class HotSpotClassSubstitutions
             KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
             if (HotSpotReplacementsUtil.klassIsArray(klassNonNull))
             {
-                return PiNode.asNonNullClass(klassNonNull.readObject(GraalHotSpotVMConfig.arrayKlassComponentMirrorOffset, HotSpotReplacementsUtil.ARRAY_KLASS_COMPONENT_MIRROR));
+                return PiNode.asNonNullClass(klassNonNull.readObject(HotSpotRuntime.arrayKlassComponentMirrorOffset, HotSpotReplacementsUtil.ARRAY_KLASS_COMPONENT_MIRROR));
             }
         }
         else
@@ -124,11 +130,5 @@ public final class HotSpotClassSubstitutions
             // Class for primitive type
         }
         return null;
-    }
-
-    // @cons
-    private HotSpotClassSubstitutions()
-    {
-        super();
     }
 }

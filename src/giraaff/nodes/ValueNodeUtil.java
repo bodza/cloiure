@@ -10,6 +10,12 @@ import giraaff.nodes.memory.MemoryNode;
 // @class ValueNodeUtil
 public final class ValueNodeUtil
 {
+    // @cons
+    private ValueNodeUtil()
+    {
+        super();
+    }
+
     public static RuntimeException shouldNotReachHere(String msg)
     {
         throw new InternalError("should not reach here: " + msg);
@@ -58,11 +64,5 @@ public final class ValueNodeUtil
         {
             return node.asNode();
         }
-    }
-
-    // @cons
-    private ValueNodeUtil()
-    {
-        super();
     }
 }

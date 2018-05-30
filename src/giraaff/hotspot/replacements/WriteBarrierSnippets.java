@@ -16,7 +16,7 @@ import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
 import giraaff.hotspot.nodes.G1ArrayRangePostWriteBarrier;
@@ -63,7 +63,7 @@ public final class WriteBarrierSnippets implements Snippets
     private static void serialWriteBarrier(Pointer ptr)
     {
         final long startAddress = GraalHotSpotVMConfigNode.cardTableAddress();
-        Word base = (Word) ptr.unsignedShiftRight(GraalHotSpotVMConfig.cardTableShift);
+        Word base = (Word) ptr.unsignedShiftRight(HotSpotRuntime.cardTableShift);
         if (((int) startAddress) == startAddress && GraalHotSpotVMConfigNode.isCardTableAddressConstant())
         {
             base.writeByte((int) startAddress, (byte) 0, GC_CARD_LOCATION);
@@ -93,7 +93,7 @@ public final class WriteBarrierSnippets implements Snippets
         {
             return;
         }
-        int cardShift = GraalHotSpotVMConfig.cardTableShift;
+        int cardShift = HotSpotRuntime.cardTableShift;
         final long cardStart = GraalHotSpotVMConfigNode.cardTableAddress();
         long start = getPointerToFirstArrayElement(address, length, elementStride) >>> cardShift;
         long end = getPointerToLastArrayElement(address, length, elementStride) >>> cardShift;
@@ -115,7 +115,7 @@ public final class WriteBarrierSnippets implements Snippets
         Object fixedExpectedObject = FixedValueAnchorNode.getObject(expectedObject);
         Word field = Word.fromAddress(address);
         Pointer previousOop = Word.objectToTrackedPointer(fixedExpectedObject);
-        byte markingValue = thread.readByte(GraalHotSpotVMConfig.g1SATBQueueMarkingOffset);
+        byte markingValue = thread.readByte(HotSpotRuntime.g1SATBQueueMarkingOffset);
         int gcCycle = 0;
         // If the concurrent marker is enabled, the barrier is issued.
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, markingValue != (byte) 0))
@@ -130,11 +130,11 @@ public final class WriteBarrierSnippets implements Snippets
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, previousOop.notEqual(0)))
             {
                 // If the thread-local SATB buffer is full, issue a native call, which will initialize a new one and add the entry.
-                Word indexAddress = thread.add(GraalHotSpotVMConfig.g1SATBQueueIndexOffset);
+                Word indexAddress = thread.add(HotSpotRuntime.g1SATBQueueIndexOffset);
                 Word indexValue = indexAddress.readWord(0);
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, indexValue.notEqual(0)))
                 {
-                    Word bufferAddress = thread.readWord(GraalHotSpotVMConfig.g1SATBQueueBufferOffset);
+                    Word bufferAddress = thread.readWord(HotSpotRuntime.g1SATBQueueBufferOffset);
                     Word nextIndex = indexValue.subtract(HotSpotReplacementsUtil.wordSize());
                     Word logAddress = bufferAddress.add(nextIndex);
                     // Log the object to be marked as well as update the SATB's buffer next index.
@@ -170,7 +170,7 @@ public final class WriteBarrierSnippets implements Snippets
         UnsignedWord xorResult = (oop.xor(writtenValue)).unsignedShiftRight(GraalHotSpotVMConfigNode.logOfHeapRegionGrainBytes());
 
         // Calculate the address of the card to be enqueued to the thread local card queue.
-        UnsignedWord cardBase = oop.unsignedShiftRight(GraalHotSpotVMConfig.cardTableShift);
+        UnsignedWord cardBase = oop.unsignedShiftRight(HotSpotRuntime.cardTableShift);
         final long startAddress = GraalHotSpotVMConfigNode.cardTableAddress();
         int displacement = 0;
         if (((int) startAddress) == startAddress && GraalHotSpotVMConfigNode.isCardTableAddressConstant())
@@ -191,20 +191,20 @@ public final class WriteBarrierSnippets implements Snippets
                 byte cardByte = cardAddress.readByte(0, GC_CARD_LOCATION);
 
                 // If the card is already dirty, (hence already enqueued) skip the insertion.
-                if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByte != GraalHotSpotVMConfig.g1YoungCardValue))
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByte != HotSpotRuntime.g1YoungCardValue))
                 {
                     MembarNode.memoryBarrier(MemoryBarriers.STORE_LOAD, GC_CARD_LOCATION);
                     byte cardByteReload = cardAddress.readByte(0, GC_CARD_LOCATION);
-                    if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByteReload != GraalHotSpotVMConfig.dirtyCardValue))
+                    if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByteReload != HotSpotRuntime.dirtyCardValue))
                     {
                         cardAddress.writeByte(0, (byte) 0, GC_CARD_LOCATION);
 
                         // If the thread-local card queue is full, issue a native call, which will initialize a new one and add the card entry.
-                        Word indexAddress = thread.add(GraalHotSpotVMConfig.g1CardQueueIndexOffset);
-                        Word indexValue = thread.readWord(GraalHotSpotVMConfig.g1CardQueueIndexOffset);
+                        Word indexAddress = thread.add(HotSpotRuntime.g1CardQueueIndexOffset);
+                        Word indexValue = thread.readWord(HotSpotRuntime.g1CardQueueIndexOffset);
                         if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, indexValue.notEqual(0)))
                         {
-                            Word bufferAddress = thread.readWord(GraalHotSpotVMConfig.g1CardQueueBufferOffset);
+                            Word bufferAddress = thread.readWord(HotSpotRuntime.g1CardQueueBufferOffset);
                             Word nextIndex = indexValue.subtract(HotSpotReplacementsUtil.wordSize());
                             Word logAddress = bufferAddress.add(nextIndex);
                             // Log the object to be scanned as well as update the card queue's next index.
@@ -225,14 +225,14 @@ public final class WriteBarrierSnippets implements Snippets
     public static void g1ArrayRangePreWriteBarrier(Address address, int length, @ConstantParameter int elementStride, @ConstantParameter Register threadRegister)
     {
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        byte markingValue = thread.readByte(GraalHotSpotVMConfig.g1SATBQueueMarkingOffset);
+        byte markingValue = thread.readByte(HotSpotRuntime.g1SATBQueueMarkingOffset);
         // If the concurrent marker is not enabled or the vector length is zero, return.
         if (markingValue == (byte) 0 || length == 0)
         {
             return;
         }
-        Word bufferAddress = thread.readWord(GraalHotSpotVMConfig.g1SATBQueueBufferOffset);
-        Word indexAddress = thread.add(GraalHotSpotVMConfig.g1SATBQueueIndexOffset);
+        Word bufferAddress = thread.readWord(HotSpotRuntime.g1SATBQueueBufferOffset);
+        Word indexAddress = thread.add(HotSpotRuntime.g1SATBQueueIndexOffset);
         long indexValue = indexAddress.readWord(0).rawValue();
         final int scale = HotSpotReplacementsUtil.arrayIndexScale(JavaKind.Object);
         long start = getPointerToFirstArrayElement(address, length, elementStride);
@@ -267,11 +267,11 @@ public final class WriteBarrierSnippets implements Snippets
             return;
         }
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        Word bufferAddress = thread.readWord(GraalHotSpotVMConfig.g1CardQueueBufferOffset);
-        Word indexAddress = thread.add(GraalHotSpotVMConfig.g1CardQueueIndexOffset);
-        long indexValue = thread.readWord(GraalHotSpotVMConfig.g1CardQueueIndexOffset).rawValue();
+        Word bufferAddress = thread.readWord(HotSpotRuntime.g1CardQueueBufferOffset);
+        Word indexAddress = thread.add(HotSpotRuntime.g1CardQueueIndexOffset);
+        long indexValue = thread.readWord(HotSpotRuntime.g1CardQueueIndexOffset).rawValue();
 
-        int cardShift = GraalHotSpotVMConfig.cardTableShift;
+        int cardShift = HotSpotRuntime.cardTableShift;
         final long cardStart = GraalHotSpotVMConfigNode.cardTableAddress();
         long start = getPointerToFirstArrayElement(address, length, elementStride) >>> cardShift;
         long end = getPointerToLastArrayElement(address, length, elementStride) >>> cardShift;
@@ -282,11 +282,11 @@ public final class WriteBarrierSnippets implements Snippets
             Word cardAddress = WordFactory.unsigned((start + cardStart) + count);
             byte cardByte = cardAddress.readByte(0, GC_CARD_LOCATION);
             // If the card is already dirty, (hence already enqueued) skip the insertion.
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByte != GraalHotSpotVMConfig.g1YoungCardValue))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByte != HotSpotRuntime.g1YoungCardValue))
             {
                 MembarNode.memoryBarrier(MemoryBarriers.STORE_LOAD, GC_CARD_LOCATION);
                 byte cardByteReload = cardAddress.readByte(0, GC_CARD_LOCATION);
-                if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByteReload != GraalHotSpotVMConfig.dirtyCardValue))
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, cardByteReload != HotSpotRuntime.dirtyCardValue))
                 {
                     cardAddress.writeByte(0, (byte) 0, GC_CARD_LOCATION);
                     // If the thread local card queue is full, issue a native call which will initialize

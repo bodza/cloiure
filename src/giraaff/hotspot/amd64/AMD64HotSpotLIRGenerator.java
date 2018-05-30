@@ -31,13 +31,13 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotLIRGenerationResult;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.hotspot.HotSpotLockStack;
 import giraaff.hotspot.HotSpotLockStackHolder;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotConstantLoadAction;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.stubs.Stub;
@@ -390,9 +390,9 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         if (hotspotLinkage.needsJavaFrameAnchor())
         {
             Register thread = getProviders().getRegisters().getThreadRegister();
-            append(new AMD64HotSpotCRuntimeCallPrologueOp(GraalHotSpotVMConfig.threadLastJavaSpOffset, thread));
+            append(new AMD64HotSpotCRuntimeCallPrologueOp(HotSpotRuntime.threadLastJavaSpOffset, thread));
             result = super.emitForeignCall(hotspotLinkage, debugInfo, args);
-            append(new AMD64HotSpotCRuntimeCallEpilogueOp(GraalHotSpotVMConfig.threadLastJavaSpOffset, GraalHotSpotVMConfig.threadLastJavaFpOffset, GraalHotSpotVMConfig.threadLastJavaPcOffset, thread));
+            append(new AMD64HotSpotCRuntimeCallEpilogueOp(HotSpotRuntime.threadLastJavaSpOffset, HotSpotRuntime.threadLastJavaFpOffset, HotSpotRuntime.threadLastJavaPcOffset, thread));
         }
         else
         {
@@ -547,8 +547,8 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
 
     private void moveDeoptValuesToThread(Value actionAndReason, Value speculation)
     {
-        moveValueToThread(actionAndReason, GraalHotSpotVMConfig.pendingDeoptimizationOffset);
-        moveValueToThread(speculation, GraalHotSpotVMConfig.pendingFailedSpeculationOffset);
+        moveValueToThread(actionAndReason, HotSpotRuntime.pendingDeoptimizationOffset);
+        moveValueToThread(speculation, HotSpotRuntime.pendingFailedSpeculationOffset);
     }
 
     private void moveValueToThread(Value v, int offset)
@@ -647,7 +647,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     {
         if (address.getValueKind().getPlatformKind() == getLIRKindTool().getNarrowOopKind().getPlatformKind())
         {
-            CompressEncoding encoding = GraalHotSpotVMConfig.oopEncoding;
+            CompressEncoding encoding = HotSpotRuntime.oopEncoding;
             Value uncompressed;
             if (encoding.getShift() <= 3)
             {
@@ -667,7 +667,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     @Override
     public void emitPrefetchAllocate(Value address)
     {
-        append(new AMD64PrefetchOp(asAddressValue(address), GraalHotSpotVMConfig.allocatePrefetchInstr));
+        append(new AMD64PrefetchOp(asAddressValue(address), HotSpotRuntime.allocatePrefetchInstr));
     }
 
     @Override

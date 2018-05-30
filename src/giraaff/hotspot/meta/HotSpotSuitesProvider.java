@@ -1,6 +1,6 @@
 package giraaff.hotspot.meta;
 
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.phases.WriteBarrierAdditionPhase;
 import giraaff.java.SuitesProviderBase;
 import giraaff.lir.phases.LIRSuites;
@@ -16,12 +16,12 @@ import giraaff.phases.tiers.SuitesCreator;
 // @class HotSpotSuitesProvider
 public class HotSpotSuitesProvider extends SuitesProviderBase
 {
-    protected final HotSpotGraalRuntimeProvider runtime;
+    protected final HotSpotGraalRuntime runtime;
 
     private final SuitesCreator defaultSuitesCreator;
 
     // @cons
-    public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntimeProvider runtime)
+    public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntime runtime)
     {
         super();
         this.defaultSuitesCreator = defaultSuitesCreator;

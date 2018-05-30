@@ -5,7 +5,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
@@ -37,9 +37,9 @@ final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
     {
         // The mark for an invocation that uses an inline cache must be placed
         // at the instruction that loads the Klass from the inline cache.
-        crb.recordMark(invokeKind == InvokeKind.Virtual ? GraalHotSpotVMConfig.invokevirtualMark : GraalHotSpotVMConfig.invokeinterfaceMark);
+        crb.recordMark(invokeKind == InvokeKind.Virtual ? HotSpotRuntime.invokevirtualMark : HotSpotRuntime.invokeinterfaceMark);
         // This must be emitted exactly like this to ensure, it's patchable.
-        masm.movq(AMD64.rax, GraalHotSpotVMConfig.nonOopBits);
+        masm.movq(AMD64.rax, HotSpotRuntime.nonOopBits);
         int offset = super.emitCall(crb, masm);
         crb.recordInvokeVirtualOrInterfaceCallOp(offset);
     }

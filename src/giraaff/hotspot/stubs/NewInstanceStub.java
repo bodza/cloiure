@@ -11,8 +11,8 @@ import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.GraalHotSpotVMConfigNode;
 import giraaff.hotspot.nodes.StubForeignCallNode;
@@ -86,7 +86,7 @@ public final class NewInstanceStub extends SnippetStub
                 Word memory = refillAllocate(thread, intArrayHub, sizeInBytes);
                 if (memory.notEqual(0))
                 {
-                    Word prototypeMarkWord = hub.readWord(GraalHotSpotVMConfig.prototypeMarkWordOffset, HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
+                    Word prototypeMarkWord = hub.readWord(HotSpotRuntime.prototypeMarkWordOffset, HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
                     NewObjectSnippets.formatObjectForStub(hub, sizeInBytes, memory, prototypeMarkWord);
                     return memory.toObject();
                 }
@@ -111,16 +111,16 @@ public final class NewInstanceStub extends SnippetStub
     {
         // If G1 is enabled, the "eden" allocation space is not the same always
         // and therefore we have to go to slowpath to allocate a new TLAB.
-        if (GraalHotSpotVMConfig.useG1GC)
+        if (HotSpotRuntime.useG1GC)
         {
             return WordFactory.zero();
         }
-        if (!GraalHotSpotVMConfig.useTLAB)
+        if (!HotSpotRuntime.useTLAB)
         {
             return edenAllocate(WordFactory.unsigned(sizeInBytes));
         }
-        Word intArrayMarkWord = WordFactory.unsigned(GraalHotSpotVMConfig.tlabIntArrayMarkWord);
-        int alignmentReserveInBytes = GraalHotSpotVMConfig.tlabAlignmentReserve * HotSpotReplacementsUtil.wordSize();
+        Word intArrayMarkWord = WordFactory.unsigned(HotSpotRuntime.tlabIntArrayMarkWord);
+        int alignmentReserveInBytes = HotSpotRuntime.tlabAlignmentReserve * HotSpotReplacementsUtil.wordSize();
 
         Word top = HotSpotReplacementsUtil.readTlabTop(thread);
         Word end = HotSpotReplacementsUtil.readTlabEnd(thread);
@@ -131,16 +131,16 @@ public final class NewInstanceStub extends SnippetStub
         long tlabFreeSpaceInWords = tlabFreeSpaceInBytes >>> HotSpotReplacementsUtil.log2WordSize();
 
         // retain TLAB and allocate object in shared space if the amount free in the TLAB is too large to discard
-        Word refillWasteLimit = thread.readWord(GraalHotSpotVMConfig.tlabRefillWasteLimitOffset, HotSpotReplacementsUtil.TLAB_REFILL_WASTE_LIMIT_LOCATION);
+        Word refillWasteLimit = thread.readWord(HotSpotRuntime.tlabRefillWasteLimitOffset, HotSpotReplacementsUtil.TLAB_REFILL_WASTE_LIMIT_LOCATION);
         if (tlabFreeSpaceInWords <= refillWasteLimit.rawValue())
         {
-            if (GraalHotSpotVMConfig.tlabStats)
+            if (HotSpotRuntime.tlabStats)
             {
                 // increment number of refills
-                thread.writeInt(GraalHotSpotVMConfig.tlabNumberOfRefillsOffset, thread.readInt(GraalHotSpotVMConfig.tlabNumberOfRefillsOffset, HotSpotReplacementsUtil.TLAB_NOF_REFILLS_LOCATION) + 1, HotSpotReplacementsUtil.TLAB_NOF_REFILLS_LOCATION);
+                thread.writeInt(HotSpotRuntime.tlabNumberOfRefillsOffset, thread.readInt(HotSpotRuntime.tlabNumberOfRefillsOffset, HotSpotReplacementsUtil.TLAB_NOF_REFILLS_LOCATION) + 1, HotSpotReplacementsUtil.TLAB_NOF_REFILLS_LOCATION);
                 // accumulate wastage
-                int wastage = thread.readInt(GraalHotSpotVMConfig.tlabFastRefillWasteOffset, HotSpotReplacementsUtil.TLAB_FAST_REFILL_WASTE_LOCATION) + (int) tlabFreeSpaceInWords;
-                thread.writeInt(GraalHotSpotVMConfig.tlabFastRefillWasteOffset, wastage, HotSpotReplacementsUtil.TLAB_FAST_REFILL_WASTE_LOCATION);
+                int wastage = thread.readInt(HotSpotRuntime.tlabFastRefillWasteOffset, HotSpotReplacementsUtil.TLAB_FAST_REFILL_WASTE_LOCATION) + (int) tlabFreeSpaceInWords;
+                thread.writeInt(HotSpotRuntime.tlabFastRefillWasteOffset, wastage, HotSpotReplacementsUtil.TLAB_FAST_REFILL_WASTE_LOCATION);
             }
 
             // if TLAB is currently allocated (top or end != null), then fill [top, end + alignment_reserve) with array object
@@ -152,13 +152,13 @@ public final class NewInstanceStub extends SnippetStub
                 int length = ((alignmentReserveInBytes - headerSize) >>> 2) + tlabFreeSpaceInInts;
                 NewObjectSnippets.formatArray(intArrayHub, 0, length, headerSize, top, intArrayMarkWord, false, false);
 
-                long allocated = thread.readLong(GraalHotSpotVMConfig.threadAllocatedBytesOffset, HotSpotReplacementsUtil.TLAB_THREAD_ALLOCATED_BYTES_LOCATION);
+                long allocated = thread.readLong(HotSpotRuntime.threadAllocatedBytesOffset, HotSpotReplacementsUtil.TLAB_THREAD_ALLOCATED_BYTES_LOCATION);
                 allocated = allocated + top.subtract(HotSpotReplacementsUtil.readTlabStart(thread)).rawValue();
-                thread.writeLong(GraalHotSpotVMConfig.threadAllocatedBytesOffset, allocated, HotSpotReplacementsUtil.TLAB_THREAD_ALLOCATED_BYTES_LOCATION);
+                thread.writeLong(HotSpotRuntime.threadAllocatedBytesOffset, allocated, HotSpotReplacementsUtil.TLAB_THREAD_ALLOCATED_BYTES_LOCATION);
             }
 
             // refill the TLAB with an eden allocation
-            Word tlabRefillSizeInWords = thread.readWord(GraalHotSpotVMConfig.threadTlabSizeOffset, HotSpotReplacementsUtil.TLAB_SIZE_LOCATION);
+            Word tlabRefillSizeInWords = thread.readWord(HotSpotRuntime.threadTlabSizeOffset, HotSpotReplacementsUtil.TLAB_SIZE_LOCATION);
             Word tlabRefillSizeInBytes = tlabRefillSizeInWords.multiply(HotSpotReplacementsUtil.wordSize());
             // allocate new TLAB, address returned in top
             top = edenAllocate(tlabRefillSizeInBytes);
@@ -177,12 +177,12 @@ public final class NewInstanceStub extends SnippetStub
         else
         {
             // retain TLAB
-            Word newRefillWasteLimit = refillWasteLimit.add(GraalHotSpotVMConfig.tlabRefillWasteIncrement);
-            thread.writeWord(GraalHotSpotVMConfig.tlabRefillWasteLimitOffset, newRefillWasteLimit, HotSpotReplacementsUtil.TLAB_REFILL_WASTE_LIMIT_LOCATION);
+            Word newRefillWasteLimit = refillWasteLimit.add(HotSpotRuntime.tlabRefillWasteIncrement);
+            thread.writeWord(HotSpotRuntime.tlabRefillWasteLimitOffset, newRefillWasteLimit, HotSpotReplacementsUtil.TLAB_REFILL_WASTE_LIMIT_LOCATION);
 
-            if (GraalHotSpotVMConfig.tlabStats)
+            if (HotSpotRuntime.tlabStats)
             {
-                thread.writeInt(GraalHotSpotVMConfig.tlabSlowAllocationsOffset, thread.readInt(GraalHotSpotVMConfig.tlabSlowAllocationsOffset, HotSpotReplacementsUtil.TLAB_SLOW_ALLOCATIONS_LOCATION) + 1, HotSpotReplacementsUtil.TLAB_SLOW_ALLOCATIONS_LOCATION);
+                thread.writeInt(HotSpotRuntime.tlabSlowAllocationsOffset, thread.readInt(HotSpotRuntime.tlabSlowAllocationsOffset, HotSpotReplacementsUtil.TLAB_SLOW_ALLOCATIONS_LOCATION) + 1, HotSpotReplacementsUtil.TLAB_SLOW_ALLOCATIONS_LOCATION);
             }
 
             return edenAllocate(WordFactory.unsigned(sizeInBytes));

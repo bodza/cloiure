@@ -1,7 +1,7 @@
 package giraaff.hotspot.phases;
 
 import giraaff.graph.Node;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.G1ArrayRangePostWriteBarrier;
 import giraaff.hotspot.nodes.G1ArrayRangePreWriteBarrier;
 import giraaff.hotspot.nodes.G1PostWriteBarrier;
@@ -110,7 +110,7 @@ public final class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
                 boolean precise = barrierType == BarrierType.PRECISE;
-                if (GraalHotSpotVMConfig.useG1GC)
+                if (HotSpotRuntime.useG1GC)
                 {
                     if (!node.getLocationIdentity().isInit())
                     {
@@ -139,7 +139,7 @@ public final class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
                 boolean precise = barrierType == BarrierType.PRECISE;
-                if (GraalHotSpotVMConfig.useG1GC)
+                if (HotSpotRuntime.useG1GC)
                 {
                     addG1PreWriteBarrier(node, node.getAddress(), null, true, node.getNullCheck(), graph);
                     addG1PostWriteBarrier(node, node.getAddress(), node.getNewValue(), precise, graph);
@@ -165,7 +165,7 @@ public final class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
                 boolean precise = barrierType == BarrierType.PRECISE;
-                if (GraalHotSpotVMConfig.useG1GC)
+                if (HotSpotRuntime.useG1GC)
                 {
                     addG1PreWriteBarrier(node, node.getAddress(), node.getExpectedValue(), false, false, graph);
                     addG1PostWriteBarrier(node, node.getAddress(), node.getNewValue(), precise, graph);
@@ -182,7 +182,7 @@ public final class WriteBarrierAdditionPhase extends Phase
 
     private void addArrayRangeBarriers(ArrayRangeWrite write, StructuredGraph graph)
     {
-        if (GraalHotSpotVMConfig.useG1GC)
+        if (HotSpotRuntime.useG1GC)
         {
             if (!write.isInitialization())
             {

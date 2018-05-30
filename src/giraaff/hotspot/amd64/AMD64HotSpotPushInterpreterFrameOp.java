@@ -7,7 +7,7 @@ import jdk.vm.ci.meta.AllocatableValue;
 
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
@@ -59,9 +59,9 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
         masm.subq(AMD64.rsp, frameSizeRegister);
 
         // this value is corrected by layout_activation_impl
-        masm.movptr(new AMD64Address(initialInfoRegister, GraalHotSpotVMConfig.frameInterpreterFrameLastSpOffset * wordSize), 0);
+        masm.movptr(new AMD64Address(initialInfoRegister, HotSpotRuntime.frameInterpreterFrameLastSpOffset * wordSize), 0);
 
         // make the frame walkable
-        masm.movq(new AMD64Address(initialInfoRegister, GraalHotSpotVMConfig.frameInterpreterFrameSenderSpOffset * wordSize), senderSpRegister);
+        masm.movq(new AMD64Address(initialInfoRegister, HotSpotRuntime.frameInterpreterFrameSenderSpOffset * wordSize), senderSpRegister);
     }
 }

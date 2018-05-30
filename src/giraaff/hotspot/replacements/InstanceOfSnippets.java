@@ -53,6 +53,12 @@ import giraaff.util.GraalError;
 // @class InstanceOfSnippets
 public final class InstanceOfSnippets implements Snippets
 {
+    // @cons
+    private InstanceOfSnippets()
+    {
+        super();
+    }
+
     /**
      * A test against a set of hints derived from a profile with 100% precise coverage of seen
      * types. This snippet deoptimizes on hint miss paths.
@@ -322,11 +328,5 @@ public final class InstanceOfSnippets implements Snippets
                 throw GraalError.shouldNotReachHere();
             }
         }
-    }
-
-    // @cons
-    private InstanceOfSnippets()
-    {
-        super();
     }
 }

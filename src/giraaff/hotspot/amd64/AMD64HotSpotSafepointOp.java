@@ -10,7 +10,7 @@ import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
@@ -39,7 +39,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
         super(TYPE);
         this.state = state;
         this.thread = thread;
-        if (GraalHotSpotVMConfig.threadLocalHandshakes || isPollingPageFar())
+        if (HotSpotRuntime.threadLocalHandshakes || isPollingPageFar())
         {
             temp = tool.getLIRGeneratorTool().newVariable(LIRKind.value(tool.getLIRGeneratorTool().target().arch.getWordKind()));
         }
@@ -58,7 +58,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 
     public static void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler asm, boolean atReturn, LIRFrameState state, Register thread, Register scratch)
     {
-        if (GraalHotSpotVMConfig.threadLocalHandshakes)
+        if (HotSpotRuntime.threadLocalHandshakes)
         {
             emitThreadLocalPoll(crb, asm, atReturn, state, thread, scratch);
         }
@@ -73,21 +73,21 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
      */
     private static boolean isPollingPageFar()
     {
-        final long pollingPageAddress = GraalHotSpotVMConfig.safepointPollingAddress;
-        return !NumUtil.isInt(pollingPageAddress - GraalHotSpotVMConfig.codeCacheLowBound) || !NumUtil.isInt(pollingPageAddress - GraalHotSpotVMConfig.codeCacheHighBound);
+        final long pollingPageAddress = HotSpotRuntime.safepointPollingAddress;
+        return !NumUtil.isInt(pollingPageAddress - HotSpotRuntime.codeCacheLowBound) || !NumUtil.isInt(pollingPageAddress - HotSpotRuntime.codeCacheHighBound);
     }
 
     private static void emitGlobalPoll(CompilationResultBuilder crb, AMD64MacroAssembler asm, boolean atReturn, LIRFrameState state, Register scratch)
     {
         if (isPollingPageFar())
         {
-            asm.movq(scratch, GraalHotSpotVMConfig.safepointPollingAddress);
-            crb.recordMark(atReturn ? GraalHotSpotVMConfig.pollReturnFarMark : GraalHotSpotVMConfig.pollFarMark);
+            asm.movq(scratch, HotSpotRuntime.safepointPollingAddress);
+            crb.recordMark(atReturn ? HotSpotRuntime.pollReturnFarMark : HotSpotRuntime.pollFarMark);
             asm.testl(AMD64.rax, new AMD64Address(scratch));
         }
         else
         {
-            crb.recordMark(atReturn ? GraalHotSpotVMConfig.pollReturnNearMark : GraalHotSpotVMConfig.pollNearMark);
+            crb.recordMark(atReturn ? HotSpotRuntime.pollReturnNearMark : HotSpotRuntime.pollNearMark);
             // The C++ code transforms the polling page offset into an RIP displacement
             // to the real address at that offset in the polling page.
             asm.testl(AMD64.rax, new AMD64Address(AMD64.rip, 0));
@@ -96,8 +96,8 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 
     private static void emitThreadLocalPoll(CompilationResultBuilder crb, AMD64MacroAssembler asm, boolean atReturn, LIRFrameState state, Register thread, Register scratch)
     {
-        asm.movptr(scratch, new AMD64Address(thread, GraalHotSpotVMConfig.threadPollingPageOffset));
-        crb.recordMark(atReturn ? GraalHotSpotVMConfig.pollReturnFarMark : GraalHotSpotVMConfig.pollFarMark);
+        asm.movptr(scratch, new AMD64Address(thread, HotSpotRuntime.threadPollingPageOffset));
+        crb.recordMark(atReturn ? HotSpotRuntime.pollReturnFarMark : HotSpotRuntime.pollFarMark);
         asm.testl(AMD64.rax, new AMD64Address(scratch));
     }
 }

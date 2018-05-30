@@ -10,7 +10,7 @@ import jdk.vm.ci.meta.DeoptimizationReason;
 
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.DeoptimizeCallerNode;
 import giraaff.hotspot.nodes.StubForeignCallNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;

@@ -3,8 +3,6 @@ package giraaff.hotspot;
 import jdk.vm.ci.code.CompilationRequest;
 import jdk.vm.ci.code.CompilationRequestResult;
 import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
-import jdk.vm.ci.hotspot.HotSpotCompilationRequestResult;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.DefaultProfilingInfo;
 import jdk.vm.ci.meta.JavaMethod;
 import jdk.vm.ci.meta.ProfilingInfo;
@@ -41,19 +39,17 @@ import giraaff.phases.tiers.Suites;
 // @class HotSpotGraalCompiler
 public final class HotSpotGraalCompiler implements GraalJVMCICompiler
 {
-    private final HotSpotJVMCIRuntimeProvider jvmciRuntime;
-    private final HotSpotGraalRuntimeProvider graalRuntime;
+    private final HotSpotGraalRuntime graalRuntime;
 
     // @cons
-    public HotSpotGraalCompiler(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider graalRuntime)
+    public HotSpotGraalCompiler(HotSpotGraalRuntime graalRuntime)
     {
         super();
-        this.jvmciRuntime = jvmciRuntime;
         this.graalRuntime = graalRuntime;
     }
 
     @Override
-    public HotSpotGraalRuntimeProvider getGraalRuntime()
+    public HotSpotGraalRuntime getGraalRuntime()
     {
         return graalRuntime;
     }
@@ -66,13 +62,7 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
 
     CompilationRequestResult compileMethod(CompilationRequest request, boolean installAsDefault, OptionValues options)
     {
-        if (graalRuntime.isShutdown())
-        {
-            return HotSpotCompilationRequestResult.failure(String.format("Shutdown entered"), false);
-        }
-
-        HotSpotCompilationRequest hsRequest = (HotSpotCompilationRequest) request;
-        return new CompilationTask(jvmciRuntime, this, hsRequest, true, installAsDefault, options).runCompilation();
+        return new CompilationTask(this, (HotSpotCompilationRequest) request, true, installAsDefault, options).runCompilation();
     }
 
     public StructuredGraph createGraph(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)

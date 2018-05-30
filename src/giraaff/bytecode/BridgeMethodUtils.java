@@ -15,6 +15,12 @@ import giraaff.bytecode.Bytecodes;
 // @class BridgeMethodUtils
 public final class BridgeMethodUtils
 {
+    // @cons
+    private BridgeMethodUtils()
+    {
+        super();
+    }
+
     /**
      * Gets the method bridged to by a {@linkplain ResolvedJavaMethod#isBridge() bridge} method. The
      * value returned is the method called by {@code method} that has the same name as {@code bridge}.
@@ -160,11 +166,5 @@ public final class BridgeMethodUtils
             }
         }
         return a;
-    }
-
-    // @cons
-    private BridgeMethodUtils()
-    {
-        super();
     }
 }

@@ -9,7 +9,6 @@ import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.ValueKindFactory;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import jdk.vm.ci.hotspot.HotSpotForeignCallTarget;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.MetaAccessProvider;
@@ -22,6 +21,7 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.target.Backend;
 import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotForeignCallsProvider;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.word.WordTypes;
@@ -196,7 +196,7 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     @Override
     public long getMaxCallTargetOffset()
     {
-        return HotSpotJVMCIRuntime.runtime().getHostJVMCIBackend().getCodeCache().getMaxCallTargetOffset(address);
+        return HotSpotRuntime.JVMCI.getHostJVMCIBackend().getCodeCache().getMaxCallTargetOffset(address);
     }
 
     @Override

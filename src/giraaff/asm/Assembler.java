@@ -21,14 +21,14 @@ public abstract class Assembler
     /**
      * Backing code buffer.
      */
-    private final Buffer codeBuffer;
+    private final CodeBuffer codeBuffer;
 
     // @cons
     public Assembler(TargetDescription target)
     {
         super();
         this.target = target;
-        this.codeBuffer = new Buffer(target.arch.getByteOrder());
+        this.codeBuffer = new CodeBuffer(target.arch.getByteOrder());
     }
 
     /**

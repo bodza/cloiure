@@ -50,6 +50,12 @@ import giraaff.util.GraalError;
 // @class GraalCompiler
 public final class GraalCompiler
 {
+    // @cons
+    private GraalCompiler()
+    {
+        super();
+    }
+
     /**
      * Encapsulates all the inputs to a {@linkplain GraalCompiler#compile(Request) compilation}.
      */
@@ -234,11 +240,5 @@ public final class GraalCompiler
             compilationResult.setBytecodeSize(bytecodeSize);
         }
         crb.finish();
-    }
-
-    // @cons
-    private GraalCompiler()
-    {
-        super();
     }
 }

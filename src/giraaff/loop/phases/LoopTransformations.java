@@ -50,7 +50,6 @@ public abstract class LoopTransformations
     private LoopTransformations()
     {
         super();
-        // does not need to be instantiated
     }
 
     public static void peel(LoopEx loop)

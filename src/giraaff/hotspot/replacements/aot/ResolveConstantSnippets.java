@@ -40,6 +40,12 @@ import giraaff.util.GraalError;
 // @class ResolveConstantSnippets
 public final class ResolveConstantSnippets implements Snippets
 {
+    // @cons
+    private ResolveConstantSnippets()
+    {
+        super();
+    }
+
     @Snippet
     public static Object resolveObjectConstant(Object constant)
     {
@@ -226,11 +232,5 @@ public final class ResolveConstantSnippets implements Snippets
                 GraphUtil.killWithUnusedFloatingInputs(resolveMethodAndLoadCountersNode);
             }
         }
-    }
-
-    // @cons
-    private ResolveConstantSnippets()
-    {
-        super();
     }
 }

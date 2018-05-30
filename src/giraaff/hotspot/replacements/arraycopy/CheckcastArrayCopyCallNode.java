@@ -1,7 +1,6 @@
 package giraaff.hotspot.replacements.arraycopy;
 
 import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.JavaKind;
 
 import org.graalvm.word.LocationIdentity;
@@ -10,7 +9,8 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.hotspot.nodes.GetObjectAddressNode;
 import giraaff.nodes.ConstantNode;
@@ -45,10 +45,10 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
 
     protected final boolean uninit;
 
-    protected final HotSpotGraalRuntimeProvider runtime;
+    protected final HotSpotGraalRuntime runtime;
 
     // @cons
-    protected CheckcastArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, ValueNode superCheckOffset, ValueNode destElemKlass, boolean uninit)
+    protected CheckcastArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, ValueNode superCheckOffset, ValueNode destElemKlass, boolean uninit)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.src = src;
@@ -97,10 +97,10 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
         FixedWithNextNode basePtr = graph().add(new GetObjectAddressNode(base));
         graph().addBeforeFixed(this, basePtr);
 
-        int shift = CodeUtil.log2(HotSpotJVMCIRuntimeProvider.getArrayIndexScale(JavaKind.Object));
+        int shift = CodeUtil.log2(HotSpotRuntime.getArrayIndexScale(JavaKind.Object));
         ValueNode extendedPos = IntegerConvertNode.convert(pos, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
         ValueNode scaledIndex = graph().unique(new LeftShiftNode(extendedPos, ConstantNode.forInt(shift, graph())));
-        ValueNode offset = graph().unique(new AddNode(scaledIndex, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(scaledIndex.stamp(NodeView.DEFAULT)), HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Object), graph())));
+        ValueNode offset = graph().unique(new AddNode(scaledIndex, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(scaledIndex.stamp(NodeView.DEFAULT)), HotSpotRuntime.getArrayBaseOffset(JavaKind.Object), graph())));
         return graph().unique(new OffsetAddressNode(basePtr, offset));
     }
 

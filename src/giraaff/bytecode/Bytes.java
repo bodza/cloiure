@@ -6,6 +6,12 @@ package giraaff.bytecode;
 // @class Bytes
 public final class Bytes
 {
+    // @cons
+    private Bytes()
+    {
+        super();
+    }
+
     /**
      * Gets a signed 1-byte value.
      *
@@ -84,11 +90,5 @@ public final class Bytes
         {
             return beS2(data, bci);
         }
-    }
-
-    // @cons
-    private Bytes()
-    {
-        super();
     }
 }

@@ -42,6 +42,12 @@ import giraaff.word.Word;
 // @class LoadExceptionObjectSnippets
 public final class LoadExceptionObjectSnippets implements Snippets
 {
+    // @cons
+    private LoadExceptionObjectSnippets()
+    {
+        super();
+    }
+
     @Snippet
     public static Object loadException(@ConstantParameter Register threadRegister)
     {
@@ -85,11 +91,5 @@ public final class LoadExceptionObjectSnippets implements Snippets
                 template(loadExceptionObject, args).instantiate(providers.getMetaAccess(), loadExceptionObject, SnippetTemplate.DEFAULT_REPLACER, args);
             }
         }
-    }
-
-    // @cons
-    private LoadExceptionObjectSnippets()
-    {
-        super();
     }
 }

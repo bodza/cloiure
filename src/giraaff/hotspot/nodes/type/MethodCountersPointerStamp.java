@@ -11,11 +11,10 @@ import giraaff.core.common.type.Stamp;
 // @class MethodCountersPointerStamp
 public final class MethodCountersPointerStamp extends MetaspacePointerStamp
 {
-    private static final MethodCountersPointerStamp METHOD_COUNTERS = new MethodCountersPointerStamp(false, false);
-
-    private static final MethodCountersPointerStamp METHOD_COUNTERS_NON_NULL = new MethodCountersPointerStamp(true, false);
-
-    private static final MethodCountersPointerStamp METHOD_COUNTERS_ALWAYS_NULL = new MethodCountersPointerStamp(false, true);
+    private static final MethodCountersPointerStamp
+        METHOD_COUNTERS             = new MethodCountersPointerStamp(false, false),
+        METHOD_COUNTERS_NON_NULL    = new MethodCountersPointerStamp(true, false),
+        METHOD_COUNTERS_ALWAYS_NULL = new MethodCountersPointerStamp(false, true);
 
     public static MethodCountersPointerStamp methodCounters()
     {

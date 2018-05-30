@@ -21,11 +21,11 @@ import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.target.Backend;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotDataBuilder;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.HotSpotHostBackend;
 import giraaff.hotspot.HotSpotLIRGenerationResult;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotForeignCallsProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.stubs.Stub;
@@ -52,7 +52,7 @@ import giraaff.options.OptionValues;
 public final class AMD64HotSpotBackend extends HotSpotHostBackend
 {
     // @cons
-    public AMD64HotSpotBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
+    public AMD64HotSpotBackend(HotSpotGraalRuntime runtime, HotSpotProviders providers)
     {
         super(runtime, providers);
     }
@@ -243,20 +243,20 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         HotSpotProviders providers = getProviders();
         if (installedCodeOwner != null && !installedCodeOwner.isStatic())
         {
-            crb.recordMark(GraalHotSpotVMConfig.unverifiedEntryMark);
+            crb.recordMark(HotSpotRuntime.unverifiedEntryMark);
             CallingConvention cc = regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[] { providers.getMetaAccess().lookupJavaType(Object.class) }, this);
             Register inlineCacheKlass = AMD64.rax; // see definition of IC_Klass in c1_LIRAssembler_x86.cpp
             Register receiver = ValueUtil.asRegister(cc.getArgument(0));
-            AMD64Address src = new AMD64Address(receiver, GraalHotSpotVMConfig.hubOffset);
+            AMD64Address src = new AMD64Address(receiver, HotSpotRuntime.hubOffset);
 
-            if (GraalHotSpotVMConfig.useCompressedClassPointers)
+            if (HotSpotRuntime.useCompressedClassPointers)
             {
                 Register register = AMD64.r10;
                 AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src);
-                if (GraalHotSpotVMConfig.narrowKlassBase != 0)
+                if (HotSpotRuntime.narrowKlassBase != 0)
                 {
                     // the heap base register was destroyed above, so restore it
-                    asm.movq(providers.getRegisters().getHeapBaseRegister(), GraalHotSpotVMConfig.narrowOopBase);
+                    asm.movq(providers.getRegisters().getHeapBaseRegister(), HotSpotRuntime.narrowOopBase);
                 }
                 asm.cmpq(inlineCacheKlass, register);
             }
@@ -267,10 +267,10 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
             AMD64Call.directConditionalJmp(crb, asm, getForeignCalls().lookupForeignCall(IC_MISS_HANDLER), ConditionFlag.NotEqual);
         }
 
-        asm.align(GraalHotSpotVMConfig.codeEntryAlignment);
-        crb.recordMark(GraalHotSpotVMConfig.osrEntryMark);
+        asm.align(HotSpotRuntime.codeEntryAlignment);
+        crb.recordMark(HotSpotRuntime.osrEntryMark);
         asm.bind(verifiedEntry);
-        crb.recordMark(GraalHotSpotVMConfig.verifiedEntryMark);
+        crb.recordMark(HotSpotRuntime.verifiedEntryMark);
     }
 
     /**
@@ -293,9 +293,9 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         if (!frameContext.isStub)
         {
             HotSpotForeignCallsProvider foreignCalls = providers.getForeignCalls();
-            crb.recordMark(GraalHotSpotVMConfig.exceptionHandlerEntryMark);
+            crb.recordMark(HotSpotRuntime.exceptionHandlerEntryMark);
             AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(EXCEPTION_HANDLER), null, false, null);
-            crb.recordMark(GraalHotSpotVMConfig.deoptHandlerEntryMark);
+            crb.recordMark(HotSpotRuntime.deoptHandlerEntryMark);
             AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(DEOPTIMIZATION_HANDLER), null, false, null);
         }
         else

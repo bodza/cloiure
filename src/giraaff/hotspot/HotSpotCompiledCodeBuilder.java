@@ -28,6 +28,12 @@ import giraaff.code.DataSection;
 // @class HotSpotCompiledCodeBuilder
 public final class HotSpotCompiledCodeBuilder
 {
+    // @cons
+    private HotSpotCompiledCodeBuilder()
+    {
+        super();
+    }
+
     public static HotSpotCompiledCode createCompiledCode(CodeCacheProvider codeCache, ResolvedJavaMethod method, HotSpotCompilationRequest compRequest, CompilationResult compResult)
     {
         String name = compResult.getName();
@@ -118,11 +124,5 @@ public final class HotSpotCompiledCodeBuilder
 
         Collections.sort(sites, new SiteComparator());
         return sites.toArray(new Site[sites.size()]);
-    }
-
-    // @cons
-    private HotSpotCompiledCodeBuilder()
-    {
-        super();
     }
 }

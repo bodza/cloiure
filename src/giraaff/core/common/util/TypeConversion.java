@@ -6,6 +6,12 @@ package giraaff.core.common.util;
 // @class TypeConversion
 public final class TypeConversion
 {
+    // @cons
+    private TypeConversion()
+    {
+        super();
+    }
+
     public static boolean isS1(long value)
     {
         return value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE;
@@ -64,11 +70,5 @@ public final class TypeConversion
     public static int asU4(long value)
     {
         return (int) value;
-    }
-
-    // @cons
-    private TypeConversion()
-    {
-        super();
     }
 }

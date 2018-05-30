@@ -8,18 +8,18 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.api.replacements.SnippetReflectionProvider;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.word.WordTypes;
 
 // @class HotSpotSnippetReflectionProvider
 public final class HotSpotSnippetReflectionProvider implements SnippetReflectionProvider
 {
-    private final HotSpotGraalRuntimeProvider runtime;
+    private final HotSpotGraalRuntime runtime;
     private final HotSpotConstantReflectionProvider constantReflection;
     private final WordTypes wordTypes;
 
     // @cons
-    public HotSpotSnippetReflectionProvider(HotSpotGraalRuntimeProvider runtime, HotSpotConstantReflectionProvider constantReflection, WordTypes wordTypes)
+    public HotSpotSnippetReflectionProvider(HotSpotGraalRuntime runtime, HotSpotConstantReflectionProvider constantReflection, WordTypes wordTypes)
     {
         super();
         this.runtime = runtime;

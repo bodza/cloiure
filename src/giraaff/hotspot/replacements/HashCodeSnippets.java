@@ -5,7 +5,7 @@ import jdk.vm.ci.code.TargetDescription;
 import org.graalvm.word.WordFactory;
 
 import giraaff.api.replacements.Snippet;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
@@ -23,6 +23,12 @@ import giraaff.word.Word;
 // @class HashCodeSnippets
 public final class HashCodeSnippets implements Snippets
 {
+    // @cons
+    private HashCodeSnippets()
+    {
+        super();
+    }
+
     @Snippet
     public static int identityHashCodeSnippet(final Object thisObj)
     {
@@ -35,14 +41,14 @@ public final class HashCodeSnippets implements Snippets
 
     static int computeHashCode(final Object x)
     {
-        Word mark = HotSpotReplacementsUtil.loadWordFromObject(x, GraalHotSpotVMConfig.markOffset);
+        Word mark = HotSpotReplacementsUtil.loadWordFromObject(x, HotSpotRuntime.markOffset);
 
         // this code is independent from biased locking (although it does not look that way)
-        final Word biasedLock = mark.and(GraalHotSpotVMConfig.biasedLockMaskInPlace);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(GraalHotSpotVMConfig.unlockedMask))))
+        final Word biasedLock = mark.and(HotSpotRuntime.biasedLockMaskInPlace);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(HotSpotRuntime.unlockedMask))))
         {
-            int hash = (int) mark.unsignedShiftRight(GraalHotSpotVMConfig.identityHashCodeShift).rawValue();
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, hash != GraalHotSpotVMConfig.uninitializedIdentityHashCodeValue))
+            int hash = (int) mark.unsignedShiftRight(HotSpotRuntime.identityHashCodeShift).rawValue();
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, hash != HotSpotRuntime.uninitializedIdentityHashCodeValue))
             {
                 return hash;
             }
@@ -69,11 +75,5 @@ public final class HashCodeSnippets implements Snippets
             SnippetTemplate template = template(node, args);
             template.instantiate(providers.getMetaAccess(), node, SnippetTemplate.DEFAULT_REPLACER, args);
         }
-    }
-
-    // @cons
-    private HashCodeSnippets()
-    {
-        super();
     }
 }

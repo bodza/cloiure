@@ -10,7 +10,7 @@ import giraaff.core.amd64.AMD64CompressAddressLowering;
 import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.graph.Node;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.loop.BasicInductionVariable;
 import giraaff.loop.CountedLoopInfo;
 import giraaff.loop.DerivedInductionVariable;
@@ -43,7 +43,7 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
     public AMD64HotSpotAddressLowering(Register heapBaseRegister, OptionValues options)
     {
         super();
-        this.heapBase = GraalHotSpotVMConfig.oopEncoding.getBase();
+        this.heapBase = HotSpotRuntime.oopEncoding.getBase();
         if (heapBase == 0)
         {
             this.heapBaseRegister = null;

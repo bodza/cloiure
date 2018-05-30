@@ -8,7 +8,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.spi.Replacements;
-import giraaff.phases.common.inlining.InliningPhase.Options;
+import giraaff.phases.common.inlining.InliningPhase;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.common.inlining.info.InlineInfo;
 import giraaff.phases.common.inlining.info.elem.Inlineable;
@@ -44,7 +44,7 @@ public abstract class AbstractInliningPolicy implements InliningPolicy
 
     protected boolean isIntrinsic(Replacements replacements, InlineInfo info)
     {
-        if (Options.AlwaysInlineIntrinsics.getValue(info.graph().getOptions()))
+        if (InliningPhase.Options.AlwaysInlineIntrinsics.getValue(info.graph().getOptions()))
         {
             return onlyIntrinsics(replacements, info);
         }

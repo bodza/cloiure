@@ -26,6 +26,12 @@ import giraaff.word.Word;
 // @class CRC32Substitutions
 public final class CRC32Substitutions
 {
+    // @cons
+    private CRC32Substitutions()
+    {
+        super();
+    }
+
     /**
      * Removed in 9.
      */
@@ -86,10 +92,4 @@ public final class CRC32Substitutions
 
     @NodeIntrinsic(ForeignCallNode.class)
     public static native int updateBytesCRC32(@ConstantNodeParameter ForeignCallDescriptor descriptor, int crc, WordBase buf, int length);
-
-    // @cons
-    private CRC32Substitutions()
-    {
-        super();
-    }
 }

@@ -9,15 +9,15 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotLIRGenerator;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 /**
- * Represents {@link GraalHotSpotVMConfig} values that may change after compilation.
+ * Represents {@link HotSpotRuntime} values that may change after compilation.
  */
 // @class GraalHotSpotVMConfigNode
 public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerable, Canonicalizable
@@ -81,7 +81,7 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
 
     public static long cardTableAddress()
     {
-        return loadLongConfigValue(GraalHotSpotVMConfig.cardTableAddressMark);
+        return loadLongConfigValue(HotSpotRuntime.cardTableAddressMark);
     }
 
     public static boolean isCardTableAddressConstant()
@@ -91,27 +91,27 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
 
     public static long heapTopAddress()
     {
-        return loadLongConfigValue(GraalHotSpotVMConfig.heapTopAddressMark);
+        return loadLongConfigValue(HotSpotRuntime.heapTopAddressMark);
     }
 
     public static long heapEndAddress()
     {
-        return loadLongConfigValue(GraalHotSpotVMConfig.heapEndAddressMark);
+        return loadLongConfigValue(HotSpotRuntime.heapEndAddressMark);
     }
 
     public static long crcTableAddress()
     {
-        return loadLongConfigValue(GraalHotSpotVMConfig.crcTableAddressMark);
+        return loadLongConfigValue(HotSpotRuntime.crcTableAddressMark);
     }
 
     public static int logOfHeapRegionGrainBytes()
     {
-        return loadIntConfigValue(GraalHotSpotVMConfig.logOfHeapRegionGrainBytesMark);
+        return loadIntConfigValue(HotSpotRuntime.logOfHeapRegionGrainBytesMark);
     }
 
     public static boolean inlineContiguousAllocationSupported()
     {
-        return loadByteConfigValue(GraalHotSpotVMConfig.inlineContiguousAllocationSupportedMark) != 0;
+        return loadByteConfigValue(HotSpotRuntime.inlineContiguousAllocationSupportedMark) != 0;
     }
 
     @Override
@@ -121,29 +121,29 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
         {
             return ConstantNode.forBoolean(true);
         }
-        if (markId == GraalHotSpotVMConfig.cardTableAddressMark)
+        if (markId == HotSpotRuntime.cardTableAddressMark)
         {
-            return ConstantNode.forLong(GraalHotSpotVMConfig.cardTableAddress);
+            return ConstantNode.forLong(HotSpotRuntime.cardTableAddress);
         }
-        else if (markId == GraalHotSpotVMConfig.heapTopAddressMark)
+        else if (markId == HotSpotRuntime.heapTopAddressMark)
         {
-            return ConstantNode.forLong(GraalHotSpotVMConfig.heapTopAddress);
+            return ConstantNode.forLong(HotSpotRuntime.heapTopAddress);
         }
-        else if (markId == GraalHotSpotVMConfig.heapEndAddressMark)
+        else if (markId == HotSpotRuntime.heapEndAddressMark)
         {
-            return ConstantNode.forLong(GraalHotSpotVMConfig.heapEndAddress);
+            return ConstantNode.forLong(HotSpotRuntime.heapEndAddress);
         }
-        else if (markId == GraalHotSpotVMConfig.crcTableAddressMark)
+        else if (markId == HotSpotRuntime.crcTableAddressMark)
         {
-            return ConstantNode.forLong(GraalHotSpotVMConfig.crcTableAddress);
+            return ConstantNode.forLong(HotSpotRuntime.crcTableAddress);
         }
-        else if (markId == GraalHotSpotVMConfig.logOfHeapRegionGrainBytesMark)
+        else if (markId == HotSpotRuntime.logOfHeapRegionGrainBytesMark)
         {
-            return ConstantNode.forInt(GraalHotSpotVMConfig.logOfHeapRegionGrainBytes);
+            return ConstantNode.forInt(HotSpotRuntime.logOfHeapRegionGrainBytes);
         }
-        else if (markId == GraalHotSpotVMConfig.inlineContiguousAllocationSupportedMark)
+        else if (markId == HotSpotRuntime.inlineContiguousAllocationSupportedMark)
         {
-            return ConstantNode.forBoolean(GraalHotSpotVMConfig.inlineContiguousAllocationSupported);
+            return ConstantNode.forBoolean(HotSpotRuntime.inlineContiguousAllocationSupported);
         }
         return this;
     }

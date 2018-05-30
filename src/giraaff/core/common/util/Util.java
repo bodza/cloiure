@@ -15,6 +15,12 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 // @class Util
 public final class Util
 {
+    // @cons
+    private Util()
+    {
+        super();
+    }
+
     /**
      * Statically cast an object to an arbitrary Object type. Dynamically checked.
      */
@@ -151,11 +157,5 @@ public final class Util
     public static void setAccessible(Executable executable, boolean flag)
     {
         executable.setAccessible(flag);
-    }
-
-    // @cons
-    private Util()
-    {
-        super();
     }
 }

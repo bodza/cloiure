@@ -75,6 +75,12 @@ import giraaff.util.GraalError;
 // @class InliningUtil
 public final class InliningUtil extends ValueMergeUtil
 {
+    // @cons
+    private InliningUtil()
+    {
+        super();
+    }
+
     public static void replaceInvokeCallTarget(Invoke invoke, StructuredGraph graph, InvokeKind invokeKind, ResolvedJavaMethod targetMethod)
     {
         MethodCallTargetNode oldCallTarget = (MethodCallTargetNode) invoke.callTarget();
@@ -778,11 +784,5 @@ public final class InliningUtil extends ValueMergeUtil
     public static int getNodeCount(StructuredGraph graph)
     {
         return graph.getNodeCount();
-    }
-
-    // @cons
-    private InliningUtil()
-    {
-        super();
     }
 }

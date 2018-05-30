@@ -12,6 +12,12 @@ import giraaff.word.Word;
 // @class HotSpotUnsafeSubstitutions
 public final class HotSpotUnsafeSubstitutions
 {
+    // @cons
+    private HotSpotUnsafeSubstitutions()
+    {
+        super();
+    }
+
     public static final String copyMemoryName = "copyMemory0";
 
     @SuppressWarnings("unused")
@@ -22,11 +28,5 @@ public final class HotSpotUnsafeSubstitutions
         Word dstAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(destBase, destOffset));
         Word size = WordFactory.signed(bytes);
         HotSpotBackend.unsafeArraycopy(srcAddr, dstAddr, size);
-    }
-
-    // @cons
-    private HotSpotUnsafeSubstitutions()
-    {
-        super();
     }
 }

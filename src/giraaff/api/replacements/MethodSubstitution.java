@@ -26,7 +26,7 @@ import jdk.vm.ci.meta.Signature;
  * <pre>
  * &#64;MethodSubstitution
  * public static Object newInstance(Class<?> componentType, int length) {
- *     if (componentType == null || loadKlassFromObject(componentType, GraalHotSpotVMConfig.arrayKlassOffset, CLASS_ARRAY_KLASS_LOCATION).isNull()) {
+ *     if (componentType == null || loadKlassFromObject(componentType, HotSpotRuntime.arrayKlassOffset, CLASS_ARRAY_KLASS_LOCATION).isNull()) {
  *         // Array class not yet created - exit the intrinsic and call the original method
  *         return newInstance(componentType, length);
  *     }
@@ -39,7 +39,7 @@ import jdk.vm.ci.meta.Signature;
  * <pre>
  * &#64;MethodSubstitution
  * public static Object newInstance(Class<?> componentType, int length) {
- *     if (componentType == null || loadKlassFromObject(componentType, GraalHotSpotVMConfig.arrayKlassOffset, CLASS_ARRAY_KLASS_LOCATION).isNull()) {
+ *     if (componentType == null || loadKlassFromObject(componentType, HotSpotRuntime.arrayKlassOffset, CLASS_ARRAY_KLASS_LOCATION).isNull()) {
  *         // Array class not yet created - exit the intrinsic and call the original method
  *         return java.lang.reflect.newInstance(componentType, length);
  *     }

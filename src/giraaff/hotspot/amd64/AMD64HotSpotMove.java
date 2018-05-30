@@ -10,7 +10,7 @@ import jdk.vm.ci.meta.Constant;
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.CompressEncoding;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.StandardOp.LoadConstantOp;
@@ -21,6 +21,12 @@ import giraaff.util.GraalError;
 // @class AMD64HotSpotMove
 public final class AMD64HotSpotMove
 {
+    // @cons
+    private AMD64HotSpotMove()
+    {
+        super();
+    }
+
     // @class AMD64HotSpotMove.HotSpotLoadObjectConstantOp
     public static final class HotSpotLoadObjectConstantOp extends AMD64LIRInstruction implements LoadConstantOp
     {
@@ -119,7 +125,7 @@ public final class AMD64HotSpotMove
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
             masm.movq(ValueUtil.asRegister(result), masm.getPlaceholder(-1));
-            crb.recordMark(GraalHotSpotVMConfig.narrowKlassBaseAddressMark);
+            crb.recordMark(HotSpotRuntime.narrowKlassBaseAddressMark);
         }
     }
 
@@ -185,7 +191,7 @@ public final class AMD64HotSpotMove
 
     public static void decodeKlassPointer(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register register, Register scratch, AMD64Address address)
     {
-        CompressEncoding encoding = GraalHotSpotVMConfig.klassEncoding;
+        CompressEncoding encoding = HotSpotRuntime.klassEncoding;
         masm.movl(register, address);
         if (encoding.getShift() != 0)
         {
@@ -196,11 +202,5 @@ public final class AMD64HotSpotMove
             masm.movq(scratch, encoding.getBase());
             masm.addq(register, scratch);
         }
-    }
-
-    // @cons
-    private AMD64HotSpotMove()
-    {
-        super();
     }
 }

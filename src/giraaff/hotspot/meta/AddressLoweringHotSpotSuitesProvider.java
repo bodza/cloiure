@@ -2,7 +2,7 @@ package giraaff.hotspot.meta;
 
 import java.util.ListIterator;
 
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.options.OptionValues;
 import giraaff.phases.BasePhase;
 import giraaff.phases.Phase;
@@ -21,7 +21,7 @@ public final class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesPro
     private final Phase addressLowering;
 
     // @cons
-    public AddressLoweringHotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntimeProvider runtime, Phase addressLowering)
+    public AddressLoweringHotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntime runtime, Phase addressLowering)
     {
         super(defaultSuitesCreator, runtime);
         this.addressLowering = addressLowering;

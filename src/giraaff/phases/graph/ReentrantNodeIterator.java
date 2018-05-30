@@ -24,6 +24,12 @@ import giraaff.nodes.LoopExitNode;
 // @class ReentrantNodeIterator
 public final class ReentrantNodeIterator
 {
+    // @cons
+    private ReentrantNodeIterator()
+    {
+        super();
+    }
+
     // @class ReentrantNodeIterator.LoopInfo
     public static final class LoopInfo<StateT>
     {
@@ -57,13 +63,6 @@ public final class ReentrantNodeIterator
         {
             return true;
         }
-    }
-
-    // @cons
-    private ReentrantNodeIterator()
-    {
-        super();
-        // no instances allowed
     }
 
     public static <StateT> LoopInfo<StateT> processLoop(NodeIteratorClosure<StateT> closure, LoopBeginNode loop, StateT initialState)

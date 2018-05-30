@@ -7,7 +7,7 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotBackend;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.nodes.GetObjectAddressNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.StructuredGraph;
@@ -31,10 +31,10 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
     @Input ValueNode destPos;
     @Input ValueNode length;
 
-    protected final HotSpotGraalRuntimeProvider runtime;
+    protected final HotSpotGraalRuntime runtime;
 
     // @cons
-    protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length)
+    protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.src = src;

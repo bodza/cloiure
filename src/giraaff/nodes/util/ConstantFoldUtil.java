@@ -13,6 +13,12 @@ import giraaff.options.OptionValues;
 // @class ConstantFoldUtil
 public final class ConstantFoldUtil
 {
+    // @cons
+    private ConstantFoldUtil()
+    {
+        super();
+    }
+
     public static ConstantNode tryConstantFold(ConstantFieldProvider fieldProvider, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, ResolvedJavaField field, JavaConstant receiver, OptionValues options)
     {
         if (!field.isStatic())
@@ -69,11 +75,5 @@ public final class ConstantFoldUtil
                 return options;
             }
         });
-    }
-
-    // @cons
-    private ConstantFoldUtil()
-    {
-        super();
     }
 }

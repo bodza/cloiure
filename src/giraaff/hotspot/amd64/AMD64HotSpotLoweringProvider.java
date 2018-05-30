@@ -6,7 +6,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.graph.Node;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
@@ -21,7 +21,7 @@ public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringPr
     private AMD64ConvertSnippets.Templates convertSnippets;
 
     // @cons
-    public AMD64HotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
+    public AMD64HotSpotLoweringProvider(HotSpotGraalRuntime runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
     {
         super(runtime, metaAccess, foreignCalls, registers, constantReflection, target);
     }

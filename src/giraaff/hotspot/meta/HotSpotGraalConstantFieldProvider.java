@@ -6,7 +6,7 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.graph.NodeClass;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 
 /**
  * Extends {@link HotSpotConstantFieldProvider} to override the implementation of
@@ -71,7 +71,7 @@ public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFiel
     {
         if (cachedHotSpotVMConfigType == null)
         {
-            cachedHotSpotVMConfigType = metaAccess.lookupJavaType(GraalHotSpotVMConfig.class);
+            cachedHotSpotVMConfigType = metaAccess.lookupJavaType(HotSpotRuntime.class);
         }
         return cachedHotSpotVMConfigType;
     }

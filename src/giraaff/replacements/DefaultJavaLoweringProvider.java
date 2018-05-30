@@ -28,7 +28,7 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
 import giraaff.graph.Node;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.CompressionNode.CompressionOp;
 import giraaff.nodes.ConstantNode;
@@ -413,7 +413,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     {
         StructuredGraph graph = array.graph();
         ValueNode canonicalArray = this.createNullCheckedValue(GraphUtil.skipPiWhileNonNull(array), before, tool);
-        AddressNode address = createOffsetAddress(graph, canonicalArray, GraalHotSpotVMConfig.arrayLengthOffset);
+        AddressNode address = createOffsetAddress(graph, canonicalArray, HotSpotRuntime.arrayLengthOffset);
         ReadNode readArrayLength = graph.add(new ReadNode(address, NamedLocationIdentity.ARRAY_LENGTH_LOCATION, StampFactory.positiveInt(), BarrierType.NONE));
         graph.addBeforeFixed(before, readArrayLength);
         return readArrayLength;

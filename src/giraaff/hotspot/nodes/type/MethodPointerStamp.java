@@ -13,11 +13,10 @@ import giraaff.core.common.type.Stamp;
 // @class MethodPointerStamp
 public final class MethodPointerStamp extends MetaspacePointerStamp
 {
-    private static final MethodPointerStamp METHOD = new MethodPointerStamp(false, false);
-
-    private static final MethodPointerStamp METHOD_NON_NULL = new MethodPointerStamp(true, false);
-
-    private static final MethodPointerStamp METHOD_ALWAYS_NULL = new MethodPointerStamp(false, true);
+    private static final MethodPointerStamp
+        METHOD             = new MethodPointerStamp(false, false),
+        METHOD_NON_NULL    = new MethodPointerStamp(true, false),
+        METHOD_ALWAYS_NULL = new MethodPointerStamp(false, true);
 
     public static MethodPointerStamp method()
     {

@@ -1,7 +1,6 @@
 package giraaff.hotspot.replacements.arraycopy;
 
 import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.PrimitiveConstant;
@@ -15,8 +14,8 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.hotspot.GraalHotSpotVMConfig;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.hotspot.nodes.GetObjectAddressNode;
 import giraaff.nodeinfo.InputType;
@@ -62,22 +61,22 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
     protected boolean disjoint;
     protected boolean uninitialized;
 
-    protected final HotSpotGraalRuntimeProvider runtime;
+    protected final HotSpotGraalRuntime runtime;
 
     // @cons
-    public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, boolean aligned, boolean disjoint, boolean uninitialized)
+    public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, boolean aligned, boolean disjoint, boolean uninitialized)
     {
         this(runtime, src, srcPos, dest, destPos, length, elementKind, null, aligned, disjoint, uninitialized);
     }
 
     // @cons
-    public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, boolean disjoint)
+    public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, boolean disjoint)
     {
         this(runtime, src, srcPos, dest, destPos, length, elementKind, null, false, disjoint, false);
     }
 
     // @cons
-    protected ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, LocationIdentity locationIdentity, boolean aligned, boolean disjoint, boolean uninitialized)
+    protected ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, LocationIdentity locationIdentity, boolean aligned, boolean disjoint, boolean uninitialized)
     {
         super(TYPE, StampFactory.forVoid());
         this.src = src;
@@ -129,9 +128,9 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
         graph().addBeforeFixed(this, basePtr);
         Stamp wordStamp = StampFactory.forKind(runtime.getTarget().wordJavaKind);
         ValueNode wordPos = IntegerConvertNode.convert(pos, wordStamp, graph(), NodeView.DEFAULT);
-        int shift = CodeUtil.log2(HotSpotJVMCIRuntimeProvider.getArrayIndexScale(elementKind));
+        int shift = CodeUtil.log2(HotSpotRuntime.getArrayIndexScale(elementKind));
         ValueNode scaledIndex = graph().unique(new LeftShiftNode(wordPos, ConstantNode.forInt(shift, graph())));
-        ValueNode offset = graph().unique(new AddNode(scaledIndex, ConstantNode.forIntegerStamp(wordStamp, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(elementKind), graph())));
+        ValueNode offset = graph().unique(new AddNode(scaledIndex, ConstantNode.forIntegerStamp(wordStamp, HotSpotRuntime.getArrayBaseOffset(elementKind), graph())));
         return graph().unique(new OffsetAddressNode(basePtr, offset));
     }
 
@@ -218,7 +217,7 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
 
     boolean isHeapWordAligned(JavaConstant value, JavaKind kind)
     {
-        return (HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(kind) + (long) value.asInt() * HotSpotJVMCIRuntimeProvider.getArrayIndexScale(kind)) % GraalHotSpotVMConfig.heapWordSize == 0;
+        return (HotSpotRuntime.getArrayBaseOffset(kind) + (long) value.asInt() * HotSpotRuntime.getArrayIndexScale(kind)) % HotSpotRuntime.heapWordSize == 0;
     }
 
     public void updateAlignedDisjoint()

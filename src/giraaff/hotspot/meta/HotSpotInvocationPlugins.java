@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.graphbuilderconf.InvocationPlugins;
 
@@ -24,7 +24,7 @@ final class HotSpotInvocationPlugins extends InvocationPlugins
     @Override
     public void register(InvocationPlugin plugin, Type declaringClass, String name, Type... argumentTypes)
     {
-        if (!GraalHotSpotVMConfig.usePopCountInstruction)
+        if (!HotSpotRuntime.usePopCountInstruction)
         {
             if (name.equals("bitCount"))
             {

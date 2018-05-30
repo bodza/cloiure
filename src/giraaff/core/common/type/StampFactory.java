@@ -16,6 +16,12 @@ import giraaff.util.GraalError;
 // @class StampFactory
 public final class StampFactory
 {
+    // @cons
+    private StampFactory()
+    {
+        super();
+    }
+
     private static final Stamp[] stampCache = new Stamp[JavaKind.values().length];
     private static final Stamp[] emptyStampCache = new Stamp[JavaKind.values().length];
     private static final Stamp objectStamp = new ObjectStamp(null, false, false, false);
@@ -358,11 +364,5 @@ public final class StampFactory
         {
             return StampPair.createSingle(StampFactory.forKind(returnType.getJavaKind()));
         }
-    }
-
-    // @cons
-    private StampFactory()
-    {
-        super();
     }
 }

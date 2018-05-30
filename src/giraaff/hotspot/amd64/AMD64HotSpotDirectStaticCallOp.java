@@ -4,7 +4,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
@@ -34,7 +34,7 @@ final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        crb.recordMark(invokeKind == InvokeKind.Static ? GraalHotSpotVMConfig.invokestaticMark : GraalHotSpotVMConfig.invokespecialMark);
+        crb.recordMark(invokeKind == InvokeKind.Static ? HotSpotRuntime.invokestaticMark : HotSpotRuntime.invokespecialMark);
         super.emitCode(crb, masm);
     }
 }

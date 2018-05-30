@@ -15,7 +15,7 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
@@ -73,11 +73,11 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
                     if (!type.isArray() && !type.isInterface())
                     {
                         // Definitely some form of instance type.
-                        return updateStamp(StampFactory.forInteger(JavaKind.Int, GraalHotSpotVMConfig.klassLayoutHelperNeutralValue, Integer.MAX_VALUE));
+                        return updateStamp(StampFactory.forInteger(JavaKind.Int, HotSpotRuntime.klassLayoutHelperNeutralValue, Integer.MAX_VALUE));
                     }
                     if (type.isArray())
                     {
-                        return updateStamp(StampFactory.forInteger(JavaKind.Int, Integer.MIN_VALUE, GraalHotSpotVMConfig.klassLayoutHelperNeutralValue - 1));
+                        return updateStamp(StampFactory.forInteger(JavaKind.Int, Integer.MIN_VALUE, HotSpotRuntime.klassLayoutHelperNeutralValue - 1));
                     }
                 }
             }
@@ -105,7 +105,7 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
         {
             if (!klass.asConstant().isDefaultForKind())
             {
-                Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), klass.asConstant(), GraalHotSpotVMConfig.klassLayoutHelperOffset);
+                Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), klass.asConstant(), HotSpotRuntime.klassLayoutHelperOffset);
                 return ConstantNode.forConstant(stamp, constant, metaAccess);
             }
         }
@@ -120,7 +120,7 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
                 if (type != null && type.isArray() && !type.getComponentType().isPrimitive())
                 {
                     // The layout for all object arrays is the same.
-                    Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), type.klass(), GraalHotSpotVMConfig.klassLayoutHelperOffset);
+                    Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), type.klass(), HotSpotRuntime.klassLayoutHelperOffset);
                     return ConstantNode.forConstant(stamp, constant, metaAccess);
                 }
             }

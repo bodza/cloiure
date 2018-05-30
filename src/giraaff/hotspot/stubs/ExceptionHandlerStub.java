@@ -19,7 +19,7 @@ import giraaff.options.OptionValues;
 import giraaff.word.Word;
 
 /**
- * Stub called by the {@linkplain GraalHotSpotVMConfig#exceptionHandlerEntryMark exception
+ * Stub called by the {@linkplain HotSpotRuntime#exceptionHandlerEntryMark exception
  * handler entry point} in a compiled method. This entry point is used when returning to a method to
  * handle an exception thrown by a callee. It is not used for routing implicit exceptions.
  * Therefore, it does not need to save any registers as HotSpot uses a caller save convention.

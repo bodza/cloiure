@@ -29,21 +29,22 @@ final class ClassfileConstantPool implements ConstantPool
     // @class ClassfileConstantPool.Bytecodes
     public static final class Bytecodes
     {
-        public static final int GETSTATIC = 178; // 0xB2
-        public static final int PUTSTATIC = 179; // 0xB3
-        public static final int GETFIELD = 180; // 0xB4
-        public static final int PUTFIELD = 181; // 0xB5
-        public static final int INVOKEVIRTUAL = 182; // 0xB6
-        public static final int INVOKESPECIAL = 183; // 0xB7
-        public static final int INVOKESTATIC = 184; // 0xB8
-        public static final int INVOKEINTERFACE = 185; // 0xB9
-        public static final int INVOKEDYNAMIC = 186; // 0xBA
-
         // @cons
         private Bytecodes()
         {
             super();
         }
+    
+        public static final int
+            GETSTATIC       = 178, // 0xB2
+            PUTSTATIC       = 179, // 0xB3
+            GETFIELD        = 180, // 0xB4
+            PUTFIELD        = 181, // 0xB5
+            INVOKEVIRTUAL   = 182, // 0xB6
+            INVOKESPECIAL   = 183, // 0xB7
+            INVOKESTATIC    = 184, // 0xB8
+            INVOKEINTERFACE = 185, // 0xB9
+            INVOKEDYNAMIC   = 186; // 0xBA
     }
 
     // @cons

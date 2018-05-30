@@ -23,7 +23,7 @@ import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.CurrentJavaThreadNode;
 import giraaff.hotspot.replacements.AESCryptSubstitutions;
 import giraaff.hotspot.replacements.BigIntegerSubstitutions;
@@ -86,6 +86,12 @@ import giraaff.word.WordTypes;
 // @class HotSpotGraphBuilderPlugins
 public final class HotSpotGraphBuilderPlugins
 {
+    // @cons
+    private HotSpotGraphBuilderPlugins()
+    {
+        super();
+    }
+
     /**
      * Creates a {@link Plugins} object that should be used when running on HotSpot.
      */
@@ -273,7 +279,7 @@ public final class HotSpotGraphBuilderPlugins
         ValueNode klass = b.add(ClassGetHubNode.create(value, b.getMetaAccess(), b.getConstantReflection(), false));
 
         boolean notCompressible = false;
-        AddressNode constantsAddress = b.add(new OffsetAddressNode(klass, b.add(ConstantNode.forLong(GraalHotSpotVMConfig.instanceKlassConstantsOffset))));
+        AddressNode constantsAddress = b.add(new OffsetAddressNode(klass, b.add(ConstantNode.forLong(HotSpotRuntime.instanceKlassConstantsOffset))));
         return WordOperationPlugin.readOp(b, wordTypes.getWordKind(), constantsAddress, INSTANCE_KLASS_CONSTANTS, BarrierType.NONE, notCompressible);
     }
 
@@ -287,7 +293,7 @@ public final class HotSpotGraphBuilderPlugins
         ValueNode constants = getMetaspaceConstantPool(b, constantPoolOop, wordTypes);
         int shift = CodeUtil.log2(wordTypes.getWordKind().getByteCount());
         ValueNode scaledIndex = b.add(new LeftShiftNode(IntegerConvertNode.convert(index, StampFactory.forKind(JavaKind.Long), NodeView.DEFAULT), b.add(ConstantNode.forInt(shift))));
-        ValueNode offset = b.add(new AddNode(scaledIndex, b.add(ConstantNode.forLong(GraalHotSpotVMConfig.constantPoolSize))));
+        ValueNode offset = b.add(new AddNode(scaledIndex, b.add(ConstantNode.forLong(HotSpotRuntime.constantPoolSize))));
         AddressNode elementAddress = b.add(new OffsetAddressNode(constants, offset));
         boolean notCompressible = false;
         ValueNode elementValue = WordOperationPlugin.readOp(b, elementKind, elementAddress, NamedLocationIdentity.getArrayLocation(elementKind), BarrierType.NONE, notCompressible);
@@ -306,7 +312,7 @@ public final class HotSpotGraphBuilderPlugins
             {
                 boolean notCompressible = false;
                 ValueNode constants = getMetaspaceConstantPool(b, constantPoolOop, wordTypes);
-                AddressNode lengthAddress = b.add(new OffsetAddressNode(constants, b.add(ConstantNode.forLong(GraalHotSpotVMConfig.constantPoolLengthOffset))));
+                AddressNode lengthAddress = b.add(new OffsetAddressNode(constants, b.add(ConstantNode.forLong(HotSpotRuntime.constantPoolLengthOffset))));
                 ValueNode length = WordOperationPlugin.readOp(b, JavaKind.Int, lengthAddress, CONSTANT_POOL_LENGTH, BarrierType.NONE, notCompressible);
                 b.addPush(JavaKind.Int, length);
                 return true;
@@ -400,7 +406,7 @@ public final class HotSpotGraphBuilderPlugins
             public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
             {
                 CurrentJavaThreadNode thread = b.add(new CurrentJavaThreadNode(wordTypes.getWordKind()));
-                ValueNode offset = b.add(ConstantNode.forLong(GraalHotSpotVMConfig.threadObjectOffset));
+                ValueNode offset = b.add(ConstantNode.forLong(HotSpotRuntime.threadObjectOffset));
                 AddressNode address = b.add(new OffsetAddressNode(thread, offset));
                 // JavaThread::_threadObj is never compressed
                 ObjectStamp stamp = StampFactory.objectNonNull(TypeReference.create(b.getAssumptions(), metaAccess.lookupJavaType(Thread.class)));
@@ -422,7 +428,7 @@ public final class HotSpotGraphBuilderPlugins
 
     private static void registerAESPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
-        if (GraalHotSpotVMConfig.useAESIntrinsics)
+        if (HotSpotRuntime.useAESIntrinsics)
         {
             Registration r = new Registration(plugins, "com.sun.crypto.provider.CipherBlockChaining", bytecodeProvider);
             r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcEncryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
@@ -435,12 +441,12 @@ public final class HotSpotGraphBuilderPlugins
 
     private static void registerSHAPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
-        if (GraalHotSpotVMConfig.useSHA256Intrinsics)
+        if (HotSpotRuntime.useSHA256Intrinsics)
         {
             Registration r = new Registration(plugins, "sun.security.provider.SHA2", bytecodeProvider);
             r.registerMethodSubstitution(SHA2Substitutions.class, SHA2Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
         }
-        if (GraalHotSpotVMConfig.useSHA512Intrinsics)
+        if (HotSpotRuntime.useSHA512Intrinsics)
         {
             Registration r = new Registration(plugins, "sun.security.provider.SHA5", bytecodeProvider);
             r.registerMethodSubstitution(SHA5Substitutions.class, SHA5Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
@@ -450,23 +456,23 @@ public final class HotSpotGraphBuilderPlugins
     private static void registerBigIntegerPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, BigInteger.class, bytecodeProvider);
-        if (GraalHotSpotVMConfig.useMulAddIntrinsic)
+        if (HotSpotRuntime.useMulAddIntrinsic)
         {
             r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMulAdd", int[].class, int[].class, int.class, int.class, int.class);
         }
-        if (GraalHotSpotVMConfig.useMultiplyToLenIntrinsic)
+        if (HotSpotRuntime.useMultiplyToLenIntrinsic)
         {
             r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMultiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class, int[].class);
         }
-        if (GraalHotSpotVMConfig.useSquareToLenIntrinsic)
+        if (HotSpotRuntime.useSquareToLenIntrinsic)
         {
             r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implSquareToLen", int[].class, int.class, int[].class, int.class);
         }
-        if (GraalHotSpotVMConfig.useMontgomeryMultiplyIntrinsic)
+        if (HotSpotRuntime.useMontgomeryMultiplyIntrinsic)
         {
             r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomeryMultiply", int[].class, int[].class, int[].class, int.class, long.class, int[].class);
         }
-        if (GraalHotSpotVMConfig.useMontgomerySquareIntrinsic)
+        if (HotSpotRuntime.useMontgomerySquareIntrinsic)
         {
             r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomerySquare", int[].class, int[].class, int.class, long.class, int[].class);
         }
@@ -474,7 +480,7 @@ public final class HotSpotGraphBuilderPlugins
 
     private static void registerCRC32Plugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
-        if (GraalHotSpotVMConfig.useCRC32Intrinsics)
+        if (HotSpotRuntime.useCRC32Intrinsics)
         {
             Registration r = new Registration(plugins, CRC32.class, bytecodeProvider);
             r.registerMethodSubstitution(CRC32Substitutions.class, "update", int.class, int.class);
@@ -485,17 +491,11 @@ public final class HotSpotGraphBuilderPlugins
 
     private static void registerCRC32CPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
-        if (GraalHotSpotVMConfig.useCRC32CIntrinsics)
+        if (HotSpotRuntime.useCRC32CIntrinsics)
         {
             Registration r = new Registration(plugins, "java.util.zip.CRC32C", bytecodeProvider);
             r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateBytes", int.class, byte[].class, int.class, int.class);
             r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateDirectByteBuffer", int.class, long.class, int.class, int.class);
         }
-    }
-
-    // @cons
-    private HotSpotGraphBuilderPlugins()
-    {
-        super();
     }
 }

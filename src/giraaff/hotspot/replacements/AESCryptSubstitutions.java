@@ -1,6 +1,5 @@
 package giraaff.hotspot.replacements;
 
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaKind;
@@ -15,6 +14,7 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.hotspot.HotSpotBackend;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.nodes.DeoptimizeNode;
 import giraaff.nodes.PiNode;
@@ -32,6 +32,12 @@ import giraaff.word.Word;
 // @class AESCryptSubstitutions
 public final class AESCryptSubstitutions
 {
+    // @cons
+    private AESCryptSubstitutions()
+    {
+        super();
+    }
+
     static final long kOffset;
     static final long lastKeyOffset;
     static final Class<?> AESCryptClass;
@@ -107,9 +113,9 @@ public final class AESCryptSubstitutions
         checkArgs(in, inOffset, out, outOffset);
         Object realReceiver = PiNode.piCastNonNull(rcvr, AESCryptClass);
         Object kObject = RawLoadNode.load(realReceiver, kOffset, JavaKind.Object, LocationIdentity.any());
-        Pointer kAddr = Word.objectToTrackedPointer(kObject).add(HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Int));
-        Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + inOffset));
-        Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + outOffset));
+        Pointer kAddr = Word.objectToTrackedPointer(kObject).add(HotSpotRuntime.getArrayBaseOffset(JavaKind.Int));
+        Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + inOffset));
+        Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + outOffset));
         if (encrypt)
         {
             encryptBlockStub(HotSpotBackend.ENCRYPT_BLOCK, inAddr, outAddr, kAddr);
@@ -119,7 +125,7 @@ public final class AESCryptSubstitutions
             if (withOriginalKey)
             {
                 Object lastKeyObject = RawLoadNode.load(realReceiver, lastKeyOffset, JavaKind.Object, LocationIdentity.any());
-                Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte));
+                Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte));
                 decryptBlockWithOriginalKeyStub(HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY, inAddr, outAddr, kAddr, lastKeyAddr);
             }
             else
@@ -148,10 +154,4 @@ public final class AESCryptSubstitutions
 
     @NodeIntrinsic(ForeignCallNode.class)
     public static native void decryptBlockWithOriginalKeyStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key, Pointer originalKey);
-
-    // @cons
-    private AESCryptSubstitutions()
-    {
-        super();
-    }
 }

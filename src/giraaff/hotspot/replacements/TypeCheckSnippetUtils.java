@@ -5,7 +5,7 @@ import java.util.Arrays;
 import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.word.KlassPointer;
@@ -24,7 +24,7 @@ public final class TypeCheckSnippetUtils
     static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull)
     {
         // if (S.cache == T) return true
-        if (sNonNull.readKlassPointer(GraalHotSpotVMConfig.secondarySuperCacheOffset, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION).equal(t))
+        if (sNonNull.readKlassPointer(HotSpotRuntime.secondarySuperCacheOffset, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION).equal(t))
         {
             return true;
         }
@@ -35,8 +35,8 @@ public final class TypeCheckSnippetUtils
     static boolean checkUnknownSubType(KlassPointer t, KlassPointer sNonNull)
     {
         // int off = T.offset
-        int superCheckOffset = t.readInt(GraalHotSpotVMConfig.superCheckOffsetOffset, HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION);
-        boolean primary = superCheckOffset != GraalHotSpotVMConfig.secondarySuperCacheOffset;
+        int superCheckOffset = t.readInt(HotSpotRuntime.superCheckOffsetOffset, HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION);
+        boolean primary = superCheckOffset != HotSpotRuntime.secondarySuperCacheOffset;
 
         // if (T = S[off]) return true
         if (sNonNull.readKlassPointer(superCheckOffset, HotSpotReplacementsUtil.PRIMARY_SUPERS_LOCATION).equal(t))
@@ -62,13 +62,13 @@ public final class TypeCheckSnippetUtils
         }
 
         // if (S.scan_s_s_array(T)) { S.cache = T; return true; }
-        Word secondarySupers = s.readWord(GraalHotSpotVMConfig.secondarySupersOffset, HotSpotReplacementsUtil.SECONDARY_SUPERS_LOCATION);
-        int length = secondarySupers.readInt(GraalHotSpotVMConfig.metaspaceArrayLengthOffset, HotSpotReplacementsUtil.METASPACE_ARRAY_LENGTH_LOCATION);
+        Word secondarySupers = s.readWord(HotSpotRuntime.secondarySupersOffset, HotSpotReplacementsUtil.SECONDARY_SUPERS_LOCATION);
+        int length = secondarySupers.readInt(HotSpotRuntime.metaspaceArrayLengthOffset, HotSpotReplacementsUtil.METASPACE_ARRAY_LENGTH_LOCATION);
         for (int i = 0; i < length; i++)
         {
             if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, t.equal(loadSecondarySupersElement(secondarySupers, i))))
             {
-                s.writeKlassPointer(GraalHotSpotVMConfig.secondarySuperCacheOffset, t, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+                s.writeKlassPointer(HotSpotRuntime.secondarySuperCacheOffset, t, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
                 return true;
             }
         }
@@ -125,6 +125,6 @@ public final class TypeCheckSnippetUtils
 
     static KlassPointer loadSecondarySupersElement(Word metaspaceArray, int index)
     {
-        return KlassPointer.fromWord(metaspaceArray.readWord(GraalHotSpotVMConfig.metaspaceArrayBaseOffset + index * HotSpotReplacementsUtil.wordSize(), HotSpotReplacementsUtil.SECONDARY_SUPERS_ELEMENT_LOCATION));
+        return KlassPointer.fromWord(metaspaceArray.readWord(HotSpotRuntime.metaspaceArrayBaseOffset + index * HotSpotReplacementsUtil.wordSize(), HotSpotReplacementsUtil.SECONDARY_SUPERS_ELEMENT_LOCATION));
     }
 }

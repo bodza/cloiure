@@ -12,6 +12,12 @@ import giraaff.bytecode.Bytecodes.Flags;
 // @class Bytecodes
 public final class Bytecodes
 {
+    // @cons
+    private Bytecodes()
+    {
+        super();
+    }
+
     public static final int
         NOP             =   0, // 0x00
         ACONST_NULL     =   1, // 0x01
@@ -835,11 +841,5 @@ public final class Bytecodes
                 return true;
         }
         return false;
-    }
-
-    // @cons
-    private Bytecodes()
-    {
-        super();
     }
 }

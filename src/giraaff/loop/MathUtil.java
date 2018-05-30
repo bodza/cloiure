@@ -18,6 +18,12 @@ import giraaff.nodes.calc.UnsignedDivNode;
 // @class MathUtil
 public final class MathUtil
 {
+    // @cons
+    private MathUtil()
+    {
+        super();
+    }
+
     private static boolean isConstantOne(ValueNode v1)
     {
         return v1.isConstant() && v1.stamp(NodeView.DEFAULT) instanceof IntegerStamp && v1.asJavaConstant().asLong() == 1;
@@ -95,11 +101,5 @@ public final class MathUtil
             graph.addBeforeFixed(before, fixedDiv);
         }
         return div;
-    }
-
-    // @cons
-    private MathUtil()
-    {
-        super();
     }
 }

@@ -7,6 +7,12 @@ package giraaff.core.common.calc;
 // @class UnsignedMath
 public final class UnsignedMath
 {
+    // @cons
+    private UnsignedMath()
+    {
+        super();
+    }
+
     /**
      * Unsigned comparison aboveThan for two numbers.
      */
@@ -69,11 +75,5 @@ public final class UnsignedMath
     public static boolean belowOrEqual(long a, long b)
     {
         return Long.compareUnsigned(a, b) <= 0;
-    }
-
-    // @cons
-    private UnsignedMath()
-    {
-        super();
     }
 }

@@ -10,8 +10,8 @@ import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.GraalHotSpotVMConfigNode;
 import giraaff.hotspot.nodes.StubForeignCallNode;
@@ -64,9 +64,9 @@ public final class NewArrayStub extends SnippetStub
     private static Object newArray(KlassPointer hub, int length, boolean fillContents, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
     {
         int layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(hub);
-        int log2ElementSize = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperLog2ElementSizeShift) & GraalHotSpotVMConfig.layoutHelperLog2ElementSizeMask;
-        int headerSize = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperHeaderSizeShift) & GraalHotSpotVMConfig.layoutHelperHeaderSizeMask;
-        int elementKind = (layoutHelper >> GraalHotSpotVMConfig.layoutHelperElementTypeShift) & GraalHotSpotVMConfig.layoutHelperElementTypeMask;
+        int log2ElementSize = (layoutHelper >> HotSpotRuntime.layoutHelperLog2ElementSizeShift) & HotSpotRuntime.layoutHelperLog2ElementSizeMask;
+        int headerSize = (layoutHelper >> HotSpotRuntime.layoutHelperHeaderSizeShift) & HotSpotRuntime.layoutHelperHeaderSizeMask;
+        int elementKind = (layoutHelper >> HotSpotRuntime.layoutHelperElementTypeShift) & HotSpotRuntime.layoutHelperElementTypeMask;
         int sizeInBytes = HotSpotReplacementsUtil.arrayAllocationSize(length, headerSize, log2ElementSize);
 
         // check that array length is small enough for fast path.
@@ -76,7 +76,7 @@ public final class NewArrayStub extends SnippetStub
             Word memory = NewInstanceStub.refillAllocate(thread, intArrayHub, sizeInBytes);
             if (memory.notEqual(0))
             {
-                return NewObjectSnippets.formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(GraalHotSpotVMConfig.arrayPrototypeMarkWord), fillContents, false);
+                return NewObjectSnippets.formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(HotSpotRuntime.arrayPrototypeMarkWord), fillContents, false);
             }
         }
 

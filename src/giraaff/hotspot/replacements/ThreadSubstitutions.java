@@ -7,7 +7,7 @@ import giraaff.api.replacements.MethodSubstitution;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.CurrentJavaThreadNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.nodes.extended.ForeignCallNode;
@@ -27,11 +27,11 @@ public final class ThreadSubstitutions
     public static boolean isInterrupted(final Thread thisObject, boolean clearInterrupted)
     {
         Word javaThread = CurrentJavaThreadNode.get();
-        Object thread = javaThread.readObject(GraalHotSpotVMConfig.threadObjectOffset, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION);
+        Object thread = javaThread.readObject(HotSpotRuntime.threadObjectOffset, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION);
         if (thisObject == thread)
         {
-            Word osThread = javaThread.readWord(GraalHotSpotVMConfig.osThreadOffset, HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION);
-            boolean interrupted = osThread.readInt(GraalHotSpotVMConfig.osThreadInterruptedOffset, LocationIdentity.any()) != 0;
+            Word osThread = javaThread.readWord(HotSpotRuntime.osThreadOffset, HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION);
+            boolean interrupted = osThread.readInt(HotSpotRuntime.osThreadInterruptedOffset, LocationIdentity.any()) != 0;
             if (!interrupted || !clearInterrupted)
             {
                 return interrupted;

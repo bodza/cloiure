@@ -6,7 +6,6 @@ import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.RegisterValue;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
@@ -14,13 +13,13 @@ import jdk.vm.ci.meta.Value;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.LIRKind;
-import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
 import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotForeignCallLinkageImpl;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.replacements.CRC32CSubstitutions;
@@ -34,9 +33,9 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
     private final Value[] nativeABICallerSaveRegisters;
 
     // @cons
-    public AMD64HotSpotForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, Value[] nativeABICallerSaveRegisters)
+    public AMD64HotSpotForeignCallsProvider(HotSpotGraalRuntime runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, Value[] nativeABICallerSaveRegisters)
     {
-        super(jvmciRuntime, runtime, metaAccess, codeCache, wordTypes);
+        super(runtime, metaAccess, codeCache, wordTypes);
         this.nativeABICallerSaveRegisters = nativeABICallerSaveRegisters;
     }
 
@@ -55,13 +54,13 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER, 0L, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER, HotSpotForeignCallLinkage.JUMP_ADDRESS, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
 
-        if (GraalHotSpotVMConfig.useCRC32Intrinsics)
+        if (HotSpotRuntime.useCRC32Intrinsics)
         {
-            registerForeignCall(CRC32Substitutions.UPDATE_BYTES_CRC32, GraalHotSpotVMConfig.updateBytesCRC32Stub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
+            registerForeignCall(CRC32Substitutions.UPDATE_BYTES_CRC32, HotSpotRuntime.updateBytesCRC32Stub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
         }
-        if (GraalHotSpotVMConfig.useCRC32CIntrinsics)
+        if (HotSpotRuntime.useCRC32CIntrinsics)
         {
-            registerForeignCall(CRC32CSubstitutions.UPDATE_BYTES_CRC32C, GraalHotSpotVMConfig.updateBytesCRC32C, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
+            registerForeignCall(CRC32CSubstitutions.UPDATE_BYTES_CRC32C, HotSpotRuntime.updateBytesCRC32C, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
         }
 
         super.initialize(providers, options);

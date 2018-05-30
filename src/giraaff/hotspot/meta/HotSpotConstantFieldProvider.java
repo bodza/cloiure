@@ -6,7 +6,7 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.spi.JavaConstantFieldProvider;
-import giraaff.hotspot.GraalHotSpotVMConfig;
+import giraaff.hotspot.HotSpotRuntime;
 import giraaff.options.OptionValues;
 
 /**
@@ -24,7 +24,7 @@ public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
     @Override
     protected boolean isStableField(ResolvedJavaField field, ConstantFieldTool<?> tool)
     {
-        if (!GraalHotSpotVMConfig.foldStableValues)
+        if (!HotSpotRuntime.foldStableValues)
         {
             return false;
         }

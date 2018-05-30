@@ -66,6 +66,12 @@ import giraaff.options.OptionValues;
 // @class GraphUtil
 public final class GraphUtil
 {
+    // @cons
+    private GraphUtil()
+    {
+        super();
+    }
+
     private static void markFixedNodes(FixedNode node, EconomicSet<Node> markedNodes, EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges)
     {
         NodeStack workStack = new NodeStack();
@@ -1036,11 +1042,5 @@ public final class GraphUtil
         VirtualArrayNode newVirtualArray = virtualArrayProvider.apply(newComponentType, newLengthInt);
         tool.createVirtualObject(newVirtualArray, newEntryState, Collections.<MonitorIdNode> emptyList(), false);
         tool.replaceWithVirtual(newVirtualArray);
-    }
-
-    // @cons
-    private GraphUtil()
-    {
-        super();
     }
 }

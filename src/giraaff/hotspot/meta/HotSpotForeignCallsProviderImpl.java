@@ -6,7 +6,6 @@ import java.util.List;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
@@ -19,7 +18,7 @@ import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
 import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotForeignCallLinkageImpl;
-import giraaff.hotspot.HotSpotGraalRuntimeProvider;
+import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.stubs.ForeignCallStub;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.options.OptionValues;
@@ -36,8 +35,7 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     public static final ForeignCallDescriptor IDENTITY_HASHCODE = new ForeignCallDescriptor("identity_hashcode", int.class, Object.class);
     public static final ForeignCallDescriptor LOAD_AND_CLEAR_EXCEPTION = new ForeignCallDescriptor("load_and_clear_exception", Object.class, Word.class);
 
-    protected final HotSpotJVMCIRuntimeProvider jvmciRuntime;
-    protected final HotSpotGraalRuntimeProvider runtime;
+    protected final HotSpotGraalRuntime runtime;
 
     protected final EconomicMap<ForeignCallDescriptor, HotSpotForeignCallLinkage> foreignCalls = EconomicMap.create();
     protected final MetaAccessProvider metaAccess;
@@ -45,10 +43,9 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     protected final WordTypes wordTypes;
 
     // @cons
-    public HotSpotForeignCallsProviderImpl(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
+    public HotSpotForeignCallsProviderImpl(HotSpotGraalRuntime runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
     {
         super();
-        this.jvmciRuntime = jvmciRuntime;
         this.runtime = runtime;
         this.metaAccess = metaAccess;
         this.codeCache = codeCache;
@@ -122,7 +119,7 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      */
     public void linkForeignCall(OptionValues options, HotSpotProviders providers, ForeignCallDescriptor descriptor, long address, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
     {
-        ForeignCallStub stub = new ForeignCallStub(options, jvmciRuntime, providers, address, descriptor, prependThread, transition, reexecutable, killedLocations);
+        ForeignCallStub stub = new ForeignCallStub(options, providers, address, descriptor, prependThread, transition, reexecutable, killedLocations);
         HotSpotForeignCallLinkage linkage = stub.getLinkage();
         HotSpotForeignCallLinkage targetLinkage = stub.getTargetLinkage();
         linkage.setCompiledStub(stub);

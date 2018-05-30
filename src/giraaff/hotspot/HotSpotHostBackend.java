@@ -33,7 +33,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
     public static final ForeignCallDescriptor UNCOMMON_TRAP_HANDLER = new ForeignCallDescriptor("uncommonTrapHandler", void.class);
 
     // @cons
-    public HotSpotHostBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
+    public HotSpotHostBackend(HotSpotGraalRuntime runtime, HotSpotProviders providers)
     {
         super(runtime, providers);
     }
@@ -69,7 +69,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
 
     public void emitStackOverflowCheck(CompilationResultBuilder crb)
     {
-        if (GraalHotSpotVMConfig.useStackBanging)
+        if (HotSpotRuntime.useStackBanging)
         {
             // Each code entry causes one stack bang n pages down the stack where n is configurable
             // by StackShadowPages. The setting depends on the maximum depth of VM call stack or native
@@ -79,8 +79,8 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
             // entry code needs to do is bang once for the end of this shadow zone.
             // The entry code may need to bang additional pages if the framesize is greater than a page.
 
-            int pageSize = GraalHotSpotVMConfig.vmPageSize;
-            int bangEnd = NumUtil.roundUp(GraalHotSpotVMConfig.stackShadowPages * 4 * CodeUtil.K, pageSize);
+            int pageSize = HotSpotRuntime.vmPageSize;
+            int bangEnd = NumUtil.roundUp(HotSpotRuntime.stackShadowPages * 4 * CodeUtil.K, pageSize);
 
             // This is how far the previous frame's stack banging extended.
             int bangEndSafe = bangEnd;

@@ -4,7 +4,6 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.core.amd64.AMD64NodeLIRBuilder.Options;
 import giraaff.core.gen.NodeLIRBuilder;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.amd64.AMD64Call;
@@ -131,7 +130,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
     @Override
     public void doBlockPrologue(Block block, OptionValues options)
     {
-        if (Options.MitigateSpeculativeExecutionAttacks.getValue(options))
+        if (AMD64NodeLIRBuilder.Options.MitigateSpeculativeExecutionAttacks.getValue(options))
         {
             boolean hasControlSplitPredecessor = false;
             for (Block b : block.getPredecessors())

@@ -22,6 +22,12 @@ import giraaff.word.Word;
 // @class CRC32CSubstitutions
 public final class CRC32CSubstitutions
 {
+    // @cons
+    private CRC32CSubstitutions()
+    {
+        super();
+    }
+
     public static final ForeignCallDescriptor UPDATE_BYTES_CRC32C = new ForeignCallDescriptor("updateBytesCRC32C", int.class, int.class, WordBase.class, int.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
@@ -39,11 +45,5 @@ public final class CRC32CSubstitutions
     {
         WordBase bufAddr = WordFactory.unsigned(addr).add(off);
         return updateBytesCRC32(UPDATE_BYTES_CRC32C, crc, bufAddr, end - off);
-    }
-
-    // @cons
-    private CRC32CSubstitutions()
-    {
-        super();
     }
 }

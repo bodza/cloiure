@@ -91,6 +91,12 @@ import giraaff.util.GraalError;
 // @class StandardGraphBuilderPlugins
 public final class StandardGraphBuilderPlugins
 {
+    // @cons
+    private StandardGraphBuilderPlugins()
+    {
+        super();
+    }
+
     public static void registerInvocationPlugins(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection, InvocationPlugins plugins, BytecodeProvider bytecodeProvider, boolean allowDeoptimization)
     {
         registerObjectPlugins(plugins);
@@ -986,11 +992,5 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
-    }
-
-    // @cons
-    private StandardGraphBuilderPlugins()
-    {
-        super();
     }
 }
