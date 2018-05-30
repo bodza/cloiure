@@ -28,8 +28,7 @@ public final class Classfile
     private static final int MAGIC = 0xCAFEBABE;
 
     /**
-     * Creates a {@link Classfile} by parsing the class file bytes for {@code type} loadable from
-     * {@code context}.
+     * Creates a {@link Classfile} by parsing the class file bytes for {@code type} loadable from {@code context}.
      *
      * @throws NoClassDefFoundError if there is an IO error while parsing the class file
      */
@@ -167,11 +166,5 @@ public final class Classfile
             }
         }
         return result;
-    }
-
-    @Override
-    public String toString()
-    {
-        return getClass().getSimpleName() + "<" + type.toJavaName() + ">";
     }
 }

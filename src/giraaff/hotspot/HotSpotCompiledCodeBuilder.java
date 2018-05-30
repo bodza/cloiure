@@ -36,8 +36,6 @@ public final class HotSpotCompiledCodeBuilder
 
     public static HotSpotCompiledCode createCompiledCode(CodeCacheProvider codeCache, ResolvedJavaMethod method, HotSpotCompilationRequest compRequest, CompilationResult compResult)
     {
-        String name = compResult.getName();
-
         byte[] targetCode = compResult.getTargetCode();
         int targetCodeSize = compResult.getTargetCodeSize();
 
@@ -82,11 +80,11 @@ public final class HotSpotCompiledCodeBuilder
                 id = hsMethod.allocateCompileId(entryBCI);
                 jvmciEnv = 0L;
             }
-            return new HotSpotCompiledNmethod(name, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, false, totalFrameSize, null, hsMethod, entryBCI, id, jvmciEnv, hasUnsafeAccess);
+            return new HotSpotCompiledNmethod(null, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, false, totalFrameSize, null, hsMethod, entryBCI, id, jvmciEnv, hasUnsafeAccess);
         }
         else
         {
-            return new HotSpotCompiledCode(name, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, false, totalFrameSize, null);
+            return new HotSpotCompiledCode(null, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, false, totalFrameSize, null);
         }
     }
 

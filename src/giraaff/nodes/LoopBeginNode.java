@@ -257,7 +257,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         {
             return super.forwardEndIndex((EndNode) pred);
         }
-        throw ValueNodeUtil.shouldNotReachHere("unknown pred : " + pred);
+        throw new InternalError("should not reach here: " + "unknown pred : " + pred);
     }
 
     @Override
@@ -275,7 +275,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
                 return end;
             }
         }
-        throw ValueNodeUtil.shouldNotReachHere();
+        throw new InternalError("should not reach here");
     }
 
     int nextEndIndex()

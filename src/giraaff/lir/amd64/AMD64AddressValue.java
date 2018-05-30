@@ -96,33 +96,6 @@ public final class AMD64AddressValue extends CompositeValue
         return new AMD64Address(toRegister(base), toRegister(index), scale, displacement);
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder s = new StringBuilder("[");
-        String sep = "";
-        if (ValueUtil.isLegal(base))
-        {
-            s.append(base);
-            sep = " + ";
-        }
-        if (ValueUtil.isLegal(index))
-        {
-            s.append(sep).append(index).append(" * ").append(scale.value);
-            sep = " + ";
-        }
-        if (displacement < 0)
-        {
-            s.append(" - ").append(-displacement);
-        }
-        else if (displacement > 0)
-        {
-            s.append(sep).append(displacement);
-        }
-        s.append("]");
-        return s.toString();
-    }
-
     public boolean isValidImplicitNullCheckFor(Value value, int implicitNullCheckLimit)
     {
         return value.equals(base) && index.equals(Value.ILLEGAL) && displacement >= 0 && displacement < implicitNullCheckLimit;

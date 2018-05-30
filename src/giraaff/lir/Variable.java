@@ -40,19 +40,6 @@ public final class Variable extends AllocatableValue
     }
 
     @Override
-    public String toString()
-    {
-        if (name != null)
-        {
-            return name;
-        }
-        else
-        {
-            return "v" + index + getKindSuffix();
-        }
-    }
-
-    @Override
     public int hashCode()
     {
         return 71 * super.hashCode() + index;

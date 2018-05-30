@@ -29,12 +29,6 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
         this.dead = other.dead;
     }
 
-    @Override
-    public String toString()
-    {
-        return "";
-    }
-
     protected abstract boolean equivalentTo(T other);
 
     public boolean isDead()

@@ -95,10 +95,4 @@ public final class DerivedConvertedInductionVariable extends DerivedInductionVar
     public void deleteUnusedNodes()
     {
     }
-
-    @Override
-    public String toString()
-    {
-        return String.format("DerivedConvertedInductionVariable base (%s) %s %s", base, value.getNodeClass().shortName(), stamp);
-    }
 }

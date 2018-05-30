@@ -21,7 +21,6 @@ import org.graalvm.collections.UnmodifiableEconomicMap;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
-import giraaff.graph.GraalGraphError;
 import giraaff.graph.Graph.DuplicationReplacement;
 import giraaff.graph.Graph.Mark;
 import giraaff.graph.Graph.NodeEventScope;
@@ -141,16 +140,7 @@ public final class InliningUtil extends ValueMergeUtil
      */
     public static UnmodifiableEconomicMap<Node, Node> inline(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod)
     {
-        try
-        {
-            return inline(invoke, inlineGraph, receiverNullCheck, inlineeMethod, "reason not specified", "phase not specified");
-        }
-        catch (GraalError ex)
-        {
-            ex.addContext("inlining into", invoke.asNode().graph().method());
-            ex.addContext("inlinee", inlineGraph.method());
-            throw ex;
-        }
+        return inline(invoke, inlineGraph, receiverNullCheck, inlineeMethod, "reason not specified", "phase not specified");
     }
 
     /**
@@ -740,7 +730,7 @@ public final class InliningUtil extends ValueMergeUtil
         return replacements.getSubstitution(target, invokeBci);
     }
 
-    public static FixedWithNextNode inlineMacroNode(Invoke invoke, ResolvedJavaMethod concrete, Class<? extends FixedWithNextNode> macroNodeClass) throws GraalError
+    public static FixedWithNextNode inlineMacroNode(Invoke invoke, ResolvedJavaMethod concrete, Class<? extends FixedWithNextNode> macroNodeClass)
     {
         StructuredGraph graph = invoke.asNode().graph();
         if (!concrete.equals(((MethodCallTargetNode) invoke.callTarget()).targetMethod()))
@@ -765,7 +755,7 @@ public final class InliningUtil extends ValueMergeUtil
         return macroNode;
     }
 
-    private static FixedWithNextNode createMacroNodeInstance(Class<? extends FixedWithNextNode> macroNodeClass, Invoke invoke) throws GraalError
+    private static FixedWithNextNode createMacroNodeInstance(Class<? extends FixedWithNextNode> macroNodeClass, Invoke invoke)
     {
         try
         {
@@ -774,7 +764,7 @@ public final class InliningUtil extends ValueMergeUtil
         }
         catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e)
         {
-            throw new GraalGraphError(e).addContext(invoke.asNode()).addContext("macroSubstitution", macroNodeClass);
+            throw new GraalError(e);
         }
     }
 

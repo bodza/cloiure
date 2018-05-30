@@ -70,20 +70,8 @@ public final class ResolvedJavaMethodBytecode implements Bytecode
     }
 
     @Override
-    public StackTraceElement asStackTraceElement(int bci)
-    {
-        return method.asStackTraceElement(bci);
-    }
-
-    @Override
     public ProfilingInfo getProfilingInfo()
     {
         return method.getProfilingInfo();
-    }
-
-    @Override
-    public String toString()
-    {
-        return getClass().getSimpleName() + method.format("<%h.%n(%p)>");
     }
 }

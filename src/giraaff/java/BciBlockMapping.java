@@ -171,31 +171,6 @@ public final class BciBlockMapping
             }
         }
 
-        @Override
-        public String toString()
-        {
-            StringBuilder sb = new StringBuilder("B").append(getId());
-            sb.append('[').append(startBci).append("..").append(endBci);
-            if (isLoopHeader || isExceptionEntry || this instanceof ExceptionDispatchBlock)
-            {
-                sb.append(' ');
-                if (isLoopHeader)
-                {
-                    sb.append('L');
-                }
-                if (isExceptionEntry)
-                {
-                    sb.append('!');
-                }
-                else if (this instanceof ExceptionDispatchBlock)
-                {
-                    sb.append("<!>");
-                }
-            }
-            sb.append(']');
-            return sb.toString();
-        }
-
         public int getLoopDepth()
         {
             return Long.bitCount(loops);
@@ -521,7 +496,7 @@ public final class BciBlockMapping
         {
             if (!GraalOptions.SupportJsrBytecodes.getValue(options))
             {
-                throw new JsrNotSupportedBailout("jsr/ret parsing disabled");
+                throw new PermanentBailoutException("jsr/ret parsing disabled");
             }
             createJsrAlternatives(blockMap, blockMap[0]);
         }
@@ -634,7 +609,7 @@ public final class BciBlockMapping
                     int target = stream.readBranchDest();
                     if (target == 0)
                     {
-                        throw new JsrNotSupportedBailout("jsr target bci 0 not allowed");
+                        throw new PermanentBailoutException("jsr target bci 0 not allowed");
                     }
                     BciBlock b1 = makeBlock(blockMap, target);
                     current.setJsrSuccessor(b1);
@@ -791,7 +766,7 @@ public final class BciBlockMapping
                 }
                 if (!successor.getJsrScope().isPrefixOf(nextScope))
                 {
-                    throw new JsrNotSupportedBailout("unstructured control flow  (" + successor.getJsrScope() + " " + nextScope + ")");
+                    throw new PermanentBailoutException("unstructured control flow  (" + successor.getJsrScope() + " " + nextScope + ")");
                 }
                 if (!nextScope.isEmpty())
                 {
@@ -950,65 +925,6 @@ public final class BciBlockMapping
         }
         loopHeader.loopEnd = endOfLoop;
         return next;
-    }
-
-    public static String toString(BciBlock[] blockMap, BciBlock[] loopHeadersMap)
-    {
-        StringBuilder sb = new StringBuilder();
-        for (BciBlock b : blockMap)
-        {
-            if (b == null)
-            {
-                continue;
-            }
-            sb.append("B").append(b.getId()).append("[").append(b.startBci).append("..").append(b.endBci).append("]");
-            if (b.isLoopHeader)
-            {
-                sb.append(" LoopHeader");
-            }
-            if (b.isExceptionEntry)
-            {
-                sb.append(" ExceptionEntry");
-            }
-            if (b instanceof ExceptionDispatchBlock)
-            {
-                sb.append(" ExceptionDispatch");
-            }
-            if (!b.successors.isEmpty())
-            {
-                sb.append(" Successors=[");
-                for (BciBlock s : b.getSuccessors())
-                {
-                    if (sb.charAt(sb.length() - 1) != '[')
-                    {
-                        sb.append(", ");
-                    }
-                    sb.append("B").append(s.getId());
-                }
-                sb.append("]");
-            }
-            if (b.loops != 0L)
-            {
-                sb.append(" Loops=[");
-                for (int pos : b.loopIdIterable())
-                {
-                    if (sb.charAt(sb.length() - 1) == '[')
-                    {
-                        sb.append(", ");
-                    }
-                    sb.append("B").append(loopHeadersMap[pos].getId());
-                }
-                sb.append("]");
-            }
-            sb.append(System.lineSeparator());
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public String toString()
-    {
-        return toString(blocks, loopHeaders);
     }
 
     /**

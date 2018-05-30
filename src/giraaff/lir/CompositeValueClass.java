@@ -86,31 +86,4 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     {
         return new Fields[] { data, values };
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName()).append(" ").append(getClazz().getSimpleName()).append(" components[");
-        values.appendFields(sb);
-        sb.append("] data[");
-        data.appendFields(sb);
-        sb.append("]");
-        return sb.toString();
-    }
-
-    public static String format(CompositeValue obj)
-    {
-        CompositeValueClass<?> valueClass = compositeClass.get(obj.getClass());
-        StringBuilder result = new StringBuilder();
-
-        LIRIntrospection.appendValues(result, obj, "", "", "{", "}", new String[] { "" }, valueClass.values);
-
-        for (int i = 0; i < valueClass.data.getCount(); i++)
-        {
-            result.append(" ").append(valueClass.data.getName(i)).append(": ").append(LIRIntrospection.getFieldString(obj, i, valueClass.data));
-        }
-
-        return result.toString();
-    }
 }

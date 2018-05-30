@@ -9,6 +9,8 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
+import giraaff.util.GraalError;
+
 /**
  * The {@code Util} class contains a motley collection of utility methods used throughout the compiler.
  */
@@ -104,7 +106,7 @@ public final class Util
             case Short:
                 return JavaConstant.forShort((short) 0);
             default:
-                throw new IllegalArgumentException(kind.toString());
+                throw GraalError.shouldNotReachHere();
         }
     }
 
@@ -132,7 +134,7 @@ public final class Util
             case Short:
                 return JavaConstant.forShort((short) 1);
             default:
-                throw new IllegalArgumentException(kind.toString());
+                throw GraalError.shouldNotReachHere();
         }
     }
 

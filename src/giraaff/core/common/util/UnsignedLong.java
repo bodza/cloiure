@@ -70,12 +70,6 @@ public final class UnsignedLong
     }
 
     @Override
-    public String toString()
-    {
-        return "UnsignedLong(" + Long.toUnsignedString(value) + ")";
-    }
-
-    @Override
     public boolean equals(Object o)
     {
         if (this == o)

@@ -100,11 +100,6 @@ public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTar
     boolean needsJavaFrameAnchor();
 
     /**
-     * Gets the VM symbol associated with the target {@linkplain #getAddress() address} of the call.
-     */
-    String getSymbol();
-
-    /**
      * Identifies foreign calls which are guaranteed to include a safepoint check.
      */
     boolean isGuaranteedSafepoint();

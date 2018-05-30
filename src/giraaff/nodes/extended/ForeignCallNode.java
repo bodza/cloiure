@@ -18,7 +18,6 @@ import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.DeoptimizingNode;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.ValueNode;
@@ -202,16 +201,6 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
             newStateDuring = currentStateAfter;
         }
         setStateDuring(newStateDuring);
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(verbosity) + "#" + descriptor;
-        }
-        return super.toString(verbosity);
     }
 
     @Override

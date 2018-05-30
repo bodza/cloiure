@@ -1,9 +1,5 @@
 package giraaff.options;
 
-import java.util.Comparator;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
@@ -124,30 +120,5 @@ public final class OptionValues
     public static Object decodeNull(Object value)
     {
         return value == NULL ? null : value;
-    }
-
-    @Override
-    public String toString()
-    {
-        return toString(getMap());
-    }
-
-    public static String toString(UnmodifiableEconomicMap<OptionKey<?>, Object> values)
-    {
-        Comparator<OptionKey<?>> comparator = new Comparator<OptionKey<?>>()
-        {
-            @Override
-            public int compare(OptionKey<?> o1, OptionKey<?> o2)
-            {
-                return o1.toString().compareTo(o2.toString());
-            }
-        };
-        SortedMap<OptionKey<?>, Object> sorted = new TreeMap<>(comparator);
-        UnmodifiableMapCursor<OptionKey<?>, Object> cursor = values.getEntries();
-        while (cursor.advance())
-        {
-            sorted.put(cursor.getKey(), decodeNull(cursor.getValue()));
-        }
-        return sorted.toString();
     }
 }

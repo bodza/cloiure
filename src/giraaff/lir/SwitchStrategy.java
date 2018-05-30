@@ -259,12 +259,6 @@ public abstract class SwitchStrategy
         }
     }
 
-    @Override
-    public String toString()
-    {
-        return getClass().getSimpleName() + "[avgEffort=" + averageEffort + "]";
-    }
-
     /**
      * This strategy orders the keys according to their probability and creates one equality
      * comparison per key.

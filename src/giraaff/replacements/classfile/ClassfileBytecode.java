@@ -143,12 +143,6 @@ public final class ClassfileBytecode implements Bytecode
     }
 
     @Override
-    public StackTraceElement asStackTraceElement(int bci)
-    {
-        return new StackTraceElement(method.getDeclaringClass().toJavaName(), method.getName(), method.getDeclaringClass().getSourceFileName(), 0);
-    }
-
-    @Override
     public ConstantPool getConstantPool()
     {
         return constantPool;
@@ -164,11 +158,5 @@ public final class ClassfileBytecode implements Bytecode
     public ProfilingInfo getProfilingInfo()
     {
         return DefaultProfilingInfo.get(TriState.FALSE);
-    }
-
-    @Override
-    public String toString()
-    {
-        return getClass().getName() + method.format("<%H.%n(%p)>");
     }
 }

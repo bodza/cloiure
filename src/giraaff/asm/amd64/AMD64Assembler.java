@@ -115,12 +115,6 @@ public class AMD64Assembler extends Assembler
         {
             return value;
         }
-
-        @Override
-        public String toString()
-        {
-            return operator;
-        }
     }
 
     /**
@@ -357,7 +351,7 @@ public class AMD64Assembler extends Assembler
                     return operandSize;
                 }
             }
-            throw GraalError.shouldNotReachHere("Unexpected kind: " + kind.toString());
+            throw GraalError.shouldNotReachHere("unexpected kind: " + kind);
         }
 
         /**
@@ -716,12 +710,6 @@ public class AMD64Assembler extends Assembler
             }
             asm.emitByte(op);
         }
-
-        @Override
-        public String toString()
-        {
-            return opcode;
-        }
     }
 
     /**
@@ -812,29 +800,32 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.AMD64RMOp
     public static class AMD64RMOp extends AMD64RROp
     {
-        public static final AMD64RMOp IMUL   = new AMD64RMOp("IMUL",         P_0F, 0xAF, OpAssertion.ByteOrLargerAssertion);
-        public static final AMD64RMOp BSF    = new AMD64RMOp("BSF",          P_0F, 0xBC);
-        public static final AMD64RMOp BSR    = new AMD64RMOp("BSR",          P_0F, 0xBD);
-        public static final AMD64RMOp POPCNT = new AMD64RMOp("POPCNT", 0xF3, P_0F, 0xB8, CPUFeature.POPCNT);
-        public static final AMD64RMOp TZCNT  = new AMD64RMOp("TZCNT",  0xF3, P_0F, 0xBC, CPUFeature.BMI1);
-        public static final AMD64RMOp LZCNT  = new AMD64RMOp("LZCNT",  0xF3, P_0F, 0xBD, CPUFeature.LZCNT);
-        public static final AMD64RMOp MOVZXB = new AMD64RMOp("MOVZXB",       P_0F, 0xB6, false, true, OpAssertion.WordOrLargerAssertion);
-        public static final AMD64RMOp MOVZX  = new AMD64RMOp("MOVZX",        P_0F, 0xB7, OpAssertion.DwordOrLargerAssertion);
-        public static final AMD64RMOp MOVSXB = new AMD64RMOp("MOVSXB",       P_0F, 0xBE, false, true, OpAssertion.WordOrLargerAssertion);
-        public static final AMD64RMOp MOVSX  = new AMD64RMOp("MOVSX",        P_0F, 0xBF, OpAssertion.DwordOrLargerAssertion);
-        public static final AMD64RMOp MOVSXD = new AMD64RMOp("MOVSXD",             0x63, OpAssertion.QwordAssertion);
-        public static final AMD64RMOp MOVB   = new AMD64RMOp("MOVB",               0x8A, OpAssertion.ByteAssertion);
-        public static final AMD64RMOp MOV    = new AMD64RMOp("MOV",                0x8B);
+        public static final AMD64RMOp
+            IMUL   = new AMD64RMOp("IMUL",         P_0F, 0xAF, OpAssertion.ByteOrLargerAssertion),
+            BSF    = new AMD64RMOp("BSF",          P_0F, 0xBC),
+            BSR    = new AMD64RMOp("BSR",          P_0F, 0xBD),
+            POPCNT = new AMD64RMOp("POPCNT", 0xF3, P_0F, 0xB8, CPUFeature.POPCNT),
+            TZCNT  = new AMD64RMOp("TZCNT",  0xF3, P_0F, 0xBC, CPUFeature.BMI1),
+            LZCNT  = new AMD64RMOp("LZCNT",  0xF3, P_0F, 0xBD, CPUFeature.LZCNT),
+            MOVZXB = new AMD64RMOp("MOVZXB",       P_0F, 0xB6, false, true, OpAssertion.WordOrLargerAssertion),
+            MOVZX  = new AMD64RMOp("MOVZX",        P_0F, 0xB7, OpAssertion.DwordOrLargerAssertion),
+            MOVSXB = new AMD64RMOp("MOVSXB",       P_0F, 0xBE, false, true, OpAssertion.WordOrLargerAssertion),
+            MOVSX  = new AMD64RMOp("MOVSX",        P_0F, 0xBF, OpAssertion.DwordOrLargerAssertion),
+            MOVSXD = new AMD64RMOp("MOVSXD",             0x63, OpAssertion.QwordAssertion),
+            MOVB   = new AMD64RMOp("MOVB",               0x8A, OpAssertion.ByteAssertion),
+            MOV    = new AMD64RMOp("MOV",                0x8B);
 
         // MOVD/MOVQ and MOVSS/MOVSD are the same opcode, just with different operand size prefix.
-        public static final AMD64RMOp MOVD   = new AMD64RMOp("MOVD",   0x66, P_0F, 0x6E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
-        public static final AMD64RMOp MOVQ   = new AMD64RMOp("MOVQ",   0x66, P_0F, 0x6E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
-        public static final AMD64RMOp MOVSS  = new AMD64RMOp("MOVSS",        P_0F, 0x10, OpAssertion.FloatAssertion, CPUFeature.SSE);
-        public static final AMD64RMOp MOVSD  = new AMD64RMOp("MOVSD",        P_0F, 0x10, OpAssertion.FloatAssertion, CPUFeature.SSE);
+        public static final AMD64RMOp
+            MOVD   = new AMD64RMOp("MOVD",   0x66, P_0F, 0x6E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2),
+            MOVQ   = new AMD64RMOp("MOVQ",   0x66, P_0F, 0x6E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2),
+            MOVSS  = new AMD64RMOp("MOVSS",        P_0F, 0x10, OpAssertion.FloatAssertion, CPUFeature.SSE),
+            MOVSD  = new AMD64RMOp("MOVSD",        P_0F, 0x10, OpAssertion.FloatAssertion, CPUFeature.SSE);
 
         // TEST is documented as MR operation, but it's symmetric, and using it as RM operation is more convenient.
-        public static final AMD64RMOp TESTB  = new AMD64RMOp("TEST",               0x84, OpAssertion.ByteAssertion);
-        public static final AMD64RMOp TEST   = new AMD64RMOp("TEST",               0x85);
+        public static final AMD64RMOp
+            TESTB  = new AMD64RMOp("TEST",               0x84, OpAssertion.ByteAssertion),
+            TEST   = new AMD64RMOp("TEST",               0x85);
 
         // @cons
         protected AMD64RMOp(String opcode, int op)
@@ -1408,16 +1399,17 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.AMD64MOp
     public static final class AMD64MOp extends AMD64Op
     {
-        public static final AMD64MOp NOT  = new AMD64MOp("NOT",  0xF7, 2);
-        public static final AMD64MOp NEG  = new AMD64MOp("NEG",  0xF7, 3);
-        public static final AMD64MOp MUL  = new AMD64MOp("MUL",  0xF7, 4);
-        public static final AMD64MOp IMUL = new AMD64MOp("IMUL", 0xF7, 5);
-        public static final AMD64MOp DIV  = new AMD64MOp("DIV",  0xF7, 6);
-        public static final AMD64MOp IDIV = new AMD64MOp("IDIV", 0xF7, 7);
-        public static final AMD64MOp INC  = new AMD64MOp("INC",  0xFF, 0);
-        public static final AMD64MOp DEC  = new AMD64MOp("DEC",  0xFF, 1);
-        public static final AMD64MOp PUSH = new AMD64MOp("PUSH", 0xFF, 6);
-        public static final AMD64MOp POP  = new AMD64MOp("POP",  0x8F, 0, OpAssertion.WordOrDwordAssertion);
+        public static final AMD64MOp
+            NOT  = new AMD64MOp("NOT",  0xF7, 2),
+            NEG  = new AMD64MOp("NEG",  0xF7, 3),
+            MUL  = new AMD64MOp("MUL",  0xF7, 4),
+            IMUL = new AMD64MOp("IMUL", 0xF7, 5),
+            DIV  = new AMD64MOp("DIV",  0xF7, 6),
+            IDIV = new AMD64MOp("IDIV", 0xF7, 7),
+            INC  = new AMD64MOp("INC",  0xFF, 0),
+            DEC  = new AMD64MOp("DEC",  0xFF, 1),
+            PUSH = new AMD64MOp("PUSH", 0xFF, 6),
+            POP  = new AMD64MOp("POP",  0x8F, 0, OpAssertion.WordOrDwordAssertion);
 
         private final int ext;
 
@@ -1465,9 +1457,10 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.AMD64MIOp
     public static final class AMD64MIOp extends AMD64ImmOp
     {
-        public static final AMD64MIOp MOVB = new AMD64MIOp("MOVB", true,  0xC6, 0, OpAssertion.ByteAssertion);
-        public static final AMD64MIOp MOV  = new AMD64MIOp("MOV",  false, 0xC7, 0);
-        public static final AMD64MIOp TEST = new AMD64MIOp("TEST", false, 0xF7, 0);
+        public static final AMD64MIOp
+            MOVB = new AMD64MIOp("MOVB", true,  0xC6, 0, OpAssertion.ByteAssertion),
+            MOV  = new AMD64MIOp("MOV",  false, 0xC7, 0),
+            TEST = new AMD64MIOp("TEST", false, 0xF7, 0);
 
         private final int ext;
 
@@ -1514,10 +1507,11 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.AMD64RMIOp
     public static final class AMD64RMIOp extends AMD64ImmOp
     {
-        public static final AMD64RMIOp IMUL    = new AMD64RMIOp("IMUL", false, 0x69);
-        public static final AMD64RMIOp IMUL_SX = new AMD64RMIOp("IMUL", true,  0x6B);
-        public static final AMD64RMIOp ROUNDSS = new AMD64RMIOp("ROUNDSS", true, P_0F3A, 0x0A, OpAssertion.PackedDoubleAssertion);
-        public static final AMD64RMIOp ROUNDSD = new AMD64RMIOp("ROUNDSD", true, P_0F3A, 0x0B, OpAssertion.PackedDoubleAssertion);
+        public static final AMD64RMIOp
+            IMUL    = new AMD64RMIOp("IMUL",    false,        0x69),
+            IMUL_SX = new AMD64RMIOp("IMUL",    true,         0x6B),
+            ROUNDSS = new AMD64RMIOp("ROUNDSS", true, P_0F3A, 0x0A, OpAssertion.PackedDoubleAssertion),
+            ROUNDSD = new AMD64RMIOp("ROUNDSD", true, P_0F3A, 0x0B, OpAssertion.PackedDoubleAssertion);
 
         // @cons
         protected AMD64RMIOp(String opcode, boolean immIsByte, int op)
@@ -1684,24 +1678,25 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.SSEOp
     public static final class SSEOp extends AMD64RMOp
     {
-        public static final SSEOp CVTSI2SS  = new SSEOp("CVTSI2SS",  0xF3, P_0F, 0x2A, OpAssertion.IntToFloatAssertion);
-        public static final SSEOp CVTSI2SD  = new SSEOp("CVTSI2SS",  0xF2, P_0F, 0x2A, OpAssertion.IntToFloatAssertion);
-        public static final SSEOp CVTTSS2SI = new SSEOp("CVTTSS2SI", 0xF3, P_0F, 0x2C, OpAssertion.FloatToIntAssertion);
-        public static final SSEOp CVTTSD2SI = new SSEOp("CVTTSD2SI", 0xF2, P_0F, 0x2C, OpAssertion.FloatToIntAssertion);
-        public static final SSEOp UCOMIS    = new SSEOp("UCOMIS",          P_0F, 0x2E, OpAssertion.PackedFloatAssertion);
-        public static final SSEOp SQRT      = new SSEOp("SQRT",            P_0F, 0x51);
-        public static final SSEOp AND       = new SSEOp("AND",             P_0F, 0x54, OpAssertion.PackedFloatAssertion);
-        public static final SSEOp ANDN      = new SSEOp("ANDN",            P_0F, 0x55, OpAssertion.PackedFloatAssertion);
-        public static final SSEOp OR        = new SSEOp("OR",              P_0F, 0x56, OpAssertion.PackedFloatAssertion);
-        public static final SSEOp XOR       = new SSEOp("XOR",             P_0F, 0x57, OpAssertion.PackedFloatAssertion);
-        public static final SSEOp ADD       = new SSEOp("ADD",             P_0F, 0x58);
-        public static final SSEOp MUL       = new SSEOp("MUL",             P_0F, 0x59);
-        public static final SSEOp CVTSS2SD  = new SSEOp("CVTSS2SD",        P_0F, 0x5A, OpAssertion.SingleAssertion);
-        public static final SSEOp CVTSD2SS  = new SSEOp("CVTSD2SS",        P_0F, 0x5A, OpAssertion.DoubleAssertion);
-        public static final SSEOp SUB       = new SSEOp("SUB",             P_0F, 0x5C);
-        public static final SSEOp MIN       = new SSEOp("MIN",             P_0F, 0x5D);
-        public static final SSEOp DIV       = new SSEOp("DIV",             P_0F, 0x5E);
-        public static final SSEOp MAX       = new SSEOp("MAX",             P_0F, 0x5F);
+        public static final SSEOp
+            CVTSI2SS  = new SSEOp("CVTSI2SS",  0xF3, P_0F, 0x2A, OpAssertion.IntToFloatAssertion),
+            CVTSI2SD  = new SSEOp("CVTSI2SS",  0xF2, P_0F, 0x2A, OpAssertion.IntToFloatAssertion),
+            CVTTSS2SI = new SSEOp("CVTTSS2SI", 0xF3, P_0F, 0x2C, OpAssertion.FloatToIntAssertion),
+            CVTTSD2SI = new SSEOp("CVTTSD2SI", 0xF2, P_0F, 0x2C, OpAssertion.FloatToIntAssertion),
+            UCOMIS    = new SSEOp("UCOMIS",          P_0F, 0x2E, OpAssertion.PackedFloatAssertion),
+            SQRT      = new SSEOp("SQRT",            P_0F, 0x51),
+            AND       = new SSEOp("AND",             P_0F, 0x54, OpAssertion.PackedFloatAssertion),
+            ANDN      = new SSEOp("ANDN",            P_0F, 0x55, OpAssertion.PackedFloatAssertion),
+            OR        = new SSEOp("OR",              P_0F, 0x56, OpAssertion.PackedFloatAssertion),
+            XOR       = new SSEOp("XOR",             P_0F, 0x57, OpAssertion.PackedFloatAssertion),
+            ADD       = new SSEOp("ADD",             P_0F, 0x58),
+            MUL       = new SSEOp("MUL",             P_0F, 0x59),
+            CVTSS2SD  = new SSEOp("CVTSS2SD",        P_0F, 0x5A, OpAssertion.SingleAssertion),
+            CVTSD2SS  = new SSEOp("CVTSD2SS",        P_0F, 0x5A, OpAssertion.DoubleAssertion),
+            SUB       = new SSEOp("SUB",             P_0F, 0x5C),
+            MIN       = new SSEOp("MIN",             P_0F, 0x5D),
+            DIV       = new SSEOp("DIV",             P_0F, 0x5E),
+            MAX       = new SSEOp("MAX",             P_0F, 0x5F);
 
         // @cons
         protected SSEOp(String opcode, int prefix, int op)
@@ -1725,16 +1720,17 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.AVXOp
     public static final class AVXOp extends AMD64RRMOp
     {
-        public static final AVXOp AND  = new AVXOp("AND",  P_0F, 0x54, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp ANDN = new AVXOp("ANDN", P_0F, 0x55, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp OR   = new AVXOp("OR",   P_0F, 0x56, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp XOR  = new AVXOp("XOR",  P_0F, 0x57, OpAssertion.PackedFloatAssertion);
-        public static final AVXOp ADD  = new AVXOp("ADD",  P_0F, 0x58);
-        public static final AVXOp MUL  = new AVXOp("MUL",  P_0F, 0x59);
-        public static final AVXOp SUB  = new AVXOp("SUB",  P_0F, 0x5C);
-        public static final AVXOp MIN  = new AVXOp("MIN",  P_0F, 0x5D);
-        public static final AVXOp DIV  = new AVXOp("DIV",  P_0F, 0x5E);
-        public static final AVXOp MAX  = new AVXOp("MAX",  P_0F, 0x5F);
+        public static final AVXOp
+            AND  = new AVXOp("AND",  P_0F, 0x54, OpAssertion.PackedFloatAssertion),
+            ANDN = new AVXOp("ANDN", P_0F, 0x55, OpAssertion.PackedFloatAssertion),
+            OR   = new AVXOp("OR",   P_0F, 0x56, OpAssertion.PackedFloatAssertion),
+            XOR  = new AVXOp("XOR",  P_0F, 0x57, OpAssertion.PackedFloatAssertion),
+            ADD  = new AVXOp("ADD",  P_0F, 0x58),
+            MUL  = new AVXOp("MUL",  P_0F, 0x59),
+            SUB  = new AVXOp("SUB",  P_0F, 0x5C),
+            MIN  = new AVXOp("MIN",  P_0F, 0x5D),
+            DIV  = new AVXOp("DIV",  P_0F, 0x5E),
+            MAX  = new AVXOp("MAX",  P_0F, 0x5F);
 
         // @cons
         protected AVXOp(String opcode, int prefix, int op)
@@ -1761,14 +1757,15 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.AMD64BinaryArithmetic
     public static final class AMD64BinaryArithmetic
     {
-        public static final AMD64BinaryArithmetic ADD = new AMD64BinaryArithmetic("ADD", 0);
-        public static final AMD64BinaryArithmetic OR  = new AMD64BinaryArithmetic("OR",  1);
-        public static final AMD64BinaryArithmetic ADC = new AMD64BinaryArithmetic("ADC", 2);
-        public static final AMD64BinaryArithmetic SBB = new AMD64BinaryArithmetic("SBB", 3);
-        public static final AMD64BinaryArithmetic AND = new AMD64BinaryArithmetic("AND", 4);
-        public static final AMD64BinaryArithmetic SUB = new AMD64BinaryArithmetic("SUB", 5);
-        public static final AMD64BinaryArithmetic XOR = new AMD64BinaryArithmetic("XOR", 6);
-        public static final AMD64BinaryArithmetic CMP = new AMD64BinaryArithmetic("CMP", 7);
+        public static final AMD64BinaryArithmetic
+            ADD = new AMD64BinaryArithmetic("ADD", 0),
+            OR  = new AMD64BinaryArithmetic("OR",  1),
+            ADC = new AMD64BinaryArithmetic("ADC", 2),
+            SBB = new AMD64BinaryArithmetic("SBB", 3),
+            AND = new AMD64BinaryArithmetic("AND", 4),
+            SUB = new AMD64BinaryArithmetic("SUB", 5),
+            XOR = new AMD64BinaryArithmetic("XOR", 6),
+            CMP = new AMD64BinaryArithmetic("CMP", 7);
 
         private final AMD64MIOp byteImmOp;
         private final AMD64MROp byteMrOp;
@@ -1842,13 +1839,14 @@ public class AMD64Assembler extends Assembler
     // @class AMD64Assembler.AMD64Shift
     public static final class AMD64Shift
     {
-        public static final AMD64Shift ROL = new AMD64Shift("ROL", 0);
-        public static final AMD64Shift ROR = new AMD64Shift("ROR", 1);
-        public static final AMD64Shift RCL = new AMD64Shift("RCL", 2);
-        public static final AMD64Shift RCR = new AMD64Shift("RCR", 3);
-        public static final AMD64Shift SHL = new AMD64Shift("SHL", 4);
-        public static final AMD64Shift SHR = new AMD64Shift("SHR", 5);
-        public static final AMD64Shift SAR = new AMD64Shift("SAR", 7);
+        public static final AMD64Shift
+            ROL = new AMD64Shift("ROL", 0),
+            ROR = new AMD64Shift("ROR", 1),
+            RCL = new AMD64Shift("RCL", 2),
+            RCR = new AMD64Shift("RCR", 3),
+            SHL = new AMD64Shift("SHL", 4),
+            SHR = new AMD64Shift("SHR", 5),
+            SAR = new AMD64Shift("SAR", 7);
 
         public final AMD64MOp m1Op;
         public final AMD64MOp mcOp;

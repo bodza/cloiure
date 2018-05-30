@@ -124,7 +124,7 @@ public enum Condition
                 canonicalCondition = CanonicalCondition.BT;
                 break;
             default:
-                throw new IllegalArgumentException(this.toString());
+                throw GraalError.shouldNotReachHere();
         }
         return new CanonicalizedCondition(canonicalCondition, canonicalMirror(), canonicalNegate());
     }
@@ -160,7 +160,7 @@ public enum Condition
             case AE:
                 return false;
         }
-        throw new IllegalArgumentException(this.toString());
+        throw GraalError.shouldNotReachHere();
     }
 
     /**
@@ -192,7 +192,7 @@ public enum Condition
             case AE:
                 return false;
         }
-        throw new IllegalArgumentException(this.toString());
+        throw GraalError.shouldNotReachHere();
     }
 
     /**
@@ -224,7 +224,7 @@ public enum Condition
             case AE:
                 return true;
         }
-        throw new IllegalArgumentException(this.toString());
+        throw GraalError.shouldNotReachHere();
     }
 
     /**
@@ -257,7 +257,7 @@ public enum Condition
             case AE:
                 return BT;
         }
-        throw new IllegalArgumentException(this.toString());
+        throw GraalError.shouldNotReachHere();
     }
 
     public boolean implies(Condition other)
@@ -289,7 +289,7 @@ public enum Condition
             case AE:
                 return false;
         }
-        throw new IllegalArgumentException(this.toString());
+        throw GraalError.shouldNotReachHere();
     }
 
     /**
@@ -658,7 +658,7 @@ public enum Condition
                     return null;
                 }
         }
-        throw new IllegalArgumentException(this.toString());
+        throw GraalError.shouldNotReachHere();
     }
 
     public Condition meet(Condition other)
@@ -792,6 +792,6 @@ public enum Condition
                     return null;
                 }
         }
-        throw new IllegalArgumentException(this.toString());
+        throw GraalError.shouldNotReachHere();
     }
 }

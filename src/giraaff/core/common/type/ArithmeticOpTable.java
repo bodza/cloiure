@@ -1,12 +1,15 @@
 package giraaff.core.common.type;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
 
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaUtil;
 
 import giraaff.core.common.calc.FloatConvert;
 import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Add;
@@ -29,7 +32,6 @@ import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Abs;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Neg;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Not;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Sqrt;
-import giraaff.util.CollectionsUtil;
 
 /**
  * Information about arithmetic operations.
@@ -126,6 +128,25 @@ public final class ArithmeticOpTable
         }
     }
 
+    /**
+     * Filters {@code inputs} with {@code predicate}, applies {@code mapper} and adds them in the
+     * array provided by {@code arrayGenerator}.
+     *
+     * @return the array provided by {@code arrayGenerator}.
+     */
+    private static <T, R> R[] filterAndMapToArray(T[] inputs, Predicate<? super T> predicate, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator)
+    {
+        List<R> resultList = new ArrayList<>();
+        for (T t : inputs)
+        {
+            if (predicate.test(t))
+            {
+                resultList.add(mapper.apply(t));
+            }
+        }
+        return resultList.toArray(arrayGenerator.apply(resultList.size()));
+    }
+
     public static ArithmeticOpTable wrap(ArithmeticOpWrapper wrapper, ArithmeticOpTable inner)
     {
         UnaryOp<Neg> neg = wrapIfNonNull(wrapper::wrapUnaryOp, inner.getNeg());
@@ -154,7 +175,7 @@ public final class ArithmeticOpTable
         IntegerConvertOp<SignExtend> signExtend = wrapIfNonNull(wrapper::wrapIntegerConvertOp, inner.getSignExtend());
         IntegerConvertOp<Narrow> narrow = wrapIfNonNull(wrapper::wrapIntegerConvertOp, inner.getNarrow());
 
-        FloatConvertOp[] floatConvert = CollectionsUtil.filterAndMapToArray(inner.floatConvert, Objects::nonNull, wrapper::wrapFloatConvertOp, FloatConvertOp[]::new);
+        FloatConvertOp[] floatConvert = filterAndMapToArray(inner.floatConvert, Objects::nonNull, wrapper::wrapFloatConvertOp, FloatConvertOp[]::new);
         return new ArithmeticOpTable(neg, add, sub, mul, mulHigh, umulHigh, div, rem, not, and, or, xor, shl, shr, ushr, abs, sqrt, zeroExtend, signExtend, narrow, floatConvert);
     }
 
@@ -365,11 +386,6 @@ public final class ArithmeticOpTable
         return floatConvert[op.ordinal()];
     }
 
-    public static String toString(Op... ops)
-    {
-        return CollectionsUtil.mapAndJoin(ops, o -> o == null ? "null" : o.operator + "{" + MetaUtil.getSimpleName(o.getClass(), false) + "}", ",");
-    }
-
     private boolean opsEquals(ArithmeticOpTable that)
     {
         return Objects.equals(neg, that.neg) &&
@@ -420,12 +436,6 @@ public final class ArithmeticOpTable
         return false;
     }
 
-    @Override
-    public String toString()
-    {
-        return getClass().getSimpleName() + "[" + toString(neg, add, sub, mul, mulHigh, umulHigh, div, rem, not, and, or, xor, shl, shr, ushr, abs, sqrt, zeroExtend, signExtend, narrow) + ",floatConvert[" + toString(floatConvert) + "]]";
-    }
-
     // @class ArithmeticOpTable.Op
     public abstract static class Op
     {
@@ -436,12 +446,6 @@ public final class ArithmeticOpTable
         {
             super();
             this.operator = operator;
-        }
-
-        @Override
-        public String toString()
-        {
-            return operator;
         }
 
         @Override
@@ -758,27 +762,6 @@ public final class ArithmeticOpTable
                 return false;
             }
             return true;
-        }
-
-        @Override
-        public String toString()
-        {
-            if (associative)
-            {
-                if (commutative)
-                {
-                    return super.toString() + "[AC]";
-                }
-                else
-                {
-                    return super.toString() + "[A]";
-                }
-            }
-            else if (commutative)
-            {
-                return super.toString() + "[C]";
-            }
-            return super.toString();
         }
     }
 

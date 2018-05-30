@@ -13,12 +13,12 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.code.CompilationResult;
 import giraaff.core.LIRGenerationPhase.LIRGenerationContext;
+import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.alloc.ComputeBlockOrder;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.target.Backend;
 import giraaff.lir.LIR;
-import giraaff.lir.alloc.OutOfRegistersException;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.asm.CompilationResultBuilderFactory;
 import giraaff.lir.framemap.FrameMap;
@@ -76,8 +76,7 @@ public final class GraalCompiler
 
         /**
          * @param graph the graph to be compiled
-         * @param installedCodeOwner the method the compiled code will be associated with once
-         *            installed. This argument can be null.
+         * @param installedCodeOwner the method the compiled code will be associated with once installed. This argument can be null.
          */
         // @cons
         public Request(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, CompilationResult compilationResult, CompilationResultBuilderFactory factory)
@@ -94,16 +93,6 @@ public final class GraalCompiler
             this.lirSuites = lirSuites;
             this.compilationResult = compilationResult;
             this.factory = factory;
-        }
-
-        /**
-         * Executes this compilation request.
-         *
-         * @return the result of the compilation
-         */
-        public CompilationResult execute()
-        {
-            return GraalCompiler.compile(this);
         }
     }
 
@@ -168,7 +157,7 @@ public final class GraalCompiler
         {
             return emitLIR0(backend, graph, stub, registerConfig, lirSuites);
         }
-        catch (OutOfRegistersException e)
+        catch (/*OutOfRegistersException*/ PermanentBailoutException e)
         {
             throw new GraalError(e);
         }
@@ -185,7 +174,7 @@ public final class GraalCompiler
         LIR lir = new LIR(schedule.getCFG(), linearScanOrder, codeEmittingOrder, graph.getOptions());
 
         FrameMapBuilder frameMapBuilder = backend.newFrameMapBuilder(registerConfig);
-        LIRGenerationResult lirGenRes = backend.newLIRGenerationResult(graph.compilationId(), lir, frameMapBuilder, graph, stub);
+        LIRGenerationResult lirGenRes = backend.newLIRGenerationResult(lir, frameMapBuilder, graph, stub);
         LIRGeneratorTool lirGen = backend.newLIRGenerator(lirGenRes);
         NodeLIRBuilderTool nodeLirGen = backend.newNodeLIRBuilder(graph, lirGen);
 
@@ -194,20 +183,6 @@ public final class GraalCompiler
         new LIRGenerationPhase().apply(backend.getTarget(), lirGenRes, context);
 
         return emitLowLevel(backend.getTarget(), lirGenRes, lirGen, lirSuites, backend.newRegisterAllocationConfig(registerConfig));
-    }
-
-    protected static String getCompilationUnitName(StructuredGraph graph, CompilationResult compilationResult)
-    {
-        if (compilationResult != null && compilationResult.getName() != null)
-        {
-            return compilationResult.getName();
-        }
-        ResolvedJavaMethod method = graph.method();
-        if (method == null)
-        {
-            return "<unknown>";
-        }
-        return method.format("%H.%n(%p)");
     }
 
     public static LIRGenerationResult emitLowLevel(TargetDescription target, LIRGenerationResult lirGenRes, LIRGeneratorTool lirGen, LIRSuites lirSuites, RegisterAllocationConfig registerAllocationConfig)

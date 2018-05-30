@@ -10,13 +10,13 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
+import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.alloc.RegisterAllocationConfig.AllocatableRegisters;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.util.Util;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.StandardOp.ValueMoveOp;
-import giraaff.lir.alloc.OutOfRegistersException;
 import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
 import giraaff.lir.alloc.lsra.Interval.RegisterPriority;
 import giraaff.lir.alloc.lsra.Interval.SpillState;
@@ -782,10 +782,9 @@ class LinearScanWalker extends IntervalWalker
                          */
                         continue;
                     }
-                    String description = generateOutOfRegErrorMsg(interval, firstUsage, availableRegs);
                     // assign a reasonable register and do a bailout in product mode to avoid errors
                     allocator.assignSpillSlot(interval);
-                    throw new OutOfRegistersException("LinearScan: no register found", description);
+                    throw new PermanentBailoutException("LinearScan: no register found");
                 }
 
                 splitAndSpillInterval(interval);
@@ -808,11 +807,6 @@ class LinearScanWalker extends IntervalWalker
         // perform splitting and spilling for all affected intervals
         splitAndSpillIntersectingIntervals(reg);
         return;
-    }
-
-    private static String generateOutOfRegErrorMsg(Interval interval, int firstUsage, Register[] availableRegs)
-    {
-        return "Cannot spill interval (" + interval + ") that is used in first instruction (possible reason: no register found) firstUsage=" + firstUsage + ", interval.from()=" + interval.from() + "; already used candidates: " + Arrays.toString(availableRegs);
     }
 
     boolean noAllocationPossible(Interval interval)

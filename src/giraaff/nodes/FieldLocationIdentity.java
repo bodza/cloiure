@@ -48,10 +48,4 @@ public final class FieldLocationIdentity extends LocationIdentity implements For
     {
         return inner.hashCode();
     }
-
-    @Override
-    public String toString()
-    {
-        return inner.format("%h.%n") + (isImmutable() ? ":immutable" : "");
-    }
 }

@@ -77,12 +77,4 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
     {
         return null;
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder ret = new StringBuilder("MethodCounters*");
-        appendString(ret);
-        return ret.toString();
-    }
 }

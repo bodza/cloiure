@@ -36,12 +36,6 @@ public final class ConstantValue extends Value
     }
 
     @Override
-    public String toString()
-    {
-        return constant.toString();
-    }
-
-    @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof ConstantValue)

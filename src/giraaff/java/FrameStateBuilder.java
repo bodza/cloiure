@@ -21,7 +21,6 @@ import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.java.BciBlockMapping.BciBlock;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FrameState;
@@ -257,34 +256,6 @@ public final class FrameStateBuilder implements SideEffectsState
     public ResolvedJavaMethod getMethod()
     {
         return code.getMethod();
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[locals: [");
-        for (int i = 0; i < locals.length; i++)
-        {
-            sb.append(i == 0 ? "" : ",").append(locals[i] == null ? "_" : locals[i] == FrameState.TWO_SLOT_MARKER ? "#" : locals[i].toString(Verbosity.Id));
-        }
-        sb.append("] stack: [");
-        for (int i = 0; i < stackSize; i++)
-        {
-            sb.append(i == 0 ? "" : ",").append(stack[i] == null ? "_" : stack[i] == FrameState.TWO_SLOT_MARKER ? "#" : stack[i].toString(Verbosity.Id));
-        }
-        sb.append("] locks: [");
-        for (int i = 0; i < lockedObjects.length; i++)
-        {
-            sb.append(i == 0 ? "" : ",").append(lockedObjects[i].toString(Verbosity.Id)).append(" / ").append(monitorIds[i].toString(Verbosity.Id));
-        }
-        sb.append("]");
-        if (rethrowException)
-        {
-            sb.append(" rethrowException");
-        }
-        sb.append("]");
-        return sb.toString();
     }
 
     public FrameState create(int bci, StateSplit forStateSplit)

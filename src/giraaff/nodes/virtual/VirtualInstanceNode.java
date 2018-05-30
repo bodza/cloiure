@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.spi.ArrayOffsetProvider;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.ValueNode;
 
@@ -64,19 +63,6 @@ public class VirtualInstanceNode extends VirtualObjectNode
     public ResolvedJavaField[] getFields()
     {
         return fields;
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(Verbosity.Name) + "(" + getObjectId() + ") " + type.toJavaName(false);
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     @Override

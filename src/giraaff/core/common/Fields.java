@@ -381,22 +381,6 @@ public class Fields
         }
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append('[');
-        appendFields(sb);
-        return sb.append(']').toString();
-    }
-
-    public void appendFields(StringBuilder sb)
-    {
-        for (int i = 0; i < offsets.length; i++)
-        {
-            sb.append(i == 0 ? "" : ", ").append(getName(i)).append('@').append(offsets[i]);
-        }
-    }
-
     public boolean getBoolean(Object n, int i)
     {
         return UnsafeAccess.UNSAFE.getBoolean(n, offsets[i]);

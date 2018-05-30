@@ -87,18 +87,6 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
         return exactType && type != null;
     }
 
-    protected void appendString(StringBuilder sb)
-    {
-        if (this.isEmpty())
-        {
-            sb.append(" empty");
-        }
-        else
-        {
-            sb.append(nonNull() ? "!" : "").append(exactType ? "#" : "").append(' ').append(type == null ? "-" : type.getName()).append(alwaysNull() ? " NULL" : "");
-        }
-    }
-
     @Override
     public Stamp meet(Stamp otherStamp)
     {

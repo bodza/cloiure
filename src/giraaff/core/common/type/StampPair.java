@@ -37,17 +37,4 @@ public final class StampPair
     {
         return trustedStamp;
     }
-
-    @Override
-    public String toString()
-    {
-        if (uncheckedStamp == null)
-        {
-            return trustedStamp.toString();
-        }
-        else
-        {
-            return trustedStamp + " (unchecked=" + uncheckedStamp + ")";
-        }
-    }
 }

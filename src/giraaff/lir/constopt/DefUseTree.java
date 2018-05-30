@@ -51,12 +51,6 @@ final class DefUseTree
         return block;
     }
 
-    @Override
-    public String toString()
-    {
-        return "DefUseTree [" + instruction + "|" + block + "," + uses + "]";
-    }
-
     public void addUsage(AbstractBlockBase<?> b, LIRInstruction inst, Value value)
     {
         uses.add(new UseEntry(b, inst, value));

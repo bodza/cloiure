@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.Stamp;
@@ -149,7 +148,7 @@ public final class ForeignCallStub extends Stub
      * %r15 on AMD64) and is only prepended if {@link #prependThread} is true.
      */
     @Override
-    protected StructuredGraph getGraph(CompilationIdentifier compilationId)
+    protected StructuredGraph getStubGraph()
     {
         WordTypes wordTypes = providers.getWordTypes();
         Class<?>[] args = linkage.getDescriptor().getArgumentTypes();
@@ -157,8 +156,8 @@ public final class ForeignCallStub extends Stub
 
         try
         {
-            ResolvedJavaMethod thisMethod = providers.getMetaAccess().lookupJavaMethod(ForeignCallStub.class.getDeclaredMethod("getGraph", CompilationIdentifier.class));
-            GraphKit kit = new GraphKit(thisMethod, providers, wordTypes, providers.getGraphBuilderPlugins(), compilationId, toString());
+            ResolvedJavaMethod thisMethod = providers.getMetaAccess().lookupJavaMethod(ForeignCallStub.class.getDeclaredMethod("getStubGraph"));
+            GraphKit kit = new GraphKit(thisMethod, providers, wordTypes, providers.getGraphBuilderPlugins());
             StructuredGraph graph = kit.getGraph();
             ParameterNode[] params = createParameters(kit, args);
             ReadRegisterNode thread = kit.append(new ReadRegisterNode(providers.getRegisters().getThreadRegister(), wordTypes.getWordKind(), true, false));

@@ -54,10 +54,4 @@ final class UseEntry
     {
         return value;
     }
-
-    @Override
-    public String toString()
-    {
-        return "Use[" + getValue() + ":" + instruction + ":" + block + "]";
-    }
 }

@@ -133,7 +133,6 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         AllocatableValue fromLocation = interval.getSplitChildAtOpId(spillOpId, OperandMode.DEF, allocator).location();
         AllocatableValue toLocation = LinearScan.canonicalSpillOpr(interval);
         LIRInstruction move = allocator.getSpillMoveFactory().createMove(toLocation, fromLocation);
-        move.setComment(res, "LSRAOptimizeSpillPos: optimize spill pos");
         move.setId(LinearScan.DOMINATOR_SPILL_MOVE_ID);
         // We can use the insertion buffer directly because we always insert at position 1.
         insertionBuffer.append(1, move);

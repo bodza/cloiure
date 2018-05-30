@@ -431,22 +431,6 @@ public final class Interval
         {
             list.set((index << 1) + 1, registerPriority.ordinal());
         }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder buf = new StringBuilder("[");
-            for (int i = size() - 1; i >= 0; --i)
-            {
-                if (buf.length() != 1)
-                {
-                    buf.append(", ");
-                }
-                RegisterPriority prio = registerPriority(i);
-                buf.append(usePos(i)).append(" -> ").append(prio.ordinal()).append(':').append(prio);
-            }
-            return buf.append("]").toString();
-        }
     }
 
     protected static final int END_MARKER_OPERAND_NUMBER = Integer.MIN_VALUE;
@@ -464,8 +448,7 @@ public final class Interval
 
     /**
      * The {@linkplain RegisterValue register} or {@linkplain StackSlot spill slot} assigned to this
-     * interval. In case of a spilled interval which is re-materialized this is
-     * {@link Value#ILLEGAL}.
+     * interval. In case of a spilled interval which is re-materialized this is {@link Value#ILLEGAL}.
      */
     private AllocatableValue location;
 
@@ -875,8 +858,7 @@ public final class Interval
                 {
                     if (i > 0)
                     {
-                        // exchange current split child to start of list (faster access for next
-                        // call)
+                        // exchange current split child to start of list (faster access for next call)
                         Util.atPutGrow(splitChildren, i, splitChildren.get(0), null);
                         Util.atPutGrow(splitChildren, 0, cur, null);
                     }
@@ -889,35 +871,6 @@ public final class Interval
 
             return result;
         }
-    }
-
-    private boolean checkSplitChild(Interval result, int opId, LinearScan allocator, int toOffset, LIRInstruction.OperandMode mode)
-    {
-        if (result == null)
-        {
-            // this is an error
-            StringBuilder msg = new StringBuilder(this.toString()).append(" has no child at ").append(opId);
-            if (!splitChildren.isEmpty())
-            {
-                Interval firstChild = splitChildren.get(0);
-                Interval lastChild = splitChildren.get(splitChildren.size() - 1);
-                msg.append(" (first = ").append(firstChild).append(", last = ").append(lastChild).append(")");
-            }
-            throw new GraalError("Linear Scan Error: %s", msg);
-        }
-
-        if (!splitChildren.isEmpty())
-        {
-            for (Interval interval : splitChildren)
-            {
-                if (interval != result && interval.from() <= opId && opId < interval.to() + toOffset)
-                {
-                    // Should not happen: Try another compilation as it is very unlikely to happen again.
-                    throw new GraalError("two valid result intervals found for opId %d: %d and %d\n%s\n", opId, result.operandNumber, interval.operandNumber, result.logString(allocator), interval.logString(allocator));
-                }
-            }
-        }
-        return true;
     }
 
     // returns the interval that covers the given opId or null if there is none
@@ -1250,85 +1203,12 @@ public final class Interval
         return false;
     }
 
-    @Override
-    public String toString()
-    {
-        String from = "?";
-        String to = "?";
-        if (first != null && !first.isEndMarker())
-        {
-            from = String.valueOf(from());
-            // to() may cache a computed value, modifying the current object, which is a bad idea
-            // for a printing function. Compute it directly instead.
-            to = String.valueOf(calcTo());
-        }
-        String locationString = this.location == null ? "" : "@" + this.location;
-        return operandNumber + ":" + operand + (ValueUtil.isRegister(operand) ? "" : locationString) + "[" + from + "," + to + "]";
-    }
-
     /**
      * Gets the use position information for this interval.
      */
     public UsePosList usePosList()
     {
         return usePosList;
-    }
-
-    /**
-     * Gets a single line string for logging the details of this interval to a log stream.
-     *
-     * @param allocator the register allocator context
-     */
-    public String logString(LinearScan allocator)
-    {
-        StringBuilder buf = new StringBuilder(100);
-        buf.append(operandNumber).append(':').append(operand).append(' ');
-        if (!ValueUtil.isRegister(operand))
-        {
-            if (location != null)
-            {
-                buf.append("location{").append(location).append("} ");
-            }
-        }
-
-        buf.append("hints{").append(splitParent.operandNumber);
-        Interval hint = locationHint(false);
-        if (hint != null && hint.operandNumber != splitParent.operandNumber)
-        {
-            buf.append(", ").append(hint.operandNumber);
-        }
-        buf.append("} ranges{");
-
-        // print ranges
-        Range cur = first;
-        while (!cur.isEndMarker())
-        {
-            if (cur != first)
-            {
-                buf.append(", ");
-            }
-            buf.append(cur);
-            cur = cur.next;
-        }
-        buf.append("} uses{");
-
-        // print use positions
-        int prev = -1;
-        for (int i = usePosList.size() - 1; i >= 0; --i)
-        {
-            if (i != usePosList.size() - 1)
-            {
-                buf.append(", ");
-            }
-            buf.append(usePosList.usePos(i)).append(':').append(usePosList.registerPriority(i));
-            prev = usePosList.usePos(i);
-        }
-        buf.append("} spill-state{").append(spillState()).append("}");
-        if (canMaterialize())
-        {
-            buf.append(" (remat:").append(getMaterializedValue().toString()).append(")");
-        }
-        return buf.toString();
     }
 
     List<Interval> getSplitChildren()

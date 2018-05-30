@@ -78,12 +78,6 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
         return immutable;
     }
 
-    @Override
-    public String toString()
-    {
-        return name + (isImmutable() ? ":final" : "");
-    }
-
     /**
      * Returns the named location identity for an array of the given element kind. Array accesses of
      * the same kind must have the same location identity unless an alias analysis guarantees that

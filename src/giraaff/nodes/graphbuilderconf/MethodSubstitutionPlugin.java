@@ -100,7 +100,7 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
     /**
      * Gets the reflection API version of the substitution method.
      */
-    Method getJavaSubstitute() throws GraalError
+    Method getJavaSubstitute()
     {
         Method substituteMethod = lookupSubstitute();
         int modifiers = substituteMethod.getModifiers();
@@ -177,25 +177,5 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
     {
         ResolvedJavaMethod subst = getSubstitute(b.getMetaAccess());
         return b.intrinsify(bytecodeProvider, targetMethod, subst, receiver, argsIncludingReceiver);
-    }
-
-    @Override
-    public StackTraceElement getApplySourceLocation(MetaAccessProvider metaAccess)
-    {
-        Class<?> c = getClass();
-        for (Method m : c.getDeclaredMethods())
-        {
-            if (m.getName().equals("execute"))
-            {
-                return metaAccess.lookupJavaMethod(m).asStackTraceElement(0);
-            }
-        }
-        throw new GraalError("could not find method named \"execute\" in " + c.getName());
-    }
-
-    @Override
-    public String toString()
-    {
-        return String.format("%s[%s.%s(%s)]", getClass().getSimpleName(), declaringClass.getName(), name, Arrays.asList(parameters).stream().map(c -> c.getTypeName()).collect(Collectors.joining(", ")));
     }
 }

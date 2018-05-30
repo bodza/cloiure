@@ -21,7 +21,6 @@ import giraaff.core.common.calc.Condition;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.core.common.type.Stamp;
-import giraaff.graph.GraalGraphError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeMap;
 import giraaff.graph.iterators.NodeIterable;
@@ -292,11 +291,11 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                             }
                             catch (GraalError e)
                             {
-                                throw GraalGraphError.transformAndAddContext(e, valueNode);
+                                throw e;
                             }
-                            catch (Throwable e)
+                            catch (Throwable t)
                             {
-                                throw new GraalGraphError(e).addContext(valueNode);
+                                throw new GraalError(t);
                             }
                         }
                     }
@@ -428,7 +427,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         }
         else
         {
-            throw GraalError.unimplemented(node.toString());
+            throw GraalError.unimplemented();
         }
     }
 
@@ -490,7 +489,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         }
         else
         {
-            throw GraalError.unimplemented(node.toString());
+            throw GraalError.unimplemented();
         }
     }
 

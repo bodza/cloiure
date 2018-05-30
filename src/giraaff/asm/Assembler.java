@@ -96,29 +96,6 @@ public abstract class Assembler
         return codeBuffer.getInt(pos);
     }
 
-    private static final String NEWLINE = System.getProperty("line.separator");
-
-    /**
-     * Some GPU architectures have a text based encoding.
-     */
-    public final void emitString(String x)
-    {
-        emitString0("\t"); // XXX REMOVE ME pretty-printing
-        emitString0(x);
-        emitString0(NEWLINE);
-    }
-
-    // XXX for pretty-printing
-    public final void emitString0(String x)
-    {
-        codeBuffer.emitBytes(x.getBytes(), 0, x.length());
-    }
-
-    public void emitString(String s, int pos)
-    {
-        codeBuffer.emitBytes(s.getBytes(), pos);
-    }
-
     /**
      * Closes this assembler. No extra data can be written to this assembler after this call.
      *

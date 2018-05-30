@@ -16,7 +16,6 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.graph.iterators.NodeIterable;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.java.ExceptionObjectNode;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.virtual.EscapeObjectState;
@@ -487,62 +486,6 @@ public final class FrameState extends VirtualState implements IterableNodeType
     public NodeIterable<FrameState> innerFrameStates()
     {
         return usages().filter(FrameState.class);
-    }
-
-    private static String toString(FrameState frameState)
-    {
-        StringBuilder sb = new StringBuilder();
-        String nl = CodeUtil.NEW_LINE;
-        FrameState fs = frameState;
-        while (fs != null)
-        {
-            Bytecode.appendLocation(sb, fs.getCode(), fs.bci);
-            if (BytecodeFrame.isPlaceholderBci(fs.bci))
-            {
-                sb.append("//").append(BytecodeFrame.getPlaceholderBciName(fs.bci));
-            }
-            sb.append(nl);
-            sb.append("locals: [");
-            for (int i = 0; i < fs.localsSize(); i++)
-            {
-                sb.append(i == 0 ? "" : ", ").append(fs.localAt(i) == null ? "_" : fs.localAt(i).toString(Verbosity.Id));
-            }
-            sb.append("]").append(nl).append("stack: [");
-            for (int i = 0; i < fs.stackSize(); i++)
-            {
-                sb.append(i == 0 ? "" : ", ").append(fs.stackAt(i) == null ? "_" : fs.stackAt(i).toString(Verbosity.Id));
-            }
-            sb.append("]").append(nl).append("locks: [");
-            for (int i = 0; i < fs.locksSize(); i++)
-            {
-                sb.append(i == 0 ? "" : ", ").append(fs.lockAt(i) == null ? "_" : fs.lockAt(i).toString(Verbosity.Id));
-            }
-            sb.append(']').append(nl);
-            fs = fs.outerFrameState();
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Debugger)
-        {
-            return toString(this);
-        }
-        else if (verbosity == Verbosity.Name)
-        {
-            String res = super.toString(Verbosity.Name) + "@" + bci;
-            if (BytecodeFrame.isPlaceholderBci(bci))
-            {
-                res += "[" + BytecodeFrame.getPlaceholderBciName(bci) + "]";
-            }
-            return res;
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     private int outerLockDepth()

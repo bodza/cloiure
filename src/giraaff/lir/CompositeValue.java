@@ -68,12 +68,6 @@ public abstract class CompositeValue extends Value
     protected abstract void visitEachComponent(LIRInstruction inst, OperandMode mode, InstructionValueConsumer proc);
 
     @Override
-    public String toString()
-    {
-        return CompositeValueClass.format(this);
-    }
-
-    @Override
     public int hashCode()
     {
         return 53 * super.hashCode();

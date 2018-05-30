@@ -23,7 +23,6 @@ import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.MapCursor;
 
 import giraaff.bytecode.Bytecode;
-import giraaff.code.SourceStackTraceBailoutException;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.graph.Graph;
@@ -437,119 +436,6 @@ public final class GraphUtil
                 GraphUtil.checkRedundantProxy(vpn);
             }
         }
-    }
-
-    /**
-     * Gets an approximate source code location for a node if possible.
-     *
-     * @return the StackTraceElements if an approximate source location is found, null otherwise
-     */
-    public static StackTraceElement[] approxSourceStackTraceElement(Node node)
-    {
-        ArrayList<StackTraceElement> elements = new ArrayList<>();
-        Node n = node;
-        while (n != null)
-        {
-            if (n instanceof MethodCallTargetNode)
-            {
-                elements.add(((MethodCallTargetNode) n).targetMethod().asStackTraceElement(-1));
-                n = ((MethodCallTargetNode) n).invoke().asNode();
-            }
-
-            if (n instanceof StateSplit)
-            {
-                FrameState state = ((StateSplit) n).stateAfter();
-                elements.addAll(Arrays.asList(approxSourceStackTraceElement(state)));
-                break;
-            }
-            n = n.predecessor();
-        }
-        return elements.toArray(new StackTraceElement[elements.size()]);
-    }
-
-    /**
-     * Gets an approximate source code location for frame state.
-     *
-     * @return the StackTraceElements if an approximate source location is found, null otherwise
-     */
-    public static StackTraceElement[] approxSourceStackTraceElement(FrameState frameState)
-    {
-        ArrayList<StackTraceElement> elements = new ArrayList<>();
-        FrameState state = frameState;
-        while (state != null)
-        {
-            Bytecode code = state.getCode();
-            if (code != null)
-            {
-                elements.add(code.asStackTraceElement(state.bci - 1));
-            }
-            state = state.outerFrameState();
-        }
-        return elements.toArray(new StackTraceElement[0]);
-    }
-
-    /**
-     * Gets approximate stack trace elements for a bytecode position.
-     */
-    public static StackTraceElement[] approxSourceStackTraceElement(BytecodePosition bytecodePosition)
-    {
-        ArrayList<StackTraceElement> elements = new ArrayList<>();
-        BytecodePosition position = bytecodePosition;
-        while (position != null)
-        {
-            ResolvedJavaMethod method = position.getMethod();
-            if (method != null)
-            {
-                elements.add(method.asStackTraceElement(position.getBCI()));
-            }
-            position = position.getCaller();
-        }
-        return elements.toArray(new StackTraceElement[0]);
-    }
-
-    /**
-     * Gets an approximate source code location for a node, encoded as an exception, if possible.
-     *
-     * @return the exception with the location
-     */
-    public static RuntimeException approxSourceException(Node node, Throwable cause)
-    {
-        final StackTraceElement[] elements = approxSourceStackTraceElement(node);
-        return createBailoutException(cause == null ? "" : cause.getMessage(), cause, elements);
-    }
-
-    /**
-     * Creates a bailout exception with the given stack trace elements and message.
-     *
-     * @param message the message of the exception
-     * @param elements the stack trace elements
-     * @return the exception
-     */
-    public static BailoutException createBailoutException(String message, Throwable cause, StackTraceElement[] elements)
-    {
-        return SourceStackTraceBailoutException.create(cause, message, elements);
-    }
-
-    /**
-     * Returns a string representation of the given collection of objects.
-     *
-     * @param objects The {@link Iterable} that will be used to iterate over the objects.
-     * @return A string of the format "[a, b, ...]".
-     */
-    public static String toString(Iterable<?> objects)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (Object o : objects)
-        {
-            sb.append(o).append(", ");
-        }
-        if (sb.length() > 1)
-        {
-            sb.setLength(sb.length() - 2);
-        }
-        sb.append("]");
-        return sb.toString();
     }
 
     /**

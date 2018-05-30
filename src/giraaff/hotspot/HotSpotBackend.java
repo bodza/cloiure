@@ -12,7 +12,6 @@ import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.runtime.JVMCICompiler;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
@@ -21,7 +20,6 @@ import org.graalvm.collections.MapCursor;
 import org.graalvm.word.Pointer;
 
 import giraaff.code.CompilationResult;
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallLinkage;
@@ -379,16 +377,5 @@ public abstract class HotSpotBackend extends Backend
     {
         HotSpotCompilationRequest compRequest = compilationRequest instanceof HotSpotCompilationRequest ? (HotSpotCompilationRequest) compilationRequest : null;
         return HotSpotCompiledCodeBuilder.createCompiledCode(getCodeCache(), method, compRequest, compResult);
-    }
-
-    @Override
-    public CompilationIdentifier getCompilationIdentifier(ResolvedJavaMethod resolvedJavaMethod)
-    {
-        if (resolvedJavaMethod instanceof HotSpotResolvedJavaMethod)
-        {
-            HotSpotCompilationRequest request = new HotSpotCompilationRequest((HotSpotResolvedJavaMethod) resolvedJavaMethod, JVMCICompiler.INVOCATION_ENTRY_BCI, 0L);
-            return new HotSpotCompilationIdentifier(request);
-        }
-        return super.getCompilationIdentifier(resolvedJavaMethod);
     }
 }

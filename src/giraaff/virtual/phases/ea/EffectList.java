@@ -1,6 +1,5 @@
 package giraaff.virtual.phases.ea;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -175,64 +174,10 @@ public class EffectList implements Iterable<EffectList.Effect>
                 }
                 catch (Throwable t)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    toString(sb, i);
-                    throw new GraalError(t).addContext("effect", sb);
+                    throw new GraalError(t);
                 }
             }
         }
-    }
-
-    private void toString(StringBuilder sb, int i)
-    {
-        Effect effect = effects[i];
-        sb.append(getName(i)).append(" [");
-        boolean first = true;
-        for (Field field : effect.getClass().getDeclaredFields())
-        {
-            try
-            {
-                field.setAccessible(true);
-                Object object = field.get(effect);
-                if (object == this)
-                {
-                    // Inner classes could capture the EffectList itself.
-                    continue;
-                }
-                sb.append(first ? "" : ", ").append(field.getName()).append("=").append(format(object));
-                first = false;
-            }
-            catch (SecurityException | IllegalAccessException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-        sb.append(']');
-    }
-
-    private static String format(Object object)
-    {
-        if (object != null && Object[].class.isAssignableFrom(object.getClass()))
-        {
-            return Arrays.toString((Object[]) object);
-        }
-        return "" + object;
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < size(); i++)
-        {
-            Effect effect = get(i);
-            if (effect.isVisible())
-            {
-                toString(sb, i);
-                sb.append('\n');
-            }
-        }
-        return sb.toString();
     }
 
     private String getName(int i)

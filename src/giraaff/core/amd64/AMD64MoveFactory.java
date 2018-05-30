@@ -106,7 +106,7 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
         }
         else
         {
-            throw GraalError.shouldNotReachHere(String.format("unsupported constant: %s", src));
+            throw GraalError.shouldNotReachHere("unsupported constant: " + src);
         }
     }
 
@@ -119,7 +119,7 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
         }
         else
         {
-            throw GraalError.shouldNotReachHere(String.format("unsupported constant for stack load: %s", input));
+            throw GraalError.shouldNotReachHere("unsupported constant for stack load: " + input);
         }
     }
 }

@@ -67,7 +67,6 @@ public final class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhas
             Variable saveVariable = lirGen.newVariable(lirKind);
             LIRInstruction save = lirGen.getSpillMoveFactory().createMove(saveVariable, registerValue);
             buffer.append(insertionIndex, save);
-            save.setComment(lirGenRes, "SaveCalleeSavedRegisters: saveAtEntry");
             saveMap.put(register, saveVariable);
             savedRegisterValues[savedRegisterValueIndex++] = registerValue;
         }
@@ -86,7 +85,6 @@ public final class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhas
         {
             LIRInstruction restore = moveFactory.createMove(register.asValue(saved.getValueKind()), saved);
             buffer.append(insertionIndex, restore);
-            restore.setComment(lirGenRes, "SaveCalleeSavedRegisters: restoreAtExit");
         });
         buffer.finish();
     }

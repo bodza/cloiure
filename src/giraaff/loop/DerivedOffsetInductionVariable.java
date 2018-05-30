@@ -154,10 +154,4 @@ public final class DerivedOffsetInductionVariable extends DerivedInductionVariab
     public void deleteUnusedNodes()
     {
     }
-
-    @Override
-    public String toString()
-    {
-        return String.format("DerivedOffsetInductionVariable base (%s) %s %s", base, value.getNodeClass().shortName(), offset);
-    }
 }

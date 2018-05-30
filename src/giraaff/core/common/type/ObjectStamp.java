@@ -30,15 +30,6 @@ public class ObjectStamp extends AbstractObjectStamp
     }
 
     @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append('a');
-        appendString(sb);
-        return sb.toString();
-    }
-
-    @Override
     public boolean isCompatible(Stamp other)
     {
         if (this == other)

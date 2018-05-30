@@ -438,11 +438,7 @@ public final class InliningData
         }
         catch (AssertionError | RuntimeException e)
         {
-            throw new GraalError(e).addContext(calleeInfo.toString());
-        }
-        catch (GraalError e)
-        {
-            throw e.addContext(calleeInfo.toString());
+            throw new GraalError(e);
         }
     }
 
@@ -626,46 +622,6 @@ public final class InliningData
     public int inliningDepth()
     {
         return invocationQueue.size() - 1;
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder result = new StringBuilder("Invocations: ");
-
-        for (MethodInvocation invocation : invocationQueue)
-        {
-            if (invocation.callee() != null)
-            {
-                result.append(invocation.callee().numberOfMethods());
-                result.append("x ");
-                result.append(invocation.callee().invoke());
-                result.append("; ");
-            }
-        }
-
-        result.append("\nGraphs: ");
-        for (CallsiteHolder graph : graphQueue)
-        {
-            result.append(graph.graph());
-            result.append("; ");
-        }
-
-        return result.toString();
-    }
-
-    /**
-     * Gets a stack trace representing the current inlining stack represented by this object.
-     */
-    public Collection<StackTraceElement> getInvocationStackTrace()
-    {
-        List<StackTraceElement> result = new ArrayList<>();
-        for (CallsiteHolder graph : graphQueue)
-        {
-            result.add(graph.method().asStackTraceElement(0));
-        }
-
-        return result;
     }
 
     private boolean contains(StructuredGraph graph)

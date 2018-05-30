@@ -97,12 +97,6 @@ public final class IllegalStamp extends Stamp
     }
 
     @Override
-    public String toString()
-    {
-        return "ILLEGAL";
-    }
-
-    @Override
     public boolean hasValues()
     {
         return true;

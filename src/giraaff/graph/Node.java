@@ -19,8 +19,8 @@ import giraaff.graph.iterators.NodePredicate;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
 /**
@@ -645,19 +645,19 @@ public abstract class Node implements Cloneable, NodeInterface
     {
         if (graph != null && graph.isFrozen())
         {
-            fail("cannot modify frozen graph");
+            throw new GraalError("cannot modify frozen graph");
         }
         if (other == this)
         {
-            fail("cannot replace a node with itself");
+            throw new GraalError("cannot replace a node with itself");
         }
         if (isDeleted())
         {
-            fail("cannot replace deleted node");
+            throw new GraalError("cannot replace deleted node");
         }
         if (other != null && other.isDeleted())
         {
-            fail("cannot replace with deleted node %s", other);
+            throw new GraalError("cannot replace with deleted node %s", other);
         }
         return true;
     }
@@ -744,7 +744,7 @@ public abstract class Node implements Cloneable, NodeInterface
     {
         if (filter == null)
         {
-            fail("filter cannot be null");
+            throw new GraalError("filter cannot be null");
         }
         checkReplaceWith(other);
         int i = 0;
@@ -831,7 +831,7 @@ public abstract class Node implements Cloneable, NodeInterface
         {
             if (!predecessor.getNodeClass().replaceFirstSuccessor(predecessor, this, other))
             {
-                fail("not found in successors, predecessor: %s", predecessor);
+                throw new GraalError("not found in successors, predecessor: %s", predecessor);
             }
             predecessor.updatePredecessor(this, other);
         }
@@ -842,7 +842,7 @@ public abstract class Node implements Cloneable, NodeInterface
         checkReplaceWith(other);
         if (other == null)
         {
-            fail("cannot replace with null");
+            throw new GraalError("cannot replace with null");
         }
         if (this.hasUsages())
         {
@@ -990,7 +990,7 @@ public abstract class Node implements Cloneable, NodeInterface
         }
         catch (Exception e)
         {
-            throw new GraalGraphError(e).addContext(this);
+            throw new GraalError(e);
         }
         newNode.graph = into;
         newNode.id = INITIAL_ID;
@@ -1010,11 +1010,6 @@ public abstract class Node implements Cloneable, NodeInterface
 
     protected void afterClone(@SuppressWarnings("unused") Node other)
     {
-    }
-
-    protected VerificationError fail(String message, Object... args) throws GraalGraphError
-    {
-        throw new VerificationError(message, args).addContext(this);
     }
 
     public Iterable<? extends Node> cfgPredecessors()
@@ -1058,37 +1053,6 @@ public abstract class Node implements Cloneable, NodeInterface
      * Do not overwrite the equality test of a node in subclasses. Equality tests must rely solely
      * on identity.
      */
-
-    /**
-     * This method is a shortcut for {@link #toString(Verbosity)} with {@link Verbosity#Short}.
-     */
-    @Override
-    public final String toString()
-    {
-        return toString(Verbosity.Short);
-    }
-
-    /**
-     * Creates a String representation for this node with a given {@link Verbosity}.
-     */
-    public String toString(Verbosity verbosity)
-    {
-        switch (verbosity)
-        {
-            case Id:
-                return Integer.toString(id);
-            case Name:
-                return getNodeClass().shortName();
-            case Short:
-                return toString(Verbosity.Id) + "|" + toString(Verbosity.Name);
-            case Long:
-            case Debugger:
-            case All:
-                return toString(Verbosity.Short);
-            default:
-                throw new RuntimeException("unknown verbosity: " + verbosity);
-        }
-    }
 
     @Deprecated
     public int getId()

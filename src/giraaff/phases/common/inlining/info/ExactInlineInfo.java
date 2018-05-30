@@ -69,12 +69,6 @@ public class ExactInlineInfo extends AbstractInlineInfo
     }
 
     @Override
-    public String toString()
-    {
-        return "exact " + concrete.format("%H.%n(%p):%r");
-    }
-
-    @Override
     public Inlineable inlineableElementAt(int index)
     {
         return inlineableElement;

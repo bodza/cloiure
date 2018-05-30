@@ -86,12 +86,6 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
         {
             bestCost = cost;
         }
-
-        @Override
-        public String toString()
-        {
-            return "NodeCost [bestCost=" + bestCost + ", numUsages=" + usages.size() + ", numMat=" + numMat + "]";
-        }
     }
 
     private final BlockMap<List<UseEntry>> blockMap;

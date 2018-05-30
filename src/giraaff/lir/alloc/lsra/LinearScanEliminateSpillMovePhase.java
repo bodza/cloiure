@@ -117,7 +117,6 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
                             {
                                 LIRInstruction move = allocator.getSpillMoveFactory().createMove(toLocation, fromLocation);
                                 insertionBuffer.append(j + 1, move);
-                                move.setComment(res, "LSRAEliminateSpillMove: store at definition");
                             }
                         }
                         interval = interval.next;

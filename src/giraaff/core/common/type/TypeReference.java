@@ -149,10 +149,4 @@ public final class TypeReference
         }
         return type;
     }
-
-    @Override
-    public String toString()
-    {
-        return (isExact() ? "#" : "") + type;
-    }
 }

@@ -16,7 +16,6 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.iterators.NodeIterable;
 import giraaff.lir.ConstantValue;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
@@ -557,19 +556,6 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
                 return ConstantNode.forConstant(JavaConstant.NULL_POINTER, null);
             default:
                 return null;
-        }
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(Verbosity.Name) + "(" + value.toValueString() + ", " + stamp(NodeView.DEFAULT).unrestricted().toString() + ")";
-        }
-        else
-        {
-            return super.toString(verbosity);
         }
     }
 }

@@ -3,7 +3,7 @@ package giraaff.core.common;
 import jdk.vm.ci.code.BailoutException;
 
 // @class PermanentBailoutException
-public class PermanentBailoutException extends BailoutException
+public final class PermanentBailoutException extends BailoutException
 {
     // @cons
     public PermanentBailoutException(String format, Object... args)

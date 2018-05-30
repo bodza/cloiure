@@ -281,10 +281,4 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     {
         throw GraalError.shouldNotReachHere();
     }
-
-    @Override
-    public String toString()
-    {
-        return String.format("%s:intrinsic", method.format("%H.%n(%p)"));
-    }
 }

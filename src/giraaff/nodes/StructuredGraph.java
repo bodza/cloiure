@@ -21,7 +21,6 @@ import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.Graph;
@@ -154,11 +153,9 @@ public final class StructuredGraph extends Graph
     // @class StructuredGraph.Builder
     public static final class Builder
     {
-        private String name;
         private final Assumptions assumptions;
         private SpeculationLog speculationLog;
         private ResolvedJavaMethod rootMethod;
-        private CompilationIdentifier compilationId = CompilationIdentifier.INVALID_COMPILATION_ID;
         private int entryBCI = JVMCICompiler.INVOCATION_ENTRY_BCI;
         private boolean useProfilingInfo = true;
         private final OptionValues options;
@@ -185,17 +182,6 @@ public final class StructuredGraph extends Graph
             this.assumptions = null;
         }
 
-        public String getName()
-        {
-            return name;
-        }
-
-        public Builder name(String s)
-        {
-            this.name = s;
-            return this;
-        }
-
         public ResolvedJavaMethod getMethod()
         {
             return rootMethod;
@@ -215,17 +201,6 @@ public final class StructuredGraph extends Graph
         public Builder speculationLog(SpeculationLog log)
         {
             this.speculationLog = log;
-            return this;
-        }
-
-        public CompilationIdentifier getCompilationId()
-        {
-            return compilationId;
-        }
-
-        public Builder compilationId(CompilationIdentifier id)
-        {
-            this.compilationId = id;
             return this;
         }
 
@@ -253,7 +228,7 @@ public final class StructuredGraph extends Graph
 
         public StructuredGraph build()
         {
-            return new StructuredGraph(name, rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo, compilationId, options);
+            return new StructuredGraph(rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo, options);
         }
     }
 
@@ -263,7 +238,6 @@ public final class StructuredGraph extends Graph
     private StartNode start;
     private ResolvedJavaMethod rootMethod;
     private final long graphId;
-    private final CompilationIdentifier compilationId;
     private final int entryBCI;
     private GuardsStage guardsStage = GuardsStage.FLOATING_GUARDS;
     private boolean isAfterFloatingReadPhase = false;
@@ -307,13 +281,12 @@ public final class StructuredGraph extends Graph
     public static final boolean NO_PROFILING_INFO = false;
 
     // @cons
-    private StructuredGraph(String name, ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)
+    private StructuredGraph(ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, OptionValues options)
     {
-        super(name, options);
+        super(options);
         this.setStart(add(new StartNode()));
         this.rootMethod = method;
         this.graphId = uniqueGraphIds.incrementAndGet();
-        this.compilationId = compilationId;
         this.entryBCI = entryBCI;
         this.assumptions = assumptions;
         if (speculationLog != null && !(speculationLog instanceof GraphSpeculationLog))
@@ -375,31 +348,6 @@ public final class StructuredGraph extends Graph
         return returnStamp;
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder buf = new StringBuilder(getClass().getSimpleName() + ":" + graphId);
-        String sep = "{";
-        if (name != null)
-        {
-            buf.append(sep);
-            buf.append(name);
-            sep = ", ";
-        }
-        if (method() != null)
-        {
-            buf.append(sep);
-            buf.append(method());
-            sep = ", ";
-        }
-
-        if (!sep.equals("{"))
-        {
-            buf.append("}");
-        }
-        return buf.toString();
-    }
-
     public StartNode start()
     {
         return start;
@@ -430,14 +378,6 @@ public final class StructuredGraph extends Graph
         return graphId;
     }
 
-    /**
-     * @see CompilationIdentifier
-     */
-    public CompilationIdentifier compilationId()
-    {
-        return compilationId;
-    }
-
     public void setStart(StartNode start)
     {
         this.start = start;
@@ -445,21 +385,12 @@ public final class StructuredGraph extends Graph
 
     /**
      * Creates a copy of this graph.
-     *
-     * @param newName the name of the copy, used for debugging purposes (can be null)
-     * @param duplicationMapCallback consumer of the duplication map created during the copying
      */
     @Override
-    protected Graph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback)
+    public StructuredGraph copy()
     {
-        return copy(newName, duplicationMapCallback, compilationId);
-    }
-
-    private StructuredGraph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, CompilationIdentifier newCompilationId)
-    {
-        AllowAssumptions allowAssumptions = AllowAssumptions.ifNonNull(assumptions);
-        StructuredGraph copy = new StructuredGraph(newName, method(), entryBCI, assumptions == null ? null : new Assumptions(), speculationLog, useProfilingInfo, newCompilationId, getOptions());
-        if (allowAssumptions == AllowAssumptions.YES && assumptions != null)
+        StructuredGraph copy = new StructuredGraph(method(), entryBCI, assumptions != null ? new Assumptions() : null, speculationLog, useProfilingInfo, getOptions());
+        if (AllowAssumptions.ifNonNull(assumptions) == AllowAssumptions.YES && assumptions != null)
         {
             copy.assumptions.record(assumptions);
         }
@@ -468,19 +399,7 @@ public final class StructuredGraph extends Graph
         copy.isAfterFloatingReadPhase = isAfterFloatingReadPhase;
         copy.hasValueProxies = hasValueProxies;
         copy.isAfterExpandLogic = isAfterExpandLogic;
-        EconomicMap<Node, Node> replacements = EconomicMap.create(Equivalence.IDENTITY);
-        replacements.put(start, copy.start);
-        UnmodifiableEconomicMap<Node, Node> duplicates = copy.addDuplicates(getNodes(), this, this.getNodeCount(), replacements);
-        if (duplicationMapCallback != null)
-        {
-            duplicationMapCallback.accept(duplicates);
-        }
         return copy;
-    }
-
-    public StructuredGraph copyWithIdentifier(CompilationIdentifier newCompilationId)
-    {
-        return copy(name, null, newCompilationId);
     }
 
     public ParameterNode getParameter(int index)

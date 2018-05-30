@@ -17,7 +17,6 @@ import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.code.CompilationResult;
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.target.Backend;
@@ -77,9 +76,9 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
     }
 
     @Override
-    public LIRGenerationResult newLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub)
+    public LIRGenerationResult newLIRGenerationResult(LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub)
     {
-        return new HotSpotLIRGenerationResult(compilationId, lir, frameMapBuilder, makeCallingConvention(graph, (Stub) stub), stub);
+        return new HotSpotLIRGenerationResult(lir, frameMapBuilder, makeCallingConvention(graph, (Stub) stub), stub);
     }
 
     @Override

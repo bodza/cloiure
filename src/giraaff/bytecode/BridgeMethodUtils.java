@@ -72,8 +72,7 @@ public final class BridgeMethodUtils
         }
         if (bridged == null)
         {
-            String dis = new BytecodeDisassembler().disassemble(bridge);
-            throw new InternalError(String.format("Couldn't find method bridged by %s:%n%s", bridge.format("%R %H.%n(%P)"), dis));
+            throw new InternalError("Couldn't find method bridged by " + bridge.format("%R %H.%n(%P)"));
         }
         return bridged;
     }

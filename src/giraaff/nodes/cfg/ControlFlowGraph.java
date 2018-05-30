@@ -73,30 +73,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         return cfg;
     }
 
-    public String dominatorTreeString()
-    {
-        return dominatorTreeString(getStartBlock());
-    }
-
-    private static String dominatorTreeString(Block b)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(b);
-        sb.append("(");
-        Block firstDominated = b.getFirstDominated();
-        while (firstDominated != null)
-        {
-            if (firstDominated.getDominator().getPostdominator() == firstDominated)
-            {
-                sb.append("!");
-            }
-            sb.append(dominatorTreeString(firstDominated));
-            firstDominated = firstDominated.getDominatedSibling();
-        }
-        sb.append(") ");
-        return sb.toString();
-    }
-
     @SuppressWarnings("unchecked")
     public <V> void visitDominatorTreeDefault(RecursiveVisitor<V> visitor)
     {

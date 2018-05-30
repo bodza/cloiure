@@ -63,12 +63,6 @@ public class FieldsScanner
         {
             return offset < o.offset ? -1 : (offset > o.offset ? 1 : 0);
         }
-
-        @Override
-        public String toString()
-        {
-            return "[" + offset + "]" + name + ":" + type.getSimpleName();
-        }
     }
 
     private final FieldsScanner.CalcOffset calc;

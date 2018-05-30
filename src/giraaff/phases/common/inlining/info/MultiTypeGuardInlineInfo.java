@@ -489,28 +489,4 @@ public final class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     {
         return BeginNode.begin(graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.TypeCheckedInliningViolated)));
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder builder = new StringBuilder(shouldFallbackToInvoke() ? "megamorphic" : "polymorphic");
-        builder.append(", ");
-        builder.append(concretes.size());
-        builder.append(" methods [ ");
-        for (int i = 0; i < concretes.size(); i++)
-        {
-            builder.append(concretes.get(i).format("  %H.%n(%p):%r"));
-        }
-        builder.append(" ], ");
-        builder.append(ptypes.size());
-        builder.append(" type checks [ ");
-        for (int i = 0; i < ptypes.size(); i++)
-        {
-            builder.append("  ");
-            builder.append(ptypes.get(i).getType().getName());
-            builder.append(ptypes.get(i).getProbability());
-        }
-        builder.append(" ]");
-        return builder.toString();
-    }
 }

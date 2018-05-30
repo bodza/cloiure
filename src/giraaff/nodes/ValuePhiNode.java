@@ -85,10 +85,4 @@ public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
         }
         return length;
     }
-
-    @Override
-    protected String valueDescription()
-    {
-        return stamp(NodeView.DEFAULT).unrestricted().toString();
-    }
 }

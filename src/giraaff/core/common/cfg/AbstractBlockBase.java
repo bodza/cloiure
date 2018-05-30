@@ -117,12 +117,6 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         this.dominatedSibling = block;
     }
 
-    @Override
-    public String toString()
-    {
-        return "B" + id;
-    }
-
     public int getPredecessorCount()
     {
         return getPredecessors().length;

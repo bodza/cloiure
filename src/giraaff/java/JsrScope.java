@@ -1,5 +1,7 @@
 package giraaff.java;
 
+import giraaff.core.common.PermanentBailoutException;
+
 // @class JsrScope
 public final class JsrScope
 {
@@ -30,7 +32,7 @@ public final class JsrScope
     {
         if ((scope & 0xffff000000000000L) != 0)
         {
-            throw new JsrNotSupportedBailout("only four jsr nesting levels are supported");
+            throw new PermanentBailoutException("only four jsr nesting levels are supported");
         }
         return new JsrScope((scope << 16) | jsrReturnBci);
     }
@@ -64,20 +66,5 @@ public final class JsrScope
             return true;
         }
         return obj != null && getClass() == obj.getClass() && scope == ((JsrScope) obj).scope;
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        long tmp = scope;
-        sb.append(" [");
-        while (tmp != 0)
-        {
-            sb.append(", ").append(tmp & 0xffff);
-            tmp = tmp >>> 16;
-        }
-        sb.append(']');
-        return sb.toString();
     }
 }

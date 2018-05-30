@@ -4,7 +4,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Formatter;
 import java.util.List;
 
 import jdk.vm.ci.code.BailoutException;
@@ -36,7 +35,6 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.api.replacements.Snippet;
 import giraaff.bytecode.Bytecode;
-import giraaff.bytecode.BytecodeDisassembler;
 import giraaff.bytecode.BytecodeLookupSwitch;
 import giraaff.bytecode.BytecodeProvider;
 import giraaff.bytecode.BytecodeStream;
@@ -343,23 +341,6 @@ public final class BytecodeParser implements GraphBuilderContext
             super();
             this.fixed = fixed;
             this.state = state;
-        }
-    }
-
-    @SuppressWarnings("serial")
-    // @class BytecodeParser.BytecodeParserError
-    public static final class BytecodeParserError extends GraalError
-    {
-        // @cons
-        public BytecodeParserError(Throwable cause)
-        {
-            super(cause);
-        }
-
-        // @cons
-        public BytecodeParserError(String msg, Object... args)
-        {
-            super(msg, args);
         }
     }
 
@@ -2033,22 +2014,6 @@ public final class BytecodeParser implements GraphBuilderContext
         return true;
     }
 
-    protected RuntimeException throwParserError(Throwable e)
-    {
-        if (e instanceof BytecodeParserError)
-        {
-            throw (BytecodeParserError) e;
-        }
-        BytecodeParser bp = this;
-        BytecodeParserError res = new BytecodeParserError(e);
-        while (bp != null)
-        {
-            res.addContext("parsing " + bp.code.asStackTraceElement(bp.bci()));
-            bp = bp.parent;
-        }
-        throw res;
-    }
-
     protected void parseAndInlineCallee(ResolvedJavaMethod targetMethod, ValueNode[] args, IntrinsicContext calleeIntrinsicContext)
     {
         FixedWithNextNode calleeBeforeUnwindNode = null;
@@ -2277,7 +2242,7 @@ public final class BytecodeParser implements GraphBuilderContext
         ValueNode lockedObject = frameState.popLock();
         if (GraphUtil.originalValue(lockedObject) != GraphUtil.originalValue(x))
         {
-            throw bailout(String.format("unbalanced monitors: mismatch at monitorexit, %s != %s", GraphUtil.originalValue(x), GraphUtil.originalValue(lockedObject)));
+            throw bailout("unbalanced monitors: mismatch at monitorexit, " + GraphUtil.originalValue(x) + " != " + GraphUtil.originalValue(lockedObject));
         }
         MonitorExitNode monitorExit = append(new MonitorExitNode(lockedObject, monitorId, escapedReturnValue));
         monitorExit.setStateAfter(createFrameState(bci, monitorExit));
@@ -2290,11 +2255,11 @@ public final class BytecodeParser implements GraphBuilderContext
         int nextBci = getStream().nextBCI();
         if (!successor.getJsrScope().pop().equals(scope))
         {
-            throw new JsrNotSupportedBailout("unstructured control flow (internal limitation)");
+            throw new PermanentBailoutException("unstructured control flow (internal limitation)");
         }
         if (successor.getJsrScope().nextReturnAddress() != nextBci)
         {
-            throw new JsrNotSupportedBailout("unstructured control flow (internal limitation)");
+            throw new PermanentBailoutException("unstructured control flow (internal limitation)");
         }
         ConstantNode nextBciNode = getJsrConstant(nextBci);
         frameState.push(JavaKind.Object, nextBciNode);
@@ -2313,7 +2278,7 @@ public final class BytecodeParser implements GraphBuilderContext
         append(new FixedGuardNode(guard, DeoptimizationReason.JavaSubroutineMismatch, DeoptimizationAction.InvalidateReprofile));
         if (!successor.getJsrScope().equals(scope.pop()))
         {
-            throw new JsrNotSupportedBailout("unstructured control flow (ret leaves more than one scope)");
+            throw new PermanentBailoutException("unstructured control flow (ret leaves more than one scope)");
         }
         appendGoto(successor);
     }
@@ -2828,7 +2793,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 {
                     if (block.getJsrScope() != JsrScope.EMPTY_SCOPE)
                     {
-                        throw new JsrNotSupportedBailout("OSR into a Bytecodes.JSR scope is not supported");
+                        throw new PermanentBailoutException("OSR into a Bytecodes.JSR scope is not supported");
                     }
                     EntryMarkerNode x = append(new EntryMarkerNode());
                     frameState.insertProxies(value -> graph.unique(new EntryProxyNode(value, x)));
@@ -2837,14 +2802,14 @@ public final class BytecodeParser implements GraphBuilderContext
 
                 processBytecode(bci, opcode);
             }
-            catch (BailoutException e)
+            catch (BailoutException | GraalError e)
             {
                 // don't wrap bailouts as parser errors
                 throw e;
             }
-            catch (Throwable e)
+            catch (Throwable t)
             {
-                throw throwParserError(e);
+                throw new GraalError(t);
             }
 
             if (lastInstr == null || lastInstr.next() != null)
@@ -3262,32 +3227,9 @@ public final class BytecodeParser implements GraphBuilderContext
     }
 
     @Override
-    public String toString()
+    public BailoutException bailout(String msg)
     {
-        Formatter fmt = new Formatter();
-        BytecodeParser bp = this;
-        String indent = "";
-        while (bp != null)
-        {
-            if (bp != this)
-            {
-                fmt.format("%n%s", indent);
-            }
-            fmt.format("%s [bci: %d, intrinsic: %s]", bp.code.asStackTraceElement(bp.bci()), bp.bci(), bp.parsingIntrinsic());
-            fmt.format("%n%s", new BytecodeDisassembler().disassemble(bp.code, bp.bci(), bp.bci() + 10));
-            bp = bp.parent;
-            indent += " ";
-        }
-        return fmt.toString();
-    }
-
-    @Override
-    public BailoutException bailout(String string)
-    {
-        FrameState currentFrameState = createFrameState(bci(), null);
-        StackTraceElement[] elements = GraphUtil.approxSourceStackTraceElement(currentFrameState);
-        BailoutException bailout = new PermanentBailoutException(string);
-        throw GraphUtil.createBailoutException(string, bailout, elements);
+        throw new PermanentBailoutException(msg);
     }
 
     private FrameState createFrameState(int bci, StateSplit forStateSplit)

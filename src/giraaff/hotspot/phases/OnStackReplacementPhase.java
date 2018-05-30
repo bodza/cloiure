@@ -16,7 +16,6 @@ import giraaff.graph.iterators.NodeIterable;
 import giraaff.loop.LoopsData;
 import giraaff.loop.phases.LoopTransformations;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.EntryMarkerNode;
 import giraaff.nodes.EntryProxyNode;
@@ -261,7 +260,7 @@ public final class OnStackReplacementPhase extends Phase
         }
         if (osr.stateAfter().stackSize() != 0)
         {
-            throw new PermanentBailoutException("OSR with stack entries not supported: %s", osr.stateAfter().toString(Verbosity.Debugger));
+            throw new PermanentBailoutException("OSR with stack entries not supported");
         }
         return osr;
     }

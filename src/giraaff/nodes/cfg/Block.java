@@ -8,7 +8,6 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.Loop;
 import giraaff.graph.Node;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.BeginNode;
 import giraaff.nodes.FixedNode;
@@ -196,70 +195,7 @@ public final class Block extends AbstractBlockBase<Block>
             {
                 return new NodeIterator();
             }
-
-            @Override
-            public String toString()
-            {
-                StringBuilder sb = new StringBuilder().append('[');
-                for (FixedNode node : this)
-                {
-                    sb.append(node).append(", ");
-                }
-                if (sb.length() > 1)
-                {
-                    sb.setLength(sb.length() - 2);
-                }
-                return sb.append(']').toString();
-            }
         };
-    }
-
-    @Override
-    public String toString()
-    {
-        return toString(Verbosity.Id);
-    }
-
-    public String toString(Verbosity verbosity)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append('B').append(id);
-        if (verbosity != Verbosity.Id)
-        {
-            if (isLoopHeader())
-            {
-                sb.append(" lh");
-            }
-
-            if (getSuccessorCount() > 0)
-            {
-                sb.append(" ->[");
-                for (int i = 0; i < getSuccessorCount(); ++i)
-                {
-                    if (i != 0)
-                    {
-                        sb.append(',');
-                    }
-                    sb.append('B').append(getSuccessors()[i].getId());
-                }
-                sb.append(']');
-            }
-
-            if (getPredecessorCount() > 0)
-            {
-                sb.append(" <-[");
-                for (int i = 0; i < getPredecessorCount(); ++i)
-                {
-                    if (i != 0)
-                    {
-                        sb.append(',');
-                    }
-                    sb.append('B').append(getPredecessors()[i].getId());
-                }
-                sb.append(']');
-            }
-        }
-        return sb.toString();
     }
 
     @Override

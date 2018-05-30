@@ -85,17 +85,6 @@ public final class Position
     }
 
     @Override
-    public String toString()
-    {
-        String res = edges.getType(index).getSimpleName() + ":" + edges.getName(index);
-        if (subIndex != Node.NOT_ITERABLE)
-        {
-            res += "[" + subIndex + "]";
-        }
-        return res;
-    }
-
-    @Override
     public int hashCode()
     {
         final int prime = 31;

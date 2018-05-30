@@ -24,7 +24,6 @@ public final class HotSpotRuntime
     private static final HotSpotVMConfigAccess c = new HotSpotVMConfigAccess(JVMCI.getConfigStore());
 
     public static final boolean
-        inline                         = c.getFlag("Inline",                         Boolean.class),
         useFastLocking                 = c.getFlag("JVMCIUseFastLocking",            Boolean.class),
         foldStableValues               = c.getFlag("FoldStableValues",               Boolean.class),
         useTLAB                        = c.getFlag("UseTLAB",                        Boolean.class),

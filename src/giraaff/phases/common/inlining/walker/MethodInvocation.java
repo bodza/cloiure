@@ -109,23 +109,4 @@ public final class MethodInvocation
         final double invokeRelevance = relevance * callee.relevanceAt(index);
         return new CallsiteHolderExplorable(ig.getGraph(), invokeProbability, invokeRelevance, freshlyInstantiatedArguments, null);
     }
-
-    @Override
-    public String toString()
-    {
-        if (isRoot())
-        {
-            return "<root>";
-        }
-        CallTargetNode callTarget = callee.invoke().callTarget();
-        if (callTarget instanceof MethodCallTargetNode)
-        {
-            ResolvedJavaMethod calleeMethod = ((MethodCallTargetNode) callTarget).targetMethod();
-            return calleeMethod.format("Invoke#%H.%n(%p)");
-        }
-        else
-        {
-            return "Invoke#" + callTarget.targetName();
-        }
-    }
 }

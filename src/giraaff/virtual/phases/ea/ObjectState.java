@@ -199,29 +199,6 @@ public final class ObjectState
     }
 
     @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder().append('{');
-        if (locks != null)
-        {
-            sb.append('l').append(locks).append(' ');
-        }
-        if (entries != null)
-        {
-            for (int i = 0; i < entries.length; i++)
-            {
-                sb.append("entry").append(i).append('=').append(entries[i]).append(' ');
-            }
-        }
-        if (materializedValue != null)
-        {
-            sb.append("mat=").append(materializedValue);
-        }
-
-        return sb.append('}').toString();
-    }
-
-    @Override
     public int hashCode()
     {
         final int prime = 31;

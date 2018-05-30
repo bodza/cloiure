@@ -259,32 +259,6 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
     }
 
     @Override
-    public String toString()
-    {
-        MapCursor<Node, T> i = getEntries();
-        if (!i.advance())
-        {
-            return "{}";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-        while (true)
-        {
-            Node key = i.getKey();
-            T value = i.getValue();
-            sb.append(key);
-            sb.append('=');
-            sb.append(value);
-            if (!i.advance())
-            {
-                return sb.append('}').toString();
-            }
-            sb.append(',').append(' ');
-        }
-    }
-
-    @Override
     public T put(Node key, T value)
     {
         T result = get(key);

@@ -40,10 +40,4 @@ public final class AssumptionInlineInfo extends ExactInlineInfo
         takenAssumption.recordTo(invoke.asNode().graph().getAssumptions());
         InliningUtil.replaceInvokeCallTarget(invoke, graph(), InvokeKind.Special, concrete);
     }
-
-    @Override
-    public String toString()
-    {
-        return "assumption " + concrete.format("%H.%n(%p):%r");
-    }
 }

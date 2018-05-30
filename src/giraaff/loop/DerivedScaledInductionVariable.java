@@ -127,10 +127,4 @@ public final class DerivedScaledInductionVariable extends DerivedInductionVariab
     {
         GraphUtil.tryKillUnused(scale);
     }
-
-    @Override
-    public String toString()
-    {
-        return String.format("DerivedScaleInductionVariable base (%s) %s %s", base, value.getNodeClass().shortName(), scale);
-    }
 }

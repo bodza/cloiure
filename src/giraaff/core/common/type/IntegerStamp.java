@@ -1,7 +1,6 @@
 package giraaff.core.common.type;
 
 import java.nio.ByteBuffer;
-import java.util.Formatter;
 
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.Constant;
@@ -299,40 +298,6 @@ public final class IntegerStamp extends PrimitiveStamp
     public boolean canBeNegative()
     {
         return lowerBound() < 0;
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append('i');
-        sb.append(getBits());
-        if (hasValues())
-        {
-            if (lowerBound == upperBound)
-            {
-                sb.append(" [").append(lowerBound).append(']');
-            }
-            else if (lowerBound != CodeUtil.minValue(getBits()) || upperBound != CodeUtil.maxValue(getBits()))
-            {
-                sb.append(" [").append(lowerBound).append(" - ").append(upperBound).append(']');
-            }
-            if (downMask != 0)
-            {
-                sb.append(" \u21ca");
-                new Formatter(sb).format("%016x", downMask);
-            }
-            if (upMask != CodeUtil.mask(getBits()))
-            {
-                sb.append(" \u21c8");
-                new Formatter(sb).format("%016x", upMask);
-            }
-        }
-        else
-        {
-            sb.append("<empty>");
-        }
-        return sb.toString();
     }
 
     private IntegerStamp createStamp(IntegerStamp other, long newUpperBound, long newLowerBound, long newDownMask, long newUpMask)

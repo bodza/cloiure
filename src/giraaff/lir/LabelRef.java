@@ -62,10 +62,4 @@ public final class LabelRef
     {
         return ((StandardOp.LabelOp) lir.getLIRforBlock(getTargetBlock()).get(0)).getLabel();
     }
-
-    @Override
-    public String toString()
-    {
-        return getSourceBlock() + " -> " + (suxIndex < block.getSuccessors().length ? getTargetBlock() : "?");
-    }
 }

@@ -44,15 +44,6 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
     }
 
     @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append('n');
-        appendString(sb);
-        return sb.toString();
-    }
-
-    @Override
     public boolean isCompatible(Stamp other)
     {
         if (this == other)

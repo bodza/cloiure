@@ -93,12 +93,4 @@ public final class MethodPointerStamp extends MetaspacePointerStamp
         HotSpotMemoryAccessProvider hsProvider = (HotSpotMemoryAccessProvider) provider;
         return hsProvider.readMethodPointerConstant(base, displacement);
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder ret = new StringBuilder("Method*");
-        appendString(ret);
-        return ret.toString();
-    }
 }

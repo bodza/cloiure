@@ -1337,11 +1337,5 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         {
             return proxifiedInput;
         }
-
-        @Override
-        public String toString()
-        {
-            return stamp + " -> " + guard;
-        }
     }
 }

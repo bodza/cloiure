@@ -157,12 +157,6 @@ public final class LoopEx
         return whole().nodes().count();
     }
 
-    @Override
-    public String toString()
-    {
-        return (isCounted() ? "CountedLoop [" + counted() + "] " : "Loop ") + "(depth=" + loop().getDepth() + ") " + loopBegin();
-    }
-
     // @class LoopEx.InvariantPredicate
     private final class InvariantPredicate implements NodePredicate
     {

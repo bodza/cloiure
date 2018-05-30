@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.Stamp;
-import giraaff.graph.GraalGraphError;
 import giraaff.graph.Graph;
 import giraaff.graph.Graph.Mark;
 import giraaff.graph.Graph.NodeEventListener;
@@ -33,6 +32,7 @@ import giraaff.options.OptionValues;
 import giraaff.phases.BasePhase;
 import giraaff.phases.Phase;
 import giraaff.phases.tiers.PhaseContext;
+import giraaff.util.GraalError;
 
 // @class CanonicalizerPhase
 public final class CanonicalizerPhase extends BasePhase<PhaseContext>
@@ -309,9 +309,9 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                         canonical = ((BinaryCommutative<?>) node).maybeCommuteInputs();
                     }
                 }
-                catch (Throwable e)
+                catch (Throwable t)
                 {
-                    throw new GraalGraphError(e).addContext(node);
+                    throw new GraalError(t);
                 }
                 if (performReplacement(node, canonical))
                 {

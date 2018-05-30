@@ -50,12 +50,6 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
             return identity.equals(other.identity) && object == other.object;
         }
 
-        @Override
-        public String toString()
-        {
-            return object + ":" + identity;
-        }
-
         public abstract boolean conflicts(LocationIdentity other);
 
         public abstract LocationIdentity getIdentity();
@@ -139,12 +133,6 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         {
             return locationIdentity;
         }
-
-        @Override
-        public String toString()
-        {
-            return "UNSAFE:" + super.toString() + " location:" + locationIdentity;
-        }
     }
 
     // @cons
@@ -159,12 +147,6 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
     {
         super();
         readCache = EconomicMap.create(Equivalence.DEFAULT, other.readCache);
-    }
-
-    @Override
-    public String toString()
-    {
-        return super.toString() + " " + readCache;
     }
 
     @Override

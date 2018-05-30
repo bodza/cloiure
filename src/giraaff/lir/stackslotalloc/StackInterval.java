@@ -89,12 +89,6 @@ public final class StackInterval
         return from == 0;
     }
 
-    @Override
-    public String toString()
-    {
-        return String.format("SI[%d-%d] k=%s o=%s l=%s h=%s", from, to, kind, operand, location, hint != null ? hint.getOperand() : "null");
-    }
-
     public void setLocationHint(StackInterval locationHint)
     {
         hint = locationHint;

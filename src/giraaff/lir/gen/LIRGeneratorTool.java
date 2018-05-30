@@ -237,12 +237,6 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
 
     Variable emitArrayEquals(JavaKind kind, Value array1, Value array2, Value length);
 
-    @SuppressWarnings("unused")
-    default Variable emitStringIndexOf(Value sourcePointer, Value sourceCount, Value targetPointer, Value targetCount, int constantTargetCount)
-    {
-        throw GraalError.unimplemented("String.indexOf substitution is not implemented on this architecture");
-    }
-
     void emitBlackhole(Value operand);
 
     LIRKind getLIRKind(Stamp stamp);

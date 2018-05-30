@@ -115,12 +115,6 @@ public class InvocationPlugins
         {
             return resolved;
         }
-
-        @Override
-        public String toString()
-        {
-            return resolved.toJavaName();
-        }
     }
 
     /**
@@ -158,12 +152,6 @@ public class InvocationPlugins
                 resolved = resolvedOrNull == null ? MASK_NULL : resolvedOrNull;
             }
             return resolved == MASK_NULL ? null : resolved;
-        }
-
-        @Override
-        public String toString()
-        {
-            return name;
         }
     }
 
@@ -529,14 +517,14 @@ public class InvocationPlugins
             this.plugin = data;
             this.isStatic = isStatic;
             this.name = name;
-            StringBuilder buf = new StringBuilder();
-            buf.append('(');
+            StringBuilder sb = new StringBuilder();
+            sb.append('(');
             for (int i = isStatic ? 0 : 1; i < argumentTypes.length; i++)
             {
-                buf.append(MetaUtil.toInternalName(argumentTypes[i].getTypeName()));
+                sb.append(MetaUtil.toInternalName(argumentTypes[i].getTypeName()));
             }
-            buf.append(')');
-            this.argumentsDescriptor = buf.toString();
+            sb.append(')');
+            this.argumentsDescriptor = sb.toString();
         }
 
         // @cons
@@ -549,12 +537,6 @@ public class InvocationPlugins
             Signature sig = resolved.getSignature();
             String desc = sig.toMethodDescriptor();
             this.argumentsDescriptor = desc.substring(0, desc.indexOf(')') + 1);
-        }
-
-        @Override
-        public String toString()
-        {
-            return name + argumentsDescriptor;
         }
     }
 
@@ -798,7 +780,6 @@ public class InvocationPlugins
         return null;
     }
 
-    @SuppressWarnings("serial")
     // @class InvocationPlugins.InvocationPlugRegistrationError
     static final class InvocationPlugRegistrationError extends GraalError
     {
@@ -1214,41 +1195,6 @@ public class InvocationPlugins
     public InvocationPlugins getParent()
     {
         return parent;
-    }
-
-    @Override
-    public String toString()
-    {
-        UnmodifiableMapCursor<String, List<Binding>> entries = getBindings(false, false).getEntries();
-        List<String> all = new ArrayList<>();
-        while (entries.advance())
-        {
-            String c = MetaUtil.internalNameToJava(entries.getKey(), true, false);
-            for (Binding b : entries.getValue())
-            {
-                all.add(c + '.' + b);
-            }
-        }
-        Collections.sort(all);
-        StringBuilder buf = new StringBuilder();
-        String nl = String.format("%n");
-        for (String s : all)
-        {
-            if (buf.length() != 0)
-            {
-                buf.append(nl);
-            }
-            buf.append(s);
-        }
-        if (parent != null)
-        {
-            if (buf.length() != 0)
-            {
-                buf.append(nl);
-            }
-            buf.append("// parent").append(nl).append(parent);
-        }
-        return buf.toString();
     }
 
     /**

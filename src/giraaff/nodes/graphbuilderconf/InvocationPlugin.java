@@ -252,21 +252,4 @@ public interface InvocationPlugin extends GraphBuilderPlugin
     {
         throw new GraalError("Invocation plugin for %s does not handle invocations with %d arguments", targetMethod.format("%H.%n(%p)"), args.length);
     }
-
-    default StackTraceElement getApplySourceLocation(MetaAccessProvider metaAccess)
-    {
-        Class<?> c = getClass();
-        for (Method m : c.getDeclaredMethods())
-        {
-            if (m.getName().equals("apply"))
-            {
-                return metaAccess.lookupJavaMethod(m).asStackTraceElement(0);
-            }
-            else if (m.getName().equals("defaultHandler"))
-            {
-                return metaAccess.lookupJavaMethod(m).asStackTraceElement(0);
-            }
-        }
-        throw new GraalError("could not find method named \"apply\" or \"defaultHandler\" in " + c.getName());
-    }
 }

@@ -15,7 +15,6 @@ import jdk.vm.ci.meta.Signature;
 
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
@@ -81,20 +80,11 @@ public final class GraphKit implements GraphBuilderTool
     }
 
     // @cons
-    public GraphKit(ResolvedJavaMethod stubMethod, Providers providers, WordTypes wordTypes, Plugins graphBuilderPlugins, CompilationIdentifier compilationId, String name)
+    public GraphKit(ResolvedJavaMethod stubMethod, Providers providers, WordTypes wordTypes, Plugins graphBuilderPlugins)
     {
         super();
         this.providers = providers;
-        StructuredGraph.Builder builder = new StructuredGraph.Builder(new OptionValues(OptionValues.newOptionMap())).compilationId(compilationId);
-        if (name != null)
-        {
-            builder.name(name);
-        }
-        else
-        {
-            builder.method(stubMethod);
-        }
-        this.graph = builder.build();
+        this.graph = new StructuredGraph.Builder(new OptionValues(OptionValues.newOptionMap())).method(stubMethod).build();
         graph.disableUnsafeAccessTracking();
         this.wordTypes = wordTypes;
         this.graphBuilderPlugins = graphBuilderPlugins;
@@ -299,9 +289,8 @@ public final class GraphKit implements GraphBuilderTool
     /**
      * Determines if a given set of arguments is compatible with the signature of a given method.
      *
-     * @return true if {@code args} are compatible with the signature if {@code method}
-     * @throws AssertionError if {@code args} are not compatible with the signature if
-     *             {@code method}
+     * @return true if {@code args} are compatible with the signature of {@code method}
+     * @throws AssertionError if {@code args} are not compatible with the signature of {@code method}
      */
     public boolean checkArgs(ResolvedJavaMethod method, ValueNode... args)
     {

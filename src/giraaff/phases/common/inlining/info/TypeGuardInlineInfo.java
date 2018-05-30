@@ -109,12 +109,6 @@ public final class TypeGuardInlineInfo extends AbstractInlineInfo
     }
 
     @Override
-    public String toString()
-    {
-        return "type-checked with type " + type.getName() + " and method " + concrete.format("%H.%n(%p):%r");
-    }
-
-    @Override
     public boolean shouldInline()
     {
         return concrete.shouldBeInlined();

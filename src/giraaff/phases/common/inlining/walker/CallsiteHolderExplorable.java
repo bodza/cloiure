@@ -209,10 +209,4 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
     {
         return Math.min(AbstractInliningPolicy.CapInheritedRelevance, relevance) * computeInliningRelevance.getRelevance(invoke);
     }
-
-    @Override
-    public String toString()
-    {
-        return (graph != null ? method().format("%H.%n(%p)") : "<null method>") + remainingInvokes;
-    }
 }

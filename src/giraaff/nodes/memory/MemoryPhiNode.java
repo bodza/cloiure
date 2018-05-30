@@ -48,10 +48,4 @@ public final class MemoryPhiNode extends PhiNode implements MemoryNode
     {
         return values;
     }
-
-    @Override
-    protected String valueDescription()
-    {
-        return locationIdentity.toString();
-    }
 }

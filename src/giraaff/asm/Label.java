@@ -90,10 +90,4 @@ public final class Label
         }
         this.position = -1;
     }
-
-    @Override
-    public String toString()
-    {
-        return isBound() ? String.valueOf(position()) : "?";
-    }
 }

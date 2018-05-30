@@ -35,8 +35,6 @@ public class Graph
         DeepFreeze
     }
 
-    public final String name;
-
     /**
      * The set of nodes in the graph, ordered by {@linkplain #register(Node) registration} time.
      */
@@ -98,87 +96,32 @@ public class Graph
      */
     private final OptionValues options;
 
-    /**
-     * Creates an empty Graph with no name.
-     */
-    // @cons
-    public Graph(OptionValues options)
-    {
-        this(null, options);
-    }
-
     private static final int INITIAL_NODES_SIZE = 32;
 
     /**
-     * Creates an empty Graph with a given name.
-     *
-     * @param name the name of the graph, used for debugging purposes
+     * Creates an empty Graph.
      */
     // @cons
-    public Graph(String name, OptionValues options)
+    public Graph(OptionValues options)
     {
         super();
         nodes = new Node[INITIAL_NODES_SIZE];
         iterableNodesFirst = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
         iterableNodesLast = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
-        this.name = name;
         this.options = options;
     }
 
     /**
      * Creates a copy of this graph.
      */
-    public final Graph copy()
+    public Graph copy()
     {
-        return copy(name, null);
-    }
-
-    /**
-     * Creates a copy of this graph.
-     *
-     * @param duplicationMapCallback consumer of the duplication map created during the copying
-     */
-    public final Graph copy(Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback)
-    {
-        return copy(name, duplicationMapCallback);
-    }
-
-    /**
-     * Creates a copy of this graph.
-     *
-     * @param newName the name of the copy, used for debugging purposes (can be null)
-     */
-    public final Graph copy(String newName)
-    {
-        return copy(newName, null);
-    }
-
-    /**
-     * Creates a copy of this graph.
-     *
-     * @param newName the name of the copy, used for debugging purposes (can be null)
-     * @param duplicationMapCallback consumer of the duplication map created during the copying
-     */
-    protected Graph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback)
-    {
-        Graph copy = new Graph(newName, options);
-        UnmodifiableEconomicMap<Node, Node> duplicates = copy.addDuplicates(getNodes(), this, this.getNodeCount(), (EconomicMap<Node, Node>) null);
-        if (duplicationMapCallback != null)
-        {
-            duplicationMapCallback.accept(duplicates);
-        }
-        return copy;
+        return new Graph(options);
     }
 
     public final OptionValues getOptions()
     {
         return options;
-    }
-
-    @Override
-    public String toString()
-    {
-        return name == null ? super.toString() : "Graph " + name;
     }
 
     /**

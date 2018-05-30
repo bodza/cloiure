@@ -183,24 +183,6 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         return new Fields[] { data, uses, alives, temps, defs };
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName()).append(" ").append(getClazz().getSimpleName()).append(" use[");
-        uses.appendFields(sb);
-        sb.append("] alive[");
-        alives.appendFields(sb);
-        sb.append("] temp[");
-        temps.appendFields(sb);
-        sb.append("] def[");
-        defs.appendFields(sb);
-        sb.append("] data[");
-        data.appendFields(sb);
-        sb.append("]");
-        return sb.toString();
-    }
-
     Values getValues(OperandMode mode)
     {
         switch (mode)
@@ -314,26 +296,6 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
             }
         }
         return null;
-    }
-
-    String toString(LIRInstruction obj)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        appendValues(sb, obj, "", " = ", "(", ")", new String[] { "" }, defs);
-        sb.append(String.valueOf(getOpcode(obj)).toUpperCase());
-        appendValues(sb, obj, " ", "", "(", ")", new String[] { "", "~" }, uses, alives);
-        appendValues(sb, obj, " ", "", "{", "}", new String[] { "" }, temps);
-
-        for (int i = 0; i < data.getCount(); i++)
-        {
-            if (i != opcodeIndex)
-            {
-                sb.append(" ").append(data.getName(i)).append(": ").append(getFieldString(obj, i, data));
-            }
-        }
-
-        return sb.toString();
     }
 
     final boolean isMoveOp()

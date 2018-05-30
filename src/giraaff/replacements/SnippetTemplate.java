@@ -3,7 +3,6 @@ package giraaff.replacements;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -188,17 +187,6 @@ public class SnippetTemplate
         {
             return lazy().nonNullParameters[paramIdx];
         }
-
-        public String getParameterName(int paramIdx)
-        {
-            return "dunno";
-        }
-
-        @Override
-        public String toString()
-        {
-            return getClass().getSimpleName() + ":" + method.format("%h.%n");
-        }
     }
 
     // @class SnippetTemplate.LazySnippetInfo
@@ -317,30 +305,6 @@ public class SnippetTemplate
         {
             this.cacheable = cacheable;
         }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder result = new StringBuilder();
-            result.append("Parameters<").append(info.method.format("%h.%n")).append(" [");
-            String sep = "";
-            for (int i = 0; i < info.getParameterCount(); i++)
-            {
-                result.append(sep);
-                if (info.isConstantParameter(i))
-                {
-                    result.append("const ");
-                }
-                else if (info.isVarargsParameter(i))
-                {
-                    result.append("varargs ");
-                }
-                result.append(info.getParameterName(i)).append(" = ").append(values[i]);
-                sep = ", ";
-            }
-            result.append(">");
-            return result.toString();
-        }
     }
 
     /**
@@ -369,48 +333,6 @@ public class SnippetTemplate
             {
                 this.length = Array.getLength(value);
             }
-        }
-
-        @Override
-        public String toString()
-        {
-            if (value instanceof boolean[])
-            {
-                return Arrays.toString((boolean[]) value);
-            }
-            if (value instanceof byte[])
-            {
-                return Arrays.toString((byte[]) value);
-            }
-            if (value instanceof char[])
-            {
-                return Arrays.toString((char[]) value);
-            }
-            if (value instanceof short[])
-            {
-                return Arrays.toString((short[]) value);
-            }
-            if (value instanceof int[])
-            {
-                return Arrays.toString((int[]) value);
-            }
-            if (value instanceof long[])
-            {
-                return Arrays.toString((long[]) value);
-            }
-            if (value instanceof float[])
-            {
-                return Arrays.toString((float[]) value);
-            }
-            if (value instanceof double[])
-            {
-                return Arrays.toString((double[]) value);
-            }
-            if (value instanceof Object[])
-            {
-                return Arrays.toString((Object[]) value);
-            }
-            return String.valueOf(value);
         }
     }
 
@@ -643,7 +565,7 @@ public class SnippetTemplate
         PhaseContext phaseContext = new PhaseContext(providers);
 
         // copy snippet graph replacing constant parameters with given arguments
-        final StructuredGraph snippetCopy = new StructuredGraph.Builder(options).name(snippetGraph.name).method(snippetGraph.method()).build();
+        final StructuredGraph snippetCopy = new StructuredGraph.Builder(options).method(snippetGraph.method()).build();
         if (!snippetGraph.isUnsafeAccessTrackingEnabled())
         {
             snippetCopy.disableUnsafeAccessTracking();
@@ -1636,44 +1558,6 @@ public class SnippetTemplate
                 ((StateSplit) sideEffectDup).setStateAfter(((StateSplit) replacee).stateAfter());
             }
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder buf = new StringBuilder(snippet.toString()).append('(');
-        String sep = "";
-        for (int i = 0; i < parameters.length; i++)
-        {
-            String name = "[" + i + "]";
-            Object value = parameters[i];
-            buf.append(sep);
-            sep = ", ";
-            if (value == null)
-            {
-                buf.append("<null> ").append(name);
-            }
-            else if (value.equals(UNUSED_PARAMETER))
-            {
-                buf.append("<unused> ").append(name);
-            }
-            else if (value.equals(CONSTANT_PARAMETER))
-            {
-                buf.append("<constant> ").append(name);
-            }
-            else if (value instanceof ParameterNode)
-            {
-                ParameterNode param = (ParameterNode) value;
-                buf.append(param.getStackKind().getJavaName()).append(' ').append(name);
-            }
-            else
-            {
-                ParameterNode[] params = (ParameterNode[]) value;
-                String kind = params.length == 0 ? "?" : params[0].getStackKind().getJavaName();
-                buf.append(kind).append('[').append(params.length).append("] ").append(name);
-            }
-        }
-        return buf.append(')').toString();
     }
 
     private static boolean checkTemplate(MetaAccessProvider metaAccess, Arguments args, ResolvedJavaMethod method, Signature signature)

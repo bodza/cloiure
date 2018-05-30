@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.spi.ArrayOffsetProvider;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.ValueNode;
@@ -57,19 +56,6 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     public void generate(NodeLIRBuilderTool gen)
     {
         // nothing to do...
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(Verbosity.Name) + "(" + getObjectId() + ") " + componentType.getName() + "[" + length + "]";
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     @Override

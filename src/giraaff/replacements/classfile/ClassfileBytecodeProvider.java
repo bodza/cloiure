@@ -179,12 +179,6 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         }
 
         @Override
-        public String toString()
-        {
-            return name + ":" + type;
-        }
-
-        @Override
         public boolean equals(Object obj)
         {
             if (obj instanceof FieldKey)
@@ -217,12 +211,6 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             super();
             this.name = name;
             this.descriptor = descriptor;
-        }
-
-        @Override
-        public String toString()
-        {
-            return name + ":" + descriptor;
         }
 
         @Override

@@ -17,7 +17,6 @@ import giraaff.graph.IterableNodeType;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.FixedGuardNode;
 import giraaff.nodes.Invoke;
@@ -79,19 +78,6 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
     public Invoke invoke()
     {
         return (Invoke) this.usages().first();
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Long)
-        {
-            return super.toString(Verbosity.Short) + "(" + targetMethod() + ")";
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     public static ResolvedJavaMethod findSpecialCallTarget(InvokeKind invokeKind, ValueNode receiver, ResolvedJavaMethod targetMethod, ResolvedJavaType contextType)

@@ -45,26 +45,4 @@ final class NodeUsageIterable implements NodeIterable<Node>
     {
         return node.getUsageCount();
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        Iterator<Node> iterator = iterator();
-        boolean first = true;
-        sb.append("usages=");
-        sb.append('[');
-        while (iterator.hasNext())
-        {
-            Node input = iterator.next();
-            if (!first)
-            {
-                sb.append(", ");
-            }
-            sb.append(input);
-            first = false;
-        }
-        sb.append(']');
-        return sb.toString();
-    }
 }

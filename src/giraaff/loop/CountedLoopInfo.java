@@ -179,12 +179,6 @@ public final class CountedLoopInfo
         return constantMaxTripCount();
     }
 
-    @Override
-    public String toString()
-    {
-        return "iv=" + iv + " until " + end + (oneOff ? iv.direction() == Direction.Up ? "+1" : "-1" : "");
-    }
-
     public ValueNode getLimit()
     {
         return end;

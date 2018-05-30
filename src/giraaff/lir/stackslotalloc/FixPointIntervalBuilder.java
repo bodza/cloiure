@@ -121,17 +121,6 @@ final class FixPointIntervalBuilder
         }
     }
 
-    private String liveSetToString(BitSet liveSet)
-    {
-        StringBuilder sb = new StringBuilder();
-        for (int i = liveSet.nextSetBit(0); i >= 0; i = liveSet.nextSetBit(i + 1))
-        {
-            StackInterval interval = getIntervalFromStackId(i);
-            sb.append(interval.getOperand()).append(" ");
-        }
-        return sb.toString();
-    }
-
     private void markOutInterval(BitSet outSet, int blockEndOpId)
     {
         for (int i = outSet.nextSetBit(0); i >= 0; i = outSet.nextSetBit(i + 1))

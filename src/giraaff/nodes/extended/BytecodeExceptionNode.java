@@ -9,7 +9,6 @@ import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.AbstractMemoryCheckpoint;
 import giraaff.nodes.memory.MemoryCheckpoint;
@@ -39,16 +38,6 @@ public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implem
     public Class<? extends Throwable> getExceptionClass()
     {
         return exceptionClass;
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(verbosity) + "#" + exceptionClass.getSimpleName();
-        }
-        return super.toString(verbosity);
     }
 
     @Override

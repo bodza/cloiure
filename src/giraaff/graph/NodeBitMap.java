@@ -332,10 +332,4 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     {
         return isMarked(node);
     }
-
-    @Override
-    public String toString()
-    {
-        return snapshot().toString();
-    }
 }

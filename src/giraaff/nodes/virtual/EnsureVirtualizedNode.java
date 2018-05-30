@@ -1,10 +1,10 @@
 package giraaff.nodes.virtual;
 
+import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
-import giraaff.graph.VerificationError;
 import giraaff.nodes.AbstractEndNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
@@ -44,8 +44,7 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
             VirtualObjectNode virtual = (VirtualObjectNode) alias;
             if (virtual instanceof VirtualBoxingNode)
             {
-                Throwable exception = new VerificationError("ensureVirtual is not valid for boxing objects: %s", virtual.type().getName());
-                throw GraphUtil.approxSourceException(this, exception);
+                throw new PermanentBailoutException("ensureVirtual is not valid for boxing objects: %s", virtual.type().getName());
             }
             if (!localOnly)
             {
@@ -81,21 +80,6 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
                 additionalReason = " (must not let virtual object escape at node " + next + ")";
             }
         }
-        Throwable exception = new VerificationError("Object of type %s should not be materialized%s:", StampTool.typeOrNull(stamp).getName(), additionalReason);
-
-        Node pos;
-        if (location instanceof FixedWithNextNode)
-        {
-            pos = ((FixedWithNextNode) location).next();
-        }
-        else if (location instanceof AbstractEndNode)
-        {
-            pos = ((AbstractEndNode) location).merge();
-        }
-        else
-        {
-            pos = location;
-        }
-        throw GraphUtil.approxSourceException(pos, exception);
+        throw new PermanentBailoutException("Object of type %s should not be materialized: %s", StampTool.typeOrNull(stamp).getName(), additionalReason);
     }
 }

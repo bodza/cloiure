@@ -46,12 +46,6 @@ abstract class ClassfileConstant
     {
     }
 
-    @Override
-    public String toString()
-    {
-        return getClass().getSimpleName();
-    }
-
     // @class ClassfileConstant.ClassRef
     static final class ClassRef extends ClassfileConstant
     {
@@ -71,7 +65,7 @@ abstract class ClassfileConstant
             resolve(cp);
         }
 
-        public ResolvedJavaType resolve(ClassfileConstantPool cp) throws GraalError
+        public ResolvedJavaType resolve(ClassfileConstantPool cp)
         {
             if (type == null)
             {

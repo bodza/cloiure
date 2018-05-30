@@ -13,7 +13,6 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.code.CompilationResult;
 import giraaff.core.GraalCompiler;
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.target.Backend;
 import giraaff.hotspot.HotSpotCompiledCodeBuilder;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
@@ -104,16 +103,8 @@ public abstract class Stub
 
     /**
      * Gets the graph that from which the code for this stub will be compiled.
-     *
-     * @param compilationId unique compilation id for the stub
      */
-    protected abstract StructuredGraph getGraph(CompilationIdentifier compilationId);
-
-    @Override
-    public String toString()
-    {
-        return "Stub<" + linkage.getDescriptor() + ">";
-    }
+    protected abstract StructuredGraph getStubGraph();
 
     /**
      * Gets the method the stub's code will be associated with once installed. This may be null.
@@ -138,9 +129,7 @@ public abstract class Stub
 
     private CompilationResult buildCompilationResult(final Backend backend)
     {
-        CompilationIdentifier compilationId = new StubCompilationIdentifier(this);
-        final StructuredGraph graph = getGraph(compilationId);
-        CompilationResult compResult = new CompilationResult(compilationId, toString());
+        final StructuredGraph graph = getStubGraph();
 
         // stubs cannot be recompiled, so they cannot be compiled with assumptions
         if (!(graph.start() instanceof StubStartNode))
@@ -150,11 +139,10 @@ public abstract class Stub
             graph.replaceFixed(graph.start(), newStart);
         }
 
-        Suites suites = createSuites();
-        GraalCompiler.emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
-        LIRSuites lirSuites = createLIRSuites();
-        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, compResult, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
-        return compResult;
+        GraalCompiler.emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), createSuites());
+        CompilationResult result = new CompilationResult();
+        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, result, CompilationResultBuilderFactory.Default, getRegisterConfig(), createLIRSuites());
+        return result;
     }
 
     protected Suites createSuites()

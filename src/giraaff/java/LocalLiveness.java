@@ -81,26 +81,6 @@ public abstract class LocalLiveness
     public abstract boolean localIsLiveOut(BciBlock block, int local);
 
     /**
-     * Returns a string representation of the liveIn values of the given block.
-     */
-    protected abstract String debugLiveIn(int blockID);
-
-    /**
-     * Returns a string representation of the liveOut values of the given block.
-     */
-    protected abstract String debugLiveOut(int blockID);
-
-    /**
-     * Returns a string representation of the liveGen values of the given block.
-     */
-    protected abstract String debugLiveGen(int blockID);
-
-    /**
-     * Returns a string representation of the liveKill values of the given block.
-     */
-    protected abstract String debugLiveKill(int blockID);
-
-    /**
      * Returns the number of live locals at the end of the given block.
      */
     protected abstract int liveOutCardinality(int blockID);

@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
@@ -42,18 +41,5 @@ public final class WriteRegisterNode extends FixedWithNextNode implements LIRLow
     {
         Value val = gen.operand(value);
         gen.getLIRGeneratorTool().emitMove(register.asValue(val.getValueKind()), val);
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(Verbosity.Name) + "%" + register;
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 }

@@ -14,12 +14,6 @@ abstract class LinearScanAllocationPhase
         return LIRPhase.createName(getClass());
     }
 
-    @Override
-    public final String toString()
-    {
-        return getName().toString();
-    }
-
     public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, AllocationPhase.AllocationContext context)
     {
         run(target, lirGenRes, context);

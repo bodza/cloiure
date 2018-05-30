@@ -70,12 +70,6 @@ public final class DataSection implements Iterable<Data>
         }
 
         @Override
-        public String toString()
-        {
-            return MetaUtil.identityHashCodeString(this);
-        }
-
-        @Override
         public boolean equals(Object obj)
         {
             if (obj == this)
@@ -259,12 +253,6 @@ public final class DataSection implements Iterable<Data>
     {
         // DataSection instances should not be used as hash map keys
         throw new UnsupportedOperationException("hashCode");
-    }
-
-    @Override
-    public String toString()
-    {
-        return MetaUtil.identityHashCodeString(this);
     }
 
     @Override

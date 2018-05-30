@@ -7,9 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import jdk.vm.ci.code.site.ConstantReference;
 import jdk.vm.ci.code.site.DataPatch;
-import jdk.vm.ci.code.site.DataSectionReference;
 import jdk.vm.ci.code.site.ExceptionHandler;
 import jdk.vm.ci.code.site.Mark;
 import jdk.vm.ci.code.site.Reference;
@@ -19,8 +17,6 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import org.graalvm.collections.EconomicSet;
-
-import giraaff.core.common.CompilationIdentifier;
 
 /**
  * Represents the output from compiling a method, including the compiled machine code, associated
@@ -40,10 +36,6 @@ public final class CompilationResult
     private final List<Mark> marks = new ArrayList<>();
 
     private int totalFrameSize = -1;
-
-    private final String name;
-
-    private final CompilationIdentifier compilationId;
 
     /**
      * The buffer containing the emitted machine code.
@@ -74,23 +66,9 @@ public final class CompilationResult
     private boolean hasUnsafeAccess;
 
     // @cons
-    public CompilationResult(CompilationIdentifier compilationId)
-    {
-        this(compilationId, compilationId.toString(CompilationIdentifier.Verbosity.NAME));
-    }
-
-    // @cons
-    public CompilationResult(CompilationIdentifier compilationId, String name)
+    public CompilationResult()
     {
         super();
-        this.compilationId = compilationId;
-        this.name = name;
-    }
-
-    // @cons
-    public CompilationResult(String name)
-    {
-        this(null, name);
     }
 
     @Override
@@ -98,16 +76,6 @@ public final class CompilationResult
     {
         // CompilationResult instances should not be used as hash map keys
         throw new UnsupportedOperationException("hashCode");
-    }
-
-    @Override
-    public String toString()
-    {
-        if (methods != null)
-        {
-            return getClass().getName() + "[" + methods[0].format("%H.%n(%p)%r") + "]";
-        }
-        return MetaUtil.identityHashCodeString(this);
     }
 
     @Override
@@ -120,20 +88,15 @@ public final class CompilationResult
         if (obj != null && obj.getClass() == getClass())
         {
             CompilationResult that = (CompilationResult) obj;
-            if (this.entryBCI == that.entryBCI &&
-                this.totalFrameSize == that.totalFrameSize &&
-                this.targetCodeSize == that.targetCodeSize &&
-                Objects.equals(this.name, that.name) &&
-                Objects.equals(this.compilationId, that.compilationId) &&
-                Objects.equals(this.dataSection, that.dataSection) &&
-                Objects.equals(this.exceptionHandlers, that.exceptionHandlers) &&
-                Objects.equals(this.dataPatches, that.dataPatches) &&
-                Objects.equals(this.marks,  that.marks) &&
-                Arrays.equals(this.assumptions, that.assumptions) &&
-                Arrays.equals(targetCode, that.targetCode))
-            {
-                return true;
-            }
+            return (this.entryBCI == that.entryBCI &&
+                    this.totalFrameSize == that.totalFrameSize &&
+                    this.targetCodeSize == that.targetCodeSize &&
+                    Objects.equals(this.dataSection, that.dataSection) &&
+                    Objects.equals(this.exceptionHandlers, that.exceptionHandlers) &&
+                    Objects.equals(this.dataPatches, that.dataPatches) &&
+                    Objects.equals(this.marks,  that.marks) &&
+                    Arrays.equals(this.assumptions, that.assumptions) &&
+                    Arrays.equals(targetCode, that.targetCode));
         }
         return false;
     }
@@ -404,16 +367,6 @@ public final class CompilationResult
             return Collections.emptyList();
         }
         return Collections.unmodifiableList(marks);
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public CompilationIdentifier getCompilationId()
-    {
-        return compilationId;
     }
 
     public void setHasUnsafeAccess(boolean hasUnsafeAccess)

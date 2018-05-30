@@ -160,10 +160,4 @@ public final class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
         }
         return nativeABICallerSaveRegisters;
     }
-
-    @Override
-    public String toString()
-    {
-        return "AMD64";
-    }
 }

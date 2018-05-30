@@ -71,17 +71,4 @@ public final class ForeignCallDescriptor
         }
         return false;
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder(name).append('(');
-        String sep = "";
-        for (Class<?> arg : argumentTypes)
-        {
-            sb.append(sep).append(arg.getSimpleName());
-            sep = ",";
-        }
-        return sb.append(')').append(resultType.getSimpleName()).toString();
-    }
 }

@@ -30,8 +30,6 @@ public interface Bytecode
 
     ConstantPool getConstantPool();
 
-    StackTraceElement asStackTraceElement(int bci);
-
     ProfilingInfo getProfilingInfo();
 
     ExceptionHandler[] getExceptionHandlers();
@@ -40,30 +38,4 @@ public interface Bytecode
      * Gets the {@link BytecodeProvider} from which this object was acquired.
      */
     BytecodeProvider getOrigin();
-
-    static String toLocation(Bytecode bytecode, int bci)
-    {
-        return appendLocation(new StringBuilder(), bytecode, bci).toString();
-    }
-
-    static StringBuilder appendLocation(StringBuilder sb, Bytecode bytecode, int bci)
-    {
-        if (bytecode != null)
-        {
-            StackTraceElement ste = bytecode.asStackTraceElement(bci);
-            if (ste.getFileName() != null && ste.getLineNumber() > 0)
-            {
-                sb.append(ste);
-            }
-            else
-            {
-                sb.append(bytecode.getMethod().format("%H.%n(%p)"));
-            }
-        }
-        else
-        {
-            sb.append("Null method");
-        }
-        return sb.append(" [bci: ").append(bci).append(']');
-    }
 }

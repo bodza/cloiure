@@ -75,21 +75,6 @@ public final class PhiResolver
             this.operand = operand;
             destinations = new ArrayList<>(4);
         }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder buf = new StringBuilder(operand.toString());
-            if (!destinations.isEmpty())
-            {
-                buf.append(" ->");
-                for (PhiResolverNode node : destinations)
-                {
-                    buf.append(' ').append(node.operand);
-                }
-            }
-            return buf.toString();
-        }
     }
 
     private final LIRGeneratorTool gen;

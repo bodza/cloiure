@@ -5,7 +5,6 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
@@ -121,23 +120,6 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     public void setUseForInlining(boolean value)
     {
         this.useForInlining = value;
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Long)
-        {
-            return super.toString(Verbosity.Short) + "(bci=" + bci() + ")";
-        }
-        else if (verbosity == Verbosity.Name)
-        {
-            return "Invoke#" + (callTarget == null ? "null" : callTarget().targetName());
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     @Override

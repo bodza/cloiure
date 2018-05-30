@@ -5,7 +5,6 @@ import jdk.vm.ci.code.CallingConvention;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRFrameState;
@@ -25,9 +24,9 @@ public final class HotSpotLIRGenerationResult extends LIRGenerationResult
     private EconomicMap<LIRFrameState, SaveRegistersOp> calleeSaveInfo = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
 
     // @cons
-    public HotSpotLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention, Object stub)
+    public HotSpotLIRGenerationResult(LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention, Object stub)
     {
-        super(compilationId, lir, frameMapBuilder, callingConvention);
+        super(lir, frameMapBuilder, callingConvention);
         this.stub = stub;
     }
 

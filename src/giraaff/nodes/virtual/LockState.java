@@ -24,12 +24,6 @@ public final class LockState
         this.next = next;
     }
 
-    @Override
-    public String toString()
-    {
-        return monitorId.getLockDepth() + (next == null ? "" : "," + next);
-    }
-
     public static List<MonitorIdNode> asList(LockState state)
     {
         if (state == null)

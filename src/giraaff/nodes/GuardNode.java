@@ -11,7 +11,6 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.extended.AnchoringNode;
 import giraaff.nodes.extended.GuardingNode;
 
@@ -100,19 +99,6 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
     public void setSpeculation(JavaConstant speculation)
     {
         this.speculation = speculation;
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name && negated)
-        {
-            return "!" + super.toString(verbosity);
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     @Override

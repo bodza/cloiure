@@ -3,10 +3,6 @@ package giraaff.lir.gen;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.RegisterConfig;
 
-import org.graalvm.collections.EconomicMap;
-
-import giraaff.core.common.CompilationIdentifier;
-import giraaff.core.common.CompilationIdentifier.Verbosity;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.framemap.FrameMap;
@@ -23,43 +19,14 @@ public class LIRGenerationResult
      * Records whether the code being generated makes at least one foreign call.
      */
     private boolean hasForeignCall;
-    /**
-     * Unique identifier of this compilation.
-     */
-    private CompilationIdentifier compilationId;
-
-    /**
-     * Stores comments about a {@link LIRInstruction} , e.g. which phase created it.
-     */
-    private EconomicMap<LIRInstruction, String> comments;
 
     // @cons
-    public LIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention)
+    public LIRGenerationResult(LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention)
     {
         super();
         this.lir = lir;
         this.frameMapBuilder = frameMapBuilder;
         this.callingConvention = callingConvention;
-        this.compilationId = compilationId;
-    }
-
-    /**
-     * Adds a comment to a {@link LIRInstruction}. Existing comments are replaced.
-     */
-    public final void setComment(LIRInstruction op, String comment)
-    {
-    }
-
-    /**
-     * Gets the comment attached to a {@link LIRInstruction}.
-     */
-    public final String getComment(LIRInstruction op)
-    {
-        if (comments == null)
-        {
-            return null;
-        }
-        return comments.get(op);
     }
 
     /**
@@ -123,22 +90,5 @@ public class LIRGenerationResult
     public final void setForeignCall(boolean hasForeignCall)
     {
         this.hasForeignCall = hasForeignCall;
-    }
-
-    public String getCompilationUnitName()
-    {
-        if (compilationId == null || compilationId == CompilationIdentifier.INVALID_COMPILATION_ID)
-        {
-            return "<unknown>";
-        }
-        return compilationId.toString(Verbosity.NAME);
-    }
-
-    /**
-     * Returns a unique identifier of the current compilation.
-     */
-    public CompilationIdentifier getCompilationId()
-    {
-        return compilationId;
     }
 }

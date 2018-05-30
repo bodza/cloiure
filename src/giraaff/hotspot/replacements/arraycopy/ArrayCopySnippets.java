@@ -482,7 +482,7 @@ public final class ArrayCopySnippets implements Snippets
             GraphUtil.killCFG(arraycopy);
         }
 
-        private ResolvedJavaMethod originalArraycopy() throws GraalError
+        private ResolvedJavaMethod originalArraycopy()
         {
             if (originalArraycopy == null)
             {

@@ -38,12 +38,6 @@ public final class CompressEncoding
     }
 
     @Override
-    public String toString()
-    {
-        return "base: " + base + " shift: " + shift;
-    }
-
-    @Override
     public int hashCode()
     {
         final int prime = 31;

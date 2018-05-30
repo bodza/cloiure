@@ -21,7 +21,6 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.asm.Assembler;
 import giraaff.code.CompilationResult;
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.spi.ForeignCallDescriptor;
@@ -119,7 +118,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
 
     public abstract LIRGeneratorTool newLIRGenerator(LIRGenerationResult lirGenRes);
 
-    public abstract LIRGenerationResult newLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub);
+    public abstract LIRGenerationResult newLIRGenerationResult(LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub);
 
     public abstract NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool lirGen);
 
@@ -270,15 +269,6 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
      * register windows on SPARC). Registers which are not visible by the caller are removed.
      */
     public abstract EconomicSet<Register> translateToCallerRegisters(EconomicSet<Register> calleeRegisters);
-
-    /**
-     * Gets the compilation id for a given {@link ResolvedJavaMethod}. Returns
-     * {@code CompilationIdentifier#INVALID_COMPILATION_ID} in case there is no such id.
-     */
-    public CompilationIdentifier getCompilationIdentifier(ResolvedJavaMethod resolvedJavaMethod)
-    {
-        return CompilationIdentifier.INVALID_COMPILATION_ID;
-    }
 
     /**
      * Encapsulates custom tasks done before and after code installation.

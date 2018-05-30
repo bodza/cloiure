@@ -115,10 +115,4 @@ public final class Range
             }
         } while (true);
     }
-
-    @Override
-    public String toString()
-    {
-        return "[" + from + ", " + to + "]";
-    }
 }

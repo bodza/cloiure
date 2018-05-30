@@ -253,9 +253,9 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
         }
         if (!innerNegated)
         {
-            // The four digit results of the expression used in the 16 subsequent formula comments
-            // correspond to results when using the following truth table for inputs a and b
-            // and testing all 4 possible input combinations:
+            // The four digit results of the expression used in the 16 subsequent formula
+            // comments correspond to results when using the following truth table for
+            // inputs a and b and testing all 4 possible input combinations:
             // _ 1234
             // a 1100
             // b 1010

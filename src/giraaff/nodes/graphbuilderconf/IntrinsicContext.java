@@ -209,10 +209,4 @@ public final class IntrinsicContext
             }
         }
     }
-
-    @Override
-    public String toString()
-    {
-        return "Intrinsic{original: " + originalMethod.format("%H.%n(%p)") + ", intrinsic: " + intrinsicMethod.format("%H.%n(%p)") + ", context: " + compilationContext + "}";
-    }
 }

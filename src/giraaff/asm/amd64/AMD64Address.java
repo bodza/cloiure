@@ -148,34 +148,6 @@ public final class AMD64Address extends AbstractAddress
         }
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder s = new StringBuilder();
-        s.append("[");
-        String sep = "";
-        if (!getBase().equals(Register.None))
-        {
-            s.append(getBase());
-            sep = " + ";
-        }
-        if (!getIndex().equals(Register.None))
-        {
-            s.append(sep).append(getIndex()).append(" * ").append(getScale().value);
-            sep = " + ";
-        }
-        if (getDisplacement() < 0)
-        {
-            s.append(" - ").append(-getDisplacement());
-        }
-        else if (getDisplacement() > 0)
-        {
-            s.append(sep).append(getDisplacement());
-        }
-        s.append("]");
-        return s.toString();
-    }
-
     /**
      * @return Base register that defines the start of the address computation. If not present, is
      *         denoted by {@link Register#None}.

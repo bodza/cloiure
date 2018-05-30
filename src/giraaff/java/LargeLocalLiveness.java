@@ -37,30 +37,6 @@ public final class LargeLocalLiveness extends LocalLiveness
     }
 
     @Override
-    protected String debugLiveIn(int blockID)
-    {
-        return localsLiveIn[blockID].toString();
-    }
-
-    @Override
-    protected String debugLiveOut(int blockID)
-    {
-        return localsLiveOut[blockID].toString();
-    }
-
-    @Override
-    protected String debugLiveGen(int blockID)
-    {
-        return localsLiveGen[blockID].toString();
-    }
-
-    @Override
-    protected String debugLiveKill(int blockID)
-    {
-        return localsLiveKill[blockID].toString();
-    }
-
-    @Override
     protected int liveOutCardinality(int blockID)
     {
         return localsLiveOut[blockID].cardinality();

@@ -762,12 +762,6 @@ public final class SchedulePhase extends Phase
             }
 
             @Override
-            public String toString()
-            {
-                return String.format("MicroBlock[id=%d]", id);
-            }
-
-            @Override
             public int hashCode()
             {
                 return id;

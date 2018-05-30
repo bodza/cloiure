@@ -156,14 +156,4 @@ public final class IntList
             array = Arrays.copyOf(array, newSize);
         }
     }
-
-    @Override
-    public String toString()
-    {
-        if (array.length == size)
-        {
-            return Arrays.toString(array);
-        }
-        return Arrays.toString(Arrays.copyOf(array, size));
-    }
 }

@@ -410,21 +410,14 @@ public final class CompilationResultBuilder
 
         for (LIRInstruction op : lir.getLIRforBlock(block))
         {
-            try
+            if (beforeOp != null)
             {
-                if (beforeOp != null)
-                {
-                    beforeOp.accept(op);
-                }
-                emitOp(this, op);
-                if (afterOp != null)
-                {
-                    afterOp.accept(op);
-                }
+                beforeOp.accept(op);
             }
-            catch (GraalError e)
+            emitOp(this, op);
+            if (afterOp != null)
             {
-                throw e.addContext("lir instruction", block + "@" + op.id() + " " + op.getClass().getName() + " " + op + "\n" + Arrays.toString(lir.codeEmittingOrder()));
+                afterOp.accept(op);
             }
         }
     }

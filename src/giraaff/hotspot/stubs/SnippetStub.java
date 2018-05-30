@@ -10,7 +10,6 @@ import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.api.replacements.Snippet.NonNullParameter;
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.type.StampFactory;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -74,7 +73,7 @@ public abstract class SnippetStub extends Stub implements Snippets
     }
 
     @Override
-    protected StructuredGraph getGraph(CompilationIdentifier compilationId)
+    protected StructuredGraph getStubGraph()
     {
         Plugins defaultPlugins = providers.getGraphBuilderPlugins();
         MetaAccessProvider metaAccess = providers.getMetaAccess();
@@ -85,7 +84,7 @@ public abstract class SnippetStub extends Stub implements Snippets
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
         // Stubs cannot have optimistic assumptions, since they have to be valid for the entire run of the VM.
-        final StructuredGraph graph = new StructuredGraph.Builder(options).method(method).compilationId(compilationId).build();
+        final StructuredGraph graph = new StructuredGraph.Builder(options).method(method).build();
         graph.disableUnsafeAccessTracking();
 
         IntrinsicContext initialIntrinsicContext = new IntrinsicContext(method, method, getReplacementsBytecodeProvider(), CompilationContext.INLINE_AFTER_PARSING);
@@ -139,11 +138,5 @@ public abstract class SnippetStub extends Stub implements Snippets
     public ResolvedJavaMethod getInstalledCodeOwner()
     {
         return method;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Stub<" + getInstalledCodeOwner().format("%h.%n") + ">";
     }
 }

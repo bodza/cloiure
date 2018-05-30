@@ -167,31 +167,6 @@ public final class FloatStamp extends PrimitiveStamp
         }
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append('f');
-        sb.append(getBits());
-        if (hasValues())
-        {
-            sb.append(nonNaN ? "!" : "");
-            if (lowerBound == upperBound)
-            {
-                sb.append(" [").append(lowerBound).append(']');
-            }
-            else if (lowerBound != Double.NEGATIVE_INFINITY || upperBound != Double.POSITIVE_INFINITY)
-            {
-                sb.append(" [").append(lowerBound).append(" - ").append(upperBound).append(']');
-            }
-        }
-        else
-        {
-            sb.append("<empty>");
-        }
-        return sb.toString();
-    }
-
     private static double meetBounds(double a, double b, DoubleBinaryOperator op)
     {
         if (Double.isNaN(a))

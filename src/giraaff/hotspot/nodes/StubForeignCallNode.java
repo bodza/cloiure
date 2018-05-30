@@ -13,7 +13,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
@@ -77,15 +76,5 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
         {
             gen.setResult(this, result);
         }
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(verbosity) + "#" + descriptor;
-        }
-        return super.toString(verbosity);
     }
 }

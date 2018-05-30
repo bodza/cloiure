@@ -185,11 +185,11 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
             if (isWordField && !isWordValue)
             {
-                throw bailout(b, "Cannot store a non-word value into a word field: " + field.format("%H.%n"));
+                throw b.bailout("Cannot store a non-word value into a word field: " + field.format("%H.%n"));
             }
             else if (!isWordField && isWordValue)
             {
-                throw bailout(b, "Cannot store a word value into a non-word field: " + field.format("%H.%n"));
+                throw b.bailout("Cannot store a word value into a non-word field: " + field.format("%H.%n"));
             }
         }
 
@@ -211,14 +211,14 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         {
             if (value.getStackKind() != wordKind)
             {
-                throw bailout(b, "Cannot store a non-word value into a word array: " + arrayType.toJavaName(true));
+                throw b.bailout("Cannot store a non-word value into a word array: " + arrayType.toJavaName(true));
             }
             b.add(createStoreIndexedNode(array, index, value));
             return true;
         }
         if (elementKind == JavaKind.Object && value.getStackKind() == wordKind)
         {
-            throw bailout(b, "Cannot store a word value into a non-word array: " + arrayType.toJavaName(true));
+            throw b.bailout("Cannot store a word value into a non-word array: " + arrayType.toJavaName(true));
         }
         return false;
     }
@@ -235,14 +235,14 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         {
             if (object.getStackKind() != JavaKind.Object)
             {
-                throw bailout(b, "Cannot cast a word value to a non-word type: " + type.toJavaName(true));
+                throw b.bailout("Cannot cast a word value to a non-word type: " + type.toJavaName(true));
             }
             return false;
         }
 
         if (object.getStackKind() != wordKind)
         {
-            throw bailout(b, "Cannot cast a non-word value to a word type: " + type.toJavaName(true));
+            throw b.bailout("Cannot cast a non-word value to a word type: " + type.toJavaName(true));
         }
         b.push(JavaKind.Object, object);
         return true;
@@ -253,16 +253,16 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     {
         if (wordTypes.isWord(type))
         {
-            throw bailout(b, "Cannot use instanceof for word a type: " + type.toJavaName(true));
+            throw b.bailout("Cannot use instanceof for word a type: " + type.toJavaName(true));
         }
         else if (object.getStackKind() != JavaKind.Object)
         {
-            throw bailout(b, "Cannot use instanceof on a word value: " + type.toJavaName(true));
+            throw b.bailout("Cannot use instanceof on a word value: " + type.toJavaName(true));
         }
         return false;
     }
 
-    protected void processWordOperation(GraphBuilderContext b, ValueNode[] args, ResolvedJavaMethod wordMethod) throws GraalError
+    protected void processWordOperation(GraphBuilderContext b, ValueNode[] args, ResolvedJavaMethod wordMethod)
     {
         JavaKind returnKind = wordMethod.getSignature().getReturnKind();
         WordFactoryOperation factoryOperation = BridgeMethodUtils.getAnnotation(WordFactoryOperation.class, wordMethod);
@@ -287,7 +287,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         Word.Operation operation = BridgeMethodUtils.getAnnotation(Word.Operation.class, wordMethod);
         if (operation == null)
         {
-            throw bailout(b, "Cannot call method on a word value: " + wordMethod.format("%H.%n(%p)"));
+            throw b.bailout("Cannot call method on a word value: " + wordMethod.format("%H.%n(%p)"));
         }
         switch (operation.opcode())
         {
@@ -413,9 +413,9 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             Constructor<?> cons = nodeClass.getDeclaredConstructor(ValueNode.class, ValueNode.class);
             return (ValueNode) cons.newInstance(left, right);
         }
-        catch (Throwable ex)
+        catch (Throwable t)
         {
-            throw new GraalError(ex).addContext(nodeClass.getName());
+            throw new GraalError(t);
         }
     }
 
@@ -530,10 +530,5 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
                 return b.add(new SignExtendNode(value, 64));
             }
         }
-    }
-
-    private static BailoutException bailout(GraphBuilderContext b, String msg)
-    {
-        throw b.bailout(msg + "\nat " + b.getCode().asStackTraceElement(b.bci()));
     }
 }

@@ -128,36 +128,4 @@ public final class LocationSet
         }
         return false;
     }
-
-    public List<LocationIdentity> getCopyAsList()
-    {
-        ArrayList<LocationIdentity> result = new ArrayList<>();
-        if (firstLocation != null)
-        {
-            result.add(firstLocation);
-        }
-        if (list != null)
-        {
-            result.addAll(list);
-        }
-        return result;
-    }
-
-    @Override
-    public String toString()
-    {
-        if (this.isAny())
-        {
-            return "ANY";
-        }
-        else if (this.isEmpty())
-        {
-            return "EMPTY";
-        }
-        else
-        {
-            List<LocationIdentity> copyAsList = getCopyAsList();
-            return Arrays.toString(copyAsList.toArray(new LocationIdentity[0]));
-        }
-    }
 }

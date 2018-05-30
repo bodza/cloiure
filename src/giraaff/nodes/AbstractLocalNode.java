@@ -2,7 +2,6 @@ package giraaff.nodes;
 
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.calc.FloatingNode;
 
 // @class AbstractLocalNode
@@ -27,18 +26,5 @@ public abstract class AbstractLocalNode extends FloatingNode
     public int index()
     {
         return index;
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(Verbosity.Name) + "(" + index + ")";
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 }

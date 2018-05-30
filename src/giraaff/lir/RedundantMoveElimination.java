@@ -224,9 +224,9 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 {
                     BlockData data = blockData.get(block);
                     /*
-                     * Initialize the number for global value numbering for this block. It
-                     * is essential that the starting number for a block is consistent at
-                     * all iterations and also in eliminateMoves().
+                     * Initialize the number for global value numbering for this block.
+                     * It is essential that the starting number for a block is consistent
+                     * at all iterations and also in eliminateMoves().
                      */
                     if (firstRound)
                     {
@@ -238,12 +238,11 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                     if (block == blocks[0] || block.isExceptionEntry())
                     {
                         /*
-                         * The entry block has undefined values. And also exception handler
-                         * blocks: the LinearScan can insert moves at the end of an
-                         * exception handler predecessor block (after the invoke, which
-                         * throws the exception), and in reality such moves are not in the
-                         * control flow in case of an exception. So we assume a save default
-                         * for exception handler blocks.
+                         * The entry block has undefined values. And also exception handler blocks:
+                         * the LinearScan can insert moves at the end of an exception handler predecessor
+                         * block (after the invoke, which throws the exception),
+                         * and in reality such moves are not in the control flow in case of an exception.
+                         * So we assume a save default for exception handler blocks.
                          */
                         clearValues(data.entryState, valueNum);
                     }

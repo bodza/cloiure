@@ -102,6 +102,6 @@ public final class HotSpotNarrowOopStamp extends NarrowOopStamp
                 }
                 break;
         }
-        throw GraalError.shouldNotReachHere(String.format("Unexpected input stamp %s", input));
+        throw GraalError.shouldNotReachHere("unexpected input stamp: " + input);
     }
 }

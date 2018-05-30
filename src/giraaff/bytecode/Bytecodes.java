@@ -314,7 +314,7 @@ public final class Bytecodes
         }
         catch (Exception e)
         {
-            throw new InternalError(e.toString());
+            throw new InternalError(e);
         }
     }
 
@@ -590,7 +590,7 @@ public final class Bytecodes
      * @return the mnemonic for {@code opcode} or {@code "<illegal opcode: " + opcode + ">"} if
      *         {@code opcode} is not a legal opcode
      */
-    public static String nameOf(int opcode) throws IllegalArgumentException
+    public static String nameOf(int opcode)
     {
         String name = nameArray[opcode & 0xff];
         if (name == null)

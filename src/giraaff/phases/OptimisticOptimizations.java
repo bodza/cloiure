@@ -138,10 +138,4 @@ public final class OptimisticOptimizations
     {
         return profilingInfo.getDeoptimizationCount(reason) < GraalOptions.DeoptsToDisableOptimisticOptimization.getValue(options);
     }
-
-    @Override
-    public String toString()
-    {
-        return enabledOpts.toString();
-    }
 }

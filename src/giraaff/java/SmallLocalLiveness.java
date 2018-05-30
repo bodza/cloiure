@@ -27,49 +27,6 @@ public final class SmallLocalLiveness extends LocalLiveness
         localsChangedInLoop = new long[loopCount];
     }
 
-    private String debugString(long value)
-    {
-        StringBuilder sb = new StringBuilder("{");
-        long current = value;
-        for (int i = 0; i < maxLocals; i++)
-        {
-            if ((current & 1L) == 1L)
-            {
-                if (sb.length() > 1)
-                {
-                    sb.append(", ");
-                }
-                sb.append(i);
-            }
-            current >>= 1;
-        }
-        return sb.append('}').toString();
-    }
-
-    @Override
-    protected String debugLiveIn(int blockID)
-    {
-        return debugString(localsLiveIn[blockID]);
-    }
-
-    @Override
-    protected String debugLiveOut(int blockID)
-    {
-        return debugString(localsLiveOut[blockID]);
-    }
-
-    @Override
-    protected String debugLiveGen(int blockID)
-    {
-        return debugString(localsLiveGen[blockID]);
-    }
-
-    @Override
-    protected String debugLiveKill(int blockID)
-    {
-        return debugString(localsLiveKill[blockID]);
-    }
-
     @Override
     protected int liveOutCardinality(int blockID)
     {

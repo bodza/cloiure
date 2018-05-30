@@ -8,12 +8,10 @@ import jdk.vm.ci.hotspot.HotSpotCompilationRequestResult;
 import jdk.vm.ci.hotspot.HotSpotInstalledCode;
 import jdk.vm.ci.hotspot.HotSpotNmethod;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
-import jdk.vm.ci.runtime.JVMCICompiler;
 
 import org.graalvm.collections.EconomicMap;
 
 import giraaff.code.CompilationResult;
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.phases.HighTier;
 import giraaff.java.BytecodeParserOptions;
 import giraaff.options.OptionKey;
@@ -23,57 +21,31 @@ import giraaff.options.OptionValues;
 public final class CompilationTask
 {
     private final HotSpotGraalCompiler compiler;
-    private final HotSpotCompilationIdentifier compilationId;
-
-    private HotSpotInstalledCode installedCode;
-
+    private final HotSpotCompilationRequest request;
+    private final boolean useProfilingInfo;
     /**
      * Specifies whether the compilation result is installed as the
      * {@linkplain HotSpotNmethod#isDefault() default} nmethod for the compiled method.
      */
     private final boolean installAsDefault;
-
-    private final boolean useProfilingInfo;
     private final OptionValues options;
+
+    private HotSpotInstalledCode installedCode;
 
     // @cons
     public CompilationTask(HotSpotGraalCompiler compiler, HotSpotCompilationRequest request, boolean useProfilingInfo, boolean installAsDefault, OptionValues options)
     {
         super();
         this.compiler = compiler;
-        this.compilationId = new HotSpotCompilationIdentifier(request);
+        this.request = request;
         this.useProfilingInfo = useProfilingInfo;
         this.installAsDefault = installAsDefault;
-
-        // Disable inlining if HotSpot has it disabled unless it's been explicitly set in Graal.
-        OptionValues newOptions = options;
-        if (!HotSpotRuntime.inline)
-        {
-            EconomicMap<OptionKey<?>, Object> m = OptionValues.newOptionMap();
-            if (HighTier.Options.Inline.getValue(options) && !HighTier.Options.Inline.hasBeenSet(options))
-            {
-                m.put(HighTier.Options.Inline, false);
-            }
-            if (BytecodeParserOptions.InlineDuringParsing.getValue(options) && !BytecodeParserOptions.InlineDuringParsing.hasBeenSet(options))
-            {
-                m.put(BytecodeParserOptions.InlineDuringParsing, false);
-            }
-            if (!m.isEmpty())
-            {
-                newOptions = new OptionValues(options, m);
-            }
-        }
-        this.options = newOptions;
+        this.options = options;
     }
 
     public HotSpotResolvedJavaMethod getMethod()
     {
-        return getRequest().getMethod();
-    }
-
-    CompilationIdentifier getCompilationIdentifier()
-    {
-        return compilationId;
+        return request.getMethod();
     }
 
     /**
@@ -83,12 +55,12 @@ public final class CompilationTask
      */
     public int getId()
     {
-        return getRequest().getId();
+        return request.getId();
     }
 
     public int getEntryBCI()
     {
-        return getRequest().getEntryBCI();
+        return request.getEntryBCI();
     }
 
     public HotSpotInstalledCode getInstalledCode()
@@ -113,11 +85,11 @@ public final class CompilationTask
 
         try
         {
-            CompilationResult result = compiler.compile(method, getEntryBCI(), useProfilingInfo, compilationId, options);
+            CompilationResult result = compiler.compile(method, getEntryBCI(), useProfilingInfo, options);
             if (result != null)
             {
                 HotSpotBackend backend = compiler.getGraalRuntime().getBackend();
-                installedCode = (HotSpotInstalledCode) backend.createInstalledCode(method, getRequest(), result, method.getSpeculationLog(), null, installAsDefault);
+                installedCode = (HotSpotInstalledCode) backend.createInstalledCode(method, request, result, method.getSpeculationLog(), null, installAsDefault);
                 return HotSpotCompilationRequestResult.success(result.getBytecodeSize() - method.getCodeSize());
             }
             return null;
@@ -143,16 +115,5 @@ public final class CompilationTask
              */
             return HotSpotCompilationRequestResult.failure(t.toString(), false);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Compilation[id=" + getId() + ", " + getMethod().format("%H.%n(%p)") + (getEntryBCI() == JVMCICompiler.INVOCATION_ENTRY_BCI ? "" : "@" + getEntryBCI()) + "]";
-    }
-
-    private HotSpotCompilationRequest getRequest()
-    {
-        return compilationId.getRequest();
     }
 }

@@ -193,10 +193,4 @@ public final class BasicInductionVariable extends InductionVariable
     public void deleteUnusedNodes()
     {
     }
-
-    @Override
-    public String toString()
-    {
-        return String.format("BasicInductionVariable %s %s %s %s", initNode(), phi, op.getNodeClass().shortName(), strideNode());
-    }
 }

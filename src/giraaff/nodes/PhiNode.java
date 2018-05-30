@@ -8,7 +8,6 @@ import giraaff.graph.iterators.NodeIterable;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.calc.FloatingNode;
 
 /**
@@ -99,41 +98,6 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
     public void clearValues()
     {
         values().clear();
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < valueCount(); ++i)
-            {
-                if (i != 0)
-                {
-                    sb.append(' ');
-                }
-                sb.append(valueAt(i) == null ? "-" : valueAt(i).toString(Verbosity.Id));
-            }
-            String description = valueDescription();
-            if (description.length() > 0)
-            {
-                sb.append(", ").append(description);
-            }
-            return super.toString(Verbosity.Name) + "(" + sb + ")";
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
-    }
-
-    /**
-     * String describing the kind of value this Phi merges. Used by {@link #toString(Verbosity)} and dumping.
-     */
-    protected String valueDescription()
-    {
-        return "";
     }
 
     public void addInput(ValueNode x)

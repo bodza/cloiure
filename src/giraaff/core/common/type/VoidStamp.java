@@ -59,12 +59,6 @@ public final class VoidStamp extends Stamp
     }
 
     @Override
-    public String toString()
-    {
-        return "void";
-    }
-
-    @Override
     public boolean alwaysDistinct(Stamp other)
     {
         return this != other;

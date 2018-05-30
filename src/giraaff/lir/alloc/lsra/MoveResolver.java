@@ -244,7 +244,6 @@ public class MoveResolver
                     {
                         move = insertMove(mappingFromOpr.get(i), toInterval);
                     }
-                    move.setComment(res, "MoveResolver resolve mapping");
                     if (LIRValueUtil.isStackSlotValue(toInterval.location()))
                     {
                         if (busySpillSlots == null)
@@ -313,7 +312,6 @@ public class MoveResolver
         LIRInstruction move = insertMove(fromInterval, spillInterval);
         mappingFrom.set(spillCandidate, spillInterval);
         unblockRegisters(fromInterval);
-        move.setComment(res, "MoveResolver break cycle");
     }
 
     void setInsertPosition(ArrayList<LIRInstruction> insertList, int insertIdx)

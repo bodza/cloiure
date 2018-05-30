@@ -325,12 +325,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     }
 
     @Override
-    public String toString()
-    {
-        return super.toString() + ", Object States: " + Arrays.toString(objectStates);
-    }
-
-    @Override
     public boolean equivalentTo(T other)
     {
         int length = Math.max(objectStates.length, other.getStateCount());

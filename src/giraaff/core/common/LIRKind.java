@@ -473,38 +473,6 @@ public final class LIRKind extends ValueKind<LIRKind>
     }
 
     @Override
-    public String toString()
-    {
-        if (isValue())
-        {
-            return getPlatformKind().name();
-        }
-        else if (isUnknownReference())
-        {
-            return getPlatformKind().name() + "[*]";
-        }
-        else
-        {
-            StringBuilder ret = new StringBuilder();
-            ret.append(getPlatformKind().name());
-            ret.append('[');
-            for (int i = 0; i < getPlatformKind().getVectorLength(); i++)
-            {
-                if (isReference(i))
-                {
-                    ret.append('.');
-                }
-                else
-                {
-                    ret.append(' ');
-                }
-            }
-            ret.append(']');
-            return ret.toString();
-        }
-    }
-
-    @Override
     public int hashCode()
     {
         final int prime = 31;

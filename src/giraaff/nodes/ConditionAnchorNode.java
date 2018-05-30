@@ -6,7 +6,6 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.extended.ValueAnchorNode;
 import giraaff.nodes.spi.Lowerable;
@@ -43,19 +42,6 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
     public boolean isNegated()
     {
         return negated;
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name && negated)
-        {
-            return "!" + super.toString(verbosity);
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     @Override

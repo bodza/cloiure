@@ -9,7 +9,6 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.util.GraphUtil;
 
@@ -76,19 +75,6 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     public boolean isNegated()
     {
         return negated;
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name && negated)
-        {
-            return "!" + super.toString(verbosity);
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 
     @Override

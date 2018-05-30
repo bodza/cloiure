@@ -369,11 +369,5 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
         {
             return this == obj;
         }
-
-        @Override
-        public String toString()
-        {
-            return "PlaceholderStamp";
-        }
     }
 }

@@ -136,24 +136,6 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     }
 
     @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder(stub == null ? descriptor.toString() : stub.toString());
-        sb.append("@0x").append(Long.toHexString(address)).append(':').append(outgoingCallingConvention).append(":").append(incomingCallingConvention);
-        if (temporaries != null && temporaries.length != 0)
-        {
-            sb.append("; temps=");
-            String sep = "";
-            for (Value op : temporaries)
-            {
-                sb.append(sep).append(op);
-                sep = ",";
-            }
-        }
-        return sb.toString();
-    }
-
-    @Override
     public boolean isReexecutable()
     {
         return reexecutable;
@@ -293,11 +275,5 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
             }
         }
         return false;
-    }
-
-    @Override
-    public String getSymbol()
-    {
-        return stub == null ? null : stub.toString();
     }
 }

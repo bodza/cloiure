@@ -492,12 +492,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         {
             return merge.graph();
         }
-
-        @Override
-        public String toString()
-        {
-            return "MergeProcessor@" + merge;
-        }
     }
 
     public void addScalarAlias(ValueNode node, ValueNode alias)

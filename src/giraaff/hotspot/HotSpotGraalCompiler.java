@@ -15,7 +15,6 @@ import giraaff.api.runtime.GraalJVMCICompiler;
 import giraaff.bytecode.Bytecode;
 import giraaff.code.CompilationResult;
 import giraaff.core.GraalCompiler;
-import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.GraalOptions;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.phases.OnStackReplacementPhase;
@@ -65,12 +64,12 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         return new CompilationTask(this, (HotSpotCompilationRequest) request, true, installAsDefault, options).runCompilation();
     }
 
-    public StructuredGraph createGraph(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)
+    public StructuredGraph createGraph(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, OptionValues options)
     {
         HotSpotBackend backend = graalRuntime.getBackend();
         HotSpotProviders providers = backend.getProviders();
         final boolean isOSR = entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
-        StructuredGraph graph = method.isNative() || isOSR ? null : getIntrinsicGraph(method, providers, compilationId, options);
+        StructuredGraph graph = method.isNative() || isOSR ? null : getIntrinsicGraph(method, providers, options);
 
         if (graph == null)
         {
@@ -79,19 +78,15 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
             {
                 speculationLog.collectFailedSpeculations();
             }
-            graph = new StructuredGraph.Builder(options, AllowAssumptions.ifTrue(GraalOptions.OptAssumptions.getValue(options))).method(method).entryBCI(entryBCI).speculationLog(speculationLog).useProfilingInfo(useProfilingInfo).compilationId(compilationId).build();
+            graph = new StructuredGraph.Builder(options, AllowAssumptions.ifTrue(GraalOptions.OptAssumptions.getValue(options))).method(method).entryBCI(entryBCI).speculationLog(speculationLog).useProfilingInfo(useProfilingInfo).build();
         }
         return graph;
     }
 
-    public CompilationResult compileHelper(CompilationResultBuilderFactory crbf, CompilationResult result, StructuredGraph graph, ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, OptionValues options)
+    public CompilationResult compile(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, OptionValues options)
     {
-        HotSpotBackend backend = graalRuntime.getBackend();
-        HotSpotProviders providers = backend.getProviders();
         final boolean isOSR = entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
 
-        Suites suites = getSuites(providers, options);
-        LIRSuites lirSuites = getLIRSuites(providers, options);
         ProfilingInfo profilingInfo = useProfilingInfo ? method.getProfilingInfo(!isOSR, isOSR) : DefaultProfilingInfo.get(TriState.FALSE);
         OptimisticOptimizations optimisticOpts = getOptimisticOpts(profilingInfo, options);
 
@@ -101,24 +96,22 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
             optimisticOpts.remove(Optimization.RemoveNeverExecutedCode);
         }
 
+        CompilationResult result =  new CompilationResult();
         result.setEntryBCI(entryBCI);
+
+        HotSpotBackend backend = graalRuntime.getBackend();
+        HotSpotProviders providers = backend.getProviders();
         PhaseSuite<HighTierContext> graphBuilderSuite = configGraphBuilderSuite(providers.getSuites().getDefaultGraphBuilderSuite(), isOSR);
-        GraalCompiler.compileGraph(graph, method, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, suites, lirSuites, result, crbf);
+
+        StructuredGraph graph = createGraph(method, entryBCI, useProfilingInfo, options);
+        GraalCompiler.compileGraph(graph, method, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, getSuites(providers, options), getLIRSuites(providers, options), result, CompilationResultBuilderFactory.Default);
 
         if (!isOSR && useProfilingInfo)
         {
-            ProfilingInfo profile = profilingInfo;
-            profile.setCompilerIRSize(StructuredGraph.class, graph.getNodeCount());
+            profilingInfo.setCompilerIRSize(StructuredGraph.class, graph.getNodeCount());
         }
 
         return result;
-    }
-
-    public CompilationResult compile(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)
-    {
-        StructuredGraph graph = createGraph(method, entryBCI, useProfilingInfo, compilationId, options);
-        CompilationResult result = new CompilationResult(compilationId);
-        return compileHelper(CompilationResultBuilderFactory.Default, result, graph, method, entryBCI, useProfilingInfo, options);
     }
 
     /**
@@ -127,14 +120,14 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
      *
      * @return an intrinsic graph that can be compiled and installed for {@code method} or null
      */
-    public StructuredGraph getIntrinsicGraph(ResolvedJavaMethod method, HotSpotProviders providers, CompilationIdentifier compilationId, OptionValues options)
+    public StructuredGraph getIntrinsicGraph(ResolvedJavaMethod method, HotSpotProviders providers, OptionValues options)
     {
         Replacements replacements = providers.getReplacements();
         Bytecode subst = replacements.getSubstitutionBytecode(method);
         if (subst != null)
         {
             ResolvedJavaMethod substMethod = subst.getMethod();
-            StructuredGraph graph = new StructuredGraph.Builder(options, AllowAssumptions.YES).method(substMethod).compilationId(compilationId).build();
+            StructuredGraph graph = new StructuredGraph.Builder(options, AllowAssumptions.YES).method(substMethod).build();
             Plugins plugins = new Plugins(providers.getGraphBuilderPlugins());
             GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
             IntrinsicContext initialReplacementContext = new IntrinsicContext(method, substMethod, subst.getOrigin(), CompilationContext.ROOT_COMPILATION);

@@ -624,20 +624,6 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         {
             return stamp;
         }
-
-        @Override
-        public String toString()
-        {
-            StringBuilder result = new StringBuilder();
-            result.append(stamp);
-            if (this.parent != null)
-            {
-                result.append(" (");
-                result.append(this.parent.toString());
-                result.append(")");
-            }
-            return result.toString();
-        }
     }
 
     public void setReplaceInputsWithConstants(boolean replaceInputsWithConstants)

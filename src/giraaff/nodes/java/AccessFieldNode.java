@@ -4,7 +4,6 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
@@ -75,18 +74,5 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
     public void lower(LoweringTool tool)
     {
         tool.getLowerer().lower(this, tool);
-    }
-
-    @Override
-    public String toString(Verbosity verbosity)
-    {
-        if (verbosity == Verbosity.Name)
-        {
-            return super.toString(verbosity) + "#" + field.getName();
-        }
-        else
-        {
-            return super.toString(verbosity);
-        }
     }
 }

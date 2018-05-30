@@ -37,12 +37,6 @@ public abstract class Loop<T extends AbstractBlockBase<T>>
 
     public abstract long numBackedges();
 
-    @Override
-    public String toString()
-    {
-        return "loop " + index + " depth " + getDepth() + (parent != null ? " outer " + parent.index : "");
-    }
-
     public Loop<T> getParent()
     {
         return parent;

@@ -65,12 +65,6 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
             ReadCacheEntry other = (ReadCacheEntry) obj;
             return identity.equals(other.identity) && object == other.object && index == other.index && kind == other.kind;
         }
-
-        @Override
-        public String toString()
-        {
-            return index == -1 ? (object + ":" + kind + "<" + identity + ">") : (object + "[" + index + "]:" + kind + "<" + identity + ">");
-        }
     }
 
     // @cons
@@ -85,12 +79,6 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
     {
         super(other);
         readCache = EconomicMap.create(Equivalence.DEFAULT, other.readCache);
-    }
-
-    @Override
-    public String toString()
-    {
-        return super.toString() + " " + readCache;
     }
 
     private static JavaKind stampToJavaKind(Stamp stamp)

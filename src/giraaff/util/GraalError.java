@@ -1,16 +1,11 @@
 package giraaff.util;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
 /**
  * Indicates a condition that should never occur during normal operation.
  */
 // @class GraalError
 public class GraalError extends Error
 {
-    private final ArrayList<String> context = new ArrayList<>();
-
     public static RuntimeException unimplemented()
     {
         throw new GraalError("unimplemented");
@@ -60,8 +55,7 @@ public class GraalError extends Error
      * if possible.
      *
      * @param condition the condition to check
-     * @param msg the message that will be associated with the error, in
-     *            {@link String#format(String, Object...)} syntax
+     * @param msg the message that will be associated with the error, in {@link String#format(String, Object...)} syntax
      * @param arg argument to the format string in {@code msg}
      */
     public static void guarantee(boolean condition, String msg, Object arg)
@@ -79,8 +73,7 @@ public class GraalError extends Error
      * if possible.
      *
      * @param condition the condition to check
-     * @param msg the message that will be associated with the error, in
-     *            {@link String#format(String, Object...)} syntax
+     * @param msg the message that will be associated with the error, in {@link String#format(String, Object...)} syntax
      * @param arg1 argument to the format string in {@code msg}
      * @param arg2 argument to the format string in {@code msg}
      */
@@ -99,8 +92,7 @@ public class GraalError extends Error
      * if possible.
      *
      * @param condition the condition to check
-     * @param msg the message that will be associated with the error, in
-     *            {@link String#format(String, Object...)} syntax
+     * @param msg the message that will be associated with the error, in {@link String#format(String, Object...)} syntax
      * @param arg1 argument to the format string in {@code msg}
      * @param arg2 argument to the format string in {@code msg}
      * @param arg3 argument to the format string in {@code msg}
@@ -141,17 +133,15 @@ public class GraalError extends Error
 
     /**
      * This constructor creates a {@link GraalError} with a message assembled via
-     * {@link String#format(String, Object...)}. It always uses the ENGLISH locale in order to
-     * always generate the same output.
+     * {@link String#format(String, Object...)}.
      *
      * @param msg the message that will be associated with the error, in String.format syntax
-     * @param args parameters to String.format - parameters that implement {@link Iterable} will be
-     *            expanded into a [x, x, ...] representation.
+     * @param args parameters to String.format
      */
     // @cons
     public GraalError(String msg, Object... args)
     {
-        super(format(msg, args));
+        super(String.format(msg, args));
     }
 
     /**
@@ -163,69 +153,5 @@ public class GraalError extends Error
     public GraalError(Throwable cause)
     {
         super(cause);
-    }
-
-    /**
-     * This constructor creates a {@link GraalError} and adds all the
-     * {@linkplain #addContext(String) context} of another {@link GraalError}.
-     *
-     * @param e the original {@link GraalError}
-     */
-    // @cons
-    public GraalError(GraalError e)
-    {
-        super(e);
-        context.addAll(e.context);
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append(context());
-        return sb.toString();
-    }
-
-    public String context()
-    {
-        StringBuilder sb = new StringBuilder();
-        for (String s : context)
-        {
-            sb.append("\n\tat ").append(s);
-        }
-        return sb.toString();
-    }
-
-    private static String format(String msg, Object... args)
-    {
-        if (args != null)
-        {
-            // expand Iterable parameters into a list representation
-            for (int i = 0; i < args.length; i++)
-            {
-                if (args[i] instanceof Iterable<?>)
-                {
-                    ArrayList<Object> list = new ArrayList<>();
-                    for (Object o : (Iterable<?>) args[i])
-                    {
-                        list.add(o);
-                    }
-                    args[i] = list.toString();
-                }
-            }
-        }
-        return String.format(Locale.ENGLISH, msg, args);
-    }
-
-    public GraalError addContext(String newContext)
-    {
-        this.context.add(newContext);
-        return this;
-    }
-
-    public GraalError addContext(String name, Object obj)
-    {
-        return addContext(format("%s: %s", name, obj));
     }
 }

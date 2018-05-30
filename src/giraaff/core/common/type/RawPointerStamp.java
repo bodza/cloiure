@@ -109,10 +109,4 @@ public final class RawPointerStamp extends AbstractPointerStamp
     {
         throw GraalError.shouldNotReachHere("can't read raw pointer");
     }
-
-    @Override
-    public String toString()
-    {
-        return "void*";
-    }
 }

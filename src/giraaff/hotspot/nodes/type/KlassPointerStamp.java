@@ -206,16 +206,4 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
         KlassPointerStamp other = (KlassPointerStamp) obj;
         return Objects.equals(this.encoding, other.encoding);
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder ret = new StringBuilder("Klass*");
-        appendString(ret);
-        if (isCompressed())
-        {
-            ret.append("(compressed ").append(encoding).append(")");
-        }
-        return ret.toString();
-    }
 }
