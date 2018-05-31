@@ -40,7 +40,6 @@ import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.WriteNode;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.virtual.phases.ea.ReadEliminationBlockState.CacheEntry;
 import giraaff.virtual.phases.ea.ReadEliminationBlockState.LoadCacheEntry;
 import giraaff.virtual.phases.ea.ReadEliminationBlockState.UnsafeLoadCacheEntry;
@@ -388,8 +387,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
         if (initialState.readCache.size() > 0)
         {
             LoopKillCache loopKilledLocations = loopLocationKillCache.get(loop);
-            // we have fully processed this loop the first time, remember to cache it the next time
-            // it is visited
+            // we have fully processed this loop the first time, remember to cache it the next time it is visited
             if (loopKilledLocations == null)
             {
                 loopKilledLocations = new LoopKillCache(1/* 1.visit */);
@@ -397,11 +395,10 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             }
             else
             {
-                OptionValues options = loop.getHeader().getBeginNode().getOptions();
-                if (loopKilledLocations.visits() > GraalOptions.ReadEliminationMaxLoopVisits.getValue(options))
+                if (loopKilledLocations.visits() > GraalOptions.readEliminationMaxLoopVisits)
                 {
-                    // we have processed the loop too many times, kill all locations so the inner
-                    // loop will never be processed more than once again on visit
+                    // we have processed the loop too many times: kill all locations, so
+                    // the inner loop will never be processed more than once again on visit
                     loopKilledLocations.setKillsAll();
                 }
                 else
@@ -416,8 +413,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                     {
                         forwardEndLiveLocations.remove(entry.getIdentity());
                     }
-                    // every location that is alive before the loop but not after is killed by the
-                    // loop
+                    // every location that is alive before the loop but not after is killed by the loop
                     for (LocationIdentity location : forwardEndLiveLocations)
                     {
                         loopKilledLocations.rememberLoopKilledLocation(location);

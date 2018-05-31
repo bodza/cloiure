@@ -16,7 +16,7 @@ import giraaff.hotspot.nodes.StubForeignCallNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.stubs.StubUtil;
 import giraaff.nodes.UnwindNode;
-import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 import giraaff.word.Word;
 
 /**
@@ -27,9 +27,9 @@ import giraaff.word.Word;
 public final class UnwindExceptionToCallerStub extends SnippetStub
 {
     // @cons
-    public UnwindExceptionToCallerStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public UnwindExceptionToCallerStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super("unwindExceptionToCaller", options, providers, linkage);
+        super("unwindExceptionToCaller", providers, linkage);
     }
 
     /**
@@ -49,11 +49,11 @@ public final class UnwindExceptionToCallerStub extends SnippetStub
         {
             return providers.getRegisters().getThreadRegister();
         }
-        return options;
+        throw GraalError.shouldNotReachHere("unknown parameter " + name + " at index " + index);
     }
 
     @Snippet
-    private static void unwindExceptionToCaller(Object exception, Word returnAddress, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    private static void unwindExceptionToCaller(Object exception, Word returnAddress, @ConstantParameter Register threadRegister)
     {
         Pointer exceptionOop = Word.objectToTrackedPointer(exception);
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);

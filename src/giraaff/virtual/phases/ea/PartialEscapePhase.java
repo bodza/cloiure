@@ -8,8 +8,6 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 import giraaff.phases.BasePhase;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.tiers.PhaseContext;
@@ -17,31 +15,25 @@ import giraaff.phases.tiers.PhaseContext;
 // @class PartialEscapePhase
 public final class PartialEscapePhase extends EffectsPhase<PhaseContext>
 {
-    // @class PartialEscapePhase.Options
-    static final class Options
-    {
-        public static final OptionKey<Boolean> OptEarlyReadElimination = new OptionKey<>(true);
-    }
-
     private final boolean readElimination;
     private final BasePhase<PhaseContext> cleanupPhase;
 
     // @cons
-    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, OptionValues options)
+    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer)
     {
-        this(iterative, Options.OptEarlyReadElimination.getValue(options), canonicalizer, null, options);
+        this(iterative, GraalOptions.optEarlyReadElimination, canonicalizer, null);
     }
 
     // @cons
-    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options)
+    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase)
     {
-        this(iterative, Options.OptEarlyReadElimination.getValue(options), canonicalizer, cleanupPhase, options);
+        this(iterative, GraalOptions.optEarlyReadElimination, canonicalizer, cleanupPhase);
     }
 
     // @cons
-    public PartialEscapePhase(boolean iterative, boolean readElimination, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options)
+    public PartialEscapePhase(boolean iterative, boolean readElimination, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase)
     {
-        super(iterative ? GraalOptions.EscapeAnalysisIterations.getValue(options) : 1, canonicalizer);
+        super(iterative ? GraalOptions.escapeAnalysisIterations : 1, canonicalizer);
         this.readElimination = readElimination;
         this.cleanupPhase = cleanupPhase;
     }
@@ -59,12 +51,9 @@ public final class PartialEscapePhase extends EffectsPhase<PhaseContext>
     @Override
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        if (VirtualUtil.matches(graph, GraalOptions.EscapeAnalyzeOnly.getValue(graph.getOptions())))
+        if (readElimination || graph.hasVirtualizableAllocation())
         {
-            if (readElimination || graph.hasVirtualizableAllocation())
-            {
-                runAnalysis(graph, context);
-            }
+            runAnalysis(graph, context);
         }
     }
 

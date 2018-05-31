@@ -23,7 +23,6 @@ import giraaff.hotspot.stubs.StubUtil;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.extended.BranchProbabilityNode;
-import giraaff.options.OptionValues;
 import giraaff.word.Word;
 
 /**
@@ -36,9 +35,9 @@ import giraaff.word.Word;
 public final class NewInstanceStub extends SnippetStub
 {
     // @cons
-    public NewInstanceStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public NewInstanceStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super("newInstance", options, providers, linkage);
+        super("newInstance", providers, linkage);
     }
 
     @Override
@@ -49,7 +48,6 @@ public final class NewInstanceStub extends SnippetStub
         Object[] args = new Object[count];
         args[1] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), intArrayType.klass(), null);
         args[2] = providers.getRegisters().getThreadRegister();
-        args[3] = options;
         return args;
     }
 
@@ -74,7 +72,7 @@ public final class NewInstanceStub extends SnippetStub
      * @param intArrayHub the hub for {@code int[].class}
      */
     @Snippet
-    private static Object newInstance(KlassPointer hub, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    private static Object newInstance(KlassPointer hub, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister)
     {
         // The type is known to be an instance so Klass::_layout_helper is the instance size as a raw number.
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);

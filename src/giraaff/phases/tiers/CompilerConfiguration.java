@@ -4,21 +4,20 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.phases.LIRPhaseSuite;
 import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 
 // @iface CompilerConfiguration
 public interface CompilerConfiguration
 {
-    PhaseSuite<HighTierContext> createHighTier(OptionValues options);
+    PhaseSuite<HighTierContext> createHighTier();
 
-    PhaseSuite<MidTierContext> createMidTier(OptionValues options);
+    PhaseSuite<MidTierContext> createMidTier();
 
-    PhaseSuite<LowTierContext> createLowTier(OptionValues options);
+    PhaseSuite<LowTierContext> createLowTier();
 
-    LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage(OptionValues options);
+    LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage();
 
-    LIRPhaseSuite<AllocationContext> createAllocationStage(OptionValues options);
+    LIRPhaseSuite<AllocationContext> createAllocationStage();
 
-    LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage(OptionValues options);
+    LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage();
 }

@@ -16,7 +16,7 @@ public final class LoopSafepointInsertionPhase extends Phase
     @Override
     protected void run(StructuredGraph graph)
     {
-        if (GraalOptions.GenLoopSafepoints.getValue(graph.getOptions()))
+        if (GraalOptions.genLoopSafepoints)
         {
             for (LoopBeginNode loopBeginNode : graph.getNodes(LoopBeginNode.TYPE))
             {

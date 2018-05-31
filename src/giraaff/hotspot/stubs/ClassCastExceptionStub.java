@@ -8,16 +8,15 @@ import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.word.KlassPointer;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 // @class ClassCastExceptionStub
 public final class ClassCastExceptionStub extends CreateExceptionStub
 {
     // @cons
-    public ClassCastExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public ClassCastExceptionStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super("createClassCastException", options, providers, linkage);
+        super("createClassCastException", providers, linkage);
     }
 
     @Override

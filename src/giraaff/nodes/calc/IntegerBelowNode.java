@@ -14,7 +14,6 @@ import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.LogicNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
-import giraaff.options.OptionValues;
 
 // @class IntegerBelowNode
 public final class IntegerBelowNode extends IntegerLowerThanNode
@@ -34,9 +33,9 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
         return OP.create(x, y, view);
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
     {
-        LogicNode value = OP.canonical(constantReflection, metaAccess, options, smallestCompareWidth, OP.getCondition(), false, x, y, view);
+        LogicNode value = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, OP.getCondition(), false, x, y, view);
         if (value != null)
         {
             return value;
@@ -48,7 +47,7 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
     public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
     {
         NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.getOptions(), tool.smallestCompareWidth(), OP.getCondition(), false, forX, forY, view);
+        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), OP.getCondition(), false, forX, forY, view);
         if (value != null)
         {
             return value;

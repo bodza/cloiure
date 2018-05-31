@@ -42,7 +42,6 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
-import giraaff.options.OptionValues;
 
 /**
  * HotSpot AMD64 specific backend.
@@ -154,7 +153,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
                 {
                     asm.decrementq(AMD64.rsp, frameSize);
                 }
-                if (GraalOptions.ZapStackOnMethodEntry.getValue(crb.getOptions()))
+                if (GraalOptions.zapStackOnMethodEntry)
                 {
                     final int intSize = 4;
                     for (int i = 0; i < frameSize / intSize; ++i)
@@ -195,14 +194,13 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         // - makes no foreign calls (which require an aligned stack)
         HotSpotLIRGenerationResult gen = (HotSpotLIRGenerationResult) lirGenRen;
         LIR lir = gen.getLIR();
-        OptionValues options = lir.getOptions();
-        boolean omitFrame = GraalOptions.CanOmitFrame.getValue(options) && !frameMap.frameNeedsAllocating() && !lir.hasArgInCallerFrame() && !gen.hasForeignCall();
+        boolean omitFrame = GraalOptions.canOmitFrame && !frameMap.frameNeedsAllocating() && !lir.hasArgInCallerFrame() && !gen.hasForeignCall();
 
         Stub stub = gen.getStub();
         Assembler masm = createAssembler(frameMap);
         HotSpotFrameContext frameContext = new HotSpotFrameContext(stub != null, omitFrame);
         DataBuilder dataBuilder = new HotSpotDataBuilder(getCodeCache().getTarget());
-        CompilationResultBuilder crb = factory.createBuilder(getCodeCache(), getForeignCalls(), frameMap, masm, dataBuilder, frameContext, options, compilationResult);
+        CompilationResultBuilder crb = factory.createBuilder(getCodeCache(), getForeignCalls(), frameMap, masm, dataBuilder, frameContext, compilationResult);
         crb.setTotalFrameSize(frameMap.totalFrameSize());
 
         if (stub != null)

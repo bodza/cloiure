@@ -12,7 +12,6 @@ import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.debug.StringToBytesNode;
 import giraaff.nodes.java.NewArrayNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -56,9 +55,9 @@ public final class StringToBytesSnippets implements Snippets
         private final SnippetInfo create;
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders providers, TargetDescription target)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
             create = snippet(StringToBytesSnippets.class, "transform", NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
         }
 

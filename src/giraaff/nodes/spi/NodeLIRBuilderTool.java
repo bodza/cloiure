@@ -24,7 +24,6 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.ConditionalNode;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.extended.SwitchNode;
-import giraaff.options.OptionValues;
 
 // @iface NodeLIRBuilderTool
 public interface NodeLIRBuilderTool extends NodeValueMap
@@ -58,9 +57,4 @@ public interface NodeLIRBuilderTool extends NodeValueMap
     Value[] visitInvokeArguments(CallingConvention cc, Collection<ValueNode> arguments);
 
     void doBlock(Block block, StructuredGraph graph, BlockMap<List<Node>> blockMap);
-
-    default OptionValues getOptions()
-    {
-        return getLIRGeneratorTool().getResult().getLIR().getOptions();
-    }
 }

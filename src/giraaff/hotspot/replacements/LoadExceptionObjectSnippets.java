@@ -9,19 +9,18 @@ import org.graalvm.word.WordFactory;
 
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.Stamp;
 import giraaff.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
-import giraaff.hotspot.replacements.HotspotSnippetsOptions;
 import giraaff.hotspot.word.HotSpotWordTypes;
 import giraaff.nodes.PiNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.java.LoadExceptionObjectNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -65,16 +64,16 @@ public final class LoadExceptionObjectSnippets implements Snippets
         private final HotSpotWordTypes wordTypes;
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders providers, TargetDescription target)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
             this.wordTypes = providers.getWordTypes();
         }
 
         public void lower(LoadExceptionObjectNode loadExceptionObject, HotSpotRegistersProvider registers, LoweringTool tool)
         {
             StructuredGraph graph = loadExceptionObject.graph();
-            if (HotspotSnippetsOptions.LoadExceptionObjectInVM.getValue(graph.getOptions()))
+            if (GraalOptions.loadExceptionObjectInVM)
             {
                 ResolvedJavaType wordType = providers.getMetaAccess().lookupJavaType(Word.class);
                 Stamp stamp = wordTypes.getWordStamp(wordType);

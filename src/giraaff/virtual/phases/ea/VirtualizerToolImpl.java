@@ -25,7 +25,6 @@ import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualInstanceNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 
 /**
  * Forwards calls from {@link VirtualizerTool} to the actual {@link PartialEscapeBlockState}.
@@ -38,12 +37,11 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     private final ConstantFieldProvider constantFieldProvider;
     private final PartialEscapeClosure<?> closure;
     private final Assumptions assumptions;
-    private final OptionValues options;
     private final LoweringProvider loweringProvider;
     private ConstantNode illegalConstant;
 
     // @cons
-    VirtualizerToolImpl(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, PartialEscapeClosure<?> closure, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider)
+    VirtualizerToolImpl(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, PartialEscapeClosure<?> closure, Assumptions assumptions, LoweringProvider loweringProvider)
     {
         super();
         this.metaAccess = metaAccess;
@@ -51,7 +49,6 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
         this.constantFieldProvider = constantFieldProvider;
         this.closure = closure;
         this.assumptions = assumptions;
-        this.options = options;
         this.loweringProvider = loweringProvider;
     }
 
@@ -60,12 +57,6 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     private ValueNode current;
     private FixedNode position;
     private GraphEffectList effects;
-
-    @Override
-    public OptionValues getOptions()
-    {
-        return options;
-    }
 
     @Override
     public MetaAccessProvider getMetaAccessProvider()
@@ -281,7 +272,7 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     @Override
     public int getMaximumEntryCount()
     {
-        return GraalOptions.MaximumEscapeAnalysisArrayLength.getValue(current.getOptions());
+        return GraalOptions.maximumEscapeAnalysisArrayLength;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package giraaff.phases.common;
 
-import giraaff.core.common.RetryableBailoutException;
+import jdk.vm.ci.code.BailoutException;
+
 import giraaff.graph.Graph.NodeEvent;
 import giraaff.graph.Graph.NodeEventScope;
 import giraaff.graph.Node;
@@ -52,7 +53,7 @@ public final class IterativeConditionalEliminationPhase extends BasePhase<PhaseC
             listener.getNodes().clear();
             if (++count > MAX_ITERATIONS)
             {
-                throw new RetryableBailoutException("Number of iterations in ConditionalEliminationPhase phase exceeds %d", MAX_ITERATIONS);
+                throw new BailoutException(false, "number of iterations in ConditionalEliminationPhase phase exceeds %d", MAX_ITERATIONS);
             }
         }
     }

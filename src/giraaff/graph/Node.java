@@ -19,7 +19,6 @@ import giraaff.graph.iterators.NodePredicate;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodeinfo.InputType;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
@@ -219,14 +218,6 @@ public abstract class Node implements Cloneable, NodeInterface
     public Graph graph()
     {
         return graph;
-    }
-
-    /**
-     * Gets the option values associated with this node's graph.
-     */
-    public final OptionValues getOptions()
-    {
-        return graph == null ? null : graph.getOptions();
     }
 
     /**

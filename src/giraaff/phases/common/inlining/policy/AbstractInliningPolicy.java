@@ -5,6 +5,7 @@ import java.util.Map;
 import jdk.vm.ci.meta.ProfilingInfo;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.spi.Replacements;
@@ -44,7 +45,7 @@ public abstract class AbstractInliningPolicy implements InliningPolicy
 
     protected boolean isIntrinsic(Replacements replacements, InlineInfo info)
     {
-        if (InliningPhase.Options.AlwaysInlineIntrinsics.getValue(info.graph().getOptions()))
+        if (GraalOptions.alwaysInlineIntrinsics)
         {
             return onlyIntrinsics(replacements, info);
         }

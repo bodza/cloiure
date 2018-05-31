@@ -24,7 +24,6 @@ import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.replacements.CRC32CSubstitutions;
 import giraaff.hotspot.replacements.CRC32Substitutions;
-import giraaff.options.OptionValues;
 import giraaff.word.WordTypes;
 
 // @class AMD64HotSpotForeignCallsProvider
@@ -40,7 +39,7 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
     }
 
     @Override
-    public void initialize(HotSpotProviders providers, OptionValues options)
+    public void initialize(HotSpotProviders providers)
     {
         TargetDescription target = providers.getCodeCache().getTarget();
         PlatformKind word = target.arch.getWordKind();
@@ -63,7 +62,7 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
             registerForeignCall(CRC32CSubstitutions.UPDATE_BYTES_CRC32C, HotSpotRuntime.updateBytesCRC32C, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
         }
 
-        super.initialize(providers, options);
+        super.initialize(providers);
     }
 
     @Override

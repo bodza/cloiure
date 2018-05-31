@@ -101,7 +101,7 @@ public final class MethodHandlePlugin implements NodePlugin
                 }
 
                 int recursionDepth = countRecursiveInlining(b, targetMethod);
-                int maxRecursionDepth = GraalOptions.MaximumRecursiveInlining.getValue(b.getOptions());
+                int maxRecursionDepth = GraalOptions.maximumRecursiveInlining;
                 if (recursionDepth > maxRecursionDepth)
                 {
                     return false;

@@ -11,6 +11,7 @@ import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.ValueKind;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.lir.InstructionValueConsumer;
@@ -26,7 +27,6 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.lir.phases.PreAllocationOptimizationPhase;
-import giraaff.options.NestedBooleanOptionKey;
 
 /**
  * This optimization tries to improve the handling of constants by replacing a single definition of
@@ -36,13 +36,6 @@ import giraaff.options.NestedBooleanOptionKey;
 // @class ConstantLoadOptimization
 public final class ConstantLoadOptimization extends PreAllocationOptimizationPhase
 {
-    // @class ConstantLoadOptimization.Options
-    public static final class Options
-    {
-        // @Option "Enable constant load optimization."
-        public static final NestedBooleanOptionKey LIROptConstantLoadOptimization = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
-    }
-
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PreAllocationOptimizationContext context)
     {

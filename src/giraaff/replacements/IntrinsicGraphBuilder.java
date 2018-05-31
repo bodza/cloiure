@@ -33,7 +33,6 @@ import giraaff.nodes.graphbuilderconf.IntrinsicContext;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 import giraaff.nodes.spi.StampProvider;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 /**
@@ -56,13 +55,13 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     protected ValueNode returnValue;
 
     // @cons
-    public IntrinsicGraphBuilder(OptionValues options, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci)
+    public IntrinsicGraphBuilder(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci)
     {
-        this(options, metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci, AllowAssumptions.YES);
+        this(metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci, AllowAssumptions.YES);
     }
 
     // @cons
-    protected IntrinsicGraphBuilder(OptionValues options, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions)
+    protected IntrinsicGraphBuilder(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions)
     {
         super();
         this.metaAccess = metaAccess;
@@ -71,7 +70,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
         this.stampProvider = stampProvider;
         this.code = code;
         this.method = code.getMethod();
-        this.graph = new StructuredGraph.Builder(options, allowAssumptions).method(method).build();
+        this.graph = new StructuredGraph.Builder(allowAssumptions).method(method).build();
         this.invokeBci = invokeBci;
         this.lastInstr = graph.start();
 
@@ -254,7 +253,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     }
 
     @Override
-    public BailoutException bailout(String string)
+    public BailoutException bailout(String msg)
     {
         throw GraalError.shouldNotReachHere();
     }

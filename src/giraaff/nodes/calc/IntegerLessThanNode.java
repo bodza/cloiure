@@ -22,7 +22,6 @@ import giraaff.nodes.LogicNegationNode;
 import giraaff.nodes.LogicNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 // @class IntegerLessThanNode
@@ -43,9 +42,9 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         return OP.create(x, y, view);
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
     {
-        LogicNode value = OP.canonical(constantReflection, metaAccess, options, smallestCompareWidth, OP.getCondition(), false, x, y, view);
+        LogicNode value = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, OP.getCondition(), false, x, y, view);
         if (value != null)
         {
             return value;
@@ -57,7 +56,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
     public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
     {
         NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.getOptions(), tool.smallestCompareWidth(), OP.getCondition(), false, forX, forY, view);
+        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), OP.getCondition(), false, forX, forY, view);
         if (value != null)
         {
             return value;
@@ -99,7 +98,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         }
 
         @Override
-        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)
+        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)
         {
             PrimitiveConstant primitive = (PrimitiveConstant) constant;
             /*
@@ -129,11 +128,11 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
             {
                 if (normalizeNode.getX().getStackKind() == JavaKind.Double || normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
-                    return FloatLessThanNode.create(constantReflection, metaAccess, options, smallestCompareWidth, a, b, mirrored ^ normalizeNode.isUnorderedLess, view);
+                    return FloatLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, a, b, mirrored ^ normalizeNode.isUnorderedLess, view);
                 }
                 else
                 {
-                    return IntegerLessThanNode.create(constantReflection, metaAccess, options, smallestCompareWidth, a, b, view);
+                    return IntegerLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, a, b, view);
                 }
             }
             else if (cst == 1)
@@ -143,11 +142,11 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
                 if (normalizeNode.getX().getStackKind() == JavaKind.Double || normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
                     // since we negate, we have to reverse the unordered result
-                    compare = FloatLessThanNode.create(constantReflection, metaAccess, options, smallestCompareWidth, b, a, mirrored == normalizeNode.isUnorderedLess, view);
+                    compare = FloatLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, b, a, mirrored == normalizeNode.isUnorderedLess, view);
                 }
                 else
                 {
-                    compare = IntegerLessThanNode.create(constantReflection, metaAccess, options, smallestCompareWidth, b, a, view);
+                    compare = IntegerLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, b, a, view);
                 }
                 return LogicNegationNode.create(compare);
             }

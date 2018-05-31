@@ -40,7 +40,6 @@ import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.Replacements;
 import giraaff.nodes.spi.StampProvider;
-import giraaff.options.OptionValues;
 import giraaff.phases.BasePhase;
 import giraaff.phases.Phase;
 import giraaff.phases.common.LoweringPhase.ProcessBlockState;
@@ -164,7 +163,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         public GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
         {
             StructuredGraph graph = before.graph();
-            if (GraalOptions.OptEliminateGuards.getValue(graph.getOptions()))
+            if (GraalOptions.optEliminateGuards)
             {
                 for (Node usage : condition.usages())
                 {
@@ -187,7 +186,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             else
             {
                 GuardNode newGuard = graph.unique(new GuardNode(condition, guardAnchor, deoptReason, action, negated, speculation));
-                if (GraalOptions.OptEliminateGuards.getValue(graph.getOptions()))
+                if (GraalOptions.optEliminateGuards)
                 {
                     activeGuards.markAndGrow(newGuard);
                 }
@@ -240,7 +239,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
     private void lower(StructuredGraph graph, PhaseContext context, LoweringMode mode)
     {
         IncrementalCanonicalizerPhase<PhaseContext> incrementalCanonicalizer = new IncrementalCanonicalizerPhase<>(canonicalizer);
-        incrementalCanonicalizer.appendPhase(new Round(context, mode, graph.getOptions()));
+        incrementalCanonicalizer.appendPhase(new Round(context, mode));
         incrementalCanonicalizer.apply(graph, context);
     }
 
@@ -260,7 +259,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         private final SchedulePhase schedulePhase;
 
         // @cons
-        private Round(PhaseContext context, LoweringMode mode, OptionValues options)
+        private Round(PhaseContext context, LoweringMode mode)
         {
             super();
             this.context = context;
@@ -272,7 +271,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
              */
             boolean immutableSchedule = mode == LoweringMode.VERIFY_LOWERING;
 
-            this.schedulePhase = new SchedulePhase(immutableSchedule, options);
+            this.schedulePhase = new SchedulePhase(immutableSchedule);
         }
 
         @Override
@@ -341,7 +340,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             @Override
             public void postprocess()
             {
-                if (anchor == block.getBeginNode() && GraalOptions.OptEliminateGuards.getValue(activeGuards.graph().getOptions()))
+                if (anchor == block.getBeginNode() && GraalOptions.optEliminateGuards)
                 {
                     for (GuardNode guard : anchor.asNode().usages().filter(GuardNode.class))
                     {

@@ -23,7 +23,6 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.LoweringPhase;
@@ -45,14 +44,13 @@ public abstract class SnippetStub extends Stub implements Snippets
     /**
      * Creates a new snippet stub.
      *
-     * @param snippetMethodName name of the single {@link Snippet} annotated method in the class of
-     *            this object
+     * @param snippetMethodName name of the single {@link Snippet} annotated method in the class of this object
      * @param linkage linkage details for a call to the stub
      */
     // @cons
-    public SnippetStub(String snippetMethodName, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public SnippetStub(String snippetMethodName, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        this(null, snippetMethodName, options, providers, linkage);
+        this(null, snippetMethodName, providers, linkage);
     }
 
     /**
@@ -65,9 +63,9 @@ public abstract class SnippetStub extends Stub implements Snippets
      * @param linkage linkage details for a call to the stub
      */
     // @cons
-    public SnippetStub(Class<? extends Snippets> snippetDeclaringClass, String snippetMethodName, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public SnippetStub(Class<? extends Snippets> snippetDeclaringClass, String snippetMethodName, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super(options, providers, linkage);
+        super(providers, linkage);
         Method javaMethod = SnippetTemplate.AbstractTemplates.findMethod(snippetDeclaringClass == null ? getClass() : snippetDeclaringClass, snippetMethodName, null);
         this.method = providers.getMetaAccess().lookupJavaMethod(javaMethod);
     }
@@ -84,7 +82,7 @@ public abstract class SnippetStub extends Stub implements Snippets
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
         // Stubs cannot have optimistic assumptions, since they have to be valid for the entire run of the VM.
-        final StructuredGraph graph = new StructuredGraph.Builder(options).method(method).build();
+        final StructuredGraph graph = new StructuredGraph.Builder().method(method).build();
         graph.disableUnsafeAccessTracking();
 
         IntrinsicContext initialIntrinsicContext = new IntrinsicContext(method, method, getReplacementsBytecodeProvider(), CompilationContext.INLINE_AFTER_PARSING);

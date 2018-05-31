@@ -23,7 +23,6 @@ import giraaff.nodes.LogicNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 // @class IntegerEqualsNode
@@ -73,9 +72,9 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
         return new IntegerEqualsNode(x, y).maybeCommuteInputs();
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
     {
-        LogicNode value = OP.canonical(constantReflection, metaAccess, options, smallestCompareWidth, CanonicalCondition.EQ, false, x, y, view);
+        LogicNode value = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, CanonicalCondition.EQ, false, x, y, view);
         if (value != null)
         {
             return value;
@@ -87,7 +86,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
     public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
     {
         NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.getOptions(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
+        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
         if (value != null)
         {
             return value;
@@ -99,7 +98,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
     public static final class IntegerEqualsOp extends CompareOp
     {
         @Override
-        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)
+        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)
         {
             PrimitiveConstant primitive = (PrimitiveConstant) constant;
             ValueNode a = normalizeNode.getX();
@@ -110,11 +109,11 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
             {
                 if (normalizeNode.getX().getStackKind() == JavaKind.Double || normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
-                    return FloatEqualsNode.create(constantReflection, metaAccess, options, smallestCompareWidth, a, b, view);
+                    return FloatEqualsNode.create(constantReflection, metaAccess, smallestCompareWidth, a, b, view);
                 }
                 else
                 {
-                    return IntegerEqualsNode.create(constantReflection, metaAccess, options, smallestCompareWidth, a, b, view);
+                    return IntegerEqualsNode.create(constantReflection, metaAccess, smallestCompareWidth, a, b, view);
                 }
             }
             else if (cst == 1)
@@ -125,7 +124,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                 }
                 else
                 {
-                    return IntegerLessThanNode.create(constantReflection, metaAccess, options, smallestCompareWidth, b, a, view);
+                    return IntegerLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, b, a, view);
                 }
             }
             else if (cst == -1)
@@ -136,7 +135,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                 }
                 else
                 {
-                    return IntegerLessThanNode.create(constantReflection, metaAccess, options, smallestCompareWidth, a, b, view);
+                    return IntegerLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, a, b, view);
                 }
             }
             else
@@ -164,7 +163,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
         }
 
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
         {
             if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY))
             {
@@ -207,11 +206,11 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                 }
             }
 
-            return super.canonical(constantReflection, metaAccess, options, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
+            return super.canonical(constantReflection, metaAccess, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
         }
 
         @Override
-        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)
+        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)
         {
             if (constant instanceof PrimitiveConstant)
             {
@@ -223,7 +222,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                     // (respective -1) for a more canonical graph and also to allow for faster
                     // execution
                     // on specific platforms.
-                    return LogicNegationNode.create(IntegerEqualsNode.create(constantReflection, metaAccess, options, smallestCompareWidth, nonConstant, ConstantNode.forIntegerKind(nonConstant.getStackKind(), 0), view));
+                    return LogicNegationNode.create(IntegerEqualsNode.create(constantReflection, metaAccess, smallestCompareWidth, nonConstant, ConstantNode.forIntegerKind(nonConstant.getStackKind(), 0), view));
                 }
                 else if (primitiveConstant.asLong() == 0)
                 {
@@ -235,7 +234,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                     else if (nonConstant instanceof SubNode)
                     {
                         SubNode subNode = (SubNode) nonConstant;
-                        return IntegerEqualsNode.create(constantReflection, metaAccess, options, smallestCompareWidth, subNode.getX(), subNode.getY(), view);
+                        return IntegerEqualsNode.create(constantReflection, metaAccess, smallestCompareWidth, subNode.getX(), subNode.getY(), view);
                     }
                     else if (nonConstant instanceof ShiftNode && nonConstant.stamp(view) instanceof IntegerStamp)
                     {
@@ -321,7 +320,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                     }
                 }
             }
-            return super.canonicalizeSymmetricConstant(constantReflection, metaAccess, options, smallestCompareWidth, condition, constant, nonConstant, mirrored, unorderedIsTrue, view);
+            return super.canonicalizeSymmetricConstant(constantReflection, metaAccess, smallestCompareWidth, condition, constant, nonConstant, mirrored, unorderedIsTrue, view);
         }
     }
 

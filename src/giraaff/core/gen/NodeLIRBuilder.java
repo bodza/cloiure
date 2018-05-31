@@ -67,7 +67,6 @@ import giraaff.nodes.extended.IntegerSwitchNode;
 import giraaff.nodes.extended.SwitchNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 /**
@@ -244,7 +243,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         return values.toArray(new Value[values.size()]);
     }
 
-    public void doBlockPrologue(@SuppressWarnings("unused") Block block, @SuppressWarnings("unused") OptionValues options)
+    public void doBlockPrologue(@SuppressWarnings("unused") Block block)
     {
     }
 
@@ -252,7 +251,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     @SuppressWarnings("try")
     public void doBlock(Block block, StructuredGraph graph, BlockMap<List<Node>> blockMap)
     {
-        OptionValues options = graph.getOptions();
         try (BlockScope blockScope = gen.getBlockScope(block))
         {
             if (block == gen.getResult().getLIR().getControlFlowGraph().getStartBlock())
@@ -270,7 +268,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                     label.setPhiValues(createPhiIn(merge));
                 }
             }
-            doBlockPrologue(block, options);
+            doBlockPrologue(block);
 
             List<Node> nodes = blockMap.get(block);
 

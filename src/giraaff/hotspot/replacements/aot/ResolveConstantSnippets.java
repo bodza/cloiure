@@ -29,7 +29,6 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -123,9 +122,9 @@ public final class ResolveConstantSnippets implements Snippets
         private final SnippetInfo pureInitializeKlass = snippet(ResolveConstantSnippets.class, "pureInitializeKlass");
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders providers, TargetDescription target)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
         }
 
         public void lower(ResolveDynamicConstantNode resolveConstantNode, LoweringTool tool)

@@ -6,7 +6,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.spi.Replacements;
-import giraaff.options.OptionValues;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.common.inlining.info.InlineInfo;
 import giraaff.phases.common.inlining.walker.MethodInvocation;
@@ -23,22 +22,17 @@ public final class GreedyInliningPolicy extends AbstractInliningPolicy
     @Override
     public boolean continueInlining(StructuredGraph currentGraph)
     {
-        if (InliningUtil.getNodeCount(currentGraph) >= GraalOptions.MaximumDesiredSize.getValue(currentGraph.getOptions()))
-        {
-            return false;
-        }
-        return true;
+        return InliningUtil.getNodeCount(currentGraph) < GraalOptions.maximumDesiredSize;
     }
 
     @Override
     public Decision isWorthInlining(Replacements replacements, MethodInvocation invocation, int inliningDepth, boolean fullyProcessed)
     {
         final InlineInfo info = invocation.callee();
-        OptionValues options = info.graph().getOptions();
         final double probability = invocation.probability();
         final double relevance = invocation.relevance();
 
-        if (GraalOptions.InlineEverything.getValue(options))
+        if (GraalOptions.inlineEverything)
         {
             return InliningPolicy.Decision.YES;
         }
@@ -57,12 +51,12 @@ public final class GreedyInliningPolicy extends AbstractInliningPolicy
         int nodes = info.determineNodeCount();
         int lowLevelGraphSize = previousLowLevelGraphSize(info);
 
-        if (GraalOptions.SmallCompiledLowLevelGraphSize.getValue(options) > 0 && lowLevelGraphSize > GraalOptions.SmallCompiledLowLevelGraphSize.getValue(options) * inliningBonus)
+        if (GraalOptions.smallCompiledLowLevelGraphSize > 0 && lowLevelGraphSize > GraalOptions.smallCompiledLowLevelGraphSize * inliningBonus)
         {
             return InliningPolicy.Decision.NO;
         }
 
-        if (nodes < GraalOptions.TrivialInliningSize.getValue(options) * inliningBonus)
+        if (nodes < GraalOptions.trivialInliningSize * inliningBonus)
         {
             return InliningPolicy.Decision.YES;
         }
@@ -74,12 +68,12 @@ public final class GreedyInliningPolicy extends AbstractInliningPolicy
          * also getting queued in the compilation queue concurrently)
          */
         double invokes = determineInvokeProbability(info);
-        if (GraalOptions.LimitInlinedInvokes.getValue(options) > 0 && fullyProcessed && invokes > GraalOptions.LimitInlinedInvokes.getValue(options) * inliningBonus)
+        if (GraalOptions.limitInlinedInvokes > 0 && fullyProcessed && invokes > GraalOptions.limitInlinedInvokes * inliningBonus)
         {
             return InliningPolicy.Decision.NO;
         }
 
-        double maximumNodes = computeMaximumSize(relevance, (int) (GraalOptions.MaximumInliningSize.getValue(options) * inliningBonus));
+        double maximumNodes = computeMaximumSize(relevance, (int) (GraalOptions.maximumInliningSize * inliningBonus));
         if (nodes <= maximumNodes)
         {
             return InliningPolicy.Decision.YES;

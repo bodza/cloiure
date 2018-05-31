@@ -6,7 +6,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.options.OptionKey;
+import giraaff.core.common.GraalOptions;
 import giraaff.util.GraalError;
 
 /**
@@ -15,13 +15,6 @@ import giraaff.util.GraalError;
 // @class JavaConstantFieldProvider
 public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
-    // @class JavaConstantFieldProvider.Options
-    static final class Options
-    {
-        // @Option "Determines whether to treat final fields with default values as constant."
-        public static final OptionKey<Boolean> TrustFinalDefaultFields = new OptionKey<>(true);
-    }
-
     // @cons
     protected JavaConstantFieldProvider(MetaAccessProvider metaAccess)
     {
@@ -90,7 +83,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
     @SuppressWarnings("unused")
     protected boolean isFinalFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
     {
-        return !value.isDefaultForKind() || Options.TrustFinalDefaultFields.getValue(tool.getOptions());
+        return !value.isDefaultForKind() || GraalOptions.trustFinalDefaultFields;
     }
 
     @SuppressWarnings("unused")

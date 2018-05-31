@@ -14,6 +14,7 @@ import jdk.vm.ci.meta.ValueKind;
 
 import org.graalvm.collections.EconomicSet;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
@@ -28,7 +29,6 @@ import giraaff.lir.framemap.VirtualStackSlotRange;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.LIRPhase;
-import giraaff.options.NestedBooleanOptionKey;
 
 /**
  * Linear Scan stack slot allocator.
@@ -42,13 +42,6 @@ import giraaff.options.NestedBooleanOptionKey;
 // @class LSStackSlotAllocator
 public final class LSStackSlotAllocator extends AllocationPhase
 {
-    // @class LSStackSlotAllocator.Options
-    public static final class Options
-    {
-        // @Option "Use linear scan stack slot allocation."
-        public static final NestedBooleanOptionKey LIROptLSStackSlotAllocator = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
-    }
-
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
     {

@@ -113,7 +113,7 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
 
     private static boolean tryConstantFold(GraphBuilderContext b, ResolvedJavaField field, JavaConstant object)
     {
-        ConstantNode result = ConstantFoldUtil.tryConstantFold(b.getConstantFieldProvider(), b.getConstantReflection(), b.getMetaAccess(), field, object, b.getOptions());
+        ConstantNode result = ConstantFoldUtil.tryConstantFold(b.getConstantFieldProvider(), b.getConstantReflection(), b.getMetaAccess(), field, object);
         if (result != null)
         {
             result = b.getGraph().unique(result);

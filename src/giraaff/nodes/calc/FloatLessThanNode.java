@@ -16,7 +16,6 @@ import giraaff.nodes.LogicNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 // @class FloatLessThanNode
@@ -42,9 +41,9 @@ public final class FloatLessThanNode extends CompareNode
         return new FloatLessThanNode(x, y, unorderedIsTrue);
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, ValueNode x, ValueNode y, boolean unorderedIsTrue, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, boolean unorderedIsTrue, NodeView view)
     {
-        LogicNode result = OP.canonical(constantReflection, metaAccess, options, smallestCompareWidth, CanonicalCondition.LT, unorderedIsTrue, x, y, view);
+        LogicNode result = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, CanonicalCondition.LT, unorderedIsTrue, x, y, view);
         if (result != null)
         {
             return result;
@@ -56,7 +55,7 @@ public final class FloatLessThanNode extends CompareNode
     public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
     {
         NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.getOptions(), tool.smallestCompareWidth(), CanonicalCondition.LT, unorderedIsTrue, forX, forY, view);
+        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.LT, unorderedIsTrue, forX, forY, view);
         if (value != null)
         {
             return value;
@@ -68,9 +67,9 @@ public final class FloatLessThanNode extends CompareNode
     public static final class FloatLessThanOp extends CompareOp
     {
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
         {
-            LogicNode result = super.canonical(constantReflection, metaAccess, options, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
+            LogicNode result = super.canonical(constantReflection, metaAccess, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
             if (result != null)
             {
                 return result;

@@ -2,6 +2,7 @@ package giraaff.core;
 
 import java.util.Collection;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.Assumptions;
@@ -13,7 +14,6 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.code.CompilationResult;
 import giraaff.core.LIRGenerationPhase.LIRGenerationContext;
-import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.alloc.ComputeBlockOrder;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;
@@ -157,7 +157,7 @@ public final class GraalCompiler
         {
             return emitLIR0(backend, graph, stub, registerConfig, lirSuites);
         }
-        catch (/*OutOfRegistersException*/ PermanentBailoutException e)
+        catch (/*OutOfRegistersException*/ BailoutException e)
         {
             throw new GraalError(e);
         }
@@ -171,7 +171,7 @@ public final class GraalCompiler
 
         AbstractBlockBase<?>[] codeEmittingOrder = ComputeBlockOrder.computeCodeEmittingOrder(blocks.length, startBlock);
         AbstractBlockBase<?>[] linearScanOrder = ComputeBlockOrder.computeLinearScanOrder(blocks.length, startBlock);
-        LIR lir = new LIR(schedule.getCFG(), linearScanOrder, codeEmittingOrder, graph.getOptions());
+        LIR lir = new LIR(schedule.getCFG(), linearScanOrder, codeEmittingOrder);
 
         FrameMapBuilder frameMapBuilder = backend.newFrameMapBuilder(registerConfig);
         LIRGenerationResult lirGenRes = backend.newLIRGenerationResult(lir, frameMapBuilder, graph, stub);

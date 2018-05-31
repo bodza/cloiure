@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.ProfilingInfo;
 
 import giraaff.core.common.GraalOptions;
-import giraaff.options.OptionValues;
 
 // @class OptimisticOptimizations
 public final class OptimisticOptimizations
@@ -29,22 +28,22 @@ public final class OptimisticOptimizations
     private final Set<Optimization> enabledOpts;
 
     // @cons
-    public OptimisticOptimizations(ProfilingInfo info, OptionValues options)
+    public OptimisticOptimizations(ProfilingInfo info)
     {
         super();
         this.enabledOpts = EnumSet.noneOf(Optimization.class);
 
         enabledOpts.add(Optimization.UseExceptionProbabilityForOperations);
-        addOptimization(options, info, DeoptimizationReason.UnreachedCode, Optimization.RemoveNeverExecutedCode);
-        addOptimization(options, info, DeoptimizationReason.TypeCheckedInliningViolated, Optimization.UseTypeCheckedInlining);
-        addOptimization(options, info, DeoptimizationReason.OptimizedTypeCheckViolated, Optimization.UseTypeCheckHints);
-        addOptimization(options, info, DeoptimizationReason.NotCompiledExceptionHandler, Optimization.UseExceptionProbability);
-        addOptimization(options, info, DeoptimizationReason.LoopLimitCheck, Optimization.UseLoopLimitChecks);
+        addOptimization(info, DeoptimizationReason.UnreachedCode, Optimization.RemoveNeverExecutedCode);
+        addOptimization(info, DeoptimizationReason.TypeCheckedInliningViolated, Optimization.UseTypeCheckedInlining);
+        addOptimization(info, DeoptimizationReason.OptimizedTypeCheckViolated, Optimization.UseTypeCheckHints);
+        addOptimization(info, DeoptimizationReason.NotCompiledExceptionHandler, Optimization.UseExceptionProbability);
+        addOptimization(info, DeoptimizationReason.LoopLimitCheck, Optimization.UseLoopLimitChecks);
     }
 
-    private void addOptimization(OptionValues options, ProfilingInfo info, DeoptimizationReason deoptReason, Optimization optimization)
+    private void addOptimization(ProfilingInfo info, DeoptimizationReason deoptReason, Optimization optimization)
     {
-        if (checkDeoptimizations(options, info, deoptReason))
+        if (checkDeoptimizations(info, deoptReason))
         {
             enabledOpts.add(optimization);
         }
@@ -77,39 +76,39 @@ public final class OptimisticOptimizations
         this.enabledOpts = enabledOpts;
     }
 
-    public boolean removeNeverExecutedCode(OptionValues options)
+    public boolean removeNeverExecutedCode()
     {
-        return GraalOptions.RemoveNeverExecutedCode.getValue(options) && enabledOpts.contains(Optimization.RemoveNeverExecutedCode);
+        return GraalOptions.removeNeverExecutedCode && enabledOpts.contains(Optimization.RemoveNeverExecutedCode);
     }
 
-    public boolean useTypeCheckHints(OptionValues options)
+    public boolean useTypeCheckHints()
     {
-        return GraalOptions.UseTypeCheckHints.getValue(options) && enabledOpts.contains(Optimization.UseTypeCheckHints);
+        return GraalOptions.useTypeCheckHints && enabledOpts.contains(Optimization.UseTypeCheckHints);
     }
 
-    public boolean inlineMonomorphicCalls(OptionValues options)
+    public boolean inlineMonomorphicCalls()
     {
-        return GraalOptions.InlineMonomorphicCalls.getValue(options) && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.inlineMonomorphicCalls && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
     }
 
-    public boolean inlinePolymorphicCalls(OptionValues options)
+    public boolean inlinePolymorphicCalls()
     {
-        return GraalOptions.InlinePolymorphicCalls.getValue(options) && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.inlinePolymorphicCalls && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
     }
 
-    public boolean inlineMegamorphicCalls(OptionValues options)
+    public boolean inlineMegamorphicCalls()
     {
-        return GraalOptions.InlineMegamorphicCalls.getValue(options) && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.inlineMegamorphicCalls && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
     }
 
-    public boolean devirtualizeInvokes(OptionValues options)
+    public boolean devirtualizeInvokes()
     {
-        return GraalOptions.OptDevirtualizeInvokesOptimistically.getValue(options) && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.optDevirtualizeInvokesOptimistically && enabledOpts.contains(Optimization.UseTypeCheckedInlining);
     }
 
-    public boolean useExceptionProbability(OptionValues options)
+    public boolean useExceptionProbability()
     {
-        return GraalOptions.UseExceptionProbability.getValue(options) && enabledOpts.contains(Optimization.UseExceptionProbability);
+        return GraalOptions.useExceptionProbability && enabledOpts.contains(Optimization.UseExceptionProbability);
     }
 
     public boolean useExceptionProbabilityForOperations()
@@ -117,9 +116,9 @@ public final class OptimisticOptimizations
         return enabledOpts.contains(Optimization.UseExceptionProbabilityForOperations);
     }
 
-    public boolean useLoopLimitChecks(OptionValues options)
+    public boolean useLoopLimitChecks()
     {
-        return GraalOptions.UseLoopLimitChecks.getValue(options) && enabledOpts.contains(Optimization.UseLoopLimitChecks);
+        return GraalOptions.useLoopLimitChecks && enabledOpts.contains(Optimization.UseLoopLimitChecks);
     }
 
     public boolean lessOptimisticThan(OptimisticOptimizations other)
@@ -134,8 +133,8 @@ public final class OptimisticOptimizations
         return false;
     }
 
-    private static boolean checkDeoptimizations(OptionValues options, ProfilingInfo profilingInfo, DeoptimizationReason reason)
+    private static boolean checkDeoptimizations(ProfilingInfo profilingInfo, DeoptimizationReason reason)
     {
-        return profilingInfo.getDeoptimizationCount(reason) < GraalOptions.DeoptsToDisableOptimisticOptimization.getValue(options);
+        return profilingInfo.getDeoptimizationCount(reason) < GraalOptions.deoptsToDisableOptimisticOptimization;
     }
 }

@@ -28,7 +28,6 @@ import giraaff.lir.StandardOp.LoadConstantOp;
 import giraaff.lir.StandardOp.NullCheck;
 import giraaff.lir.StandardOp.ValueMoveOp;
 import giraaff.lir.asm.CompilationResultBuilder;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 // @class AMD64Move
@@ -890,7 +889,7 @@ public final class AMD64Move
             this.lirKindTool = lirKindTool;
         }
 
-        public static boolean hasBase(OptionValues options, CompressEncoding encoding)
+        public static boolean hasBase(CompressEncoding encoding)
         {
             return encoding.hasBase();
         }
@@ -944,7 +943,7 @@ public final class AMD64Move
             move(lirKindTool.getObjectKind(), crb, masm);
 
             Register resReg = ValueUtil.asRegister(getResult());
-            if (hasBase(crb.getOptions(), encoding))
+            if (hasBase(encoding))
             {
                 Register baseReg = getBaseRegister();
                 if (!nonNull)
@@ -984,7 +983,7 @@ public final class AMD64Move
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
             move(lirKindTool.getNarrowOopKind(), crb, masm);
-            emitUncompressCode(masm, ValueUtil.asRegister(getResult()), getShift(), hasBase(crb.getOptions(), encoding) ? getBaseRegister() : null, nonNull);
+            emitUncompressCode(masm, ValueUtil.asRegister(getResult()), getShift(), hasBase(encoding) ? getBaseRegister() : null, nonNull);
         }
 
         public static void emitUncompressCode(AMD64MacroAssembler masm, Register resReg, int shift, Register baseReg, boolean nonNull)

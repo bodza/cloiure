@@ -5,7 +5,6 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.lir.phases.LIRPhaseSuite;
 import giraaff.lir.phases.LIRSuites;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 
 // @class Suites
@@ -40,32 +39,14 @@ public final class Suites
         this.lowTier = lowTier;
     }
 
-    public static Suites createSuites(CompilerConfiguration config, OptionValues options)
+    public static Suites createSuites(CompilerConfiguration config)
     {
-        return new Suites(config.createHighTier(options), config.createMidTier(options), config.createLowTier(options));
+        return new Suites(config.createHighTier(), config.createMidTier(), config.createLowTier());
     }
 
-    public static LIRSuites createLIRSuites(CompilerConfiguration config, OptionValues options)
+    public static LIRSuites createLIRSuites(CompilerConfiguration config)
     {
-        LIRPhaseSuite<AllocationContext> allocationStage = config.createAllocationStage(options);
-        return new LIRSuites(config.createPreAllocationOptimizationStage(options), allocationStage, config.createPostAllocationOptimizationStage(options));
-    }
-
-    private static boolean verifyAllocationStage(LIRPhaseSuite<AllocationContext> allocationStage)
-    {
-        boolean allocationPhase = false;
-        for (LIRPhase<?> phase : allocationStage.getPhases())
-        {
-            if (phase instanceof RegisterAllocationPhase)
-            {
-                if (allocationPhase)
-                {
-                    return false;
-                }
-                allocationPhase = true;
-            }
-        }
-        return allocationPhase;
+        return new LIRSuites(config.createPreAllocationOptimizationStage(), config.createAllocationStage(), config.createPostAllocationOptimizationStage());
     }
 
     public boolean isImmutable()

@@ -124,7 +124,6 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.replacements.DefaultJavaLoweringProvider;
 import giraaff.util.GraalError;
 
@@ -159,20 +158,20 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     }
 
     @Override
-    public void initialize(OptionValues options, HotSpotProviders providers)
+    public void initialize(HotSpotProviders providers)
     {
-        super.initialize(options, providers, providers.getSnippetReflection());
+        super.initialize(providers, providers.getSnippetReflection());
 
-        instanceofSnippets = new InstanceOfSnippets.Templates(options, providers, target);
-        newObjectSnippets = new NewObjectSnippets.Templates(options, providers, target);
-        monitorSnippets = new MonitorSnippets.Templates(options, providers, target, HotSpotRuntime.useFastLocking);
-        writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, providers, target, HotSpotRuntime.useCompressedOops ? HotSpotRuntime.oopEncoding : null);
-        exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(options, providers, target);
-        unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(options, providers, target);
-        arraycopySnippets = new ArrayCopySnippets.Templates(options, providers, target);
-        stringToBytesSnippets = new StringToBytesSnippets.Templates(options, providers, target);
-        hashCodeSnippets = new HashCodeSnippets.Templates(options, providers, target);
-        resolveConstantSnippets = new ResolveConstantSnippets.Templates(options, providers, target);
+        instanceofSnippets = new InstanceOfSnippets.Templates(providers, target);
+        newObjectSnippets = new NewObjectSnippets.Templates(providers, target);
+        monitorSnippets = new MonitorSnippets.Templates(providers, target, HotSpotRuntime.useFastLocking);
+        writeBarrierSnippets = new WriteBarrierSnippets.Templates(providers, target, HotSpotRuntime.useCompressedOops ? HotSpotRuntime.oopEncoding : null);
+        exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(providers, target);
+        unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(providers, target);
+        arraycopySnippets = new ArrayCopySnippets.Templates(providers, target);
+        stringToBytesSnippets = new StringToBytesSnippets.Templates(providers, target);
+        hashCodeSnippets = new HashCodeSnippets.Templates(providers, target);
+        resolveConstantSnippets = new ResolveConstantSnippets.Templates(providers, target);
     }
 
     public MonitorSnippets.Templates getMonitorSnippets()
@@ -514,8 +513,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             JavaType[] signature = callTarget.targetMethod().getSignature().toParameterTypes(callTarget.isStatic() ? null : callTarget.targetMethod().getDeclaringClass());
 
             LoweredCallTargetNode loweredCallTarget = null;
-            OptionValues options = graph.getOptions();
-            if (GraalOptions.InlineVTableStubs.getValue(options) && callTarget.invokeKind().isIndirect() && (GraalOptions.AlwaysInlineVTableStubs.getValue(options) || invoke.isPolymorphic()))
+            if (GraalOptions.inlineVTableStubs && callTarget.invokeKind().isIndirect() && (GraalOptions.alwaysInlineVTableStubs || invoke.isPolymorphic()))
             {
                 HotSpotResolvedJavaMethod hsMethod = (HotSpotResolvedJavaMethod) callTarget.targetMethod();
                 ResolvedJavaType receiverType = invoke.getReceiverType();
@@ -742,7 +740,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
     private void lowerBytecodeExceptionNode(BytecodeExceptionNode node)
     {
-        if (GraalOptions.OmitHotExceptionStacktrace.getValue(node.getOptions()))
+        if (GraalOptions.omitHotExceptionStacktrace)
         {
             if (throwCachedException(node))
             {

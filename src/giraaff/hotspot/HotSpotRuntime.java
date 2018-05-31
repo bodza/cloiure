@@ -115,7 +115,7 @@ public final class HotSpotRuntime
         metaspaceArrayBaseOffset        = c.getFieldOffset("Array<Klass*>::_data[0]",       Integer.class, "Klass*"),
         metaspaceArrayLengthOffset      = c.getFieldOffset("Array<Klass*>::_length",        Integer.class, "int"),
         arrayClassElementOffset         = c.getFieldOffset("ObjArrayKlass::_element_klass", Integer.class, "Klass*"),
-        arrayKlassComponentMirrorOffset = c.getFieldOffset("ArrayKlass::_component_mirror", Integer.class, "oop");
+        arrayKlassComponentMirrorOffset = c.getFieldOffset("ArrayKlass::_component_mirror", Integer.class, "oop", Integer.MAX_VALUE);
 
     public static final int jvmAccWrittenFlags = c.getConstant("JVM_ACC_WRITTEN_FLAGS", Integer.class);
 

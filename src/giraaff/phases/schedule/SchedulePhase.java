@@ -48,7 +48,6 @@ import giraaff.nodes.cfg.LocationSet;
 import giraaff.nodes.memory.FloatingReadNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.ValueProxy;
-import giraaff.options.OptionValues;
 import giraaff.phases.Phase;
 
 // @class SchedulePhase
@@ -79,15 +78,15 @@ public final class SchedulePhase extends Phase
     private final boolean immutableGraph;
 
     // @cons
-    public SchedulePhase(OptionValues options)
+    public SchedulePhase()
     {
-        this(false, options);
+        this(false);
     }
 
     // @cons
-    public SchedulePhase(boolean immutableGraph, OptionValues options)
+    public SchedulePhase(boolean immutableGraph)
     {
-        this(GraalOptions.OptScheduleOutOfLoops.getValue(options) ? SchedulingStrategy.LATEST_OUT_OF_LOOPS : SchedulingStrategy.LATEST, immutableGraph);
+        this(GraalOptions.optScheduleOutOfLoops ? SchedulingStrategy.LATEST_OUT_OF_LOOPS : SchedulingStrategy.LATEST, immutableGraph);
     }
 
     // @cons
@@ -821,7 +820,7 @@ public final class SchedulePhase extends Phase
             if (graph.getGuardsStage().allowsFloatingGuards() && graph.getNodes(GuardNode.TYPE).isNotEmpty())
             {
                 // Now process guards.
-                if (GraalOptions.GuardPriorities.getValue(graph.getOptions()) && withGuardOrder)
+                if (GraalOptions.guardPriorities && withGuardOrder)
                 {
                     EnumMap<GuardPriority, List<GuardNode>> guardsByPriority = new EnumMap<>(GuardPriority.class);
                     for (GuardNode guard : graph.getNodes(GuardNode.TYPE))

@@ -81,8 +81,6 @@ import giraaff.nodes.spi.ArrayLengthProvider;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.MemoryProxy;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
@@ -416,38 +414,27 @@ public class SnippetTemplate
         }
     }
 
-    // @class SnippetTemplate.Options
-    static final class Options
-    {
-        // @Option "Use a LRU cache for snippet templates."
-        public static final OptionKey<Boolean> UseSnippetTemplateCache = new OptionKey<>(true);
-
-        static final OptionKey<Integer> MaxTemplatesPerSnippet = new OptionKey<>(50);
-    }
-
     /**
      * Base class for snippet classes. It provides a cache for {@link SnippetTemplate}s.
      */
     // @class SnippetTemplate.AbstractTemplates
     public abstract static class AbstractTemplates
     {
-        protected final OptionValues options;
         protected final Providers providers;
         protected final SnippetReflectionProvider snippetReflection;
         protected final TargetDescription target;
         private final Map<CacheKey, SnippetTemplate> templates;
 
         // @cons
-        protected AbstractTemplates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        protected AbstractTemplates(Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
             super();
-            this.options = options;
             this.providers = providers;
             this.snippetReflection = snippetReflection;
             this.target = target;
-            if (Options.UseSnippetTemplateCache.getValue(options))
+            if (GraalOptions.useSnippetTemplateCache)
             {
-                int size = Options.MaxTemplatesPerSnippet.getValue(options);
+                int size = GraalOptions.maxTemplatesPerSnippet;
                 this.templates = Collections.synchronizedMap(new LRUCache<>(size, size));
             }
             else
@@ -477,7 +464,7 @@ public class SnippetTemplate
         {
             Method method = findMethod(declaringClass, methodName, null);
             ResolvedJavaMethod javaMethod = providers.getMetaAccess().lookupJavaMethod(method);
-            if (GraalOptions.EagerSnippets.getValue(options))
+            if (GraalOptions.eagerSnippets)
             {
                 return new EagerSnippetInfo(javaMethod, initialPrivateLocations);
             }
@@ -493,11 +480,11 @@ public class SnippetTemplate
         protected SnippetTemplate template(ValueNode replacee, final Arguments args)
         {
             StructuredGraph graph = replacee.graph();
-            SnippetTemplate template = Options.UseSnippetTemplateCache.getValue(options) && args.cacheable ? templates.get(args.cacheKey) : null;
+            SnippetTemplate template = GraalOptions.useSnippetTemplateCache && args.cacheable ? templates.get(args.cacheKey) : null;
             if (template == null)
             {
-                template = new SnippetTemplate(options, providers, snippetReflection, args, replacee);
-                if (Options.UseSnippetTemplateCache.getValue(options) && args.cacheable)
+                template = new SnippetTemplate(providers, snippetReflection, args, replacee);
+                if (GraalOptions.useSnippetTemplateCache && args.cacheable)
                 {
                     templates.put(args.cacheKey, template);
                 }
@@ -550,7 +537,7 @@ public class SnippetTemplate
      * Creates a snippet template.
      */
     // @cons
-    protected SnippetTemplate(OptionValues options, final Providers providers, SnippetReflectionProvider snippetReflection, Arguments args, Node replacee)
+    protected SnippetTemplate(final Providers providers, SnippetReflectionProvider snippetReflection, Arguments args, Node replacee)
     {
         super();
         this.snippetReflection = snippetReflection;
@@ -565,7 +552,7 @@ public class SnippetTemplate
         PhaseContext phaseContext = new PhaseContext(providers);
 
         // copy snippet graph replacing constant parameters with given arguments
-        final StructuredGraph snippetCopy = new StructuredGraph.Builder(options).method(snippetGraph.method()).build();
+        final StructuredGraph snippetCopy = new StructuredGraph.Builder().method(snippetGraph.method()).build();
         if (!snippetGraph.isUnsafeAccessTrackingEnabled())
         {
             snippetCopy.disableUnsafeAccessTracking();

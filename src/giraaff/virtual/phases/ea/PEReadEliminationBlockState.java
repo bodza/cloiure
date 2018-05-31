@@ -17,7 +17,6 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.virtual.AllocatedObjectNode;
 import giraaff.nodes.virtual.VirtualInstanceNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 
 // @class PEReadEliminationBlockState
 public final class PEReadEliminationBlockState extends PartialEscapeBlockState<PEReadEliminationBlockState>
@@ -68,9 +67,9 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
     }
 
     // @cons
-    public PEReadEliminationBlockState(OptionValues options)
+    public PEReadEliminationBlockState()
     {
-        super(options);
+        super();
         readCache = EconomicMap.create(Equivalence.DEFAULT);
     }
 

@@ -7,7 +7,6 @@ import org.graalvm.collections.EconomicSet;
 import giraaff.graph.Node;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.StructuredGraph;
-import giraaff.options.OptionValues;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.inlining.info.elem.Inlineable;
 import giraaff.phases.tiers.HighTierContext;
@@ -64,7 +63,7 @@ public interface InlineInfo
 
     boolean shouldInline();
 
-    void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer, OptionValues optionValues);
+    void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer);
 
     int determineNodeCount();
 }

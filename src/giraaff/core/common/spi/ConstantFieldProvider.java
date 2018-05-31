@@ -3,8 +3,6 @@ package giraaff.core.common.spi;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.ResolvedJavaField;
 
-import giraaff.options.OptionValues;
-
 /**
  * Implements the logic that decides whether a field read should be constant folded.
  */
@@ -14,8 +12,6 @@ public interface ConstantFieldProvider
     // @iface ConstantFieldProvider.ConstantFieldTool
     public interface ConstantFieldTool<T>
     {
-        OptionValues getOptions();
-
         JavaConstant readValue();
 
         JavaConstant getReceiver();

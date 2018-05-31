@@ -1,28 +1,23 @@
 package giraaff.nodes.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import jdk.vm.ci.code.BailoutException;
-import jdk.vm.ci.code.BytecodePosition;
 import jdk.vm.ci.meta.Assumptions;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.MapCursor;
 
-import giraaff.bytecode.Bytecode;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.graph.Graph;
@@ -51,7 +46,6 @@ import giraaff.nodes.StateSplit;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.LoadIndexedNode;
-import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.spi.ArrayLengthProvider;
 import giraaff.nodes.spi.LimitedValueProxy;
@@ -60,7 +54,6 @@ import giraaff.nodes.spi.ValueProxy;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 
 // @class GraphUtil
 public final class GraphUtil
@@ -730,11 +723,10 @@ public final class GraphUtil
         private final ConstantFieldProvider constantFieldProvider;
         private final boolean canonicalizeReads;
         private final Assumptions assumptions;
-        private final OptionValues options;
         private final LoweringProvider loweringProvider;
 
         // @cons
-        DefaultSimplifierTool(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider)
+        DefaultSimplifierTool(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, LoweringProvider loweringProvider)
         {
             super();
             this.metaAccess = metaAccess;
@@ -742,7 +734,6 @@ public final class GraphUtil
             this.constantFieldProvider = constantFieldProvider;
             this.canonicalizeReads = canonicalizeReads;
             this.assumptions = assumptions;
-            this.options = options;
             this.loweringProvider = loweringProvider;
         }
 
@@ -807,12 +798,6 @@ public final class GraphUtil
         }
 
         @Override
-        public OptionValues getOptions()
-        {
-            return options;
-        }
-
-        @Override
         public Integer smallestCompareWidth()
         {
             if (loweringProvider != null)
@@ -826,14 +811,14 @@ public final class GraphUtil
         }
     }
 
-    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, OptionValues options)
+    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions)
     {
-        return getDefaultSimplifier(metaAccess, constantReflection, constantFieldProvider, canonicalizeReads, assumptions, options, null);
+        return getDefaultSimplifier(metaAccess, constantReflection, constantFieldProvider, canonicalizeReads, assumptions, null);
     }
 
-    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider)
+    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, LoweringProvider loweringProvider)
     {
-        return new DefaultSimplifierTool(metaAccess, constantReflection, constantFieldProvider, canonicalizeReads, assumptions, options, loweringProvider);
+        return new DefaultSimplifierTool(metaAccess, constantReflection, constantFieldProvider, canonicalizeReads, assumptions, loweringProvider);
     }
 
     public static Constant foldIfConstantAndRemove(ValueNode node, ValueNode constant)

@@ -2,17 +2,14 @@ package giraaff.graph;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.graph.Node.ValueNumberable;
 import giraaff.graph.iterators.NodeIterable;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
-import giraaff.util.GraalError;
 
 /**
  * This class is a graph container, it contains the set of nodes that belong to this graph.
@@ -20,18 +17,10 @@ import giraaff.util.GraalError;
 // @class Graph
 public class Graph
 {
-    // @class Graph.Options
-    public static final class Options
-    {
-        // @Option "Graal graph compression is performed when percent of live nodes falls below this value."
-        public static final OptionKey<Integer> GraphCompressionThreshold = new OptionKey<>(70);
-    }
-
     // @enum Graph.FreezeState
     private enum FreezeState
     {
         Unfrozen,
-        TemporaryFreeze,
         DeepFreeze
     }
 
@@ -91,24 +80,18 @@ public class Graph
      */
     private FreezeState freezeState = FreezeState.Unfrozen;
 
-    /**
-     * The option values used while compiling this graph.
-     */
-    private final OptionValues options;
-
     private static final int INITIAL_NODES_SIZE = 32;
 
     /**
      * Creates an empty Graph.
      */
     // @cons
-    public Graph(OptionValues options)
+    public Graph()
     {
         super();
         nodes = new Node[INITIAL_NODES_SIZE];
         iterableNodesFirst = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
         iterableNodesLast = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
-        this.options = options;
     }
 
     /**
@@ -116,12 +99,7 @@ public class Graph
      */
     public Graph copy()
     {
-        return new Graph(options);
-    }
-
-    public final OptionValues getOptions()
-    {
-        return options;
+        return new Graph();
     }
 
     /**
@@ -716,7 +694,7 @@ public class Graph
     }
 
     /**
-     * If the {@linkplain Options#GraphCompressionThreshold compression threshold} is met, the list
+     * If the {@linkplain GraalOptions#graphCompressionThreshold compression threshold} is met, the list
      * of nodes is compressed such that all non-null entries precede all null entries while
      * preserving the ordering between the nodes within the list.
      */
@@ -724,7 +702,7 @@ public class Graph
     {
         int liveNodeCount = getNodeCount();
         int liveNodePercent = liveNodeCount * 100 / nodesSize;
-        int compressionThreshold = Options.GraphCompressionThreshold.getValue(options);
+        int compressionThreshold = GraalOptions.graphCompressionThreshold;
         if (compressionThreshold == 0 || liveNodePercent >= compressionThreshold)
         {
             return false;
@@ -1055,23 +1033,5 @@ public class Graph
     public void freeze()
     {
         this.freezeState = FreezeState.DeepFreeze;
-    }
-
-    public void temporaryFreeze()
-    {
-        if (this.freezeState == FreezeState.DeepFreeze)
-        {
-            throw new GraalError("Graph was permanetly frozen.");
-        }
-        this.freezeState = FreezeState.TemporaryFreeze;
-    }
-
-    public void unfreeze()
-    {
-        if (this.freezeState == FreezeState.DeepFreeze)
-        {
-            throw new GraalError("Graph was permanetly frozen.");
-        }
-        this.freezeState = FreezeState.Unfrozen;
     }
 }

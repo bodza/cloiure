@@ -41,7 +41,6 @@ import giraaff.lir.StandardOp.LabelOp;
 import giraaff.lir.StandardOp.SaveRegistersOp;
 import giraaff.lir.SwitchStrategy;
 import giraaff.lir.Variable;
-import giraaff.options.OptionValues;
 
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
@@ -68,7 +67,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         this.arithmeticLIRGen = arithmeticLIRGen;
         this.res = res;
         this.providers = providers;
-        OptionValues options = res.getLIR().getOptions();
 
         arithmeticLIRGen.lirGen = this;
         this.moveFactory = moveFactory;

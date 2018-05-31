@@ -1,23 +1,16 @@
 package giraaff.phases.common;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.graph.Node;
 import giraaff.graph.NodeFlood;
 import giraaff.nodes.AbstractEndNode;
 import giraaff.nodes.GuardNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.options.OptionKey;
 import giraaff.phases.Phase;
 
 // @class DeadCodeEliminationPhase
 public final class DeadCodeEliminationPhase extends Phase
 {
-    // @class DeadCodeEliminationPhase.Options
-    public static final class Options
-    {
-        // @Option "Disable optional dead code eliminations."
-        public static final OptionKey<Boolean> ReduceDCE = new OptionKey<>(true);
-    }
-
     // @enum DeadCodeEliminationPhase.Optionality
     public enum Optionality
     {
@@ -26,8 +19,7 @@ public final class DeadCodeEliminationPhase extends Phase
     }
 
     /**
-     * Creates a dead code elimination phase that will be run irrespective of
-     * {@link Options#ReduceDCE}.
+     * Creates a dead code elimination phase that will be run irrespective of {@link GraalOptions#reduceDCE}.
      */
     // @cons
     public DeadCodeEliminationPhase()
@@ -37,7 +29,7 @@ public final class DeadCodeEliminationPhase extends Phase
 
     /**
      * Creates a dead code elimination phase that will be run only if it is
-     * {@linkplain Optionality#Required non-optional} or {@link Options#ReduceDCE} is false.
+     * {@linkplain Optionality#Required non-optional} or {@link GraalOptions#reduceDCE} is false.
      */
     // @cons
     public DeadCodeEliminationPhase(Optionality optionality)
@@ -51,7 +43,7 @@ public final class DeadCodeEliminationPhase extends Phase
     @Override
     public void run(StructuredGraph graph)
     {
-        if (optional && Options.ReduceDCE.getValue(graph.getOptions()))
+        if (optional && GraalOptions.reduceDCE)
         {
             return;
         }

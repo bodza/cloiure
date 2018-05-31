@@ -1,5 +1,6 @@
 package giraaff.hotspot.phases;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaConstant;
@@ -7,7 +8,7 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.SpeculationLog;
 import jdk.vm.ci.runtime.JVMCICompiler;
 
-import giraaff.core.common.PermanentBailoutException;
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.Loop;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
@@ -40,8 +41,6 @@ import giraaff.nodes.java.MonitorEnterNode;
 import giraaff.nodes.java.MonitorExitNode;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 import giraaff.phases.Phase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
@@ -50,20 +49,6 @@ import giraaff.util.GraalError;
 // @class OnStackReplacementPhase
 public final class OnStackReplacementPhase extends Phase
 {
-    // @class OnStackReplacementPhase.Options
-    public static final class Options
-    {
-        // @Option "Deoptimize OSR compiled code when the OSR entry loop is finished if there is no mature profile available for the rest of the method."
-        public static final OptionKey<Boolean> DeoptAfterOSR = new OptionKey<>(true);
-        // @Option "Support OSR compilations with locks. If DeoptAfterOSR is true we can per definition not have unbalaced enter/extis mappings. If DeoptAfterOSR is false insert artificial monitor enters after the OSRStart to have balanced enter/exits in the graph."
-        public static final OptionKey<Boolean> SupportOSRWithLocks = new OptionKey<>(true);
-    }
-
-    private static boolean supportOSRWithLocks(OptionValues options)
-    {
-        return Options.SupportOSRWithLocks.getValue(options);
-    }
-
     // @cons
     public OnStackReplacementPhase()
     {
@@ -94,12 +79,12 @@ public final class OnStackReplacementPhase extends Phase
              * cannot decide where to deopt and which framestate will be used. In the worst case
              * the framestate of the OSR entry would be used.
              */
-            throw new PermanentBailoutException("OSR compilation without OSR entry loop.");
+            throw new BailoutException("OSR compilation without OSR entry loop.");
         }
 
-        if (!supportOSRWithLocks(graph.getOptions()) && currentOSRWithLocks)
+        if (!GraalOptions.supportOSRWithLocks && currentOSRWithLocks)
         {
-            throw new PermanentBailoutException("OSR with locks disabled.");
+            throw new BailoutException("OSR with locks disabled.");
         }
 
         while (true)
@@ -238,7 +223,7 @@ public final class OnStackReplacementPhase extends Phase
                 MonitorIdNode id = exit.getMonitorId();
                 if (id.usages().filter(MonitorEnterNode.class).count() != 1)
                 {
-                    throw new PermanentBailoutException("Unbalanced monitor enter-exit in OSR compilation with locks. Object is locked before the loop but released inside the loop.");
+                    throw new BailoutException("Unbalanced monitor enter-exit in OSR compilation with locks. Object is locked before the loop, but released inside the loop.");
                 }
             }
         }
@@ -252,15 +237,15 @@ public final class OnStackReplacementPhase extends Phase
         EntryMarkerNode osr = osrNodes.first();
         if (osr == null)
         {
-            throw new PermanentBailoutException("No OnStackReplacementNode generated");
+            throw new BailoutException("no OnStackReplacementNode generated");
         }
         if (osrNodes.count() > 1)
         {
-            throw new GraalError("Multiple OnStackReplacementNodes generated");
+            throw new GraalError("multiple OnStackReplacementNodes generated");
         }
         if (osr.stateAfter().stackSize() != 0)
         {
-            throw new PermanentBailoutException("OSR with stack entries not supported");
+            throw new BailoutException("OSR with stack entries not supported");
         }
         return osr;
     }

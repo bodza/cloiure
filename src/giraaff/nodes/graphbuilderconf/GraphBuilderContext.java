@@ -258,7 +258,7 @@ public interface GraphBuilderContext extends GraphBuilderTool
      */
     IntrinsicContext getIntrinsic();
 
-    BailoutException bailout(String string);
+    BailoutException bailout(String msg);
 
     default ValueNode nullCheckedValue(ValueNode value)
     {

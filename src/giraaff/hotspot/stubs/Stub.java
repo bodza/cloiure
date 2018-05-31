@@ -21,7 +21,6 @@ import giraaff.hotspot.nodes.StubStartNode;
 import giraaff.lir.asm.CompilationResultBuilderFactory;
 import giraaff.lir.phases.LIRSuites;
 import giraaff.nodes.StructuredGraph;
-import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.Suites;
@@ -71,7 +70,6 @@ public abstract class Stub
         return true;
     }
 
-    protected final OptionValues options;
     protected final HotSpotProviders providers;
 
     /**
@@ -80,11 +78,10 @@ public abstract class Stub
      * @param linkage linkage details for a call to the stub
      */
     // @cons
-    public Stub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public Stub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         super();
         this.linkage = linkage;
-        this.options = options;
         this.providers = providers;
     }
 
@@ -116,18 +113,18 @@ public abstract class Stub
      */
     public synchronized InstalledCode getCode(final Backend backend)
     {
-        if (code == null)
+        if (this.code == null)
         {
             CodeCacheProvider codeCache = providers.getCodeCache();
             CompilationResult compResult = buildCompilationResult(backend);
             HotSpotCompiledCode compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(codeCache, null, null, compResult);
-            code = codeCache.installCode(null, compiledCode, null, null, false);
+            this.code = codeCache.installCode(null, compiledCode, null, null, false);
         }
 
-        return code;
+        return this.code;
     }
 
-    private CompilationResult buildCompilationResult(final Backend backend)
+    private final CompilationResult buildCompilationResult(final Backend backend)
     {
         final StructuredGraph graph = getStubGraph();
 
@@ -139,20 +136,12 @@ public abstract class Stub
             graph.replaceFixed(graph.start(), newStart);
         }
 
-        GraalCompiler.emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), createSuites());
+        Suites suites = providers.getSuites().getDefaultSuites();
+        suites = new Suites(new PhaseSuite<>(), suites.getMidTier(), suites.getLowTier());
+        GraalCompiler.emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
         CompilationResult result = new CompilationResult();
-        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, result, CompilationResultBuilderFactory.Default, getRegisterConfig(), createLIRSuites());
+        LIRSuites lirSuites = new LIRSuites(providers.getSuites().getDefaultLIRSuites());
+        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, result, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
         return result;
-    }
-
-    protected Suites createSuites()
-    {
-        Suites defaultSuites = providers.getSuites().getDefaultSuites(options);
-        return new Suites(new PhaseSuite<>(), defaultSuites.getMidTier(), defaultSuites.getLowTier());
-    }
-
-    protected LIRSuites createLIRSuites()
-    {
-        return new LIRSuites(providers.getSuites().getDefaultLIRSuites(options));
     }
 }

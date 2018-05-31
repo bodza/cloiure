@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.graph.Node;
-import giraaff.options.OptionValues;
 
 // @iface CanonicalizerTool
 public interface CanonicalizerTool
@@ -33,6 +32,4 @@ public interface CanonicalizerTool
      * If this method returns null, then there is no known smallest compare width.
      */
     Integer smallestCompareWidth();
-
-    OptionValues getOptions();
 }

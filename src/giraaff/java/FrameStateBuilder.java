@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.meta.Assumptions;
 import jdk.vm.ci.meta.JavaKind;
@@ -17,7 +18,6 @@ import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.Bytecodes;
 import giraaff.bytecode.ResolvedJavaMethodBytecode;
 import giraaff.core.common.GraalOptions;
-import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.java.BciBlockMapping.BciBlock;
@@ -111,7 +111,7 @@ public final class FrameStateBuilder implements SideEffectsState
 
         this.monitorIds = EMPTY_MONITOR_ARRAY;
         this.graph = graph;
-        this.clearNonLiveLocals = GraalOptions.OptClearNonLiveLocals.getValue(graph.getOptions());
+        this.clearNonLiveLocals = GraalOptions.optClearNonLiveLocals;
     }
 
     public void initializeFromArgumentsArray(ValueNode[] arguments)
@@ -337,7 +337,7 @@ public final class FrameStateBuilder implements SideEffectsState
         {
             if (GraphUtil.originalValue(lockedObjects[i]) != GraphUtil.originalValue(other.lockedObjects[i]) || monitorIds[i] != other.monitorIds[i])
             {
-                throw new PermanentBailoutException("unbalanced monitors");
+                throw new BailoutException("unbalanced monitors");
             }
         }
         return true;

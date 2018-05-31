@@ -19,6 +19,7 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.BytecodeProvider;
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.StampFactory;
@@ -45,7 +46,6 @@ import giraaff.hotspot.replacements.SHA5Substitutions;
 import giraaff.hotspot.replacements.ThreadSubstitutions;
 import giraaff.hotspot.replacements.arraycopy.ArrayCopyNode;
 import giraaff.hotspot.word.HotSpotWordTypes;
-import giraaff.java.BytecodeParserOptions;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.DynamicPiNode;
 import giraaff.nodes.FixedGuardNode;
@@ -71,7 +71,6 @@ import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.phases.tiers.CompilerConfiguration;
 import giraaff.replacements.InlineDuringParsingPlugin;
 import giraaff.replacements.MethodHandlePlugin;
@@ -105,10 +104,9 @@ public final class HotSpotGraphBuilderPlugins
 
         plugins.appendTypePlugin(nodePlugin);
         plugins.appendNodePlugin(nodePlugin);
-        OptionValues options = replacements.getOptions();
         plugins.appendNodePlugin(new MethodHandlePlugin(constantReflection.getMethodHandleAccess(), true));
         plugins.appendInlineInvokePlugin(replacements);
-        if (BytecodeParserOptions.InlineDuringParsing.getValue(options))
+        if (GraalOptions.inlineDuringParsing)
         {
             plugins.appendInlineInvokePlugin(new InlineDuringParsingPlugin());
         }
@@ -119,7 +117,7 @@ public final class HotSpotGraphBuilderPlugins
             public void run()
             {
                 BytecodeProvider replacementBytecodeProvider = replacements.getDefaultReplacementBytecodeProvider();
-                registerObjectPlugins(invocationPlugins, options, replacementBytecodeProvider);
+                registerObjectPlugins(invocationPlugins, replacementBytecodeProvider);
                 registerClassPlugins(plugins, replacementBytecodeProvider);
                 registerSystemPlugins(invocationPlugins, foreignCalls);
                 registerThreadPlugins(invocationPlugins, metaAccess, wordTypes, replacementBytecodeProvider);
@@ -139,7 +137,7 @@ public final class HotSpotGraphBuilderPlugins
         return plugins;
     }
 
-    private static void registerObjectPlugins(InvocationPlugins plugins, OptionValues options, BytecodeProvider bytecodeProvider)
+    private static void registerObjectPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, Object.class, bytecodeProvider);
         // FIXME: clone() requires speculation and requires a fix in here (to check that b.getAssumptions() != null),
@@ -174,7 +172,10 @@ public final class HotSpotGraphBuilderPlugins
         r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isArray", Receiver.class);
         r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isPrimitive", Receiver.class);
         r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getSuperclass", Receiver.class);
-        r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getComponentType", Receiver.class);
+        if (HotSpotRuntime.arrayKlassComponentMirrorOffset != Integer.MAX_VALUE)
+        {
+            r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getComponentType", Receiver.class);
+        }
 
         r.register2("cast", Receiver.class, Object.class, new InvocationPlugin()
         {

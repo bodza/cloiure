@@ -12,7 +12,6 @@ import giraaff.graph.Node;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 /**
@@ -147,6 +146,4 @@ public interface VirtualizerTool
      * @return true if materialization happened, false if not.
      */
     boolean ensureMaterialized(VirtualObjectNode virtualObject);
-
-    OptionValues getOptions();
 }

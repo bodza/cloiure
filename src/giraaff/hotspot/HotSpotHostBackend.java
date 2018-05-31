@@ -14,7 +14,6 @@ import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.nodes.StructuredGraph;
-import giraaff.options.OptionValues;
 
 /**
  * Common functionality of HotSpot host backends.
@@ -39,14 +38,14 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
     }
 
     @Override
-    public void completeInitialization(OptionValues options)
+    public void completeInitialization()
     {
         final HotSpotProviders providers = getProviders();
         HotSpotHostForeignCallsProvider foreignCalls = (HotSpotHostForeignCallsProvider) providers.getForeignCalls();
         final HotSpotLoweringProvider lowerer = (HotSpotLoweringProvider) providers.getLowerer();
 
-        foreignCalls.initialize(providers, options);
-        lowerer.initialize(options, providers);
+        foreignCalls.initialize(providers);
+        lowerer.initialize(providers);
     }
 
     protected CallingConvention makeCallingConvention(StructuredGraph graph, Stub stub)

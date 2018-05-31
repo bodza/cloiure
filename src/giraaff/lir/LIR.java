@@ -8,7 +8,6 @@ import giraaff.core.common.cfg.AbstractControlFlowGraph;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.lir.StandardOp.LabelOp;
 import giraaff.lir.gen.LIRGenerator;
-import giraaff.options.OptionValues;
 
 /**
  * This class implements the overall container for the LIR graph and directs its construction,
@@ -37,30 +36,22 @@ public final class LIR extends LIRGenerator.VariableProvider
 
     private boolean hasArgInCallerFrame;
 
-    private final OptionValues options;
-
     /**
      * Creates a new LIR instance for the specified compilation.
      */
     // @cons
-    public LIR(AbstractControlFlowGraph<?> cfg, AbstractBlockBase<?>[] linearScanOrder, AbstractBlockBase<?>[] codeEmittingOrder, OptionValues options)
+    public LIR(AbstractControlFlowGraph<?> cfg, AbstractBlockBase<?>[] linearScanOrder, AbstractBlockBase<?>[] codeEmittingOrder)
     {
         super();
         this.cfg = cfg;
         this.codeEmittingOrder = codeEmittingOrder;
         this.linearScanOrder = linearScanOrder;
         this.lirInstructions = new BlockMap<>(cfg);
-        this.options = options;
     }
 
     public AbstractControlFlowGraph<?> getControlFlowGraph()
     {
         return cfg;
-    }
-
-    public OptionValues getOptions()
-    {
-        return options;
     }
 
     public ArrayList<LIRInstruction> getLIRforBlock(AbstractBlockBase<?> block)

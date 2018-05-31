@@ -1,11 +1,11 @@
 package giraaff.hotspot.nodes.aot;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.core.common.PermanentBailoutException;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
@@ -94,7 +94,7 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
         }
         else
         {
-            throw new PermanentBailoutException("Unsupported constant type: " + constant);
+            throw new BailoutException("unsupported constant type: " + constant);
         }
         gen.setResult(this, result);
     }

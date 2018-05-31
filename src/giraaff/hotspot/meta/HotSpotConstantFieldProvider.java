@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.spi.JavaConstantFieldProvider;
 import giraaff.hotspot.HotSpotRuntime;
-import giraaff.options.OptionValues;
 
 /**
  * Implements the default constant folding semantics for Java fields in the HotSpot VM.
@@ -28,7 +27,7 @@ public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
         {
             return false;
         }
-        if (field.isStatic() && !isStaticFieldConstant(field, tool.getOptions()))
+        if (field.isStatic() && !isStaticFieldConstant(field))
         {
             return false;
         }
@@ -43,7 +42,7 @@ public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
     @Override
     protected boolean isFinalField(ResolvedJavaField field, ConstantFieldTool<?> tool)
     {
-        if (field.isStatic() && !isStaticFieldConstant(field, tool.getOptions()))
+        if (field.isStatic() && !isStaticFieldConstant(field))
         {
             return false;
         }
@@ -51,11 +50,9 @@ public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
         return super.isFinalField(field, tool);
     }
 
-    private static final String SystemClassName = "Ljava/lang/System;";
-
-    protected boolean isStaticFieldConstant(ResolvedJavaField field, @SuppressWarnings("unused") OptionValues options)
+    protected boolean isStaticFieldConstant(ResolvedJavaField field)
     {
         ResolvedJavaType declaringClass = field.getDeclaringClass();
-        return declaringClass.isInitialized() && !declaringClass.getName().equals(SystemClassName);
+        return declaringClass.isInitialized() && !declaringClass.getName().equals("Ljava/lang/System;");
     }
 }

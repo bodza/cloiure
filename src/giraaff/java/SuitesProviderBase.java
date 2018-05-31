@@ -1,7 +1,6 @@
 package giraaff.java;
 
 import giraaff.lir.phases.LIRSuites;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.Suites;
@@ -13,9 +12,9 @@ public abstract class SuitesProviderBase implements SuitesCreator
     protected PhaseSuite<HighTierContext> defaultGraphBuilderSuite;
 
     @Override
-    public final Suites getDefaultSuites(OptionValues options)
+    public final Suites getDefaultSuites()
     {
-        return createSuites(options);
+        return createSuites();
     }
 
     @Override
@@ -25,14 +24,14 @@ public abstract class SuitesProviderBase implements SuitesCreator
     }
 
     @Override
-    public final LIRSuites getDefaultLIRSuites(OptionValues options)
+    public final LIRSuites getDefaultLIRSuites()
     {
-        return createLIRSuites(options);
+        return createLIRSuites();
     }
 
     @Override
-    public abstract LIRSuites createLIRSuites(OptionValues options);
+    public abstract LIRSuites createLIRSuites();
 
     @Override
-    public abstract Suites createSuites(OptionValues options);
+    public abstract Suites createSuites();
 }

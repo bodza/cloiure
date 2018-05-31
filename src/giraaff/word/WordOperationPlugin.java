@@ -2,7 +2,6 @@ package giraaff.word;
 
 import java.lang.reflect.Constructor;
 
-import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.JavaTypeProfile;
@@ -185,11 +184,11 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
             if (isWordField && !isWordValue)
             {
-                throw b.bailout("Cannot store a non-word value into a word field: " + field.format("%H.%n"));
+                throw b.bailout("cannot store a non-word value into a word field: " + field.format("%H.%n"));
             }
             else if (!isWordField && isWordValue)
             {
-                throw b.bailout("Cannot store a word value into a non-word field: " + field.format("%H.%n"));
+                throw b.bailout("cannot store a word value into a non-word field: " + field.format("%H.%n"));
             }
         }
 
@@ -211,14 +210,14 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         {
             if (value.getStackKind() != wordKind)
             {
-                throw b.bailout("Cannot store a non-word value into a word array: " + arrayType.toJavaName(true));
+                throw b.bailout("cannot store a non-word value into a word array: " + arrayType.toJavaName(true));
             }
             b.add(createStoreIndexedNode(array, index, value));
             return true;
         }
         if (elementKind == JavaKind.Object && value.getStackKind() == wordKind)
         {
-            throw b.bailout("Cannot store a word value into a non-word array: " + arrayType.toJavaName(true));
+            throw b.bailout("cannot store a word value into a non-word array: " + arrayType.toJavaName(true));
         }
         return false;
     }
@@ -235,14 +234,14 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         {
             if (object.getStackKind() != JavaKind.Object)
             {
-                throw b.bailout("Cannot cast a word value to a non-word type: " + type.toJavaName(true));
+                throw b.bailout("cannot cast a word value to a non-word type: " + type.toJavaName(true));
             }
             return false;
         }
 
         if (object.getStackKind() != wordKind)
         {
-            throw b.bailout("Cannot cast a non-word value to a word type: " + type.toJavaName(true));
+            throw b.bailout("cannot cast a non-word value to a word type: " + type.toJavaName(true));
         }
         b.push(JavaKind.Object, object);
         return true;
@@ -253,11 +252,11 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     {
         if (wordTypes.isWord(type))
         {
-            throw b.bailout("Cannot use instanceof for word a type: " + type.toJavaName(true));
+            throw b.bailout("cannot use instanceof for word a type: " + type.toJavaName(true));
         }
         else if (object.getStackKind() != JavaKind.Object)
         {
-            throw b.bailout("Cannot use instanceof on a word value: " + type.toJavaName(true));
+            throw b.bailout("cannot use instanceof on a word value: " + type.toJavaName(true));
         }
         return false;
     }
@@ -287,7 +286,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         Word.Operation operation = BridgeMethodUtils.getAnnotation(Word.Operation.class, wordMethod);
         if (operation == null)
         {
-            throw b.bailout("Cannot call method on a word value: " + wordMethod.format("%H.%n(%p)"));
+            throw b.bailout("cannot call method on a word value: " + wordMethod.format("%H.%n(%p)"));
         }
         switch (operation.opcode())
         {

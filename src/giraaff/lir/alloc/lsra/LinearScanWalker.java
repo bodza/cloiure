@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.core.common.PermanentBailoutException;
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.alloc.RegisterAllocationConfig.AllocatableRegisters;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.util.Util;
@@ -533,7 +534,7 @@ class LinearScanWalker extends IntervalWalker
                      * The loop depth of the spilling position is higher then the loop depth at the
                      * definition of the interval. Move write to memory out of loop.
                      */
-                    if (LinearScan.Options.LIROptLSRAOptimizeSpillPosition.getValue(allocator.getOptions()))
+                    if (GraalOptions.lirOptLSRAOptimizeSpillPosition)
                     {
                         // find best spill position in dominator the tree
                         interval.setSpillState(SpillState.SpillInDominator);
@@ -562,7 +563,7 @@ class LinearScanWalker extends IntervalWalker
 
                 if (defLoopDepth <= spillLoopDepth)
                 {
-                    if (LinearScan.Options.LIROptLSRAOptimizeSpillPosition.getValue(allocator.getOptions()))
+                    if (GraalOptions.lirOptLSRAOptimizeSpillPosition)
                     {
                         // the interval is spilled more then once
                         interval.setSpillState(SpillState.SpillInDominator);
@@ -784,7 +785,7 @@ class LinearScanWalker extends IntervalWalker
                     }
                     // assign a reasonable register and do a bailout in product mode to avoid errors
                     allocator.assignSpillSlot(interval);
-                    throw new PermanentBailoutException("LinearScan: no register found");
+                    throw new /*OutOfRegistersException*/ BailoutException("linear scan: no register found");
                 }
 
                 splitAndSpillInterval(interval);

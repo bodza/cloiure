@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.meta.ExceptionHandler;
 
@@ -20,8 +21,6 @@ import giraaff.bytecode.BytecodeSwitch;
 import giraaff.bytecode.BytecodeTableSwitch;
 import giraaff.bytecode.Bytecodes;
 import giraaff.core.common.GraalOptions;
-import giraaff.core.common.PermanentBailoutException;
-import giraaff.options.OptionValues;
 
 /**
  * Builds a mapping between bytecodes and basic blocks and builds a conservative control flow graph
@@ -486,7 +485,7 @@ public final class BciBlockMapping
     /**
      * Builds the block map and conservative CFG and numbers blocks.
      */
-    public void build(BytecodeStream stream, OptionValues options)
+    public void build(BytecodeStream stream)
     {
         int codeSize = code.getCodeSize();
         BciBlock[] blockMap = new BciBlock[codeSize];
@@ -494,9 +493,9 @@ public final class BciBlockMapping
         iterateOverBytecodes(blockMap, stream);
         if (hasJsrBytecodes)
         {
-            if (!GraalOptions.SupportJsrBytecodes.getValue(options))
+            if (!GraalOptions.supportJsrBytecodes)
             {
-                throw new PermanentBailoutException("jsr/ret parsing disabled");
+                throw new BailoutException("jsr/ret parsing disabled");
             }
             createJsrAlternatives(blockMap, blockMap[0]);
         }
@@ -609,7 +608,7 @@ public final class BciBlockMapping
                     int target = stream.readBranchDest();
                     if (target == 0)
                     {
-                        throw new PermanentBailoutException("jsr target bci 0 not allowed");
+                        throw new BailoutException("jsr target bci 0 not allowed");
                     }
                     BciBlock b1 = makeBlock(blockMap, target);
                     current.setJsrSuccessor(b1);
@@ -732,7 +731,7 @@ public final class BciBlockMapping
         BciBlock predecessor = blockMap[predBci];
         if (sux.isExceptionEntry)
         {
-            throw new PermanentBailoutException("Exception handler can be reached by both normal and exceptional control flow");
+            throw new BailoutException("exception handler can be reached by both normal and exceptional control flow");
         }
         predecessor.addSuccessor(sux);
     }
@@ -766,7 +765,7 @@ public final class BciBlockMapping
                 }
                 if (!successor.getJsrScope().isPrefixOf(nextScope))
                 {
-                    throw new PermanentBailoutException("unstructured control flow  (" + successor.getJsrScope() + " " + nextScope + ")");
+                    throw new BailoutException("unstructured control flow (" + successor.getJsrScope() + " " + nextScope + ")");
                 }
                 if (!nextScope.isEmpty())
                 {
@@ -857,7 +856,7 @@ public final class BciBlockMapping
                 // There is a path from a loop end to the method entry that does not pass the loop header.
                 // Therefore, the loop is non reducible (has more than one entry).
                 // We don't want to compile such methods because the IR only supports structured loops.
-                throw new PermanentBailoutException("Non-reducible loop: %016x", loop);
+                throw new BailoutException("non-reducible loop: %016x", loop);
             }
         } while (loopChanges);
     }
@@ -873,7 +872,7 @@ public final class BciBlockMapping
             // There is a path from a loop end to the method entry that does not pass the loop header.
             // Therefore, the loop is non reducible (has more than one entry).
             // We don't want to compile such methods because the IR only supports structured loops.
-            throw new PermanentBailoutException("Non-reducible loop");
+            throw new BailoutException("non-reducible loop");
         }
 
         // Purge null entries for unreached blocks and sort blocks such that loop bodies are always
@@ -954,13 +953,13 @@ public final class BciBlockMapping
             {
                 // Loops that are implicitly formed by an exception handler lead to all sorts of corner cases.
                 // Don't compile such methods for now, until we see a concrete case that allows checking for correctness.
-                throw new PermanentBailoutException("Loop formed by an exception handler");
+                throw new BailoutException("loop formed by an exception handler");
             }
             if (nextLoop >= LOOP_HEADER_MAX_CAPACITY)
             {
                 // This restriction can be removed by using a fall-back to a BitSet in case we have more than 64 loops.
                 // Don't compile such methods for now, until we see a concrete case that allows checking for correctness.
-                throw new PermanentBailoutException("Too many loops in method");
+                throw new BailoutException("too many loops in method");
             }
 
             block.loops = 1L << nextLoop;
@@ -1069,10 +1068,10 @@ public final class BciBlockMapping
         return loops;
     }
 
-    public static BciBlockMapping create(BytecodeStream stream, Bytecode code, OptionValues options)
+    public static BciBlockMapping create(BytecodeStream stream, Bytecode code)
     {
         BciBlockMapping map = new BciBlockMapping(code);
-        map.build(stream, options);
+        map.build(stream);
         return map;
     }
 

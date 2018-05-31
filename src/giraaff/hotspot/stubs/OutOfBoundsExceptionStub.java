@@ -7,7 +7,6 @@ import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.AllocaNode;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 import giraaff.word.Word;
 
@@ -18,9 +17,9 @@ import giraaff.word.Word;
 public final class OutOfBoundsExceptionStub extends CreateExceptionStub
 {
     // @cons
-    public OutOfBoundsExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public OutOfBoundsExceptionStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super("createOutOfBoundsException", options, providers, linkage);
+        super("createOutOfBoundsException", providers, linkage);
     }
 
     private static final int MAX_INT_STRING_SIZE = Integer.toString(Integer.MIN_VALUE).length();

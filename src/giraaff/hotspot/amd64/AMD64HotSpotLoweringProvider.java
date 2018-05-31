@@ -12,7 +12,6 @@ import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
 import giraaff.nodes.calc.FloatConvertNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.replacements.amd64.AMD64ConvertSnippets;
 
 // @class AMD64HotSpotLoweringProvider
@@ -27,10 +26,10 @@ public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringPr
     }
 
     @Override
-    public void initialize(OptionValues options, HotSpotProviders providers)
+    public void initialize(HotSpotProviders providers)
     {
-        convertSnippets = new AMD64ConvertSnippets.Templates(options, providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
-        super.initialize(options, providers);
+        convertSnippets = new AMD64ConvertSnippets.Templates(providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
+        super.initialize(providers);
     }
 
     @Override

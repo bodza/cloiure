@@ -35,7 +35,6 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.nodes.virtual.AllocatedObjectNode;
 import giraaff.nodes.virtual.CommitAllocationNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 import giraaff.phases.graph.ReentrantBlockIterator;
 import giraaff.phases.graph.ReentrantBlockIterator.BlockIteratorClosure;
 import giraaff.phases.graph.ReentrantBlockIterator.LoopInfo;
@@ -219,8 +218,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
                     }
                 }
             }
-
-            OptionValues options = block.getBeginNode().getOptions();
 
             // a lastFixedNode is needed in case we want to insert fixed nodes
             FixedWithNextNode lastFixedNode = null;

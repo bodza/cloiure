@@ -6,7 +6,6 @@ import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 /**
@@ -16,9 +15,9 @@ import giraaff.util.GraalError;
 public final class NullPointerExceptionStub extends CreateExceptionStub
 {
     // @cons
-    public NullPointerExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public NullPointerExceptionStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super("createNullPointerException", options, providers, linkage);
+        super("createNullPointerException", providers, linkage);
     }
 
     @Override

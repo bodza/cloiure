@@ -24,7 +24,6 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualBoxingNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 // @class ObjectEqualsNode
@@ -58,9 +57,9 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
         }
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, ValueNode x, ValueNode y, NodeView view)
     {
-        LogicNode result = OP.canonical(constantReflection, metaAccess, options, null, CanonicalCondition.EQ, false, x, y, view);
+        LogicNode result = OP.canonical(constantReflection, metaAccess, null, CanonicalCondition.EQ, false, x, y, view);
         if (result != null)
         {
             return result;
@@ -72,7 +71,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
     {
         NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.getOptions(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
+        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
         if (value != null)
         {
             return value;
@@ -84,7 +83,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     public static final class ObjectEqualsOp extends PointerEqualsOp
     {
         @Override
-        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)
+        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)
         {
             ResolvedJavaType type = constantReflection.asJavaType(constant);
             if (type != null && nonConstant instanceof GetClassNode)
@@ -97,7 +96,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
                 }
                 return LogicConstantNode.forBoolean(false);
             }
-            return super.canonicalizeSymmetricConstant(constantReflection, metaAccess, options, smallestCompareWidth, condition, constant, nonConstant, mirrored, unorderedIsTrue, view);
+            return super.canonicalizeSymmetricConstant(constantReflection, metaAccess, smallestCompareWidth, condition, constant, nonConstant, mirrored, unorderedIsTrue, view);
         }
 
         @Override

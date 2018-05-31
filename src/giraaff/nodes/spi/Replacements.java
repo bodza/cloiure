@@ -8,7 +8,6 @@ import giraaff.bytecode.BytecodeProvider;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin;
-import giraaff.options.OptionValues;
 
 /**
  * Interface for managing replacements.
@@ -16,8 +15,6 @@ import giraaff.options.OptionValues;
 // @iface Replacements
 public interface Replacements
 {
-    OptionValues getOptions();
-
     /**
      * Gets the object managing the various graph builder plugins used by this object when parsing
      * bytecode into a graph.

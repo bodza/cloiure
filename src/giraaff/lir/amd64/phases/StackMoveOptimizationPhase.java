@@ -9,6 +9,7 @@ import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
@@ -18,7 +19,6 @@ import giraaff.lir.amd64.AMD64Move.AMD64StackMove;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
-import giraaff.options.NestedBooleanOptionKey;
 
 /**
  * Replaces sequential {@link AMD64StackMove}s of the same type with a single
@@ -30,12 +30,6 @@ import giraaff.options.NestedBooleanOptionKey;
 // @class StackMoveOptimizationPhase
 public final class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 {
-    // @class StackMoveOptimizationPhase.Options
-    public static final class Options
-    {
-        public static final NestedBooleanOptionKey LIROptStackMoveOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
-    }
-
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
     {

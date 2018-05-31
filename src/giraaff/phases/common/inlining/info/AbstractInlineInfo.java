@@ -7,7 +7,6 @@ import org.graalvm.collections.EconomicSet;
 import giraaff.graph.Node;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.StructuredGraph;
-import giraaff.options.OptionValues;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.common.inlining.info.elem.Inlineable;
@@ -45,7 +44,7 @@ public abstract class AbstractInlineInfo implements InlineInfo
     }
 
     @Override
-    public final void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer, OptionValues options)
+    public final void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer)
     {
         for (int i = 0; i < numberOfMethods(); i++)
         {

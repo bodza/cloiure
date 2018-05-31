@@ -17,7 +17,6 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.extended.BoxNode;
 import giraaff.nodes.extended.UnboxNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
@@ -163,9 +162,9 @@ public final class BoxingSnippets implements Snippets
         private final EnumMap<JavaKind, SnippetInfo> unboxSnippets = new EnumMap<>(JavaKind.class);
 
         // @cons
-        public Templates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        public Templates(Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
-            super(options, providers, snippetReflection, target);
+            super(providers, snippetReflection, target);
             for (JavaKind kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short })
             {
                 boxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "ValueOf"));

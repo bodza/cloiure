@@ -100,7 +100,6 @@ import giraaff.nodes.virtual.CommitAllocationNode;
 import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualInstanceNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.SnippetLowerableMemoryNode.SnippetLowering;
 import giraaff.util.GraalError;
@@ -129,9 +128,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         this.useCompressedOops = useCompressedOops;
     }
 
-    public void initialize(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection)
+    public void initialize(Providers providers, SnippetReflectionProvider snippetReflection)
     {
-        boxingSnippets = new BoxingSnippets.Templates(options, providers, snippetReflection, target);
+        boxingSnippets = new BoxingSnippets.Templates(providers, snippetReflection, target);
     }
 
     public final TargetDescription getTarget()

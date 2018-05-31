@@ -7,8 +7,6 @@ import giraaff.loop.phases.LoopFullUnrollPhase;
 import giraaff.loop.phases.LoopPeelingPhase;
 import giraaff.loop.phases.LoopUnswitchingPhase;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.ConvertDeoptimizeToGuardPhase;
@@ -26,49 +24,42 @@ import giraaff.virtual.phases.ea.PartialEscapePhase;
 // @class HighTier
 public final class HighTier extends PhaseSuite<HighTierContext>
 {
-    // @class HighTier.Options
-    public static final class Options
-    {
-        // @Option "Enable inlining."
-        public static final OptionKey<Boolean> Inline = new OptionKey<>(true);
-    }
-
     // @cons
-    public HighTier(OptionValues options)
+    public HighTier()
     {
         super();
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
         appendPhase(canonicalizer);
 
-        if (Options.Inline.getValue(options))
+        if (GraalOptions.inline)
         {
             appendPhase(new InliningPhase(canonicalizer));
             appendPhase(new DeadCodeEliminationPhase(Optionality.Optional));
         }
 
-        if (GraalOptions.OptConvertDeoptsToGuards.getValue(options))
+        if (GraalOptions.optConvertDeoptsToGuards)
         {
             appendPhase(new IncrementalCanonicalizerPhase<>(canonicalizer, new ConvertDeoptimizeToGuardPhase()));
         }
 
-        if (GraalOptions.ConditionalElimination.getValue(options))
+        if (GraalOptions.conditionalElimination)
         {
             appendPhase(new IterativeConditionalEliminationPhase(canonicalizer, false));
         }
 
         LoopPolicies loopPolicies = createLoopPolicies();
-        if (GraalOptions.FullUnroll.getValue(options))
+        if (GraalOptions.fullUnroll)
         {
             appendPhase(new LoopFullUnrollPhase(canonicalizer, loopPolicies));
         }
 
-        if (GraalOptions.OptLoopTransform.getValue(options))
+        if (GraalOptions.optLoopTransform)
         {
-            if (GraalOptions.LoopPeeling.getValue(options))
+            if (GraalOptions.loopPeeling)
             {
                 appendPhase(new LoopPeelingPhase(loopPolicies));
             }
-            if (GraalOptions.LoopUnswitch.getValue(options))
+            if (GraalOptions.loopUnswitch)
             {
                 appendPhase(new LoopUnswitchingPhase(loopPolicies));
             }
@@ -76,12 +67,12 @@ public final class HighTier extends PhaseSuite<HighTierContext>
 
         appendPhase(canonicalizer);
 
-        if (GraalOptions.PartialEscapeAnalysis.getValue(options))
+        if (GraalOptions.partialEscapeAnalysis)
         {
-            appendPhase(new PartialEscapePhase(true, canonicalizer, options));
+            appendPhase(new PartialEscapePhase(true, canonicalizer));
         }
 
-        if (GraalOptions.OptReadElimination.getValue(options))
+        if (GraalOptions.optReadElimination)
         {
             appendPhase(new EarlyReadEliminationPhase(canonicalizer));
         }

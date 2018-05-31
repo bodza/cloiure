@@ -24,7 +24,6 @@ import giraaff.nodes.java.InstanceOfDynamicNode;
 import giraaff.nodes.java.InstanceOfNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -47,9 +46,9 @@ import giraaff.replacements.SnippetTemplate.UsageReplacer;
 public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 {
     // @cons
-    public InstanceOfSnippetsTemplates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+    public InstanceOfSnippetsTemplates(Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
     {
-        super(options, providers, snippetReflection, target);
+        super(providers, snippetReflection, target);
     }
 
     /**

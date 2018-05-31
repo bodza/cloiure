@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.BytecodeProvider;
 import giraaff.hotspot.word.HotSpotOperation;
-import giraaff.options.OptionValues;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.ReplacementsImpl;
 
@@ -17,8 +16,8 @@ import giraaff.replacements.ReplacementsImpl;
 public final class HotSpotReplacementsImpl extends ReplacementsImpl
 {
     // @cons
-    public HotSpotReplacementsImpl(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
+    public HotSpotReplacementsImpl(Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
     {
-        super(options, providers, snippetReflection, bytecodeProvider, target);
+        super(providers, snippetReflection, bytecodeProvider, target);
     }
 }

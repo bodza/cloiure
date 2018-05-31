@@ -126,7 +126,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
             endMaps = EconomicMap.create();
             stampMap = graph.createNodeMap();
             undoOperations = new NodeStack();
-            replaceConstantInputs = replaceInputsWithConstants && GraalOptions.ReplaceInputsWithConstantsBasedOnStamps.getValue(graph.getOptions());
+            replaceConstantInputs = replaceInputsWithConstants && GraalOptions.replaceInputsWithConstantsBasedOnStamps;
         }
 
         protected void replaceInput(Position p, Node oldInput, Node newConstantInput)
@@ -558,7 +558,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         {
             fixReadsClosure.processNodes(block, schedule);
         }
-        if (GraalOptions.RawConditionalElimination.getValue(graph.getOptions()))
+        if (GraalOptions.rawConditionalElimination)
         {
             schedule.getCFG().visitDominatorTree(createVisitor(graph, schedule, context), false);
         }
@@ -586,7 +586,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         @Override
         protected void run(StructuredGraph graph, LowTierContext context)
         {
-            if (GraalOptions.RawConditionalElimination.getValue(graph.getOptions()))
+            if (GraalOptions.rawConditionalElimination)
             {
                 SchedulePhase schedulePhase = new SchedulePhase(SchedulingStrategy.LATEST, true);
                 schedulePhase.apply(graph);

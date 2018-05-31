@@ -160,7 +160,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         @Override
         protected PartialEscapeBlockState.Final getInitialState()
         {
-            return new PartialEscapeBlockState.Final(tool.getOptions());
+            return new PartialEscapeBlockState.Final();
         }
 
         @Override
@@ -182,7 +182,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         super(schedule, schedule.getCFG());
         StructuredGraph graph = schedule.getCFG().graph;
         this.hasVirtualInputs = graph.createNodeBitMap();
-        this.tool = new VirtualizerToolImpl(metaAccess, constantReflection, constantFieldProvider, this, graph.getAssumptions(), graph.getOptions(), loweringProvider);
+        this.tool = new VirtualizerToolImpl(metaAccess, constantReflection, constantFieldProvider, this, graph.getAssumptions(), loweringProvider);
     }
 
     /**
@@ -523,7 +523,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
     protected BlockT stripKilledLoopLocations(Loop<Block> loop, BlockT originalInitialState)
     {
         BlockT initialState = super.stripKilledLoopLocations(loop, originalInitialState);
-        if (loop.getDepth() > GraalOptions.EscapeAnalysisLoopCutoff.getValue(cfg.graph.getOptions()))
+        if (loop.getDepth() > GraalOptions.escapeAnalysisLoopCutoff)
         {
             /*
              * After we've reached the maximum loop nesting, we'll simply materialize everything we

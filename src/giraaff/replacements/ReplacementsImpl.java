@@ -19,7 +19,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.graph.Node;
 import giraaff.graph.Node.NodeIntrinsic;
-import giraaff.java.BytecodeParserOptions;
 import giraaff.java.GraphBuilderPhase;
 import giraaff.java.GraphBuilderPhase.Instance;
 import giraaff.nodes.CallTargetNode;
@@ -40,7 +39,6 @@ import giraaff.nodes.graphbuilderconf.MethodSubstitutionPlugin;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.Replacements;
 import giraaff.nodes.spi.StampProvider;
-import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.ConvertDeoptimizeToGuardPhase;
@@ -55,17 +53,10 @@ import giraaff.word.WordOperationPlugin;
 // @class ReplacementsImpl
 public class ReplacementsImpl implements Replacements, InlineInvokePlugin
 {
-    protected final OptionValues options;
     public final Providers providers;
     public final SnippetReflectionProvider snippetReflection;
     public final TargetDescription target;
     private GraphBuilderConfiguration.Plugins graphBuilderPlugins;
-
-    @Override
-    public OptionValues getOptions()
-    {
-        return options;
-    }
 
     /**
      * The preprocessed replacement graphs.
@@ -104,7 +95,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         Bytecode subst = getSubstitutionBytecode(method);
         if (subst != null)
         {
-            if (b.parsingIntrinsic() || BytecodeParserOptions.InlineDuringParsing.getValue(b.getOptions()) || BytecodeParserOptions.InlineIntrinsicsDuringParsing.getValue(b.getOptions()))
+            if (b.parsingIntrinsic() || GraalOptions.inlineDuringParsing || GraalOptions.inlineIntrinsicsDuringParsing)
             {
                 // forced inlining of intrinsics
                 return InlineInfo.createIntrinsicInlineInfo(subst.getMethod(), method, subst.getOrigin());
@@ -133,10 +124,9 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     }
 
     // @cons
-    public ReplacementsImpl(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
+    public ReplacementsImpl(Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
     {
         super();
-        this.options = options;
         this.providers = providers.copyWith(this);
         this.snippetReflection = snippetReflection;
         this.target = target;
@@ -153,11 +143,11 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     @Override
     public StructuredGraph getSnippet(ResolvedJavaMethod method, ResolvedJavaMethod recursiveEntry, Object[] args)
     {
-        StructuredGraph graph = GraalOptions.UseSnippetGraphCache.getValue(options) ? graphs.get(method) : null;
+        StructuredGraph graph = GraalOptions.useSnippetGraphCache ? graphs.get(method) : null;
         if (graph == null)
         {
             StructuredGraph newGraph = makeGraph(defaultBytecodeProvider, method, args, recursiveEntry);
-            if (!GraalOptions.UseSnippetGraphCache.getValue(options) || args != null)
+            if (!GraalOptions.useSnippetGraphCache || args != null)
             {
                 return newGraph;
             }
@@ -213,11 +203,11 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             {
                 MethodSubstitutionPlugin msPlugin = (MethodSubstitutionPlugin) plugin;
                 ResolvedJavaMethod substitute = msPlugin.getSubstitute(metaAccess);
-                StructuredGraph graph = GraalOptions.UseSnippetGraphCache.getValue(options) ? graphs.get(substitute) : null;
+                StructuredGraph graph = GraalOptions.useSnippetGraphCache ? graphs.get(substitute) : null;
                 if (graph == null)
                 {
                     graph = makeGraph(msPlugin.getBytecodeProvider(), substitute, null, method);
-                    if (!GraalOptions.UseSnippetGraphCache.getValue(options))
+                    if (!GraalOptions.useSnippetGraphCache)
                     {
                         return graph;
                     }
@@ -233,7 +223,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
                 ConstantReflectionProvider constantReflection = providers.getConstantReflection();
                 ConstantFieldProvider constantFieldProvider = providers.getConstantFieldProvider();
                 StampProvider stampProvider = providers.getStampProvider();
-                result = new IntrinsicGraphBuilder(options, metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci).buildGraph(plugin);
+                result = new IntrinsicGraphBuilder(metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci).buildGraph(plugin);
             }
         }
         else
@@ -353,7 +343,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         protected StructuredGraph buildInitialGraph(BytecodeProvider bytecodeProvider, final ResolvedJavaMethod methodToParse, Object[] args)
         {
             // replacements cannot have optimistic assumptions since they have to be valid for the entire run of the VM
-            final StructuredGraph graph = new StructuredGraph.Builder(replacements.options).method(methodToParse).build();
+            final StructuredGraph graph = new StructuredGraph.Builder().method(methodToParse).build();
 
             // replacements are not user code so they do not participate in unsafe access tracking
             graph.disableUnsafeAccessTracking();

@@ -1,6 +1,6 @@
 package giraaff.java;
 
-import giraaff.core.common.PermanentBailoutException;
+import jdk.vm.ci.code.BailoutException;
 
 // @class JsrScope
 public final class JsrScope
@@ -32,7 +32,7 @@ public final class JsrScope
     {
         if ((scope & 0xffff000000000000L) != 0)
         {
-            throw new PermanentBailoutException("only four jsr nesting levels are supported");
+            throw new BailoutException("only 4 jsr nesting levels are supported");
         }
         return new JsrScope((scope << 16) | jsrReturnBci);
     }

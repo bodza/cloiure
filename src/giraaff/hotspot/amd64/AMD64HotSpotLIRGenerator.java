@@ -64,7 +64,6 @@ import giraaff.lir.amd64.AMD64VZeroUpper;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 /**
@@ -604,7 +603,6 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
             // metaspace pointer
             Variable result = newVariable(lirKindTool.getNarrowPointerKind());
             AllocatableValue base = Value.ILLEGAL;
-            OptionValues options = getResult().getLIR().getOptions();
             if (encoding.hasBase())
             {
                 base = emitLoadConstant(lirKindTool.getWordKind(), JavaConstant.forLong(encoding.getBase()));
@@ -632,7 +630,6 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
             LIRKind uncompressedKind = lirKindTool.getWordKind();
             Variable result = newVariable(uncompressedKind);
             AllocatableValue base = Value.ILLEGAL;
-            OptionValues options = getResult().getLIR().getOptions();
             if (encoding.hasBase())
             {
                 base = emitLoadConstant(uncompressedKind, JavaConstant.forLong(encoding.getBase()));

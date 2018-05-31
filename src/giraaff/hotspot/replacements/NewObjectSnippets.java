@@ -47,7 +47,6 @@ import giraaff.nodes.java.NewInstanceNode;
 import giraaff.nodes.java.NewMultiArrayNode;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -97,12 +96,12 @@ public final class NewObjectSnippets implements Snippets
     }
 
     @Snippet
-    public static Object allocateInstance(@ConstantParameter int size, KlassPointer hub, Word prototypeMarkWord, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter boolean constantSize, @ConstantParameter String typeContext, @ConstantParameter OptionValues options)
+    public static Object allocateInstance(@ConstantParameter int size, KlassPointer hub, Word prototypeMarkWord, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter boolean constantSize, @ConstantParameter String typeContext)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(allocateInstanceHelper(size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize, typeContext, options));
+        return PiNode.piCastToSnippetReplaceeStamp(allocateInstanceHelper(size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize, typeContext));
     }
 
-    public static Object allocateInstanceHelper(int size, KlassPointer hub, Word prototypeMarkWord, boolean fillContents, Register threadRegister, boolean constantSize, String typeContext, OptionValues options)
+    public static Object allocateInstanceHelper(int size, KlassPointer hub, Word prototypeMarkWord, boolean fillContents, Register threadRegister, boolean constantSize, String typeContext)
     {
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         Word top = HotSpotReplacementsUtil.readTlabTop(thread);
@@ -124,7 +123,7 @@ public final class NewObjectSnippets implements Snippets
     public static native Object newInstance(@ConstantNodeParameter ForeignCallDescriptor descriptor, KlassPointer hub);
 
     @Snippet
-    public static Object allocateInstanceDynamic(Class<?> type, Class<?> classClass, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    public static Object allocateInstanceDynamic(Class<?> type, Class<?> classClass, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister)
     {
         if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, type == null))
         {
@@ -137,10 +136,10 @@ public final class NewObjectSnippets implements Snippets
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
 
-        return PiNode.piCastToSnippetReplaceeStamp(allocateInstanceDynamicHelper(type, fillContents, threadRegister, options, nonNullType));
+        return PiNode.piCastToSnippetReplaceeStamp(allocateInstanceDynamicHelper(type, fillContents, threadRegister, nonNullType));
     }
 
-    private static Object allocateInstanceDynamicHelper(Class<?> type, boolean fillContents, Register threadRegister, OptionValues options, Class<?> nonNullType)
+    private static Object allocateInstanceDynamicHelper(Class<?> type, boolean fillContents, Register threadRegister, Class<?> nonNullType)
     {
         KlassPointer hub = ClassGetHubNode.readClass(nonNullType);
         if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, !hub.isNull()))
@@ -163,7 +162,7 @@ public final class NewObjectSnippets implements Snippets
                      * FIXME(je,ds): we should actually pass typeContext instead of "" but late
                      * binding of parameters is not yet supported by the GraphBuilderPlugin system.
                      */
-                    return allocateInstanceHelper(layoutHelper, nonNullHub, prototypeMarkWord, fillContents, threadRegister, false, "", options);
+                    return allocateInstanceHelper(layoutHelper, nonNullHub, prototypeMarkWord, fillContents, threadRegister, false, "");
                 }
             }
         }
@@ -176,13 +175,13 @@ public final class NewObjectSnippets implements Snippets
     public static final int MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH = 0x00FFFFFF;
 
     @Snippet
-    public static Object allocateArray(KlassPointer hub, int length, Word prototypeMarkWord, @ConstantParameter int headerSize, @ConstantParameter int log2ElementSize, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter boolean maybeUnroll, @ConstantParameter String typeContext, @ConstantParameter OptionValues options)
+    public static Object allocateArray(KlassPointer hub, int length, Word prototypeMarkWord, @ConstantParameter int headerSize, @ConstantParameter int log2ElementSize, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter boolean maybeUnroll, @ConstantParameter String typeContext)
     {
-        Object result = allocateArrayImpl(hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, typeContext, false, options);
+        Object result = allocateArrayImpl(hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, typeContext, false);
         return PiArrayNode.piArrayCastToSnippetReplaceeStamp(result, length);
     }
 
-    private static Object allocateArrayImpl(KlassPointer hub, int length, Word prototypeMarkWord, int headerSize, int log2ElementSize, boolean fillContents, Register threadRegister, boolean maybeUnroll, String typeContext, boolean skipNegativeCheck, OptionValues options)
+    private static Object allocateArrayImpl(KlassPointer hub, int length, Word prototypeMarkWord, int headerSize, int log2ElementSize, boolean fillContents, Register threadRegister, boolean maybeUnroll, String typeContext, boolean skipNegativeCheck)
     {
         int allocationSize = HotSpotReplacementsUtil.arrayAllocationSize(length, headerSize, log2ElementSize);
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
@@ -219,12 +218,12 @@ public final class NewObjectSnippets implements Snippets
     public static native Object dynamicNewInstanceStubCall(@ConstantNodeParameter ForeignCallDescriptor descriptor, Class<?> elementType);
 
     @Snippet
-    public static Object allocateArrayDynamic(Class<?> elementType, Class<?> voidClass, int length, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter JavaKind knownElementKind, @ConstantParameter int knownLayoutHelper, Word prototypeMarkWord, @ConstantParameter OptionValues options)
+    public static Object allocateArrayDynamic(Class<?> elementType, Class<?> voidClass, int length, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter JavaKind knownElementKind, @ConstantParameter int knownLayoutHelper, Word prototypeMarkWord)
     {
-        return allocateArrayDynamicImpl(elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord, options);
+        return allocateArrayDynamicImpl(elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord);
     }
 
-    private static Object allocateArrayDynamicImpl(Class<?> elementType, Class<?> voidClass, int length, boolean fillContents, Register threadRegister, JavaKind knownElementKind, int knownLayoutHelper, Word prototypeMarkWord, OptionValues options)
+    private static Object allocateArrayDynamicImpl(Class<?> elementType, Class<?> voidClass, int length, boolean fillContents, Register threadRegister, JavaKind knownElementKind, int knownLayoutHelper, Word prototypeMarkWord)
     {
         // We only need the dynamic check for void when we have no static information from knownElementKind.
         if (knownElementKind == JavaKind.Illegal && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, elementType == null || DynamicNewArrayNode.throwsIllegalArgumentException(elementType, voidClass)))
@@ -265,7 +264,7 @@ public final class NewObjectSnippets implements Snippets
         int headerSize = (layoutHelper >> HotSpotRuntime.layoutHelperHeaderSizeShift) & HotSpotRuntime.layoutHelperHeaderSizeMask;
         int log2ElementSize = (layoutHelper >> HotSpotRuntime.layoutHelperLog2ElementSizeShift) & HotSpotRuntime.layoutHelperLog2ElementSizeMask;
 
-        Object result = allocateArrayImpl(nonNullKlass, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, false, "dynamic type", true, options);
+        Object result = allocateArrayImpl(nonNullKlass, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, false, "dynamic type", true);
         return PiArrayNode.piArrayCastToSnippetReplaceeStamp(result, length);
     }
 
@@ -396,9 +395,9 @@ public final class NewObjectSnippets implements Snippets
         private final SnippetInfo newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders providers, TargetDescription target)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
         }
 
         /**
@@ -411,7 +410,6 @@ public final class NewObjectSnippets implements Snippets
             ConstantNode hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), type.klass(), providers.getMetaAccess(), graph);
             int size = instanceSize(type);
 
-            OptionValues localOptions = graph.getOptions();
             SnippetInfo snippet = allocateInstance;
             Arguments args = new Arguments(snippet, graph.getGuardsStage(), tool.getLoweringStage());
             args.addConst("size", size);
@@ -421,7 +419,6 @@ public final class NewObjectSnippets implements Snippets
             args.addConst("threadRegister", registers.getThreadRegister());
             args.addConst("constantSize", true);
             args.addConst("typeContext", "");
-            args.addConst("options", localOptions);
 
             SnippetTemplate template = template(newInstanceNode, args);
             template.instantiate(providers.getMetaAccess(), newInstanceNode, SnippetTemplate.DEFAULT_REPLACER, args);
@@ -440,7 +437,6 @@ public final class NewObjectSnippets implements Snippets
             final int headerSize = HotSpotRuntime.getArrayBaseOffset(elementKind);
             int log2ElementSize = CodeUtil.log2(HotSpotRuntime.getArrayIndexScale(elementKind));
 
-            OptionValues localOptions = graph.getOptions();
             SnippetInfo snippet = allocateArray;
 
             Arguments args = new Arguments(snippet, graph.getGuardsStage(), tool.getLoweringStage());
@@ -454,7 +450,7 @@ public final class NewObjectSnippets implements Snippets
             args.addConst("threadRegister", registers.getThreadRegister());
             args.addConst("maybeUnroll", length.isConstant());
             args.addConst("typeContext", "");
-            args.addConst("options", localOptions);
+
             SnippetTemplate template = template(newArrayNode, args);
             template.instantiate(providers.getMetaAccess(), newArrayNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
@@ -462,13 +458,11 @@ public final class NewObjectSnippets implements Snippets
         public void lower(DynamicNewInstanceNode newInstanceNode, HotSpotRegistersProvider registers, LoweringTool tool)
         {
             Arguments args = new Arguments(allocateInstanceDynamic, newInstanceNode.graph().getGuardsStage(), tool.getLoweringStage());
-            OptionValues localOptions = newInstanceNode.getOptions();
             args.add("type", newInstanceNode.getInstanceType());
             ValueNode classClass = newInstanceNode.getClassClass();
             args.add("classClass", classClass);
             args.addConst("fillContents", newInstanceNode.fillContents());
             args.addConst("threadRegister", registers.getThreadRegister());
-            args.addConst("options", localOptions);
 
             SnippetTemplate template = template(newInstanceNode, args);
             template.instantiate(providers.getMetaAccess(), newInstanceNode, SnippetTemplate.DEFAULT_REPLACER, args);
@@ -477,7 +471,6 @@ public final class NewObjectSnippets implements Snippets
         public void lower(DynamicNewArrayNode newArrayNode, HotSpotRegistersProvider registers, LoweringTool tool)
         {
             StructuredGraph graph = newArrayNode.graph();
-            OptionValues localOptions = graph.getOptions();
             Arguments args = new Arguments(allocateArrayDynamic, newArrayNode.graph().getGuardsStage(), tool.getLoweringStage());
             args.add("elementType", newArrayNode.getElementType());
             ValueNode voidClass = newArrayNode.getVoidClass();
@@ -497,7 +490,7 @@ public final class NewObjectSnippets implements Snippets
                 args.addConst("knownLayoutHelper", 0);
             }
             args.add("prototypeMarkWord", lookupArrayClass(tool, JavaKind.Object).prototypeMarkWord());
-            args.addConst("options", localOptions);
+
             SnippetTemplate template = template(newArrayNode, args);
             template.instantiate(providers.getMetaAccess(), newArrayNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
@@ -510,7 +503,6 @@ public final class NewObjectSnippets implements Snippets
         public void lower(NewMultiArrayNode newmultiarrayNode, LoweringTool tool)
         {
             StructuredGraph graph = newmultiarrayNode.graph();
-            OptionValues localOptions = graph.getOptions();
             int rank = newmultiarrayNode.dimensionCount();
             ValueNode[] dims = new ValueNode[rank];
             for (int i = 0; i < newmultiarrayNode.dimensionCount(); i++)

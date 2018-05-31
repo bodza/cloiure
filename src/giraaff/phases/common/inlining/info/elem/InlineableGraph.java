@@ -167,7 +167,7 @@ public final class InlineableGraph implements Inlineable
      */
     private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller)
     {
-        StructuredGraph newGraph = new StructuredGraph.Builder(caller.getOptions(), AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).build();
+        StructuredGraph newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).build();
         if (!caller.isUnsafeAccessTrackingEnabled())
         {
             newGraph.disableUnsafeAccessTracking();

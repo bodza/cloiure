@@ -8,7 +8,6 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.calc.FloatConvertNode;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
@@ -152,9 +151,9 @@ public final class AMD64ConvertSnippets implements Snippets
         private final SnippetInfo d2l;
 
         // @cons
-        public Templates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        public Templates(Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
-            super(options, providers, snippetReflection, target);
+            super(providers, snippetReflection, target);
 
             f2i = snippet(AMD64ConvertSnippets.class, "f2i");
             f2l = snippet(AMD64ConvertSnippets.class, "f2l");

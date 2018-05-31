@@ -13,11 +13,11 @@ import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.api.replacements.Snippet.NonNullParameter;
 import giraaff.api.replacements.Snippet.VarargsParameter;
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampFactory;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
-import giraaff.hotspot.replacements.HotspotSnippetsOptions;
 import giraaff.hotspot.replacements.TypeCheckSnippetUtils;
 import giraaff.hotspot.replacements.TypeCheckSnippetUtils.Hints;
 import giraaff.hotspot.word.KlassPointer;
@@ -34,7 +34,6 @@ import giraaff.nodes.java.ClassIsAssignableFromNode;
 import giraaff.nodes.java.InstanceOfDynamicNode;
 import giraaff.nodes.java.InstanceOfNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.replacements.InstanceOfSnippetsTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
@@ -239,9 +238,9 @@ public final class InstanceOfSnippets implements Snippets
         private final SnippetInfo isAssignableFrom = snippet(InstanceOfSnippets.class, "isAssignableFrom", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders providers, TargetDescription target)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
         }
 
         @Override
@@ -253,9 +252,8 @@ public final class InstanceOfSnippets implements Snippets
                 ValueNode object = instanceOf.getValue();
                 Assumptions assumptions = instanceOf.graph().getAssumptions();
 
-                OptionValues localOptions = instanceOf.getOptions();
                 JavaTypeProfile profile = instanceOf.profile();
-                TypeCheckHints hintInfo = new TypeCheckHints(instanceOf.type(), profile, assumptions, HotspotSnippetsOptions.TypeCheckMinProfileHitProbability.getValue(localOptions), HotspotSnippetsOptions.TypeCheckMaxHints.getValue(localOptions));
+                TypeCheckHints hintInfo = new TypeCheckHints(instanceOf.type(), profile, assumptions, GraalOptions.typeCheckMinProfileHitProbability, GraalOptions.typeCheckMaxHints);
                 final HotSpotResolvedObjectType type = (HotSpotResolvedObjectType) instanceOf.type().getType();
                 ConstantNode hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), type.klass(), providers.getMetaAccess(), instanceOf.graph());
 

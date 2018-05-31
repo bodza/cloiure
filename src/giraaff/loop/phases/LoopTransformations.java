@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import jdk.vm.ci.code.BailoutException;
+
 import giraaff.core.common.GraalOptions;
-import giraaff.core.common.RetryableBailoutException;
 import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.graph.Graph.Mark;
 import giraaff.graph.Node;
@@ -69,9 +70,9 @@ public abstract class LoopTransformations
             peel(loop);
             canonicalizer.applyIncremental(graph, context, mark);
             loop.invalidateFragments();
-            if (graph.getNodeCount() > initialNodeCount + GraalOptions.MaximumDesiredSize.getValue(graph.getOptions()) * 2)
+            if (graph.getNodeCount() > initialNodeCount + GraalOptions.maximumDesiredSize * 2)
             {
-                throw new RetryableBailoutException("FullUnroll : Graph seems to grow out of proportion");
+                throw new BailoutException(false, "full unroll: graph seems to grow out of proportion");
             }
         }
     }

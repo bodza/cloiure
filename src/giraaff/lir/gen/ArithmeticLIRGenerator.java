@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.LIRKind;
 import giraaff.lir.Variable;
-import giraaff.options.OptionValues;
 
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
@@ -20,12 +19,6 @@ public abstract class ArithmeticLIRGenerator implements ArithmeticLIRGeneratorTo
     {
         return lirGen;
     }
-
-    public OptionValues getOptions()
-    {
-        return getLIRGen().getResult().getLIR().getOptions();
-    }
-    // automatic derived reference handling
 
     protected abstract boolean isNumericInteger(PlatformKind kind);
 

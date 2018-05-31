@@ -45,7 +45,6 @@ import giraaff.bytecode.Bytes;
 import giraaff.bytecode.ResolvedJavaMethodBytecode;
 import giraaff.bytecode.ResolvedJavaMethodBytecodeProvider;
 import giraaff.core.common.GraalOptions;
-import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.calc.Condition;
 import giraaff.core.common.calc.Condition.CanonicalizedCondition;
@@ -61,7 +60,6 @@ import giraaff.graph.Graph.Mark;
 import giraaff.graph.Node;
 import giraaff.java.BciBlockMapping.BciBlock;
 import giraaff.java.BciBlockMapping.ExceptionDispatchBlock;
-import giraaff.java.BytecodeParserOptions;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.BeginNode;
@@ -164,7 +162,6 @@ import giraaff.nodes.java.StoreIndexedNode;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.util.ValueMergeUtil;
 import giraaff.util.GraalError;
@@ -373,7 +370,6 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private final GraphBuilderPhase.Instance graphBuilderInstance;
     protected final StructuredGraph graph;
-    protected final OptionValues options;
 
     private BciBlockMapping blockMap;
     private LocalLiveness liveness;
@@ -407,7 +403,6 @@ public final class BytecodeParser implements GraphBuilderContext
         this.method = code.getMethod();
         this.graphBuilderInstance = graphBuilderInstance;
         this.graph = graph;
-        this.options = graph.getOptions();
         this.graphBuilderConfig = graphBuilderInstance.graphBuilderConfig;
         this.optimisticOpts = graphBuilderInstance.optimisticOpts;
         this.metaAccess = graphBuilderInstance.metaAccess;
@@ -464,7 +459,7 @@ public final class BytecodeParser implements GraphBuilderContext
         }
 
         // compute the block map, setup exception handlers and get the entrypoint(s)
-        BciBlockMapping newMapping = BciBlockMapping.create(stream, code, options);
+        BciBlockMapping newMapping = BciBlockMapping.create(stream, code);
         this.blockMap = newMapping;
         this.firstInstructionArray = new FixedWithNextNode[blockMap.getBlockCount()];
         this.entryStateArray = new FrameStateBuilder[blockMap.getBlockCount()];
@@ -899,17 +894,17 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected LogicNode genObjectEquals(ValueNode x, ValueNode y)
     {
-        return ObjectEqualsNode.create(constantReflection, metaAccess, options, x, y, NodeView.DEFAULT);
+        return ObjectEqualsNode.create(constantReflection, metaAccess, x, y, NodeView.DEFAULT);
     }
 
     protected LogicNode genIntegerEquals(ValueNode x, ValueNode y)
     {
-        return IntegerEqualsNode.create(constantReflection, metaAccess, options, null, x, y, NodeView.DEFAULT);
+        return IntegerEqualsNode.create(constantReflection, metaAccess, null, x, y, NodeView.DEFAULT);
     }
 
     protected LogicNode genIntegerLessThan(ValueNode x, ValueNode y)
     {
-        return IntegerLessThanNode.create(constantReflection, metaAccess, options, null, x, y, NodeView.DEFAULT);
+        return IntegerLessThanNode.create(constantReflection, metaAccess, null, x, y, NodeView.DEFAULT);
     }
 
     protected ValueNode genUnique(ValueNode x)
@@ -987,11 +982,11 @@ public final class BytecodeParser implements GraphBuilderContext
         StampPair stamp = graphBuilderConfig.getPlugins().getOverridingStamp(this, field.getType(), false);
         if (stamp == null)
         {
-            return LoadFieldNode.create(getConstantFieldProvider(), getConstantReflection(), getMetaAccess(), getOptions(), getAssumptions(), receiver, field, false, false);
+            return LoadFieldNode.create(getConstantFieldProvider(), getConstantReflection(), getMetaAccess(), getAssumptions(), receiver, field, false, false);
         }
         else
         {
-            return LoadFieldNode.createOverrideStamp(getConstantFieldProvider(), getConstantReflection(), getMetaAccess(), getOptions(), stamp, receiver, field, false, false);
+            return LoadFieldNode.createOverrideStamp(getConstantFieldProvider(), getConstantReflection(), getMetaAccess(), stamp, receiver, field, false, false);
         }
     }
 
@@ -1021,7 +1016,7 @@ public final class BytecodeParser implements GraphBuilderContext
     {
         AbstractBeginNode trueSucc = graph.add(new BeginNode());
         BytecodeExceptionNode exception = graph.add(new BytecodeExceptionNode(metaAccess, ArrayIndexOutOfBoundsException.class, index));
-        append(new IfNode(genUnique(IntegerBelowNode.create(constantReflection, metaAccess, options, null, index, length, NodeView.DEFAULT)), trueSucc, exception, BranchProbabilityNode.FAST_PATH_PROBABILITY));
+        append(new IfNode(genUnique(IntegerBelowNode.create(constantReflection, metaAccess, null, index, length, NodeView.DEFAULT)), trueSucc, exception, BranchProbabilityNode.FAST_PATH_PROBABILITY));
         lastInstr = trueSucc;
 
         exception.setStateAfter(createFrameState(bci(), exception));
@@ -1069,7 +1064,7 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             ResolvedJavaMethod resolvedTarget = (ResolvedJavaMethod) target;
             ResolvedJavaType holder = resolvedTarget.getDeclaringClass();
-            if (!holder.isInitialized() && GraalOptions.ResolveClassBeforeStaticInvoke.getValue(options))
+            if (!holder.isInitialized() && GraalOptions.resolveClassBeforeStaticInvoke)
             {
                 handleUnresolvedInvoke(target, InvokeKind.Static);
             }
@@ -1314,7 +1309,7 @@ public final class BytecodeParser implements GraphBuilderContext
         }
 
         JavaKind resultType = targetMethod.getSignature().getReturnKind();
-        if (!parsingIntrinsic() && GraalOptions.DeoptALot.getValue(options))
+        if (!parsingIntrinsic() && GraalOptions.deoptALot)
         {
             append(new DeoptimizeNode(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint));
             frameState.pushReturn(resultType, ConstantNode.defaultForKind(resultType, graph));
@@ -1351,7 +1346,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 return null;
             }
 
-            if (!invokeKind.isIndirect() || BytecodeParserOptions.UseGuardedIntrinsics.getValue(options))
+            if (!invokeKind.isIndirect() || GraalOptions.useGuardedIntrinsics)
             {
                 if (tryInvocationPlugin(invokeKind, args, targetMethod, resultType, returnType))
                 {
@@ -1456,7 +1451,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected JavaTypeProfile getProfileForInvoke(InvokeKind invokeKind)
     {
-        if (invokeKind.isIndirect() && profilingInfo != null && this.optimisticOpts.useTypeCheckHints(getOptions()))
+        if (invokeKind.isIndirect() && profilingInfo != null && this.optimisticOpts.useTypeCheckHints())
         {
             return profilingInfo.getTypeProfile(bci());
         }
@@ -1568,9 +1563,9 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             // be conservative if information was not recorded (could result in endless
             // recompiles otherwise)
-            if (!GraalOptions.StressInvokeWithExceptionNode.getValue(options))
+            if (!GraalOptions.stressInvokeWithExceptionNode)
             {
-                if (optimisticOpts.useExceptionProbability(getOptions()))
+                if (optimisticOpts.useExceptionProbability())
                 {
                     if (profilingInfo != null)
                     {
@@ -1646,10 +1641,10 @@ public final class BytecodeParser implements GraphBuilderContext
             LoadHubNode hub = graph.unique(new LoadHubNode(stampProvider, nonNullReceiver));
             LoadMethodNode actual = append(new LoadMethodNode(methodStamp, targetMethod, receiverType, method.getDeclaringClass(), hub));
             ConstantNode expected = graph.unique(ConstantNode.forConstant(methodStamp, targetMethod.getEncoding(), getMetaAccess()));
-            LogicNode compare = graph.addOrUniqueWithInputs(CompareNode.createCompareNode(constantReflection, metaAccess, options, null, CanonicalCondition.EQ, actual, expected, NodeView.DEFAULT));
+            LogicNode compare = graph.addOrUniqueWithInputs(CompareNode.createCompareNode(constantReflection, metaAccess, null, CanonicalCondition.EQ, actual, expected, NodeView.DEFAULT));
 
             JavaTypeProfile profile = null;
-            if (profilingInfo != null && this.optimisticOpts.useTypeCheckHints(getOptions()))
+            if (profilingInfo != null && this.optimisticOpts.useTypeCheckHints())
             {
                 profile = profilingInfo.getTypeProfile(bci());
                 if (profile != null)
@@ -1953,7 +1948,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 {
                     return false;
                 }
-                if (canInlinePartialIntrinsicExit() && BytecodeParserOptions.InlinePartialIntrinsicExitDuringParsing.getValue(options))
+                if (canInlinePartialIntrinsicExit() && GraalOptions.inlinePartialIntrinsicExitDuringParsing)
                 {
                     // Otherwise inline the original method. Any frame state created during the inlining
                     // will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
@@ -2255,11 +2250,11 @@ public final class BytecodeParser implements GraphBuilderContext
         int nextBci = getStream().nextBCI();
         if (!successor.getJsrScope().pop().equals(scope))
         {
-            throw new PermanentBailoutException("unstructured control flow (internal limitation)");
+            throw new BailoutException("unstructured control flow (internal limitation)");
         }
         if (successor.getJsrScope().nextReturnAddress() != nextBci)
         {
-            throw new PermanentBailoutException("unstructured control flow (internal limitation)");
+            throw new BailoutException("unstructured control flow (internal limitation)");
         }
         ConstantNode nextBciNode = getJsrConstant(nextBci);
         frameState.push(JavaKind.Object, nextBciNode);
@@ -2273,12 +2268,12 @@ public final class BytecodeParser implements GraphBuilderContext
         JsrScope scope = currentBlock.getJsrScope();
         int retAddress = scope.nextReturnAddress();
         ConstantNode returnBciNode = getJsrConstant(retAddress);
-        LogicNode guard = IntegerEqualsNode.create(constantReflection, metaAccess, options, null, local, returnBciNode, NodeView.DEFAULT);
+        LogicNode guard = IntegerEqualsNode.create(constantReflection, metaAccess, null, local, returnBciNode, NodeView.DEFAULT);
         guard = graph.addOrUniqueWithInputs(guard);
         append(new FixedGuardNode(guard, DeoptimizationReason.JavaSubroutineMismatch, DeoptimizationAction.InvalidateReprofile));
         if (!successor.getJsrScope().equals(scope.pop()))
         {
-            throw new PermanentBailoutException("unstructured control flow (ret leaves more than one scope)");
+            throw new BailoutException("unstructured control flow (ret leaves more than one scope)");
         }
         appendGoto(successor);
     }
@@ -2793,7 +2788,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 {
                     if (block.getJsrScope() != JsrScope.EMPTY_SCOPE)
                     {
-                        throw new PermanentBailoutException("OSR into a Bytecodes.JSR scope is not supported");
+                        throw new BailoutException("OSR into a Bytecodes.JSR scope is not supported");
                     }
                     EntryMarkerNode x = append(new EntryMarkerNode());
                     frameState.insertProxies(value -> graph.unique(new EntryProxyNode(value, x)));
@@ -3229,7 +3224,7 @@ public final class BytecodeParser implements GraphBuilderContext
     @Override
     public BailoutException bailout(String msg)
     {
-        throw new PermanentBailoutException(msg);
+        throw new BailoutException(msg);
     }
 
     private FrameState createFrameState(int bci, StateSplit forStateSplit)
@@ -3617,7 +3612,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private JavaTypeProfile getProfileForTypeCheck(TypeReference type)
     {
-        if (parsingIntrinsic() || profilingInfo == null || !optimisticOpts.useTypeCheckHints(getOptions()) || type.isExact())
+        if (parsingIntrinsic() || profilingInfo == null || !optimisticOpts.useTypeCheckHints() || type.isExact())
         {
             return null;
         }
@@ -4005,7 +4000,7 @@ public final class BytecodeParser implements GraphBuilderContext
     protected boolean needsExplicitException()
     {
         BytecodeExceptionMode exceptionMode = graphBuilderConfig.getBytecodeExceptionMode();
-        if (exceptionMode == BytecodeExceptionMode.CheckAll || GraalOptions.StressExplicitExceptionCode.getValue(options))
+        if (exceptionMode == BytecodeExceptionMode.CheckAll || GraalOptions.stressExplicitExceptionCode)
         {
             return true;
         }
@@ -4291,12 +4286,12 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected boolean isNeverExecutedCode(double probability)
     {
-        return probability == 0 && optimisticOpts.removeNeverExecutedCode(getOptions());
+        return probability == 0 && optimisticOpts.removeNeverExecutedCode();
     }
 
     private double clampProbability(double probability)
     {
-        if (!optimisticOpts.removeNeverExecutedCode(getOptions()))
+        if (!optimisticOpts.removeNeverExecutedCode())
         {
             if (probability == 0)
             {
@@ -4543,7 +4538,7 @@ public final class BytecodeParser implements GraphBuilderContext
             case Bytecodes.IFNONNULL:       genIfNull(Condition.NE); break;
             case Bytecodes.GOTO_W:          genGoto(); break;
             case Bytecodes.JSR_W:           genJsr(stream.readBranchDest()); break;
-            default:              throw new PermanentBailoutException("Unsupported opcode %d (%s) [bci=%d]", opcode, Bytecodes.nameOf(opcode), bci);
+            default:                        throw new BailoutException("unsupported opcode %d (%s) [bci=%d]", opcode, Bytecodes.nameOf(opcode), bci);
         }
     }
 

@@ -77,7 +77,7 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
                 type = getConcreteType(getObject().stamp(NodeView.DEFAULT));
                 if (type != null)
                 {
-                    StructuredGraph newGraph = new StructuredGraph.Builder(graph().getOptions(), AllowAssumptions.ifNonNull(assumptions)).build();
+                    StructuredGraph newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(assumptions)).build();
                     ParameterNode param = newGraph.addWithoutUnique(new ParameterNode(0, StampPair.createSingle(getObject().stamp(NodeView.DEFAULT))));
                     NewInstanceNode newInstance = newGraph.add(new NewInstanceNode(type, true));
                     newGraph.addAfterFixed(newGraph.start(), newInstance);

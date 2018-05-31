@@ -2,9 +2,9 @@ package giraaff.lir.phases;
 
 import jdk.vm.ci.code.TargetDescription;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.lir.LIR;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.options.OptionKey;
 
 /**
  * Base class for all {@link LIR low-level} phases. Subclasses should be stateless. There will be
@@ -13,13 +13,6 @@ import giraaff.options.OptionKey;
 // @class LIRPhase
 public abstract class LIRPhase<C>
 {
-    // @class LIRPhase.Options
-    public static final class Options
-    {
-        // @Option "Enable LIR level optimiztations."
-        public static final OptionKey<Boolean> LIROptimization = new OptionKey<>(true);
-    }
-
     // @cons
     public LIRPhase()
     {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterArray;
 import jdk.vm.ci.code.StackSlot;
@@ -16,7 +17,6 @@ import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
 import giraaff.core.common.LIRKind;
-import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.alloc.ComputeBlockOrder;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.util.BitMap2D;
@@ -190,7 +190,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
         catch (OutOfMemoryError oom)
         {
-            throw new PermanentBailoutException(oom, "Out-of-memory during live set allocation of size %d", liveSize);
+            throw new BailoutException(oom, "out-of-memory during live set allocation of size %d", liveSize);
         }
     }
 
@@ -270,7 +270,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             if (changeOccurred && iterationCount > 50)
             {
                 // Very unlikely, should never happen: If it happens we cannot guarantee it won't happen again.
-                throw new PermanentBailoutException("too many iterations in computeGlobalLiveSets");
+                throw new BailoutException("too many iterations in computeGlobalLiveSets");
             }
         } while (changeOccurred);
 

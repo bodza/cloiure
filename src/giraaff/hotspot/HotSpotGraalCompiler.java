@@ -28,7 +28,6 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import giraaff.nodes.spi.Replacements;
-import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.OptimisticOptimizations.Optimization;
 import giraaff.phases.PhaseSuite;
@@ -56,20 +55,20 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
     @Override
     public CompilationRequestResult compileMethod(CompilationRequest request)
     {
-        return compileMethod(request, true, graalRuntime.getOptions());
+        return compileMethod(request, true);
     }
 
-    CompilationRequestResult compileMethod(CompilationRequest request, boolean installAsDefault, OptionValues options)
+    CompilationRequestResult compileMethod(CompilationRequest request, boolean installAsDefault)
     {
-        return new CompilationTask(this, (HotSpotCompilationRequest) request, true, installAsDefault, options).runCompilation();
+        return new CompilationTask(this, (HotSpotCompilationRequest) request, true, installAsDefault).runCompilation();
     }
 
-    public StructuredGraph createGraph(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, OptionValues options)
+    public StructuredGraph createGraph(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo)
     {
         HotSpotBackend backend = graalRuntime.getBackend();
         HotSpotProviders providers = backend.getProviders();
         final boolean isOSR = entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
-        StructuredGraph graph = method.isNative() || isOSR ? null : getIntrinsicGraph(method, providers, options);
+        StructuredGraph graph = method.isNative() || isOSR ? null : getIntrinsicGraph(method, providers);
 
         if (graph == null)
         {
@@ -78,20 +77,20 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
             {
                 speculationLog.collectFailedSpeculations();
             }
-            graph = new StructuredGraph.Builder(options, AllowAssumptions.ifTrue(GraalOptions.OptAssumptions.getValue(options))).method(method).entryBCI(entryBCI).speculationLog(speculationLog).useProfilingInfo(useProfilingInfo).build();
+            graph = new StructuredGraph.Builder(AllowAssumptions.ifTrue(GraalOptions.optAssumptions)).method(method).entryBCI(entryBCI).speculationLog(speculationLog).useProfilingInfo(useProfilingInfo).build();
         }
         return graph;
     }
 
-    public CompilationResult compile(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, OptionValues options)
+    public CompilationResult compile(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo)
     {
         final boolean isOSR = entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
 
         ProfilingInfo profilingInfo = useProfilingInfo ? method.getProfilingInfo(!isOSR, isOSR) : DefaultProfilingInfo.get(TriState.FALSE);
-        OptimisticOptimizations optimisticOpts = getOptimisticOpts(profilingInfo, options);
+        OptimisticOptimizations optimisticOpts = getOptimisticOpts(profilingInfo);
 
         // Cut off never executed code profiles if there is code, e.g. after the osr loop, that is never executed.
-        if (isOSR && !OnStackReplacementPhase.Options.DeoptAfterOSR.getValue(options))
+        if (isOSR && !GraalOptions.deoptAfterOSR)
         {
             optimisticOpts.remove(Optimization.RemoveNeverExecutedCode);
         }
@@ -103,8 +102,8 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         HotSpotProviders providers = backend.getProviders();
         PhaseSuite<HighTierContext> graphBuilderSuite = configGraphBuilderSuite(providers.getSuites().getDefaultGraphBuilderSuite(), isOSR);
 
-        StructuredGraph graph = createGraph(method, entryBCI, useProfilingInfo, options);
-        GraalCompiler.compileGraph(graph, method, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, getSuites(providers, options), getLIRSuites(providers, options), result, CompilationResultBuilderFactory.Default);
+        StructuredGraph graph = createGraph(method, entryBCI, useProfilingInfo);
+        GraalCompiler.compileGraph(graph, method, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, getSuites(providers), getLIRSuites(providers), result, CompilationResultBuilderFactory.Default);
 
         if (!isOSR && useProfilingInfo)
         {
@@ -120,14 +119,14 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
      *
      * @return an intrinsic graph that can be compiled and installed for {@code method} or null
      */
-    public StructuredGraph getIntrinsicGraph(ResolvedJavaMethod method, HotSpotProviders providers, OptionValues options)
+    public StructuredGraph getIntrinsicGraph(ResolvedJavaMethod method, HotSpotProviders providers)
     {
         Replacements replacements = providers.getReplacements();
         Bytecode subst = replacements.getSubstitutionBytecode(method);
         if (subst != null)
         {
             ResolvedJavaMethod substMethod = subst.getMethod();
-            StructuredGraph graph = new StructuredGraph.Builder(options, AllowAssumptions.YES).method(substMethod).build();
+            StructuredGraph graph = new StructuredGraph.Builder(AllowAssumptions.YES).method(substMethod).build();
             Plugins plugins = new Plugins(providers.getGraphBuilderPlugins());
             GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
             IntrinsicContext initialReplacementContext = new IntrinsicContext(method, substMethod, subst.getOrigin(), CompilationContext.ROOT_COMPILATION);
@@ -137,19 +136,19 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         return null;
     }
 
-    protected OptimisticOptimizations getOptimisticOpts(ProfilingInfo profilingInfo, OptionValues options)
+    protected OptimisticOptimizations getOptimisticOpts(ProfilingInfo profilingInfo)
     {
-        return new OptimisticOptimizations(profilingInfo, options);
+        return new OptimisticOptimizations(profilingInfo);
     }
 
-    protected Suites getSuites(HotSpotProviders providers, OptionValues options)
+    protected Suites getSuites(HotSpotProviders providers)
     {
-        return providers.getSuites().getDefaultSuites(options);
+        return providers.getSuites().getDefaultSuites();
     }
 
-    protected LIRSuites getLIRSuites(HotSpotProviders providers, OptionValues options)
+    protected LIRSuites getLIRSuites(HotSpotProviders providers)
     {
-        return providers.getSuites().getDefaultLIRSuites(options);
+        return providers.getSuites().getDefaultLIRSuites();
     }
 
     /**

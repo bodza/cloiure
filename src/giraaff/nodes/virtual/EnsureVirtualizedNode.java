@@ -1,6 +1,7 @@
 package giraaff.nodes.virtual;
 
-import giraaff.core.common.PermanentBailoutException;
+import jdk.vm.ci.code.BailoutException;
+
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;
@@ -44,7 +45,7 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
             VirtualObjectNode virtual = (VirtualObjectNode) alias;
             if (virtual instanceof VirtualBoxingNode)
             {
-                throw new PermanentBailoutException("ensureVirtual is not valid for boxing objects: %s", virtual.type().getName());
+                throw new BailoutException("ensureVirtual is not valid for boxing objects: %s", virtual.type().getName());
             }
             if (!localOnly)
             {
@@ -80,6 +81,6 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
                 additionalReason = " (must not let virtual object escape at node " + next + ")";
             }
         }
-        throw new PermanentBailoutException("Object of type %s should not be materialized: %s", StampTool.typeOrNull(stamp).getName(), additionalReason);
+        throw new BailoutException("instance of type %s should not be materialized%s", StampTool.typeOrNull(stamp).getName(), additionalReason);
     }
 }

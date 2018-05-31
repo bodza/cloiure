@@ -4,7 +4,6 @@ import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.phases.WriteBarrierAdditionPhase;
 import giraaff.java.SuitesProviderBase;
 import giraaff.lir.phases.LIRSuites;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.Suites;
@@ -30,9 +29,9 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     }
 
     @Override
-    public Suites createSuites(OptionValues options)
+    public Suites createSuites()
     {
-        Suites ret = defaultSuitesCreator.createSuites(options);
+        Suites ret = defaultSuitesCreator.createSuites();
 
         ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase());
 
@@ -45,8 +44,8 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     }
 
     @Override
-    public LIRSuites createLIRSuites(OptionValues options)
+    public LIRSuites createLIRSuites()
     {
-        return defaultSuitesCreator.createLIRSuites(options);
+        return defaultSuitesCreator.createLIRSuites();
     }
 }

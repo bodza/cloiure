@@ -16,7 +16,6 @@ import giraaff.nodes.LogicNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 
 /**
  * Common super-class for "a < b" comparisons both {@linkplain IntegerLowerThanNode signed} and
@@ -123,9 +122,9 @@ public abstract class IntegerLowerThanNode extends CompareNode
     public abstract static class LowerOp extends CompareOp
     {
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
         {
-            LogicNode result = super.canonical(constantReflection, metaAccess, options, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
+            LogicNode result = super.canonical(constantReflection, metaAccess, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
             if (result != null)
             {
                 return result;

@@ -12,10 +12,8 @@ import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import org.graalvm.collections.EconomicMap;
 
 import giraaff.code.CompilationResult;
+import giraaff.core.common.GraalOptions;
 import giraaff.core.phases.HighTier;
-import giraaff.java.BytecodeParserOptions;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 
 // @class CompilationTask
 public final class CompilationTask
@@ -28,19 +26,17 @@ public final class CompilationTask
      * {@linkplain HotSpotNmethod#isDefault() default} nmethod for the compiled method.
      */
     private final boolean installAsDefault;
-    private final OptionValues options;
 
     private HotSpotInstalledCode installedCode;
 
     // @cons
-    public CompilationTask(HotSpotGraalCompiler compiler, HotSpotCompilationRequest request, boolean useProfilingInfo, boolean installAsDefault, OptionValues options)
+    public CompilationTask(HotSpotGraalCompiler compiler, HotSpotCompilationRequest request, boolean useProfilingInfo, boolean installAsDefault)
     {
         super();
         this.compiler = compiler;
         this.request = request;
         this.useProfilingInfo = useProfilingInfo;
         this.installAsDefault = installAsDefault;
-        this.options = options;
     }
 
     public HotSpotResolvedJavaMethod getMethod()
@@ -85,7 +81,7 @@ public final class CompilationTask
 
         try
         {
-            CompilationResult result = compiler.compile(method, getEntryBCI(), useProfilingInfo, options);
+            CompilationResult result = compiler.compile(method, getEntryBCI(), useProfilingInfo);
             if (result != null)
             {
                 HotSpotBackend backend = compiler.getGraalRuntime().getBackend();

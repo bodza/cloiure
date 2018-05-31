@@ -23,34 +23,15 @@ import giraaff.nodes.cfg.Block;
 import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.nodes.debug.ControlFlowAnchorNode;
 import giraaff.nodes.java.TypeSwitchNode;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 
 // @class DefaultLoopPolicies
 public final class DefaultLoopPolicies implements LoopPolicies
 {
-    // @class DefaultLoopPolicies.Options
-    public static final class Options
-    {
-        public static final OptionKey<Integer> LoopUnswitchMaxIncrease = new OptionKey<>(500);
-        public static final OptionKey<Integer> LoopUnswitchTrivial = new OptionKey<>(10);
-        public static final OptionKey<Double> LoopUnswitchFrequencyBoost = new OptionKey<>(10.0);
-
-        public static final OptionKey<Integer> FullUnrollMaxNodes = new OptionKey<>(300);
-        public static final OptionKey<Integer> FullUnrollMaxIterations = new OptionKey<>(600);
-        public static final OptionKey<Integer> ExactFullUnrollMaxNodes = new OptionKey<>(1200);
-        public static final OptionKey<Integer> ExactPartialUnrollMaxNodes = new OptionKey<>(200);
-
-        public static final OptionKey<Integer> UnrollMaxIterations = new OptionKey<>(16);
-    }
-
     @Override
     public boolean shouldPeel(LoopEx loop, ControlFlowGraph cfg, MetaAccessProvider metaAccess)
     {
         LoopBeginNode loopBegin = loop.loopBegin();
-        double entryProbability = cfg.blockFor(loopBegin.forwardEnd()).probability();
-        OptionValues options = cfg.graph.getOptions();
-        if (entryProbability > GraalOptions.MinimumPeelProbability.getValue(options) && loop.size() + loopBegin.graph().getNodeCount() < GraalOptions.MaximumDesiredSize.getValue(options))
+        if (cfg.blockFor(loopBegin.forwardEnd()).probability() > GraalOptions.minimumPeelProbability && loop.size() + loopBegin.graph().getNodeCount() < GraalOptions.maximumDesiredSize)
         {
             // check whether we're allowed to peel this loop
             return loop.canDuplicateLoop();
@@ -68,15 +49,14 @@ public final class DefaultLoopPolicies implements LoopPolicies
         {
             return false;
         }
-        OptionValues options = loop.entryPoint().getOptions();
         CountedLoopInfo counted = loop.counted();
         UnsignedLong maxTrips = counted.constantMaxTripCount();
         if (maxTrips.equals(0))
         {
             return loop.canDuplicateLoop();
         }
-        int maxNodes = (counted.isExactTripCount() && counted.isConstantExactTripCount()) ? Options.ExactFullUnrollMaxNodes.getValue(options) : Options.FullUnrollMaxNodes.getValue(options);
-        maxNodes = Math.min(maxNodes, Math.max(0, GraalOptions.MaximumDesiredSize.getValue(options) - loop.loopBegin().graph().getNodeCount()));
+        int maxNodes = (counted.isExactTripCount() && counted.isConstantExactTripCount()) ? GraalOptions.exactFullUnrollMaxNodes : GraalOptions.fullUnrollMaxNodes;
+        maxNodes = Math.min(maxNodes, Math.max(0, GraalOptions.maximumDesiredSize - loop.loopBegin().graph().getNodeCount()));
         int size = Math.max(1, loop.size() - 1 - loop.loopBegin().phis().count());
         /*
          * The check below should not throw ArithmeticException because:
@@ -85,7 +65,7 @@ public final class DefaultLoopPolicies implements LoopPolicies
          *   - maxTrips <= FullUnrollMaxIterations <= Integer.MAX_VALUE
          *   - 1 <= size <= Integer.MAX_VALUE
          */
-        if (maxTrips.isLessOrEqualTo(Options.FullUnrollMaxIterations.getValue(options)) && maxTrips.minus(1).times(size).isLessOrEqualTo(maxNodes))
+        if (maxTrips.isLessOrEqualTo(GraalOptions.fullUnrollMaxIterations) && maxTrips.minus(1).times(size).isLessOrEqualTo(maxNodes))
         {
             // check whether we're allowed to unroll this loop
             return loop.canDuplicateLoop();
@@ -104,9 +84,8 @@ public final class DefaultLoopPolicies implements LoopPolicies
         {
             return false;
         }
-        OptionValues options = loop.entryPoint().getOptions();
-        int maxNodes = Options.ExactPartialUnrollMaxNodes.getValue(options);
-        maxNodes = Math.min(maxNodes, Math.max(0, GraalOptions.MaximumDesiredSize.getValue(options) - loop.loopBegin().graph().getNodeCount()));
+        int maxNodes = GraalOptions.exactPartialUnrollMaxNodes;
+        maxNodes = Math.min(maxNodes, Math.max(0, GraalOptions.maximumDesiredSize - loop.loopBegin().graph().getNodeCount()));
         int size = Math.max(1, loop.size() - 1 - loop.loopBegin().phis().count());
         int unrollFactor = loopBegin.getUnrollFactor();
         if (unrollFactor == 1)
@@ -118,7 +97,7 @@ public final class DefaultLoopPolicies implements LoopPolicies
             }
             loopBegin.setLoopOrigFrequency(loopFrequency);
         }
-        int maxUnroll = Options.UnrollMaxIterations.getValue(options);
+        int maxUnroll = GraalOptions.unrollMaxIterations;
         // Now correct size for the next unroll. UnrollMaxIterations == 1 means perform the
         // pre/main/post transformation but don't actually unroll the main loop.
         size += size;
@@ -153,13 +132,11 @@ public final class DefaultLoopPolicies implements LoopPolicies
     public boolean shouldTryUnswitch(LoopEx loop)
     {
         LoopBeginNode loopBegin = loop.loopBegin();
-        double loopFrequency = loopBegin.loopFrequency();
-        if (loopFrequency <= 1.0)
+        if (loopBegin.loopFrequency() <= 1.0)
         {
             return false;
         }
-        OptionValues options = loop.entryPoint().getOptions();
-        return loopBegin.unswitches() <= GraalOptions.LoopMaxUnswitch.getValue(options);
+        return loopBegin.unswitches() <= GraalOptions.loopMaxUnswitch;
     }
 
     // @class DefaultLoopPolicies.CountingClosure
@@ -198,11 +175,10 @@ public final class DefaultLoopPolicies implements LoopPolicies
 
         CountingClosure stateNodesCount = new CountingClosure();
         double loopFrequency = loop.loopBegin().loopFrequency();
-        OptionValues options = loop.loopBegin().getOptions();
-        int maxDiff = Options.LoopUnswitchTrivial.getValue(options) + (int) (Options.LoopUnswitchFrequencyBoost.getValue(options) * (loopFrequency - 1.0 + phis));
+        int maxDiff = GraalOptions.loopUnswitchTrivial + (int) (GraalOptions.loopUnswitchFrequencyBoost * (loopFrequency - 1.0 + phis));
 
-        maxDiff = Math.min(maxDiff, Options.LoopUnswitchMaxIncrease.getValue(options));
-        int remainingGraphSpace = GraalOptions.MaximumDesiredSize.getValue(options) - graph.getNodeCount();
+        maxDiff = Math.min(maxDiff, GraalOptions.loopUnswitchMaxIncrease);
+        int remainingGraphSpace = GraalOptions.maximumDesiredSize - graph.getNodeCount();
         maxDiff = Math.min(maxDiff, remainingGraphSpace);
 
         loop.loopBegin().stateAfter().applyToVirtual(stateNodesCount);

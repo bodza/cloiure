@@ -28,7 +28,6 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.phases.BasePhase;
 import giraaff.phases.Phase;
 import giraaff.phases.tiers.PhaseContext;
@@ -174,7 +173,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             {
                 workList.addAll(graph.getNewNodes(newNodesMark));
             }
-            tool = new Tool(graph.getAssumptions(), graph.getOptions());
+            tool = new Tool(graph.getAssumptions());
             processWorkSet(graph);
         }
 
@@ -433,15 +432,13 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         private final class Tool implements SimplifierTool, NodeView
         {
             private final Assumptions assumptions;
-            private final OptionValues options;
             private NodeView nodeView;
 
             // @cons
-            Tool(Assumptions assumptions, OptionValues options)
+            Tool(Assumptions assumptions)
             {
                 super();
                 this.assumptions = assumptions;
-                this.options = options;
                 this.nodeView = getNodeView();
             }
 
@@ -511,12 +508,6 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             public Integer smallestCompareWidth()
             {
                 return context.getLowerer().smallestCompareWidth();
-            }
-
-            @Override
-            public OptionValues getOptions()
-            {
-                return options;
             }
 
             @Override

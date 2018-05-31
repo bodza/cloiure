@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.RegisterConfig;
@@ -14,7 +15,6 @@ import jdk.vm.ci.meta.ValueKind;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
-import giraaff.core.common.PermanentBailoutException;
 
 /**
  * This class is used to build the stack frame layout for a compiled method. A {@link StackSlot} is
@@ -170,7 +170,7 @@ public abstract class FrameMap
         frameSize = currentFrameSize();
         if (frameSize > getRegisterConfig().getMaximumFrameSize())
         {
-            throw new PermanentBailoutException("Frame size (%d) exceeded maximum allowed frame size (%d).", frameSize, getRegisterConfig().getMaximumFrameSize());
+            throw new BailoutException("frame size (%d) exceeded maximum allowed frame size (%d)", frameSize, getRegisterConfig().getMaximumFrameSize());
         }
     }
 

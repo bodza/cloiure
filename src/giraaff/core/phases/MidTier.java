@@ -7,7 +7,6 @@ import giraaff.loop.phases.LoopPartialUnrollPhase;
 import giraaff.loop.phases.LoopSafepointEliminationPhase;
 import giraaff.loop.phases.ReassociateInvariantPhase;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.DeoptimizationGroupingPhase;
@@ -25,19 +24,19 @@ import giraaff.phases.tiers.MidTierContext;
 public final class MidTier extends PhaseSuite<MidTierContext>
 {
     // @cons
-    public MidTier(OptionValues options)
+    public MidTier()
     {
         super();
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
 
         appendPhase(new LockEliminationPhase());
 
-        if (GraalOptions.OptFloatingReads.getValue(options))
+        if (GraalOptions.optFloatingReads)
         {
             appendPhase(new IncrementalCanonicalizerPhase<>(canonicalizer, new FloatingReadPhase()));
         }
 
-        if (GraalOptions.ConditionalElimination.getValue(options))
+        if (GraalOptions.conditionalElimination)
         {
             appendPhase(new IterativeConditionalEliminationPhase(canonicalizer, true));
         }
@@ -49,19 +48,19 @@ public final class MidTier extends PhaseSuite<MidTierContext>
         appendPhase(new FrameStateAssignmentPhase());
 
         LoopPolicies loopPolicies = createLoopPolicies();
-        if (GraalOptions.OptLoopTransform.getValue(options))
+        if (GraalOptions.optLoopTransform)
         {
-            if (GraalOptions.PartialUnroll.getValue(options))
+            if (GraalOptions.partialUnroll)
             {
                 appendPhase(new LoopPartialUnrollPhase(loopPolicies, canonicalizer));
             }
         }
-        if (GraalOptions.ReassociateInvariants.getValue(options))
+        if (GraalOptions.reassociateInvariants)
         {
             appendPhase(new ReassociateInvariantPhase());
         }
 
-        if (GraalOptions.OptDeoptimizationGrouping.getValue(options))
+        if (GraalOptions.optDeoptimizationGrouping)
         {
             appendPhase(new DeoptimizationGroupingPhase());
         }

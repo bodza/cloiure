@@ -2,7 +2,6 @@ package giraaff.core.phases;
 
 import giraaff.core.common.GraalOptions;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
@@ -20,14 +19,14 @@ import giraaff.phases.tiers.LowTierContext;
 public final class LowTier extends PhaseSuite<LowTierContext>
 {
     // @cons
-    public LowTier(OptionValues options)
+    public LowTier()
     {
         super();
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
 
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.LOW_TIER));
         appendPhase(new ExpandLogicPhase());
-        appendPhase(new FixReadsPhase(true, new SchedulePhase(GraalOptions.StressTestEarlyReads.getValue(options) ? SchedulingStrategy.EARLIEST : SchedulingStrategy.LATEST_OUT_OF_LOOPS)));
+        appendPhase(new FixReadsPhase(true, new SchedulePhase(GraalOptions.stressTestEarlyReads ? SchedulingStrategy.EARLIEST : SchedulingStrategy.LATEST_OUT_OF_LOOPS)));
 
         CanonicalizerPhase canonicalizerWithoutGVN = new CanonicalizerPhase();
         canonicalizerWithoutGVN.disableGVN();

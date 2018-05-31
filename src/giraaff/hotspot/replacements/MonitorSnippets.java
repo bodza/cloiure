@@ -13,6 +13,7 @@ import org.graalvm.word.WordFactory;
 
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
@@ -25,7 +26,6 @@ import giraaff.hotspot.nodes.CurrentLockNode;
 import giraaff.hotspot.nodes.EndLockScopeNode;
 import giraaff.hotspot.nodes.FastAcquireBiasedLockNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
-import giraaff.hotspot.replacements.HotspotSnippetsOptions;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.DeoptimizeNode;
@@ -36,7 +36,6 @@ import giraaff.nodes.extended.MembarNode;
 import giraaff.nodes.java.MonitorExitNode;
 import giraaff.nodes.java.RawMonitorEnterNode;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -132,7 +131,7 @@ public final class MonitorSnippets implements Snippets
     }
 
     @Snippet
-    public static void monitorenter(Object object, KlassPointer hub, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter Register stackPointerRegister, @ConstantParameter OptionValues options)
+    public static void monitorenter(Object object, KlassPointer hub, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter Register stackPointerRegister)
     {
         // load the mark word - this includes a null-check on object
         final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotRuntime.markOffset);
@@ -143,16 +142,16 @@ public final class MonitorSnippets implements Snippets
 
         if (HotSpotRuntime.useBiasedLocking)
         {
-            if (tryEnterBiased(object, hub, lock, mark, threadRegister, options))
+            if (tryEnterBiased(object, hub, lock, mark, threadRegister))
             {
                 return;
             }
             // not biased, fall-through
         }
-        if (inlineFastLockSupported(options) && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, mark.and(HotSpotRuntime.monitorMask).notEqual(0)))
+        if (inlineFastLockSupported() && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, mark.and(HotSpotRuntime.monitorMask).notEqual(0)))
         {
             // inflated case
-            if (tryEnterInflated(object, lock, mark, threadRegister, options))
+            if (tryEnterInflated(object, lock, mark, threadRegister))
             {
                 return;
             }
@@ -206,7 +205,7 @@ public final class MonitorSnippets implements Snippets
         monitorenterStubC(MONITORENTER, object, lock);
     }
 
-    private static boolean tryEnterBiased(Object object, KlassPointer hub, Word lock, Word mark, Register threadRegister, OptionValues options)
+    private static boolean tryEnterBiased(Object object, KlassPointer hub, Word lock, Word mark, Register threadRegister)
     {
         // See whether the lock is currently biased toward our thread and whether the epoch is still valid.
         // Note that the runtime guarantees sufficient alignment of JavaThread pointers to allow age to be placed into low bits.
@@ -296,17 +295,12 @@ public final class MonitorSnippets implements Snippets
         }
     }
 
-    public static boolean useFastInflatedLocking(OptionValues options)
+    private static boolean inlineFastLockSupported()
     {
-        return HotspotSnippetsOptions.SimpleFastInflatedLocking.getValue(options);
+        return GraalOptions.simpleFastInflatedLocking && HotSpotRuntime.monitorMask >= 0 && HotSpotRuntime.objectMonitorOwnerOffset >= 0;
     }
 
-    private static boolean inlineFastLockSupported(OptionValues options)
-    {
-        return useFastInflatedLocking(options) && HotSpotRuntime.monitorMask >= 0 && HotSpotRuntime.objectMonitorOwnerOffset >= 0;
-    }
-
-    private static boolean tryEnterInflated(Object object, Word lock, Word mark, Register threadRegister, OptionValues options)
+    private static boolean tryEnterInflated(Object object, Word lock, Word mark, Register threadRegister)
     {
         // write non-zero value to lock slot
         lock.writeWord(HotSpotRuntime.lockDisplacedMarkOffset, lock, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
@@ -330,7 +324,7 @@ public final class MonitorSnippets implements Snippets
      * Calls straight out to the monitorenter stub.
      */
     @Snippet
-    public static void monitorenterStub(Object object, @ConstantParameter int lockDepth, @ConstantParameter OptionValues options)
+    public static void monitorenterStub(Object object, @ConstantParameter int lockDepth)
     {
         if (object == null)
         {
@@ -342,7 +336,7 @@ public final class MonitorSnippets implements Snippets
     }
 
     @Snippet
-    public static void monitorexit(Object object, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    public static void monitorexit(Object object, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister)
     {
         final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotRuntime.markOffset);
         if (HotSpotRuntime.useBiasedLocking)
@@ -370,7 +364,7 @@ public final class MonitorSnippets implements Snippets
         }
         else
         {
-            if (!tryExitInflated(object, mark, lock, threadRegister, options))
+            if (!tryExitInflated(object, mark, lock, threadRegister))
             {
                 // Test if object's mark word is pointing to the displaced mark word, and if so,
                 // restore the displaced mark in the object - if the object's mark word is not
@@ -390,9 +384,9 @@ public final class MonitorSnippets implements Snippets
         EndLockScopeNode.endLockScope();
     }
 
-    private static boolean inlineFastUnlockSupported(OptionValues options)
+    private static boolean inlineFastUnlockSupported()
     {
-        return useFastInflatedLocking(options)
+        return GraalOptions.simpleFastInflatedLocking
             && HotSpotRuntime.objectMonitorEntryListOffset >= 0
             && HotSpotRuntime.objectMonitorCxqOffset >= 0
             && HotSpotRuntime.monitorMask >= 0
@@ -400,9 +394,9 @@ public final class MonitorSnippets implements Snippets
             && HotSpotRuntime.objectMonitorRecursionsOffset >= 0;
     }
 
-    private static boolean tryExitInflated(Object object, Word mark, Word lock, Register threadRegister, OptionValues options)
+    private static boolean tryExitInflated(Object object, Word mark, Word lock, Register threadRegister)
     {
-        if (!inlineFastUnlockSupported(options))
+        if (!inlineFastUnlockSupported())
         {
             return false;
         }
@@ -442,7 +436,7 @@ public final class MonitorSnippets implements Snippets
      * Calls straight out to the monitorexit stub.
      */
     @Snippet
-    public static void monitorexitStub(Object object, @ConstantParameter int lockDepth, @ConstantParameter OptionValues options)
+    public static void monitorexitStub(Object object, @ConstantParameter int lockDepth)
     {
         final Word lock = CurrentLockNode.currentLock(lockDepth);
         monitorexitStubC(MONITOREXIT, object, lock);
@@ -460,9 +454,9 @@ public final class MonitorSnippets implements Snippets
         private final boolean useFastLocking;
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target, boolean useFastLocking)
+        public Templates(HotSpotProviders providers, TargetDescription target, boolean useFastLocking)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
             this.useFastLocking = useFastLocking;
         }
 
@@ -479,14 +473,12 @@ public final class MonitorSnippets implements Snippets
                 args.addConst("lockDepth", monitorenterNode.getMonitorId().getLockDepth());
                 args.addConst("threadRegister", registers.getThreadRegister());
                 args.addConst("stackPointerRegister", registers.getStackPointerRegister());
-                args.addConst("options", graph.getOptions());
             }
             else
             {
                 args = new Arguments(monitorenterStub, graph.getGuardsStage(), tool.getLoweringStage());
                 args.add("object", monitorenterNode.object());
                 args.addConst("lockDepth", monitorenterNode.getMonitorId().getLockDepth());
-                args.addConst("options", graph.getOptions());
             }
 
             template(monitorenterNode, args).instantiate(providers.getMetaAccess(), monitorenterNode, SnippetTemplate.DEFAULT_REPLACER, args);
@@ -508,7 +500,6 @@ public final class MonitorSnippets implements Snippets
             args.add("object", monitorexitNode.object());
             args.addConst("lockDepth", monitorexitNode.getMonitorId().getLockDepth());
             args.addConst("threadRegister", registers.getThreadRegister());
-            args.addConst("options", graph.getOptions());
 
             template(monitorexitNode, args).instantiate(providers.getMetaAccess(), monitorexitNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }

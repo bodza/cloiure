@@ -6,6 +6,7 @@ import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRInsertionBuffer;
 import giraaff.lir.LIRInstruction;
@@ -15,19 +16,10 @@ import giraaff.lir.alloc.lsra.LinearScan.IntervalPredicate;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.phases.LIRPhase;
-import giraaff.options.NestedBooleanOptionKey;
-import giraaff.options.OptionKey;
 
 // @class LinearScanEliminateSpillMovePhase
 public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 {
-    // @class LinearScanEliminateSpillMovePhase.Options
-    public static final class Options
-    {
-        // @Option "Enable spill move elimination."
-        public static final OptionKey<Boolean> LIROptLSRAEliminateSpillMoves = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
-    }
-
     private static final IntervalPredicate mustStoreAtDefinition = new LinearScan.IntervalPredicate()
     {
         @Override
@@ -90,7 +82,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
                      * Remove move from register to stack if the stack slot is guaranteed to
                      * be correct. Only moves that have been inserted by LinearScan can be removed.
                      */
-                    if (Options.LIROptLSRAEliminateSpillMoves.getValue(allocator.getOptions()) && canEliminateSpillMove(block, move))
+                    if (GraalOptions.lirOptLSRAEliminateSpillMoves && canEliminateSpillMove(block, move))
                     {
                         // Move target is a stack slot that is always correct, so eliminate instruction.
 

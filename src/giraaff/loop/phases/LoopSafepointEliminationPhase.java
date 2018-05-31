@@ -18,7 +18,7 @@ public final class LoopSafepointEliminationPhase extends BasePhase<MidTierContex
     protected void run(StructuredGraph graph, MidTierContext context)
     {
         LoopsData loops = new LoopsData(graph);
-        if (context.getOptimisticOptimizations().useLoopLimitChecks(graph.getOptions()) && graph.getGuardsStage().allowsFloatingGuards())
+        if (context.getOptimisticOptimizations().useLoopLimitChecks() && graph.getGuardsStage().allowsFloatingGuards())
         {
             loops.detectedCountedLoops();
             for (LoopEx loop : loops.countedLoops())

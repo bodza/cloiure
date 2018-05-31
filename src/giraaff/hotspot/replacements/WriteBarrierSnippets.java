@@ -44,7 +44,6 @@ import giraaff.nodes.memory.address.AddressNode.Address;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.type.NarrowOopStamp;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -359,9 +358,9 @@ public final class WriteBarrierSnippets implements Snippets
         private final CompressEncoding oopEncoding;
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target, CompressEncoding oopEncoding)
+        public Templates(HotSpotProviders providers, TargetDescription target, CompressEncoding oopEncoding)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
             this.oopEncoding = oopEncoding;
         }
 

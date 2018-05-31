@@ -3,7 +3,6 @@ package giraaff.hotspot.meta;
 import java.util.ListIterator;
 
 import giraaff.hotspot.HotSpotGraalRuntime;
-import giraaff.options.OptionValues;
 import giraaff.phases.BasePhase;
 import giraaff.phases.Phase;
 import giraaff.phases.common.ExpandLogicPhase;
@@ -28,9 +27,9 @@ public final class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesPro
     }
 
     @Override
-    public Suites createSuites(OptionValues options)
+    public Suites createSuites()
     {
-        Suites suites = super.createSuites(options);
+        Suites suites = super.createSuites();
 
         ListIterator<BasePhase<? super LowTierContext>> findPhase = suites.getLowTier().findPhase(FixReadsPhase.class);
         if (findPhase == null)

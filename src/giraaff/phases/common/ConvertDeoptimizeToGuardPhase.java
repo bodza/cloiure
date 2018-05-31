@@ -151,7 +151,7 @@ public final class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
         Node current = from;
         while (current != null)
         {
-            if (GraalOptions.GuardPriorities.getValue(from.getOptions()) && current instanceof FixedGuardNode)
+            if (GraalOptions.guardPriorities && current instanceof FixedGuardNode)
             {
                 FixedGuardNode otherGuard = (FixedGuardNode) current;
                 if (otherGuard.computePriority().isHigherPriorityThan(deopt.computePriority()))
@@ -205,7 +205,7 @@ public final class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
                     FixedNode next = pred.next();
                     pred.setNext(guard);
                     guard.setNext(next);
-                    SimplifierTool simplifierTool = GraphUtil.getDefaultSimplifier(null, null, null, false, graph.getAssumptions(), graph.getOptions(), loweringProvider);
+                    SimplifierTool simplifierTool = GraphUtil.getDefaultSimplifier(null, null, null, false, graph.getAssumptions(), loweringProvider);
                     survivingSuccessor.simplify(simplifierTool);
                     return;
                 }

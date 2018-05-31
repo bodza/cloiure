@@ -15,7 +15,7 @@ import giraaff.hotspot.nodes.PatchReturnAddressNode;
 import giraaff.hotspot.nodes.StubForeignCallNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.stubs.StubUtil;
-import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 import giraaff.word.Word;
 
 /**
@@ -30,14 +30,14 @@ import giraaff.word.Word;
 public final class ExceptionHandlerStub extends SnippetStub
 {
     // @cons
-    public ExceptionHandlerStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public ExceptionHandlerStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super("exceptionHandler", options, providers, linkage);
+        super("exceptionHandler", providers, linkage);
     }
 
     /**
-     * This stub is called when returning to a method to handle an exception thrown by a callee. It
-     * is not used for routing implicit exceptions. Therefore, it does not need to save any
+     * This stub is called when returning to a method to handle an exception thrown by a callee.
+     * It is not used for routing implicit exceptions. Therefore, it does not need to save any
      * registers as HotSpot uses a caller save convention.
      */
     @Override
@@ -53,11 +53,11 @@ public final class ExceptionHandlerStub extends SnippetStub
         {
             return providers.getRegisters().getThreadRegister();
         }
-        return options;
+        throw GraalError.shouldNotReachHere("unknown parameter " + name + " at index " + index);
     }
 
     @Snippet
-    private static void exceptionHandler(Object exception, Word exceptionPc, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    private static void exceptionHandler(Object exception, Word exceptionPc, @ConstantParameter Register threadRegister)
     {
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         HotSpotReplacementsUtil.writeExceptionOop(thread, exception);

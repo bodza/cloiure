@@ -4,13 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.nio.ByteBuffer;
 
+import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
 import jdk.vm.ci.meta.Constant;
 
-import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.type.DataPointerConstant;
 
 /**
@@ -57,7 +57,7 @@ public final class EncodedSymbolConstant extends DataPointerConstant
         }
         catch (Exception e)
         {
-            throw new PermanentBailoutException(e, "String conversion failed: %s", s);
+            throw new BailoutException(e, "UTF-8 encoding failed: %s", s);
         }
     }
 
@@ -89,7 +89,7 @@ public final class EncodedSymbolConstant extends DataPointerConstant
                 return result;
             }
         }
-        throw new PermanentBailoutException("Encoding of constant %s failed", constant);
+        throw new BailoutException("encoding of constant %s failed", constant);
     }
 
     public byte[] getEncodedConstant()

@@ -35,7 +35,6 @@ import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.LabelRef;
 import giraaff.lir.framemap.FrameMap;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 /**
@@ -86,20 +85,19 @@ public final class CompilationResultBuilder
 
     private List<ExceptionInfo> exceptionInfoList;
 
-    private final OptionValues options;
     private final EconomicMap<Constant, Data> dataCache;
 
     private Consumer<LIRInstruction> beforeOp;
     private Consumer<LIRInstruction> afterOp;
 
     // @cons
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, CompilationResult compilationResult)
+    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, CompilationResult compilationResult)
     {
-        this(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, options, compilationResult, EconomicMap.create(Equivalence.DEFAULT));
+        this(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, compilationResult, EconomicMap.create(Equivalence.DEFAULT));
     }
 
     // @cons
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache)
+    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache)
     {
         super();
         this.target = codeCache.getTarget();
@@ -110,7 +108,6 @@ public final class CompilationResultBuilder
         this.dataBuilder = dataBuilder;
         this.compilationResult = compilationResult;
         this.frameContext = frameContext;
-        this.options = options;
         this.dataCache = dataCache;
     }
 
@@ -456,10 +453,5 @@ public final class CompilationResultBuilder
     {
         this.beforeOp = beforeOp;
         this.afterOp = afterOp;
-    }
-
-    public OptionValues getOptions()
-    {
-        return options;
     }
 }

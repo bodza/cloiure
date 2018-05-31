@@ -483,7 +483,7 @@ public final class StandardGraphBuilderPlugins
             ValueNode trueValue = ConstantNode.forBoolean(!canonical.mustNegate(), graph);
             ValueNode falseValue = ConstantNode.forBoolean(canonical.mustNegate(), graph);
 
-            LogicNode compare = CompareNode.createCompareNode(graph, b.getConstantReflection(), b.getMetaAccess(), b.getOptions(), null, canonical.getCanonicalCondition(), lhs, rhs, NodeView.DEFAULT);
+            LogicNode compare = CompareNode.createCompareNode(graph, b.getConstantReflection(), b.getMetaAccess(), null, canonical.getCanonicalCondition(), lhs, rhs, NodeView.DEFAULT);
             b.addPush(JavaKind.Boolean, new ConditionalNode(compare, trueValue, falseValue));
             return true;
         }

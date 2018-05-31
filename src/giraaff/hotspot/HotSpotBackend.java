@@ -49,7 +49,6 @@ import giraaff.lir.ValueConsumer;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.nodes.UnwindNode;
 import giraaff.nodes.extended.ForeignCallNode;
-import giraaff.options.OptionValues;
 import giraaff.phases.tiers.SuitesProvider;
 import giraaff.word.Word;
 
@@ -282,7 +281,7 @@ public abstract class HotSpotBackend extends Backend
      * Performs any remaining initialization that was deferred until the {@linkplain #getRuntime()
      * runtime} object was initialized and this backend was registered with it.
      */
-    public void completeInitialization(OptionValues options)
+    public void completeInitialization()
     {
     }
 

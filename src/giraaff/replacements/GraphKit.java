@@ -49,7 +49,6 @@ import giraaff.nodes.java.ExceptionObjectNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.nodes.type.StampTool;
-import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
@@ -84,15 +83,15 @@ public final class GraphKit implements GraphBuilderTool
     {
         super();
         this.providers = providers;
-        this.graph = new StructuredGraph.Builder(new OptionValues(OptionValues.newOptionMap())).method(stubMethod).build();
-        graph.disableUnsafeAccessTracking();
+        this.graph = new StructuredGraph.Builder().method(stubMethod).build();
+        this.graph.disableUnsafeAccessTracking();
         this.wordTypes = wordTypes;
         this.graphBuilderPlugins = graphBuilderPlugins;
         this.lastFixedNode = graph.start();
 
-        structures = new ArrayList<>();
+        this.structures = new ArrayList<>();
         // Add a dummy element, so that the access of the last element never leads to an exception.
-        structures.add(new Structure() {});
+        this.structures.add(new Structure() {});
     }
 
     @Override
@@ -347,7 +346,7 @@ public final class GraphKit implements GraphBuilderTool
         Plugins plugins = new Plugins(graphBuilderPlugins);
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
-        StructuredGraph calleeGraph = new StructuredGraph.Builder(invoke.getOptions()).method(method).build();
+        StructuredGraph calleeGraph = new StructuredGraph.Builder().method(method).build();
         IntrinsicContext initialReplacementContext = new IntrinsicContext(method, method, providers.getReplacements().getDefaultReplacementBytecodeProvider(), CompilationContext.INLINE_AFTER_PARSING);
         GraphBuilderPhase.Instance instance = createGraphBuilderInstance(metaAccess, providers.getStampProvider(), providers.getConstantReflection(), providers.getConstantFieldProvider(), config, OptimisticOptimizations.NONE, initialReplacementContext);
         instance.apply(calleeGraph);

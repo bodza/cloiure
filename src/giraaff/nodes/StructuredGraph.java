@@ -19,7 +19,6 @@ import jdk.vm.ci.runtime.JVMCICompiler;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
-import org.graalvm.collections.UnmodifiableEconomicMap;
 
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.core.common.type.Stamp;
@@ -32,7 +31,6 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.VirtualizableAllocation;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 
 /**
  * A graph that contains at least one distinguished node : the {@link #start() start} node. This
@@ -158,16 +156,14 @@ public final class StructuredGraph extends Graph
         private ResolvedJavaMethod rootMethod;
         private int entryBCI = JVMCICompiler.INVOCATION_ENTRY_BCI;
         private boolean useProfilingInfo = true;
-        private final OptionValues options;
 
         /**
          * Creates a builder for a graph.
          */
         // @cons
-        public Builder(OptionValues options, AllowAssumptions allowAssumptions)
+        public Builder(AllowAssumptions allowAssumptions)
         {
             super();
-            this.options = options;
             this.assumptions = allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
         }
 
@@ -175,10 +171,9 @@ public final class StructuredGraph extends Graph
          * Creates a builder for a graph that does not support {@link Assumptions}.
          */
         // @cons
-        public Builder(OptionValues options)
+        public Builder()
         {
             super();
-            this.options = options;
             this.assumptions = null;
         }
 
@@ -228,7 +223,7 @@ public final class StructuredGraph extends Graph
 
         public StructuredGraph build()
         {
-            return new StructuredGraph(rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo, options);
+            return new StructuredGraph(rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo);
         }
     }
 
@@ -281,9 +276,9 @@ public final class StructuredGraph extends Graph
     public static final boolean NO_PROFILING_INFO = false;
 
     // @cons
-    private StructuredGraph(ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, OptionValues options)
+    private StructuredGraph(ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo)
     {
-        super(options);
+        super();
         this.setStart(add(new StartNode()));
         this.rootMethod = method;
         this.graphId = uniqueGraphIds.incrementAndGet();
@@ -389,7 +384,7 @@ public final class StructuredGraph extends Graph
     @Override
     public StructuredGraph copy()
     {
-        StructuredGraph copy = new StructuredGraph(method(), entryBCI, assumptions != null ? new Assumptions() : null, speculationLog, useProfilingInfo, getOptions());
+        StructuredGraph copy = new StructuredGraph(method(), entryBCI, assumptions != null ? new Assumptions() : null, speculationLog, useProfilingInfo);
         if (AllowAssumptions.ifNonNull(assumptions) == AllowAssumptions.YES && assumptions != null)
         {
             copy.assumptions.record(assumptions);

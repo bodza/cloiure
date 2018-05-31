@@ -22,7 +22,6 @@ import giraaff.nodes.extended.LoadHubNode;
 import giraaff.nodes.extended.LoadMethodNode;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 
 // @class PointerEqualsNode
 public class PointerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
@@ -57,7 +56,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
     public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
     {
         NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.getOptions(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
+        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
         if (value != null)
         {
             return value;
@@ -103,7 +102,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
         }
 
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
         {
             LogicNode result = findSynonym(forX, forY, view);
             if (result != null)
@@ -114,7 +113,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
             {
                 return LogicConstantNode.contradiction();
             }
-            return super.canonical(constantReflection, metaAccess, options, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
+            return super.canonical(constantReflection, metaAccess, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
         }
 
         @Override

@@ -4,6 +4,7 @@ import jdk.vm.ci.code.TargetDescription;
 
 import org.graalvm.collections.Pair;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 
@@ -36,7 +37,7 @@ public final class LinearScanRegisterAllocationPhase extends LinearScanAllocatio
 
         // allocate cpu registers
         LinearScanWalker lsw;
-        if (OptimizingLinearScanWalker.Options.LSRAOptimization.getValue(allocator.getOptions()))
+        if (GraalOptions.lsraOptimization)
         {
             lsw = new OptimizingLinearScanWalker(allocator, precoloredIntervals, notPrecoloredIntervals);
         }

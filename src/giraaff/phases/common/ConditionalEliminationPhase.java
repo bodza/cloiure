@@ -262,7 +262,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             this.undoOperations = new NodeStack();
             this.map = graph.createNodeMap();
             pendingTests = new ArrayDeque<>();
-            tool = GraphUtil.getDefaultSimplifier(context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), false, graph.getAssumptions(), graph.getOptions(), context.getLowerer());
+            tool = GraphUtil.getDefaultSimplifier(context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), false, graph.getAssumptions(), context.getLowerer());
             mergeMaps = EconomicMap.create();
         }
 

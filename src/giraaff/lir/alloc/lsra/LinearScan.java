@@ -15,6 +15,7 @@ import jdk.vm.ci.meta.Value;
 
 import org.graalvm.collections.Pair;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.BlockMap;
@@ -29,9 +30,6 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.phases.LIRPhase;
-import giraaff.options.NestedBooleanOptionKey;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 /**
@@ -42,13 +40,6 @@ import giraaff.util.GraalError;
 // @class LinearScan
 public class LinearScan
 {
-    // @class LinearScan.Options
-    public static final class Options
-    {
-        // @Option "Enable spill position optimization."
-        public static final OptionKey<Boolean> LIROptLSRAOptimizeSpillPosition = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
-    }
-
     // @class LinearScan.BlockData
     public static final class BlockData
     {
@@ -180,11 +171,6 @@ public class LinearScan
     public Interval intervalEndMarker()
     {
         return intervalEndMarker;
-    }
-
-    public OptionValues getOptions()
-    {
-        return ir.getOptions();
     }
 
     public int getFirstLirInstructionId(AbstractBlockBase<?> block)
@@ -656,7 +642,7 @@ public class LinearScan
         {
             return result;
         }
-        throw new GraalError("LinearScan: interval is null");
+        throw new GraalError("linear scan: interval is null");
     }
 
     static AllocatableValue canonicalSpillOpr(Interval interval)
@@ -690,7 +676,7 @@ public class LinearScan
 
         createRegisterAllocationPhase().apply(target, lirGenRes, context);
 
-        if (LinearScan.Options.LIROptLSRAOptimizeSpillPosition.getValue(getOptions()))
+        if (GraalOptions.lirOptLSRAOptimizeSpillPosition)
         {
             createOptimizeSpillPositionPhase().apply(target, lirGenRes, context);
         }

@@ -22,7 +22,6 @@ import giraaff.hotspot.stubs.NewInstanceStub;
 import giraaff.hotspot.stubs.StubUtil;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.ConstantNode;
-import giraaff.options.OptionValues;
 import giraaff.word.Word;
 
 /**
@@ -35,9 +34,9 @@ import giraaff.word.Word;
 public final class NewArrayStub extends SnippetStub
 {
     // @cons
-    public NewArrayStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public NewArrayStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super("newArray", options, providers, linkage);
+        super("newArray", providers, linkage);
     }
 
     @Override
@@ -48,7 +47,6 @@ public final class NewArrayStub extends SnippetStub
         Object[] args = new Object[count];
         args[3] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), intArrayType.klass(), null);
         args[4] = providers.getRegisters().getThreadRegister();
-        args[5] = options;
         return args;
     }
 
@@ -61,7 +59,7 @@ public final class NewArrayStub extends SnippetStub
      * @param intArrayHub the hub for {@code int[].class}
      */
     @Snippet
-    private static Object newArray(KlassPointer hub, int length, boolean fillContents, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    private static Object newArray(KlassPointer hub, int length, boolean fillContents, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister)
     {
         int layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(hub);
         int log2ElementSize = (layoutHelper >> HotSpotRuntime.layoutHelperLog2ElementSizeShift) & HotSpotRuntime.layoutHelperLog2ElementSizeMask;

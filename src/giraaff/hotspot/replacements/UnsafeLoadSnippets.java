@@ -9,7 +9,6 @@ import giraaff.nodes.extended.FixedValueAnchorNode;
 import giraaff.nodes.extended.RawLoadNode;
 import giraaff.nodes.memory.HeapAccess.BarrierType;
 import giraaff.nodes.spi.LoweringTool;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -40,9 +39,9 @@ public final class UnsafeLoadSnippets implements Snippets
         private final SnippetInfo unsafeLoad = snippet(UnsafeLoadSnippets.class, "lowerUnsafeLoad");
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders providers, TargetDescription target)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
         }
 
         public void lower(RawLoadNode load, LoweringTool tool)

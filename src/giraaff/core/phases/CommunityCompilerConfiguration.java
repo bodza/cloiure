@@ -7,7 +7,6 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimiza
 import giraaff.lir.phases.PostAllocationOptimizationStage;
 import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
 import giraaff.lir.phases.PreAllocationOptimizationStage;
-import giraaff.options.OptionValues;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.CompilerConfiguration;
 import giraaff.phases.tiers.HighTierContext;
@@ -27,38 +26,38 @@ public final class CommunityCompilerConfiguration implements CompilerConfigurati
     }
 
     @Override
-    public PhaseSuite<HighTierContext> createHighTier(OptionValues options)
+    public PhaseSuite<HighTierContext> createHighTier()
     {
-        return new HighTier(options);
+        return new HighTier();
     }
 
     @Override
-    public PhaseSuite<MidTierContext> createMidTier(OptionValues options)
+    public PhaseSuite<MidTierContext> createMidTier()
     {
-        return new MidTier(options);
+        return new MidTier();
     }
 
     @Override
-    public PhaseSuite<LowTierContext> createLowTier(OptionValues options)
+    public PhaseSuite<LowTierContext> createLowTier()
     {
-        return new LowTier(options);
+        return new LowTier();
     }
 
     @Override
-    public LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage(OptionValues options)
+    public LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage()
     {
-        return new PreAllocationOptimizationStage(options);
+        return new PreAllocationOptimizationStage();
     }
 
     @Override
-    public LIRPhaseSuite<AllocationContext> createAllocationStage(OptionValues options)
+    public LIRPhaseSuite<AllocationContext> createAllocationStage()
     {
-        return new AllocationStage(options);
+        return new AllocationStage();
     }
 
     @Override
-    public LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage(OptionValues options)
+    public LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage()
     {
-        return new PostAllocationOptimizationStage(options);
+        return new PostAllocationOptimizationStage();
     }
 }

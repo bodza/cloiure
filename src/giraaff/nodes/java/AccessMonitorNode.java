@@ -1,7 +1,5 @@
 package giraaff.nodes.java;
 
-import jdk.vm.ci.code.BailoutException;
-
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
@@ -14,8 +12,8 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 /**
  * The {@code AccessMonitorNode} is the base class of both monitor acquisition and release.
  *
- * The Java bytecode specification allows non-balanced locking. Graal does not handle such cases and
- * throws a {@link BailoutException} instead during graph building.
+ * The Java bytecode specification allows non-balanced locking. Graal does not handle such cases
+ * and throws a {@link BailoutException} instead during graph building.
  */
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class AccessMonitorNode

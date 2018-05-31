@@ -4,6 +4,7 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.core.gen.NodeLIRBuilder;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.amd64.AMD64Call;
@@ -17,20 +18,11 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.IntegerDivRemNode;
 import giraaff.nodes.cfg.Block;
-import giraaff.options.OptionKey;
-import giraaff.options.OptionValues;
 import giraaff.util.GraalError;
 
 // @class AMD64NodeLIRBuilder
 public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {
-    // @class AMD64NodeLIRBuilder.Options
-    public static final class Options
-    {
-        // @Option "AMD64: Emit lfence instructions at the beginning of basic blocks."
-        public static final OptionKey<Boolean> MitigateSpeculativeExecutionAttacks = new OptionKey<>(false);
-    }
-
     // @cons
     public AMD64NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
@@ -128,9 +120,9 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
     }
 
     @Override
-    public void doBlockPrologue(Block block, OptionValues options)
+    public void doBlockPrologue(Block block)
     {
-        if (AMD64NodeLIRBuilder.Options.MitigateSpeculativeExecutionAttacks.getValue(options))
+        if (GraalOptions.mitigateSpeculativeExecutionAttacks)
         {
             boolean hasControlSplitPredecessor = false;
             for (Block b : block.getPredecessors())

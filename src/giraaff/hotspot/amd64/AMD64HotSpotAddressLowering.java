@@ -28,7 +28,6 @@ import giraaff.nodes.calc.SignExtendNode;
 import giraaff.nodes.calc.ZeroExtendNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.memory.address.OffsetAddressNode;
-import giraaff.options.OptionValues;
 
 // @class AMD64HotSpotAddressLowering
 public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
@@ -40,7 +39,7 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
     private final Register heapBaseRegister;
 
     // @cons
-    public AMD64HotSpotAddressLowering(Register heapBaseRegister, OptionValues options)
+    public AMD64HotSpotAddressLowering(Register heapBaseRegister)
     {
         super();
         this.heapBase = HotSpotRuntime.oopEncoding.getBase();

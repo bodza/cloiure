@@ -17,7 +17,6 @@ import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.StubForeignCallNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.word.KlassPointer;
-import giraaff.options.OptionValues;
 import giraaff.replacements.nodes.CStringConstant;
 import giraaff.word.Word;
 
@@ -28,9 +27,9 @@ import giraaff.word.Word;
 public class CreateExceptionStub extends SnippetStub
 {
     // @cons
-    protected CreateExceptionStub(String snippetMethodName, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    protected CreateExceptionStub(String snippetMethodName, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
-        super(snippetMethodName, options, providers, linkage);
+        super(snippetMethodName, providers, linkage);
     }
 
     private static Word classAsCString(Class<?> cls)
@@ -40,8 +39,7 @@ public class CreateExceptionStub extends SnippetStub
 
     protected static Object createException(Register threadRegister, Class<? extends Throwable> exception)
     {
-        Word message = null;
-        return createException(threadRegister, exception, message);
+        return createException(threadRegister, exception, (Word) null);
     }
 
     protected static Object createException(Register threadRegister, Class<? extends Throwable> exception, Word message)

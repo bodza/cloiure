@@ -8,7 +8,6 @@ import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.StampProvider;
-import giraaff.options.OptionValues;
 
 /**
  * Used by a {@link GraphBuilderPlugin} to interface with an object that builds a graph.
@@ -41,11 +40,6 @@ public interface GraphBuilderTool
      * Gets the graph being constructed.
      */
     StructuredGraph getGraph();
-
-    default OptionValues getOptions()
-    {
-        return getGraph().getOptions();
-    }
 
     /**
      * Determines if this parsing context is within the bytecode of an intrinsic or a method inlined

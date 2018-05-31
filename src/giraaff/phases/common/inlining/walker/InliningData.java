@@ -31,7 +31,6 @@ import giraaff.nodes.java.AbstractNewObjectNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.virtual.AllocatedObjectNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.inlining.InliningUtil;
@@ -104,42 +103,35 @@ public final class InliningData
 
     private String checkTargetConditionsHelper(ResolvedJavaMethod method, int invokeBci)
     {
-        OptionValues options = rootGraph.getOptions();
         if (method == null)
         {
             return "the method is not resolved";
         }
-        else if (method.isNative() && (!GraalOptions.Intrinsify.getValue(options) || !InliningUtil.canIntrinsify(context.getReplacements(), method, invokeBci)))
+        if (method.isNative() && (!GraalOptions.intrinsify || !InliningUtil.canIntrinsify(context.getReplacements(), method, invokeBci)))
         {
             return "it is a non-intrinsic native method";
         }
-        else if (method.isAbstract())
+        if (method.isAbstract())
         {
             return "it is an abstract method";
         }
-        else if (!method.getDeclaringClass().isInitialized())
+        if (!method.getDeclaringClass().isInitialized())
         {
             return "the method's class is not initialized";
         }
-        else if (!method.canBeInlined())
+        if (!method.canBeInlined())
         {
             return "it is marked non-inlinable";
         }
-        else if (countRecursiveInlining(method) > GraalOptions.MaximumRecursiveInlining.getValue(options))
+        if (countRecursiveInlining(method) > GraalOptions.maximumRecursiveInlining)
         {
             return "it exceeds the maximum recursive inlining depth";
         }
-        else
+        if (new OptimisticOptimizations(rootGraph.getProfilingInfo(method)).lessOptimisticThan(context.getOptimisticOptimizations()))
         {
-            if (new OptimisticOptimizations(rootGraph.getProfilingInfo(method), options).lessOptimisticThan(context.getOptimisticOptimizations()))
-            {
-                return "the callee uses less optimistic optimizations than caller";
-            }
-            else
-            {
-                return null;
-            }
+            return "the callee uses less optimistic optimizations than caller";
         }
+        return null;
     }
 
     private boolean checkTargetConditions(Invoke invoke, ResolvedJavaMethod method)
@@ -269,10 +261,9 @@ public final class InliningData
         ResolvedJavaType contextType = invoke.getContextType();
         double notRecordedTypeProbability = typeProfile.getNotRecordedProbability();
         final OptimisticOptimizations optimisticOpts = context.getOptimisticOptimizations();
-        OptionValues options = invoke.asNode().getOptions();
         if (ptypes.length == 1 && notRecordedTypeProbability == 0)
         {
-            if (!optimisticOpts.inlineMonomorphicCalls(options))
+            if (!optimisticOpts.inlineMonomorphicCalls())
             {
                 return null;
             }
@@ -289,11 +280,11 @@ public final class InliningData
         {
             invoke.setPolymorphic(true);
 
-            if (!optimisticOpts.inlinePolymorphicCalls(options) && notRecordedTypeProbability == 0)
+            if (!optimisticOpts.inlinePolymorphicCalls() && notRecordedTypeProbability == 0)
             {
                 return null;
             }
-            if (!optimisticOpts.inlineMegamorphicCalls(options) && notRecordedTypeProbability > 0)
+            if (!optimisticOpts.inlineMegamorphicCalls() && notRecordedTypeProbability > 0)
             {
                 // due to filtering impossible types, notRecordedTypeProbability can be > 0 although
                 // the number of types is lower than what can be recorded in a type profile
@@ -331,7 +322,7 @@ public final class InliningData
                 ArrayList<Double> newConcreteMethodsProbabilities = new ArrayList<>();
                 for (int i = 0; i < concreteMethods.size(); ++i)
                 {
-                    if (concreteMethodsProbabilities.get(i) >= GraalOptions.MegamorphicInliningMinMethodProbability.getValue(options))
+                    if (concreteMethodsProbabilities.get(i) >= GraalOptions.megamorphicInliningMinMethodProbability)
                     {
                         newConcreteMethods.add(concreteMethods.get(i));
                         newConcreteMethodsProbabilities.add(concreteMethodsProbabilities.get(i));
@@ -464,7 +455,7 @@ public final class InliningData
             return true;
         }
 
-        if (context.getOptimisticOptimizations().devirtualizeInvokes(calleeInfo.graph().getOptions()))
+        if (context.getOptimisticOptimizations().devirtualizeInvokes())
         {
             calleeInfo.tryToDevirtualizeInvoke(new Providers(context));
         }
@@ -499,7 +490,7 @@ public final class InliningData
 
         if (info != null)
         {
-            info.populateInlinableElements(context, currentGraph().graph(), canonicalizer, rootGraph.getOptions());
+            info.populateInlinableElements(context, currentGraph().graph(), canonicalizer);
             double invokeProbability = callsiteHolder.invokeProbability(invoke);
             double invokeRelevance = callsiteHolder.invokeRelevance(invoke);
             MethodInvocation methodInvocation = new MethodInvocation(info, invokeProbability, invokeRelevance, freshlyInstantiatedArguments(invoke, callsiteHolder.getFixedParams()));

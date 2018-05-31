@@ -21,7 +21,6 @@ import giraaff.hotspot.HotSpotForeignCallLinkageImpl;
 import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.stubs.ForeignCallStub;
 import giraaff.hotspot.stubs.Stub;
-import giraaff.options.OptionValues;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
@@ -117,9 +116,9 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      *            cannot be re-executed.
      * @param killedLocations the memory locations killed by the foreign call
      */
-    public void linkForeignCall(OptionValues options, HotSpotProviders providers, ForeignCallDescriptor descriptor, long address, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    public void linkForeignCall(HotSpotProviders providers, ForeignCallDescriptor descriptor, long address, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
     {
-        ForeignCallStub stub = new ForeignCallStub(options, providers, address, descriptor, prependThread, transition, reexecutable, killedLocations);
+        ForeignCallStub stub = new ForeignCallStub(providers, address, descriptor, prependThread, transition, reexecutable, killedLocations);
         HotSpotForeignCallLinkage linkage = stub.getLinkage();
         HotSpotForeignCallLinkage targetLinkage = stub.getTargetLinkage();
         linkage.setCompiledStub(stub);

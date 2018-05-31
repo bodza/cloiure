@@ -2,7 +2,6 @@ package giraaff.core.target;
 
 import java.util.ArrayList;
 
-import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.CompilationRequest;
 import jdk.vm.ci.code.CompiledCode;

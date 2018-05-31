@@ -4,25 +4,16 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 
+import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
 import giraaff.lir.alloc.lsra.Interval.RegisterPriority;
 import giraaff.lir.alloc.lsra.Interval.State;
-import giraaff.options.OptionKey;
 
 // @class OptimizingLinearScanWalker
 public final class OptimizingLinearScanWalker extends LinearScanWalker
 {
-    // @class OptimizingLinearScanWalker.Options
-    public static final class Options
-    {
-        // @Option "Enable LSRA optimization."
-        public static final OptionKey<Boolean> LSRAOptimization = new OptionKey<>(false);
-        // @Option "LSRA optimization: Only split but do not reassign."
-        public static final OptionKey<Boolean> LSRAOptSplitOnly = new OptionKey<>(false);
-    }
-
     // @cons
     OptimizingLinearScanWalker(LinearScan allocator, Interval unhandledFixedFirst, Interval unhandledAnyFirst)
     {
@@ -126,7 +117,7 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
         // the currentSplitChild is needed later when moves are inserted for reloading
         splitPart.makeCurrentSplitChild();
 
-        if (Options.LSRAOptSplitOnly.getValue(allocator.getOptions()))
+        if (GraalOptions.lsraOptSplitOnly)
         {
             // just add the split interval to the unhandled list
             unhandledLists.addToListSortedByStartAndUsePositions(RegisterBinding.Any, splitPart);

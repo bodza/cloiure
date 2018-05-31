@@ -37,7 +37,6 @@ import giraaff.nodes.java.ArrayLengthNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
@@ -260,9 +259,9 @@ public final class ArrayCopySnippets implements Snippets
         private ResolvedJavaMethod originalArraycopy;
 
         // @cons
-        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders providers, TargetDescription target)
         {
-            super(options, providers, providers.getSnippetReflection(), target);
+            super(providers, providers.getSnippetReflection(), target);
         }
 
         protected SnippetInfo snippet(String methodName)

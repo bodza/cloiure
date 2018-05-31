@@ -29,24 +29,16 @@ import giraaff.nodes.extended.NullCheckNode;
 import giraaff.nodes.memory.FixedAccessNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.options.OptionKey;
 import giraaff.phases.BasePhase;
 import giraaff.phases.tiers.LowTierContext;
 
 // @class UseTrappingNullChecksPhase
 public final class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
 {
-    // @class UseTrappingNullChecksPhase.Options
-    public static final class Options
-    {
-        // @Option "Use traps for null checks instead of explicit null-checks."
-        public static final OptionKey<Boolean> UseTrappingNullChecks = new OptionKey<>(true);
-    }
-
     @Override
     protected void run(StructuredGraph graph, LowTierContext context)
     {
-        if (!Options.UseTrappingNullChecks.getValue(graph.getOptions()) || context.getTarget().implicitNullCheckLimit <= 0)
+        if (!GraalOptions.useTrappingNullChecks || context.getTarget().implicitNullCheckLimit <= 0)
         {
             return;
         }
@@ -189,7 +181,7 @@ public final class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
         DeoptimizingFixedWithNextNode trappingNullCheck = null;
         FixedNode nextNonTrapping = nonTrappingContinuation.next();
         ValueNode value = isNullNode.getValue();
-        if (GraalOptions.OptImplicitNullChecks.getValue(ifNode.graph().getOptions()) && implicitNullCheckLimit > 0)
+        if (GraalOptions.optImplicitNullChecks && implicitNullCheckLimit > 0)
         {
             if (nextNonTrapping instanceof FixedAccessNode)
             {
