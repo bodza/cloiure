@@ -245,6 +245,7 @@ public final class HotSpotReplacementsUtil
 
     public static final LocationIdentity KLASS_ACCESS_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_access_flags");
 
+    // @closure
     public static final LocationIdentity KLASS_LAYOUT_HELPER_LOCATION = new HotSpotOptimizingLocationIdentity("Klass::_layout_helper")
     {
         @Override
@@ -298,6 +299,7 @@ public final class HotSpotReplacementsUtil
 
     public static final LocationIdentity HUB_WRITE_LOCATION = NamedLocationIdentity.mutable("Hub:write");
 
+    // @closure
     public static final LocationIdentity HUB_LOCATION = new HotSpotOptimizingLocationIdentity("Hub")
     {
         @Override
@@ -312,6 +314,7 @@ public final class HotSpotReplacementsUtil
         }
     };
 
+    // @closure
     public static final LocationIdentity COMPRESSED_HUB_LOCATION = new HotSpotOptimizingLocationIdentity("CompressedHub")
     {
         @Override
@@ -455,6 +458,7 @@ public final class HotSpotReplacementsUtil
 
     public static final LocationIdentity KLASS_MODIFIER_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_modifier_flags");
 
+    // @closure
     public static final LocationIdentity CLASS_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("Class._klass")
     {
         @Override
@@ -464,6 +468,7 @@ public final class HotSpotReplacementsUtil
         }
     };
 
+    // @closure
     public static final LocationIdentity CLASS_ARRAY_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("Class._array_klass")
     {
         @Override
@@ -500,6 +505,7 @@ public final class HotSpotReplacementsUtil
         }
     }
 
+    // @closure
     public static final LocationIdentity OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("ObjArrayKlass::_element_klass")
     {
         @Override

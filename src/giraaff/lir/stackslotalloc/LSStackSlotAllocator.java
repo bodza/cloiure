@@ -341,6 +341,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
             }
         }
 
+        // @closure
         ValueProcedure assignSlot = new ValueProcedure()
         {
             @Override

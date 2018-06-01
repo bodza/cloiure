@@ -820,6 +820,7 @@ public class InvocationPlugins
                          * later invocations.
                          */
                         deferredRegistrations.clear();
+                        // @closure
                         Runnable rethrow = new Runnable()
                         {
                             @Override

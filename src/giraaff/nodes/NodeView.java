@@ -25,17 +25,15 @@ import giraaff.graph.spi.CanonicalizerTool;
 // @iface NodeView
 public interface NodeView
 {
-    NodeView DEFAULT = new Default();
-
-    // @class NodeView.Default
-    final class Default implements NodeView
+    // @closure
+    NodeView DEFAULT = new NodeView()
     {
         @Override
         public Stamp stamp(ValueNode node)
         {
             return node.stamp;
         }
-    }
+    };
 
     /**
      * Return a view-specific stamp of the node.

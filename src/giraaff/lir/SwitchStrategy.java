@@ -153,12 +153,13 @@ public abstract class SwitchStrategy
      * given switch instruction.
      */
     // @class SwitchStrategy.EffortClosure
+    // @closure
     private final class EffortClosure implements SwitchClosure
     {
         private int defaultEffort;
         private int defaultCount;
-        private final int[] keyEfforts = new int[keyProbabilities.length];
-        private final int[] keyCounts = new int[keyProbabilities.length];
+        private final int[] keyEfforts = new int[SwitchStrategy.this.keyProbabilities.length];
+        private final int[] keyCounts = new int[SwitchStrategy.this.keyProbabilities.length];
         private final LabelRef[] keyTargets;
 
         // @cons
@@ -203,10 +204,10 @@ public abstract class SwitchStrategy
         {
             double defaultProbability = 1;
             double effort = 0;
-            for (int i = 0; i < keyProbabilities.length; i++)
+            for (int i = 0; i < SwitchStrategy.this.keyProbabilities.length; i++)
             {
-                effort += keyEfforts[i] * keyProbabilities[i] / keyCounts[i];
-                defaultProbability -= keyProbabilities[i];
+                effort += keyEfforts[i] * SwitchStrategy.this.keyProbabilities[i] / keyCounts[i];
+                defaultProbability -= SwitchStrategy.this.keyProbabilities[i];
             }
             return effort + defaultEffort * defaultProbability / defaultCount;
         }
@@ -231,8 +232,8 @@ public abstract class SwitchStrategy
     }
 
     /**
-     * Tells the system that the given (inclusive) range of keys is reached after depth number of
-     * comparisons, which is used to calculate the average effort.
+     * Tells the system that the given (inclusive) range of keys is reached after depth number
+     * of comparisons, which is used to calculate the average effort.
      */
     protected void registerEffort(int rangeStart, int rangeEnd, int depth)
     {
@@ -281,6 +282,7 @@ public abstract class SwitchStrategy
             {
                 indexes[i] = i;
             }
+            // @closure
             Arrays.sort(indexes, new Comparator<Integer>()
             {
                 @Override
@@ -367,6 +369,7 @@ public abstract class SwitchStrategy
             {
                 indexes[i] = i;
             }
+            // @closure
             Arrays.sort(indexes, new Comparator<Integer>()
             {
                 @Override

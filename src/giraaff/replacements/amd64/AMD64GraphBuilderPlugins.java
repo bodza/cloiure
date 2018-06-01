@@ -59,6 +59,7 @@ public final class AMD64GraphBuilderPlugins
         Registration r = new Registration(plugins, declaringClass, bytecodeProvider);
         if (arch.getFeatures().contains(AMD64.CPUFeature.LZCNT) && arch.getFlags().contains(AMD64.Flag.UseCountLeadingZerosInstruction))
         {
+            // @closure
             r.register1("numberOfLeadingZeros", type, new InvocationPlugin()
             {
                 @Override
@@ -83,6 +84,7 @@ public final class AMD64GraphBuilderPlugins
         }
         if (arch.getFeatures().contains(AMD64.CPUFeature.BMI1) && arch.getFlags().contains(AMD64.Flag.UseCountTrailingZerosInstruction))
         {
+            // @closure
             r.register1("numberOfTrailingZeros", type, new InvocationPlugin()
             {
                 @Override
@@ -108,6 +110,7 @@ public final class AMD64GraphBuilderPlugins
 
         if (arch.getFeatures().contains(AMD64.CPUFeature.POPCNT))
         {
+            // @closure
             r.register1("bitCount", type, new InvocationPlugin()
             {
                 @Override
@@ -134,6 +137,7 @@ public final class AMD64GraphBuilderPlugins
 
     private static void registerRound(Registration r, String name, RoundingMode mode)
     {
+        // @closure
         r.register1(name, Double.TYPE, new InvocationPlugin()
         {
             @Override
@@ -172,6 +176,7 @@ public final class AMD64GraphBuilderPlugins
         {
             Class<?> javaClass = kind == JavaKind.Object ? Object.class : kind.toJavaClass();
 
+            // @closure
             r.register4("getAndSet" + kind.name(), Receiver.class, Object.class, long.class, javaClass, new InvocationPlugin()
             {
                 @Override
@@ -186,6 +191,7 @@ public final class AMD64GraphBuilderPlugins
             });
             if (kind != JavaKind.Object)
             {
+                // @closure
                 r.register4("getAndAdd" + kind.name(), Receiver.class, Object.class, long.class, javaClass, new InvocationPlugin()
                 {
                     @Override

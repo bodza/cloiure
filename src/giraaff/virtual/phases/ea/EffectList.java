@@ -112,6 +112,7 @@ public class EffectList implements Iterable<EffectList.Effect>
     @Override
     public Iterator<Effect> iterator()
     {
+        // @closure
         return new Iterator<Effect>()
         {
             int index;

@@ -144,6 +144,7 @@ public final class HotSpotGraphBuilderPlugins
         // and in ReplacementImpl.getSubstitution() where there is an instantiation of IntrinsicGraphBuilder using
         // a constructor that sets AllowAssumptions to YES automatically. The former has to inherit the assumptions
         // settings from the root compile instead.
+        // @closure
         r.register1("clone", Receiver.class, new InvocationPlugin()
         {
             @Override
@@ -177,6 +178,7 @@ public final class HotSpotGraphBuilderPlugins
             r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getComponentType", Receiver.class);
         }
 
+        // @closure
         r.register2("cast", Receiver.class, Object.class, new InvocationPlugin()
         {
             @Override
@@ -206,6 +208,7 @@ public final class HotSpotGraphBuilderPlugins
 
     private static void registerCallSitePlugins(InvocationPlugins plugins)
     {
+        // @closure
         InvocationPlugin plugin = new InvocationPlugin()
         {
             @Override
@@ -238,6 +241,7 @@ public final class HotSpotGraphBuilderPlugins
     private static void registerReflectionPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, reflectionClass, bytecodeProvider);
+        // @closure
         r.register0("getCallerClass", new InvocationPlugin()
         {
             @Override
@@ -306,6 +310,7 @@ public final class HotSpotGraphBuilderPlugins
     {
         Registration r = new Registration(plugins, constantPoolClass, bytecodeProvider);
 
+        // @closure
         r.register2("getSize0", Receiver.class, Object.class, new InvocationPlugin()
         {
             @Override
@@ -320,6 +325,7 @@ public final class HotSpotGraphBuilderPlugins
             }
         });
 
+        // @closure
         r.register3("getIntAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
@@ -328,6 +334,7 @@ public final class HotSpotGraphBuilderPlugins
                 return readMetaspaceConstantPoolElement(b, constantPoolOop, index, JavaKind.Int, wordTypes);
             }
         });
+        // @closure
         r.register3("getLongAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
@@ -336,6 +343,7 @@ public final class HotSpotGraphBuilderPlugins
                 return readMetaspaceConstantPoolElement(b, constantPoolOop, index, JavaKind.Long, wordTypes);
             }
         });
+        // @closure
         r.register3("getFloatAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
@@ -344,6 +352,7 @@ public final class HotSpotGraphBuilderPlugins
                 return readMetaspaceConstantPoolElement(b, constantPoolOop, index, JavaKind.Float, wordTypes);
             }
         });
+        // @closure
         r.register3("getDoubleAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
@@ -359,6 +368,7 @@ public final class HotSpotGraphBuilderPlugins
         Registration r = new Registration(plugins, System.class);
         r.register0("currentTimeMillis", new ForeignCallPlugin(foreignCalls, HotSpotHostForeignCallsProvider.JAVA_TIME_MILLIS));
         r.register0("nanoTime", new ForeignCallPlugin(foreignCalls, HotSpotHostForeignCallsProvider.JAVA_TIME_NANOS));
+        // @closure
         r.register1("identityHashCode", Object.class, new InvocationPlugin()
         {
             @Override
@@ -374,6 +384,7 @@ public final class HotSpotGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register5("arraycopy", Object.class, int.class, Object.class, int.class, int.class, new InvocationPlugin()
         {
             @Override
@@ -401,6 +412,7 @@ public final class HotSpotGraphBuilderPlugins
     private static void registerThreadPlugins(InvocationPlugins plugins, MetaAccessProvider metaAccess, WordTypes wordTypes, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, Thread.class, bytecodeProvider);
+        // @closure
         r.register0("currentThread", new InvocationPlugin()
         {
             @Override

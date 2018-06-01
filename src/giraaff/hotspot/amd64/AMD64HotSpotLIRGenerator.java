@@ -102,6 +102,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
      * Utility for emitting the instruction to save RBP.
      */
     // @class AMD64HotSpotLIRGenerator.SaveRbp
+    // @closure
     final class SaveRbp
     {
         final NoOp placeholder;
@@ -116,7 +117,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         {
             super();
             this.placeholder = placeholder;
-            AMD64FrameMapBuilder frameMapBuilder = (AMD64FrameMapBuilder) getResult().getFrameMapBuilder();
+            AMD64FrameMapBuilder frameMapBuilder = (AMD64FrameMapBuilder) AMD64HotSpotLIRGenerator.this.getResult().getFrameMapBuilder();
             this.reservedSlot = frameMapBuilder.allocateRBPSpillSlot();
         }
 
@@ -134,11 +135,11 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
             }
             else
             {
-                ((AMD64FrameMapBuilder) getResult().getFrameMapBuilder()).freeRBPSpillSlot();
-                dst = newVariable(LIRKind.value(AMD64Kind.QWORD));
+                ((AMD64FrameMapBuilder) AMD64HotSpotLIRGenerator.this.getResult().getFrameMapBuilder()).freeRBPSpillSlot();
+                dst = AMD64HotSpotLIRGenerator.this.newVariable(LIRKind.value(AMD64Kind.QWORD));
             }
 
-            placeholder.replace(getResult().getLIR(), new MoveFromRegOp(AMD64Kind.QWORD, dst, AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD))));
+            placeholder.replace(AMD64HotSpotLIRGenerator.this.getResult().getLIR(), new MoveFromRegOp(AMD64Kind.QWORD, dst, AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD))));
             return dst;
         }
     }

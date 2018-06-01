@@ -683,11 +683,13 @@ public final class GraphUtil
      */
     public static NodeIterable<FixedNode> predecessorIterable(final FixedNode start)
     {
+        // @closure
         return new NodeIterable<FixedNode>()
         {
             @Override
             public Iterator<FixedNode> iterator()
             {
+                // @closure
                 return new Iterator<FixedNode>()
                 {
                     public FixedNode current = start;

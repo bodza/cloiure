@@ -106,6 +106,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
      * Emits code at the verified entry point and return point(s) of a method.
      */
     // @class AMD64HotSpotBackend.HotSpotFrameContext
+    // @closure
     final class HotSpotFrameContext implements FrameContext
     {
         final boolean isStub;
@@ -143,7 +144,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
                 int verifiedEntryPosition = asm.position();
                 if (!isStub)
                 {
-                    emitStackOverflowCheck(crb);
+                    AMD64HotSpotBackend.this.emitStackOverflowCheck(crb);
                 }
                 if (!isStub && asm.position() == verifiedEntryPosition)
                 {

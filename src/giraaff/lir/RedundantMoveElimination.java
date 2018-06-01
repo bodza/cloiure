@@ -368,8 +368,9 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 }
             }
 
-            // Value procedure for the instruction's output and temp values
+            // Value procedure for the instruction's output and temp values.
             // @class RedundantMoveElimination.Optimization.*OutputValueConsumer
+            // @closure
             final class OutputValueConsumer implements ValueConsumer
             {
                 int opValueNum;
@@ -384,7 +385,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 @Override
                 public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
                 {
-                    int stateIdx = getStateIdx(operand);
+                    int stateIdx = RedundantMoveElimination.Optimization.this.getStateIdx(operand);
                     if (stateIdx >= 0)
                     {
                         // Assign a unique number to the output or temp location.

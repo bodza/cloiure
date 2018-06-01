@@ -35,6 +35,7 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
     private final Object[] notes;
 
     // @class AMD64HotSpotConstantRetrievalOp.CollectTemporaries
+    // @closure
     private final class CollectTemporaries implements ValueProcedure
     {
         ArrayList<Value> values = new ArrayList<>();
@@ -43,13 +44,12 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         CollectTemporaries()
         {
             super();
-            forEachTemp(this);
+            AMD64HotSpotConstantRetrievalOp.this.forEachTemp(this);
         }
 
         public Value[] asArray()
         {
-            Value[] copy = new Value[values.size()];
-            return values.toArray(copy);
+            return values.toArray(new Value[values.size()]);
         }
 
         @Override

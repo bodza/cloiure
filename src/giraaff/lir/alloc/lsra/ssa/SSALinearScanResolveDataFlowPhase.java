@@ -38,6 +38,7 @@ final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowP
             int phiOutIdx = SSAUtil.phiOutIndex(allocator.getLIR(), phiOutBlock);
             int phiOutId = midBlock != null ? fromBlockLastInstructionId : instructions.get(phiOutIdx).id();
 
+            // @closure
             PhiValueVisitor visitor = new PhiValueVisitor()
             {
                 @Override

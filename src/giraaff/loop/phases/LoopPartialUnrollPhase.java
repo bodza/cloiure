@@ -36,22 +36,15 @@ public final class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
                 {
                     LoopsData dataCounted = new LoopsData(graph);
                     dataCounted.detectedCountedLoops();
-                    Graph.Mark mark = graph.getMark();
-                    boolean prePostInserted = false;
                     for (LoopEx loop : dataCounted.countedLoops())
                     {
-                        if (!LoopTransformations.isUnrollableLoop(loop))
-                        {
-                            continue;
-                        }
-                        if (getPolicies().shouldPartiallyUnroll(loop))
+                        if (LoopTransformations.isUnrollableLoop(loop) && getPolicies().shouldPartiallyUnroll(loop))
                         {
                             if (loop.loopBegin().isSimpleLoop())
                             {
-                                // First perform the pre/post transformation and do the partial
-                                // unroll when we come around again.
+                                // First perform the pre/post transformation and do the partial unroll
+                                // when we come around again.
                                 LoopTransformations.insertPrePostLoops(loop);
-                                prePostInserted = true;
                             }
                             else
                             {

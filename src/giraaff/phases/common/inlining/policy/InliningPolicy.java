@@ -8,13 +8,13 @@ import giraaff.phases.common.inlining.walker.MethodInvocation;
 public interface InliningPolicy
 {
     // @class InliningPolicy.Decision
-    final class Decision
+    static final class Decision
     {
         public static final Decision YES = new Decision(true, "(unknown reason)");
         public static final Decision NO = new Decision(false, "(unknown reason)");
 
-        private final boolean shouldInline;
-        private final String reason;
+        public final boolean shouldInline;
+        public final String reason;
 
         // @cons
         private Decision(boolean shouldInline, String reason)
@@ -22,16 +22,6 @@ public interface InliningPolicy
             super();
             this.shouldInline = shouldInline;
             this.reason = reason;
-        }
-
-        public boolean shouldInline()
-        {
-            return shouldInline;
-        }
-
-        public String getReason()
-        {
-            return reason;
         }
     }
 

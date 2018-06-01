@@ -115,6 +115,7 @@ public final class GraphEffectList extends EffectList
      */
     public void addVirtualMapping(FrameState node, EscapeObjectState state)
     {
+        // @closure
         add("add virtual mapping", new Effect()
         {
             @Override
@@ -161,6 +162,7 @@ public final class GraphEffectList extends EffectList
 
     public void killIfBranch(IfNode ifNode, boolean constantCondition)
     {
+        // @closure
         add("kill if branch", new Effect()
         {
             @Override
@@ -179,6 +181,7 @@ public final class GraphEffectList extends EffectList
 
     public void replaceWithSink(FixedWithNextNode node, ControlSinkNode sink)
     {
+        // @closure
         add("kill if branch", new Effect()
         {
             @Override
@@ -244,6 +247,7 @@ public final class GraphEffectList extends EffectList
      */
     public void replaceFirstInput(Node node, Node oldInput, Node newInput)
     {
+        // @closure
         add("replace first input", new Effect()
         {
             @Override

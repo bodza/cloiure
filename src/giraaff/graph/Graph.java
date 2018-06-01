@@ -54,6 +54,7 @@ public class Graph
      */
     private EconomicMap<Node, Node>[] cachedLeafNodes;
 
+    // @closure
     private static final Equivalence NODE_VALUE_COMPARE = new Equivalence()
     {
         @Override
@@ -201,8 +202,8 @@ public class Graph
         return addHelper(node);
     }
 
-    // @class Graph.AddInputsFilter
-    private final class AddInputsFilter extends Node.EdgeVisitor
+    // @closure
+    private Node.EdgeVisitor addInputsFilter = new Node.EdgeVisitor()
     {
         @Override
         public Node apply(Node self, Node input)
@@ -216,9 +217,7 @@ public class Graph
                 return input;
             }
         }
-    }
-
-    private AddInputsFilter addInputsFilter = new AddInputsFilter();
+    };
 
     private <T extends Node> void addInputs(T node)
     {
@@ -338,41 +337,6 @@ public class Graph
         }
     }
 
-    /**
-     * Registers a given {@link NodeEventListener} with the enclosing graph until this object is
-     * {@linkplain #close() closed}.
-     */
-    // @class Graph.NodeEventScope
-    public final class NodeEventScope implements AutoCloseable
-    {
-        // @cons
-        NodeEventScope(NodeEventListener listener)
-        {
-            super();
-            if (nodeEventListener == null)
-            {
-                nodeEventListener = listener;
-            }
-            else
-            {
-                nodeEventListener = new ChainedNodeEventListener(listener, nodeEventListener);
-            }
-        }
-
-        @Override
-        public void close()
-        {
-            if (nodeEventListener instanceof ChainedNodeEventListener)
-            {
-                nodeEventListener = ((ChainedNodeEventListener) nodeEventListener).next;
-            }
-            else
-            {
-                nodeEventListener = null;
-            }
-        }
-    }
-
     // @class Graph.ChainedNodeEventListener
     private static final class ChainedNodeEventListener extends NodeEventListener
     {
@@ -420,6 +384,41 @@ public class Graph
         {
             head.event(e, node);
             next.event(e, node);
+        }
+    }
+
+    /**
+     * Registers a given {@link NodeEventListener} with the enclosing graph until this object is {@linkplain #close() closed}.
+     */
+    // @class Graph.NodeEventScope
+    // @closure
+    public final class NodeEventScope implements AutoCloseable
+    {
+        // @cons
+        NodeEventScope(NodeEventListener listener)
+        {
+            super();
+            if (Graph.this.nodeEventListener == null)
+            {
+                Graph.this.nodeEventListener = listener;
+            }
+            else
+            {
+                Graph.this.nodeEventListener = new ChainedNodeEventListener(listener, Graph.this.nodeEventListener);
+            }
+        }
+
+        @Override
+        public void close()
+        {
+            if (Graph.this.nodeEventListener instanceof ChainedNodeEventListener)
+            {
+                Graph.this.nodeEventListener = ((ChainedNodeEventListener) Graph.this.nodeEventListener).next;
+            }
+            else
+            {
+                Graph.this.nodeEventListener = null;
+            }
         }
     }
 
@@ -648,6 +647,7 @@ public class Graph
     public NodeIterable<Node> getNewNodes(Mark mark)
     {
         final int index = mark == null ? 0 : mark.getValue();
+        // @closure
         return new NodeIterable<Node>()
         {
             @Override
@@ -665,6 +665,7 @@ public class Graph
      */
     public NodeIterable<Node> getNodes()
     {
+        // @closure
         return new NodeIterable<Node>()
         {
             @Override
@@ -738,6 +739,7 @@ public class Graph
      */
     public <T extends Node & IterableNodeType> NodeIterable<T> getNodes(final NodeClass<T> nodeClass)
     {
+        // @closure
         return new NodeIterable<T>()
         {
             @Override
@@ -852,12 +854,12 @@ public class Graph
 
     public NodeWorkList createNodeWorkList()
     {
-        return new NodeWorkList.SingletonNodeWorkList(this);
+        return new SingletonNodeWorkList(this);
     }
 
     public NodeWorkList createIterativeNodeWorkList(boolean fill, int iterationLimitPerNode)
     {
-        return new NodeWorkList.IterativeNodeWorkList(this, fill, iterationLimitPerNode);
+        return new IterativeNodeWorkList(this, fill, iterationLimitPerNode);
     }
 
     void register(Node node)
@@ -872,9 +874,9 @@ public class Graph
 
         updateNodeCaches(node);
 
-        if (nodeEventListener != null)
+        if (this.nodeEventListener != null)
         {
-            nodeEventListener.event(NodeEvent.NODE_ADDED, node);
+            this.nodeEventListener.event(NodeEvent.NODE_ADDED, node);
         }
         afterRegister(node);
     }
@@ -946,9 +948,9 @@ public class Graph
         nodes[node.id] = null;
         nodesDeletedSinceLastCompression++;
 
-        if (nodeEventListener != null)
+        if (this.nodeEventListener != null)
         {
-            nodeEventListener.event(NodeEvent.NODE_ADDED, node);
+            this.nodeEventListener.event(NodeEvent.NODE_ADDED, node);
         }
 
         // nodes aren't removed from the type cache here - they will be removed during iteration

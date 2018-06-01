@@ -8,7 +8,7 @@ import java.util.Queue;
 public final class NodeFlood implements Iterable<Node>
 {
     private final NodeBitMap visited;
-    private final Queue<Node> worklist;
+    private final Queue<Node> worklist = new ArrayDeque<>();
     private int totalMarkedCount;
 
     // @cons
@@ -16,7 +16,6 @@ public final class NodeFlood implements Iterable<Node>
     {
         super();
         visited = graph.createNodeBitMap();
-        worklist = new ArrayDeque<>();
     }
 
     public void add(Node node)
@@ -57,41 +56,30 @@ public final class NodeFlood implements Iterable<Node>
         return visited.isNew(node);
     }
 
-    // @class NodeFlood.QueueConsumingIterator
-    private static final class QueueConsumingIterator implements Iterator<Node>
-    {
-        private final Queue<Node> queue;
-
-        // @cons
-        QueueConsumingIterator(Queue<Node> queue)
-        {
-            super();
-            this.queue = queue;
-        }
-
-        @Override
-        public boolean hasNext()
-        {
-            return !queue.isEmpty();
-        }
-
-        @Override
-        public Node next()
-        {
-            return queue.remove();
-        }
-
-        @Override
-        public void remove()
-        {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     @Override
     public Iterator<Node> iterator()
     {
-        return new QueueConsumingIterator(worklist);
+        // @closure
+        return new Iterator<Node>()
+        {
+            @Override
+            public boolean hasNext()
+            {
+                return !NodeFlood.this.worklist.isEmpty();
+            }
+
+            @Override
+            public Node next()
+            {
+                return NodeFlood.this.worklist.remove();
+            }
+
+            @Override
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     // @class NodeFlood.UnmarkedNodeIterator
@@ -151,6 +139,7 @@ public final class NodeFlood implements Iterable<Node>
 
     public Iterable<Node> unmarkedNodes()
     {
+        // @closure
         return new Iterable<Node>()
         {
             @Override

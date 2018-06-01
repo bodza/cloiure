@@ -37,13 +37,4 @@ public interface MemoryCheckpoint extends MemoryNode, FixedNodeInterface
          */
         LocationIdentity[] getLocationIdentities();
     }
-
-    // @class MemoryCheckpoint.TypeAssertion
-    final class TypeAssertion
-    {
-        public static boolean correctType(Node node)
-        {
-            return !(node instanceof MemoryCheckpoint) || (node instanceof MemoryCheckpoint.Single ^ node instanceof MemoryCheckpoint.Multi);
-        }
-    }
 }

@@ -28,12 +28,12 @@ import giraaff.lir.VirtualStackSlot;
 // @class FixPointIntervalBuilder
 final class FixPointIntervalBuilder
 {
+    private final LIR lir;
+    private final StackInterval[] stackSlotMap;
+    private final int maxOpId;
     private final BlockMap<BitSet> liveInMap;
     private final BlockMap<BitSet> liveOutMap;
-    private final LIR lir;
-    private final int maxOpId;
-    private final StackInterval[] stackSlotMap;
-    private final EconomicSet<LIRInstruction> usePos;
+    private final EconomicSet<LIRInstruction> usePos = EconomicSet.create(Equivalence.IDENTITY);
 
     // @cons
     FixPointIntervalBuilder(LIR lir, StackInterval[] stackSlotMap, int maxOpId)
@@ -42,9 +42,8 @@ final class FixPointIntervalBuilder
         this.lir = lir;
         this.stackSlotMap = stackSlotMap;
         this.maxOpId = maxOpId;
-        liveInMap = new BlockMap<>(lir.getControlFlowGraph());
-        liveOutMap = new BlockMap<>(lir.getControlFlowGraph());
-        this.usePos = EconomicSet.create(Equivalence.IDENTITY);
+        this.liveInMap = new BlockMap<>(lir.getControlFlowGraph());
+        this.liveOutMap = new BlockMap<>(lir.getControlFlowGraph());
     }
 
     /**
@@ -55,21 +54,21 @@ final class FixPointIntervalBuilder
     EconomicSet<LIRInstruction> build()
     {
         Deque<AbstractBlockBase<?>> worklist = new ArrayDeque<>();
-        AbstractBlockBase<?>[] blocks = lir.getControlFlowGraph().getBlocks();
+        AbstractBlockBase<?>[] blocks = this.lir.getControlFlowGraph().getBlocks();
         for (int i = blocks.length - 1; i >= 0; i--)
         {
             worklist.add(blocks[i]);
         }
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        for (AbstractBlockBase<?> block : this.lir.getControlFlowGraph().getBlocks())
         {
-            liveInMap.put(block, new BitSet(stackSlotMap.length));
+            this.liveInMap.put(block, new BitSet(this.stackSlotMap.length));
         }
         while (!worklist.isEmpty())
         {
             AbstractBlockBase<?> block = worklist.poll();
             processBlock(block, worklist);
         }
-        return usePos;
+        return this.usePos;
     }
 
     /**
@@ -77,16 +76,16 @@ final class FixPointIntervalBuilder
      */
     private boolean updateOutBlock(AbstractBlockBase<?> block)
     {
-        BitSet union = new BitSet(stackSlotMap.length);
+        BitSet union = new BitSet(this.stackSlotMap.length);
         for (AbstractBlockBase<?> succ : block.getSuccessors())
         {
-            union.or(liveInMap.get(succ));
+            union.or(this.liveInMap.get(succ));
         }
-        BitSet outSet = liveOutMap.get(block);
+        BitSet outSet = this.liveOutMap.get(block);
         // check if changed
         if (outSet == null || !union.equals(outSet))
         {
-            liveOutMap.put(block, union);
+            this.liveOutMap.put(block, union);
             return true;
         }
         return false;
@@ -96,9 +95,9 @@ final class FixPointIntervalBuilder
     {
         if (updateOutBlock(block))
         {
-            ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
+            ArrayList<LIRInstruction> instructions = this.lir.getLIRforBlock(block);
             // get out set and mark intervals
-            BitSet outSet = liveOutMap.get(block);
+            BitSet outSet = this.liveOutMap.get(block);
             markOutInterval(outSet, getBlockEnd(instructions));
 
             // process instructions
@@ -116,7 +115,7 @@ final class FixPointIntervalBuilder
             }
             // set in set and mark intervals
             BitSet inSet = closure.getCurrentSet();
-            liveInMap.put(block, inSet);
+            this.liveInMap.put(block, inSet);
             markInInterval(inSet, getBlockBegin(instructions));
         }
     }
@@ -140,6 +139,7 @@ final class FixPointIntervalBuilder
     }
 
     // @class FixPointIntervalBuilder.BlockClosure
+    // @closure
     private final class BlockClosure
     {
         private final BitSet currentSet;
@@ -169,6 +169,7 @@ final class FixPointIntervalBuilder
             op.visitEachInput(useConsumer);
         }
 
+        // @closure
         InstructionValueConsumer useConsumer = new InstructionValueConsumer()
         {
             @Override
@@ -179,12 +180,13 @@ final class FixPointIntervalBuilder
                     VirtualStackSlot vslot = LIRValueUtil.asVirtualStackSlot(operand);
                     addUse(vslot, inst, flags);
                     addRegisterHint(inst, vslot, mode, flags, false);
-                    usePos.add(inst);
+                    FixPointIntervalBuilder.this.usePos.add(inst);
                     currentSet.set(vslot.getId());
                 }
             }
         };
 
+        // @closure
         InstructionValueConsumer defConsumer = new InstructionValueConsumer()
         {
             @Override
@@ -195,7 +197,7 @@ final class FixPointIntervalBuilder
                     VirtualStackSlot vslot = LIRValueUtil.asVirtualStackSlot(operand);
                     addDef(vslot, inst);
                     addRegisterHint(inst, vslot, mode, flags, true);
-                    usePos.add(inst);
+                    FixPointIntervalBuilder.this.usePos.add(inst);
                     currentSet.clear(vslot.getId());
                 }
             }
@@ -208,7 +210,7 @@ final class FixPointIntervalBuilder
             {
                 // Stack slot is marked uninitialized so we have to assume it is live all the time.
                 interval.addFrom(0);
-                interval.addTo(maxOpId);
+                interval.addTo(FixPointIntervalBuilder.this.maxOpId);
             }
             else
             {
@@ -226,6 +228,7 @@ final class FixPointIntervalBuilder
         {
             if (flags.contains(OperandFlag.HINT))
             {
+                // @closure
                 InstructionValueProcedure proc = new InstructionValueProcedure()
                 {
                     @Override
@@ -258,12 +261,12 @@ final class FixPointIntervalBuilder
 
     private StackInterval get(VirtualStackSlot stackSlot)
     {
-        return stackSlotMap[stackSlot.getId()];
+        return this.stackSlotMap[stackSlot.getId()];
     }
 
     private void put(VirtualStackSlot stackSlot, StackInterval interval)
     {
-        stackSlotMap[stackSlot.getId()] = interval;
+        this.stackSlotMap[stackSlot.getId()] = interval;
     }
 
     private StackInterval getOrCreateInterval(VirtualStackSlot stackSlot)
@@ -279,7 +282,7 @@ final class FixPointIntervalBuilder
 
     private StackInterval getIntervalFromStackId(int id)
     {
-        return stackSlotMap[id];
+        return this.stackSlotMap[id];
     }
 
     private static int getBlockBegin(ArrayList<LIRInstruction> instructions)

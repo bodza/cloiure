@@ -105,6 +105,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
     }
 
     // @class PartialEscapeClosure.CollectVirtualObjectsClosure
+    // @closure
     private final class CollectVirtualObjectsClosure extends NodeClosure<ValueNode>
     {
         private final EconomicSet<VirtualObjectNode> virtual;
@@ -684,6 +685,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
     }
 
     // @class PartialEscapeClosure.MergeProcessor
+    // @closure
     protected class MergeProcessor extends EffectsClosure<BlockT>.MergeProcessor
     {
         private EconomicMap<Object, ValuePhiNode> materializedPhis;

@@ -241,10 +241,11 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     }
 
     /**
-     * This iterator only returns nodes that are marked in the {@link NodeBitMap} and are alive in
-     * the corresponding {@link Graph}.
+     * This iterator only returns nodes that are marked in the {@link NodeBitMap} and are alive
+     * in the corresponding {@link Graph}.
      */
     // @class NodeBitMap.MarkedNodeIterator
+    // @closure
     private final class MarkedNodeIterator implements Iterator<Node>
     {
         private int currentNodeId;
@@ -263,7 +264,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
             currentNode = NodeBitMap.this.nextMarkedNode(currentNodeId + 1);
             if (currentNode != null)
             {
-                currentNodeId = getNodeId(currentNode);
+                currentNodeId = NodeBitMap.this.getNodeId(currentNode);
             }
             else
             {

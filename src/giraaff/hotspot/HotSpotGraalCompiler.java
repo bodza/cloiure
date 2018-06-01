@@ -103,7 +103,7 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         PhaseSuite<HighTierContext> graphBuilderSuite = configGraphBuilderSuite(providers.getSuites().getDefaultGraphBuilderSuite(), isOSR);
 
         StructuredGraph graph = createGraph(method, entryBCI, useProfilingInfo);
-        GraalCompiler.compileGraph(graph, method, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, getSuites(providers), getLIRSuites(providers), result, CompilationResultBuilderFactory.Default);
+        GraalCompiler.compileGraph(graph, method, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, getSuites(providers), getLIRSuites(providers), result, CompilationResultBuilderFactory.DEFAULT);
 
         if (!isOSR && useProfilingInfo)
         {

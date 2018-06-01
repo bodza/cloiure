@@ -63,13 +63,13 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
         LIRInstruction createStackLoad(AllocatableValue result, Constant input);
     }
 
-    // @class LIRGeneratorTool.BlockScope
-    abstract class BlockScope implements AutoCloseable
+    // @iface LIRGeneratorTool.BlockScope
+    public interface BlockScope extends AutoCloseable
     {
-        public abstract AbstractBlockBase<?> getCurrentBlock();
+        AbstractBlockBase<?> getCurrentBlock();
 
         @Override
-        public abstract void close();
+        void close();
     }
 
     ArithmeticLIRGeneratorTool getArithmetic();
@@ -97,8 +97,8 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
     /**
      * Get a special {@link MoveFactory} for spill moves.
      *
-     * The instructions returned by this factory must only depend on the input values. References to
-     * values that require interaction with register allocation are strictly forbidden.
+     * The instructions returned by this factory must only depend on the input values. References
+     * to values that require interaction with register allocation are strictly forbidden.
      */
     MoveFactory getSpillMoveFactory();
 
@@ -111,8 +111,8 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
     /**
      * Some backends need to convert sub-word kinds to a larger kind in
      * {@link ArithmeticLIRGeneratorTool#emitLoad} and {@link #emitLoadConstant} because sub-word
-     * registers can't be accessed. This method converts the {@link LIRKind} of a memory location or
-     * constant to the {@link LIRKind} that will be used when it is loaded into a register.
+     * registers can't be accessed. This method converts the {@link LIRKind} of a memory location
+     * or constant to the {@link LIRKind} that will be used when it is loaded into a register.
      */
     <K extends ValueKind<K>> K toRegisterKind(K kind);
 

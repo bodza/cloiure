@@ -141,6 +141,7 @@ public final class Block extends AbstractBlockBase<Block>
     }
 
     // @class Block.NodeIterator
+    // @closure
     private final class NodeIterator implements Iterator<FixedNode>
     {
         private FixedNode cur;
@@ -149,7 +150,7 @@ public final class Block extends AbstractBlockBase<Block>
         NodeIterator()
         {
             super();
-            cur = getBeginNode();
+            cur = Block.this.getBeginNode();
         }
 
         @Override
@@ -164,8 +165,7 @@ public final class Block extends AbstractBlockBase<Block>
             FixedNode result = cur;
             if (result instanceof FixedWithNextNode)
             {
-                FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) result;
-                FixedNode next = fixedWithNextNode.next();
+                FixedNode next = ((FixedWithNextNode) result).next();
                 if (next instanceof AbstractBeginNode)
                 {
                     next = null;
@@ -188,6 +188,7 @@ public final class Block extends AbstractBlockBase<Block>
 
     public Iterable<FixedNode> getNodes()
     {
+        // @closure
         return new Iterable<FixedNode>()
         {
             @Override

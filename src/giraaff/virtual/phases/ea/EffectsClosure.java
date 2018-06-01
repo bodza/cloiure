@@ -125,6 +125,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
         // Effects are applied during a ordered iteration over the blocks to apply them in the correct
         // order, e.g. apply the effect that adds a node to the graph before the node is used.
+        // @closure
         BlockIteratorClosure<Void> closure = new BlockIteratorClosure<Void>()
         {
             @Override
@@ -418,13 +419,14 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
      * The main workhorse for merging states, both for loops and for normal merges.
      */
     // @class EffectsClosure.MergeProcessor
+    // @closure
     protected abstract class MergeProcessor
     {
         private final Block mergeBlock;
         private final AbstractMergeNode merge;
 
-        protected final GraphEffectList mergeEffects;
-        protected final GraphEffectList afterMergeEffects;
+        protected final GraphEffectList mergeEffects = new GraphEffectList();
+        protected final GraphEffectList afterMergeEffects = new GraphEffectList();
 
         /**
          * The indexes are used to map from an index in the list of active (non-dead) predecessors
@@ -439,8 +441,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
             super();
             this.mergeBlock = mergeBlock;
             this.merge = (AbstractMergeNode) mergeBlock.getBeginNode();
-            this.mergeEffects = new GraphEffectList();
-            this.afterMergeEffects = new GraphEffectList();
         }
 
         /**
@@ -450,7 +450,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
         private void setNewState(BlockT state)
         {
-            newState = state;
+            this.newState = state;
             mergeEffects.clear();
             afterMergeEffects.clear();
         }
@@ -462,32 +462,32 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
         protected final Block getPredecessor(int index)
         {
-            return mergeBlock.getPredecessors()[stateIndexes[index]];
+            return this.mergeBlock.getPredecessors()[this.stateIndexes[index]];
         }
 
         protected final NodeIterable<PhiNode> getPhis()
         {
-            return merge.phis();
+            return this.merge.phis();
         }
 
         protected final ValueNode getPhiValueAt(PhiNode phi, int index)
         {
-            return phi.valueAt(stateIndexes[index]);
+            return phi.valueAt(this.stateIndexes[index]);
         }
 
         protected final ValuePhiNode createValuePhi(Stamp stamp)
         {
-            return new ValuePhiNode(stamp, merge, new ValueNode[mergeBlock.getPredecessorCount()]);
+            return new ValuePhiNode(stamp, this.merge, new ValueNode[this.mergeBlock.getPredecessorCount()]);
         }
 
         protected final void setPhiInput(PhiNode phi, int index, ValueNode value)
         {
-            afterMergeEffects.initializePhiInput(phi, stateIndexes[index], value);
+            afterMergeEffects.initializePhiInput(phi, this.stateIndexes[index], value);
         }
 
         protected final StructuredGraph graph()
         {
-            return merge.graph();
+            return this.merge.graph();
         }
     }
 

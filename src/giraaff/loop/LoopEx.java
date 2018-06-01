@@ -158,6 +158,7 @@ public final class LoopEx
     }
 
     // @class LoopEx.InvariantPredicate
+    // @closure
     private final class InvariantPredicate implements NodePredicate
     {
         private final Graph.Mark mark;
@@ -166,18 +167,18 @@ public final class LoopEx
         InvariantPredicate()
         {
             super();
-            this.mark = loopBegin().graph().getMark();
+            this.mark = LoopEx.this.loopBegin().graph().getMark();
         }
 
         @Override
         public boolean apply(Node n)
         {
-            if (loopBegin().graph().isNew(mark, n))
+            if (LoopEx.this.loopBegin().graph().isNew(mark, n))
             {
                 // Newly created nodes are unknown.
                 return false;
             }
-            return isOutsideLoop(n);
+            return LoopEx.this.isOutsideLoop(n);
         }
     }
 

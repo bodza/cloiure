@@ -141,7 +141,7 @@ public abstract class Stub
         GraalCompiler.emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
         CompilationResult result = new CompilationResult();
         LIRSuites lirSuites = new LIRSuites(providers.getSuites().getDefaultLIRSuites());
-        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, result, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
+        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, result, CompilationResultBuilderFactory.DEFAULT, getRegisterConfig(), lirSuites);
         return result;
     }
 }

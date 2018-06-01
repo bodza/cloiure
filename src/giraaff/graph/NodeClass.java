@@ -87,17 +87,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public static <T> NodeClass<T> get(Class<T> clazz)
     {
-        boolean shouldBeInitializedBefore = UnsafeAccess.UNSAFE.shouldBeInitialized(clazz);
-
         NodeClass<T> result = getUnchecked(clazz);
         if (result != null || clazz == NODE_CLASS)
         {
             return result;
         }
 
-        boolean shouldBeInitializedAfter = UnsafeAccess.UNSAFE.shouldBeInitialized(clazz);
-        String msg = "GR-9537 Reflective field access of TYPE field returned null. This is probably a bug in HotSpot class initialization. " + " clazz: " + clazz.getTypeName() + ", shouldBeInitializedBefore: " + shouldBeInitializedBefore + ", shouldBeInitializedAfter: " + shouldBeInitializedAfter;
-        throw GraalError.shouldNotReachHere(msg);
+        throw GraalError.shouldNotReachHere("Reflective field access of TYPE field returned null. This is probably a bug in HotSpot class initialization.");
     }
 
     private static final Class<?> NODE_CLASS = Node.class;
@@ -904,6 +900,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
         createNodeDuplicates(graph, nodes, replacements, newNodes);
 
+        // @closure
         InplaceUpdateClosure replacementClosure = new InplaceUpdateClosure()
         {
             @Override
@@ -1187,6 +1184,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     public NodeIterable<Node> getSuccessorIterable(final Node node)
     {
         long mask = this.successorIteration;
+        // @closure
         return new NodeIterable<Node>()
         {
             @Override
@@ -1200,6 +1198,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     public NodeIterable<Node> getInputIterable(final Node node)
     {
         long mask = this.inputsIteration;
+        // @closure
         return new NodeIterable<Node>()
         {
             @Override

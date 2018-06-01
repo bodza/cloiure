@@ -412,6 +412,7 @@ public final class StructuredGraph extends Graph
     public Iterable<Invoke> getInvokes()
     {
         final Iterator<MethodCallTargetNode> callTargets = getNodes(MethodCallTargetNode.TYPE).iterator();
+        // @closure
         return new Iterable<Invoke>()
         {
             private Invoke next;
@@ -419,6 +420,7 @@ public final class StructuredGraph extends Graph
             @Override
             public Iterator<Invoke> iterator()
             {
+                // @closure
                 return new Iterator<Invoke>()
                 {
                     @Override

@@ -133,6 +133,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         ValueNode[] argumentsArray = arguments.toArray(new ValueNode[arguments.size()]);
 
         final FixedNode before = this;
+        // @closure
         GraphAdder adder = new GraphAdder(graph())
         {
             @Override

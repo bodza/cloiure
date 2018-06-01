@@ -21,7 +21,8 @@ public interface CompilationResultBuilderFactory
     /**
      * The default factory creates a standard {@link CompilationResultBuilder}.
      */
-    CompilationResultBuilderFactory Default = new CompilationResultBuilderFactory()
+    // @closure
+    CompilationResultBuilderFactory DEFAULT = new CompilationResultBuilderFactory()
     {
         @Override
         public CompilationResultBuilder createBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, CompilationResult compilationResult)

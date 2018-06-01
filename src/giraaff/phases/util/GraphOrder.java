@@ -29,6 +29,7 @@ public final class GraphOrder
         final ArrayList<Node> nodes = new ArrayList<>();
         final NodeBitMap visited = graph.createNodeBitMap();
 
+        // @closure
         new StatelessPostOrderNodeIterator(graph.start())
         {
             @Override

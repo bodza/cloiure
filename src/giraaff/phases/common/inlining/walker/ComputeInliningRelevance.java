@@ -156,6 +156,7 @@ public final class ComputeInliningRelevance
      * excludes the nodes of child loops.
      */
     // @class ComputeInliningRelevance.Scope
+    // @closure
     private final class Scope
     {
         public final FixedNode start;
@@ -164,11 +165,11 @@ public final class ComputeInliningRelevance
         /**
          * The minimum probability along the most probable path in this scope. Computed lazily.
          */
-        private double fastPathMinProbability = UNINITIALIZED;
+        private double fastPathMinProbability = ComputeInliningRelevance.UNINITIALIZED;
         /**
          * A measure of how important this scope is within its parent scope. Computed lazily.
          */
-        private double scopeRelevanceWithinParent = UNINITIALIZED;
+        private double scopeRelevanceWithinParent = ComputeInliningRelevance.UNINITIALIZED;
 
         // @cons
         Scope(FixedNode start, Scope parent)
@@ -180,9 +181,9 @@ public final class ComputeInliningRelevance
 
         public double getFastPathMinProbability()
         {
-            if (fastPathMinProbability == UNINITIALIZED)
+            if (fastPathMinProbability == ComputeInliningRelevance.UNINITIALIZED)
             {
-                fastPathMinProbability = Math.max(EPSILON, computeFastPathMinProbability(start));
+                fastPathMinProbability = Math.max(ComputeInliningRelevance.EPSILON, ComputeInliningRelevance.this.computeFastPathMinProbability(start));
             }
             return fastPathMinProbability;
         }
@@ -193,11 +194,11 @@ public final class ComputeInliningRelevance
          */
         public double getScopeRelevanceWithinParent()
         {
-            if (scopeRelevanceWithinParent == UNINITIALIZED)
+            if (scopeRelevanceWithinParent == ComputeInliningRelevance.UNINITIALIZED)
             {
                 if (start instanceof LoopBeginNode)
                 {
-                    double scopeEntryProbability = nodeProbabilities.applyAsDouble(((LoopBeginNode) start).forwardEnd());
+                    double scopeEntryProbability = ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(((LoopBeginNode) start).forwardEnd());
 
                     scopeRelevanceWithinParent = scopeEntryProbability / parent.getFastPathMinProbability();
                 }
@@ -223,7 +224,7 @@ public final class ComputeInliningRelevance
                 if (current instanceof Invoke)
                 {
                     // process the invoke and queue its successors
-                    nodeRelevances.put((FixedNode) current, computeInvokeRelevance((Invoke) current));
+                    ComputeInliningRelevance.this.nodeRelevances.put((FixedNode) current, computeInvokeRelevance((Invoke) current));
                     workList.addAll(current.successors());
                 }
                 else if (current instanceof LoopBeginNode)
@@ -264,9 +265,7 @@ public final class ComputeInliningRelevance
          */
         public double computeInvokeRelevance(Invoke invoke)
         {
-            double invokeProbability = nodeProbabilities.applyAsDouble(invoke.asNode());
-
-            return (invokeProbability / getFastPathMinProbability()) * Math.min(1.0, getScopeRelevanceWithinParent());
+            return (ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(invoke.asNode()) / getFastPathMinProbability()) * Math.min(getScopeRelevanceWithinParent(), 1.0);
         }
     }
 

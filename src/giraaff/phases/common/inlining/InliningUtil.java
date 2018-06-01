@@ -207,6 +207,7 @@ public final class InliningUtil extends ValueMergeUtil
         }
 
         final AbstractBeginNode prevBegin = AbstractBeginNode.prevBegin(invokeNode);
+        // @closure
         DuplicationReplacement localReplacement = new DuplicationReplacement()
         {
             @Override
@@ -302,9 +303,8 @@ public final class InliningUtil extends ValueMergeUtil
     {
         HashSetNodeEventListener listener = new HashSetNodeEventListener();
         /*
-         * This code relies on the fact that Graph.addDuplicates doesn't trigger the
-         * NodeEventListener to track only nodes which were modified into the process of inlining
-         * the graph into the current graph.
+         * This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
+         * only nodes which were modified into the process of inlining the graph into the current graph.
          */
         try (NodeEventScope nes = invoke.asNode().graph().trackNodeEvents(listener))
         {

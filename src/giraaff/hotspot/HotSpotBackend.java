@@ -294,6 +294,7 @@ public abstract class HotSpotBackend extends Backend
     protected final EconomicSet<Register> gatherDestroyedCallerRegisters(LIR lir)
     {
         final EconomicSet<Register> destroyedRegisters = EconomicSet.create(Equivalence.IDENTITY);
+        // @closure
         ValueConsumer defConsumer = new ValueConsumer()
         {
             @Override

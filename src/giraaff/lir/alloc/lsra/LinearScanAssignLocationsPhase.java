@@ -96,6 +96,7 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
         }
     }
 
+    // @closure
     private final InstructionValueProcedure assignProc = new InstructionValueProcedure()
     {
         @Override

@@ -373,6 +373,7 @@ public abstract class Edges extends Fields
 
     public Iterable<Position> getPositionsIterable(final Node node)
     {
+        // @closure
         return new Iterable<Position>()
         {
             @Override

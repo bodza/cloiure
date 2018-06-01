@@ -81,6 +81,7 @@ public final class DeadCodeEliminationPhase extends Phase
 
     private static void iterateSuccessorsAndInputs(NodeFlood flood)
     {
+        // @closure
         Node.EdgeVisitor consumer = new Node.EdgeVisitor()
         {
             @Override
@@ -108,6 +109,7 @@ public final class DeadCodeEliminationPhase extends Phase
 
     private static void deleteNodes(NodeFlood flood, StructuredGraph graph)
     {
+        // @closure
         Node.EdgeVisitor consumer = new Node.EdgeVisitor()
         {
             @Override

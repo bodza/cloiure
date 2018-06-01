@@ -32,6 +32,7 @@ final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitch
     }
 
     // @class AMD64HotSpotStrategySwitchOp.HotSpotSwitchClosure
+    // @closure
     public final class HotSpotSwitchClosure extends SwitchClosure
     {
         // @cons

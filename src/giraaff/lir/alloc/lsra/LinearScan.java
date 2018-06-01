@@ -239,6 +239,7 @@ public class LinearScan
         blockData.put(block, new BlockData());
     }
 
+    // @closure
     static final IntervalPredicate IS_PRECOLORED_INTERVAL = new IntervalPredicate()
     {
         @Override
@@ -248,6 +249,7 @@ public class LinearScan
         }
     };
 
+    // @closure
     static final IntervalPredicate IS_VARIABLE_INTERVAL = new IntervalPredicate()
     {
         @Override
@@ -257,6 +259,7 @@ public class LinearScan
         }
     };
 
+    // @closure
     static final IntervalPredicate IS_STACK_INTERVAL = new IntervalPredicate()
     {
         @Override

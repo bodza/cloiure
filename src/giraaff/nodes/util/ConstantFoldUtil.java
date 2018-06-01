@@ -28,6 +28,7 @@ public final class ConstantFoldUtil
             }
         }
 
+        // @closure
         return fieldProvider.readConstantField(field, new ConstantFieldTool<ConstantNode>()
         {
             @Override

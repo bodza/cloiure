@@ -155,6 +155,7 @@ public abstract class LoopFragment
             }
             else if (cfgFix != null && dataFix != null)
             {
+                // @closure
                 dr = new DuplicationReplacement()
                 {
                     @Override
@@ -355,19 +356,13 @@ public abstract class LoopFragment
         return TriState.UNKNOWN;
     }
 
-    private static void pushWorkList(Deque<WorkListEntry> workList, Node node, NodeBitMap loopNodes)
-    {
-        WorkListEntry entry = new WorkListEntry(node, loopNodes);
-        workList.push(entry);
-    }
-
     private static void markFloating(Deque<WorkListEntry> workList, Node start, NodeBitMap loopNodes, NodeBitMap nonLoopNodes)
     {
         if (isLoopNode(start, loopNodes, nonLoopNodes).isKnown())
         {
             return;
         }
-        pushWorkList(workList, start, loopNodes);
+        workList.push(new WorkListEntry(start, loopNodes));
         while (!workList.isEmpty())
         {
             WorkListEntry currentEntry = workList.peek();
@@ -384,7 +379,7 @@ public abstract class LoopFragment
                 }
                 else
                 {
-                    pushWorkList(workList, current, loopNodes);
+                    workList.push(new WorkListEntry(current, loopNodes));
                 }
             }
             else
@@ -415,12 +410,14 @@ public abstract class LoopFragment
 
     public static NodeIterable<AbstractBeginNode> toHirBlocks(final Iterable<Block> blocks)
     {
+        // @closure
         return new NodeIterable<AbstractBeginNode>()
         {
             @Override
             public Iterator<AbstractBeginNode> iterator()
             {
                 final Iterator<Block> it = blocks.iterator();
+                // @closure
                 return new Iterator<AbstractBeginNode>()
                 {
                     @Override
@@ -447,12 +444,14 @@ public abstract class LoopFragment
 
     public static NodeIterable<AbstractBeginNode> toHirExits(final Iterable<Block> blocks)
     {
+        // @closure
         return new NodeIterable<AbstractBeginNode>()
         {
             @Override
             public Iterator<AbstractBeginNode> iterator()
             {
                 final Iterator<Block> it = blocks.iterator();
+                // @closure
                 return new Iterator<AbstractBeginNode>()
                 {
                     @Override

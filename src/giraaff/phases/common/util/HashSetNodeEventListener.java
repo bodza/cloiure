@@ -13,8 +13,7 @@ import giraaff.graph.Node;
 import giraaff.graph.Node.IndirectCanonicalization;
 
 /**
- * A simple {@link NodeEventListener} implementation that accumulates event nodes in a
- * {@link HashSet}.
+ * A simple {@link NodeEventListener} implementation that accumulates event nodes in a {@link HashSet}.
  */
 // @class HashSetNodeEventListener
 public final class HashSetNodeEventListener extends NodeEventListener

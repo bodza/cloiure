@@ -88,6 +88,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
     }
 
     // @class LoweringPhase.LoweringToolImpl
+    // @closure
     final class LoweringToolImpl implements LoweringTool
     {
         private final PhaseContext context;
@@ -108,7 +109,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         @Override
         public LoweringStage getLoweringStage()
         {
-            return loweringStage;
+            return LoweringPhase.this.loweringStage;
         }
 
         @Override
@@ -251,6 +252,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
     }
 
     // @class LoweringPhase.Round
+    // @closure
     private final class Round extends Phase
     {
         private final PhaseContext context;
@@ -300,6 +302,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         }
 
         // @class LoweringPhase.Round.ProcessFrame
+        // @closure
         private final class ProcessFrame extends Frame<ProcessFrame>
         {
             private final NodeBitMap activeGuards;

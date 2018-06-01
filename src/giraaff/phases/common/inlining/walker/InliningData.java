@@ -449,9 +449,9 @@ public final class InliningData
         InlineInfo calleeInfo = calleeInvocation.callee();
 
         InliningPolicy.Decision decision = inliningPolicy.isWorthInlining(context.getReplacements(), calleeInvocation, inliningDepth, true);
-        if (decision.shouldInline())
+        if (decision.shouldInline)
         {
-            doInline(callerCallsiteHolder, calleeInvocation, decision.getReason());
+            doInline(callerCallsiteHolder, calleeInvocation, decision.reason);
             return true;
         }
 
@@ -664,7 +664,7 @@ public final class InliningData
     {
         final MethodInvocation currentInvocation = currentInvocation();
 
-        final boolean backtrack = (!currentInvocation.isRoot() && !inliningPolicy.isWorthInlining(context.getReplacements(), currentInvocation, inliningDepth(), false).shouldInline());
+        final boolean backtrack = (!currentInvocation.isRoot() && !inliningPolicy.isWorthInlining(context.getReplacements(), currentInvocation, inliningDepth(), false).shouldInline);
         if (backtrack)
         {
             int remainingGraphs = currentInvocation.totalGraphs() - currentInvocation.processedGraphs();

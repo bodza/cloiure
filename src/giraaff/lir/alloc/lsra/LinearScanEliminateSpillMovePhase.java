@@ -20,6 +20,7 @@ import giraaff.lir.phases.LIRPhase;
 // @class LinearScanEliminateSpillMovePhase
 public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 {
+    // @closure
     private static final IntervalPredicate mustStoreAtDefinition = new LinearScan.IntervalPredicate()
     {
         @Override

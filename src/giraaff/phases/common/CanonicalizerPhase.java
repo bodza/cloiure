@@ -72,17 +72,17 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
 
     public void disableGVN()
     {
-        globalValueNumber = false;
+        this.globalValueNumber = false;
     }
 
     public void disableReadCanonicalization()
     {
-        canonicalizeReads = false;
+        this.canonicalizeReads = false;
     }
 
     public void disableSimplification()
     {
-        simplify = false;
+        this.simplify = false;
     }
 
     @Override
@@ -120,6 +120,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
     }
 
     // @class CanonicalizerPhase.Instance
+    // @closure
     private final class Instance extends Phase
     {
         private final Mark newNodesMark;
@@ -162,16 +163,16 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             boolean wholeGraph = newNodesMark == null || newNodesMark.isStart();
             if (initWorkingSet == null)
             {
-                workList = graph.createIterativeNodeWorkList(wholeGraph, MAX_ITERATION_PER_NODE);
+                this.workList = graph.createIterativeNodeWorkList(wholeGraph, MAX_ITERATION_PER_NODE);
             }
             else
             {
-                workList = graph.createIterativeNodeWorkList(false, MAX_ITERATION_PER_NODE);
-                workList.addAll(initWorkingSet);
+                this.workList = graph.createIterativeNodeWorkList(false, MAX_ITERATION_PER_NODE);
+                this.workList.addAll(initWorkingSet);
             }
             if (!wholeGraph)
             {
-                workList.addAll(graph.getNewNodes(newNodesMark));
+                this.workList.addAll(graph.getNewNodes(newNodesMark));
             }
             tool = new Tool(graph.getAssumptions());
             processWorkSet(graph);
@@ -180,23 +181,24 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         @SuppressWarnings("try")
         private void processWorkSet(StructuredGraph graph)
         {
+            // @closure
             NodeEventListener listener = new NodeEventListener()
             {
                 @Override
                 public void nodeAdded(Node node)
                 {
-                    workList.add(node);
+                    CanonicalizerPhase.Instance.this.workList.add(node);
                 }
 
                 @Override
                 public void inputChanged(Node node)
                 {
-                    workList.add(node);
+                    CanonicalizerPhase.Instance.this.workList.add(node);
                     if (node instanceof IndirectCanonicalization)
                     {
                         for (Node usage : node.usages())
                         {
-                            workList.add(usage);
+                            CanonicalizerPhase.Instance.this.workList.add(usage);
                         }
                     }
                 }
@@ -204,13 +206,13 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 @Override
                 public void usagesDroppedToZero(Node node)
                 {
-                    workList.add(node);
+                    CanonicalizerPhase.Instance.this.workList.add(node);
                 }
             };
 
             try (NodeEventScope nes = graph.trackNodeEvents(listener))
             {
-                for (Node n : workList)
+                for (Node n : this.workList)
                 {
                     boolean changed = processNode(n);
                 }
@@ -236,7 +238,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             {
                 return true;
             }
-            if (globalValueNumber && tryGlobalValueNumbering(node, nodeClass))
+            if (CanonicalizerPhase.this.globalValueNumber && tryGlobalValueNumbering(node, nodeClass))
             {
                 return true;
             }
@@ -247,7 +249,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 Constant constant = valueNode.stamp(NodeView.DEFAULT).asConstant();
                 if (constant != null && !(node instanceof ConstantNode))
                 {
-                    ConstantNode stampConstant = ConstantNode.forConstant(valueNode.stamp(NodeView.DEFAULT), constant, context.getMetaAccess(), graph);
+                    ConstantNode stampConstant = ConstantNode.forConstant(valueNode.stamp(NodeView.DEFAULT), constant, this.context.getMetaAccess(), graph);
                     valueNode.replaceAtUsages(InputType.Value, stampConstant);
                     GraphUtil.tryKillUnused(valueNode);
                     return true;
@@ -259,7 +261,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                     {
                         return true;
                     }
-                    valueNode.usages().forEach(workList::add);
+                    valueNode.usages().forEach(this.workList::add);
                 }
             }
             return false;
@@ -281,16 +283,16 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
 
         public boolean tryCanonicalize(final Node node, NodeClass<?> nodeClass)
         {
-            if (customCanonicalizer != null)
+            if (CanonicalizerPhase.this.customCanonicalizer != null)
             {
-                Node canonical = customCanonicalizer.canonicalize(node);
+                Node canonical = CanonicalizerPhase.this.customCanonicalizer.canonicalize(node);
                 if (performReplacement(node, canonical))
                 {
                     return true;
                 }
                 else
                 {
-                    customCanonicalizer.simplify(node, tool);
+                    CanonicalizerPhase.this.customCanonicalizer.simplify(node, tool);
                     if (node.isDeleted())
                     {
                         return true;
@@ -318,7 +320,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 }
             }
 
-            if (nodeClass.isSimplifiable() && simplify)
+            if (nodeClass.isSimplifiable() && CanonicalizerPhase.this.simplify)
             {
                 node.simplify(tool);
                 return node.isDeleted();
@@ -420,7 +422,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 {
                     for (Node usage : node.usages())
                     {
-                        workList.add(usage);
+                        this.workList.add(usage);
                     }
                     return true;
                 }
@@ -429,6 +431,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         }
 
         // @class CanonicalizerPhase.Instance.Tool
+        // @closure
         private final class Tool implements SimplifierTool, NodeView
         {
             private final Assumptions assumptions;
@@ -453,31 +456,31 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             @Override
             public MetaAccessProvider getMetaAccess()
             {
-                return context.getMetaAccess();
+                return CanonicalizerPhase.Instance.this.context.getMetaAccess();
             }
 
             @Override
             public ConstantReflectionProvider getConstantReflection()
             {
-                return context.getConstantReflection();
+                return CanonicalizerPhase.Instance.this.context.getConstantReflection();
             }
 
             @Override
             public ConstantFieldProvider getConstantFieldProvider()
             {
-                return context.getConstantFieldProvider();
+                return CanonicalizerPhase.Instance.this.context.getConstantFieldProvider();
             }
 
             @Override
             public void addToWorkList(Node node)
             {
-                workList.add(node);
+                CanonicalizerPhase.Instance.this.workList.add(node);
             }
 
             @Override
             public void addToWorkList(Iterable<? extends Node> nodes)
             {
-                workList.addAll(nodes);
+                CanonicalizerPhase.Instance.this.workList.addAll(nodes);
             }
 
             @Override
@@ -489,7 +492,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             @Override
             public boolean canonicalizeReads()
             {
-                return canonicalizeReads;
+                return CanonicalizerPhase.this.canonicalizeReads;
             }
 
             @Override
@@ -507,7 +510,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             @Override
             public Integer smallestCompareWidth()
             {
-                return context.getLowerer().smallestCompareWidth();
+                return CanonicalizerPhase.Instance.this.context.getLowerer().smallestCompareWidth();
             }
 
             @Override
@@ -520,6 +523,6 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
 
     public boolean getCanonicalizeReads()
     {
-        return canonicalizeReads;
+        return this.canonicalizeReads;
     }
 }

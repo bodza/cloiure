@@ -35,8 +35,8 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
 
     private void optimizeSpillPosition(LIRGenerationResult res)
     {
-        LIRInsertionBuffer[] insertionBuffers = new LIRInsertionBuffer[allocator.getLIR().linearScanOrder().length];
-        for (Interval interval : allocator.intervals())
+        LIRInsertionBuffer[] insertionBuffers = new LIRInsertionBuffer[this.allocator.getLIR().linearScanOrder().length];
+        for (Interval interval : this.allocator.intervals())
         {
             optimizeInterval(insertionBuffers, interval, res);
         }
@@ -55,7 +55,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         {
             return;
         }
-        AbstractBlockBase<?> defBlock = allocator.blockForId(interval.spillDefinitionPos());
+        AbstractBlockBase<?> defBlock = this.allocator.blockForId(interval.spillDefinitionPos());
         AbstractBlockBase<?> spillBlock = null;
         Interval firstSpillChild = null;
         for (Interval splitChild : interval.getSplitChildren())
@@ -102,7 +102,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
          * end of the predecessors might differ. Therefore, we would need a spill move in all
          * predecessors. To avoid this we spill in the dominator.
          */
-        if (!defBlock.equals(spillBlock) && spillBlock.equals(allocator.blockForId(firstSpillChild.from())))
+        if (!defBlock.equals(spillBlock) && spillBlock.equals(this.allocator.blockForId(firstSpillChild.from())))
         {
             AbstractBlockBase<?> dom = spillBlock.getDominator();
             spillBlock = dom;
@@ -126,13 +126,13 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         {
             insertionBuffer = new LIRInsertionBuffer();
             insertionBuffers[spillBlock.getId()] = insertionBuffer;
-            insertionBuffer.init(allocator.getLIR().getLIRforBlock(spillBlock));
+            insertionBuffer.init(this.allocator.getLIR().getLIRforBlock(spillBlock));
         }
-        int spillOpId = allocator.getFirstLirInstructionId(spillBlock);
+        int spillOpId = this.allocator.getFirstLirInstructionId(spillBlock);
         // insert spill move
-        AllocatableValue fromLocation = interval.getSplitChildAtOpId(spillOpId, OperandMode.DEF, allocator).location();
+        AllocatableValue fromLocation = interval.getSplitChildAtOpId(spillOpId, OperandMode.DEF, this.allocator).location();
         AllocatableValue toLocation = LinearScan.canonicalSpillOpr(interval);
-        LIRInstruction move = allocator.getSpillMoveFactory().createMove(toLocation, fromLocation);
+        LIRInstruction move = this.allocator.getSpillMoveFactory().createMove(toLocation, fromLocation);
         move.setId(LinearScan.DOMINATOR_SPILL_MOVE_ID);
         // We can use the insertion buffer directly because we always insert at position 1.
         insertionBuffer.append(1, move);
@@ -144,6 +144,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
      * Iterate over all {@link AbstractBlockBase blocks} of an interval.
      */
     // @class LinearScanOptimizeSpillPositionPhase.IntervalBlockIterator
+    // @closure
     private final class IntervalBlockIterator implements Iterator<AbstractBlockBase<?>>
     {
         Range range;
@@ -154,7 +155,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         {
             super();
             range = interval.first();
-            block = allocator.blockForId(range.from);
+            block = LinearScanOptimizeSpillPositionPhase.this.allocator.blockForId(range.from);
         }
 
         @Override
@@ -162,10 +163,10 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         {
             AbstractBlockBase<?> currentBlock = block;
             int nextBlockIndex = block.getLinearScanNumber() + 1;
-            if (nextBlockIndex < allocator.sortedBlocks().length)
+            if (nextBlockIndex < LinearScanOptimizeSpillPositionPhase.this.allocator.sortedBlocks().length)
             {
-                block = allocator.sortedBlocks()[nextBlockIndex];
-                if (range.to <= allocator.getFirstLirInstructionId(block))
+                block = LinearScanOptimizeSpillPositionPhase.this.allocator.sortedBlocks()[nextBlockIndex];
+                if (range.to <= LinearScanOptimizeSpillPositionPhase.this.allocator.getFirstLirInstructionId(block))
                 {
                     range = range.next;
                     if (range.isEndMarker())
@@ -174,7 +175,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
                     }
                     else
                     {
-                        block = allocator.blockForId(range.from);
+                        block = LinearScanOptimizeSpillPositionPhase.this.allocator.blockForId(range.from);
                     }
                 }
             }
@@ -194,6 +195,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
 
     private Iterable<AbstractBlockBase<?>> blocksForInterval(Interval interval)
     {
+        // @closure
         return new Iterable<AbstractBlockBase<?>>()
         {
             @Override

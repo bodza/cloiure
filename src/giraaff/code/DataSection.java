@@ -147,6 +147,7 @@ public final class DataSection implements Iterable<Data>
             switch (size)
             {
                 case 1:
+                    // @closure
                     return new ZeroData(alignment, size)
                     {
                         @Override
@@ -157,6 +158,7 @@ public final class DataSection implements Iterable<Data>
                     };
 
                 case 2:
+                    // @closure
                     return new ZeroData(alignment, size)
                     {
                         @Override
@@ -167,6 +169,7 @@ public final class DataSection implements Iterable<Data>
                     };
 
                 case 4:
+                    // @closure
                     return new ZeroData(alignment, size)
                     {
                         @Override
@@ -177,6 +180,7 @@ public final class DataSection implements Iterable<Data>
                     };
 
                 case 8:
+                    // @closure
                     return new ZeroData(alignment, size)
                     {
                         @Override

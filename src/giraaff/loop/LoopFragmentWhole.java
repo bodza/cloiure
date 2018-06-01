@@ -67,6 +67,7 @@ public final class LoopFragmentWhole extends LoopFragment
     {
         final FixedNode entry = loop().entryPoint();
         final Graph graph = this.graph();
+        // @closure
         return new DuplicationReplacement()
         {
             private EndNode endNode;

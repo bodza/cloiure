@@ -38,9 +38,9 @@ public final class ComputeBlockOrder
     private static final int INITIAL_WORKLIST_CAPACITY = 10;
 
     /**
-     * Divisor used for degrading the probability of the current path versus unscheduled paths at a
-     * merge node when calculating the linear scan order. A high value means that predecessors of
-     * merge nodes are more likely to be scheduled before the merge node.
+     * Divisor used for degrading the probability of the current path versus unscheduled paths at
+     * a merge node when calculating the linear scan order. A high value means that predecessors
+     * of merge nodes are more likely to be scheduled before the merge node.
      */
     private static final int PENALTY_VERSUS_UNSCHEDULED = 10;
 
@@ -53,8 +53,7 @@ public final class ComputeBlockOrder
     {
         List<T> order = new ArrayList<>();
         BitSet visitedBlocks = new BitSet(blockCount);
-        PriorityQueue<T> worklist = initializeWorklist(startBlock, visitedBlocks);
-        computeLinearScanOrder(order, worklist, visitedBlocks);
+        computeLinearScanOrder(order, initializeWorklist(startBlock, visitedBlocks), visitedBlocks);
         return order.toArray(new AbstractBlockBase<?>[0]);
     }
 
@@ -67,8 +66,7 @@ public final class ComputeBlockOrder
     {
         List<T> order = new ArrayList<>();
         BitSet visitedBlocks = new BitSet(blockCount);
-        PriorityQueue<T> worklist = initializeWorklist(startBlock, visitedBlocks);
-        computeCodeEmittingOrder(order, worklist, visitedBlocks);
+        computeCodeEmittingOrder(order, initializeWorklist(startBlock, visitedBlocks), visitedBlocks);
         return order.toArray(new AbstractBlockBase<?>[0]);
     }
 
@@ -79,8 +77,7 @@ public final class ComputeBlockOrder
     {
         while (!worklist.isEmpty())
         {
-            T nextImportantPath = worklist.poll();
-            addPathToCodeEmittingOrder(nextImportantPath, order, worklist, visitedBlocks);
+            addPathToCodeEmittingOrder(worklist.poll(), order, worklist, visitedBlocks);
         }
     }
 

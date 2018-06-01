@@ -2390,6 +2390,7 @@ public final class BytecodeParser implements GraphBuilderContext
                     pos++;
                 } while (exits != 0);
 
+                // @closure
                 Collections.sort(exitLoops, new Comparator<BciBlock>()
                 {
                     @Override

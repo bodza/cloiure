@@ -1016,6 +1016,7 @@ public class SnippetTemplate
      * Represents the default {@link UsageReplacer usage replacer} logic which simply delegates to
      * {@link Node#replaceAtUsages(Node)}.
      */
+    // @closure
     public static final UsageReplacer DEFAULT_REPLACER = new UsageReplacer()
     {
         @Override
@@ -1135,6 +1136,7 @@ public class SnippetTemplate
     }
 
     // @class SnippetTemplate.MemoryOutputMap
+    // @closure
     private final class MemoryOutputMap extends MemoryInputMap
     {
         private final UnmodifiableEconomicMap<Node, Node> duplicates;
@@ -1149,9 +1151,8 @@ public class SnippetTemplate
         @Override
         public MemoryNode getLastLocationAccess(LocationIdentity locationIdentity)
         {
-            MemoryMapNode memoryMap = returnNode.getMemoryMap();
-            MemoryNode lastLocationAccess = memoryMap.getLastLocationAccess(locationIdentity);
-            if (lastLocationAccess == memoryAnchor)
+            MemoryNode lastLocationAccess = SnippetTemplate.this.returnNode.getMemoryMap().getLastLocationAccess(locationIdentity);
+            if (lastLocationAccess == SnippetTemplate.this.memoryAnchor)
             {
                 return super.getLastLocationAccess(locationIdentity);
             }
@@ -1164,7 +1165,7 @@ public class SnippetTemplate
         @Override
         public Collection<LocationIdentity> getLocations()
         {
-            return returnNode.getMemoryMap().getLocations();
+            return SnippetTemplate.this.returnNode.getMemoryMap().getLocations();
         }
     }
 

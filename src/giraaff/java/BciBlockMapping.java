@@ -215,6 +215,7 @@ public final class BciBlockMapping
          */
         public Iterable<Integer> loopIdIterable()
         {
+            // @closure
             return new Iterable<Integer>()
             {
                 @Override
@@ -227,6 +228,7 @@ public final class BciBlockMapping
 
         private static Iterator<Integer> idIterator(long field)
         {
+            // @closure
             return new Iterator<Integer>()
             {
                 long l = field;

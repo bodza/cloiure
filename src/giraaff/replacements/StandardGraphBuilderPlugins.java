@@ -121,6 +121,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerStringPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider, SnippetReflectionProvider snippetReflection)
     {
         final Registration r = new Registration(plugins, String.class, bytecodeProvider);
+        // @closure
         r.register1("hashCode", Receiver.class, new InvocationPlugin()
         {
             @Override
@@ -151,6 +152,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerArrayPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, Array.class, bytecodeProvider);
+        // @closure
         r.register2("newInstance", Class.class, int.class, new InvocationPlugin()
         {
             @Override
@@ -199,6 +201,7 @@ public final class StandardGraphBuilderPlugins
         for (JavaKind kind : new JavaKind[] { JavaKind.Int, JavaKind.Long, JavaKind.Object })
         {
             Class<?> javaClass = kind == JavaKind.Object ? Object.class : kind.toJavaClass();
+            // @closure
             r.register5("compareAndSet" + kind.name(), Receiver.class, Object.class, long.class, javaClass, javaClass, new InvocationPlugin()
             {
                 @Override
@@ -213,6 +216,7 @@ public final class StandardGraphBuilderPlugins
             });
         }
 
+        // @closure
         r.register2("allocateInstance", Receiver.class, Class.class, new InvocationPlugin()
         {
             @Override
@@ -235,6 +239,7 @@ public final class StandardGraphBuilderPlugins
         Class<?> declaringClass = kind.toBoxedJavaClass();
         Class<?> type = kind.toJavaClass();
         Registration r = new Registration(plugins, declaringClass);
+        // @closure
         r.register1("reverseBytes", type, new InvocationPlugin()
         {
             @Override
@@ -244,6 +249,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register2("divideUnsigned", type, type, new InvocationPlugin()
         {
             @Override
@@ -253,6 +259,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register2("remainderUnsigned", type, type, new InvocationPlugin()
         {
             @Override
@@ -267,6 +274,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerCharacterPlugins(InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, Character.class);
+        // @closure
         r.register1("reverseBytes", char.class, new InvocationPlugin()
         {
             @Override
@@ -285,6 +293,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerShortPlugins(InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, Short.class);
+        // @closure
         r.register1("reverseBytes", short.class, new InvocationPlugin()
         {
             @Override
@@ -303,6 +312,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerFloatPlugins(InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, Float.class);
+        // @closure
         r.register1("floatToRawIntBits", float.class, new InvocationPlugin()
         {
             @Override
@@ -312,6 +322,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register1("floatToIntBits", float.class, new InvocationPlugin()
         {
             @Override
@@ -324,6 +335,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register1("intBitsToFloat", int.class, new InvocationPlugin()
         {
             @Override
@@ -338,6 +350,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerDoublePlugins(InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, Double.class);
+        // @closure
         r.register1("doubleToRawLongBits", double.class, new InvocationPlugin()
         {
             @Override
@@ -347,6 +360,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register1("doubleToLongBits", double.class, new InvocationPlugin()
         {
             @Override
@@ -359,6 +373,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register1("longBitsToDouble", long.class, new InvocationPlugin()
         {
             @Override
@@ -379,6 +394,7 @@ public final class StandardGraphBuilderPlugins
             {
                 Class<?> type = kind.toJavaClass();
 
+                // @closure
                 r.register1("decrementExact", type, new InvocationPlugin()
                 {
                     @Override
@@ -389,6 +405,7 @@ public final class StandardGraphBuilderPlugins
                     }
                 });
 
+                // @closure
                 r.register1("incrementExact", type, new InvocationPlugin()
                 {
                     @Override
@@ -399,6 +416,7 @@ public final class StandardGraphBuilderPlugins
                     }
                 });
 
+                // @closure
                 r.register2("addExact", type, type, new InvocationPlugin()
                 {
                     @Override
@@ -409,6 +427,7 @@ public final class StandardGraphBuilderPlugins
                     }
                 });
 
+                // @closure
                 r.register2("subtractExact", type, type, new InvocationPlugin()
                 {
                     @Override
@@ -419,6 +438,7 @@ public final class StandardGraphBuilderPlugins
                     }
                 });
 
+                // @closure
                 r.register2("multiplyExact", type, type, new InvocationPlugin()
                 {
                     @Override
@@ -430,6 +450,7 @@ public final class StandardGraphBuilderPlugins
                 });
             }
         }
+        // @closure
         r.register1("abs", Float.TYPE, new InvocationPlugin()
         {
             @Override
@@ -439,6 +460,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register1("abs", Double.TYPE, new InvocationPlugin()
         {
             @Override
@@ -448,6 +470,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register1("sqrt", Double.TYPE, new InvocationPlugin()
         {
             @Override
@@ -517,6 +540,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerObjectPlugins(InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, Object.class);
+        // @closure
         r.register1("<init>", Receiver.class, new InvocationPlugin()
         {
             @Override
@@ -539,6 +563,7 @@ public final class StandardGraphBuilderPlugins
                 return false;
             }
         });
+        // @closure
         r.register1("getClass", Receiver.class, new InvocationPlugin()
         {
             @Override
@@ -563,6 +588,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerClassPlugins(InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, Class.class);
+        // @closure
         r.register2("isInstance", Receiver.class, Object.class, new InvocationPlugin()
         {
             @Override
@@ -573,6 +599,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register2("isAssignableFrom", Receiver.class, Class.class, new InvocationPlugin()
         {
             @Override
@@ -595,6 +622,7 @@ public final class StandardGraphBuilderPlugins
         Registration r = new Registration(plugins, Edges.class);
         for (Class<?> c : new Class<?>[] { Node.class, NodeList.class })
         {
+            // @closure
             r.register2("get" + c.getSimpleName() + "Unsafe", Node.class, long.class, new InvocationPlugin()
             {
                 @Override
@@ -606,6 +634,7 @@ public final class StandardGraphBuilderPlugins
                     return true;
                 }
             });
+            // @closure
             r.register3("put" + c.getSimpleName() + "Unsafe", Node.class, long.class, c, new InvocationPlugin()
             {
                 @Override
@@ -842,6 +871,7 @@ public final class StandardGraphBuilderPlugins
     private static void registerGraalDirectivesPlugins(InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, GraalDirectives.class);
+        // @closure
         r.register0("deoptimize", new InvocationPlugin()
         {
             @Override
@@ -852,6 +882,7 @@ public final class StandardGraphBuilderPlugins
             }
         });
 
+        // @closure
         r.register0("deoptimizeAndInvalidate", new InvocationPlugin()
         {
             @Override
@@ -862,6 +893,7 @@ public final class StandardGraphBuilderPlugins
             }
         });
 
+        // @closure
         r.register0("deoptimizeAndInvalidateWithSpeculation", new InvocationPlugin()
         {
             @Override
@@ -884,6 +916,7 @@ public final class StandardGraphBuilderPlugins
             }
         });
 
+        // @closure
         r.register0("inCompiledCode", new InvocationPlugin()
         {
             @Override
@@ -894,6 +927,7 @@ public final class StandardGraphBuilderPlugins
             }
         });
 
+        // @closure
         r.register0("controlFlowAnchor", new InvocationPlugin()
         {
             @Override
@@ -904,6 +938,7 @@ public final class StandardGraphBuilderPlugins
             }
         });
 
+        // @closure
         r.register2("injectBranchProbability", double.class, boolean.class, new InvocationPlugin()
         {
             @Override
@@ -914,6 +949,7 @@ public final class StandardGraphBuilderPlugins
             }
         });
 
+        // @closure
         InvocationPlugin blackholePlugin = new InvocationPlugin()
         {
             @Override
@@ -924,6 +960,7 @@ public final class StandardGraphBuilderPlugins
             }
         };
 
+        // @closure
         InvocationPlugin bindToRegisterPlugin = new InvocationPlugin()
         {
             @Override
@@ -941,6 +978,7 @@ public final class StandardGraphBuilderPlugins
                 r.register1("blackhole", javaClass, blackholePlugin);
                 r.register1("bindToRegister", javaClass, bindToRegisterPlugin);
 
+                // @closure
                 r.register1("opaque", javaClass, new InvocationPlugin()
                 {
                     @Override
@@ -953,6 +991,7 @@ public final class StandardGraphBuilderPlugins
             }
         }
 
+        // @closure
         InvocationPlugin spillPlugin = new InvocationPlugin()
         {
             @Override
@@ -964,6 +1003,7 @@ public final class StandardGraphBuilderPlugins
         };
         r.register0("spillRegisters", spillPlugin);
 
+        // @closure
         r.register1("guardingNonNull", Object.class, new InvocationPlugin()
         {
             @Override
@@ -974,6 +1014,7 @@ public final class StandardGraphBuilderPlugins
             }
         });
 
+        // @closure
         r.register1("ensureVirtualized", Object.class, new InvocationPlugin()
         {
             @Override
@@ -983,6 +1024,7 @@ public final class StandardGraphBuilderPlugins
                 return true;
             }
         });
+        // @closure
         r.register1("ensureVirtualizedHere", Object.class, new InvocationPlugin()
         {
             @Override

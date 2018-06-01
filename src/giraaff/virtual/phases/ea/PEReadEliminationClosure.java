@@ -437,6 +437,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     }
 
     // @class PEReadEliminationClosure.ReadEliminationMergeProcessor
+    // @closure
     private final class ReadEliminationMergeProcessor extends MergeProcessor
     {
         // @cons

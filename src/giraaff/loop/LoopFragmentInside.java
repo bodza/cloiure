@@ -54,6 +54,7 @@ public class LoopFragmentInside extends LoopFragment
      * of the duplicated inside fragment
      */
     private EconomicMap<PhiNode, ValueNode> mergedInitializers;
+    // @closure
     private final DuplicationReplacement dataFixBefore = new DuplicationReplacement()
     {
         @Override
@@ -67,6 +68,7 @@ public class LoopFragmentInside extends LoopFragment
         }
     };
 
+    // @closure
     private final DuplicationReplacement dataFixWithinAfter = new DuplicationReplacement()
     {
         @Override
@@ -353,6 +355,7 @@ public class LoopFragmentInside extends LoopFragment
     {
         final LoopBeginNode loopBegin = loop().loopBegin();
         final StructuredGraph graph = graph();
+        // @closure
         return new DuplicationReplacement()
         {
             private EconomicMap<Node, Node> seenNode = EconomicMap.create(Equivalence.IDENTITY);

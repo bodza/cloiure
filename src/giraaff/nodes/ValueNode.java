@@ -97,6 +97,7 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
         return this instanceof ConstantNode;
     }
 
+    // @closure
     private static final NodePredicate IS_CONSTANT = new NodePredicate()
     {
         @Override

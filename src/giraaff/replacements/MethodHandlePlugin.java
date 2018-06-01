@@ -55,6 +55,7 @@ public final class MethodHandlePlugin implements NodePlugin
                 args[0] = b.nullCheckedValue(args[0]);
             }
             StampPair invokeReturnStamp = b.getInvokeReturnStamp(b.getAssumptions());
+            // @closure
             MethodHandleNode.GraphAdder adder = new MethodHandleNode.GraphAdder(b.getGraph())
             {
                 @Override

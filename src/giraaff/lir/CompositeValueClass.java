@@ -26,6 +26,7 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     /**
      * The CompositeValueClass is only used for formatting for the most part so cache it as a ClassValue.
      */
+    // @closure
     private static final ClassValue<CompositeValueClass<?>> compositeClass = new ClassValue<CompositeValueClass<?>>()
     {
         @Override

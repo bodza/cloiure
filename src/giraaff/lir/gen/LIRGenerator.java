@@ -167,13 +167,13 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public Variable newVariable(ValueKind<?> valueKind)
     {
-        return new Variable(valueKind, ((VariableProvider) res.getLIR()).nextVariable());
+        return new Variable(valueKind, ((VariableProvider) this.res.getLIR()).nextVariable());
     }
 
     @Override
     public RegisterConfig getRegisterConfig()
     {
-        return res.getRegisterConfig();
+        return this.res.getRegisterConfig();
     }
 
     @Override
@@ -293,9 +293,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public <I extends LIRInstruction> I append(I op)
     {
-        LIR lir = res.getLIR();
-        ArrayList<LIRInstruction> lirForBlock = lir.getLIRforBlock(getCurrentBlock());
-        lirForBlock.add(op);
+        this.res.getLIR().getLIRforBlock(getCurrentBlock()).add(op);
         return op;
     }
 
@@ -311,32 +309,33 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     }
 
     // @class LIRGenerator.BlockScopeImpl
-    private final class BlockScopeImpl extends BlockScope
+    // @closure
+    private final class BlockScopeImpl implements BlockScope
     {
         // @cons
         private BlockScopeImpl(AbstractBlockBase<?> block)
         {
             super();
-            currentBlock = block;
+            LIRGenerator.this.currentBlock = block;
         }
 
         private void doBlockStart()
         {
             // set up the list of LIR instructions
-            res.getLIR().setLIRforBlock(currentBlock, new ArrayList<LIRInstruction>());
+            LIRGenerator.this.res.getLIR().setLIRforBlock(LIRGenerator.this.currentBlock, new ArrayList<LIRInstruction>());
 
-            append(new LabelOp(new Label(currentBlock.getId()), currentBlock.isAligned()));
+            LIRGenerator.this.append(new LabelOp(new Label(LIRGenerator.this.currentBlock.getId()), LIRGenerator.this.currentBlock.isAligned()));
         }
 
         private void doBlockEnd()
         {
-            currentBlock = null;
+            LIRGenerator.this.currentBlock = null;
         }
 
         @Override
         public AbstractBlockBase<?> getCurrentBlock()
         {
-            return currentBlock;
+            return LIRGenerator.this.currentBlock;
         }
 
         @Override
@@ -357,7 +356,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public void emitIncomingValues(Value[] params)
     {
-        ((LabelOp) res.getLIR().getLIRforBlock(getCurrentBlock()).get(0)).setIncomingValues(params);
+        ((LabelOp) this.res.getLIR().getLIRforBlock(getCurrentBlock()).get(0)).setIncomingValues(params);
     }
 
     @Override
@@ -402,7 +401,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
 
         // move the arguments into the correct location
         CallingConvention linkageCc = linkage.getOutgoingCallingConvention();
-        res.getFrameMapBuilder().callsMethod(linkageCc);
+        this.res.getFrameMapBuilder().callsMethod(linkageCc);
         Value[] argLocations = new Value[args.length];
         for (int i = 0; i < args.length; i++)
         {
@@ -411,7 +410,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
             emitMove(loc, arg);
             argLocations[i] = loc;
         }
-        res.setForeignCall(true);
+        this.res.setForeignCall(true);
         emitForeignCallOp(linkage, linkageCc.getReturn(), argLocations, linkage.getTemporaries(), state);
 
         if (ValueUtil.isLegal(linkageCc.getReturn()))
@@ -497,13 +496,13 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public AbstractBlockBase<?> getCurrentBlock()
     {
-        return currentBlock;
+        return this.currentBlock;
     }
 
     @Override
     public LIRGenerationResult getResult()
     {
-        return res;
+        return this.res;
     }
 
     @Override
@@ -535,7 +534,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     public LIRInstruction zapArgumentSpace()
     {
         List<StackSlot> slots = null;
-        for (AllocatableValue arg : res.getCallingConvention().getArguments())
+        for (AllocatableValue arg : this.res.getCallingConvention().getArguments())
         {
             if (ValueUtil.isStackSlot(arg))
             {

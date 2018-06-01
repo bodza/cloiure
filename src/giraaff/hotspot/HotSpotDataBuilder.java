@@ -47,6 +47,7 @@ public final class HotSpotDataBuilder extends DataBuilder
 
             HotSpotConstant c = (HotSpotConstant) vmConstant;
             int size = c.isCompressed() ? 4 : target.wordSize;
+            // @closure
             return new Data(size, size)
             {
                 @Override

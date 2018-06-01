@@ -273,6 +273,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
     }
 
     // @class ReadEliminationClosure.ReadEliminationMergeProcessor
+    // @closure
     private final class ReadEliminationMergeProcessor extends EffectsClosure<ReadEliminationBlockState>.MergeProcessor
     {
         private final EconomicMap<Object, ValuePhiNode> materializedPhis = EconomicMap.create(Equivalence.DEFAULT);

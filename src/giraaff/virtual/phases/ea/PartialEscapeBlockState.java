@@ -191,6 +191,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
         materializeWithCommit(fixed, virtual, objects, locks, values, ensureVirtual, otherAllocations);
 
         materializeEffects.addVirtualizationDelta(-(objects.size() + otherAllocations.size()));
+        // @closure
         materializeEffects.add("materializeBefore", new Effect()
         {
             @Override
