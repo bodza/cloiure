@@ -16,25 +16,25 @@ public final class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedN
 
     @OptionalInput(InputType.Guard)
     // @field
-    protected GuardingNode guard;
+    protected GuardingNode ___guard;
 
     // @cons
     public GuardedUnsafeLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, GuardingNode __guard)
     {
         super(TYPE, __object, __offset, __accessKind, __locationIdentity);
-        this.guard = __guard;
+        this.___guard = __guard;
     }
 
     @Override
     public GuardingNode getGuard()
     {
-        return guard;
+        return this.___guard;
     }
 
     @Override
     public void setGuard(GuardingNode __guard)
     {
-        updateUsagesInterface(this.guard, __guard);
-        this.guard = __guard;
+        updateUsagesInterface(this.___guard, __guard);
+        this.___guard = __guard;
     }
 }

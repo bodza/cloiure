@@ -25,51 +25,51 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
     @Input
     // @field
-    ValueNode offset;
+    ValueNode ___offset;
     // @field
-    protected final JavaKind accessKind;
+    protected final JavaKind ___accessKind;
     // @field
-    protected final LocationIdentity locationIdentity;
+    protected final LocationIdentity ___locationIdentity;
     // @field
-    protected final boolean forceAnyLocation;
+    protected final boolean ___forceAnyLocation;
 
     // @cons
     protected UnsafeAccessNode(NodeClass<? extends UnsafeAccessNode> __c, Stamp __stamp, ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __forceAnyLocation)
     {
         super(__c, __stamp);
-        this.forceAnyLocation = __forceAnyLocation;
-        this.object = __object;
-        this.offset = __offset;
-        this.accessKind = __accessKind;
-        this.locationIdentity = __locationIdentity;
+        this.___forceAnyLocation = __forceAnyLocation;
+        this.___object = __object;
+        this.___offset = __offset;
+        this.___accessKind = __accessKind;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 
     public boolean isAnyLocationForced()
     {
-        return forceAnyLocation;
+        return this.___forceAnyLocation;
     }
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
     public ValueNode offset()
     {
-        return offset;
+        return this.___offset;
     }
 
     public JavaKind accessKind()
     {
-        return accessKind;
+        return this.___accessKind;
     }
 
     @Override
@@ -107,7 +107,7 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
         return this;
     }
 
-    protected abstract ValueNode cloneAsFieldAccess(Assumptions assumptions, ResolvedJavaField field);
+    protected abstract ValueNode cloneAsFieldAccess(Assumptions __assumptions, ResolvedJavaField __field);
 
-    protected abstract ValueNode cloneAsArrayAccess(ValueNode location, LocationIdentity identity);
+    protected abstract ValueNode cloneAsArrayAccess(ValueNode __location, LocationIdentity __identity);
 }

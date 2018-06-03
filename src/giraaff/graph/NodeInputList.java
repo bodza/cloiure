@@ -41,7 +41,7 @@ public final class NodeInputList<T extends Node> extends NodeList<T>
     @Override
     protected void update(T __oldNode, T __newNode)
     {
-        self.updateUsages(__oldNode, __newNode);
+        this.___self.updateUsages(__oldNode, __newNode);
     }
 
     @Override

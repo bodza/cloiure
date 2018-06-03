@@ -8,10 +8,10 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotRuntime;
 
-/**
- * Extends {@link HotSpotConstantFieldProvider} to override the implementation of
- * {@link #readConstantField} with Graal specific semantics.
- */
+///
+// Extends {@link HotSpotConstantFieldProvider} to override the implementation of
+// {@link #readConstantField} with Graal specific semantics.
+///
 // @class HotSpotGraalConstantFieldProvider
 public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvider
 {
@@ -19,7 +19,7 @@ public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFiel
     public HotSpotGraalConstantFieldProvider(MetaAccessProvider __metaAccess)
     {
         super(__metaAccess);
-        this.metaAccess = __metaAccess;
+        this.___metaAccess = __metaAccess;
     }
 
     @Override
@@ -63,28 +63,28 @@ public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFiel
     }
 
     // @field
-    private final MetaAccessProvider metaAccess;
+    private final MetaAccessProvider ___metaAccess;
 
     // @field
-    private ResolvedJavaType cachedHotSpotVMConfigType;
+    private ResolvedJavaType ___cachedHotSpotVMConfigType;
     // @field
-    private ResolvedJavaType cachedNodeClassType;
+    private ResolvedJavaType ___cachedNodeClassType;
 
     private ResolvedJavaType getHotSpotVMConfigType()
     {
-        if (cachedHotSpotVMConfigType == null)
+        if (this.___cachedHotSpotVMConfigType == null)
         {
-            cachedHotSpotVMConfigType = metaAccess.lookupJavaType(HotSpotRuntime.class);
+            this.___cachedHotSpotVMConfigType = this.___metaAccess.lookupJavaType(HotSpotRuntime.class);
         }
-        return cachedHotSpotVMConfigType;
+        return this.___cachedHotSpotVMConfigType;
     }
 
     private ResolvedJavaType getNodeClassType()
     {
-        if (cachedNodeClassType == null)
+        if (this.___cachedNodeClassType == null)
         {
-            cachedNodeClassType = metaAccess.lookupJavaType(NodeClass.class);
+            this.___cachedNodeClassType = this.___metaAccess.lookupJavaType(NodeClass.class);
         }
-        return cachedNodeClassType;
+        return this.___cachedNodeClassType;
     }
 }

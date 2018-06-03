@@ -18,10 +18,10 @@ import giraaff.nodes.calc.UnaryNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Determines the index of the least significant "1" bit. Note that the result is undefined if the
- * input is zero.
- */
+///
+// Determines the index of the least significant "1" bit. Note that the result is undefined if the
+// input is zero.
+///
 // @class BitScanForwardNode
 public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIRLowerable
 {
@@ -77,11 +77,11 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
         return __folded != null ? __folded : this;
     }
 
-    /**
-     * Utility method with defined return value for 0.
-     *
-     * @return number of trailing zeros or -1 if {@code v} == 0.
-     */
+    ///
+    // Utility method with defined return value for 0.
+    //
+    // @return number of trailing zeros or -1 if {@code v} == 0.
+    ///
     public static int scan(long __v)
     {
         if (__v == 0)
@@ -91,31 +91,31 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
         return Long.numberOfTrailingZeros(__v);
     }
 
-    /**
-     * Utility method with defined return value for 0.
-     *
-     * @return number of trailing zeros or -1 if {@code v} == 0.
-     */
+    ///
+    // Utility method with defined return value for 0.
+    //
+    // @return number of trailing zeros or -1 if {@code v} == 0.
+    ///
     public static int scan(int __v)
     {
         return scan(0xffffffffL & __v);
     }
 
-    /**
-     * Raw intrinsic for bsf instruction.
-     *
-     * @return number of trailing zeros or an undefined value if {@code v} == 0.
-     */
+    ///
+    // Raw intrinsic for bsf instruction.
+    //
+    // @return number of trailing zeros or an undefined value if {@code v} == 0.
+    ///
     @NodeIntrinsic
-    public static native int unsafeScan(long v);
+    public static native int unsafeScan(long __v);
 
-    /**
-     * Raw intrinsic for bsf instruction.
-     *
-     * @return number of trailing zeros or an undefined value if {@code v} == 0.
-     */
+    ///
+    // Raw intrinsic for bsf instruction.
+    //
+    // @return number of trailing zeros or an undefined value if {@code v} == 0.
+    ///
     @NodeIntrinsic
-    public static native int unsafeScan(int v);
+    public static native int unsafeScan(int __v);
 
     @Override
     public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)

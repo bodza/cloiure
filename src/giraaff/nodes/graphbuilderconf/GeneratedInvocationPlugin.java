@@ -11,19 +11,19 @@ import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.nodes.ValueNode;
 import giraaff.util.GraalError;
 
-/**
- * Abstract class for a plugin generated for a method annotated by {@link NodeIntrinsic} or {@link Fold}.
- */
+///
+// Abstract class for a plugin generated for a method annotated by {@link NodeIntrinsic} or {@link Fold}.
+///
 // @class GeneratedInvocationPlugin
 public abstract class GeneratedInvocationPlugin implements InvocationPlugin
 {
-    /**
-     * Gets the class of the annotation for which this plugin was generated.
-     */
+    ///
+    // Gets the class of the annotation for which this plugin was generated.
+    ///
     public abstract Class<? extends Annotation> getSource();
 
     @Override
-    public abstract boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] args);
+    public abstract boolean execute(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, InvocationPlugin.Receiver __receiver, ValueNode[] __args);
 
     protected boolean checkInjectedArgument(GraphBuilderContext __b, ValueNode __arg, ResolvedJavaMethod __foldAnnotatedMethod)
     {

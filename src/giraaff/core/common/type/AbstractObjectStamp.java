@@ -10,31 +10,31 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-/**
- * Type describing all pointers to Java objects.
- */
+///
+// Type describing all pointers to Java objects.
+///
 // @class AbstractObjectStamp
 public abstract class AbstractObjectStamp extends AbstractPointerStamp
 {
     // @field
-    private final ResolvedJavaType type;
+    private final ResolvedJavaType ___type;
     // @field
-    private final boolean exactType;
+    private final boolean ___exactType;
 
     // @cons
     protected AbstractObjectStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull)
     {
         super(__nonNull, __alwaysNull);
-        this.type = __type;
-        this.exactType = __exactType;
+        this.___type = __type;
+        this.___exactType = __exactType;
     }
 
-    protected abstract AbstractObjectStamp copyWith(ResolvedJavaType newType, boolean newExactType, boolean newNonNull, boolean newAlwaysNull);
+    protected abstract AbstractObjectStamp copyWith(ResolvedJavaType __newType, boolean __newExactType, boolean __newNonNull, boolean __newAlwaysNull);
 
     @Override
     protected final AbstractPointerStamp copyWith(boolean __newNonNull, boolean __newAlwaysNull)
     {
-        return copyWith(type, exactType, __newNonNull, __newAlwaysNull);
+        return copyWith(this.___type, this.___exactType, __newNonNull, __newAlwaysNull);
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
     @Override
     public boolean hasValues()
     {
-        return !exactType || (type != null && (isConcreteType(type)));
+        return !this.___exactType || (this.___type != null && (isConcreteType(this.___type)));
     }
 
     @Override
@@ -72,21 +72,21 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
     @Override
     public ResolvedJavaType javaType(MetaAccessProvider __metaAccess)
     {
-        if (type != null)
+        if (this.___type != null)
         {
-            return type;
+            return this.___type;
         }
         return __metaAccess.lookupJavaType(Object.class);
     }
 
     public ResolvedJavaType type()
     {
-        return type;
+        return this.___type;
     }
 
     public boolean isExactType()
     {
-        return exactType && type != null;
+        return this.___exactType && this.___type != null;
     }
 
     @Override
@@ -112,35 +112,35 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
         if (__other.alwaysNull())
         {
             __meetType = type();
-            __meetExactType = exactType;
+            __meetExactType = this.___exactType;
             __meetNonNull = false;
             __meetAlwaysNull = alwaysNull();
         }
         else if (alwaysNull())
         {
             __meetType = __other.type();
-            __meetExactType = __other.exactType;
+            __meetExactType = __other.___exactType;
             __meetNonNull = false;
             __meetAlwaysNull = __other.alwaysNull();
         }
         else
         {
             __meetType = meetTypes(type(), __other.type());
-            __meetExactType = exactType && __other.exactType;
-            if (__meetExactType && type != null && __other.type != null)
+            __meetExactType = this.___exactType && __other.___exactType;
+            if (__meetExactType && this.___type != null && __other.___type != null)
             {
                 // meeting two valid exact types may result in a non-exact type
-                __meetExactType = Objects.equals(__meetType, type) && Objects.equals(__meetType, __other.type);
+                __meetExactType = Objects.equals(__meetType, this.___type) && Objects.equals(__meetType, __other.___type);
             }
             __meetNonNull = nonNull() && __other.nonNull();
             __meetAlwaysNull = false;
         }
 
-        if (Objects.equals(__meetType, type) && __meetExactType == exactType && __meetNonNull == nonNull() && __meetAlwaysNull == alwaysNull())
+        if (Objects.equals(__meetType, this.___type) && __meetExactType == this.___exactType && __meetNonNull == nonNull() && __meetAlwaysNull == alwaysNull())
         {
             return this;
         }
-        else if (Objects.equals(__meetType, __other.type) && __meetExactType == __other.exactType && __meetNonNull == __other.nonNull() && __meetAlwaysNull == __other.alwaysNull())
+        else if (Objects.equals(__meetType, __other.___type) && __meetExactType == __other.___exactType && __meetNonNull == __other.nonNull() && __meetAlwaysNull == __other.alwaysNull())
         {
             return __other;
         }
@@ -156,21 +156,21 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
         return join0(__otherStamp, false);
     }
 
-    /**
-     * Returns the stamp representing the type of this stamp after a cast to the type represented by
-     * the {@code to} stamp. While this is very similar to a {@link #join} operation, in the case
-     * where both types are not obviously related, the cast operation will prefer the type of the
-     * {@code to} stamp. This is necessary as long as ObjectStamps are not able to accurately
-     * represent intersection types.
-     *
-     * For example when joining the {@link RandomAccess} type with the {@link AbstractList} type,
-     * without intersection types, this would result in the most generic type ({@link Object} ). For
-     * this reason, in some cases a {@code castTo} operation is preferable in order to keep at least
-     * the {@link AbstractList} type.
-     *
-     * @param other the stamp this stamp should be casted to
-     * @return the new improved stamp or {@code null} if this stamp cannot be improved
-     */
+    ///
+    // Returns the stamp representing the type of this stamp after a cast to the type represented by
+    // the {@code to} stamp. While this is very similar to a {@link #join} operation, in the case
+    // where both types are not obviously related, the cast operation will prefer the type of the
+    // {@code to} stamp. This is necessary as long as ObjectStamps are not able to accurately
+    // represent intersection types.
+    //
+    // For example when joining the {@link RandomAccess} type with the {@link AbstractList} type,
+    // without intersection types, this would result in the most generic type ({@link Object} ). For
+    // this reason, in some cases a {@code castTo} operation is preferable in order to keep at least
+    // the {@link AbstractList} type.
+    //
+    // @param other the stamp this stamp should be casted to
+    // @return the new improved stamp or {@code null} if this stamp cannot be improved
+    ///
     @Override
     public Stamp improveWith(Stamp __other)
     {
@@ -196,34 +196,34 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
         ResolvedJavaType __joinType;
         boolean __joinAlwaysNull = alwaysNull() || __other.alwaysNull();
         boolean __joinNonNull = nonNull() || __other.nonNull();
-        boolean __joinExactType = exactType || __other.exactType;
-        if (Objects.equals(type, __other.type))
+        boolean __joinExactType = this.___exactType || __other.___exactType;
+        if (Objects.equals(this.___type, __other.___type))
         {
-            __joinType = type;
+            __joinType = this.___type;
         }
-        else if (type == null)
+        else if (this.___type == null)
         {
-            __joinType = __other.type;
+            __joinType = __other.___type;
         }
-        else if (__other.type == null)
+        else if (__other.___type == null)
         {
-            __joinType = type;
+            __joinType = this.___type;
         }
         else
         {
             // both types are != null and different
-            if (type.isAssignableFrom(__other.type))
+            if (this.___type.isAssignableFrom(__other.___type))
             {
-                __joinType = __other.type;
-                if (exactType)
+                __joinType = __other.___type;
+                if (this.___exactType)
                 {
                     __joinAlwaysNull = true;
                 }
             }
-            else if (__other.type.isAssignableFrom(type))
+            else if (__other.___type.isAssignableFrom(this.___type))
             {
-                __joinType = type;
-                if (__other.exactType)
+                __joinType = this.___type;
+                if (__other.___exactType)
                 {
                     __joinAlwaysNull = true;
                 }
@@ -232,15 +232,15 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
             {
                 if (__improve)
                 {
-                    __joinType = type;
-                    __joinExactType = exactType;
+                    __joinType = this.___type;
+                    __joinExactType = this.___exactType;
                 }
                 else
                 {
                     __joinType = null;
                 }
 
-                if (__joinExactType || (!isInterfaceOrArrayOfInterface(type) && !isInterfaceOrArrayOfInterface(__other.type)))
+                if (__joinExactType || (!isInterfaceOrArrayOfInterface(this.___type) && !isInterfaceOrArrayOfInterface(__other.___type)))
                 {
                     __joinAlwaysNull = true;
                 }
@@ -263,11 +263,11 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
         {
             return empty();
         }
-        if (Objects.equals(__joinType, type) && __joinExactType == exactType && __joinNonNull == nonNull() && __joinAlwaysNull == alwaysNull())
+        if (Objects.equals(__joinType, this.___type) && __joinExactType == this.___exactType && __joinNonNull == nonNull() && __joinAlwaysNull == alwaysNull())
         {
             return this;
         }
-        else if (Objects.equals(__joinType, __other.type) && __joinExactType == __other.exactType && __joinNonNull == __other.nonNull() && __joinAlwaysNull == __other.alwaysNull())
+        else if (Objects.equals(__joinType, __other.___type) && __joinExactType == __other.___exactType && __joinNonNull == __other.nonNull() && __joinAlwaysNull == __other.alwaysNull())
         {
             return __other;
         }
@@ -360,8 +360,8 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
         final int __prime = 31;
         int __result = 1;
         __result = __prime * __result + super.hashCode();
-        __result = __prime * __result + (exactType ? 1231 : 1237);
-        __result = __prime * __result + ((type == null || type.isJavaLangObject()) ? 0 : type.hashCode());
+        __result = __prime * __result + (this.___exactType ? 1231 : 1237);
+        __result = __prime * __result + ((this.___type == null || this.___type.isJavaLangObject()) ? 0 : this.___type.hashCode());
         return __result;
     }
 
@@ -377,26 +377,26 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
             return false;
         }
         AbstractObjectStamp __other = (AbstractObjectStamp) __obj;
-        if (exactType != __other.exactType)
+        if (this.___exactType != __other.___exactType)
         {
             return false;
         }
         // null == java.lang.Object
-        if (type == null)
+        if (this.___type == null)
         {
-            if (__other.type != null && !__other.type.isJavaLangObject())
+            if (__other.___type != null && !__other.___type.isJavaLangObject())
             {
                 return false;
             }
         }
-        else if (__other.type == null)
+        else if (__other.___type == null)
         {
-            if (type != null && !type.isJavaLangObject())
+            if (this.___type != null && !this.___type.isJavaLangObject())
             {
                 return false;
             }
         }
-        else if (!type.equals(__other.type))
+        else if (!this.___type.equals(__other.___type))
         {
             return false;
         }

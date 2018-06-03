@@ -15,10 +15,10 @@ import giraaff.nodes.LogicNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 
-/**
- * Returns -1, 0, or 1 if either x &lt; y, x == y, or x &gt; y. If the comparison is undecided (one
- * of the inputs is NaN), the result is 1 if isUnorderedLess is false and -1 if isUnorderedLess is true.
- */
+///
+// Returns -1, 0, or 1 if either x &lt; y, x == y, or x &gt; y. If the comparison is undecided (one
+// of the inputs is NaN), the result is 1 if isUnorderedLess is false and -1 if isUnorderedLess is true.
+///
 // @class NormalizeCompareNode
 public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType
 {
@@ -26,13 +26,13 @@ public final class NormalizeCompareNode extends BinaryNode implements IterableNo
     public static final NodeClass<NormalizeCompareNode> TYPE = NodeClass.create(NormalizeCompareNode.class);
 
     // @field
-    protected final boolean isUnorderedLess;
+    protected final boolean ___isUnorderedLess;
 
     // @cons
     public NormalizeCompareNode(ValueNode __x, ValueNode __y, JavaKind __kind, boolean __isUnorderedLess)
     {
         super(TYPE, StampFactory.forInteger(__kind, -1, 1), __x, __y);
-        this.isUnorderedLess = __isUnorderedLess;
+        this.___isUnorderedLess = __isUnorderedLess;
     }
 
     public static ValueNode create(ValueNode __x, ValueNode __y, boolean __isUnorderedLess, JavaKind __kind, ConstantReflectionProvider __constantReflection)
@@ -77,7 +77,7 @@ public final class NormalizeCompareNode extends BinaryNode implements IterableNo
     public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __result = tryConstantFold(x, y, isUnorderedLess, stamp(__view).getStackKind(), __tool.getConstantReflection());
+        ValueNode __result = tryConstantFold(this.___x, this.___y, this.___isUnorderedLess, stamp(__view).getStackKind(), __tool.getConstantReflection());
         if (__result != null)
         {
             return __result;
@@ -99,6 +99,6 @@ public final class NormalizeCompareNode extends BinaryNode implements IterableNo
 
     public boolean isUnorderedLess()
     {
-        return isUnorderedLess;
+        return this.___isUnorderedLess;
     }
 }

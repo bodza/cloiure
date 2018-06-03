@@ -14,10 +14,10 @@ import giraaff.lir.StandardOp.SaveRegistersOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMap;
 
-/**
- * Pops the current frame off the stack including the return address and restores the return
- * registers stored on the stack.
- */
+///
+// Pops the current frame off the stack including the return address and restores the return
+// registers stored on the stack.
+///
 @Opcode
 // @class AMD64HotSpotLeaveCurrentStackFrameOp
 final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
@@ -26,21 +26,21 @@ final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
     public static final LIRInstructionClass<AMD64HotSpotLeaveCurrentStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveCurrentStackFrameOp.class);
 
     // @field
-    private final SaveRegistersOp saveRegisterOp;
+    private final SaveRegistersOp ___saveRegisterOp;
 
     // @cons
     AMD64HotSpotLeaveCurrentStackFrameOp(SaveRegistersOp __saveRegisterOp)
     {
         super(TYPE);
-        this.saveRegisterOp = __saveRegisterOp;
+        this.___saveRegisterOp = __saveRegisterOp;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        FrameMap __frameMap = __crb.frameMap;
+        FrameMap __frameMap = __crb.___frameMap;
         RegisterConfig __registerConfig = __frameMap.getRegisterConfig();
-        RegisterSaveLayout __registerSaveLayout = saveRegisterOp.getMap(__frameMap);
+        RegisterSaveLayout __registerSaveLayout = this.___saveRegisterOp.getMap(__frameMap);
         Register __stackPointer = __registerConfig.getFrameRegister();
 
         // Restore integer result register.
@@ -57,6 +57,6 @@ final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
         leaveFrameAndRestoreRbp(__crb, __masm);
 
         // Remove return address.
-        __masm.addq(__stackPointer, __crb.target.arch.getReturnAddressSize());
+        __masm.addq(__stackPointer, __crb.___target.arch.getReturnAddressSize());
     }
 }

@@ -1,8 +1,8 @@
 package giraaff.core.common;
 
-/**
- * This class encapsulates options that control the behavior of the Graal compiler.
- */
+///
+// This class encapsulates options that control the behavior of the Graal compiler.
+///
 // @class GraalOptions
 public final class GraalOptions
 {
@@ -162,37 +162,37 @@ public final class GraalOptions
     // @def
     public static final boolean useSnippetGraphCache = true;
 
-    /**
-     * @anno AMD64NodeLIRBuilder.Options
-     */
+    ///
+    // @anno AMD64NodeLIRBuilder.Options
+    ///
     // @Option "AMD64: Emit lfence instructions at the beginning of basic blocks."
     // @def
     public static final boolean mitigateSpeculativeExecutionAttacks = false;
 
-    /**
-     * @anno JavaConstantFieldProvider.Options
-     */
+    ///
+    // @anno JavaConstantFieldProvider.Options
+    ///
     // @Option "Determines whether to treat final fields with default values as constant."
     // @def
     public static final boolean trustFinalDefaultFields = true;
 
-    /**
-     * @anno HighTier.Options
-     */
+    ///
+    // @anno HighTier.Options
+    ///
     // @Option "Enable inlining."
     // @def
     public static final boolean inline = true;
 
-    /**
-     * @anno Graph.Options
-     */
+    ///
+    // @anno Graph.Options
+    ///
     // @Option "Graal graph compression is performed when percent of live nodes falls below this value."
     // @def
     public static final int graphCompressionThreshold = 70;
 
-    /**
-     * @anno OnStackReplacementPhase.Options
-     */
+    ///
+    // @anno OnStackReplacementPhase.Options
+    ///
     // @Option "Deoptimize OSR compiled code when the OSR entry loop is finished if there is no mature profile available for the rest of the method."
     // @def
     public static final boolean deoptAfterOSR = true;
@@ -201,11 +201,11 @@ public final class GraalOptions
     // @def
     public static final boolean supportOSRWithLocks = true;
 
-    /**
-     * Options related to HotSpot snippets in this package.
-     *
-     * @anno HotspotSnippetsOptions
-     */
+    ///
+    // Options related to HotSpot snippets in this package.
+    //
+    // @anno HotspotSnippetsOptions
+    ///
     // @Option "If the probability that a type check will hit one the profiled types (up to TypeCheckMaxHints) is below this value, the type check will be compiled without profiling info."
     // @def
     public static final double typeCheckMinProfileHitProbability = 0.5;
@@ -222,11 +222,11 @@ public final class GraalOptions
     // @def
     public static final boolean simpleFastInflatedLocking = true;
 
-    /**
-     * Options related to {@link BytecodeParser}.
-     *
-     * @anno BytecodeParserOptions
-     */
+    ///
+    // Options related to {@link BytecodeParser}.
+    //
+    // @anno BytecodeParserOptions
+    ///
     // @Option "Inlines trivial methods during bytecode parsing."
     // @def
     public static final boolean inlineDuringParsing = true;
@@ -247,30 +247,30 @@ public final class GraalOptions
     // @def
     public static final boolean useGuardedIntrinsics = true;
 
-    /**
-     * @anno LIRPhase.Options
-     */
+    ///
+    // @anno LIRPhase.Options
+    ///
     // @Option "Enable LIR level optimiztations."
     // @def
     public static final boolean lirOptimization = true;
 
-    /**
-     * @anno LinearScan.Options
-     */
+    ///
+    // @anno LinearScan.Options
+    ///
     // @Option "Enable spill position optimization."
     // @def
     public static final boolean lirOptLSRAOptimizeSpillPosition = lirOptimization && true;
 
-    /**
-     * @anno LinearScanEliminateSpillMovePhase.Options
-     */
+    ///
+    // @anno LinearScanEliminateSpillMovePhase.Options
+    ///
     // @Option "Enable spill move elimination."
     // @def
     public static final boolean lirOptLSRAEliminateSpillMoves = lirOptimization && true;
 
-    /**
-     * @anno OptimizingLinearScanWalker.Options
-     */
+    ///
+    // @anno OptimizingLinearScanWalker.Options
+    ///
     // @Option "Enable LSRA optimization."
     // @def
     public static final boolean lsraOptimization = false;
@@ -278,22 +278,22 @@ public final class GraalOptions
     // @def
     public static final boolean lsraOptSplitOnly = false;
 
-    /**
-     * @anno StackMoveOptimizationPhase.Options
-     */
+    ///
+    // @anno StackMoveOptimizationPhase.Options
+    ///
     // @def
     public static final boolean lirOptStackMoveOptimizer = lirOptimization && true;
 
-    /**
-     * @anno ConstantLoadOptimization.Options
-     */
+    ///
+    // @anno ConstantLoadOptimization.Options
+    ///
     // @Option "Enable constant load optimization."
     // @def
     public static final boolean lirOptConstantLoadOptimization = lirOptimization && true;
 
-    /**
-     * @anno PostAllocationOptimizationStage.Options
-     */
+    ///
+    // @anno PostAllocationOptimizationStage.Options
+    ///
     // @def
     public static final boolean lirOptEdgeMoveOptimizer = lirOptimization && true;
     // @def
@@ -303,16 +303,16 @@ public final class GraalOptions
     // @def
     public static final boolean lirOptNullCheckOptimizer = lirOptimization && true;
 
-    /**
-     * @anno LSStackSlotAllocator.Options
-     */
+    ///
+    // @anno LSStackSlotAllocator.Options
+    ///
     // @Option "Use linear scan stack slot allocation."
     // @def
     public static final boolean lirOptLSStackSlotAllocator = lirOptimization && true;
 
-    /**
-     * @anno DefaultLoopPolicies.Options
-     */
+    ///
+    // @anno DefaultLoopPolicies.Options
+    ///
     // @def
     public static final int loopUnswitchMaxIncrease = 500;
     // @def
@@ -332,39 +332,39 @@ public final class GraalOptions
     // @def
     public static final int unrollMaxIterations = 16;
 
-    /**
-     * @anno DeadCodeEliminationPhase.Options
-     */
+    ///
+    // @anno DeadCodeEliminationPhase.Options
+    ///
     // @Option "Disable optional dead code eliminations."
     // @def
     public static final boolean reduceDCE = true;
 
-    /**
-     * @anno InliningPhase.Options
-     */
+    ///
+    // @anno InliningPhase.Options
+    ///
     // @Option "Unconditionally inline intrinsics."
     // @def
     public static final boolean alwaysInlineIntrinsics = false;
 
-    /**
-     * This is a defensive measure against known pathologies of the inliner where the breadth of
-     * the inlining call tree exploration can be wide enough to prevent inlining from completing
-     * in reasonable time.
-     */
+    ///
+    // This is a defensive measure against known pathologies of the inliner where the breadth of
+    // the inlining call tree exploration can be wide enough to prevent inlining from completing
+    // in reasonable time.
+    ///
     // @Option "Per-compilation method inlining exploration limit before giving up (use 0 to disable)."
     // @def
     public static final int methodInlineBailoutLimit = 5000;
 
-    /**
-     * @anno UseTrappingNullChecksPhase.Options
-     */
+    ///
+    // @anno UseTrappingNullChecksPhase.Options
+    ///
     // @Option "Use traps for null checks instead of explicit null-checks."
     // @def
     public static final boolean useTrappingNullChecks = true;
 
-    /**
-     * @anno SnippetTemplate.Options
-     */
+    ///
+    // @anno SnippetTemplate.Options
+    ///
     // @Option "Use a LRU cache for snippet templates."
     // @def
     public static final boolean useSnippetTemplateCache = true;
@@ -372,9 +372,9 @@ public final class GraalOptions
     // @def
     public static final int maxTemplatesPerSnippet = 50;
 
-    /**
-     * @anno PartialEscapePhase.Options
-     */
+    ///
+    // @anno PartialEscapePhase.Options
+    ///
     // @def
     public static final boolean optEarlyReadElimination = true;
 }

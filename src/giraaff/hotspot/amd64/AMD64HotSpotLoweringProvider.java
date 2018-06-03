@@ -18,7 +18,7 @@ import giraaff.replacements.amd64.AMD64ConvertSnippets;
 public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
 {
     // @field
-    private AMD64ConvertSnippets.Templates convertSnippets;
+    private AMD64ConvertSnippets.Templates ___convertSnippets;
 
     // @cons
     public AMD64HotSpotLoweringProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, ForeignCallsProvider __foreignCalls, HotSpotRegistersProvider __registers, HotSpotConstantReflectionProvider __constantReflection, TargetDescription __target)
@@ -29,7 +29,7 @@ public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringPr
     @Override
     public void initialize(HotSpotProviders __providers)
     {
-        convertSnippets = new AMD64ConvertSnippets.Templates(__providers, __providers.getSnippetReflection(), __providers.getCodeCache().getTarget());
+        this.___convertSnippets = new AMD64ConvertSnippets.Templates(__providers, __providers.getSnippetReflection(), __providers.getCodeCache().getTarget());
         super.initialize(__providers);
     }
 
@@ -38,7 +38,7 @@ public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringPr
     {
         if (__n instanceof FloatConvertNode)
         {
-            convertSnippets.lower((FloatConvertNode) __n, __tool);
+            this.___convertSnippets.lower((FloatConvertNode) __n, __tool);
         }
         else
         {

@@ -7,7 +7,7 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 // @iface BlockValueMap
 public interface BlockValueMap
 {
-    void accessOperand(Value operand, AbstractBlockBase<?> block);
+    void accessOperand(Value __operand, AbstractBlockBase<?> __block);
 
-    void defineOperand(Value operand, AbstractBlockBase<?> block);
+    void defineOperand(Value __operand, AbstractBlockBase<?> __block);
 }

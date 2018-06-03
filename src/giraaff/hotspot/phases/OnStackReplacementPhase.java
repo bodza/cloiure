@@ -74,11 +74,9 @@ public final class OnStackReplacementPhase extends Phase
 
         if (__originalOSRLoop == null)
         {
-            /*
-             * OSR with Locks: We do not have an OSR loop for the original OSR bci. Therefore we
-             * cannot decide where to deopt and which framestate will be used. In the worst case
-             * the framestate of the OSR entry would be used.
-             */
+            // OSR with Locks: We do not have an OSR loop for the original OSR bci. Therefore we
+            // cannot decide where to deopt and which framestate will be used. In the worst case
+            // the framestate of the OSR entry would be used.
             throw new BailoutException("OSR compilation without OSR entry loop.");
         }
 
@@ -150,11 +148,9 @@ public final class OnStackReplacementPhase extends Phase
             if (__value instanceof EntryProxyNode)
             {
                 EntryProxyNode __proxy = (EntryProxyNode) __value;
-                /*
-                 * We need to drop the stamp since the types we see during OSR may be too
-                 * precise (if a branch was not parsed for example). In cases when this is
-                 * possible, we insert a guard and narrow the OSRLocal stamp at its usages.
-                 */
+                // We need to drop the stamp since the types we see during OSR may be too
+                // precise (if a branch was not parsed for example). In cases when this is
+                // possible, we insert a guard and narrow the OSRLocal stamp at its usages.
                 Stamp __narrowedStamp = __proxy.value().stamp(NodeView.DEFAULT);
                 Stamp __unrestrictedStamp = __proxy.stamp(NodeView.DEFAULT).unrestricted();
                 ValueNode __osrLocal;
@@ -167,7 +163,7 @@ public final class OnStackReplacementPhase extends Phase
                     __osrLocal = __graph.addOrUnique(new OSRLocalNode(__i, __unrestrictedStamp));
                 }
                 // Speculate on the OSRLocal stamps that could be more precise.
-                OSRLocalSpeculationReason __reason = new OSRLocalSpeculationReason(__osrState.bci, __narrowedStamp, __i);
+                OSRLocalSpeculationReason __reason = new OSRLocalSpeculationReason(__osrState.___bci, __narrowedStamp, __i);
                 if (__graph.getSpeculationLog().maySpeculate(__reason) && __osrLocal instanceof OSRLocalNode && __value.getStackKind().equals(JavaKind.Object) && !__narrowedStamp.isUnrestricted())
                 {
                     // Add guard.
@@ -210,14 +206,12 @@ public final class OnStackReplacementPhase extends Phase
                 __osrStart.setNext(__osrMonitorEnter);
             }
 
-            /*
-             * Ensure balanced monitorenter - monitorexit
-             *
-             * Ensure that there is no monitor exit without a monitor enter in the graph. If there
-             * is one this can only be done by bytecode as we have the monitor enter before the OSR
-             * loop but the exit in a path of the loop that must be under a condition, else it will
-             * throw an IllegalStateException anyway in the 2.iteration
-             */
+            // Ensure balanced monitorenter - monitorexit
+            //
+            // Ensure that there is no monitor exit without a monitor enter in the graph. If there
+            // is one this can only be done by bytecode as we have the monitor enter before the OSR
+            // loop but the exit in a path of the loop that must be under a condition, else it will
+            // throw an IllegalStateException anyway in the 2.iteration
             for (MonitorExitNode __exit : __graph.getNodes(MonitorExitNode.TYPE))
             {
                 MonitorIdNode __id = __exit.getMonitorId();
@@ -271,19 +265,19 @@ public final class OnStackReplacementPhase extends Phase
     private static final class OSRLocalSpeculationReason implements SpeculationLog.SpeculationReason
     {
         // @field
-        private int bci;
+        private int ___bci;
         // @field
-        private Stamp speculatedStamp;
+        private Stamp ___speculatedStamp;
         // @field
-        private int localIndex;
+        private int ___localIndex;
 
         // @cons
         OSRLocalSpeculationReason(int __bci, Stamp __speculatedStamp, int __localIndex)
         {
             super();
-            this.bci = __bci;
-            this.speculatedStamp = __speculatedStamp;
-            this.localIndex = __localIndex;
+            this.___bci = __bci;
+            this.___speculatedStamp = __speculatedStamp;
+            this.___localIndex = __localIndex;
         }
 
         @Override
@@ -292,7 +286,7 @@ public final class OnStackReplacementPhase extends Phase
             if (__obj instanceof OSRLocalSpeculationReason)
             {
                 OSRLocalSpeculationReason __that = (OSRLocalSpeculationReason) __obj;
-                return this.bci == __that.bci && this.speculatedStamp.equals(__that.speculatedStamp) && this.localIndex == __that.localIndex;
+                return this.___bci == __that.___bci && this.___speculatedStamp.equals(__that.___speculatedStamp) && this.___localIndex == __that.___localIndex;
             }
             return false;
         }
@@ -300,7 +294,7 @@ public final class OnStackReplacementPhase extends Phase
         @Override
         public int hashCode()
         {
-            return (bci << 16) ^ speculatedStamp.hashCode() ^ localIndex;
+            return (this.___bci << 16) ^ this.___speculatedStamp.hashCode() ^ this.___localIndex;
         }
     }
 }

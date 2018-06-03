@@ -4,28 +4,28 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.nodes.StructuredGraph;
 
-/**
- * Information about a graph that will potentially be inlined. This includes tracking the
- * invocations in graph that will subject to inlining themselves.
- */
+///
+// Information about a graph that will potentially be inlined. This includes tracking the
+// invocations in graph that will subject to inlining themselves.
+///
 // @class CallsiteHolder
 public abstract class CallsiteHolder
 {
-    /**
-     * Gets the method associated with the {@linkplain #graph() graph} represented by this object.
-     */
+    ///
+    // Gets the method associated with the {@linkplain #graph() graph} represented by this object.
+    ///
     public abstract ResolvedJavaMethod method();
 
-    /**
-     * The stack realized by {@link InliningData} grows upon {@link InliningData#moveForward()}
-     * deciding to explore (depth-first) a callsite of the graph associated to this
-     * {@link CallsiteHolder}. The list of not-yet-considered callsites is managed by
-     * {@link CallsiteHolderExplorable}, and this method reports whether any such candidates remain.
-     */
+    ///
+    // The stack realized by {@link InliningData} grows upon {@link InliningData#moveForward()}
+    // deciding to explore (depth-first) a callsite of the graph associated to this
+    // {@link CallsiteHolder}. The list of not-yet-considered callsites is managed by
+    // {@link CallsiteHolderExplorable}, and this method reports whether any such candidates remain.
+    ///
     public abstract boolean hasRemainingInvokes();
 
-    /**
-     * The graph about which this object contains inlining information.
-     */
+    ///
+    // The graph about which this object contains inlining information.
+    ///
     public abstract StructuredGraph graph();
 }

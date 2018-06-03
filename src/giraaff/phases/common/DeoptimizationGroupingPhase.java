@@ -23,10 +23,10 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.phases.BasePhase;
 import giraaff.phases.tiers.MidTierContext;
 
-/**
- * This phase tries to find {@link AbstractDeoptimizeNode DeoptimizeNodes} which use the same
- * {@link FrameState} and merges them together.
- */
+///
+// This phase tries to find {@link AbstractDeoptimizeNode DeoptimizeNodes} which use the same
+// {@link FrameState} and merges them together.
+///
 // @class DeoptimizationGroupingPhase
 public final class DeoptimizationGroupingPhase extends BasePhase<MidTierContext>
 {

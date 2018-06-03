@@ -28,37 +28,37 @@ public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode i
 
     @Successor
     // @field
-    AbstractBeginNode next;
+    AbstractBeginNode ___next;
     @Successor
     // @field
-    AbstractBeginNode overflowSuccessor;
+    AbstractBeginNode ___overflowSuccessor;
     @Input
     // @field
-    ValueNode x;
+    ValueNode ___x;
     @Input
     // @field
-    ValueNode y;
+    ValueNode ___y;
 
     // @cons
     protected IntegerExactArithmeticSplitNode(NodeClass<? extends IntegerExactArithmeticSplitNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y, AbstractBeginNode __next, AbstractBeginNode __overflowSuccessor)
     {
         super(__c, __stamp);
-        this.x = __x;
-        this.y = __y;
-        this.overflowSuccessor = __overflowSuccessor;
-        this.next = __next;
+        this.___x = __x;
+        this.___y = __y;
+        this.___overflowSuccessor = __overflowSuccessor;
+        this.___next = __next;
     }
 
     @Override
     public AbstractBeginNode getPrimarySuccessor()
     {
-        return next;
+        return this.___next;
     }
 
     @Override
     public double probability(AbstractBeginNode __successor)
     {
-        return __successor == next ? 1 : 0;
+        return __successor == this.___next ? 1 : 0;
     }
 
     @Override
@@ -70,32 +70,32 @@ public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode i
 
     public AbstractBeginNode getNext()
     {
-        return next;
+        return this.___next;
     }
 
     public AbstractBeginNode getOverflowSuccessor()
     {
-        return overflowSuccessor;
+        return this.___overflowSuccessor;
     }
 
     public ValueNode getX()
     {
-        return x;
+        return this.___x;
     }
 
     public ValueNode getY()
     {
-        return y;
+        return this.___y;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
         __gen.setResult(this, generateArithmetic(__gen));
-        __gen.emitOverflowCheckBranch(getOverflowSuccessor(), getNext(), stamp, probability(getOverflowSuccessor()));
+        __gen.emitOverflowCheckBranch(getOverflowSuccessor(), getNext(), this.___stamp, probability(getOverflowSuccessor()));
     }
 
-    protected abstract Value generateArithmetic(NodeLIRBuilderTool gen);
+    protected abstract Value generateArithmetic(NodeLIRBuilderTool __gen);
 
     static void lower(LoweringTool __tool, IntegerExactArithmeticNode __node)
     {

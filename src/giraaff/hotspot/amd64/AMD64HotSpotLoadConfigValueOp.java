@@ -16,16 +16,16 @@ public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
 
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue result;
+    protected AllocatableValue ___result;
     // @field
-    private final int markId;
+    private final int ___markId;
 
     // @cons
     public AMD64HotSpotLoadConfigValueOp(int __markId, AllocatableValue __result)
     {
         super(TYPE);
-        this.result = __result;
-        this.markId = __markId;
+        this.___result = __result;
+        this.___markId = __markId;
     }
 
     @Override

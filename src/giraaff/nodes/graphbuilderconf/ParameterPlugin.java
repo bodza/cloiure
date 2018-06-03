@@ -6,5 +6,5 @@ import giraaff.nodes.calc.FloatingNode;
 // @iface ParameterPlugin
 public interface ParameterPlugin extends GraphBuilderPlugin
 {
-    FloatingNode interceptParameter(GraphBuilderTool b, int index, StampPair stamp);
+    FloatingNode interceptParameter(GraphBuilderTool __b, int __index, StampPair __stamp);
 }

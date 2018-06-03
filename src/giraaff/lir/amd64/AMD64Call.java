@@ -32,25 +32,25 @@ public final class AMD64Call
 
         @Def({OperandFlag.REG, OperandFlag.ILLEGAL})
         // @field
-        protected Value result;
+        protected Value ___result;
         @Use({OperandFlag.REG, OperandFlag.STACK})
         // @field
-        protected Value[] parameters;
+        protected Value[] ___parameters;
         @Temp({OperandFlag.REG, OperandFlag.STACK})
         // @field
-        protected Value[] temps;
+        protected Value[] ___temps;
         // @State
         // @field
-        protected LIRFrameState state;
+        protected LIRFrameState ___state;
 
         // @cons
         protected CallOp(LIRInstructionClass<? extends CallOp> __c, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(__c);
-            this.result = __result;
-            this.parameters = __parameters;
-            this.state = __state;
-            this.temps = addStackSlotsToTemporaries(__parameters, __temps);
+            this.___result = __result;
+            this.___parameters = __parameters;
+            this.___state = __state;
+            this.___temps = addStackSlotsToTemporaries(__parameters, __temps);
         }
 
         @Override
@@ -67,13 +67,13 @@ public final class AMD64Call
         public static final LIRInstructionClass<MethodCallOp> TYPE = LIRInstructionClass.create(MethodCallOp.class);
 
         // @field
-        protected final ResolvedJavaMethod callTarget;
+        protected final ResolvedJavaMethod ___callTarget;
 
         // @cons
         protected MethodCallOp(LIRInstructionClass<? extends MethodCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(__c, __result, __parameters, __temps, __state);
-            this.callTarget = __callTarget;
+            this.___callTarget = __callTarget;
         }
     }
 
@@ -99,12 +99,12 @@ public final class AMD64Call
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            directCall(__crb, __masm, callTarget, null, true, state);
+            directCall(__crb, __masm, this.___callTarget, null, true, this.___state);
         }
 
         public int emitCall(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            return directCall(__crb, __masm, callTarget, null, true, state);
+            return directCall(__crb, __masm, this.___callTarget, null, true, this.___state);
         }
     }
 
@@ -117,7 +117,7 @@ public final class AMD64Call
 
         @Use({OperandFlag.REG})
         // @field
-        protected Value targetAddress;
+        protected Value ___targetAddress;
 
         // @cons
         public IndirectCallOp(ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, Value __targetAddress, LIRFrameState __state)
@@ -129,13 +129,13 @@ public final class AMD64Call
         protected IndirectCallOp(LIRInstructionClass<? extends IndirectCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, Value __targetAddress, LIRFrameState __state)
         {
             super(__c, __callTarget, __result, __parameters, __temps, __state);
-            this.targetAddress = __targetAddress;
+            this.___targetAddress = __targetAddress;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            indirectCall(__crb, __masm, ValueUtil.asRegister(targetAddress), callTarget, state);
+            indirectCall(__crb, __masm, ValueUtil.asRegister(this.___targetAddress), this.___callTarget, this.___state);
         }
     }
 
@@ -146,19 +146,19 @@ public final class AMD64Call
         public static final LIRInstructionClass<ForeignCallOp> TYPE = LIRInstructionClass.create(ForeignCallOp.class);
 
         // @field
-        protected final ForeignCallLinkage callTarget;
+        protected final ForeignCallLinkage ___callTarget;
 
         // @cons
         public ForeignCallOp(LIRInstructionClass<? extends ForeignCallOp> __c, ForeignCallLinkage __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(__c, __result, __parameters, __temps, __state);
-            this.callTarget = __callTarget;
+            this.___callTarget = __callTarget;
         }
 
         @Override
         public boolean destroysCallerSavedRegisters()
         {
-            return callTarget.destroysRegisters();
+            return this.___callTarget.destroysRegisters();
         }
     }
 
@@ -178,7 +178,7 @@ public final class AMD64Call
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            directCall(__crb, __masm, callTarget, null, false, state);
+            directCall(__crb, __masm, this.___callTarget, null, false, this.___state);
         }
     }
 
@@ -191,20 +191,20 @@ public final class AMD64Call
 
         @Temp({OperandFlag.REG})
         // @field
-        protected AllocatableValue callTemp;
+        protected AllocatableValue ___callTemp;
 
         // @cons
         public DirectFarForeignCallOp(ForeignCallLinkage __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(TYPE, __callTarget, __result, __parameters, __temps, __state);
             // The register allocator does not support virtual registers that are used at the call site, so use a fixed register.
-            callTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.QWORD));
+            this.___callTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.QWORD));
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            directCall(__crb, __masm, callTarget, ((RegisterValue) callTemp).getRegister(), false, state);
+            directCall(__crb, __masm, this.___callTarget, ((RegisterValue) this.___callTemp).getRegister(), false, this.___state);
         }
     }
 
@@ -236,8 +236,8 @@ public final class AMD64Call
     {
         // make sure that the displacement word of the call ends up word aligned
         int __offset = __masm.position();
-        __offset += __crb.target.arch.getMachineCodeCallDisplacementOffset();
-        int __modulus = __crb.target.wordSize;
+        __offset += __crb.___target.arch.getMachineCodeCallDisplacementOffset();
+        int __modulus = __crb.___target.wordSize;
         if (__offset % __modulus != 0)
         {
             __masm.nop(__modulus - __offset % __modulus);

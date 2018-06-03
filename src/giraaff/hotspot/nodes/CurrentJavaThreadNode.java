@@ -14,9 +14,9 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
-/**
- * Gets the address of the C++ JavaThread object for the current thread.
- */
+///
+// Gets the address of the C++ JavaThread object for the current thread.
+///
 // @class CurrentJavaThreadNode
 public final class CurrentJavaThreadNode extends FloatingNode implements LIRLowerable
 {

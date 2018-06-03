@@ -5,35 +5,35 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
-/**
- * Represents an inlined {@link Constant} value.
- */
+///
+// Represents an inlined {@link Constant} value.
+///
 // @class ConstantValue
 public final class ConstantValue extends Value
 {
     // @field
-    private final Constant constant;
+    private final Constant ___constant;
 
     // @cons
     public ConstantValue(ValueKind<?> __kind, Constant __constant)
     {
         super(__kind);
-        this.constant = __constant;
+        this.___constant = __constant;
     }
 
     public Constant getConstant()
     {
-        return constant;
+        return this.___constant;
     }
 
     public boolean isJavaConstant()
     {
-        return constant instanceof JavaConstant;
+        return this.___constant instanceof JavaConstant;
     }
 
     public JavaConstant getJavaConstant()
     {
-        return (JavaConstant) constant;
+        return (JavaConstant) this.___constant;
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class ConstantValue extends Value
         if (__obj instanceof ConstantValue)
         {
             ConstantValue __other = (ConstantValue) __obj;
-            return super.equals(__other) && this.constant.equals(__other.constant);
+            return super.equals(__other) && this.___constant.equals(__other.___constant);
         }
         return false;
     }
@@ -50,6 +50,6 @@ public final class ConstantValue extends Value
     @Override
     public int hashCode()
     {
-        return constant.hashCode() + super.hashCode();
+        return this.___constant.hashCode() + super.hashCode();
     }
 }

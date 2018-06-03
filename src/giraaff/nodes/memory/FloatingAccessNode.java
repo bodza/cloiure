@@ -17,53 +17,53 @@ public abstract class FloatingAccessNode extends FloatingGuardedNode implements 
 
     @Input(InputType.Association)
     // @field
-    AddressNode address;
+    AddressNode ___address;
     // @field
-    protected final LocationIdentity location;
+    protected final LocationIdentity ___location;
 
     // @field
-    protected BarrierType barrierType;
+    protected BarrierType ___barrierType;
 
     // @cons
     protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp)
     {
         super(__c, __stamp);
-        this.address = __address;
-        this.location = __location;
+        this.___address = __address;
+        this.___location = __location;
     }
 
     // @cons
     protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
     {
         super(__c, __stamp, __guard);
-        this.address = __address;
-        this.location = __location;
-        this.barrierType = __barrierType;
+        this.___address = __address;
+        this.___location = __location;
+        this.___barrierType = __barrierType;
     }
 
     @Override
     public AddressNode getAddress()
     {
-        return address;
+        return this.___address;
     }
 
     @Override
     public void setAddress(AddressNode __address)
     {
-        updateUsages(this.address, __address);
-        this.address = __address;
+        updateUsages(this.___address, __address);
+        this.___address = __address;
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return location;
+        return this.___location;
     }
 
     @Override
     public BarrierType getBarrierType()
     {
-        return barrierType;
+        return this.___barrierType;
     }
 
     @Override

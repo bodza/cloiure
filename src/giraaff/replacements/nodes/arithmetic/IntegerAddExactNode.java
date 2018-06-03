@@ -16,10 +16,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.AddNode;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Node representing an exact integer addition that will throw an {@link ArithmeticException} in
- * case the addition would overflow the 32 bit range.
- */
+///
+// Node representing an exact integer addition that will throw an {@link ArithmeticException} in
+// case the addition would overflow the 32 bit range.
+///
 // @class IntegerAddExactNode
 public final class IntegerAddExactNode extends AddNode implements IntegerExactArithmeticNode
 {
@@ -36,11 +36,9 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     @Override
     public boolean inferStamp()
     {
-        /*
-         * Note: it is not allowed to use the foldStamp method of the regular add node as we do not know
-         * the result stamp of this node if we do not know whether we may deopt. If we know we can never
-         * overflow we will replace this node with its non overflow checking counterpart anyway.
-         */
+        // Note: it is not allowed to use the foldStamp method of the regular add node as we do not know
+        // the result stamp of this node if we do not know whether we may deopt. If we know we can never
+        // overflow we will replace this node with its non overflow checking counterpart anyway.
         return false;
     }
 

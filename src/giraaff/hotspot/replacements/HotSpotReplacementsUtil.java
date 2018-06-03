@@ -41,9 +41,9 @@ import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 import giraaff.word.Word;
 
-/**
- * A collection of methods used in HotSpot snippets, substitutions and stubs.
- */
+///
+// A collection of methods used in HotSpot snippets, substitutions and stubs.
+///
 // @class HotSpotReplacementsUtil
 public final class HotSpotReplacementsUtil
 {
@@ -63,7 +63,7 @@ public final class HotSpotReplacementsUtil
         }
 
         @Override
-        public abstract ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool);
+        public abstract ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool);
 
         protected ValueNode findReadHub(ValueNode __object)
         {
@@ -93,11 +93,11 @@ public final class HotSpotReplacementsUtil
             return null;
         }
 
-        /**
-         * Fold reads that convert from Class -> Hub -> Class or vice versa.
-         *
-         * @return an earlier read or the original {@code read}
-         */
+        ///
+        // Fold reads that convert from Class -> Hub -> Class or vice versa.
+        //
+        // @return an earlier read or the original {@code read}
+        ///
         protected static ValueNode foldIndirection(ValueNode __read, ValueNode __object, LocationIdentity __otherLocation)
         {
             if (__object instanceof Access)
@@ -181,11 +181,11 @@ public final class HotSpotReplacementsUtil
         __thread.writeWord(HotSpotRuntime.threadTlabEndOffset, __end, TLAB_END_LOCATION);
     }
 
-    /**
-     * Clears the pending exception for the given thread.
-     *
-     * @return the pending exception, or null if there was none
-     */
+    ///
+    // Clears the pending exception for the given thread.
+    //
+    // @return the pending exception, or null if there was none
+    ///
     public static final Object clearPendingException(Word __thread)
     {
         Object __result = __thread.readObject(HotSpotRuntime.pendingExceptionOffset, PENDING_EXCEPTION_LOCATION);
@@ -193,29 +193,29 @@ public final class HotSpotReplacementsUtil
         return __result;
     }
 
-    /**
-     * Reads the pending deoptimization value for the given thread.
-     *
-     * @return {@code true} if there was a pending deoptimization
-     */
+    ///
+    // Reads the pending deoptimization value for the given thread.
+    //
+    // @return {@code true} if there was a pending deoptimization
+    ///
     public static final int readPendingDeoptimization(Word __thread)
     {
         return __thread.readInt(HotSpotRuntime.pendingDeoptimizationOffset, PENDING_DEOPTIMIZATION_LOCATION);
     }
 
-    /**
-     * Writes the pending deoptimization value for the given thread.
-     */
+    ///
+    // Writes the pending deoptimization value for the given thread.
+    ///
     public static final void writePendingDeoptimization(Word __thread, int __value)
     {
         __thread.writeInt(HotSpotRuntime.pendingDeoptimizationOffset, __value, PENDING_DEOPTIMIZATION_LOCATION);
     }
 
-    /**
-     * Gets and clears the object result from a runtime call stored in a thread local.
-     *
-     * @return the object that was in the thread local
-     */
+    ///
+    // Gets and clears the object result from a runtime call stored in a thread local.
+    //
+    // @return the object that was in the thread local
+    ///
     public static final Object getAndClearObjectResult(Word __thread)
     {
         Object __result = __thread.readObject(HotSpotRuntime.objectResultOffset, OBJECT_RESULT_LOCATION);
@@ -223,10 +223,9 @@ public final class HotSpotReplacementsUtil
         return __result;
     }
 
-    /*
-     * As far as Java code is concerned this can be considered immutable: it is set just after the
-     * JavaThread is created, before it is published. After that, it is never changed.
-     */
+    // As far as Java code is concerned this can be considered immutable: it is set just after the
+    // JavaThread is created, before it is published. After that, it is never changed.
+
     // @def
     public static final LocationIdentity JAVA_THREAD_THREAD_OBJECT_LOCATION = NamedLocationIdentity.immutable("JavaThread::_threadObj");
 
@@ -282,22 +281,20 @@ public final class HotSpotReplacementsUtil
     };
 
     @NodeIntrinsic(value = KlassLayoutHelperNode.class)
-    public static native int readLayoutHelper(KlassPointer object);
+    public static native int readLayoutHelper(KlassPointer __object);
 
-    /**
-     * Checks if class {@code klass} is an array.
-     *
-     * See: Klass::layout_helper_is_array
-     *
-     * @param klassNonNull the class to be checked
-     * @return true if klassNonNull is an array, false otherwise
-     */
+    ///
+    // Checks if class {@code klass} is an array.
+    //
+    // See: Klass::layout_helper_is_array
+    //
+    // @param klassNonNull the class to be checked
+    // @return true if klassNonNull is an array, false otherwise
+    ///
     public static final boolean klassIsArray(KlassPointer __klassNonNull)
     {
-        /*
-         * The less-than check only works if both values are ints. We use local variables to make
-         * sure these are still ints and haven't changed.
-         */
+        // The less-than check only works if both values are ints. We use local variables to make
+        // sure these are still ints and haven't changed.
         final int __layoutHelper = readLayoutHelper(__klassNonNull);
         final int __layoutHelperNeutralValue = HotSpotRuntime.klassLayoutHelperNeutralValue;
         return (__layoutHelper < __layoutHelperNeutralValue);
@@ -368,17 +365,17 @@ public final class HotSpotReplacementsUtil
         return WordFactory.unsigned(ComputeObjectAddressNode.get(__a, HotSpotRuntime.getArrayBaseOffset(JavaKind.Int)));
     }
 
-    /**
-     * Computes the size of the memory chunk allocated for an array. This size accounts for the
-     * array header size, body size and any padding after the last element to satisfy object
-     * alignment requirements.
-     *
-     * @param length the number of elements in the array
-     * @param headerSize the size of the array header
-     * @param log2ElementSize log2 of the size of an element in the array
-     *
-     * @return the size of the memory chunk
-     */
+    ///
+    // Computes the size of the memory chunk allocated for an array. This size accounts for the
+    // array header size, body size and any padding after the last element to satisfy object
+    // alignment requirements.
+    //
+    // @param length the number of elements in the array
+    // @param headerSize the size of the array header
+    // @param log2ElementSize log2 of the size of an element in the array
+    //
+    // @return the size of the memory chunk
+    ///
     public static final int arrayAllocationSize(int __length, int __headerSize, int __log2ElementSize)
     {
         int __alignment = HotSpotRuntime.objectAlignment;
@@ -409,9 +406,9 @@ public final class HotSpotReplacementsUtil
     // @def
     public static final LocationIdentity OBJECT_MONITOR_ENTRY_LIST_LOCATION = NamedLocationIdentity.mutable("ObjectMonitor::_EntryList");
 
-    /**
-     * Loads the hub of an object (without null checking it first).
-     */
+    ///
+    // Loads the hub of an object (without null checking it first).
+    ///
     public static final KlassPointer loadHub(Object __object)
     {
         return loadHubIntrinsic(__object);
@@ -432,31 +429,31 @@ public final class HotSpotReplacementsUtil
         return loadKlassFromObjectIntrinsic(__object, __offset, __identity, getWordKind());
     }
 
-    /**
-     * Reads the value of a given register.
-     *
-     * @param register a register which must not be available to the register allocator
-     * @return the value of {@code register} as a word
-     */
+    ///
+    // Reads the value of a given register.
+    //
+    // @param register a register which must not be available to the register allocator
+    // @return the value of {@code register} as a word
+    ///
     public static final Word registerAsWord(@ConstantNodeParameter Register __register)
     {
         return registerAsWord(__register, true, false);
     }
 
     @NodeIntrinsic(value = ReadRegisterNode.class)
-    public static native Word registerAsWord(@ConstantNodeParameter Register register, @ConstantNodeParameter boolean directUse, @ConstantNodeParameter boolean incoming);
+    public static native Word registerAsWord(@ConstantNodeParameter Register __register, @ConstantNodeParameter boolean __directUse, @ConstantNodeParameter boolean __incoming);
 
     @NodeIntrinsic(value = WriteRegisterNode.class)
-    public static native void writeRegisterAsWord(@ConstantNodeParameter Register register, Word value);
+    public static native void writeRegisterAsWord(@ConstantNodeParameter Register __register, Word __value);
 
     @NodeIntrinsic(value = RawLoadNode.class)
-    private static native Word loadWordFromObjectIntrinsic(Object object, long offset, @ConstantNodeParameter LocationIdentity locationIdentity, @ConstantNodeParameter JavaKind wordKind);
+    private static native Word loadWordFromObjectIntrinsic(Object __object, long __offset, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter JavaKind __wordKind);
 
     @NodeIntrinsic(value = RawLoadNode.class)
-    private static native KlassPointer loadKlassFromObjectIntrinsic(Object object, long offset, @ConstantNodeParameter LocationIdentity locationIdentity, @ConstantNodeParameter JavaKind wordKind);
+    private static native KlassPointer loadKlassFromObjectIntrinsic(Object __object, long __offset, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter JavaKind __wordKind);
 
     @NodeIntrinsic(value = LoadHubNode.class)
-    public static native KlassPointer loadHubIntrinsic(Object object);
+    public static native KlassPointer loadHubIntrinsic(Object __object);
 
     // @Fold
     public static final int log2WordSize()
@@ -467,10 +464,10 @@ public final class HotSpotReplacementsUtil
     // @def
     public static final LocationIdentity CLASS_STATE_LOCATION = NamedLocationIdentity.mutable("ClassState");
 
-    /**
-     * @param hub the hub of an InstanceKlass
-     * @return true is the InstanceKlass represented by hub is fully initialized
-     */
+    ///
+    // @param hub the hub of an InstanceKlass
+    // @return true is the InstanceKlass represented by hub is fully initialized
+    ///
     public static final boolean isInstanceKlassFullyInitialized(KlassPointer __hub)
     {
         return readInstanceKlassState(__hub) == HotSpotRuntime.instanceKlassStateFullyInitialized;
@@ -526,7 +523,7 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity TLAB_SLOW_ALLOCATIONS_LOCATION = NamedLocationIdentity.mutable("TlabSlowAllocations");
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native int identityHashCode(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object object);
+    public static native int identityHashCode(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object);
 
     // @Fold
     public static final long referentOffset()

@@ -15,42 +15,42 @@ import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.util.GraalError;
 
-/**
- * A FrameMapBuilder that records allocation.
- */
+///
+// A FrameMapBuilder that records allocation.
+///
 // @class FrameMapBuilderImpl
 public class FrameMapBuilderImpl extends FrameMapBuilderTool
 {
     // @field
-    private final RegisterConfig registerConfig;
+    private final RegisterConfig ___registerConfig;
     // @field
-    private final CodeCacheProvider codeCache;
+    private final CodeCacheProvider ___codeCache;
     // @field
-    private final FrameMap frameMap;
+    private final FrameMap ___frameMap;
     // @field
-    private final List<VirtualStackSlot> stackSlots;
+    private final List<VirtualStackSlot> ___stackSlots;
     // @field
-    private final List<CallingConvention> calls;
+    private final List<CallingConvention> ___calls;
     // @field
-    private int numStackSlots;
+    private int ___numStackSlots;
 
     // @cons
     public FrameMapBuilderImpl(FrameMap __frameMap, CodeCacheProvider __codeCache, RegisterConfig __registerConfig)
     {
         super();
-        this.registerConfig = __registerConfig == null ? __codeCache.getRegisterConfig() : __registerConfig;
-        this.codeCache = __codeCache;
-        this.frameMap = __frameMap;
-        this.stackSlots = new ArrayList<>();
-        this.calls = new ArrayList<>();
-        this.numStackSlots = 0;
+        this.___registerConfig = __registerConfig == null ? __codeCache.getRegisterConfig() : __registerConfig;
+        this.___codeCache = __codeCache;
+        this.___frameMap = __frameMap;
+        this.___stackSlots = new ArrayList<>();
+        this.___calls = new ArrayList<>();
+        this.___numStackSlots = 0;
     }
 
     @Override
     public VirtualStackSlot allocateSpillSlot(ValueKind<?> __kind)
     {
-        SimpleVirtualStackSlot __slot = new SimpleVirtualStackSlot(numStackSlots++, __kind);
-        stackSlots.add(__slot);
+        SimpleVirtualStackSlot __slot = new SimpleVirtualStackSlot(this.___numStackSlots++, __kind);
+        this.___stackSlots.add(__slot);
         return __slot;
     }
 
@@ -65,55 +65,55 @@ public class FrameMapBuilderImpl extends FrameMapBuilderTool
         {
             throw GraalError.unimplemented();
         }
-        VirtualStackSlotRange __slot = new VirtualStackSlotRange(numStackSlots++, __slots, __objects, LIRKind.fromJavaKind(frameMap.getTarget().arch, JavaKind.Object));
-        stackSlots.add(__slot);
+        VirtualStackSlotRange __slot = new VirtualStackSlotRange(this.___numStackSlots++, __slots, __objects, LIRKind.fromJavaKind(this.___frameMap.getTarget().arch, JavaKind.Object));
+        this.___stackSlots.add(__slot);
         return __slot;
     }
 
     @Override
     public RegisterConfig getRegisterConfig()
     {
-        return registerConfig;
+        return this.___registerConfig;
     }
 
     @Override
     public CodeCacheProvider getCodeCache()
     {
-        return codeCache;
+        return this.___codeCache;
     }
 
     @Override
     public FrameMap getFrameMap()
     {
-        return frameMap;
+        return this.___frameMap;
     }
 
     @Override
     public int getNumberOfStackSlots()
     {
-        return numStackSlots;
+        return this.___numStackSlots;
     }
 
     @Override
     public void callsMethod(CallingConvention __cc)
     {
-        calls.add(__cc);
+        this.___calls.add(__cc);
     }
 
     @Override
     public FrameMap buildFrameMap(LIRGenerationResult __res)
     {
-        for (CallingConvention __cc : calls)
+        for (CallingConvention __cc : this.___calls)
         {
-            frameMap.callsMethod(__cc);
+            this.___frameMap.callsMethod(__cc);
         }
-        frameMap.finish();
-        return frameMap;
+        this.___frameMap.finish();
+        return this.___frameMap;
     }
 
     @Override
     public List<VirtualStackSlot> getStackSlots()
     {
-        return stackSlots;
+        return this.___stackSlots;
     }
 }

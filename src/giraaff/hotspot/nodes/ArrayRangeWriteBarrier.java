@@ -14,35 +14,35 @@ public abstract class ArrayRangeWriteBarrier extends WriteBarrier implements Low
 
     @Input(InputType.Association)
     // @field
-    AddressNode address;
+    AddressNode ___address;
     @Input
     // @field
-    ValueNode length;
+    ValueNode ___length;
 
     // @field
-    private final int elementStride;
+    private final int ___elementStride;
 
     // @cons
     protected ArrayRangeWriteBarrier(NodeClass<? extends ArrayRangeWriteBarrier> __c, AddressNode __address, ValueNode __length, int __elementStride)
     {
         super(__c);
-        this.address = __address;
-        this.length = __length;
-        this.elementStride = __elementStride;
+        this.___address = __address;
+        this.___length = __length;
+        this.___elementStride = __elementStride;
     }
 
     public AddressNode getAddress()
     {
-        return address;
+        return this.___address;
     }
 
     public ValueNode getLength()
     {
-        return length;
+        return this.___length;
     }
 
     public int getElementStride()
     {
-        return elementStride;
+        return this.___elementStride;
     }
 }

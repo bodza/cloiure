@@ -127,47 +127,47 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.replacements.DefaultJavaLoweringProvider;
 import giraaff.util.GraalError;
 
-/**
- * HotSpot implementation of {@link LoweringProvider}.
- */
+///
+// HotSpot implementation of {@link LoweringProvider}.
+///
 // @class DefaultHotSpotLoweringProvider
 public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider implements HotSpotLoweringProvider
 {
     // @field
-    protected final HotSpotGraalRuntime runtime;
+    protected final HotSpotGraalRuntime ___runtime;
     // @field
-    protected final HotSpotRegistersProvider registers;
+    protected final HotSpotRegistersProvider ___registers;
     // @field
-    protected final HotSpotConstantReflectionProvider constantReflection;
+    protected final HotSpotConstantReflectionProvider ___constantReflection;
 
     // @field
-    protected InstanceOfSnippets.Templates instanceofSnippets;
+    protected InstanceOfSnippets.Templates ___instanceofSnippets;
     // @field
-    protected NewObjectSnippets.Templates newObjectSnippets;
+    protected NewObjectSnippets.Templates ___newObjectSnippets;
     // @field
-    protected MonitorSnippets.Templates monitorSnippets;
+    protected MonitorSnippets.Templates ___monitorSnippets;
     // @field
-    protected WriteBarrierSnippets.Templates writeBarrierSnippets;
+    protected WriteBarrierSnippets.Templates ___writeBarrierSnippets;
     // @field
-    protected LoadExceptionObjectSnippets.Templates exceptionObjectSnippets;
+    protected LoadExceptionObjectSnippets.Templates ___exceptionObjectSnippets;
     // @field
-    protected UnsafeLoadSnippets.Templates unsafeLoadSnippets;
+    protected UnsafeLoadSnippets.Templates ___unsafeLoadSnippets;
     // @field
-    protected ArrayCopySnippets.Templates arraycopySnippets;
+    protected ArrayCopySnippets.Templates ___arraycopySnippets;
     // @field
-    protected StringToBytesSnippets.Templates stringToBytesSnippets;
+    protected StringToBytesSnippets.Templates ___stringToBytesSnippets;
     // @field
-    protected HashCodeSnippets.Templates hashCodeSnippets;
+    protected HashCodeSnippets.Templates ___hashCodeSnippets;
     // @field
-    protected ResolveConstantSnippets.Templates resolveConstantSnippets;
+    protected ResolveConstantSnippets.Templates ___resolveConstantSnippets;
 
     // @cons
     public DefaultHotSpotLoweringProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, ForeignCallsProvider __foreignCalls, HotSpotRegistersProvider __registers, HotSpotConstantReflectionProvider __constantReflection, TargetDescription __target)
     {
         super(__metaAccess, __foreignCalls, __target, HotSpotRuntime.useCompressedOops);
-        this.runtime = __runtime;
-        this.registers = __registers;
-        this.constantReflection = __constantReflection;
+        this.___runtime = __runtime;
+        this.___registers = __registers;
+        this.___constantReflection = __constantReflection;
     }
 
     @Override
@@ -175,21 +175,21 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     {
         super.initialize(__providers, __providers.getSnippetReflection());
 
-        instanceofSnippets = new InstanceOfSnippets.Templates(__providers, target);
-        newObjectSnippets = new NewObjectSnippets.Templates(__providers, target);
-        monitorSnippets = new MonitorSnippets.Templates(__providers, target, HotSpotRuntime.useFastLocking);
-        writeBarrierSnippets = new WriteBarrierSnippets.Templates(__providers, target, HotSpotRuntime.useCompressedOops ? HotSpotRuntime.oopEncoding : null);
-        exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(__providers, target);
-        unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(__providers, target);
-        arraycopySnippets = new ArrayCopySnippets.Templates(__providers, target);
-        stringToBytesSnippets = new StringToBytesSnippets.Templates(__providers, target);
-        hashCodeSnippets = new HashCodeSnippets.Templates(__providers, target);
-        resolveConstantSnippets = new ResolveConstantSnippets.Templates(__providers, target);
+        this.___instanceofSnippets = new InstanceOfSnippets.Templates(__providers, this.___target);
+        this.___newObjectSnippets = new NewObjectSnippets.Templates(__providers, this.___target);
+        this.___monitorSnippets = new MonitorSnippets.Templates(__providers, this.___target, HotSpotRuntime.useFastLocking);
+        this.___writeBarrierSnippets = new WriteBarrierSnippets.Templates(__providers, this.___target, HotSpotRuntime.useCompressedOops ? HotSpotRuntime.oopEncoding : null);
+        this.___exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(__providers, this.___target);
+        this.___unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(__providers, this.___target);
+        this.___arraycopySnippets = new ArrayCopySnippets.Templates(__providers, this.___target);
+        this.___stringToBytesSnippets = new StringToBytesSnippets.Templates(__providers, this.___target);
+        this.___hashCodeSnippets = new HashCodeSnippets.Templates(__providers, this.___target);
+        this.___resolveConstantSnippets = new ResolveConstantSnippets.Templates(__providers, this.___target);
     }
 
     public MonitorSnippets.Templates getMonitorSnippets()
     {
-        return monitorSnippets;
+        return this.___monitorSnippets;
     }
 
     @Override
@@ -225,7 +225,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             InstanceOfNode __instanceOfNode = (InstanceOfNode) __n;
             if (__graph.getGuardsStage().areDeoptsFixed())
             {
-                instanceofSnippets.lower(__instanceOfNode, __tool);
+                this.___instanceofSnippets.lower(__instanceOfNode, __tool);
             }
             else
             {
@@ -243,7 +243,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             InstanceOfDynamicNode __instanceOfDynamicNode = (InstanceOfDynamicNode) __n;
             if (__graph.getGuardsStage().areDeoptsFixed())
             {
-                instanceofSnippets.lower(__instanceOfDynamicNode, __tool);
+                this.___instanceofSnippets.lower(__instanceOfDynamicNode, __tool);
             }
             else
             {
@@ -267,14 +267,14 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         {
             if (__graph.getGuardsStage().areDeoptsFixed())
             {
-                instanceofSnippets.lower((ClassIsAssignableFromNode) __n, __tool);
+                this.___instanceofSnippets.lower((ClassIsAssignableFromNode) __n, __tool);
             }
         }
         else if (__n instanceof NewInstanceNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                newObjectSnippets.lower((NewInstanceNode) __n, registers, __tool);
+                this.___newObjectSnippets.lower((NewInstanceNode) __n, this.___registers, __tool);
             }
         }
         else if (__n instanceof DynamicNewInstanceNode)
@@ -282,20 +282,20 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             DynamicNewInstanceNode __newInstanceNode = (DynamicNewInstanceNode) __n;
             if (__newInstanceNode.getClassClass() == null)
             {
-                JavaConstant __classClassMirror = constantReflection.forObject(Class.class);
+                JavaConstant __classClassMirror = this.___constantReflection.forObject(Class.class);
                 ConstantNode __classClass = ConstantNode.forConstant(__classClassMirror, __tool.getMetaAccess(), __graph);
                 __newInstanceNode.setClassClass(__classClass);
             }
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                newObjectSnippets.lower(__newInstanceNode, registers, __tool);
+                this.___newObjectSnippets.lower(__newInstanceNode, this.___registers, __tool);
             }
         }
         else if (__n instanceof NewArrayNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                newObjectSnippets.lower((NewArrayNode) __n, registers, __tool);
+                this.___newObjectSnippets.lower((NewArrayNode) __n, this.___registers, __tool);
             }
         }
         else if (__n instanceof DynamicNewArrayNode)
@@ -303,81 +303,81 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             DynamicNewArrayNode __dynamicNewArrayNode = (DynamicNewArrayNode) __n;
             if (__dynamicNewArrayNode.getVoidClass() == null)
             {
-                JavaConstant __voidClassMirror = constantReflection.forObject(void.class);
+                JavaConstant __voidClassMirror = this.___constantReflection.forObject(void.class);
                 ConstantNode __voidClass = ConstantNode.forConstant(__voidClassMirror, __tool.getMetaAccess(), __graph);
                 __dynamicNewArrayNode.setVoidClass(__voidClass);
             }
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                newObjectSnippets.lower(__dynamicNewArrayNode, registers, __tool);
+                this.___newObjectSnippets.lower(__dynamicNewArrayNode, this.___registers, __tool);
             }
         }
         else if (__n instanceof RawMonitorEnterNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                monitorSnippets.lower((RawMonitorEnterNode) __n, registers, __tool);
+                this.___monitorSnippets.lower((RawMonitorEnterNode) __n, this.___registers, __tool);
             }
         }
         else if (__n instanceof MonitorExitNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                monitorSnippets.lower((MonitorExitNode) __n, registers, __tool);
+                this.___monitorSnippets.lower((MonitorExitNode) __n, this.___registers, __tool);
             }
         }
         else if (__n instanceof ArrayCopyNode)
         {
-            arraycopySnippets.lower((ArrayCopyNode) __n, __tool);
+            this.___arraycopySnippets.lower((ArrayCopyNode) __n, __tool);
         }
         else if (__n instanceof ArrayCopyWithSlowPathNode)
         {
-            arraycopySnippets.lower((ArrayCopyWithSlowPathNode) __n, __tool);
+            this.___arraycopySnippets.lower((ArrayCopyWithSlowPathNode) __n, __tool);
         }
         else if (__n instanceof G1PreWriteBarrier)
         {
-            writeBarrierSnippets.lower((G1PreWriteBarrier) __n, registers, __tool);
+            this.___writeBarrierSnippets.lower((G1PreWriteBarrier) __n, this.___registers, __tool);
         }
         else if (__n instanceof G1PostWriteBarrier)
         {
-            writeBarrierSnippets.lower((G1PostWriteBarrier) __n, registers, __tool);
+            this.___writeBarrierSnippets.lower((G1PostWriteBarrier) __n, this.___registers, __tool);
         }
         else if (__n instanceof G1ReferentFieldReadBarrier)
         {
-            writeBarrierSnippets.lower((G1ReferentFieldReadBarrier) __n, registers, __tool);
+            this.___writeBarrierSnippets.lower((G1ReferentFieldReadBarrier) __n, this.___registers, __tool);
         }
         else if (__n instanceof SerialWriteBarrier)
         {
-            writeBarrierSnippets.lower((SerialWriteBarrier) __n, __tool);
+            this.___writeBarrierSnippets.lower((SerialWriteBarrier) __n, __tool);
         }
         else if (__n instanceof SerialArrayRangeWriteBarrier)
         {
-            writeBarrierSnippets.lower((SerialArrayRangeWriteBarrier) __n, __tool);
+            this.___writeBarrierSnippets.lower((SerialArrayRangeWriteBarrier) __n, __tool);
         }
         else if (__n instanceof G1ArrayRangePreWriteBarrier)
         {
-            writeBarrierSnippets.lower((G1ArrayRangePreWriteBarrier) __n, registers, __tool);
+            this.___writeBarrierSnippets.lower((G1ArrayRangePreWriteBarrier) __n, this.___registers, __tool);
         }
         else if (__n instanceof G1ArrayRangePostWriteBarrier)
         {
-            writeBarrierSnippets.lower((G1ArrayRangePostWriteBarrier) __n, registers, __tool);
+            this.___writeBarrierSnippets.lower((G1ArrayRangePostWriteBarrier) __n, this.___registers, __tool);
         }
         else if (__n instanceof NewMultiArrayNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                newObjectSnippets.lower((NewMultiArrayNode) __n, __tool);
+                this.___newObjectSnippets.lower((NewMultiArrayNode) __n, __tool);
             }
         }
         else if (__n instanceof LoadExceptionObjectNode)
         {
-            exceptionObjectSnippets.lower((LoadExceptionObjectNode) __n, registers, __tool);
+            this.___exceptionObjectSnippets.lower((LoadExceptionObjectNode) __n, this.___registers, __tool);
         }
         else if (__n instanceof StringToBytesNode)
         {
             if (__graph.getGuardsStage().areDeoptsFixed())
             {
-                stringToBytesSnippets.lower((StringToBytesNode) __n, __tool);
+                this.___stringToBytesSnippets.lower((StringToBytesNode) __n, __tool);
             }
         }
         else if (__n instanceof IntegerDivRemNode)
@@ -409,34 +409,34 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
         else if (__n instanceof IdentityHashCodeNode)
         {
-            hashCodeSnippets.lower((IdentityHashCodeNode) __n, __tool);
+            this.___hashCodeSnippets.lower((IdentityHashCodeNode) __n, __tool);
         }
         else if (__n instanceof ResolveDynamicConstantNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                resolveConstantSnippets.lower((ResolveDynamicConstantNode) __n, __tool);
+                this.___resolveConstantSnippets.lower((ResolveDynamicConstantNode) __n, __tool);
             }
         }
         else if (__n instanceof ResolveConstantNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                resolveConstantSnippets.lower((ResolveConstantNode) __n, __tool);
+                this.___resolveConstantSnippets.lower((ResolveConstantNode) __n, __tool);
             }
         }
         else if (__n instanceof ResolveMethodAndLoadCountersNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                resolveConstantSnippets.lower((ResolveMethodAndLoadCountersNode) __n, __tool);
+                this.___resolveConstantSnippets.lower((ResolveMethodAndLoadCountersNode) __n, __tool);
             }
         }
         else if (__n instanceof InitializeKlassNode)
         {
             if (__graph.getGuardsStage().areFrameStatesAtDeopts())
             {
-                resolveConstantSnippets.lower((InitializeKlassNode) __n, __tool);
+                this.___resolveConstantSnippets.lower((InitializeKlassNode) __n, __tool);
             }
         }
         else
@@ -447,10 +447,8 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
     private static void lowerComputeObjectAddressNode(ComputeObjectAddressNode __n)
     {
-        /*
-         * Lower the node into a ComputeObjectAddress node and an Add but ensure that it's below any
-         * potential safepoints and above it's uses.
-         */
+        // Lower the node into a ComputeObjectAddress node and an Add but ensure that it's below any
+        // potential safepoints and above it's uses.
         for (Node __use : __n.usages().snapshot())
         {
             if (__use instanceof FixedNode)
@@ -491,7 +489,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
         StructuredGraph __graph = __n.graph();
         AddressNode __address = createOffsetAddress(__graph, __n.getHub(), HotSpotRuntime.classMirrorOffset);
-        FloatingReadNode __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_MIRROR_LOCATION, null, StampFactory.forKind(target.wordJavaKind), null, BarrierType.NONE));
+        FloatingReadNode __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_MIRROR_LOCATION, null, StampFactory.forKind(this.___target.wordJavaKind), null, BarrierType.NONE));
         __address = createOffsetAddress(__graph, __read, 0);
         __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_MIRROR_HANDLE_LOCATION, null, __n.stamp(NodeView.DEFAULT), null, BarrierType.NONE));
         __n.replaceAtUsagesAndDelete(__read);
@@ -532,7 +530,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                 ResolvedJavaType __receiverType = __invoke.getReceiverType();
                 if (__hsMethod.isInVirtualMethodTable(__receiverType))
                 {
-                    JavaKind __wordKind = runtime.getTarget().wordJavaKind;
+                    JavaKind __wordKind = this.___runtime.getTarget().wordJavaKind;
                     ValueNode __hub = createReadHub(__graph, __receiver, __tool);
 
                     ReadNode __metaspaceMethod = createReadVirtualMethod(__graph, __hub, __hsMethod, __receiverType);
@@ -572,17 +570,15 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     public ValueNode staticFieldBase(StructuredGraph __graph, ResolvedJavaField __f)
     {
         HotSpotResolvedJavaField __field = (HotSpotResolvedJavaField) __f;
-        JavaConstant __base = constantReflection.asJavaClass(__field.getDeclaringClass());
-        return ConstantNode.forConstant(__base, metaAccess, __graph);
+        JavaConstant __base = this.___constantReflection.asJavaClass(__field.getDeclaringClass());
+        return ConstantNode.forConstant(__base, this.___metaAccess, __graph);
     }
 
     @Override
     protected ValueNode createReadArrayComponentHub(StructuredGraph __graph, ValueNode __arrayHub, FixedNode __anchor)
     {
-        /*
-         * Anchor the read of the element klass to the cfg, because it is only valid when arrayClass
-         * is an object class, which might not be the case in other parts of the compiled method.
-         */
+        // Anchor the read of the element klass to the cfg, because it is only valid when arrayClass
+        // is an object class, which might not be the case in other parts of the compiled method.
         AddressNode __address = createOffsetAddress(__graph, __arrayHub, HotSpotRuntime.arrayClassElementOffset);
         return __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION, null, KlassPointerStamp.klassNonNull(), AbstractBeginNode.prevBegin(__anchor)));
     }
@@ -593,7 +589,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         StructuredGraph __graph = __load.graph();
         if (!(__load instanceof GuardedUnsafeLoadNode) && !__graph.getGuardsStage().allowsFloatingGuards() && addReadBarrier(__load))
         {
-            unsafeLoadSnippets.lower(__load, __tool);
+            this.___unsafeLoadSnippets.lower(__load, __tool);
         }
         else
         {
@@ -643,8 +639,8 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         if (__graph.getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
         {
             StartNode __newStart = __graph.add(new StartNode());
-            ParameterNode __buffer = __graph.addWithoutUnique(new ParameterNode(0, StampPair.createSingle(StampFactory.forKind(runtime.getTarget().wordJavaKind))));
-            ForeignCallNode __migrationEnd = __graph.add(new ForeignCallNode(foreignCalls, HotSpotForeignCallsProviderImpl.OSR_MIGRATION_END, __buffer));
+            ParameterNode __buffer = __graph.addWithoutUnique(new ParameterNode(0, StampPair.createSingle(StampFactory.forKind(this.___runtime.getTarget().wordJavaKind))));
+            ForeignCallNode __migrationEnd = __graph.add(new ForeignCallNode(this.___foreignCalls, HotSpotForeignCallsProviderImpl.OSR_MIGRATION_END, __buffer));
             __migrationEnd.setStateAfter(__osrStart.stateAfter());
             __newStart.setNext(__migrationEnd);
             FixedNode __next = __osrStart.next();
@@ -652,7 +648,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             __migrationEnd.setNext(__next);
             __graph.setStart(__newStart);
 
-            final int __wordSize = target.wordSize;
+            final int __wordSize = this.___target.wordSize;
 
             // taken from c2 locals_addr = osr_buf + (max_locals-1)*wordSize)
             int __localsOffset = (__graph.method().getMaxLocals() - 1) * __wordSize;
@@ -752,7 +748,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
 
         StructuredGraph __graph = __node.graph();
-        FloatingNode __exceptionNode = ConstantNode.forConstant(constantReflection.forObject(__exception), metaAccess, __graph);
+        FloatingNode __exceptionNode = ConstantNode.forConstant(this.___constantReflection.forObject(__exception), this.___metaAccess, __graph);
         __graph.replaceFixedWithFloating(__node, __exceptionNode);
         return true;
     }
@@ -790,7 +786,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
 
         StructuredGraph __graph = __node.graph();
-        ForeignCallNode __foreignCallNode = __graph.add(new ForeignCallNode(foreignCalls, __descriptor, __node.stamp(NodeView.DEFAULT), __node.getArguments()));
+        ForeignCallNode __foreignCallNode = __graph.add(new ForeignCallNode(this.___foreignCalls, __descriptor, __node.stamp(NodeView.DEFAULT), __node.getArguments()));
         __graph.replaceFixedWithFixed(__node, __foreignCallNode);
     }
 
@@ -865,7 +861,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     {
         HotSpotResolvedJavaField __loadField = (HotSpotResolvedJavaField) __f;
         BarrierType __barrierType = BarrierType.NONE;
-        if (HotSpotRuntime.useG1GC && __loadField.getJavaKind() == JavaKind.Object && metaAccess.lookupJavaType(Reference.class).equals(__loadField.getDeclaringClass()) && __loadField.getName().equals("referent"))
+        if (HotSpotRuntime.useG1GC && __loadField.getJavaKind() == JavaKind.Object && this.___metaAccess.lookupJavaType(Reference.class).equals(__loadField.getDeclaringClass()) && __loadField.getName().equals("referent"))
         {
             __barrierType = BarrierType.PRECISE;
         }

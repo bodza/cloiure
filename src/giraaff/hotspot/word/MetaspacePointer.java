@@ -12,9 +12,9 @@ import giraaff.word.Word;
 import giraaff.word.Word.Opcode;
 import giraaff.word.Word.Operation;
 
-/**
- * Marker type for a metaspace pointer.
- */
+///
+// Marker type for a metaspace pointer.
+///
 // @class MetaspacePointer
 public abstract class MetaspacePointer
 {
@@ -24,872 +24,872 @@ public abstract class MetaspacePointer
     @HotSpotOperation(opcode = HotspotOpcode.FROM_POINTER)
     public abstract Pointer asWord();
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract byte readByte(WordBase offset, LocationIdentity locationIdentity);
+    public abstract byte readByte(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract char readChar(WordBase offset, LocationIdentity locationIdentity);
+    public abstract char readChar(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract short readShort(WordBase offset, LocationIdentity locationIdentity);
+    public abstract short readShort(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract int readInt(WordBase offset, LocationIdentity locationIdentity);
+    public abstract int readInt(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract long readLong(WordBase offset, LocationIdentity locationIdentity);
+    public abstract long readLong(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract float readFloat(WordBase offset, LocationIdentity locationIdentity);
+    public abstract float readFloat(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract double readDouble(WordBase offset, LocationIdentity locationIdentity);
+    public abstract double readDouble(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Word readWord(WordBase offset, LocationIdentity locationIdentity);
+    public abstract Word readWord(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(WordBase offset, LocationIdentity locationIdentity);
+    public abstract Object readObject(WordBase __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract byte readByte(int offset, LocationIdentity locationIdentity);
+    public abstract byte readByte(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract char readChar(int offset, LocationIdentity locationIdentity);
+    public abstract char readChar(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract short readShort(int offset, LocationIdentity locationIdentity);
+    public abstract short readShort(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract int readInt(int offset, LocationIdentity locationIdentity);
+    public abstract int readInt(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract long readLong(int offset, LocationIdentity locationIdentity);
+    public abstract long readLong(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract float readFloat(int offset, LocationIdentity locationIdentity);
+    public abstract float readFloat(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract double readDouble(int offset, LocationIdentity locationIdentity);
+    public abstract double readDouble(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Word readWord(int offset, LocationIdentity locationIdentity);
+    public abstract Word readWord(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the read
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the read
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(int offset, LocationIdentity locationIdentity);
+    public abstract Object readObject(int __offset, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeByte(WordBase offset, byte val, LocationIdentity locationIdentity);
+    public abstract void writeByte(WordBase __offset, byte __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeChar(WordBase offset, char val, LocationIdentity locationIdentity);
+    public abstract void writeChar(WordBase __offset, char __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeShort(WordBase offset, short val, LocationIdentity locationIdentity);
+    public abstract void writeShort(WordBase __offset, short __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeInt(WordBase offset, int val, LocationIdentity locationIdentity);
+    public abstract void writeInt(WordBase __offset, int __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeLong(WordBase offset, long val, LocationIdentity locationIdentity);
+    public abstract void writeLong(WordBase __offset, long __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeFloat(WordBase offset, float val, LocationIdentity locationIdentity);
+    public abstract void writeFloat(WordBase __offset, float __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeDouble(WordBase offset, double val, LocationIdentity locationIdentity);
+    public abstract void writeDouble(WordBase __offset, double __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeWord(WordBase offset, WordBase val, LocationIdentity locationIdentity);
+    public abstract void writeWord(WordBase __offset, WordBase __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Initializes the memory at address {@code (this + offset)}. Both the base address and offset
-     * are in bytes. The memory must be uninitialized or zero prior to this operation.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Initializes the memory at address {@code (this + offset)}. Both the base address and offset
+    // are in bytes. The memory must be uninitialized or zero prior to this operation.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.INITIALIZE)
-    public abstract void initializeLong(WordBase offset, long val, LocationIdentity locationIdentity);
+    public abstract void initializeLong(WordBase __offset, long __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeObject(WordBase offset, Object val, LocationIdentity locationIdentity);
+    public abstract void writeObject(WordBase __offset, Object __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeByte(int offset, byte val, LocationIdentity locationIdentity);
+    public abstract void writeByte(int __offset, byte __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeChar(int offset, char val, LocationIdentity locationIdentity);
+    public abstract void writeChar(int __offset, char __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeShort(int offset, short val, LocationIdentity locationIdentity);
+    public abstract void writeShort(int __offset, short __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeInt(int offset, int val, LocationIdentity locationIdentity);
+    public abstract void writeInt(int __offset, int __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeLong(int offset, long val, LocationIdentity locationIdentity);
+    public abstract void writeLong(int __offset, long __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeFloat(int offset, float val, LocationIdentity locationIdentity);
+    public abstract void writeFloat(int __offset, float __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeDouble(int offset, double val, LocationIdentity locationIdentity);
+    public abstract void writeDouble(int __offset, double __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeWord(int offset, WordBase val, LocationIdentity locationIdentity);
+    public abstract void writeWord(int __offset, WordBase __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param locationIdentity the identity of the write
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param locationIdentity the identity of the write
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeObject(int offset, Object val, LocationIdentity locationIdentity);
+    public abstract void writeObject(int __offset, Object __val, LocationIdentity __locationIdentity);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract byte readByte(WordBase offset);
+    public abstract byte readByte(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract char readChar(WordBase offset);
+    public abstract char readChar(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract short readShort(WordBase offset);
+    public abstract short readShort(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract int readInt(WordBase offset);
+    public abstract int readInt(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract long readLong(WordBase offset);
+    public abstract long readLong(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract float readFloat(WordBase offset);
+    public abstract float readFloat(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract double readDouble(WordBase offset);
+    public abstract double readDouble(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Word readWord(WordBase offset);
+    public abstract Word readWord(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(WordBase offset);
+    public abstract Object readObject(WordBase __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
-     * the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param barrierType the type of the read barrier to be added
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
+    // the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param barrierType the type of the read barrier to be added
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(WordBase offset, BarrierType barrierType);
+    public abstract Object readObject(WordBase __offset, BarrierType __barrierType);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract byte readByte(int offset);
+    public abstract byte readByte(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract char readChar(int offset);
+    public abstract char readChar(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract short readShort(int offset);
+    public abstract short readShort(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract int readInt(int offset);
+    public abstract int readInt(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract long readLong(int offset);
+    public abstract long readLong(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract float readFloat(int offset);
+    public abstract float readFloat(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract double readDouble(int offset);
+    public abstract double readDouble(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Word readWord(int offset);
+    public abstract Word readWord(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(int offset);
+    public abstract Object readObject(int __offset);
 
-    /**
-     * Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
-     * the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
-     *
-     * @param offset the signed offset for the memory access
-     * @param barrierType the type of the read barrier to be added
-     * @return the result of the memory access
-     */
+    ///
+    // Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
+    // the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
+    //
+    // @param offset the signed offset for the memory access
+    // @param barrierType the type of the read barrier to be added
+    // @return the result of the memory access
+    ///
     @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(int offset, BarrierType barrierType);
+    public abstract Object readObject(int __offset, BarrierType __barrierType);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeByte(WordBase offset, byte val);
+    public abstract void writeByte(WordBase __offset, byte __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeChar(WordBase offset, char val);
+    public abstract void writeChar(WordBase __offset, char __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeShort(WordBase offset, short val);
+    public abstract void writeShort(WordBase __offset, short __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeInt(WordBase offset, int val);
+    public abstract void writeInt(WordBase __offset, int __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeLong(WordBase offset, long val);
+    public abstract void writeLong(WordBase __offset, long __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeFloat(WordBase offset, float val);
+    public abstract void writeFloat(WordBase __offset, float __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeDouble(WordBase offset, double val);
+    public abstract void writeDouble(WordBase __offset, double __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeWord(WordBase offset, WordBase val);
+    public abstract void writeWord(WordBase __offset, WordBase __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * The offset is always treated as a {@link SignedWord} value. However, the static type is
-     * {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
-     * knows that the highest-order bit of the unsigned value is never used).
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // The offset is always treated as a {@link SignedWord} value. However, the static type is
+    // {@link WordBase} to avoid the frequent casts of {@link UnsignedWord} values (where the caller
+    // knows that the highest-order bit of the unsigned value is never used).
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeObject(WordBase offset, Object val);
+    public abstract void writeObject(WordBase __offset, Object __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeByte(int offset, byte val);
+    public abstract void writeByte(int __offset, byte __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeChar(int offset, char val);
+    public abstract void writeChar(int __offset, char __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeShort(int offset, short val);
+    public abstract void writeShort(int __offset, short __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeInt(int offset, int val);
+    public abstract void writeInt(int __offset, int __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeLong(int offset, long val);
+    public abstract void writeLong(int __offset, long __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeFloat(int offset, float val);
+    public abstract void writeFloat(int __offset, float __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeDouble(int offset, double val);
+    public abstract void writeDouble(int __offset, double __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeWord(int offset, WordBase val);
+    public abstract void writeWord(int __offset, WordBase __val);
 
-    /**
-     * Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     *
-     * @param offset the signed offset for the memory access
-     * @param val the value to be written to memory
-     */
+    ///
+    // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+    //
+    // @param offset the signed offset for the memory access
+    // @param val the value to be written to memory
+    ///
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public abstract void writeObject(int offset, Object val);
+    public abstract void writeObject(int __offset, Object __val);
 }

@@ -7,30 +7,30 @@ import java.util.NoSuchElementException;
 final class NodeUsageIterator implements Iterator<Node>
 {
     // @field
-    final Node node;
+    final Node ___node;
     // @field
-    int index = -1;
+    int ___index = -1;
     // @field
-    Node current;
+    Node ___current;
 
     void advance()
     {
-        current = null;
-        index++;
-        if (index == 0)
+        this.___current = null;
+        this.___index++;
+        if (this.___index == 0)
         {
-            current = node.usage0;
+            this.___current = this.___node.___usage0;
         }
-        else if (index == 1)
+        else if (this.___index == 1)
         {
-            current = node.usage1;
+            this.___current = this.___node.___usage1;
         }
         else
         {
-            int __relativeIndex = index - Node.INLINE_USAGE_COUNT;
-            if (__relativeIndex < node.extraUsagesCount)
+            int __relativeIndex = this.___index - Node.INLINE_USAGE_COUNT;
+            if (__relativeIndex < this.___node.___extraUsagesCount)
             {
-                current = node.extraUsages[__relativeIndex];
+                this.___current = this.___node.___extraUsages[__relativeIndex];
             }
         }
     }
@@ -39,20 +39,20 @@ final class NodeUsageIterator implements Iterator<Node>
     NodeUsageIterator(Node __node)
     {
         super();
-        this.node = __node;
+        this.___node = __node;
         advance();
     }
 
     @Override
     public boolean hasNext()
     {
-        return current != null;
+        return this.___current != null;
     }
 
     @Override
     public Node next()
     {
-        Node __result = current;
+        Node __result = this.___current;
         if (__result == null)
         {
             throw new NoSuchElementException();

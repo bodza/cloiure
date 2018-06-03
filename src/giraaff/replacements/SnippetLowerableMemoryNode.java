@@ -23,61 +23,61 @@ public final class SnippetLowerableMemoryNode extends FixedWithNextNode implemen
     // @iface SnippetLowerableMemoryNode.SnippetLowering
     public interface SnippetLowering
     {
-        void lower(SnippetLowerableMemoryNode node, LoweringTool tool);
+        void lower(SnippetLowerableMemoryNode __node, LoweringTool __tool);
     }
 
     @Input
     // @field
-    protected NodeInputList<ValueNode> arguments;
+    protected NodeInputList<ValueNode> ___arguments;
     @OptionalInput(InputType.Memory)
     // @field
-    protected MemoryNode lastLocationAccess;
+    protected MemoryNode ___lastLocationAccess;
     // @field
-    private final LocationIdentity locationIdentity;
+    private final LocationIdentity ___locationIdentity;
     // @field
-    SnippetLowering lowering;
+    SnippetLowering ___lowering;
 
     // @cons
     public SnippetLowerableMemoryNode(SnippetLowering __lowering, LocationIdentity __locationIdentity, Stamp __stamp, ValueNode... __arguments)
     {
         super(TYPE, __stamp);
-        this.arguments = new NodeInputList<>(this, __arguments);
-        this.lowering = __lowering;
-        this.locationIdentity = __locationIdentity;
+        this.___arguments = new NodeInputList<>(this, __arguments);
+        this.___lowering = __lowering;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public ValueNode getArgument(int __i)
     {
-        return arguments.get(__i);
+        return this.___arguments.get(__i);
     }
 
     public int getArgumentCount()
     {
-        return arguments.size();
+        return this.___arguments.size();
     }
 
     @Override
     public void lower(LoweringTool __tool)
     {
-        lowering.lower(this, __tool);
+        this.___lowering.lower(this, __tool);
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 
     @Override
     public MemoryNode getLastLocationAccess()
     {
-        return lastLocationAccess;
+        return this.___lastLocationAccess;
     }
 
     @Override
     public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__lla));
-        lastLocationAccess = __lla;
+        updateUsages(ValueNodeUtil.asNode(this.___lastLocationAccess), ValueNodeUtil.asNode(__lla));
+        this.___lastLocationAccess = __lla;
     }
 }

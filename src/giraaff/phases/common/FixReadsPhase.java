@@ -54,16 +54,16 @@ import giraaff.phases.schedule.SchedulePhase.SchedulingStrategy;
 import giraaff.phases.tiers.LowTierContext;
 import giraaff.phases.tiers.PhaseContext;
 
-/**
- * This phase lowers {@link FloatingReadNode FloatingReadNodes} into corresponding fixed reads.
- */
+///
+// This phase lowers {@link FloatingReadNode FloatingReadNodes} into corresponding fixed reads.
+///
 // @class FixReadsPhase
 public final class FixReadsPhase extends BasePhase<LowTierContext>
 {
     // @field
-    protected boolean replaceInputsWithConstants;
+    protected boolean ___replaceInputsWithConstants;
     // @field
-    protected Phase schedulePhase;
+    protected Phase ___schedulePhase;
 
     // @class FixReadsPhase.FixReadsClosure
     private static final class FixReadsClosure extends ScheduledNodeIterator
@@ -109,34 +109,34 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
     protected static final class RawConditionalEliminationVisitor implements RecursiveVisitor<Integer>
     {
         // @field
-        protected final NodeMap<StampElement> stampMap;
+        protected final NodeMap<StampElement> ___stampMap;
         // @field
-        protected final NodeStack undoOperations;
+        protected final NodeStack ___undoOperations;
         // @field
-        private final ScheduleResult schedule;
+        private final ScheduleResult ___schedule;
         // @field
-        private final StructuredGraph graph;
+        private final StructuredGraph ___graph;
         // @field
-        private final MetaAccessProvider metaAccess;
+        private final MetaAccessProvider ___metaAccess;
         // @field
-        private final boolean replaceConstantInputs;
+        private final boolean ___replaceConstantInputs;
         // @field
-        private final BlockMap<Integer> blockActionStart;
+        private final BlockMap<Integer> ___blockActionStart;
         // @field
-        private final EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>> endMaps;
+        private final EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>> ___endMaps;
 
         // @cons
         protected RawConditionalEliminationVisitor(StructuredGraph __graph, ScheduleResult __schedule, MetaAccessProvider __metaAccess, boolean __replaceInputsWithConstants)
         {
             super();
-            this.graph = __graph;
-            this.schedule = __schedule;
-            this.metaAccess = __metaAccess;
-            blockActionStart = new BlockMap<>(__schedule.getCFG());
-            endMaps = EconomicMap.create();
-            stampMap = __graph.createNodeMap();
-            undoOperations = new NodeStack();
-            replaceConstantInputs = __replaceInputsWithConstants && GraalOptions.replaceInputsWithConstantsBasedOnStamps;
+            this.___graph = __graph;
+            this.___schedule = __schedule;
+            this.___metaAccess = __metaAccess;
+            this.___blockActionStart = new BlockMap<>(__schedule.getCFG());
+            this.___endMaps = EconomicMap.create();
+            this.___stampMap = __graph.createNodeMap();
+            this.___undoOperations = new NodeStack();
+            this.___replaceConstantInputs = __replaceInputsWithConstants && GraalOptions.replaceInputsWithConstantsBasedOnStamps;
         }
 
         protected void replaceInput(Position __p, Node __oldInput, Node __newConstantInput)
@@ -175,7 +175,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
                                         continue;
                                     }
                                 }
-                                ConstantNode __stampConstant = ConstantNode.forConstant(__bestStamp, __constant, metaAccess, graph);
+                                ConstantNode __stampConstant = ConstantNode.forConstant(__bestStamp, __constant, this.___metaAccess, this.___graph);
                                 replaceInput(__p, __node, __stampConstant);
                                 __replacements++;
                             }
@@ -188,7 +188,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
 
         protected void processNode(Node __node)
         {
-            if (replaceConstantInputs)
+            if (this.___replaceConstantInputs)
             {
                 replaceConstantInputs(__node);
             }
@@ -230,7 +230,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
 
         protected void registerCombinedStamps(MergeNode __node)
         {
-            EconomicMap<ValueNode, Stamp> __endMap = endMaps.get(__node);
+            EconomicMap<ValueNode, Stamp> __endMap = this.___endMaps.get(__node);
             MapCursor<ValueNode, Stamp> __entries = __endMap.getEntries();
             while (__entries.advance())
             {
@@ -251,12 +251,12 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
             {
                 MergeNode __merge = (MergeNode) __abstractMerge;
 
-                NodeMap<Block> __blockToNodeMap = this.schedule.getNodeToBlockMap();
+                NodeMap<Block> __blockToNodeMap = this.___schedule.getNodeToBlockMap();
                 Block __mergeBlock = __blockToNodeMap.get(__merge);
                 Block __mergeBlockDominator = __mergeBlock.getDominator();
                 Block __currentBlock = __blockToNodeMap.get(__node);
 
-                EconomicMap<ValueNode, Stamp> __currentEndMap = endMaps.get(__merge);
+                EconomicMap<ValueNode, Stamp> __currentEndMap = this.___endMaps.get(__merge);
 
                 if (__currentEndMap == null || !__currentEndMap.isEmpty())
                 {
@@ -282,13 +282,13 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
                         }
                     }
 
-                    int __lastMark = undoOperations.size();
+                    int __lastMark = this.___undoOperations.size();
                     while (__currentBlock != __mergeBlockDominator)
                     {
-                        int __mark = blockActionStart.get(__currentBlock);
+                        int __mark = this.___blockActionStart.get(__currentBlock);
                         for (int __i = __lastMark - 1; __i >= __mark; --__i)
                         {
-                            ValueNode __nodeWithNewStamp = (ValueNode) undoOperations.get(__i);
+                            ValueNode __nodeWithNewStamp = (ValueNode) this.___undoOperations.get(__i);
 
                             if (__nodeWithNewStamp.isDeleted() || __nodeWithNewStamp instanceof LogicNode || __nodeWithNewStamp instanceof ConstantNode || __blockToNodeMap.isNew(__nodeWithNewStamp))
                             {
@@ -328,7 +328,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
                         __currentBlock = __currentBlock.getDominator();
                     }
 
-                    endMaps.put(__merge, __endMap);
+                    this.___endMaps.put(__merge, __endMap);
                 }
             }
         }
@@ -357,7 +357,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
             Constant __constant = __newStamp.asConstant();
             if (__constant != null && !(__node instanceof ConstantNode))
             {
-                ConstantNode __stampConstant = ConstantNode.forConstant(__newStamp, __constant, metaAccess, graph);
+                ConstantNode __stampConstant = ConstantNode.forConstant(__newStamp, __constant, this.___metaAccess, this.___graph);
                 __node.replaceAtUsages(InputType.Value, __stampConstant);
                 GraphUtil.tryKillUnused(__node);
                 return true;
@@ -505,14 +505,14 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         protected void registerNewStamp(ValueNode __value, Stamp __newStamp)
         {
             ValueNode __originalNode = __value;
-            stampMap.setAndGrow(__originalNode, new StampElement(__newStamp, stampMap.getAndGrow(__originalNode)));
-            undoOperations.push(__originalNode);
+            this.___stampMap.setAndGrow(__originalNode, new StampElement(__newStamp, this.___stampMap.getAndGrow(__originalNode)));
+            this.___undoOperations.push(__originalNode);
         }
 
         protected Stamp getBestStamp(ValueNode __value)
         {
             ValueNode __originalNode = __value;
-            StampElement __currentStamp = stampMap.getAndGrow(__originalNode);
+            StampElement __currentStamp = this.___stampMap.getAndGrow(__originalNode);
             if (__currentStamp == null)
             {
                 return __value.stamp(NodeView.DEFAULT);
@@ -523,9 +523,9 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         @Override
         public Integer enter(Block __b)
         {
-            int __mark = undoOperations.size();
-            blockActionStart.put(__b, __mark);
-            for (Node __n : schedule.getBlockToNodesMap().get(__b))
+            int __mark = this.___undoOperations.size();
+            this.___blockActionStart.put(__b, __mark);
+            for (Node __n : this.___schedule.getBlockToNodesMap().get(__b))
             {
                 if (__n.isAlive())
                 {
@@ -539,12 +539,12 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         public void exit(Block __b, Integer __state)
         {
             int __mark = __state;
-            while (undoOperations.size() > __mark)
+            while (this.___undoOperations.size() > __mark)
             {
-                Node __node = undoOperations.pop();
+                Node __node = this.___undoOperations.pop();
                 if (__node.isAlive())
                 {
-                    stampMap.set(__node, stampMap.get(__node).getParent());
+                    this.___stampMap.set(__node, this.___stampMap.get(__node).getParent());
                 }
             }
         }
@@ -554,14 +554,14 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
     public FixReadsPhase(boolean __replaceInputsWithConstants, Phase __schedulePhase)
     {
         super();
-        this.replaceInputsWithConstants = __replaceInputsWithConstants;
-        this.schedulePhase = __schedulePhase;
+        this.___replaceInputsWithConstants = __replaceInputsWithConstants;
+        this.___schedulePhase = __schedulePhase;
     }
 
     @Override
     protected void run(StructuredGraph __graph, LowTierContext __context)
     {
-        schedulePhase.apply(__graph);
+        this.___schedulePhase.apply(__graph);
         ScheduleResult __schedule = __graph.getLastSchedule();
         FixReadsClosure __fixReadsClosure = new FixReadsClosure();
         for (Block __block : __schedule.getCFG().getBlocks())
@@ -579,13 +579,13 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
     public static final class RawCEPhase extends BasePhase<LowTierContext>
     {
         // @field
-        private final boolean replaceInputsWithConstants;
+        private final boolean ___replaceInputsWithConstants;
 
         // @cons
         public RawCEPhase(boolean __replaceInputsWithConstants)
         {
             super();
-            this.replaceInputsWithConstants = __replaceInputsWithConstants;
+            this.___replaceInputsWithConstants = __replaceInputsWithConstants;
         }
 
         @Override
@@ -602,45 +602,45 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
                 SchedulePhase __schedulePhase = new SchedulePhase(SchedulingStrategy.LATEST, true);
                 __schedulePhase.apply(__graph);
                 ScheduleResult __schedule = __graph.getLastSchedule();
-                __schedule.getCFG().visitDominatorTree(new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), replaceInputsWithConstants), false);
+                __schedule.getCFG().visitDominatorTree(new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), this.___replaceInputsWithConstants), false);
             }
         }
     }
 
     protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph __graph, ScheduleResult __schedule, PhaseContext __context)
     {
-        return new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), replaceInputsWithConstants);
+        return new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), this.___replaceInputsWithConstants);
     }
 
     // @class FixReadsPhase.StampElement
     protected static final class StampElement
     {
         // @field
-        private final Stamp stamp;
+        private final Stamp ___stamp;
         // @field
-        private final StampElement parent;
+        private final StampElement ___parent;
 
         // @cons
         public StampElement(Stamp __stamp, StampElement __parent)
         {
             super();
-            this.stamp = __stamp;
-            this.parent = __parent;
+            this.___stamp = __stamp;
+            this.___parent = __parent;
         }
 
         public StampElement getParent()
         {
-            return parent;
+            return this.___parent;
         }
 
         public Stamp getStamp()
         {
-            return stamp;
+            return this.___stamp;
         }
     }
 
     public void setReplaceInputsWithConstants(boolean __replaceInputsWithConstants)
     {
-        this.replaceInputsWithConstants = __replaceInputsWithConstants;
+        this.___replaceInputsWithConstants = __replaceInputsWithConstants;
     }
 }

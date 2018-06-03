@@ -19,18 +19,18 @@ public final class ResolveDynamicConstantNode extends DeoptimizingFixedWithNextN
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
 
     // @cons
     public ResolveDynamicConstantNode(Stamp __valueStamp, ValueNode __value)
     {
         super(TYPE, __valueStamp);
-        this.value = __value;
+        this.___value = __value;
     }
 
     public ValueNode value()
     {
-        return value;
+        return this.___value;
     }
 
     @Override

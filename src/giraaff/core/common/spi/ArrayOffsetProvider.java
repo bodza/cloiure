@@ -5,7 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 // @iface ArrayOffsetProvider
 public interface ArrayOffsetProvider
 {
-    int arrayBaseOffset(JavaKind elementKind);
+    int arrayBaseOffset(JavaKind __elementKind);
 
-    int arrayScalingFactor(JavaKind elementKind);
+    int arrayScalingFactor(JavaKind __elementKind);
 }

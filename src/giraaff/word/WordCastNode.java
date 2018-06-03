@@ -21,12 +21,12 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Casts between Word and Object exposed by the {@link Word#fromAddress},
- * {@link Word#objectToTrackedPointer}, {@link Word#objectToUntrackedPointer} and
- * {@link Word#toObject()} operations. It has an impact on the pointer maps for the GC, so it must
- * not be scheduled or optimized away.
- */
+///
+// Casts between Word and Object exposed by the {@link Word#fromAddress},
+// {@link Word#objectToTrackedPointer}, {@link Word#objectToUntrackedPointer} and
+// {@link Word#toObject()} operations. It has an impact on the pointer maps for the GC, so it must
+// not be scheduled or optimized away.
+///
 // @class WordCastNode
 public final class WordCastNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable
 {
@@ -35,9 +35,9 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
 
     @Input
     // @field
-    ValueNode input;
+    ValueNode ___input;
     // @field
-    public final boolean trackedPointer;
+    public final boolean ___trackedPointer;
 
     public static WordCastNode wordToObject(ValueNode __input, JavaKind __wordKind)
     {
@@ -74,13 +74,13 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     protected WordCastNode(Stamp __stamp, ValueNode __input, boolean __trackedPointer)
     {
         super(TYPE, __stamp);
-        this.input = __input;
-        this.trackedPointer = __trackedPointer;
+        this.___input = __input;
+        this.___trackedPointer = __trackedPointer;
     }
 
     public ValueNode getInput()
     {
-        return input;
+        return this.___input;
     }
 
     @Override
@@ -89,17 +89,17 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
         if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             // If the cast is unused, it can be eliminated.
-            return input;
+            return this.___input;
         }
 
-        if (input.isConstant())
+        if (this.___input.isConstant())
         {
             // Null pointers are uncritical for GC, so they can be constant folded.
-            if (input.asJavaConstant().isNull())
+            if (this.___input.asJavaConstant().isNull())
             {
                 return ConstantNode.forIntegerStamp(stamp(NodeView.DEFAULT), 0);
             }
-            else if (input.asJavaConstant().getJavaKind().isNumericInteger() && input.asJavaConstant().asLong() == 0)
+            else if (this.___input.asJavaConstant().getJavaKind().isNumericInteger() && this.___input.asJavaConstant().asLong() == 0)
             {
                 return ConstantNode.forConstant(stamp(NodeView.DEFAULT), JavaConstant.NULL_POINTER, __tool.getMetaAccess());
             }
@@ -111,10 +111,10 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __value = __gen.operand(input);
+        Value __value = __gen.operand(this.___input);
         ValueKind<?> __kind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
 
-        if (trackedPointer && LIRKind.isValue(__kind) && !LIRKind.isValue(__value))
+        if (this.___trackedPointer && LIRKind.isValue(__kind) && !LIRKind.isValue(__value))
         {
             // just change the PlatformKind, but don't drop reference information
             __kind = __value.getValueKind().changeType(__kind.getPlatformKind());

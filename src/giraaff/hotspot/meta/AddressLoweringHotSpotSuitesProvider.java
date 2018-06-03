@@ -11,20 +11,20 @@ import giraaff.phases.tiers.LowTierContext;
 import giraaff.phases.tiers.Suites;
 import giraaff.phases.tiers.SuitesCreator;
 
-/**
- * Subclass to factor out management of address lowering.
- */
+///
+// Subclass to factor out management of address lowering.
+///
 // @class AddressLoweringHotSpotSuitesProvider
 public final class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesProvider
 {
     // @field
-    private final Phase addressLowering;
+    private final Phase ___addressLowering;
 
     // @cons
     public AddressLoweringHotSpotSuitesProvider(SuitesCreator __defaultSuitesCreator, HotSpotGraalRuntime __runtime, Phase __addressLowering)
     {
         super(__defaultSuitesCreator, __runtime);
-        this.addressLowering = __addressLowering;
+        this.___addressLowering = __addressLowering;
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesPro
         {
             __findPhase = __suites.getLowTier().findPhase(ExpandLogicPhase.class);
         }
-        __findPhase.add(addressLowering);
+        __findPhase.add(this.___addressLowering);
 
         return __suites;
     }

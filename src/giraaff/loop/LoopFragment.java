@@ -44,43 +44,43 @@ import giraaff.util.GraalError;
 public abstract class LoopFragment
 {
     // @field
-    private final LoopEx loop;
+    private final LoopEx ___loop;
     // @field
-    private final LoopFragment original;
+    private final LoopFragment ___original;
     // @field
-    protected NodeBitMap nodes;
+    protected NodeBitMap ___nodes;
     // @field
-    protected boolean nodesReady;
+    protected boolean ___nodesReady;
     // @field
-    private EconomicMap<Node, Node> duplicationMap;
+    private EconomicMap<Node, Node> ___duplicationMap;
 
     // @cons
     public LoopFragment(LoopEx __loop)
     {
         this(__loop, null);
-        this.nodesReady = true;
+        this.___nodesReady = true;
     }
 
     // @cons
     public LoopFragment(LoopEx __loop, LoopFragment __original)
     {
         super();
-        this.loop = __loop;
-        this.original = __original;
-        this.nodesReady = false;
+        this.___loop = __loop;
+        this.___original = __original;
+        this.___nodesReady = false;
     }
 
-    /**
-     * Return the original LoopEx for this fragment. For duplicated fragments this returns null.
-     */
+    ///
+    // Return the original LoopEx for this fragment. For duplicated fragments this returns null.
+    ///
     protected LoopEx loop()
     {
-        return loop;
+        return this.___loop;
     }
 
     public abstract LoopFragment duplicate();
 
-    public abstract void insertBefore(LoopEx l);
+    public abstract void insertBefore(LoopEx __l);
 
     public void disconnect()
     {
@@ -95,31 +95,31 @@ public abstract class LoopFragment
     @SuppressWarnings("unchecked")
     public <New extends Node, Old extends New> New getDuplicatedNode(Old __n)
     {
-        return (New) duplicationMap.get(__n);
+        return (New) this.___duplicationMap.get(__n);
     }
 
     protected <New extends Node, Old extends New> void putDuplicatedNode(Old __oldNode, New __newNode)
     {
-        duplicationMap.put(__oldNode, __newNode);
+        this.___duplicationMap.put(__oldNode, __newNode);
     }
 
-    /**
-     * Gets the corresponding value in this fragment. Should be called on duplicate fragments with a
-     * node from the original fragment as argument.
-     *
-     * @param b original value
-     * @return corresponding value in the peel
-     */
-    protected abstract ValueNode prim(ValueNode b);
+    ///
+    // Gets the corresponding value in this fragment. Should be called on duplicate fragments with a
+    // node from the original fragment as argument.
+    //
+    // @param b original value
+    // @return corresponding value in the peel
+    ///
+    protected abstract ValueNode prim(ValueNode __b);
 
     public boolean isDuplicate()
     {
-        return original != null;
+        return this.___original != null;
     }
 
     public LoopFragment original()
     {
-        return original;
+        return this.___original;
     }
 
     public abstract NodeBitMap nodes();
@@ -146,7 +146,7 @@ public abstract class LoopFragment
 
     protected void patchNodes(final DuplicationReplacement __dataFix)
     {
-        if (isDuplicate() && !nodesReady)
+        if (isDuplicate() && !this.___nodesReady)
         {
             final DuplicationReplacement __cfgFix = original().getDuplicationReplacement();
             DuplicationReplacement __dr;
@@ -186,11 +186,11 @@ public abstract class LoopFragment
             }
             beforeDuplication();
             NodeIterable<Node> __nodesIterable = original().nodes();
-            duplicationMap = graph().addDuplicates(__nodesIterable, graph(), __nodesIterable.count(), __dr);
+            this.___duplicationMap = graph().addDuplicates(__nodesIterable, graph(), __nodesIterable.count(), __dr);
             finishDuplication();
-            nodes = new NodeBitMap(graph());
-            nodes.markAll(duplicationMap.getValues());
-            nodesReady = true;
+            this.___nodes = new NodeBitMap(graph());
+            this.___nodes.markAll(this.___duplicationMap.getValues());
+            this.___nodesReady = true;
         }
         else
         {
@@ -289,10 +289,8 @@ public abstract class LoopFragment
                 }
                 if (__n instanceof AbstractMergeNode)
                 {
-                    /*
-                     * Since we already marked all phi nodes as being in the loop to break cycles,
-                     * we also have to iterate over their usages here.
-                     */
+                    // Since we already marked all phi nodes as being in the loop to break cycles,
+                    // we also have to iterate over their usages here.
                     for (PhiNode __phi : ((AbstractMergeNode) __n).phis())
                     {
                         for (Node __usage : __phi.usages())
@@ -313,19 +311,19 @@ public abstract class LoopFragment
     static final class WorkListEntry
     {
         // @field
-        final Iterator<Node> usages;
+        final Iterator<Node> ___usages;
         // @field
-        final Node n;
+        final Node ___n;
         // @field
-        boolean isLoopNode;
+        boolean ___isLoopNode;
 
         // @cons
         WorkListEntry(Node __n, NodeBitMap __loopNodes)
         {
             super();
-            this.n = __n;
-            this.usages = __n.usages().iterator();
-            this.isLoopNode = __loopNodes.isMarked(__n);
+            this.___n = __n;
+            this.___usages = __n.usages().iterator();
+            this.___isLoopNode = __loopNodes.isMarked(__n);
         }
 
         @Override
@@ -336,13 +334,13 @@ public abstract class LoopFragment
                 return false;
             }
             WorkListEntry __other = (WorkListEntry) __obj;
-            return this.n == __other.n;
+            return this.___n == __other.___n;
         }
 
         @Override
         public int hashCode()
         {
-            return n.hashCode();
+            return this.___n.hashCode();
         }
     }
 
@@ -374,15 +372,15 @@ public abstract class LoopFragment
         while (!__workList.isEmpty())
         {
             WorkListEntry __currentEntry = __workList.peek();
-            if (__currentEntry.usages.hasNext())
+            if (__currentEntry.___usages.hasNext())
             {
-                Node __current = __currentEntry.usages.next();
+                Node __current = __currentEntry.___usages.next();
                 TriState __result = isLoopNode(__current, __loopNodes, __nonLoopNodes);
                 if (__result.isKnown())
                 {
                     if (__result.toBoolean())
                     {
-                        __currentEntry.isLoopNode = true;
+                        __currentEntry.___isLoopNode = true;
                     }
                 }
                 else
@@ -393,8 +391,8 @@ public abstract class LoopFragment
             else
             {
                 __workList.pop();
-                boolean __isLoopNode = __currentEntry.isLoopNode;
-                Node __current = __currentEntry.n;
+                boolean __isLoopNode = __currentEntry.___isLoopNode;
+                Node __current = __currentEntry.___n;
                 if (!__isLoopNode && __current instanceof GuardNode)
                 {
                     // (gd) this is only OK if we are not going to make loop transforms based on this
@@ -405,7 +403,7 @@ public abstract class LoopFragment
                     __loopNodes.mark(__current);
                     for (WorkListEntry __e : __workList)
                     {
-                        __e.isLoopNode = true;
+                        __e.___isLoopNode = true;
                     }
                 }
                 else
@@ -468,9 +466,9 @@ public abstract class LoopFragment
                         throw new UnsupportedOperationException();
                     }
 
-                    /**
-                     * Return the true LoopExitNode for this loop or the BeginNode for the block.
-                     */
+                    ///
+                    // Return the true LoopExitNode for this loop or the BeginNode for the block.
+                    ///
                     @Override
                     public AbstractBeginNode next()
                     {
@@ -493,10 +491,10 @@ public abstract class LoopFragment
         };
     }
 
-    /**
-     * Merges the early exits (i.e. loop exits) that were duplicated as part of this fragment, with
-     * the original fragment's exits.
-     */
+    ///
+    // Merges the early exits (i.e. loop exits) that were duplicated as part of this fragment, with
+    // the original fragment's exits.
+    ///
     protected void mergeEarlyExits()
     {
         StructuredGraph __graph = graph();
@@ -529,15 +527,13 @@ public abstract class LoopFragment
                 __exitState = __exitState.duplicateWithVirtualState();
                 __loopEarlyExit.setStateAfter(__exitState);
                 __merge.setStateAfter(__originalExitState);
-                /*
-                 * Using the old exit's state as the merge's state is necessary because some of the VirtualState
-                 * nodes contained in the old exit's state may be shared by other dominated VirtualStates.
-                 * Those dominated virtual states need to see the proxy->phi update that are applied below.
-                 *
-                 * We now update the original fragment's nodes accordingly:
-                 */
-                __originalExitState.applyToVirtual(__node -> original.nodes.clearAndGrow(__node));
-                __exitState.applyToVirtual(__node -> original.nodes.markAndGrow(__node));
+                // Using the old exit's state as the merge's state is necessary because some of the VirtualState
+                // nodes contained in the old exit's state may be shared by other dominated VirtualStates.
+                // Those dominated virtual states need to see the proxy->phi update that are applied below.
+                //
+                // We now update the original fragment's nodes accordingly:
+                __originalExitState.applyToVirtual(__node -> this.___original.___nodes.clearAndGrow(__node));
+                __exitState.applyToVirtual(__node -> this.___original.___nodes.markAndGrow(__node));
             }
             FrameState __finalExitState = __exitState;
 

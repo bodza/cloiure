@@ -16,25 +16,25 @@ public final class ArrayCopyWithSlowPathNode extends BasicArrayCopyNode
     public static final NodeClass<ArrayCopyWithSlowPathNode> TYPE = NodeClass.create(ArrayCopyWithSlowPathNode.class);
 
     // @field
-    private final SnippetTemplate.SnippetInfo snippet;
+    private final SnippetTemplate.SnippetInfo ___snippet;
 
     // @cons
     public ArrayCopyWithSlowPathNode(ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, SnippetTemplate.SnippetInfo __snippet, JavaKind __elementKind)
     {
         super(TYPE, __src, __srcPos, __dest, __destPos, __length, __elementKind, BytecodeFrame.INVALID_FRAMESTATE_BCI);
-        this.snippet = __snippet;
+        this.___snippet = __snippet;
     }
 
     @NodeIntrinsic
-    public static native void arraycopy(Object nonNullSrc, int srcPos, Object nonNullDest, int destPos, int length, @ConstantNodeParameter SnippetTemplate.SnippetInfo snippet, @ConstantNodeParameter JavaKind elementKind);
+    public static native void arraycopy(Object __nonNullSrc, int __srcPos, Object __nonNullDest, int __destPos, int __length, @ConstantNodeParameter SnippetTemplate.SnippetInfo __snippet, @ConstantNodeParameter JavaKind __elementKind);
 
     public SnippetTemplate.SnippetInfo getSnippet()
     {
-        return snippet;
+        return this.___snippet;
     }
 
     public void setBci(int __bci)
     {
-        this.bci = __bci;
+        this.___bci = __bci;
     }
 }

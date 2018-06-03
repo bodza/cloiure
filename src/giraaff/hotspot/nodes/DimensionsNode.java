@@ -15,9 +15,9 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
-/**
- * Intrinsic for allocating an on-stack array of integers to hold the dimensions of a multianewarray instruction.
- */
+///
+// Intrinsic for allocating an on-stack array of integers to hold the dimensions of a multianewarray instruction.
+///
 // @class DimensionsNode
 public final class DimensionsNode extends FixedWithNextNode implements LIRLowerable
 {
@@ -25,20 +25,20 @@ public final class DimensionsNode extends FixedWithNextNode implements LIRLowera
     public static final NodeClass<DimensionsNode> TYPE = NodeClass.create(DimensionsNode.class);
 
     // @field
-    protected final int rank;
+    protected final int ___rank;
 
     // @cons
     public DimensionsNode(@InjectedNodeParameter WordTypes __wordTypes, int __rank)
     {
         super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
-        this.rank = __rank;
+        this.___rank = __rank;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
         LIRGeneratorTool __lirGen = __gen.getLIRGeneratorTool();
-        int __size = rank * 4;
+        int __size = this.___rank * 4;
         int __wordSize = __lirGen.target().wordSize;
         int __slots = NumUtil.roundUp(__size, __wordSize) / __wordSize;
         VirtualStackSlot __array = __lirGen.getResult().getFrameMapBuilder().allocateStackSlots(__slots, new BitSet(0), null);
@@ -47,5 +47,5 @@ public final class DimensionsNode extends FixedWithNextNode implements LIRLowera
     }
 
     @NodeIntrinsic
-    public static native Word allocaDimsArray(@ConstantNodeParameter int rank);
+    public static native Word allocaDimsArray(@ConstantNodeParameter int __rank);
 }

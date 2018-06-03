@@ -28,36 +28,36 @@ public final class LoadConstantIndirectlyNode extends FloatingNode implements Ca
 
     @OptionalInput
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     // @field
-    protected Constant constant;
+    protected Constant ___constant;
     // @field
-    protected HotSpotConstantLoadAction action;
+    protected HotSpotConstantLoadAction ___action;
 
     // @cons
     public LoadConstantIndirectlyNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
-        this.constant = null;
-        this.action = HotSpotConstantLoadAction.RESOLVE;
+        this.___value = __value;
+        this.___constant = null;
+        this.___action = HotSpotConstantLoadAction.RESOLVE;
     }
 
     // @cons
     public LoadConstantIndirectlyNode(ValueNode __value, HotSpotConstantLoadAction __action)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
-        this.constant = null;
-        this.action = __action;
+        this.___value = __value;
+        this.___constant = null;
+        this.___action = __action;
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (value != null)
+        if (this.___value != null)
         {
-            constant = GraphUtil.foldIfConstantAndRemove(this, value);
+            this.___constant = GraphUtil.foldIfConstantAndRemove(this, this.___value);
         }
         return this;
     }
@@ -66,27 +66,27 @@ public final class LoadConstantIndirectlyNode extends FloatingNode implements Ca
     public void generate(NodeLIRBuilderTool __gen)
     {
         Value __result;
-        if (constant instanceof HotSpotObjectConstant)
+        if (this.___constant instanceof HotSpotObjectConstant)
         {
-            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadObjectAddress(constant);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadObjectAddress(this.___constant);
         }
-        else if (constant instanceof HotSpotMetaspaceConstant)
+        else if (this.___constant instanceof HotSpotMetaspaceConstant)
         {
-            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, action);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(this.___constant, this.___action);
         }
         else
         {
-            throw new BailoutException("unsupported constant type: " + constant);
+            throw new BailoutException("unsupported constant type: " + this.___constant);
         }
         __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic
-    public static native KlassPointer loadKlass(KlassPointer klassPointer, @ConstantNodeParameter HotSpotConstantLoadAction action);
+    public static native KlassPointer loadKlass(KlassPointer __klassPointer, @ConstantNodeParameter HotSpotConstantLoadAction __action);
 
     @NodeIntrinsic
-    public static native KlassPointer loadKlass(KlassPointer klassPointer);
+    public static native KlassPointer loadKlass(KlassPointer __klassPointer);
 
     @NodeIntrinsic
-    public static native Object loadObject(Object object);
+    public static native Object loadObject(Object __object);
 }

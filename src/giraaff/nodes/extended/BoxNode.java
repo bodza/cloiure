@@ -21,10 +21,10 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.virtual.VirtualBoxingNode;
 
-/**
- * This node represents the boxing of a primitive value. This corresponds to a call to the valueOf
- * methods in Integer, Long, etc.
- */
+///
+// This node represents the boxing of a primitive value. This corresponds to a call to the valueOf
+// methods in Integer, Long, etc.
+///
 // @class BoxNode
 public final class BoxNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Canonicalizable.Unary<ValueNode>
 {
@@ -33,9 +33,9 @@ public final class BoxNode extends FixedWithNextNode implements VirtualizableAll
 
     @Input
     // @field
-    private ValueNode value;
+    private ValueNode ___value;
     // @field
-    protected final JavaKind boxingKind;
+    protected final JavaKind ___boxingKind;
 
     // @cons
     public BoxNode(ValueNode __value, ResolvedJavaType __resultType, JavaKind __boxingKind)
@@ -47,19 +47,19 @@ public final class BoxNode extends FixedWithNextNode implements VirtualizableAll
     public BoxNode(NodeClass<? extends BoxNode> __c, ValueNode __value, ResolvedJavaType __resultType, JavaKind __boxingKind)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__resultType)));
-        this.value = __value;
-        this.boxingKind = __boxingKind;
+        this.___value = __value;
+        this.___boxingKind = __boxingKind;
     }
 
     public JavaKind getBoxingKind()
     {
-        return boxingKind;
+        return this.___boxingKind;
     }
 
     @Override
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
@@ -80,7 +80,7 @@ public final class BoxNode extends FixedWithNextNode implements VirtualizableAll
 
     protected VirtualBoxingNode createVirtualBoxingNode()
     {
-        return new VirtualBoxingNode(StampTool.typeOrNull(stamp(NodeView.DEFAULT)), boxingKind);
+        return new VirtualBoxingNode(StampTool.typeOrNull(stamp(NodeView.DEFAULT)), this.___boxingKind);
     }
 
     @Override

@@ -102,40 +102,40 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
     private static final class BlockNodeIterator implements Iterator<FixedNode>
     {
         // @field
-        private FixedNode current;
+        private FixedNode ___current;
 
         // @cons
         BlockNodeIterator(FixedNode __next)
         {
             super();
-            this.current = __next;
+            this.___current = __next;
         }
 
         @Override
         public boolean hasNext()
         {
-            return current != null;
+            return this.___current != null;
         }
 
         @Override
         public FixedNode next()
         {
-            FixedNode __ret = current;
+            FixedNode __ret = this.___current;
             if (__ret == null)
             {
                 throw new NoSuchElementException();
             }
-            if (current instanceof FixedWithNextNode)
+            if (this.___current instanceof FixedWithNextNode)
             {
-                current = ((FixedWithNextNode) current).next();
-                if (current instanceof AbstractBeginNode)
+                this.___current = ((FixedWithNextNode) this.___current).next();
+                if (this.___current instanceof AbstractBeginNode)
                 {
-                    current = null;
+                    this.___current = null;
                 }
             }
             else
             {
-                current = null;
+                this.___current = null;
             }
             return __ret;
         }

@@ -22,17 +22,17 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     // @def
     private static final ObjectState[] EMPTY_ARRAY = new ObjectState[0];
 
-    /**
-     * This array contains the state of all virtual objects, indexed by
-     * {@link VirtualObjectNode#getObjectId()}. Entries in this array may be null if the
-     * corresponding virtual object is not alive or reachable currently.
-     */
+    ///
+    // This array contains the state of all virtual objects, indexed by
+    // {@link VirtualObjectNode#getObjectId()}. Entries in this array may be null if the
+    // corresponding virtual object is not alive or reachable currently.
+    ///
     // @field
-    private ObjectState[] objectStates;
+    private ObjectState[] ___objectStates;
 
     public boolean contains(VirtualObjectNode __value)
     {
-        for (ObjectState __state : objectStates)
+        for (ObjectState __state : this.___objectStates)
         {
             if (__state != null && __state.isVirtual() && __state.getEntries() != null)
             {
@@ -52,19 +52,19 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     private static final class RefCount
     {
         // @field
-        private int refCount = 1;
+        private int ___refCount = 1;
     }
 
-    /**
-     * Usage count for the objectStates array, to avoid unneessary copying.
-     */
+    ///
+    // Usage count for the objectStates array, to avoid unneessary copying.
+    ///
     // @field
-    private RefCount arrayRefCount;
+    private RefCount ___arrayRefCount;
 
-    /**
-     * Final subclass of PartialEscapeBlockState, for performance and to make everything behave
-     * nicely with generics.
-     */
+    ///
+    // Final subclass of PartialEscapeBlockState, for performance and to make everything behave
+    // nicely with generics.
+    ///
     // @class PartialEscapeBlockState.Final
     public static final class Final extends PartialEscapeBlockState<Final>
     {
@@ -85,8 +85,8 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     protected PartialEscapeBlockState()
     {
         super();
-        objectStates = EMPTY_ARRAY;
-        arrayRefCount = new RefCount();
+        this.___objectStates = EMPTY_ARRAY;
+        this.___arrayRefCount = new RefCount();
     }
 
     // @cons
@@ -98,44 +98,44 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public ObjectState getObjectState(int __object)
     {
-        return objectStates[__object];
+        return this.___objectStates[__object];
     }
 
     public ObjectState getObjectStateOptional(int __object)
     {
-        return __object >= objectStates.length ? null : objectStates[__object];
+        return __object >= this.___objectStates.length ? null : this.___objectStates[__object];
     }
 
-    /**
-     * Asserts that the given virtual object is available/reachable in the current state.
-     */
+    ///
+    // Asserts that the given virtual object is available/reachable in the current state.
+    ///
     public ObjectState getObjectState(VirtualObjectNode __object)
     {
-        return objectStates[__object.getObjectId()];
+        return this.___objectStates[__object.getObjectId()];
     }
 
     public ObjectState getObjectStateOptional(VirtualObjectNode __object)
     {
         int __id = __object.getObjectId();
-        return __id >= objectStates.length ? null : objectStates[__id];
+        return __id >= this.___objectStates.length ? null : this.___objectStates[__id];
     }
 
     private ObjectState[] getObjectStateArrayForModification()
     {
-        if (arrayRefCount.refCount > 1)
+        if (this.___arrayRefCount.___refCount > 1)
         {
-            objectStates = objectStates.clone();
-            arrayRefCount.refCount--;
-            arrayRefCount = new RefCount();
+            this.___objectStates = this.___objectStates.clone();
+            this.___arrayRefCount.___refCount--;
+            this.___arrayRefCount = new RefCount();
         }
-        return objectStates;
+        return this.___objectStates;
     }
 
     private ObjectState getObjectStateForModification(int __object)
     {
         ObjectState[] __array = getObjectStateArrayForModification();
         ObjectState __objectState = __array[__object];
-        if (__objectState.copyOnWrite)
+        if (__objectState.___copyOnWrite)
         {
             __array[__object] = __objectState = __objectState.cloneState();
         }
@@ -144,7 +144,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public void setEntry(int __object, int __entryIndex, ValueNode __value)
     {
-        if (objectStates[__object].getEntry(__entryIndex) != __value)
+        if (this.___objectStates[__object].getEntry(__entryIndex) != __value)
         {
             getObjectStateForModification(__object).setEntry(__entryIndex, __value);
         }
@@ -167,7 +167,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public void setEnsureVirtualized(int __object, boolean __ensureVirtualized)
     {
-        if (objectStates[__object].getEnsureVirtualized() != __ensureVirtualized)
+        if (this.___objectStates[__object].getEnsureVirtualized() != __ensureVirtualized)
         {
             getObjectStateForModification(__object).setEnsureVirtualized(__ensureVirtualized);
         }
@@ -175,16 +175,16 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public void updateMaterializedValue(int __object, ValueNode __value)
     {
-        if (objectStates[__object].getMaterializedValue() != __value)
+        if (this.___objectStates[__object].getMaterializedValue() != __value)
         {
             getObjectStateForModification(__object).updateMaterializedValue(__value);
         }
     }
 
-    /**
-     * Materializes the given virtual object and produces the necessary effects in the effects list.
-     * This transitively also materializes all other virtual objects that are reachable from the entries.
-     */
+    ///
+    // Materializes the given virtual object and produces the necessary effects in the effects list.
+    // This transitively also materializes all other virtual objects that are reachable from the entries.
+    ///
     public void materializeBefore(FixedNode __fixed, VirtualObjectNode __virtual, GraphEffectList __materializeEffects)
     {
         List<AllocatedObjectNode> __objects = new ArrayList<>(2);
@@ -306,12 +306,12 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     private ObjectState[] ensureSize(int __objectId)
     {
-        if (objectStates.length <= __objectId)
+        if (this.___objectStates.length <= __objectId)
         {
-            objectStates = Arrays.copyOf(objectStates, Math.max(__objectId * 2, 4));
-            arrayRefCount.refCount--;
-            arrayRefCount = new RefCount();
-            return objectStates;
+            this.___objectStates = Arrays.copyOf(this.___objectStates, Math.max(__objectId * 2, 4));
+            this.___arrayRefCount.___refCount--;
+            this.___arrayRefCount = new RefCount();
+            return this.___objectStates;
         }
         else
         {
@@ -321,13 +321,13 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public int getStateCount()
     {
-        return objectStates.length;
+        return this.___objectStates.length;
     }
 
     @Override
     public boolean equivalentTo(T __other)
     {
-        int __length = Math.max(objectStates.length, __other.getStateCount());
+        int __length = Math.max(this.___objectStates.length, __other.getStateCount());
         for (int __i = 0; __i < __length; __i++)
         {
             ObjectState __left = getObjectStateOptional(__i);
@@ -349,14 +349,14 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public void resetObjectStates(int __size)
     {
-        objectStates = new ObjectState[__size];
+        this.___objectStates = new ObjectState[__size];
     }
 
     public static boolean identicalObjectStates(PartialEscapeBlockState<?>[] __states)
     {
         for (int __i = 1; __i < __states.length; __i++)
         {
-            if (__states[0].objectStates != __states[__i].objectStates)
+            if (__states[0].___objectStates != __states[__i].___objectStates)
             {
                 return false;
             }
@@ -368,7 +368,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     {
         for (int __i = 1; __i < __states.length; __i++)
         {
-            if (__states[0].objectStates[__object] != __states[__i].objectStates[__object])
+            if (__states[0].___objectStates[__object] != __states[__i].___objectStates[__object])
             {
                 return false;
             }
@@ -378,16 +378,16 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     public void adoptAddObjectStates(PartialEscapeBlockState<?> __other)
     {
-        if (objectStates != null)
+        if (this.___objectStates != null)
         {
-            arrayRefCount.refCount--;
+            this.___arrayRefCount.___refCount--;
         }
-        objectStates = __other.objectStates;
-        arrayRefCount = __other.arrayRefCount;
+        this.___objectStates = __other.___objectStates;
+        this.___arrayRefCount = __other.___arrayRefCount;
 
-        if (arrayRefCount.refCount == 1)
+        if (this.___arrayRefCount.___refCount == 1)
         {
-            for (ObjectState __state : objectStates)
+            for (ObjectState __state : this.___objectStates)
             {
                 if (__state != null)
                 {
@@ -395,6 +395,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
                 }
             }
         }
-        arrayRefCount.refCount++;
+        this.___arrayRefCount.___refCount++;
     }
 }

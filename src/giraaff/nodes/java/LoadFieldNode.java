@@ -30,9 +30,9 @@ import giraaff.nodes.util.ConstantFoldUtil;
 import giraaff.nodes.virtual.VirtualInstanceNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code LoadFieldNode} represents a read of a static or instance field.
- */
+///
+// The {@code LoadFieldNode} represents a read of a static or instance field.
+///
 // @class LoadFieldNode
 public final class LoadFieldNode extends AccessFieldNode implements Canonicalizable.Unary<ValueNode>, Virtualizable, UncheckedInterfaceProvider
 {
@@ -40,13 +40,13 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
     public static final NodeClass<LoadFieldNode> TYPE = NodeClass.create(LoadFieldNode.class);
 
     // @field
-    private final Stamp uncheckedStamp;
+    private final Stamp ___uncheckedStamp;
 
     // @cons
     protected LoadFieldNode(StampPair __stamp, ValueNode __object, ResolvedJavaField __field)
     {
         super(TYPE, __stamp.getTrustedStamp(), __object, __field);
-        this.uncheckedStamp = __stamp.getUncheckedStamp();
+        this.___uncheckedStamp = __stamp.getUncheckedStamp();
     }
 
     public static LoadFieldNode create(Assumptions __assumptions, ValueNode __object, ResolvedJavaField __field)
@@ -83,7 +83,7 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
         {
             return null;
         }
-        return canonical(this, StampPair.create(stamp, uncheckedStamp), __forObject, field, __tool.getConstantFieldProvider(), __tool.getConstantReflection(), __tool.getMetaAccess(), __tool.canonicalizeReads(), __tool.allUsagesAvailable());
+        return canonical(this, StampPair.create(this.___stamp, this.___uncheckedStamp), __forObject, this.___field, __tool.getConstantFieldProvider(), __tool.getConstantReflection(), __tool.getMetaAccess(), __tool.canonicalizeReads(), __tool.allUsagesAvailable());
     }
 
     private static ValueNode canonical(LoadFieldNode __loadFieldNode, StampPair __stamp, ValueNode __forObject, ResolvedJavaField __field, ConstantFieldProvider __constantFields, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, boolean __canonicalizeReads, boolean __allUsagesAvailable)
@@ -116,12 +116,12 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
         return __self;
     }
 
-    /**
-     * Gets a constant value for this load if possible.
-     */
+    ///
+    // Gets a constant value for this load if possible.
+    ///
     public ConstantNode asConstant(CanonicalizerTool __tool, ValueNode __forObject)
     {
-        return asConstant(__tool.getConstantFieldProvider(), __tool.getConstantReflection(), __tool.getMetaAccess(), __forObject, field);
+        return asConstant(__tool.getConstantFieldProvider(), __tool.getConstantReflection(), __tool.getMetaAccess(), __forObject, this.___field);
     }
 
     private static ConstantNode asConstant(ConstantFieldProvider __constantFields, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, ValueNode __forObject, ResolvedJavaField __field)
@@ -172,7 +172,7 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
             if (__fieldIndex != -1)
             {
                 ValueNode __entry = __tool.getEntry((VirtualObjectNode) __alias, __fieldIndex);
-                if (stamp.isCompatible(__entry.stamp(NodeView.DEFAULT)))
+                if (this.___stamp.isCompatible(__entry.stamp(NodeView.DEFAULT)))
                 {
                     __tool.replaceWith(__entry);
                 }
@@ -183,12 +183,12 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
     @Override
     public Stamp uncheckedStamp()
     {
-        return uncheckedStamp;
+        return this.___uncheckedStamp;
     }
 
     public void setObject(ValueNode __newObject)
     {
-        this.updateUsages(object, __newObject);
-        this.object = __newObject;
+        this.updateUsages(this.___object, __newObject);
+        this.___object = __newObject;
     }
 }

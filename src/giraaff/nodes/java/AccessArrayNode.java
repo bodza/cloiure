@@ -5,9 +5,9 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
 
-/**
- * This the base class of all array operations.
- */
+///
+// This the base class of all array operations.
+///
 // @class AccessArrayNode
 public abstract class AccessArrayNode extends FixedWithNextNode
 {
@@ -16,28 +16,28 @@ public abstract class AccessArrayNode extends FixedWithNextNode
 
     @Input
     // @field
-    protected ValueNode array;
+    protected ValueNode ___array;
 
     public ValueNode array()
     {
-        return array;
+        return this.___array;
     }
 
-    /**
-     * Creates a new AccessArrayNode.
-     *
-     * @param array the instruction that produces the array object value
-     */
+    ///
+    // Creates a new AccessArrayNode.
+    //
+    // @param array the instruction that produces the array object value
+    ///
     // @cons
     public AccessArrayNode(NodeClass<? extends AccessArrayNode> __c, Stamp __stamp, ValueNode __array)
     {
         super(__c, __stamp);
-        this.array = __array;
+        this.___array = __array;
     }
 
     public void setArray(ValueNode __array)
     {
-        updateUsages(this.array, __array);
-        this.array = __array;
+        updateUsages(this.___array, __array);
+        this.___array = __array;
     }
 }

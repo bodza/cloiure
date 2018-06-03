@@ -8,9 +8,9 @@ import giraaff.nodes.FrameState;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.memory.address.AddressNode;
 
-/**
- * An {@link FixedAccessNode} that can be converted to a {@link FloatingAccessNode}.
- */
+///
+// An {@link FixedAccessNode} that can be converted to a {@link FloatingAccessNode}.
+///
 // @class FloatableAccessNode
 public abstract class FloatableAccessNode extends FixedAccessNode
 {
@@ -35,23 +35,23 @@ public abstract class FloatableAccessNode extends FixedAccessNode
         super(__c, __address, __location, __stamp, __guard, __barrierType, __nullCheck, __stateBefore);
     }
 
-    public abstract FloatingAccessNode asFloatingNode(MemoryNode lastLocationAccess);
+    public abstract FloatingAccessNode asFloatingNode(MemoryNode __lastLocationAccess);
 
     // @field
-    protected boolean forceFixed;
+    protected boolean ___forceFixed;
 
     public void setForceFixed(boolean __flag)
     {
-        this.forceFixed = __flag;
+        this.___forceFixed = __flag;
     }
 
-    /**
-     * AccessNodes can float only if their location identities are not ANY_LOCATION. Furthermore, in
-     * case G1 is enabled any access (read) to the java.lang.ref.Reference.referent field which has
-     * an attached write barrier with pre-semantics can not also float.
-     */
+    ///
+    // AccessNodes can float only if their location identities are not ANY_LOCATION. Furthermore, in
+    // case G1 is enabled any access (read) to the java.lang.ref.Reference.referent field which has
+    // an attached write barrier with pre-semantics can not also float.
+    ///
     public boolean canFloat()
     {
-        return !forceFixed && getLocationIdentity().isSingle() && getBarrierType() == BarrierType.NONE;
+        return !this.___forceFixed && getLocationIdentity().isSingle() && getBarrierType() == BarrierType.NONE;
     }
 }

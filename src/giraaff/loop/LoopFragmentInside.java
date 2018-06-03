@@ -46,15 +46,15 @@ import giraaff.util.GraalError;
 // @class LoopFragmentInside
 public class LoopFragmentInside extends LoopFragment
 {
-    /**
-     * mergedInitializers. When an inside fragment's (loop)ends are merged to create a unique exit
-     * point, some phis must be created : they phis together all the back-values of the loop-phis
-     * These can then be used to update the loop-phis' forward edge value ('initializer') in the
-     * peeling case. In the unrolling case they will be used as the value that replace the loop-phis
-     * of the duplicated inside fragment
-     */
+    ///
+    // mergedInitializers. When an inside fragment's (loop)ends are merged to create a unique exit
+    // point, some phis must be created : they phis together all the back-values of the loop-phis
+    // These can then be used to update the loop-phis' forward edge value ('initializer') in the
+    // peeling case. In the unrolling case they will be used as the value that replace the loop-phis
+    // of the duplicated inside fragment
+    ///
     // @field
-    private EconomicMap<PhiNode, ValueNode> mergedInitializers;
+    private EconomicMap<PhiNode, ValueNode> ___mergedInitializers;
     // @closure
     private final DuplicationReplacement dataFixBefore = new DuplicationReplacement()
     {
@@ -135,20 +135,20 @@ public class LoopFragmentInside extends LoopFragment
         __end.setNext(__loop.entryPoint());
     }
 
-    /**
-     * Duplicate the body within the loop after the current copy copy of the body, updating the
-     * iteration limit to account for the duplication.
-     */
+    ///
+    // Duplicate the body within the loop after the current copy copy of the body, updating the
+    // iteration limit to account for the duplication.
+    ///
     public void insertWithinAfter(LoopEx __loop)
     {
         insertWithinAfter(__loop, true);
     }
 
-    /**
-     * Duplicate the body within the loop after the current copy copy of the body.
-     *
-     * @param updateLimit true if the iteration limit should be adjusted.
-     */
+    ///
+    // Duplicate the body within the loop after the current copy copy of the body.
+    //
+    // @param updateLimit true if the iteration limit should be adjusted.
+    ///
     public void insertWithinAfter(LoopEx __loop, boolean __updateLimit)
     {
         patchNodes(dataFixWithinAfter);
@@ -307,16 +307,16 @@ public class LoopFragmentInside extends LoopFragment
     @Override
     public NodeBitMap nodes()
     {
-        if (nodes == null)
+        if (this.___nodes == null)
         {
             LoopFragmentWhole __whole = loop().whole();
             __whole.nodes(); // init nodes bitmap in whole
-            nodes = __whole.nodes.copy();
+            this.___nodes = __whole.___nodes.copy();
             // remove the phis
             LoopBeginNode __loopBegin = loop().loopBegin();
             for (PhiNode __phi : __loopBegin.phis())
             {
-                nodes.clear(__phi);
+                this.___nodes.clear(__phi);
             }
             clearStateNodes(__loopBegin);
             for (LoopExitNode __exit : exits())
@@ -324,11 +324,11 @@ public class LoopFragmentInside extends LoopFragment
                 clearStateNodes(__exit);
                 for (ProxyNode __proxy : __exit.proxies())
                 {
-                    nodes.clear(__proxy);
+                    this.___nodes.clear(__proxy);
                 }
             }
         }
-        return nodes;
+        return this.___nodes;
     }
 
     private void clearStateNodes(StateSplit __stateSplit)
@@ -338,9 +338,9 @@ public class LoopFragmentInside extends LoopFragment
         {
             __loopState.applyToVirtual(__v ->
             {
-                if (__v.usages().filter(__n -> nodes.isMarked(__n) && __n != __stateSplit).isEmpty())
+                if (__v.usages().filter(__n -> this.___nodes.isMarked(__n) && __n != __stateSplit).isEmpty())
                 {
-                    nodes.clear(__v);
+                    this.___nodes.clear(__v);
                 }
             });
         }
@@ -360,42 +360,42 @@ public class LoopFragmentInside extends LoopFragment
         return new DuplicationReplacement()
         {
             // @field
-            private EconomicMap<Node, Node> seenNode = EconomicMap.create(Equivalence.IDENTITY);
+            private EconomicMap<Node, Node> ___seenNode = EconomicMap.create(Equivalence.IDENTITY);
 
             @Override
             public Node replacement(Node __original)
             {
                 if (__original == __loopBegin)
                 {
-                    Node __value = seenNode.get(__original);
+                    Node __value = this.___seenNode.get(__original);
                     if (__value != null)
                     {
                         return __value;
                     }
                     AbstractBeginNode __newValue = __graph.add(new BeginNode());
-                    seenNode.put(__original, __newValue);
+                    this.___seenNode.put(__original, __newValue);
                     return __newValue;
                 }
                 if (__original instanceof LoopExitNode && ((LoopExitNode) __original).loopBegin() == __loopBegin)
                 {
-                    Node __value = seenNode.get(__original);
+                    Node __value = this.___seenNode.get(__original);
                     if (__value != null)
                     {
                         return __value;
                     }
                     AbstractBeginNode __newValue = __graph.add(new BeginNode());
-                    seenNode.put(__original, __newValue);
+                    this.___seenNode.put(__original, __newValue);
                     return __newValue;
                 }
                 if (__original instanceof LoopEndNode && ((LoopEndNode) __original).loopBegin() == __loopBegin)
                 {
-                    Node __value = seenNode.get(__original);
+                    Node __value = this.___seenNode.get(__original);
                     if (__value != null)
                     {
                         return __value;
                     }
                     EndNode __newValue = __graph.add(new EndNode());
-                    seenNode.put(__original, __newValue);
+                    this.___seenNode.put(__original, __newValue);
                     return __newValue;
                 }
                 return __original;
@@ -443,7 +443,7 @@ public class LoopFragmentInside extends LoopFragment
         StructuredGraph __graph = __loopBegin.graph();
         List<PhiNode> __newPhis = new LinkedList<>();
 
-        NodeBitMap __usagesToPatch = nodes.copy();
+        NodeBitMap __usagesToPatch = this.___nodes.copy();
         for (LoopExitNode __exit : exits())
         {
             markStateNodes(__exit, __usagesToPatch);
@@ -469,7 +469,7 @@ public class LoopFragmentInside extends LoopFragment
             }
             else
             {
-                __first = __peel.mergedInitializers.get(__phi);
+                __first = __peel.___mergedInitializers.get(__phi);
             }
             // create a new phi (we don't patch the old one since some usages of the old one may
             // still be valid)
@@ -557,12 +557,12 @@ public class LoopFragmentInside extends LoopFragment
         }
     }
 
-    /**
-     * Gets the corresponding value in this fragment.
-     *
-     * @param b original value
-     * @return corresponding value in the peel
-     */
+    ///
+    // Gets the corresponding value in this fragment.
+    //
+    // @param b original value
+    // @return corresponding value in the peel
+    ///
     @Override
     protected ValueNode prim(ValueNode __b)
     {
@@ -572,7 +572,7 @@ public class LoopFragmentInside extends LoopFragment
             PhiNode __phi = (PhiNode) __b;
             return __phi.valueAt(__loopBegin.forwardEnd());
         }
-        else if (nodesReady)
+        else if (this.___nodesReady)
         {
             ValueNode __v = getDuplicatedNode(__b);
             if (__v == null)
@@ -595,7 +595,7 @@ public class LoopFragmentInside extends LoopFragment
             PhiNode __phi = (PhiNode) __b;
             return __phi.valueAt(1);
         }
-        else if (nodesReady)
+        else if (this.___nodesReady)
         {
             ValueNode __v = getDuplicatedNode(__b);
             if (__v == null)
@@ -625,7 +625,7 @@ public class LoopFragmentInside extends LoopFragment
                 __reverseEnds.put(__duplicate, __le);
             }
         }
-        mergedInitializers = EconomicMap.create(Equivalence.IDENTITY);
+        this.___mergedInitializers = EconomicMap.create(Equivalence.IDENTITY);
         AbstractBeginNode __newExit;
         StructuredGraph __graph = graph();
         if (__endsToMerge.size() == 1)
@@ -680,7 +680,7 @@ public class LoopFragmentInside extends LoopFragment
                         }
                     });
                 }
-                mergedInitializers.put(__phi, __initializer);
+                this.___mergedInitializers.put(__phi, __initializer);
             }
         }
         return __newExit;

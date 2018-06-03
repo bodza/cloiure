@@ -14,9 +14,9 @@ import giraaff.lir.amd64.AMD64SaveRegistersOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMap;
 
-/**
- * Writes well known garbage values to registers.
- */
+///
+// Writes well known garbage values to registers.
+///
 @Opcode
 // @class AMD64ZapRegistersOp
 public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
@@ -24,35 +24,35 @@ public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements Sa
     // @def
     public static final LIRInstructionClass<AMD64ZapRegistersOp> TYPE = LIRInstructionClass.create(AMD64ZapRegistersOp.class);
 
-    /**
-     * The registers that are zapped.
-     */
+    ///
+    // The registers that are zapped.
+    ///
     // @field
-    protected final Register[] zappedRegisters;
+    protected final Register[] ___zappedRegisters;
 
-    /**
-     * The garbage values that are written to the registers.
-     */
+    ///
+    // The garbage values that are written to the registers.
+    ///
     // @field
-    protected final JavaConstant[] zapValues;
+    protected final JavaConstant[] ___zapValues;
 
     // @cons
     public AMD64ZapRegistersOp(Register[] __zappedRegisters, JavaConstant[] __zapValues)
     {
         super(TYPE);
-        this.zappedRegisters = __zappedRegisters;
-        this.zapValues = __zapValues;
+        this.___zappedRegisters = __zappedRegisters;
+        this.___zapValues = __zapValues;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        for (int __i = 0; __i < zappedRegisters.length; __i++)
+        for (int __i = 0; __i < this.___zappedRegisters.length; __i++)
         {
-            Register __reg = zappedRegisters[__i];
+            Register __reg = this.___zappedRegisters[__i];
             if (__reg != null)
             {
-                AMD64Move.const2reg(__crb, __masm, __reg, zapValues[__i]);
+                AMD64Move.const2reg(__crb, __masm, __reg, this.___zapValues[__i]);
             }
         }
     }
@@ -66,7 +66,7 @@ public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements Sa
     @Override
     public int remove(EconomicSet<Register> __doNotSave)
     {
-        return AMD64SaveRegistersOp.prune(__doNotSave, zappedRegisters);
+        return AMD64SaveRegistersOp.prune(__doNotSave, this.___zappedRegisters);
     }
 
     @Override

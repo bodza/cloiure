@@ -17,30 +17,30 @@ final class AMD64HotSpotCRuntimeCallEpilogueOp extends AMD64LIRInstruction
     public static final LIRInstructionClass<AMD64HotSpotCRuntimeCallEpilogueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotCRuntimeCallEpilogueOp.class);
 
     // @field
-    private final int threadLastJavaSpOffset;
+    private final int ___threadLastJavaSpOffset;
     // @field
-    private final int threadLastJavaFpOffset;
+    private final int ___threadLastJavaFpOffset;
     // @field
-    private final int threadLastJavaPcOffset;
+    private final int ___threadLastJavaPcOffset;
     // @field
-    private final Register thread;
+    private final Register ___thread;
 
     // @cons
     AMD64HotSpotCRuntimeCallEpilogueOp(int __threadLastJavaSpOffset, int __threadLastJavaFpOffset, int __threadLastJavaPcOffset, Register __thread)
     {
         super(TYPE);
-        this.threadLastJavaSpOffset = __threadLastJavaSpOffset;
-        this.threadLastJavaFpOffset = __threadLastJavaFpOffset;
-        this.threadLastJavaPcOffset = __threadLastJavaPcOffset;
-        this.thread = __thread;
+        this.___threadLastJavaSpOffset = __threadLastJavaSpOffset;
+        this.___threadLastJavaFpOffset = __threadLastJavaFpOffset;
+        this.___threadLastJavaPcOffset = __threadLastJavaPcOffset;
+        this.___thread = __thread;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         // reset last Java frame
-        __masm.movslq(new AMD64Address(thread, threadLastJavaSpOffset), 0);
-        __masm.movslq(new AMD64Address(thread, threadLastJavaFpOffset), 0);
-        __masm.movslq(new AMD64Address(thread, threadLastJavaPcOffset), 0);
+        __masm.movslq(new AMD64Address(this.___thread, this.___threadLastJavaSpOffset), 0);
+        __masm.movslq(new AMD64Address(this.___thread, this.___threadLastJavaFpOffset), 0);
+        __masm.movslq(new AMD64Address(this.___thread, this.___threadLastJavaPcOffset), 0);
     }
 }

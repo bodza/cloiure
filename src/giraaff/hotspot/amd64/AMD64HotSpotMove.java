@@ -35,41 +35,41 @@ public final class AMD64HotSpotMove
 
         @Def({OperandFlag.REG, OperandFlag.STACK})
         // @field
-        private AllocatableValue result;
+        private AllocatableValue ___result;
         // @field
-        private final HotSpotObjectConstant input;
+        private final HotSpotObjectConstant ___input;
 
         // @cons
         public HotSpotLoadObjectConstantOp(AllocatableValue __result, HotSpotObjectConstant __input)
         {
             super(TYPE);
-            this.result = __result;
-            this.input = __input;
+            this.___result = __result;
+            this.___input = __input;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            boolean __compressed = input.isCompressed();
-            if (__crb.target.inlineObjects)
+            boolean __compressed = this.___input.isCompressed();
+            if (__crb.___target.inlineObjects)
             {
-                __crb.recordInlineDataInCode(input);
-                if (ValueUtil.isRegister(result))
+                __crb.recordInlineDataInCode(this.___input);
+                if (ValueUtil.isRegister(this.___result))
                 {
                     if (__compressed)
                     {
-                        __masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
+                        __masm.movl(ValueUtil.asRegister(this.___result), 0xDEADDEAD);
                     }
                     else
                     {
-                        __masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
+                        __masm.movq(ValueUtil.asRegister(this.___result), 0xDEADDEADDEADDEADL);
                     }
                 }
                 else
                 {
                     if (__compressed)
                     {
-                        __masm.movl((AMD64Address) __crb.asAddress(result), 0xDEADDEAD);
+                        __masm.movl((AMD64Address) __crb.asAddress(this.___result), 0xDEADDEAD);
                     }
                     else
                     {
@@ -79,16 +79,16 @@ public final class AMD64HotSpotMove
             }
             else
             {
-                if (ValueUtil.isRegister(result))
+                if (ValueUtil.isRegister(this.___result))
                 {
-                    AMD64Address __address = (AMD64Address) __crb.recordDataReferenceInCode(input, __compressed ? 4 : 8);
+                    AMD64Address __address = (AMD64Address) __crb.recordDataReferenceInCode(this.___input, __compressed ? 4 : 8);
                     if (__compressed)
                     {
-                        __masm.movl(ValueUtil.asRegister(result), __address);
+                        __masm.movl(ValueUtil.asRegister(this.___result), __address);
                     }
                     else
                     {
-                        __masm.movq(ValueUtil.asRegister(result), __address);
+                        __masm.movq(ValueUtil.asRegister(this.___result), __address);
                     }
                 }
                 else
@@ -101,13 +101,13 @@ public final class AMD64HotSpotMove
         @Override
         public Constant getConstant()
         {
-            return input;
+            return this.___input;
         }
 
         @Override
         public AllocatableValue getResult()
         {
-            return result;
+            return this.___result;
         }
     }
 
@@ -119,19 +119,19 @@ public final class AMD64HotSpotMove
 
         @Def({OperandFlag.REG, OperandFlag.HINT})
         // @field
-        protected AllocatableValue result;
+        protected AllocatableValue ___result;
 
         // @cons
         public BaseMove(AllocatableValue __result)
         {
             super(TYPE);
-            this.result = __result;
+            this.___result = __result;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            __masm.movq(ValueUtil.asRegister(result), __masm.getPlaceholder(-1));
+            __masm.movq(ValueUtil.asRegister(this.___result), __masm.getPlaceholder(-1));
             __crb.recordMark(HotSpotRuntime.narrowKlassBaseAddressMark);
         }
     }
@@ -144,41 +144,41 @@ public final class AMD64HotSpotMove
 
         @Def({OperandFlag.REG, OperandFlag.STACK})
         // @field
-        private AllocatableValue result;
+        private AllocatableValue ___result;
         // @field
-        private final HotSpotMetaspaceConstant input;
+        private final HotSpotMetaspaceConstant ___input;
 
         // @cons
         public HotSpotLoadMetaspaceConstantOp(AllocatableValue __result, HotSpotMetaspaceConstant __input)
         {
             super(TYPE);
-            this.result = __result;
-            this.input = __input;
+            this.___result = __result;
+            this.___input = __input;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            boolean __compressed = input.isCompressed();
-            if (ValueUtil.isRegister(result))
+            boolean __compressed = this.___input.isCompressed();
+            if (ValueUtil.isRegister(this.___result))
             {
                 if (__compressed)
                 {
-                    __crb.recordInlineDataInCode(input);
-                    __masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
+                    __crb.recordInlineDataInCode(this.___input);
+                    __masm.movl(ValueUtil.asRegister(this.___result), 0xDEADDEAD);
                 }
                 else
                 {
-                    __crb.recordInlineDataInCode(input);
-                    __masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
+                    __crb.recordInlineDataInCode(this.___input);
+                    __masm.movq(ValueUtil.asRegister(this.___result), 0xDEADDEADDEADDEADL);
                 }
             }
             else
             {
                 if (__compressed)
                 {
-                    __crb.recordInlineDataInCode(input);
-                    __masm.movl((AMD64Address) __crb.asAddress(result), 0xDEADDEAD);
+                    __crb.recordInlineDataInCode(this.___input);
+                    __masm.movl((AMD64Address) __crb.asAddress(this.___result), 0xDEADDEAD);
                 }
                 else
                 {
@@ -190,13 +190,13 @@ public final class AMD64HotSpotMove
         @Override
         public Constant getConstant()
         {
-            return input;
+            return this.___input;
         }
 
         @Override
         public AllocatableValue getResult()
         {
-            return result;
+            return this.___result;
         }
     }
 

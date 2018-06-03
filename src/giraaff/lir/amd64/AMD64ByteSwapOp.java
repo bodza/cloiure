@@ -19,31 +19,35 @@ public final class AMD64ByteSwapOp extends AMD64LIRInstruction
 
     @Def({OperandFlag.REG, OperandFlag.HINT})
     // @field
-    protected Value result;
+    protected Value ___result;
     @Use
     // @field
-    protected Value input;
+    protected Value ___input;
 
     // @cons
     public AMD64ByteSwapOp(Value __result, Value __input)
     {
         super(TYPE);
-        this.result = __result;
-        this.input = __input;
+        this.___result = __result;
+        this.___input = __input;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        AMD64Move.move(__crb, __masm, result, input);
-        switch ((AMD64Kind) input.getPlatformKind())
+        AMD64Move.move(__crb, __masm, this.___result, this.___input);
+        switch ((AMD64Kind) this.___input.getPlatformKind())
         {
             case DWORD:
-                __masm.bswapl(ValueUtil.asRegister(result));
+            {
+                __masm.bswapl(ValueUtil.asRegister(this.___result));
                 break;
+            }
             case QWORD:
-                __masm.bswapq(ValueUtil.asRegister(result));
+            {
+                __masm.bswapq(ValueUtil.asRegister(this.___result));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }

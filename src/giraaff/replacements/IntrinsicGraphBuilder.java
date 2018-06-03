@@ -35,35 +35,35 @@ import giraaff.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.util.GraalError;
 
-/**
- * Implementation of {@link GraphBuilderContext} used to produce a graph for a method based on an
- * {@link InvocationPlugin} for the method.
- */
+///
+// Implementation of {@link GraphBuilderContext} used to produce a graph for a method based on an
+// {@link InvocationPlugin} for the method.
+///
 // @class IntrinsicGraphBuilder
 public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
 {
     // @field
-    protected final MetaAccessProvider metaAccess;
+    protected final MetaAccessProvider ___metaAccess;
     // @field
-    protected final ConstantReflectionProvider constantReflection;
+    protected final ConstantReflectionProvider ___constantReflection;
     // @field
-    protected final ConstantFieldProvider constantFieldProvider;
+    protected final ConstantFieldProvider ___constantFieldProvider;
     // @field
-    protected final StampProvider stampProvider;
+    protected final StampProvider ___stampProvider;
     // @field
-    protected final StructuredGraph graph;
+    protected final StructuredGraph ___graph;
     // @field
-    protected final Bytecode code;
+    protected final Bytecode ___code;
     // @field
-    protected final ResolvedJavaMethod method;
+    protected final ResolvedJavaMethod ___method;
     // @field
-    protected final int invokeBci;
+    protected final int ___invokeBci;
     // @field
-    protected FixedWithNextNode lastInstr;
+    protected FixedWithNextNode ___lastInstr;
     // @field
-    protected ValueNode[] arguments;
+    protected ValueNode[] ___arguments;
     // @field
-    protected ValueNode returnValue;
+    protected ValueNode ___returnValue;
 
     // @cons
     public IntrinsicGraphBuilder(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, StampProvider __stampProvider, Bytecode __code, int __invokeBci)
@@ -75,32 +75,32 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     protected IntrinsicGraphBuilder(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, StampProvider __stampProvider, Bytecode __code, int __invokeBci, AllowAssumptions __allowAssumptions)
     {
         super();
-        this.metaAccess = __metaAccess;
-        this.constantReflection = __constantReflection;
-        this.constantFieldProvider = __constantFieldProvider;
-        this.stampProvider = __stampProvider;
-        this.code = __code;
-        this.method = __code.getMethod();
-        this.graph = new StructuredGraph.Builder(__allowAssumptions).method(method).build();
-        this.invokeBci = __invokeBci;
-        this.lastInstr = graph.start();
+        this.___metaAccess = __metaAccess;
+        this.___constantReflection = __constantReflection;
+        this.___constantFieldProvider = __constantFieldProvider;
+        this.___stampProvider = __stampProvider;
+        this.___code = __code;
+        this.___method = __code.getMethod();
+        this.___graph = new StructuredGraph.Builder(__allowAssumptions).method(this.___method).build();
+        this.___invokeBci = __invokeBci;
+        this.___lastInstr = this.___graph.start();
 
-        Signature __sig = method.getSignature();
+        Signature __sig = this.___method.getSignature();
         int __max = __sig.getParameterCount(false);
-        this.arguments = new ValueNode[__max + (method.isStatic() ? 0 : 1)];
+        this.___arguments = new ValueNode[__max + (this.___method.isStatic() ? 0 : 1)];
 
         int __javaIndex = 0;
         int __index = 0;
-        if (!method.isStatic())
+        if (!this.___method.isStatic())
         {
             // add the receiver
-            Stamp __receiverStamp = StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(method.getDeclaringClass()));
-            ValueNode __receiver = graph.addWithoutUnique(new ParameterNode(__javaIndex, StampPair.createSingle(__receiverStamp)));
-            arguments[__index] = __receiver;
+            Stamp __receiverStamp = StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(this.___method.getDeclaringClass()));
+            ValueNode __receiver = this.___graph.addWithoutUnique(new ParameterNode(__javaIndex, StampPair.createSingle(__receiverStamp)));
+            this.___arguments[__index] = __receiver;
             __javaIndex = 1;
             __index = 1;
         }
-        ResolvedJavaType __accessingClass = method.getDeclaringClass();
+        ResolvedJavaType __accessingClass = this.___method.getDeclaringClass();
         for (int __i = 0; __i < __max; __i++)
         {
             JavaType __type = __sig.getParameterType(__i, __accessingClass).resolve(__accessingClass);
@@ -114,8 +114,8 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
             {
                 __stamp = StampFactory.forKind(__kind);
             }
-            ValueNode __param = graph.addWithoutUnique(new ParameterNode(__index, StampPair.createSingle(__stamp)));
-            arguments[__index] = __param;
+            ValueNode __param = this.___graph.addWithoutUnique(new ParameterNode(__index, StampPair.createSingle(__stamp)));
+            this.___arguments[__index] = __param;
             __javaIndex += __kind.getSlotCount();
             __index++;
         }
@@ -126,15 +126,15 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
         if (__v instanceof FixedNode)
         {
             FixedNode __fixedNode = (FixedNode) __v;
-            lastInstr.setNext(__fixedNode);
+            this.___lastInstr.setNext(__fixedNode);
             if (__fixedNode instanceof FixedWithNextNode)
             {
                 FixedWithNextNode __fixedWithNextNode = (FixedWithNextNode) __fixedNode;
-                lastInstr = __fixedWithNextNode;
+                this.___lastInstr = __fixedWithNextNode;
             }
             else
             {
-                lastInstr = null;
+                this.___lastInstr = null;
             }
         }
     }
@@ -146,7 +146,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
         {
             return __v;
         }
-        T __added = graph.addOrUniqueWithInputs(__v);
+        T __added = this.___graph.addOrUniqueWithInputs(__v);
         if (__added == __v)
         {
             updateLastInstruction(__v);
@@ -157,7 +157,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     @Override
     public void push(JavaKind __kind, ValueNode __value)
     {
-        returnValue = __value;
+        this.___returnValue = __value;
     }
 
     @Override
@@ -175,31 +175,31 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     @Override
     public StampProvider getStampProvider()
     {
-        return stampProvider;
+        return this.___stampProvider;
     }
 
     @Override
     public MetaAccessProvider getMetaAccess()
     {
-        return metaAccess;
+        return this.___metaAccess;
     }
 
     @Override
     public ConstantReflectionProvider getConstantReflection()
     {
-        return constantReflection;
+        return this.___constantReflection;
     }
 
     @Override
     public ConstantFieldProvider getConstantFieldProvider()
     {
-        return constantFieldProvider;
+        return this.___constantFieldProvider;
     }
 
     @Override
     public StructuredGraph getGraph()
     {
-        return graph;
+        return this.___graph;
     }
 
     @Override
@@ -218,31 +218,31 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     @Override
     public Bytecode getCode()
     {
-        return code;
+        return this.___code;
     }
 
     @Override
     public ResolvedJavaMethod getMethod()
     {
-        return method;
+        return this.___method;
     }
 
     @Override
     public int bci()
     {
-        return invokeBci;
+        return this.___invokeBci;
     }
 
     @Override
     public InvokeKind getInvokeKind()
     {
-        return method.isStatic() ? InvokeKind.Static : InvokeKind.Virtual;
+        return this.___method.isStatic() ? InvokeKind.Static : InvokeKind.Virtual;
     }
 
     @Override
     public JavaType getInvokeReturnType()
     {
-        return method.getSignature().getReturnType(method.getDeclaringClass());
+        return this.___method.getSignature().getReturnType(this.___method.getDeclaringClass());
     }
 
     @Override
@@ -272,16 +272,16 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     @Override
     public ValueNode get(boolean __performNullCheck)
     {
-        return arguments[0];
+        return this.___arguments[0];
     }
 
     public StructuredGraph buildGraph(InvocationPlugin __plugin)
     {
-        Receiver __receiver = method.isStatic() ? null : this;
-        if (__plugin.execute(this, method, __receiver, arguments))
+        Receiver __receiver = this.___method.isStatic() ? null : this;
+        if (__plugin.execute(this, this.___method, __receiver, this.___arguments))
         {
-            append(new ReturnNode(returnValue));
-            return graph;
+            append(new ReturnNode(this.___returnValue));
+            return this.___graph;
         }
         return null;
     }

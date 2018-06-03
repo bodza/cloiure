@@ -11,9 +11,9 @@ import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ParameterNode;
 import giraaff.nodes.ValueNode;
 
-/**
- * Implements the semantics of {@link VarargsParameter}.
- */
+///
+// Implements the semantics of {@link VarargsParameter}.
+///
 // @class LoadSnippetVarargParameterNode
 public final class LoadSnippetVarargParameterNode extends FixedWithNextNode implements Canonicalizable
 {
@@ -22,29 +22,29 @@ public final class LoadSnippetVarargParameterNode extends FixedWithNextNode impl
 
     @Input
     // @field
-    ValueNode index;
+    ValueNode ___index;
 
     @Input
     // @field
-    NodeInputList<ParameterNode> parameters;
+    NodeInputList<ParameterNode> ___parameters;
 
     // @cons
     public LoadSnippetVarargParameterNode(ParameterNode[] __locals, ValueNode __index, Stamp __stamp)
     {
         super(TYPE, __stamp);
-        this.index = __index;
-        this.parameters = new NodeInputList<>(this, __locals);
+        this.___index = __index;
+        this.___parameters = new NodeInputList<>(this, __locals);
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (index.isConstant())
+        if (this.___index.isConstant())
         {
-            int __indexValue = index.asJavaConstant().asInt();
-            if (__indexValue < parameters.size())
+            int __indexValue = this.___index.asJavaConstant().asInt();
+            if (__indexValue < this.___parameters.size())
             {
-                return parameters.get(__indexValue);
+                return this.___parameters.get(__indexValue);
             }
         }
         return this;

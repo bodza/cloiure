@@ -11,14 +11,14 @@ import giraaff.graph.Node;
 public interface NodeIterable<T extends Node> extends Iterable<T>
 {
     @SuppressWarnings("unchecked")
-    default <F extends T> NodeIterable<F> filter(Class<F> clazz)
+    default <F extends T> NodeIterable<F> filter(Class<F> __clazz)
     {
-        return (NodeIterable<F>) new FilteredNodeIterable<>(this).and(NodePredicates.isA(clazz));
+        return (NodeIterable<F>) new FilteredNodeIterable<>(this).and(NodePredicates.isA(__clazz));
     }
 
-    default FilteredNodeIterable<T> filter(NodePredicate predicate)
+    default FilteredNodeIterable<T> filter(NodePredicate __predicate)
     {
-        return new FilteredNodeIterable<>(this).and(predicate);
+        return new FilteredNodeIterable<>(this).and(__predicate);
     }
 
     default List<T> snapshot()
@@ -28,11 +28,11 @@ public interface NodeIterable<T extends Node> extends Iterable<T>
         return __list;
     }
 
-    default void snapshotTo(Collection<? super T> to)
+    default void snapshotTo(Collection<? super T> __to)
     {
         for (T __n : this)
         {
-            to.add(__n);
+            __to.add(__n);
         }
     }
 
@@ -68,11 +68,11 @@ public interface NodeIterable<T extends Node> extends Iterable<T>
         return iterator().hasNext();
     }
 
-    default boolean contains(T node)
+    default boolean contains(T __node)
     {
         for (T __next : this)
         {
-            if (__next == node)
+            if (__next == __node)
             {
                 return true;
             }

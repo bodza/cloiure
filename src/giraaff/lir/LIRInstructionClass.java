@@ -27,25 +27,25 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
     private static final Class<LIRInstruction> INSTRUCTION_CLASS = LIRInstruction.class;
 
     // @field
-    private final Values uses;
+    private final Values ___uses;
     // @field
-    private final Values alives;
+    private final Values ___alives;
     // @field
-    private final Values temps;
+    private final Values ___temps;
     // @field
-    private final Values defs;
+    private final Values ___defs;
 
     // @field
-    private final boolean isMoveOp;
+    private final boolean ___isMoveOp;
     // @field
-    private final boolean isValueMoveOp;
+    private final boolean ___isValueMoveOp;
     // @field
-    private final boolean isLoadConstantOp;
+    private final boolean ___isLoadConstantOp;
 
     // @field
-    private String opcodeConstant;
+    private String ___opcodeConstant;
     // @field
-    private int opcodeIndex;
+    private int ___opcodeIndex;
 
     // @cons
     private LIRInstructionClass(Class<T> __clazz)
@@ -61,26 +61,26 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         LIRInstructionFieldsScanner __ifs = new LIRInstructionFieldsScanner(__calcOffset);
         __ifs.scan(__clazz);
 
-        uses = new Values(__ifs.valueAnnotations.get(LIRInstruction.Use.class));
-        alives = new Values(__ifs.valueAnnotations.get(LIRInstruction.Alive.class));
-        temps = new Values(__ifs.valueAnnotations.get(LIRInstruction.Temp.class));
-        defs = new Values(__ifs.valueAnnotations.get(LIRInstruction.Def.class));
+        this.___uses = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Use.class));
+        this.___alives = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Alive.class));
+        this.___temps = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Temp.class));
+        this.___defs = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Def.class));
 
-        data = new Fields(__ifs.data);
+        this.___data = new Fields(__ifs.___data);
 
-        opcodeConstant = __ifs.opcodeConstant;
-        if (__ifs.opcodeField == null)
+        this.___opcodeConstant = __ifs.___opcodeConstant;
+        if (__ifs.___opcodeField == null)
         {
-            opcodeIndex = -1;
+            this.___opcodeIndex = -1;
         }
         else
         {
-            opcodeIndex = __ifs.data.indexOf(__ifs.opcodeField);
+            this.___opcodeIndex = __ifs.___data.indexOf(__ifs.___opcodeField);
         }
 
-        isMoveOp = MoveOp.class.isAssignableFrom(__clazz);
-        isValueMoveOp = ValueMoveOp.class.isAssignableFrom(__clazz);
-        isLoadConstantOp = LoadConstantOp.class.isAssignableFrom(__clazz);
+        this.___isMoveOp = MoveOp.class.isAssignableFrom(__clazz);
+        this.___isValueMoveOp = ValueMoveOp.class.isAssignableFrom(__clazz);
+        this.___isLoadConstantOp = LoadConstantOp.class.isAssignableFrom(__clazz);
     }
 
     @SuppressWarnings("unchecked")
@@ -107,23 +107,23 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
     private static final class LIRInstructionFieldsScanner extends LIRFieldsScanner
     {
         // @field
-        private String opcodeConstant;
+        private String ___opcodeConstant;
 
-        /**
-         * Field (if any) annotated by {@link Opcode}.
-         */
+        ///
+        // Field (if any) annotated by {@link Opcode}.
+        ///
         // @field
-        private FieldsScanner.FieldInfo opcodeField;
+        private FieldsScanner.FieldInfo ___opcodeField;
 
         // @cons
         LIRInstructionFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
             super(__calc);
 
-            valueAnnotations.put(LIRInstruction.Use.class, new OperandModeAnnotation());
-            valueAnnotations.put(LIRInstruction.Alive.class, new OperandModeAnnotation());
-            valueAnnotations.put(LIRInstruction.Temp.class, new OperandModeAnnotation());
-            valueAnnotations.put(LIRInstruction.Def.class, new OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Use.class, new OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Alive.class, new OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Temp.class, new OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Def.class, new OperandModeAnnotation());
         }
 
         @Override
@@ -161,18 +161,18 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         {
             if (__clazz.getAnnotation(Opcode.class) != null)
             {
-                opcodeConstant = null;
+                this.___opcodeConstant = null;
             }
-            opcodeField = null;
+            this.___opcodeField = null;
 
             super.scan(__clazz, LIRInstruction.class, false);
 
-            if (opcodeConstant == null && opcodeField == null)
+            if (this.___opcodeConstant == null && this.___opcodeField == null)
             {
-                opcodeConstant = __clazz.getSimpleName();
-                if (opcodeConstant.endsWith("Op"))
+                this.___opcodeConstant = __clazz.getSimpleName();
+                if (this.___opcodeConstant.endsWith("Op"))
                 {
-                    opcodeConstant = opcodeConstant.substring(0, opcodeConstant.length() - 2);
+                    this.___opcodeConstant = this.___opcodeConstant.substring(0, this.___opcodeConstant.length() - 2);
                 }
             }
         }
@@ -184,7 +184,7 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
 
             if (__field.getAnnotation(Opcode.class) != null)
             {
-                opcodeField = data.get(data.size() - 1);
+                this.___opcodeField = this.___data.get(this.___data.size() - 1);
             }
         }
     }
@@ -192,7 +192,7 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
     @Override
     public Fields[] getAllFields()
     {
-        return new Fields[] { data, uses, alives, temps, defs };
+        return new Fields[] { this.___data, this.___uses, this.___alives, this.___temps, this.___defs };
     }
 
     Values getValues(OperandMode __mode)
@@ -200,13 +200,13 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         switch (__mode)
         {
             case USE:
-                return uses;
+                return this.___uses;
             case ALIVE:
-                return alives;
+                return this.___alives;
             case TEMP:
-                return temps;
+                return this.___temps;
             case DEF:
-                return defs;
+                return this.___defs;
             default:
                 throw GraalError.shouldNotReachHere("unknown OperandMode: " + __mode);
         }
@@ -214,56 +214,56 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
 
     final String getOpcode(LIRInstruction __obj)
     {
-        if (opcodeConstant != null)
+        if (this.___opcodeConstant != null)
         {
-            return opcodeConstant;
+            return this.___opcodeConstant;
         }
-        return String.valueOf(data.getObject(__obj, opcodeIndex));
+        return String.valueOf(this.___data.getObject(__obj, this.___opcodeIndex));
     }
 
     final boolean hasOperands()
     {
-        return uses.getCount() > 0 || alives.getCount() > 0 || temps.getCount() > 0 || defs.getCount() > 0;
+        return this.___uses.getCount() > 0 || this.___alives.getCount() > 0 || this.___temps.getCount() > 0 || this.___defs.getCount() > 0;
     }
 
     final void forEachUse(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, uses, OperandMode.USE, __proc);
+        forEach(__obj, this.___uses, OperandMode.USE, __proc);
     }
 
     final void forEachAlive(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, alives, OperandMode.ALIVE, __proc);
+        forEach(__obj, this.___alives, OperandMode.ALIVE, __proc);
     }
 
     final void forEachTemp(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, temps, OperandMode.TEMP, __proc);
+        forEach(__obj, this.___temps, OperandMode.TEMP, __proc);
     }
 
     final void forEachDef(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, defs, OperandMode.DEF, __proc);
+        forEach(__obj, this.___defs, OperandMode.DEF, __proc);
     }
 
     final void visitEachUse(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, uses, OperandMode.USE, __proc);
+        visitEach(__obj, this.___uses, OperandMode.USE, __proc);
     }
 
     final void visitEachAlive(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, alives, OperandMode.ALIVE, __proc);
+        visitEach(__obj, this.___alives, OperandMode.ALIVE, __proc);
     }
 
     final void visitEachTemp(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, temps, OperandMode.TEMP, __proc);
+        visitEach(__obj, this.___temps, OperandMode.TEMP, __proc);
     }
 
     final void visitEachDef(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, defs, OperandMode.DEF, __proc);
+        visitEach(__obj, this.___defs, OperandMode.DEF, __proc);
     }
 
     final Value forEachRegisterHint(LIRInstruction __obj, OperandMode __mode, InstructionValueProcedure __proc)
@@ -271,11 +271,11 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         Values __hints;
         if (__mode == OperandMode.USE)
         {
-            __hints = defs;
+            __hints = this.___defs;
         }
         else if (__mode == OperandMode.DEF)
         {
-            __hints = uses;
+            __hints = this.___uses;
         }
         else
         {
@@ -312,16 +312,16 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
 
     final boolean isMoveOp()
     {
-        return isMoveOp;
+        return this.___isMoveOp;
     }
 
     final boolean isValueMoveOp()
     {
-        return isValueMoveOp;
+        return this.___isValueMoveOp;
     }
 
     final boolean isLoadConstantOp()
     {
-        return isLoadConstantOp;
+        return this.___isLoadConstantOp;
     }
 }

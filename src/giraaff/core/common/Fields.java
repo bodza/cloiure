@@ -6,38 +6,38 @@ import java.util.Collections;
 import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
-/**
- * Describes fields in a class, primarily for access via {@link Unsafe}.
- */
+///
+// Describes fields in a class, primarily for access via {@link Unsafe}.
+///
 // @class Fields
 public class Fields
 {
-    /**
-     * Offsets used with {@link Unsafe} to access the fields.
-     */
+    ///
+    // Offsets used with {@link Unsafe} to access the fields.
+    ///
     // @field
-    protected final long[] offsets;
+    protected final long[] ___offsets;
 
-    /**
-     * The names of the fields.
-     */
+    ///
+    // The names of the fields.
+    ///
     // @field
-    private final String[] names;
+    private final String[] ___names;
 
-    /**
-     * The types of the fields.
-     */
+    ///
+    // The types of the fields.
+    ///
     // @field
-    private final Class<?>[] types;
+    private final Class<?>[] ___types;
 
     // @field
-    private final Class<?>[] declaringClasses;
+    private final Class<?>[] ___declaringClasses;
 
     public static Fields forClass(Class<?> __clazz, Class<?> __endClazz, boolean __includeTransient, FieldsScanner.CalcOffset __calcOffset)
     {
         FieldsScanner __scanner = new FieldsScanner(__calcOffset == null ? new FieldsScanner.DefaultCalcOffset() : __calcOffset);
         __scanner.scan(__clazz, __endClazz, __includeTransient);
-        return new Fields(__scanner.data);
+        return new Fields(__scanner.___data);
     }
 
     // @cons
@@ -45,73 +45,73 @@ public class Fields
     {
         super();
         Collections.sort(__fields);
-        this.offsets = new long[__fields.size()];
-        this.names = new String[offsets.length];
-        this.types = new Class<?>[offsets.length];
-        this.declaringClasses = new Class<?>[offsets.length];
+        this.___offsets = new long[__fields.size()];
+        this.___names = new String[this.___offsets.length];
+        this.___types = new Class<?>[this.___offsets.length];
+        this.___declaringClasses = new Class<?>[this.___offsets.length];
         int __index = 0;
         for (FieldsScanner.FieldInfo __f : __fields)
         {
-            offsets[__index] = __f.offset;
-            names[__index] = __f.name;
-            types[__index] = __f.type;
-            declaringClasses[__index] = __f.declaringClass;
+            this.___offsets[__index] = __f.___offset;
+            this.___names[__index] = __f.___name;
+            this.___types[__index] = __f.___type;
+            this.___declaringClasses[__index] = __f.___declaringClass;
             __index++;
         }
     }
 
-    /**
-     * Gets the number of fields represented by this object.
-     */
+    ///
+    // Gets the number of fields represented by this object.
+    ///
     public int getCount()
     {
-        return offsets.length;
+        return this.___offsets.length;
     }
 
     public static void translateInto(Fields __fields, ArrayList<FieldsScanner.FieldInfo> __infos)
     {
         for (int __index = 0; __index < __fields.getCount(); __index++)
         {
-            __infos.add(new FieldsScanner.FieldInfo(__fields.offsets[__index], __fields.names[__index], __fields.types[__index], __fields.declaringClasses[__index]));
+            __infos.add(new FieldsScanner.FieldInfo(__fields.___offsets[__index], __fields.___names[__index], __fields.___types[__index], __fields.___declaringClasses[__index]));
         }
     }
 
-    /**
-     * Function enabling an object field value to be replaced with another value when being copied
-     * within {@link Fields#copy(Object, Object, ObjectTransformer)}.
-     */
+    ///
+    // Function enabling an object field value to be replaced with another value when being copied
+    // within {@link Fields#copy(Object, Object, ObjectTransformer)}.
+    ///
     @FunctionalInterface
     // @iface Fields.ObjectTransformer
     public interface ObjectTransformer
     {
-        Object apply(int index, Object from);
+        Object apply(int __index, Object __from);
     }
 
-    /**
-     * Copies fields from {@code from} to {@code to}, both of which must be of the same type.
-     *
-     * @param from the object from which the fields should be copied
-     * @param to the object to which the fields should be copied
-     */
+    ///
+    // Copies fields from {@code from} to {@code to}, both of which must be of the same type.
+    //
+    // @param from the object from which the fields should be copied
+    // @param to the object to which the fields should be copied
+    ///
     public void copy(Object __from, Object __to)
     {
         copy(__from, __to, null);
     }
 
-    /**
-     * Copies fields from {@code from} to {@code to}, both of which must be of the same type.
-     *
-     * @param from the object from which the fields should be copied
-     * @param to the object to which the fields should be copied
-     * @param trans function to applied to object field values as they are copied. If {@code null},
-     *            the value is copied unchanged.
-     */
+    ///
+    // Copies fields from {@code from} to {@code to}, both of which must be of the same type.
+    //
+    // @param from the object from which the fields should be copied
+    // @param to the object to which the fields should be copied
+    // @param trans function to applied to object field values as they are copied. If {@code null},
+    //            the value is copied unchanged.
+    ///
     public void copy(Object __from, Object __to, ObjectTransformer __trans)
     {
-        for (int __index = 0; __index < offsets.length; __index++)
+        for (int __index = 0; __index < this.___offsets.length; __index++)
         {
-            long __offset = offsets[__index];
-            Class<?> __type = types[__index];
+            long __offset = this.___offsets[__index];
+            Class<?> __type = this.___types[__index];
             if (__type.isPrimitive())
             {
                 if (__type == Integer.TYPE)
@@ -155,17 +155,17 @@ public class Fields
         }
     }
 
-    /**
-     * Gets the value of a field for a given object.
-     *
-     * @param object the object whose field is to be read
-     * @param index the index of the field (between 0 and {@link #getCount()})
-     * @return the value of the specified field which will be boxed if the field type is primitive
-     */
+    ///
+    // Gets the value of a field for a given object.
+    //
+    // @param object the object whose field is to be read
+    // @param index the index of the field (between 0 and {@link #getCount()})
+    // @return the value of the specified field which will be boxed if the field type is primitive
+    ///
     public Object get(Object __object, int __index)
     {
-        long __offset = offsets[__index];
-        Class<?> __type = types[__index];
+        long __offset = this.___offsets[__index];
+        Class<?> __type = this.___types[__index];
         Object __value = null;
         if (__type.isPrimitive())
         {
@@ -209,17 +209,17 @@ public class Fields
         return __value;
     }
 
-    /**
-     * Gets the value of a field for a given object.
-     *
-     * @param object the object whose field is to be read
-     * @param index the index of the field (between 0 and {@link #getCount()})
-     * @return the value of the specified field which will be boxed if the field type is primitive
-     */
+    ///
+    // Gets the value of a field for a given object.
+    //
+    // @param object the object whose field is to be read
+    // @param index the index of the field (between 0 and {@link #getCount()})
+    // @return the value of the specified field which will be boxed if the field type is primitive
+    ///
     public long getRawPrimitive(Object __object, int __index)
     {
-        long __offset = offsets[__index];
-        Class<?> __type = types[__index];
+        long __offset = this.___offsets[__index];
+        Class<?> __type = this.___types[__index];
 
         if (__type == Integer.TYPE)
         {
@@ -259,49 +259,49 @@ public class Fields
         }
     }
 
-    /**
-     * Determines if a field in the domain of this object is the same as the field denoted by the
-     * same index in another {@link Fields} object.
-     */
+    ///
+    // Determines if a field in the domain of this object is the same as the field denoted by the
+    // same index in another {@link Fields} object.
+    ///
     public boolean isSame(Fields __other, int __index)
     {
-        return __other.offsets[__index] == offsets[__index];
+        return __other.___offsets[__index] == this.___offsets[__index];
     }
 
     public long[] getOffsets()
     {
-        return offsets;
+        return this.___offsets;
     }
 
-    /**
-     * Gets the name of a field.
-     *
-     * @param index index of a field
-     */
+    ///
+    // Gets the name of a field.
+    //
+    // @param index index of a field
+    ///
     public String getName(int __index)
     {
-        return names[__index];
+        return this.___names[__index];
     }
 
-    /**
-     * Gets the type of a field.
-     *
-     * @param index index of a field
-     */
+    ///
+    // Gets the type of a field.
+    //
+    // @param index index of a field
+    ///
     public Class<?> getType(int __index)
     {
-        return types[__index];
+        return this.___types[__index];
     }
 
     public Class<?> getDeclaringClass(int __index)
     {
-        return declaringClasses[__index];
+        return this.___declaringClasses[__index];
     }
 
     public void set(Object __object, int __index, Object __value)
     {
-        long __offset = offsets[__index];
-        Class<?> __type = types[__index];
+        long __offset = this.___offsets[__index];
+        Class<?> __type = this.___types[__index];
         if (__type.isPrimitive())
         {
             if (__type == Integer.TYPE)
@@ -345,8 +345,8 @@ public class Fields
 
     public void setRawPrimitive(Object __object, int __index, long __value)
     {
-        long __offset = offsets[__index];
-        Class<?> __type = types[__index];
+        long __offset = this.___offsets[__index];
+        Class<?> __type = this.___types[__index];
         if (__type == Integer.TYPE)
         {
             UnsafeAccess.UNSAFE.putInt(__object, __offset, (int) __value);
@@ -387,51 +387,51 @@ public class Fields
 
     public boolean getBoolean(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getBoolean(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getBoolean(__n, this.___offsets[__i]);
     }
 
     public byte getByte(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getByte(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getByte(__n, this.___offsets[__i]);
     }
 
     public short getShort(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getShort(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getShort(__n, this.___offsets[__i]);
     }
 
     public char getChar(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getChar(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getChar(__n, this.___offsets[__i]);
     }
 
     public int getInt(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getInt(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getInt(__n, this.___offsets[__i]);
     }
 
     public long getLong(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getLong(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getLong(__n, this.___offsets[__i]);
     }
 
     public float getFloat(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getFloat(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getFloat(__n, this.___offsets[__i]);
     }
 
     public double getDouble(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getDouble(__n, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getDouble(__n, this.___offsets[__i]);
     }
 
     public Object getObject(Object __object, int __i)
     {
-        return UnsafeAccess.UNSAFE.getObject(__object, offsets[__i]);
+        return UnsafeAccess.UNSAFE.getObject(__object, this.___offsets[__i]);
     }
 
     public void putObject(Object __object, int __i, Object __value)
     {
-        UnsafeAccess.UNSAFE.putObject(__object, offsets[__i], __value);
+        UnsafeAccess.UNSAFE.putObject(__object, this.___offsets[__i], __value);
     }
 }

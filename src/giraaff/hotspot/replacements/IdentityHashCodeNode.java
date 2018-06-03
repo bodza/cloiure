@@ -25,13 +25,13 @@ public final class IdentityHashCodeNode extends FixedWithNextNode implements Can
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
 
     // @cons
     public IdentityHashCodeNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forInteger(32));
-        this.object = __object;
+        this.___object = __object;
     }
 
     @Override
@@ -43,9 +43,9 @@ public final class IdentityHashCodeNode extends FixedWithNextNode implements Can
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (object.isConstant())
+        if (this.___object.isConstant())
         {
-            JavaConstant __c = (JavaConstant) object.asConstant();
+            JavaConstant __c = (JavaConstant) this.___object.asConstant();
             JavaConstant __identityHashCode;
             if (__c.isNull())
             {
@@ -68,5 +68,5 @@ public final class IdentityHashCodeNode extends FixedWithNextNode implements Can
     }
 
     @NodeIntrinsic
-    public static native int identityHashCode(Object object);
+    public static native int identityHashCode(Object __object);
 }

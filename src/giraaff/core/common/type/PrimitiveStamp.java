@@ -3,28 +3,28 @@ package giraaff.core.common.type;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 
-/**
- * Type describing primitive values.
- */
+///
+// Type describing primitive values.
+///
 // @class PrimitiveStamp
 public abstract class PrimitiveStamp extends ArithmeticStamp
 {
     // @field
-    private final int bits;
+    private final int ___bits;
 
     // @cons
     protected PrimitiveStamp(int __bits, ArithmeticOpTable __ops)
     {
         super(__ops);
-        this.bits = __bits;
+        this.___bits = __bits;
     }
 
-    /**
-     * The width in bits of the value described by this stamp.
-     */
+    ///
+    // The width in bits of the value described by this stamp.
+    ///
     public int getBits()
     {
-        return bits;
+        return this.___bits;
     }
 
     public static int getBits(Stamp __stamp)
@@ -57,7 +57,7 @@ public abstract class PrimitiveStamp extends ArithmeticStamp
     public int hashCode()
     {
         final int __prime = 31;
-        return __prime * super.hashCode() + bits;
+        return __prime * super.hashCode() + this.___bits;
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class PrimitiveStamp extends ArithmeticStamp
             return false;
         }
         PrimitiveStamp __other = (PrimitiveStamp) __obj;
-        if (bits != __other.bits)
+        if (this.___bits != __other.___bits)
         {
             return false;
         }

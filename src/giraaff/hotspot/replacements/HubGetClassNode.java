@@ -20,10 +20,10 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Read {@code Klass::_java_mirror} and incorporate non-null type information into stamp. This is
- * also used by {@link ClassGetHubNode} to eliminate chains of {@code klass._java_mirror._klass}.
- */
+///
+// Read {@code Klass::_java_mirror} and incorporate non-null type information into stamp. This is
+// also used by {@link ClassGetHubNode} to eliminate chains of {@code klass._java_mirror._klass}.
+///
 // @class HubGetClassNode
 public final class HubGetClassNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
@@ -32,18 +32,18 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
 
     @Input
     // @field
-    protected ValueNode hub;
+    protected ValueNode ___hub;
 
     // @cons
     public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider __metaAccess, ValueNode __hub)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(__metaAccess.lookupJavaType(Class.class))));
-        this.hub = __hub;
+        this.___hub = __hub;
     }
 
     public ValueNode getHub()
     {
-        return hub;
+        return this.___hub;
     }
 
     @Override
@@ -56,9 +56,9 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
         else
         {
             MetaAccessProvider __metaAccess = __tool.getMetaAccess();
-            if (__metaAccess != null && hub.isConstant())
+            if (__metaAccess != null && this.___hub.isConstant())
             {
-                ResolvedJavaType __exactType = __tool.getConstantReflection().asJavaType(hub.asConstant());
+                ResolvedJavaType __exactType = __tool.getConstantReflection().asJavaType(this.___hub.asConstant());
                 if (__exactType != null)
                 {
                     return ConstantNode.forConstant(__tool.getConstantReflection().asJavaClass(__exactType), __metaAccess);
@@ -75,12 +75,12 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
     }
 
     @NodeIntrinsic
-    public static native Class<?> readClass(KlassPointer hub);
+    public static native Class<?> readClass(KlassPointer __hub);
 
     @Override
     public ValueNode getValue()
     {
-        return hub;
+        return this.___hub;
     }
 
     @Override
@@ -111,9 +111,9 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
         }
     }
 
-    /**
-     * Any concrete Klass* has a corresponding {@link java.lang.Class}.
-     */
+    ///
+    // Any concrete Klass* has a corresponding {@link java.lang.Class}.
+    ///
     @Override
     public boolean isLossless()
     {

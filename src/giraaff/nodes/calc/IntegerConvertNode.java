@@ -19,9 +19,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.StampInverter;
 
-/**
- * An {@code IntegerConvert} converts an integer to an integer of different width.
- */
+///
+// An {@code IntegerConvert} converts an integer to an integer of different width.
+///
 // @class IntegerConvertNode
 public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements ArithmeticOperation, ConvertNode, ArithmeticLIRLowerable, StampInverter
 {
@@ -30,14 +30,14 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     public static final NodeClass<IntegerConvertNode> TYPE = NodeClass.create(IntegerConvertNode.class);
 
     // @field
-    protected final SerializableIntegerConvertFunction<OP> getOp;
+    protected final SerializableIntegerConvertFunction<OP> ___getOp;
     // @field
-    protected final SerializableIntegerConvertFunction<REV> getReverseOp;
+    protected final SerializableIntegerConvertFunction<REV> ___getReverseOp;
 
     // @field
-    protected final int inputBits;
+    protected final int ___inputBits;
     // @field
-    protected final int resultBits;
+    protected final int ___resultBits;
 
     // @iface IntegerConvertNode.SerializableIntegerConvertFunction
     protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, IntegerConvertOp<T>>
@@ -48,25 +48,25 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> __c, SerializableIntegerConvertFunction<OP> __getOp, SerializableIntegerConvertFunction<REV> __getReverseOp, int __inputBits, int __resultBits, ValueNode __input)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__input.stamp(NodeView.DEFAULT))).foldStamp(__inputBits, __resultBits, __input.stamp(NodeView.DEFAULT)), __input);
-        this.getOp = __getOp;
-        this.getReverseOp = __getReverseOp;
-        this.inputBits = __inputBits;
-        this.resultBits = __resultBits;
+        this.___getOp = __getOp;
+        this.___getReverseOp = __getReverseOp;
+        this.___inputBits = __inputBits;
+        this.___resultBits = __resultBits;
     }
 
     public int getInputBits()
     {
-        return inputBits;
+        return this.___inputBits;
     }
 
     public int getResultBits()
     {
-        return resultBits;
+        return this.___resultBits;
     }
 
     protected final IntegerConvertOp<OP> getOp(ValueNode __forValue)
     {
-        return getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
+        return this.___getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
@@ -84,20 +84,20 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     @Override
     public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        IntegerConvertOp<REV> __reverse = getReverseOp.apply(ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)));
+        IntegerConvertOp<REV> __reverse = this.___getReverseOp.apply(ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)));
         return __reverse.foldConstant(getResultBits(), getInputBits(), __c);
     }
 
     @Override
     public Stamp foldStamp(Stamp __newStamp)
     {
-        return getArithmeticOp().foldStamp(inputBits, resultBits, __newStamp);
+        return getArithmeticOp().foldStamp(this.___inputBits, this.___resultBits, __newStamp);
     }
 
     @Override
     public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode __synonym = findSynonym(getOp(__forValue), __forValue, inputBits, resultBits, stamp(NodeView.DEFAULT));
+        ValueNode __synonym = findSynonym(getOp(__forValue), __forValue, this.___inputBits, this.___resultBits, stamp(NodeView.DEFAULT));
         if (__synonym != null)
         {
             return __synonym;
@@ -180,6 +180,6 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     @Override
     public Stamp invertStamp(Stamp __outStamp)
     {
-        return getArithmeticOp().invertStamp(inputBits, resultBits, __outStamp);
+        return getArithmeticOp().invertStamp(this.___inputBits, this.___resultBits, __outStamp);
     }
 }

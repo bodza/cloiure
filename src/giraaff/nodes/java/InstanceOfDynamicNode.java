@@ -19,10 +19,10 @@ import giraaff.nodes.calc.IsNullNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * The {@code InstanceOfDynamicNode} represents a type check where the type being checked is not
- * known at compile time. This is used, for instance, to intrinsify {@link Class#isInstance(Object)}.
- */
+///
+// The {@code InstanceOfDynamicNode} represents a type check where the type being checked is not
+// known at compile time. This is used, for instance, to intrinsify {@link Class#isInstance(Object)}.
+///
 // @class InstanceOfDynamicNode
 public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {
@@ -30,9 +30,9 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
     public static final NodeClass<InstanceOfDynamicNode> TYPE = NodeClass.create(InstanceOfDynamicNode.class);
 
     // @field
-    private final boolean allowNull;
+    private final boolean ___allowNull;
     // @field
-    private final boolean exact;
+    private final boolean ___exact;
 
     public static LogicNode create(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __mirror, ValueNode __object, boolean __allowNull, boolean __exact)
     {
@@ -53,8 +53,8 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
     protected InstanceOfDynamicNode(ValueNode __mirror, ValueNode __object, boolean __allowNull, boolean __exact)
     {
         super(TYPE, __mirror, __object);
-        this.allowNull = __allowNull;
-        this.exact = __exact;
+        this.___allowNull = __allowNull;
+        this.___exact = __exact;
     }
 
     public boolean isMirror()
@@ -121,7 +121,7 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
     @Override
     public LogicNode canonical(CanonicalizerTool __tool, ValueNode __forMirror, ValueNode __forObject)
     {
-        LogicNode __result = findSynonym(__tool.getAssumptions(), __tool.getConstantReflection(), __forMirror, __forObject, allowNull, exact);
+        LogicNode __result = findSynonym(__tool.getAssumptions(), __tool.getConstantReflection(), __forMirror, __forObject, this.___allowNull, this.___exact);
         if (__result != null)
         {
             return __result;
@@ -131,18 +131,18 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
 
     public void setMirror(ValueNode __newObject)
     {
-        this.updateUsages(x, __newObject);
-        this.x = __newObject;
+        this.updateUsages(this.___x, __newObject);
+        this.___x = __newObject;
     }
 
     public boolean allowsNull()
     {
-        return allowNull;
+        return this.___allowNull;
     }
 
     public boolean isExact()
     {
-        return exact;
+        return this.___exact;
     }
 
     @Override

@@ -97,15 +97,13 @@ public final class ExpandLogicPhase extends Phase
 
     private static void processIf(LogicNode __x, boolean __xNegated, LogicNode __y, boolean __yNegated, IfNode __ifNode, double __shortCircuitProbability)
     {
-        /*
-         * this method splits an IfNode, which has a ShortCircuitOrNode as its condition, into two
-         * separate IfNodes: if(X) and if(Y)
-         *
-         * for computing the probabilities P(X) and P(Y), we use two different approaches. The first
-         * one assumes that the shortCircuitProbability and the probability on the IfNode were
-         * created with each other in mind. If this assumption does not hold, we fall back to
-         * another mechanism for computing the probabilities.
-         */
+        // this method splits an IfNode, which has a ShortCircuitOrNode as its condition, into two
+        // separate IfNodes: if(X) and if(Y)
+        //
+        // for computing the probabilities P(X) and P(Y), we use two different approaches. The first
+        // one assumes that the shortCircuitProbability and the probability on the IfNode were
+        // created with each other in mind. If this assumption does not hold, we fall back to
+        // another mechanism for computing the probabilities.
         AbstractBeginNode __trueTarget = __ifNode.trueSuccessor();
         AbstractBeginNode __falseTarget = __ifNode.falseSuccessor();
 
@@ -117,16 +115,14 @@ public final class ExpandLogicPhase extends Phase
 
         if (!doubleEquals(__ifNode.getTrueSuccessorProbability(), __expectedOriginalIfTrueProbability))
         {
-            /*
-             * 2nd approach
-             *
-             * the assumption above did not hold, so we either used an artificial probability as
-             * shortCircuitProbability or the ShortCircuitOrNode was moved to some other IfNode.
-             *
-             * so, we distribute the if's trueSuccessorProbability between the newly generated if
-             * nodes according to the shortCircuitProbability. the following invariant is always
-             * true in this case: P(originalIf.trueSuccessor) == P(X) + ((1 - P(X)) * P(Y))
-             */
+            // 2nd approach
+            //
+            // the assumption above did not hold, so we either used an artificial probability as
+            // shortCircuitProbability or the ShortCircuitOrNode was moved to some other IfNode.
+            //
+            // so, we distribute the if's trueSuccessorProbability between the newly generated if
+            // nodes according to the shortCircuitProbability. the following invariant is always
+            // true in this case: P(originalIf.trueSuccessor) == P(X) + ((1 - P(X)) * P(Y))
             __firstIfTrueProbability = __ifNode.getTrueSuccessorProbability() * __shortCircuitProbability;
             __secondIfTrueProbability = sanitizeProbability(1 - (__ifNode.probability(__falseTarget) / (1 - __firstIfTrueProbability)));
         }

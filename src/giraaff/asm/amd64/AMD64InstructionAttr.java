@@ -4,9 +4,9 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.amd64.AMD64.CPUFeature;
 import jdk.vm.ci.code.TargetDescription;
 
-/**
- * Attributes for instructions for SSE through EVEX, also including address components.
- */
+///
+// Attributes for instructions for SSE through EVEX, also including address components.
+///
 // @class AMD64InstructionAttr
 public final class AMD64InstructionAttr
 {
@@ -14,178 +14,178 @@ public final class AMD64InstructionAttr
     AMD64InstructionAttr(int __inVectorLen, boolean __inRexVexW, boolean __inLegacyMode, boolean __inNoRegMask, boolean __inUsesVl, TargetDescription __target)
     {
         super();
-        avxVectorLen = __inVectorLen;
-        rexVexW = __inRexVexW;
-        this.target = __target;
-        legacyMode = (!supports(CPUFeature.AVX512F)) ? true : __inLegacyMode;
-        noRegMask = __inNoRegMask;
-        usesVl = __inUsesVl;
-        rexVexWReverted = false;
-        tupleType = 0;
-        inputSizeInBits = 0;
-        isEvexInstruction = false;
-        evexEncoding = 0;
-        isClearContext = false;
-        isExtendedContext = false;
+        this.___avxVectorLen = __inVectorLen;
+        this.___rexVexW = __inRexVexW;
+        this.___target = __target;
+        this.___legacyMode = (!supports(CPUFeature.AVX512F)) ? true : __inLegacyMode;
+        this.___noRegMask = __inNoRegMask;
+        this.___usesVl = __inUsesVl;
+        this.___rexVexWReverted = false;
+        this.___tupleType = 0;
+        this.___inputSizeInBits = 0;
+        this.___isEvexInstruction = false;
+        this.___evexEncoding = 0;
+        this.___isClearContext = false;
+        this.___isExtendedContext = false;
     }
 
     // @field
-    private TargetDescription target;
+    private TargetDescription ___target;
     // @field
-    private int avxVectorLen;
+    private int ___avxVectorLen;
     // @field
-    private boolean rexVexW;
+    private boolean ___rexVexW;
     // @field
-    private boolean rexVexWReverted;
+    private boolean ___rexVexWReverted;
     // @field
-    private boolean legacyMode;
+    private boolean ___legacyMode;
     // @field
-    private boolean noRegMask;
+    private boolean ___noRegMask;
     // @field
-    private boolean usesVl;
+    private boolean ___usesVl;
     // @field
-    private int tupleType;
+    private int ___tupleType;
     // @field
-    private int inputSizeInBits;
+    private int ___inputSizeInBits;
     // @field
-    private boolean isEvexInstruction;
+    private boolean ___isEvexInstruction;
     // @field
-    private int evexEncoding;
+    private int ___evexEncoding;
     // @field
-    private boolean isClearContext;
+    private boolean ___isClearContext;
     // @field
-    private boolean isExtendedContext;
+    private boolean ___isExtendedContext;
 
     public int getVectorLen()
     {
-        return avxVectorLen;
+        return this.___avxVectorLen;
     }
 
     public boolean isRexVexW()
     {
-        return rexVexW;
+        return this.___rexVexW;
     }
 
     public boolean isRexVexWReverted()
     {
-        return rexVexWReverted;
+        return this.___rexVexWReverted;
     }
 
     public boolean isLegacyMode()
     {
-        return legacyMode;
+        return this.___legacyMode;
     }
 
     public boolean isNoRegMask()
     {
-        return noRegMask;
+        return this.___noRegMask;
     }
 
     public boolean usesVl()
     {
-        return usesVl;
+        return this.___usesVl;
     }
 
     public int getTupleType()
     {
-        return tupleType;
+        return this.___tupleType;
     }
 
     public int getInputSize()
     {
-        return inputSizeInBits;
+        return this.___inputSizeInBits;
     }
 
     public boolean isEvexInstruction()
     {
-        return isEvexInstruction;
+        return this.___isEvexInstruction;
     }
 
     public int getEvexEncoding()
     {
-        return evexEncoding;
+        return this.___evexEncoding;
     }
 
     public boolean isClearContext()
     {
-        return isClearContext;
+        return this.___isClearContext;
     }
 
     public boolean isExtendedContext()
     {
-        return isExtendedContext;
+        return this.___isExtendedContext;
     }
 
-    /**
-     * Set the vector length of a given instruction.
-     */
+    ///
+    // Set the vector length of a given instruction.
+    ///
     public void setVectorLen(int __vectorLen)
     {
-        avxVectorLen = __vectorLen;
+        this.___avxVectorLen = __vectorLen;
     }
 
-    /**
-     * In EVEX it is possible in blended code generation to revert the encoding width for AVX.
-     */
+    ///
+    // In EVEX it is possible in blended code generation to revert the encoding width for AVX.
+    ///
     public void setRexVexWReverted()
     {
-        rexVexWReverted = true;
+        this.___rexVexWReverted = true;
     }
 
-    /**
-     * Alter the current encoding width.
-     */
+    ///
+    // Alter the current encoding width.
+    ///
     public void setRexVexW(boolean __state)
     {
-        rexVexW = __state;
+        this.___rexVexW = __state;
     }
 
-    /**
-     * Alter the current instructions legacy mode. Blended code generation will use this.
-     */
+    ///
+    // Alter the current instructions legacy mode. Blended code generation will use this.
+    ///
     public void setLegacyMode()
     {
-        legacyMode = true;
+        this.___legacyMode = true;
     }
 
-    /**
-     * During emit or during definition of an instruction, mark if it is EVEX.
-     */
+    ///
+    // During emit or during definition of an instruction, mark if it is EVEX.
+    ///
     public void setIsEvexInstruction()
     {
-        isEvexInstruction = true;
+        this.___isEvexInstruction = true;
     }
 
-    /**
-     * Set the current encoding attributes to be used in address calculations for EVEX.
-     */
+    ///
+    // Set the current encoding attributes to be used in address calculations for EVEX.
+    ///
     public void setEvexEncoding(int __value)
     {
-        evexEncoding = __value;
+        this.___evexEncoding = __value;
     }
 
-    /**
-     * Use clear context for this instruction in EVEX, defaults is merge(false).
-     */
+    ///
+    // Use clear context for this instruction in EVEX, defaults is merge(false).
+    ///
     public void setIsClearContext()
     {
-        isClearContext = true;
+        this.___isClearContext = true;
     }
 
-    /**
-     * Set the address attributes for configuring displacement calculations in EVEX.
-     */
+    ///
+    // Set the address attributes for configuring displacement calculations in EVEX.
+    ///
     public void setAddressAttributes(int __inTupleType, int __inInputSizeInBits)
     {
         if (supports(CPUFeature.AVX512F))
         {
-            tupleType = __inTupleType;
-            inputSizeInBits = __inInputSizeInBits;
+            this.___tupleType = __inTupleType;
+            this.___inputSizeInBits = __inInputSizeInBits;
         }
     }
 
     private boolean supports(CPUFeature __feature)
     {
-        return ((AMD64) target.arch).getFeatures().contains(__feature);
+        return ((AMD64) this.___target.arch).getFeatures().contains(__feature);
     }
 }

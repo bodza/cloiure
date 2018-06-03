@@ -6,36 +6,36 @@ import jdk.vm.ci.code.Register;
 public final class HotSpotRegisters implements HotSpotRegistersProvider
 {
     // @field
-    private final Register threadRegister;
+    private final Register ___threadRegister;
     // @field
-    private final Register heapBaseRegister;
+    private final Register ___heapBaseRegister;
     // @field
-    private final Register stackPointerRegister;
+    private final Register ___stackPointerRegister;
 
     // @cons
     public HotSpotRegisters(Register __threadRegister, Register __heapBaseRegister, Register __stackPointerRegister)
     {
         super();
-        this.threadRegister = __threadRegister;
-        this.heapBaseRegister = __heapBaseRegister;
-        this.stackPointerRegister = __stackPointerRegister;
+        this.___threadRegister = __threadRegister;
+        this.___heapBaseRegister = __heapBaseRegister;
+        this.___stackPointerRegister = __stackPointerRegister;
     }
 
     @Override
     public Register getThreadRegister()
     {
-        return threadRegister;
+        return this.___threadRegister;
     }
 
     @Override
     public Register getHeapBaseRegister()
     {
-        return heapBaseRegister;
+        return this.___heapBaseRegister;
     }
 
     @Override
     public Register getStackPointerRegister()
     {
-        return stackPointerRegister;
+        return this.___stackPointerRegister;
     }
 }

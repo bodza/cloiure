@@ -6,10 +6,10 @@ import giraaff.core.common.GraalOptions;
 import giraaff.lir.LIR;
 import giraaff.lir.gen.LIRGenerationResult;
 
-/**
- * Base class for all {@link LIR low-level} phases. Subclasses should be stateless. There will be
- * one global instance for each phase that is shared for all compilations.
- */
+///
+// Base class for all {@link LIR low-level} phases. Subclasses should be stateless. There will be
+// one global instance for each phase that is shared for all compilations.
+///
 // @class LIRPhase
 public abstract class LIRPhase<C>
 {
@@ -24,7 +24,7 @@ public abstract class LIRPhase<C>
         run(__target, __lirGenRes, __context);
     }
 
-    protected abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, C context);
+    protected abstract void run(TargetDescription __target, LIRGenerationResult __lirGenRes, C __context);
 
     public static CharSequence createName(Class<?> __clazz)
     {

@@ -122,11 +122,9 @@ public final class RightShiftNode extends ShiftNode<Shr>
     {
         if (super.isNarrowable(__resultBits))
         {
-            /*
-             * For signed right shifts, the narrow can be done before the shift if the cut off bits
-             * are all equal to the sign bit of the input. That's equivalent to the condition that
-             * the input is in the signed range of the narrow type.
-             */
+            // For signed right shifts, the narrow can be done before the shift if the cut off bits
+            // are all equal to the sign bit of the input. That's equivalent to the condition that
+            // the input is in the signed range of the narrow type.
             IntegerStamp __inputStamp = (IntegerStamp) getX().stamp(NodeView.DEFAULT);
             return CodeUtil.minValue(__resultBits) <= __inputStamp.lowerBound() && __inputStamp.upperBound() <= CodeUtil.maxValue(__resultBits);
         }

@@ -22,13 +22,13 @@ public abstract class AbstractInliningPolicy implements InliningPolicy
     // @def
     public static final float CapInheritedRelevance = 1.0f;
     // @field
-    protected final Map<Invoke, Double> hints;
+    protected final Map<Invoke, Double> ___hints;
 
     // @cons
     public AbstractInliningPolicy(Map<Invoke, Double> __hints)
     {
         super();
-        this.hints = __hints;
+        this.___hints = __hints;
     }
 
     protected double computeMaximumSize(double __relevance, int __configuredMaximum)
@@ -39,9 +39,9 @@ public abstract class AbstractInliningPolicy implements InliningPolicy
 
     protected double getInliningBonus(InlineInfo __info)
     {
-        if (hints != null && hints.containsKey(__info.invoke()))
+        if (this.___hints != null && this.___hints.containsKey(__info.invoke()))
         {
-            return hints.get(__info.invoke());
+            return this.___hints.get(__info.invoke());
         }
         return 1;
     }

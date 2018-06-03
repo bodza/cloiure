@@ -16,10 +16,10 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * AMD64 mul/div operation. This operation has a single operand for the second input. The first
- * input must be in RAX for mul and in RDX:RAX for div. The result is in RDX:RAX.
- */
+///
+// AMD64 mul/div operation. This operation has a single operand for the second input. The first
+// input must be in RAX for mul and in RDX:RAX for div. The result is in RDX:RAX.
+///
 // @class AMD64MulDivOp
 public final class AMD64MulDivOp extends AMD64LIRInstruction
 {
@@ -28,31 +28,31 @@ public final class AMD64MulDivOp extends AMD64LIRInstruction
 
     @Opcode
     // @field
-    private final AMD64MOp opcode;
+    private final AMD64MOp ___opcode;
     // @field
-    private final OperandSize size;
+    private final OperandSize ___size;
 
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue highResult;
+    protected AllocatableValue ___highResult;
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue lowResult;
+    protected AllocatableValue ___lowResult;
 
     @Use({OperandFlag.REG, OperandFlag.ILLEGAL})
     // @field
-    protected AllocatableValue highX;
+    protected AllocatableValue ___highX;
     @Use({OperandFlag.REG})
     // @field
-    protected AllocatableValue lowX;
+    protected AllocatableValue ___lowX;
 
     @Use({OperandFlag.REG, OperandFlag.STACK})
     // @field
-    protected AllocatableValue y;
+    protected AllocatableValue ___y;
 
     // @State
     // @field
-    protected LIRFrameState state;
+    protected LIRFrameState ___state;
 
     // @cons
     public AMD64MulDivOp(AMD64MOp __opcode, OperandSize __size, LIRKind __resultKind, AllocatableValue __x, AllocatableValue __y)
@@ -64,50 +64,50 @@ public final class AMD64MulDivOp extends AMD64LIRInstruction
     public AMD64MulDivOp(AMD64MOp __opcode, OperandSize __size, LIRKind __resultKind, AllocatableValue __highX, AllocatableValue __lowX, AllocatableValue __y, LIRFrameState __state)
     {
         super(TYPE);
-        this.opcode = __opcode;
-        this.size = __size;
+        this.___opcode = __opcode;
+        this.___size = __size;
 
-        this.highResult = AMD64.rdx.asValue(__resultKind);
-        this.lowResult = AMD64.rax.asValue(__resultKind);
+        this.___highResult = AMD64.rdx.asValue(__resultKind);
+        this.___lowResult = AMD64.rax.asValue(__resultKind);
 
-        this.highX = __highX;
-        this.lowX = __lowX;
+        this.___highX = __highX;
+        this.___lowX = __lowX;
 
-        this.y = __y;
+        this.___y = __y;
 
-        this.state = __state;
+        this.___state = __state;
     }
 
     public AllocatableValue getHighResult()
     {
-        return highResult;
+        return this.___highResult;
     }
 
     public AllocatableValue getLowResult()
     {
-        return lowResult;
+        return this.___lowResult;
     }
 
     public AllocatableValue getQuotient()
     {
-        return lowResult;
+        return this.___lowResult;
     }
 
     public AllocatableValue getRemainder()
     {
-        return highResult;
+        return this.___highResult;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        if (ValueUtil.isRegister(y))
+        if (ValueUtil.isRegister(this.___y))
         {
-            opcode.emit(__masm, size, ValueUtil.asRegister(y));
+            this.___opcode.emit(__masm, this.___size, ValueUtil.asRegister(this.___y));
         }
         else
         {
-            opcode.emit(__masm, size, (AMD64Address) __crb.asAddress(y));
+            this.___opcode.emit(__masm, this.___size, (AMD64Address) __crb.asAddress(this.___y));
         }
     }
 }

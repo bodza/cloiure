@@ -15,9 +15,9 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.phases.BasePhase;
 import giraaff.phases.tiers.PhaseContext;
 
-/**
- * This phase will make sure that the branch leading towards this deopt has 0.0 probability.
- */
+///
+// This phase will make sure that the branch leading towards this deopt has 0.0 probability.
+///
 // @class PropagateDeoptimizeProbabilityPhase
 public final class PropagateDeoptimizeProbabilityPhase extends BasePhase<PhaseContext>
 {

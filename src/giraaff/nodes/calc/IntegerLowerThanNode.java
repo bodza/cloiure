@@ -17,10 +17,10 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * Common super-class for "a < b" comparisons both {@linkplain IntegerLowerThanNode signed} and
- * {@linkplain IntegerBelowNode unsigned}.
- */
+///
+// Common super-class for "a < b" comparisons both {@linkplain IntegerLowerThanNode signed} and
+// {@linkplain IntegerBelowNode unsigned}.
+///
 // @class IntegerLowerThanNode
 public abstract class IntegerLowerThanNode extends CompareNode
 {
@@ -28,18 +28,18 @@ public abstract class IntegerLowerThanNode extends CompareNode
     public static final NodeClass<IntegerLowerThanNode> TYPE = NodeClass.create(IntegerLowerThanNode.class);
 
     // @field
-    private final LowerOp op;
+    private final LowerOp ___op;
 
     // @cons
     protected IntegerLowerThanNode(NodeClass<? extends CompareNode> __c, ValueNode __x, ValueNode __y, LowerOp __op)
     {
         super(__c, __op.getCondition(), false, __x, __y);
-        this.op = __op;
+        this.___op = __op;
     }
 
     protected LowerOp getOp()
     {
-        return op;
+        return this.___op;
     }
 
     @Override
@@ -139,15 +139,15 @@ public abstract class IntegerLowerThanNode extends CompareNode
             return null;
         }
 
-        protected abstract long upperBound(IntegerStamp stamp);
+        protected abstract long upperBound(IntegerStamp __stamp);
 
-        protected abstract long lowerBound(IntegerStamp stamp);
+        protected abstract long lowerBound(IntegerStamp __stamp);
 
-        protected abstract int compare(long a, long b);
+        protected abstract int compare(long __a, long __b);
 
-        protected abstract long min(long a, long b);
+        protected abstract long min(long __a, long __b);
 
-        protected abstract long max(long a, long b);
+        protected abstract long max(long __a, long __b);
 
         protected long min(long __a, long __b, int __bits)
         {
@@ -159,17 +159,17 @@ public abstract class IntegerLowerThanNode extends CompareNode
             return max(cast(__a, __bits), cast(__b, __bits));
         }
 
-        protected abstract long cast(long a, int bits);
+        protected abstract long cast(long __a, int __bits);
 
-        protected abstract long minValue(int bits);
+        protected abstract long minValue(int __bits);
 
-        protected abstract long maxValue(int bits);
+        protected abstract long maxValue(int __bits);
 
-        protected abstract IntegerStamp forInteger(int bits, long min, long max);
+        protected abstract IntegerStamp forInteger(int __bits, long __min, long __max);
 
         protected abstract CanonicalCondition getCondition();
 
-        protected abstract IntegerLowerThanNode createNode(ValueNode x, ValueNode y);
+        protected abstract IntegerLowerThanNode createNode(ValueNode __x, ValueNode __y);
 
         public LogicNode create(ValueNode __x, ValueNode __y, NodeView __view)
         {
@@ -358,20 +358,18 @@ public abstract class IntegerLowerThanNode extends CompareNode
             int __bits = __a.getBits();
             long __min = minValue(__bits);
             long __max = maxValue(__bits);
-            /*
-             * if x < x + a <=> x + a didn't overflow:
-             *
-             * x is outside ]MAX - a, MAX], i.e., inside [MIN, MAX - a]
-             *
-             * if a is negative those bounds wrap around correctly.
-             *
-             * If a is exactly zero this gives an unbounded stamp (any integer) in the positive case
-             * and an empty stamp in the negative case: if x |<| x is true, then either x has no
-             * value or any value...
-             *
-             * This does not use upper/lowerBound from LowerOp because it's about the (signed)
-             * addition not the comparison.
-             */
+            // if x < x + a <=> x + a didn't overflow:
+            //
+            // x is outside ]MAX - a, MAX], i.e., inside [MIN, MAX - a]
+            //
+            // if a is negative those bounds wrap around correctly.
+            //
+            // If a is exactly zero this gives an unbounded stamp (any integer) in the positive case
+            // and an empty stamp in the negative case: if x |<| x is true, then either x has no
+            // value or any value...
+            //
+            // This does not use upper/lowerBound from LowerOp because it's about the (signed)
+            // addition not the comparison.
             if (__mirrored)
             {
                 if (__a.contains(0))

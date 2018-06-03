@@ -10,9 +10,9 @@ import giraaff.hotspot.nodes.AllocaNode;
 import giraaff.util.GraalError;
 import giraaff.word.Word;
 
-/**
- * Stub to allocate an {@link ArrayIndexOutOfBoundsException} thrown by a bytecode.
- */
+///
+// Stub to allocate an {@link ArrayIndexOutOfBoundsException} thrown by a bytecode.
+///
 // @class OutOfBoundsExceptionStub
 public final class OutOfBoundsExceptionStub extends CreateExceptionStub
 {
@@ -31,15 +31,15 @@ public final class OutOfBoundsExceptionStub extends CreateExceptionStub
         switch (__index)
         {
             case 1:
-                return providers.getRegisters().getThreadRegister();
+                return this.___providers.getRegisters().getThreadRegister();
             case 2:
             {
-                int __wordSize = providers.getWordTypes().getWordKind().getByteCount();
+                int __wordSize = this.___providers.getWordTypes().getWordKind().getByteCount();
                 // (MAX_INT_STRING_SIZE + 1) / wordSize, rounded up
                 return MAX_INT_STRING_SIZE / __wordSize + 1;
             }
             default:
-                throw GraalError.shouldNotReachHere("unknown parameter " + __name + " at __index " + __index);
+                throw GraalError.shouldNotReachHere("unknown parameter " + __name + " at index " + __index);
         }
     }
 

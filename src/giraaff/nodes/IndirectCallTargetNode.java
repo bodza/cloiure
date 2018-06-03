@@ -15,7 +15,7 @@ public class IndirectCallTargetNode extends LoweredCallTargetNode
 
     @Input
     // @field
-    protected ValueNode computedAddress;
+    protected ValueNode ___computedAddress;
 
     // @cons
     public IndirectCallTargetNode(ValueNode __computedAddress, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, InvokeKind __invokeKind)
@@ -27,12 +27,12 @@ public class IndirectCallTargetNode extends LoweredCallTargetNode
     protected IndirectCallTargetNode(NodeClass<? extends IndirectCallTargetNode> __c, ValueNode __computedAddress, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, InvokeKind __invokeKind)
     {
         super(__c, __arguments, __returnStamp, __signature, __target, __callType, __invokeKind);
-        this.computedAddress = __computedAddress;
+        this.___computedAddress = __computedAddress;
     }
 
     public ValueNode computedAddress()
     {
-        return computedAddress;
+        return this.___computedAddress;
     }
 
     @Override

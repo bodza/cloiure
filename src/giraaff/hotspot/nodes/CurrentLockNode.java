@@ -12,9 +12,9 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
-/**
- * Intrinsic for getting the lock in the current {@linkplain BeginLockScopeNode lock scope}.
- */
+///
+// Intrinsic for getting the lock in the current {@linkplain BeginLockScopeNode lock scope}.
+///
 // @class CurrentLockNode
 public final class CurrentLockNode extends FixedWithNextNode implements LIRLowerable
 {
@@ -22,25 +22,25 @@ public final class CurrentLockNode extends FixedWithNextNode implements LIRLower
     public static final NodeClass<CurrentLockNode> TYPE = NodeClass.create(CurrentLockNode.class);
 
     // @field
-    protected int lockDepth;
+    protected int ___lockDepth;
 
     // @cons
     public CurrentLockNode(@InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
     {
         super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
-        this.lockDepth = __lockDepth;
+        this.___lockDepth = __lockDepth;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
         HotSpotLIRGenerator __hsGen = (HotSpotLIRGenerator) __gen.getLIRGeneratorTool();
-        VirtualStackSlot __slot = __hsGen.getLockSlot(lockDepth);
+        VirtualStackSlot __slot = __hsGen.getLockSlot(this.___lockDepth);
         // the register allocator cannot handle stack -> register moves, so we use an LEA here
         Value __result = __gen.getLIRGeneratorTool().emitAddress(__slot);
         __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic
-    public static native Word currentLock(@ConstantNodeParameter int lockDepth);
+    public static native Word currentLock(@ConstantNodeParameter int __lockDepth);
 }

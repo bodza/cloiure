@@ -20,13 +20,13 @@ public final class AMD64VZeroUpper extends AMD64LIRInstruction
 
     @Temp
     // @field
-    protected final RegisterValue[] xmmRegisters;
+    protected final RegisterValue[] ___xmmRegisters;
 
     // @cons
     public AMD64VZeroUpper(Value[] __exclude)
     {
         super(TYPE);
-        xmmRegisters = initRegisterValues(__exclude);
+        this.___xmmRegisters = initRegisterValues(__exclude);
     }
 
     private static RegisterValue[] initRegisterValues(Value[] __exclude)

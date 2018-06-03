@@ -9,9 +9,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.virtual.EscapeObjectState;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * This class encapsulated the virtual state of an escape analyzed object.
- */
+///
+// This class encapsulated the virtual state of an escape analyzed object.
+///
 // @class VirtualObjectState
 public final class VirtualObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
@@ -20,37 +20,37 @@ public final class VirtualObjectState extends EscapeObjectState implements Node.
 
     @OptionalInput
     // @field
-    NodeInputList<ValueNode> values;
+    NodeInputList<ValueNode> ___values;
 
     public NodeInputList<ValueNode> values()
     {
-        return values;
+        return this.___values;
     }
 
     // @cons
     public VirtualObjectState(VirtualObjectNode __object, ValueNode[] __values)
     {
         super(TYPE, __object);
-        this.values = new NodeInputList<>(this, __values);
+        this.___values = new NodeInputList<>(this, __values);
     }
 
     // @cons
     public VirtualObjectState(VirtualObjectNode __object, List<ValueNode> __values)
     {
         super(TYPE, __object);
-        this.values = new NodeInputList<>(this, __values);
+        this.___values = new NodeInputList<>(this, __values);
     }
 
     @Override
     public VirtualObjectState duplicateWithVirtualState()
     {
-        return graph().addWithoutUnique(new VirtualObjectState(object(), values));
+        return graph().addWithoutUnique(new VirtualObjectState(object(), this.___values));
     }
 
     @Override
     public void applyToNonVirtual(NodeClosure<? super ValueNode> __closure)
     {
-        for (ValueNode __value : values)
+        for (ValueNode __value : this.___values)
         {
             if (__value != null)
             {

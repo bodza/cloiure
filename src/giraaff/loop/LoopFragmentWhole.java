@@ -48,12 +48,12 @@ public final class LoopFragmentWhole extends LoopFragment
     @Override
     public NodeBitMap nodes()
     {
-        if (nodes == null)
+        if (this.___nodes == null)
         {
             Loop<Block> __loop = loop().loop();
-            nodes = LoopFragment.computeNodes(graph(), LoopFragment.toHirBlocks(__loop.getBlocks()), LoopFragment.toHirExits(__loop.getExits()));
+            this.___nodes = LoopFragment.computeNodes(graph(), LoopFragment.toHirBlocks(__loop.getBlocks()), LoopFragment.toHirExits(__loop.getExits()));
         }
-        return nodes;
+        return this.___nodes;
     }
 
     @Override
@@ -71,18 +71,18 @@ public final class LoopFragmentWhole extends LoopFragment
         return new DuplicationReplacement()
         {
             // @field
-            private EndNode endNode;
+            private EndNode ___endNode;
 
             @Override
             public Node replacement(Node __o)
             {
                 if (__o == __entry)
                 {
-                    if (endNode == null)
+                    if (this.___endNode == null)
                     {
-                        endNode = __graph.add(new EndNode());
+                        this.___endNode = __graph.add(new EndNode());
                     }
-                    return endNode;
+                    return this.___endNode;
                 }
                 return __o;
             }
@@ -122,9 +122,9 @@ public final class LoopFragmentWhole extends LoopFragment
                 {
                     __exitNode = __graph.add(new LoopExitNode(__loopBegin));
                     __graph.addAfterFixed(__exitBlock.getBeginNode(), __exitNode);
-                    if (nodes != null)
+                    if (this.___nodes != null)
                     {
-                        nodes.mark(__exitNode);
+                        this.___nodes.mark(__exitNode);
                     }
                 }
                 __exits.add(__exitNode);
@@ -133,9 +133,9 @@ public final class LoopFragmentWhole extends LoopFragment
             {
                 if (!__exits.contains(__exitNode))
                 {
-                    if (nodes != null)
+                    if (this.___nodes != null)
                     {
-                        nodes.clear(__exitNode);
+                        this.___nodes.clear(__exitNode);
                     }
                     __graph.removeFixed(__exitNode);
                 }

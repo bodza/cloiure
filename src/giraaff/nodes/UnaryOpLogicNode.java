@@ -16,19 +16,19 @@ public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable
 
     @Input
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
 
     @Override
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     // @cons
     public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> __c, ValueNode __value)
     {
         super(__c);
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override
@@ -46,7 +46,7 @@ public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable
         return __succStamp;
     }
 
-    public abstract Stamp getSucceedingStampForValue(boolean negated);
+    public abstract Stamp getSucceedingStampForValue(boolean __negated);
 
-    public abstract TriState tryFold(Stamp valueStamp);
+    public abstract TriState tryFold(Stamp __valueStamp);
 }

@@ -18,63 +18,63 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
 
     @Input(InputType.Condition)
     // @field
-    LogicNode x;
+    LogicNode ___x;
     @Input(InputType.Condition)
     // @field
-    LogicNode y;
+    LogicNode ___y;
     // @field
-    protected boolean xNegated;
+    protected boolean ___xNegated;
     // @field
-    protected boolean yNegated;
+    protected boolean ___yNegated;
     // @field
-    protected double shortCircuitProbability;
+    protected double ___shortCircuitProbability;
 
     // @cons
     public ShortCircuitOrNode(LogicNode __x, boolean __xNegated, LogicNode __y, boolean __yNegated, double __shortCircuitProbability)
     {
         super(TYPE);
-        this.x = __x;
-        this.xNegated = __xNegated;
-        this.y = __y;
-        this.yNegated = __yNegated;
-        this.shortCircuitProbability = __shortCircuitProbability;
+        this.___x = __x;
+        this.___xNegated = __xNegated;
+        this.___y = __y;
+        this.___yNegated = __yNegated;
+        this.___shortCircuitProbability = __shortCircuitProbability;
     }
 
     @Override
     public LogicNode getX()
     {
-        return x;
+        return this.___x;
     }
 
     @Override
     public LogicNode getY()
     {
-        return y;
+        return this.___y;
     }
 
     public boolean isXNegated()
     {
-        return xNegated;
+        return this.___xNegated;
     }
 
     public boolean isYNegated()
     {
-        return yNegated;
+        return this.___yNegated;
     }
 
-    /**
-     * Gets the probability that the {@link #getY() y} part of this binary node is <b>not</b>
-     * evaluated. This is the probability that this operator will short-circuit its execution.
-     */
+    ///
+    // Gets the probability that the {@link #getY() y} part of this binary node is <b>not</b>
+    // evaluated. This is the probability that this operator will short-circuit its execution.
+    ///
     public double getShortCircuitProbability()
     {
-        return shortCircuitProbability;
+        return this.___shortCircuitProbability;
     }
 
     protected ShortCircuitOrNode canonicalizeNegation(LogicNode __forX, LogicNode __forY)
     {
         LogicNode __xCond = __forX;
-        boolean __xNeg = xNegated;
+        boolean __xNeg = this.___xNegated;
         while (__xCond instanceof LogicNegationNode)
         {
             __xCond = ((LogicNegationNode) __xCond).getValue();
@@ -82,7 +82,7 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
         }
 
         LogicNode __yCond = __forY;
-        boolean __yNeg = yNegated;
+        boolean __yNeg = this.___yNegated;
         while (__yCond instanceof LogicNegationNode)
         {
             __yCond = ((LogicNegationNode) __yCond).getValue();
@@ -91,7 +91,7 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
 
         if (__xCond != __forX || __yCond != __forY)
         {
-            return new ShortCircuitOrNode(__xCond, __xNeg, __yCond, __yNeg, shortCircuitProbability);
+            return new ShortCircuitOrNode(__xCond, __xNeg, __yCond, __yNeg, this.___shortCircuitProbability);
         }
         else
         {
@@ -183,11 +183,11 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
             ShortCircuitOrNode __inner = (ShortCircuitOrNode) __forX;
             if (__forY == __inner.getX())
             {
-                return optimizeShortCircuit(__inner, this.xNegated, this.yNegated, true);
+                return optimizeShortCircuit(__inner, this.___xNegated, this.___yNegated, true);
             }
             else if (__forY == __inner.getY())
             {
-                return optimizeShortCircuit(__inner, this.xNegated, this.yNegated, false);
+                return optimizeShortCircuit(__inner, this.___xNegated, this.___yNegated, false);
             }
         }
         else if (__forY instanceof ShortCircuitOrNode)
@@ -195,11 +195,11 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
             ShortCircuitOrNode __inner = (ShortCircuitOrNode) __forY;
             if (__inner.getX() == __forX)
             {
-                return optimizeShortCircuit(__inner, this.yNegated, this.xNegated, true);
+                return optimizeShortCircuit(__inner, this.___yNegated, this.___xNegated, true);
             }
             else if (__inner.getY() == __forX)
             {
-                return optimizeShortCircuit(__inner, this.yNegated, this.xNegated, false);
+                return optimizeShortCircuit(__inner, this.___yNegated, this.___xNegated, false);
             }
         }
 

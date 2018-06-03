@@ -27,9 +27,9 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
-/**
- * Reads an {@linkplain FixedAccessNode accessed} value.
- */
+///
+// Reads an {@linkplain FixedAccessNode accessed} value.
+///
 // @class ReadNode
 public final class ReadNode extends FloatableAccessNode implements LIRLowerableAccess, Canonicalizable, Virtualizable, GuardingNode
 {
@@ -52,7 +52,7 @@ public final class ReadNode extends FloatableAccessNode implements LIRLowerableA
     public void generate(NodeLIRBuilderTool __gen)
     {
         LIRKind __readKind = __gen.getLIRGeneratorTool().getLIRKind(getAccessStamp());
-        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitLoad(__readKind, __gen.operand(address), __gen.state(this)));
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitLoad(__readKind, __gen.operand(this.___address), __gen.state(this)));
     }
 
     @Override

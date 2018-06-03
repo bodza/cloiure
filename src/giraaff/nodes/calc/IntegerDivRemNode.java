@@ -29,32 +29,32 @@ public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lower
     }
 
     // @field
-    private final Op op;
+    private final Op ___op;
     // @field
-    private final Type type;
+    private final Type ___type;
     // @field
-    private final boolean canDeopt;
+    private final boolean ___canDeopt;
 
     // @cons
     protected IntegerDivRemNode(NodeClass<? extends IntegerDivRemNode> __c, Stamp __stamp, Op __op, Type __type, ValueNode __x, ValueNode __y)
     {
         super(__c, __stamp, __x, __y);
-        this.op = __op;
-        this.type = __type;
+        this.___op = __op;
+        this.___type = __type;
 
         // Assigning canDeopt during constructor, because it must never change during lifetime of the node.
         IntegerStamp __yStamp = (IntegerStamp) getY().stamp(NodeView.DEFAULT);
-        this.canDeopt = __yStamp.contains(0) || __yStamp.contains(-1);
+        this.___canDeopt = __yStamp.contains(0) || __yStamp.contains(-1);
     }
 
     public final Op getOp()
     {
-        return op;
+        return this.___op;
     }
 
     public final Type getType()
     {
-        return type;
+        return this.___type;
     }
 
     @Override
@@ -66,6 +66,6 @@ public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lower
     @Override
     public boolean canDeoptimize()
     {
-        return canDeopt;
+        return this.___canDeopt;
     }
 }

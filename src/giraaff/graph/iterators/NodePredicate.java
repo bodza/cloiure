@@ -8,16 +8,16 @@ import giraaff.graph.iterators.NodePredicates.AndPredicate;
 // @iface NodePredicate
 public interface NodePredicate extends Predicate<Node>
 {
-    boolean apply(Node n);
+    boolean apply(Node __n);
 
     @Override
-    default boolean test(Node n)
+    default boolean test(Node __n)
     {
-        return apply(n);
+        return apply(__n);
     }
 
-    default NodePredicate and(NodePredicate np)
+    default NodePredicate and(NodePredicate __np)
     {
-        return new AndPredicate(this, np);
+        return new AndPredicate(this, __np);
     }
 }

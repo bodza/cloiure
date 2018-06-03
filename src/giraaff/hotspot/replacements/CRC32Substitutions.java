@@ -19,9 +19,9 @@ import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.word.Word;
 
-/**
- * Substitutions for {@link CRC32}.
- */
+///
+// Substitutions for {@link CRC32}.
+///
 @ClassSubstitution(CRC32.class)
 // @class CRC32Substitutions
 public final class CRC32Substitutions
@@ -32,9 +32,9 @@ public final class CRC32Substitutions
         super();
     }
 
-    /**
-     * Removed in 9.
-     */
+    ///
+    // Removed in 9.
+    ///
     @MethodSubstitution(optional = true)
     static int update(int __crc, int __b)
     {
@@ -48,9 +48,9 @@ public final class CRC32Substitutions
         return ~__result;
     }
 
-    /**
-     * Removed in 9.
-     */
+    ///
+    // Removed in 9.
+    ///
     @MethodSubstitution(optional = true)
     static int updateBytes(int __crc, byte[] __buf, int __off, int __len)
     {
@@ -58,9 +58,9 @@ public final class CRC32Substitutions
         return updateBytesCRC32(UPDATE_BYTES_CRC32, __crc, __bufAddr, __len);
     }
 
-    /**
-     * @since 9
-     */
+    ///
+    // @since 9
+    ///
     @MethodSubstitution(optional = true)
     static int updateBytes0(int __crc, byte[] __buf, int __off, int __len)
     {
@@ -68,9 +68,9 @@ public final class CRC32Substitutions
         return updateBytesCRC32(UPDATE_BYTES_CRC32, __crc, __bufAddr, __len);
     }
 
-    /**
-     * Removed in 9.
-     */
+    ///
+    // Removed in 9.
+    ///
     @MethodSubstitution(optional = true)
     static int updateByteBuffer(int __crc, long __addr, int __off, int __len)
     {
@@ -78,9 +78,9 @@ public final class CRC32Substitutions
         return updateBytesCRC32(UPDATE_BYTES_CRC32, __crc, __bufAddr, __len);
     }
 
-    /**
-     * @since 9
-     */
+    ///
+    // @since 9
+    ///
     @MethodSubstitution(optional = true)
     static int updateByteBuffer0(int __crc, long __addr, int __off, int __len)
     {
@@ -92,5 +92,5 @@ public final class CRC32Substitutions
     public static final ForeignCallDescriptor UPDATE_BYTES_CRC32 = new ForeignCallDescriptor("updateBytesCRC32", int.class, int.class, WordBase.class, int.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native int updateBytesCRC32(@ConstantNodeParameter ForeignCallDescriptor descriptor, int crc, WordBase buf, int length);
+    public static native int updateBytesCRC32(@ConstantNodeParameter ForeignCallDescriptor __descriptor, int __crc, WordBase __buf, int __length);
 }

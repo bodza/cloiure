@@ -13,9 +13,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Writes a given {@linkplain #value() value} a {@linkplain FixedAccessNode memory location}.
- */
+///
+// Writes a given {@linkplain #value() value} a {@linkplain FixedAccessNode memory location}.
+///
 // @class WriteNode
 public final class WriteNode extends AbstractWriteNode implements LIRLowerableAccess, Canonicalizable
 {
@@ -38,7 +38,7 @@ public final class WriteNode extends AbstractWriteNode implements LIRLowerableAc
     public void generate(NodeLIRBuilderTool __gen)
     {
         LIRKind __writeKind = __gen.getLIRGeneratorTool().getLIRKind(value().stamp(NodeView.DEFAULT));
-        __gen.getLIRGeneratorTool().getArithmetic().emitStore(__writeKind, __gen.operand(address), __gen.operand(value()), __gen.state(this));
+        __gen.getLIRGeneratorTool().getArithmetic().emitStore(__writeKind, __gen.operand(this.___address), __gen.operand(value()), __gen.state(this));
     }
 
     @Override
@@ -59,7 +59,7 @@ public final class WriteNode extends AbstractWriteNode implements LIRLowerableAc
         if (__tool.canonicalizeReads() && hasExactlyOneUsage() && next() instanceof WriteNode)
         {
             WriteNode __write = (WriteNode) next();
-            if (__write.lastLocationAccess == this && __write.getAddress() == getAddress() && getAccessStamp().isCompatible(__write.getAccessStamp()))
+            if (__write.___lastLocationAccess == this && __write.getAddress() == getAddress() && getAccessStamp().isCompatible(__write.getAccessStamp()))
             {
                 __write.setLastLocationAccess(getLastLocationAccess());
                 return __write;

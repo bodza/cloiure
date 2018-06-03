@@ -2,9 +2,9 @@ package giraaff.phases;
 
 import giraaff.nodes.StructuredGraph;
 
-/**
- * Base class for compiler phases that don't need a context object.
- */
+///
+// Base class for compiler phases that don't need a context object.
+///
 // @class Phase
 public abstract class Phase extends BasePhase<Object>
 {
@@ -19,7 +19,7 @@ public abstract class Phase extends BasePhase<Object>
         apply(__graph, null);
     }
 
-    protected abstract void run(StructuredGraph graph);
+    protected abstract void run(StructuredGraph __graph);
 
     @Override
     protected final void run(StructuredGraph __graph, Object __context)

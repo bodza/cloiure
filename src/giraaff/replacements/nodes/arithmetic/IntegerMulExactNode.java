@@ -13,10 +13,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.MulNode;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Node representing an exact integer multiplication that will throw an {@link ArithmeticException}
- * in case the addition would overflow the 32 bit range.
- */
+///
+// Node representing an exact integer multiplication that will throw an {@link ArithmeticException}
+// in case the addition would overflow the 32 bit range.
+///
 // @class IntegerMulExactNode
 public final class IntegerMulExactNode extends MulNode implements IntegerExactArithmeticNode
 {
@@ -33,11 +33,9 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
     @Override
     public boolean inferStamp()
     {
-        /*
-         * Note: it is not allowed to use the foldStamp method of the regular mul node as we do not know
-         * the result stamp of this node if we do not know whether we may deopt. If we know we can never
-         * overflow we will replace this node with its non overflow checking counterpart anyway.
-         */
+        // Note: it is not allowed to use the foldStamp method of the regular mul node as we do not know
+        // the result stamp of this node if we do not know whether we may deopt. If we know we can never
+        // overflow we will replace this node with its non overflow checking counterpart anyway.
         return false;
     }
 
@@ -64,9 +62,9 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
                 return ConstantNode.forIntegerStamp(stamp(NodeView.DEFAULT), 0);
             }
         }
-        if (!IntegerStamp.multiplicationCanOverflow((IntegerStamp) x.stamp(NodeView.DEFAULT), (IntegerStamp) y.stamp(NodeView.DEFAULT)))
+        if (!IntegerStamp.multiplicationCanOverflow((IntegerStamp) this.___x.stamp(NodeView.DEFAULT), (IntegerStamp) this.___y.stamp(NodeView.DEFAULT)))
         {
-            return new MulNode(x, y).canonical(__tool);
+            return new MulNode(this.___x, this.___y).canonical(__tool);
         }
         return this;
     }

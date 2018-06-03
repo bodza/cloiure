@@ -29,7 +29,7 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
     private static final KlassPointerStamp KLASS_ALWAYS_NULL = new KlassPointerStamp(false, true);
 
     // @field
-    private final CompressEncoding encoding;
+    private final CompressEncoding ___encoding;
 
     public static KlassPointerStamp klass()
     {
@@ -56,13 +56,13 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
     private KlassPointerStamp(boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
         super(__nonNull, __alwaysNull);
-        this.encoding = __encoding;
+        this.___encoding = __encoding;
     }
 
     @Override
     protected AbstractPointerStamp copyWith(boolean __newNonNull, boolean __newAlwaysNull)
     {
-        return new KlassPointerStamp(__newNonNull, __newAlwaysNull, encoding);
+        return new KlassPointerStamp(__newNonNull, __newAlwaysNull, this.___encoding);
     }
 
     @Override
@@ -75,7 +75,7 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
         if (__otherStamp instanceof KlassPointerStamp)
         {
             KlassPointerStamp __other = (KlassPointerStamp) __otherStamp;
-            return Objects.equals(this.encoding, __other.encoding);
+            return Objects.equals(this.___encoding, __other.___encoding);
         }
         return false;
     }
@@ -100,7 +100,7 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
         {
             if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__c))
             {
-                return new KlassPointerStamp(false, true, encoding);
+                return new KlassPointerStamp(false, true, this.___encoding);
             }
         }
         else
@@ -117,7 +117,7 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
         }
         if (isCompressed())
         {
-            return new KlassPointerStamp(true, false, encoding);
+            return new KlassPointerStamp(true, false, this.___encoding);
         }
         else
         {
@@ -153,12 +153,12 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
 
     public boolean isCompressed()
     {
-        return encoding != null;
+        return this.___encoding != null;
     }
 
     public CompressEncoding getEncoding()
     {
-        return encoding;
+        return this.___encoding;
     }
 
     public KlassPointerStamp compressed(CompressEncoding __newEncoding)
@@ -189,7 +189,7 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
     public int hashCode()
     {
         final int __prime = 31;
-        return __prime * super.hashCode() + ((encoding != null) ? encoding.hashCode() : 0);
+        return __prime * super.hashCode() + ((this.___encoding != null) ? this.___encoding.hashCode() : 0);
     }
 
     @Override
@@ -208,6 +208,6 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
             return false;
         }
         KlassPointerStamp __other = (KlassPointerStamp) __obj;
-        return Objects.equals(this.encoding, __other.encoding);
+        return Objects.equals(this.___encoding, __other.___encoding);
     }
 }

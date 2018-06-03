@@ -6,54 +6,54 @@ import java.util.function.Predicate;
 
 import giraaff.lir.Variable;
 
-/**
- * Maps variables to a generic type.
- *
- * TODO evaluate data structure
- */
+///
+// Maps variables to a generic type.
+//
+// TODO evaluate data structure
+///
 // @class VariableMap
 final class VariableMap<T>
 {
     // @field
-    private final ArrayList<T> content;
+    private final ArrayList<T> ___content;
 
     // @cons
     VariableMap()
     {
         super();
-        content = new ArrayList<>();
+        this.___content = new ArrayList<>();
     }
 
     public T get(Variable __key)
     {
-        if (__key == null || __key.index >= content.size())
+        if (__key == null || __key.___index >= this.___content.size())
         {
             return null;
         }
-        return content.get(__key.index);
+        return this.___content.get(__key.___index);
     }
 
     public T put(Variable __key, T __value)
     {
-        while (__key.index >= content.size())
+        while (__key.___index >= this.___content.size())
         {
-            content.add(null);
+            this.___content.add(null);
         }
-        return content.set(__key.index, __value);
+        return this.___content.set(__key.___index, __value);
     }
 
     public T remove(Variable __key)
     {
-        if (__key.index >= content.size())
+        if (__key.___index >= this.___content.size())
         {
             return null;
         }
-        return content.set(__key.index, null);
+        return this.___content.set(__key.___index, null);
     }
 
     public void forEach(Consumer<T> __action)
     {
-        for (T __e : content)
+        for (T __e : this.___content)
         {
             if (__e != null)
             {
@@ -62,17 +62,17 @@ final class VariableMap<T>
         }
     }
 
-    /**
-     * Keeps only keys which match the given predicate.
-     */
+    ///
+    // Keeps only keys which match the given predicate.
+    ///
     public void filter(Predicate<T> __predicate)
     {
-        for (int __i = 0; __i < content.size(); __i++)
+        for (int __i = 0; __i < this.___content.size(); __i++)
         {
-            T __e = content.get(__i);
+            T __e = this.___content.get(__i);
             if (__e != null && !__predicate.test(__e))
             {
-                content.set(__i, null);
+                this.___content.set(__i, null);
             }
         }
     }

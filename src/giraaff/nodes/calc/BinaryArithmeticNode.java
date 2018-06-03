@@ -36,19 +36,19 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     }
 
     // @field
-    protected final SerializableBinaryFunction<OP> getOp;
+    protected final SerializableBinaryFunction<OP> ___getOp;
 
     // @cons
     protected BinaryArithmeticNode(NodeClass<? extends BinaryArithmeticNode<OP>> __c, SerializableBinaryFunction<OP> __getOp, ValueNode __x, ValueNode __y)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT))).foldStamp(__x.stamp(NodeView.DEFAULT), __y.stamp(NodeView.DEFAULT)), __x, __y);
-        this.getOp = __getOp;
+        this.___getOp = __getOp;
     }
 
     protected final BinaryOp<OP> getOp(ValueNode __forX, ValueNode __forY)
     {
         ArithmeticOpTable __table = ArithmeticOpTable.forStamp(__forX.stamp(NodeView.DEFAULT));
-        return getOp.apply(__table);
+        return this.___getOp.apply(__table);
     }
 
     @Override
@@ -172,26 +172,25 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
         return null;
     }
 
-    /*
-     * In reassociate, complexity comes from the handling of IntegerSub (non commutative) which can
-     * be mixed with IntegerAdd. It first tries to find m1, m2 which match the criterion :
-     * (a o m2) o m1
-     * (m2 o a) o m1
-     * m1 o (a o m2)
-     * m1 o (m2 o a)
-     * It then produces 4 boolean for the -/+ cases:
-     * invertA : should the final expression be like *-a (rather than a+*)
-     * aSub : should the final expression be like a-* (rather than a+*)
-     * invertM1 : should the final expression contain -m1
-     * invertM2 : should the final expression contain -m2
-     */
-    /**
-     * Tries to re-associate values which satisfy the criterion. For example with a constantness
-     * criterion: {@code (a + 2) + 1 => a + (1 + 2)}.
-     *
-     * This method accepts only {@linkplain BinaryOp#isAssociative() associative} operations such as
-     * +, -, *, &amp;, | and ^.
-     */
+    // In reassociate, complexity comes from the handling of IntegerSub (non commutative) which can
+    // be mixed with IntegerAdd. It first tries to find m1, m2 which match the criterion :
+    // (a o m2) o m1
+    // (m2 o a) o m1
+    // m1 o (a o m2)
+    // m1 o (m2 o a)
+    // It then produces 4 boolean for the -/+ cases:
+    // invertA : should the final expression be like *-a (rather than a+*)
+    // aSub : should the final expression be like a-* (rather than a+*)
+    // invertM1 : should the final expression contain -m1
+    // invertM2 : should the final expression contain -m2
+
+    ///
+    // Tries to re-associate values which satisfy the criterion. For example with a constantness
+    // criterion: {@code (a + 2) + 1 => a + (1 + 2)}.
+    //
+    // This method accepts only {@linkplain BinaryOp#isAssociative() associative} operations such as
+    // +, -, *, &amp;, | and ^.
+    ///
     public static ValueNode reassociate(BinaryArithmeticNode<?> __node, NodePredicate __criterion, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         ReassociateMatch __match1 = findReassociate(__node, __criterion);
@@ -294,22 +293,22 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
         }
     }
 
-    /**
-     * Ensure a canonical ordering of inputs for commutative nodes to improve GVN results. Order the
-     * inputs by increasing {@link Node#id} and call {@link Graph#findDuplicate(Node)} on the node
-     * if it's currently in a graph. It's assumed that if there was a constant on the left it's been
-     * moved to the right by other code and that ordering is left alone.
-     *
-     * @return the original node or another node with the same input ordering
-     */
+    ///
+    // Ensure a canonical ordering of inputs for commutative nodes to improve GVN results. Order the
+    // inputs by increasing {@link Node#id} and call {@link Graph#findDuplicate(Node)} on the node
+    // if it's currently in a graph. It's assumed that if there was a constant on the left it's been
+    // moved to the right by other code and that ordering is left alone.
+    //
+    // @return the original node or another node with the same input ordering
+    ///
     @SuppressWarnings("deprecation")
     public BinaryNode maybeCommuteInputs()
     {
-        if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId()))
+        if (!this.___y.isConstant() && (this.___x.isConstant() || this.___x.getId() > this.___y.getId()))
         {
-            ValueNode __tmp = x;
-            x = y;
-            y = __tmp;
+            ValueNode __tmp = this.___x;
+            this.___x = this.___y;
+            this.___y = __tmp;
             if (graph() != null)
             {
                 // see if this node already exists
@@ -323,13 +322,13 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
         return this;
     }
 
-    /**
-     * Determines if it would be better to swap the inputs in order to produce better assembly code.
-     * First we try to pick a value which is dead after this use. If both values are dead at this
-     * use then we try pick an induction variable phi to encourage the phi to live in a single register.
-     *
-     * @return true if inputs should be swapped, false otherwise
-     */
+    ///
+    // Determines if it would be better to swap the inputs in order to produce better assembly code.
+    // First we try to pick a value which is dead after this use. If both values are dead at this
+    // use then we try pick an induction variable phi to encourage the phi to live in a single register.
+    //
+    // @return true if inputs should be swapped, false otherwise
+    ///
     protected boolean shouldSwapInputs(NodeValueMap __nodeValueMap)
     {
         final boolean __xHasOtherUsages = getX().hasUsagesOtherThan(this, __nodeValueMap);

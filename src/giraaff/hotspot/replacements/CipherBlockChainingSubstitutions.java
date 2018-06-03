@@ -21,9 +21,9 @@ import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 import giraaff.word.Word;
 
-/**
- * Substitutions for {@code com.sun.crypto.provider.CipherBlockChaining} methods.
- */
+///
+// Substitutions for {@code com.sun.crypto.provider.CipherBlockChaining} methods.
+///
 @ClassSubstitution(className = "com.sun.crypto.provider.CipherBlockChaining", optional = true)
 // @class CipherBlockChainingSubstitutions
 public final class CipherBlockChainingSubstitutions
@@ -136,10 +136,10 @@ public final class CipherBlockChainingSubstitutions
         }
     }
 
-    /**
-     * Variation for platforms (e.g. SPARC) that need do key expansion in stubs due to compatibility
-     * issues between Java key expansion and hardware crypto instructions.
-     */
+    ///
+    // Variation for platforms (e.g. SPARC) that need do key expansion in stubs due to compatibility
+    // issues between Java key expansion and hardware crypto instructions.
+    ///
     @MethodSubstitution(isStatic = false, value = "decrypt")
     static int decryptWithOriginalKey(Object __rcvr, byte[] __in, int __inOffset, int __inLength, byte[] __out, int __outOffset)
     {
@@ -157,9 +157,9 @@ public final class CipherBlockChainingSubstitutions
         }
     }
 
-    /**
-     * @see #decryptWithOriginalKey(Object, byte[], int, int, byte[], int)
-     */
+    ///
+    // @see #decryptWithOriginalKey(Object, byte[], int, int, byte[], int)
+    ///
     @MethodSubstitution(isStatic = false, value = "implDecrypt")
     static int implDecryptWithOriginalKey(Object __rcvr, byte[] __in, int __inOffset, int __inLength, byte[] __out, int __outOffset)
     {
@@ -208,11 +208,11 @@ public final class CipherBlockChainingSubstitutions
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void encryptAESCryptStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key, Pointer r, int inLength);
+    public static native void encryptAESCryptStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __in, Word __out, Pointer __key, Pointer __r, int __inLength);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void decryptAESCryptStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key, Pointer r, int inLength);
+    public static native void decryptAESCryptStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __in, Word __out, Pointer __key, Pointer __r, int __inLength);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void decryptAESCryptWithOriginalKeyStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key, Pointer r, int inLength, Pointer originalKey);
+    public static native void decryptAESCryptWithOriginalKeyStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __in, Word __out, Pointer __key, Pointer __r, int __inLength, Pointer __originalKey);
 }

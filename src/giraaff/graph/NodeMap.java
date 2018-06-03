@@ -14,41 +14,41 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
     private static final int MIN_REALLOC_SIZE = 16;
 
     // @field
-    protected Object[] values;
+    protected Object[] ___values;
 
     // @cons
     public NodeMap(Graph __graph)
     {
         super(__graph);
-        this.values = new Object[__graph.nodeIdCount()];
+        this.___values = new Object[__graph.nodeIdCount()];
     }
 
     // @cons
     public NodeMap(NodeMap<T> __copyFrom)
     {
-        super(__copyFrom.graph);
-        this.values = Arrays.copyOf(__copyFrom.values, __copyFrom.values.length);
+        super(__copyFrom.___graph);
+        this.___values = Arrays.copyOf(__copyFrom.___values, __copyFrom.___values.length);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T get(Node __node)
     {
-        return (T) values[getNodeId(__node)];
+        return (T) this.___values[getNodeId(__node)];
     }
 
     @SuppressWarnings("unchecked")
     public T getAndGrow(Node __node)
     {
         checkAndGrow(__node);
-        return (T) values[getNodeId(__node)];
+        return (T) this.___values[getNodeId(__node)];
     }
 
     private void checkAndGrow(Node __node)
     {
         if (isNew(__node))
         {
-            this.values = Arrays.copyOf(values, Math.max(MIN_REALLOC_SIZE, graph.nodeIdCount() * 3 / 2));
+            this.___values = Arrays.copyOf(this.___values, Math.max(MIN_REALLOC_SIZE, this.___graph.nodeIdCount() * 3 / 2));
         }
     }
 
@@ -70,7 +70,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
 
     public boolean containsValue(Object __value)
     {
-        for (Object __o : values)
+        for (Object __o : this.___values)
         {
             if (__o == __value)
             {
@@ -82,12 +82,12 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
 
     public Graph graph()
     {
-        return graph;
+        return this.___graph;
     }
 
     public void set(Node __node, T __value)
     {
-        values[getNodeId(__node)] = __value;
+        this.___values[getNodeId(__node)] = __value;
     }
 
     public void setAndGrow(Node __node, T __value)
@@ -96,12 +96,12 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
         set(__node, __value);
     }
 
-    /**
-     * @return Return the key for the entry at index {@code i}
-     */
+    ///
+    // @return Return the key for the entry at index {@code i}
+    ///
     protected Node getKey(int __i)
     {
-        return graph.getNode(__i);
+        return this.___graph.getNode(__i);
     }
 
     @Override
@@ -112,7 +112,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
 
     public int capacity()
     {
-        return values.length;
+        return this.___values.length;
     }
 
     public boolean isNew(Node __node)
@@ -123,7 +123,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
     @Override
     public void clear()
     {
-        Arrays.fill(values, null);
+        Arrays.fill(this.___values, null);
     }
 
     @Override
@@ -144,7 +144,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
                     public boolean hasNext()
                     {
                         forward();
-                        return __i < NodeMap.this.values.length;
+                        return __i < NodeMap.this.___values.length;
                     }
 
                     @Override
@@ -165,7 +165,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
 
                     private void forward()
                     {
-                        while (__i < NodeMap.this.values.length && (NodeMap.this.getKey(__i) == null || NodeMap.this.values[__i] == null))
+                        while (__i < NodeMap.this.___values.length && (NodeMap.this.getKey(__i) == null || NodeMap.this.___values[__i] == null))
                         {
                             __i++;
                         }
@@ -187,11 +187,11 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
             public boolean advance()
             {
                 __current++;
-                while (__current < NodeMap.this.values.length && (NodeMap.this.values[__current] == null || NodeMap.this.getKey(__current) == null))
+                while (__current < NodeMap.this.___values.length && (NodeMap.this.___values[__current] == null || NodeMap.this.getKey(__current) == null))
                 {
                     __current++;
                 }
-                return __current < NodeMap.this.values.length;
+                return __current < NodeMap.this.___values.length;
             }
 
             @Override
@@ -204,13 +204,13 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
             @Override
             public T getValue()
             {
-                return (T) NodeMap.this.values[__current];
+                return (T) NodeMap.this.___values[__current];
             }
 
             @Override
             public void remove()
             {
-                NodeMap.this.values[__current] = null;
+                NodeMap.this.___values[__current] = null;
             }
         };
     }
@@ -233,7 +233,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
                     public boolean hasNext()
                     {
                         forward();
-                        return __i < NodeMap.this.values.length;
+                        return __i < NodeMap.this.___values.length;
                     }
 
                     @SuppressWarnings("unchecked")
@@ -241,7 +241,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
                     public T next()
                     {
                         final int __pos = __i;
-                        final T __value = (T) NodeMap.this.values[__pos];
+                        final T __value = (T) NodeMap.this.___values[__pos];
                         __i++;
                         forward();
                         return __value;
@@ -255,7 +255,7 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
 
                     private void forward()
                     {
-                        while (__i < NodeMap.this.values.length && (NodeMap.this.getKey(__i) == null || NodeMap.this.values[__i] == null))
+                        while (__i < NodeMap.this.___values.length && (NodeMap.this.getKey(__i) == null || NodeMap.this.___values[__i] == null))
                         {
                             __i++;
                         }

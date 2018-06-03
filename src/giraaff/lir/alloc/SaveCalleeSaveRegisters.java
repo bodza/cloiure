@@ -33,7 +33,7 @@ public final class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhas
             return;
         }
         LIR __lir = __lirGenRes.getLIR();
-        RegisterMap<Variable> __savedRegisters = saveAtEntry(__lir, __context.lirGen, __lirGenRes, __calleeSaveRegisters, __target.arch);
+        RegisterMap<Variable> __savedRegisters = saveAtEntry(__lir, __context.___lirGen, __lirGenRes, __calleeSaveRegisters, __target.arch);
 
         for (AbstractBlockBase<?> __block : __lir.codeEmittingOrder())
         {
@@ -43,7 +43,7 @@ public final class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhas
             }
             if (__block.getSuccessorCount() == 0)
             {
-                restoreAtExit(__lir, __context.lirGen.getSpillMoveFactory(), __lirGenRes, __savedRegisters, __block);
+                restoreAtExit(__lir, __context.___lirGen.getSpillMoveFactory(), __lirGenRes, __savedRegisters, __block);
             }
         }
     }

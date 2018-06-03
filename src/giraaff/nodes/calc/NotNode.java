@@ -11,9 +11,9 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.StampInverter;
 
-/**
- * Binary negation of long or integer values.
- */
+///
+// Binary negation of long or integer values.
+///
 // @class NotNode
 public final class NotNode extends UnaryArithmeticNode<Not> implements ArithmeticLIRLowerable, NarrowableArithmeticNode, StampInverter
 {

@@ -13,34 +13,34 @@ public abstract class ObjectWriteBarrier extends WriteBarrier
 
     @Input(InputType.Association)
     // @field
-    protected AddressNode address;
+    protected AddressNode ___address;
     @OptionalInput
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     // @field
-    protected final boolean precise;
+    protected final boolean ___precise;
 
     // @cons
     protected ObjectWriteBarrier(NodeClass<? extends ObjectWriteBarrier> __c, AddressNode __address, ValueNode __value, boolean __precise)
     {
         super(__c);
-        this.address = __address;
-        this.value = __value;
-        this.precise = __precise;
+        this.___address = __address;
+        this.___value = __value;
+        this.___precise = __precise;
     }
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     public AddressNode getAddress()
     {
-        return address;
+        return this.___address;
     }
 
     public boolean usePrecise()
     {
-        return precise;
+        return this.___precise;
     }
 }

@@ -18,9 +18,9 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.util.GraalError;
 
-/**
- * Round floating-point value.
- */
+///
+// Round floating-point value.
+///
 // @class AMD64RoundNode
 public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowerable
 {
@@ -28,13 +28,13 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
     public static final NodeClass<AMD64RoundNode> TYPE = NodeClass.create(AMD64RoundNode.class);
 
     // @field
-    private final RoundingMode mode;
+    private final RoundingMode ___mode;
 
     // @cons
     public AMD64RoundNode(ValueNode __value, RoundingMode __mode)
     {
         super(TYPE, roundStamp((FloatStamp) __value.stamp(NodeView.DEFAULT), __mode), __value);
-        this.mode = __mode;
+        this.___mode = __mode;
     }
 
     private static double round(RoundingMode __mode, double __input)
@@ -68,7 +68,7 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
     @Override
     public Stamp foldStamp(Stamp __newStamp)
     {
-        return roundStamp((FloatStamp) __newStamp, mode);
+        return roundStamp((FloatStamp) __newStamp, this.___mode);
     }
 
     public ValueNode tryFold(ValueNode __input)
@@ -78,11 +78,11 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
             JavaConstant __c = __input.asJavaConstant();
             if (__c.getJavaKind() == JavaKind.Double)
             {
-                return ConstantNode.forDouble(round(mode, __c.asDouble()));
+                return ConstantNode.forDouble(round(this.___mode, __c.asDouble()));
             }
             else if (__c.getJavaKind() == JavaKind.Float)
             {
-                return ConstantNode.forFloat((float) round(mode, __c.asFloat()));
+                return ConstantNode.forFloat((float) round(this.___mode, __c.asFloat()));
             }
         }
         return null;
@@ -98,6 +98,6 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
     @Override
     public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        __builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) __gen).emitRound(__builder.operand(getValue()), mode));
+        __builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) __gen).emitRound(__builder.operand(getValue()), this.___mode));
     }
 }

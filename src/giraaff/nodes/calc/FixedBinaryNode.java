@@ -14,28 +14,28 @@ public abstract class FixedBinaryNode extends DeoptimizingFixedWithNextNode impl
 
     @Input
     // @field
-    protected ValueNode x;
+    protected ValueNode ___x;
     @Input
     // @field
-    protected ValueNode y;
+    protected ValueNode ___y;
 
     // @cons
     public FixedBinaryNode(NodeClass<? extends FixedBinaryNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y)
     {
         super(__c, __stamp);
-        this.x = __x;
-        this.y = __y;
+        this.___x = __x;
+        this.___y = __y;
     }
 
     @Override
     public ValueNode getX()
     {
-        return x;
+        return this.___x;
     }
 
     @Override
     public ValueNode getY()
     {
-        return y;
+        return this.___y;
     }
 }

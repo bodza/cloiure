@@ -13,64 +13,64 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Access the value of a specific register.
- */
+///
+// Access the value of a specific register.
+///
 // @class ReadRegisterNode
 public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
     // @def
     public static final NodeClass<ReadRegisterNode> TYPE = NodeClass.create(ReadRegisterNode.class);
 
-    /**
-     * The fixed register to access.
-     */
+    ///
+    // The fixed register to access.
+    ///
     // @field
-    protected final Register register;
+    protected final Register ___register;
 
-    /**
-     * When true, subsequent uses of this node use the fixed register; when false, the value is
-     * moved into a new virtual register so that the fixed register is not seen by uses.
-     */
+    ///
+    // When true, subsequent uses of this node use the fixed register; when false, the value is
+    // moved into a new virtual register so that the fixed register is not seen by uses.
+    ///
     // @field
-    protected final boolean directUse;
+    protected final boolean ___directUse;
 
-    /**
-     * When true, this node is also an implicit definition of the value for the register allocator,
-     * i.e., the register is an implicit incoming value; when false, the register must be defined in
-     * the same method or must be an register excluded from register allocation.
-     */
+    ///
+    // When true, this node is also an implicit definition of the value for the register allocator,
+    // i.e., the register is an implicit incoming value; when false, the register must be defined in
+    // the same method or must be an register excluded from register allocation.
+    ///
     // @field
-    protected final boolean incoming;
+    protected final boolean ___incoming;
 
     // @cons
     public ReadRegisterNode(Register __register, JavaKind __kind, boolean __directUse, boolean __incoming)
     {
         super(TYPE, StampFactory.forKind(__kind));
-        this.register = __register;
-        this.directUse = __directUse;
-        this.incoming = __incoming;
+        this.___register = __register;
+        this.___directUse = __directUse;
+        this.___incoming = __incoming;
     }
 
     // @cons
     public ReadRegisterNode(@InjectedNodeParameter Stamp __stamp, Register __register, boolean __directUse, boolean __incoming)
     {
         super(TYPE, __stamp);
-        this.register = __register;
-        this.directUse = __directUse;
-        this.incoming = __incoming;
+        this.___register = __register;
+        this.___directUse = __directUse;
+        this.___incoming = __incoming;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
         LIRKind __kind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
-        Value __result = register.asValue(__kind);
-        if (incoming)
+        Value __result = this.___register.asValue(__kind);
+        if (this.___incoming)
         {
             __gen.getLIRGeneratorTool().emitIncomingValues(new Value[] { __result });
         }
-        if (!directUse)
+        if (!this.___directUse)
         {
             __result = __gen.getLIRGeneratorTool().emitMove(__result);
         }

@@ -20,10 +20,10 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * Store of a value at a location specified as an offset relative to an object. No null check is
- * performed before the store.
- */
+///
+// Store of a value at a location specified as an offset relative to an object. No null check is
+// performed before the store.
+///
 // @class RawStoreNode
 public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, Lowerable, Virtualizable, MemoryCheckpoint.Single
 {
@@ -32,12 +32,12 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateAfter;
+    FrameState ___stateAfter;
     // @field
-    private final boolean needsBarrier;
+    private final boolean ___needsBarrier;
 
     // @cons
     public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity)
@@ -55,33 +55,33 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
     public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __needsBarrier, FrameState __stateAfter, boolean __forceAnyLocation)
     {
         super(TYPE, StampFactory.forVoid(), __object, __offset, __accessKind, __locationIdentity, __forceAnyLocation);
-        this.value = __value;
-        this.needsBarrier = __needsBarrier;
-        this.stateAfter = __stateAfter;
+        this.___value = __value;
+        this.___needsBarrier = __needsBarrier;
+        this.___stateAfter = __stateAfter;
     }
 
     @NodeIntrinsic
-    public static native Object storeObject(Object object, long offset, Object value, @ConstantNodeParameter JavaKind kind, @ConstantNodeParameter LocationIdentity locationIdentity, @ConstantNodeParameter boolean needsBarrier);
+    public static native Object storeObject(Object __object, long __offset, Object __value, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter boolean __needsBarrier);
 
     @NodeIntrinsic
-    public static native Object storeChar(Object object, long offset, char value, @ConstantNodeParameter JavaKind kind, @ConstantNodeParameter LocationIdentity locationIdentity);
+    public static native Object storeChar(Object __object, long __offset, char __value, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity);
 
     public boolean needsBarrier()
     {
-        return needsBarrier;
+        return this.___needsBarrier;
     }
 
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
     @Override
@@ -92,7 +92,7 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
 
     public ValueNode value()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
@@ -130,11 +130,11 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
     @Override
     protected ValueNode cloneAsArrayAccess(ValueNode __location, LocationIdentity __identity)
     {
-        return new RawStoreNode(object(), __location, value, accessKind(), __identity, needsBarrier, stateAfter(), isAnyLocationForced());
+        return new RawStoreNode(object(), __location, this.___value, accessKind(), __identity, this.___needsBarrier, stateAfter(), isAnyLocationForced());
     }
 
     public FrameState getState()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 }

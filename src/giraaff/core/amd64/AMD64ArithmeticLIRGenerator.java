@@ -49,9 +49,9 @@ import giraaff.lir.gen.ArithmeticLIRGenerator;
 import giraaff.lir.gen.LIRGenerator;
 import giraaff.util.GraalError;
 
-/**
- * This class implements the AMD64 specific portion of the LIR generator.
- */
+///
+// This class implements the AMD64 specific portion of the LIR generator.
+///
 // @class AMD64ArithmeticLIRGenerator
 public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implements AMD64ArithmeticLIRGeneratorTool
 {
@@ -74,11 +74,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __input.getPlatformKind())
         {
             case DWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MOp(AMD64MOp.NEG, OperandSize.DWORD, __result, __input));
                 break;
+            }
             case QWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MOp(AMD64MOp.NEG, OperandSize.QWORD, __result, __input));
                 break;
+            }
             case SINGLE:
                 if (__isAvx)
                 {
@@ -113,11 +117,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __input.getPlatformKind())
         {
             case DWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MOp(AMD64MOp.NOT, OperandSize.DWORD, __result, __input));
                 break;
+            }
             case QWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MOp(AMD64MOp.NOT, OperandSize.QWORD, __result, __input));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -512,17 +520,25 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch (__memoryKind)
         {
             case BYTE:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVZXB, OperandSize.DWORD, __result, __address, __state));
                 break;
+            }
             case WORD:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVZX, OperandSize.DWORD, __result, __address, __state));
                 break;
+            }
             case DWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOV, OperandSize.DWORD, __result, __address, __state));
                 break;
+            }
             case QWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOV, OperandSize.QWORD, __result, __address, __state));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -553,11 +569,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
+            {
                 __op = emitIDIV(OperandSize.DWORD, __a, __b, __state);
                 break;
+            }
             case QWORD:
+            {
                 __op = emitIDIV(OperandSize.QWORD, __a, __b, __state);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -570,11 +590,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
+            {
                 __op = emitDIV(OperandSize.DWORD, __a, __b, __state);
                 break;
+            }
             case QWORD:
+            {
                 __op = emitDIV(OperandSize.QWORD, __a, __b, __state);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -663,11 +687,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
+            {
                 __op = emitDIV(OperandSize.DWORD, __a, __b, __state);
                 break;
+            }
             case QWORD:
+            {
                 __op = emitDIV(OperandSize.QWORD, __a, __b, __state);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -681,11 +709,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
+            {
                 __op = emitDIV(OperandSize.DWORD, __a, __b, __state);
                 break;
+            }
             case QWORD:
+            {
                 __op = emitDIV(OperandSize.QWORD, __a, __b, __state);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -807,21 +839,19 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
             JavaConstant __c = LIRValueUtil.asJavaConstant(__b);
             if (__c.asLong() == 1)
             {
-                __gen.append(new AMD64Unary.MOp(__op.m1Op, __size, __result, __input));
+                __gen.append(new AMD64Unary.MOp(__op.___m1Op, __size, __result, __input));
             }
             else
             {
-                /*
-                 * c is implicitly masked to 5 or 6 bits by the CPU, so casting it to (int) is
-                 * always correct, even without the NumUtil.is32bit() test.
-                 */
-                __gen.append(new AMD64Binary.ConstOp(__op.miOp, __size, __result, __input, (int) __c.asLong()));
+                // c is implicitly masked to 5 or 6 bits by the CPU, so casting it to (int) is
+                // always correct, even without the NumUtil.is32bit() test.
+                __gen.append(new AMD64Binary.ConstOp(__op.___miOp, __size, __result, __input, (int) __c.asLong()));
             }
         }
         else
         {
             __gen.emitMove(RCX_I, __b);
-            __gen.append(new AMD64ShiftOp(__op.mcOp, __size, __result, __input, RCX_I));
+            __gen.append(new AMD64ShiftOp(__op.___mcOp, __size, __result, __input, RCX_I));
         }
         return __result;
     }
@@ -918,9 +948,7 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         }
 
         AllocatableValue __input = getLIRGen().asAllocatable(__inputVal);
-        /*
-         * Conversions between integer to floating point types require moves between CPU and FPU registers.
-         */
+        // Conversions between integer to floating point types require moves between CPU and FPU registers.
         AMD64Kind __fromKind = (AMD64Kind) __from.getPlatformKind();
         switch ((AMD64Kind) __to.getPlatformKind())
         {
@@ -1066,12 +1094,10 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
                 __resultKind = __resultKind.changeType(AMD64Kind.DWORD);
             }
 
-            /*
-             * Always emit DWORD operations, even if the resultKind is Long. On AMD64, all DWORD
-             * operations implicitly set the upper half of the register to 0, which is what we want
-             * anyway. Compared to the QWORD operations, the encoding of the DWORD operations is
-             * sometimes one byte shorter.
-             */
+            // Always emit DWORD operations, even if the resultKind is Long. On AMD64, all DWORD
+            // operations implicitly set the upper half of the register to 0, which is what we want
+            // anyway. Compared to the QWORD operations, the encoding of the DWORD operations is
+            // sometimes one byte shorter.
             switch (__fromBits)
             {
                 case 8:
@@ -1180,11 +1206,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __input.getPlatformKind())
         {
             case SINGLE:
+            {
                 __gen.append(new AMD64Binary.DataTwoOp(SSEOp.AND, OperandSize.PS, __result, __gen.asAllocatable(__input), JavaConstant.forFloat(Float.intBitsToFloat(0x7FFFFFFF)), 16));
                 break;
+            }
             case DOUBLE:
+            {
                 __gen.append(new AMD64Binary.DataTwoOp(SSEOp.AND, OperandSize.PD, __result, __gen.asAllocatable(__input), JavaConstant.forDouble(Double.longBitsToDouble(0x7FFFFFFFFFFFFFFFL)), 16));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -1199,11 +1229,15 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __input.getPlatformKind())
         {
             case SINGLE:
+            {
                 __gen.append(new AMD64Unary.RMOp(SSEOp.SQRT, OperandSize.SS, __result, __gen.asAllocatable(__input)));
                 break;
+            }
             case DOUBLE:
+            {
                 __gen.append(new AMD64Unary.RMOp(SSEOp.SQRT, OperandSize.SD, __result, __gen.asAllocatable(__input)));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -1223,23 +1257,35 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch ((AMD64Kind) __kind.getPlatformKind())
         {
             case BYTE:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVSXB, OperandSize.DWORD, __result, __loadAddress, __state));
                 break;
+            }
             case WORD:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVSX, OperandSize.DWORD, __result, __loadAddress, __state));
                 break;
+            }
             case DWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOV, OperandSize.DWORD, __result, __loadAddress, __state));
                 break;
+            }
             case QWORD:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOV, OperandSize.QWORD, __result, __loadAddress, __state));
                 break;
+            }
             case SINGLE:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVSS, OperandSize.SS, __result, __loadAddress, __state));
                 break;
+            }
             case DOUBLE:
+            {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVSD, OperandSize.SD, __result, __loadAddress, __state));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -1323,23 +1369,35 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch (__kind)
         {
             case BYTE:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOVB, OperandSize.BYTE, __address, __value, __state));
                 break;
+            }
             case WORD:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOV, OperandSize.WORD, __address, __value, __state));
                 break;
+            }
             case DWORD:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOV, OperandSize.DWORD, __address, __value, __state));
                 break;
+            }
             case QWORD:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOV, OperandSize.QWORD, __address, __value, __state));
                 break;
+            }
             case SINGLE:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOVSS, OperandSize.SS, __address, __value, __state));
                 break;
+            }
             case DOUBLE:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOVSD, OperandSize.SD, __address, __value, __state));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -1367,23 +1425,35 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         switch (__cmpKind)
         {
             case BYTE:
+            {
                 __size = OperandSize.BYTE;
                 break;
+            }
             case WORD:
+            {
                 __size = OperandSize.WORD;
                 break;
+            }
             case DWORD:
+            {
                 __size = OperandSize.DWORD;
                 break;
+            }
             case QWORD:
+            {
                 __size = OperandSize.QWORD;
                 break;
+            }
             case SINGLE:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.Op(SSEOp.UCOMIS, OperandSize.PS, __left, getLIRGen().asAllocatable(__right)));
                 return;
+            }
             case DOUBLE:
+            {
                 getLIRGen().append(new AMD64BinaryConsumer.Op(SSEOp.UCOMIS, OperandSize.PD, __left, getLIRGen().asAllocatable(__right)));
                 return;
+            }
             default:
                 throw GraalError.shouldNotReachHere("unexpected kind: " + __cmpKind);
         }
@@ -1437,11 +1507,11 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         Variable __result = __gen.newVariable(LIRKind.combine(__value));
         if (__value.getPlatformKind() == AMD64Kind.SINGLE)
         {
-            __gen.append(new AMD64Binary.RMIOp(AMD64RMIOp.ROUNDSS, OperandSize.PD, __result, __gen.asAllocatable(__value), __mode.encoding));
+            __gen.append(new AMD64Binary.RMIOp(AMD64RMIOp.ROUNDSS, OperandSize.PD, __result, __gen.asAllocatable(__value), __mode.___encoding));
         }
         else
         {
-            __gen.append(new AMD64Binary.RMIOp(AMD64RMIOp.ROUNDSD, OperandSize.PD, __result, __gen.asAllocatable(__value), __mode.encoding));
+            __gen.append(new AMD64Binary.RMIOp(AMD64RMIOp.ROUNDSD, OperandSize.PD, __result, __gen.asAllocatable(__value), __mode.___encoding));
         }
         return __result;
     }

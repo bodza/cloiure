@@ -12,10 +12,10 @@ import giraaff.lir.amd64.AMD64Call.DirectCallOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.nodes.CallTargetNode.InvokeKind;
 
-/**
- * A direct call that complies with the conventions for such calls in HotSpot. It doesn't use an
- * inline cache so it's just a patchable call site.
- */
+///
+// A direct call that complies with the conventions for such calls in HotSpot. It doesn't use an
+// inline cache so it's just a patchable call site.
+///
 @Opcode
 // @class AMD64HotSpotDirectStaticCallOp
 final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
@@ -24,19 +24,19 @@ final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
     public static final LIRInstructionClass<AMD64HotSpotDirectStaticCallOp> TYPE = LIRInstructionClass.create(AMD64HotSpotDirectStaticCallOp.class);
 
     // @field
-    private final InvokeKind invokeKind;
+    private final InvokeKind ___invokeKind;
 
     // @cons
     AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod __target, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state, InvokeKind __invokeKind)
     {
         super(TYPE, __target, __result, __parameters, __temps, __state);
-        this.invokeKind = __invokeKind;
+        this.___invokeKind = __invokeKind;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        __crb.recordMark(invokeKind == InvokeKind.Static ? HotSpotRuntime.invokestaticMark : HotSpotRuntime.invokespecialMark);
+        __crb.recordMark(this.___invokeKind == InvokeKind.Static ? HotSpotRuntime.invokestaticMark : HotSpotRuntime.invokespecialMark);
         super.emitCode(__crb, __masm);
     }
 }

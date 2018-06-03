@@ -18,25 +18,25 @@ public final class ArrayCopyNode extends BasicArrayCopyNode implements Lowerable
     public static final NodeClass<ArrayCopyNode> TYPE = NodeClass.create(ArrayCopyNode.class);
 
     // @field
-    private JavaKind elementKind;
+    private JavaKind ___elementKind;
 
     // @cons
     public ArrayCopyNode(int __bci, ValueNode __src, ValueNode __srcPos, ValueNode __dst, ValueNode __dstPos, ValueNode __length)
     {
         super(TYPE, __src, __srcPos, __dst, __dstPos, __length, null, __bci);
-        elementKind = ArrayCopySnippets.Templates.selectComponentKind(this);
+        this.___elementKind = ArrayCopySnippets.Templates.selectComponentKind(this);
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        if (elementKind == null)
+        if (this.___elementKind == null)
         {
-            elementKind = ArrayCopySnippets.Templates.selectComponentKind(this);
+            this.___elementKind = ArrayCopySnippets.Templates.selectComponentKind(this);
         }
-        if (elementKind != null)
+        if (this.___elementKind != null)
         {
-            return NamedLocationIdentity.getArrayLocation(elementKind);
+            return NamedLocationIdentity.getArrayLocation(this.___elementKind);
         }
         return LocationIdentity.any();
     }

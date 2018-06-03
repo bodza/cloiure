@@ -2,16 +2,16 @@ package giraaff.graph;
 
 import java.util.Iterator;
 
-/**
- * Iterates over the nodes in a given graph.
- */
+///
+// Iterates over the nodes in a given graph.
+///
 // @class GraphNodeIterator
 final class GraphNodeIterator implements Iterator<Node>
 {
     // @field
-    private final Graph graph;
+    private final Graph ___graph;
     // @field
-    private int index;
+    private int ___index;
 
     // @cons
     GraphNodeIterator(Graph __graph)
@@ -23,19 +23,19 @@ final class GraphNodeIterator implements Iterator<Node>
     GraphNodeIterator(Graph __graph, int __index)
     {
         super();
-        this.graph = __graph;
-        this.index = __index - 1;
+        this.___graph = __graph;
+        this.___index = __index - 1;
         forward();
     }
 
     private void forward()
     {
-        if (index < graph.nodesSize)
+        if (this.___index < this.___graph.___nodesSize)
         {
             do
             {
-                index++;
-            } while (index < graph.nodesSize && graph.nodes[index] == null);
+                this.___index++;
+            } while (this.___index < this.___graph.___nodesSize && this.___graph.___nodes[this.___index] == null);
         }
     }
 
@@ -43,14 +43,14 @@ final class GraphNodeIterator implements Iterator<Node>
     public boolean hasNext()
     {
         checkForDeletedNode();
-        return index < graph.nodesSize;
+        return this.___index < this.___graph.___nodesSize;
     }
 
     private void checkForDeletedNode()
     {
-        while (index < graph.nodesSize && graph.nodes[index] == null)
+        while (this.___index < this.___graph.___nodesSize && this.___graph.___nodes[this.___index] == null)
         {
-            index++;
+            this.___index++;
         }
     }
 
@@ -59,7 +59,7 @@ final class GraphNodeIterator implements Iterator<Node>
     {
         try
         {
-            return graph.nodes[index];
+            return this.___graph.___nodes[this.___index];
         }
         finally
         {

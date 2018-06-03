@@ -8,26 +8,26 @@ import giraaff.phases.util.Providers;
 public final class HighTierContext extends PhaseContext
 {
     // @field
-    private final PhaseSuite<HighTierContext> graphBuilderSuite;
+    private final PhaseSuite<HighTierContext> ___graphBuilderSuite;
 
     // @field
-    private final OptimisticOptimizations optimisticOpts;
+    private final OptimisticOptimizations ___optimisticOpts;
 
     // @cons
     public HighTierContext(Providers __providers, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts)
     {
         super(__providers);
-        this.graphBuilderSuite = __graphBuilderSuite;
-        this.optimisticOpts = __optimisticOpts;
+        this.___graphBuilderSuite = __graphBuilderSuite;
+        this.___optimisticOpts = __optimisticOpts;
     }
 
     public PhaseSuite<HighTierContext> getGraphBuilderSuite()
     {
-        return graphBuilderSuite;
+        return this.___graphBuilderSuite;
     }
 
     public OptimisticOptimizations getOptimisticOptimizations()
     {
-        return optimisticOpts;
+        return this.___optimisticOpts;
     }
 }

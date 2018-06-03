@@ -6,9 +6,9 @@ import giraaff.graph.spi.Canonicalizable;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 
-/**
- * The {@code BinaryNode} class is the base of arithmetic and logic operations with two inputs.
- */
+///
+// The {@code BinaryNode} class is the base of arithmetic and logic operations with two inputs.
+///
 // @class BinaryNode
 public abstract class BinaryNode extends FloatingNode implements Canonicalizable.Binary<ValueNode>
 {
@@ -17,48 +17,48 @@ public abstract class BinaryNode extends FloatingNode implements Canonicalizable
 
     @Input
     // @field
-    protected ValueNode x;
+    protected ValueNode ___x;
     @Input
     // @field
-    protected ValueNode y;
+    protected ValueNode ___y;
 
     @Override
     public ValueNode getX()
     {
-        return x;
+        return this.___x;
     }
 
     @Override
     public ValueNode getY()
     {
-        return y;
+        return this.___y;
     }
 
     public void setX(ValueNode __x)
     {
-        updateUsages(this.x, __x);
-        this.x = __x;
+        updateUsages(this.___x, __x);
+        this.___x = __x;
     }
 
     public void setY(ValueNode __y)
     {
-        updateUsages(this.y, __y);
-        this.y = __y;
+        updateUsages(this.___y, __y);
+        this.___y = __y;
     }
 
-    /**
-     * Creates a new BinaryNode instance.
-     *
-     * @param stamp the result type of this instruction
-     * @param x the first input instruction
-     * @param y the second input instruction
-     */
+    ///
+    // Creates a new BinaryNode instance.
+    //
+    // @param stamp the result type of this instruction
+    // @param x the first input instruction
+    // @param y the second input instruction
+    ///
     // @cons
     protected BinaryNode(NodeClass<? extends BinaryNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y)
     {
         super(__c, __stamp);
-        this.x = __x;
-        this.y = __y;
+        this.___x = __x;
+        this.___y = __y;
     }
 
     @Override
@@ -67,10 +67,10 @@ public abstract class BinaryNode extends FloatingNode implements Canonicalizable
         return updateStamp(foldStamp(getX().stamp(NodeView.DEFAULT), getY().stamp(NodeView.DEFAULT)));
     }
 
-    /**
-     * Compute an improved for this node using the passed in stamps. The stamps must be compatible
-     * with the current values of {@link #x} and {@link #y}. This code is used to provide the
-     * default implementation of {@link #inferStamp()} and may be used by external optimizations.
-     */
-    public abstract Stamp foldStamp(Stamp stampX, Stamp stampY);
+    ///
+    // Compute an improved for this node using the passed in stamps. The stamps must be compatible
+    // with the current values of {@link #x} and {@link #y}. This code is used to provide the
+    // default implementation of {@link #inferStamp()} and may be used by external optimizations.
+    ///
+    public abstract Stamp foldStamp(Stamp __stampX, Stamp __stampY);
 }

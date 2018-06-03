@@ -27,9 +27,9 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Node for a {@linkplain ForeignCallDescriptor foreign} call.
- */
+///
+// Node for a {@linkplain ForeignCallDescriptor foreign} call.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class ForeignCallNode
 public final class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowerable, DeoptimizingNode.DeoptDuring, MemoryCheckpoint.Multi
@@ -39,27 +39,25 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
 
     @Input
     // @field
-    protected NodeInputList<ValueNode> arguments;
+    protected NodeInputList<ValueNode> ___arguments;
     @OptionalInput(InputType.State)
     // @field
-    protected FrameState stateDuring;
+    protected FrameState ___stateDuring;
     // @field
-    protected final ForeignCallsProvider foreignCalls;
+    protected final ForeignCallsProvider ___foreignCalls;
 
     // @field
-    protected final ForeignCallDescriptor descriptor;
+    protected final ForeignCallDescriptor ___descriptor;
     // @field
-    protected int bci = BytecodeFrame.UNKNOWN_BCI;
+    protected int ___bci = BytecodeFrame.UNKNOWN_BCI;
 
     public static boolean intrinsify(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, @InjectedNodeParameter Stamp __returnStamp, @InjectedNodeParameter ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
         ForeignCallNode __node = new ForeignCallNode(__foreignCalls, __descriptor, __arguments);
         __node.setStamp(__returnStamp);
 
-        /*
-         * Need to update the BCI of a ForeignCallNode so that it gets the stateDuring in the case that the
-         * foreign call can deoptimize. As with all deoptimization, we need a state in a non-intrinsic method.
-         */
+        // Need to update the BCI of a ForeignCallNode so that it gets the stateDuring in the case that the
+        // foreign call can deoptimize. As with all deoptimization, we need a state in a non-intrinsic method.
         GraphBuilderContext __nonIntrinsicAncestor = __b.getNonIntrinsicAncestor();
         if (__nonIntrinsicAncestor != null)
         {
@@ -101,52 +99,52 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
     public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, Stamp __stamp, List<ValueNode> __arguments)
     {
         super(TYPE, __stamp);
-        this.arguments = new NodeInputList<>(this, __arguments);
-        this.descriptor = __descriptor;
-        this.foreignCalls = __foreignCalls;
+        this.___arguments = new NodeInputList<>(this, __arguments);
+        this.___descriptor = __descriptor;
+        this.___foreignCalls = __foreignCalls;
     }
 
     // @cons
     public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, Stamp __stamp)
     {
         super(TYPE, __stamp);
-        this.arguments = new NodeInputList<>(this);
-        this.descriptor = __descriptor;
-        this.foreignCalls = __foreignCalls;
+        this.___arguments = new NodeInputList<>(this);
+        this.___descriptor = __descriptor;
+        this.___foreignCalls = __foreignCalls;
     }
 
     // @cons
     protected ForeignCallNode(NodeClass<? extends ForeignCallNode> __c, ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
         super(__c, StampFactory.forKind(JavaKind.fromJavaClass(__descriptor.getResultType())));
-        this.arguments = new NodeInputList<>(this, __arguments);
-        this.descriptor = __descriptor;
-        this.foreignCalls = __foreignCalls;
+        this.___arguments = new NodeInputList<>(this, __arguments);
+        this.___descriptor = __descriptor;
+        this.___foreignCalls = __foreignCalls;
     }
 
     @Override
     public boolean hasSideEffect()
     {
-        return !foreignCalls.isReexecutable(descriptor);
+        return !this.___foreignCalls.isReexecutable(this.___descriptor);
     }
 
     public ForeignCallDescriptor getDescriptor()
     {
-        return descriptor;
+        return this.___descriptor;
     }
 
     @Override
     public LocationIdentity[] getLocationIdentities()
     {
-        return foreignCalls.getKilledLocations(descriptor);
+        return this.___foreignCalls.getKilledLocations(this.___descriptor);
     }
 
     protected Value[] operands(NodeLIRBuilderTool __gen)
     {
-        Value[] __operands = new Value[arguments.size()];
+        Value[] __operands = new Value[this.___arguments.size()];
         for (int __i = 0; __i < __operands.length; __i++)
         {
-            __operands[__i] = __gen.operand(arguments.get(__i));
+            __operands[__i] = __gen.operand(this.___arguments.get(__i));
         }
         return __operands;
     }
@@ -154,7 +152,7 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        ForeignCallLinkage __linkage = __gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(descriptor);
+        ForeignCallLinkage __linkage = __gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(this.___descriptor);
         Value[] __operands = operands(__gen);
         Value __result = __gen.getLIRGeneratorTool().emitForeignCall(__linkage, __gen.state(this), __operands);
         if (__result != null)
@@ -172,27 +170,27 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
     @Override
     public FrameState stateDuring()
     {
-        return stateDuring;
+        return this.___stateDuring;
     }
 
     @Override
     public void setStateDuring(FrameState __stateDuring)
     {
-        updateUsages(this.stateDuring, __stateDuring);
-        this.stateDuring = __stateDuring;
+        updateUsages(this.___stateDuring, __stateDuring);
+        this.___stateDuring = __stateDuring;
     }
 
     public int getBci()
     {
-        return bci;
+        return this.___bci;
     }
 
-    /**
-     * Set the {@code bci} of the invoke bytecode for use when converting a stateAfter into a stateDuring.
-     */
+    ///
+    // Set the {@code bci} of the invoke bytecode for use when converting a stateAfter into a stateDuring.
+    ///
     public void setBci(int __bci)
     {
-        this.bci = __bci;
+        this.___bci = __bci;
     }
 
     @Override
@@ -202,7 +200,7 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
         if ((__currentStateAfter.stackSize() > 0 && __currentStateAfter.stackAt(__currentStateAfter.stackSize() - 1) == this) || (__currentStateAfter.stackSize() > 1 && __currentStateAfter.stackAt(__currentStateAfter.stackSize() - 2) == this))
         {
             // The result of this call is on the top of stack, so roll back to the previous bci.
-            __newStateDuring = __currentStateAfter.duplicateModifiedDuringCall(bci, this.getStackKind());
+            __newStateDuring = __currentStateAfter.duplicateModifiedDuringCall(this.___bci, this.getStackKind());
         }
         else
         {
@@ -214,16 +212,16 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
     @Override
     public boolean canDeoptimize()
     {
-        return foreignCalls.canDeoptimize(descriptor);
+        return this.___foreignCalls.canDeoptimize(this.___descriptor);
     }
 
     public boolean isGuaranteedSafepoint()
     {
-        return foreignCalls.isGuaranteedSafepoint(descriptor);
+        return this.___foreignCalls.isGuaranteedSafepoint(this.___descriptor);
     }
 
     public NodeInputList<ValueNode> getArguments()
     {
-        return arguments;
+        return this.___arguments;
     }
 }

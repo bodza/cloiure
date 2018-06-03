@@ -103,25 +103,23 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, Constant __constant, NormalizeCompareNode __normalizeNode, boolean __mirrored, NodeView __view)
         {
             PrimitiveConstant __primitive = (PrimitiveConstant) __constant;
-            /*
-             * a NC b < c  (not mirrored)
-             * cases for c:
-             *  0         -> a < b
-             *  [MIN, -1] -> false
-             *  1         -> a <= b
-             *  [2, MAX]  -> true
-             * unordered-is-less means unordered-is-true.
-             *
-             * c < a NC b  (mirrored)
-             * cases for c:
-             *  0         -> a > b
-             *  [1, MAX]  -> false
-             *  -1        -> a >= b
-             *  [MIN, -2] -> true
-             * unordered-is-less means unordered-is-false.
-             *
-             * We can handle mirroring by swapping a & b and negating the constant.
-             */
+            // a NC b < c  (not mirrored)
+            // cases for c:
+            //  0         -> a < b
+            //  [MIN, -1] -> false
+            //  1         -> a <= b
+            //  [2, MAX]  -> true
+            // unordered-is-less means unordered-is-true.
+            //
+            // c < a NC b  (mirrored)
+            // cases for c:
+            //  0         -> a > b
+            //  [1, MAX]  -> false
+            //  -1        -> a >= b
+            //  [MIN, -2] -> true
+            // unordered-is-less means unordered-is-false.
+            //
+            // We can handle mirroring by swapping a & b and negating the constant.
             ValueNode __a = __mirrored ? __normalizeNode.getY() : __normalizeNode.getX();
             ValueNode __b = __mirrored ? __normalizeNode.getX() : __normalizeNode.getY();
             long __cst = __mirrored ? -__primitive.asLong() : __primitive.asLong();
@@ -130,7 +128,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
             {
                 if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
-                    return FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __a, __b, __mirrored ^ __normalizeNode.isUnorderedLess, __view);
+                    return FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __a, __b, __mirrored ^ __normalizeNode.___isUnorderedLess, __view);
                 }
                 else
                 {
@@ -144,7 +142,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
                 if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
                     // since we negate, we have to reverse the unordered result
-                    __compare = FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __b, __a, __mirrored == __normalizeNode.isUnorderedLess, __view);
+                    __compare = FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __b, __a, __mirrored == __normalizeNode.___isUnorderedLess, __view);
                 }
                 else
                 {

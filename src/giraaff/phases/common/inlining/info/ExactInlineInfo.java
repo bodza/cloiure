@@ -9,36 +9,36 @@ import giraaff.nodes.Invoke;
 import giraaff.phases.common.inlining.info.elem.Inlineable;
 import giraaff.phases.util.Providers;
 
-/**
- * Represents an inlining opportunity where the compiler can statically determine a monomorphic
- * target method and therefore is able to determine the called method exactly.
- */
+///
+// Represents an inlining opportunity where the compiler can statically determine a monomorphic
+// target method and therefore is able to determine the called method exactly.
+///
 // @class ExactInlineInfo
 public class ExactInlineInfo extends AbstractInlineInfo
 {
     // @field
-    protected final ResolvedJavaMethod concrete;
+    protected final ResolvedJavaMethod ___concrete;
     // @field
-    private Inlineable inlineableElement;
+    private Inlineable ___inlineableElement;
     // @field
-    private boolean suppressNullCheck;
+    private boolean ___suppressNullCheck;
 
     // @cons
     public ExactInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete)
     {
         super(__invoke);
-        this.concrete = __concrete;
+        this.___concrete = __concrete;
     }
 
     public void suppressNullCheck()
     {
-        suppressNullCheck = true;
+        this.___suppressNullCheck = true;
     }
 
     @Override
     public EconomicSet<Node> inline(Providers __providers, String __reason)
     {
-        return inline(invoke, concrete, inlineableElement, !suppressNullCheck, __reason);
+        return inline(this.___invoke, this.___concrete, this.___inlineableElement, !this.___suppressNullCheck, __reason);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ExactInlineInfo extends AbstractInlineInfo
     @Override
     public ResolvedJavaMethod methodAt(int __index)
     {
-        return concrete;
+        return this.___concrete;
     }
 
     @Override
@@ -74,18 +74,18 @@ public class ExactInlineInfo extends AbstractInlineInfo
     @Override
     public Inlineable inlineableElementAt(int __index)
     {
-        return inlineableElement;
+        return this.___inlineableElement;
     }
 
     @Override
     public void setInlinableElement(int __index, Inlineable __inlineableElement)
     {
-        this.inlineableElement = __inlineableElement;
+        this.___inlineableElement = __inlineableElement;
     }
 
     @Override
     public boolean shouldInline()
     {
-        return concrete.shouldBeInlined();
+        return this.___concrete.shouldBeInlined();
     }
 }

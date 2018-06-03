@@ -18,16 +18,16 @@ public final class IterativeConditionalEliminationPhase extends BasePhase<PhaseC
     private static final int MAX_ITERATIONS = 256;
 
     // @field
-    private final CanonicalizerPhase canonicalizer;
+    private final CanonicalizerPhase ___canonicalizer;
     // @field
-    private final boolean fullSchedule;
+    private final boolean ___fullSchedule;
 
     // @cons
     public IterativeConditionalEliminationPhase(CanonicalizerPhase __canonicalizer, boolean __fullSchedule)
     {
         super();
-        this.canonicalizer = __canonicalizer;
-        this.fullSchedule = __fullSchedule;
+        this.___canonicalizer = __canonicalizer;
+        this.___fullSchedule = __fullSchedule;
     }
 
     @Override
@@ -39,7 +39,7 @@ public final class IterativeConditionalEliminationPhase extends BasePhase<PhaseC
         {
             try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
             {
-                new ConditionalEliminationPhase(fullSchedule).apply(__graph, __context);
+                new ConditionalEliminationPhase(this.___fullSchedule).apply(__graph, __context);
             }
             if (__listener.getNodes().isEmpty())
             {
@@ -52,7 +52,7 @@ public final class IterativeConditionalEliminationPhase extends BasePhase<PhaseC
                     __listener.getNodes().add(__node);
                 }
             }
-            canonicalizer.applyIncremental(__graph, __context, __listener.getNodes());
+            this.___canonicalizer.applyIncremental(__graph, __context, __listener.getNodes());
             __listener.getNodes().clear();
             __count++;
             if (__count > MAX_ITERATIONS)

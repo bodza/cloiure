@@ -12,18 +12,18 @@ public abstract class EscapeObjectState extends VirtualState implements ValueNum
 
     @Input
     // @field
-    protected VirtualObjectNode object;
+    protected VirtualObjectNode ___object;
 
     public VirtualObjectNode object()
     {
-        return object;
+        return this.___object;
     }
 
     // @cons
     public EscapeObjectState(NodeClass<? extends EscapeObjectState> __c, VirtualObjectNode __object)
     {
         super(__c);
-        this.object = __object;
+        this.___object = __object;
     }
 
     @Override

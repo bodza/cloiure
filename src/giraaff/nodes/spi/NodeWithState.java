@@ -4,9 +4,9 @@ import giraaff.graph.iterators.NodeIterable;
 import giraaff.nodes.FixedNodeInterface;
 import giraaff.nodes.FrameState;
 
-/**
- * Interface for nodes which have {@link FrameState} nodes as input.
- */
+///
+// Interface for nodes which have {@link FrameState} nodes as input.
+///
 // @iface NodeWithState
 public interface NodeWithState extends FixedNodeInterface
 {

@@ -29,32 +29,32 @@ import giraaff.nodes.extended.SwitchNode;
 public interface NodeLIRBuilderTool extends NodeValueMap
 {
     // TODO remove and move into the Node
-    LIRFrameState state(DeoptimizingNode deopt);
+    LIRFrameState state(DeoptimizingNode __deopt);
 
-    void emitIf(IfNode i);
+    void emitIf(IfNode __i);
 
-    void emitConditional(ConditionalNode i);
+    void emitConditional(ConditionalNode __i);
 
-    void emitSwitch(SwitchNode i);
+    void emitSwitch(SwitchNode __i);
 
-    void emitInvoke(Invoke i);
+    void emitInvoke(Invoke __i);
 
     // Handling of block-end nodes still needs to be unified in the LIRGenerator.
-    void visitMerge(AbstractMergeNode i);
+    void visitMerge(AbstractMergeNode __i);
 
-    void visitEndNode(AbstractEndNode i);
+    void visitEndNode(AbstractEndNode __i);
 
-    void visitLoopEnd(LoopEndNode i);
+    void visitLoopEnd(LoopEndNode __i);
 
     // These methods define the contract a runtime specific backend must provide.
 
-    void visitSafepointNode(SafepointNode i);
+    void visitSafepointNode(SafepointNode __i);
 
     LIRGeneratorTool getLIRGeneratorTool();
 
-    void emitOverflowCheckBranch(AbstractBeginNode overflowSuccessor, AbstractBeginNode next, Stamp compareStamp, double probability);
+    void emitOverflowCheckBranch(AbstractBeginNode __overflowSuccessor, AbstractBeginNode __next, Stamp __compareStamp, double __probability);
 
-    Value[] visitInvokeArguments(CallingConvention cc, Collection<ValueNode> arguments);
+    Value[] visitInvokeArguments(CallingConvention __cc, Collection<ValueNode> __arguments);
 
-    void doBlock(Block block, StructuredGraph graph, BlockMap<List<Node>> blockMap);
+    void doBlock(Block __block, StructuredGraph __graph, BlockMap<List<Node>> __blockMap);
 }

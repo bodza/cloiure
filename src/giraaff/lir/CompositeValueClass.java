@@ -14,18 +14,18 @@ import giraaff.lir.LIRIntrospection.OperandModeAnnotation;
 import giraaff.lir.LIRIntrospection.Values;
 import giraaff.util.GraalError;
 
-/**
- * Lazily associated metadata for every {@link CompositeValue} type. The metadata includes:
- *
- * <li>The offsets of fields annotated with {@link Component} as well as methods for iterating over
- * such fields.</li>
- */
+///
+// Lazily associated metadata for every {@link CompositeValue} type. The metadata includes:
+//
+// <li>The offsets of fields annotated with {@link Component} as well as methods for iterating over
+// such fields.</li>
+///
 // @class CompositeValueClass
 public final class CompositeValueClass<T> extends FieldIntrospection<T>
 {
-    /**
-     * The CompositeValueClass is only used for formatting for the most part so cache it as a ClassValue.
-     */
+    ///
+    // The CompositeValueClass is only used for formatting for the most part so cache it as a ClassValue.
+    ///
     // @closure
     private static final ClassValue<CompositeValueClass<?>> compositeClass = new ClassValue<CompositeValueClass<?>>()
     {
@@ -43,7 +43,7 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     }
 
     // @field
-    private final Values values;
+    private final Values ___values;
 
     // @cons
     private CompositeValueClass(Class<T> __clazz)
@@ -53,8 +53,8 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
         CompositeValueFieldsScanner __vfs = new CompositeValueFieldsScanner(new FieldsScanner.DefaultCalcOffset());
         __vfs.scan(__clazz, CompositeValue.class, false);
 
-        values = new Values(__vfs.valueAnnotations.get(CompositeValue.Component.class));
-        data = new Fields(__vfs.data);
+        this.___values = new Values(__vfs.___valueAnnotations.get(CompositeValue.Component.class));
+        this.___data = new Fields(__vfs.___data);
     }
 
     // @class CompositeValueClass.CompositeValueFieldsScanner
@@ -64,7 +64,7 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
         CompositeValueFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
             super(__calc);
-            valueAnnotations.put(CompositeValue.Component.class, new OperandModeAnnotation());
+            this.___valueAnnotations.put(CompositeValue.Component.class, new OperandModeAnnotation());
         }
 
         @Override
@@ -86,6 +86,6 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     @Override
     public Fields[] getAllFields()
     {
-        return new Fields[] { data, values };
+        return new Fields[] { this.___data, this.___values };
     }
 }

@@ -11,20 +11,20 @@ import giraaff.phases.tiers.PhaseContext;
 public final class EarlyReadEliminationPhase extends EffectsPhase<PhaseContext>
 {
     // @field
-    private final boolean considerGuards;
+    private final boolean ___considerGuards;
 
     // @cons
     public EarlyReadEliminationPhase(CanonicalizerPhase __canonicalizer)
     {
         super(1, __canonicalizer, true);
-        this.considerGuards = true;
+        this.___considerGuards = true;
     }
 
     // @cons
     public EarlyReadEliminationPhase(CanonicalizerPhase __canonicalizer, boolean __considerGuards)
     {
         super(1, __canonicalizer, true);
-        this.considerGuards = __considerGuards;
+        this.___considerGuards = __considerGuards;
     }
 
     @Override
@@ -36,6 +36,6 @@ public final class EarlyReadEliminationPhase extends EffectsPhase<PhaseContext>
     @Override
     protected Closure<?> createEffectsClosure(PhaseContext __context, ScheduleResult __schedule, ControlFlowGraph __cfg)
     {
-        return new ReadEliminationClosure(__cfg, considerGuards);
+        return new ReadEliminationClosure(__cfg, this.___considerGuards);
     }
 }

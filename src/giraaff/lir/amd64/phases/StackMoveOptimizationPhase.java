@@ -20,13 +20,13 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
 
-/**
- * Replaces sequential {@link AMD64StackMove}s of the same type with a single
- * {@link AMD64MultiStackMove} to avoid storing/restoring the scratch register multiple times.
- *
- * Note: this phase must be inserted <b>after</b> {@link RedundantMoveElimination} phase because
- * {@link AMD64MultiStackMove} are not probably detected.
- */
+///
+// Replaces sequential {@link AMD64StackMove}s of the same type with a single
+// {@link AMD64MultiStackMove} to avoid storing/restoring the scratch register multiple times.
+//
+// Note: this phase must be inserted <b>after</b> {@link RedundantMoveElimination} phase because
+// {@link AMD64MultiStackMove} are not probably detected.
+///
 // @class StackMoveOptimizationPhase
 public final class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 {
@@ -48,17 +48,17 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
         private static final int NONE = -1;
 
         // @field
-        private int begin = NONE;
+        private int ___begin = NONE;
         // @field
-        private Register reg = null;
+        private Register ___reg = null;
         // @field
-        private List<AllocatableValue> dst;
+        private List<AllocatableValue> ___dst;
         // @field
-        private List<Value> src;
+        private List<Value> ___src;
         // @field
-        private AllocatableValue slot;
+        private AllocatableValue ___slot;
         // @field
-        private boolean removed = false;
+        private boolean ___removed = false;
 
         public void process(List<LIRInstruction> __instructions)
         {
@@ -70,38 +70,38 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
                 {
                     AMD64StackMove __move = asStackMove(__inst);
 
-                    if (reg != null && !reg.equals(__move.getScratchRegister()))
+                    if (this.___reg != null && !this.___reg.equals(__move.getScratchRegister()))
                     {
                         // end of trace & start of new
                         replaceStackMoves(__instructions);
                     }
 
                     // lazy initialize
-                    if (dst == null)
+                    if (this.___dst == null)
                     {
-                        dst = new ArrayList<>();
-                        src = new ArrayList<>();
+                        this.___dst = new ArrayList<>();
+                        this.___src = new ArrayList<>();
                     }
 
-                    dst.add(__move.getResult());
-                    src.add(__move.getInput());
+                    this.___dst.add(__move.getResult());
+                    this.___src.add(__move.getInput());
 
-                    if (begin == NONE)
+                    if (this.___begin == NONE)
                     {
                         // trace begin
-                        begin = __i;
-                        reg = __move.getScratchRegister();
-                        slot = __move.getBackupSlot();
+                        this.___begin = __i;
+                        this.___reg = __move.getScratchRegister();
+                        this.___slot = __move.getBackupSlot();
                     }
                 }
-                else if (begin != NONE)
+                else if (this.___begin != NONE)
                 {
                     // end of trace
                     replaceStackMoves(__instructions);
                 }
             }
             // remove instructions
-            if (removed)
+            if (this.___removed)
             {
                 __instructions.removeAll(Collections.singleton(null));
             }
@@ -109,23 +109,23 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
 
         private void replaceStackMoves(List<LIRInstruction> __instructions)
         {
-            int __size = dst.size();
+            int __size = this.___dst.size();
             if (__size > 1)
             {
-                AMD64MultiStackMove __multiMove = new AMD64MultiStackMove(dst.toArray(new AllocatableValue[__size]), src.toArray(new AllocatableValue[__size]), reg, slot);
+                AMD64MultiStackMove __multiMove = new AMD64MultiStackMove(this.___dst.toArray(new AllocatableValue[__size]), this.___src.toArray(new AllocatableValue[__size]), this.___reg, this.___slot);
                 // replace first instruction
-                __instructions.set(begin, __multiMove);
+                __instructions.set(this.___begin, __multiMove);
                 // and null out others
-                Collections.fill(__instructions.subList(begin + 1, begin + __size), null);
+                Collections.fill(__instructions.subList(this.___begin + 1, this.___begin + __size), null);
                 // removed
-                removed = true;
+                this.___removed = true;
             }
             // reset
-            dst.clear();
-            src.clear();
-            begin = NONE;
-            reg = null;
-            slot = null;
+            this.___dst.clear();
+            this.___src.clear();
+            this.___begin = NONE;
+            this.___reg = null;
+            this.___slot = null;
         }
     }
 

@@ -89,10 +89,8 @@ public abstract class LoopTransformations
         ControlSplitNode __newControlSplit = (ControlSplitNode) __firstNode.copyWithInputs();
         __originalLoop.entryPoint().replaceAtPredecessor(__newControlSplit);
 
-        /*
-         * The code below assumes that all of the control split nodes have the same successor
-         * structure, which should have been enforced by findUnswitchable.
-         */
+        // The code below assumes that all of the control split nodes have the same successor
+        // structure, which should have been enforced by findUnswitchable.
         Iterator<Position> __successors = __firstNode.successorPositions().iterator();
         // original loop is used as first successor
         Position __firstPosition = __successors.next();
@@ -273,9 +271,9 @@ public abstract class LoopTransformations
         return __mainLoopBegin;
     }
 
-    /**
-     * Cleanup the merge and remove the predecessors too.
-     */
+    ///
+    // Cleanup the merge and remove the predecessors too.
+    ///
     private static void cleanupMerge(AbstractMergeNode __mergeNode, AbstractBeginNode __landingNode)
     {
         for (EndNode __end : __mergeNode.cfgPredecessors().snapshot())
@@ -323,9 +321,9 @@ public abstract class LoopTransformations
         }
     }
 
-    /**
-     * Find the end of the block following the LoopExit.
-     */
+    ///
+    // Find the end of the block following the LoopExit.
+    ///
     private static EndNode getBlockEndAfterLoopExit(LoopBeginNode __curLoopBegin)
     {
         FixedNode __node = __curLoopBegin.getSingleLoopExit().next();

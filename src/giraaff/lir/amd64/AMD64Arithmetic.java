@@ -28,29 +28,29 @@ public enum AMD64Arithmetic
 
         @Opcode
         // @field
-        private final AMD64Arithmetic opcode;
+        private final AMD64Arithmetic ___opcode;
         @Def
         // @field
-        protected AllocatableValue result;
+        protected AllocatableValue ___result;
         @Use
         // @field
-        protected AllocatableValue x;
+        protected AllocatableValue ___x;
         @Use
         // @field
-        protected AllocatableValue y;
+        protected AllocatableValue ___y;
         @Temp
         // @field
-        protected AllocatableValue raxTemp;
+        protected AllocatableValue ___raxTemp;
 
         // @cons
         public FPDivRemOp(AMD64Arithmetic __opcode, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
         {
             super(TYPE);
-            this.opcode = __opcode;
-            this.result = __result;
-            this.raxTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.DWORD));
-            this.x = __x;
-            this.y = __y;
+            this.___opcode = __opcode;
+            this.___result = __result;
+            this.___raxTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.DWORD));
+            this.___x = __x;
+            this.___y = __y;
         }
 
         @Override
@@ -58,18 +58,18 @@ public enum AMD64Arithmetic
         {
             AMD64Address __tmp = new AMD64Address(AMD64.rsp);
             __masm.subq(AMD64.rsp, 8);
-            if (opcode == FREM)
+            if (this.___opcode == FREM)
             {
-                __masm.movflt(__tmp, ValueUtil.asRegister(y));
+                __masm.movflt(__tmp, ValueUtil.asRegister(this.___y));
                 __masm.flds(__tmp);
-                __masm.movflt(__tmp, ValueUtil.asRegister(x));
+                __masm.movflt(__tmp, ValueUtil.asRegister(this.___x));
                 __masm.flds(__tmp);
             }
             else
             {
-                __masm.movdbl(__tmp, ValueUtil.asRegister(y));
+                __masm.movdbl(__tmp, ValueUtil.asRegister(this.___y));
                 __masm.fldd(__tmp);
-                __masm.movdbl(__tmp, ValueUtil.asRegister(x));
+                __masm.movdbl(__tmp, ValueUtil.asRegister(this.___x));
                 __masm.fldd(__tmp);
             }
 
@@ -83,15 +83,15 @@ public enum AMD64Arithmetic
             __masm.fxch(1);
             __masm.fpop();
 
-            if (opcode == FREM)
+            if (this.___opcode == FREM)
             {
                 __masm.fstps(__tmp);
-                __masm.movflt(ValueUtil.asRegister(result), __tmp);
+                __masm.movflt(ValueUtil.asRegister(this.___result), __tmp);
             }
             else
             {
                 __masm.fstpd(__tmp);
-                __masm.movdbl(ValueUtil.asRegister(result), __tmp);
+                __masm.movdbl(ValueUtil.asRegister(this.___result), __tmp);
             }
             __masm.addq(AMD64.rsp, 8);
         }

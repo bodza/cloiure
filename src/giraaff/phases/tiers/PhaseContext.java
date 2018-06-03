@@ -13,28 +13,28 @@ import giraaff.phases.util.Providers;
 public class PhaseContext
 {
     // @field
-    private final MetaAccessProvider metaAccess;
+    private final MetaAccessProvider ___metaAccess;
     // @field
-    private final ConstantReflectionProvider constantReflection;
+    private final ConstantReflectionProvider ___constantReflection;
     // @field
-    private final ConstantFieldProvider constantFieldProvider;
+    private final ConstantFieldProvider ___constantFieldProvider;
     // @field
-    private final LoweringProvider lowerer;
+    private final LoweringProvider ___lowerer;
     // @field
-    private final Replacements replacements;
+    private final Replacements ___replacements;
     // @field
-    private final StampProvider stampProvider;
+    private final StampProvider ___stampProvider;
 
     // @cons
     public PhaseContext(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, LoweringProvider __lowerer, Replacements __replacements, StampProvider __stampProvider)
     {
         super();
-        this.metaAccess = __metaAccess;
-        this.constantReflection = __constantReflection;
-        this.constantFieldProvider = __constantFieldProvider;
-        this.lowerer = __lowerer;
-        this.replacements = __replacements;
-        this.stampProvider = __stampProvider;
+        this.___metaAccess = __metaAccess;
+        this.___constantReflection = __constantReflection;
+        this.___constantFieldProvider = __constantFieldProvider;
+        this.___lowerer = __lowerer;
+        this.___replacements = __replacements;
+        this.___stampProvider = __stampProvider;
     }
 
     // @cons
@@ -45,31 +45,31 @@ public class PhaseContext
 
     public MetaAccessProvider getMetaAccess()
     {
-        return metaAccess;
+        return this.___metaAccess;
     }
 
     public ConstantReflectionProvider getConstantReflection()
     {
-        return constantReflection;
+        return this.___constantReflection;
     }
 
     public ConstantFieldProvider getConstantFieldProvider()
     {
-        return constantFieldProvider;
+        return this.___constantFieldProvider;
     }
 
     public LoweringProvider getLowerer()
     {
-        return lowerer;
+        return this.___lowerer;
     }
 
     public Replacements getReplacements()
     {
-        return replacements;
+        return this.___replacements;
     }
 
     public StampProvider getStampProvider()
     {
-        return stampProvider;
+        return this.___stampProvider;
     }
 }

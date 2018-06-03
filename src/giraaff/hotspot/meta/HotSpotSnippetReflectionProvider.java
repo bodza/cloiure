@@ -15,25 +15,25 @@ import giraaff.word.WordTypes;
 public final class HotSpotSnippetReflectionProvider implements SnippetReflectionProvider
 {
     // @field
-    private final HotSpotGraalRuntime runtime;
+    private final HotSpotGraalRuntime ___runtime;
     // @field
-    private final HotSpotConstantReflectionProvider constantReflection;
+    private final HotSpotConstantReflectionProvider ___constantReflection;
     // @field
-    private final WordTypes wordTypes;
+    private final WordTypes ___wordTypes;
 
     // @cons
     public HotSpotSnippetReflectionProvider(HotSpotGraalRuntime __runtime, HotSpotConstantReflectionProvider __constantReflection, WordTypes __wordTypes)
     {
         super();
-        this.runtime = __runtime;
-        this.constantReflection = __constantReflection;
-        this.wordTypes = __wordTypes;
+        this.___runtime = __runtime;
+        this.___constantReflection = __constantReflection;
+        this.___wordTypes = __wordTypes;
     }
 
     @Override
     public JavaConstant forObject(Object __object)
     {
-        return constantReflection.forObject(__object);
+        return this.___constantReflection.forObject(__object);
     }
 
     @Override

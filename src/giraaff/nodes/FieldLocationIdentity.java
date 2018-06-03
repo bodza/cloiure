@@ -9,13 +9,13 @@ import org.graalvm.word.LocationIdentity;
 public final class FieldLocationIdentity extends LocationIdentity implements FormatWithToString
 {
     // @field
-    private final ResolvedJavaField inner;
+    private final ResolvedJavaField ___inner;
 
     // @cons
     public FieldLocationIdentity(ResolvedJavaField __inner)
     {
         super();
-        this.inner = __inner;
+        this.___inner = __inner;
     }
 
     @Override
@@ -34,19 +34,19 @@ public final class FieldLocationIdentity extends LocationIdentity implements For
         if (__obj instanceof FieldLocationIdentity)
         {
             FieldLocationIdentity __fieldLocationIdentity = (FieldLocationIdentity) __obj;
-            return inner.equals(__fieldLocationIdentity.inner);
+            return this.___inner.equals(__fieldLocationIdentity.___inner);
         }
         return false;
     }
 
     public ResolvedJavaField getField()
     {
-        return inner;
+        return this.___inner;
     }
 
     @Override
     public int hashCode()
     {
-        return inner.hashCode();
+        return this.___inner.hashCode();
     }
 }

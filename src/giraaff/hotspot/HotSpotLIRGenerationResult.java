@@ -16,29 +16,29 @@ import giraaff.lir.gen.LIRGenerationResult;
 public final class HotSpotLIRGenerationResult extends LIRGenerationResult
 {
     // @field
-    protected final Object stub;
+    protected final Object ___stub;
 
-    /**
-     * Map from debug infos that need to be updated with callee save information to the operations
-     * that provide the information.
-     */
+    ///
+    // Map from debug infos that need to be updated with callee save information to the operations
+    // that provide the information.
+    ///
     // @field
-    private EconomicMap<LIRFrameState, SaveRegistersOp> calleeSaveInfo = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
+    private EconomicMap<LIRFrameState, SaveRegistersOp> ___calleeSaveInfo = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
 
     // @cons
     public HotSpotLIRGenerationResult(LIR __lir, FrameMapBuilder __frameMapBuilder, CallingConvention __callingConvention, Object __stub)
     {
         super(__lir, __frameMapBuilder, __callingConvention);
-        this.stub = __stub;
+        this.___stub = __stub;
     }
 
     public EconomicMap<LIRFrameState, SaveRegistersOp> getCalleeSaveInfo()
     {
-        return calleeSaveInfo;
+        return this.___calleeSaveInfo;
     }
 
     public Stub getStub()
     {
-        return (Stub) stub;
+        return (Stub) this.___stub;
     }
 }

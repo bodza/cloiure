@@ -34,9 +34,9 @@ import giraaff.nodes.SafepointNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 
-/**
- * LIR generator specialized for AMD64 HotSpot.
- */
+///
+// LIR generator specialized for AMD64 HotSpot.
+///
 // @class AMD64HotSpotNodeLIRBuilder
 public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder
 {
@@ -49,19 +49,19 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
 
     private AMD64HotSpotLIRGenerator getGen()
     {
-        return (AMD64HotSpotLIRGenerator) gen;
+        return (AMD64HotSpotLIRGenerator) this.___gen;
     }
 
     @Override
     protected LockStackHolder createLockStackHolder()
     {
-        return new HotSpotLockStackHolder(new HotSpotLockStack(gen.getResult().getFrameMapBuilder(), LIRKind.value(AMD64Kind.QWORD)));
+        return new HotSpotLockStackHolder(new HotSpotLockStack(this.___gen.getResult().getFrameMapBuilder(), LIRKind.value(AMD64Kind.QWORD)));
     }
 
     @Override
     protected void emitPrologue(StructuredGraph __graph)
     {
-        CallingConvention __incomingArguments = gen.getResult().getCallingConvention();
+        CallingConvention __incomingArguments = this.___gen.getResult().getCallingConvention();
 
         Value[] __params = new Value[__incomingArguments.getArgumentCount() + 1];
         for (int __i = 0; __i < __params.length - 1; __i++)
@@ -70,15 +70,15 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
             if (ValueUtil.isStackSlot(__params[__i]))
             {
                 StackSlot __slot = ValueUtil.asStackSlot(__params[__i]);
-                if (__slot.isInCallerFrame() && !gen.getResult().getLIR().hasArgInCallerFrame())
+                if (__slot.isInCallerFrame() && !this.___gen.getResult().getLIR().hasArgInCallerFrame())
                 {
-                    gen.getResult().getLIR().setHasArgInCallerFrame();
+                    this.___gen.getResult().getLIR().setHasArgInCallerFrame();
                 }
             }
         }
         __params[__params.length - 1] = AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD));
 
-        gen.emitIncomingValues(__params);
+        this.___gen.emitIncomingValues(__params);
 
         getGen().emitSaveRbp();
 
@@ -87,7 +87,7 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
         for (ParameterNode __param : __graph.getNodes(ParameterNode.TYPE))
         {
             Value __paramValue = __params[__param.index()];
-            setResult(__param, gen.emitMove(__paramValue));
+            setResult(__param, this.___gen.emitMove(__paramValue));
         }
     }
 
@@ -123,8 +123,8 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
             Value __targetAddressSrc = operand(__callTarget.computedAddress());
             AllocatableValue __metaspaceMethodDst = AMD64.rbx.asValue(__metaspaceMethodSrc.getValueKind());
             AllocatableValue __targetAddressDst = AMD64.rax.asValue(__targetAddressSrc.getValueKind());
-            gen.emitMove(__metaspaceMethodDst, __metaspaceMethodSrc);
-            gen.emitMove(__targetAddressDst, __targetAddressSrc);
+            this.___gen.emitMove(__metaspaceMethodDst, __metaspaceMethodSrc);
+            this.___gen.emitMove(__targetAddressDst, __targetAddressSrc);
             append(new AMD64IndirectCallOp(__callTarget.targetMethod(), __result, __parameters, __temps, __metaspaceMethodDst, __targetAddressDst, __callState));
         }
         else
@@ -136,19 +136,19 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
     @Override
     public void emitPatchReturnAddress(ValueNode __address)
     {
-        append(new AMD64HotSpotPatchReturnAddressOp(gen.load(operand(__address))));
+        append(new AMD64HotSpotPatchReturnAddressOp(this.___gen.load(operand(__address))));
     }
 
     @Override
     public void emitJumpToExceptionHandlerInCaller(ValueNode __handlerInCallerPc, ValueNode __exception, ValueNode __exceptionPc)
     {
-        Variable __handler = gen.load(operand(__handlerInCallerPc));
-        ForeignCallLinkage __linkage = gen.getForeignCalls().lookupForeignCall(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER);
+        Variable __handler = this.___gen.load(operand(__handlerInCallerPc));
+        ForeignCallLinkage __linkage = this.___gen.getForeignCalls().lookupForeignCall(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER);
         CallingConvention __outgoingCc = __linkage.getOutgoingCallingConvention();
         RegisterValue __exceptionFixed = (RegisterValue) __outgoingCc.getArgument(0);
         RegisterValue __exceptionPcFixed = (RegisterValue) __outgoingCc.getArgument(1);
-        gen.emitMove(__exceptionFixed, operand(__exception));
-        gen.emitMove(__exceptionPcFixed, operand(__exceptionPc));
+        this.___gen.emitMove(__exceptionFixed, operand(__exception));
+        this.___gen.emitMove(__exceptionPcFixed, operand(__exceptionPc));
         Register __thread = getGen().getProviders().getRegisters().getThreadRegister();
         append(new AMD64HotSpotJumpToExceptionHandlerInCallerOp(__handler, __exceptionFixed, __exceptionPcFixed, HotSpotRuntime.threadIsMethodHandleReturnOffset, __thread));
     }

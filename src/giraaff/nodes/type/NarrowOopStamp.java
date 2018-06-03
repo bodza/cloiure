@@ -16,17 +16,17 @@ import giraaff.core.common.type.Stamp;
 public abstract class NarrowOopStamp extends AbstractObjectStamp
 {
     // @field
-    private final CompressEncoding encoding;
+    private final CompressEncoding ___encoding;
 
     // @cons
     protected NarrowOopStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
         super(__type, __exactType, __nonNull, __alwaysNull);
-        this.encoding = __encoding;
+        this.___encoding = __encoding;
     }
 
     @Override
-    protected abstract AbstractObjectStamp copyWith(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull);
+    protected abstract AbstractObjectStamp copyWith(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull);
 
     public Stamp uncompressed()
     {
@@ -35,7 +35,7 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
 
     public CompressEncoding getEncoding()
     {
-        return encoding;
+        return this.___encoding;
     }
 
     @Override
@@ -54,19 +54,19 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
         if (__other instanceof NarrowOopStamp)
         {
             NarrowOopStamp __narrow = (NarrowOopStamp) __other;
-            return encoding.equals(__narrow.encoding);
+            return this.___encoding.equals(__narrow.___encoding);
         }
         return false;
     }
 
     @Override
-    public abstract Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement);
+    public abstract Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement);
 
     @Override
     public int hashCode()
     {
         final int __prime = 31;
-        return __prime * super.hashCode() + encoding.hashCode();
+        return __prime * super.hashCode() + this.___encoding.hashCode();
     }
 
     @Override
@@ -81,7 +81,7 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
             return false;
         }
         NarrowOopStamp __other = (NarrowOopStamp) __obj;
-        if (!encoding.equals(__other.encoding))
+        if (!this.___encoding.equals(__other.___encoding))
         {
             return false;
         }
@@ -92,5 +92,5 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
     public abstract JavaConstant asConstant();
 
     @Override
-    public abstract boolean isCompatible(Constant other);
+    public abstract boolean isCompatible(Constant __other);
 }

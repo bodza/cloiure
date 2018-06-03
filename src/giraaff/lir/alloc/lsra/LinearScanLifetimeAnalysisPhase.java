@@ -39,13 +39,13 @@ import giraaff.util.GraalError;
 public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 {
     // @field
-    protected final LinearScan allocator;
+    protected final LinearScan ___allocator;
 
     // @cons
     protected LinearScanLifetimeAnalysisPhase(LinearScan __linearScan)
     {
         super();
-        allocator = __linearScan;
+        this.___allocator = __linearScan;
     }
 
     @Override
@@ -57,50 +57,50 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         buildIntervals();
     }
 
-    /**
-     * Bit set for each variable that is contained in each loop.
-     */
+    ///
+    // Bit set for each variable that is contained in each loop.
+    ///
     // @field
-    private BitMap2D intervalInLoop;
+    private BitMap2D ___intervalInLoop;
 
     boolean isIntervalInLoop(int __interval, int __loop)
     {
-        return intervalInLoop.at(__interval, __loop);
+        return this.___intervalInLoop.at(__interval, __loop);
     }
 
-    /**
-     * Numbers all instructions in all blocks. The numbering follows the
-     * {@linkplain ComputeBlockOrder linear scan order}.
-     */
+    ///
+    // Numbers all instructions in all blocks. The numbering follows the
+    // {@linkplain ComputeBlockOrder linear scan order}.
+    ///
     protected void numberInstructions()
     {
-        allocator.initIntervals();
+        this.___allocator.initIntervals();
 
         ValueConsumer __setVariableConsumer = (__value, __mode, __flags) ->
         {
             if (LIRValueUtil.isVariable(__value))
             {
-                allocator.getOrCreateInterval(LIRValueUtil.asVariable(__value));
+                this.___allocator.getOrCreateInterval(LIRValueUtil.asVariable(__value));
             }
         };
 
         // Assign IDs to LIR nodes and build a mapping, lirOps, from ID to LIRInstruction node.
         int __numInstructions = 0;
-        for (AbstractBlockBase<?> __block : allocator.sortedBlocks())
+        for (AbstractBlockBase<?> __block : this.___allocator.sortedBlocks())
         {
-            __numInstructions += allocator.getLIR().getLIRforBlock(__block).size();
+            __numInstructions += this.___allocator.getLIR().getLIRforBlock(__block).size();
         }
 
         // initialize with correct length
-        allocator.initOpIdMaps(__numInstructions);
+        this.___allocator.initOpIdMaps(__numInstructions);
 
         int __opId = 0;
         int __index = 0;
-        for (AbstractBlockBase<?> __block : allocator.sortedBlocks())
+        for (AbstractBlockBase<?> __block : this.___allocator.sortedBlocks())
         {
-            allocator.initBlockData(__block);
+            this.___allocator.initBlockData(__block);
 
-            ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__block);
+            ArrayList<LIRInstruction> __instructions = this.___allocator.getLIR().getLIRforBlock(__block);
 
             int __numInst = __instructions.size();
             for (int __j = 0; __j < __numInst; __j++)
@@ -108,7 +108,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 LIRInstruction __op = __instructions.get(__j);
                 __op.setId(__opId);
 
-                allocator.putOpIdMaps(__index, __op, __block);
+                this.___allocator.putOpIdMaps(__index, __op, __block);
 
                 __op.visitEachTemp(__setVariableConsumer);
                 __op.visitEachOutput(__setVariableConsumer);
@@ -119,41 +119,41 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
     }
 
-    /**
-     * Computes local live sets (i.e. {@link BlockData#liveGen} and {@link BlockData#liveKill})
-     * separately for each block.
-     */
+    ///
+    // Computes local live sets (i.e. {@link BlockData#liveGen} and {@link BlockData#liveKill})
+    // separately for each block.
+    ///
     void computeLocalLiveSets()
     {
-        int __liveSize = allocator.liveSetSize();
+        int __liveSize = this.___allocator.liveSetSize();
 
-        intervalInLoop = new BitMap2D(allocator.operandSize(), allocator.numLoops());
+        this.___intervalInLoop = new BitMap2D(this.___allocator.operandSize(), this.___allocator.numLoops());
 
         try
         {
             final BitSet __liveGenScratch = new BitSet(__liveSize);
             final BitSet __liveKillScratch = new BitSet(__liveSize);
             // iterate all blocks
-            for (final AbstractBlockBase<?> __block : allocator.sortedBlocks())
+            for (final AbstractBlockBase<?> __block : this.___allocator.sortedBlocks())
             {
                 __liveGenScratch.clear();
                 __liveKillScratch.clear();
 
-                ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__block);
+                ArrayList<LIRInstruction> __instructions = this.___allocator.getLIR().getLIRforBlock(__block);
                 int __numInst = __instructions.size();
 
                 ValueConsumer __useConsumer = (__operand, __mode, __flags) ->
                 {
                     if (LIRValueUtil.isVariable(__operand))
                     {
-                        int __operandNum = allocator.operandNumber(__operand);
+                        int __operandNum = this.___allocator.operandNumber(__operand);
                         if (!__liveKillScratch.get(__operandNum))
                         {
                             __liveGenScratch.set(__operandNum);
                         }
                         if (__block.getLoop() != null)
                         {
-                            intervalInLoop.setBit(__operandNum, __block.getLoop().getIndex());
+                            this.___intervalInLoop.setBit(__operandNum, __block.getLoop().getIndex());
                         }
                     }
                 };
@@ -161,11 +161,11 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 {
                     if (LIRValueUtil.isVariable(__operand))
                     {
-                        int __varNum = allocator.operandNumber(__operand);
+                        int __varNum = this.___allocator.operandNumber(__operand);
                         __liveKillScratch.set(__varNum);
                         if (__block.getLoop() != null)
                         {
-                            intervalInLoop.setBit(__varNum, __block.getLoop().getIndex());
+                            this.___intervalInLoop.setBit(__varNum, __block.getLoop().getIndex());
                         }
                     }
                 };
@@ -182,12 +182,12 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                     __op.visitEachOutput(__defConsumer);
                 }
 
-                BlockData __blockSets = allocator.getBlockData(__block);
-                __blockSets.liveGen = trimClone(__liveGenScratch);
-                __blockSets.liveKill = trimClone(__liveKillScratch);
+                BlockData __blockSets = this.___allocator.getBlockData(__block);
+                __blockSets.___liveGen = trimClone(__liveGenScratch);
+                __blockSets.___liveKill = trimClone(__liveKillScratch);
                 // sticky size, will get non-sticky in computeGlobalLiveSets
-                __blockSets.liveIn = new BitSet(0);
-                __blockSets.liveOut = new BitSet(0);
+                __blockSets.___liveIn = new BitSet(0);
+                __blockSets.___liveOut = new BitSet(0);
             }
         }
         catch (OutOfMemoryError __oom)
@@ -196,22 +196,20 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
     }
 
-    /**
-     * Performs a backward dataflow analysis to compute global live sets (i.e.
-     * {@link BlockData#liveIn} and {@link BlockData#liveOut}) for each block.
-     */
+    ///
+    // Performs a backward dataflow analysis to compute global live sets (i.e.
+    // {@link BlockData#liveIn} and {@link BlockData#liveOut}) for each block.
+    ///
     protected void computeGlobalLiveSets()
     {
-        int __numBlocks = allocator.blockCount();
+        int __numBlocks = this.___allocator.blockCount();
         boolean __changeOccurred;
         boolean __changeOccurredInBlock;
         int __iterationCount = 0;
-        BitSet __scratch = new BitSet(allocator.liveSetSize()); // scratch set for calculations
+        BitSet __scratch = new BitSet(this.___allocator.liveSetSize()); // scratch set for calculations
 
-        /*
-         * Perform a backward dataflow analysis to compute liveOut and liveIn for each block.
-         * The loop is executed until a fixpoint is reached (no changes in an iteration).
-         */
+        // Perform a backward dataflow analysis to compute liveOut and liveIn for each block.
+        // The loop is executed until a fixpoint is reached (no changes in an iteration).
         do
         {
             __changeOccurred = false;
@@ -219,8 +217,8 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             // iterate all blocks in reverse order
             for (int __i = __numBlocks - 1; __i >= 0; __i--)
             {
-                AbstractBlockBase<?> __block = allocator.blockAt(__i);
-                BlockData __blockSets = allocator.getBlockData(__block);
+                AbstractBlockBase<?> __block = this.___allocator.blockAt(__i);
+                BlockData __blockSets = this.___allocator.getBlockData(__block);
 
                 __changeOccurredInBlock = false;
 
@@ -234,13 +232,13 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                     {
                         for (AbstractBlockBase<?> __successor : __block.getSuccessors())
                         {
-                            __scratch.or(allocator.getBlockData(__successor).liveIn);
+                            __scratch.or(this.___allocator.getBlockData(__successor).___liveIn);
                         }
                     }
 
-                    if (!__blockSets.liveOut.equals(__scratch))
+                    if (!__blockSets.___liveOut.equals(__scratch))
                     {
-                        __blockSets.liveOut = trimClone(__scratch);
+                        __blockSets.___liveOut = trimClone(__scratch);
 
                         __changeOccurred = true;
                         __changeOccurredInBlock = true;
@@ -249,20 +247,16 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
                 if (__iterationCount == 0 || __changeOccurredInBlock)
                 {
-                    /*
-                     * liveIn(block) is the union of liveGen(block) with (liveOut(block) & !liveKill(block)).
-                     *
-                     * Note: liveIn has to be computed only in first iteration or if liveOut has changed!
-                     * Note: liveIn set can only grow, never shrink. No need to clear it.
-                     */
-                    BitSet __liveIn = __blockSets.liveIn;
-                    /*
-                     * BitSet#or will call BitSet#ensureSize (since the bit set is of length
-                     * 0 initially) and set sticky to false
-                     */
-                    __liveIn.or(__blockSets.liveOut);
-                    __liveIn.andNot(__blockSets.liveKill);
-                    __liveIn.or(__blockSets.liveGen);
+                    // liveIn(block) is the union of liveGen(block) with (liveOut(block) & !liveKill(block)).
+                    //
+                    // Note: liveIn has to be computed only in first iteration or if liveOut has changed!
+                    // Note: liveIn set can only grow, never shrink. No need to clear it.
+                    BitSet __liveIn = __blockSets.___liveIn;
+                    // BitSet#or will call BitSet#ensureSize (since the bit set is of length
+                    // 0 initially) and set sticky to false
+                    __liveIn.or(__blockSets.___liveOut);
+                    __liveIn.andNot(__blockSets.___liveKill);
+                    __liveIn.or(__blockSets.___liveGen);
 
                     __liveIn.clone(); // trimToSize()
                 }
@@ -277,20 +271,20 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         } while (__changeOccurred);
 
         // check that the liveIn set of the first block is empty
-        AbstractBlockBase<?> __startBlock = allocator.getLIR().getControlFlowGraph().getStartBlock();
-        if (allocator.getBlockData(__startBlock).liveIn.cardinality() != 0)
+        AbstractBlockBase<?> __startBlock = this.___allocator.getLIR().getControlFlowGraph().getStartBlock();
+        if (this.___allocator.getBlockData(__startBlock).___liveIn.cardinality() != 0)
         {
             // bailout if this occurs in product mode.
-            throw new GraalError("liveIn set of first block must be empty: " + allocator.getBlockData(__startBlock).liveIn);
+            throw new GraalError("liveIn set of first block must be empty: " + this.___allocator.getBlockData(__startBlock).___liveIn);
         }
     }
 
-    /**
-     * Creates a trimmed copy a bit set.
-     *
-     * {@link BitSet#clone()} cannot be used since it will not {@linkplain BitSet#trimToSize trim}
-     * the array if the bit set is {@linkplain BitSet#sizeIsSticky sticky}.
-     */
+    ///
+    // Creates a trimmed copy a bit set.
+    //
+    // {@link BitSet#clone()} cannot be used since it will not {@linkplain BitSet#trimToSize trim}
+    // the array if the bit set is {@linkplain BitSet#sizeIsSticky sticky}.
+    ///
     @SuppressWarnings("javadoc")
     private static BitSet trimClone(BitSet __set)
     {
@@ -302,12 +296,12 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
     protected void addUse(AllocatableValue __operand, int __from, int __to, RegisterPriority __registerPriority, ValueKind<?> __kind)
     {
-        if (!allocator.isProcessed(__operand))
+        if (!this.___allocator.isProcessed(__operand))
         {
             return;
         }
 
-        Interval __interval = allocator.getOrCreateInterval(__operand);
+        Interval __interval = this.___allocator.getOrCreateInterval(__operand);
         if (!__kind.equals(LIRKind.Illegal))
         {
             __interval.setKind(__kind);
@@ -321,12 +315,12 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
     protected void addTemp(AllocatableValue __operand, int __tempPos, RegisterPriority __registerPriority, ValueKind<?> __kind)
     {
-        if (!allocator.isProcessed(__operand))
+        if (!this.___allocator.isProcessed(__operand))
         {
             return;
         }
 
-        Interval __interval = allocator.getOrCreateInterval(__operand);
+        Interval __interval = this.___allocator.getOrCreateInterval(__operand);
         if (!__kind.equals(LIRKind.Illegal))
         {
             __interval.setKind(__kind);
@@ -339,26 +333,24 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
     protected void addDef(AllocatableValue __operand, LIRInstruction __op, RegisterPriority __registerPriority, ValueKind<?> __kind)
     {
-        if (!allocator.isProcessed(__operand))
+        if (!this.___allocator.isProcessed(__operand))
         {
             return;
         }
         int __defPos = __op.id();
 
-        Interval __interval = allocator.getOrCreateInterval(__operand);
+        Interval __interval = this.___allocator.getOrCreateInterval(__operand);
         if (!__kind.equals(LIRKind.Illegal))
         {
             __interval.setKind(__kind);
         }
 
         Range __r = __interval.first();
-        if (__r.from <= __defPos)
+        if (__r.___from <= __defPos)
         {
-            /*
-             * Update the starting point (when a range is first created for a use, its start is the
-             * beginning of the current block until a def is encountered).
-             */
-            __r.from = __defPos;
+            // Update the starting point (when a range is first created for a use, its start is the
+            // beginning of the current block until a def is encountered).
+            __r.___from = __defPos;
             __interval.addUsePos(__defPos, __registerPriority);
         }
         else
@@ -377,10 +369,10 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         __interval.addMaterializationValue(getMaterializedValue(__op, __operand, __interval));
     }
 
-    /**
-     * Optimizes moves related to incoming stack based arguments. The interval for the destination
-     * of such moves is assigned the stack slot (which is in the caller's frame) as its spill slot.
-     */
+    ///
+    // Optimizes moves related to incoming stack based arguments. The interval for the destination
+    // of such moves is assigned the stack slot (which is in the caller's frame) as its spill slot.
+    ///
     protected void handleMethodArguments(LIRInstruction __op)
     {
         if (ValueMoveOp.isValueMoveOp(__op))
@@ -390,7 +382,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             {
                 StackSlot __slot = ValueUtil.asStackSlot(__move.getInput());
 
-                Interval __interval = allocator.intervalFor(__move.getResult());
+                Interval __interval = this.___allocator.intervalFor(__move.getResult());
                 __interval.setSpillSlot(__slot);
                 __interval.assignLocation(__slot);
             }
@@ -405,8 +397,8 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             {
                 if (LinearScan.isVariableOrRegister(__registerHint))
                 {
-                    Interval __from = allocator.getOrCreateInterval((AllocatableValue) __registerHint);
-                    Interval __to = allocator.getOrCreateInterval((AllocatableValue) __targetValue);
+                    Interval __from = this.___allocator.getOrCreateInterval((AllocatableValue) __registerHint);
+                    Interval __to = this.___allocator.getOrCreateInterval((AllocatableValue) __targetValue);
 
                     // hints always point from def to use
                     if (__hintAtDef)
@@ -425,17 +417,19 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
     }
 
-    /**
-     * Eliminates moves from register to stack if the stack slot is known to be correct.
-     */
+    ///
+    // Eliminates moves from register to stack if the stack slot is known to be correct.
+    ///
     protected void changeSpillDefinitionPos(LIRInstruction __op, AllocatableValue __operand, Interval __interval, int __defPos)
     {
         switch (__interval.spillState())
         {
             case NoDefinitionFound:
+            {
                 __interval.setSpillDefinitionPos(__defPos);
                 __interval.setSpillState(SpillState.NoSpillStore);
                 break;
+            }
 
             case NoSpillStore:
                 if (__defPos < __interval.spillDefinitionPos() - 2)
@@ -450,8 +444,10 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 break;
 
             case NoOptimization:
+            {
                 // nothing to do
                 break;
+            }
 
             default:
                 throw GraalError.shouldNotReachHere("other states not allowed at this time");
@@ -460,16 +456,14 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
     private static boolean optimizeMethodArgument(Value __value)
     {
-        /*
-         * Object method arguments that are passed on the stack are currently not optimized because
-         * this requires that the runtime visits method arguments during stack walking.
-         */
+        // Object method arguments that are passed on the stack are currently not optimized because
+        // this requires that the runtime visits method arguments during stack walking.
         return ValueUtil.isStackSlot(__value) && ValueUtil.asStackSlot(__value).isInCallerFrame() && LIRKind.isValue(__value);
     }
 
-    /**
-     * Determines the register priority for an instruction's output/result operand.
-     */
+    ///
+    // Determines the register priority for an instruction's output/result operand.
+    ///
     protected RegisterPriority registerPriorityOfOutputOperand(LIRInstruction __op)
     {
         if (ValueMoveOp.isValueMoveOp(__op))
@@ -485,9 +479,9 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         return RegisterPriority.MustHaveRegister;
     }
 
-    /**
-     * Determines the priority which with an instruction's input operand will be allocated a register.
-     */
+    ///
+    // Determines the priority which with an instruction's input operand will be allocated a register.
+    ///
     protected static RegisterPriority registerPriorityOfInputOperand(EnumSet<OperandFlag> __flags)
     {
         if (__flags.contains(OperandFlag.STACK))
@@ -524,7 +518,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             {
                 RegisterPriority __p = registerPriorityOfInputOperand(__flags);
                 int __opId = __op.id();
-                int __blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(__opId)));
+                int __blockFrom = this.___allocator.getFirstLirInstructionId((this.___allocator.blockForId(__opId)));
                 addUse((AllocatableValue) __operand, __blockFrom, __opId + 1, __p, __operand.getValueKind());
                 addRegisterHint(__op, __operand, __mode, __flags, false);
             }
@@ -535,7 +529,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             if (LinearScan.isVariableOrRegister(__operand))
             {
                 int __opId = __op.id();
-                int __blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(__opId)));
+                int __blockFrom = this.___allocator.getFirstLirInstructionId((this.___allocator.blockForId(__opId)));
                 RegisterPriority __p = registerPriorityOfInputOperand(__flags);
                 addUse((AllocatableValue) __operand, __blockFrom, __opId, __p, __operand.getValueKind());
                 addRegisterHint(__op, __operand, __mode, __flags, false);
@@ -543,39 +537,35 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         };
 
         // create a list with all caller-save registers (cpu, fpu, xmm)
-        RegisterArray __callerSaveRegs = allocator.getRegisterAllocationConfig().getRegisterConfig().getCallerSaveRegisters();
+        RegisterArray __callerSaveRegs = this.___allocator.getRegisterAllocationConfig().getRegisterConfig().getCallerSaveRegisters();
 
         // iterate all blocks in reverse order
-        for (int __i = allocator.blockCount() - 1; __i >= 0; __i--)
+        for (int __i = this.___allocator.blockCount() - 1; __i >= 0; __i--)
         {
-            AbstractBlockBase<?> __block = allocator.blockAt(__i);
-            ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__block);
-            final int __blockFrom = allocator.getFirstLirInstructionId(__block);
-            int __blockTo = allocator.getLastLirInstructionId(__block);
+            AbstractBlockBase<?> __block = this.___allocator.blockAt(__i);
+            ArrayList<LIRInstruction> __instructions = this.___allocator.getLIR().getLIRforBlock(__block);
+            final int __blockFrom = this.___allocator.getFirstLirInstructionId(__block);
+            int __blockTo = this.___allocator.getLastLirInstructionId(__block);
 
             // update intervals for operands live at the end of this block
-            BitSet __live = allocator.getBlockData(__block).liveOut;
+            BitSet __live = this.___allocator.getBlockData(__block).___liveOut;
             for (int __operandNum = __live.nextSetBit(0); __operandNum >= 0; __operandNum = __live.nextSetBit(__operandNum + 1))
             {
-                AllocatableValue __operand = allocator.intervalFor(__operandNum).operand;
+                AllocatableValue __operand = this.___allocator.intervalFor(__operandNum).___operand;
 
                 addUse(__operand, __blockFrom, __blockTo + 2, RegisterPriority.None, LIRKind.Illegal);
 
-                /*
-                 * Add special use positions for loop-end blocks when the interval is used
-                 * anywhere inside this loop. It's possible that the block was part of a
-                 * non-natural loop, so it might have an invalid loop index.
-                 */
+                // Add special use positions for loop-end blocks when the interval is used
+                // anywhere inside this loop. It's possible that the block was part of a
+                // non-natural loop, so it might have an invalid loop index.
                 if (__block.isLoopEnd() && __block.getLoop() != null && isIntervalInLoop(__operandNum, __block.getLoop().getIndex()))
                 {
-                    allocator.intervalFor(__operandNum).addUsePos(__blockTo + 1, RegisterPriority.LiveAtLoopEnd);
+                    this.___allocator.intervalFor(__operandNum).addUsePos(__blockTo + 1, RegisterPriority.LiveAtLoopEnd);
                 }
             }
 
-            /*
-             * Iterate all instructions of the block in reverse order. Definitions of
-             * intervals are processed before uses.
-             */
+            // Iterate all instructions of the block in reverse order. Definitions of
+            // intervals are processed before uses.
             for (int __j = __instructions.size() - 1; __j >= 0; __j--)
             {
                 final LIRInstruction __op = __instructions.get(__j);
@@ -587,7 +577,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 {
                     for (Register __r : __callerSaveRegs)
                     {
-                        if (allocator.attributes(__r).isAllocatable())
+                        if (this.___allocator.attributes(__r).isAllocatable())
                         {
                             addTemp(__r.asValue(), __opId, RegisterPriority.None, LIRKind.Illegal);
                         }
@@ -604,43 +594,39 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             }
         }
 
-        /*
-         * Add the range [0, 1] to all fixed intervals. The register allocator need not handle
-         * unhandled fixed intervals.
-         */
-        for (Interval __interval : allocator.intervals())
+        // Add the range [0, 1] to all fixed intervals. The register allocator need not handle
+        // unhandled fixed intervals.
+        for (Interval __interval : this.___allocator.intervals())
         {
-            if (__interval != null && ValueUtil.isRegister(__interval.operand))
+            if (__interval != null && ValueUtil.isRegister(__interval.___operand))
             {
                 __interval.addRange(0, 1);
             }
         }
     }
 
-    /**
-     * Returns a value for a interval definition, which can be used for re-materialization.
-     *
-     * @param op An instruction which defines a value
-     * @param operand The destination operand of the instruction
-     * @param interval The interval for this defined value.
-     * @return Returns the value which is moved to the instruction and which can be reused at all
-     *         reload-locations in case the interval of this instruction is spilled. Currently this
-     *         can only be a {@link JavaConstant}.
-     */
+    ///
+    // Returns a value for a interval definition, which can be used for re-materialization.
+    //
+    // @param op An instruction which defines a value
+    // @param operand The destination operand of the instruction
+    // @param interval The interval for this defined value.
+    // @return Returns the value which is moved to the instruction and which can be reused at all
+    //         reload-locations in case the interval of this instruction is spilled. Currently this
+    //         can only be a {@link JavaConstant}.
+    ///
     protected Constant getMaterializedValue(LIRInstruction __op, Value __operand, Interval __interval)
     {
         if (LoadConstantOp.isLoadConstantOp(__op))
         {
             LoadConstantOp __move = LoadConstantOp.asLoadConstantOp(__op);
 
-            if (!allocator.neverSpillConstants())
+            if (!this.___allocator.neverSpillConstants())
             {
-                /*
-                 * Check if the interval has any uses which would accept an stack location (priority
-                 * == ShouldHaveRegister). Rematerialization of such intervals can result in a
-                 * degradation, because rematerialization always inserts a constant load, even if
-                 * the value is not needed in a register.
-                 */
+                // Check if the interval has any uses which would accept an stack location (priority
+                // == ShouldHaveRegister). Rematerialization of such intervals can result in a
+                // degradation, because rematerialization always inserts a constant load, even if
+                // the value is not needed in a register.
                 Interval.UsePosList __usePosList = __interval.usePosList();
                 int __numUsePos = __usePosList.size();
                 for (int __useIdx = 0; __useIdx < __numUsePos; __useIdx++)

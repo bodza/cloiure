@@ -7,9 +7,9 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Marks a position in the graph where a safepoint should be emitted.
- */
+///
+// Marks a position in the graph where a safepoint should be emitted.
+///
 // @class SafepointNode
 public final class SafepointNode extends DeoptimizingFixedWithNextNode implements Lowerable, LIRLowerable
 {

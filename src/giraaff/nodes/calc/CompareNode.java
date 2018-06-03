@@ -29,42 +29,42 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
     public static final NodeClass<CompareNode> TYPE = NodeClass.create(CompareNode.class);
 
     // @field
-    protected final CanonicalCondition condition;
+    protected final CanonicalCondition ___condition;
     // @field
-    protected final boolean unorderedIsTrue;
+    protected final boolean ___unorderedIsTrue;
 
-    /**
-     * Constructs a new Compare instruction.
-     *
-     * @param x the instruction producing the first input to the instruction
-     * @param y the instruction that produces the second input to this instruction
-     */
+    ///
+    // Constructs a new Compare instruction.
+    //
+    // @param x the instruction producing the first input to the instruction
+    // @param y the instruction that produces the second input to this instruction
+    ///
     // @cons
     protected CompareNode(NodeClass<? extends CompareNode> __c, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __x, ValueNode __y)
     {
         super(__c, __x, __y);
-        this.condition = __condition;
-        this.unorderedIsTrue = __unorderedIsTrue;
+        this.___condition = __condition;
+        this.___unorderedIsTrue = __unorderedIsTrue;
     }
 
-    /**
-     * Gets the condition (comparison operation) for this instruction.
-     *
-     * @return the condition
-     */
+    ///
+    // Gets the condition (comparison operation) for this instruction.
+    //
+    // @return the condition
+    ///
     public final CanonicalCondition condition()
     {
-        return condition;
+        return this.___condition;
     }
 
-    /**
-     * Checks whether unordered inputs mean true or false (only applies to float operations).
-     *
-     * @return {@code true} if unordered inputs produce true
-     */
+    ///
+    // Checks whether unordered inputs mean true or false (only applies to float operations).
+    //
+    // @return {@code true} if unordered inputs produce true
+    ///
     public final boolean unorderedIsTrue()
     {
-        return this.unorderedIsTrue;
+        return this.___unorderedIsTrue;
     }
 
     public static LogicNode tryConstantFold(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
@@ -86,15 +86,15 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         return null;
     }
 
-    /**
-     * Does this operation represent an identity check such that for x == y, x is exactly the same
-     * thing as y. This is generally true except for some floating point comparisons.
-     *
-     * @return true for identity comparisons
-     */
+    ///
+    // Does this operation represent an identity check such that for x == y, x is exactly the same
+    // thing as y. This is generally true except for some floating point comparisons.
+    //
+    // @return true for identity comparisons
+    ///
     public boolean isIdentityComparison()
     {
-        return condition == CanonicalCondition.EQ;
+        return this.___condition == CanonicalCondition.EQ;
     }
 
     // @class CompareNode.CompareOp
@@ -251,7 +251,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
             return null;
         }
 
-        protected abstract LogicNode duplicateModified(ValueNode newW, ValueNode newY, boolean unorderedIsTrue, NodeView view);
+        protected abstract LogicNode duplicateModified(ValueNode __newW, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view);
     }
 
     public static LogicNode createCompareNode(StructuredGraph __graph, CanonicalCondition __condition, ValueNode __x, ValueNode __y, ConstantReflectionProvider __constantReflection, NodeView __view)

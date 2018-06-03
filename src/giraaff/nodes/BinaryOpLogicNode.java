@@ -18,29 +18,29 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
 
     @Input
     // @field
-    protected ValueNode x;
+    protected ValueNode ___x;
     @Input
     // @field
-    protected ValueNode y;
+    protected ValueNode ___y;
 
     @Override
     public ValueNode getX()
     {
-        return x;
+        return this.___x;
     }
 
     @Override
     public ValueNode getY()
     {
-        return y;
+        return this.___y;
     }
 
     // @cons
     public BinaryOpLogicNode(NodeClass<? extends BinaryOpLogicNode> __c, ValueNode __x, ValueNode __y)
     {
         super(__c);
-        this.x = __x;
-        this.y = __y;
+        this.___x = __x;
+        this.___y = __y;
     }
 
     @Override
@@ -48,21 +48,21 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
     {
     }
 
-    /**
-     * Ensure a canonical ordering of inputs for commutative nodes to improve GVN results. Order the
-     * inputs by increasing {@link Node#id} and call {@link Graph#findDuplicate(Node)} on the node
-     * if it's currently in a graph.
-     *
-     * @return the original node or another node with the same inputs, ignoring ordering.
-     */
+    ///
+    // Ensure a canonical ordering of inputs for commutative nodes to improve GVN results. Order the
+    // inputs by increasing {@link Node#id} and call {@link Graph#findDuplicate(Node)} on the node
+    // if it's currently in a graph.
+    //
+    // @return the original node or another node with the same inputs, ignoring ordering.
+    ///
     @SuppressWarnings("deprecation")
     public LogicNode maybeCommuteInputs()
     {
-        if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId()))
+        if (!this.___y.isConstant() && (this.___x.isConstant() || this.___x.getId() > this.___y.getId()))
         {
-            ValueNode __tmp = x;
-            x = y;
-            y = __tmp;
+            ValueNode __tmp = this.___x;
+            this.___x = this.___y;
+            this.___y = __tmp;
             if (graph() != null)
             {
                 // see if this node already exists
@@ -76,9 +76,9 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
         return this;
     }
 
-    public abstract Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp);
+    public abstract Stamp getSucceedingStampForX(boolean __negated, Stamp __xStamp, Stamp __yStamp);
 
-    public abstract Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp);
+    public abstract Stamp getSucceedingStampForY(boolean __negated, Stamp __xStamp, Stamp __yStamp);
 
-    public abstract TriState tryFold(Stamp xStamp, Stamp yStamp);
+    public abstract TriState tryFold(Stamp __xStamp, Stamp __yStamp);
 }

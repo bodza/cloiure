@@ -9,97 +9,97 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.type.TypeReference;
 
-/**
- * Utility for deriving hint types for a type check instruction (e.g. checkcast or instanceof) based
- * on the target type of the check and any profiling information available for the instruction.
- */
+///
+// Utility for deriving hint types for a type check instruction (e.g. checkcast or instanceof) based
+// on the target type of the check and any profiling information available for the instruction.
+///
 // @class TypeCheckHints
 public final class TypeCheckHints
 {
-    /**
-     * A receiver type profiled in a type check instruction.
-     */
+    ///
+    // A receiver type profiled in a type check instruction.
+    ///
     // @class TypeCheckHints.Hint
     public static final class Hint
     {
-        /**
-         * A type seen while profiling a type check instruction.
-         */
+        ///
+        // A type seen while profiling a type check instruction.
+        ///
         // @field
-        public final ResolvedJavaType type;
+        public final ResolvedJavaType ___type;
 
-        /**
-         * Specifies if {@link #type} is a sub-type of the checked type.
-         */
+        ///
+        // Specifies if {@link #type} is a sub-type of the checked type.
+        ///
         // @field
-        public final boolean positive;
+        public final boolean ___positive;
 
         // @cons
         Hint(ResolvedJavaType __type, boolean __positive)
         {
             super();
-            this.type = __type;
-            this.positive = __positive;
+            this.___type = __type;
+            this.___positive = __positive;
         }
     }
 
     // @def
     private static final Hint[] NO_HINTS = {};
 
-    /**
-     * If non-null, then this is the only type that could pass the type check because the target of
-     * the type check is a final class or has been speculated to be a final class and this value is
-     * the only concrete subclass of the target type.
-     */
+    ///
+    // If non-null, then this is the only type that could pass the type check because the target of
+    // the type check is a final class or has been speculated to be a final class and this value is
+    // the only concrete subclass of the target type.
+    ///
     // @field
-    public final ResolvedJavaType exact;
+    public final ResolvedJavaType ___exact;
 
-    /**
-     * The most likely types that the type check instruction will see.
-     */
+    ///
+    // The most likely types that the type check instruction will see.
+    ///
     // @field
-    public final Hint[] hints;
+    public final Hint[] ___hints;
 
-    /**
-     * The profile from which this information was derived.
-     */
+    ///
+    // The profile from which this information was derived.
+    ///
     // @field
-    public final JavaTypeProfile profile;
+    public final JavaTypeProfile ___profile;
 
-    /**
-     * The total probability that the type check will hit one of the types in {@link #hints}.
-     */
+    ///
+    // The total probability that the type check will hit one of the types in {@link #hints}.
+    ///
     // @field
-    public final double hintHitProbability;
+    public final double ___hintHitProbability;
 
-    /**
-     * Derives hint information for use when generating the code for a type check instruction.
-     *
-     * @param targetType the target type of the type check
-     * @param profile the profiling information available for the instruction (if any)
-     * @param assumptions the object in which speculations are recorded. This is null if
-     *            speculations are not supported.
-     * @param minHintHitProbability if the probability that the type check will hit one of the
-     *            profiled types (up to {@code maxHints}) is below this value, then {@link #hints}
-     *            will be null
-     * @param maxHints the maximum length of {@link #hints}
-     */
+    ///
+    // Derives hint information for use when generating the code for a type check instruction.
+    //
+    // @param targetType the target type of the type check
+    // @param profile the profiling information available for the instruction (if any)
+    // @param assumptions the object in which speculations are recorded. This is null if
+    //            speculations are not supported.
+    // @param minHintHitProbability if the probability that the type check will hit one of the
+    //            profiled types (up to {@code maxHints}) is below this value, then {@link #hints}
+    //            will be null
+    // @param maxHints the maximum length of {@link #hints}
+    ///
     // @cons
     public TypeCheckHints(TypeReference __targetType, JavaTypeProfile __profile, Assumptions __assumptions, double __minHintHitProbability, int __maxHints)
     {
         super();
-        this.profile = __profile;
+        this.___profile = __profile;
         if (__targetType != null && __targetType.isExact())
         {
-            exact = __targetType.getType();
+            this.___exact = __targetType.getType();
         }
         else
         {
-            exact = null;
+            this.___exact = null;
         }
         Double[] __hitProbability = { null };
-        this.hints = makeHints(__targetType, __profile, __minHintHitProbability, __maxHints, __hitProbability);
-        this.hintHitProbability = __hitProbability[0];
+        this.___hints = makeHints(__targetType, __profile, __minHintHitProbability, __maxHints, __hitProbability);
+        this.___hintHitProbability = __hitProbability[0];
     }
 
     private static Hint[] makeHints(TypeReference __targetType, JavaTypeProfile __profile, double __minHintHitProbability, int __maxHints, Double[] __hitProbability)

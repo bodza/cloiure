@@ -47,10 +47,8 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
         {
             return AbstractPointerStamp.pointerNonNull(__object.stamp(NodeView.DEFAULT));
         }
-        /*
-         * If this call can't be intrinsified don't report a non-null stamp, otherwise the stamp
-         * would change when this is lowered back to an invoke and we might lose a null check.
-         */
+        // If this call can't be intrinsified don't report a non-null stamp, otherwise the stamp
+        // would change when this is lowered back to an invoke and we might lose a null check.
         return AbstractPointerStamp.pointerMaybeNull(__object.stamp(NodeView.DEFAULT));
     }
 

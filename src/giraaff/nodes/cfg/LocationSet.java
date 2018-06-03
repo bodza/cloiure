@@ -10,44 +10,44 @@ import org.graalvm.word.LocationIdentity;
 public final class LocationSet
 {
     // @field
-    private LocationIdentity firstLocation;
+    private LocationIdentity ___firstLocation;
     // @field
-    private List<LocationIdentity> list;
+    private List<LocationIdentity> ___list;
 
     // @cons
     public LocationSet()
     {
         super();
-        list = null;
+        this.___list = null;
     }
 
     // @cons
     public LocationSet(LocationSet __other)
     {
         super();
-        this.firstLocation = __other.firstLocation;
-        if (__other.list != null && __other.list.size() > 0)
+        this.___firstLocation = __other.___firstLocation;
+        if (__other.___list != null && __other.___list.size() > 0)
         {
-            list = new ArrayList<>(__other.list);
+            this.___list = new ArrayList<>(__other.___list);
         }
     }
 
     private void initList()
     {
-        if (list == null)
+        if (this.___list == null)
         {
-            list = new ArrayList<>(4);
+            this.___list = new ArrayList<>(4);
         }
     }
 
     public boolean isEmpty()
     {
-        return firstLocation == null;
+        return this.___firstLocation == null;
     }
 
     public boolean isAny()
     {
-        return firstLocation != null && firstLocation.isAny();
+        return this.___firstLocation != null && this.___firstLocation.isAny();
     }
 
     public void add(LocationIdentity __location)
@@ -58,8 +58,8 @@ public final class LocationSet
         }
         else if (__location.isAny())
         {
-            firstLocation = __location;
-            list = null;
+            this.___firstLocation = __location;
+            this.___list = null;
         }
         else if (__location.isImmutable())
         {
@@ -67,37 +67,37 @@ public final class LocationSet
         }
         else
         {
-            if (firstLocation == null)
+            if (this.___firstLocation == null)
             {
-                firstLocation = __location;
+                this.___firstLocation = __location;
             }
-            else if (__location.equals(firstLocation))
+            else if (__location.equals(this.___firstLocation))
             {
                 return;
             }
             else
             {
                 initList();
-                for (int __i = 0; __i < list.size(); ++__i)
+                for (int __i = 0; __i < this.___list.size(); ++__i)
                 {
-                    LocationIdentity __value = list.get(__i);
+                    LocationIdentity __value = this.___list.get(__i);
                     if (__location.equals(__value))
                     {
                         return;
                     }
                 }
-                list.add(__location);
+                this.___list.add(__location);
             }
         }
     }
 
     public void addAll(LocationSet __other)
     {
-        if (__other.firstLocation != null)
+        if (__other.___firstLocation != null)
         {
-            add(__other.firstLocation);
+            add(__other.___firstLocation);
         }
-        List<LocationIdentity> __otherList = __other.list;
+        List<LocationIdentity> __otherList = __other.___list;
         if (__otherList != null)
         {
             for (LocationIdentity __l : __otherList)
@@ -109,19 +109,19 @@ public final class LocationSet
 
     public boolean contains(LocationIdentity __locationIdentity)
     {
-        if (LocationIdentity.any().equals(firstLocation))
+        if (LocationIdentity.any().equals(this.___firstLocation))
         {
             return true;
         }
-        if (__locationIdentity.equals(firstLocation))
+        if (__locationIdentity.equals(this.___firstLocation))
         {
             return true;
         }
-        if (list != null)
+        if (this.___list != null)
         {
-            for (int __i = 0; __i < list.size(); ++__i)
+            for (int __i = 0; __i < this.___list.size(); ++__i)
             {
-                LocationIdentity __value = list.get(__i);
+                LocationIdentity __value = this.___list.get(__i);
                 if (__locationIdentity.equals(__value))
                 {
                     return true;

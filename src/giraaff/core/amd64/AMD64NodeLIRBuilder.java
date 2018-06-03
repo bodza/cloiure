@@ -34,7 +34,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
     {
         Value __targetAddressSrc = operand(__callTarget.computedAddress());
         AllocatableValue __targetAddress = AMD64.rax.asValue(__targetAddressSrc.getValueKind());
-        gen.emitMove(__targetAddress, __targetAddressSrc);
+        this.___gen.emitMove(__targetAddress, __targetAddressSrc);
         append(new AMD64Call.IndirectCallOp(__callTarget.targetMethod(), __result, __parameters, __temps, __targetAddress, __callState));
     }
 
@@ -43,7 +43,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
     {
         if (__valueNode instanceof IntegerDivRemNode)
         {
-            AMD64ArithmeticLIRGenerator __arithmeticGen = (AMD64ArithmeticLIRGenerator) gen.getArithmetic();
+            AMD64ArithmeticLIRGenerator __arithmeticGen = (AMD64ArithmeticLIRGenerator) this.___gen.getArithmetic();
             IntegerDivRemNode __divRem = (IntegerDivRemNode) __valueNode;
             FixedNode __node = __divRem.next();
             while (true)
@@ -82,11 +82,15 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
                             switch (__divRem.getType())
                             {
                                 case SIGNED:
+                                {
                                     __results = __arithmeticGen.emitSignedDivRem(operand(__divRem.getX()), operand(__divRem.getY()), state((DeoptimizingNode) __valueNode));
                                     break;
+                                }
                                 case UNSIGNED:
+                                {
                                     __results = __arithmeticGen.emitUnsignedDivRem(operand(__divRem.getX()), operand(__divRem.getY()), state((DeoptimizingNode) __valueNode));
                                     break;
+                                }
                                 default:
                                     throw GraalError.shouldNotReachHere();
                             }
@@ -116,7 +120,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
     @Override
     public AMD64LIRGenerator getLIRGeneratorTool()
     {
-        return (AMD64LIRGenerator) gen;
+        return (AMD64LIRGenerator) this.___gen;
     }
 
     @Override

@@ -10,10 +10,10 @@ import giraaff.lir.Opcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Performs a hard-coded tail call to the specified target, which normally should be an
- * {@link InstalledCode} instance.
- */
+///
+// Performs a hard-coded tail call to the specified target, which normally should be an
+// {@link InstalledCode} instance.
+///
 @Opcode
 // @class AMD64TailcallOp
 public final class AMD64TailcallOp extends AMD64LIRInstruction
@@ -23,17 +23,17 @@ public final class AMD64TailcallOp extends AMD64LIRInstruction
 
     @Use
     // @field
-    protected Value target;
+    protected Value ___target;
     @Alive
     // @field
-    protected Value[] parameters;
+    protected Value[] ___parameters;
 
     // @cons
     public AMD64TailcallOp(Value[] __parameters, Value __target)
     {
         super(TYPE);
-        this.target = __target;
-        this.parameters = __parameters;
+        this.___target = __target;
+        this.___parameters = __parameters;
     }
 
     @Override
@@ -43,7 +43,7 @@ public final class AMD64TailcallOp extends AMD64LIRInstruction
         __masm.leave();
 
         // jump to the target method
-        __masm.jmp(ValueUtil.asRegister(target));
+        __masm.jmp(ValueUtil.asRegister(this.___target));
         __masm.ensureUniquePC();
     }
 }

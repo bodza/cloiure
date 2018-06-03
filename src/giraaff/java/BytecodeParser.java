@@ -166,60 +166,60 @@ import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.util.ValueMergeUtil;
 import giraaff.util.GraalError;
 
-/**
- * The {@code GraphBuilder} class parses the bytecode of a method and builds the IR graph.
- */
+///
+// The {@code GraphBuilder} class parses the bytecode of a method and builds the IR graph.
+///
 // @class BytecodeParser
 public final class BytecodeParser implements GraphBuilderContext
 {
-    /**
-     * A scoped object for tasks to be performed after parsing an intrinsic such as processing
-     * {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frames states.
-     */
+    ///
+    // A scoped object for tasks to be performed after parsing an intrinsic such as processing
+    // {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frames states.
+    ///
     // @class BytecodeParser.IntrinsicScope
     static final class IntrinsicScope implements AutoCloseable
     {
         // @field
-        FrameState stateBefore;
+        FrameState ___stateBefore;
         // @field
-        final Mark mark;
+        final Mark ___mark;
         // @field
-        final BytecodeParser parser;
+        final BytecodeParser ___parser;
         // @field
-        List<ReturnToCallerData> returnDataList;
+        List<ReturnToCallerData> ___returnDataList;
 
-        /**
-         * Creates a scope for root parsing an intrinsic.
-         *
-         * @param parser the parsing context of the intrinsic
-         */
+        ///
+        // Creates a scope for root parsing an intrinsic.
+        //
+        // @param parser the parsing context of the intrinsic
+        ///
         // @cons
         IntrinsicScope(BytecodeParser __parser)
         {
             super();
-            this.parser = __parser;
-            mark = null;
+            this.___parser = __parser;
+            this.___mark = null;
         }
 
-        /**
-         * Creates a scope for parsing an intrinsic during graph builder inlining.
-         *
-         * @param parser the parsing context of the (non-intrinsic) method calling the intrinsic
-         * @param args the arguments to the call
-         */
+        ///
+        // Creates a scope for parsing an intrinsic during graph builder inlining.
+        //
+        // @param parser the parsing context of the (non-intrinsic) method calling the intrinsic
+        // @param args the arguments to the call
+        ///
         // @cons
         IntrinsicScope(BytecodeParser __parser, JavaKind[] __argSlotKinds, ValueNode[] __args)
         {
             super();
-            this.parser = __parser;
-            mark = __parser.getGraph().getMark();
-            stateBefore = __parser.frameState.create(__parser.bci(), __parser.getNonIntrinsicAncestor(), false, __argSlotKinds, __args);
+            this.___parser = __parser;
+            this.___mark = __parser.getGraph().getMark();
+            this.___stateBefore = __parser.___frameState.create(__parser.bci(), __parser.getNonIntrinsicAncestor(), false, __argSlotKinds, __args);
         }
 
         @Override
         public void close()
         {
-            IntrinsicContext __intrinsic = parser.intrinsicContext;
+            IntrinsicContext __intrinsic = this.___parser.___intrinsicContext;
             if (__intrinsic != null && __intrinsic.isPostParseInlined())
             {
                 return;
@@ -228,24 +228,24 @@ public final class BytecodeParser implements GraphBuilderContext
             processPlaceholderFrameStates(__intrinsic);
         }
 
-        /**
-         * Fixes up the {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frame states
-         * added to the graph while parsing/inlining the intrinsic for which this object exists.
-         */
+        ///
+        // Fixes up the {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frame states
+        // added to the graph while parsing/inlining the intrinsic for which this object exists.
+        ///
         private void processPlaceholderFrameStates(IntrinsicContext __intrinsic)
         {
-            StructuredGraph __graph = parser.getGraph();
+            StructuredGraph __graph = this.___parser.getGraph();
             boolean __sawInvalidFrameState = false;
-            for (Node __node : __graph.getNewNodes(mark))
+            for (Node __node : __graph.getNewNodes(this.___mark))
             {
                 if (__node instanceof FrameState)
                 {
                     FrameState __frameState = (FrameState) __node;
-                    if (BytecodeFrame.isPlaceholderBci(__frameState.bci))
+                    if (BytecodeFrame.isPlaceholderBci(__frameState.___bci))
                     {
-                        if (__frameState.bci == BytecodeFrame.AFTER_BCI)
+                        if (__frameState.___bci == BytecodeFrame.AFTER_BCI)
                         {
-                            if (parser.getInvokeReturnType() == null)
+                            if (this.___parser.getInvokeReturnType() == null)
                             {
                                 // A frame state in a root compiled intrinsic.
                                 FrameState __newFrameState = __graph.add(new FrameState(BytecodeFrame.INVALID_FRAMESTATE_BCI));
@@ -253,19 +253,19 @@ public final class BytecodeParser implements GraphBuilderContext
                             }
                             else
                             {
-                                JavaKind __returnKind = parser.getInvokeReturnType().getJavaKind();
-                                FrameStateBuilder __frameStateBuilder = parser.frameState;
+                                JavaKind __returnKind = this.___parser.getInvokeReturnType().getJavaKind();
+                                FrameStateBuilder __frameStateBuilder = this.___parser.___frameState;
                                 if (__frameState.stackSize() != 0)
                                 {
                                     ValueNode __returnVal = __frameState.stackAt(0);
-                                    if (!ReturnToCallerData.containsReturnValue(returnDataList, __returnVal))
+                                    if (!ReturnToCallerData.containsReturnValue(this.___returnDataList, __returnVal))
                                     {
                                         throw new GraalError("AFTER_BCI frame state within an intrinsic has a non-return value on the stack: %s", __returnVal);
                                     }
 
                                     // Swap the top-of-stack value with the return value.
                                     ValueNode __tos = __frameStateBuilder.pop(__returnKind);
-                                    FrameState __newFrameState = __frameStateBuilder.create(parser.stream.nextBCI(), parser.getNonIntrinsicAncestor(), false, new JavaKind[] { __returnKind }, new ValueNode[] { __returnVal });
+                                    FrameState __newFrameState = __frameStateBuilder.create(this.___parser.___stream.nextBCI(), this.___parser.getNonIntrinsicAncestor(), false, new JavaKind[] { __returnKind }, new ValueNode[] { __returnVal });
                                     __frameState.replaceAndDelete(__newFrameState);
                                     __frameStateBuilder.push(__returnKind, __tos);
                                 }
@@ -281,23 +281,23 @@ public final class BytecodeParser implements GraphBuilderContext
                                 else
                                 {
                                     // An intrinsic for a void method.
-                                    FrameState __newFrameState = __frameStateBuilder.create(parser.stream.nextBCI(), null);
+                                    FrameState __newFrameState = __frameStateBuilder.create(this.___parser.___stream.nextBCI(), null);
                                     __frameState.replaceAndDelete(__newFrameState);
                                 }
                             }
                         }
-                        else if (__frameState.bci == BytecodeFrame.BEFORE_BCI)
+                        else if (__frameState.___bci == BytecodeFrame.BEFORE_BCI)
                         {
-                            if (stateBefore == null)
+                            if (this.___stateBefore == null)
                             {
-                                stateBefore = __graph.start().stateAfter();
+                                this.___stateBefore = __graph.start().stateAfter();
                             }
-                            if (stateBefore != __frameState)
+                            if (this.___stateBefore != __frameState)
                             {
-                                __frameState.replaceAndDelete(stateBefore);
+                                __frameState.replaceAndDelete(this.___stateBefore);
                             }
                         }
-                        else if (__frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
+                        else if (__frameState.___bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
                         {
                             // This is a frame state for the entry point to an exception dispatcher in an intrinsic.
                             // For example, the invoke denoting a partial intrinsic exit will have an edge to such a
@@ -306,11 +306,11 @@ public final class BytecodeParser implements GraphBuilderContext
                             // value on the stack on entry to an exception handler, namely the exception object.
                             ValueNode __exceptionValue = __frameState.stackAt(0);
                             ExceptionObjectNode __exceptionObject = (ExceptionObjectNode) GraphUtil.unproxify(__exceptionValue);
-                            FrameStateBuilder __dispatchState = parser.frameState.copy();
+                            FrameStateBuilder __dispatchState = this.___parser.___frameState.copy();
                             __dispatchState.clearStack();
                             __dispatchState.push(JavaKind.Object, __exceptionValue);
                             __dispatchState.setRethrowException(true);
-                            FrameState __newFrameState = __dispatchState.create(parser.bci(), __exceptionObject);
+                            FrameState __newFrameState = __dispatchState.create(this.___parser.bci(), __exceptionObject);
                             __frameState.replaceAndDelete(__newFrameState);
                         }
                     }
@@ -318,14 +318,14 @@ public final class BytecodeParser implements GraphBuilderContext
             }
             if (__sawInvalidFrameState)
             {
-                JavaKind __returnKind = parser.getInvokeReturnType().getJavaKind();
-                FrameStateBuilder __frameStateBuilder = parser.frameState;
+                JavaKind __returnKind = this.___parser.getInvokeReturnType().getJavaKind();
+                FrameStateBuilder __frameStateBuilder = this.___parser.___frameState;
                 ValueNode __returnValue = __frameStateBuilder.pop(__returnKind);
                 StateSplitProxyNode __proxy = __graph.add(new StateSplitProxyNode(__returnValue));
-                parser.lastInstr.setNext(__proxy);
+                this.___parser.___lastInstr.setNext(__proxy);
                 __frameStateBuilder.push(__returnKind, __proxy);
-                __proxy.setStateAfter(parser.createFrameState(parser.stream.nextBCI(), __proxy));
-                parser.lastInstr = __proxy;
+                __proxy.setStateAfter(this.___parser.createFrameState(this.___parser.___stream.nextBCI(), __proxy));
+                this.___parser.___lastInstr = __proxy;
             }
         }
     }
@@ -334,16 +334,16 @@ public final class BytecodeParser implements GraphBuilderContext
     private static final class Target
     {
         // @field
-        FixedNode fixed;
+        FixedNode ___fixed;
         // @field
-        FrameStateBuilder state;
+        FrameStateBuilder ___state;
 
         // @cons
         Target(FixedNode __fixed, FrameStateBuilder __state)
         {
             super();
-            this.fixed = __fixed;
-            this.state = __state;
+            this.___fixed = __fixed;
+            this.___state = __state;
         }
     }
 
@@ -351,23 +351,23 @@ public final class BytecodeParser implements GraphBuilderContext
     protected static final class ReturnToCallerData
     {
         // @field
-        protected final ValueNode returnValue;
+        protected final ValueNode ___returnValue;
         // @field
-        protected final FixedWithNextNode beforeReturnNode;
+        protected final FixedWithNextNode ___beforeReturnNode;
 
         // @cons
         protected ReturnToCallerData(ValueNode __returnValue, FixedWithNextNode __beforeReturnNode)
         {
             super();
-            this.returnValue = __returnValue;
-            this.beforeReturnNode = __beforeReturnNode;
+            this.___returnValue = __returnValue;
+            this.___beforeReturnNode = __beforeReturnNode;
         }
 
         static boolean containsReturnValue(List<ReturnToCallerData> __list, ValueNode __value)
         {
             for (ReturnToCallerData __e : __list)
             {
-                if (__e.returnValue == __value)
+                if (__e.___returnValue == __value)
                 {
                     return true;
                 }
@@ -377,135 +377,135 @@ public final class BytecodeParser implements GraphBuilderContext
     }
 
     // @field
-    private final GraphBuilderPhase.Instance graphBuilderInstance;
+    private final GraphBuilderPhase.Instance ___graphBuilderInstance;
     // @field
-    protected final StructuredGraph graph;
+    protected final StructuredGraph ___graph;
 
     // @field
-    private BciBlockMapping blockMap;
+    private BciBlockMapping ___blockMap;
     // @field
-    private LocalLiveness liveness;
+    private LocalLiveness ___liveness;
     // @field
-    protected final int entryBCI;
+    protected final int ___entryBCI;
     // @field
-    private final BytecodeParser parent;
+    private final BytecodeParser ___parent;
 
     // @field
-    private ValueNode methodSynchronizedObject;
+    private ValueNode ___methodSynchronizedObject;
 
     // @field
-    private List<ReturnToCallerData> returnDataList;
+    private List<ReturnToCallerData> ___returnDataList;
     // @field
-    private ValueNode unwindValue;
+    private ValueNode ___unwindValue;
     // @field
-    private FixedWithNextNode beforeUnwindNode;
+    private FixedWithNextNode ___beforeUnwindNode;
 
     // @field
-    protected FixedWithNextNode lastInstr; // the last instruction added
+    protected FixedWithNextNode ___lastInstr; // the last instruction added
     // @field
-    private boolean controlFlowSplit;
+    private boolean ___controlFlowSplit;
     // @field
-    private final InvocationPluginReceiver invocationPluginReceiver = new InvocationPluginReceiver(this);
+    private final InvocationPluginReceiver ___invocationPluginReceiver = new InvocationPluginReceiver(this);
 
     // @field
-    private FixedWithNextNode[] firstInstructionArray;
+    private FixedWithNextNode[] ___firstInstructionArray;
     // @field
-    private FrameStateBuilder[] entryStateArray;
+    private FrameStateBuilder[] ___entryStateArray;
 
     // @field
-    private boolean finalBarrierRequired;
+    private boolean ___finalBarrierRequired;
     // @field
-    private ValueNode originalReceiver;
+    private ValueNode ___originalReceiver;
     // @field
-    private final boolean eagerInitializing;
+    private final boolean ___eagerInitializing;
     // @field
-    private final boolean uninitializedIsError;
+    private final boolean ___uninitializedIsError;
 
     // @cons
     protected BytecodeParser(GraphBuilderPhase.Instance __graphBuilderInstance, StructuredGraph __graph, BytecodeParser __parent, ResolvedJavaMethod __method, int __entryBCI, IntrinsicContext __intrinsicContext)
     {
         super();
-        this.bytecodeProvider = __intrinsicContext == null ? ResolvedJavaMethodBytecodeProvider.INSTANCE : __intrinsicContext.getBytecodeProvider();
-        this.code = bytecodeProvider.getBytecode(__method);
-        this.method = code.getMethod();
-        this.graphBuilderInstance = __graphBuilderInstance;
-        this.graph = __graph;
-        this.graphBuilderConfig = __graphBuilderInstance.graphBuilderConfig;
-        this.optimisticOpts = __graphBuilderInstance.optimisticOpts;
-        this.metaAccess = __graphBuilderInstance.metaAccess;
-        this.stampProvider = __graphBuilderInstance.stampProvider;
-        this.constantReflection = __graphBuilderInstance.constantReflection;
-        this.constantFieldProvider = __graphBuilderInstance.constantFieldProvider;
-        this.stream = new BytecodeStream(code.getCode());
-        this.profilingInfo = __graph.useProfilingInfo() ? code.getProfilingInfo() : null;
-        this.constantPool = code.getConstantPool();
-        this.intrinsicContext = __intrinsicContext;
-        this.entryBCI = __entryBCI;
-        this.parent = __parent;
+        this.___bytecodeProvider = __intrinsicContext == null ? ResolvedJavaMethodBytecodeProvider.INSTANCE : __intrinsicContext.getBytecodeProvider();
+        this.___code = this.___bytecodeProvider.getBytecode(__method);
+        this.___method = this.___code.getMethod();
+        this.___graphBuilderInstance = __graphBuilderInstance;
+        this.___graph = __graph;
+        this.___graphBuilderConfig = __graphBuilderInstance.___graphBuilderConfig;
+        this.___optimisticOpts = __graphBuilderInstance.___optimisticOpts;
+        this.___metaAccess = __graphBuilderInstance.___metaAccess;
+        this.___stampProvider = __graphBuilderInstance.___stampProvider;
+        this.___constantReflection = __graphBuilderInstance.___constantReflection;
+        this.___constantFieldProvider = __graphBuilderInstance.___constantFieldProvider;
+        this.___stream = new BytecodeStream(this.___code.getCode());
+        this.___profilingInfo = __graph.useProfilingInfo() ? this.___code.getProfilingInfo() : null;
+        this.___constantPool = this.___code.getConstantPool();
+        this.___intrinsicContext = __intrinsicContext;
+        this.___entryBCI = __entryBCI;
+        this.___parent = __parent;
 
-        eagerInitializing = graphBuilderConfig.eagerResolving();
-        uninitializedIsError = graphBuilderConfig.unresolvedIsError();
+        this.___eagerInitializing = this.___graphBuilderConfig.eagerResolving();
+        this.___uninitializedIsError = this.___graphBuilderConfig.unresolvedIsError();
     }
 
     protected GraphBuilderPhase.Instance getGraphBuilderInstance()
     {
-        return graphBuilderInstance;
+        return this.___graphBuilderInstance;
     }
 
     public ValueNode getUnwindValue()
     {
-        return unwindValue;
+        return this.___unwindValue;
     }
 
     public FixedWithNextNode getBeforeUnwindNode()
     {
-        return this.beforeUnwindNode;
+        return this.___beforeUnwindNode;
     }
 
     @SuppressWarnings("try")
     protected void buildRootMethod()
     {
-        FrameStateBuilder __startFrameState = new FrameStateBuilder(this, code, graph);
-        __startFrameState.initializeForMethodStart(graph.getAssumptions(), graphBuilderConfig.eagerResolving() || intrinsicContext != null, graphBuilderConfig.getPlugins());
+        FrameStateBuilder __startFrameState = new FrameStateBuilder(this, this.___code, this.___graph);
+        __startFrameState.initializeForMethodStart(this.___graph.getAssumptions(), this.___graphBuilderConfig.eagerResolving() || this.___intrinsicContext != null, this.___graphBuilderConfig.getPlugins());
 
-        try (IntrinsicScope __s = intrinsicContext != null ? new IntrinsicScope(this) : null)
+        try (IntrinsicScope __s = this.___intrinsicContext != null ? new IntrinsicScope(this) : null)
         {
-            build(graph.start(), __startFrameState);
+            build(this.___graph.start(), __startFrameState);
         }
 
         cleanupFinalGraph();
-        ComputeLoopFrequenciesClosure.compute(graph);
+        ComputeLoopFrequenciesClosure.compute(this.___graph);
     }
 
     protected void build(FixedWithNextNode __startInstruction, FrameStateBuilder __startFrameState)
     {
-        if (bytecodeProvider.shouldRecordMethodDependencies())
+        if (this.___bytecodeProvider.shouldRecordMethodDependencies())
         {
             // record method dependency in the graph
-            graph.recordMethod(method);
+            this.___graph.recordMethod(this.___method);
         }
 
         // compute the block map, setup exception handlers and get the entrypoint(s)
-        BciBlockMapping __newMapping = BciBlockMapping.create(stream, code);
-        this.blockMap = __newMapping;
-        this.firstInstructionArray = new FixedWithNextNode[blockMap.getBlockCount()];
-        this.entryStateArray = new FrameStateBuilder[blockMap.getBlockCount()];
-        if (!method.isStatic())
+        BciBlockMapping __newMapping = BciBlockMapping.create(this.___stream, this.___code);
+        this.___blockMap = __newMapping;
+        this.___firstInstructionArray = new FixedWithNextNode[this.___blockMap.getBlockCount()];
+        this.___entryStateArray = new FrameStateBuilder[this.___blockMap.getBlockCount()];
+        if (!this.___method.isStatic())
         {
-            originalReceiver = __startFrameState.loadLocal(0, JavaKind.Object);
+            this.___originalReceiver = __startFrameState.loadLocal(0, JavaKind.Object);
         }
 
-        liveness = LocalLiveness.compute(stream, blockMap.getBlocks(), method.getMaxLocals(), blockMap.getLoopCount());
+        this.___liveness = LocalLiveness.compute(this.___stream, this.___blockMap.getBlocks(), this.___method.getMaxLocals(), this.___blockMap.getLoopCount());
 
-        lastInstr = __startInstruction;
+        this.___lastInstr = __startInstruction;
         this.setCurrentFrameState(__startFrameState);
-        stream.setBCI(0);
+        this.___stream.setBCI(0);
 
-        BciBlock __startBlock = blockMap.getStartBlock();
-        if (this.parent == null)
+        BciBlock __startBlock = this.___blockMap.getStartBlock();
+        if (this.___parent == null)
         {
-            StartNode __startNode = graph.start();
-            if (method.isSynchronized())
+            StartNode __startNode = this.___graph.start();
+            if (this.___method.isSynchronized())
             {
                 __startNode.setStateAfter(createFrameState(BytecodeFrame.BEFORE_BCI, __startNode));
             }
@@ -513,16 +513,14 @@ public final class BytecodeParser implements GraphBuilderContext
             {
                 if (!parsingIntrinsic())
                 {
-                    if (graph.method() != null && graph.method().isJavaLangObjectInit())
+                    if (this.___graph.method() != null && this.___graph.method().isJavaLangObjectInit())
                     {
-                        /*
-                         * Don't clear the receiver when Object.<init> is the compilation root.
-                         * The receiver is needed as input to RegisterFinalizerNode.
-                         */
+                        // Don't clear the receiver when Object.<init> is the compilation root.
+                        // The receiver is needed as input to RegisterFinalizerNode.
                     }
                     else
                     {
-                        frameState.clearNonLiveLocals(__startBlock, liveness, true);
+                        this.___frameState.clearNonLiveLocals(__startBlock, this.___liveness, true);
                     }
                     __startNode.setStateAfter(createFrameState(bci(), __startNode));
                 }
@@ -537,52 +535,52 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        if (method.isSynchronized())
+        if (this.___method.isSynchronized())
         {
-            finishPrepare(lastInstr, BytecodeFrame.BEFORE_BCI);
+            finishPrepare(this.___lastInstr, BytecodeFrame.BEFORE_BCI);
 
             // add a monitor enter to the start block
-            methodSynchronizedObject = synchronizedObject(frameState, method);
-            frameState.clearNonLiveLocals(__startBlock, liveness, true);
-            genMonitorEnter(methodSynchronizedObject, bci());
+            this.___methodSynchronizedObject = synchronizedObject(this.___frameState, this.___method);
+            this.___frameState.clearNonLiveLocals(__startBlock, this.___liveness, true);
+            genMonitorEnter(this.___methodSynchronizedObject, bci());
         }
 
-        finishPrepare(lastInstr, 0);
+        finishPrepare(this.___lastInstr, 0);
 
-        currentBlock = blockMap.getStartBlock();
-        setEntryState(__startBlock, frameState);
+        this.___currentBlock = this.___blockMap.getStartBlock();
+        setEntryState(__startBlock, this.___frameState);
         if (__startBlock.isLoopHeader())
         {
             appendGoto(__startBlock);
         }
         else
         {
-            setFirstInstruction(__startBlock, lastInstr);
+            setFirstInstruction(__startBlock, this.___lastInstr);
         }
 
-        BciBlock[] __blocks = blockMap.getBlocks();
+        BciBlock[] __blocks = this.___blockMap.getBlocks();
         for (BciBlock __block : __blocks)
         {
             processBlock(__block);
         }
     }
 
-    /**
-     * Hook for subclasses to modify synthetic code (start nodes and unwind nodes).
-     *
-     * @param instruction the current last instruction
-     * @param bci the current bci
-     */
+    ///
+    // Hook for subclasses to modify synthetic code (start nodes and unwind nodes).
+    //
+    // @param instruction the current last instruction
+    // @param bci the current bci
+    ///
     protected void finishPrepare(FixedWithNextNode __instruction, int __bci)
     {
     }
 
     protected void cleanupFinalGraph()
     {
-        GraphUtil.normalizeLoops(graph);
+        GraphUtil.normalizeLoops(this.___graph);
 
         // Remove dead parameters.
-        for (ParameterNode __param : graph.getNodes(ParameterNode.TYPE))
+        for (ParameterNode __param : this.___graph.getNodes(ParameterNode.TYPE))
         {
             if (__param.hasNoUsages())
             {
@@ -591,7 +589,7 @@ public final class BytecodeParser implements GraphBuilderContext
         }
 
         // Remove redundant begin nodes.
-        for (BeginNode __beginNode : graph.getNodes(BeginNode.TYPE))
+        for (BeginNode __beginNode : this.___graph.getNodes(BeginNode.TYPE))
         {
             Node __predecessor = __beginNode.predecessor();
             if (__predecessor instanceof ControlSplitNode)
@@ -606,27 +604,27 @@ public final class BytecodeParser implements GraphBuilderContext
         }
     }
 
-    /**
-     * Creates the frame state after the start node of a graph for an {@link IntrinsicContext
-     * intrinsic} that is the parse root (either for root compiling or for post-parse inlining).
-     */
+    ///
+    // Creates the frame state after the start node of a graph for an {@link IntrinsicContext
+    // intrinsic} that is the parse root (either for root compiling or for post-parse inlining).
+    ///
     private FrameState createStateAfterStartOfReplacementGraph()
     {
         FrameState __stateAfterStart;
-        if (intrinsicContext.isPostParseInlined())
+        if (this.___intrinsicContext.isPostParseInlined())
         {
-            __stateAfterStart = graph.add(new FrameState(BytecodeFrame.BEFORE_BCI));
+            __stateAfterStart = this.___graph.add(new FrameState(BytecodeFrame.BEFORE_BCI));
         }
         else
         {
-            ResolvedJavaMethod __original = intrinsicContext.getOriginalMethod();
+            ResolvedJavaMethod __original = this.___intrinsicContext.getOriginalMethod();
             ValueNode[] __locals;
-            if (__original.getMaxLocals() == frameState.localsSize() || __original.isNative())
+            if (__original.getMaxLocals() == this.___frameState.localsSize() || __original.isNative())
             {
                 __locals = new ValueNode[__original.getMaxLocals()];
                 for (int __i = 0; __i < __locals.length; __i++)
                 {
-                    ValueNode __node = frameState.locals[__i];
+                    ValueNode __node = this.___frameState.___locals[__i];
                     if (__node == FrameState.TWO_SLOT_MARKER)
                     {
                         __node = null;
@@ -640,7 +638,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 int __parameterCount = __original.getSignature().getParameterCount(!__original.isStatic());
                 for (int __i = 0; __i < __parameterCount; __i++)
                 {
-                    ValueNode __param = frameState.locals[__i];
+                    ValueNode __param = this.___frameState.___locals[__i];
                     if (__param == FrameState.TWO_SLOT_MARKER)
                     {
                         __param = null;
@@ -652,82 +650,82 @@ public final class BytecodeParser implements GraphBuilderContext
             int __stackSize = 0;
             ValueNode[] __locks = {};
             List<MonitorIdNode> __monitorIds = Collections.emptyList();
-            __stateAfterStart = graph.add(new FrameState(null, new ResolvedJavaMethodBytecode(__original), 0, __locals, __stack, __stackSize, __locks, __monitorIds, false, false));
+            __stateAfterStart = this.___graph.add(new FrameState(null, new ResolvedJavaMethodBytecode(__original), 0, __locals, __stack, __stackSize, __locks, __monitorIds, false, false));
         }
         return __stateAfterStart;
     }
 
-    /**
-     * @param type the unresolved type of the constant
-     */
+    ///
+    // @param type the unresolved type of the constant
+    ///
     protected void handleUnresolvedLoadConstant(JavaType __type)
     {
         append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
-    /**
-     * @param type the unresolved type of the type check
-     * @param object the object value whose type is being checked against {@code type}
-     */
+    ///
+    // @param type the unresolved type of the type check
+    // @param object the object value whose type is being checked against {@code type}
+    ///
     protected void handleUnresolvedCheckCast(JavaType __type, ValueNode __object)
     {
-        append(new FixedGuardNode(graph.addOrUniqueWithInputs(IsNullNode.create(__object)), DeoptimizationReason.Unresolved, DeoptimizationAction.InvalidateRecompile));
-        frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER));
+        append(new FixedGuardNode(this.___graph.addOrUniqueWithInputs(IsNullNode.create(__object)), DeoptimizationReason.Unresolved, DeoptimizationAction.InvalidateRecompile));
+        this.___frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER));
     }
 
-    /**
-     * @param type the unresolved type of the type check
-     * @param object the object value whose type is being checked against {@code type}
-     */
+    ///
+    // @param type the unresolved type of the type check
+    // @param object the object value whose type is being checked against {@code type}
+    ///
     protected void handleUnresolvedInstanceOf(JavaType __type, ValueNode __object)
     {
-        AbstractBeginNode __successor = graph.add(new BeginNode());
-        DeoptimizeNode __deopt = graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
-        append(new IfNode(graph.addOrUniqueWithInputs(IsNullNode.create(__object)), __successor, __deopt, 1));
-        lastInstr = __successor;
-        frameState.push(JavaKind.Int, appendConstant(JavaConstant.INT_0));
+        AbstractBeginNode __successor = this.___graph.add(new BeginNode());
+        DeoptimizeNode __deopt = this.___graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
+        append(new IfNode(this.___graph.addOrUniqueWithInputs(IsNullNode.create(__object)), __successor, __deopt, 1));
+        this.___lastInstr = __successor;
+        this.___frameState.push(JavaKind.Int, appendConstant(JavaConstant.INT_0));
     }
 
-    /**
-     * @param type the type being instantiated
-     */
+    ///
+    // @param type the type being instantiated
+    ///
     protected void handleUnresolvedNewInstance(JavaType __type)
     {
         append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
-    /**
-     * @param type the type of the array being instantiated
-     * @param length the length of the array
-     */
+    ///
+    // @param type the type of the array being instantiated
+    // @param length the length of the array
+    ///
     protected void handleUnresolvedNewObjectArray(JavaType __type, ValueNode __length)
     {
         append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
-    /**
-     * @param type the type being instantiated
-     * @param dims the dimensions for the multi-array
-     */
+    ///
+    // @param type the type being instantiated
+    // @param dims the dimensions for the multi-array
+    ///
     protected void handleUnresolvedNewMultiArray(JavaType __type, ValueNode[] __dims)
     {
         append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
-    /**
-     * @param field the unresolved field
-     * @param receiver the object containing the field or {@code null} if {@code field} is static
-     */
+    ///
+    // @param field the unresolved field
+    // @param receiver the object containing the field or {@code null} if {@code field} is static
+    ///
     protected void handleUnresolvedLoadField(JavaField __field, ValueNode __receiver)
     {
         append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
-    /**
-     * @param field the unresolved field
-     * @param value the value being stored to the field
-     * @param receiver the object containing the field or {@code null} if {@code field} is static
-     */
+    ///
+    // @param field the unresolved field
+    // @param value the value being stored to the field
+    // @param receiver the object containing the field or {@code null} if {@code field} is static
+    ///
     protected void handleUnresolvedStoreField(JavaField __field, ValueNode __value, ValueNode __receiver)
     {
         append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
@@ -745,13 +743,13 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private AbstractBeginNode handleException(ValueNode __exceptionObject, int __bci, boolean __deoptimizeOnly)
     {
-        FrameStateBuilder __dispatchState = frameState.copy();
+        FrameStateBuilder __dispatchState = this.___frameState.copy();
         __dispatchState.clearStack();
 
         AbstractBeginNode __dispatchBegin;
         if (__exceptionObject == null)
         {
-            ExceptionObjectNode __newExceptionObject = graph.add(new ExceptionObjectNode(metaAccess));
+            ExceptionObjectNode __newExceptionObject = this.___graph.add(new ExceptionObjectNode(this.___metaAccess));
             __dispatchBegin = __newExceptionObject;
             __dispatchState.push(JavaKind.Object, __dispatchBegin);
             __dispatchState.setRethrowException(true);
@@ -759,16 +757,16 @@ public final class BytecodeParser implements GraphBuilderContext
         }
         else
         {
-            __dispatchBegin = graph.add(new BeginNode());
+            __dispatchBegin = this.___graph.add(new BeginNode());
             __dispatchState.push(JavaKind.Object, __exceptionObject);
             __dispatchState.setRethrowException(true);
         }
-        this.controlFlowSplit = true;
+        this.___controlFlowSplit = true;
         FixedWithNextNode __finishedDispatch = finishInstruction(__dispatchBegin, __dispatchState);
 
         if (__deoptimizeOnly)
         {
-            DeoptimizeNode __deoptimizeNode = graph.add(new DeoptimizeNode(DeoptimizationAction.None, DeoptimizationReason.TransferToInterpreter));
+            DeoptimizeNode __deoptimizeNode = this.___graph.add(new DeoptimizeNode(DeoptimizationAction.None, DeoptimizationReason.TransferToInterpreter));
             __dispatchBegin.setNext(BeginNode.begin(__deoptimizeNode));
         }
         else
@@ -780,14 +778,12 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void createHandleExceptionTarget(FixedWithNextNode __finishedDispatch, int __bci, FrameStateBuilder __dispatchState)
     {
-        BciBlock __dispatchBlock = currentBlock.exceptionDispatchBlock();
-        /*
-         * The exception dispatch block is always for the last bytecode of a block, so if we are not
-         * at the endBci yet, there is no exception handler for this bci and we can unwind immediately.
-         */
-        if (__bci != currentBlock.endBci || __dispatchBlock == null)
+        BciBlock __dispatchBlock = this.___currentBlock.exceptionDispatchBlock();
+        // The exception dispatch block is always for the last bytecode of a block, so if we are not
+        // at the endBci yet, there is no exception handler for this bci and we can unwind immediately.
+        if (__bci != this.___currentBlock.___endBci || __dispatchBlock == null)
         {
-            __dispatchBlock = blockMap.getUnwindBlock();
+            __dispatchBlock = this.___blockMap.getUnwindBlock();
         }
 
         FixedNode __target = createTarget(__dispatchBlock, __dispatchState);
@@ -796,7 +792,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected ValueNode genLoadIndexed(ValueNode __array, ValueNode __index, JavaKind __kind)
     {
-        return LoadIndexedNode.create(graph.getAssumptions(), __array, __index, __kind, metaAccess, constantReflection);
+        return LoadIndexedNode.create(this.___graph.getAssumptions(), __array, __index, __kind, this.___metaAccess, this.___constantReflection);
     }
 
     protected void genStoreIndexed(ValueNode __array, ValueNode __index, JavaKind __kind, ValueNode __value)
@@ -891,7 +887,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected ValueNode genNormalizeCompare(ValueNode __x, ValueNode __y, boolean __isUnorderedLess)
     {
-        return NormalizeCompareNode.create(__x, __y, __isUnorderedLess, JavaKind.Int, constantReflection);
+        return NormalizeCompareNode.create(__x, __y, __isUnorderedLess, JavaKind.Int, this.___constantReflection);
     }
 
     protected ValueNode genFloatConvert(FloatConvert __op, ValueNode __input)
@@ -916,32 +912,32 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void genGoto()
     {
-        appendGoto(currentBlock.getSuccessor(0));
+        appendGoto(this.___currentBlock.getSuccessor(0));
     }
 
     protected LogicNode genObjectEquals(ValueNode __x, ValueNode __y)
     {
-        return ObjectEqualsNode.create(constantReflection, metaAccess, __x, __y, NodeView.DEFAULT);
+        return ObjectEqualsNode.create(this.___constantReflection, this.___metaAccess, __x, __y, NodeView.DEFAULT);
     }
 
     protected LogicNode genIntegerEquals(ValueNode __x, ValueNode __y)
     {
-        return IntegerEqualsNode.create(constantReflection, metaAccess, null, __x, __y, NodeView.DEFAULT);
+        return IntegerEqualsNode.create(this.___constantReflection, this.___metaAccess, null, __x, __y, NodeView.DEFAULT);
     }
 
     protected LogicNode genIntegerLessThan(ValueNode __x, ValueNode __y)
     {
-        return IntegerLessThanNode.create(constantReflection, metaAccess, null, __x, __y, NodeView.DEFAULT);
+        return IntegerLessThanNode.create(this.___constantReflection, this.___metaAccess, null, __x, __y, NodeView.DEFAULT);
     }
 
     protected ValueNode genUnique(ValueNode __x)
     {
-        return graph.addOrUniqueWithInputs(__x);
+        return this.___graph.addOrUniqueWithInputs(__x);
     }
 
     protected LogicNode genUnique(LogicNode __x)
     {
-        return graph.addOrUniqueWithInputs(__x);
+        return this.___graph.addOrUniqueWithInputs(__x);
     }
 
     protected ValueNode genIfNode(LogicNode __condition, FixedNode __falseSuccessor, FixedNode __trueSuccessor, double __d)
@@ -951,10 +947,10 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void genThrow()
     {
-        ValueNode __exception = frameState.pop(JavaKind.Object);
-        FixedGuardNode __nullCheck = append(new FixedGuardNode(graph.addOrUniqueWithInputs(IsNullNode.create(__exception)), DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, true));
-        ValueNode __nonNullException = graph.maybeAddOrUnique(PiNode.create(__exception, __exception.stamp(NodeView.DEFAULT).join(StampFactory.objectNonNull()), __nullCheck));
-        lastInstr.setNext(handleException(__nonNullException, bci(), false));
+        ValueNode __exception = this.___frameState.pop(JavaKind.Object);
+        FixedGuardNode __nullCheck = append(new FixedGuardNode(this.___graph.addOrUniqueWithInputs(IsNullNode.create(__exception)), DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, true));
+        ValueNode __nonNullException = this.___graph.maybeAddOrUnique(PiNode.create(__exception, __exception.stamp(NodeView.DEFAULT).join(StampFactory.objectNonNull()), __nullCheck));
+        this.___lastInstr.setNext(handleException(__nonNullException, bci(), false));
     }
 
     protected LogicNode createInstanceOf(TypeReference __type, ValueNode __object)
@@ -1006,7 +1002,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected ValueNode genLoadField(ValueNode __receiver, ResolvedJavaField __field)
     {
-        StampPair __stamp = graphBuilderConfig.getPlugins().getOverridingStamp(this, __field.getType(), false);
+        StampPair __stamp = this.___graphBuilderConfig.getPlugins().getOverridingStamp(this, __field.getType(), false);
         if (__stamp == null)
         {
             return LoadFieldNode.create(getConstantFieldProvider(), getConstantReflection(), getMetaAccess(), getAssumptions(), __receiver, __field, false, false);
@@ -1028,11 +1024,11 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             return __receiver;
         }
-        BytecodeExceptionNode __exception = graph.add(new BytecodeExceptionNode(metaAccess, NullPointerException.class));
-        AbstractBeginNode __falseSucc = graph.add(new BeginNode());
-        ValueNode __nonNullReceiver = graph.addOrUniqueWithInputs(PiNode.create(__receiver, StampFactory.objectNonNull(), __falseSucc));
-        append(new IfNode(graph.addOrUniqueWithInputs(IsNullNode.create(__receiver)), __exception, __falseSucc, BranchProbabilityNode.SLOW_PATH_PROBABILITY));
-        lastInstr = __falseSucc;
+        BytecodeExceptionNode __exception = this.___graph.add(new BytecodeExceptionNode(this.___metaAccess, NullPointerException.class));
+        AbstractBeginNode __falseSucc = this.___graph.add(new BeginNode());
+        ValueNode __nonNullReceiver = this.___graph.addOrUniqueWithInputs(PiNode.create(__receiver, StampFactory.objectNonNull(), __falseSucc));
+        append(new IfNode(this.___graph.addOrUniqueWithInputs(IsNullNode.create(__receiver)), __exception, __falseSucc, BranchProbabilityNode.SLOW_PATH_PROBABILITY));
+        this.___lastInstr = __falseSucc;
 
         __exception.setStateAfter(createFrameState(bci(), __exception));
         __exception.setNext(handleException(__exception, bci(), false));
@@ -1041,10 +1037,10 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void emitExplicitBoundsCheck(ValueNode __index, ValueNode __length)
     {
-        AbstractBeginNode __trueSucc = graph.add(new BeginNode());
-        BytecodeExceptionNode __exception = graph.add(new BytecodeExceptionNode(metaAccess, ArrayIndexOutOfBoundsException.class, __index));
-        append(new IfNode(genUnique(IntegerBelowNode.create(constantReflection, metaAccess, null, __index, __length, NodeView.DEFAULT)), __trueSucc, __exception, BranchProbabilityNode.FAST_PATH_PROBABILITY));
-        lastInstr = __trueSucc;
+        AbstractBeginNode __trueSucc = this.___graph.add(new BeginNode());
+        BytecodeExceptionNode __exception = this.___graph.add(new BytecodeExceptionNode(this.___metaAccess, ArrayIndexOutOfBoundsException.class, __index));
+        append(new IfNode(genUnique(IntegerBelowNode.create(this.___constantReflection, this.___metaAccess, null, __index, __length, NodeView.DEFAULT)), __trueSucc, __exception, BranchProbabilityNode.FAST_PATH_PROBABILITY));
+        this.___lastInstr = __trueSucc;
 
         __exception.setStateAfter(createFrameState(bci(), __exception));
         __exception.setNext(handleException(__exception, bci(), false));
@@ -1052,22 +1048,22 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected ValueNode genArrayLength(ValueNode __x)
     {
-        return ArrayLengthNode.create(__x, constantReflection);
+        return ArrayLengthNode.create(__x, this.___constantReflection);
     }
 
     protected void genStoreField(ValueNode __receiver, ResolvedJavaField __field, ValueNode __value)
     {
         StoreFieldNode __storeFieldNode = new StoreFieldNode(__receiver, __field, __value);
         append(__storeFieldNode);
-        __storeFieldNode.setStateAfter(this.createFrameState(stream.nextBCI(), __storeFieldNode));
+        __storeFieldNode.setStateAfter(this.createFrameState(this.___stream.nextBCI(), __storeFieldNode));
     }
 
-    /**
-     * Ensure that concrete classes are at least linked before generating an invoke. Interfaces may
-     * never be linked so simply return true for them.
-     *
-     * @return true if the declared holder is an interface or is linked
-     */
+    ///
+    // Ensure that concrete classes are at least linked before generating an invoke. Interfaces may
+    // never be linked so simply return true for them.
+    //
+    // @return true if the declared holder is an interface or is linked
+    ///
     private static boolean callTargetIsResolved(JavaMethod __target)
     {
         if (__target instanceof ResolvedJavaMethod)
@@ -1097,7 +1093,7 @@ public final class BytecodeParser implements GraphBuilderContext
             }
             else
             {
-                ValueNode[] __args = frameState.popArguments(__resolvedTarget.getSignature().getParameterCount(false));
+                ValueNode[] __args = this.___frameState.popArguments(__resolvedTarget.getSignature().getParameterCount(false));
                 Invoke __invoke = appendInvoke(InvokeKind.Static, __resolvedTarget, __args);
                 if (__invoke != null)
                 {
@@ -1121,7 +1117,7 @@ public final class BytecodeParser implements GraphBuilderContext
     {
         if (callTargetIsResolved(__target))
         {
-            ValueNode[] __args = frameState.popArguments(__target.getSignature().getParameterCount(true));
+            ValueNode[] __args = this.___frameState.popArguments(__target.getSignature().getParameterCount(true));
             appendInvoke(InvokeKind.Interface, (ResolvedJavaMethod) __target, __args);
         }
         else
@@ -1138,7 +1134,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     void genInvokeDynamic(JavaMethod __target)
     {
-        if (!(__target instanceof ResolvedJavaMethod) || !genDynamicInvokeHelper((ResolvedJavaMethod) __target, stream.readCPI4(), Bytecodes.INVOKEDYNAMIC))
+        if (!(__target instanceof ResolvedJavaMethod) || !genDynamicInvokeHelper((ResolvedJavaMethod) __target, this.___stream.readCPI4(), Bytecodes.INVOKEDYNAMIC))
         {
             handleUnresolvedInvoke(__target, InvokeKind.Static);
         }
@@ -1152,7 +1148,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private boolean genDynamicInvokeHelper(ResolvedJavaMethod __target, int __cpi, int __opcode)
     {
-        InvokeDynamicPlugin __invokeDynamicPlugin = graphBuilderConfig.getPlugins().getInvokeDynamicPlugin();
+        InvokeDynamicPlugin __invokeDynamicPlugin = this.___graphBuilderConfig.getPlugins().getInvokeDynamicPlugin();
 
         if (__opcode == Bytecodes.INVOKEVIRTUAL && __invokeDynamicPlugin != null && !__invokeDynamicPlugin.isResolvedDynamicInvoke(this, __cpi, __opcode))
         {
@@ -1160,7 +1156,7 @@ public final class BytecodeParser implements GraphBuilderContext
             return false;
         }
 
-        JavaConstant __appendix = constantPool.lookupAppendix(__cpi, __opcode);
+        JavaConstant __appendix = this.___constantPool.lookupAppendix(__cpi, __opcode);
         if (__appendix != null)
         {
             ValueNode __appendixNode;
@@ -1170,19 +1166,19 @@ public final class BytecodeParser implements GraphBuilderContext
                 __invokeDynamicPlugin.recordDynamicMethod(this, __cpi, __opcode, __target);
 
                 // will perform runtime type checks and static initialization
-                FrameState __stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
+                FrameState __stateBefore = this.___frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
                 __appendixNode = __invokeDynamicPlugin.genAppendixNode(this, __cpi, __opcode, __appendix, __stateBefore);
             }
             else
             {
-                __appendixNode = ConstantNode.forConstant(__appendix, metaAccess, graph);
+                __appendixNode = ConstantNode.forConstant(__appendix, this.___metaAccess, this.___graph);
             }
 
-            frameState.push(JavaKind.Object, __appendixNode);
+            this.___frameState.push(JavaKind.Object, __appendixNode);
         }
 
         boolean __hasReceiver = (__opcode == Bytecodes.INVOKEDYNAMIC) ? false : !__target.isStatic();
-        ValueNode[] __args = frameState.popArguments(__target.getSignature().getParameterCount(__hasReceiver));
+        ValueNode[] __args = this.___frameState.popArguments(__target.getSignature().getParameterCount(__hasReceiver));
         if (__hasReceiver)
         {
             appendInvoke(InvokeKind.Virtual, __target, __args);
@@ -1211,20 +1207,18 @@ public final class BytecodeParser implements GraphBuilderContext
         }
 
         ResolvedJavaMethod __resolvedTarget = (ResolvedJavaMethod) __target;
-        int __cpi = stream.readCPI();
+        int __cpi = this.___stream.readCPI();
 
-        /*
-         * Special handling for runtimes that rewrite an invocation of MethodHandle.invoke(...) or
-         * MethodHandle.invokeExact(...) to a static adapter. HotSpot does this - see
-         * https://wiki.openjdk.java.net/display/HotSpot/Method+handles+and+invokedynamic
-         */
+        // Special handling for runtimes that rewrite an invocation of MethodHandle.invoke(...) or
+        // MethodHandle.invokeExact(...) to a static adapter. HotSpot does this - see
+        // https://wiki.openjdk.java.net/display/HotSpot/Method+handles+and+invokedynamic
 
         if (genDynamicInvokeHelper(__resolvedTarget, __cpi, Bytecodes.INVOKEVIRTUAL))
         {
             return true;
         }
 
-        ValueNode[] __args = frameState.popArguments(__target.getSignature().getParameterCount(true));
+        ValueNode[] __args = this.___frameState.popArguments(__target.getSignature().getParameterCount(true));
         appendInvoke(InvokeKind.Virtual, (ResolvedJavaMethod) __target, __args);
 
         return true;
@@ -1240,7 +1234,7 @@ public final class BytecodeParser implements GraphBuilderContext
     {
         if (callTargetIsResolved(__target))
         {
-            ValueNode[] __args = frameState.popArguments(__target.getSignature().getParameterCount(true));
+            ValueNode[] __args = this.___frameState.popArguments(__target.getSignature().getParameterCount(true));
             appendInvoke(InvokeKind.Special, (ResolvedJavaMethod) __target, __args);
         }
         else
@@ -1253,82 +1247,82 @@ public final class BytecodeParser implements GraphBuilderContext
     static final class CurrentInvoke
     {
         // @field
-        final ValueNode[] args;
+        final ValueNode[] ___args;
         // @field
-        final InvokeKind kind;
+        final InvokeKind ___kind;
         // @field
-        final JavaType returnType;
+        final JavaType ___returnType;
 
         // @cons
         CurrentInvoke(ValueNode[] __args, InvokeKind __kind, JavaType __returnType)
         {
             super();
-            this.args = __args;
-            this.kind = __kind;
-            this.returnType = __returnType;
+            this.___args = __args;
+            this.___kind = __kind;
+            this.___returnType = __returnType;
         }
     }
 
     // @field
-    private CurrentInvoke currentInvoke;
+    private CurrentInvoke ___currentInvoke;
     // @field
-    protected FrameStateBuilder frameState;
+    protected FrameStateBuilder ___frameState;
     // @field
-    protected BciBlock currentBlock;
+    protected BciBlock ___currentBlock;
     // @field
-    protected final BytecodeStream stream;
+    protected final BytecodeStream ___stream;
     // @field
-    protected final GraphBuilderConfiguration graphBuilderConfig;
+    protected final GraphBuilderConfiguration ___graphBuilderConfig;
     // @field
-    protected final ResolvedJavaMethod method;
+    protected final ResolvedJavaMethod ___method;
     // @field
-    protected final Bytecode code;
+    protected final Bytecode ___code;
     // @field
-    protected final BytecodeProvider bytecodeProvider;
+    protected final BytecodeProvider ___bytecodeProvider;
     // @field
-    protected final ProfilingInfo profilingInfo;
+    protected final ProfilingInfo ___profilingInfo;
     // @field
-    protected final OptimisticOptimizations optimisticOpts;
+    protected final OptimisticOptimizations ___optimisticOpts;
     // @field
-    protected final ConstantPool constantPool;
+    protected final ConstantPool ___constantPool;
     // @field
-    protected final MetaAccessProvider metaAccess;
+    protected final MetaAccessProvider ___metaAccess;
     // @field
-    private final ConstantReflectionProvider constantReflection;
+    private final ConstantReflectionProvider ___constantReflection;
     // @field
-    private final ConstantFieldProvider constantFieldProvider;
+    private final ConstantFieldProvider ___constantFieldProvider;
     // @field
-    private final StampProvider stampProvider;
+    private final StampProvider ___stampProvider;
     // @field
-    protected final IntrinsicContext intrinsicContext;
+    protected final IntrinsicContext ___intrinsicContext;
 
     @Override
     public InvokeKind getInvokeKind()
     {
-        return currentInvoke == null ? null : currentInvoke.kind;
+        return this.___currentInvoke == null ? null : this.___currentInvoke.___kind;
     }
 
     @Override
     public JavaType getInvokeReturnType()
     {
-        return currentInvoke == null ? null : currentInvoke.returnType;
+        return this.___currentInvoke == null ? null : this.___currentInvoke.___returnType;
     }
 
     // @field
-    private boolean forceInliningEverything;
+    private boolean ___forceInliningEverything;
 
     @Override
     public void handleReplacedInvoke(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, boolean __inlineEverything)
     {
-        boolean __previous = forceInliningEverything;
-        forceInliningEverything = __previous || __inlineEverything;
+        boolean __previous = this.___forceInliningEverything;
+        this.___forceInliningEverything = __previous || __inlineEverything;
         try
         {
             appendInvoke(__invokeKind, __targetMethod, __args);
         }
         finally
         {
-            forceInliningEverything = __previous;
+            this.___forceInliningEverything = __previous;
         }
     }
 
@@ -1346,7 +1340,7 @@ public final class BytecodeParser implements GraphBuilderContext
         InvokeKind __invokeKind = __initialInvokeKind;
         if (__initialInvokeKind.isIndirect())
         {
-            ResolvedJavaType __contextType = this.frameState.getMethod().getDeclaringClass();
+            ResolvedJavaType __contextType = this.___frameState.getMethod().getDeclaringClass();
             ResolvedJavaMethod __specialCallTarget = MethodCallTargetNode.findSpecialCallTarget(__initialInvokeKind, __args[0], __initialTargetMethod, __contextType);
             if (__specialCallTarget != null)
             {
@@ -1359,12 +1353,12 @@ public final class BytecodeParser implements GraphBuilderContext
         if (!parsingIntrinsic() && GraalOptions.deoptALot)
         {
             append(new DeoptimizeNode(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint));
-            frameState.pushReturn(__resultType, ConstantNode.defaultForKind(__resultType, graph));
+            this.___frameState.pushReturn(__resultType, ConstantNode.defaultForKind(__resultType, this.___graph));
             return null;
         }
 
-        JavaType __returnType = __targetMethod.getSignature().getReturnType(method.getDeclaringClass());
-        if (graphBuilderConfig.eagerResolving() || parsingIntrinsic())
+        JavaType __returnType = __targetMethod.getSignature().getReturnType(this.___method.getDeclaringClass());
+        if (this.___graphBuilderConfig.eagerResolving() || parsingIntrinsic())
         {
             __returnType = __returnType.resolve(__targetMethod.getDeclaringClass());
         }
@@ -1381,7 +1375,7 @@ public final class BytecodeParser implements GraphBuilderContext
         InlineInfo __inlineInfo = null;
         try
         {
-            currentInvoke = new CurrentInvoke(__args, __invokeKind, __returnType);
+            this.___currentInvoke = new CurrentInvoke(__args, __invokeKind, __returnType);
             if (tryNodePluginForInvocation(__args, __targetMethod))
             {
                 return null;
@@ -1411,17 +1405,17 @@ public final class BytecodeParser implements GraphBuilderContext
         }
         finally
         {
-            currentInvoke = null;
+            this.___currentInvoke = null;
         }
 
         int __invokeBci = bci();
         JavaTypeProfile __profile = getProfileForInvoke(__invokeKind);
         ExceptionEdgeAction __edgeAction = getActionForInvokeExceptionEdge(__inlineInfo);
         boolean __partialIntrinsicExit = false;
-        if (intrinsicContext != null && intrinsicContext.isCallToOriginal(__targetMethod))
+        if (this.___intrinsicContext != null && this.___intrinsicContext.isCallToOriginal(__targetMethod))
         {
             __partialIntrinsicExit = true;
-            ResolvedJavaMethod __originalMethod = intrinsicContext.getOriginalMethod();
+            ResolvedJavaMethod __originalMethod = this.___intrinsicContext.getOriginalMethod();
             BytecodeParser __intrinsicCallSiteParser = getNonIntrinsicAncestor();
             if (__intrinsicCallSiteParser != null)
             {
@@ -1440,7 +1434,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 // so the bci must be set to unknown, so that the inliner patches it later.
                 __invokeBci = BytecodeFrame.UNKNOWN_BCI;
                 __profile = null;
-                __edgeAction = graph.method().getAnnotation(Snippet.class) == null ? ExceptionEdgeAction.INCLUDE_AND_HANDLE : ExceptionEdgeAction.OMIT;
+                __edgeAction = this.___graph.method().getAnnotation(Snippet.class) == null ? ExceptionEdgeAction.INCLUDE_AND_HANDLE : ExceptionEdgeAction.OMIT;
             }
 
             if (__originalMethod.isStatic())
@@ -1454,7 +1448,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 __invokeKind = InvokeKind.Special;
             }
             Signature __sig = __originalMethod.getSignature();
-            __returnType = __sig.getReturnType(method.getDeclaringClass());
+            __returnType = __sig.getReturnType(this.___method.getDeclaringClass());
             __resultType = __sig.getReturnKind();
             __targetMethod = __originalMethod;
         }
@@ -1469,19 +1463,19 @@ public final class BytecodeParser implements GraphBuilderContext
         return __invoke;
     }
 
-    /**
-     * Checks that the class of the receiver of an {@link Bytecodes#INVOKESPECIAL} in a method
-     * declared in an interface (i.e., a default method) is assignable to the interface. If not,
-     * then deoptimize so that the interpreter can throw an {@link IllegalAccessError}.
-     *
-     * This is a check not performed by the verifier and so must be performed at runtime.
-     *
-     * @param args arguments to an {@link Bytecodes#INVOKESPECIAL} implementing a direct call to a
-     *            method in a super class
-     */
+    ///
+    // Checks that the class of the receiver of an {@link Bytecodes#INVOKESPECIAL} in a method
+    // declared in an interface (i.e., a default method) is assignable to the interface. If not,
+    // then deoptimize so that the interpreter can throw an {@link IllegalAccessError}.
+    //
+    // This is a check not performed by the verifier and so must be performed at runtime.
+    //
+    // @param args arguments to an {@link Bytecodes#INVOKESPECIAL} implementing a direct call to a
+    //            method in a super class
+    ///
     protected void emitCheckForInvokeSuperSpecial(ValueNode[] __args)
     {
-        ResolvedJavaType __callingClass = method.getDeclaringClass();
+        ResolvedJavaType __callingClass = this.___method.getDeclaringClass();
         if (__callingClass.getHostClass() != null)
         {
             __callingClass = __callingClass.getHostClass();
@@ -1489,7 +1483,7 @@ public final class BytecodeParser implements GraphBuilderContext
         if (__callingClass.isInterface())
         {
             ValueNode __receiver = __args[0];
-            TypeReference __checkedType = TypeReference.createTrusted(graph.getAssumptions(), __callingClass);
+            TypeReference __checkedType = TypeReference.createTrusted(this.___graph.getAssumptions(), __callingClass);
             LogicNode __condition = genUnique(createInstanceOf(__checkedType, __receiver, null));
             FixedGuardNode __fixedGuard = append(new FixedGuardNode(__condition, DeoptimizationReason.ClassCastException, DeoptimizationAction.None, false));
             __args[0] = append(PiNode.create(__receiver, StampFactory.object(__checkedType, true), __fixedGuard));
@@ -1498,20 +1492,20 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected JavaTypeProfile getProfileForInvoke(InvokeKind __invokeKind)
     {
-        if (__invokeKind.isIndirect() && profilingInfo != null && this.optimisticOpts.useTypeCheckHints())
+        if (__invokeKind.isIndirect() && this.___profilingInfo != null && this.___optimisticOpts.useTypeCheckHints())
         {
-            return profilingInfo.getTypeProfile(bci());
+            return this.___profilingInfo.getTypeProfile(bci());
         }
         return null;
     }
 
-    /**
-     * A partial intrinsic exits by (effectively) calling the intrinsified method. This call must
-     * use exactly the arguments to the call being intrinsified.
-     *
-     * @param originalArgs arguments of original call to intrinsified method
-     * @param recursiveArgs arguments of recursive call to intrinsified method
-     */
+    ///
+    // A partial intrinsic exits by (effectively) calling the intrinsified method. This call must
+    // use exactly the arguments to the call being intrinsified.
+    //
+    // @param originalArgs arguments of original call to intrinsified method
+    // @param recursiveArgs arguments of recursive call to intrinsified method
+    ///
     private static boolean checkPartialIntrinsicExit(ValueNode[] __originalArgs, ValueNode[] __recursiveArgs)
     {
         if (__originalArgs != null)
@@ -1534,16 +1528,16 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected Invoke createNonInlinedInvoke(ExceptionEdgeAction __exceptionEdge, int __invokeBci, ValueNode[] __invokeArgs, ResolvedJavaMethod __targetMethod, InvokeKind __invokeKind, JavaKind __resultType, JavaType __returnType, JavaTypeProfile __profile)
     {
-        StampPair __returnStamp = graphBuilderConfig.getPlugins().getOverridingStamp(this, __returnType, false);
+        StampPair __returnStamp = this.___graphBuilderConfig.getPlugins().getOverridingStamp(this, __returnType, false);
         if (__returnStamp == null)
         {
-            __returnStamp = StampFactory.forDeclaredType(graph.getAssumptions(), __returnType, false);
+            __returnStamp = StampFactory.forDeclaredType(this.___graph.getAssumptions(), __returnType, false);
         }
 
-        MethodCallTargetNode __callTarget = graph.add(createMethodCallTarget(__invokeKind, __targetMethod, __invokeArgs, __returnStamp, __profile));
+        MethodCallTargetNode __callTarget = this.___graph.add(createMethodCallTarget(__invokeKind, __targetMethod, __invokeArgs, __returnStamp, __profile));
         Invoke __invoke = createNonInlinedInvoke(__exceptionEdge, __invokeBci, __callTarget, __resultType);
 
-        for (InlineInvokePlugin __plugin : graphBuilderConfig.getPlugins().getInlineInvokePlugins())
+        for (InlineInvokePlugin __plugin : this.___graphBuilderConfig.getPlugins().getInlineInvokePlugins())
         {
             __plugin.notifyNotInlined(this, __targetMethod, __invoke);
         }
@@ -1560,18 +1554,18 @@ public final class BytecodeParser implements GraphBuilderContext
         else
         {
             Invoke __invoke = createInvokeWithException(__invokeBci, __callTarget, __resultType, __exceptionEdge);
-            AbstractBeginNode __beginNode = graph.add(KillingBeginNode.create(LocationIdentity.any()));
+            AbstractBeginNode __beginNode = this.___graph.add(KillingBeginNode.create(LocationIdentity.any()));
             __invoke.setNext(__beginNode);
-            lastInstr = __beginNode;
+            this.___lastInstr = __beginNode;
             return __invoke;
         }
     }
 
-    /**
-     * Describes what should be done with the exception edge of an invocation. The edge can be
-     * omitted or included. An included edge can handle the exception or transfer execution to the
-     * interpreter for handling (deoptimize).
-     */
+    ///
+    // Describes what should be done with the exception edge of an invocation. The edge can be
+    // omitted or included. An included edge can handle the exception or transfer execution to the
+    // interpreter for handling (deoptimize).
+    ///
     // @enum BytecodeParser.ExceptionEdgeAction
     protected enum ExceptionEdgeAction
     {
@@ -1594,15 +1588,15 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             return ExceptionEdgeAction.INCLUDE_AND_DEOPTIMIZE;
         }
-        else if (graphBuilderConfig.getBytecodeExceptionMode() == BytecodeExceptionMode.CheckAll)
+        else if (this.___graphBuilderConfig.getBytecodeExceptionMode() == BytecodeExceptionMode.CheckAll)
         {
             return ExceptionEdgeAction.INCLUDE_AND_HANDLE;
         }
-        else if (graphBuilderConfig.getBytecodeExceptionMode() == BytecodeExceptionMode.ExplicitOnly)
+        else if (this.___graphBuilderConfig.getBytecodeExceptionMode() == BytecodeExceptionMode.ExplicitOnly)
         {
             return ExceptionEdgeAction.INCLUDE_AND_HANDLE;
         }
-        else if (graphBuilderConfig.getBytecodeExceptionMode() == BytecodeExceptionMode.OmitAll)
+        else if (this.___graphBuilderConfig.getBytecodeExceptionMode() == BytecodeExceptionMode.OmitAll)
         {
             return ExceptionEdgeAction.OMIT;
         }
@@ -1612,11 +1606,11 @@ public final class BytecodeParser implements GraphBuilderContext
             // recompiles otherwise)
             if (!GraalOptions.stressInvokeWithExceptionNode)
             {
-                if (optimisticOpts.useExceptionProbability())
+                if (this.___optimisticOpts.useExceptionProbability())
                 {
-                    if (profilingInfo != null)
+                    if (this.___profilingInfo != null)
                     {
-                        TriState __exceptionSeen = profilingInfo.getExceptionSeen(bci());
+                        TriState __exceptionSeen = this.___profilingInfo.getExceptionSeen(bci());
                         if (__exceptionSeen == TriState.FALSE)
                         {
                             return ExceptionEdgeAction.OMIT;
@@ -1632,48 +1626,48 @@ public final class BytecodeParser implements GraphBuilderContext
     protected static final class IntrinsicGuard
     {
         // @field
-        final FixedWithNextNode lastInstr;
+        final FixedWithNextNode ___lastInstr;
         // @field
-        final Mark mark;
+        final Mark ___mark;
         // @field
-        final AbstractBeginNode nonIntrinsicBranch;
+        final AbstractBeginNode ___nonIntrinsicBranch;
         // @field
-        final ValueNode receiver;
+        final ValueNode ___receiver;
         // @field
-        final JavaTypeProfile profile;
+        final JavaTypeProfile ___profile;
 
         // @cons
         public IntrinsicGuard(FixedWithNextNode __lastInstr, ValueNode __receiver, Mark __mark, AbstractBeginNode __nonIntrinsicBranch, JavaTypeProfile __profile)
         {
             super();
-            this.lastInstr = __lastInstr;
-            this.receiver = __receiver;
-            this.mark = __mark;
-            this.nonIntrinsicBranch = __nonIntrinsicBranch;
-            this.profile = __profile;
+            this.___lastInstr = __lastInstr;
+            this.___receiver = __receiver;
+            this.___mark = __mark;
+            this.___nonIntrinsicBranch = __nonIntrinsicBranch;
+            this.___profile = __profile;
         }
     }
 
-    /**
-     * Weaves a test of the receiver type to ensure the dispatch will select {@code targetMethod}
-     * and not another method that overrides it. This should only be called if there is an
-     * {@link InvocationPlugin} for {@code targetMethod} and the invocation is indirect.
-     *
-     * The control flow woven around the intrinsic is as follows:
-     *
-     * <pre>
-     *  if (LoadMethod(LoadHub(receiver)) == targetMethod) {
-     *       <intrinsic for targetMethod>
-     *  } else {
-     *       <virtual call to targetMethod>
-     *  }
-     * </pre>
-     *
-     * The {@code else} branch is woven by {@link #afterInvocationPluginExecution}.
-     *
-     * @return {@code null} if the intrinsic cannot be used otherwise an object to be used by
-     *         {@link #afterInvocationPluginExecution} to weave code for the non-intrinsic branch
-     */
+    ///
+    // Weaves a test of the receiver type to ensure the dispatch will select {@code targetMethod}
+    // and not another method that overrides it. This should only be called if there is an
+    // {@link InvocationPlugin} for {@code targetMethod} and the invocation is indirect.
+    //
+    // The control flow woven around the intrinsic is as follows:
+    //
+    // <pre>
+    //  if (LoadMethod(LoadHub(receiver)) == targetMethod) {
+    //       <intrinsic for targetMethod>
+    //  } else {
+    //       <virtual call to targetMethod>
+    //  }
+    // </pre>
+    //
+    // The {@code else} branch is woven by {@link #afterInvocationPluginExecution}.
+    //
+    // @return {@code null} if the intrinsic cannot be used otherwise an object to be used by
+    //         {@link #afterInvocationPluginExecution} to weave code for the non-intrinsic branch
+    ///
     protected IntrinsicGuard guardIntrinsic(ValueNode[] __args, ResolvedJavaMethod __targetMethod, InvocationPluginReceiver __pluginReceiver)
     {
         ValueNode __intrinsicReceiver = __args[0];
@@ -1683,22 +1677,22 @@ public final class BytecodeParser implements GraphBuilderContext
             // the verifier guarantees it to be at least type declaring targetMethod
             __receiverType = __targetMethod.getDeclaringClass();
         }
-        ResolvedJavaMethod __resolvedMethod = __receiverType.resolveMethod(__targetMethod, method.getDeclaringClass());
+        ResolvedJavaMethod __resolvedMethod = __receiverType.resolveMethod(__targetMethod, this.___method.getDeclaringClass());
         if (__resolvedMethod == null || __resolvedMethod.equals(__targetMethod))
         {
-            Mark __mark = graph.getMark();
-            FixedWithNextNode __currentLastInstr = lastInstr;
+            Mark __mark = this.___graph.getMark();
+            FixedWithNextNode __currentLastInstr = this.___lastInstr;
             ValueNode __nonNullReceiver = __pluginReceiver.get();
-            Stamp __methodStamp = stampProvider.createMethodStamp();
-            LoadHubNode __hub = graph.unique(new LoadHubNode(stampProvider, __nonNullReceiver));
-            LoadMethodNode __actual = append(new LoadMethodNode(__methodStamp, __targetMethod, __receiverType, method.getDeclaringClass(), __hub));
-            ConstantNode __expected = graph.unique(ConstantNode.forConstant(__methodStamp, __targetMethod.getEncoding(), getMetaAccess()));
-            LogicNode __compare = graph.addOrUniqueWithInputs(CompareNode.createCompareNode(constantReflection, metaAccess, null, CanonicalCondition.EQ, __actual, __expected, NodeView.DEFAULT));
+            Stamp __methodStamp = this.___stampProvider.createMethodStamp();
+            LoadHubNode __hub = this.___graph.unique(new LoadHubNode(this.___stampProvider, __nonNullReceiver));
+            LoadMethodNode __actual = append(new LoadMethodNode(__methodStamp, __targetMethod, __receiverType, this.___method.getDeclaringClass(), __hub));
+            ConstantNode __expected = this.___graph.unique(ConstantNode.forConstant(__methodStamp, __targetMethod.getEncoding(), getMetaAccess()));
+            LogicNode __compare = this.___graph.addOrUniqueWithInputs(CompareNode.createCompareNode(this.___constantReflection, this.___metaAccess, null, CanonicalCondition.EQ, __actual, __expected, NodeView.DEFAULT));
 
             JavaTypeProfile __profile = null;
-            if (profilingInfo != null && this.optimisticOpts.useTypeCheckHints())
+            if (this.___profilingInfo != null && this.___optimisticOpts.useTypeCheckHints())
             {
-                __profile = profilingInfo.getTypeProfile(bci());
+                __profile = this.___profilingInfo.getTypeProfile(bci());
                 if (__profile != null)
                 {
                     JavaTypeProfile __newProfile = adjustProfileForInvocationPlugin(__profile, __targetMethod);
@@ -1707,7 +1701,7 @@ public final class BytecodeParser implements GraphBuilderContext
                         if (__newProfile.getTypes().length == 0)
                         {
                             // all profiled types select the intrinsic, so emit a fixed guard instead of an if-then-else
-                            lastInstr = append(new FixedGuardNode(__compare, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile, false));
+                            this.___lastInstr = append(new FixedGuardNode(__compare, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile, false));
                             return new IntrinsicGuard(__currentLastInstr, __intrinsicReceiver, __mark, null, null);
                         }
                     }
@@ -1720,10 +1714,10 @@ public final class BytecodeParser implements GraphBuilderContext
                 }
             }
 
-            AbstractBeginNode __intrinsicBranch = graph.add(new BeginNode());
-            AbstractBeginNode __nonIntrinsicBranch = graph.add(new BeginNode());
+            AbstractBeginNode __intrinsicBranch = this.___graph.add(new BeginNode());
+            AbstractBeginNode __nonIntrinsicBranch = this.___graph.add(new BeginNode());
             append(new IfNode(__compare, __intrinsicBranch, __nonIntrinsicBranch, BranchProbabilityNode.FAST_PATH_PROBABILITY));
-            lastInstr = __intrinsicBranch;
+            this.___lastInstr = __intrinsicBranch;
             return new IntrinsicGuard(__currentLastInstr, __intrinsicReceiver, __mark, __nonIntrinsicBranch, __profile);
         }
         else
@@ -1733,15 +1727,15 @@ public final class BytecodeParser implements GraphBuilderContext
         }
     }
 
-    /**
-     * Adjusts the profile for an indirect invocation of a virtual method for which there is an
-     * intrinsic. The adjustment made by this method is to remove all types from the profile that do
-     * not override {@code targetMethod}.
-     *
-     * @param profile the profile to adjust
-     * @param targetMethod the virtual method for which there is an intrinsic
-     * @return the adjusted profile or the original {@code profile} object if no adjustment was made
-     */
+    ///
+    // Adjusts the profile for an indirect invocation of a virtual method for which there is an
+    // intrinsic. The adjustment made by this method is to remove all types from the profile that do
+    // not override {@code targetMethod}.
+    //
+    // @param profile the profile to adjust
+    // @param targetMethod the virtual method for which there is an intrinsic
+    // @return the adjusted profile or the original {@code profile} object if no adjustment was made
+    ///
     protected JavaTypeProfile adjustProfileForInvocationPlugin(JavaTypeProfile __profile, ResolvedJavaMethod __targetMethod)
     {
         if (__profile.getTypes().length > 0)
@@ -1750,7 +1744,7 @@ public final class BytecodeParser implements GraphBuilderContext
             double __notRecordedProbability = __profile.getNotRecordedProbability();
             for (ProfiledType __ptype : __profile.getTypes())
             {
-                if (!__ptype.getType().resolveMethod(__targetMethod, method.getDeclaringClass()).equals(__targetMethod))
+                if (!__ptype.getType().resolveMethod(__targetMethod, this.___method.getDeclaringClass()).equals(__targetMethod))
                 {
                     __retained.add(__ptype);
                 }
@@ -1774,18 +1768,18 @@ public final class BytecodeParser implements GraphBuilderContext
         return __profile;
     }
 
-    /**
-     * Performs any action required after execution of an invocation plugin.
-     * This includes checking invocation plugin invariants as well as weaving the {@code else}
-     * branch of the code woven by {@link #guardIntrinsic} if {@code guard != null}.
-     */
+    ///
+    // Performs any action required after execution of an invocation plugin.
+    // This includes checking invocation plugin invariants as well as weaving the {@code else}
+    // branch of the code woven by {@link #guardIntrinsic} if {@code guard != null}.
+    ///
     protected void afterInvocationPluginExecution(boolean __pluginHandledInvoke, IntrinsicGuard __intrinsicGuard, InvokeKind __invokeKind, ValueNode[] __args, ResolvedJavaMethod __targetMethod, JavaKind __resultType, JavaType __returnType)
     {
         if (__intrinsicGuard != null)
         {
             if (__pluginHandledInvoke)
             {
-                if (__intrinsicGuard.nonIntrinsicBranch != null)
+                if (__intrinsicGuard.___nonIntrinsicBranch != null)
                 {
                     // Intrinsic emitted: emit a virtual call to the target method and
                     // merge it with the intrinsic branch.
@@ -1795,53 +1789,53 @@ public final class BytecodeParser implements GraphBuilderContext
                     FrameStateBuilder __nonIntrinisicState = null;
                     if (__resultType != JavaKind.Void)
                     {
-                        __intrinsicState = frameState.copy();
-                        frameState.pop(__resultType);
-                        __nonIntrinisicState = frameState;
+                        __intrinsicState = this.___frameState.copy();
+                        this.___frameState.pop(__resultType);
+                        __nonIntrinisicState = this.___frameState;
                     }
 
-                    lastInstr = __intrinsicGuard.nonIntrinsicBranch;
-                    createNonInlinedInvoke(getActionForInvokeExceptionEdge(null), bci(), __args, __targetMethod, __invokeKind, __resultType, __returnType, __intrinsicGuard.profile);
+                    this.___lastInstr = __intrinsicGuard.___nonIntrinsicBranch;
+                    createNonInlinedInvoke(getActionForInvokeExceptionEdge(null), bci(), __args, __targetMethod, __invokeKind, __resultType, __returnType, __intrinsicGuard.___profile);
 
                     EndNode __nonIntrinsicEnd = append(new EndNode());
-                    AbstractMergeNode __mergeNode = graph.add(new MergeNode());
+                    AbstractMergeNode __mergeNode = this.___graph.add(new MergeNode());
 
                     __mergeNode.addForwardEnd(__intrinsicEnd);
                     if (__intrinsicState != null)
                     {
                         __intrinsicState.merge(__mergeNode, __nonIntrinisicState);
-                        frameState = __intrinsicState;
+                        this.___frameState = __intrinsicState;
                     }
                     __mergeNode.addForwardEnd(__nonIntrinsicEnd);
-                    __mergeNode.setStateAfter(frameState.create(stream.nextBCI(), __mergeNode));
+                    __mergeNode.setStateAfter(this.___frameState.create(this.___stream.nextBCI(), __mergeNode));
 
-                    lastInstr = __mergeNode;
+                    this.___lastInstr = __mergeNode;
                 }
             }
             else
             {
                 // Intrinsic was not applied: remove intrinsic guard
                 // and restore the original receiver node in the arguments array.
-                __intrinsicGuard.lastInstr.setNext(null);
-                GraphUtil.removeNewNodes(graph, __intrinsicGuard.mark);
-                lastInstr = __intrinsicGuard.lastInstr;
-                __args[0] = __intrinsicGuard.receiver;
+                __intrinsicGuard.___lastInstr.setNext(null);
+                GraphUtil.removeNewNodes(this.___graph, __intrinsicGuard.___mark);
+                this.___lastInstr = __intrinsicGuard.___lastInstr;
+                __args[0] = __intrinsicGuard.___receiver;
             }
         }
     }
 
     protected boolean tryInvocationPlugin(InvokeKind __invokeKind, ValueNode[] __args, ResolvedJavaMethod __targetMethod, JavaKind __resultType, JavaType __returnType)
     {
-        InvocationPlugin __plugin = graphBuilderConfig.getPlugins().getInvocationPlugins().lookupInvocation(__targetMethod);
+        InvocationPlugin __plugin = this.___graphBuilderConfig.getPlugins().getInvocationPlugins().lookupInvocation(__targetMethod);
         if (__plugin != null)
         {
-            if (intrinsicContext != null && intrinsicContext.isCallToOriginal(__targetMethod))
+            if (this.___intrinsicContext != null && this.___intrinsicContext.isCallToOriginal(__targetMethod))
             {
                 // Self recursive intrinsic means the original method should be called.
                 return false;
             }
 
-            InvocationPluginReceiver __pluginReceiver = invocationPluginReceiver.init(__targetMethod, __args);
+            InvocationPluginReceiver __pluginReceiver = this.___invocationPluginReceiver.init(__targetMethod, __args);
 
             IntrinsicGuard __intrinsicGuard = null;
             if (__invokeKind.isIndirect())
@@ -1868,7 +1862,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private boolean tryNodePluginForInvocation(ValueNode[] __args, ResolvedJavaMethod __targetMethod)
     {
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleInvoke(this, __targetMethod, __args))
             {
@@ -1881,20 +1875,20 @@ public final class BytecodeParser implements GraphBuilderContext
     // @def
     private static final InlineInfo SUCCESSFULLY_INLINED = InlineInfo.createStandardInlineInfo(null);
 
-    /**
-     * Try to inline a method. If the method was inlined, returns {@link #SUCCESSFULLY_INLINED}.
-     * Otherwise, it returns the {@link InlineInfo} that lead to the decision to not inline it, or
-     * {@code null} if there is no {@link InlineInfo} for this method.
-     */
+    ///
+    // Try to inline a method. If the method was inlined, returns {@link #SUCCESSFULLY_INLINED}.
+    // Otherwise, it returns the {@link InlineInfo} that lead to the decision to not inline it, or
+    // {@code null} if there is no {@link InlineInfo} for this method.
+    ///
     private InlineInfo tryInline(ValueNode[] __args, ResolvedJavaMethod __targetMethod)
     {
-        boolean __canBeInlined = forceInliningEverything || parsingIntrinsic() || __targetMethod.canBeInlined();
+        boolean __canBeInlined = this.___forceInliningEverything || parsingIntrinsic() || __targetMethod.canBeInlined();
         if (!__canBeInlined)
         {
             return null;
         }
 
-        if (forceInliningEverything)
+        if (this.___forceInliningEverything)
         {
             if (inline(__targetMethod, __targetMethod, null, __args))
             {
@@ -1906,7 +1900,7 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        for (InlineInvokePlugin __plugin : graphBuilderConfig.getPlugins().getInlineInvokePlugins())
+        for (InlineInvokePlugin __plugin : this.___graphBuilderConfig.getPlugins().getInlineInvokePlugins())
         {
             InlineInfo __inlineInfo = __plugin.shouldInlineInvoke(this, __targetMethod, __args);
             if (__inlineInfo != null)
@@ -1929,7 +1923,7 @@ public final class BytecodeParser implements GraphBuilderContext
         // that methods are always force inlined in intrinsics/snippets.
         if (parsingIntrinsic())
         {
-            if (inline(__targetMethod, __targetMethod, this.bytecodeProvider, __args))
+            if (inline(__targetMethod, __targetMethod, this.___bytecodeProvider, __args))
             {
                 return SUCCESSFULLY_INLINED;
             }
@@ -1940,10 +1934,10 @@ public final class BytecodeParser implements GraphBuilderContext
     // @def
     private static final int ACCESSOR_BYTECODE_LENGTH = 5;
 
-    /**
-     * Tries to inline {@code targetMethod} if it is an instance field accessor. This avoids the
-     * overhead of creating and using a nested {@link BytecodeParser} object.
-     */
+    ///
+    // Tries to inline {@code targetMethod} if it is an instance field accessor. This avoids the
+    // overhead of creating and using a nested {@link BytecodeParser} object.
+    ///
     private boolean tryFastInlineAccessor(ValueNode[] __args, ResolvedJavaMethod __targetMethod)
     {
         byte[] __bytecode = __targetMethod.getCode();
@@ -1956,7 +1950,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 JavaField __field = __targetMethod.getConstantPool().lookupField(__cpi, __targetMethod, Bytecodes.GETFIELD);
                 if (__field instanceof ResolvedJavaField)
                 {
-                    ValueNode __receiver = invocationPluginReceiver.init(__targetMethod, __args).get();
+                    ValueNode __receiver = this.___invocationPluginReceiver.init(__targetMethod, __args).get();
                     ResolvedJavaField __resolvedField = (ResolvedJavaField) __field;
                     genGetField(__resolvedField, __receiver);
                     notifyBeforeInline(__targetMethod);
@@ -1980,7 +1974,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private boolean inline(ResolvedJavaMethod __targetMethod, ResolvedJavaMethod __inlinedMethod, BytecodeProvider __intrinsicBytecodeProvider, ValueNode[] __args)
     {
-        IntrinsicContext __intrinsic = this.intrinsicContext;
+        IntrinsicContext __intrinsic = this.___intrinsicContext;
 
         if (__intrinsic == null && __targetMethod.equals(__inlinedMethod) && (__targetMethod.getModifiers() & (Modifier.STATIC | Modifier.SYNCHRONIZED)) == 0 && tryFastInlineAccessor(__args, __targetMethod))
         {
@@ -2040,7 +2034,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void notifyBeforeInline(ResolvedJavaMethod __inlinedMethod)
     {
-        for (InlineInvokePlugin __plugin : graphBuilderConfig.getPlugins().getInlineInvokePlugins())
+        for (InlineInvokePlugin __plugin : this.___graphBuilderConfig.getPlugins().getInlineInvokePlugins())
         {
             __plugin.notifyBeforeInline(__inlinedMethod);
         }
@@ -2048,16 +2042,16 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void notifyAfterInline(ResolvedJavaMethod __inlinedMethod)
     {
-        for (InlineInvokePlugin __plugin : graphBuilderConfig.getPlugins().getInlineInvokePlugins())
+        for (InlineInvokePlugin __plugin : this.___graphBuilderConfig.getPlugins().getInlineInvokePlugins())
         {
             __plugin.notifyAfterInline(__inlinedMethod);
         }
     }
 
-    /**
-     * Determines if a partial intrinsic exit (i.e., a call to the original method within an
-     * intrinsic) can be inlined.
-     */
+    ///
+    // Determines if a partial intrinsic exit (i.e., a call to the original method within an
+    // intrinsic) can be inlined.
+    ///
     protected boolean canInlinePartialIntrinsicExit()
     {
         return true;
@@ -2070,19 +2064,19 @@ public final class BytecodeParser implements GraphBuilderContext
 
         try (IntrinsicScope __s = __calleeIntrinsicContext != null && !parsingIntrinsic() ? new IntrinsicScope(this, __targetMethod.getSignature().toParameterKinds(!__targetMethod.isStatic()), __args) : null)
         {
-            BytecodeParser __parser = graphBuilderInstance.createBytecodeParser(graph, this, __targetMethod, JVMCICompiler.INVOCATION_ENTRY_BCI, __calleeIntrinsicContext);
-            FrameStateBuilder __startFrameState = new FrameStateBuilder(__parser, __parser.code, graph);
+            BytecodeParser __parser = this.___graphBuilderInstance.createBytecodeParser(this.___graph, this, __targetMethod, JVMCICompiler.INVOCATION_ENTRY_BCI, __calleeIntrinsicContext);
+            FrameStateBuilder __startFrameState = new FrameStateBuilder(__parser, __parser.___code, this.___graph);
             if (!__targetMethod.isStatic())
             {
                 __args[0] = nullCheckedValue(__args[0]);
             }
             __startFrameState.initializeFromArgumentsArray(__args);
-            __parser.build(this.lastInstr, __startFrameState);
+            __parser.build(this.___lastInstr, __startFrameState);
 
-            if (__parser.returnDataList == null)
+            if (__parser.___returnDataList == null)
             {
                 // Callee does not return.
-                lastInstr = null;
+                this.___lastInstr = null;
             }
             else
             {
@@ -2090,38 +2084,38 @@ public final class BytecodeParser implements GraphBuilderContext
                 MergeNode __returnMergeNode = null;
                 if (__s != null)
                 {
-                    __s.returnDataList = __parser.returnDataList;
+                    __s.___returnDataList = __parser.___returnDataList;
                 }
-                if (__parser.returnDataList.size() == 1)
+                if (__parser.___returnDataList.size() == 1)
                 {
                     // Callee has a single return, we can continue parsing at that point.
-                    ReturnToCallerData __singleReturnData = __parser.returnDataList.get(0);
-                    lastInstr = __singleReturnData.beforeReturnNode;
-                    __calleeReturnValue = __singleReturnData.returnValue;
+                    ReturnToCallerData __singleReturnData = __parser.___returnDataList.get(0);
+                    this.___lastInstr = __singleReturnData.___beforeReturnNode;
+                    __calleeReturnValue = __singleReturnData.___returnValue;
                 }
                 else
                 {
                     // Callee has multiple returns, we need to insert a control flow merge.
-                    __returnMergeNode = graph.add(new MergeNode());
-                    __calleeReturnValue = ValueMergeUtil.mergeValueProducers(__returnMergeNode, __parser.returnDataList, __returnData -> __returnData.beforeReturnNode, __returnData -> __returnData.returnValue);
+                    __returnMergeNode = this.___graph.add(new MergeNode());
+                    __calleeReturnValue = ValueMergeUtil.mergeValueProducers(__returnMergeNode, __parser.___returnDataList, __returnData -> __returnData.___beforeReturnNode, __returnData -> __returnData.___returnValue);
                 }
 
                 if (__calleeReturnValue != null)
                 {
-                    frameState.push(__targetMethod.getSignature().getReturnKind().getStackKind(), __calleeReturnValue);
+                    this.___frameState.push(__targetMethod.getSignature().getReturnKind().getStackKind(), __calleeReturnValue);
                 }
                 if (__returnMergeNode != null)
                 {
-                    __returnMergeNode.setStateAfter(createFrameState(stream.nextBCI(), __returnMergeNode));
-                    lastInstr = finishInstruction(__returnMergeNode, frameState);
+                    __returnMergeNode.setStateAfter(createFrameState(this.___stream.nextBCI(), __returnMergeNode));
+                    this.___lastInstr = finishInstruction(__returnMergeNode, this.___frameState);
                 }
             }
             // Propagate any side effects into the caller when parsing intrinsics.
-            if (__parser.frameState.isAfterSideEffect() && parsingIntrinsic())
+            if (__parser.___frameState.isAfterSideEffect() && parsingIntrinsic())
             {
-                for (StateSplit __sideEffect : __parser.frameState.sideEffects())
+                for (StateSplit __sideEffect : __parser.___frameState.sideEffects())
                 {
-                    frameState.addSideEffect(__sideEffect);
+                    this.___frameState.addSideEffect(__sideEffect);
                 }
             }
 
@@ -2132,14 +2126,12 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        /*
-         * Method handleException will call createTarget, which wires this exception edge to the
-         * corresponding exception dispatch block in the caller. In the case where it wires to the
-         * caller's unwind block, any FrameState created meanwhile, e.g. FrameState for LoopExitNode,
-         * would be instantiated with AFTER_EXCEPTION_BCI. Such frame states should not be fixed by
-         * IntrinsicScope.close, as they denote the states of the caller. Thus, the following code
-         * should be placed outside the IntrinsicScope, so that correctly created FrameStates are not replaced.
-         */
+        // Method handleException will call createTarget, which wires this exception edge to the
+        // corresponding exception dispatch block in the caller. In the case where it wires to the
+        // caller's unwind block, any FrameState created meanwhile, e.g. FrameState for LoopExitNode,
+        // would be instantiated with AFTER_EXCEPTION_BCI. Such frame states should not be fixed by
+        // IntrinsicScope.close, as they denote the states of the caller. Thus, the following code
+        // should be placed outside the IntrinsicScope, so that correctly created FrameStates are not replaced.
         if (__calleeBeforeUnwindNode != null)
         {
             __calleeBeforeUnwindNode.setNext(handleException(__calleeUnwindValue, bci(), false));
@@ -2154,23 +2146,23 @@ public final class BytecodeParser implements GraphBuilderContext
     protected InvokeNode createInvoke(int __invokeBci, CallTargetNode __callTarget, JavaKind __resultType)
     {
         InvokeNode __invoke = append(new InvokeNode(__callTarget, __invokeBci));
-        frameState.pushReturn(__resultType, __invoke);
-        __invoke.setStateAfter(createFrameState(stream.nextBCI(), __invoke));
+        this.___frameState.pushReturn(__resultType, __invoke);
+        __invoke.setStateAfter(createFrameState(this.___stream.nextBCI(), __invoke));
         return __invoke;
     }
 
     protected InvokeWithExceptionNode createInvokeWithException(int __invokeBci, CallTargetNode __callTarget, JavaKind __resultType, ExceptionEdgeAction __exceptionEdgeAction)
     {
-        if (currentBlock != null && stream.nextBCI() > currentBlock.endBci)
+        if (this.___currentBlock != null && this.___stream.nextBCI() > this.___currentBlock.___endBci)
         {
             // Clear non-live locals early so that the exception handler entry gets the cleared state.
-            frameState.clearNonLiveLocals(currentBlock, liveness, false);
+            this.___frameState.clearNonLiveLocals(this.___currentBlock, this.___liveness, false);
         }
 
         AbstractBeginNode __exceptionEdge = handleException(null, bci(), __exceptionEdgeAction == ExceptionEdgeAction.INCLUDE_AND_DEOPTIMIZE);
         InvokeWithExceptionNode __invoke = append(new InvokeWithExceptionNode(__callTarget, __exceptionEdge, __invokeBci));
-        frameState.pushReturn(__resultType, __invoke);
-        __invoke.setStateAfter(createFrameState(stream.nextBCI(), __invoke));
+        this.___frameState.pushReturn(__resultType, __invoke);
+        __invoke.setStateAfter(createFrameState(this.___stream.nextBCI(), __invoke));
         return __invoke;
     }
 
@@ -2184,9 +2176,9 @@ public final class BytecodeParser implements GraphBuilderContext
                 FrameState __stateAfter = __stateSplit.stateAfter();
                 if (__stateSplit.hasSideEffect())
                 {
-                    if (__stateAfter.bci == BytecodeFrame.AFTER_BCI)
+                    if (__stateAfter.___bci == BytecodeFrame.AFTER_BCI)
                     {
-                        __stateAfter.replaceAtUsages(graph.add(new FrameState(BytecodeFrame.AFTER_BCI, __returnVal)));
+                        __stateAfter.replaceAtUsages(this.___graph.add(new FrameState(BytecodeFrame.AFTER_BCI, __returnVal)));
                         GraphUtil.killWithUnusedFloatingInputs(__stateAfter);
                     }
                     else
@@ -2199,27 +2191,27 @@ public final class BytecodeParser implements GraphBuilderContext
 
         ValueNode __realReturnVal = processReturnValue(__returnVal, __returnKind);
 
-        frameState.setRethrowException(false);
-        frameState.clearStack();
+        this.___frameState.setRethrowException(false);
+        this.___frameState.clearStack();
         beforeReturn(__realReturnVal, __returnKind);
-        if (parent == null)
+        if (this.___parent == null)
         {
             append(new ReturnNode(__realReturnVal));
         }
         else
         {
-            if (returnDataList == null)
+            if (this.___returnDataList == null)
             {
-                returnDataList = new ArrayList<>();
+                this.___returnDataList = new ArrayList<>();
             }
-            returnDataList.add(new ReturnToCallerData(__realReturnVal, lastInstr));
-            lastInstr = null;
+            this.___returnDataList.add(new ReturnToCallerData(__realReturnVal, this.___lastInstr));
+            this.___lastInstr = null;
         }
     }
 
     private ValueNode processReturnValue(ValueNode __value, JavaKind __kind)
     {
-        JavaKind __returnKind = method.getSignature().getReturnKind();
+        JavaKind __returnKind = this.___method.getSignature().getReturnKind();
         if (__kind != __returnKind)
         {
             // sub-word integer
@@ -2245,25 +2237,21 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void beforeReturn(ValueNode __x, JavaKind __kind)
     {
-        if (graph.method() != null && graph.method().isJavaLangObjectInit())
+        if (this.___graph.method() != null && this.___graph.method().isJavaLangObjectInit())
         {
-            /*
-             * Get the receiver from the initial state since bytecode rewriting could do arbitrary
-             * things to the state of the locals.
-             */
-            ValueNode __receiver = graph.start().stateAfter().localAt(0);
-            if (RegisterFinalizerNode.mayHaveFinalizer(__receiver, graph.getAssumptions()))
+            // Get the receiver from the initial state since bytecode rewriting could do arbitrary
+            // things to the state of the locals.
+            ValueNode __receiver = this.___graph.start().stateAfter().localAt(0);
+            if (RegisterFinalizerNode.mayHaveFinalizer(__receiver, this.___graph.getAssumptions()))
             {
                 append(new RegisterFinalizerNode(__receiver));
             }
         }
-        if (finalBarrierRequired)
+        if (this.___finalBarrierRequired)
         {
-            /*
-             * When compiling an OSR with a final field store, don't bother tracking the original
-             * receiver since the receiver cannot be EA'ed.
-             */
-            append(new FinalFieldBarrierNode(entryBCI == JVMCICompiler.INVOCATION_ENTRY_BCI ? originalReceiver : null));
+            // When compiling an OSR with a final field store, don't bother tracking the original
+            // receiver since the receiver cannot be EA'ed.
+            append(new FinalFieldBarrierNode(this.___entryBCI == JVMCICompiler.INVOCATION_ENTRY_BCI ? this.___originalReceiver : null));
         }
         synchronizedEpilogue(BytecodeFrame.AFTER_BCI, __x, __kind);
     }
@@ -2275,20 +2263,20 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void genMonitorEnter(ValueNode __x, int __bci)
     {
-        MonitorIdNode __monitorId = graph.add(new MonitorIdNode(frameState.lockDepth(true)));
+        MonitorIdNode __monitorId = this.___graph.add(new MonitorIdNode(this.___frameState.lockDepth(true)));
         MonitorEnterNode __monitorEnter = append(createMonitorEnterNode(__x, __monitorId));
-        frameState.pushLock(__x, __monitorId);
+        this.___frameState.pushLock(__x, __monitorId);
         __monitorEnter.setStateAfter(createFrameState(__bci, __monitorEnter));
     }
 
     protected void genMonitorExit(ValueNode __x, ValueNode __escapedReturnValue, int __bci)
     {
-        if (frameState.lockDepth(false) == 0)
+        if (this.___frameState.lockDepth(false) == 0)
         {
             throw bailout("unbalanced monitors: too many exits");
         }
-        MonitorIdNode __monitorId = frameState.peekMonitorId();
-        ValueNode __lockedObject = frameState.popLock();
+        MonitorIdNode __monitorId = this.___frameState.peekMonitorId();
+        ValueNode __lockedObject = this.___frameState.popLock();
         if (GraphUtil.originalValue(__lockedObject) != GraphUtil.originalValue(__x))
         {
             throw bailout("unbalanced monitors: mismatch at monitorexit, " + GraphUtil.originalValue(__x) + " != " + GraphUtil.originalValue(__lockedObject));
@@ -2299,8 +2287,8 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void genJsr(int __dest)
     {
-        BciBlock __successor = currentBlock.getJsrSuccessor();
-        JsrScope __scope = currentBlock.getJsrScope();
+        BciBlock __successor = this.___currentBlock.getJsrSuccessor();
+        JsrScope __scope = this.___currentBlock.getJsrScope();
         int __nextBci = getStream().nextBCI();
         if (!__successor.getJsrScope().pop().equals(__scope))
         {
@@ -2311,19 +2299,19 @@ public final class BytecodeParser implements GraphBuilderContext
             throw new BailoutException("unstructured control flow (internal limitation)");
         }
         ConstantNode __nextBciNode = getJsrConstant(__nextBci);
-        frameState.push(JavaKind.Object, __nextBciNode);
+        this.___frameState.push(JavaKind.Object, __nextBciNode);
         appendGoto(__successor);
     }
 
     protected void genRet(int __localIndex)
     {
-        BciBlock __successor = currentBlock.getRetSuccessor();
-        ValueNode __local = frameState.loadLocal(__localIndex, JavaKind.Object);
-        JsrScope __scope = currentBlock.getJsrScope();
+        BciBlock __successor = this.___currentBlock.getRetSuccessor();
+        ValueNode __local = this.___frameState.loadLocal(__localIndex, JavaKind.Object);
+        JsrScope __scope = this.___currentBlock.getJsrScope();
         int __retAddress = __scope.nextReturnAddress();
         ConstantNode __returnBciNode = getJsrConstant(__retAddress);
-        LogicNode __guard = IntegerEqualsNode.create(constantReflection, metaAccess, null, __local, __returnBciNode, NodeView.DEFAULT);
-        __guard = graph.addOrUniqueWithInputs(__guard);
+        LogicNode __guard = IntegerEqualsNode.create(this.___constantReflection, this.___metaAccess, null, __local, __returnBciNode, NodeView.DEFAULT);
+        __guard = this.___graph.addOrUniqueWithInputs(__guard);
         append(new FixedGuardNode(__guard, DeoptimizationReason.JavaSubroutineMismatch, DeoptimizationAction.InvalidateReprofile));
         if (!__successor.getJsrScope().equals(__scope.pop()))
         {
@@ -2337,7 +2325,7 @@ public final class BytecodeParser implements GraphBuilderContext
         JavaConstant __nextBciConstant = new RawConstant(__bci);
         Stamp __nextBciStamp = StampFactory.forConstant(__nextBciConstant);
         ConstantNode __nextBciNode = new ConstantNode(__nextBciConstant, __nextBciStamp);
-        return graph.unique(__nextBciNode);
+        return this.___graph.unique(__nextBciNode);
     }
 
     protected void genIntegerSwitch(ValueNode __value, ArrayList<BciBlock> __actualSuccessors, int[] __keys, double[] __keyProbabilities, int[] __keySuccessors)
@@ -2358,21 +2346,21 @@ public final class BytecodeParser implements GraphBuilderContext
         }
         else
         {
-            this.controlFlowSplit = true;
+            this.___controlFlowSplit = true;
             double[] __successorProbabilities = successorProbabilites(__actualSuccessors.size(), __keySuccessors, __keyProbabilities);
             IntegerSwitchNode __switchNode = append(new IntegerSwitchNode(__value, __actualSuccessors.size(), __keys, __keyProbabilities, __keySuccessors));
             for (int __i = 0; __i < __actualSuccessors.size(); __i++)
             {
-                __switchNode.setBlockSuccessor(__i, createBlockTarget(__successorProbabilities[__i], __actualSuccessors.get(__i), frameState));
+                __switchNode.setBlockSuccessor(__i, createBlockTarget(__successorProbabilities[__i], __actualSuccessors.get(__i), this.___frameState));
             }
         }
     }
 
-    /**
-     * Helper function that sums up the probabilities of all keys that lead to a specific successor.
-     *
-     * @return an array of size successorCount with the accumulated probability for each successor.
-     */
+    ///
+    // Helper function that sums up the probabilities of all keys that lead to a specific successor.
+    //
+    // @return an array of size successorCount with the accumulated probability for each successor.
+    ///
     private static double[] successorProbabilites(int __successorCount, int[] __keySuccessors, double[] __keyProbabilities)
     {
         double[] __probability = new double[__successorCount];
@@ -2385,7 +2373,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected ConstantNode appendConstant(JavaConstant __constant)
     {
-        return ConstantNode.forConstant(__constant, metaAccess, graph);
+        return ConstantNode.forConstant(__constant, this.___metaAccess, this.___graph);
     }
 
     @Override
@@ -2395,7 +2383,7 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             return __v;
         }
-        T __added = graph.addOrUniqueWithInputs(__v);
+        T __added = this.___graph.addOrUniqueWithInputs(__v);
         if (__added == __v)
         {
             updateLastInstruction(__v);
@@ -2408,24 +2396,24 @@ public final class BytecodeParser implements GraphBuilderContext
         if (__v instanceof FixedNode)
         {
             FixedNode __fixedNode = (FixedNode) __v;
-            lastInstr.setNext(__fixedNode);
+            this.___lastInstr.setNext(__fixedNode);
             if (__fixedNode instanceof FixedWithNextNode)
             {
                 FixedWithNextNode __fixedWithNextNode = (FixedWithNextNode) __fixedNode;
-                lastInstr = __fixedWithNextNode;
+                this.___lastInstr = __fixedWithNextNode;
             }
             else
             {
-                lastInstr = null;
+                this.___lastInstr = null;
             }
         }
     }
 
     private Target checkLoopExit(FixedNode __target, BciBlock __targetBlock, FrameStateBuilder __state)
     {
-        if (currentBlock != null)
+        if (this.___currentBlock != null)
         {
-            long __exits = currentBlock.loops & ~__targetBlock.loops;
+            long __exits = this.___currentBlock.___loops & ~__targetBlock.___loops;
             if (__exits != 0)
             {
                 LoopExitNode __firstLoopExit = null;
@@ -2438,7 +2426,7 @@ public final class BytecodeParser implements GraphBuilderContext
                     long __lMask = 1L << __pos;
                     if ((__exits & __lMask) != 0)
                     {
-                        __exitLoops.add(blockMap.getLoopHeader(__pos));
+                        __exitLoops.add(this.___blockMap.getLoopHeader(__pos));
                         __exits &= ~__lMask;
                     }
                     __pos++;
@@ -2450,20 +2438,20 @@ public final class BytecodeParser implements GraphBuilderContext
                     @Override
                     public int compare(BciBlock __o1, BciBlock __o2)
                     {
-                        return Long.bitCount(__o2.loops) - Long.bitCount(__o1.loops);
+                        return Long.bitCount(__o2.___loops) - Long.bitCount(__o1.___loops);
                     }
                 });
 
-                int __bci = __targetBlock.startBci;
+                int __bci = __targetBlock.___startBci;
                 if (__targetBlock instanceof ExceptionDispatchBlock)
                 {
-                    __bci = ((ExceptionDispatchBlock) __targetBlock).deoptBci;
+                    __bci = ((ExceptionDispatchBlock) __targetBlock).___deoptBci;
                 }
                 FrameStateBuilder __newState = __state.copy();
                 for (BciBlock __loop : __exitLoops)
                 {
                     LoopBeginNode __loopBegin = (LoopBeginNode) getFirstInstruction(__loop);
-                    LoopExitNode __loopExit = graph.add(new LoopExitNode(__loopBegin));
+                    LoopExitNode __loopExit = this.___graph.add(new LoopExitNode(__loopBegin));
                     if (__lastLoopExit != null)
                     {
                         __lastLoopExit.setNext(__loopExit);
@@ -2473,7 +2461,7 @@ public final class BytecodeParser implements GraphBuilderContext
                         __firstLoopExit = __loopExit;
                     }
                     __lastLoopExit = __loopExit;
-                    __newState.clearNonLiveLocals(__targetBlock, liveness, true);
+                    __newState.clearNonLiveLocals(__targetBlock, this.___liveness, true);
                     __newState.insertLoopProxies(__loopExit, getEntryState(__loop));
                     __loopExit.setStateAfter(__newState.create(__bci, __loopExit));
                 }
@@ -2487,29 +2475,29 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private FrameStateBuilder getEntryState(BciBlock __block)
     {
-        return entryStateArray[__block.id];
+        return this.___entryStateArray[__block.___id];
     }
 
     private void setEntryState(BciBlock __block, FrameStateBuilder __entryState)
     {
-        this.entryStateArray[__block.id] = __entryState;
+        this.___entryStateArray[__block.___id] = __entryState;
     }
 
     private void setFirstInstruction(BciBlock __block, FixedWithNextNode __firstInstruction)
     {
-        this.firstInstructionArray[__block.id] = __firstInstruction;
+        this.___firstInstructionArray[__block.___id] = __firstInstruction;
     }
 
     private FixedWithNextNode getFirstInstruction(BciBlock __block)
     {
-        return firstInstructionArray[__block.id];
+        return this.___firstInstructionArray[__block.___id];
     }
 
     private FixedNode createTarget(double __probability, BciBlock __block, FrameStateBuilder __stateAfter)
     {
         if (isNeverExecutedCode(__probability))
         {
-            return graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.UnreachedCode));
+            return this.___graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.UnreachedCode));
         }
         else
         {
@@ -2526,26 +2514,24 @@ public final class BytecodeParser implements GraphBuilderContext
     {
         if (getFirstInstruction(__block) == null)
         {
-            /*
-             * This is the first time we see this block as a branch target. Create and return a
-             * placeholder that later can be replaced with a MergeNode when we see this block again.
-             */
+            // This is the first time we see this block as a branch target. Create and return a
+            // placeholder that later can be replaced with a MergeNode when we see this block again.
             FixedNode __targetNode;
-            if (__canReuseInstruction && (__block.getPredecessorCount() == 1 || !controlFlowSplit) && !__block.isLoopHeader() && (currentBlock.loops & ~__block.loops) == 0)
+            if (__canReuseInstruction && (__block.getPredecessorCount() == 1 || !this.___controlFlowSplit) && !__block.isLoopHeader() && (this.___currentBlock.___loops & ~__block.___loops) == 0)
             {
-                setFirstInstruction(__block, lastInstr);
-                lastInstr = null;
+                setFirstInstruction(__block, this.___lastInstr);
+                this.___lastInstr = null;
             }
             else
             {
-                setFirstInstruction(__block, graph.add(new BeginNode()));
+                setFirstInstruction(__block, this.___graph.add(new BeginNode()));
             }
             __targetNode = getFirstInstruction(__block);
             Target __target = checkLoopExit(__targetNode, __block, __state);
-            FixedNode __result = __target.fixed;
-            FrameStateBuilder __currentEntryState = __target.state == __state ? (__canReuseState ? __state : __state.copy()) : __target.state;
+            FixedNode __result = __target.___fixed;
+            FrameStateBuilder __currentEntryState = __target.___state == __state ? (__canReuseState ? __state : __state.copy()) : __target.___state;
             setEntryState(__block, __currentEntryState);
-            __currentEntryState.clearNonLiveLocals(__block, liveness, true);
+            __currentEntryState.clearNonLiveLocals(__block, this.___liveness, true);
 
             return __result;
         }
@@ -2558,31 +2544,27 @@ public final class BytecodeParser implements GraphBuilderContext
 
         if (getFirstInstruction(__block) instanceof LoopBeginNode)
         {
-            /*
-             * Backward loop edge. We need to create a special LoopEndNode and merge with the
-             * loop begin node created before.
-             */
+            // Backward loop edge. We need to create a special LoopEndNode and merge with the
+            // loop begin node created before.
             LoopBeginNode __loopBegin = (LoopBeginNode) getFirstInstruction(__block);
-            LoopEndNode __loopEnd = graph.add(new LoopEndNode(__loopBegin));
+            LoopEndNode __loopEnd = this.___graph.add(new LoopEndNode(__loopBegin));
             Target __target = checkLoopExit(__loopEnd, __block, __state);
-            FixedNode __result = __target.fixed;
-            getEntryState(__block).merge(__loopBegin, __target.state);
+            FixedNode __result = __target.___fixed;
+            getEntryState(__block).merge(__loopBegin, __target.___state);
 
             return __result;
         }
 
         if (getFirstInstruction(__block) instanceof AbstractBeginNode && !(getFirstInstruction(__block) instanceof AbstractMergeNode))
         {
-            /*
-             * This is the second time we see this block. Create the actual MergeNode and the
-             * End Node for the already existing edge.
-             */
+            // This is the second time we see this block. Create the actual MergeNode and the
+            // End Node for the already existing edge.
             AbstractBeginNode __beginNode = (AbstractBeginNode) getFirstInstruction(__block);
 
             // The EndNode for the already existing edge.
-            EndNode __end = graph.add(new EndNode());
+            EndNode __end = this.___graph.add(new EndNode());
             // The MergeNode that replaces the placeholder.
-            AbstractMergeNode __mergeNode = graph.add(new MergeNode());
+            AbstractMergeNode __mergeNode = this.___graph.add(new MergeNode());
             FixedNode __next = __beginNode.next();
 
             if (__beginNode.predecessor() instanceof ControlSplitNode)
@@ -2604,19 +2586,19 @@ public final class BytecodeParser implements GraphBuilderContext
         AbstractMergeNode __mergeNode = (AbstractMergeNode) getFirstInstruction(__block);
 
         // The EndNode for the newly merged edge.
-        EndNode __newEnd = graph.add(new EndNode());
+        EndNode __newEnd = this.___graph.add(new EndNode());
         Target __target = checkLoopExit(__newEnd, __block, __state);
-        FixedNode __result = __target.fixed;
-        getEntryState(__block).merge(__mergeNode, __target.state);
+        FixedNode __result = __target.___fixed;
+        getEntryState(__block).merge(__mergeNode, __target.___state);
         __mergeNode.addForwardEnd(__newEnd);
 
         return __result;
     }
 
-    /**
-     * Returns a block begin node with the specified state. If the specified probability is 0, the
-     * block deoptimizes immediately.
-     */
+    ///
+    // Returns a block begin node with the specified state. If the specified probability is 0, the
+    // block deoptimizes immediately.
+    ///
     private AbstractBeginNode createBlockTarget(double __probability, BciBlock __block, FrameStateBuilder __stateAfter)
     {
         FixedNode __target = createTarget(__probability, __block, __stateAfter);
@@ -2644,14 +2626,14 @@ public final class BytecodeParser implements GraphBuilderContext
             return;
         }
 
-        lastInstr = __firstInstruction;
-        frameState = getEntryState(__block);
-        setCurrentFrameState(frameState);
-        currentBlock = __block;
+        this.___lastInstr = __firstInstruction;
+        this.___frameState = getEntryState(__block);
+        setCurrentFrameState(this.___frameState);
+        this.___currentBlock = __block;
 
-        if (__block != blockMap.getUnwindBlock() && !(__block instanceof ExceptionDispatchBlock))
+        if (__block != this.___blockMap.getUnwindBlock() && !(__block instanceof ExceptionDispatchBlock))
         {
-            frameState.setRethrowException(false);
+            this.___frameState.setRethrowException(false);
         }
 
         if (__firstInstruction instanceof AbstractMergeNode)
@@ -2659,7 +2641,7 @@ public final class BytecodeParser implements GraphBuilderContext
             setMergeStateAfter(__block, __firstInstruction);
         }
 
-        if (__block == blockMap.getUnwindBlock())
+        if (__block == this.___blockMap.getUnwindBlock())
         {
             handleUnwindBlock((ExceptionDispatchBlock) __block);
         }
@@ -2675,17 +2657,17 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void handleUnwindBlock(ExceptionDispatchBlock __block)
     {
-        if (parent == null)
+        if (this.___parent == null)
         {
-            finishPrepare(lastInstr, __block.deoptBci);
-            frameState.setRethrowException(false);
+            finishPrepare(this.___lastInstr, __block.___deoptBci);
+            this.___frameState.setRethrowException(false);
             createUnwind();
         }
         else
         {
-            ValueNode __exception = frameState.pop(JavaKind.Object);
-            this.unwindValue = __exception;
-            this.beforeUnwindNode = this.lastInstr;
+            ValueNode __exception = this.___frameState.pop(JavaKind.Object);
+            this.___unwindValue = __exception;
+            this.___beforeUnwindNode = this.___lastInstr;
         }
     }
 
@@ -2694,10 +2676,10 @@ public final class BytecodeParser implements GraphBuilderContext
         AbstractMergeNode __abstractMergeNode = (AbstractMergeNode) __firstInstruction;
         if (__abstractMergeNode.stateAfter() == null)
         {
-            int __bci = __block.startBci;
+            int __bci = __block.___startBci;
             if (__block instanceof ExceptionDispatchBlock)
             {
-                __bci = ((ExceptionDispatchBlock) __block).deoptBci;
+                __bci = ((ExceptionDispatchBlock) __block).___deoptBci;
             }
             __abstractMergeNode.setStateAfter(createFrameState(__bci, __abstractMergeNode));
         }
@@ -2706,22 +2688,22 @@ public final class BytecodeParser implements GraphBuilderContext
     private void createUnwind()
     {
         synchronizedEpilogue(BytecodeFrame.AFTER_EXCEPTION_BCI, null, null);
-        ValueNode __exception = frameState.pop(JavaKind.Object);
+        ValueNode __exception = this.___frameState.pop(JavaKind.Object);
         append(new UnwindNode(__exception));
     }
 
     private void synchronizedEpilogue(int __bci, ValueNode __currentReturnValue, JavaKind __currentReturnValueKind)
     {
-        if (method.isSynchronized())
+        if (this.___method.isSynchronized())
         {
             if (__currentReturnValue != null)
             {
-                frameState.push(__currentReturnValueKind, __currentReturnValue);
+                this.___frameState.push(__currentReturnValueKind, __currentReturnValue);
             }
-            genMonitorExit(methodSynchronizedObject, __currentReturnValue, __bci);
-            finishPrepare(lastInstr, __bci);
+            genMonitorExit(this.___methodSynchronizedObject, __currentReturnValue, __bci);
+            finishPrepare(this.___lastInstr, __bci);
         }
-        if (frameState.lockDepth(false) != 0)
+        if (this.___frameState.lockDepth(false) != 0)
         {
             throw bailout("unbalanced monitors: too few exits exiting frame");
         }
@@ -2729,53 +2711,53 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void createExceptionDispatch(ExceptionDispatchBlock __block)
     {
-        lastInstr = finishInstruction(lastInstr, frameState);
+        this.___lastInstr = finishInstruction(this.___lastInstr, this.___frameState);
 
-        if (__block.handler.isCatchAll())
+        if (__block.___handler.isCatchAll())
         {
             appendGoto(__block.getSuccessor(0));
             return;
         }
 
-        JavaType __catchType = __block.handler.getCatchType();
-        if (graphBuilderConfig.eagerResolving())
+        JavaType __catchType = __block.___handler.getCatchType();
+        if (this.___graphBuilderConfig.eagerResolving())
         {
-            __catchType = lookupType(__block.handler.catchTypeCPI(), Bytecodes.INSTANCEOF);
+            __catchType = lookupType(__block.___handler.catchTypeCPI(), Bytecodes.INSTANCEOF);
         }
         if (__catchType instanceof ResolvedJavaType)
         {
-            TypeReference __checkedCatchType = TypeReference.createTrusted(graph.getAssumptions(), (ResolvedJavaType) __catchType);
+            TypeReference __checkedCatchType = TypeReference.createTrusted(this.___graph.getAssumptions(), (ResolvedJavaType) __catchType);
 
-            if (graphBuilderConfig.getSkippedExceptionTypes() != null)
+            if (this.___graphBuilderConfig.getSkippedExceptionTypes() != null)
             {
-                for (ResolvedJavaType __skippedType : graphBuilderConfig.getSkippedExceptionTypes())
+                for (ResolvedJavaType __skippedType : this.___graphBuilderConfig.getSkippedExceptionTypes())
                 {
                     if (__skippedType.isAssignableFrom(__checkedCatchType.getType()))
                     {
-                        BciBlock __nextBlock = __block.getSuccessorCount() == 1 ? blockMap.getUnwindBlock() : __block.getSuccessor(1);
-                        ValueNode __exception = frameState.stack[0];
-                        FixedNode __trueSuccessor = graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.UnreachedCode));
-                        FixedNode __nextDispatch = createTarget(__nextBlock, frameState);
-                        append(new IfNode(graph.addOrUniqueWithInputs(createInstanceOf(__checkedCatchType, __exception)), __trueSuccessor, __nextDispatch, 0));
+                        BciBlock __nextBlock = __block.getSuccessorCount() == 1 ? this.___blockMap.getUnwindBlock() : __block.getSuccessor(1);
+                        ValueNode __exception = this.___frameState.___stack[0];
+                        FixedNode __trueSuccessor = this.___graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.UnreachedCode));
+                        FixedNode __nextDispatch = createTarget(__nextBlock, this.___frameState);
+                        append(new IfNode(this.___graph.addOrUniqueWithInputs(createInstanceOf(__checkedCatchType, __exception)), __trueSuccessor, __nextDispatch, 0));
                         return;
                     }
                 }
             }
 
-            BciBlock __nextBlock = __block.getSuccessorCount() == 1 ? blockMap.getUnwindBlock() : __block.getSuccessor(1);
-            ValueNode __exception = frameState.stack[0];
+            BciBlock __nextBlock = __block.getSuccessorCount() == 1 ? this.___blockMap.getUnwindBlock() : __block.getSuccessor(1);
+            ValueNode __exception = this.___frameState.___stack[0];
             // Anchor for the piNode, which must be before any LoopExit inserted by createTarget.
-            BeginNode __piNodeAnchor = graph.add(new BeginNode());
+            BeginNode __piNodeAnchor = this.___graph.add(new BeginNode());
             ObjectStamp __checkedStamp = StampFactory.objectNonNull(__checkedCatchType);
-            PiNode __piNode = graph.addWithoutUnique(new PiNode(__exception, __checkedStamp));
-            frameState.pop(JavaKind.Object);
-            frameState.push(JavaKind.Object, __piNode);
-            FixedNode __catchSuccessor = createTarget(__block.getSuccessor(0), frameState);
-            frameState.pop(JavaKind.Object);
-            frameState.push(JavaKind.Object, __exception);
-            FixedNode __nextDispatch = createTarget(__nextBlock, frameState);
+            PiNode __piNode = this.___graph.addWithoutUnique(new PiNode(__exception, __checkedStamp));
+            this.___frameState.pop(JavaKind.Object);
+            this.___frameState.push(JavaKind.Object, __piNode);
+            FixedNode __catchSuccessor = createTarget(__block.getSuccessor(0), this.___frameState);
+            this.___frameState.pop(JavaKind.Object);
+            this.___frameState.push(JavaKind.Object, __exception);
+            FixedNode __nextDispatch = createTarget(__nextBlock, this.___frameState);
             __piNodeAnchor.setNext(__catchSuccessor);
-            IfNode __ifNode = append(new IfNode(graph.unique(createInstanceOf(__checkedCatchType, __exception)), __piNodeAnchor, __nextDispatch, 0.5));
+            IfNode __ifNode = append(new IfNode(this.___graph.unique(createInstanceOf(__checkedCatchType, __exception)), __piNodeAnchor, __nextDispatch, 0.5));
             __piNode.setGuard(__ifNode.trueSuccessor());
         }
         else
@@ -2786,10 +2768,10 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void appendGoto(BciBlock __successor)
     {
-        FixedNode __targetInstr = createTarget(__successor, frameState, true, true);
-        if (lastInstr != null && lastInstr != __targetInstr)
+        FixedNode __targetInstr = createTarget(__successor, this.___frameState, true, true);
+        if (this.___lastInstr != null && this.___lastInstr != __targetInstr)
         {
-            lastInstr.setNext(__targetInstr);
+            this.___lastInstr.setNext(__targetInstr);
         }
     }
 
@@ -2798,55 +2780,49 @@ public final class BytecodeParser implements GraphBuilderContext
         if (__block.isLoopHeader())
         {
             // Create the loop header block, which later will merge the backward branches of the loop.
-            controlFlowSplit = true;
-            LoopBeginNode __loopBegin = appendLoopBegin(this.lastInstr, __block.startBci);
-            lastInstr = __loopBegin;
+            this.___controlFlowSplit = true;
+            LoopBeginNode __loopBegin = appendLoopBegin(this.___lastInstr, __block.___startBci);
+            this.___lastInstr = __loopBegin;
 
             // Create phi functions for all local variables and operand stack slots.
-            frameState.insertLoopPhis(liveness, __block.loopId, __loopBegin, forceLoopPhis(), stampFromValueForForcedPhis());
-            __loopBegin.setStateAfter(createFrameState(__block.startBci, __loopBegin));
+            this.___frameState.insertLoopPhis(this.___liveness, __block.___loopId, __loopBegin, forceLoopPhis(), stampFromValueForForcedPhis());
+            __loopBegin.setStateAfter(createFrameState(__block.___startBci, __loopBegin));
 
-            /*
-             * We have seen all forward branches. All subsequent backward branches will merge to the
-             * loop header. This ensures that the loop header has exactly one non-loop predecessor.
-             */
+            // We have seen all forward branches. All subsequent backward branches will merge to the
+            // loop header. This ensures that the loop header has exactly one non-loop predecessor.
             setFirstInstruction(__block, __loopBegin);
-            /*
-             * We need to preserve the frame state builder of the loop header so that we can merge
-             * values for phi functions, so make a copy of it.
-             */
-            setEntryState(__block, frameState.copy());
+            // We need to preserve the frame state builder of the loop header so that we can merge
+            // values for phi functions, so make a copy of it.
+            setEntryState(__block, this.___frameState.copy());
         }
-        else if (lastInstr instanceof MergeNode)
+        else if (this.___lastInstr instanceof MergeNode)
         {
-            /*
-             * All inputs of non-loop phi nodes are known by now. We can infer the stamp for the
-             * phi, so that parsing continues with more precise type information.
-             */
-            frameState.inferPhiStamps((AbstractMergeNode) lastInstr);
+            // All inputs of non-loop phi nodes are known by now. We can infer the stamp for the
+            // phi, so that parsing continues with more precise type information.
+            this.___frameState.inferPhiStamps((AbstractMergeNode) this.___lastInstr);
         }
 
-        lastInstr = finishInstruction(lastInstr, frameState);
+        this.___lastInstr = finishInstruction(this.___lastInstr, this.___frameState);
 
-        int __endBCI = stream.endBCI();
+        int __endBCI = this.___stream.endBCI();
 
-        stream.setBCI(__block.startBci);
-        int __bci = __block.startBci;
+        this.___stream.setBCI(__block.___startBci);
+        int __bci = __block.___startBci;
 
         while (__bci < __endBCI)
         {
             try
             {
                 // read the opcode
-                int __opcode = stream.currentBC();
-                if (parent == null && __bci == entryBCI)
+                int __opcode = this.___stream.currentBC();
+                if (this.___parent == null && __bci == this.___entryBCI)
                 {
                     if (__block.getJsrScope() != JsrScope.EMPTY_SCOPE)
                     {
                         throw new BailoutException("OSR into a Bytecodes.JSR scope is not supported");
                     }
                     EntryMarkerNode __x = append(new EntryMarkerNode());
-                    frameState.insertProxies(__value -> graph.unique(new EntryProxyNode(__value, __x)));
+                    this.___frameState.insertProxies(__value -> this.___graph.unique(new EntryProxyNode(__value, __x)));
                     __x.setStateAfter(createFrameState(__bci, __x));
                 }
 
@@ -2862,18 +2838,18 @@ public final class BytecodeParser implements GraphBuilderContext
                 throw new GraalError(__t);
             }
 
-            if (lastInstr == null || lastInstr.next() != null)
+            if (this.___lastInstr == null || this.___lastInstr.next() != null)
             {
                 break;
             }
 
-            stream.next();
-            __bci = stream.currentBCI();
+            this.___stream.next();
+            __bci = this.___stream.currentBCI();
 
-            lastInstr = finishInstruction(lastInstr, frameState);
+            this.___lastInstr = finishInstruction(this.___lastInstr, this.___frameState);
             if (__bci < __endBCI)
             {
-                if (__bci > __block.endBci)
+                if (__bci > __block.___endBci)
                 {
                     // we fell through to the next block, add a goto and break
                     appendGoto(__block.getSuccessor(0));
@@ -2886,7 +2862,7 @@ public final class BytecodeParser implements GraphBuilderContext
     // Also a hook for subclasses.
     protected boolean forceLoopPhis()
     {
-        return graph.isOSR();
+        return this.___graph.isOSR();
     }
 
     // Hook for subclasses.
@@ -2903,8 +2879,8 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private LoopBeginNode appendLoopBegin(FixedWithNextNode __fixedWithNext, int __startBci)
     {
-        EndNode __preLoopEnd = graph.add(new EndNode());
-        LoopBeginNode __loopBegin = graph.add(new LoopBeginNode());
+        EndNode __preLoopEnd = this.___graph.add(new EndNode());
+        LoopBeginNode __loopBegin = this.___graph.add(new LoopBeginNode());
         if (disableLoopSafepoint())
         {
             __loopBegin.disableSafepoint();
@@ -2915,13 +2891,13 @@ public final class BytecodeParser implements GraphBuilderContext
         return __loopBegin;
     }
 
-    /**
-     * Hook for subclasses to modify the last instruction or add other instructions.
-     *
-     * @param instr The last instruction (= fixed node) which was added.
-     * @param state The current frame state.
-     * @return Returns the (new) last instruction.
-     */
+    ///
+    // Hook for subclasses to modify the last instruction or add other instructions.
+    //
+    // @param instr The last instruction (= fixed node) which was added.
+    // @param state The current frame state.
+    // @return Returns the (new) last instruction.
+    ///
     protected FixedWithNextNode finishInstruction(FixedWithNextNode __instr, FrameStateBuilder __state)
     {
         return __instr;
@@ -2929,8 +2905,8 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void genIf(ValueNode __x, Condition __cond, ValueNode __y)
     {
-        BciBlock __trueBlock = currentBlock.getSuccessor(0);
-        BciBlock __falseBlock = currentBlock.getSuccessor(1);
+        BciBlock __trueBlock = this.___currentBlock.getSuccessor(0);
+        BciBlock __falseBlock = this.___currentBlock.getSuccessor(1);
 
         if (__trueBlock == __falseBlock)
         {
@@ -2979,12 +2955,12 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected double getProfileProbability(boolean __negate)
     {
-        if (profilingInfo == null)
+        if (this.___profilingInfo == null)
         {
             return 0.5;
         }
 
-        double __probability = profilingInfo.getBranchTakenProbability(bci());
+        double __probability = this.___profilingInfo.getBranchTakenProbability(bci());
 
         if (__probability < 0)
         {
@@ -3059,7 +3035,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
             if (isNeverExecutedCode(__probability))
             {
-                if (!graph.isOSR() || getParent() != null || graph.getEntryBCI() != __trueBlock.startBci)
+                if (!this.___graph.isOSR() || getParent() != null || this.___graph.getEntryBCI() != __trueBlock.___startBci)
                 {
                     append(new FixedGuardNode(__condition, DeoptimizationReason.UnreachedCode, DeoptimizationAction.InvalidateReprofile, true));
                     appendGoto(__falseBlock);
@@ -3068,7 +3044,7 @@ public final class BytecodeParser implements GraphBuilderContext
             }
             else if (isNeverExecutedCode(1 - __probability))
             {
-                if (!graph.isOSR() || getParent() != null || graph.getEntryBCI() != __falseBlock.startBci)
+                if (!this.___graph.isOSR() || getParent() != null || this.___graph.getEntryBCI() != __falseBlock.___startBci)
                 {
                     append(new FixedGuardNode(__condition, DeoptimizationReason.UnreachedCode, DeoptimizationAction.InvalidateReprofile, false));
                     appendGoto(__trueBlock);
@@ -3076,7 +3052,7 @@ public final class BytecodeParser implements GraphBuilderContext
                 }
             }
 
-            int __oldBci = stream.currentBCI();
+            int __oldBci = this.___stream.currentBCI();
             int __trueBlockInt = checkPositiveIntConstantPushed(__trueBlock);
             if (__trueBlockInt != -1)
             {
@@ -3090,27 +3066,27 @@ public final class BytecodeParser implements GraphBuilderContext
                 }
             }
 
-            this.controlFlowSplit = true;
-            FixedNode __trueSuccessor = createTarget(__trueBlock, frameState, false, false);
-            FixedNode __falseSuccessor = createTarget(__falseBlock, frameState, false, true);
+            this.___controlFlowSplit = true;
+            FixedNode __trueSuccessor = createTarget(__trueBlock, this.___frameState, false, false);
+            FixedNode __falseSuccessor = createTarget(__falseBlock, this.___frameState, false, true);
             ValueNode __ifNode = genIfNode(__condition, __trueSuccessor, __falseSuccessor, __probability);
             postProcessIfNode(__ifNode);
             append(__ifNode);
         }
     }
 
-    /**
-     * Hook for subclasses to decide whether the IfNode probability should be complemented during
-     * conversion to Graal IR.
-     */
+    ///
+    // Hook for subclasses to decide whether the IfNode probability should be complemented during
+    // conversion to Graal IR.
+    ///
     protected boolean shouldComplementProbability()
     {
         return true;
     }
 
-    /**
-     * Hook for subclasses to generate custom nodes before an IfNode.
-     */
+    ///
+    // Hook for subclasses to generate custom nodes before an IfNode.
+    ///
     @SuppressWarnings("unused")
     protected void postProcessIfNode(ValueNode __node)
     {
@@ -3123,7 +3099,7 @@ public final class BytecodeParser implements GraphBuilderContext
             genConditionalForIf(__trueBlock, __condition, __oldBci, __trueBlockInt, __falseBlockInt, false);
             return true;
         }
-        else if (this.parent != null && returnAfterConstant(__trueBlock) && returnAfterConstant(__falseBlock))
+        else if (this.___parent != null && returnAfterConstant(__trueBlock) && returnAfterConstant(__falseBlock))
         {
             genConditionalForIf(__trueBlock, __condition, __oldBci, __trueBlockInt, __falseBlockInt, true);
             return true;
@@ -3133,23 +3109,23 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void genConditionalForIf(BciBlock __trueBlock, LogicNode __condition, int __oldBci, int __trueBlockInt, int __falseBlockInt, boolean __genReturn)
     {
-        ConstantNode __trueValue = graph.unique(ConstantNode.forInt(__trueBlockInt));
-        ConstantNode __falseValue = graph.unique(ConstantNode.forInt(__falseBlockInt));
+        ConstantNode __trueValue = this.___graph.unique(ConstantNode.forInt(__trueBlockInt));
+        ConstantNode __falseValue = this.___graph.unique(ConstantNode.forInt(__falseBlockInt));
         ValueNode __conditionalNode = ConditionalNode.create(__condition, __trueValue, __falseValue, NodeView.DEFAULT);
         if (__conditionalNode.graph() == null)
         {
-            __conditionalNode = graph.addOrUniqueWithInputs(__conditionalNode);
+            __conditionalNode = this.___graph.addOrUniqueWithInputs(__conditionalNode);
         }
         if (__genReturn)
         {
-            JavaKind __returnKind = method.getSignature().getReturnKind().getStackKind();
+            JavaKind __returnKind = this.___method.getSignature().getReturnKind().getStackKind();
             this.genReturn(__conditionalNode, __returnKind);
         }
         else
         {
-            frameState.push(JavaKind.Int, __conditionalNode);
+            this.___frameState.push(JavaKind.Int, __conditionalNode);
             appendGoto(__trueBlock.getSuccessor(0));
-            stream.setBCI(__oldBci);
+            this.___stream.setBCI(__oldBci);
         }
     }
 
@@ -3182,12 +3158,12 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             __nextBlock = __trueBlock;
         }
-        int __startBci = __nextBlock.startBci;
-        int __targetAtStart = stream.readUByte(__startBci);
+        int __startBci = __nextBlock.___startBci;
+        int __targetAtStart = this.___stream.readUByte(__startBci);
         if (__targetAtStart == Bytecodes.GOTO && __nextBlock.getPredecessorCount() == 1)
         {
             // This is an empty block. Skip it.
-            BciBlock __successorBlock = __nextBlock.successors.get(0);
+            BciBlock __successorBlock = __nextBlock.___successors.get(0);
             appendGoto(__successorBlock);
         }
         else
@@ -3198,8 +3174,8 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private int checkPositiveIntConstantPushed(BciBlock __block)
     {
-        stream.setBCI(__block.startBci);
-        int __currentBC = stream.currentBC();
+        this.___stream.setBCI(__block.___startBci);
+        int __currentBC = this.___stream.currentBC();
         if (__currentBC >= Bytecodes.ICONST_0 && __currentBC <= Bytecodes.ICONST_5)
         {
             return __currentBC - Bytecodes.ICONST_0;
@@ -3209,71 +3185,71 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private boolean gotoOrFallThroughAfterConstant(BciBlock __block)
     {
-        stream.setBCI(__block.startBci);
-        int __currentBCI = stream.nextBCI();
-        stream.setBCI(__currentBCI);
-        int __currentBC = stream.currentBC();
-        return stream.currentBCI() > __block.endBci || __currentBC == Bytecodes.GOTO || __currentBC == Bytecodes.GOTO_W;
+        this.___stream.setBCI(__block.___startBci);
+        int __currentBCI = this.___stream.nextBCI();
+        this.___stream.setBCI(__currentBCI);
+        int __currentBC = this.___stream.currentBC();
+        return this.___stream.currentBCI() > __block.___endBci || __currentBC == Bytecodes.GOTO || __currentBC == Bytecodes.GOTO_W;
     }
 
     private boolean returnAfterConstant(BciBlock __block)
     {
-        stream.setBCI(__block.startBci);
-        int __currentBCI = stream.nextBCI();
-        stream.setBCI(__currentBCI);
-        int __currentBC = stream.currentBC();
+        this.___stream.setBCI(__block.___startBci);
+        int __currentBCI = this.___stream.nextBCI();
+        this.___stream.setBCI(__currentBCI);
+        int __currentBC = this.___stream.currentBC();
         return __currentBC == Bytecodes.IRETURN;
     }
 
     @Override
     public StampProvider getStampProvider()
     {
-        return stampProvider;
+        return this.___stampProvider;
     }
 
     @Override
     public MetaAccessProvider getMetaAccess()
     {
-        return metaAccess;
+        return this.___metaAccess;
     }
 
     @Override
     public void push(JavaKind __slotKind, ValueNode __value)
     {
-        frameState.push(__slotKind, __value);
+        this.___frameState.push(__slotKind, __value);
     }
 
     @Override
     public ConstantReflectionProvider getConstantReflection()
     {
-        return constantReflection;
+        return this.___constantReflection;
     }
 
     @Override
     public ConstantFieldProvider getConstantFieldProvider()
     {
-        return constantFieldProvider;
+        return this.___constantFieldProvider;
     }
 
-    /**
-     * Gets the graph being processed by this builder.
-     */
+    ///
+    // Gets the graph being processed by this builder.
+    ///
     @Override
     public StructuredGraph getGraph()
     {
-        return graph;
+        return this.___graph;
     }
 
     @Override
     public BytecodeParser getParent()
     {
-        return parent;
+        return this.___parent;
     }
 
     @Override
     public IntrinsicContext getIntrinsic()
     {
-        return intrinsicContext;
+        return this.___intrinsicContext;
     }
 
     @Override
@@ -3284,63 +3260,63 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private FrameState createFrameState(int __bci, StateSplit __forStateSplit)
     {
-        if (currentBlock != null && __bci > currentBlock.endBci)
+        if (this.___currentBlock != null && __bci > this.___currentBlock.___endBci)
         {
-            frameState.clearNonLiveLocals(currentBlock, liveness, false);
+            this.___frameState.clearNonLiveLocals(this.___currentBlock, this.___liveness, false);
         }
-        return frameState.create(__bci, __forStateSplit);
+        return this.___frameState.create(__bci, __forStateSplit);
     }
 
     @Override
     public void setStateAfter(StateSplit __sideEffect)
     {
-        FrameState __stateAfter = createFrameState(stream.nextBCI(), __sideEffect);
+        FrameState __stateAfter = createFrameState(this.___stream.nextBCI(), __sideEffect);
         __sideEffect.setStateAfter(__stateAfter);
     }
 
     public void setCurrentFrameState(FrameStateBuilder __frameState)
     {
-        this.frameState = __frameState;
+        this.___frameState = __frameState;
     }
 
     protected final BytecodeStream getStream()
     {
-        return stream;
+        return this.___stream;
     }
 
     @Override
     public int bci()
     {
-        return stream.currentBCI();
+        return this.___stream.currentBCI();
     }
 
     public void loadLocal(int __index, JavaKind __kind)
     {
-        ValueNode __value = frameState.loadLocal(__index, __kind);
-        frameState.push(__kind, __value);
+        ValueNode __value = this.___frameState.loadLocal(__index, __kind);
+        this.___frameState.push(__kind, __value);
     }
 
     public void loadLocalObject(int __index)
     {
-        ValueNode __value = frameState.loadLocal(__index, JavaKind.Object);
+        ValueNode __value = this.___frameState.loadLocal(__index, JavaKind.Object);
 
-        int __nextBCI = stream.nextBCI();
-        int __nextBC = stream.readUByte(__nextBCI);
-        if (__nextBCI <= currentBlock.endBci && __nextBC == Bytecodes.GETFIELD)
+        int __nextBCI = this.___stream.nextBCI();
+        int __nextBC = this.___stream.readUByte(__nextBCI);
+        if (__nextBCI <= this.___currentBlock.___endBci && __nextBC == Bytecodes.GETFIELD)
         {
-            stream.next();
-            genGetField(stream.readCPI(), Bytecodes.GETFIELD, __value);
+            this.___stream.next();
+            genGetField(this.___stream.readCPI(), Bytecodes.GETFIELD, __value);
         }
         else
         {
-            frameState.push(JavaKind.Object, __value);
+            this.___frameState.push(JavaKind.Object, __value);
         }
     }
 
     public void storeLocal(JavaKind __kind, int __index)
     {
-        ValueNode __value = frameState.pop(__kind);
-        frameState.storeLocal(__index, __kind, __value);
+        ValueNode __value = this.___frameState.pop(__kind);
+        this.___frameState.storeLocal(__index, __kind, __value);
     }
 
     private void genLoadConstant(int __cpi, int __opcode)
@@ -3353,7 +3329,7 @@ public final class BytecodeParser implements GraphBuilderContext
             JavaType __type = (JavaType) __con;
             if (__type instanceof ResolvedJavaType)
             {
-                frameState.push(JavaKind.Object, appendConstant(getConstantReflection().asJavaClass((ResolvedJavaType) __type)));
+                this.___frameState.push(JavaKind.Object, appendConstant(getConstantReflection().asJavaClass((ResolvedJavaType) __type)));
             }
             else
             {
@@ -3363,7 +3339,7 @@ public final class BytecodeParser implements GraphBuilderContext
         else if (__con instanceof JavaConstant)
         {
             JavaConstant __constant = (JavaConstant) __con;
-            frameState.push(__constant.getJavaKind(), appendConstant(__constant));
+            this.___frameState.push(__constant.getJavaKind(), appendConstant(__constant));
         }
         else
         {
@@ -3373,10 +3349,10 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void genLoadIndexed(JavaKind __kind)
     {
-        ValueNode __index = frameState.pop(JavaKind.Int);
-        ValueNode __array = emitExplicitExceptions(frameState.pop(JavaKind.Object), __index);
+        ValueNode __index = this.___frameState.pop(JavaKind.Int);
+        ValueNode __array = emitExplicitExceptions(this.___frameState.pop(JavaKind.Object), __index);
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleLoadIndexed(this, __array, __index, __kind))
             {
@@ -3384,16 +3360,16 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        frameState.push(__kind, append(genLoadIndexed(__array, __index, __kind)));
+        this.___frameState.push(__kind, append(genLoadIndexed(__array, __index, __kind)));
     }
 
     private void genStoreIndexed(JavaKind __kind)
     {
-        ValueNode __value = frameState.pop(__kind);
-        ValueNode __index = frameState.pop(JavaKind.Int);
-        ValueNode __array = emitExplicitExceptions(frameState.pop(JavaKind.Object), __index);
+        ValueNode __value = this.___frameState.pop(__kind);
+        ValueNode __index = this.___frameState.pop(JavaKind.Int);
+        ValueNode __array = emitExplicitExceptions(this.___frameState.pop(JavaKind.Object), __index);
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleStoreIndexed(this, __array, __index, __kind, __value))
             {
@@ -3406,202 +3382,232 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void genArithmeticOp(JavaKind __kind, int __opcode)
     {
-        ValueNode __y = frameState.pop(__kind);
-        ValueNode __x = frameState.pop(__kind);
+        ValueNode __y = this.___frameState.pop(__kind);
+        ValueNode __x = this.___frameState.pop(__kind);
         ValueNode __v;
         switch (__opcode)
         {
             case Bytecodes.IADD:
             case Bytecodes.LADD:
+            {
                 __v = genIntegerAdd(__x, __y);
                 break;
+            }
             case Bytecodes.FADD:
             case Bytecodes.DADD:
+            {
                 __v = genFloatAdd(__x, __y);
                 break;
+            }
             case Bytecodes.ISUB:
             case Bytecodes.LSUB:
+            {
                 __v = genIntegerSub(__x, __y);
                 break;
+            }
             case Bytecodes.FSUB:
             case Bytecodes.DSUB:
+            {
                 __v = genFloatSub(__x, __y);
                 break;
+            }
             case Bytecodes.IMUL:
             case Bytecodes.LMUL:
+            {
                 __v = genIntegerMul(__x, __y);
                 break;
+            }
             case Bytecodes.FMUL:
             case Bytecodes.DMUL:
+            {
                 __v = genFloatMul(__x, __y);
                 break;
+            }
             case Bytecodes.FDIV:
             case Bytecodes.DDIV:
+            {
                 __v = genFloatDiv(__x, __y);
                 break;
+            }
             case Bytecodes.FREM:
             case Bytecodes.DREM:
+            {
                 __v = genFloatRem(__x, __y);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        frameState.push(__kind, append(__v));
+        this.___frameState.push(__kind, append(__v));
     }
 
     private void genIntegerDivOp(JavaKind __kind, int __opcode)
     {
-        ValueNode __y = frameState.pop(__kind);
-        ValueNode __x = frameState.pop(__kind);
+        ValueNode __y = this.___frameState.pop(__kind);
+        ValueNode __x = this.___frameState.pop(__kind);
         ValueNode __v;
         switch (__opcode)
         {
             case Bytecodes.IDIV:
             case Bytecodes.LDIV:
+            {
                 __v = genIntegerDiv(__x, __y);
                 break;
+            }
             case Bytecodes.IREM:
             case Bytecodes.LREM:
+            {
                 __v = genIntegerRem(__x, __y);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        frameState.push(__kind, append(__v));
+        this.___frameState.push(__kind, append(__v));
     }
 
     private void genNegateOp(JavaKind __kind)
     {
-        ValueNode __x = frameState.pop(__kind);
-        frameState.push(__kind, append(genNegateOp(__x)));
+        ValueNode __x = this.___frameState.pop(__kind);
+        this.___frameState.push(__kind, append(genNegateOp(__x)));
     }
 
     private void genShiftOp(JavaKind __kind, int __opcode)
     {
-        ValueNode __s = frameState.pop(JavaKind.Int);
-        ValueNode __x = frameState.pop(__kind);
+        ValueNode __s = this.___frameState.pop(JavaKind.Int);
+        ValueNode __x = this.___frameState.pop(__kind);
         ValueNode __v;
         switch (__opcode)
         {
             case Bytecodes.ISHL:
             case Bytecodes.LSHL:
+            {
                 __v = genLeftShift(__x, __s);
                 break;
+            }
             case Bytecodes.ISHR:
             case Bytecodes.LSHR:
+            {
                 __v = genRightShift(__x, __s);
                 break;
+            }
             case Bytecodes.IUSHR:
             case Bytecodes.LUSHR:
+            {
                 __v = genUnsignedRightShift(__x, __s);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        frameState.push(__kind, append(__v));
+        this.___frameState.push(__kind, append(__v));
     }
 
     private void genLogicOp(JavaKind __kind, int __opcode)
     {
-        ValueNode __y = frameState.pop(__kind);
-        ValueNode __x = frameState.pop(__kind);
+        ValueNode __y = this.___frameState.pop(__kind);
+        ValueNode __x = this.___frameState.pop(__kind);
         ValueNode __v;
         switch (__opcode)
         {
             case Bytecodes.IAND:
             case Bytecodes.LAND:
+            {
                 __v = genAnd(__x, __y);
                 break;
+            }
             case Bytecodes.IOR:
             case Bytecodes.LOR:
+            {
                 __v = genOr(__x, __y);
                 break;
+            }
             case Bytecodes.IXOR:
             case Bytecodes.LXOR:
+            {
                 __v = genXor(__x, __y);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        frameState.push(__kind, append(__v));
+        this.___frameState.push(__kind, append(__v));
     }
 
     private void genCompareOp(JavaKind __kind, boolean __isUnorderedLess)
     {
-        ValueNode __y = frameState.pop(__kind);
-        ValueNode __x = frameState.pop(__kind);
-        frameState.push(JavaKind.Int, append(genNormalizeCompare(__x, __y, __isUnorderedLess)));
+        ValueNode __y = this.___frameState.pop(__kind);
+        ValueNode __x = this.___frameState.pop(__kind);
+        this.___frameState.push(JavaKind.Int, append(genNormalizeCompare(__x, __y, __isUnorderedLess)));
     }
 
     private void genFloatConvert(FloatConvert __op, JavaKind __from, JavaKind __to)
     {
-        ValueNode __input = frameState.pop(__from);
-        frameState.push(__to, append(genFloatConvert(__op, __input)));
+        ValueNode __input = this.___frameState.pop(__from);
+        this.___frameState.push(__to, append(genFloatConvert(__op, __input)));
     }
 
     private void genSignExtend(JavaKind __from, JavaKind __to)
     {
-        ValueNode __input = frameState.pop(__from);
+        ValueNode __input = this.___frameState.pop(__from);
         if (__from != __from.getStackKind())
         {
             __input = append(genNarrow(__input, __from.getBitCount()));
         }
-        frameState.push(__to, append(genSignExtend(__input, __to.getBitCount())));
+        this.___frameState.push(__to, append(genSignExtend(__input, __to.getBitCount())));
     }
 
     private void genZeroExtend(JavaKind __from, JavaKind __to)
     {
-        ValueNode __input = frameState.pop(__from);
+        ValueNode __input = this.___frameState.pop(__from);
         if (__from != __from.getStackKind())
         {
             __input = append(genNarrow(__input, __from.getBitCount()));
         }
-        frameState.push(__to, append(genZeroExtend(__input, __to.getBitCount())));
+        this.___frameState.push(__to, append(genZeroExtend(__input, __to.getBitCount())));
     }
 
     private void genNarrow(JavaKind __from, JavaKind __to)
     {
-        ValueNode __input = frameState.pop(__from);
-        frameState.push(__to, append(genNarrow(__input, __to.getBitCount())));
+        ValueNode __input = this.___frameState.pop(__from);
+        this.___frameState.push(__to, append(genNarrow(__input, __to.getBitCount())));
     }
 
     private void genIncrement()
     {
         int __index = getStream().readLocalIndex();
         int __delta = getStream().readIncrement();
-        ValueNode __x = frameState.loadLocal(__index, JavaKind.Int);
+        ValueNode __x = this.___frameState.loadLocal(__index, JavaKind.Int);
         ValueNode __y = appendConstant(JavaConstant.forInt(__delta));
-        frameState.storeLocal(__index, JavaKind.Int, append(genIntegerAdd(__x, __y)));
+        this.___frameState.storeLocal(__index, JavaKind.Int, append(genIntegerAdd(__x, __y)));
     }
 
     private void genIfZero(Condition __cond)
     {
         ValueNode __y = appendConstant(JavaConstant.INT_0);
-        ValueNode __x = frameState.pop(JavaKind.Int);
+        ValueNode __x = this.___frameState.pop(JavaKind.Int);
         genIf(__x, __cond, __y);
     }
 
     private void genIfNull(Condition __cond)
     {
         ValueNode __y = appendConstant(JavaConstant.NULL_POINTER);
-        ValueNode __x = frameState.pop(JavaKind.Object);
+        ValueNode __x = this.___frameState.pop(JavaKind.Object);
         genIf(__x, __cond, __y);
     }
 
     private void genIfSame(JavaKind __kind, Condition __cond)
     {
-        ValueNode __y = frameState.pop(__kind);
-        ValueNode __x = frameState.pop(__kind);
+        ValueNode __y = this.___frameState.pop(__kind);
+        ValueNode __x = this.___frameState.pop(__kind);
         genIf(__x, __cond, __y);
     }
 
     private static void initialize(ResolvedJavaType __resolvedType)
     {
-        /*
-         * Since we're potentially triggering class initialization here, we need synchronization
-         * to mitigate the potential for class initialization related deadlock being caused by
-         * the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
-         */
+        // Since we're potentially triggering class initialization here, we need synchronization
+        // to mitigate the potential for class initialization related deadlock being caused by
+        // the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
         synchronized (BytecodeParser.class)
         {
             __resolvedType.initialize();
@@ -3611,20 +3617,20 @@ public final class BytecodeParser implements GraphBuilderContext
     protected JavaType lookupType(int __cpi, int __bytecode)
     {
         maybeEagerlyResolve(__cpi, __bytecode);
-        return constantPool.lookupType(__cpi, __bytecode);
+        return this.___constantPool.lookupType(__cpi, __bytecode);
     }
 
     private JavaMethod lookupMethod(int __cpi, int __opcode)
     {
         maybeEagerlyResolve(__cpi, __opcode);
-        return constantPool.lookupMethod(__cpi, __opcode);
+        return this.___constantPool.lookupMethod(__cpi, __opcode);
     }
 
     protected JavaField lookupField(int __cpi, int __opcode)
     {
         maybeEagerlyResolve(__cpi, __opcode);
-        JavaField __result = constantPool.lookupField(__cpi, method, __opcode);
-        if (parsingIntrinsic() || eagerInitializing)
+        JavaField __result = this.___constantPool.lookupField(__cpi, this.___method, __opcode);
+        if (parsingIntrinsic() || this.___eagerInitializing)
         {
             if (__result instanceof ResolvedJavaField)
             {
@@ -3642,38 +3648,36 @@ public final class BytecodeParser implements GraphBuilderContext
     private Object lookupConstant(int __cpi, int __opcode)
     {
         maybeEagerlyResolve(__cpi, __opcode);
-        return constantPool.lookupConstant(__cpi);
+        return this.___constantPool.lookupConstant(__cpi);
     }
 
     protected void maybeEagerlyResolve(int __cpi, int __bytecode)
     {
-        if (intrinsicContext != null)
+        if (this.___intrinsicContext != null)
         {
-            constantPool.loadReferencedType(__cpi, __bytecode);
+            this.___constantPool.loadReferencedType(__cpi, __bytecode);
         }
-        else if (graphBuilderConfig.eagerResolving())
+        else if (this.___graphBuilderConfig.eagerResolving())
         {
-            /*
-             * Since we're potentially triggering class initialization here, we need synchronization
-             * to mitigate the potential for class initialization related deadlock being caused by
-             * the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
-             */
+            // Since we're potentially triggering class initialization here, we need synchronization
+            // to mitigate the potential for class initialization related deadlock being caused by
+            // the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
             synchronized (BytecodeParser.class)
             {
-                constantPool.loadReferencedType(__cpi, __bytecode);
+                this.___constantPool.loadReferencedType(__cpi, __bytecode);
             }
         }
     }
 
     private JavaTypeProfile getProfileForTypeCheck(TypeReference __type)
     {
-        if (parsingIntrinsic() || profilingInfo == null || !optimisticOpts.useTypeCheckHints() || __type.isExact())
+        if (parsingIntrinsic() || this.___profilingInfo == null || !this.___optimisticOpts.useTypeCheckHints() || __type.isExact())
         {
             return null;
         }
         else
         {
-            return profilingInfo.getTypeProfile(bci());
+            return this.___profilingInfo.getTypeProfile(bci());
         }
     }
 
@@ -3681,17 +3685,17 @@ public final class BytecodeParser implements GraphBuilderContext
     {
         int __cpi = getStream().readCPI();
         JavaType __type = lookupType(__cpi, Bytecodes.CHECKCAST);
-        ValueNode __object = frameState.pop(JavaKind.Object);
+        ValueNode __object = this.___frameState.pop(JavaKind.Object);
 
         if (!(__type instanceof ResolvedJavaType))
         {
             handleUnresolvedCheckCast(__type, __object);
             return;
         }
-        TypeReference __checkedType = TypeReference.createTrusted(graph.getAssumptions(), (ResolvedJavaType) __type);
+        TypeReference __checkedType = TypeReference.createTrusted(this.___graph.getAssumptions(), (ResolvedJavaType) __type);
         JavaTypeProfile __profile = getProfileForTypeCheck(__checkedType);
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleCheckCast(this, __object, __checkedType.getType(), __profile))
             {
@@ -3736,24 +3740,24 @@ public final class BytecodeParser implements GraphBuilderContext
                 __castNode = append(PiNode.create(__object, StampFactory.object(__checkedType, __nonNull), __fixedGuard));
             }
         }
-        frameState.push(JavaKind.Object, __castNode);
+        this.___frameState.push(JavaKind.Object, __castNode);
     }
 
     private void genInstanceOf()
     {
         int __cpi = getStream().readCPI();
         JavaType __type = lookupType(__cpi, Bytecodes.INSTANCEOF);
-        ValueNode __object = frameState.pop(JavaKind.Object);
+        ValueNode __object = this.___frameState.pop(JavaKind.Object);
 
         if (!(__type instanceof ResolvedJavaType))
         {
             handleUnresolvedInstanceOf(__type, __object);
             return;
         }
-        TypeReference __resolvedType = TypeReference.createTrusted(graph.getAssumptions(), (ResolvedJavaType) __type);
+        TypeReference __resolvedType = TypeReference.createTrusted(this.___graph.getAssumptions(), (ResolvedJavaType) __type);
         JavaTypeProfile __profile = getProfileForTypeCheck(__resolvedType);
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleInstanceOf(this, __object, __resolvedType.getType(), __profile))
             {
@@ -3787,11 +3791,11 @@ public final class BytecodeParser implements GraphBuilderContext
 
         int __next = getStream().nextBCI();
         int __value = getStream().readUByte(__next);
-        if (__next <= currentBlock.endBci && (__value == Bytecodes.IFEQ || __value == Bytecodes.IFNE))
+        if (__next <= this.___currentBlock.___endBci && (__value == Bytecodes.IFEQ || __value == Bytecodes.IFNE))
         {
             getStream().next();
-            BciBlock __firstSucc = currentBlock.getSuccessor(0);
-            BciBlock __secondSucc = currentBlock.getSuccessor(1);
+            BciBlock __firstSucc = this.___currentBlock.getSuccessor(0);
+            BciBlock __secondSucc = this.___currentBlock.getSuccessor(1);
             if (__firstSucc != __secondSucc)
             {
                 boolean __negate = __value != Bytecodes.IFNE;
@@ -3811,7 +3815,7 @@ public final class BytecodeParser implements GraphBuilderContext
         else
         {
             // Most frequent for value is IRETURN, followed by ISTORE.
-            frameState.push(JavaKind.Int, append(genConditional(__logicNode)));
+            this.___frameState.push(JavaKind.Int, append(genConditional(__logicNode)));
         }
     }
 
@@ -3835,7 +3839,7 @@ public final class BytecodeParser implements GraphBuilderContext
             return;
         }
 
-        ResolvedJavaType[] __skippedExceptionTypes = this.graphBuilderConfig.getSkippedExceptionTypes();
+        ResolvedJavaType[] __skippedExceptionTypes = this.___graphBuilderConfig.getSkippedExceptionTypes();
         if (__skippedExceptionTypes != null)
         {
             for (ResolvedJavaType __exceptionType : __skippedExceptionTypes)
@@ -3848,7 +3852,7 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleNewInstance(this, __resolvedType))
             {
@@ -3856,16 +3860,16 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        frameState.push(JavaKind.Object, append(createNewInstance(__resolvedType, true)));
+        this.___frameState.push(JavaKind.Object, append(createNewInstance(__resolvedType, true)));
     }
 
-    /**
-     * Gets the kind of array elements for the array type code that appears in a
-     * {@link Bytecodes#NEWARRAY} bytecode.
-     *
-     * @param code the array type code
-     * @return the kind from the array type code
-     */
+    ///
+    // Gets the kind of array elements for the array type code that appears in a
+    // {@link Bytecodes#NEWARRAY} bytecode.
+    //
+    // @param code the array type code
+    // @return the kind from the array type code
+    ///
     private static Class<?> arrayTypeCodeToClass(int __code)
     {
         switch (__code)
@@ -3893,10 +3897,10 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void genNewPrimitiveArray(int __typeCode)
     {
-        ResolvedJavaType __elementType = metaAccess.lookupJavaType(arrayTypeCodeToClass(__typeCode));
-        ValueNode __length = frameState.pop(JavaKind.Int);
+        ResolvedJavaType __elementType = this.___metaAccess.lookupJavaType(arrayTypeCodeToClass(__typeCode));
+        ValueNode __length = this.___frameState.pop(JavaKind.Int);
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleNewArray(this, __elementType, __length))
             {
@@ -3904,7 +3908,7 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        frameState.push(JavaKind.Object, append(createNewArray(__elementType, __length, true)));
+        this.___frameState.push(JavaKind.Object, append(createNewArray(__elementType, __length, true)));
     }
 
     private void genNewObjectArray(int __cpi)
@@ -3913,15 +3917,15 @@ public final class BytecodeParser implements GraphBuilderContext
 
         if (!(__type instanceof ResolvedJavaType))
         {
-            ValueNode __length = frameState.pop(JavaKind.Int);
+            ValueNode __length = this.___frameState.pop(JavaKind.Int);
             handleUnresolvedNewObjectArray(__type, __length);
             return;
         }
 
         ResolvedJavaType __resolvedType = (ResolvedJavaType) __type;
 
-        ValueNode __length = frameState.pop(JavaKind.Int);
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        ValueNode __length = this.___frameState.pop(JavaKind.Int);
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleNewArray(this, __resolvedType, __length))
             {
@@ -3929,7 +3933,7 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        frameState.push(JavaKind.Object, append(createNewArray(__resolvedType, __length, true)));
+        this.___frameState.push(JavaKind.Object, append(createNewArray(__resolvedType, __length, true)));
     }
 
     private void genNewMultiArray(int __cpi)
@@ -3942,7 +3946,7 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             for (int __i = __rank - 1; __i >= 0; __i--)
             {
-                __dims[__i] = frameState.pop(JavaKind.Int);
+                __dims[__i] = this.___frameState.pop(JavaKind.Int);
             }
             handleUnresolvedNewMultiArray(__type, __dims);
             return;
@@ -3951,10 +3955,10 @@ public final class BytecodeParser implements GraphBuilderContext
 
         for (int __i = __rank - 1; __i >= 0; __i--)
         {
-            __dims[__i] = frameState.pop(JavaKind.Int);
+            __dims[__i] = this.___frameState.pop(JavaKind.Int);
         }
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleNewMultiArray(this, __resolvedType, __dims))
             {
@@ -3962,12 +3966,12 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        frameState.push(JavaKind.Object, append(createNewMultiArray(__resolvedType, __dims)));
+        this.___frameState.push(JavaKind.Object, append(createNewMultiArray(__resolvedType, __dims)));
     }
 
     protected void genGetField(int __cpi, int __opcode)
     {
-        genGetField(__cpi, __opcode, frameState.pop(JavaKind.Object));
+        genGetField(__cpi, __opcode, this.___frameState.pop(JavaKind.Object));
     }
 
     protected void genGetField(int __cpi, int __opcode, ValueNode __receiverInput)
@@ -3992,7 +3996,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private void genGetField(ResolvedJavaField __resolvedField, ValueNode __receiver)
     {
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleLoadField(this, __receiver, __resolvedField))
             {
@@ -4013,21 +4017,21 @@ public final class BytecodeParser implements GraphBuilderContext
         if (__resolvedField.isVolatile() && __fieldRead instanceof LoadFieldNode)
         {
             StateSplitProxyNode __readProxy = append(genVolatileFieldReadProxy(__fieldRead));
-            frameState.push(__fieldKind, __readProxy);
-            __readProxy.setStateAfter(frameState.create(stream.nextBCI(), __readProxy));
+            this.___frameState.push(__fieldKind, __readProxy);
+            __readProxy.setStateAfter(this.___frameState.create(this.___stream.nextBCI(), __readProxy));
         }
         else
         {
-            frameState.push(__fieldKind, __fieldRead);
+            this.___frameState.push(__fieldKind, __fieldRead);
         }
     }
 
-    /**
-     * @param receiver the receiver of an object based operation
-     * @param index the index of an array based operation that is to be tested for out of bounds.
-     *            This is null for a non-array operation.
-     * @return the receiver value possibly modified to have a non-null stamp
-     */
+    ///
+    // @param receiver the receiver of an object based operation
+    // @param index the index of an array based operation that is to be tested for out of bounds.
+    //            This is null for a non-array operation.
+    // @return the receiver value possibly modified to have a non-null stamp
+    ///
     protected ValueNode emitExplicitExceptions(ValueNode __receiver, ValueNode __index)
     {
         if (needsExplicitException())
@@ -4054,14 +4058,14 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected boolean needsExplicitException()
     {
-        BytecodeExceptionMode __exceptionMode = graphBuilderConfig.getBytecodeExceptionMode();
+        BytecodeExceptionMode __exceptionMode = this.___graphBuilderConfig.getBytecodeExceptionMode();
         if (__exceptionMode == BytecodeExceptionMode.CheckAll || GraalOptions.stressExplicitExceptionCode)
         {
             return true;
         }
-        else if (__exceptionMode == BytecodeExceptionMode.Profile && profilingInfo != null)
+        else if (__exceptionMode == BytecodeExceptionMode.Profile && this.___profilingInfo != null)
         {
-            return profilingInfo.getExceptionSeen(bci()) == TriState.TRUE;
+            return this.___profilingInfo.getExceptionSeen(bci()) == TriState.TRUE;
         }
         return false;
     }
@@ -4074,17 +4078,17 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void genPutField(JavaField __field)
     {
-        genPutField(__field, frameState.pop(__field.getJavaKind()));
+        genPutField(__field, this.___frameState.pop(__field.getJavaKind()));
     }
 
     private void genPutField(JavaField __field, ValueNode __value)
     {
-        ValueNode __receiver = emitExplicitExceptions(frameState.pop(JavaKind.Object));
+        ValueNode __receiver = emitExplicitExceptions(this.___frameState.pop(JavaKind.Object));
         if (__field instanceof ResolvedJavaField)
         {
             ResolvedJavaField __resolvedField = (ResolvedJavaField) __field;
 
-            for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+            for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
             {
                 if (__plugin.handleStoreField(this, __receiver, __resolvedField, __value))
                 {
@@ -4092,9 +4096,9 @@ public final class BytecodeParser implements GraphBuilderContext
                 }
             }
 
-            if (__resolvedField.isFinal() && method.isConstructor())
+            if (__resolvedField.isFinal() && this.___method.isConstructor())
             {
-                finalBarrierRequired = true;
+                this.___finalBarrierRequired = true;
             }
             genStoreField(__receiver, __resolvedField, __value);
         }
@@ -4118,17 +4122,15 @@ public final class BytecodeParser implements GraphBuilderContext
             return;
         }
 
-        /*
-         * Javac does not allow use of "$assertionsDisabled" for a field name but Eclipse does, in
-         * which case a suffix is added to the generated field.
-         */
+        // Javac does not allow use of "$assertionsDisabled" for a field name but Eclipse does, in
+        // which case a suffix is added to the generated field.
         if (__resolvedField.isSynthetic() && __resolvedField.getName().startsWith("$assertionsDisabled"))
         {
-            frameState.push(__field.getJavaKind(), ConstantNode.forBoolean(true, graph));
+            this.___frameState.push(__field.getJavaKind(), ConstantNode.forBoolean(true, this.___graph));
             return;
         }
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleLoadStaticField(this, __resolvedField))
             {
@@ -4136,7 +4138,7 @@ public final class BytecodeParser implements GraphBuilderContext
             }
         }
 
-        frameState.push(__field.getJavaKind(), append(genLoadField(null, __resolvedField)));
+        this.___frameState.push(__field.getJavaKind(), append(genLoadField(null, __resolvedField)));
     }
 
     private ResolvedJavaField resolveStaticFieldAccess(JavaField __field, ValueNode __value)
@@ -4148,15 +4150,13 @@ public final class BytecodeParser implements GraphBuilderContext
             {
                 return __resolvedField;
             }
-            /*
-             * Static fields have initialization semantics but may be safely accessed under certain
-             * conditions while the class is being initialized. Executing in the clinit or init of
-             * classes which are subtypes of the field holder are sure to be running in a context
-             * where the access is safe.
-             */
-            if (__resolvedField.getDeclaringClass().isAssignableFrom(method.getDeclaringClass()))
+            // Static fields have initialization semantics but may be safely accessed under certain
+            // conditions while the class is being initialized. Executing in the clinit or init of
+            // classes which are subtypes of the field holder are sure to be running in a context
+            // where the access is safe.
+            if (__resolvedField.getDeclaringClass().isAssignableFrom(this.___method.getDeclaringClass()))
             {
-                if (method.isClassInitializer() || method.isConstructor())
+                if (this.___method.isClassInitializer() || this.___method.isConstructor())
                 {
                     return __resolvedField;
                 }
@@ -4181,14 +4181,14 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected void genPutStatic(JavaField __field)
     {
-        ValueNode __value = frameState.pop(__field.getJavaKind());
+        ValueNode __value = this.___frameState.pop(__field.getJavaKind());
         ResolvedJavaField __resolvedField = resolveStaticFieldAccess(__field, __value);
         if (__resolvedField == null)
         {
             return;
         }
 
-        for (NodePlugin __plugin : graphBuilderConfig.getPlugins().getNodePlugins())
+        for (NodePlugin __plugin : this.___graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (__plugin.handleStoreStaticField(this, __resolvedField, __value))
             {
@@ -4201,7 +4201,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private double[] switchProbability(int __numberOfCases, int __bci)
     {
-        double[] __prob = (profilingInfo == null ? null : profilingInfo.getSwitchProbabilities(__bci));
+        double[] __prob = (this.___profilingInfo == null ? null : this.___profilingInfo.getSwitchProbabilities(__bci));
         if (__prob == null)
         {
             __prob = new double[__numberOfCases];
@@ -4229,32 +4229,32 @@ public final class BytecodeParser implements GraphBuilderContext
     static final class SuccessorInfo
     {
         // @field
-        final int blockIndex;
+        final int ___blockIndex;
         // @field
-        int actualIndex;
+        int ___actualIndex;
 
         // @cons
         SuccessorInfo(int __blockSuccessorIndex)
         {
             super();
-            this.blockIndex = __blockSuccessorIndex;
-            actualIndex = -1;
+            this.___blockIndex = __blockSuccessorIndex;
+            this.___actualIndex = -1;
         }
     }
 
     private void genSwitch(BytecodeSwitch __bs)
     {
         int __bci = bci();
-        ValueNode __value = frameState.pop(JavaKind.Int);
+        ValueNode __value = this.___frameState.pop(JavaKind.Int);
 
         int __nofCases = __bs.numberOfCases();
         int __nofCasesPlusDefault = __nofCases + 1;
         double[] __keyProbabilities = switchProbability(__nofCasesPlusDefault, __bci);
 
         EconomicMap<Integer, SuccessorInfo> __bciToBlockSuccessorIndex = EconomicMap.create(Equivalence.DEFAULT);
-        for (int __i = 0; __i < currentBlock.getSuccessorCount(); __i++)
+        for (int __i = 0; __i < this.___currentBlock.getSuccessorCount(); __i++)
         {
-            __bciToBlockSuccessorIndex.put(currentBlock.getSuccessor(__i).startBci, new SuccessorInfo(__i));
+            __bciToBlockSuccessorIndex.put(this.___currentBlock.getSuccessor(__i).___startBci, new SuccessorInfo(__i));
         }
 
         ArrayList<BciBlock> __actualSuccessors = new ArrayList<>();
@@ -4283,38 +4283,36 @@ public final class BytecodeParser implements GraphBuilderContext
             {
                 int __targetBci = __i < __nofCases ? __bs.targetAt(__i) : __bs.defaultTarget();
                 SuccessorInfo __info = __bciToBlockSuccessorIndex.get(__targetBci);
-                if (__info.actualIndex < 0)
+                if (__info.___actualIndex < 0)
                 {
-                    __info.actualIndex = __nextSuccessorIndex++;
-                    __actualSuccessors.add(currentBlock.getSuccessor(__info.blockIndex));
+                    __info.___actualIndex = __nextSuccessorIndex++;
+                    __actualSuccessors.add(this.___currentBlock.getSuccessor(__info.___blockIndex));
                 }
-                __keySuccessors[__i] = __info.actualIndex;
+                __keySuccessors[__i] = __info.___actualIndex;
             }
         }
-        /*
-         * When the profile indicates a case is never taken, the above code will cause the case to
-         * deopt should it be subsequently encountered. However, the case may share code with
-         * another case that is taken according to the profile.
-         *
-         * For example:
-         *
-         * switch (opcode) {
-         *     case GOTO:
-         *     case GOTO_W: {
-         *         // emit goto code
-         *         break;
-         *     }
-         * }
-         *
-         * The profile may indicate the GOTO_W case is never taken, and thus a deoptimization stub
-         * will be emitted. There might be optimization opportunity if additional branching based
-         * on opcode is within the case block. Specially, if there is only single case that
-         * reaches a target, we have better chance cutting out unused branches. Otherwise,
-         * it might be beneficial routing to the same code instead of deopting.
-         *
-         * The following code rewires deoptimization stub to existing resolved branch target if
-         * the target is connected by more than 1 cases.
-         */
+        // When the profile indicates a case is never taken, the above code will cause the case to
+        // deopt should it be subsequently encountered. However, the case may share code with
+        // another case that is taken according to the profile.
+        //
+        // For example:
+        //
+        // switch (opcode) {
+        //     case GOTO:
+        //     case GOTO_W: {
+        //         // emit goto code
+        //         break;
+        //     }
+        // }
+        //
+        // The profile may indicate the GOTO_W case is never taken, and thus a deoptimization stub
+        // will be emitted. There might be optimization opportunity if additional branching based
+        // on opcode is within the case block. Specially, if there is only single case that
+        // reaches a target, we have better chance cutting out unused branches. Otherwise,
+        // it might be beneficial routing to the same code instead of deopting.
+        //
+        // The following code rewires deoptimization stub to existing resolved branch target if
+        // the target is connected by more than 1 cases.
         if (__deoptSuccessorIndex >= 0)
         {
             int[] __connectedCases = new int[__nextSuccessorIndex];
@@ -4329,10 +4327,10 @@ public final class BytecodeParser implements GraphBuilderContext
                 {
                     int __targetBci = __i < __nofCases ? __bs.targetAt(__i) : __bs.defaultTarget();
                     SuccessorInfo __info = __bciToBlockSuccessorIndex.get(__targetBci);
-                    int __rewiredIndex = __info.actualIndex;
+                    int __rewiredIndex = __info.___actualIndex;
                     if (__rewiredIndex >= 0 && __connectedCases[__rewiredIndex] > 1)
                     {
-                        __keySuccessors[__i] = __info.actualIndex;
+                        __keySuccessors[__i] = __info.___actualIndex;
                     }
                 }
             }
@@ -4343,12 +4341,12 @@ public final class BytecodeParser implements GraphBuilderContext
 
     protected boolean isNeverExecutedCode(double __probability)
     {
-        return __probability == 0 && optimisticOpts.removeNeverExecutedCode();
+        return __probability == 0 && this.___optimisticOpts.removeNeverExecutedCode();
     }
 
     private double clampProbability(double __probability)
     {
-        if (!optimisticOpts.removeNeverExecutedCode())
+        if (!this.___optimisticOpts.removeNeverExecutedCode())
         {
             if (__probability == 0)
             {
@@ -4364,7 +4362,7 @@ public final class BytecodeParser implements GraphBuilderContext
 
     private boolean assertAtIfBytecode()
     {
-        int __bytecode = stream.currentBC();
+        int __bytecode = this.___stream.currentBC();
         switch (__bytecode)
         {
             case Bytecodes.IFEQ:
@@ -4394,32 +4392,32 @@ public final class BytecodeParser implements GraphBuilderContext
 
         switch (__opcode)
         {
-            case Bytecodes.NOP:             /* nothing to do */ break;
-            case Bytecodes.ACONST_NULL:     frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER)); break;
+            case Bytecodes.NOP:             break; // nothing to do
+            case Bytecodes.ACONST_NULL:     this.___frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER)); break;
             case Bytecodes.ICONST_M1:       // fall through
             case Bytecodes.ICONST_0:        // fall through
             case Bytecodes.ICONST_1:        // fall through
             case Bytecodes.ICONST_2:        // fall through
             case Bytecodes.ICONST_3:        // fall through
             case Bytecodes.ICONST_4:        // fall through
-            case Bytecodes.ICONST_5:        frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(__opcode - Bytecodes.ICONST_0))); break;
+            case Bytecodes.ICONST_5:        this.___frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(__opcode - Bytecodes.ICONST_0))); break;
             case Bytecodes.LCONST_0:        // fall through
-            case Bytecodes.LCONST_1:        frameState.push(JavaKind.Long, appendConstant(JavaConstant.forLong(__opcode - Bytecodes.LCONST_0))); break;
+            case Bytecodes.LCONST_1:        this.___frameState.push(JavaKind.Long, appendConstant(JavaConstant.forLong(__opcode - Bytecodes.LCONST_0))); break;
             case Bytecodes.FCONST_0:        // fall through
             case Bytecodes.FCONST_1:        // fall through
-            case Bytecodes.FCONST_2:        frameState.push(JavaKind.Float, appendConstant(JavaConstant.forFloat(__opcode - Bytecodes.FCONST_0))); break;
+            case Bytecodes.FCONST_2:        this.___frameState.push(JavaKind.Float, appendConstant(JavaConstant.forFloat(__opcode - Bytecodes.FCONST_0))); break;
             case Bytecodes.DCONST_0:        // fall through
-            case Bytecodes.DCONST_1:        frameState.push(JavaKind.Double, appendConstant(JavaConstant.forDouble(__opcode - Bytecodes.DCONST_0))); break;
-            case Bytecodes.BIPUSH:          frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(stream.readByte()))); break;
-            case Bytecodes.SIPUSH:          frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(stream.readShort()))); break;
+            case Bytecodes.DCONST_1:        this.___frameState.push(JavaKind.Double, appendConstant(JavaConstant.forDouble(__opcode - Bytecodes.DCONST_0))); break;
+            case Bytecodes.BIPUSH:          this.___frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(this.___stream.readByte()))); break;
+            case Bytecodes.SIPUSH:          this.___frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(this.___stream.readShort()))); break;
             case Bytecodes.LDC:             // fall through
             case Bytecodes.LDC_W:           // fall through
-            case Bytecodes.LDC2_W:          genLoadConstant(stream.readCPI(), __opcode); break;
-            case Bytecodes.ILOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Int); break;
-            case Bytecodes.LLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Long); break;
-            case Bytecodes.FLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Float); break;
-            case Bytecodes.DLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Double); break;
-            case Bytecodes.ALOAD:           loadLocalObject(stream.readLocalIndex()); break;
+            case Bytecodes.LDC2_W:          genLoadConstant(this.___stream.readCPI(), __opcode); break;
+            case Bytecodes.ILOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Int); break;
+            case Bytecodes.LLOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Long); break;
+            case Bytecodes.FLOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Float); break;
+            case Bytecodes.DLOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Double); break;
+            case Bytecodes.ALOAD:           loadLocalObject(this.___stream.readLocalIndex()); break;
             case Bytecodes.ILOAD_0:         // fall through
             case Bytecodes.ILOAD_1:         // fall through
             case Bytecodes.ILOAD_2:         // fall through
@@ -4448,11 +4446,11 @@ public final class BytecodeParser implements GraphBuilderContext
             case Bytecodes.BALOAD:          genLoadIndexed(JavaKind.Byte); break;
             case Bytecodes.CALOAD:          genLoadIndexed(JavaKind.Char); break;
             case Bytecodes.SALOAD:          genLoadIndexed(JavaKind.Short); break;
-            case Bytecodes.ISTORE:          storeLocal(JavaKind.Int, stream.readLocalIndex()); break;
-            case Bytecodes.LSTORE:          storeLocal(JavaKind.Long, stream.readLocalIndex()); break;
-            case Bytecodes.FSTORE:          storeLocal(JavaKind.Float, stream.readLocalIndex()); break;
-            case Bytecodes.DSTORE:          storeLocal(JavaKind.Double, stream.readLocalIndex()); break;
-            case Bytecodes.ASTORE:          storeLocal(JavaKind.Object, stream.readLocalIndex()); break;
+            case Bytecodes.ISTORE:          storeLocal(JavaKind.Int, this.___stream.readLocalIndex()); break;
+            case Bytecodes.LSTORE:          storeLocal(JavaKind.Long, this.___stream.readLocalIndex()); break;
+            case Bytecodes.FSTORE:          storeLocal(JavaKind.Float, this.___stream.readLocalIndex()); break;
+            case Bytecodes.DSTORE:          storeLocal(JavaKind.Double, this.___stream.readLocalIndex()); break;
+            case Bytecodes.ASTORE:          storeLocal(JavaKind.Object, this.___stream.readLocalIndex()); break;
             case Bytecodes.ISTORE_0:        // fall through
             case Bytecodes.ISTORE_1:        // fall through
             case Bytecodes.ISTORE_2:        // fall through
@@ -4489,7 +4487,7 @@ public final class BytecodeParser implements GraphBuilderContext
             case Bytecodes.DUP2:            // fall through
             case Bytecodes.DUP2_X1:         // fall through
             case Bytecodes.DUP2_X2:         // fall through
-            case Bytecodes.SWAP:            frameState.stackOp(__opcode); break;
+            case Bytecodes.SWAP:            this.___frameState.stackOp(__opcode); break;
             case Bytecodes.IADD:            // fall through
             case Bytecodes.ISUB:            // fall through
             case Bytecodes.IMUL:            genArithmeticOp(JavaKind.Int, __opcode); break;
@@ -4562,79 +4560,79 @@ public final class BytecodeParser implements GraphBuilderContext
             case Bytecodes.IF_ACMPEQ:       genIfSame(JavaKind.Object, Condition.EQ); break;
             case Bytecodes.IF_ACMPNE:       genIfSame(JavaKind.Object, Condition.NE); break;
             case Bytecodes.GOTO:            genGoto(); break;
-            case Bytecodes.JSR:             genJsr(stream.readBranchDest()); break;
-            case Bytecodes.RET:             genRet(stream.readLocalIndex()); break;
+            case Bytecodes.JSR:             genJsr(this.___stream.readBranchDest()); break;
+            case Bytecodes.RET:             genRet(this.___stream.readLocalIndex()); break;
             case Bytecodes.TABLESWITCH:     genSwitch(new BytecodeTableSwitch(getStream(), bci())); break;
             case Bytecodes.LOOKUPSWITCH:    genSwitch(new BytecodeLookupSwitch(getStream(), bci())); break;
-            case Bytecodes.IRETURN:         genReturn(frameState.pop(JavaKind.Int), JavaKind.Int); break;
-            case Bytecodes.LRETURN:         genReturn(frameState.pop(JavaKind.Long), JavaKind.Long); break;
-            case Bytecodes.FRETURN:         genReturn(frameState.pop(JavaKind.Float), JavaKind.Float); break;
-            case Bytecodes.DRETURN:         genReturn(frameState.pop(JavaKind.Double), JavaKind.Double); break;
-            case Bytecodes.ARETURN:         genReturn(frameState.pop(JavaKind.Object), JavaKind.Object); break;
+            case Bytecodes.IRETURN:         genReturn(this.___frameState.pop(JavaKind.Int), JavaKind.Int); break;
+            case Bytecodes.LRETURN:         genReturn(this.___frameState.pop(JavaKind.Long), JavaKind.Long); break;
+            case Bytecodes.FRETURN:         genReturn(this.___frameState.pop(JavaKind.Float), JavaKind.Float); break;
+            case Bytecodes.DRETURN:         genReturn(this.___frameState.pop(JavaKind.Double), JavaKind.Double); break;
+            case Bytecodes.ARETURN:         genReturn(this.___frameState.pop(JavaKind.Object), JavaKind.Object); break;
             case Bytecodes.RETURN:          genReturn(null, JavaKind.Void); break;
-            case Bytecodes.GETSTATIC:       __cpi = stream.readCPI(); genGetStatic(__cpi, __opcode); break;
-            case Bytecodes.PUTSTATIC:       __cpi = stream.readCPI(); genPutStatic(__cpi, __opcode); break;
-            case Bytecodes.GETFIELD:        __cpi = stream.readCPI(); genGetField(__cpi, __opcode); break;
-            case Bytecodes.PUTFIELD:        __cpi = stream.readCPI(); genPutField(__cpi, __opcode); break;
-            case Bytecodes.INVOKEVIRTUAL:   __cpi = stream.readCPI(); genInvokeVirtual(__cpi, __opcode); break;
-            case Bytecodes.INVOKESPECIAL:   __cpi = stream.readCPI(); genInvokeSpecial(__cpi, __opcode); break;
-            case Bytecodes.INVOKESTATIC:    __cpi = stream.readCPI(); genInvokeStatic(__cpi, __opcode); break;
-            case Bytecodes.INVOKEINTERFACE: __cpi = stream.readCPI(); genInvokeInterface(__cpi, __opcode); break;
-            case Bytecodes.INVOKEDYNAMIC:   __cpi = stream.readCPI4(); genInvokeDynamic(__cpi, __opcode); break;
-            case Bytecodes.NEW:             genNewInstance(stream.readCPI()); break;
-            case Bytecodes.NEWARRAY:        genNewPrimitiveArray(stream.readLocalIndex()); break;
-            case Bytecodes.ANEWARRAY:       genNewObjectArray(stream.readCPI()); break;
+            case Bytecodes.GETSTATIC:       __cpi = this.___stream.readCPI(); genGetStatic(__cpi, __opcode); break;
+            case Bytecodes.PUTSTATIC:       __cpi = this.___stream.readCPI(); genPutStatic(__cpi, __opcode); break;
+            case Bytecodes.GETFIELD:        __cpi = this.___stream.readCPI(); genGetField(__cpi, __opcode); break;
+            case Bytecodes.PUTFIELD:        __cpi = this.___stream.readCPI(); genPutField(__cpi, __opcode); break;
+            case Bytecodes.INVOKEVIRTUAL:   __cpi = this.___stream.readCPI(); genInvokeVirtual(__cpi, __opcode); break;
+            case Bytecodes.INVOKESPECIAL:   __cpi = this.___stream.readCPI(); genInvokeSpecial(__cpi, __opcode); break;
+            case Bytecodes.INVOKESTATIC:    __cpi = this.___stream.readCPI(); genInvokeStatic(__cpi, __opcode); break;
+            case Bytecodes.INVOKEINTERFACE: __cpi = this.___stream.readCPI(); genInvokeInterface(__cpi, __opcode); break;
+            case Bytecodes.INVOKEDYNAMIC:   __cpi = this.___stream.readCPI4(); genInvokeDynamic(__cpi, __opcode); break;
+            case Bytecodes.NEW:             genNewInstance(this.___stream.readCPI()); break;
+            case Bytecodes.NEWARRAY:        genNewPrimitiveArray(this.___stream.readLocalIndex()); break;
+            case Bytecodes.ANEWARRAY:       genNewObjectArray(this.___stream.readCPI()); break;
             case Bytecodes.ARRAYLENGTH:     genArrayLength(); break;
             case Bytecodes.ATHROW:          genThrow(); break;
             case Bytecodes.CHECKCAST:       genCheckCast(); break;
             case Bytecodes.INSTANCEOF:      genInstanceOf(); break;
-            case Bytecodes.MONITORENTER:    genMonitorEnter(frameState.pop(JavaKind.Object), stream.nextBCI()); break;
-            case Bytecodes.MONITOREXIT:     genMonitorExit(frameState.pop(JavaKind.Object), null, stream.nextBCI()); break;
-            case Bytecodes.MULTIANEWARRAY:  genNewMultiArray(stream.readCPI()); break;
+            case Bytecodes.MONITORENTER:    genMonitorEnter(this.___frameState.pop(JavaKind.Object), this.___stream.nextBCI()); break;
+            case Bytecodes.MONITOREXIT:     genMonitorExit(this.___frameState.pop(JavaKind.Object), null, this.___stream.nextBCI()); break;
+            case Bytecodes.MULTIANEWARRAY:  genNewMultiArray(this.___stream.readCPI()); break;
             case Bytecodes.IFNULL:          genIfNull(Condition.EQ); break;
             case Bytecodes.IFNONNULL:       genIfNull(Condition.NE); break;
             case Bytecodes.GOTO_W:          genGoto(); break;
-            case Bytecodes.JSR_W:           genJsr(stream.readBranchDest()); break;
+            case Bytecodes.JSR_W:           genJsr(this.___stream.readBranchDest()); break;
             default:                        throw new BailoutException("unsupported opcode %d (%s) [bci=%d]", __opcode, Bytecodes.nameOf(__opcode), __bci);
         }
     }
 
     private void genArrayLength()
     {
-        ValueNode __array = emitExplicitExceptions(frameState.pop(JavaKind.Object));
-        frameState.push(JavaKind.Int, append(genArrayLength(__array)));
+        ValueNode __array = emitExplicitExceptions(this.___frameState.pop(JavaKind.Object));
+        this.___frameState.push(JavaKind.Int, append(genArrayLength(__array)));
     }
 
     @Override
     public ResolvedJavaMethod getMethod()
     {
-        return method;
+        return this.___method;
     }
 
     @Override
     public Bytecode getCode()
     {
-        return code;
+        return this.___code;
     }
 
     public FrameStateBuilder getFrameStateBuilder()
     {
-        return frameState;
+        return this.___frameState;
     }
 
     @Override
     public boolean parsingIntrinsic()
     {
-        return intrinsicContext != null;
+        return this.___intrinsicContext != null;
     }
 
     @Override
     public BytecodeParser getNonIntrinsicAncestor()
     {
-        BytecodeParser __ancestor = parent;
+        BytecodeParser __ancestor = this.___parent;
         while (__ancestor != null && __ancestor.parsingIntrinsic())
         {
-            __ancestor = __ancestor.parent;
+            __ancestor = __ancestor.___parent;
         }
         return __ancestor;
     }

@@ -19,5 +19,5 @@ abstract class LinearScanAllocationPhase
         run(__target, __lirGenRes, __context);
     }
 
-    protected abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationPhase.AllocationContext context);
+    protected abstract void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context);
 }

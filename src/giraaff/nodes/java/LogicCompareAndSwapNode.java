@@ -15,11 +15,11 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Represents the low-level version of an atomic compare-and-swap operation.
- *
- * This version returns a boolean indicating is the CAS was successful or not.
- */
+///
+// Represents the low-level version of an atomic compare-and-swap operation.
+//
+// This version returns a boolean indicating is the CAS was successful or not.
+///
 // @class LogicCompareAndSwapNode
 public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode
 {

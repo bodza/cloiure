@@ -14,7 +14,7 @@ public abstract class FloatingAnchoredNode extends FloatingNode
 
     @Input(InputType.Anchor)
     // @field
-    protected AnchoringNode anchor;
+    protected AnchoringNode ___anchor;
 
     // @cons
     public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> __c, Stamp __stamp)
@@ -26,17 +26,17 @@ public abstract class FloatingAnchoredNode extends FloatingNode
     public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> __c, Stamp __stamp, AnchoringNode __anchor)
     {
         super(__c, __stamp);
-        this.anchor = __anchor;
+        this.___anchor = __anchor;
     }
 
     public AnchoringNode getAnchor()
     {
-        return anchor;
+        return this.___anchor;
     }
 
     public void setAnchor(AnchoringNode __x)
     {
-        updateUsagesInterface(this.anchor, __x);
-        this.anchor = __x;
+        updateUsagesInterface(this.___anchor, __x);
+        this.___anchor = __x;
     }
 }

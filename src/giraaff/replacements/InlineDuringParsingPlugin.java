@@ -12,10 +12,10 @@ import giraaff.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo;
 // @class InlineDuringParsingPlugin
 public final class InlineDuringParsingPlugin implements InlineInvokePlugin
 {
-    /**
-     * Budget which when exceeded reduces the effective value of
-     * {@link GraalOptions#inlineDuringParsingMaxDepth} to {@link #maxDepthAfterBudgetExceeded}.
-     */
+    ///
+    // Budget which when exceeded reduces the effective value of
+    // {@link GraalOptions#inlineDuringParsingMaxDepth} to {@link #maxDepthAfterBudgetExceeded}.
+    ///
     // @def
     private static final int nodeBudget = 2000;
     // @def

@@ -105,8 +105,10 @@ public final class WriteBarrierAdditionPhase extends Phase
         switch (__barrierType)
         {
             case NONE:
+            {
                 // nothing to do
                 break;
+            }
             case IMPRECISE:
             case PRECISE:
             {
@@ -136,8 +138,10 @@ public final class WriteBarrierAdditionPhase extends Phase
         switch (__barrierType)
         {
             case NONE:
+            {
                 // nothing to do
                 break;
+            }
             case IMPRECISE:
             case PRECISE:
             {
@@ -164,8 +168,10 @@ public final class WriteBarrierAdditionPhase extends Phase
         switch (__barrierType)
         {
             case NONE:
+            {
                 // nothing to do
                 break;
+            }
             case IMPRECISE:
             case PRECISE:
             {

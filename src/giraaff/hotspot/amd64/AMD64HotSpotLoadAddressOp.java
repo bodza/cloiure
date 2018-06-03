@@ -19,34 +19,38 @@ public final class AMD64HotSpotLoadAddressOp extends AMD64LIRInstruction
 
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue result;
+    protected AllocatableValue ___result;
     // @field
-    private final Constant constant;
+    private final Constant ___constant;
     // @field
-    private final Object note;
+    private final Object ___note;
 
     // @cons
     public AMD64HotSpotLoadAddressOp(AllocatableValue __result, Constant __constant, Object __note)
     {
         super(TYPE);
-        this.result = __result;
-        this.constant = __constant;
-        this.note = __note;
+        this.___result = __result;
+        this.___constant = __constant;
+        this.___note = __note;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        __crb.recordInlineDataInCodeWithNote(constant, note);
-        AMD64Kind __kind = (AMD64Kind) result.getPlatformKind();
+        __crb.recordInlineDataInCodeWithNote(this.___constant, this.___note);
+        AMD64Kind __kind = (AMD64Kind) this.___result.getPlatformKind();
         switch (__kind)
         {
             case DWORD:
-                __masm.movl(ValueUtil.asRegister(result), __masm.getPlaceholder(-1));
+            {
+                __masm.movl(ValueUtil.asRegister(this.___result), __masm.getPlaceholder(-1));
                 break;
+            }
             case QWORD:
-                __masm.movq(ValueUtil.asRegister(result), __masm.getPlaceholder(-1));
+            {
+                __masm.movq(ValueUtil.asRegister(this.___result), __masm.getPlaceholder(-1));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere("unexpected kind: " + __kind);
         }

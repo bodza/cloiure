@@ -23,27 +23,27 @@ import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.common.inlining.info.elem.Inlineable;
 import giraaff.phases.util.Providers;
 
-/**
- * Represents an inlining opportunity for which profiling information suggests a monomorphic
- * receiver, but for which the receiver type cannot be proven. A type check guard will be generated
- * if this inlining is performed.
- */
+///
+// Represents an inlining opportunity for which profiling information suggests a monomorphic
+// receiver, but for which the receiver type cannot be proven. A type check guard will be generated
+// if this inlining is performed.
+///
 // @class TypeGuardInlineInfo
 public final class TypeGuardInlineInfo extends AbstractInlineInfo
 {
     // @field
-    private final ResolvedJavaMethod concrete;
+    private final ResolvedJavaMethod ___concrete;
     // @field
-    private final ResolvedJavaType type;
+    private final ResolvedJavaType ___type;
     // @field
-    private Inlineable inlineableElement;
+    private Inlineable ___inlineableElement;
 
     // @cons
     public TypeGuardInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete, ResolvedJavaType __type)
     {
         super(__invoke);
-        this.concrete = __concrete;
-        this.type = __type;
+        this.___concrete = __concrete;
+        this.___type = __type;
     }
 
     @Override
@@ -55,13 +55,13 @@ public final class TypeGuardInlineInfo extends AbstractInlineInfo
     @Override
     public ResolvedJavaMethod methodAt(int __index)
     {
-        return concrete;
+        return this.___concrete;
     }
 
     @Override
     public Inlineable inlineableElementAt(int __index)
     {
-        return inlineableElement;
+        return this.___inlineableElement;
     }
 
     @Override
@@ -79,41 +79,41 @@ public final class TypeGuardInlineInfo extends AbstractInlineInfo
     @Override
     public void setInlinableElement(int __index, Inlineable __inlineableElement)
     {
-        this.inlineableElement = __inlineableElement;
+        this.___inlineableElement = __inlineableElement;
     }
 
     @Override
     public EconomicSet<Node> inline(Providers __providers, String __reason)
     {
         createGuard(graph(), __providers);
-        return inline(invoke, concrete, inlineableElement, false, __reason);
+        return inline(this.___invoke, this.___concrete, this.___inlineableElement, false, __reason);
     }
 
     @Override
     public void tryToDevirtualizeInvoke(Providers __providers)
     {
         createGuard(graph(), __providers);
-        InliningUtil.replaceInvokeCallTarget(invoke, graph(), InvokeKind.Special, concrete);
+        InliningUtil.replaceInvokeCallTarget(this.___invoke, graph(), InvokeKind.Special, this.___concrete);
     }
 
     private void createGuard(StructuredGraph __graph, Providers __providers)
     {
-        ValueNode __nonNullReceiver = InliningUtil.nonNullReceiver(invoke);
+        ValueNode __nonNullReceiver = InliningUtil.nonNullReceiver(this.___invoke);
         LoadHubNode __receiverHub = __graph.unique(new LoadHubNode(__providers.getStampProvider(), __nonNullReceiver));
-        ConstantNode __typeHub = ConstantNode.forConstant(__receiverHub.stamp(NodeView.DEFAULT), __providers.getConstantReflection().asObjectHub(type), __providers.getMetaAccess(), __graph);
+        ConstantNode __typeHub = ConstantNode.forConstant(__receiverHub.stamp(NodeView.DEFAULT), __providers.getConstantReflection().asObjectHub(this.___type), __providers.getMetaAccess(), __graph);
 
         LogicNode __typeCheck = CompareNode.createCompareNode(__graph, CanonicalCondition.EQ, __receiverHub, __typeHub, __providers.getConstantReflection(), NodeView.DEFAULT);
         FixedGuardNode __guard = __graph.add(new FixedGuardNode(__typeCheck, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile));
 
-        ValueNode __anchoredReceiver = InliningUtil.createAnchoredReceiver(__graph, __guard, type, __nonNullReceiver, true);
-        invoke.callTarget().replaceFirstInput(__nonNullReceiver, __anchoredReceiver);
+        ValueNode __anchoredReceiver = InliningUtil.createAnchoredReceiver(__graph, __guard, this.___type, __nonNullReceiver, true);
+        this.___invoke.callTarget().replaceFirstInput(__nonNullReceiver, __anchoredReceiver);
 
-        __graph.addBeforeFixed(invoke.asNode(), __guard);
+        __graph.addBeforeFixed(this.___invoke.asNode(), __guard);
     }
 
     @Override
     public boolean shouldInline()
     {
-        return concrete.shouldBeInlined();
+        return this.___concrete.shouldBeInlined();
     }
 }

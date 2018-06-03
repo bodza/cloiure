@@ -16,9 +16,9 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Represents {@link HotSpotRuntime} values that may change after compilation.
- */
+///
+// Represents {@link HotSpotRuntime} values that may change after compilation.
+///
 // @class GraalHotSpotVMConfigNode
 public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerable, Canonicalizable
 {
@@ -26,60 +26,60 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
     public static final NodeClass<GraalHotSpotVMConfigNode> TYPE = NodeClass.create(GraalHotSpotVMConfigNode.class);
 
     // @field
-    protected final int markId;
+    protected final int ___markId;
 
-    /**
-     * Constructor for {@link #areConfigValuesConstant()}.
-     */
+    ///
+    // Constructor for {@link #areConfigValuesConstant()}.
+    ///
     // @cons
     public GraalHotSpotVMConfigNode()
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));
-        this.markId = 0;
+        this.___markId = 0;
     }
 
-    /**
-     * Constructor for node intrinsics below.
-     *
-     * @param markId id of the config value
-     */
+    ///
+    // Constructor for node intrinsics below.
+    //
+    // @param markId id of the config value
+    ///
     // @cons
     public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp __stamp, int __markId)
     {
         super(TYPE, __stamp);
-        this.markId = __markId;
+        this.___markId = __markId;
     }
 
-    /**
-     * Constructor with explicit type specification.
-     *
-     * @param markId id of the config value
-     * @param kind explicit type of the node
-     */
+    ///
+    // Constructor with explicit type specification.
+    //
+    // @param markId id of the config value
+    // @param kind explicit type of the node
+    ///
     // @cons
     public GraalHotSpotVMConfigNode(int __markId, JavaKind __kind)
     {
         super(TYPE, StampFactory.forKind(__kind));
-        this.markId = __markId;
+        this.___markId = __markId;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadConfigValue(markId, __gen.getLIRGeneratorTool().getLIRKind(stamp)));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadConfigValue(this.___markId, __gen.getLIRGeneratorTool().getLIRKind(this.___stamp)));
     }
 
     @NodeIntrinsic
     private static native boolean areConfigValuesConstant();
 
     @NodeIntrinsic
-    private static native long loadLongConfigValue(@ConstantNodeParameter int markId);
+    private static native long loadLongConfigValue(@ConstantNodeParameter int __markId);
 
     @NodeIntrinsic
-    private static native int loadIntConfigValue(@ConstantNodeParameter int markId);
+    private static native int loadIntConfigValue(@ConstantNodeParameter int __markId);
 
     @NodeIntrinsic
-    private static native byte loadByteConfigValue(@ConstantNodeParameter int markId);
+    private static native byte loadByteConfigValue(@ConstantNodeParameter int __markId);
 
     public static long cardTableAddress()
     {
@@ -119,31 +119,31 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (markId == 0)
+        if (this.___markId == 0)
         {
             return ConstantNode.forBoolean(true);
         }
-        if (markId == HotSpotRuntime.cardTableAddressMark)
+        if (this.___markId == HotSpotRuntime.cardTableAddressMark)
         {
             return ConstantNode.forLong(HotSpotRuntime.cardTableAddress);
         }
-        else if (markId == HotSpotRuntime.heapTopAddressMark)
+        else if (this.___markId == HotSpotRuntime.heapTopAddressMark)
         {
             return ConstantNode.forLong(HotSpotRuntime.heapTopAddress);
         }
-        else if (markId == HotSpotRuntime.heapEndAddressMark)
+        else if (this.___markId == HotSpotRuntime.heapEndAddressMark)
         {
             return ConstantNode.forLong(HotSpotRuntime.heapEndAddress);
         }
-        else if (markId == HotSpotRuntime.crcTableAddressMark)
+        else if (this.___markId == HotSpotRuntime.crcTableAddressMark)
         {
             return ConstantNode.forLong(HotSpotRuntime.crcTableAddress);
         }
-        else if (markId == HotSpotRuntime.logOfHeapRegionGrainBytesMark)
+        else if (this.___markId == HotSpotRuntime.logOfHeapRegionGrainBytesMark)
         {
             return ConstantNode.forInt(HotSpotRuntime.logOfHeapRegionGrainBytes);
         }
-        else if (markId == HotSpotRuntime.inlineContiguousAllocationSupportedMark)
+        else if (this.___markId == HotSpotRuntime.inlineContiguousAllocationSupportedMark)
         {
             return ConstantNode.forBoolean(HotSpotRuntime.inlineContiguousAllocationSupported);
         }

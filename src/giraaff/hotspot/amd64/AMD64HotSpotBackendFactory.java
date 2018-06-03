@@ -126,24 +126,22 @@ public final class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
     {
         List<Register> __callerSave = new ArrayList<>(__regConfig.getAllocatableRegisters().asList());
 
-        /*
-         * System V Application Binary Interface, AMD64 Architecture Processor Supplement
-         *
-         * Draft Version 0.96
-         *
-         * http://www.uclibc.org/docs/psABI-x86_64.pdf
-         *
-         * 3.2.1
-         *
-         * ...
-         *
-         * This subsection discusses usage of each register. Registers %rbp, %rbx and %r12
-         * through %r15 "belong" to the calling function and the called function is required to
-         * preserve their values. In other words, a called function must preserve these
-         * registers' values for its caller. Remaining registers "belong" to the called
-         * function. If a calling function wants to preserve such a register value across a
-         * function call, it must save the value in its local stack frame.
-         */
+        // System V Application Binary Interface, AMD64 Architecture Processor Supplement
+        //
+        // Draft Version 0.96
+        //
+        // http://www.uclibc.org/docs/psABI-x86_64.pdf
+        //
+        // 3.2.1
+        //
+        // ...
+        //
+        // This subsection discusses usage of each register. Registers %rbp, %rbx and %r12
+        // through %r15 "belong" to the calling function and the called function is required to
+        // preserve their values. In other words, a called function must preserve these
+        // registers' values for its caller. Remaining registers "belong" to the called
+        // function. If a calling function wants to preserve such a register value across a
+        // function call, it must save the value in its local stack frame.
         __callerSave.remove(AMD64.rbp);
         __callerSave.remove(AMD64.rbx);
         __callerSave.remove(AMD64.r12);

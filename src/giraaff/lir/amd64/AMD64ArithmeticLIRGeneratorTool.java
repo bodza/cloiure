@@ -6,15 +6,15 @@ import jdk.vm.ci.meta.Value;
 import giraaff.lir.Variable;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 
-/**
- * This interface can be used to generate AMD64 LIR for arithmetic operations.
- */
+///
+// This interface can be used to generate AMD64 LIR for arithmetic operations.
+///
 // @iface AMD64ArithmeticLIRGeneratorTool
 public interface AMD64ArithmeticLIRGeneratorTool extends ArithmeticLIRGeneratorTool
 {
-    Value emitCountLeadingZeros(Value value);
+    Value emitCountLeadingZeros(Value __value);
 
-    Value emitCountTrailingZeros(Value value);
+    Value emitCountTrailingZeros(Value __value);
 
     // @enum AMD64ArithmeticLIRGeneratorTool.RoundingMode
     enum RoundingMode
@@ -25,15 +25,15 @@ public interface AMD64ArithmeticLIRGeneratorTool extends ArithmeticLIRGeneratorT
         TRUNCATE(3);
 
         // @field
-        public final int encoding;
+        public final int ___encoding;
 
         RoundingMode(int __encoding)
         {
-            this.encoding = __encoding;
+            this.___encoding = __encoding;
         }
     }
 
-    Value emitRound(Value value, RoundingMode mode);
+    Value emitRound(Value __value, RoundingMode __mode);
 
-    void emitCompareOp(AMD64Kind cmpKind, Variable left, Value right);
+    void emitCompareOp(AMD64Kind __cmpKind, Variable __left, Value __right);
 }

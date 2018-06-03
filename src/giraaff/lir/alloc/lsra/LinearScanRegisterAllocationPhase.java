@@ -12,13 +12,13 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 public final class LinearScanRegisterAllocationPhase extends LinearScanAllocationPhase
 {
     // @field
-    private final LinearScan allocator;
+    private final LinearScan ___allocator;
 
     // @cons
     LinearScanRegisterAllocationPhase(LinearScan __allocator)
     {
         super();
-        this.allocator = __allocator;
+        this.___allocator = __allocator;
     }
 
     @Override
@@ -32,7 +32,7 @@ public final class LinearScanRegisterAllocationPhase extends LinearScanAllocatio
         Interval __precoloredIntervals;
         Interval __notPrecoloredIntervals;
 
-        Pair<Interval, Interval> __result = allocator.createUnhandledLists(LinearScan.IS_PRECOLORED_INTERVAL, LinearScan.IS_VARIABLE_INTERVAL);
+        Pair<Interval, Interval> __result = this.___allocator.createUnhandledLists(LinearScan.IS_PRECOLORED_INTERVAL, LinearScan.IS_VARIABLE_INTERVAL);
         __precoloredIntervals = __result.getLeft();
         __notPrecoloredIntervals = __result.getRight();
 
@@ -40,11 +40,11 @@ public final class LinearScanRegisterAllocationPhase extends LinearScanAllocatio
         LinearScanWalker __lsw;
         if (GraalOptions.lsraOptimization)
         {
-            __lsw = new OptimizingLinearScanWalker(allocator, __precoloredIntervals, __notPrecoloredIntervals);
+            __lsw = new OptimizingLinearScanWalker(this.___allocator, __precoloredIntervals, __notPrecoloredIntervals);
         }
         else
         {
-            __lsw = new LinearScanWalker(allocator, __precoloredIntervals, __notPrecoloredIntervals);
+            __lsw = new LinearScanWalker(this.___allocator, __precoloredIntervals, __notPrecoloredIntervals);
         }
         __lsw.walk();
         __lsw.finishAllocation();

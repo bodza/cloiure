@@ -69,11 +69,11 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
     // @class PointerEqualsNode.PointerEqualsOp
     public static class PointerEqualsOp extends CompareOp
     {
-        /**
-         * Determines if this is a comparison used to determine whether dispatching on a receiver
-         * could select a certain method and if so, returns {@code true} if the answer is guaranteed
-         * to be false. Otherwise, returns {@code false}.
-         */
+        ///
+        // Determines if this is a comparison used to determine whether dispatching on a receiver
+        // could select a certain method and if so, returns {@code true} if the answer is guaranteed
+        // to be false. Otherwise, returns {@code false}.
+        ///
         private static boolean isAlwaysFailingVirtualDispatchTest(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY)
         {
             if (__forY.isConstant())

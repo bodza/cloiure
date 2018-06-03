@@ -2,11 +2,11 @@ package giraaff.phases;
 
 import giraaff.nodes.StructuredGraph;
 
-/**
- * Base class for all compiler phases. Subclasses should be stateless. There will be one global
- * instance for each compiler phase that is shared for all compilations. VM-, target- and
- * compilation-specific data can be passed with a context object.
- */
+///
+// Base class for all compiler phases. Subclasses should be stateless. There will be one global
+// instance for each compiler phase that is shared for all compilations. VM-, target- and
+// compilation-specific data can be passed with a context object.
+///
 // @class BasePhase
 public abstract class BasePhase<C>
 {
@@ -26,5 +26,5 @@ public abstract class BasePhase<C>
         return new ClassTypeSequence(BasePhase.this.getClass());
     }
 
-    protected abstract void run(StructuredGraph graph, C context);
+    protected abstract void run(StructuredGraph __graph, C __context);
 }

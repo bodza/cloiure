@@ -2,9 +2,9 @@ package giraaff.core.common;
 
 import jdk.vm.ci.code.CodeUtil;
 
-/**
- * A collection of static utility functions that check ranges of numbers.
- */
+///
+// A collection of static utility functions that check ranges of numbers.
+///
 // @class NumUtil
 public final class NumUtil
 {
@@ -19,65 +19,65 @@ public final class NumUtil
         return 0 <= __x && __x < 32;
     }
 
-    /**
-     * Determines if a given {@code int} value is the range of unsigned byte values.
-     */
+    ///
+    // Determines if a given {@code int} value is the range of unsigned byte values.
+    ///
     public static boolean isUByte(int __x)
     {
         return (__x & 0xff) == __x;
     }
 
-    /**
-     * Determines if a given {@code int} value is the range of signed byte values.
-     */
+    ///
+    // Determines if a given {@code int} value is the range of signed byte values.
+    ///
     public static boolean isByte(int __x)
     {
         return (byte) __x == __x;
     }
 
-    /**
-     * Determines if a given {@code long} value is the range of unsigned byte values.
-     */
+    ///
+    // Determines if a given {@code long} value is the range of unsigned byte values.
+    ///
     public static boolean isUByte(long __x)
     {
         return (__x & 0xffL) == __x;
     }
 
-    /**
-     * Determines if a given {@code long} value is the range of signed byte values.
-     */
+    ///
+    // Determines if a given {@code long} value is the range of signed byte values.
+    ///
     public static boolean isByte(long __l)
     {
         return (byte) __l == __l;
     }
 
-    /**
-     * Determines if a given {@code long} value is the range of unsigned int values.
-     */
+    ///
+    // Determines if a given {@code long} value is the range of unsigned int values.
+    ///
     public static boolean isUInt(long __x)
     {
         return (__x & 0xffffffffL) == __x;
     }
 
-    /**
-     * Determines if a given {@code long} value is the range of signed int values.
-     */
+    ///
+    // Determines if a given {@code long} value is the range of signed int values.
+    ///
     public static boolean isInt(long __l)
     {
         return (int) __l == __l;
     }
 
-    /**
-     * Determines if a given {@code int} value is the range of signed short values.
-     */
+    ///
+    // Determines if a given {@code int} value is the range of signed short values.
+    ///
     public static boolean isShort(int __x)
     {
         return (short) __x == __x;
     }
 
-    /**
-     * Determines if a given {@code long} value is the range of signed short values.
-     */
+    ///
+    // Determines if a given {@code long} value is the range of signed short values.
+    ///
     public static boolean isShort(long __x)
     {
         return (short) __x == __x;
@@ -159,10 +159,10 @@ public final class NumUtil
         return __value >= __min && __value <= __max;
     }
 
-    /**
-     * @param n Number of bits that should be set to 1. Must be between 0 and 32 (inclusive).
-     * @return A number with n bits set to 1.
-     */
+    ///
+    // @param n Number of bits that should be set to 1. Must be between 0 and 32 (inclusive).
+    // @return A number with n bits set to 1.
+    ///
     public static int getNbitNumberInt(int __n)
     {
         if (__n < 32)
@@ -175,10 +175,10 @@ public final class NumUtil
         }
     }
 
-    /**
-     * @param n Number of bits that should be set to 1. Must be between 0 and 64 (inclusive).
-     * @return A number with n bits set to 1.
-     */
+    ///
+    // @param n Number of bits that should be set to 1. Must be between 0 and 64 (inclusive).
+    // @return A number with n bits set to 1.
+    ///
     public static long getNbitNumberLong(int __n)
     {
         if (__n < 64)
@@ -191,25 +191,25 @@ public final class NumUtil
         }
     }
 
-    /**
-     * Get the minimum value representable in a {@code bits} bit signed integer.
-     */
+    ///
+    // Get the minimum value representable in a {@code bits} bit signed integer.
+    ///
     public static long minValue(int __bits)
     {
         return CodeUtil.minValue(__bits);
     }
 
-    /**
-     * Get the maximum value representable in a {@code bits} bit signed integer.
-     */
+    ///
+    // Get the maximum value representable in a {@code bits} bit signed integer.
+    ///
     public static long maxValue(int __bits)
     {
         return CodeUtil.maxValue(__bits);
     }
 
-    /**
-     * Get the maximum value representable in a {@code bits} bit unsigned integer.
-     */
+    ///
+    // Get the maximum value representable in a {@code bits} bit unsigned integer.
+    ///
     public static long maxValueUnsigned(int __bits)
     {
         return getNbitNumberLong(__bits);

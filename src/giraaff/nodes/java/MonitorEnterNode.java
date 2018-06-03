@@ -13,9 +13,9 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code MonitorEnterNode} represents the acquisition of a monitor.
- */
+///
+// The {@code MonitorEnterNode} represents the acquisition of a monitor.
+///
 // @class MonitorEnterNode
 public class MonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
 {

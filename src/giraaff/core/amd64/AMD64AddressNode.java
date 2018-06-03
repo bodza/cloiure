@@ -21,9 +21,9 @@ import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Represents an address of the form [base + index*scale + displacement]. Both base and index are optional.
- */
+///
+// Represents an address of the form [base + index*scale + displacement]. Both base and index are optional.
+///
 // @class AMD64AddressNode
 public final class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLowerable
 {
@@ -32,16 +32,16 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
 
     @OptionalInput
     // @field
-    private ValueNode base;
+    private ValueNode ___base;
 
     @OptionalInput
     // @field
-    private ValueNode index;
+    private ValueNode ___index;
     // @field
-    private Scale scale;
+    private Scale ___scale;
 
     // @field
-    private int displacement;
+    private int ___displacement;
 
     // @cons
     public AMD64AddressNode(ValueNode __base)
@@ -53,16 +53,16 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
     public AMD64AddressNode(ValueNode __base, ValueNode __index)
     {
         super(TYPE);
-        this.base = __base;
-        this.index = __index;
-        this.scale = Scale.Times1;
+        this.___base = __base;
+        this.___index = __index;
+        this.___scale = Scale.Times1;
     }
 
     public void canonicalizeIndex(SimplifierTool __tool)
     {
-        if (index instanceof AddNode && ((IntegerStamp) index.stamp(NodeView.DEFAULT)).getBits() == 64)
+        if (this.___index instanceof AddNode && ((IntegerStamp) this.___index.stamp(NodeView.DEFAULT)).getBits() == 64)
         {
-            AddNode __add = (AddNode) index;
+            AddNode __add = (AddNode) this.___index;
             ValueNode __valX = __add.getX();
             if (__valX instanceof PhiNode)
             {
@@ -76,9 +76,9 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
                         if (__valY instanceof ConstantNode)
                         {
                             int __addBy = __valY.asJavaConstant().asInt();
-                            displacement = displacement + scale.value * __addBy;
-                            replaceFirstInput(index, __phi);
-                            __tool.addToWorkList(index);
+                            this.___displacement = this.___displacement + this.___scale.___value * __addBy;
+                            replaceFirstInput(this.___index, __phi);
+                            __tool.addToWorkList(this.___index);
                         }
                     }
                 }
@@ -91,16 +91,16 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
     {
         LIRGeneratorTool __tool = __gen.getLIRGeneratorTool();
 
-        AllocatableValue __baseValue = base == null ? Value.ILLEGAL : __tool.asAllocatable(__gen.operand(base));
-        AllocatableValue __indexValue = index == null ? Value.ILLEGAL : __tool.asAllocatable(__gen.operand(index));
+        AllocatableValue __baseValue = this.___base == null ? Value.ILLEGAL : __tool.asAllocatable(__gen.operand(this.___base));
+        AllocatableValue __indexValue = this.___index == null ? Value.ILLEGAL : __tool.asAllocatable(__gen.operand(this.___index));
 
         AllocatableValue __baseReference = LIRKind.derivedBaseFromValue(__baseValue);
         AllocatableValue __indexReference;
-        if (index == null)
+        if (this.___index == null)
         {
             __indexReference = null;
         }
-        else if (scale.equals(Scale.Times1))
+        else if (this.___scale.equals(Scale.Times1))
         {
             __indexReference = LIRKind.derivedBaseFromValue(__indexValue);
         }
@@ -117,13 +117,13 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
         }
 
         LIRKind __kind = LIRKind.combineDerived(__tool.getLIRKind(stamp(NodeView.DEFAULT)), __baseReference, __indexReference);
-        __gen.setResult(this, new AMD64AddressValue(__kind, __baseValue, __indexValue, scale, displacement));
+        __gen.setResult(this, new AMD64AddressValue(__kind, __baseValue, __indexValue, this.___scale, this.___displacement));
     }
 
     @Override
     public ValueNode getBase()
     {
-        return base;
+        return this.___base;
     }
 
     public void setBase(ValueNode __base)
@@ -131,15 +131,15 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
         // allow modification before inserting into the graph
         if (isAlive())
         {
-            updateUsages(this.base, __base);
+            updateUsages(this.___base, __base);
         }
-        this.base = __base;
+        this.___base = __base;
     }
 
     @Override
     public ValueNode getIndex()
     {
-        return index;
+        return this.___index;
     }
 
     public void setIndex(ValueNode __index)
@@ -147,35 +147,35 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
         // allow modification before inserting into the graph
         if (isAlive())
         {
-            updateUsages(this.index, __index);
+            updateUsages(this.___index, __index);
         }
-        this.index = __index;
+        this.___index = __index;
     }
 
     public Scale getScale()
     {
-        return scale;
+        return this.___scale;
     }
 
     public void setScale(Scale __scale)
     {
-        this.scale = __scale;
+        this.___scale = __scale;
     }
 
     public int getDisplacement()
     {
-        return displacement;
+        return this.___displacement;
     }
 
     public void setDisplacement(int __displacement)
     {
-        this.displacement = __displacement;
+        this.___displacement = __displacement;
     }
 
     @Override
     public long getMaxConstantDisplacement()
     {
-        return displacement;
+        return this.___displacement;
     }
 
     @Override

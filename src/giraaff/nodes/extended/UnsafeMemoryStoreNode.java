@@ -12,9 +12,9 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Store of a value at a location specified as an absolute address.
- */
+///
+// Store of a value at a location specified as an absolute address.
+///
 // @class UnsafeMemoryStoreNode
 public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerable, MemoryCheckpoint.Single
 {
@@ -23,38 +23,38 @@ public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements L
 
     @Input
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     @Input
     // @field
-    protected ValueNode address;
+    protected ValueNode ___address;
     // @field
-    protected final JavaKind kind;
+    protected final JavaKind ___kind;
     // @field
-    protected final LocationIdentity locationIdentity;
+    protected final LocationIdentity ___locationIdentity;
 
     // @cons
     public UnsafeMemoryStoreNode(ValueNode __address, ValueNode __value, JavaKind __kind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = __address;
-        this.value = __value;
-        this.kind = __kind;
-        this.locationIdentity = __locationIdentity;
+        this.___address = __address;
+        this.___value = __value;
+        this.___kind = __kind;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     public ValueNode getAddress()
     {
-        return address;
+        return this.___address;
     }
 
     public JavaKind getKind()
     {
-        return kind;
+        return this.___kind;
     }
 
     @Override
@@ -66,6 +66,6 @@ public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements L
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 }

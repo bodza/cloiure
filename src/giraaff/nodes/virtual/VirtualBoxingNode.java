@@ -16,7 +16,7 @@ public final class VirtualBoxingNode extends VirtualInstanceNode
     public static final NodeClass<VirtualBoxingNode> TYPE = NodeClass.create(VirtualBoxingNode.class);
 
     // @field
-    protected final JavaKind boxingKind;
+    protected final JavaKind ___boxingKind;
 
     // @cons
     public VirtualBoxingNode(ResolvedJavaType __type, JavaKind __boxingKind)
@@ -28,24 +28,24 @@ public final class VirtualBoxingNode extends VirtualInstanceNode
     public VirtualBoxingNode(NodeClass<? extends VirtualBoxingNode> __c, ResolvedJavaType __type, JavaKind __boxingKind)
     {
         super(__c, __type, false);
-        this.boxingKind = __boxingKind;
+        this.___boxingKind = __boxingKind;
     }
 
     public JavaKind getBoxingKind()
     {
-        return boxingKind;
+        return this.___boxingKind;
     }
 
     @Override
     public VirtualBoxingNode duplicate()
     {
-        return new VirtualBoxingNode(type(), boxingKind);
+        return new VirtualBoxingNode(type(), this.___boxingKind);
     }
 
     @Override
     public ValueNode getMaterializedRepresentation(FixedNode __fixed, ValueNode[] __entries, LockState __locks)
     {
-        return new BoxNode(__entries[0], type(), boxingKind);
+        return new BoxNode(__entries[0], type(), this.___boxingKind);
     }
 
     public ValueNode getBoxedValue(VirtualizerTool __tool)

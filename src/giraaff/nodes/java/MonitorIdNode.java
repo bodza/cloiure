@@ -8,11 +8,11 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * This node describes one locking scope; it ties the monitor enter, monitor exit and
- * the frame states together. It is thus referenced from the {@link MonitorEnterNode},
- * from the {@link MonitorExitNode} and from the {@link FrameState}.
- */
+///
+// This node describes one locking scope; it ties the monitor enter, monitor exit and
+// the frame states together. It is thus referenced from the {@link MonitorEnterNode},
+// from the {@link MonitorExitNode} and from the {@link FrameState}.
+///
 // @NodeInfo.allowedUsageTypes "Association"
 // @class MonitorIdNode
 public final class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
@@ -21,9 +21,9 @@ public final class MonitorIdNode extends ValueNode implements IterableNodeType, 
     public static final NodeClass<MonitorIdNode> TYPE = NodeClass.create(MonitorIdNode.class);
 
     // @field
-    protected int lockDepth;
+    protected int ___lockDepth;
     // @field
-    protected boolean eliminated;
+    protected boolean ___eliminated;
 
     // @cons
     public MonitorIdNode(int __lockDepth)
@@ -35,27 +35,27 @@ public final class MonitorIdNode extends ValueNode implements IterableNodeType, 
     protected MonitorIdNode(NodeClass<? extends MonitorIdNode> __c, int __lockDepth)
     {
         super(__c, StampFactory.forVoid());
-        this.lockDepth = __lockDepth;
+        this.___lockDepth = __lockDepth;
     }
 
     public int getLockDepth()
     {
-        return lockDepth;
+        return this.___lockDepth;
     }
 
     public void setLockDepth(int __lockDepth)
     {
-        this.lockDepth = __lockDepth;
+        this.___lockDepth = __lockDepth;
     }
 
     public boolean isEliminated()
     {
-        return eliminated;
+        return this.___eliminated;
     }
 
     public void setEliminated()
     {
-        eliminated = true;
+        this.___eliminated = true;
     }
 
     @Override

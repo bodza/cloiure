@@ -28,58 +28,58 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
 
     @Input
     // @field
-    ValueNode src;
+    ValueNode ___src;
     @Input
     // @field
-    ValueNode srcPos;
+    ValueNode ___srcPos;
     @Input
     // @field
-    ValueNode dest;
+    ValueNode ___dest;
     @Input
     // @field
-    ValueNode destPos;
+    ValueNode ___destPos;
     @Input
     // @field
-    ValueNode length;
+    ValueNode ___length;
 
     // @field
-    protected final HotSpotGraalRuntime runtime;
+    protected final HotSpotGraalRuntime ___runtime;
 
     // @cons
     protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.src = __src;
-        this.srcPos = __srcPos;
-        this.dest = __dest;
-        this.destPos = __destPos;
-        this.length = __length;
-        this.runtime = __runtime;
+        this.___src = __src;
+        this.___srcPos = __srcPos;
+        this.___dest = __dest;
+        this.___destPos = __destPos;
+        this.___length = __length;
+        this.___runtime = __runtime;
     }
 
     public ValueNode getSource()
     {
-        return src;
+        return this.___src;
     }
 
     public ValueNode getSourcePosition()
     {
-        return srcPos;
+        return this.___srcPos;
     }
 
     public ValueNode getDestination()
     {
-        return dest;
+        return this.___dest;
     }
 
     public ValueNode getDestinationPosition()
     {
-        return destPos;
+        return this.___destPos;
     }
 
     public ValueNode getLength()
     {
-        return length;
+        return this.___length;
     }
 
     @Override
@@ -90,7 +90,7 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
             StructuredGraph __graph = graph();
             ValueNode __srcAddr = objectAddress(getSource());
             ValueNode __destAddr = objectAddress(getDestination());
-            ForeignCallNode __call = __graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), HotSpotBackend.GENERIC_ARRAYCOPY, __srcAddr, srcPos, __destAddr, destPos, length));
+            ForeignCallNode __call = __graph.add(new ForeignCallNode(this.___runtime.getBackend().getForeignCalls(), HotSpotBackend.GENERIC_ARRAYCOPY, __srcAddr, this.___srcPos, __destAddr, this.___destPos, this.___length));
             __call.setStateAfter(stateAfter());
             __graph.replaceFixedWithFixed(this, __call);
         }
@@ -105,9 +105,9 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
 
     private ValueNode wordValue(ValueNode __value)
     {
-        if (__value.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind)
+        if (__value.stamp(NodeView.DEFAULT).getStackKind() != this.___runtime.getTarget().wordJavaKind)
         {
-            return IntegerConvertNode.convert(__value, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
+            return IntegerConvertNode.convert(__value, StampFactory.forKind(this.___runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
         }
         return __value;
     }
@@ -119,5 +119,5 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
     }
 
     @NodeIntrinsic
-    public static native int genericArraycopy(Object src, int srcPos, Object dest, int destPos, int length);
+    public static native int genericArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length);
 }

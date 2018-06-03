@@ -48,81 +48,81 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
 
     @Input
     // @field
-    NodeInputList<ValueNode> args;
+    NodeInputList<ValueNode> ___args;
 
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateDuring;
+    FrameState ___stateDuring;
 
     @OptionalInput(InputType.Memory)
     // @field
-    protected MemoryNode lastLocationAccess;
+    protected MemoryNode ___lastLocationAccess;
 
     // @field
-    protected JavaKind elementKind;
+    protected JavaKind ___elementKind;
 
     // @field
-    protected int bci;
+    protected int ___bci;
 
     // @cons
     public BasicArrayCopyNode(NodeClass<? extends AbstractMemoryCheckpoint> __type, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, int __bci)
     {
         super(__type, StampFactory.forKind(JavaKind.Void));
-        this.bci = __bci;
-        args = new NodeInputList<>(this, new ValueNode[] { __src, __srcPos, __dest, __destPos, __length });
-        this.elementKind = __elementKind != JavaKind.Illegal ? __elementKind : null;
+        this.___bci = __bci;
+        this.___args = new NodeInputList<>(this, new ValueNode[] { __src, __srcPos, __dest, __destPos, __length });
+        this.___elementKind = __elementKind != JavaKind.Illegal ? __elementKind : null;
     }
 
     // @cons
     public BasicArrayCopyNode(NodeClass<? extends AbstractMemoryCheckpoint> __type, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind)
     {
         super(__type, StampFactory.forKind(JavaKind.Void));
-        this.bci = BytecodeFrame.INVALID_FRAMESTATE_BCI;
-        args = new NodeInputList<>(this, new ValueNode[] { __src, __srcPos, __dest, __destPos, __length });
-        this.elementKind = __elementKind != JavaKind.Illegal ? __elementKind : null;
+        this.___bci = BytecodeFrame.INVALID_FRAMESTATE_BCI;
+        this.___args = new NodeInputList<>(this, new ValueNode[] { __src, __srcPos, __dest, __destPos, __length });
+        this.___elementKind = __elementKind != JavaKind.Illegal ? __elementKind : null;
     }
 
     public ValueNode getSource()
     {
-        return args.get(SRC_ARG);
+        return this.___args.get(SRC_ARG);
     }
 
     public ValueNode getSourcePosition()
     {
-        return args.get(SRC_POS_ARG);
+        return this.___args.get(SRC_POS_ARG);
     }
 
     public ValueNode getDestination()
     {
-        return args.get(DEST_ARG);
+        return this.___args.get(DEST_ARG);
     }
 
     public ValueNode getDestinationPosition()
     {
-        return args.get(DEST_POS_ARG);
+        return this.___args.get(DEST_POS_ARG);
     }
 
     public ValueNode getLength()
     {
-        return args.get(LENGTH_ARG);
+        return this.___args.get(LENGTH_ARG);
     }
 
     public int getBci()
     {
-        return bci;
+        return this.___bci;
     }
 
     public JavaKind getElementKind()
     {
-        return elementKind;
+        return this.___elementKind;
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        if (elementKind != null)
+        if (this.___elementKind != null)
         {
-            return NamedLocationIdentity.getArrayLocation(elementKind);
+            return NamedLocationIdentity.getArrayLocation(this.___elementKind);
         }
         return LocationIdentity.any();
     }
@@ -130,14 +130,14 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
     @Override
     public MemoryNode getLastLocationAccess()
     {
-        return lastLocationAccess;
+        return this.___lastLocationAccess;
     }
 
     @Override
     public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsagesInterface(lastLocationAccess, __lla);
-        lastLocationAccess = __lla;
+        updateUsagesInterface(this.___lastLocationAccess, __lla);
+        this.___lastLocationAccess = __lla;
     }
 
     @Override
@@ -274,14 +274,14 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
     @Override
     public FrameState stateDuring()
     {
-        return stateDuring;
+        return this.___stateDuring;
     }
 
     @Override
     public void setStateDuring(FrameState __stateDuring)
     {
-        updateUsages(this.stateDuring, __stateDuring);
-        this.stateDuring = __stateDuring;
+        updateUsages(this.___stateDuring, __stateDuring);
+        this.___stateDuring = __stateDuring;
     }
 
     @Override

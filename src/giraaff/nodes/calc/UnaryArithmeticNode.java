@@ -26,18 +26,18 @@ public abstract class UnaryArithmeticNode<OP> extends UnaryNode implements Arith
     }
 
     // @field
-    protected final SerializableUnaryFunction<OP> getOp;
+    protected final SerializableUnaryFunction<OP> ___getOp;
 
     // @cons
     protected UnaryArithmeticNode(NodeClass<? extends UnaryArithmeticNode<OP>> __c, SerializableUnaryFunction<OP> __getOp, ValueNode __value)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__value.stamp(NodeView.DEFAULT))).foldStamp(__value.stamp(NodeView.DEFAULT)), __value);
-        this.getOp = __getOp;
+        this.___getOp = __getOp;
     }
 
     protected final UnaryOp<OP> getOp(ValueNode __forValue)
     {
-        return getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
+        return this.___getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override

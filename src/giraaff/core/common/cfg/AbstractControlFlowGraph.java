@@ -5,26 +5,26 @@ import java.util.Collection;
 // @iface AbstractControlFlowGraph
 public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
 {
-    // @field
+    // @def
     int BLOCK_ID_INITIAL = -1;
-    // @field
+    // @def
     int BLOCK_ID_VISITED = -2;
 
-    /**
-     * Returns the list blocks contained in this control flow graph.
-     *
-     * It is guaranteed that the blocks are numbered and ordered according
-     * to a reverse post order traversal of the control flow graph.
-     */
+    ///
+    // Returns the list blocks contained in this control flow graph.
+    //
+    // It is guaranteed that the blocks are numbered and ordered according
+    // to a reverse post order traversal of the control flow graph.
+    ///
     T[] getBlocks();
 
     Collection<Loop<T>> getLoops();
 
     T getStartBlock();
 
-    /**
-     * True if block {@code a} is dominated by block {@code b}.
-     */
+    ///
+    // True if block {@code a} is dominated by block {@code b}.
+    ///
     static boolean isDominatedBy(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
         int __domNumberA = __a.getDominatorNumber();
@@ -32,30 +32,30 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
         return __domNumberA >= __domNumberB && __domNumberA <= __b.getMaxChildDominatorNumber();
     }
 
-    /**
-     * True if block {@code a} dominates block {@code b} and {@code a} is not identical block to
-     * {@code b}.
-     */
+    ///
+    // True if block {@code a} dominates block {@code b} and {@code a} is not identical block to
+    // {@code b}.
+    ///
     static boolean strictlyDominates(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
         return __a != __b && dominates(__a, __b);
     }
 
-    /**
-     * True if block {@code a} dominates block {@code b}.
-     */
+    ///
+    // True if block {@code a} dominates block {@code b}.
+    ///
     static boolean dominates(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
         return isDominatedBy(__b, __a);
     }
 
-    /**
-     * Calculates the common dominator of two blocks.
-     *
-     * Note that this algorithm makes use of special properties regarding the numbering of blocks.
-     *
-     * @see #getBlocks()
-     */
+    ///
+    // Calculates the common dominator of two blocks.
+    //
+    // Note that this algorithm makes use of special properties regarding the numbering of blocks.
+    //
+    // @see #getBlocks()
+    ///
     static AbstractBlockBase<?> commonDominator(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
         if (__a == null)
@@ -105,9 +105,9 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
         return __result;
     }
 
-    /**
-     * @see AbstractControlFlowGraph#commonDominator(AbstractBlockBase, AbstractBlockBase)
-     */
+    ///
+    // @see AbstractControlFlowGraph#commonDominator(AbstractBlockBase, AbstractBlockBase)
+    ///
     @SuppressWarnings("unchecked")
     static <T extends AbstractBlockBase<T>> T commonDominatorTyped(T __a, T __b)
     {

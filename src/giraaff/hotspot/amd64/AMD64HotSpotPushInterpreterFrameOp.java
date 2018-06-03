@@ -14,9 +14,9 @@ import giraaff.lir.Opcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Pushes an interpreter frame to the stack.
- */
+///
+// Pushes an interpreter frame to the stack.
+///
 @Opcode
 // @class AMD64HotSpotPushInterpreterFrameOp
 final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
@@ -26,34 +26,34 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
 
     @Alive(OperandFlag.REG)
     // @field
-    AllocatableValue frameSize;
+    AllocatableValue ___frameSize;
     @Alive(OperandFlag.REG)
     // @field
-    AllocatableValue framePc;
+    AllocatableValue ___framePc;
     @Alive(OperandFlag.REG)
     // @field
-    AllocatableValue senderSp;
+    AllocatableValue ___senderSp;
     @Alive(OperandFlag.REG)
     // @field
-    AllocatableValue initialInfo;
+    AllocatableValue ___initialInfo;
 
     // @cons
     AMD64HotSpotPushInterpreterFrameOp(AllocatableValue __frameSize, AllocatableValue __framePc, AllocatableValue __senderSp, AllocatableValue __initialInfo)
     {
         super(TYPE);
-        this.frameSize = __frameSize;
-        this.framePc = __framePc;
-        this.senderSp = __senderSp;
-        this.initialInfo = __initialInfo;
+        this.___frameSize = __frameSize;
+        this.___framePc = __framePc;
+        this.___senderSp = __senderSp;
+        this.___initialInfo = __initialInfo;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        final Register __frameSizeRegister = ValueUtil.asRegister(frameSize);
-        final Register __framePcRegister = ValueUtil.asRegister(framePc);
-        final Register __senderSpRegister = ValueUtil.asRegister(senderSp);
-        final Register __initialInfoRegister = ValueUtil.asRegister(initialInfo);
+        final Register __frameSizeRegister = ValueUtil.asRegister(this.___frameSize);
+        final Register __framePcRegister = ValueUtil.asRegister(this.___framePc);
+        final Register __senderSpRegister = ValueUtil.asRegister(this.___senderSp);
+        final Register __initialInfoRegister = ValueUtil.asRegister(this.___initialInfo);
         final int __wordSize = 8;
 
         // we'll push PC and BP by hand

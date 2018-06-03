@@ -12,10 +12,10 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Represents an atomic read-and-write operation like
- * {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
- */
+///
+// Represents an atomic read-and-write operation like
+// {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
+///
 // @class AtomicReadAndWriteNode
 public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
@@ -24,54 +24,54 @@ public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint imple
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
     @Input
     // @field
-    ValueNode offset;
+    ValueNode ___offset;
     @Input
     // @field
-    ValueNode newValue;
+    ValueNode ___newValue;
 
     // @field
-    protected final JavaKind valueKind;
+    protected final JavaKind ___valueKind;
     // @field
-    protected final LocationIdentity locationIdentity;
+    protected final LocationIdentity ___locationIdentity;
 
     // @cons
     public AtomicReadAndWriteNode(ValueNode __object, ValueNode __offset, ValueNode __newValue, JavaKind __valueKind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(__newValue.getStackKind()));
-        this.object = __object;
-        this.offset = __offset;
-        this.newValue = __newValue;
-        this.valueKind = __valueKind;
-        this.locationIdentity = __locationIdentity;
+        this.___object = __object;
+        this.___offset = __offset;
+        this.___newValue = __newValue;
+        this.___valueKind = __valueKind;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
     public ValueNode offset()
     {
-        return offset;
+        return this.___offset;
     }
 
     public ValueNode newValue()
     {
-        return newValue;
+        return this.___newValue;
     }
 
     public JavaKind getValueKind()
     {
-        return valueKind;
+        return this.___valueKind;
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 
     @Override

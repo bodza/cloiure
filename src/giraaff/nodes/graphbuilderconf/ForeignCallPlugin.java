@@ -7,29 +7,29 @@ import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.extended.ForeignCallNode;
 
-/**
- * {@link InvocationPlugin} for converting a method call directly to a foreign call.
- */
+///
+// {@link InvocationPlugin} for converting a method call directly to a foreign call.
+///
 // @class ForeignCallPlugin
 public final class ForeignCallPlugin implements InvocationPlugin
 {
     // @field
-    private final ForeignCallsProvider foreignCalls;
+    private final ForeignCallsProvider ___foreignCalls;
     // @field
-    private final ForeignCallDescriptor descriptor;
+    private final ForeignCallDescriptor ___descriptor;
 
     // @cons
     public ForeignCallPlugin(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor)
     {
         super();
-        this.foreignCalls = __foreignCalls;
-        this.descriptor = __descriptor;
+        this.___foreignCalls = __foreignCalls;
+        this.___descriptor = __descriptor;
     }
 
     @Override
     public boolean execute(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, InvocationPlugin.Receiver __receiver, ValueNode[] __args)
     {
-        ForeignCallNode __foreignCall = new ForeignCallNode(foreignCalls, descriptor, __args);
+        ForeignCallNode __foreignCall = new ForeignCallNode(this.___foreignCalls, this.___descriptor, __args);
         __foreignCall.setBci(__b.bci());
         __b.addPush(__targetMethod.getSignature().getReturnKind(), __foreignCall);
         return true;

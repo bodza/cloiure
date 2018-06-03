@@ -20,45 +20,45 @@ import giraaff.util.GraalError;
 public final class BasicInductionVariable extends InductionVariable
 {
     // @field
-    private final ValuePhiNode phi;
+    private final ValuePhiNode ___phi;
     // @field
-    private final ValueNode init;
+    private final ValueNode ___init;
     // @field
-    private ValueNode rawStride;
+    private ValueNode ___rawStride;
     // @field
-    private BinaryArithmeticNode<?> op;
+    private BinaryArithmeticNode<?> ___op;
 
     // @cons
     public BasicInductionVariable(LoopEx __loop, ValuePhiNode __phi, ValueNode __init, ValueNode __rawStride, BinaryArithmeticNode<?> __op)
     {
         super(__loop);
-        this.phi = __phi;
-        this.init = __init;
-        this.rawStride = __rawStride;
-        this.op = __op;
+        this.___phi = __phi;
+        this.___init = __init;
+        this.___rawStride = __rawStride;
+        this.___op = __op;
     }
 
     @Override
     public StructuredGraph graph()
     {
-        return phi.graph();
+        return this.___phi.graph();
     }
 
     public BinaryArithmeticNode<?> getOp()
     {
-        return op;
+        return this.___op;
     }
 
     public void setOP(BinaryArithmeticNode<?> __newOp)
     {
-        rawStride = __newOp.getY();
-        op = __newOp;
+        this.___rawStride = __newOp.getY();
+        this.___op = __newOp;
     }
 
     @Override
     public Direction direction()
     {
-        Stamp __stamp = rawStride.stamp(NodeView.DEFAULT);
+        Stamp __stamp = this.___rawStride.stamp(NodeView.DEFAULT);
         if (__stamp instanceof IntegerStamp)
         {
             IntegerStamp __integerStamp = (IntegerStamp) __stamp;
@@ -73,7 +73,7 @@ public final class BasicInductionVariable extends InductionVariable
             }
             if (__dir != null)
             {
-                if (op instanceof AddNode)
+                if (this.___op instanceof AddNode)
                 {
                     return __dir;
                 }
@@ -89,25 +89,25 @@ public final class BasicInductionVariable extends InductionVariable
     @Override
     public ValuePhiNode valueNode()
     {
-        return phi;
+        return this.___phi;
     }
 
     @Override
     public ValueNode initNode()
     {
-        return init;
+        return this.___init;
     }
 
     @Override
     public ValueNode strideNode()
     {
-        if (op instanceof AddNode)
+        if (this.___op instanceof AddNode)
         {
-            return rawStride;
+            return this.___rawStride;
         }
-        if (op instanceof SubNode)
+        if (this.___op instanceof SubNode)
         {
-            return graph().unique(new NegateNode(rawStride));
+            return graph().unique(new NegateNode(this.___rawStride));
         }
         throw GraalError.shouldNotReachHere();
     }
@@ -115,31 +115,31 @@ public final class BasicInductionVariable extends InductionVariable
     @Override
     public boolean isConstantInit()
     {
-        return init.isConstant();
+        return this.___init.isConstant();
     }
 
     @Override
     public boolean isConstantStride()
     {
-        return rawStride.isConstant();
+        return this.___rawStride.isConstant();
     }
 
     @Override
     public long constantInit()
     {
-        return init.asJavaConstant().asLong();
+        return this.___init.asJavaConstant().asLong();
     }
 
     @Override
     public long constantStride()
     {
-        if (op instanceof AddNode)
+        if (this.___op instanceof AddNode)
         {
-            return rawStride.asJavaConstant().asLong();
+            return this.___rawStride.asJavaConstant().asLong();
         }
-        if (op instanceof SubNode)
+        if (this.___op instanceof SubNode)
         {
-            return -rawStride.asJavaConstant().asLong();
+            return -this.___rawStride.asJavaConstant().asLong();
         }
         throw GraalError.shouldNotReachHere();
     }
@@ -147,7 +147,7 @@ public final class BasicInductionVariable extends InductionVariable
     @Override
     public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __stamp)
     {
-        Stamp __fromStamp = phi.stamp(NodeView.DEFAULT);
+        Stamp __fromStamp = this.___phi.stamp(NodeView.DEFAULT);
         StructuredGraph __graph = graph();
         ValueNode __stride = strideNode();
         ValueNode __initNode = this.initNode();
@@ -156,7 +156,7 @@ public final class BasicInductionVariable extends InductionVariable
             __stride = IntegerConvertNode.convert(__stride, __stamp, graph(), NodeView.DEFAULT);
             __initNode = IntegerConvertNode.convert(__initNode, __stamp, graph(), NodeView.DEFAULT);
         }
-        ValueNode __maxTripCount = loop.counted().maxTripCountNode(__assumePositiveTripCount);
+        ValueNode __maxTripCount = this.___loop.counted().maxTripCountNode(__assumePositiveTripCount);
         if (!__maxTripCount.stamp(NodeView.DEFAULT).isCompatible(__stamp))
         {
             __maxTripCount = IntegerConvertNode.convert(__maxTripCount, __stamp, graph(), NodeView.DEFAULT);
@@ -167,8 +167,8 @@ public final class BasicInductionVariable extends InductionVariable
     @Override
     public ValueNode exitValueNode()
     {
-        Stamp __stamp = phi.stamp(NodeView.DEFAULT);
-        ValueNode __maxTripCount = loop.counted().maxTripCountNode();
+        Stamp __stamp = this.___phi.stamp(NodeView.DEFAULT);
+        ValueNode __maxTripCount = this.___loop.counted().maxTripCountNode();
         if (!__maxTripCount.stamp(NodeView.DEFAULT).isCompatible(__stamp))
         {
             __maxTripCount = IntegerConvertNode.convert(__maxTripCount, __stamp, graph(), NodeView.DEFAULT);
@@ -179,13 +179,13 @@ public final class BasicInductionVariable extends InductionVariable
     @Override
     public boolean isConstantExtremum()
     {
-        return isConstantInit() && isConstantStride() && loop.counted().isConstantMaxTripCount();
+        return isConstantInit() && isConstantStride() && this.___loop.counted().isConstantMaxTripCount();
     }
 
     @Override
     public long constantExtremum()
     {
-        UnsignedLong __tripCount = loop.counted().constantMaxTripCount();
+        UnsignedLong __tripCount = this.___loop.counted().constantMaxTripCount();
         if (__tripCount.isLessThan(1))
         {
             return constantInit();

@@ -13,13 +13,13 @@ import giraaff.phases.tiers.PhaseContext;
 public final class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
 {
     // @field
-    private final CanonicalizerPhase canonicalizer;
+    private final CanonicalizerPhase ___canonicalizer;
 
     // @cons
     public LoopPartialUnrollPhase(LoopPolicies __policies, CanonicalizerPhase __canonicalizer)
     {
         super(__policies);
-        this.canonicalizer = __canonicalizer;
+        this.___canonicalizer = __canonicalizer;
     }
 
     @Override
@@ -58,7 +58,7 @@ public final class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
 
                     if (!__listener.getNodes().isEmpty())
                     {
-                        canonicalizer.applyIncremental(__graph, __context, __listener.getNodes());
+                        this.___canonicalizer.applyIncremental(__graph, __context, __listener.getNodes());
                         __listener.getNodes().clear();
                     }
                 }

@@ -69,6 +69,6 @@ public final class HotSpotCompressionNode extends CompressionNode
     @Override
     protected Stamp mkStamp(Stamp __input)
     {
-        return HotSpotNarrowOopStamp.mkStamp(op, __input, encoding);
+        return HotSpotNarrowOopStamp.mkStamp(this.___op, __input, this.___encoding);
     }
 }

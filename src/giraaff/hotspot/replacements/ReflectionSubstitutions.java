@@ -9,9 +9,9 @@ import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.word.KlassPointer;
 
-/**
- * Substitutions for {@link sun.reflect.Reflection} methods.
- */
+///
+// Substitutions for {@link sun.reflect.Reflection} methods.
+///
 @ClassSubstitution(className = { "jdk.internal.reflect.Reflection", "sun.reflect.Reflection" }, optional = true)
 // @class ReflectionSubstitutions
 public final class ReflectionSubstitutions

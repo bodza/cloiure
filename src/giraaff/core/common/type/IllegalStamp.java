@@ -11,11 +11,11 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.util.GraalError;
 
-/**
- * This stamp represents the type of the {@link JavaKind#Illegal} value in the second slot of
- * {@link JavaKind#Long} and {@link JavaKind#Double} values. It can only appear in framestates or
- * virtual objects.
- */
+///
+// This stamp represents the type of the {@link JavaKind#Illegal} value in the second slot of
+// {@link JavaKind#Long} and {@link JavaKind#Double} values. It can only appear in framestates or
+// virtual objects.
+///
 // @class IllegalStamp
 public final class IllegalStamp extends Stamp
 {

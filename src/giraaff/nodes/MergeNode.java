@@ -2,9 +2,9 @@ package giraaff.nodes;
 
 import giraaff.graph.NodeClass;
 
-/**
- * Denotes the merging of multiple control-flow paths.
- */
+///
+// Denotes the merging of multiple control-flow paths.
+///
 // @class MergeNode
 public final class MergeNode extends AbstractMergeNode
 {

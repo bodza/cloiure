@@ -18,33 +18,33 @@ public final class DeadCodeEliminationPhase extends Phase
         Required;
     }
 
-    /**
-     * Creates a dead code elimination phase that will be run irrespective of {@link GraalOptions#reduceDCE}.
-     */
+    ///
+    // Creates a dead code elimination phase that will be run irrespective of {@link GraalOptions#reduceDCE}.
+    ///
     // @cons
     public DeadCodeEliminationPhase()
     {
         this(Optionality.Required);
     }
 
-    /**
-     * Creates a dead code elimination phase that will be run only if it is
-     * {@linkplain Optionality#Required non-optional} or {@link GraalOptions#reduceDCE} is false.
-     */
+    ///
+    // Creates a dead code elimination phase that will be run only if it is
+    // {@linkplain Optionality#Required non-optional} or {@link GraalOptions#reduceDCE} is false.
+    ///
     // @cons
     public DeadCodeEliminationPhase(Optionality __optionality)
     {
         super();
-        this.optional = __optionality == Optionality.Optional;
+        this.___optional = __optionality == Optionality.Optional;
     }
 
     // @field
-    private final boolean optional;
+    private final boolean ___optional;
 
     @Override
     public void run(StructuredGraph __graph)
     {
-        if (optional && GraalOptions.reduceDCE)
+        if (this.___optional && GraalOptions.reduceDCE)
         {
             return;
         }

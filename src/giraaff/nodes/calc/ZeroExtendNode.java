@@ -17,9 +17,9 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * The {@code ZeroExtendNode} converts an integer to a wider integer using zero extension.
- */
+///
+// The {@code ZeroExtendNode} converts an integer to a wider integer using zero extension.
+///
 // @class ZeroExtendNode
 public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
 {
@@ -27,7 +27,7 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
     public static final NodeClass<ZeroExtendNode> TYPE = NodeClass.create(ZeroExtendNode.class);
 
     // @field
-    private final boolean inputAlwaysPositive;
+    private final boolean ___inputAlwaysPositive;
 
     // @cons
     public ZeroExtendNode(ValueNode __input, int __resultBits)
@@ -39,7 +39,7 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
     public ZeroExtendNode(ValueNode __input, int __inputBits, int __resultBits, boolean __inputAlwaysPositive)
     {
         super(TYPE, ArithmeticOpTable::getZeroExtend, ArithmeticOpTable::getNarrow, __inputBits, __resultBits, __input);
-        this.inputAlwaysPositive = __inputAlwaysPositive;
+        this.___inputAlwaysPositive = __inputAlwaysPositive;
     }
 
     public static ValueNode create(ValueNode __input, int __resultBits, NodeView __view)
@@ -71,7 +71,7 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
 
     public boolean isInputAlwaysPositive()
     {
-        return inputAlwaysPositive;
+        return this.___inputAlwaysPositive;
     }
 
     @Override
@@ -96,7 +96,7 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
             return __ret;
         }
 
-        return canonical(this, __forValue, getInputBits(), getResultBits(), __view, inputAlwaysPositive);
+        return canonical(this, __forValue, getInputBits(), getResultBits(), __view, this.___inputAlwaysPositive);
     }
 
     private static ValueNode canonical(ZeroExtendNode __zeroExtendNode, ValueNode __forValue, int __inputBits, int __resultBits, NodeView __view, boolean __alwaysPositive)

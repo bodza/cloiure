@@ -10,10 +10,10 @@ import giraaff.nodes.debug.ControlFlowAnchored;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * A high-level intrinsic for getting an address inside of an object. During lowering it will be
- * moved next to any uses to avoid creating a derived pointer that is live across a safepoint.
- */
+///
+// A high-level intrinsic for getting an address inside of an object. During lowering it will be
+// moved next to any uses to avoid creating a derived pointer that is live across a safepoint.
+///
 // @class ComputeObjectAddressNode
 public final class ComputeObjectAddressNode extends FixedWithNextNode implements Lowerable, ControlFlowAnchored
 {
@@ -22,21 +22,21 @@ public final class ComputeObjectAddressNode extends FixedWithNextNode implements
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
     @Input
     // @field
-    ValueNode offset;
+    ValueNode ___offset;
 
     // @cons
     public ComputeObjectAddressNode(ValueNode __obj, ValueNode __offset)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Long));
-        this.object = __obj;
-        this.offset = __offset;
+        this.___object = __obj;
+        this.___offset = __offset;
     }
 
     @NodeIntrinsic
-    public static native long get(Object array, long offset);
+    public static native long get(Object __array, long __offset);
 
     @Override
     public void lower(LoweringTool __tool)
@@ -46,11 +46,11 @@ public final class ComputeObjectAddressNode extends FixedWithNextNode implements
 
     public ValueNode getObject()
     {
-        return object;
+        return this.___object;
     }
 
     public ValueNode getOffset()
     {
-        return offset;
+        return this.___offset;
     }
 }

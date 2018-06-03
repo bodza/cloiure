@@ -19,50 +19,50 @@ public final class DataSection implements Iterable<Data>
     // @iface DataSection.Patches
     public interface Patches
     {
-        void registerPatch(int position, VMConstant c);
+        void registerPatch(int __position, VMConstant __c);
     }
 
     // @class DataSection.Data
     public abstract static class Data
     {
         // @field
-        private int alignment;
+        private int ___alignment;
         // @field
-        private final int size;
+        private final int ___size;
 
         // @field
-        private DataSectionReference ref;
+        private DataSectionReference ___ref;
 
         // @cons
         protected Data(int __alignment, int __size)
         {
             super();
-            this.alignment = __alignment;
-            this.size = __size;
+            this.___alignment = __alignment;
+            this.___size = __size;
 
             // initialized in DataSection.insertData(Data)
-            ref = null;
+            this.___ref = null;
         }
 
-        protected abstract void emit(ByteBuffer buffer, Patches patches);
+        protected abstract void emit(ByteBuffer __buffer, Patches __patches);
 
         public void updateAlignment(int __newAlignment)
         {
-            if (__newAlignment == alignment)
+            if (__newAlignment == this.___alignment)
             {
                 return;
             }
-            alignment = lcm(alignment, __newAlignment);
+            this.___alignment = lcm(this.___alignment, __newAlignment);
         }
 
         public int getAlignment()
         {
-            return alignment;
+            return this.___alignment;
         }
 
         public int getSize()
         {
-            return size;
+            return this.___size;
         }
 
         @Override
@@ -82,7 +82,7 @@ public final class DataSection implements Iterable<Data>
             if (__obj instanceof Data)
             {
                 Data __that = (Data) __obj;
-                if (this.alignment == __that.alignment && this.size == __that.size && this.ref.equals(__that.ref))
+                if (this.___alignment == __that.___alignment && this.___size == __that.___size && this.___ref.equals(__that.___ref))
                 {
                     return true;
                 }
@@ -95,19 +95,19 @@ public final class DataSection implements Iterable<Data>
     public static final class RawData extends Data
     {
         // @field
-        private final byte[] data;
+        private final byte[] ___data;
 
         // @cons
         public RawData(byte[] __data, int __alignment)
         {
             super(__alignment, __data.length);
-            this.data = __data;
+            this.___data = __data;
         }
 
         @Override
         protected void emit(ByteBuffer __buffer, Patches __patches)
         {
-            __buffer.put(data);
+            __buffer.put(this.___data);
         }
     }
 
@@ -115,7 +115,7 @@ public final class DataSection implements Iterable<Data>
     public static final class SerializableData extends Data
     {
         // @field
-        private final SerializableConstant constant;
+        private final SerializableConstant ___constant;
 
         // @cons
         public SerializableData(SerializableConstant __constant)
@@ -127,14 +127,14 @@ public final class DataSection implements Iterable<Data>
         public SerializableData(SerializableConstant __constant, int __alignment)
         {
             super(__alignment, __constant.getSerializedSize());
-            this.constant = __constant;
+            this.___constant = __constant;
         }
 
         @Override
         protected void emit(ByteBuffer __buffer, Patches __patches)
         {
             int __position = __buffer.position();
-            constant.serialize(__buffer);
+            this.___constant.serialize(__buffer);
         }
     }
 
@@ -221,13 +221,13 @@ public final class DataSection implements Iterable<Data>
     public static final class PackedData extends Data
     {
         // @field
-        private final Data[] nested;
+        private final Data[] ___nested;
 
         // @cons
         private PackedData(int __alignment, int __size, Data[] __nested)
         {
             super(__alignment, __size);
-            this.nested = __nested;
+            this.___nested = __nested;
         }
 
         public static PackedData create(Data[] __nested)
@@ -245,7 +245,7 @@ public final class DataSection implements Iterable<Data>
         @Override
         protected void emit(ByteBuffer __buffer, Patches __patches)
         {
-            for (Data __data : nested)
+            for (Data __data : this.___nested)
             {
                 __data.emit(__buffer, __patches);
             }
@@ -253,14 +253,14 @@ public final class DataSection implements Iterable<Data>
     }
 
     // @field
-    private final ArrayList<Data> dataItems = new ArrayList<>();
+    private final ArrayList<Data> ___dataItems = new ArrayList<>();
 
     // @field
-    private boolean closed;
+    private boolean ___closed;
     // @field
-    private int sectionAlignment;
+    private int ___sectionAlignment;
     // @field
-    private int sectionSize;
+    private int ___sectionSize;
 
     @Override
     public int hashCode()
@@ -279,7 +279,7 @@ public final class DataSection implements Iterable<Data>
         if (__obj instanceof DataSection)
         {
             DataSection __that = (DataSection) __obj;
-            if (this.closed == __that.closed && this.sectionAlignment == __that.sectionAlignment && this.sectionSize == __that.sectionSize && Objects.equals(this.dataItems, __that.dataItems))
+            if (this.___closed == __that.___closed && this.___sectionAlignment == __that.___sectionAlignment && this.___sectionSize == __that.___sectionSize && Objects.equals(this.___dataItems, __that.___dataItems))
             {
                 return true;
             }
@@ -287,146 +287,146 @@ public final class DataSection implements Iterable<Data>
         return false;
     }
 
-    /**
-     * Inserts a {@link Data} item into the data section. If the item is already in the data
-     * section, the same {@link DataSectionReference} is returned.
-     *
-     * @param data the {@link Data} item to be inserted
-     * @return a unique {@link DataSectionReference} identifying the {@link Data} item
-     */
+    ///
+    // Inserts a {@link Data} item into the data section. If the item is already in the data
+    // section, the same {@link DataSectionReference} is returned.
+    //
+    // @param data the {@link Data} item to be inserted
+    // @return a unique {@link DataSectionReference} identifying the {@link Data} item
+    ///
     public DataSectionReference insertData(Data __data)
     {
         checkOpen();
         synchronized (__data)
         {
-            if (__data.ref == null)
+            if (__data.___ref == null)
             {
-                __data.ref = new DataSectionReference();
-                dataItems.add(__data);
+                __data.___ref = new DataSectionReference();
+                this.___dataItems.add(__data);
             }
-            return __data.ref;
+            return __data.___ref;
         }
     }
 
-    /**
-     * Transfers all {@link Data} from the provided other {@link DataSection} to this
-     * {@link DataSection}, and empties the other section.
-     */
+    ///
+    // Transfers all {@link Data} from the provided other {@link DataSection} to this
+    // {@link DataSection}, and empties the other section.
+    ///
     public void addAll(DataSection __other)
     {
         checkOpen();
         __other.checkOpen();
 
-        for (Data __data : __other.dataItems)
+        for (Data __data : __other.___dataItems)
         {
-            dataItems.add(__data);
+            this.___dataItems.add(__data);
         }
-        __other.dataItems.clear();
+        __other.___dataItems.clear();
     }
 
-    /**
-     * Determines if this object has been {@link #close() closed}.
-     */
+    ///
+    // Determines if this object has been {@link #close() closed}.
+    ///
     public boolean closed()
     {
-        return closed;
+        return this.___closed;
     }
 
-    /**
-     * Computes the layout of the data section and closes this object to further updates.
-     *
-     * This must be called exactly once.
-     */
+    ///
+    // Computes the layout of the data section and closes this object to further updates.
+    //
+    // This must be called exactly once.
+    ///
     public void close()
     {
         checkOpen();
-        closed = true;
+        this.___closed = true;
 
         // simple heuristic: put items with larger alignment requirement first
-        dataItems.sort((__a, __b) -> __a.alignment - __b.alignment);
+        this.___dataItems.sort((__a, __b) -> __a.___alignment - __b.___alignment);
 
         int __position = 0;
         int __alignment = 1;
-        for (Data __d : dataItems)
+        for (Data __d : this.___dataItems)
         {
-            __alignment = lcm(__alignment, __d.alignment);
-            __position = align(__position, __d.alignment);
+            __alignment = lcm(__alignment, __d.___alignment);
+            __position = align(__position, __d.___alignment);
 
-            __d.ref.setOffset(__position);
-            __position += __d.size;
+            __d.___ref.setOffset(__position);
+            __position += __d.___size;
         }
 
-        sectionAlignment = __alignment;
-        sectionSize = __position;
+        this.___sectionAlignment = __alignment;
+        this.___sectionSize = __position;
     }
 
-    /**
-     * Gets the size of the data section.
-     *
-     * This must only be called once this object has been {@linkplain #closed() closed}.
-     */
+    ///
+    // Gets the size of the data section.
+    //
+    // This must only be called once this object has been {@linkplain #closed() closed}.
+    ///
     public int getSectionSize()
     {
         checkClosed();
-        return sectionSize;
+        return this.___sectionSize;
     }
 
-    /**
-     * Gets the minimum alignment requirement of the data section.
-     *
-     * This must only be called once this object has been {@linkplain #closed() closed}.
-     */
+    ///
+    // Gets the minimum alignment requirement of the data section.
+    //
+    // This must only be called once this object has been {@linkplain #closed() closed}.
+    ///
     public int getSectionAlignment()
     {
         checkClosed();
-        return sectionAlignment;
+        return this.___sectionAlignment;
     }
 
-    /**
-     * Builds the data section into a given buffer.
-     *
-     * This must only be called once this object has been {@linkplain #closed() closed}.
-     *
-     * @param buffer the {@link ByteBuffer} where the data section should be built. The buffer must
-     *            hold at least {@link #getSectionSize()} bytes.
-     * @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
-     *            relocations in the data section
-     */
+    ///
+    // Builds the data section into a given buffer.
+    //
+    // This must only be called once this object has been {@linkplain #closed() closed}.
+    //
+    // @param buffer the {@link ByteBuffer} where the data section should be built. The buffer must
+    //            hold at least {@link #getSectionSize()} bytes.
+    // @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
+    //            relocations in the data section
+    ///
     public void buildDataSection(ByteBuffer __buffer, Patches __patch)
     {
         buildDataSection(__buffer, __patch, (__r, __s) -> {});
     }
 
-    /**
-     * Builds the data section into a given buffer.
-     *
-     * This must only be called once this object has been {@linkplain #closed() closed}. When this
-     * method returns, the buffers' position is just after the last data item.
-     *
-     * @param buffer the {@link ByteBuffer} where the data section should be built. The buffer must
-     *            hold at least {@link #getSectionSize()} bytes.
-     * @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
-     * @param onEmit a function that is called before emitting each data item with the
-     *            {@link DataSectionReference} and the size of the data.
-     */
+    ///
+    // Builds the data section into a given buffer.
+    //
+    // This must only be called once this object has been {@linkplain #closed() closed}. When this
+    // method returns, the buffers' position is just after the last data item.
+    //
+    // @param buffer the {@link ByteBuffer} where the data section should be built. The buffer must
+    //            hold at least {@link #getSectionSize()} bytes.
+    // @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
+    // @param onEmit a function that is called before emitting each data item with the
+    //            {@link DataSectionReference} and the size of the data.
+    ///
     public void buildDataSection(ByteBuffer __buffer, Patches __patch, BiConsumer<DataSectionReference, Integer> __onEmit)
     {
         checkClosed();
         int __start = __buffer.position();
-        for (Data __d : dataItems)
+        for (Data __d : this.___dataItems)
         {
-            __buffer.position(__start + __d.ref.getOffset());
-            __onEmit.accept(__d.ref, __d.getSize());
+            __buffer.position(__start + __d.___ref.getOffset());
+            __onEmit.accept(__d.___ref, __d.getSize());
             __d.emit(__buffer, __patch);
         }
-        __buffer.position(__start + sectionSize);
+        __buffer.position(__start + this.___sectionSize);
     }
 
     public Data findData(DataSectionReference __ref)
     {
-        for (Data __d : dataItems)
+        for (Data __d : this.___dataItems)
         {
-            if (__d.ref == __ref)
+            if (__d.___ref == __ref)
             {
                 return __d;
             }
@@ -442,7 +442,7 @@ public final class DataSection implements Iterable<Data>
     @Override
     public Iterator<Data> iterator()
     {
-        return dataItems.iterator();
+        return this.___dataItems.iterator();
     }
 
     private static int lcm(int __x, int __y)
@@ -476,7 +476,7 @@ public final class DataSection implements Iterable<Data>
 
     private void checkClosed()
     {
-        if (!closed)
+        if (!this.___closed)
         {
             throw new IllegalStateException();
         }
@@ -484,7 +484,7 @@ public final class DataSection implements Iterable<Data>
 
     private void checkOpen()
     {
-        if (closed)
+        if (this.___closed)
         {
             throw new IllegalStateException();
         }
@@ -493,8 +493,8 @@ public final class DataSection implements Iterable<Data>
     public void clear()
     {
         checkOpen();
-        this.dataItems.clear();
-        this.sectionAlignment = 0;
-        this.sectionSize = 0;
+        this.___dataItems.clear();
+        this.___sectionAlignment = 0;
+        this.___sectionSize = 0;
     }
 }

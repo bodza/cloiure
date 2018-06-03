@@ -2,18 +2,18 @@ package giraaff.core.common.util;
 
 import giraaff.util.UnsafeAccess;
 
-/**
- * Provides low-level read access from a byte[] array for signed and unsigned values of size 1, 2,
- * 4, and 8 bytes.
- *
- * The class can either be instantiated for sequential access to the byte[] array; or static methods
- * can be used to read values without the overhead of creating an instance.
- *
- * The flag {@code supportsUnalignedMemoryAccess} must be set according to the capabilities of the
- * hardware architecture: the value {@code true} allows more efficient memory access on
- * architectures that support unaligned memory accesses; the value {@code false} is the safe
- * fallback that works on every hardware.
- */
+///
+// Provides low-level read access from a byte[] array for signed and unsigned values of size 1, 2,
+// 4, and 8 bytes.
+//
+// The class can either be instantiated for sequential access to the byte[] array; or static methods
+// can be used to read values without the overhead of creating an instance.
+//
+// The flag {@code supportsUnalignedMemoryAccess} must be set according to the capabilities of the
+// hardware architecture: the value {@code true} allows more efficient memory access on
+// architectures that support unaligned memory accesses; the value {@code false} is the safe
+// fallback that works on every hardware.
+///
 // @class UnsafeArrayTypeReader
 public abstract class UnsafeArrayTypeReader implements TypeReader
 {
@@ -91,43 +91,43 @@ public abstract class UnsafeArrayTypeReader implements TypeReader
     }
 
     // @field
-    protected final byte[] data;
+    protected final byte[] ___data;
     // @field
-    protected long byteIndex;
+    protected long ___byteIndex;
 
     // @cons
     protected UnsafeArrayTypeReader(byte[] __data, long __byteIndex)
     {
         super();
-        this.data = __data;
-        this.byteIndex = __byteIndex;
+        this.___data = __data;
+        this.___byteIndex = __byteIndex;
     }
 
     @Override
     public long getByteIndex()
     {
-        return byteIndex;
+        return this.___byteIndex;
     }
 
     @Override
     public void setByteIndex(long __byteIndex)
     {
-        this.byteIndex = __byteIndex;
+        this.___byteIndex = __byteIndex;
     }
 
     @Override
     public final int getS1()
     {
-        int __result = getS1(data, byteIndex);
-        byteIndex += Byte.BYTES;
+        int __result = getS1(this.___data, this.___byteIndex);
+        this.___byteIndex += Byte.BYTES;
         return __result;
     }
 
     @Override
     public final int getU1()
     {
-        int __result = getU1(data, byteIndex);
-        byteIndex += Byte.BYTES;
+        int __result = getU1(this.___data, this.___byteIndex);
+        this.___byteIndex += Byte.BYTES;
         return __result;
     }
 
@@ -171,24 +171,24 @@ final class UnalignedUnsafeArrayTypeReader extends UnsafeArrayTypeReader
     @Override
     public int getS2()
     {
-        int __result = getS2(data, byteIndex);
-        byteIndex += Short.BYTES;
+        int __result = getS2(this.___data, this.___byteIndex);
+        this.___byteIndex += Short.BYTES;
         return __result;
     }
 
     @Override
     public int getS4()
     {
-        int __result = getS4(data, byteIndex);
-        byteIndex += Integer.BYTES;
+        int __result = getS4(this.___data, this.___byteIndex);
+        this.___byteIndex += Integer.BYTES;
         return __result;
     }
 
     @Override
     public long getS8()
     {
-        long __result = getS8(data, byteIndex);
-        byteIndex += Long.BYTES;
+        long __result = getS8(this.___data, this.___byteIndex);
+        this.___byteIndex += Long.BYTES;
         return __result;
     }
 }
@@ -234,24 +234,24 @@ final class AlignedUnsafeArrayTypeReader extends UnsafeArrayTypeReader
     @Override
     public int getS2()
     {
-        int __result = getS2(data, byteIndex);
-        byteIndex += Short.BYTES;
+        int __result = getS2(this.___data, this.___byteIndex);
+        this.___byteIndex += Short.BYTES;
         return __result;
     }
 
     @Override
     public int getS4()
     {
-        int __result = getS4(data, byteIndex);
-        byteIndex += Integer.BYTES;
+        int __result = getS4(this.___data, this.___byteIndex);
+        this.___byteIndex += Integer.BYTES;
         return __result;
     }
 
     @Override
     public long getS8()
     {
-        long __result = getS8(data, byteIndex);
-        byteIndex += Long.BYTES;
+        long __result = getS8(this.___data, this.___byteIndex);
+        this.___byteIndex += Long.BYTES;
         return __result;
     }
 }

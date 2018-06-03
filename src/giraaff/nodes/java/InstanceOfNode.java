@@ -26,9 +26,9 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.type.StampTool;
 
-/**
- * The {@code InstanceOfNode} represents an instanceof test.
- */
+///
+// The {@code InstanceOfNode} represents an instanceof test.
+///
 // @class InstanceOfNode
 public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtualizable
 {
@@ -36,13 +36,13 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
     public static final NodeClass<InstanceOfNode> TYPE = NodeClass.create(InstanceOfNode.class);
 
     // @field
-    private ObjectStamp checkedStamp;
+    private ObjectStamp ___checkedStamp;
 
     // @field
-    private JavaTypeProfile profile;
+    private JavaTypeProfile ___profile;
     @OptionalInput(InputType.Anchor)
     // @field
-    protected AnchoringNode anchor;
+    protected AnchoringNode ___anchor;
 
     // @cons
     private InstanceOfNode(ObjectStamp __checkedStamp, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
@@ -54,9 +54,9 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
     protected InstanceOfNode(NodeClass<? extends InstanceOfNode> __c, ObjectStamp __checkedStamp, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
         super(__c, __object);
-        this.checkedStamp = __checkedStamp;
-        this.profile = __profile;
-        this.anchor = __anchor;
+        this.___checkedStamp = __checkedStamp;
+        this.___profile = __profile;
+        this.___anchor = __anchor;
     }
 
     public static LogicNode createAllowNull(TypeReference __type, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
@@ -101,7 +101,7 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
     public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
         NodeView __view = NodeView.from(__tool);
-        LogicNode __synonym = findSynonym(checkedStamp, __forValue, __view);
+        LogicNode __synonym = findSynonym(this.___checkedStamp, __forValue, __view);
         if (__synonym != null)
         {
             return __synonym;
@@ -150,17 +150,17 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
         return null;
     }
 
-    /**
-     * Gets the type being tested.
-     */
+    ///
+    // Gets the type being tested.
+    ///
     public TypeReference type()
     {
-        return StampTool.typeReferenceOrNull(checkedStamp);
+        return StampTool.typeReferenceOrNull(this.___checkedStamp);
     }
 
     public JavaTypeProfile profile()
     {
-        return profile;
+        return this.___profile;
     }
 
     @Override
@@ -183,7 +183,7 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
         }
         else
         {
-            return checkedStamp;
+            return this.___checkedStamp;
         }
     }
 
@@ -193,7 +193,7 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
         if (__valueStamp instanceof ObjectStamp)
         {
             ObjectStamp __inputStamp = (ObjectStamp) __valueStamp;
-            ObjectStamp __joinedStamp = (ObjectStamp) checkedStamp.join(__inputStamp);
+            ObjectStamp __joinedStamp = (ObjectStamp) this.___checkedStamp.join(__inputStamp);
 
             if (__joinedStamp.isEmpty())
             {
@@ -202,8 +202,8 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
             }
             else
             {
-                ObjectStamp __meetStamp = (ObjectStamp) checkedStamp.meet(__inputStamp);
-                if (checkedStamp.equals(__meetStamp))
+                ObjectStamp __meetStamp = (ObjectStamp) this.___checkedStamp.meet(__inputStamp);
+                if (this.___checkedStamp.equals(__meetStamp))
                 {
                     // The check will always succeed, the union of the two stamps is equal to the checked stamp.
                     return TriState.TRUE;
@@ -215,28 +215,28 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
 
     public boolean allowsNull()
     {
-        return !checkedStamp.nonNull();
+        return !this.___checkedStamp.nonNull();
     }
 
     public void setProfile(JavaTypeProfile __typeProfile, AnchoringNode __anchor)
     {
-        this.profile = __typeProfile;
-        updateUsagesInterface(this.anchor, __anchor);
-        this.anchor = __anchor;
+        this.___profile = __typeProfile;
+        updateUsagesInterface(this.___anchor, __anchor);
+        this.___anchor = __anchor;
     }
 
     public AnchoringNode getAnchor()
     {
-        return anchor;
+        return this.___anchor;
     }
 
     public ObjectStamp getCheckedStamp()
     {
-        return checkedStamp;
+        return this.___checkedStamp;
     }
 
     public void strengthenCheckedStamp(ObjectStamp __newCheckedStamp)
     {
-        this.checkedStamp = __newCheckedStamp;
+        this.___checkedStamp = __newCheckedStamp;
     }
 }

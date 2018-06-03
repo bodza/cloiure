@@ -28,19 +28,19 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * Load of a value from a location specified as an offset relative to an object. No null check is
- * performed before the load.
- */
+///
+// Load of a value from a location specified as an offset relative to an object. No null check is
+// performed before the load.
+///
 // @class RawLoadNode
 public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtualizable, Canonicalizable
 {
     // @def
     public static final NodeClass<RawLoadNode> TYPE = NodeClass.create(RawLoadNode.class);
 
-    /**
-     * This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
-     */
+    ///
+    // This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
+    ///
     // @cons
     public RawLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
@@ -53,10 +53,10 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
         super(TYPE, StampFactory.forKind(__accessKind.getStackKind()), __object, __offset, __accessKind, __locationIdentity, __forceAnyLocation);
     }
 
-    /**
-     * This constructor exists for node intrinsics that need a stamp based on the return type of the
-     * {@link giraaff.graph.Node.NodeIntrinsic} annotated method.
-     */
+    ///
+    // This constructor exists for node intrinsics that need a stamp based on the return type of the
+    // {@link giraaff.graph.Node.NodeIntrinsic} annotated method.
+    ///
     // @cons
     public RawLoadNode(@InjectedNodeParameter Stamp __stamp, ValueNode __object, ValueNode __offset, LocationIdentity __locationIdentity, JavaKind __accessKind)
     {
@@ -96,9 +96,9 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
                     {
                         if (!(__entry.stamp(NodeView.DEFAULT).isCompatible(stamp(NodeView.DEFAULT))))
                         {
-                            if (__entry.stamp(NodeView.DEFAULT) instanceof PrimitiveStamp && stamp instanceof PrimitiveStamp)
+                            if (__entry.stamp(NodeView.DEFAULT) instanceof PrimitiveStamp && this.___stamp instanceof PrimitiveStamp)
                             {
-                                PrimitiveStamp __p1 = (PrimitiveStamp) stamp;
+                                PrimitiveStamp __p1 = (PrimitiveStamp) this.___stamp;
                                 PrimitiveStamp __p2 = (PrimitiveStamp) __entry.stamp(NodeView.DEFAULT);
                                 int __width1 = __p1.getBits();
                                 int __width2 = __p2.getBits();
@@ -174,5 +174,5 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
     }
 
     @NodeIntrinsic
-    public static native Object load(Object object, long offset, @ConstantNodeParameter JavaKind kind, @ConstantNodeParameter LocationIdentity locationIdentity);
+    public static native Object load(Object __object, long __offset, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity);
 }

@@ -5,21 +5,21 @@ import jdk.vm.ci.meta.ExceptionHandler;
 import jdk.vm.ci.meta.ProfilingInfo;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-/**
- * Direct access to the bytecode of a {@link ResolvedJavaMethod} that will reflect any
- * instrumentation and rewriting performed on the {@link ResolvedJavaMethod}.
- */
+///
+// Direct access to the bytecode of a {@link ResolvedJavaMethod} that will reflect any
+// instrumentation and rewriting performed on the {@link ResolvedJavaMethod}.
+///
 // @class ResolvedJavaMethodBytecode
 public final class ResolvedJavaMethodBytecode implements Bytecode
 {
     // @field
-    private final ResolvedJavaMethod method;
+    private final ResolvedJavaMethod ___method;
 
     // @cons
     public ResolvedJavaMethodBytecode(ResolvedJavaMethod __method)
     {
         super();
-        this.method = __method;
+        this.___method = __method;
     }
 
     @Override
@@ -31,48 +31,48 @@ public final class ResolvedJavaMethodBytecode implements Bytecode
     @Override
     public ResolvedJavaMethod getMethod()
     {
-        return method;
+        return this.___method;
     }
 
     @Override
     public byte[] getCode()
     {
-        return method.getCode();
+        return this.___method.getCode();
     }
 
     @Override
     public int getCodeSize()
     {
-        return method.getCodeSize();
+        return this.___method.getCodeSize();
     }
 
     @Override
     public int getMaxStackSize()
     {
-        return method.getMaxStackSize();
+        return this.___method.getMaxStackSize();
     }
 
     @Override
     public int getMaxLocals()
     {
-        return method.getMaxLocals();
+        return this.___method.getMaxLocals();
     }
 
     @Override
     public ConstantPool getConstantPool()
     {
-        return method.getConstantPool();
+        return this.___method.getConstantPool();
     }
 
     @Override
     public ExceptionHandler[] getExceptionHandlers()
     {
-        return method.getExceptionHandlers();
+        return this.___method.getExceptionHandlers();
     }
 
     @Override
     public ProfilingInfo getProfilingInfo()
     {
-        return method.getProfilingInfo();
+        return this.___method.getProfilingInfo();
     }
 }

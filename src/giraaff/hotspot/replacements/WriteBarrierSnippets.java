@@ -340,42 +340,42 @@ public final class WriteBarrierSnippets implements Snippets
     public static final ForeignCallDescriptor G1WBPRECALL = new ForeignCallDescriptor("write_barrier_pre", void.class, Object.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void g1PreBarrierStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object object);
+    private static native void g1PreBarrierStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object);
 
     // @def
     public static final ForeignCallDescriptor G1WBPOSTCALL = new ForeignCallDescriptor("write_barrier_post", void.class, Word.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void g1PostBarrierStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word card);
+    public static native void g1PostBarrierStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __card);
 
     // @class WriteBarrierSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final SnippetInfo serialImpreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialImpreciseWriteBarrier", GC_CARD_LOCATION);
+        private final SnippetInfo ___serialImpreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialImpreciseWriteBarrier", GC_CARD_LOCATION);
         // @field
-        private final SnippetInfo serialPreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialPreciseWriteBarrier", GC_CARD_LOCATION);
+        private final SnippetInfo ___serialPreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialPreciseWriteBarrier", GC_CARD_LOCATION);
         // @field
-        private final SnippetInfo serialArrayRangeWriteBarrier = snippet(WriteBarrierSnippets.class, "serialArrayRangeWriteBarrier");
+        private final SnippetInfo ___serialArrayRangeWriteBarrier = snippet(WriteBarrierSnippets.class, "serialArrayRangeWriteBarrier");
         // @field
-        private final SnippetInfo g1PreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetInfo ___g1PreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo g1ReferentReadBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetInfo ___g1ReferentReadBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo g1PostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetInfo ___g1PostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo g1ArrayRangePreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetInfo ___g1ArrayRangePreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo g1ArrayRangePostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetInfo ___g1ArrayRangePostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
 
         // @field
-        private final CompressEncoding oopEncoding;
+        private final CompressEncoding ___oopEncoding;
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target, CompressEncoding __oopEncoding)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
-            this.oopEncoding = __oopEncoding;
+            this.___oopEncoding = __oopEncoding;
         }
 
         public void lower(SerialWriteBarrier __writeBarrier, LoweringTool __tool)
@@ -383,30 +383,30 @@ public final class WriteBarrierSnippets implements Snippets
             Arguments __args;
             if (__writeBarrier.usePrecise())
             {
-                __args = new Arguments(serialPreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+                __args = new Arguments(this.___serialPreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("address", __writeBarrier.getAddress());
             }
             else
             {
-                __args = new Arguments(serialImpreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+                __args = new Arguments(this.___serialImpreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
                 OffsetAddressNode __address = (OffsetAddressNode) __writeBarrier.getAddress();
                 __args.add("object", __address.getBase());
             }
-            template(__writeBarrier, __args).instantiate(providers.getMetaAccess(), __writeBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__writeBarrier, __args).instantiate(this.___providers.getMetaAccess(), __writeBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
         public void lower(SerialArrayRangeWriteBarrier __arrayRangeWriteBarrier, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(serialArrayRangeWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___serialArrayRangeWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("address", __arrayRangeWriteBarrier.getAddress());
             __args.add("length", __arrayRangeWriteBarrier.getLength());
             __args.addConst("elementStride", __arrayRangeWriteBarrier.getElementStride());
-            template(__arrayRangeWriteBarrier, __args).instantiate(providers.getMetaAccess(), __arrayRangeWriteBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__arrayRangeWriteBarrier, __args).instantiate(this.___providers.getMetaAccess(), __arrayRangeWriteBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
         public void lower(G1PreWriteBarrier __writeBarrierPre, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(g1PreWriteBarrier, __writeBarrierPre.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___g1PreWriteBarrier, __writeBarrierPre.graph().getGuardsStage(), __tool.getLoweringStage());
             AddressNode __address = __writeBarrierPre.getAddress();
             __args.add("address", __address);
             if (__address instanceof OffsetAddressNode)
@@ -421,19 +421,19 @@ public final class WriteBarrierSnippets implements Snippets
             ValueNode __expected = __writeBarrierPre.getExpectedObject();
             if (__expected != null && __expected.stamp(NodeView.DEFAULT) instanceof NarrowOopStamp)
             {
-                __expected = HotSpotCompressionNode.uncompress(__expected, oopEncoding);
+                __expected = HotSpotCompressionNode.uncompress(__expected, this.___oopEncoding);
             }
             __args.add("expectedObject", __expected);
 
             __args.addConst("doLoad", __writeBarrierPre.doLoad());
             __args.addConst("nullCheck", __writeBarrierPre.getNullCheck());
             __args.addConst("threadRegister", __registers.getThreadRegister());
-            template(__writeBarrierPre, __args).instantiate(providers.getMetaAccess(), __writeBarrierPre, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__writeBarrierPre, __args).instantiate(this.___providers.getMetaAccess(), __writeBarrierPre, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
         public void lower(G1ReferentFieldReadBarrier __readBarrier, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(g1ReferentReadBarrier, __readBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___g1ReferentReadBarrier, __readBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             AddressNode __address = __readBarrier.getAddress();
             __args.add("address", __address);
             if (__address instanceof OffsetAddressNode)
@@ -448,14 +448,14 @@ public final class WriteBarrierSnippets implements Snippets
             ValueNode __expected = __readBarrier.getExpectedObject();
             if (__expected != null && __expected.stamp(NodeView.DEFAULT) instanceof NarrowOopStamp)
             {
-                __expected = HotSpotCompressionNode.uncompress(__expected, oopEncoding);
+                __expected = HotSpotCompressionNode.uncompress(__expected, this.___oopEncoding);
             }
 
             __args.add("expectedObject", __expected);
             __args.addConst("doLoad", __readBarrier.doLoad());
             __args.addConst("nullCheck", false);
             __args.addConst("threadRegister", __registers.getThreadRegister());
-            template(__readBarrier, __args).instantiate(providers.getMetaAccess(), __readBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__readBarrier, __args).instantiate(this.___providers.getMetaAccess(), __readBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
         public void lower(G1PostWriteBarrier __writeBarrierPost, HotSpotRegistersProvider __registers, LoweringTool __tool)
@@ -466,7 +466,7 @@ public final class WriteBarrierSnippets implements Snippets
                 __graph.removeFixed(__writeBarrierPost);
                 return;
             }
-            Arguments __args = new Arguments(g1PostWriteBarrier, __graph.getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___g1PostWriteBarrier, __graph.getGuardsStage(), __tool.getLoweringStage());
             AddressNode __address = __writeBarrierPost.getAddress();
             __args.add("address", __address);
             if (__address instanceof OffsetAddressNode)
@@ -481,33 +481,33 @@ public final class WriteBarrierSnippets implements Snippets
             ValueNode __value = __writeBarrierPost.getValue();
             if (__value.stamp(NodeView.DEFAULT) instanceof NarrowOopStamp)
             {
-                __value = HotSpotCompressionNode.uncompress(__value, oopEncoding);
+                __value = HotSpotCompressionNode.uncompress(__value, this.___oopEncoding);
             }
             __args.add("value", __value);
 
             __args.addConst("usePrecise", __writeBarrierPost.usePrecise());
             __args.addConst("threadRegister", __registers.getThreadRegister());
-            template(__writeBarrierPost, __args).instantiate(providers.getMetaAccess(), __writeBarrierPost, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__writeBarrierPost, __args).instantiate(this.___providers.getMetaAccess(), __writeBarrierPost, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
         public void lower(G1ArrayRangePreWriteBarrier __arrayRangeWriteBarrier, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(g1ArrayRangePreWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___g1ArrayRangePreWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("address", __arrayRangeWriteBarrier.getAddress());
             __args.add("length", __arrayRangeWriteBarrier.getLength());
             __args.addConst("elementStride", __arrayRangeWriteBarrier.getElementStride());
             __args.addConst("threadRegister", __registers.getThreadRegister());
-            template(__arrayRangeWriteBarrier, __args).instantiate(providers.getMetaAccess(), __arrayRangeWriteBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__arrayRangeWriteBarrier, __args).instantiate(this.___providers.getMetaAccess(), __arrayRangeWriteBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
         public void lower(G1ArrayRangePostWriteBarrier __arrayRangeWriteBarrier, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(g1ArrayRangePostWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___g1ArrayRangePostWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("address", __arrayRangeWriteBarrier.getAddress());
             __args.add("length", __arrayRangeWriteBarrier.getLength());
             __args.addConst("elementStride", __arrayRangeWriteBarrier.getElementStride());
             __args.addConst("threadRegister", __registers.getThreadRegister());
-            template(__arrayRangeWriteBarrier, __args).instantiate(providers.getMetaAccess(), __arrayRangeWriteBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__arrayRangeWriteBarrier, __args).instantiate(this.___providers.getMetaAccess(), __arrayRangeWriteBarrier, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

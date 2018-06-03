@@ -9,7 +9,7 @@ import giraaff.graph.Node;
 public abstract class NodeIterator<T extends Node> implements Iterator<T>
 {
     // @field
-    protected T current;
+    protected T ___current;
 
     protected abstract void forward();
 
@@ -17,19 +17,19 @@ public abstract class NodeIterator<T extends Node> implements Iterator<T>
     public boolean hasNext()
     {
         forward();
-        return current != null;
+        return this.___current != null;
     }
 
     @Override
     public T next()
     {
         forward();
-        T __ret = current;
-        if (current == null)
+        T __ret = this.___current;
+        if (this.___current == null)
         {
             throw new NoSuchElementException();
         }
-        current = null;
+        this.___current = null;
         return __ret;
     }
 

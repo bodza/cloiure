@@ -15,10 +15,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.AddNode;
 import giraaff.nodes.calc.BinaryArithmeticNode;
 
-/**
- * Represents an address that is composed of a base and an offset. The base can be either a
- * {@link JavaKind#Object}, a word-sized integer or another pointer. The offset must be a word-sized integer.
- */
+///
+// Represents an address that is composed of a base and an offset. The base can be either a
+// {@link JavaKind#Object}, a word-sized integer or another pointer. The offset must be a word-sized integer.
+///
 // @NodeInfo.allowedUsageTypes "Association"
 // @class OffsetAddressNode
 public final class OffsetAddressNode extends AddressNode implements Canonicalizable
@@ -28,17 +28,17 @@ public final class OffsetAddressNode extends AddressNode implements Canonicaliza
 
     @Input
     // @field
-    ValueNode base;
+    ValueNode ___base;
     @Input
     // @field
-    ValueNode offset;
+    ValueNode ___offset;
 
     // @cons
     public OffsetAddressNode(ValueNode __base, ValueNode __offset)
     {
         super(TYPE);
-        this.base = __base;
-        this.offset = __offset;
+        this.___base = __base;
+        this.___offset = __offset;
     }
 
     public static OffsetAddressNode create(ValueNode __base)
@@ -49,39 +49,39 @@ public final class OffsetAddressNode extends AddressNode implements Canonicaliza
     @Override
     public ValueNode getBase()
     {
-        return base;
+        return this.___base;
     }
 
     public void setBase(ValueNode __base)
     {
-        updateUsages(this.base, __base);
-        this.base = __base;
+        updateUsages(this.___base, __base);
+        this.___base = __base;
     }
 
     public ValueNode getOffset()
     {
-        return offset;
+        return this.___offset;
     }
 
     public void setOffset(ValueNode __offset)
     {
-        updateUsages(this.offset, __offset);
-        this.offset = __offset;
+        updateUsages(this.___offset, __offset);
+        this.___offset = __offset;
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (base instanceof OffsetAddressNode)
+        if (this.___base instanceof OffsetAddressNode)
         {
             NodeView __view = NodeView.from(__tool);
             // Rewrite (&base[offset1])[offset2] to base[offset1 + offset2].
-            OffsetAddressNode __b = (OffsetAddressNode) base;
+            OffsetAddressNode __b = (OffsetAddressNode) this.___base;
             return new OffsetAddressNode(__b.getBase(), BinaryArithmeticNode.add(__b.getOffset(), this.getOffset(), __view));
         }
-        else if (base instanceof AddNode)
+        else if (this.___base instanceof AddNode)
         {
-            AddNode __add = (AddNode) base;
+            AddNode __add = (AddNode) this.___base;
             if (__add.getY().isConstant())
             {
                 return new OffsetAddressNode(__add.getX(), new AddNode(__add.getY(), getOffset()));
@@ -91,12 +91,12 @@ public final class OffsetAddressNode extends AddressNode implements Canonicaliza
     }
 
     @NodeIntrinsic
-    public static native Address address(Object base, long offset);
+    public static native Address address(Object __base, long __offset);
 
     @Override
     public long getMaxConstantDisplacement()
     {
-        Stamp __curStamp = offset.stamp(NodeView.DEFAULT);
+        Stamp __curStamp = this.___offset.stamp(NodeView.DEFAULT);
         if (__curStamp instanceof IntegerStamp)
         {
             IntegerStamp __integerStamp = (IntegerStamp) __curStamp;

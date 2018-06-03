@@ -110,9 +110,9 @@ public final class HotSpotCompiledCodeBuilder
         }
     }
 
-    /**
-     * HotSpot expects sites to be presented in ascending order of PC (see {@code DebugInformationRecorder::add_new_pc_offset}).
-     */
+    ///
+    // HotSpot expects sites to be presented in ascending order of PC (see {@code DebugInformationRecorder::add_new_pc_offset}).
+    ///
     private static Site[] getSortedSites(CodeCacheProvider __codeCache, CompilationResult __result)
     {
         List<Site> __sites = new ArrayList<>(__result.getExceptionHandlers().size() + __result.getDataPatches().size() + __result.getMarks().size());

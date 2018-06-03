@@ -13,41 +13,41 @@ import giraaff.nodes.spi.Replacements;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.phases.tiers.PhaseContext;
 
-/**
- * A set of providers, some of which may not be present (i.e., null).
- */
+///
+// A set of providers, some of which may not be present (i.e., null).
+///
 // @class Providers
 public class Providers implements CodeGenProviders
 {
     // @field
-    private final MetaAccessProvider metaAccess;
+    private final MetaAccessProvider ___metaAccess;
     // @field
-    private final CodeCacheProvider codeCache;
+    private final CodeCacheProvider ___codeCache;
     // @field
-    private final LoweringProvider lowerer;
+    private final LoweringProvider ___lowerer;
     // @field
-    private final ConstantReflectionProvider constantReflection;
+    private final ConstantReflectionProvider ___constantReflection;
     // @field
-    private final ConstantFieldProvider constantFieldProvider;
+    private final ConstantFieldProvider ___constantFieldProvider;
     // @field
-    private final ForeignCallsProvider foreignCalls;
+    private final ForeignCallsProvider ___foreignCalls;
     // @field
-    private final Replacements replacements;
+    private final Replacements ___replacements;
     // @field
-    private final StampProvider stampProvider;
+    private final StampProvider ___stampProvider;
 
     // @cons
     public Providers(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, ForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, Replacements __replacements, StampProvider __stampProvider)
     {
         super();
-        this.metaAccess = __metaAccess;
-        this.codeCache = __codeCache;
-        this.constantReflection = __constantReflection;
-        this.constantFieldProvider = __constantFieldProvider;
-        this.foreignCalls = __foreignCalls;
-        this.lowerer = __lowerer;
-        this.replacements = __replacements;
-        this.stampProvider = __stampProvider;
+        this.___metaAccess = __metaAccess;
+        this.___codeCache = __codeCache;
+        this.___constantReflection = __constantReflection;
+        this.___constantFieldProvider = __constantFieldProvider;
+        this.___foreignCalls = __foreignCalls;
+        this.___lowerer = __lowerer;
+        this.___replacements = __replacements;
+        this.___stampProvider = __stampProvider;
     }
 
     // @cons
@@ -65,90 +65,90 @@ public class Providers implements CodeGenProviders
     @Override
     public MetaAccessProvider getMetaAccess()
     {
-        return metaAccess;
+        return this.___metaAccess;
     }
 
     @Override
     public CodeCacheProvider getCodeCache()
     {
-        return codeCache;
+        return this.___codeCache;
     }
 
     @Override
     public ForeignCallsProvider getForeignCalls()
     {
-        return foreignCalls;
+        return this.___foreignCalls;
     }
 
     public LoweringProvider getLowerer()
     {
-        return lowerer;
+        return this.___lowerer;
     }
 
     @Override
     public ArrayOffsetProvider getArrayOffsetProvider()
     {
-        return lowerer;
+        return this.___lowerer;
     }
 
     @Override
     public ConstantReflectionProvider getConstantReflection()
     {
-        return constantReflection;
+        return this.___constantReflection;
     }
 
     public ConstantFieldProvider getConstantFieldProvider()
     {
-        return constantFieldProvider;
+        return this.___constantFieldProvider;
     }
 
     public Replacements getReplacements()
     {
-        return replacements;
+        return this.___replacements;
     }
 
     public StampProvider getStampProvider()
     {
-        return stampProvider;
+        return this.___stampProvider;
     }
 
     public Providers copyWith(MetaAccessProvider __substitution)
     {
-        return new Providers(__substitution, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, stampProvider);
+        return new Providers(__substitution, this.___codeCache, this.___constantReflection, this.___constantFieldProvider, this.___foreignCalls, this.___lowerer, this.___replacements, this.___stampProvider);
     }
 
     public Providers copyWith(CodeCacheProvider __substitution)
     {
-        return new Providers(metaAccess, __substitution, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, stampProvider);
+        return new Providers(this.___metaAccess, __substitution, this.___constantReflection, this.___constantFieldProvider, this.___foreignCalls, this.___lowerer, this.___replacements, this.___stampProvider);
     }
 
     public Providers copyWith(ConstantReflectionProvider __substitution)
     {
-        return new Providers(metaAccess, codeCache, __substitution, constantFieldProvider, foreignCalls, lowerer, replacements, stampProvider);
+        return new Providers(this.___metaAccess, this.___codeCache, __substitution, this.___constantFieldProvider, this.___foreignCalls, this.___lowerer, this.___replacements, this.___stampProvider);
     }
 
     public Providers copyWith(ConstantFieldProvider __substitution)
     {
-        return new Providers(metaAccess, codeCache, constantReflection, __substitution, foreignCalls, lowerer, replacements, stampProvider);
+        return new Providers(this.___metaAccess, this.___codeCache, this.___constantReflection, __substitution, this.___foreignCalls, this.___lowerer, this.___replacements, this.___stampProvider);
     }
 
     public Providers copyWith(ForeignCallsProvider __substitution)
     {
-        return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, __substitution, lowerer, replacements, stampProvider);
+        return new Providers(this.___metaAccess, this.___codeCache, this.___constantReflection, this.___constantFieldProvider, __substitution, this.___lowerer, this.___replacements, this.___stampProvider);
     }
 
     public Providers copyWith(LoweringProvider __substitution)
     {
-        return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, __substitution, replacements, stampProvider);
+        return new Providers(this.___metaAccess, this.___codeCache, this.___constantReflection, this.___constantFieldProvider, this.___foreignCalls, __substitution, this.___replacements, this.___stampProvider);
     }
 
     public Providers copyWith(Replacements __substitution)
     {
-        return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, __substitution, stampProvider);
+        return new Providers(this.___metaAccess, this.___codeCache, this.___constantReflection, this.___constantFieldProvider, this.___foreignCalls, this.___lowerer, __substitution, this.___stampProvider);
     }
 
     public Providers copyWith(StampProvider __substitution)
     {
-        return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, __substitution);
+        return new Providers(this.___metaAccess, this.___codeCache, this.___constantReflection, this.___constantFieldProvider, this.___foreignCalls, this.___lowerer, this.___replacements, __substitution);
     }
 }

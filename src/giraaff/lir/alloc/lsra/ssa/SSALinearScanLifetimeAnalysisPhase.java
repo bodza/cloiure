@@ -34,13 +34,13 @@ public final class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetime
         {
             LabelOp __label = (LabelOp) __op;
 
-            Interval __to = allocator.getOrCreateInterval((AllocatableValue) __targetValue);
+            Interval __to = this.___allocator.getOrCreateInterval((AllocatableValue) __targetValue);
 
-            SSAUtil.forEachPhiRegisterHint(allocator.getLIR(), allocator.blockForId(__label.id()), __label, __targetValue, __mode, (ValueConsumer) (__registerHint, __valueMode, __valueFlags) ->
+            SSAUtil.forEachPhiRegisterHint(this.___allocator.getLIR(), this.___allocator.blockForId(__label.id()), __label, __targetValue, __mode, (ValueConsumer) (__registerHint, __valueMode, __valueFlags) ->
             {
                 if (LinearScan.isVariableOrRegister(__registerHint))
                 {
-                    Interval __from = allocator.getOrCreateInterval((AllocatableValue) __registerHint);
+                    Interval __from = this.___allocator.getOrCreateInterval((AllocatableValue) __registerHint);
 
                     setHint(__op, __to, __from);
                     setHint(__op, __from, __to);

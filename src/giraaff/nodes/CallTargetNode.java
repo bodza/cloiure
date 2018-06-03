@@ -32,11 +32,11 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 
         InvokeKind(boolean __direct)
         {
-            this.direct = __direct;
+            this.___direct = __direct;
         }
 
         // @field
-        private final boolean direct;
+        private final boolean ___direct;
 
         public boolean hasReceiver()
         {
@@ -45,12 +45,12 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 
         public boolean isDirect()
         {
-            return direct;
+            return this.___direct;
         }
 
         public boolean isIndirect()
         {
-            return !direct;
+            return !this.___direct;
         }
 
         public boolean isInterface()
@@ -61,27 +61,27 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 
     @Input
     // @field
-    protected NodeInputList<ValueNode> arguments;
+    protected NodeInputList<ValueNode> ___arguments;
     // @field
-    protected ResolvedJavaMethod targetMethod;
+    protected ResolvedJavaMethod ___targetMethod;
     // @field
-    protected InvokeKind invokeKind;
+    protected InvokeKind ___invokeKind;
     // @field
-    protected final StampPair returnStamp;
+    protected final StampPair ___returnStamp;
 
     // @cons
     protected CallTargetNode(NodeClass<? extends CallTargetNode> __c, ValueNode[] __arguments, ResolvedJavaMethod __targetMethod, InvokeKind __invokeKind, StampPair __returnStamp)
     {
         super(__c, StampFactory.forVoid());
-        this.targetMethod = __targetMethod;
-        this.invokeKind = __invokeKind;
-        this.arguments = new NodeInputList<>(this, __arguments);
-        this.returnStamp = __returnStamp;
+        this.___targetMethod = __targetMethod;
+        this.___invokeKind = __invokeKind;
+        this.___arguments = new NodeInputList<>(this, __arguments);
+        this.___returnStamp = __returnStamp;
     }
 
     public NodeInputList<ValueNode> arguments()
     {
-        return arguments;
+        return this.___arguments;
     }
 
     public static Stamp createReturnStamp(Assumptions __assumptions, JavaType __returnType)
@@ -99,12 +99,12 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 
     public StampPair returnStamp()
     {
-        return this.returnStamp;
+        return this.___returnStamp;
     }
 
-    /**
-     * A human-readable representation of the target, used for debug printing only.
-     */
+    ///
+    // A human-readable representation of the target, used for debug printing only.
+    ///
     public abstract String targetName();
 
     @Override
@@ -115,26 +115,26 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 
     public void setTargetMethod(ResolvedJavaMethod __method)
     {
-        targetMethod = __method;
+        this.___targetMethod = __method;
     }
 
-    /**
-     * Gets the target method for this invocation instruction.
-     *
-     * @return the target method
-     */
+    ///
+    // Gets the target method for this invocation instruction.
+    //
+    // @return the target method
+    ///
     public ResolvedJavaMethod targetMethod()
     {
-        return targetMethod;
+        return this.___targetMethod;
     }
 
     public InvokeKind invokeKind()
     {
-        return invokeKind;
+        return this.___invokeKind;
     }
 
     public void setInvokeKind(InvokeKind __kind)
     {
-        this.invokeKind = __kind;
+        this.___invokeKind = __kind;
     }
 }

@@ -33,62 +33,62 @@ import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Neg;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Not;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Sqrt;
 
-/**
- * Information about arithmetic operations.
- */
+///
+// Information about arithmetic operations.
+///
 // @class ArithmeticOpTable
 public final class ArithmeticOpTable
 {
     // @field
-    private final UnaryOp<Neg> neg;
+    private final UnaryOp<Neg> ___neg;
     // @field
-    private final BinaryOp<Add> add;
+    private final BinaryOp<Add> ___add;
     // @field
-    private final BinaryOp<Sub> sub;
+    private final BinaryOp<Sub> ___sub;
 
     // @field
-    private final BinaryOp<Mul> mul;
+    private final BinaryOp<Mul> ___mul;
     // @field
-    private final BinaryOp<MulHigh> mulHigh;
+    private final BinaryOp<MulHigh> ___mulHigh;
     // @field
-    private final BinaryOp<UMulHigh> umulHigh;
+    private final BinaryOp<UMulHigh> ___umulHigh;
     // @field
-    private final BinaryOp<Div> div;
+    private final BinaryOp<Div> ___div;
     // @field
-    private final BinaryOp<Rem> rem;
+    private final BinaryOp<Rem> ___rem;
 
     // @field
-    private final UnaryOp<Not> not;
+    private final UnaryOp<Not> ___not;
     // @field
-    private final BinaryOp<And> and;
+    private final BinaryOp<And> ___and;
     // @field
-    private final BinaryOp<Or> or;
+    private final BinaryOp<Or> ___or;
     // @field
-    private final BinaryOp<Xor> xor;
+    private final BinaryOp<Xor> ___xor;
 
     // @field
-    private final ShiftOp<Shl> shl;
+    private final ShiftOp<Shl> ___shl;
     // @field
-    private final ShiftOp<Shr> shr;
+    private final ShiftOp<Shr> ___shr;
     // @field
-    private final ShiftOp<UShr> ushr;
+    private final ShiftOp<UShr> ___ushr;
 
     // @field
-    private final UnaryOp<Abs> abs;
+    private final UnaryOp<Abs> ___abs;
     // @field
-    private final UnaryOp<Sqrt> sqrt;
+    private final UnaryOp<Sqrt> ___sqrt;
 
     // @field
-    private final IntegerConvertOp<ZeroExtend> zeroExtend;
+    private final IntegerConvertOp<ZeroExtend> ___zeroExtend;
     // @field
-    private final IntegerConvertOp<SignExtend> signExtend;
+    private final IntegerConvertOp<SignExtend> ___signExtend;
     // @field
-    private final IntegerConvertOp<Narrow> narrow;
+    private final IntegerConvertOp<Narrow> ___narrow;
 
     // @field
-    private final FloatConvertOp[] floatConvert;
+    private final FloatConvertOp[] ___floatConvert;
     // @field
-    private final int hash;
+    private final int ___hash;
 
     public static ArithmeticOpTable forStamp(Stamp __s)
     {
@@ -104,22 +104,22 @@ public final class ArithmeticOpTable
 
     public BinaryOp<?>[] getBinaryOps()
     {
-        return new BinaryOp<?>[] { add, sub, mul, mulHigh, umulHigh, div, rem, and, or, xor };
+        return new BinaryOp<?>[] { this.___add, this.___sub, this.___mul, this.___mulHigh, this.___umulHigh, this.___div, this.___rem, this.___and, this.___or, this.___xor };
     }
 
     public UnaryOp<?>[] getUnaryOps()
     {
-        return new UnaryOp<?>[] { neg, not, abs, sqrt };
+        return new UnaryOp<?>[] { this.___neg, this.___not, this.___abs, this.___sqrt };
     }
 
     public ShiftOp<?>[] getShiftOps()
     {
-        return new ShiftOp<?>[] { shl, shr, ushr };
+        return new ShiftOp<?>[] { this.___shl, this.___shr, this.___ushr };
     }
 
     public IntegerConvertOp<?>[] getIntegerConvertOps()
     {
-        return new IntegerConvertOp<?>[] { zeroExtend, signExtend, narrow };
+        return new IntegerConvertOp<?>[] { this.___zeroExtend, this.___signExtend, this.___narrow };
     }
 
     // @def
@@ -128,15 +128,15 @@ public final class ArithmeticOpTable
     // @iface ArithmeticOpTable.ArithmeticOpWrapper
     public interface ArithmeticOpWrapper
     {
-        <OP> UnaryOp<OP> wrapUnaryOp(UnaryOp<OP> op);
+        <OP> UnaryOp<OP> wrapUnaryOp(UnaryOp<OP> __op);
 
-        <OP> BinaryOp<OP> wrapBinaryOp(BinaryOp<OP> op);
+        <OP> BinaryOp<OP> wrapBinaryOp(BinaryOp<OP> __op);
 
-        <OP> ShiftOp<OP> wrapShiftOp(ShiftOp<OP> op);
+        <OP> ShiftOp<OP> wrapShiftOp(ShiftOp<OP> __op);
 
-        <OP> IntegerConvertOp<OP> wrapIntegerConvertOp(IntegerConvertOp<OP> op);
+        <OP> IntegerConvertOp<OP> wrapIntegerConvertOp(IntegerConvertOp<OP> __op);
 
-        FloatConvertOp wrapFloatConvertOp(FloatConvertOp op);
+        FloatConvertOp wrapFloatConvertOp(FloatConvertOp __op);
     }
 
     private static <T> T wrapIfNonNull(Function<T, T> __wrapper, T __obj)
@@ -151,12 +151,12 @@ public final class ArithmeticOpTable
         }
     }
 
-    /**
-     * Filters {@code inputs} with {@code predicate}, applies {@code mapper} and adds them in the
-     * array provided by {@code arrayGenerator}.
-     *
-     * @return the array provided by {@code arrayGenerator}.
-     */
+    ///
+    // Filters {@code inputs} with {@code predicate}, applies {@code mapper} and adds them in the
+    // array provided by {@code arrayGenerator}.
+    //
+    // @return the array provided by {@code arrayGenerator}.
+    ///
     private static <T, R> R[] filterAndMapToArray(T[] __inputs, Predicate<? super T> __predicate, Function<? super T, ? extends R> __mapper, IntFunction<R[]> __arrayGenerator)
     {
         List<R> __resultList = new ArrayList<>();
@@ -198,7 +198,7 @@ public final class ArithmeticOpTable
         IntegerConvertOp<SignExtend> __signExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getSignExtend());
         IntegerConvertOp<Narrow> __narrow = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getNarrow());
 
-        FloatConvertOp[] __floatConvert = filterAndMapToArray(__inner.floatConvert, Objects::nonNull, __wrapper::wrapFloatConvertOp, FloatConvertOp[]::new);
+        FloatConvertOp[] __floatConvert = filterAndMapToArray(__inner.___floatConvert, Objects::nonNull, __wrapper::wrapFloatConvertOp, FloatConvertOp[]::new);
         return new ArithmeticOpTable(__neg, __add, __sub, __mul, __mulHigh, __umulHigh, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __sqrt, __zeroExtend, __signExtend, __narrow, __floatConvert);
     }
 
@@ -206,231 +206,231 @@ public final class ArithmeticOpTable
     protected ArithmeticOpTable(UnaryOp<Neg> __neg, BinaryOp<Add> __add, BinaryOp<Sub> __sub, BinaryOp<Mul> __mul, BinaryOp<MulHigh> __mulHigh, BinaryOp<UMulHigh> __umulHigh, BinaryOp<Div> __div, BinaryOp<Rem> __rem, UnaryOp<Not> __not, BinaryOp<And> __and, BinaryOp<Or> __or, BinaryOp<Xor> __xor, ShiftOp<Shl> __shl, ShiftOp<Shr> __shr, ShiftOp<UShr> __ushr, UnaryOp<Abs> __abs, UnaryOp<Sqrt> __sqrt, IntegerConvertOp<ZeroExtend> __zeroExtend, IntegerConvertOp<SignExtend> __signExtend, IntegerConvertOp<Narrow> __narrow, FloatConvertOp... __floatConvert)
     {
         super();
-        this.neg = __neg;
-        this.add = __add;
-        this.sub = __sub;
-        this.mul = __mul;
-        this.mulHigh = __mulHigh;
-        this.umulHigh = __umulHigh;
-        this.div = __div;
-        this.rem = __rem;
-        this.not = __not;
-        this.and = __and;
-        this.or = __or;
-        this.xor = __xor;
-        this.shl = __shl;
-        this.shr = __shr;
-        this.ushr = __ushr;
-        this.abs = __abs;
-        this.sqrt = __sqrt;
-        this.zeroExtend = __zeroExtend;
-        this.signExtend = __signExtend;
-        this.narrow = __narrow;
-        this.floatConvert = new FloatConvertOp[FloatConvert.values().length];
+        this.___neg = __neg;
+        this.___add = __add;
+        this.___sub = __sub;
+        this.___mul = __mul;
+        this.___mulHigh = __mulHigh;
+        this.___umulHigh = __umulHigh;
+        this.___div = __div;
+        this.___rem = __rem;
+        this.___not = __not;
+        this.___and = __and;
+        this.___or = __or;
+        this.___xor = __xor;
+        this.___shl = __shl;
+        this.___shr = __shr;
+        this.___ushr = __ushr;
+        this.___abs = __abs;
+        this.___sqrt = __sqrt;
+        this.___zeroExtend = __zeroExtend;
+        this.___signExtend = __signExtend;
+        this.___narrow = __narrow;
+        this.___floatConvert = new FloatConvertOp[FloatConvert.values().length];
         for (FloatConvertOp __op : __floatConvert)
         {
-            this.floatConvert[__op.getFloatConvert().ordinal()] = __op;
+            this.___floatConvert[__op.getFloatConvert().ordinal()] = __op;
         }
 
-        this.hash = Objects.hash(__neg, __add, __sub, __mul, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __sqrt, __zeroExtend, __signExtend, __narrow);
+        this.___hash = Objects.hash(__neg, __add, __sub, __mul, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __sqrt, __zeroExtend, __signExtend, __narrow);
     }
 
     @Override
     public int hashCode()
     {
-        return hash;
+        return this.___hash;
     }
 
-    /**
-     * Describes the unary negation operation.
-     */
+    ///
+    // Describes the unary negation operation.
+    ///
     public UnaryOp<Neg> getNeg()
     {
-        return neg;
+        return this.___neg;
     }
 
-    /**
-     * Describes the addition operation.
-     */
+    ///
+    // Describes the addition operation.
+    ///
     public BinaryOp<Add> getAdd()
     {
-        return add;
+        return this.___add;
     }
 
-    /**
-     * Describes the subtraction operation.
-     */
+    ///
+    // Describes the subtraction operation.
+    ///
     public BinaryOp<Sub> getSub()
     {
-        return sub;
+        return this.___sub;
     }
 
-    /**
-     * Describes the multiplication operation.
-     */
+    ///
+    // Describes the multiplication operation.
+    ///
     public BinaryOp<Mul> getMul()
     {
-        return mul;
+        return this.___mul;
     }
 
-    /**
-     * Describes a signed operation that multiples the upper 32-bits of two long values.
-     */
+    ///
+    // Describes a signed operation that multiples the upper 32-bits of two long values.
+    ///
     public BinaryOp<MulHigh> getMulHigh()
     {
-        return mulHigh;
+        return this.___mulHigh;
     }
 
-    /**
-     * Describes an unsigned operation that multiples the upper 32-bits of two long values.
-     */
+    ///
+    // Describes an unsigned operation that multiples the upper 32-bits of two long values.
+    ///
     public BinaryOp<UMulHigh> getUMulHigh()
     {
-        return umulHigh;
+        return this.___umulHigh;
     }
 
-    /**
-     * Describes the division operation.
-     */
+    ///
+    // Describes the division operation.
+    ///
     public BinaryOp<Div> getDiv()
     {
-        return div;
+        return this.___div;
     }
 
-    /**
-     * Describes the remainder operation.
-     */
+    ///
+    // Describes the remainder operation.
+    ///
     public BinaryOp<Rem> getRem()
     {
-        return rem;
+        return this.___rem;
     }
 
-    /**
-     * Describes the bitwise not operation.
-     */
+    ///
+    // Describes the bitwise not operation.
+    ///
     public UnaryOp<Not> getNot()
     {
-        return not;
+        return this.___not;
     }
 
-    /**
-     * Describes the bitwise and operation.
-     */
+    ///
+    // Describes the bitwise and operation.
+    ///
     public BinaryOp<And> getAnd()
     {
-        return and;
+        return this.___and;
     }
 
-    /**
-     * Describes the bitwise or operation.
-     */
+    ///
+    // Describes the bitwise or operation.
+    ///
     public BinaryOp<Or> getOr()
     {
-        return or;
+        return this.___or;
     }
 
-    /**
-     * Describes the bitwise xor operation.
-     */
+    ///
+    // Describes the bitwise xor operation.
+    ///
     public BinaryOp<Xor> getXor()
     {
-        return xor;
+        return this.___xor;
     }
 
-    /**
-     * Describes the shift left operation.
-     */
+    ///
+    // Describes the shift left operation.
+    ///
     public ShiftOp<Shl> getShl()
     {
-        return shl;
+        return this.___shl;
     }
 
-    /**
-     * Describes the signed shift right operation.
-     */
+    ///
+    // Describes the signed shift right operation.
+    ///
     public ShiftOp<Shr> getShr()
     {
-        return shr;
+        return this.___shr;
     }
 
-    /**
-     * Describes the unsigned shift right operation.
-     */
+    ///
+    // Describes the unsigned shift right operation.
+    ///
     public ShiftOp<UShr> getUShr()
     {
-        return ushr;
+        return this.___ushr;
     }
 
-    /**
-     * Describes the absolute value operation.
-     */
+    ///
+    // Describes the absolute value operation.
+    ///
     public UnaryOp<Abs> getAbs()
     {
-        return abs;
+        return this.___abs;
     }
 
-    /**
-     * Describes the square root operation.
-     */
+    ///
+    // Describes the square root operation.
+    ///
     public UnaryOp<Sqrt> getSqrt()
     {
-        return sqrt;
+        return this.___sqrt;
     }
 
-    /**
-     * Describes the zero extend conversion.
-     */
+    ///
+    // Describes the zero extend conversion.
+    ///
     public IntegerConvertOp<ZeroExtend> getZeroExtend()
     {
-        return zeroExtend;
+        return this.___zeroExtend;
     }
 
-    /**
-     * Describes the sign extend conversion.
-     */
+    ///
+    // Describes the sign extend conversion.
+    ///
     public IntegerConvertOp<SignExtend> getSignExtend()
     {
-        return signExtend;
+        return this.___signExtend;
     }
 
-    /**
-     * Describes the narrowing conversion.
-     */
+    ///
+    // Describes the narrowing conversion.
+    ///
     public IntegerConvertOp<Narrow> getNarrow()
     {
-        return narrow;
+        return this.___narrow;
     }
 
-    /**
-     * Describes integer/float/double conversions.
-     */
+    ///
+    // Describes integer/float/double conversions.
+    ///
     public FloatConvertOp getFloatConvert(FloatConvert __op)
     {
-        return floatConvert[__op.ordinal()];
+        return this.___floatConvert[__op.ordinal()];
     }
 
     private boolean opsEquals(ArithmeticOpTable __that)
     {
-        return Objects.equals(neg, __that.neg) &&
-               Objects.equals(add, __that.add) &&
-               Objects.equals(sub, __that.sub) &&
-               Objects.equals(mul, __that.mul) &&
-               Objects.equals(mulHigh, __that.mulHigh) &&
-               Objects.equals(umulHigh, __that.umulHigh) &&
-               Objects.equals(div, __that.div) &&
-               Objects.equals(rem, __that.rem) &&
-               Objects.equals(not, __that.not) &&
-               Objects.equals(and, __that.and) &&
-               Objects.equals(or, __that.or) &&
-               Objects.equals(xor, __that.xor) &&
-               Objects.equals(shl, __that.shl) &&
-               Objects.equals(shr, __that.shr) &&
-               Objects.equals(ushr, __that.ushr) &&
-               Objects.equals(abs, __that.abs) &&
-               Objects.equals(sqrt, __that.sqrt) &&
-               Objects.equals(zeroExtend, __that.zeroExtend) &&
-               Objects.equals(signExtend, __that.signExtend) &&
-               Objects.equals(narrow, __that.narrow);
+        return Objects.equals(this.___neg, __that.___neg) &&
+               Objects.equals(this.___add, __that.___add) &&
+               Objects.equals(this.___sub, __that.___sub) &&
+               Objects.equals(this.___mul, __that.___mul) &&
+               Objects.equals(this.___mulHigh, __that.___mulHigh) &&
+               Objects.equals(this.___umulHigh, __that.___umulHigh) &&
+               Objects.equals(this.___div, __that.___div) &&
+               Objects.equals(this.___rem, __that.___rem) &&
+               Objects.equals(this.___not, __that.___not) &&
+               Objects.equals(this.___and, __that.___and) &&
+               Objects.equals(this.___or, __that.___or) &&
+               Objects.equals(this.___xor, __that.___xor) &&
+               Objects.equals(this.___shl, __that.___shl) &&
+               Objects.equals(this.___shr, __that.___shr) &&
+               Objects.equals(this.___ushr, __that.___ushr) &&
+               Objects.equals(this.___abs, __that.___abs) &&
+               Objects.equals(this.___sqrt, __that.___sqrt) &&
+               Objects.equals(this.___zeroExtend, __that.___zeroExtend) &&
+               Objects.equals(this.___signExtend, __that.___signExtend) &&
+               Objects.equals(this.___narrow, __that.___narrow);
     }
 
     @Override
@@ -451,7 +451,7 @@ public final class ArithmeticOpTable
         ArithmeticOpTable __that = (ArithmeticOpTable) __obj;
         if (opsEquals(__that))
         {
-            if (Arrays.equals(this.floatConvert, __that.floatConvert))
+            if (Arrays.equals(this.___floatConvert, __that.___floatConvert))
             {
                 return true;
             }
@@ -463,19 +463,19 @@ public final class ArithmeticOpTable
     public abstract static class Op
     {
         // @field
-        private final String operator;
+        private final String ___operator;
 
         // @cons
         protected Op(String __operator)
         {
             super();
-            this.operator = __operator;
+            this.___operator = __operator;
         }
 
         @Override
         public int hashCode()
         {
-            return operator.hashCode();
+            return this.___operator.hashCode();
         }
 
         @Override
@@ -494,7 +494,7 @@ public final class ArithmeticOpTable
                 return false;
             }
             Op __that = (Op) __obj;
-            if (operator.equals(__that.operator))
+            if (this.___operator.equals(__that.___operator))
             {
                 return true;
             }
@@ -502,9 +502,9 @@ public final class ArithmeticOpTable
         }
     }
 
-    /**
-     * Describes a unary arithmetic operation.
-     */
+    ///
+    // Describes a unary arithmetic operation.
+    ///
     // @class ArithmeticOpTable.UnaryOp
     public abstract static class UnaryOp<T> extends Op
     {
@@ -554,15 +554,15 @@ public final class ArithmeticOpTable
             super(__operation);
         }
 
-        /**
-         * Apply the operation to a {@link Constant}.
-         */
-        public abstract Constant foldConstant(Constant value);
+        ///
+        // Apply the operation to a {@link Constant}.
+        ///
+        public abstract Constant foldConstant(Constant __value);
 
-        /**
-         * Apply the operation to a {@link Stamp}.
-         */
-        public abstract Stamp foldStamp(Stamp stamp);
+        ///
+        // Apply the operation to a {@link Stamp}.
+        ///
+        public abstract Stamp foldStamp(Stamp __stamp);
 
         public UnaryOp<T> unwrap()
         {
@@ -570,9 +570,9 @@ public final class ArithmeticOpTable
         }
     }
 
-    /**
-     * Describes a binary arithmetic operation.
-     */
+    ///
+    // Describes a binary arithmetic operation.
+    ///
     // @class ArithmeticOpTable.BinaryOp
     public abstract static class BinaryOp<T> extends Op
     {
@@ -677,72 +677,72 @@ public final class ArithmeticOpTable
         }
 
         // @field
-        private final boolean associative;
+        private final boolean ___associative;
         // @field
-        private final boolean commutative;
+        private final boolean ___commutative;
 
         // @cons
         protected BinaryOp(String __operation, boolean __associative, boolean __commutative)
         {
             super(__operation);
-            this.associative = __associative;
-            this.commutative = __commutative;
+            this.___associative = __associative;
+            this.___commutative = __commutative;
         }
 
-        /**
-         * Applies this operation to {@code a} and {@code b}.
-         *
-         * @return the result of applying this operation or {@code null} if applying it would raise
-         *         an exception (e.g. {@link ArithmeticException} for dividing by 0)
-         */
-        public abstract Constant foldConstant(Constant a, Constant b);
+        ///
+        // Applies this operation to {@code a} and {@code b}.
+        //
+        // @return the result of applying this operation or {@code null} if applying it would raise
+        //         an exception (e.g. {@link ArithmeticException} for dividing by 0)
+        ///
+        public abstract Constant foldConstant(Constant __a, Constant __b);
 
-        /**
-         * Apply the operation to two {@linkplain Stamp Stamps}.
-         */
-        public abstract Stamp foldStamp(Stamp a, Stamp b);
+        ///
+        // Apply the operation to two {@linkplain Stamp Stamps}.
+        ///
+        public abstract Stamp foldStamp(Stamp __a, Stamp __b);
 
-        /**
-         * Checks whether this operation is associative. An operation is associative when
-         * {@code (a . b) . c == a . (b . c)} for all a, b, c. Note that you still have to be
-         * careful with inverses. For example the integer subtraction operation will report {@code true}
-         * here, since you can still reassociate as long as the correct negations are inserted.
-         */
+        ///
+        // Checks whether this operation is associative. An operation is associative when
+        // {@code (a . b) . c == a . (b . c)} for all a, b, c. Note that you still have to be
+        // careful with inverses. For example the integer subtraction operation will report {@code true}
+        // here, since you can still reassociate as long as the correct negations are inserted.
+        ///
         public final boolean isAssociative()
         {
-            return associative;
+            return this.___associative;
         }
 
-        /**
-         * Checks whether this operation is commutative. An operation is commutative when
-         * {@code a . b == b . a} for all a, b.
-         */
+        ///
+        // Checks whether this operation is commutative. An operation is commutative when
+        // {@code a . b == b . a} for all a, b.
+        ///
         public final boolean isCommutative()
         {
-            return commutative;
+            return this.___commutative;
         }
 
-        /**
-         * Check whether a {@link Constant} is a neutral element for this operation. A neutral
-         * element is any element {@code n} where {@code a . n == a} for all a.
-         *
-         * @param n the {@link Constant} that should be tested
-         * @return true iff for all {@code a}: {@code a . n == a}
-         */
+        ///
+        // Check whether a {@link Constant} is a neutral element for this operation. A neutral
+        // element is any element {@code n} where {@code a . n == a} for all a.
+        //
+        // @param n the {@link Constant} that should be tested
+        // @return true iff for all {@code a}: {@code a . n == a}
+        ///
         public boolean isNeutral(Constant __n)
         {
             return false;
         }
 
-        /**
-         * Check whether this operation has a zero {@code z == a . a} for each a. Examples of
-         * operations having such an element are subtraction and exclusive-or. Note that this may be
-         * different from the numbers tested by {@link #isNeutral}.
-         *
-         * @param stamp a {@link Stamp}
-         * @return a unique {@code z} such that {@code z == a . a} for each {@code a} in
-         *         {@code stamp} if it exists, otherwise {@code null}
-         */
+        ///
+        // Check whether this operation has a zero {@code z == a . a} for each a. Examples of
+        // operations having such an element are subtraction and exclusive-or. Note that this may be
+        // different from the numbers tested by {@link #isNeutral}.
+        //
+        // @param stamp a {@link Stamp}
+        // @return a unique {@code z} such that {@code z == a . a} for each {@code a} in
+        //         {@code stamp} if it exists, otherwise {@code null}
+        ///
         public Constant getZero(Stamp __stamp)
         {
             return null;
@@ -758,8 +758,8 @@ public final class ArithmeticOpTable
         {
             final int __prime = 31;
             int __result = super.hashCode();
-            __result = __prime * __result + (associative ? 1231 : 1237);
-            __result = __prime * __result + (commutative ? 1231 : 1237);
+            __result = __prime * __result + (this.___associative ? 1231 : 1237);
+            __result = __prime * __result + (this.___commutative ? 1231 : 1237);
             return __result;
         }
 
@@ -779,11 +779,11 @@ public final class ArithmeticOpTable
                 return false;
             }
             BinaryOp<?> __that = (BinaryOp<?>) __obj;
-            if (associative != __that.associative)
+            if (this.___associative != __that.___associative)
             {
                 return false;
             }
-            if (commutative != __that.commutative)
+            if (this.___commutative != __that.___commutative)
             {
                 return false;
             }
@@ -791,10 +791,10 @@ public final class ArithmeticOpTable
         }
     }
 
-    /**
-     * Describes a shift operation. The right argument of a shift operation always has kind
-     * {@link JavaKind#Int}.
-     */
+    ///
+    // Describes a shift operation. The right argument of a shift operation always has kind
+    // {@link JavaKind#Int}.
+    ///
     // @class ArithmeticOpTable.ShiftOp
     public abstract static class ShiftOp<OP> extends Op
     {
@@ -834,38 +834,38 @@ public final class ArithmeticOpTable
             super(__operation);
         }
 
-        /**
-         * Apply the shift to a constant.
-         */
-        public abstract Constant foldConstant(Constant c, int amount);
+        ///
+        // Apply the shift to a constant.
+        ///
+        public abstract Constant foldConstant(Constant __c, int __amount);
 
-        /**
-         * Apply the shift to a stamp.
-         */
-        public abstract Stamp foldStamp(Stamp s, IntegerStamp amount);
+        ///
+        // Apply the shift to a stamp.
+        ///
+        public abstract Stamp foldStamp(Stamp __s, IntegerStamp __amount);
 
-        /**
-         * Get the shift amount mask for a given result stamp.
-         */
-        public abstract int getShiftAmountMask(Stamp s);
+        ///
+        // Get the shift amount mask for a given result stamp.
+        ///
+        public abstract int getShiftAmountMask(Stamp __s);
     }
 
     // @class ArithmeticOpTable.FloatConvertOp
     public abstract static class FloatConvertOp extends UnaryOp<FloatConvertOp>
     {
         // @field
-        private final FloatConvert op;
+        private final FloatConvert ___op;
 
         // @cons
         protected FloatConvertOp(FloatConvert __op)
         {
             super(__op.name());
-            this.op = __op;
+            this.___op = __op;
         }
 
         public FloatConvert getFloatConvert()
         {
-            return op;
+            return this.___op;
         }
 
         @Override
@@ -878,7 +878,7 @@ public final class ArithmeticOpTable
         public int hashCode()
         {
             final int __prime = 31;
-            return __prime * super.hashCode() + op.hashCode();
+            return __prime * super.hashCode() + this.___op.hashCode();
         }
 
         @Override
@@ -897,7 +897,7 @@ public final class ArithmeticOpTable
                 return false;
             }
             FloatConvertOp __that = (FloatConvertOp) __obj;
-            if (op != __that.op)
+            if (this.___op != __that.___op)
             {
                 return false;
             }
@@ -950,18 +950,18 @@ public final class ArithmeticOpTable
             super(__op);
         }
 
-        public abstract Constant foldConstant(int inputBits, int resultBits, Constant value);
+        public abstract Constant foldConstant(int __inputBits, int __resultBits, Constant __value);
 
-        public abstract Stamp foldStamp(int inputBits, int resultBits, Stamp stamp);
+        public abstract Stamp foldStamp(int __inputBits, int __resultBits, Stamp __stamp);
 
         public IntegerConvertOp<T> unwrap()
         {
             return this;
         }
 
-        /**
-         * Computes the stamp of the input for the given output stamp.
-         */
-        public abstract Stamp invertStamp(int inputBits, int resultBits, Stamp outStamp);
+        ///
+        // Computes the stamp of the input for the given output stamp.
+        ///
+        public abstract Stamp invertStamp(int __inputBits, int __resultBits, Stamp __outStamp);
     }
 }

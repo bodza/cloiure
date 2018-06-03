@@ -43,9 +43,9 @@ import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * HotSpot AMD64 specific backend.
- */
+///
+// HotSpot AMD64 specific backend.
+///
 // @class AMD64HotSpotBackend
 public final class AMD64HotSpotBackend extends HotSpotHostBackend
 {
@@ -89,55 +89,55 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
     @Override
     protected void bangStackWithOffset(CompilationResultBuilder __crb, int __bangOffset)
     {
-        AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
+        AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.___asm;
         int __pos = __asm.position();
         __asm.movl(new AMD64Address(AMD64.rsp, -__bangOffset), AMD64.rax);
     }
 
-    /**
-     * The size of the instruction used to patch the verified entry point of an nmethod when the
-     * nmethod is made non-entrant or a zombie (e.g. during deopt or class unloading). The first
-     * instruction emitted at an nmethod's verified entry point must be at least this length to
-     * ensure mt-safe patching.
-     */
+    ///
+    // The size of the instruction used to patch the verified entry point of an nmethod when the
+    // nmethod is made non-entrant or a zombie (e.g. during deopt or class unloading). The first
+    // instruction emitted at an nmethod's verified entry point must be at least this length to
+    // ensure mt-safe patching.
+    ///
     // @def
     public static final int PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE = 5;
 
-    /**
-     * Emits code at the verified entry point and return point(s) of a method.
-     */
+    ///
+    // Emits code at the verified entry point and return point(s) of a method.
+    ///
     // @class AMD64HotSpotBackend.HotSpotFrameContext
     // @closure
     final class HotSpotFrameContext implements FrameContext
     {
         // @field
-        final boolean isStub;
+        final boolean ___isStub;
         // @field
-        final boolean omitFrame;
+        final boolean ___omitFrame;
 
         // @cons
         HotSpotFrameContext(boolean __isStub, boolean __omitFrame)
         {
             super();
-            this.isStub = __isStub;
-            this.omitFrame = __omitFrame;
+            this.___isStub = __isStub;
+            this.___omitFrame = __omitFrame;
         }
 
         @Override
         public boolean hasFrame()
         {
-            return !omitFrame;
+            return !this.___omitFrame;
         }
 
         @Override
         public void enter(CompilationResultBuilder __crb)
         {
-            FrameMap __frameMap = __crb.frameMap;
+            FrameMap __frameMap = __crb.___frameMap;
             int __frameSize = __frameMap.frameSize();
-            AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
-            if (omitFrame)
+            AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.___asm;
+            if (this.___omitFrame)
             {
-                if (!isStub)
+                if (!this.___isStub)
                 {
                     __asm.nop(PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE);
                 }
@@ -145,11 +145,11 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
             else
             {
                 int __verifiedEntryPosition = __asm.position();
-                if (!isStub)
+                if (!this.___isStub)
                 {
                     AMD64HotSpotBackend.this.emitStackOverflowCheck(__crb);
                 }
-                if (!isStub && __asm.position() == __verifiedEntryPosition)
+                if (!this.___isStub && __asm.position() == __verifiedEntryPosition)
                 {
                     __asm.subqWide(AMD64.rsp, __frameSize);
                 }
@@ -171,11 +171,11 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         @Override
         public void leave(CompilationResultBuilder __crb)
         {
-            if (!omitFrame)
+            if (!this.___omitFrame)
             {
-                AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
+                AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.___asm;
 
-                int __frameSize = __crb.frameMap.frameSize();
+                int __frameSize = __crb.___frameMap.frameSize();
                 __asm.incrementq(AMD64.rsp, __frameSize);
             }
         }
@@ -219,8 +219,8 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
     @Override
     public void emitCode(CompilationResultBuilder __crb, LIR __lir, ResolvedJavaMethod __installedCodeOwner)
     {
-        AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
-        FrameMap __frameMap = __crb.frameMap;
+        AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.___asm;
+        FrameMap __frameMap = __crb.___frameMap;
         RegisterConfig __regConfig = __frameMap.getRegisterConfig();
         Label __verifiedEntry = new Label();
 
@@ -234,11 +234,11 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         emitCodeSuffix(__installedCodeOwner, __crb, __asm, __frameMap);
     }
 
-    /**
-     * Emits the code prior to the verified entry point.
-     *
-     * @param installedCodeOwner see {@link Backend#emitCode}
-     */
+    ///
+    // Emits the code prior to the verified entry point.
+    //
+    // @param installedCodeOwner see {@link Backend#emitCode}
+    ///
     public void emitCodePrefix(ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilder __crb, AMD64MacroAssembler __asm, RegisterConfig __regConfig, Label __verifiedEntry)
     {
         HotSpotProviders __providers = getProviders();
@@ -274,24 +274,24 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         __crb.recordMark(HotSpotRuntime.verifiedEntryMark);
     }
 
-    /**
-     * Emits the code which starts at the verified entry point.
-     *
-     * @param installedCodeOwner see {@link Backend#emitCode}
-     */
+    ///
+    // Emits the code which starts at the verified entry point.
+    //
+    // @param installedCodeOwner see {@link Backend#emitCode}
+    ///
     public void emitCodeBody(ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilder __crb, LIR __lir)
     {
         __crb.emit(__lir);
     }
 
-    /**
-     * @param installedCodeOwner see {@link Backend#emitCode}
-     */
+    ///
+    // @param installedCodeOwner see {@link Backend#emitCode}
+    ///
     public void emitCodeSuffix(ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilder __crb, AMD64MacroAssembler __asm, FrameMap __frameMap)
     {
         HotSpotProviders __providers = getProviders();
-        HotSpotFrameContext __frameContext = (HotSpotFrameContext) __crb.frameContext;
-        if (!__frameContext.isStub)
+        HotSpotFrameContext __frameContext = (HotSpotFrameContext) __crb.___frameContext;
+        if (!__frameContext.___isStub)
         {
             HotSpotForeignCallsProvider __foreignCalls = __providers.getForeignCalls();
             __crb.recordMark(HotSpotRuntime.exceptionHandlerEntryMark);

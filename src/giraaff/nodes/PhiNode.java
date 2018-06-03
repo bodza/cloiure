@@ -10,13 +10,13 @@ import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.calc.FloatingNode;
 
-/**
- * {@code PhiNode}s represent the merging of edges at a control flow merges (
- * {@link AbstractMergeNode} or {@link LoopBeginNode}). For a {@link AbstractMergeNode}, the order
- * of the values corresponds to the order of the ends. For {@link LoopBeginNode}s, the first value
- * corresponds to the loop's predecessor, while the rest of the values correspond to the
- * {@link LoopEndNode}s.
- */
+///
+// {@code PhiNode}s represent the merging of edges at a control flow merges (
+// {@link AbstractMergeNode} or {@link LoopBeginNode}). For a {@link AbstractMergeNode}, the order
+// of the values corresponds to the order of the ends. For {@link LoopBeginNode}s, the first value
+// corresponds to the loop's predecessor, while the rest of the values correspond to the
+// {@link LoopEndNode}s.
+///
 // @class PhiNode
 public abstract class PhiNode extends FloatingNode implements Canonicalizable
 {
@@ -25,45 +25,45 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
 
     @Input(InputType.Association)
     // @field
-    protected AbstractMergeNode merge;
+    protected AbstractMergeNode ___merge;
 
     // @cons
     protected PhiNode(NodeClass<? extends PhiNode> __c, Stamp __stamp, AbstractMergeNode __merge)
     {
         super(__c, __stamp);
-        this.merge = __merge;
+        this.___merge = __merge;
     }
 
     public abstract NodeInputList<ValueNode> values();
 
     public AbstractMergeNode merge()
     {
-        return merge;
+        return this.___merge;
     }
 
     public void setMerge(AbstractMergeNode __x)
     {
-        updateUsages(merge, __x);
-        merge = __x;
+        updateUsages(this.___merge, __x);
+        this.___merge = __x;
     }
 
-    /**
-     * Get the instruction that produces the value associated with the i'th predecessor of the merge.
-     *
-     * @param i the index of the predecessor
-     * @return the instruction that produced the value in the i'th predecessor
-     */
+    ///
+    // Get the instruction that produces the value associated with the i'th predecessor of the merge.
+    //
+    // @param i the index of the predecessor
+    // @return the instruction that produced the value in the i'th predecessor
+    ///
     public ValueNode valueAt(int __i)
     {
         return values().get(__i);
     }
 
-    /**
-     * Sets the value at the given index and makes sure that the values list is large enough.
-     *
-     * @param i the index at which to set the value
-     * @param x the new phi input value for the given location
-     */
+    ///
+    // Sets the value at the given index and makes sure that the values list is large enough.
+    //
+    // @param i the index at which to set the value
+    // @param x the new phi input value for the given location
+    ///
     public void initializeValueAt(int __i, ValueNode __x)
     {
         while (values().size() <= __i)
@@ -88,11 +88,11 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
         return valueAt(merge().phiPredecessorIndex(__pred));
     }
 
-    /**
-     * Get the number of inputs to this phi (i.e. the number of predecessors to the merge).
-     *
-     * @return the number of inputs in this phi
-     */
+    ///
+    // Get the number of inputs to this phi (i.e. the number of predecessors to the merge).
+    //
+    // @return the number of inputs in this phi
+    ///
     public int valueCount()
     {
         return values().size();
@@ -118,10 +118,10 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
         return values().subList(merge().forwardEndCount());
     }
 
-    /**
-     * If all inputs are the same value, this value is returned, otherwise {@code this}. Note that
-     * {@code null} is a valid return value, since {@link GuardPhiNode}s can have {@code null} inputs.
-     */
+    ///
+    // If all inputs are the same value, this value is returned, otherwise {@code this}. Note that
+    // {@code null} is a valid return value, since {@link GuardPhiNode}s can have {@code null} inputs.
+    ///
     public ValueNode singleValueOrThis()
     {
         ValueNode __singleValue = valueAt(0);
@@ -140,11 +140,11 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
         return __singleValue;
     }
 
-    /**
-     * If all inputs (but the first one) are the same value, the value is returned, otherwise
-     * {@code this}. Note that {@code null} is a valid return value, since {@link GuardPhiNode}s can
-     * have {@code null} inputs.
-     */
+    ///
+    // If all inputs (but the first one) are the same value, the value is returned, otherwise
+    // {@code this}. Note that {@code null} is a valid return value, since {@link GuardPhiNode}s can
+    // have {@code null} inputs.
+    ///
     public ValueNode singleBackValueOrThis()
     {
         int __valueCount = valueCount();

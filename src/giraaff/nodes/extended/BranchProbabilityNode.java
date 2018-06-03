@@ -16,11 +16,11 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.util.GraalError;
 
-/**
- * Instances of this node class will look for a preceding if node and put the given probability into
- * the if node's taken probability. Then the branch probability node will be removed. This node is
- * intended primarily for snippets, so that they can define their fast and slow paths.
- */
+///
+// Instances of this node class will look for a preceding if node and put the given probability into
+// the if node's taken probability. Then the branch probability node will be removed. This node is
+// intended primarily for snippets, so that they can define their fast and slow paths.
+///
 // @class BranchProbabilityNode
 public final class BranchProbabilityNode extends FloatingNode implements Simplifiable, Lowerable
 {
@@ -49,27 +49,27 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
 
     @Input
     // @field
-    ValueNode probability;
+    ValueNode ___probability;
     @Input
     // @field
-    ValueNode condition;
+    ValueNode ___condition;
 
     // @cons
     public BranchProbabilityNode(ValueNode __probability, ValueNode __condition)
     {
         super(TYPE, __condition.stamp(NodeView.DEFAULT));
-        this.probability = __probability;
-        this.condition = __condition;
+        this.___probability = __probability;
+        this.___condition = __condition;
     }
 
     public ValueNode getProbability()
     {
-        return probability;
+        return this.___probability;
     }
 
     public ValueNode getCondition()
     {
-        return condition;
+        return this.___condition;
     }
 
     @Override
@@ -79,9 +79,9 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
         {
             return;
         }
-        if (probability.isConstant())
+        if (this.___probability.isConstant())
         {
-            double __probabilityValue = probability.asJavaConstant().asDouble();
+            double __probabilityValue = this.___probability.asJavaConstant().asDouble();
             if (__probabilityValue < 0.0)
             {
                 throw new GraalError("A negative probability of " + __probabilityValue + " is not allowed!");
@@ -92,10 +92,8 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
             }
             else if (Double.isNaN(__probabilityValue))
             {
-                /*
-                 * We allow NaN if the node is in unreachable code that will eventually fall away,
-                 * or else an error will be thrown during lowering since we keep the node around.
-                 */
+                // We allow NaN if the node is in unreachable code that will eventually fall away,
+                // or else an error will be thrown during lowering since we keep the node around.
                 return;
             }
             boolean __usageFound = false;
@@ -126,7 +124,7 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
             }
             if (__usageFound)
             {
-                ValueNode __currentCondition = condition;
+                ValueNode __currentCondition = this.___condition;
                 replaceAndDelete(__currentCondition);
                 if (__tool != null)
                 {
@@ -148,18 +146,18 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
         return hasExactlyOneUsage() && usages().first() instanceof ReturnNode;
     }
 
-    /**
-     * This intrinsic should only be used for the condition of an if statement. The parameter
-     * condition should also only denote a simple condition and not a combined condition involving
-     * &amp;&amp; or || operators. It injects the probability of the condition into the if statement.
-     *
-     * @param probability the probability that the given condition is true as a double value between
-     *            0.0 and 1.0.
-     * @param condition the simple condition without any &amp;&amp; or || operators
-     * @return the condition
-     */
+    ///
+    // This intrinsic should only be used for the condition of an if statement. The parameter
+    // condition should also only denote a simple condition and not a combined condition involving
+    // &amp;&amp; or || operators. It injects the probability of the condition into the if statement.
+    //
+    // @param probability the probability that the given condition is true as a double value between
+    //            0.0 and 1.0.
+    // @param condition the simple condition without any &amp;&amp; or || operators
+    // @return the condition
+    ///
     @NodeIntrinsic
-    public static native boolean probability(double probability, boolean condition);
+    public static native boolean probability(double __probability, boolean __condition);
 
     @Override
     public void lower(LoweringTool __tool)

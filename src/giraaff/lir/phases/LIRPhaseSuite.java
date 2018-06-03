@@ -13,44 +13,44 @@ import giraaff.lir.gen.LIRGenerationResult;
 public class LIRPhaseSuite<C> extends LIRPhase<C>
 {
     // @field
-    private List<LIRPhase<C>> phases;
+    private List<LIRPhase<C>> ___phases;
     // @field
-    private boolean immutable;
+    private boolean ___immutable;
 
     // @cons
     public LIRPhaseSuite()
     {
         super();
-        phases = new ArrayList<>();
+        this.___phases = new ArrayList<>();
     }
 
-    /**
-     * Gets an unmodifiable view on the phases in this suite.
-     */
+    ///
+    // Gets an unmodifiable view on the phases in this suite.
+    ///
     public List<LIRPhase<C>> getPhases()
     {
-        return Collections.unmodifiableList(phases);
+        return Collections.unmodifiableList(this.___phases);
     }
 
-    /**
-     * Add a new phase at the beginning of this suite.
-     */
+    ///
+    // Add a new phase at the beginning of this suite.
+    ///
     public final void prependPhase(LIRPhase<C> __phase)
     {
-        phases.add(0, __phase);
+        this.___phases.add(0, __phase);
     }
 
-    /**
-     * Add a new phase at the end of this suite.
-     */
+    ///
+    // Add a new phase at the end of this suite.
+    ///
     public final void appendPhase(LIRPhase<C> __phase)
     {
-        phases.add(__phase);
+        this.___phases.add(__phase);
     }
 
     public final ListIterator<LIRPhase<C>> findPhase(Class<? extends LIRPhase<C>> __phaseClass)
     {
-        ListIterator<LIRPhase<C>> __it = phases.listIterator();
+        ListIterator<LIRPhase<C>> __it = this.___phases.listIterator();
         if (findNextPhase(__it, __phaseClass))
         {
             return __it;
@@ -63,7 +63,7 @@ public class LIRPhaseSuite<C> extends LIRPhase<C>
 
     public final <T extends LIRPhase<C>> T findPhaseInstance(Class<T> __phaseClass)
     {
-        ListIterator<LIRPhase<C>> __it = phases.listIterator();
+        ListIterator<LIRPhase<C>> __it = this.___phases.listIterator();
         while (__it.hasNext())
         {
             LIRPhase<C> __phase = __it.next();
@@ -91,7 +91,7 @@ public class LIRPhaseSuite<C> extends LIRPhase<C>
     @Override
     protected final void run(TargetDescription __target, LIRGenerationResult __lirGenRes, C __context)
     {
-        for (LIRPhase<C> __phase : phases)
+        for (LIRPhase<C> __phase : this.___phases)
         {
             __phase.apply(__target, __lirGenRes, __context);
         }
@@ -100,21 +100,21 @@ public class LIRPhaseSuite<C> extends LIRPhase<C>
     public LIRPhaseSuite<C> copy()
     {
         LIRPhaseSuite<C> __suite = new LIRPhaseSuite<>();
-        __suite.phases.addAll(phases);
+        __suite.___phases.addAll(this.___phases);
         return __suite;
     }
 
     public boolean isImmutable()
     {
-        return immutable;
+        return this.___immutable;
     }
 
     public synchronized void setImmutable()
     {
-        if (!immutable)
+        if (!this.___immutable)
         {
-            phases = Collections.unmodifiableList(phases);
-            immutable = true;
+            this.___phases = Collections.unmodifiableList(this.___phases);
+            this.___immutable = true;
         }
     }
 }

@@ -24,57 +24,57 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * Compares two arrays lexicographically.
- */
+///
+// Compares two arrays lexicographically.
+///
 // @class ArrayCompareToNode
 public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
     // @def
     public static final NodeClass<ArrayCompareToNode> TYPE = NodeClass.create(ArrayCompareToNode.class);
 
-    /** {@link JavaKind} of one array to compare. */
+    /// {@link JavaKind} of one array to compare.
     // @field
-    protected final JavaKind kind1;
+    protected final JavaKind ___kind1;
 
-    /** {@link JavaKind} of the other array to compare. */
+    /// {@link JavaKind} of the other array to compare.
     // @field
-    protected final JavaKind kind2;
+    protected final JavaKind ___kind2;
 
-    /** One array to be tested for equality. */
+    /// One array to be tested for equality.
     @Input
     // @field
-    ValueNode array1;
+    ValueNode ___array1;
 
-    /** The other array to be tested for equality. */
+    /// The other array to be tested for equality.
     @Input
     // @field
-    ValueNode array2;
+    ValueNode ___array2;
 
-    /** Length of one array. */
+    /// Length of one array.
     @Input
     // @field
-    ValueNode length1;
+    ValueNode ___length1;
 
-    /** Length of the other array. */
+    /// Length of the other array.
     @Input
     // @field
-    ValueNode length2;
+    ValueNode ___length2;
 
     @OptionalInput(InputType.Memory)
     // @field
-    MemoryNode lastLocationAccess;
+    MemoryNode ___lastLocationAccess;
 
     // @cons
     public ArrayCompareToNode(ValueNode __array1, ValueNode __array2, ValueNode __length1, ValueNode __length2, @ConstantNodeParameter JavaKind __kind1, @ConstantNodeParameter JavaKind __kind2)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.kind1 = __kind1;
-        this.kind2 = __kind2;
-        this.array1 = __array1;
-        this.array2 = __array2;
-        this.length1 = __length1;
-        this.length2 = __length2;
+        this.___kind1 = __kind1;
+        this.___kind2 = __kind2;
+        this.___array1 = __array1;
+        this.___array2 = __array2;
+        this.___length1 = __length1;
+        this.___length2 = __length2;
     }
 
     @Override
@@ -84,8 +84,8 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
         {
             return null;
         }
-        ValueNode __a1 = GraphUtil.unproxify(array1);
-        ValueNode __a2 = GraphUtil.unproxify(array2);
+        ValueNode __a1 = GraphUtil.unproxify(this.___array1);
+        ValueNode __a2 = GraphUtil.unproxify(this.___array2);
         if (__a1 == __a2)
         {
             return ConstantNode.forInt(0);
@@ -96,8 +96,8 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     @Override
     public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode __alias1 = __tool.getAlias(array1);
-        ValueNode __alias2 = __tool.getAlias(array2);
+        ValueNode __alias1 = __tool.getAlias(this.___array1);
+        ValueNode __alias2 = __tool.getAlias(this.___array2);
         if (__alias1 == __alias2)
         {
             // the same virtual objects will always have the same contents
@@ -106,31 +106,31 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     }
 
     @NodeIntrinsic
-    public static native int compareTo(Object array1, Object array2, int length1, int length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2);
+    public static native int compareTo(Object __array1, Object __array2, int __length1, int __length2, @ConstantNodeParameter JavaKind __kind1, @ConstantNodeParameter JavaKind __kind2);
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __result = __gen.getLIRGeneratorTool().emitArrayCompareTo(kind1, kind2, __gen.operand(array1), __gen.operand(array2), __gen.operand(length1), __gen.operand(length2));
+        Value __result = __gen.getLIRGeneratorTool().emitArrayCompareTo(this.___kind1, this.___kind2, __gen.operand(this.___array1), __gen.operand(this.___array2), __gen.operand(this.___length1), __gen.operand(this.___length2));
         __gen.setResult(this, __result);
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return NamedLocationIdentity.getArrayLocation(kind1);
+        return NamedLocationIdentity.getArrayLocation(this.___kind1);
     }
 
     @Override
     public MemoryNode getLastLocationAccess()
     {
-        return lastLocationAccess;
+        return this.___lastLocationAccess;
     }
 
     @Override
     public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__lla));
-        lastLocationAccess = __lla;
+        updateUsages(ValueNodeUtil.asNode(this.___lastLocationAccess), ValueNodeUtil.asNode(__lla));
+        this.___lastLocationAccess = __lla;
     }
 }

@@ -14,10 +14,10 @@ import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Represents an atomic read-and-add operation like
- * {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
- */
+///
+// Represents an atomic read-and-add operation like
+// {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class AtomicReadAndAddNode
 public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single
@@ -27,38 +27,38 @@ public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint impleme
 
     @Input(InputType.Association)
     // @field
-    AddressNode address;
+    AddressNode ___address;
     @Input
     // @field
-    ValueNode delta;
+    ValueNode ___delta;
 
     // @field
-    protected final LocationIdentity locationIdentity;
+    protected final LocationIdentity ___locationIdentity;
 
     // @cons
     public AtomicReadAndAddNode(AddressNode __address, ValueNode __delta, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(__delta.getStackKind()));
-        this.address = __address;
-        this.delta = __delta;
-        this.locationIdentity = __locationIdentity;
+        this.___address = __address;
+        this.___delta = __delta;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public ValueNode delta()
     {
-        return delta;
+        return this.___delta;
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __result = __gen.getLIRGeneratorTool().emitAtomicReadAndAdd(__gen.operand(address), __gen.operand(delta));
+        Value __result = __gen.getLIRGeneratorTool().emitAtomicReadAndAdd(__gen.operand(this.___address), __gen.operand(this.___delta));
         __gen.setResult(this, __result);
     }
 }

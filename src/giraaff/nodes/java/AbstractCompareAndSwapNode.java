@@ -14,9 +14,9 @@ import giraaff.nodes.memory.LIRLowerableAccess;
 import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.memory.address.AddressNode;
 
-/**
- * Low-level atomic compare-and-swap operation.
- */
+///
+// Low-level atomic compare-and-swap operation.
+///
 // @NodeInfo.allowedUsageTypes "Value, Memory"
 // @class AbstractCompareAndSwapNode
 public abstract class AbstractCompareAndSwapNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
@@ -26,25 +26,25 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
 
     @Input
     // @field
-    ValueNode expectedValue;
+    ValueNode ___expectedValue;
     @Input
     // @field
-    ValueNode newValue;
+    ValueNode ___newValue;
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateAfter;
+    FrameState ___stateAfter;
 
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
     @Override
@@ -55,20 +55,20 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
 
     public ValueNode getExpectedValue()
     {
-        return expectedValue;
+        return this.___expectedValue;
     }
 
     public ValueNode getNewValue()
     {
-        return newValue;
+        return this.___newValue;
     }
 
     // @cons
     public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue, BarrierType __barrierType, Stamp __stamp)
     {
         super(__c, __address, __location, __stamp, __barrierType);
-        this.expectedValue = __expectedValue;
-        this.newValue = __newValue;
+        this.___expectedValue = __expectedValue;
+        this.___newValue = __newValue;
     }
 
     @Override
@@ -80,6 +80,6 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
     @Override
     public Stamp getAccessStamp()
     {
-        return expectedValue.stamp(NodeView.DEFAULT).meet(newValue.stamp(NodeView.DEFAULT)).unrestricted();
+        return this.___expectedValue.stamp(NodeView.DEFAULT).meet(this.___newValue.stamp(NodeView.DEFAULT)).unrestricted();
     }
 }

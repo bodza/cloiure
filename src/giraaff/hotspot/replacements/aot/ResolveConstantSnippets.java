@@ -115,17 +115,17 @@ public final class ResolveConstantSnippets implements Snippets
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final SnippetInfo resolveObjectConstant = snippet(ResolveConstantSnippets.class, "resolveObjectConstant");
+        private final SnippetInfo ___resolveObjectConstant = snippet(ResolveConstantSnippets.class, "resolveObjectConstant");
         // @field
-        private final SnippetInfo resolveDynamicConstant = snippet(ResolveConstantSnippets.class, "resolveDynamicConstant");
+        private final SnippetInfo ___resolveDynamicConstant = snippet(ResolveConstantSnippets.class, "resolveDynamicConstant");
         // @field
-        private final SnippetInfo resolveKlassConstant = snippet(ResolveConstantSnippets.class, "resolveKlassConstant");
+        private final SnippetInfo ___resolveKlassConstant = snippet(ResolveConstantSnippets.class, "resolveKlassConstant");
         // @field
-        private final SnippetInfo resolveMethodAndLoadCounters = snippet(ResolveConstantSnippets.class, "resolveMethodAndLoadCounters");
+        private final SnippetInfo ___resolveMethodAndLoadCounters = snippet(ResolveConstantSnippets.class, "resolveMethodAndLoadCounters");
         // @field
-        private final SnippetInfo initializeKlass = snippet(ResolveConstantSnippets.class, "initializeKlass");
+        private final SnippetInfo ___initializeKlass = snippet(ResolveConstantSnippets.class, "initializeKlass");
         // @field
-        private final SnippetInfo pureInitializeKlass = snippet(ResolveConstantSnippets.class, "pureInitializeKlass");
+        private final SnippetInfo ___pureInitializeKlass = snippet(ResolveConstantSnippets.class, "pureInitializeKlass");
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target)
@@ -138,13 +138,13 @@ public final class ResolveConstantSnippets implements Snippets
             StructuredGraph __graph = __resolveConstantNode.graph();
 
             ValueNode __value = __resolveConstantNode.value();
-            SnippetInfo __snippet = resolveDynamicConstant;
+            SnippetInfo __snippet = this.___resolveDynamicConstant;
 
             Arguments __args = new Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
             __args.add("constant", __value);
 
             SnippetTemplate __template = template(__resolveConstantNode, __args);
-            __template.instantiate(providers.getMetaAccess(), __resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+            __template.instantiate(this.___providers.getMetaAccess(), __resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, __args);
 
             if (!__resolveConstantNode.isDeleted())
             {
@@ -167,29 +167,29 @@ public final class ResolveConstantSnippets implements Snippets
                 {
                     if (__resolveConstantNode.action() == HotSpotConstantLoadAction.RESOLVE)
                     {
-                        __snippet = resolveKlassConstant;
+                        __snippet = this.___resolveKlassConstant;
                     }
                     else
                     {
-                        __snippet = pureInitializeKlass;
+                        __snippet = this.___pureInitializeKlass;
                     }
                 }
             }
             else if (__constant instanceof HotSpotObjectConstant)
             {
-                __snippet = resolveObjectConstant;
+                __snippet = this.___resolveObjectConstant;
                 HotSpotObjectConstant __hotspotObjectConstant = (HotSpotObjectConstant) __constant;
             }
             if (__snippet == null)
             {
-                throw new GraalError("Unsupported constant type: " + __constant);
+                throw new GraalError("unsupported constant type: " + __constant);
             }
 
             Arguments __args = new Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
             __args.add("constant", __value);
 
             SnippetTemplate __template = template(__resolveConstantNode, __args);
-            __template.instantiate(providers.getMetaAccess(), __resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+            __template.instantiate(this.___providers.getMetaAccess(), __resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, __args);
 
             if (!__resolveConstantNode.isDeleted())
             {
@@ -206,11 +206,11 @@ public final class ResolveConstantSnippets implements Snippets
 
             if (__constant instanceof HotSpotMetaspaceConstant)
             {
-                Arguments __args = new Arguments(initializeKlass, __graph.getGuardsStage(), __tool.getLoweringStage());
+                Arguments __args = new Arguments(this.___initializeKlass, __graph.getGuardsStage(), __tool.getLoweringStage());
                 __args.add("constant", __value);
 
                 SnippetTemplate __template = template(__initializeKlassNode, __args);
-                __template.instantiate(providers.getMetaAccess(), __initializeKlassNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+                __template.instantiate(this.___providers.getMetaAccess(), __initializeKlassNode, SnippetTemplate.DEFAULT_REPLACER, __args);
                 if (!__initializeKlassNode.isDeleted())
                 {
                     GraphUtil.killWithUnusedFloatingInputs(__initializeKlassNode);
@@ -218,7 +218,7 @@ public final class ResolveConstantSnippets implements Snippets
             }
             else
             {
-                throw new GraalError("Unsupported constant type: " + __constant);
+                throw new GraalError("unsupported constant type: " + __constant);
             }
         }
 
@@ -226,11 +226,11 @@ public final class ResolveConstantSnippets implements Snippets
         {
             StructuredGraph __graph = __resolveMethodAndLoadCountersNode.graph();
             ConstantNode __method = ConstantNode.forConstant(MethodPointerStamp.methodNonNull(), __resolveMethodAndLoadCountersNode.getMethod().getEncoding(), __tool.getMetaAccess(), __graph);
-            Arguments __args = new Arguments(resolveMethodAndLoadCounters, __graph.getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___resolveMethodAndLoadCounters, __graph.getGuardsStage(), __tool.getLoweringStage());
             __args.add("method", __method);
             __args.add("klassHint", __resolveMethodAndLoadCountersNode.getHub());
             SnippetTemplate __template = template(__resolveMethodAndLoadCountersNode, __args);
-            __template.instantiate(providers.getMetaAccess(), __resolveMethodAndLoadCountersNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+            __template.instantiate(this.___providers.getMetaAccess(), __resolveMethodAndLoadCountersNode, SnippetTemplate.DEFAULT_REPLACER, __args);
 
             if (!__resolveMethodAndLoadCountersNode.isDeleted())
             {

@@ -30,13 +30,13 @@ import giraaff.word.WordTypes;
 public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsProvider
 {
     // @field
-    private final Value[] nativeABICallerSaveRegisters;
+    private final Value[] ___nativeABICallerSaveRegisters;
 
     // @cons
     public AMD64HotSpotForeignCallsProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, Value[] __nativeABICallerSaveRegisters)
     {
         super(__runtime, __metaAccess, __codeCache, __wordTypes);
-        this.nativeABICallerSaveRegisters = __nativeABICallerSaveRegisters;
+        this.___nativeABICallerSaveRegisters = __nativeABICallerSaveRegisters;
     }
 
     @Override
@@ -69,6 +69,6 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
     @Override
     public Value[] getNativeABICallerSaveRegisters()
     {
-        return nativeABICallerSaveRegisters;
+        return this.___nativeABICallerSaveRegisters;
     }
 }

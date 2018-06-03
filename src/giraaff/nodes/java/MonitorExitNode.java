@@ -13,39 +13,39 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code MonitorExitNode} represents a monitor release. If it is the release of the monitor of
- * a synchronized method, then the return value of the method will be referenced via the edge
- * {@link #escapedReturnValue}, so that it will be materialized before releasing the monitor.
- */
+///
+// The {@code MonitorExitNode} represents a monitor release. If it is the release of the monitor of
+// a synchronized method, then the return value of the method will be referenced via the edge
+// {@link #escapedReturnValue}, so that it will be materialized before releasing the monitor.
+///
 // @class MonitorExitNode
 public final class MonitorExitNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<MonitorExitNode> TYPE = NodeClass.create(MonitorExitNode.class);
 
-    /**
-     * Non-null for the monitor exit introduced due to a synchronized root method and null in all
-     * other cases.
-     */
+    ///
+    // Non-null for the monitor exit introduced due to a synchronized root method and null in all
+    // other cases.
+    ///
     @OptionalInput
     // @field
-    ValueNode escapedReturnValue;
+    ValueNode ___escapedReturnValue;
 
     // @cons
     public MonitorExitNode(ValueNode __object, MonitorIdNode __monitorId, ValueNode __escapedReturnValue)
     {
         super(TYPE, __object, __monitorId);
-        this.escapedReturnValue = __escapedReturnValue;
+        this.___escapedReturnValue = __escapedReturnValue;
     }
 
-    /**
-     * Return value is cleared when a synchronized method graph is inlined.
-     */
+    ///
+    // Return value is cleared when a synchronized method graph is inlined.
+    ///
     public void clearEscapedReturnValue()
     {
-        updateUsages(escapedReturnValue, null);
-        this.escapedReturnValue = null;
+        updateUsages(this.___escapedReturnValue, null);
+        this.___escapedReturnValue = null;
     }
 
     @Override

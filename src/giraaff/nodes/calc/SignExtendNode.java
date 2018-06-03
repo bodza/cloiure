@@ -13,9 +13,9 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * The {@code SignExtendNode} converts an integer to a wider integer using sign extension.
- */
+///
+// The {@code SignExtendNode} converts an integer to a wider integer using sign extension.
+///
 // @class SignExtendNode
 public final class SignExtendNode extends IntegerConvertNode<SignExtend, Narrow>
 {

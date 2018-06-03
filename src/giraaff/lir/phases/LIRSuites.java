@@ -15,21 +15,21 @@ import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizati
 public final class LIRSuites
 {
     // @field
-    private final LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage;
+    private final LIRPhaseSuite<PreAllocationOptimizationContext> ___preAllocOptStage;
     // @field
-    private final LIRPhaseSuite<AllocationContext> allocStage;
+    private final LIRPhaseSuite<AllocationContext> ___allocStage;
     // @field
-    private final LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage;
+    private final LIRPhaseSuite<PostAllocationOptimizationContext> ___postAllocStage;
     // @field
-    private boolean immutable;
+    private boolean ___immutable;
 
     // @cons
     public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationContext> __preAllocOptStage, LIRPhaseSuite<AllocationContext> __allocStage, LIRPhaseSuite<PostAllocationOptimizationContext> __postAllocStage)
     {
         super();
-        this.preAllocOptStage = __preAllocOptStage;
-        this.allocStage = __allocStage;
-        this.postAllocStage = __postAllocStage;
+        this.___preAllocOptStage = __preAllocOptStage;
+        this.___allocStage = __allocStage;
+        this.___postAllocStage = __postAllocStage;
     }
 
     // @cons
@@ -38,62 +38,62 @@ public final class LIRSuites
         this(__other.getPreAllocationOptimizationStage().copy(), __other.getAllocationStage().copy(), __other.getPostAllocationOptimizationStage().copy());
     }
 
-    /**
-     * {@link PreAllocationOptimizationPhase}s are executed between {@link LIR} generation and
-     * register allocation.
-     *
-     * {@link PreAllocationOptimizationPhase Implementers} can create new
-     * {@link LIRGeneratorTool#newVariable variables}, {@link LIRGenerationResult#getFrameMap stack
-     * slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
-     */
+    ///
+    // {@link PreAllocationOptimizationPhase}s are executed between {@link LIR} generation and
+    // register allocation.
+    //
+    // {@link PreAllocationOptimizationPhase Implementers} can create new
+    // {@link LIRGeneratorTool#newVariable variables}, {@link LIRGenerationResult#getFrameMap stack
+    // slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
+    ///
     public LIRPhaseSuite<PreAllocationOptimizationContext> getPreAllocationOptimizationStage()
     {
-        return preAllocOptStage;
+        return this.___preAllocOptStage;
     }
 
-    /**
-     * {@link AllocationPhase}s are responsible for register allocation and translating
-     * {@link VirtualStackSlot}s into {@link StackSlot}s.
-     *
-     * After the {@link AllocationStage} there should be no more {@link Variable}s and
-     * {@link VirtualStackSlot}s.
-     */
+    ///
+    // {@link AllocationPhase}s are responsible for register allocation and translating
+    // {@link VirtualStackSlot}s into {@link StackSlot}s.
+    //
+    // After the {@link AllocationStage} there should be no more {@link Variable}s and
+    // {@link VirtualStackSlot}s.
+    ///
     public LIRPhaseSuite<AllocationContext> getAllocationStage()
     {
-        return allocStage;
+        return this.___allocStage;
     }
 
-    /**
-     * {@link PostAllocationOptimizationPhase}s are executed after register allocation and before
-     * machine code generation.
-     *
-     * A {@link PostAllocationOptimizationPhase} must not introduce new {@link Variable}s,
-     * {@link VirtualStackSlot}s or {@link StackSlot}s. Blocks might be removed from
-     * {@link LIR#codeEmittingOrder()} by overwriting them with {@code null}.
-     */
+    ///
+    // {@link PostAllocationOptimizationPhase}s are executed after register allocation and before
+    // machine code generation.
+    //
+    // A {@link PostAllocationOptimizationPhase} must not introduce new {@link Variable}s,
+    // {@link VirtualStackSlot}s or {@link StackSlot}s. Blocks might be removed from
+    // {@link LIR#codeEmittingOrder()} by overwriting them with {@code null}.
+    ///
     public LIRPhaseSuite<PostAllocationOptimizationContext> getPostAllocationOptimizationStage()
     {
-        return postAllocStage;
+        return this.___postAllocStage;
     }
 
     public boolean isImmutable()
     {
-        return immutable;
+        return this.___immutable;
     }
 
     public synchronized void setImmutable()
     {
-        if (!immutable)
+        if (!this.___immutable)
         {
-            preAllocOptStage.setImmutable();
-            allocStage.setImmutable();
-            postAllocStage.setImmutable();
-            immutable = true;
+            this.___preAllocOptStage.setImmutable();
+            this.___allocStage.setImmutable();
+            this.___postAllocStage.setImmutable();
+            this.___immutable = true;
         }
     }
 
     public LIRSuites copy()
     {
-        return new LIRSuites(preAllocOptStage.copy(), allocStage.copy(), postAllocStage.copy());
+        return new LIRSuites(this.___preAllocOptStage.copy(), this.___allocStage.copy(), this.___postAllocStage.copy());
     }
 }

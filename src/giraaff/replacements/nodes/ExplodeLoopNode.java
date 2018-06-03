@@ -9,11 +9,11 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.LoopBeginNode;
 
-/**
- * Placeholder node to denote to snippet preparation that the following loop must be completely unrolled.
- *
- * @see VarargsParameter
- */
+///
+// Placeholder node to denote to snippet preparation that the following loop must be completely unrolled.
+//
+// @see VarargsParameter
+///
 // @class ExplodeLoopNode
 public final class ExplodeLoopNode extends FixedWithNextNode
 {
@@ -48,9 +48,9 @@ public final class ExplodeLoopNode extends FixedWithNextNode
         return (LoopBeginNode) __currentNext;
     }
 
-    /**
-     * A call to this method must be placed immediately prior to the loop that is to be exploded.
-     */
+    ///
+    // A call to this method must be placed immediately prior to the loop that is to be exploded.
+    ///
     @NodeIntrinsic
     public static native void explodeLoop();
 }

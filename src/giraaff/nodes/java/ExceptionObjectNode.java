@@ -19,10 +19,10 @@ import giraaff.nodes.spi.LoweringTool;
 
 import giraaff.nodeinfo.InputType;
 
-/**
- * The entry to an exception handler with the exception coming from a call (as opposed to a local
- * throw instruction or implicit exception).
- */
+///
+// The entry to an exception handler with the exception coming from a call (as opposed to a local
+// throw instruction or implicit exception).
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class ExceptionObjectNode
 public final class ExceptionObjectNode extends BeginStateSplitNode implements Lowerable, MemoryCheckpoint.Single
@@ -42,10 +42,10 @@ public final class ExceptionObjectNode extends BeginStateSplitNode implements Lo
         return LocationIdentity.any();
     }
 
-    /**
-     * An exception handler is an entry point to a method from the runtime and so represents an
-     * instruction that cannot be re-executed. It therefore needs a frame state.
-     */
+    ///
+    // An exception handler is an entry point to a method from the runtime and so represents an
+    // instruction that cannot be re-executed. It therefore needs a frame state.
+    ///
     @Override
     public boolean hasSideEffect()
     {
@@ -57,10 +57,8 @@ public final class ExceptionObjectNode extends BeginStateSplitNode implements Lo
     {
         if (graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
         {
-            /*
-             * Now the lowering to BeginNode+LoadExceptionNode can be performed, since no more
-             * deopts can float in between the begin node and the load exception node.
-             */
+            // Now the lowering to BeginNode+LoadExceptionNode can be performed, since no more
+            // deopts can float in between the begin node and the load exception node.
             LocationIdentity __locationsKilledByInvoke = ((InvokeWithExceptionNode) predecessor()).getLocationIdentity();
             AbstractBeginNode __entry = graph().add(KillingBeginNode.create(__locationsKilledByInvoke));
             LoadExceptionObjectNode __loadException = graph().add(new LoadExceptionObjectNode(stamp(NodeView.DEFAULT)));

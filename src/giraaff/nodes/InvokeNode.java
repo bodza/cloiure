@@ -19,9 +19,9 @@ import giraaff.nodes.util.GraphUtil;
 
 import giraaff.nodeinfo.InputType;
 
-/**
- * The {@code InvokeNode} represents all kinds of method calls.
- */
+///
+// The {@code InvokeNode} represents all kinds of method calls.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class InvokeNode
 public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke, LIRLowerable, MemoryCheckpoint.Single, UncheckedInterfaceProvider
@@ -31,19 +31,19 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
 
     @OptionalInput
     // @field
-    ValueNode classInit;
+    ValueNode ___classInit;
     @Input(InputType.Extension)
     // @field
-    CallTargetNode callTarget;
+    CallTargetNode ___callTarget;
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateDuring;
+    FrameState ___stateDuring;
     // @field
-    protected final int bci;
+    protected final int ___bci;
     // @field
-    protected boolean polymorphic;
+    protected boolean ___polymorphic;
     // @field
-    protected boolean useForInlining;
+    protected boolean ___useForInlining;
 
     // @cons
     public InvokeNode(CallTargetNode __callTarget, int __bci)
@@ -55,10 +55,10 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     public InvokeNode(CallTargetNode __callTarget, int __bci, Stamp __stamp)
     {
         super(TYPE, __stamp);
-        this.callTarget = __callTarget;
-        this.bci = __bci;
-        this.polymorphic = false;
-        this.useForInlining = true;
+        this.___callTarget = __callTarget;
+        this.___bci = __bci;
+        this.___polymorphic = false;
+        this.___useForInlining = true;
     }
 
     @Override
@@ -75,37 +75,37 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     @Override
     public CallTargetNode callTarget()
     {
-        return callTarget;
+        return this.___callTarget;
     }
 
     void setCallTarget(CallTargetNode __callTarget)
     {
-        updateUsages(this.callTarget, __callTarget);
-        this.callTarget = __callTarget;
+        updateUsages(this.___callTarget, __callTarget);
+        this.___callTarget = __callTarget;
     }
 
     @Override
     public boolean isPolymorphic()
     {
-        return polymorphic;
+        return this.___polymorphic;
     }
 
     @Override
     public void setPolymorphic(boolean __value)
     {
-        this.polymorphic = __value;
+        this.___polymorphic = __value;
     }
 
     @Override
     public boolean useForInlining()
     {
-        return useForInlining;
+        return this.___useForInlining;
     }
 
     @Override
     public void setUseForInlining(boolean __value)
     {
-        this.useForInlining = __value;
+        this.___useForInlining = __value;
     }
 
     @Override
@@ -115,7 +115,7 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
         {
             if (getStackKind() != JavaKind.Void)
             {
-                if (callTarget instanceof MethodCallTargetNode && ((MethodCallTargetNode) callTarget).targetMethod().getAnnotation(NodeIntrinsic.class) != null)
+                if (this.___callTarget instanceof MethodCallTargetNode && ((MethodCallTargetNode) this.___callTarget).targetMethod().getAnnotation(NodeIntrinsic.class) != null)
                 {
                     return true;
                 }
@@ -146,13 +146,13 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     @Override
     public int bci()
     {
-        return bci;
+        return this.___bci;
     }
 
     @Override
     public void intrinsify(Node __node)
     {
-        CallTargetNode __call = callTarget;
+        CallTargetNode __call = this.___callTarget;
         FrameState __currentStateAfter = stateAfter();
         if (__node instanceof StateSplit)
         {
@@ -195,32 +195,32 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     @Override
     public FrameState stateDuring()
     {
-        return stateDuring;
+        return this.___stateDuring;
     }
 
     @Override
     public void setStateDuring(FrameState __stateDuring)
     {
-        updateUsages(this.stateDuring, __stateDuring);
-        this.stateDuring = __stateDuring;
+        updateUsages(this.___stateDuring, __stateDuring);
+        this.___stateDuring = __stateDuring;
     }
 
     @Override
     public Stamp uncheckedStamp()
     {
-        return this.callTarget.returnStamp().getUncheckedStamp();
+        return this.___callTarget.returnStamp().getUncheckedStamp();
     }
 
     @Override
     public void setClassInit(ValueNode __classInit)
     {
-        this.classInit = __classInit;
+        this.___classInit = __classInit;
         updateUsages(null, __classInit);
     }
 
     @Override
     public ValueNode classInit()
     {
-        return classInit;
+        return this.___classInit;
     }
 }

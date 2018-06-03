@@ -20,18 +20,18 @@ import giraaff.phases.schedule.SchedulePhase;
 import giraaff.phases.schedule.SchedulePhase.SchedulingStrategy;
 import giraaff.phases.tiers.MidTierContext;
 
-/**
- * This phase lowers {@link GuardNode GuardNodes} into corresponding control-flow structure and
- * {@link DeoptimizeNode DeoptimizeNodes}.
- *
- * This allow to enter the {@link GuardsStage#FIXED_DEOPTS FIXED_DEOPTS} stage of the graph where
- * all node that may cause deoptimization are fixed.
- *
- * It first makes a schedule in order to know where the control flow should be placed. Then, for
- * each block, it applies two passes. The first one tries to replace null-check guards with implicit
- * null checks performed by access to the objects that need to be null checked. The second phase
- * does the actual control-flow expansion of the remaining {@link GuardNode GuardNodes}.
- */
+///
+// This phase lowers {@link GuardNode GuardNodes} into corresponding control-flow structure and
+// {@link DeoptimizeNode DeoptimizeNodes}.
+//
+// This allow to enter the {@link GuardsStage#FIXED_DEOPTS FIXED_DEOPTS} stage of the graph where
+// all node that may cause deoptimization are fixed.
+//
+// It first makes a schedule in order to know where the control flow should be placed. Then, for
+// each block, it applies two passes. The first one tries to replace null-check guards with implicit
+// null checks performed by access to the objects that need to be null checked. The second phase
+// does the actual control-flow expansion of the remaining {@link GuardNode GuardNodes}.
+///
 // @class GuardLoweringPhase
 public final class GuardLoweringPhase extends BasePhase<MidTierContext>
 {
@@ -39,13 +39,13 @@ public final class GuardLoweringPhase extends BasePhase<MidTierContext>
     private static final class LowerGuards extends ScheduledNodeIterator
     {
         // @field
-        private final Block block;
+        private final Block ___block;
 
         // @cons
         LowerGuards(Block __block)
         {
             super();
-            this.block = __block;
+            this.___block = __block;
         }
 
         @Override
@@ -92,7 +92,7 @@ public final class GuardLoweringPhase extends BasePhase<MidTierContext>
 
         private void insertLoopExits(DeoptimizeNode __deopt)
         {
-            Loop<Block> __loop = block.getLoop();
+            Loop<Block> __loop = this.___block.getLoop();
             StructuredGraph __graph = __deopt.graph();
             while (__loop != null)
             {

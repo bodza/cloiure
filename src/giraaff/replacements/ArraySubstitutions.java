@@ -10,9 +10,9 @@ import giraaff.api.replacements.MethodSubstitution;
 import giraaff.nodes.DeoptimizeNode;
 import giraaff.nodes.java.ArrayLengthNode;
 
-/**
- * Substitutions for {@link java.lang.reflect.Array} methods.
- */
+///
+// Substitutions for {@link java.lang.reflect.Array} methods.
+///
 @ClassSubstitution(Array.class)
 // @class ArraySubstitutions
 public final class ArraySubstitutions

@@ -21,9 +21,9 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * A call to the VM via a regular stub.
- */
+///
+// A call to the VM via a regular stub.
+///
 // @class ResolveConstantStubCall
 public final class ResolveConstantStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
@@ -32,48 +32,48 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
 
     @OptionalInput
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     @Input
     // @field
-    protected ValueNode string;
+    protected ValueNode ___string;
     // @field
-    protected Constant constant;
+    protected Constant ___constant;
     // @field
-    protected HotSpotConstantLoadAction action;
+    protected HotSpotConstantLoadAction ___action;
 
     // @cons
     public ResolveConstantStubCall(ValueNode __value, ValueNode __string)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
-        this.string = __string;
-        this.action = HotSpotConstantLoadAction.RESOLVE;
+        this.___value = __value;
+        this.___string = __string;
+        this.___action = HotSpotConstantLoadAction.RESOLVE;
     }
 
     // @cons
     public ResolveConstantStubCall(ValueNode __value, ValueNode __string, HotSpotConstantLoadAction __action)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
-        this.string = __string;
-        this.action = __action;
+        this.___value = __value;
+        this.___string = __string;
+        this.___action = __action;
     }
 
     @NodeIntrinsic
-    public static native Object resolveObject(Object value, Object symbol);
+    public static native Object resolveObject(Object __value, Object __symbol);
 
     @NodeIntrinsic
-    public static native KlassPointer resolveKlass(KlassPointer value, Object symbol);
+    public static native KlassPointer resolveKlass(KlassPointer __value, Object __symbol);
 
     @NodeIntrinsic
-    public static native KlassPointer resolveKlass(KlassPointer value, Object symbol, @ConstantNodeParameter HotSpotConstantLoadAction action);
+    public static native KlassPointer resolveKlass(KlassPointer __value, Object __symbol, @ConstantNodeParameter HotSpotConstantLoadAction __action);
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (value != null)
+        if (this.___value != null)
         {
-            constant = GraphUtil.foldIfConstantAndRemove(this, value);
+            this.___constant = GraphUtil.foldIfConstantAndRemove(this, this.___value);
         }
         return this;
     }
@@ -81,27 +81,27 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __stringValue = __gen.operand(string);
+        Value __stringValue = __gen.operand(this.___string);
         LIRFrameState __fs = __gen.state(this);
         Value __result;
-        if (constant instanceof HotSpotObjectConstant)
+        if (this.___constant instanceof HotSpotObjectConstant)
         {
-            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitObjectConstantRetrieval(constant, __stringValue, __fs);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitObjectConstantRetrieval(this.___constant, __stringValue, __fs);
         }
-        else if (constant instanceof HotSpotMetaspaceConstant)
+        else if (this.___constant instanceof HotSpotMetaspaceConstant)
         {
-            if (action == HotSpotConstantLoadAction.RESOLVE)
+            if (this.___action == HotSpotConstantLoadAction.RESOLVE)
             {
-                __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitMetaspaceConstantRetrieval(constant, __stringValue, __fs);
+                __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitMetaspaceConstantRetrieval(this.___constant, __stringValue, __fs);
             }
             else
             {
-                __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, __stringValue, __fs);
+                __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(this.___constant, __stringValue, __fs);
             }
         }
         else
         {
-            throw new BailoutException("unsupported constant type: " + constant);
+            throw new BailoutException("unsupported constant type: " + this.___constant);
         }
         __gen.setResult(this, __result);
     }

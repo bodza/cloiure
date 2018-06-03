@@ -10,9 +10,9 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.util.GraalError;
 
-/**
- * Singleton stamp representing the value of type {@code void}.
- */
+///
+// Singleton stamp representing the value of type {@code void}.
+///
 // @class VoidStamp
 public final class VoidStamp extends Stamp
 {

@@ -73,22 +73,22 @@ public abstract class NodePredicates
     static final class AndPredicate implements NodePredicate
     {
         // @field
-        private final NodePredicate a;
+        private final NodePredicate ___a;
         // @field
-        private final NodePredicate b;
+        private final NodePredicate ___b;
 
         // @cons
         AndPredicate(NodePredicate __a, NodePredicate __b)
         {
             super();
-            this.a = __a;
-            this.b = __b;
+            this.___a = __a;
+            this.___b = __b;
         }
 
         @Override
         public boolean apply(Node __n)
         {
-            return a.apply(__n) && b.apply(__n);
+            return this.___a.apply(__n) && this.___b.apply(__n);
         }
     }
 
@@ -96,25 +96,25 @@ public abstract class NodePredicates
     static final class NotPredicate implements NodePredicate
     {
         // @field
-        private final NodePredicate a;
+        private final NodePredicate ___a;
 
         // @cons
         NotPredicate(NodePredicate __n)
         {
             super();
-            this.a = __n;
+            this.___a = __n;
         }
 
         @Override
         public boolean apply(Node __n)
         {
-            return !a.apply(__n);
+            return !this.___a.apply(__n);
         }
 
         @Override
         public NodePredicate negate()
         {
-            return a;
+            return this.___a;
         }
     }
 
@@ -132,43 +132,43 @@ public abstract class NodePredicates
     public static final class PositiveTypePredicate implements NodePredicate
     {
         // @field
-        private final Class<?> type;
+        private final Class<?> ___type;
         // @field
-        private PositiveTypePredicate or;
+        private PositiveTypePredicate ___or;
 
         // @cons
         PositiveTypePredicate(Class<?> __type)
         {
             super();
-            this.type = __type;
+            this.___type = __type;
         }
 
         // @cons
         public PositiveTypePredicate(NegativeTypePredicate __a)
         {
             super();
-            type = __a.type;
-            if (__a.nor != null)
+            this.___type = __a.___type;
+            if (__a.___nor != null)
             {
-                or = new PositiveTypePredicate(__a.nor);
+                this.___or = new PositiveTypePredicate(__a.___nor);
             }
         }
 
         @Override
         public boolean apply(Node __n)
         {
-            return type.isInstance(__n) || (or != null && or.apply(__n));
+            return this.___type.isInstance(__n) || (this.___or != null && this.___or.apply(__n));
         }
 
         public PositiveTypePredicate or(Class<? extends Node> __clazz)
         {
-            if (or == null)
+            if (this.___or == null)
             {
-                or = new PositiveTypePredicate(__clazz);
+                this.___or = new PositiveTypePredicate(__clazz);
             }
             else
             {
-                or.or(__clazz);
+                this.___or.or(__clazz);
             }
             return this;
         }
@@ -184,43 +184,43 @@ public abstract class NodePredicates
     public static final class NegativeTypePredicate implements NodePredicate
     {
         // @field
-        private final Class<?> type;
+        private final Class<?> ___type;
         // @field
-        private NegativeTypePredicate nor;
+        private NegativeTypePredicate ___nor;
 
         // @cons
         NegativeTypePredicate(Class<?> __type)
         {
             super();
-            this.type = __type;
+            this.___type = __type;
         }
 
         // @cons
         public NegativeTypePredicate(PositiveTypePredicate __a)
         {
             super();
-            type = __a.type;
-            if (__a.or != null)
+            this.___type = __a.___type;
+            if (__a.___or != null)
             {
-                nor = new NegativeTypePredicate(__a.or);
+                this.___nor = new NegativeTypePredicate(__a.___or);
             }
         }
 
         @Override
         public boolean apply(Node __n)
         {
-            return !type.isInstance(__n) && (nor == null || nor.apply(__n));
+            return !this.___type.isInstance(__n) && (this.___nor == null || this.___nor.apply(__n));
         }
 
         public NegativeTypePredicate nor(Class<? extends Node> __clazz)
         {
-            if (nor == null)
+            if (this.___nor == null)
             {
-                nor = new NegativeTypePredicate(__clazz);
+                this.___nor = new NegativeTypePredicate(__clazz);
             }
             else
             {
-                nor.nor(__clazz);
+                this.___nor.nor(__clazz);
             }
             return this;
         }

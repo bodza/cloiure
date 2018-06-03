@@ -12,9 +12,9 @@ import giraaff.core.common.cfg.BlockMap;
 import giraaff.core.common.cfg.PrintableDominatorOptimizationProblem;
 import giraaff.core.common.cfg.PropertyConsumable;
 
-/**
- * Represents a dominator (sub-)tree for a constant definition.
- */
+///
+// Represents a dominator (sub-)tree for a constant definition.
+///
 // @class ConstantTree
 public final class ConstantTree extends PrintableDominatorOptimizationProblem<ConstantTree.Flags, ConstantTree.NodeCost>
 {
@@ -27,26 +27,26 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
         CANDIDATE,
     }
 
-    /**
-     * Costs associated with a block.
-     */
+    ///
+    // Costs associated with a block.
+    ///
     // @class ConstantTree.NodeCost
     public static final class NodeCost implements PropertyConsumable
     {
         // @field
-        private List<UseEntry> usages;
+        private List<UseEntry> ___usages;
         // @field
-        private double bestCost;
+        private double ___bestCost;
         // @field
-        private int numMat;
+        private int ___numMat;
 
         // @cons
         public NodeCost(double __bestCost, List<UseEntry> __usages, int __numMat)
         {
             super();
-            this.bestCost = __bestCost;
-            this.usages = __usages;
-            this.numMat = __numMat;
+            this.___bestCost = __bestCost;
+            this.___usages = __usages;
+            this.___numMat = __numMat;
         }
 
         @Override
@@ -54,68 +54,68 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
         {
             __action.accept("bestCost", Double.toString(getBestCost()));
             __action.accept("numMat", Integer.toString(getNumMaterializations()));
-            __action.accept("numUsages", Integer.toString(usages.size()));
+            __action.accept("numUsages", Integer.toString(this.___usages.size()));
         }
 
         public void addUsage(UseEntry __usage)
         {
-            if (usages == null)
+            if (this.___usages == null)
             {
-                usages = new ArrayList<>();
+                this.___usages = new ArrayList<>();
             }
-            usages.add(__usage);
+            this.___usages.add(__usage);
         }
 
         public List<UseEntry> getUsages()
         {
-            if (usages == null)
+            if (this.___usages == null)
             {
                 return Collections.emptyList();
             }
-            return usages;
+            return this.___usages;
         }
 
         public double getBestCost()
         {
-            return bestCost;
+            return this.___bestCost;
         }
 
         public int getNumMaterializations()
         {
-            return numMat;
+            return this.___numMat;
         }
 
         public void setBestCost(double __cost)
         {
-            bestCost = __cost;
+            this.___bestCost = __cost;
         }
     }
 
     // @field
-    private final BlockMap<List<UseEntry>> blockMap;
+    private final BlockMap<List<UseEntry>> ___blockMap;
 
     // @cons
     public ConstantTree(AbstractControlFlowGraph<?> __cfg, DefUseTree __tree)
     {
         super(Flags.class, __cfg);
-        this.blockMap = new BlockMap<>(__cfg);
+        this.___blockMap = new BlockMap<>(__cfg);
         __tree.forEach(__u -> getOrInitList(__u.getBlock()).add(__u));
     }
 
     private List<UseEntry> getOrInitList(AbstractBlockBase<?> __block)
     {
-        List<UseEntry> __list = blockMap.get(__block);
+        List<UseEntry> __list = this.___blockMap.get(__block);
         if (__list == null)
         {
             __list = new ArrayList<>();
-            blockMap.put(__block, __list);
+            this.___blockMap.put(__block, __list);
         }
         return __list;
     }
 
     public List<UseEntry> getUsages(AbstractBlockBase<?> __block)
     {
-        List<UseEntry> __list = blockMap.get(__block);
+        List<UseEntry> __list = this.___blockMap.get(__block);
         if (__list == null)
         {
             return Collections.emptyList();
@@ -123,15 +123,15 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
         return Collections.unmodifiableList(__list);
     }
 
-    /**
-     * Returns the cost object associated with {@code block}. If there is none, a new cost object is created.
-     */
+    ///
+    // Returns the cost object associated with {@code block}. If there is none, a new cost object is created.
+    ///
     NodeCost getOrInitCost(AbstractBlockBase<?> __block)
     {
         NodeCost __cost = getCost(__block);
         if (__cost == null)
         {
-            __cost = new NodeCost(__block.probability(), blockMap.get(__block), 1);
+            __cost = new NodeCost(__block.probability(), this.___blockMap.get(__block), 1);
             setCost(__block, __cost);
         }
         return __cost;

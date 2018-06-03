@@ -33,7 +33,7 @@ public final class CallSiteTargetNode extends MacroStateSplitNode implements Can
 
     private ValueNode getCallSite()
     {
-        return arguments.get(0);
+        return this.___arguments.get(0);
     }
 
     public static ConstantNode tryFold(ValueNode __callSite, MetaAccessProvider __metaAccess, Assumptions __assumptions)

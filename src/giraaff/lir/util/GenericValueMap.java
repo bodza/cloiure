@@ -9,30 +9,30 @@ import org.graalvm.collections.Equivalence;
 public final class GenericValueMap<T> extends ValueMap<Value, T>
 {
     // @field
-    private final EconomicMap<Value, T> data;
+    private final EconomicMap<Value, T> ___data;
 
     // @cons
     public GenericValueMap()
     {
         super();
-        data = EconomicMap.create(Equivalence.DEFAULT);
+        this.___data = EconomicMap.create(Equivalence.DEFAULT);
     }
 
     @Override
     public T get(Value __value)
     {
-        return data.get(__value);
+        return this.___data.get(__value);
     }
 
     @Override
     public void remove(Value __value)
     {
-        data.removeKey(__value);
+        this.___data.removeKey(__value);
     }
 
     @Override
     public void put(Value __value, T __object)
     {
-        data.put(__value, __object);
+        this.___data.put(__value, __object);
     }
 }

@@ -26,36 +26,36 @@ import giraaff.util.GraalError;
 // @class ControlFlowGraph
 public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 {
-    /**
-     * Don't allow probability values to be become too small or too high as this makes frequency
-     * calculations over- or underflow the range of a double. This commonly happens with infinite
-     * loops within infinite loops. The value is chosen a bit lower than half the maximum exponent
-     * supported by double. That way we can never overflow to infinity when multiplying two
-     * probability values.
-     */
+    ///
+    // Don't allow probability values to be become too small or too high as this makes frequency
+    // calculations over- or underflow the range of a double. This commonly happens with infinite
+    // loops within infinite loops. The value is chosen a bit lower than half the maximum exponent
+    // supported by double. That way we can never overflow to infinity when multiplying two
+    // probability values.
+    ///
     // @def
     public static final double MIN_PROBABILITY = 0x1.0p-500;
     // @def
     public static final double MAX_PROBABILITY = 1 / MIN_PROBABILITY;
 
     // @field
-    public final StructuredGraph graph;
+    public final StructuredGraph ___graph;
 
     // @field
-    private NodeMap<Block> nodeToBlock;
+    private NodeMap<Block> ___nodeToBlock;
     // @field
-    private Block[] reversePostOrder;
+    private Block[] ___reversePostOrder;
     // @field
-    private List<Loop<Block>> loops;
+    private List<Loop<Block>> ___loops;
     // @field
-    private int maxDominatorDepth;
+    private int ___maxDominatorDepth;
 
     // @iface ControlFlowGraph.RecursiveVisitor
     public interface RecursiveVisitor<V>
     {
-        V enter(Block b);
+        V enter(Block __b);
 
-        void exit(Block b, V value);
+        void exit(Block __b, V __value);
     }
 
     public static ControlFlowGraph compute(StructuredGraph __graph, boolean __connectBlocks, boolean __computeLoops, boolean __computeDominators, boolean __computePostdominators)
@@ -83,7 +83,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     @SuppressWarnings("unchecked")
     public <V> void visitDominatorTreeDefault(RecursiveVisitor<V> __visitor)
     {
-        Block[] __stack = new Block[maxDominatorDepth + 1];
+        Block[] __stack = new Block[this.___maxDominatorDepth + 1];
         Block __current = getStartBlock();
         int __tos = 0;
         Object[] __values = null;
@@ -102,7 +102,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                     {
                         if (__values == null)
                         {
-                            __values = new Object[maxDominatorDepth + 1];
+                            __values = new Object[this.___maxDominatorDepth + 1];
                         }
                         __values[__valuesTOS++] = __value;
                     }
@@ -171,23 +171,23 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         public DeferredExit(Block __block, DeferredExit __next)
         {
             super();
-            this.block = __block;
-            this.next = __next;
+            this.___block = __block;
+            this.___next = __next;
         }
 
         // @field
-        private final Block block;
+        private final Block ___block;
         // @field
-        private final DeferredExit next;
+        private final DeferredExit ___next;
 
         public Block getBlock()
         {
-            return block;
+            return this.___block;
         }
 
         public DeferredExit getNext()
         {
-            return next;
+            return this.___next;
         }
     }
 
@@ -236,8 +236,8 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                     {
                         while (__deferredExit != null)
                         {
-                            __stack[++__tos] = __deferredExit.block;
-                            __deferredExit = __deferredExit.next;
+                            __stack[++__tos] = __deferredExit.___block;
+                            __deferredExit = __deferredExit.___next;
                         }
                         __deferredExits[__loopIndex] = null;
                     }
@@ -251,7 +251,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                 {
                     if (__values == null)
                     {
-                        __values = new Object[maxDominatorDepth + 1];
+                        __values = new Object[this.___maxDominatorDepth + 1];
                     }
                     __values[__valuesTOS++] = __value;
                 }
@@ -315,13 +315,13 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     private ControlFlowGraph(StructuredGraph __graph)
     {
         super();
-        this.graph = __graph;
-        this.nodeToBlock = __graph.createNodeMap();
+        this.___graph = __graph;
+        this.___nodeToBlock = __graph.createNodeMap();
     }
 
     private void computeDominators()
     {
-        Block[] __blocks = reversePostOrder;
+        Block[] __blocks = this.___reversePostOrder;
         int __curMaxDominatorDepth = 0;
         for (int __i = 1; __i < __blocks.length; __i++)
         {
@@ -358,8 +358,8 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 
             __curMaxDominatorDepth = Math.max(__curMaxDominatorDepth, __block.getDominatorDepth());
         }
-        this.maxDominatorDepth = __curMaxDominatorDepth;
-        calcDominatorRanges(getStartBlock(), reversePostOrder.length);
+        this.___maxDominatorDepth = __curMaxDominatorDepth;
+        calcDominatorRanges(getStartBlock(), this.___reversePostOrder.length);
     }
 
     private static void calcDominatorRanges(Block __block, int __size)
@@ -430,39 +430,39 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     @Override
     public Block[] getBlocks()
     {
-        return reversePostOrder;
+        return this.___reversePostOrder;
     }
 
     @Override
     public Block getStartBlock()
     {
-        return reversePostOrder[0];
+        return this.___reversePostOrder[0];
     }
 
     public Block[] reversePostOrder()
     {
-        return reversePostOrder;
+        return this.___reversePostOrder;
     }
 
     public NodeMap<Block> getNodeToBlock()
     {
-        return nodeToBlock;
+        return this.___nodeToBlock;
     }
 
     public Block blockFor(Node __node)
     {
-        return nodeToBlock.get(__node);
+        return this.___nodeToBlock.get(__node);
     }
 
     @Override
     public List<Loop<Block>> getLoops()
     {
-        return loops;
+        return this.___loops;
     }
 
     public int getMaxDominatorDepth()
     {
-        return maxDominatorDepth;
+        return this.___maxDominatorDepth;
     }
 
     private void identifyBlock(Block __block)
@@ -470,11 +470,11 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         FixedWithNextNode __cur = __block.getBeginNode();
         while (true)
         {
-            nodeToBlock.set(__cur, __block);
+            this.___nodeToBlock.set(__cur, __block);
             FixedNode __next = __cur.next();
             if (__next instanceof AbstractBeginNode)
             {
-                __block.endNode = __cur;
+                __block.___endNode = __cur;
                 return;
             }
             else if (__next instanceof FixedWithNextNode)
@@ -483,22 +483,22 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             }
             else
             {
-                nodeToBlock.set(__next, __block);
-                __block.endNode = __next;
+                this.___nodeToBlock.set(__next, __block);
+                __block.___endNode = __next;
                 return;
             }
         }
     }
 
-    /**
-     * Identify and connect blocks (including loop backward edges). Predecessors need to be in the
-     * order expected when iterating phi inputs.
-     */
+    ///
+    // Identify and connect blocks (including loop backward edges). Predecessors need to be in the
+    // order expected when iterating phi inputs.
+    ///
     private void identifyBlocks()
     {
         // Find all block headers.
         int __numBlocks = 0;
-        for (AbstractBeginNode __begin : graph.getNodes(AbstractBeginNode.TYPE))
+        for (AbstractBeginNode __begin : this.___graph.getNodes(AbstractBeginNode.TYPE))
         {
             Block __block = new Block(__begin);
             identifyBlock(__block);
@@ -507,17 +507,17 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 
         // Compute reverse post order.
         int __count = 0;
-        NodeMap<Block> __nodeMap = this.nodeToBlock;
+        NodeMap<Block> __nodeMap = this.___nodeToBlock;
         Block[] __stack = new Block[__numBlocks];
         int __tos = 0;
-        Block __startBlock = blockFor(graph.start());
+        Block __startBlock = blockFor(this.___graph.start());
         __stack[0] = __startBlock;
         __startBlock.setPredecessors(Block.EMPTY_ARRAY);
         do
         {
             Block __block = __stack[__tos];
             int __id = __block.getId();
-            if (__id == BLOCK_ID_INITIAL)
+            if (__id == AbstractControlFlowGraph.BLOCK_ID_INITIAL)
             {
                 // First time we see this block: push all successors.
                 FixedNode __last = __block.getEndNode();
@@ -525,7 +525,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                 {
                     EndNode __endNode = (EndNode) __last;
                     Block __suxBlock = __nodeMap.get(__endNode.merge());
-                    if (__suxBlock.getId() == BLOCK_ID_INITIAL)
+                    if (__suxBlock.getId() == AbstractControlFlowGraph.BLOCK_ID_INITIAL)
                     {
                         __stack[++__tos] = __suxBlock;
                     }
@@ -568,7 +568,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                     System.arraycopy(__stack, __startTos + 1, __successors, 0, __suxCount);
                     __block.setSuccessors(__successors);
                 }
-                __block.setId(BLOCK_ID_VISITED);
+                __block.setId(AbstractControlFlowGraph.BLOCK_ID_VISITED);
                 AbstractBeginNode __beginNode = __block.getBeginNode();
                 if (__beginNode instanceof LoopBeginNode)
                 {
@@ -586,7 +586,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                     __block.setPredecessors(__predecessors);
                 }
             }
-            else if (__id == BLOCK_ID_VISITED)
+            else if (__id == AbstractControlFlowGraph.BLOCK_ID_VISITED)
             {
                 // Second time we see this block: All successors have been processed,
                 // so add block to result list. Can safely reuse the stack for this.
@@ -603,7 +603,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         } while (__tos >= 0);
 
         // Compute reverse postorder and number blocks.
-        this.reversePostOrder = __stack;
+        this.___reversePostOrder = __stack;
     }
 
     private static void computeLoopPredecessors(NodeMap<Block> __nodeMap, Block __block, LoopBeginNode __loopBeginNode)
@@ -624,7 +624,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 
     private void computeProbabilities()
     {
-        for (Block __block : reversePostOrder)
+        for (Block __block : this.___reversePostOrder)
         {
             Block[] __predecessors = __block.getPredecessors();
 
@@ -636,7 +636,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             else if (__predecessors.length == 1)
             {
                 Block __pred = __predecessors[0];
-                __probability = __pred.probability;
+                __probability = __pred.___probability;
                 if (__pred.getSuccessorCount() > 1)
                 {
                     ControlSplitNode __controlSplit = (ControlSplitNode) __pred.getEndNode();
@@ -645,10 +645,10 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             }
             else
             {
-                __probability = __predecessors[0].probability;
+                __probability = __predecessors[0].___probability;
                 for (int __i = 1; __i < __predecessors.length; ++__i)
                 {
-                    __probability += __predecessors[__i].probability;
+                    __probability += __predecessors[__i].___probability;
                 }
 
                 if (__block.getBeginNode() instanceof LoopBeginNode)
@@ -671,37 +671,37 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 
     private void computeLoopInformation()
     {
-        loops = new ArrayList<>();
-        if (graph.hasLoops())
+        this.___loops = new ArrayList<>();
+        if (this.___graph.hasLoops())
         {
-            Block[] __stack = new Block[this.reversePostOrder.length];
-            for (Block __block : reversePostOrder)
+            Block[] __stack = new Block[this.___reversePostOrder.length];
+            for (Block __block : this.___reversePostOrder)
             {
                 AbstractBeginNode __beginNode = __block.getBeginNode();
                 if (__beginNode instanceof LoopBeginNode)
                 {
                     Loop<Block> __parent = __block.getLoop();
-                    Loop<Block> __loop = new HIRLoop(__parent, loops.size(), __block);
+                    Loop<Block> __loop = new HIRLoop(__parent, this.___loops.size(), __block);
                     if (__parent != null)
                     {
                         __parent.getChildren().add(__loop);
                     }
-                    loops.add(__loop);
+                    this.___loops.add(__loop);
                     __block.setLoop(__loop);
                     __loop.getBlocks().add(__block);
 
                     LoopBeginNode __loopBegin = (LoopBeginNode) __beginNode;
                     for (LoopEndNode __end : __loopBegin.loopEnds())
                     {
-                        Block __endBlock = nodeToBlock.get(__end);
+                        Block __endBlock = this.___nodeToBlock.get(__end);
                         computeLoopBlocks(__endBlock, __loop, __stack, true);
                     }
 
-                    if (graph.getGuardsStage() != GuardsStage.AFTER_FSA)
+                    if (this.___graph.getGuardsStage() != GuardsStage.AFTER_FSA)
                     {
                         for (LoopExitNode __exit : __loopBegin.loopExits())
                         {
-                            Block __exitBlock = nodeToBlock.get(__exit);
+                            Block __exitBlock = this.___nodeToBlock.get(__exit);
                             computeLoopBlocks(__exitBlock.getFirstPredecessor(), __loop, __stack, true);
                             __loop.addExit(__exitBlock);
                         }
@@ -729,9 +729,9 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         }
 
         // Compute the loop exit blocks after FSA.
-        if (graph.getGuardsStage() == GuardsStage.AFTER_FSA)
+        if (this.___graph.getGuardsStage() == GuardsStage.AFTER_FSA)
         {
-            for (Block __b : reversePostOrder)
+            for (Block __b : this.___reversePostOrder)
             {
                 if (__b.getLoop() != null)
                 {
@@ -753,18 +753,16 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                             }
                             else
                             {
-                                /*
-                                 * succ also has a loop, might be a child loop
-                                 *
-                                 * if it is a child loop we do not exit a loop. if it is a loop
-                                 * different than b.loop and not a child loop it must be a parent
-                                 * loop, thus we exit all loops between b.loop and succ.loop
-                                 *
-                                 * if we exit multiple loops immediately after each other the
-                                 * bytecode parser might generate loop exit nodes after another and
-                                 * the CFG will identify them as separate blocks, we just take the
-                                 * first one and exit all loops at this one
-                                 */
+                                // succ also has a loop, might be a child loop
+                                //
+                                // if it is a child loop we do not exit a loop. if it is a loop
+                                // different than b.loop and not a child loop it must be a parent
+                                // loop, thus we exit all loops between b.loop and succ.loop
+                                //
+                                // if we exit multiple loops immediately after each other the
+                                // bytecode parser might generate loop exit nodes after another and
+                                // the CFG will identify them as separate blocks, we just take the
+                                // first one and exit all loops at this one
                                 if (__succ.getLoop().getParent() != __b.getLoop())
                                 {
                                     // b.loop must not be a transitive parent of succ.loop
@@ -811,7 +809,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 
     public void computePostdominators()
     {
-        Block[] __reversePostOrderTmp = this.reversePostOrder;
+        Block[] __reversePostOrderTmp = this.___reversePostOrder;
         outer: for (int j = __reversePostOrderTmp.length - 1; j >= 0; --j)
         {
             Block __block = __reversePostOrderTmp[j];
@@ -828,7 +826,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             Block __firstSucc = __block.getSuccessors()[0];
             if (__block.getSuccessorCount() == 1)
             {
-                __block.postdominator = __firstSucc;
+                __block.___postdominator = __firstSucc;
                 continue;
             }
             Block __postdominator = __firstSucc;
@@ -873,13 +871,13 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 
     public void setNodeToBlock(NodeMap<Block> __nodeMap)
     {
-        this.nodeToBlock = __nodeMap;
+        this.___nodeToBlock = __nodeMap;
     }
 
-    /**
-     * Multiplies a and b and clamps the between {@link ControlFlowGraph#MIN_PROBABILITY} and
-     * {@link ControlFlowGraph#MAX_PROBABILITY}.
-     */
+    ///
+    // Multiplies a and b and clamps the between {@link ControlFlowGraph#MIN_PROBABILITY} and
+    // {@link ControlFlowGraph#MAX_PROBABILITY}.
+    ///
     public static double multiplyProbabilities(double __a, double __b)
     {
         double __r = __a * __b;

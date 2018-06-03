@@ -16,21 +16,21 @@ public final class PrefetchAllocateNode extends FixedWithNextNode implements LIR
 
     @Input(InputType.Association)
     // @field
-    AddressNode address;
+    AddressNode ___address;
 
     // @cons
     public PrefetchAllocateNode(ValueNode __address)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = (AddressNode) __address;
+        this.___address = (AddressNode) __address;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.getLIRGeneratorTool().emitPrefetchAllocate(__gen.operand(address));
+        __gen.getLIRGeneratorTool().emitPrefetchAllocate(__gen.operand(this.___address));
     }
 
     @NodeIntrinsic
-    public static native void prefetch(Address address);
+    public static native void prefetch(Address __address);
 }

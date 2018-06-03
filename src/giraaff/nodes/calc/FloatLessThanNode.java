@@ -57,7 +57,7 @@ public final class FloatLessThanNode extends CompareNode
     public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.LT, unorderedIsTrue, __forX, __forY, __view);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.LT, this.___unorderedIsTrue, __forX, __forY, __view);
         if (__value != null)
         {
             return __value;

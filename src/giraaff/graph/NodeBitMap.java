@@ -14,18 +14,18 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     private static final int SHIFT = 6;
 
     // @field
-    private long[] bits;
+    private long[] ___bits;
     // @field
-    private int nodeCount;
+    private int ___nodeCount;
     // @field
-    private int counter;
+    private int ___counter;
 
     // @cons
     public NodeBitMap(Graph __graph)
     {
         super(__graph);
-        this.nodeCount = __graph.nodeIdCount();
-        this.bits = new long[sizeForNodeCount(nodeCount)];
+        this.___nodeCount = __graph.nodeIdCount();
+        this.___bits = new long[sizeForNodeCount(this.___nodeCount)];
     }
 
     private static int sizeForNodeCount(int __nodeCount)
@@ -35,25 +35,25 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public int getCounter()
     {
-        return counter;
+        return this.___counter;
     }
 
     // @cons
     private NodeBitMap(NodeBitMap __other)
     {
-        super(__other.graph);
-        this.bits = __other.bits.clone();
-        this.nodeCount = __other.nodeCount;
+        super(__other.___graph);
+        this.___bits = __other.___bits.clone();
+        this.___nodeCount = __other.___nodeCount;
     }
 
     public Graph graph()
     {
-        return graph;
+        return this.___graph;
     }
 
     public boolean isNew(Node __node)
     {
-        return getNodeId(__node) >= nodeCount;
+        return getNodeId(__node) >= this.___nodeCount;
     }
 
     public boolean isMarked(Node __node)
@@ -65,7 +65,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     {
         if (!isMarked(__node))
         {
-            this.counter++;
+            this.___counter++;
             this.mark(__node);
             return true;
         }
@@ -77,7 +77,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public boolean isMarked(int __id)
     {
-        return (bits[__id >> SHIFT] & (1L << __id)) != 0;
+        return (this.___bits[__id >> SHIFT] & (1L << __id)) != 0;
     }
 
     public boolean isMarkedAndGrow(Node __node)
@@ -90,100 +90,100 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     public void mark(Node __node)
     {
         int __id = getNodeId(__node);
-        bits[__id >> SHIFT] |= (1L << __id);
+        this.___bits[__id >> SHIFT] |= (1L << __id);
     }
 
     public void markAndGrow(Node __node)
     {
         int __id = getNodeId(__node);
         checkGrow(__id);
-        bits[__id >> SHIFT] |= (1L << __id);
+        this.___bits[__id >> SHIFT] |= (1L << __id);
     }
 
     public void clear(Node __node)
     {
         int __id = getNodeId(__node);
-        bits[__id >> SHIFT] &= ~(1L << __id);
+        this.___bits[__id >> SHIFT] &= ~(1L << __id);
     }
 
     public void clearAndGrow(Node __node)
     {
         int __id = getNodeId(__node);
         checkGrow(__id);
-        bits[__id >> SHIFT] &= ~(1L << __id);
+        this.___bits[__id >> SHIFT] &= ~(1L << __id);
     }
 
     private void checkGrow(int __id)
     {
-        if (__id >= nodeCount)
+        if (__id >= this.___nodeCount)
         {
-            if ((__id >> SHIFT) >= bits.length)
+            if ((__id >> SHIFT) >= this.___bits.length)
             {
                 grow();
             }
             else
             {
-                nodeCount = __id + 1;
+                this.___nodeCount = __id + 1;
             }
         }
     }
 
     public void clearAll()
     {
-        Arrays.fill(bits, 0);
+        Arrays.fill(this.___bits, 0);
     }
 
     public void intersect(NodeBitMap __other)
     {
-        int __commonLength = Math.min(bits.length, __other.bits.length);
-        for (int __i = __commonLength; __i < bits.length; __i++)
+        int __commonLength = Math.min(this.___bits.length, __other.___bits.length);
+        for (int __i = __commonLength; __i < this.___bits.length; __i++)
         {
-            bits[__i] = 0;
+            this.___bits[__i] = 0;
         }
         for (int __i = 0; __i < __commonLength; __i++)
         {
-            bits[__i] &= __other.bits[__i];
+            this.___bits[__i] &= __other.___bits[__i];
         }
     }
 
     public void subtract(NodeBitMap __other)
     {
-        int __commonLength = Math.min(bits.length, __other.bits.length);
+        int __commonLength = Math.min(this.___bits.length, __other.___bits.length);
         for (int __i = 0; __i < __commonLength; __i++)
         {
-            bits[__i] &= ~__other.bits[__i];
+            this.___bits[__i] &= ~__other.___bits[__i];
         }
     }
 
     public void union(NodeBitMap __other)
     {
         grow();
-        if (bits.length < __other.bits.length)
+        if (this.___bits.length < __other.___bits.length)
         {
-            bits = Arrays.copyOf(bits, __other.bits.length);
+            this.___bits = Arrays.copyOf(this.___bits, __other.___bits.length);
         }
-        for (int __i = 0; __i < Math.min(bits.length, __other.bits.length); __i++)
+        for (int __i = 0; __i < Math.min(this.___bits.length, __other.___bits.length); __i++)
         {
-            bits[__i] |= __other.bits[__i];
+            this.___bits[__i] |= __other.___bits[__i];
         }
     }
 
     public void invert()
     {
-        for (int __i = 0; __i < bits.length; __i++)
+        for (int __i = 0; __i < this.___bits.length; __i++)
         {
-            bits[__i] = ~bits[__i];
+            this.___bits[__i] = ~this.___bits[__i];
         }
     }
 
     public void grow()
     {
-        nodeCount = Math.max(nodeCount, graph().nodeIdCount());
-        int __newLength = sizeForNodeCount(nodeCount);
-        if (__newLength > bits.length)
+        this.___nodeCount = Math.max(this.___nodeCount, graph().nodeIdCount());
+        int __newLength = sizeForNodeCount(this.___nodeCount);
+        if (__newLength > this.___bits.length)
         {
-            __newLength = Math.max(__newLength, (bits.length * 3 / 2) + 1);
-            bits = Arrays.copyOf(bits, __newLength);
+            __newLength = Math.max(__newLength, (this.___bits.length * 3 / 2) + 1);
+            this.___bits = Arrays.copyOf(this.___bits, __newLength);
         }
     }
 
@@ -198,21 +198,21 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     protected Node nextMarkedNode(int __fromNodeId)
     {
         int __wordIndex = __fromNodeId >> SHIFT;
-        int __wordsInUse = bits.length;
+        int __wordsInUse = this.___bits.length;
         if (__wordIndex < __wordsInUse)
         {
-            long __word = getPartOfWord(bits[__wordIndex], __fromNodeId);
+            long __word = getPartOfWord(this.___bits[__wordIndex], __fromNodeId);
             while (true)
             {
                 while (__word != 0)
                 {
                     int __bitIndex = Long.numberOfTrailingZeros(__word);
                     int __nodeId = __wordIndex * Long.SIZE + __bitIndex;
-                    Node __result = graph.getNode(__nodeId);
+                    Node __result = this.___graph.getNode(__nodeId);
                     if (__result == null)
                     {
                         // node was deleted -> clear the bit and continue searching
-                        bits[__wordIndex] = bits[__wordIndex] & ~(1L << __bitIndex);
+                        this.___bits[__wordIndex] = this.___bits[__wordIndex] & ~(1L << __bitIndex);
                         int __nextNodeId = __nodeId + 1;
                         if ((__nextNodeId & (Long.SIZE - 1)) == 0)
                         {
@@ -233,7 +233,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
                 {
                     break;
                 }
-                __word = bits[__wordIndex];
+                __word = this.___bits[__wordIndex];
             }
         }
         return null;
@@ -244,48 +244,48 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
         return __word & (0xFFFFFFFFFFFFFFFFL << __firstNodeIdToInclude);
     }
 
-    /**
-     * This iterator only returns nodes that are marked in the {@link NodeBitMap} and are alive
-     * in the corresponding {@link Graph}.
-     */
+    ///
+    // This iterator only returns nodes that are marked in the {@link NodeBitMap} and are alive
+    // in the corresponding {@link Graph}.
+    ///
     // @class NodeBitMap.MarkedNodeIterator
     // @closure
     private final class MarkedNodeIterator implements Iterator<Node>
     {
         // @field
-        private int currentNodeId;
+        private int ___currentNodeId;
         // @field
-        private Node currentNode;
+        private Node ___currentNode;
 
         // @cons
         MarkedNodeIterator()
         {
             super();
-            currentNodeId = -1;
+            this.___currentNodeId = -1;
             forward();
         }
 
         private void forward()
         {
-            currentNode = NodeBitMap.this.nextMarkedNode(currentNodeId + 1);
-            if (currentNode != null)
+            this.___currentNode = NodeBitMap.this.nextMarkedNode(this.___currentNodeId + 1);
+            if (this.___currentNode != null)
             {
-                currentNodeId = NodeBitMap.this.getNodeId(currentNode);
+                this.___currentNodeId = NodeBitMap.this.getNodeId(this.___currentNode);
             }
             else
             {
-                currentNodeId = -1;
+                this.___currentNodeId = -1;
             }
         }
 
         @Override
         public boolean hasNext()
         {
-            if (currentNode == null && currentNodeId >= 0)
+            if (this.___currentNode == null && this.___currentNodeId >= 0)
             {
                 forward();
             }
-            return currentNodeId >= 0;
+            return this.___currentNodeId >= 0;
         }
 
         @Override
@@ -295,13 +295,13 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
             {
                 throw new NoSuchElementException();
             }
-            if (!currentNode.isAlive())
+            if (!this.___currentNode.isAlive())
             {
                 throw new ConcurrentModificationException("NodeBitMap was modified between the calls to hasNext() and next()");
             }
 
-            Node __result = currentNode;
-            currentNode = null;
+            Node __result = this.___currentNode;
+            this.___currentNode = null;
             return __result;
         }
 
@@ -327,7 +327,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     public int count()
     {
         int __count = 0;
-        for (long __l : bits)
+        for (long __l : this.___bits)
         {
             __count += Long.bitCount(__l);
         }

@@ -28,22 +28,22 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
 
     @Input
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     // @field
-    protected final JavaKind boxingKind;
+    protected final JavaKind ___boxingKind;
 
     @Override
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     // @cons
     public UnboxNode(ValueNode __value, JavaKind __boxingKind)
     {
         super(TYPE, StampFactory.forKind(__boxingKind.getStackKind()));
-        this.value = __value;
-        this.boxingKind = __boxingKind;
+        this.___value = __value;
+        this.___boxingKind = __boxingKind;
     }
 
     public static ValueNode create(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ValueNode __value, JavaKind __boxingKind)
@@ -58,7 +58,7 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
 
     public JavaKind getBoxingKind()
     {
-        return boxingKind;
+        return this.___boxingKind;
     }
 
     @Override
@@ -75,7 +75,7 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
         {
             VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
             ResolvedJavaType __objectType = __virtual.type();
-            ResolvedJavaType __expectedType = __tool.getMetaAccessProvider().lookupJavaType(boxingKind.toBoxedJavaClass());
+            ResolvedJavaType __expectedType = __tool.getMetaAccessProvider().lookupJavaType(this.___boxingKind.toBoxedJavaClass());
             if (__objectType.equals(__expectedType))
             {
                 __tool.replaceWithValue(__tool.getEntry(__virtual, 0));
@@ -90,7 +90,7 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
         {
             return null;
         }
-        ValueNode __synonym = findSynonym(__tool.getMetaAccess(), __tool.getConstantReflection(), __forValue, boxingKind);
+        ValueNode __synonym = findSynonym(__tool.getMetaAccess(), __tool.getConstantReflection(), __forValue, this.___boxingKind);
         if (__synonym != null)
         {
             return __synonym;

@@ -9,9 +9,9 @@ import jdk.vm.ci.meta.PlatformKind;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
-/**
- * Configuration for register allocation. This is different to {@link RegisterConfig}.
- */
+///
+// Configuration for register allocation. This is different to {@link RegisterConfig}.
+///
 // @class RegisterAllocationConfig
 public class RegisterAllocationConfig
 {
@@ -19,19 +19,19 @@ public class RegisterAllocationConfig
     public static final class AllocatableRegisters
     {
         // @field
-        public final Register[] allocatableRegisters;
+        public final Register[] ___allocatableRegisters;
         // @field
-        public final int minRegisterNumber;
+        public final int ___minRegisterNumber;
         // @field
-        public final int maxRegisterNumber;
+        public final int ___maxRegisterNumber;
 
         // @cons
         public AllocatableRegisters(RegisterArray __allocatableRegisters, int __minRegisterNumber, int __maxRegisterNumber)
         {
             super();
-            this.allocatableRegisters = __allocatableRegisters.toArray();
-            this.minRegisterNumber = __minRegisterNumber;
-            this.maxRegisterNumber = __maxRegisterNumber;
+            this.___allocatableRegisters = __allocatableRegisters.toArray();
+            this.___minRegisterNumber = __minRegisterNumber;
+            this.___maxRegisterNumber = __maxRegisterNumber;
         }
     }
 
@@ -41,40 +41,40 @@ public class RegisterAllocationConfig
     }
 
     // @field
-    protected final RegisterConfig registerConfig;
+    protected final RegisterConfig ___registerConfig;
     // @field
-    private final EconomicMap<PlatformKind.Key, AllocatableRegisters> categorized = EconomicMap.create(Equivalence.DEFAULT);
+    private final EconomicMap<PlatformKind.Key, AllocatableRegisters> ___categorized = EconomicMap.create(Equivalence.DEFAULT);
     // @field
-    private RegisterArray cachedRegisters;
+    private RegisterArray ___cachedRegisters;
 
     // @cons
     public RegisterAllocationConfig(RegisterConfig __registerConfig)
     {
         super();
-        this.registerConfig = __registerConfig;
+        this.___registerConfig = __registerConfig;
     }
 
-    /**
-     * Gets the set of registers that can be used by the register allocator for a value of a particular kind.
-     */
+    ///
+    // Gets the set of registers that can be used by the register allocator for a value of a particular kind.
+    ///
     public AllocatableRegisters getAllocatableRegisters(PlatformKind __kind)
     {
         PlatformKind.Key __key = __kind.getKey();
-        if (categorized.containsKey(__key))
+        if (this.___categorized.containsKey(__key))
         {
-            return categorized.get(__key);
+            return this.___categorized.get(__key);
         }
-        AllocatableRegisters __ret = createAllocatableRegisters(registerConfig.filterAllocatableRegisters(__kind, getAllocatableRegisters()));
-        categorized.put(__key, __ret);
+        AllocatableRegisters __ret = createAllocatableRegisters(this.___registerConfig.filterAllocatableRegisters(__kind, getAllocatableRegisters()));
+        this.___categorized.put(__key, __ret);
         return __ret;
     }
 
-    /**
-     * Gets the {@link RegisterCategory} for the given {@link PlatformKind}.
-     */
+    ///
+    // Gets the {@link RegisterCategory} for the given {@link PlatformKind}.
+    ///
     public RegisterCategory getRegisterCategory(PlatformKind __kind)
     {
-        return getAllocatableRegisters(__kind).allocatableRegisters[0].getRegisterCategory();
+        return getAllocatableRegisters(__kind).___allocatableRegisters[0].getRegisterCategory();
     }
 
     protected AllocatableRegisters createAllocatableRegisters(RegisterArray __registers)
@@ -96,20 +96,20 @@ public class RegisterAllocationConfig
         return new AllocatableRegisters(__registers, __min, __max);
     }
 
-    /**
-     * Gets the set of registers that can be used by the register allocator.
-     */
+    ///
+    // Gets the set of registers that can be used by the register allocator.
+    ///
     public RegisterArray getAllocatableRegisters()
     {
-        if (cachedRegisters == null)
+        if (this.___cachedRegisters == null)
         {
-            cachedRegisters = initAllocatable(registerConfig.getAllocatableRegisters());
+            this.___cachedRegisters = initAllocatable(this.___registerConfig.getAllocatableRegisters());
         }
-        return cachedRegisters;
+        return this.___cachedRegisters;
     }
 
     public RegisterConfig getRegisterConfig()
     {
-        return registerConfig;
+        return this.___registerConfig;
     }
 }

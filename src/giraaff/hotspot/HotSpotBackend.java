@@ -52,78 +52,78 @@ import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.phases.tiers.SuitesProvider;
 import giraaff.word.Word;
 
-/**
- * HotSpot specific backend.
- */
+///
+// HotSpot specific backend.
+///
 // @class HotSpotBackend
 public abstract class HotSpotBackend extends Backend
 {
-    /**
-     * Descriptor for {@link ExceptionHandlerStub}. This stub is called by the
-     * {@linkplain HotSpotRuntime#exceptionHandlerEntryMark exception handler} in a
-     * compiled method.
-     */
+    ///
+    // Descriptor for {@link ExceptionHandlerStub}. This stub is called by the
+    // {@linkplain HotSpotRuntime#exceptionHandlerEntryMark exception handler} in a
+    // compiled method.
+    ///
     // @def
     public static final ForeignCallDescriptor EXCEPTION_HANDLER = new ForeignCallDescriptor("exceptionHandler", void.class, Object.class, Word.class);
 
-    /**
-     * Descriptor for SharedRuntime::get_ic_miss_stub().
-     */
+    ///
+    // Descriptor for SharedRuntime::get_ic_miss_stub().
+    ///
     // @def
     public static final ForeignCallDescriptor IC_MISS_HANDLER = new ForeignCallDescriptor("icMissHandler", void.class);
 
-    /**
-     * Descriptor for {@link UnwindExceptionToCallerStub}. This stub is called by code generated
-     * from {@link UnwindNode}.
-     */
+    ///
+    // Descriptor for {@link UnwindExceptionToCallerStub}. This stub is called by code generated
+    // from {@link UnwindNode}.
+    ///
     // @def
     public static final ForeignCallDescriptor UNWIND_EXCEPTION_TO_CALLER = new ForeignCallDescriptor("unwindExceptionToCaller", void.class, Object.class, Word.class);
 
-    /**
-     * Descriptor for the arguments when unwinding to an exception handler in a caller.
-     */
+    ///
+    // Descriptor for the arguments when unwinding to an exception handler in a caller.
+    ///
     // @def
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_IN_CALLER = new ForeignCallDescriptor("exceptionHandlerInCaller", void.class, Object.class, Word.class);
 
-    /**
-     * @see AESCryptSubstitutions#encryptBlockStub(ForeignCallDescriptor, Word, Word, Pointer)
-     */
+    ///
+    // @see AESCryptSubstitutions#encryptBlockStub(ForeignCallDescriptor, Word, Word, Pointer)
+    ///
     // @def
     public static final ForeignCallDescriptor ENCRYPT_BLOCK = new ForeignCallDescriptor("encrypt_block", void.class, Word.class, Word.class, Pointer.class);
 
-    /**
-     * @see AESCryptSubstitutions#decryptBlockStub(ForeignCallDescriptor, Word, Word, Pointer)
-     */
+    ///
+    // @see AESCryptSubstitutions#decryptBlockStub(ForeignCallDescriptor, Word, Word, Pointer)
+    ///
     // @def
     public static final ForeignCallDescriptor DECRYPT_BLOCK = new ForeignCallDescriptor("decrypt_block", void.class, Word.class, Word.class, Pointer.class);
 
-    /**
-     * @see AESCryptSubstitutions#decryptBlockStub(ForeignCallDescriptor, Word, Word, Pointer)
-     */
+    ///
+    // @see AESCryptSubstitutions#decryptBlockStub(ForeignCallDescriptor, Word, Word, Pointer)
+    ///
     // @def
     public static final ForeignCallDescriptor DECRYPT_BLOCK_WITH_ORIGINAL_KEY = new ForeignCallDescriptor("decrypt_block_with_original_key", void.class, Word.class, Word.class, Pointer.class, Pointer.class);
 
-    /**
-     * @see CipherBlockChainingSubstitutions#crypt
-     */
+    ///
+    // @see CipherBlockChainingSubstitutions#crypt
+    ///
     // @def
     public static final ForeignCallDescriptor ENCRYPT = new ForeignCallDescriptor("encrypt", void.class, Word.class, Word.class, Pointer.class, Pointer.class, int.class);
 
-    /**
-     * @see CipherBlockChainingSubstitutions#crypt
-     */
+    ///
+    // @see CipherBlockChainingSubstitutions#crypt
+    ///
     // @def
     public static final ForeignCallDescriptor DECRYPT = new ForeignCallDescriptor("decrypt", void.class, Word.class, Word.class, Pointer.class, Pointer.class, int.class);
 
-    /**
-     * @see CipherBlockChainingSubstitutions#crypt
-     */
+    ///
+    // @see CipherBlockChainingSubstitutions#crypt
+    ///
     // @def
     public static final ForeignCallDescriptor DECRYPT_WITH_ORIGINAL_KEY = new ForeignCallDescriptor("decrypt_with_original_key", void.class, Word.class, Word.class, Pointer.class, Pointer.class, int.class, Pointer.class);
 
-    /**
-     * @see BigIntegerSubstitutions#multiplyToLen
-     */
+    ///
+    // @see BigIntegerSubstitutions#multiplyToLen
+    ///
     // @def
     public static final ForeignCallDescriptor MULTIPLY_TO_LEN = new ForeignCallDescriptor("multiplyToLen", void.class, Word.class, int.class, Word.class, int.class, Word.class, int.class);
 
@@ -133,11 +133,11 @@ public abstract class HotSpotBackend extends Backend
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void multiplyToLenStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word xIn, int xLen, Word yIn, int yLen, Word zIn, int zLen);
+    private static native void multiplyToLenStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __xIn, int __xLen, Word __yIn, int __yLen, Word __zIn, int __zLen);
 
-    /**
-     * @see BigIntegerSubstitutions#mulAdd
-     */
+    ///
+    // @see BigIntegerSubstitutions#mulAdd
+    ///
     // @def
     public static final ForeignCallDescriptor MUL_ADD = new ForeignCallDescriptor("mulAdd", int.class, Word.class, Word.class, int.class, int.class, int.class);
 
@@ -147,11 +147,11 @@ public abstract class HotSpotBackend extends Backend
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native int mulAddStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word inAddr, Word outAddr, int newOffset, int len, int k);
+    private static native int mulAddStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __inAddr, Word __outAddr, int __newOffset, int __len, int __k);
 
-    /**
-     * @see BigIntegerSubstitutions#implMontgomeryMultiply
-     */
+    ///
+    // @see BigIntegerSubstitutions#implMontgomeryMultiply
+    ///
     // @def
     public static final ForeignCallDescriptor MONTGOMERY_MULTIPLY = new ForeignCallDescriptor("implMontgomeryMultiply", void.class, Word.class, Word.class, Word.class, int.class, long.class, Word.class);
 
@@ -161,11 +161,11 @@ public abstract class HotSpotBackend extends Backend
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void implMontgomeryMultiply(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word aAddr, Word bAddr, Word nAddr, int len, long inv, Word productAddr);
+    private static native void implMontgomeryMultiply(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __aAddr, Word __bAddr, Word __nAddr, int __len, long __inv, Word __productAddr);
 
-    /**
-     * @see BigIntegerSubstitutions#implMontgomerySquare
-     */
+    ///
+    // @see BigIntegerSubstitutions#implMontgomerySquare
+    ///
     // @def
     public static final ForeignCallDescriptor MONTGOMERY_SQUARE = new ForeignCallDescriptor("implMontgomerySquare", void.class, Word.class, Word.class, int.class, long.class, Word.class);
 
@@ -175,11 +175,11 @@ public abstract class HotSpotBackend extends Backend
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void implMontgomerySquare(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word aAddr, Word nAddr, int len, long inv, Word productAddr);
+    private static native void implMontgomerySquare(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __aAddr, Word __nAddr, int __len, long __inv, Word __productAddr);
 
-    /**
-     * @see BigIntegerSubstitutions#implSquareToLen
-     */
+    ///
+    // @see BigIntegerSubstitutions#implSquareToLen
+    ///
     // @def
     public static final ForeignCallDescriptor SQUARE_TO_LEN = new ForeignCallDescriptor("implSquareToLen", void.class, Word.class, int.class, Word.class, int.class);
 
@@ -189,11 +189,11 @@ public abstract class HotSpotBackend extends Backend
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void implSquareToLen(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word xAddr, int len, Word zAddr, int zLen);
+    private static native void implSquareToLen(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __xAddr, int __len, Word __zAddr, int __zLen);
 
-    /**
-     * @see SHA2Substitutions#implCompress0
-     */
+    ///
+    // @see SHA2Substitutions#implCompress0
+    ///
     // @def
     public static final ForeignCallDescriptor SHA2_IMPL_COMPRESS = new ForeignCallDescriptor("sha2ImplCompress", void.class, Word.class, Object.class);
 
@@ -203,11 +203,11 @@ public abstract class HotSpotBackend extends Backend
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void sha2ImplCompressStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word bufAddr, Object state);
+    private static native void sha2ImplCompressStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __bufAddr, Object __state);
 
-    /**
-     * @see SHA5Substitutions#implCompress0
-     */
+    ///
+    // @see SHA5Substitutions#implCompress0
+    ///
     // @def
     public static final ForeignCallDescriptor SHA5_IMPL_COMPRESS = new ForeignCallDescriptor("sha5ImplCompress", void.class, Word.class, Object.class);
 
@@ -217,11 +217,11 @@ public abstract class HotSpotBackend extends Backend
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void sha5ImplCompressStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word bufAddr, Object state);
+    private static native void sha5ImplCompressStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __bufAddr, Object __state);
 
-    /**
-     * @see giraaff.hotspot.meta.HotSpotUnsafeSubstitutions#copyMemory
-     */
+    ///
+    // @see giraaff.hotspot.meta.HotSpotUnsafeSubstitutions#copyMemory
+    ///
     // @def
     public static final ForeignCallDescriptor UNSAFE_ARRAYCOPY = new ForeignCallDescriptor("unsafe_arraycopy", void.class, Word.class, Word.class, Word.class);
 
@@ -234,93 +234,93 @@ public abstract class HotSpotBackend extends Backend
     public static final ForeignCallDescriptor GENERIC_ARRAYCOPY = new ForeignCallDescriptor("generic_arraycopy", int.class, Word.class, int.class, Word.class, int.class, int.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void unsafeArraycopyStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word srcAddr, Word dstAddr, Word size);
+    private static native void unsafeArraycopyStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __srcAddr, Word __dstAddr, Word __size);
 
-    /**
-     * New multi array stub call.
-     */
+    ///
+    // New multi array stub call.
+    ///
     // @def
     public static final ForeignCallDescriptor NEW_MULTI_ARRAY = new ForeignCallDescriptor("new_multi_array", Object.class, KlassPointer.class, int.class, Word.class);
 
-    /**
-     * New array stub.
-     */
+    ///
+    // New array stub.
+    ///
     // @def
     public static final ForeignCallDescriptor NEW_ARRAY = new ForeignCallDescriptor("new_array", Object.class, KlassPointer.class, int.class, boolean.class);
 
-    /**
-     * New instance stub.
-     */
+    ///
+    // New instance stub.
+    ///
     // @def
     public static final ForeignCallDescriptor NEW_INSTANCE = new ForeignCallDescriptor("new_instance", Object.class, KlassPointer.class);
 
-    /**
-     * @see ResolveConstantStubCall
-     */
+    ///
+    // @see ResolveConstantStubCall
+    ///
     // @def
     public static final ForeignCallDescriptor RESOLVE_STRING_BY_SYMBOL = new ForeignCallDescriptor("resolve_string_by_symbol", Object.class, Word.class, Word.class);
 
-    /**
-     * @see ResolveConstantStubCall
-     */
+    ///
+    // @see ResolveConstantStubCall
+    ///
     // @def
     public static final ForeignCallDescriptor RESOLVE_DYNAMIC_INVOKE = new ForeignCallDescriptor("resolve_dynamic_invoke", Object.class, Word.class);
 
-    /**
-     * @see ResolveConstantStubCall
-     */
+    ///
+    // @see ResolveConstantStubCall
+    ///
     // @def
     public static final ForeignCallDescriptor RESOLVE_KLASS_BY_SYMBOL = new ForeignCallDescriptor("resolve_klass_by_symbol", Word.class, Word.class, Word.class);
 
-    /**
-     * @see ResolveConstantStubCall
-     */
+    ///
+    // @see ResolveConstantStubCall
+    ///
     // @def
     public static final ForeignCallDescriptor INITIALIZE_KLASS_BY_SYMBOL = new ForeignCallDescriptor("initialize_klass_by_symbol", Word.class, Word.class, Word.class);
 
-    /**
-     * @see ResolveConstantStubCall
-     */
+    ///
+    // @see ResolveConstantStubCall
+    ///
     // @def
     public static final ForeignCallDescriptor RESOLVE_METHOD_BY_SYMBOL_AND_LOAD_COUNTERS = new ForeignCallDescriptor("resolve_method_by_symbol_and_load_counters", Word.class, Word.class, Word.class, Word.class);
 
-    /**
-     * Tiered support.
-     */
+    ///
+    // Tiered support.
+    ///
     // @def
     public static final ForeignCallDescriptor INVOCATION_EVENT = new ForeignCallDescriptor("invocation_event", void.class, MethodCountersPointer.class);
     // @def
     public static final ForeignCallDescriptor BACKEDGE_EVENT = new ForeignCallDescriptor("backedge_event", void.class, MethodCountersPointer.class, int.class, int.class);
 
     // @field
-    private final HotSpotGraalRuntime runtime;
+    private final HotSpotGraalRuntime ___runtime;
 
     // @cons
     public HotSpotBackend(HotSpotGraalRuntime __runtime, HotSpotProviders __providers)
     {
         super(__providers);
-        this.runtime = __runtime;
+        this.___runtime = __runtime;
     }
 
     public HotSpotGraalRuntime getRuntime()
     {
-        return runtime;
+        return this.___runtime;
     }
 
-    /**
-     * Performs any remaining initialization that was deferred until the {@linkplain #getRuntime()
-     * runtime} object was initialized and this backend was registered with it.
-     */
+    ///
+    // Performs any remaining initialization that was deferred until the {@linkplain #getRuntime()
+    // runtime} object was initialized and this backend was registered with it.
+    ///
     public void completeInitialization()
     {
     }
 
-    /**
-     * Finds all the registers that are defined by some given LIR.
-     *
-     * @param lir the LIR to examine
-     * @return the registers that are defined by or used as temps for any instruction in {@code lir}
-     */
+    ///
+    // Finds all the registers that are defined by some given LIR.
+    //
+    // @param lir the LIR to examine
+    // @return the registers that are defined by or used as temps for any instruction in {@code lir}
+    ///
     protected final EconomicSet<Register> gatherDestroyedCallerRegisters(LIR __lir)
     {
         final EconomicSet<Register> __destroyedRegisters = EconomicSet.create(Equivalence.IDENTITY);
@@ -359,22 +359,22 @@ public abstract class HotSpotBackend extends Backend
         return translateToCallerRegisters(__destroyedRegisters);
     }
 
-    /**
-     * Updates a given stub with respect to the registers it destroys.
-     *
-     * Any entry in {@code calleeSaveInfo} that {@linkplain SaveRegistersOp#supportsRemove()
-     * supports} pruning will have {@code destroyedRegisters}
-     * {@linkplain SaveRegistersOp#remove(EconomicSet) removed} as these registers are declared as
-     * temporaries in the stub's {@linkplain ForeignCallLinkage linkage} (and thus will be saved by
-     * the stub's caller).
-     *
-     * @param stub the stub to update
-     * @param destroyedRegisters the registers destroyed by the stub
-     * @param calleeSaveInfo a map from debug infos to the operations that provide their
-     *            {@linkplain RegisterSaveLayout callee-save information}
-     * @param frameMap used to {@linkplain FrameMap#offsetForStackSlot(StackSlot) convert} a virtual
-     *            slot to a frame slot index
-     */
+    ///
+    // Updates a given stub with respect to the registers it destroys.
+    //
+    // Any entry in {@code calleeSaveInfo} that {@linkplain SaveRegistersOp#supportsRemove()
+    // supports} pruning will have {@code destroyedRegisters}
+    // {@linkplain SaveRegistersOp#remove(EconomicSet) removed} as these registers are declared as
+    // temporaries in the stub's {@linkplain ForeignCallLinkage linkage} (and thus will be saved by
+    // the stub's caller).
+    //
+    // @param stub the stub to update
+    // @param destroyedRegisters the registers destroyed by the stub
+    // @param calleeSaveInfo a map from debug infos to the operations that provide their
+    //            {@linkplain RegisterSaveLayout callee-save information}
+    // @param frameMap used to {@linkplain FrameMap#offsetForStackSlot(StackSlot) convert} a virtual
+    //            slot to a frame slot index
+    ///
     protected void updateStub(Stub __stub, EconomicSet<Register> __destroyedRegisters, EconomicMap<LIRFrameState, SaveRegistersOp> __calleeSaveInfo, FrameMap __frameMap)
     {
         __stub.initDestroyedCallerRegisters(__destroyedRegisters);

@@ -28,29 +28,29 @@ public interface LoweringTool
 
     StampProvider getStampProvider();
 
-    GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action);
+    GuardingNode createGuard(FixedNode __before, LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action);
 
-    GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated);
+    GuardingNode createGuard(FixedNode __before, LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action, JavaConstant __speculation, boolean __negated);
 
-    /**
-     * Gets the closest fixed node preceding the node currently being lowered.
-     */
+    ///
+    // Gets the closest fixed node preceding the node currently being lowered.
+    ///
     FixedWithNextNode lastFixedNode();
 
     AnchoringNode getCurrentGuardAnchor();
 
-    /**
-     * Marker interface lowering stages.
-     */
+    ///
+    // Marker interface lowering stages.
+    ///
     // @iface LoweringTool.LoweringStage
     interface LoweringStage
     {
     }
 
-    /**
-     * The lowering stages used in a standard Graal phase plan. Lowering is called 3 times, during
-     * every tier of compilation.
-     */
+    ///
+    // The lowering stages used in a standard Graal phase plan. Lowering is called 3 times, during
+    // every tier of compilation.
+    ///
     // @enum LoweringTool.StandardLoweringStage implements LoweringStage
     enum StandardLoweringStage implements LoweringStage
     {
@@ -59,8 +59,8 @@ public interface LoweringTool
         LOW_TIER
     }
 
-    /**
-     * Returns current lowering stage.
-     */
+    ///
+    // Returns current lowering stage.
+    ///
     LoweringStage getLoweringStage();
 }

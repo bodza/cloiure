@@ -15,9 +15,9 @@ import giraaff.nodes.TypeCheckHints;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.word.Word;
 
-/**
- * Utilities and common code paths used by the type check snippets.
- */
+///
+// Utilities and common code paths used by the type check snippets.
+///
 // @class TypeCheckSnippetUtils
 public final class TypeCheckSnippetUtils
 {
@@ -75,45 +75,45 @@ public final class TypeCheckSnippetUtils
         return false;
     }
 
-    /**
-     * A set of type check hints ordered by decreasing probabilities.
-     */
+    ///
+    // A set of type check hints ordered by decreasing probabilities.
+    ///
     // @class TypeCheckSnippetUtils.Hints
     public static final class Hints
     {
-        /**
-         * The hubs of the hint types.
-         */
+        ///
+        // The hubs of the hint types.
+        ///
         // @field
-        public final ConstantNode[] hubs;
+        public final ConstantNode[] ___hubs;
 
-        /**
-         * A predicate over {@link #hubs} specifying whether the corresponding hint type is a
-         * sub-type of the checked type.
-         */
+        ///
+        // A predicate over {@link #hubs} specifying whether the corresponding hint type is a
+        // sub-type of the checked type.
+        ///
         // @field
-        public final boolean[] isPositive;
+        public final boolean[] ___isPositive;
 
         // @cons
         Hints(ConstantNode[] __hints, boolean[] __hintIsPositive)
         {
             super();
-            this.hubs = __hints;
-            this.isPositive = __hintIsPositive;
+            this.___hubs = __hints;
+            this.___isPositive = __hintIsPositive;
         }
     }
 
     static Hints createHints(TypeCheckHints __hints, MetaAccessProvider __metaAccess, boolean __positiveOnly, StructuredGraph __graph)
     {
-        ConstantNode[] __hubs = new ConstantNode[__hints.hints.length];
-        boolean[] __isPositive = new boolean[__hints.hints.length];
+        ConstantNode[] __hubs = new ConstantNode[__hints.___hints.length];
+        boolean[] __isPositive = new boolean[__hints.___hints.length];
         int __index = 0;
         for (int __i = 0; __i < __hubs.length; __i++)
         {
-            if (!__positiveOnly || __hints.hints[__i].positive)
+            if (!__positiveOnly || __hints.___hints[__i].___positive)
             {
-                __hubs[__index] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) __hints.hints[__i].type).klass(), __metaAccess, __graph);
-                __isPositive[__index] = __hints.hints[__i].positive;
+                __hubs[__index] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) __hints.___hints[__i].___type).klass(), __metaAccess, __graph);
+                __isPositive[__index] = __hints.___hints[__i].___positive;
                 __index++;
             }
         }

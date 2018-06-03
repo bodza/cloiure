@@ -19,9 +19,9 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * Loads an object's class (i.e., this node can be created for {@code object.getClass()}).
- */
+///
+// Loads an object's class (i.e., this node can be created for {@code object.getClass()}).
+///
 // @class GetClassNode
 public final class GetClassNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
@@ -30,18 +30,18 @@ public final class GetClassNode extends FloatingNode implements Lowerable, Canon
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
 
     public ValueNode getObject()
     {
-        return object;
+        return this.___object;
     }
 
     // @cons
     public GetClassNode(Stamp __stamp, ValueNode __object)
     {
         super(TYPE, __stamp);
-        this.object = __object;
+        this.___object = __object;
     }
 
     @Override

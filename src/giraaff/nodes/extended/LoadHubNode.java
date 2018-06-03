@@ -20,9 +20,9 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.type.StampTool;
 
-/**
- * Loads an object's hub. The object is not null-checked by this operation.
- */
+///
+// Loads an object's hub. The object is not null-checked by this operation.
+///
 // @class LoadHubNode
 public final class LoadHubNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
@@ -31,11 +31,11 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     private static Stamp hubStamp(StampProvider __stampProvider, ValueNode __value)
@@ -64,7 +64,7 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
     public LoadHubNode(Stamp __stamp, ValueNode __value)
     {
         super(TYPE, __stamp);
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override

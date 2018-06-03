@@ -22,45 +22,45 @@ import giraaff.lir.StandardOp.ValueMoveOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 
-/**
- * The base class for an {@code LIRInstruction}.
- */
+///
+// The base class for an {@code LIRInstruction}.
+///
 // @class LIRInstruction
 public abstract class LIRInstruction
 {
-    /**
-     * Constants denoting how a LIR instruction uses an operand.
-     */
+    ///
+    // Constants denoting how a LIR instruction uses an operand.
+    ///
     // @enum LIRInstruction.OperandMode
     public enum OperandMode
     {
-        /**
-         * The value must have been defined before. It is alive before the instruction until the
-         * beginning of the instruction, but not necessarily throughout the instruction. A register
-         * assigned to it can also be assigned to a {@link #TEMP} or {@link #DEF} operand. The value
-         * can be used again after the instruction, so the instruction must not modify the register.
-         */
+        ///
+        // The value must have been defined before. It is alive before the instruction until the
+        // beginning of the instruction, but not necessarily throughout the instruction. A register
+        // assigned to it can also be assigned to a {@link #TEMP} or {@link #DEF} operand. The value
+        // can be used again after the instruction, so the instruction must not modify the register.
+        ///
         USE,
 
-        /**
-         * The value must have been defined before. It is alive before the instruction and
-         * throughout the instruction. A register assigned to it cannot be assigned to a
-         * {@link #TEMP} or {@link #DEF} operand. The value can be used again after the instruction,
-         * so the instruction must not modify the register.
-         */
+        ///
+        // The value must have been defined before. It is alive before the instruction and
+        // throughout the instruction. A register assigned to it cannot be assigned to a
+        // {@link #TEMP} or {@link #DEF} operand. The value can be used again after the instruction,
+        // so the instruction must not modify the register.
+        ///
         ALIVE,
 
-        /**
-         * The value must not have been defined before, and must not be used after the instruction.
-         * The instruction can do whatever it wants with the register assigned to it (or not use it
-         * at all).
-         */
+        ///
+        // The value must not have been defined before, and must not be used after the instruction.
+        // The instruction can do whatever it wants with the register assigned to it (or not use it
+        // at all).
+        ///
         TEMP,
 
-        /**
-         * The value must not have been defined before. The instruction has to assign a value to the
-         * register. The value can (and most likely will) be used after the instruction.
-         */
+        ///
+        // The value must not have been defined before. The instruction has to assign a value to the
+        // register. The value can (and most likely will) be used after the instruction.
+        ///
         DEF,
     }
 
@@ -92,58 +92,58 @@ public abstract class LIRInstruction
         OperandFlag[] value() default OperandFlag.REG;
     }
 
-    /**
-     * Flags for an operand.
-     */
+    ///
+    // Flags for an operand.
+    ///
     // @enum LIRInstruction.OperandFlag
     public enum OperandFlag
     {
-        /**
-         * The value can be a {@link RegisterValue}.
-         */
+        ///
+        // The value can be a {@link RegisterValue}.
+        ///
         REG,
 
-        /**
-         * The value can be a {@link StackSlot}.
-         */
+        ///
+        // The value can be a {@link StackSlot}.
+        ///
         STACK,
 
-        /**
-         * The value can be a {@link CompositeValue}.
-         */
+        ///
+        // The value can be a {@link CompositeValue}.
+        ///
         COMPOSITE,
 
-        /**
-         * The value can be a {@link JavaConstant}.
-         */
+        ///
+        // The value can be a {@link JavaConstant}.
+        ///
         CONST,
 
-        /**
-         * The value can be {@link Value#ILLEGAL}.
-         */
+        ///
+        // The value can be {@link Value#ILLEGAL}.
+        ///
         ILLEGAL,
 
-        /**
-         * The register allocator should try to assign a certain register to improve code quality.
-         * Use {@link LIRInstruction#forEachRegisterHint} to access the register hints.
-         */
+        ///
+        // The register allocator should try to assign a certain register to improve code quality.
+        // Use {@link LIRInstruction#forEachRegisterHint} to access the register hints.
+        ///
         HINT,
 
-        /**
-         * The value can be uninitialized, e.g. a stack slot that has not written to before. This
-         * is only used to avoid false positives in verification code.
-         */
+        ///
+        // The value can be uninitialized, e.g. a stack slot that has not written to before. This
+        // is only used to avoid false positives in verification code.
+        ///
         UNINITIALIZED,
 
-        /**
-         * Outgoing block value.
-         */
+        ///
+        // Outgoing block value.
+        ///
         OUTGOING,
     }
 
-    /**
-     * For validity checking of the operand flags defined by instruction subclasses.
-     */
+    ///
+    // For validity checking of the operand flags defined by instruction subclasses.
+    ///
     // @def
     protected static final EnumMap<OperandMode, EnumSet<OperandFlag>> ALLOWED_FLAGS;
 
@@ -156,52 +156,52 @@ public abstract class LIRInstruction
         ALLOWED_FLAGS.put(OperandMode.DEF, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.ILLEGAL, OperandFlag.HINT));
     }
 
-    /**
-     * The flags of the base and index value of an address.
-     */
+    ///
+    // The flags of the base and index value of an address.
+    ///
     // @def
     protected static final EnumSet<OperandFlag> ADDRESS_FLAGS = EnumSet.of(OperandFlag.REG, OperandFlag.ILLEGAL);
 
     // @field
-    private final LIRInstructionClass<?> instructionClass;
+    private final LIRInstructionClass<?> ___instructionClass;
 
-    /**
-     * Instruction id for register allocation.
-     */
+    ///
+    // Instruction id for register allocation.
+    ///
     // @field
-    private int id;
+    private int ___id;
 
-    /**
-     * Constructs a new LIR instruction.
-     */
+    ///
+    // Constructs a new LIR instruction.
+    ///
     // @cons
     public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> __c)
     {
         super();
-        instructionClass = __c;
-        id = -1;
+        this.___instructionClass = __c;
+        this.___id = -1;
     }
 
-    public abstract void emitCode(CompilationResultBuilder crb);
+    public abstract void emitCode(CompilationResultBuilder __crb);
 
     public final int id()
     {
-        return id;
+        return this.___id;
     }
 
     public final void setId(int __id)
     {
-        this.id = __id;
+        this.___id = __id;
     }
 
     public final String name()
     {
-        return instructionClass.getOpcode(this);
+        return this.___instructionClass.getOpcode(this);
     }
 
     public final boolean hasOperands()
     {
-        return instructionClass.hasOperands() || destroysCallerSavedRegisters();
+        return this.___instructionClass.hasOperands() || destroysCallerSavedRegisters();
     }
 
     public boolean destroysCallerSavedRegisters()
@@ -212,138 +212,138 @@ public abstract class LIRInstruction
     // InstructionValueProcedures
     public final void forEachInput(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachUse(this, __proc);
+        this.___instructionClass.forEachUse(this, __proc);
     }
 
     public final void forEachAlive(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachAlive(this, __proc);
+        this.___instructionClass.forEachAlive(this, __proc);
     }
 
     public final void forEachTemp(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachTemp(this, __proc);
+        this.___instructionClass.forEachTemp(this, __proc);
     }
 
     public final void forEachOutput(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachDef(this, __proc);
+        this.___instructionClass.forEachDef(this, __proc);
     }
 
     // ValueProcedures
     public final void forEachInput(ValueProcedure __proc)
     {
-        instructionClass.forEachUse(this, __proc);
+        this.___instructionClass.forEachUse(this, __proc);
     }
 
     public final void forEachAlive(ValueProcedure __proc)
     {
-        instructionClass.forEachAlive(this, __proc);
+        this.___instructionClass.forEachAlive(this, __proc);
     }
 
     public final void forEachTemp(ValueProcedure __proc)
     {
-        instructionClass.forEachTemp(this, __proc);
+        this.___instructionClass.forEachTemp(this, __proc);
     }
 
     public final void forEachOutput(ValueProcedure __proc)
     {
-        instructionClass.forEachDef(this, __proc);
+        this.___instructionClass.forEachDef(this, __proc);
     }
 
     // InstructionValueConsumers
     public final void visitEachInput(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachUse(this, __proc);
+        this.___instructionClass.visitEachUse(this, __proc);
     }
 
     public final void visitEachAlive(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachAlive(this, __proc);
+        this.___instructionClass.visitEachAlive(this, __proc);
     }
 
     public final void visitEachTemp(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachTemp(this, __proc);
+        this.___instructionClass.visitEachTemp(this, __proc);
     }
 
     public final void visitEachOutput(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachDef(this, __proc);
+        this.___instructionClass.visitEachDef(this, __proc);
     }
 
     // ValueConsumers
     public final void visitEachInput(ValueConsumer __proc)
     {
-        instructionClass.visitEachUse(this, __proc);
+        this.___instructionClass.visitEachUse(this, __proc);
     }
 
     public final void visitEachAlive(ValueConsumer __proc)
     {
-        instructionClass.visitEachAlive(this, __proc);
+        this.___instructionClass.visitEachAlive(this, __proc);
     }
 
     public final void visitEachTemp(ValueConsumer __proc)
     {
-        instructionClass.visitEachTemp(this, __proc);
+        this.___instructionClass.visitEachTemp(this, __proc);
     }
 
     public final void visitEachOutput(ValueConsumer __proc)
     {
-        instructionClass.visitEachDef(this, __proc);
+        this.___instructionClass.visitEachDef(this, __proc);
     }
 
     @SuppressWarnings("unused")
     public final Value forEachRegisterHint(Value __value, OperandMode __mode, InstructionValueProcedure __proc)
     {
-        return instructionClass.forEachRegisterHint(this, __mode, __proc);
+        return this.___instructionClass.forEachRegisterHint(this, __mode, __proc);
     }
 
     @SuppressWarnings("unused")
     public final Value forEachRegisterHint(Value __value, OperandMode __mode, ValueProcedure __proc)
     {
-        return instructionClass.forEachRegisterHint(this, __mode, __proc);
+        return this.___instructionClass.forEachRegisterHint(this, __mode, __proc);
     }
 
-    /**
-     * Returns {@code true} if the instruction is a {@link MoveOp}.
-     *
-     * This function is preferred to {@code instanceof MoveOp} since the type check is more
-     * expensive than reading a field from {@link LIRInstructionClass}.
-     */
+    ///
+    // Returns {@code true} if the instruction is a {@link MoveOp}.
+    //
+    // This function is preferred to {@code instanceof MoveOp} since the type check is more
+    // expensive than reading a field from {@link LIRInstructionClass}.
+    ///
     public final boolean isMoveOp()
     {
-        return instructionClass.isMoveOp();
+        return this.___instructionClass.isMoveOp();
     }
 
-    /**
-     * Returns {@code true} if the instruction is a {@link ValueMoveOp}.
-     *
-     * This function is preferred to {@code instanceof ValueMoveOp} since the type check is more
-     * expensive than reading a field from {@link LIRInstructionClass}.
-     */
+    ///
+    // Returns {@code true} if the instruction is a {@link ValueMoveOp}.
+    //
+    // This function is preferred to {@code instanceof ValueMoveOp} since the type check is more
+    // expensive than reading a field from {@link LIRInstructionClass}.
+    ///
     public final boolean isValueMoveOp()
     {
-        return instructionClass.isValueMoveOp();
+        return this.___instructionClass.isValueMoveOp();
     }
 
-    /**
-     * Returns {@code true} if the instruction is a {@link LoadConstantOp}.
-     *
-     * This function is preferred to {@code instanceof LoadConstantOp} since the type check is more
-     * expensive than reading a field from {@link LIRInstructionClass}.
-     */
+    ///
+    // Returns {@code true} if the instruction is a {@link LoadConstantOp}.
+    //
+    // This function is preferred to {@code instanceof LoadConstantOp} since the type check is more
+    // expensive than reading a field from {@link LIRInstructionClass}.
+    ///
     public final boolean isLoadConstantOp()
     {
-        return instructionClass.isLoadConstantOp();
+        return this.___instructionClass.isLoadConstantOp();
     }
 
-    /**
-     * Utility method to add stack arguments to a list of temporaries. Useful for modeling calling
-     * conventions that kill outgoing argument space.
-     *
-     * @return additional temporaries
-     */
+    ///
+    // Utility method to add stack arguments to a list of temporaries. Useful for modeling calling
+    // conventions that kill outgoing argument space.
+    //
+    // @return additional temporaries
+    ///
     protected static Value[] addStackSlotsToTemporaries(Value[] __parameters, Value[] __temporaries)
     {
         int __extraTemps = 0;
@@ -372,12 +372,12 @@ public abstract class LIRInstruction
 
     public LIRInstructionClass<?> getLIRInstructionClass()
     {
-        return instructionClass;
+        return this.___instructionClass;
     }
 
     @Override
     public int hashCode()
     {
-        return id;
+        return this.___id;
     }
 }

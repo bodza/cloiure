@@ -25,12 +25,12 @@ import giraaff.nodes.ConstantNode;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.word.Word;
 
-/**
- * Stub implementing the fast path for TLAB refill during instance class allocation. This stub is
- * called from the {@linkplain NewObjectSnippets inline} allocation code when TLAB allocation fails.
- * If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
- * runtime for to complete the allocation.
- */
+///
+// Stub implementing the fast path for TLAB refill during instance class allocation. This stub is
+// called from the {@linkplain NewObjectSnippets inline} allocation code when TLAB allocation fails.
+// If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
+// runtime for to complete the allocation.
+///
 // @class NewInstanceStub
 public final class NewInstanceStub extends SnippetStub
 {
@@ -43,11 +43,11 @@ public final class NewInstanceStub extends SnippetStub
     @Override
     protected Object[] makeConstArgs()
     {
-        HotSpotResolvedObjectType __intArrayType = (HotSpotResolvedObjectType) providers.getMetaAccess().lookupJavaType(int[].class);
-        int __count = method.getSignature().getParameterCount(false);
+        HotSpotResolvedObjectType __intArrayType = (HotSpotResolvedObjectType) this.___providers.getMetaAccess().lookupJavaType(int[].class);
+        int __count = this.___method.getSignature().getParameterCount(false);
         Object[] __args = new Object[__count];
         __args[1] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __intArrayType.klass(), null);
-        __args[2] = providers.getRegisters().getThreadRegister();
+        __args[2] = this.___providers.getRegisters().getThreadRegister();
         return __args;
     }
 
@@ -65,12 +65,12 @@ public final class NewInstanceStub extends SnippetStub
         return WordFactory.zero();
     }
 
-    /**
-     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
-     *
-     * @param hub the hub of the object to be allocated
-     * @param intArrayHub the hub for {@code int[].class}
-     */
+    ///
+    // Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
+    //
+    // @param hub the hub of the object to be allocated
+    // @param intArrayHub the hub for {@code int[].class}
+    ///
     @Snippet
     private static Object newInstance(KlassPointer __hub, @ConstantParameter KlassPointer __intArrayHub, @ConstantParameter Register __threadRegister)
     {
@@ -96,15 +96,15 @@ public final class NewInstanceStub extends SnippetStub
         return HotSpotReplacementsUtil.getAndClearObjectResult(__thread);
     }
 
-    /**
-     * Attempts to refill the current thread's TLAB and retries the allocation.
-     *
-     * @param intArrayHub the hub for {@code int[].class}
-     * @param sizeInBytes the size of the allocation
-     *
-     * @return the newly allocated, uninitialized chunk of memory,
-     *         or {@link WordFactory#zero()} if the operation was unsuccessful
-     */
+    ///
+    // Attempts to refill the current thread's TLAB and retries the allocation.
+    //
+    // @param intArrayHub the hub for {@code int[].class}
+    // @param sizeInBytes the size of the allocation
+    //
+    // @return the newly allocated, uninitialized chunk of memory,
+    //         or {@link WordFactory#zero()} if the operation was unsuccessful
+    ///
     static Word refillAllocate(Word __thread, KlassPointer __intArrayHub, int __sizeInBytes)
     {
         // If G1 is enabled, the "eden" allocation space is not the same always
@@ -187,12 +187,12 @@ public final class NewInstanceStub extends SnippetStub
         }
     }
 
-    /**
-     * Attempts to allocate a chunk of memory from Eden space.
-     *
-     * @param sizeInBytes the size of the chunk to allocate
-     * @return the allocated chunk or {@link WordFactory#zero()} if allocation fails
-     */
+    ///
+    // Attempts to allocate a chunk of memory from Eden space.
+    //
+    // @param sizeInBytes the size of the chunk to allocate
+    // @return the allocated chunk or {@link WordFactory#zero()} if allocation fails
+    ///
     public static Word edenAllocate(Word __sizeInBytes)
     {
         final long __heapTopRawAddress = GraalHotSpotVMConfigNode.heapTopAddress();
@@ -226,5 +226,5 @@ public final class NewInstanceStub extends SnippetStub
     public static final ForeignCallDescriptor NEW_INSTANCE_C = StubUtil.newDescriptor(NewInstanceStub.class, "newInstanceC", void.class, Word.class, KlassPointer.class);
 
     @NodeIntrinsic(StubForeignCallNode.class)
-    public static native void newInstanceC(@ConstantNodeParameter ForeignCallDescriptor newInstanceC, Word thread, KlassPointer hub);
+    public static native void newInstanceC(@ConstantNodeParameter ForeignCallDescriptor __newInstanceC, Word __thread, KlassPointer __hub);
 }

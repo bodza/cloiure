@@ -18,5 +18,5 @@ public interface Inlineable
 
     Iterable<Invoke> getInvokes();
 
-    double getProbability(Invoke invoke);
+    double getProbability(Invoke __invoke);
 }

@@ -7,25 +7,25 @@ import jdk.vm.ci.meta.Value;
 import giraaff.core.common.LIRKind;
 import giraaff.lir.Variable;
 
-/**
- * This class traverses the HIR instructions and generates LIR instructions from them.
- */
+///
+// This class traverses the HIR instructions and generates LIR instructions from them.
+///
 // @class ArithmeticLIRGenerator
 public abstract class ArithmeticLIRGenerator implements ArithmeticLIRGeneratorTool
 {
     // @field
-    LIRGenerator lirGen;
+    LIRGenerator ___lirGen;
 
     public LIRGenerator getLIRGen()
     {
-        return lirGen;
+        return this.___lirGen;
     }
 
-    protected abstract boolean isNumericInteger(PlatformKind kind);
+    protected abstract boolean isNumericInteger(PlatformKind __kind);
 
-    protected abstract Variable emitAdd(LIRKind resultKind, Value a, Value b, boolean setFlags);
+    protected abstract Variable emitAdd(LIRKind __resultKind, Value __a, Value __b, boolean __setFlags);
 
-    protected abstract Variable emitSub(LIRKind resultKind, Value a, Value b, boolean setFlags);
+    protected abstract Variable emitSub(LIRKind __resultKind, Value __a, Value __b, boolean __setFlags);
 
     @Override
     public final Variable emitAdd(Value __aVal, Value __bVal, boolean __setFlags)

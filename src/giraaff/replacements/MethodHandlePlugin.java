@@ -20,16 +20,16 @@ import giraaff.replacements.nodes.MethodHandleNode;
 public final class MethodHandlePlugin implements NodePlugin
 {
     // @field
-    private final MethodHandleAccessProvider methodHandleAccess;
+    private final MethodHandleAccessProvider ___methodHandleAccess;
     // @field
-    private final boolean safeForDeoptimization;
+    private final boolean ___safeForDeoptimization;
 
     // @cons
     public MethodHandlePlugin(MethodHandleAccessProvider __methodHandleAccess, boolean __safeForDeoptimization)
     {
         super();
-        this.methodHandleAccess = __methodHandleAccess;
-        this.safeForDeoptimization = __safeForDeoptimization;
+        this.___methodHandleAccess = __methodHandleAccess;
+        this.___safeForDeoptimization = __safeForDeoptimization;
     }
 
     private static int countRecursiveInlining(GraphBuilderContext __b, ResolvedJavaMethod __method)
@@ -48,7 +48,7 @@ public final class MethodHandlePlugin implements NodePlugin
     @Override
     public boolean handleInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        IntrinsicMethod __intrinsicMethod = methodHandleAccess.lookupMethodHandleIntrinsic(__method);
+        IntrinsicMethod __intrinsicMethod = this.___methodHandleAccess.lookupMethodHandleIntrinsic(__method);
         if (__intrinsicMethod != null)
         {
             InvokeKind __invokeKind = __b.getInvokeKind();
@@ -66,7 +66,7 @@ public final class MethodHandlePlugin implements NodePlugin
                     return __b.add(__node);
                 }
             };
-            InvokeNode __invoke = MethodHandleNode.tryResolveTargetInvoke(adder, methodHandleAccess, __intrinsicMethod, __method, __b.bci(), __invokeReturnStamp, __args);
+            InvokeNode __invoke = MethodHandleNode.tryResolveTargetInvoke(adder, this.___methodHandleAccess, __intrinsicMethod, __method, __b.bci(), __invokeReturnStamp, __args);
             if (__invoke == null)
             {
                 MethodHandleNode __methodHandleNode = new MethodHandleNode(__intrinsicMethod, __invokeKind, __method, __b.bci(), __invokeReturnStamp, __args);
@@ -89,7 +89,7 @@ public final class MethodHandlePlugin implements NodePlugin
                 }
 
                 boolean __inlineEverything = false;
-                if (safeForDeoptimization)
+                if (this.___safeForDeoptimization)
                 {
                     // If a MemberName suffix argument is dropped, the replaced call cannot
                     // deoptimized since the necessary frame state cannot be reconstructed.

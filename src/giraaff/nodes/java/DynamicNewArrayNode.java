@@ -14,10 +14,10 @@ import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.ValueNode;
 
-/**
- * The {@code DynamicNewArrayNode} is used for allocation of arrays when the type is not a
- * compile-time constant.
- */
+///
+// The {@code DynamicNewArrayNode} is used for allocation of arrays when the type is not a
+// compile-time constant.
+///
 // @class DynamicNewArrayNode
 public final class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonicalizable
 {
@@ -26,22 +26,22 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
 
     @Input
     // @field
-    ValueNode elementType;
+    ValueNode ___elementType;
 
-    /**
-     * Class pointer to void.class needs to be exposed earlier than this node is lowered so that it
-     * can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
-     */
+    ///
+    // Class pointer to void.class needs to be exposed earlier than this node is lowered so that it
+    // can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
+    ///
     @OptionalInput
     // @field
-    ValueNode voidClass;
+    ValueNode ___voidClass;
 
-    /**
-     * A non-null value indicating the worst case element type. Mainly useful for distinguishing
-     * Object arrays from primitive arrays.
-     */
+    ///
+    // A non-null value indicating the worst case element type. Mainly useful for distinguishing
+    // Object arrays from primitive arrays.
+    ///
     // @field
-    protected final JavaKind knownElementKind;
+    protected final JavaKind ___knownElementKind;
 
     // @cons
     public DynamicNewArrayNode(ValueNode __elementType, ValueNode __length, boolean __fillContents)
@@ -69,26 +69,26 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
     protected DynamicNewArrayNode(NodeClass<? extends DynamicNewArrayNode> __c, ValueNode __elementType, ValueNode __length, boolean __fillContents, JavaKind __knownElementKind, FrameState __stateBefore, MetaAccessProvider __metaAccess)
     {
         super(__c, computeStamp(__knownElementKind, __metaAccess), __length, __fillContents, __stateBefore);
-        this.elementType = __elementType;
-        this.knownElementKind = __knownElementKind;
+        this.___elementType = __elementType;
+        this.___knownElementKind = __knownElementKind;
     }
 
     public ValueNode getElementType()
     {
-        return elementType;
+        return this.___elementType;
     }
 
     public JavaKind getKnownElementKind()
     {
-        return knownElementKind;
+        return this.___knownElementKind;
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (elementType.isConstant())
+        if (this.___elementType.isConstant())
         {
-            ResolvedJavaType __type = __tool.getConstantReflection().asJavaType(elementType.asConstant());
+            ResolvedJavaType __type = __tool.getConstantReflection().asJavaType(this.___elementType.asConstant());
             if (__type != null && !throwsIllegalArgumentException(__type))
             {
                 return createNewArrayNode(__type);
@@ -97,9 +97,9 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
         return this;
     }
 
-    /**
-     * Hook for subclasses to instantiate a subclass of {@link NewArrayNode}.
-     */
+    ///
+    // Hook for subclasses to instantiate a subclass of {@link NewArrayNode}.
+    ///
     protected NewArrayNode createNewArrayNode(ResolvedJavaType __type)
     {
         return new NewArrayNode(__type, length(), fillContents(), stateBefore());
@@ -116,7 +116,7 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
     }
 
     @NodeIntrinsic
-    private static native Object newArray(Class<?> componentType, int length, @ConstantNodeParameter boolean fillContents);
+    private static native Object newArray(Class<?> __componentType, int __length, @ConstantNodeParameter boolean __fillContents);
 
     public static Object newArray(Class<?> __componentType, int __length)
     {
@@ -124,7 +124,7 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
     }
 
     @NodeIntrinsic
-    private static native Object newArray(Class<?> componentType, int length, @ConstantNodeParameter boolean fillContents, @ConstantNodeParameter JavaKind knownElementKind);
+    private static native Object newArray(Class<?> __componentType, int __length, @ConstantNodeParameter boolean __fillContents, @ConstantNodeParameter JavaKind __knownElementKind);
 
     public static Object newArray(Class<?> __componentType, int __length, JavaKind __knownElementKind)
     {
@@ -138,12 +138,12 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
 
     public ValueNode getVoidClass()
     {
-        return voidClass;
+        return this.___voidClass;
     }
 
     public void setVoidClass(ValueNode __newVoidClass)
     {
-        updateUsages(voidClass, __newVoidClass);
-        voidClass = __newVoidClass;
+        updateUsages(this.___voidClass, __newVoidClass);
+        this.___voidClass = __newVoidClass;
     }
 }

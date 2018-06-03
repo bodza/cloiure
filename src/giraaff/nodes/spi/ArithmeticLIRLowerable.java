@@ -6,10 +6,10 @@ import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 public interface ArithmeticLIRLowerable extends LIRLowerable
 {
     @Override
-    default void generate(NodeLIRBuilderTool builder)
+    default void generate(NodeLIRBuilderTool __builder)
     {
-        generate(builder, builder.getLIRGeneratorTool().getArithmetic());
+        generate(__builder, __builder.getLIRGeneratorTool().getArithmetic());
     }
 
-    void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen);
+    void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen);
 }

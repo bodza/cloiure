@@ -18,10 +18,10 @@ import giraaff.nodes.calc.UnaryNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Determines the index of the most significant "1" bit. Note that the result is undefined if the
- * input is zero.
- */
+///
+// Determines the index of the most significant "1" bit. Note that the result is undefined if the
+// input is zero.
+///
 // @class BitScanReverseNode
 public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIRLowerable
 {
@@ -70,41 +70,41 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
         return this;
     }
 
-    /**
-     * Utility method with defined return value for 0.
-     *
-     * @return index of first set bit or -1 if {@code v} == 0.
-     */
+    ///
+    // Utility method with defined return value for 0.
+    //
+    // @return index of first set bit or -1 if {@code v} == 0.
+    ///
     public static int scan(long __v)
     {
         return 63 - Long.numberOfLeadingZeros(__v);
     }
 
-    /**
-     * Utility method with defined return value for 0.
-     *
-     * @return index of first set bit or -1 if {@code v} == 0.
-     */
+    ///
+    // Utility method with defined return value for 0.
+    //
+    // @return index of first set bit or -1 if {@code v} == 0.
+    ///
     public static int scan(int __v)
     {
         return 31 - Integer.numberOfLeadingZeros(__v);
     }
 
-    /**
-     * Raw intrinsic for bsr instruction.
-     *
-     * @return index of first set bit or an undefined value if {@code v} == 0.
-     */
+    ///
+    // Raw intrinsic for bsr instruction.
+    //
+    // @return index of first set bit or an undefined value if {@code v} == 0.
+    ///
     @NodeIntrinsic
-    public static native int unsafeScan(int v);
+    public static native int unsafeScan(int __v);
 
-    /**
-     * Raw intrinsic for bsr instruction.
-     *
-     * @return index of first set bit or an undefined value if {@code v} == 0.
-     */
+    ///
+    // Raw intrinsic for bsr instruction.
+    //
+    // @return index of first set bit or an undefined value if {@code v} == 0.
+    ///
     @NodeIntrinsic
-    public static native int unsafeScan(long v);
+    public static native int unsafeScan(long __v);
 
     @Override
     public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)

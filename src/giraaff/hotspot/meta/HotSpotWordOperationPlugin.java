@@ -34,9 +34,9 @@ import giraaff.util.GraalError;
 import giraaff.word.WordOperationPlugin;
 import giraaff.word.WordTypes;
 
-/**
- * Extends {@link WordOperationPlugin} to handle {@linkplain HotSpotOperation HotSpot word operations}.
- */
+///
+// Extends {@link WordOperationPlugin} to handle {@linkplain HotSpotOperation HotSpot word operations}.
+///
 // @class HotSpotWordOperationPlugin
 final class HotSpotWordOperationPlugin extends WordOperationPlugin
 {
@@ -50,7 +50,7 @@ final class HotSpotWordOperationPlugin extends WordOperationPlugin
     protected LoadIndexedNode createLoadIndexedNode(ValueNode __array, ValueNode __index)
     {
         ResolvedJavaType __arrayType = StampTool.typeOrNull(__array);
-        Stamp __componentStamp = wordTypes.getWordStamp(__arrayType.getComponentType());
+        Stamp __componentStamp = this.___wordTypes.getWordStamp(__arrayType.getComponentType());
         if (__componentStamp instanceof MetaspacePointerStamp)
         {
             return new LoadIndexedPointerNode(__componentStamp, __array, __index);
@@ -64,7 +64,7 @@ final class HotSpotWordOperationPlugin extends WordOperationPlugin
     @Override
     public boolean handleInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        if (!wordTypes.isWordOperation(__method))
+        if (!this.___wordTypes.isWordOperation(__method))
         {
             return false;
         }
@@ -72,7 +72,7 @@ final class HotSpotWordOperationPlugin extends WordOperationPlugin
         HotSpotOperation __operation = BridgeMethodUtils.getAnnotation(HotSpotOperation.class, __method);
         if (__operation == null)
         {
-            processWordOperation(__b, __args, wordTypes.getWordOperation(__method, __b.getMethod().getDeclaringClass()));
+            processWordOperation(__b, __args, this.___wordTypes.getWordOperation(__method, __b.getMethod().getDeclaringClass()));
             return true;
         }
         processHotSpotWordOperation(__b, __method, __args, __operation);
@@ -108,16 +108,22 @@ final class HotSpotWordOperationPlugin extends WordOperationPlugin
             }
 
             case FROM_POINTER:
-                __b.addPush(__returnKind, new PointerCastNode(StampFactory.forKind(wordKind), __args[0]));
+            {
+                __b.addPush(__returnKind, new PointerCastNode(StampFactory.forKind(this.___wordKind), __args[0]));
                 break;
+            }
 
             case TO_KLASS_POINTER:
+            {
                 __b.addPush(__returnKind, new PointerCastNode(KlassPointerStamp.klass(), __args[0]));
                 break;
+            }
 
             case TO_METHOD_POINTER:
+            {
                 __b.addPush(__returnKind, new PointerCastNode(MethodPointerStamp.method(), __args[0]));
                 break;
+            }
 
             case READ_KLASS_POINTER:
             {
@@ -130,7 +136,7 @@ final class HotSpotWordOperationPlugin extends WordOperationPlugin
                 }
                 else
                 {
-                    __location = snippetReflection.asObject(LocationIdentity.class, __args[2].asJavaConstant());
+                    __location = this.___snippetReflection.asObject(LocationIdentity.class, __args[2].asJavaConstant());
                 }
                 ReadNode __read = __b.add(new ReadNode(__address, __location, __readStamp, BarrierType.NONE));
                 __b.push(__returnKind, __read);

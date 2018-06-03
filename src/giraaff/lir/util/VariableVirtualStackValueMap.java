@@ -9,16 +9,16 @@ import giraaff.util.GraalError;
 public final class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K, T>
 {
     // @field
-    private final Object[] variables;
+    private final Object[] ___variables;
     // @field
-    private final Object[] slots;
+    private final Object[] ___slots;
 
     // @cons
     public VariableVirtualStackValueMap(int __initialVariableCapacity, int __initialStackSlotCapacity)
     {
         super();
-        variables = new Object[__initialVariableCapacity];
-        slots = new Object[__initialStackSlotCapacity];
+        this.___variables = new Object[__initialVariableCapacity];
+        this.___slots = new Object[__initialStackSlotCapacity];
     }
 
     @Override
@@ -26,11 +26,11 @@ public final class VariableVirtualStackValueMap<K extends Value, T> extends Valu
     {
         if (LIRValueUtil.isVariable(__value))
         {
-            return get(variables, LIRValueUtil.asVariable(__value).index);
+            return get(this.___variables, LIRValueUtil.asVariable(__value).___index);
         }
         if (LIRValueUtil.isVirtualStackSlot(__value))
         {
-            return get(slots, LIRValueUtil.asVirtualStackSlot(__value).getId());
+            return get(this.___slots, LIRValueUtil.asVirtualStackSlot(__value).getId());
         }
         throw GraalError.shouldNotReachHere("Unsupported Value: " + __value);
     }
@@ -40,11 +40,11 @@ public final class VariableVirtualStackValueMap<K extends Value, T> extends Valu
     {
         if (LIRValueUtil.isVariable(__value))
         {
-            remove(variables, LIRValueUtil.asVariable(__value).index);
+            remove(this.___variables, LIRValueUtil.asVariable(__value).___index);
         }
         else if (LIRValueUtil.isVirtualStackSlot(__value))
         {
-            remove(slots, LIRValueUtil.asVirtualStackSlot(__value).getId());
+            remove(this.___slots, LIRValueUtil.asVirtualStackSlot(__value).getId());
         }
         else
         {
@@ -57,11 +57,11 @@ public final class VariableVirtualStackValueMap<K extends Value, T> extends Valu
     {
         if (LIRValueUtil.isVariable(__value))
         {
-            put(variables, LIRValueUtil.asVariable(__value).index, __object);
+            put(this.___variables, LIRValueUtil.asVariable(__value).___index, __object);
         }
         else if (LIRValueUtil.isVirtualStackSlot(__value))
         {
-            put(slots, LIRValueUtil.asVirtualStackSlot(__value).getId(), __object);
+            put(this.___slots, LIRValueUtil.asVirtualStackSlot(__value).getId(), __object);
         }
         else
         {

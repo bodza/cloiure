@@ -14,10 +14,10 @@ import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Write a raw memory location according to Java field or array write semantics. It will perform
- * write barriers, implicit conversions and optionally oop compression.
- */
+///
+// Write a raw memory location according to Java field or array write semantics. It will perform
+// write barriers, implicit conversions and optionally oop compression.
+///
 // @class JavaWriteNode
 public final class JavaWriteNode extends AbstractWriteNode implements Lowerable, StateSplit, MemoryAccess, MemoryCheckpoint.Single
 {
@@ -25,16 +25,16 @@ public final class JavaWriteNode extends AbstractWriteNode implements Lowerable,
     public static final NodeClass<JavaWriteNode> TYPE = NodeClass.create(JavaWriteNode.class);
 
     // @field
-    protected final JavaKind writeKind;
+    protected final JavaKind ___writeKind;
     // @field
-    protected final boolean compressible;
+    protected final boolean ___compressible;
 
     // @cons
     public JavaWriteNode(JavaKind __writeKind, AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType, boolean __compressible)
     {
         super(TYPE, __address, __location, __value, __barrierType);
-        this.writeKind = __writeKind;
-        this.compressible = __compressible;
+        this.___writeKind = __writeKind;
+        this.___compressible = __compressible;
     }
 
     @Override
@@ -51,11 +51,11 @@ public final class JavaWriteNode extends AbstractWriteNode implements Lowerable,
 
     public JavaKind getWriteKind()
     {
-        return writeKind;
+        return this.___writeKind;
     }
 
     public boolean isCompressible()
     {
-        return compressible;
+        return this.___compressible;
     }
 }

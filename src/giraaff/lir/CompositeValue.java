@@ -12,11 +12,11 @@ import jdk.vm.ci.meta.ValueKind;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstruction.OperandMode;
 
-/**
- * Base class to represent values that need to be stored in more than one register. This is mainly
- * intended to support addresses and not general arbitrary nesting of composite values. Because of
- * the possibility of sharing of CompositeValues they should be immutable.
- */
+///
+// Base class to represent values that need to be stored in more than one register. This is mainly
+// intended to support addresses and not general arbitrary nesting of composite values. Because of
+// the possibility of sharing of CompositeValues they should be immutable.
+///
 // @class CompositeValue
 public abstract class CompositeValue extends Value
 {
@@ -33,19 +33,19 @@ public abstract class CompositeValue extends Value
         super(__kind);
     }
 
-    /**
-     * Invoke {@code proc} on each {@link Value} element of this {@link CompositeValue}.
-     * If {@code proc} replaces any value then a new CompositeValue should be returned.
-     *
-     * @return the original CompositeValue or a copy with any modified values
-     */
-    public abstract CompositeValue forEachComponent(LIRInstruction inst, OperandMode mode, InstructionValueProcedure proc);
+    ///
+    // Invoke {@code proc} on each {@link Value} element of this {@link CompositeValue}.
+    // If {@code proc} replaces any value then a new CompositeValue should be returned.
+    //
+    // @return the original CompositeValue or a copy with any modified values
+    ///
+    public abstract CompositeValue forEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueProcedure __proc);
 
-    /**
-     * A helper method to visit {@link Value}[] ensuring that a copy of the array is made if it's needed.
-     *
-     * @return the original {@code values} array or a copy if values changed
-     */
+    ///
+    // A helper method to visit {@link Value}[] ensuring that a copy of the array is made if it's needed.
+    //
+    // @return the original {@code values} array or a copy if values changed
+    ///
     protected Value[] visitValueArray(LIRInstruction __inst, Value[] __values, OperandMode __mode, InstructionValueProcedure __proc, EnumSet<OperandFlag> __flags)
     {
         Value[] __newValues = null;
@@ -65,7 +65,7 @@ public abstract class CompositeValue extends Value
         return __newValues != null ? __newValues : __values;
     }
 
-    protected abstract void visitEachComponent(LIRInstruction inst, OperandMode mode, InstructionValueConsumer proc);
+    protected abstract void visitEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueConsumer __proc);
 
     @Override
     public int hashCode()

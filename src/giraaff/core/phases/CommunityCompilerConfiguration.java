@@ -13,9 +13,9 @@ import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.LowTierContext;
 import giraaff.phases.tiers.MidTierContext;
 
-/**
- * The default configuration for the community edition of Graal.
- */
+///
+// The default configuration for the community edition of Graal.
+///
 // @class CommunityCompilerConfiguration
 public final class CommunityCompilerConfiguration implements CompilerConfiguration
 {

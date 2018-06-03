@@ -17,9 +17,9 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.type.StampTool;
 
-/**
- * Count the number of trailing zeros using the {@code tzcntq} or {@code tzcntl} instructions.
- */
+///
+// Count the number of trailing zeros using the {@code tzcntq} or {@code tzcntl} instructions.
+///
 // @class AMD64CountTrailingZerosNode
 public final class AMD64CountTrailingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
 {

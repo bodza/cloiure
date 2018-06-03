@@ -59,7 +59,7 @@ public final class HashCodeSnippets implements Snippets
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final SnippetInfo identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
+        private final SnippetInfo ___identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target)
@@ -70,10 +70,10 @@ public final class HashCodeSnippets implements Snippets
         public void lower(IdentityHashCodeNode __node, LoweringTool __tool)
         {
             StructuredGraph __graph = __node.graph();
-            Arguments __args = new Arguments(identityHashCodeSnippet, __graph.getGuardsStage(), __tool.getLoweringStage());
-            __args.add("thisObj", __node.object);
+            Arguments __args = new Arguments(this.___identityHashCodeSnippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            __args.add("thisObj", __node.___object);
             SnippetTemplate __template = template(__node, __args);
-            __template.instantiate(providers.getMetaAccess(), __node, SnippetTemplate.DEFAULT_REPLACER, __args);
+            __template.instantiate(this.___providers.getMetaAccess(), __node, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

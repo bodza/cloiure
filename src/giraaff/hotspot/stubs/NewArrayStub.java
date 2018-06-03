@@ -24,12 +24,12 @@ import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.ConstantNode;
 import giraaff.word.Word;
 
-/**
- * Stub implementing the fast path for TLAB refill during instance class allocation. This stub is
- * called from the {@linkplain NewObjectSnippets inline} allocation code when TLAB allocation fails.
- * If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
- * runtime to complete the allocation.
- */
+///
+// Stub implementing the fast path for TLAB refill during instance class allocation. This stub is
+// called from the {@linkplain NewObjectSnippets inline} allocation code when TLAB allocation fails.
+// If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
+// runtime to complete the allocation.
+///
 // @class NewArrayStub
 public final class NewArrayStub extends SnippetStub
 {
@@ -42,22 +42,22 @@ public final class NewArrayStub extends SnippetStub
     @Override
     protected Object[] makeConstArgs()
     {
-        HotSpotResolvedObjectType __intArrayType = (HotSpotResolvedObjectType) providers.getMetaAccess().lookupJavaType(int[].class);
-        int __count = method.getSignature().getParameterCount(false);
+        HotSpotResolvedObjectType __intArrayType = (HotSpotResolvedObjectType) this.___providers.getMetaAccess().lookupJavaType(int[].class);
+        int __count = this.___method.getSignature().getParameterCount(false);
         Object[] __args = new Object[__count];
         __args[3] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __intArrayType.klass(), null);
-        __args[4] = providers.getRegisters().getThreadRegister();
+        __args[4] = this.___providers.getRegisters().getThreadRegister();
         return __args;
     }
 
-    /**
-     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
-     *
-     * @param hub the hub of the object to be allocated
-     * @param length the length of the array
-     * @param fillContents Should the array be filled with zeroes?
-     * @param intArrayHub the hub for {@code int[].class}
-     */
+    ///
+    // Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
+    //
+    // @param hub the hub of the object to be allocated
+    // @param length the length of the array
+    // @param fillContents Should the array be filled with zeroes?
+    // @param intArrayHub the hub for {@code int[].class}
+    ///
     @Snippet
     private static Object newArray(KlassPointer __hub, int __length, boolean __fillContents, @ConstantParameter KlassPointer __intArrayHub, @ConstantParameter Register __threadRegister)
     {
@@ -87,5 +87,5 @@ public final class NewArrayStub extends SnippetStub
     public static final ForeignCallDescriptor NEW_ARRAY_C = StubUtil.newDescriptor(NewArrayStub.class, "newArrayC", void.class, Word.class, KlassPointer.class, int.class);
 
     @NodeIntrinsic(StubForeignCallNode.class)
-    public static native void newArrayC(@ConstantNodeParameter ForeignCallDescriptor newArrayC, Word thread, KlassPointer hub, int length);
+    public static native void newArrayC(@ConstantNodeParameter ForeignCallDescriptor __newArrayC, Word __thread, KlassPointer __hub, int __length);
 }

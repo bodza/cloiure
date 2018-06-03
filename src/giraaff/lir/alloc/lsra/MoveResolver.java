@@ -17,32 +17,32 @@ import giraaff.util.GraalError;
 public class MoveResolver
 {
     // @field
-    private final LinearScan allocator;
+    private final LinearScan ___allocator;
 
     // @field
-    private int insertIdx;
+    private int ___insertIdx;
     // @field
-    private LIRInsertionBuffer insertionBuffer; // buffer where moves are inserted
+    private LIRInsertionBuffer ___insertionBuffer; // buffer where moves are inserted
 
     // @field
-    private final ArrayList<Interval> mappingFrom;
+    private final ArrayList<Interval> ___mappingFrom;
     // @field
-    private final ArrayList<Constant> mappingFromOpr;
+    private final ArrayList<Constant> ___mappingFromOpr;
     // @field
-    private final ArrayList<Interval> mappingTo;
+    private final ArrayList<Interval> ___mappingTo;
     // @field
-    private boolean multipleReadsAllowed;
+    private boolean ___multipleReadsAllowed;
     // @field
-    private final int[] registerBlocked;
+    private final int[] ___registerBlocked;
 
     // @field
-    private final LIRGenerationResult res;
+    private final LIRGenerationResult ___res;
 
     protected void setValueBlocked(Value __location, int __direction)
     {
         if (ValueUtil.isRegister(__location))
         {
-            registerBlocked[ValueUtil.asRegister(__location).number] += __direction;
+            this.___registerBlocked[ValueUtil.asRegister(__location).number] += __direction;
         }
         else
         {
@@ -52,56 +52,56 @@ public class MoveResolver
 
     protected Interval getMappingFrom(int __i)
     {
-        return mappingFrom.get(__i);
+        return this.___mappingFrom.get(__i);
     }
 
     protected int mappingFromSize()
     {
-        return mappingFrom.size();
+        return this.___mappingFrom.size();
     }
 
     protected int valueBlocked(Value __location)
     {
         if (ValueUtil.isRegister(__location))
         {
-            return registerBlocked[ValueUtil.asRegister(__location).number];
+            return this.___registerBlocked[ValueUtil.asRegister(__location).number];
         }
         throw GraalError.shouldNotReachHere("unhandled value " + __location);
     }
 
     void setMultipleReadsAllowed()
     {
-        multipleReadsAllowed = true;
+        this.___multipleReadsAllowed = true;
     }
 
     protected boolean areMultipleReadsAllowed()
     {
-        return multipleReadsAllowed;
+        return this.___multipleReadsAllowed;
     }
 
     boolean hasMappings()
     {
-        return mappingFrom.size() > 0;
+        return this.___mappingFrom.size() > 0;
     }
 
     protected LinearScan getAllocator()
     {
-        return allocator;
+        return this.___allocator;
     }
 
     // @cons
     protected MoveResolver(LinearScan __allocator)
     {
         super();
-        this.allocator = __allocator;
-        this.multipleReadsAllowed = false;
-        this.mappingFrom = new ArrayList<>(8);
-        this.mappingFromOpr = new ArrayList<>(8);
-        this.mappingTo = new ArrayList<>(8);
-        this.insertIdx = -1;
-        this.insertionBuffer = new LIRInsertionBuffer();
-        this.registerBlocked = new int[__allocator.getRegisters().size()];
-        this.res = __allocator.getLIRGenerationResult();
+        this.___allocator = __allocator;
+        this.___multipleReadsAllowed = false;
+        this.___mappingFrom = new ArrayList<>(8);
+        this.___mappingFromOpr = new ArrayList<>(8);
+        this.___mappingTo = new ArrayList<>(8);
+        this.___insertIdx = -1;
+        this.___insertionBuffer = new LIRInsertionBuffer();
+        this.___registerBlocked = new int[__allocator.getRegisters().size()];
+        this.___res = __allocator.getLIRGenerationResult();
     }
 
     // mark assignedReg and assignedRegHi of the interval as blocked
@@ -125,10 +125,10 @@ public class MoveResolver
         }
     }
 
-    /**
-     * Checks if the {@linkplain Interval#location() location} of {@code to} is not blocked or is
-     * only blocked by {@code from}.
-     */
+    ///
+    // Checks if the {@linkplain Interval#location() location} of {@code to} is not blocked or is
+    // only blocked by {@code from}.
+    ///
     private boolean safeToProcessMove(Interval __from, Interval __to)
     {
         Value __fromReg = __from != null ? __from.location() : null;
@@ -165,33 +165,33 @@ public class MoveResolver
 
     private void createInsertionBuffer(ArrayList<LIRInstruction> __list)
     {
-        insertionBuffer.init(__list);
+        this.___insertionBuffer.init(__list);
     }
 
     private void appendInsertionBuffer()
     {
-        if (insertionBuffer.initialized())
+        if (this.___insertionBuffer.initialized())
         {
-            insertionBuffer.finish();
+            this.___insertionBuffer.finish();
         }
 
-        insertIdx = -1;
+        this.___insertIdx = -1;
     }
 
     private LIRInstruction insertMove(Interval __fromInterval, Interval __toInterval)
     {
-        LIRInstruction __move = createMove(__fromInterval.operand, __toInterval.operand, __fromInterval.location(), __toInterval.location());
-        insertionBuffer.append(insertIdx, __move);
+        LIRInstruction __move = createMove(__fromInterval.___operand, __toInterval.___operand, __fromInterval.location(), __toInterval.location());
+        this.___insertionBuffer.append(this.___insertIdx, __move);
 
         return __move;
     }
 
-    /**
-     * @param fromOpr {@link Interval#operand operand} of the {@code from} interval
-     * @param toOpr {@link Interval#operand operand} of the {@code to} interval
-     * @param fromLocation {@link Interval#location() location} of the {@code to} interval
-     * @param toLocation {@link Interval#location() location} of the {@code to} interval
-     */
+    ///
+    // @param fromOpr {@link Interval#operand operand} of the {@code from} interval
+    // @param toOpr {@link Interval#operand operand} of the {@code to} interval
+    // @param fromLocation {@link Interval#location() location} of the {@code to} interval
+    // @param toLocation {@link Interval#location() location} of the {@code to} interval
+    ///
     protected LIRInstruction createMove(AllocatableValue __fromOpr, AllocatableValue __toOpr, AllocatableValue __fromLocation, AllocatableValue __toLocation)
     {
         return getAllocator().getSpillMoveFactory().createMove(__toOpr, __fromOpr);
@@ -199,7 +199,7 @@ public class MoveResolver
 
     private LIRInstruction insertMove(Constant __fromOpr, Interval __toInterval)
     {
-        AllocatableValue __toOpr = __toInterval.operand;
+        AllocatableValue __toOpr = __toInterval.___operand;
         LIRInstruction __move;
         if (LIRValueUtil.isStackSlotValue(__toInterval.location()))
         {
@@ -209,7 +209,7 @@ public class MoveResolver
         {
             __move = getAllocator().getSpillMoveFactory().createLoad(__toOpr, __fromOpr);
         }
-        insertionBuffer.append(insertIdx, __move);
+        this.___insertionBuffer.append(this.___insertIdx, __move);
 
         return __move;
     }
@@ -220,9 +220,9 @@ public class MoveResolver
         // When a register is blocked, no move to this register is emitted.
         // This is necessary for detecting cycles in moves.
         int __i;
-        for (__i = mappingFrom.size() - 1; __i >= 0; __i--)
+        for (__i = this.___mappingFrom.size() - 1; __i >= 0; __i--)
         {
-            Interval __fromInterval = mappingFrom.get(__i);
+            Interval __fromInterval = this.___mappingFrom.get(__i);
             if (__fromInterval != null)
             {
                 blockRegisters(__fromInterval);
@@ -230,15 +230,15 @@ public class MoveResolver
         }
 
         ArrayList<AllocatableValue> __busySpillSlots = null;
-        while (mappingFrom.size() > 0)
+        while (this.___mappingFrom.size() > 0)
         {
             boolean __processedInterval = false;
 
             int __spillCandidate = -1;
-            for (__i = mappingFrom.size() - 1; __i >= 0; __i--)
+            for (__i = this.___mappingFrom.size() - 1; __i >= 0; __i--)
             {
-                Interval __fromInterval = mappingFrom.get(__i);
-                Interval __toInterval = mappingTo.get(__i);
+                Interval __fromInterval = this.___mappingFrom.get(__i);
+                Interval __toInterval = this.___mappingTo.get(__i);
 
                 if (safeToProcessMove(__fromInterval, __toInterval))
                 {
@@ -251,7 +251,7 @@ public class MoveResolver
                     }
                     else
                     {
-                        __move = insertMove(mappingFromOpr.get(__i), __toInterval);
+                        __move = insertMove(this.___mappingFromOpr.get(__i), __toInterval);
                     }
                     if (LIRValueUtil.isStackSlotValue(__toInterval.location()))
                     {
@@ -261,9 +261,9 @@ public class MoveResolver
                         }
                         __busySpillSlots.add(__toInterval.location());
                     }
-                    mappingFrom.remove(__i);
-                    mappingFromOpr.remove(__i);
-                    mappingTo.remove(__i);
+                    this.___mappingFrom.remove(__i);
+                    this.___mappingFromOpr.remove(__i);
+                    this.___mappingTo.remove(__i);
 
                     __processedInterval = true;
                 }
@@ -282,7 +282,7 @@ public class MoveResolver
         }
 
         // reset to default value
-        multipleReadsAllowed = false;
+        this.___multipleReadsAllowed = false;
     }
 
     protected void breakCycle(int __spillCandidate)
@@ -291,7 +291,7 @@ public class MoveResolver
         // (e.g. r1 . r2, r2 . r1), so one interval must be spilled to memory
 
         // create a new spill interval and assign a stack slot to it
-        Interval __fromInterval = mappingFrom.get(__spillCandidate);
+        Interval __fromInterval = this.___mappingFrom.get(__spillCandidate);
         // do not allocate a new spill slot for temporary interval, but
         // use spill slot assigned to fromInterval. Otherwise moves from
         // one stack slot to another can happen (not allowed by LIRAssembler
@@ -319,25 +319,25 @@ public class MoveResolver
 
         // insert a move from register to stack and update the mapping
         LIRInstruction __move = insertMove(__fromInterval, __spillInterval);
-        mappingFrom.set(__spillCandidate, __spillInterval);
+        this.___mappingFrom.set(__spillCandidate, __spillInterval);
         unblockRegisters(__fromInterval);
     }
 
     void setInsertPosition(ArrayList<LIRInstruction> __insertList, int __insertIdx)
     {
         createInsertionBuffer(__insertList);
-        this.insertIdx = __insertIdx;
+        this.___insertIdx = __insertIdx;
     }
 
     void moveInsertPosition(ArrayList<LIRInstruction> __newInsertList, int __newInsertIdx)
     {
-        if (insertionBuffer.lirList() != null && (insertionBuffer.lirList() != __newInsertList || this.insertIdx != __newInsertIdx))
+        if (this.___insertionBuffer.lirList() != null && (this.___insertionBuffer.lirList() != __newInsertList || this.___insertIdx != __newInsertIdx))
         {
             // insert position changed . resolve current mappings
             resolveMappings();
         }
 
-        if (insertionBuffer.lirList() != __newInsertList)
+        if (this.___insertionBuffer.lirList() != __newInsertList)
         {
             // block changed . append insertionBuffer because it is
             // bound to a specific block and create a new insertionBuffer
@@ -345,7 +345,7 @@ public class MoveResolver
             createInsertionBuffer(__newInsertList);
         }
 
-        this.insertIdx = __newInsertIdx;
+        this.___insertIdx = __newInsertIdx;
     }
 
     public void addMapping(Interval __fromInterval, Interval __toInterval)
@@ -362,16 +362,16 @@ public class MoveResolver
             return;
         }
 
-        mappingFrom.add(__fromInterval);
-        mappingFromOpr.add(null);
-        mappingTo.add(__toInterval);
+        this.___mappingFrom.add(__fromInterval);
+        this.___mappingFromOpr.add(null);
+        this.___mappingTo.add(__toInterval);
     }
 
     public void addMapping(Constant __fromOpr, Interval __toInterval)
     {
-        mappingFrom.add(null);
-        mappingFromOpr.add(__fromOpr);
-        mappingTo.add(__toInterval);
+        this.___mappingFrom.add(null);
+        this.___mappingFromOpr.add(__fromOpr);
+        this.___mappingTo.add(__toInterval);
     }
 
     void resolveAndAppendMoves()

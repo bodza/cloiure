@@ -11,7 +11,7 @@ public final class G1PostWriteBarrier extends ObjectWriteBarrier
     public static final NodeClass<G1PostWriteBarrier> TYPE = NodeClass.create(G1PostWriteBarrier.class);
 
     // @field
-    protected final boolean alwaysNull;
+    protected final boolean ___alwaysNull;
 
     // @cons
     public G1PostWriteBarrier(AddressNode __address, ValueNode __value, boolean __precise, boolean __alwaysNull)
@@ -23,11 +23,11 @@ public final class G1PostWriteBarrier extends ObjectWriteBarrier
     protected G1PostWriteBarrier(NodeClass<? extends G1PostWriteBarrier> __c, AddressNode __address, ValueNode __value, boolean __precise, boolean __alwaysNull)
     {
         super(__c, __address, __value, __precise);
-        this.alwaysNull = __alwaysNull;
+        this.___alwaysNull = __alwaysNull;
     }
 
     public boolean alwaysNull()
     {
-        return alwaysNull;
+        return this.___alwaysNull;
     }
 }

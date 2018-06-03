@@ -10,9 +10,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Square root.
- */
+///
+// Square root.
+///
 // @class SqrtNode
 public final class SqrtNode extends UnaryArithmeticNode<Sqrt> implements ArithmeticLIRLowerable
 {

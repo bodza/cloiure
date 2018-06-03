@@ -24,22 +24,22 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code LoadIndexedNode} represents a read from an element of an array.
- */
+///
+// The {@code LoadIndexedNode} represents a read from an element of an array.
+///
 // @class LoadIndexedNode
 public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable, Canonicalizable
 {
     // @def
     public static final NodeClass<LoadIndexedNode> TYPE = NodeClass.create(LoadIndexedNode.class);
 
-    /**
-     * Creates a new LoadIndexedNode.
-     *
-     * @param array the instruction producing the array
-     * @param index the instruction producing the index
-     * @param elementKind the element type
-     */
+    ///
+    // Creates a new LoadIndexedNode.
+    //
+    // @param array the instruction producing the array
+    // @param index the instruction producing the index
+    // @param elementKind the element type
+    ///
     // @cons
     public LoadIndexedNode(Assumptions __assumptions, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
@@ -92,7 +92,7 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
     @Override
     public boolean inferStamp()
     {
-        return updateStamp(stamp.improveWith(createStamp(graph().getAssumptions(), array(), elementKind())));
+        return updateStamp(this.___stamp.improveWith(createStamp(graph().getAssumptions(), array(), elementKind())));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
             if (__idx >= 0 && __idx < __virtual.entryCount())
             {
                 ValueNode __entry = __tool.getEntry(__virtual, __idx);
-                if (stamp.isCompatible(__entry.stamp(NodeView.DEFAULT)))
+                if (this.___stamp.isCompatible(__entry.stamp(NodeView.DEFAULT)))
                 {
                     __tool.replaceWith(__entry);
                 }

@@ -34,33 +34,33 @@ public final class ReentrantNodeIterator
     public static final class LoopInfo<StateT>
     {
         // @field
-        public final EconomicMap<LoopEndNode, StateT> endStates;
+        public final EconomicMap<LoopEndNode, StateT> ___endStates;
         // @field
-        public final EconomicMap<LoopExitNode, StateT> exitStates;
+        public final EconomicMap<LoopExitNode, StateT> ___exitStates;
 
         // @cons
         public LoopInfo(int __endCount, int __exitCount)
         {
             super();
-            endStates = EconomicMap.create(Equivalence.IDENTITY, __endCount);
-            exitStates = EconomicMap.create(Equivalence.IDENTITY, __exitCount);
+            this.___endStates = EconomicMap.create(Equivalence.IDENTITY, __endCount);
+            this.___exitStates = EconomicMap.create(Equivalence.IDENTITY, __exitCount);
         }
     }
 
     // @class ReentrantNodeIterator.NodeIteratorClosure
     public abstract static class NodeIteratorClosure<StateT>
     {
-        protected abstract StateT processNode(FixedNode node, StateT currentState);
+        protected abstract StateT processNode(FixedNode __node, StateT __currentState);
 
-        protected abstract StateT merge(AbstractMergeNode merge, List<StateT> states);
+        protected abstract StateT merge(AbstractMergeNode __merge, List<StateT> __states);
 
-        protected abstract StateT afterSplit(AbstractBeginNode node, StateT oldState);
+        protected abstract StateT afterSplit(AbstractBeginNode __node, StateT __oldState);
 
-        protected abstract EconomicMap<LoopExitNode, StateT> processLoop(LoopBeginNode loop, StateT initialState);
+        protected abstract EconomicMap<LoopExitNode, StateT> processLoop(LoopBeginNode __loop, StateT __initialState);
 
-        /**
-         * Determine whether iteration should continue in the current state.
-         */
+        ///
+        // Determine whether iteration should continue in the current state.
+        ///
         protected boolean continueIteration(StateT __currentState)
         {
             return true;
@@ -76,14 +76,14 @@ public final class ReentrantNodeIterator
         {
             if (__blockEndStates.containsKey(__end))
             {
-                __info.endStates.put(__end, __blockEndStates.get(__end));
+                __info.___endStates.put(__end, __blockEndStates.get(__end));
             }
         }
         for (LoopExitNode __exit : __loop.loopExits())
         {
             if (__blockEndStates.containsKey(__exit))
             {
-                __info.exitStates.put(__exit, __blockEndStates.get(__exit));
+                __info.___exitStates.put(__exit, __blockEndStates.get(__exit));
             }
         }
         return __info;

@@ -16,20 +16,20 @@ public interface InliningPolicy
         public static final Decision NO = new Decision(false, "(unknown reason)");
 
         // @field
-        public final boolean shouldInline;
+        public final boolean ___shouldInline;
         // @field
-        public final String reason;
+        public final String ___reason;
 
         // @cons
         private Decision(boolean __shouldInline, String __reason)
         {
             super();
-            this.shouldInline = __shouldInline;
-            this.reason = __reason;
+            this.___shouldInline = __shouldInline;
+            this.___reason = __reason;
         }
     }
 
-    boolean continueInlining(StructuredGraph graph);
+    boolean continueInlining(StructuredGraph __graph);
 
-    Decision isWorthInlining(Replacements replacements, MethodInvocation invocation, int inliningDepth, boolean fullyProcessed);
+    Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed);
 }

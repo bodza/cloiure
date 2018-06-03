@@ -21,10 +21,10 @@ import giraaff.nodes.calc.CompareNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * The {@code ConditionalNode} class represents a comparison that yields one of two (eagerly
- * evaluated) values.
- */
+///
+// The {@code ConditionalNode} class represents a comparison that yields one of two (eagerly
+// evaluated) values.
+///
 // @class ConditionalNode
 public final class ConditionalNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
@@ -33,17 +33,17 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
 
     @Input(InputType.Condition)
     // @field
-    LogicNode condition;
+    LogicNode ___condition;
     @Input(InputType.Value)
     // @field
-    ValueNode trueValue;
+    ValueNode ___trueValue;
     @Input(InputType.Value)
     // @field
-    ValueNode falseValue;
+    ValueNode ___falseValue;
 
     public LogicNode condition()
     {
-        return condition;
+        return this.___condition;
     }
 
     // @cons
@@ -56,9 +56,9 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
     public ConditionalNode(LogicNode __condition, ValueNode __trueValue, ValueNode __falseValue)
     {
         super(TYPE, __trueValue.stamp(NodeView.DEFAULT).meet(__falseValue.stamp(NodeView.DEFAULT)));
-        this.condition = __condition;
-        this.trueValue = __trueValue;
-        this.falseValue = __falseValue;
+        this.___condition = __condition;
+        this.___trueValue = __trueValue;
+        this.___falseValue = __falseValue;
     }
 
     public static ValueNode create(LogicNode __condition, NodeView __view)
@@ -84,11 +84,11 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
     @Override
     public boolean inferStamp()
     {
-        Stamp __valueStamp = trueValue.stamp(NodeView.DEFAULT).meet(falseValue.stamp(NodeView.DEFAULT));
-        if (condition instanceof IntegerLessThanNode)
+        Stamp __valueStamp = this.___trueValue.stamp(NodeView.DEFAULT).meet(this.___falseValue.stamp(NodeView.DEFAULT));
+        if (this.___condition instanceof IntegerLessThanNode)
         {
-            IntegerLessThanNode __lessThan = (IntegerLessThanNode) condition;
-            if (__lessThan.getX() == trueValue && __lessThan.getY() == falseValue)
+            IntegerLessThanNode __lessThan = (IntegerLessThanNode) this.___condition;
+            if (__lessThan.getX() == this.___trueValue && __lessThan.getY() == this.___falseValue)
             {
                 // this encodes a min operation
                 JavaConstant __constant = __lessThan.getX().asJavaConstant();
@@ -102,7 +102,7 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
                     __valueStamp = __valueStamp.join(__bounds);
                 }
             }
-            else if (__lessThan.getX() == falseValue && __lessThan.getY() == trueValue)
+            else if (__lessThan.getX() == this.___falseValue && __lessThan.getY() == this.___trueValue)
             {
                 // this encodes a max operation
                 JavaConstant __constant = __lessThan.getX().asJavaConstant();
@@ -122,25 +122,25 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
 
     public ValueNode trueValue()
     {
-        return trueValue;
+        return this.___trueValue;
     }
 
     public ValueNode falseValue()
     {
-        return falseValue;
+        return this.___falseValue;
     }
 
     @Override
     public ValueNode canonical(CanonicalizerTool __tool)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __synonym = findSynonym(condition, trueValue(), falseValue(), __view);
+        ValueNode __synonym = findSynonym(this.___condition, trueValue(), falseValue(), __view);
         if (__synonym != null)
         {
             return __synonym;
         }
 
-        ValueNode __result = canonicalizeConditional(condition, trueValue(), falseValue(), stamp, __view);
+        ValueNode __result = canonicalizeConditional(this.___condition, trueValue(), falseValue(), this.___stamp, __view);
         if (__result != null)
         {
             return __result;

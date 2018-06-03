@@ -13,32 +13,32 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.virtual.nodes.MaterializedObjectState;
 import giraaff.virtual.nodes.VirtualObjectState;
 
-/**
- * This class describes the state of a virtual object while iterating over the graph. It describes
- * the fields or array elements (called "entries") and the lock count if the object is still
- * virtual. If the object was materialized, it contains the current materialized value.
- */
+///
+// This class describes the state of a virtual object while iterating over the graph. It describes
+// the fields or array elements (called "entries") and the lock count if the object is still
+// virtual. If the object was materialized, it contains the current materialized value.
+///
 // @class ObjectState
 public final class ObjectState
 {
     // @field
-    private ValueNode[] entries;
+    private ValueNode[] ___entries;
     // @field
-    private ValueNode materializedValue;
+    private ValueNode ___materializedValue;
     // @field
-    private LockState locks;
+    private LockState ___locks;
     // @field
-    private boolean ensureVirtualized;
+    private boolean ___ensureVirtualized;
 
     // @field
-    private EscapeObjectState cachedState;
+    private EscapeObjectState ___cachedState;
 
-    /**
-     * ObjectStates are duplicated lazily, if this field is true then the state needs to be copied
-     * before it is modified.
-     */
+    ///
+    // ObjectStates are duplicated lazily, if this field is true then the state needs to be copied
+    // before it is modified.
+    ///
     // @field
-    boolean copyOnWrite;
+    boolean ___copyOnWrite;
 
     // @cons
     public ObjectState(ValueNode[] __entries, List<MonitorIdNode> __locks, boolean __ensureVirtualized)
@@ -46,7 +46,7 @@ public final class ObjectState
         this(__entries, (LockState) null, __ensureVirtualized);
         for (int __i = __locks.size() - 1; __i >= 0; __i--)
         {
-            this.locks = new LockState(__locks.get(__i), this.locks);
+            this.___locks = new LockState(__locks.get(__i), this.___locks);
         }
     }
 
@@ -54,29 +54,29 @@ public final class ObjectState
     public ObjectState(ValueNode[] __entries, LockState __locks, boolean __ensureVirtualized)
     {
         super();
-        this.entries = __entries;
-        this.locks = __locks;
-        this.ensureVirtualized = __ensureVirtualized;
+        this.___entries = __entries;
+        this.___locks = __locks;
+        this.___ensureVirtualized = __ensureVirtualized;
     }
 
     // @cons
     public ObjectState(ValueNode __materializedValue, LockState __locks, boolean __ensureVirtualized)
     {
         super();
-        this.materializedValue = __materializedValue;
-        this.locks = __locks;
-        this.ensureVirtualized = __ensureVirtualized;
+        this.___materializedValue = __materializedValue;
+        this.___locks = __locks;
+        this.___ensureVirtualized = __ensureVirtualized;
     }
 
     // @cons
     private ObjectState(ObjectState __other)
     {
         super();
-        entries = __other.entries == null ? null : __other.entries.clone();
-        materializedValue = __other.materializedValue;
-        locks = __other.locks;
-        cachedState = __other.cachedState;
-        ensureVirtualized = __other.ensureVirtualized;
+        this.___entries = __other.___entries == null ? null : __other.___entries.clone();
+        this.___materializedValue = __other.___materializedValue;
+        this.___locks = __other.___locks;
+        this.___cachedState = __other.___cachedState;
+        this.___ensureVirtualized = __other.___ensureVirtualized;
     }
 
     public ObjectState cloneState()
@@ -86,16 +86,14 @@ public final class ObjectState
 
     public EscapeObjectState createEscapeObjectState(VirtualObjectNode __virtual)
     {
-        if (cachedState == null)
+        if (this.___cachedState == null)
         {
             if (isVirtual())
             {
-                /*
-                 * Clear out entries that are default values anyway.
-                 *
-                 * TODO this should be propagated into ObjectState.entries, but that will take some more refactoring
-                 */
-                ValueNode[] __newEntries = entries.clone();
+                // Clear out entries that are default values anyway.
+                //
+                // TODO this should be propagated into ObjectState.entries, but that will take some more refactoring
+                ValueNode[] __newEntries = this.___entries.clone();
                 for (int __i = 0; __i < __newEntries.length; __i++)
                 {
                     if (__newEntries[__i].asJavaConstant() == JavaConstant.defaultForKind(__virtual.entryKind(__i).getStackKind()))
@@ -103,105 +101,105 @@ public final class ObjectState
                         __newEntries[__i] = null;
                     }
                 }
-                cachedState = new VirtualObjectState(__virtual, __newEntries);
+                this.___cachedState = new VirtualObjectState(__virtual, __newEntries);
             }
             else
             {
-                cachedState = new MaterializedObjectState(__virtual, materializedValue);
+                this.___cachedState = new MaterializedObjectState(__virtual, this.___materializedValue);
             }
         }
-        return cachedState;
+        return this.___cachedState;
     }
 
     public boolean isVirtual()
     {
-        return materializedValue == null;
+        return this.___materializedValue == null;
     }
 
-    /**
-     * Users of this method are not allowed to change the entries of the returned array.
-     */
+    ///
+    // Users of this method are not allowed to change the entries of the returned array.
+    ///
     public ValueNode[] getEntries()
     {
-        return entries;
+        return this.___entries;
     }
 
     public ValueNode getEntry(int __index)
     {
-        return entries[__index];
+        return this.___entries[__index];
     }
 
     public ValueNode getMaterializedValue()
     {
-        return materializedValue;
+        return this.___materializedValue;
     }
 
     public void setEntry(int __index, ValueNode __value)
     {
-        cachedState = null;
-        entries[__index] = __value;
+        this.___cachedState = null;
+        this.___entries[__index] = __value;
     }
 
     public void escape(ValueNode __materialized)
     {
-        materializedValue = __materialized;
-        entries = null;
-        cachedState = null;
+        this.___materializedValue = __materialized;
+        this.___entries = null;
+        this.___cachedState = null;
     }
 
     public void updateMaterializedValue(ValueNode __value)
     {
-        cachedState = null;
-        materializedValue = __value;
+        this.___cachedState = null;
+        this.___materializedValue = __value;
     }
 
     public void addLock(MonitorIdNode __monitorId)
     {
-        locks = new LockState(__monitorId, locks);
+        this.___locks = new LockState(__monitorId, this.___locks);
     }
 
     public MonitorIdNode removeLock()
     {
         try
         {
-            return locks.monitorId;
+            return this.___locks.___monitorId;
         }
         finally
         {
-            locks = locks.next;
+            this.___locks = this.___locks.___next;
         }
     }
 
     public LockState getLocks()
     {
-        return locks;
+        return this.___locks;
     }
 
     public boolean hasLocks()
     {
-        return locks != null;
+        return this.___locks != null;
     }
 
     public boolean locksEqual(ObjectState __other)
     {
-        LockState __a = locks;
-        LockState __b = __other.locks;
-        while (__a != null && __b != null && __a.monitorId == __b.monitorId)
+        LockState __a = this.___locks;
+        LockState __b = __other.___locks;
+        while (__a != null && __b != null && __a.___monitorId == __b.___monitorId)
         {
-            __a = __a.next;
-            __b = __b.next;
+            __a = __a.___next;
+            __b = __b.___next;
         }
         return __a == null && __b == null;
     }
 
     public void setEnsureVirtualized(boolean __ensureVirtualized)
     {
-        this.ensureVirtualized = __ensureVirtualized;
+        this.___ensureVirtualized = __ensureVirtualized;
     }
 
     public boolean getEnsureVirtualized()
     {
-        return ensureVirtualized;
+        return this.___ensureVirtualized;
     }
 
     @Override
@@ -209,9 +207,9 @@ public final class ObjectState
     {
         final int __prime = 31;
         int __result = 1;
-        __result = __prime * __result + Arrays.hashCode(entries);
-        __result = __prime * __result + (locks != null ? locks.monitorId.getLockDepth() : 0);
-        __result = __prime * __result + ((materializedValue == null) ? 0 : materializedValue.hashCode());
+        __result = __prime * __result + Arrays.hashCode(this.___entries);
+        __result = __prime * __result + (this.___locks != null ? this.___locks.___monitorId.getLockDepth() : 0);
+        __result = __prime * __result + ((this.___materializedValue == null) ? 0 : this.___materializedValue.hashCode());
         return __result;
     }
 
@@ -227,7 +225,7 @@ public final class ObjectState
             return false;
         }
         ObjectState __other = (ObjectState) __obj;
-        if (!Arrays.equals(entries, __other.entries))
+        if (!Arrays.equals(this.___entries, __other.___entries))
         {
             return false;
         }
@@ -235,14 +233,14 @@ public final class ObjectState
         {
             return false;
         }
-        if (materializedValue == null)
+        if (this.___materializedValue == null)
         {
-            if (__other.materializedValue != null)
+            if (__other.___materializedValue != null)
             {
                 return false;
             }
         }
-        else if (!materializedValue.equals(__other.materializedValue))
+        else if (!this.___materializedValue.equals(__other.___materializedValue))
         {
             return false;
         }
@@ -251,7 +249,7 @@ public final class ObjectState
 
     public ObjectState share()
     {
-        copyOnWrite = true;
+        this.___copyOnWrite = true;
         return this;
     }
 }

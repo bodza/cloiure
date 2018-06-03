@@ -9,88 +9,88 @@ import giraaff.nodes.calc.IntegerConvertNode;
 public final class DerivedConvertedInductionVariable extends DerivedInductionVariable
 {
     // @field
-    private final Stamp stamp;
+    private final Stamp ___stamp;
     // @field
-    private final ValueNode value;
+    private final ValueNode ___value;
 
     // @cons
     public DerivedConvertedInductionVariable(LoopEx __loop, InductionVariable __base, Stamp __stamp, ValueNode __value)
     {
         super(__loop, __base);
-        this.stamp = __stamp;
-        this.value = __value;
+        this.___stamp = __stamp;
+        this.___value = __value;
     }
 
     @Override
     public ValueNode valueNode()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
     public Direction direction()
     {
-        return base.direction();
+        return this.___base.direction();
     }
 
     @Override
     public ValueNode initNode()
     {
-        return IntegerConvertNode.convert(base.initNode(), stamp, graph(), NodeView.DEFAULT);
+        return IntegerConvertNode.convert(this.___base.initNode(), this.___stamp, graph(), NodeView.DEFAULT);
     }
 
     @Override
     public ValueNode strideNode()
     {
-        return IntegerConvertNode.convert(base.strideNode(), stamp, graph(), NodeView.DEFAULT);
+        return IntegerConvertNode.convert(this.___base.strideNode(), this.___stamp, graph(), NodeView.DEFAULT);
     }
 
     @Override
     public boolean isConstantInit()
     {
-        return base.isConstantInit();
+        return this.___base.isConstantInit();
     }
 
     @Override
     public boolean isConstantStride()
     {
-        return base.isConstantStride();
+        return this.___base.isConstantStride();
     }
 
     @Override
     public long constantInit()
     {
-        return base.constantInit();
+        return this.___base.constantInit();
     }
 
     @Override
     public long constantStride()
     {
-        return base.constantStride();
+        return this.___base.constantStride();
     }
 
     @Override
     public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __s)
     {
-        return base.extremumNode(__assumePositiveTripCount, __s);
+        return this.___base.extremumNode(__assumePositiveTripCount, __s);
     }
 
     @Override
     public ValueNode exitValueNode()
     {
-        return IntegerConvertNode.convert(base.exitValueNode(), stamp, graph(), NodeView.DEFAULT);
+        return IntegerConvertNode.convert(this.___base.exitValueNode(), this.___stamp, graph(), NodeView.DEFAULT);
     }
 
     @Override
     public boolean isConstantExtremum()
     {
-        return base.isConstantExtremum();
+        return this.___base.isConstantExtremum();
     }
 
     @Override
     public long constantExtremum()
     {
-        return base.constantExtremum();
+        return this.___base.constantExtremum();
     }
 
     @Override

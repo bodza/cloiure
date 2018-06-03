@@ -5,9 +5,9 @@ import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodeinfo.InputType;
 
-/**
- * Logic node that negates its argument.
- */
+///
+// Logic node that negates its argument.
+///
 // @class LogicNegationNode
 public final class LogicNegationNode extends LogicNode implements Canonicalizable.Unary<LogicNode>
 {
@@ -16,13 +16,13 @@ public final class LogicNegationNode extends LogicNode implements Canonicalizabl
 
     @Input(InputType.Condition)
     // @field
-    LogicNode value;
+    LogicNode ___value;
 
     // @cons
     public LogicNegationNode(LogicNode __value)
     {
         super(TYPE);
-        this.value = __value;
+        this.___value = __value;
     }
 
     public static LogicNode create(LogicNode __value)
@@ -52,7 +52,7 @@ public final class LogicNegationNode extends LogicNode implements Canonicalizabl
     @Override
     public LogicNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override

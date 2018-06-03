@@ -12,7 +12,7 @@ public abstract class DeoptimizingFixedWithNextNode extends FixedWithNextNode im
 
     @OptionalInput(InputType.State)
     // @field
-    protected FrameState stateBefore;
+    protected FrameState ___stateBefore;
 
     // @cons
     protected DeoptimizingFixedWithNextNode(NodeClass<? extends DeoptimizingFixedWithNextNode> __c, Stamp __stamp)
@@ -24,19 +24,19 @@ public abstract class DeoptimizingFixedWithNextNode extends FixedWithNextNode im
     protected DeoptimizingFixedWithNextNode(NodeClass<? extends DeoptimizingFixedWithNextNode> __c, Stamp __stamp, FrameState __stateBefore)
     {
         super(__c, __stamp);
-        this.stateBefore = __stateBefore;
+        this.___stateBefore = __stateBefore;
     }
 
     @Override
     public FrameState stateBefore()
     {
-        return stateBefore;
+        return this.___stateBefore;
     }
 
     @Override
     public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, __f);
-        stateBefore = __f;
+        updateUsages(this.___stateBefore, __f);
+        this.___stateBefore = __f;
     }
 }

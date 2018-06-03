@@ -7,10 +7,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Marks the control flow path where an object acquired a biased lock because the lock was already
- * biased to the object on the current thread.
- */
+///
+// Marks the control flow path where an object acquired a biased lock because the lock was already
+// biased to the object on the current thread.
+///
 // @class FastAcquireBiasedLockNode
 public final class FastAcquireBiasedLockNode extends FixedWithNextNode implements LIRLowerable
 {
@@ -19,18 +19,18 @@ public final class FastAcquireBiasedLockNode extends FixedWithNextNode implement
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
 
     // @cons
     public FastAcquireBiasedLockNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = __object;
+        this.___object = __object;
     }
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
     @Override
@@ -40,5 +40,5 @@ public final class FastAcquireBiasedLockNode extends FixedWithNextNode implement
     }
 
     @NodeIntrinsic
-    public static native void mark(Object object);
+    public static native void mark(Object __object);
 }

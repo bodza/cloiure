@@ -31,11 +31,11 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
     }
 
     // @field
-    private final int maxIterations;
+    private final int ___maxIterations;
     // @field
-    protected final CanonicalizerPhase canonicalizer;
+    protected final CanonicalizerPhase ___canonicalizer;
     // @field
-    private final boolean unscheduled;
+    private final boolean ___unscheduled;
 
     // @cons
     protected EffectsPhase(int __maxIterations, CanonicalizerPhase __canonicalizer)
@@ -47,9 +47,9 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
     protected EffectsPhase(int __maxIterations, CanonicalizerPhase __canonicalizer, boolean __unscheduled)
     {
         super();
-        this.maxIterations = __maxIterations;
-        this.canonicalizer = __canonicalizer;
-        this.unscheduled = __unscheduled;
+        this.___maxIterations = __maxIterations;
+        this.___canonicalizer = __canonicalizer;
+        this.___unscheduled = __unscheduled;
     }
 
     @Override
@@ -61,11 +61,11 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
     public boolean runAnalysis(StructuredGraph __graph, PhaseContextT __context)
     {
         boolean __changed = false;
-        for (int __iteration = 0; __iteration < maxIterations; __iteration++)
+        for (int __iteration = 0; __iteration < this.___maxIterations; __iteration++)
         {
             ScheduleResult __schedule;
             ControlFlowGraph __cfg;
-            if (unscheduled)
+            if (this.___unscheduled)
             {
                 __schedule = null;
                 __cfg = ControlFlowGraph.compute(__graph, true, true, false, false);
@@ -115,11 +115,11 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
 
     protected void postIteration(final StructuredGraph __graph, final PhaseContextT __context, EconomicSet<Node> __changedNodes)
     {
-        if (canonicalizer != null)
+        if (this.___canonicalizer != null)
         {
-            canonicalizer.applyIncremental(__graph, __context, __changedNodes);
+            this.___canonicalizer.applyIncremental(__graph, __context, __changedNodes);
         }
     }
 
-    protected abstract Closure<?> createEffectsClosure(PhaseContextT context, ScheduleResult schedule, ControlFlowGraph cfg);
+    protected abstract Closure<?> createEffectsClosure(PhaseContextT __context, ScheduleResult __schedule, ControlFlowGraph __cfg);
 }

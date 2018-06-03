@@ -7,102 +7,102 @@ import jdk.vm.ci.meta.PrimitiveConstant;
 
 import giraaff.util.GraalError;
 
-/**
- * Condition codes used in conditionals.
- */
+///
+// Condition codes used in conditionals.
+///
 // @enum Condition
 public enum Condition
 {
-    /**
-     * Equal.
-     */
+    ///
+    // Equal.
+    ///
     EQ("=="),
 
-    /**
-     * Not equal.
-     */
+    ///
+    // Not equal.
+    ///
     NE("!="),
 
-    /**
-     * Signed less than.
-     */
+    ///
+    // Signed less than.
+    ///
     LT("<"),
 
-    /**
-     * Signed less than or equal.
-     */
+    ///
+    // Signed less than or equal.
+    ///
     LE("<="),
 
-    /**
-     * Signed greater than.
-     */
+    ///
+    // Signed greater than.
+    ///
     GT(">"),
 
-    /**
-     * Signed greater than or equal.
-     */
+    ///
+    // Signed greater than or equal.
+    ///
     GE(">="),
 
-    /**
-     * Unsigned greater than or equal ("above than or equal").
-     */
+    ///
+    // Unsigned greater than or equal ("above than or equal").
+    ///
     AE("|>=|"),
 
-    /**
-     * Unsigned less than or equal ("below than or equal").
-     */
+    ///
+    // Unsigned less than or equal ("below than or equal").
+    ///
     BE("|<=|"),
 
-    /**
-     * Unsigned greater than ("above than").
-     */
+    ///
+    // Unsigned greater than ("above than").
+    ///
     AT("|>|"),
 
-    /**
-     * Unsigned less than ("below than").
-     */
+    ///
+    // Unsigned less than ("below than").
+    ///
     BT("|<|");
 
     // @field
-    public final String operator;
+    public final String ___operator;
 
     Condition(String __operator)
     {
-        this.operator = __operator;
+        this.___operator = __operator;
     }
 
     // @class Condition.CanonicalizedCondition
     public static final class CanonicalizedCondition
     {
         // @field
-        private final CanonicalCondition canonicalCondition;
+        private final CanonicalCondition ___canonicalCondition;
         // @field
-        private final boolean mirror;
+        private final boolean ___mirror;
         // @field
-        private final boolean negate;
+        private final boolean ___negate;
 
         // @cons
         private CanonicalizedCondition(CanonicalCondition __canonicalCondition, boolean __mirror, boolean __negate)
         {
             super();
-            this.canonicalCondition = __canonicalCondition;
-            this.mirror = __mirror;
-            this.negate = __negate;
+            this.___canonicalCondition = __canonicalCondition;
+            this.___mirror = __mirror;
+            this.___negate = __negate;
         }
 
         public CanonicalCondition getCanonicalCondition()
         {
-            return canonicalCondition;
+            return this.___canonicalCondition;
         }
 
         public boolean mustMirror()
         {
-            return mirror;
+            return this.___mirror;
         }
 
         public boolean mustNegate()
         {
-            return negate;
+            return this.___negate;
         }
     }
 
@@ -113,32 +113,38 @@ public enum Condition
         {
             case EQ:
             case NE:
+            {
                 __canonicalCondition = CanonicalCondition.EQ;
                 break;
+            }
             case LT:
             case LE:
             case GT:
             case GE:
+            {
                 __canonicalCondition = CanonicalCondition.LT;
                 break;
+            }
             case BT:
             case BE:
             case AT:
             case AE:
+            {
                 __canonicalCondition = CanonicalCondition.BT;
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }
         return new CanonicalizedCondition(__canonicalCondition, canonicalMirror(), canonicalNegate());
     }
 
-    /**
-     * Given a condition and its negation, this method returns true for one of the two and false for
-     * the other one. This can be used to keep comparisons in a canonical form.
-     *
-     * @return true if this condition is considered to be the canonical form, false otherwise.
-     */
+    ///
+    // Given a condition and its negation, this method returns true for one of the two and false for
+    // the other one. This can be used to keep comparisons in a canonical form.
+    //
+    // @return true if this condition is considered to be the canonical form, false otherwise.
+    ///
     public boolean isCanonical()
     {
         switch (this)
@@ -167,10 +173,10 @@ public enum Condition
         throw GraalError.shouldNotReachHere();
     }
 
-    /**
-     * Returns true if the condition needs to be mirrored to get to a canonical condition. The
-     * result of the mirroring operation might still need to be negated to achieve a canonical form.
-     */
+    ///
+    // Returns true if the condition needs to be mirrored to get to a canonical condition. The
+    // result of the mirroring operation might still need to be negated to achieve a canonical form.
+    ///
     private boolean canonicalMirror()
     {
         switch (this)
@@ -199,10 +205,10 @@ public enum Condition
         throw GraalError.shouldNotReachHere();
     }
 
-    /**
-     * Returns true if the condition needs to be negated to get to a canonical condition. The result
-     * of the negation might still need to be mirrored to achieve a canonical form.
-     */
+    ///
+    // Returns true if the condition needs to be negated to get to a canonical condition. The result
+    // of the negation might still need to be mirrored to achieve a canonical form.
+    ///
     private boolean canonicalNegate()
     {
         switch (this)
@@ -231,11 +237,11 @@ public enum Condition
         throw GraalError.shouldNotReachHere();
     }
 
-    /**
-     * Negate this conditional.
-     *
-     * @return the condition that represents the negation
-     */
+    ///
+    // Negate this conditional.
+    //
+    // @return the condition that represents the negation
+    ///
     public final Condition negate()
     {
         switch (this)
@@ -296,11 +302,11 @@ public enum Condition
         throw GraalError.shouldNotReachHere();
     }
 
-    /**
-     * Mirror this conditional (i.e. commute "a op b" to "b op' a")
-     *
-     * @return the condition representing the equivalent commuted operation
-     */
+    ///
+    // Mirror this conditional (i.e. commute "a op b" to "b op' a")
+    //
+    // @return the condition representing the equivalent commuted operation
+    ///
     public final Condition mirror()
     {
         switch (this)
@@ -329,48 +335,48 @@ public enum Condition
         throw new IllegalArgumentException();
     }
 
-    /**
-     * Returns true if this condition represents an unsigned comparison. EQ and NE are not
-     * considered to be unsigned.
-     */
+    ///
+    // Returns true if this condition represents an unsigned comparison. EQ and NE are not
+    // considered to be unsigned.
+    ///
     public final boolean isUnsigned()
     {
         return this == Condition.BT || this == Condition.BE || this == Condition.AT || this == Condition.AE;
     }
 
-    /**
-     * Checks if this conditional operation is commutative.
-     *
-     * @return {@code true} if this operation is commutative
-     */
+    ///
+    // Checks if this conditional operation is commutative.
+    //
+    // @return {@code true} if this operation is commutative
+    ///
     public final boolean isCommutative()
     {
         return this == EQ || this == NE;
     }
 
-    /**
-     * Attempts to fold a comparison between two constants and return the result.
-     *
-     * @param lt the constant on the left side of the comparison
-     * @param rt the constant on the right side of the comparison
-     * @param constantReflection needed to compare constants
-     * @return {@link Boolean#TRUE} if the comparison is known to be true, {@link Boolean#FALSE} if
-     *         the comparison is known to be false
-     */
+    ///
+    // Attempts to fold a comparison between two constants and return the result.
+    //
+    // @param lt the constant on the left side of the comparison
+    // @param rt the constant on the right side of the comparison
+    // @param constantReflection needed to compare constants
+    // @return {@link Boolean#TRUE} if the comparison is known to be true, {@link Boolean#FALSE} if
+    //         the comparison is known to be false
+    ///
     public boolean foldCondition(JavaConstant __lt, JavaConstant __rt, ConstantReflectionProvider __constantReflection)
     {
         return foldCondition(__lt, __rt, __constantReflection, false);
     }
 
-    /**
-     * Attempts to fold a comparison between two constants and return the result.
-     *
-     * @param lt the constant on the left side of the comparison
-     * @param rt the constant on the right side of the comparison
-     * @param constantReflection needed to compare constants
-     * @param unorderedIsTrue true if an undecided float comparison should result in "true"
-     * @return true if the comparison is known to be true, false if the comparison is known to be false
-     */
+    ///
+    // Attempts to fold a comparison between two constants and return the result.
+    //
+    // @param lt the constant on the left side of the comparison
+    // @param rt the constant on the right side of the comparison
+    // @param constantReflection needed to compare constants
+    // @param unorderedIsTrue true if an undecided float comparison should result in "true"
+    // @return true if the comparison is known to be true, false if the comparison is known to be false
+    ///
     public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
     {
         if (__lt instanceof PrimitiveConstant)
@@ -398,14 +404,14 @@ public enum Condition
         }
     }
 
-    /**
-     * Attempts to fold a comparison between two primitive constants and return the result.
-     *
-     * @param lp the constant on the left side of the comparison
-     * @param rp the constant on the right side of the comparison
-     * @param unorderedIsTrue true if an undecided float comparison should result in "true"
-     * @return true if the comparison is known to be true, false if the comparison is known to be false
-     */
+    ///
+    // Attempts to fold a comparison between two primitive constants and return the result.
+    //
+    // @param lp the constant on the left side of the comparison
+    // @param rp the constant on the right side of the comparison
+    // @param unorderedIsTrue true if an undecided float comparison should result in "true"
+    // @return true if the comparison is known to be true, false if the comparison is known to be false
+    ///
     public boolean foldCondition(PrimitiveConstant __lp, PrimitiveConstant __rp, boolean __unorderedIsTrue)
     {
         switch (__lp.getJavaKind())

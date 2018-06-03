@@ -61,11 +61,11 @@ public final class ReflectionGetCallerClassNode extends MacroStateSplitNode impl
         }
     }
 
-    /**
-     * If inlining is deep enough this method returns a {@link ConstantNode} of the caller class by walking the stack.
-     *
-     * @return ConstantNode of the caller class, or null
-     */
+    ///
+    // If inlining is deep enough this method returns a {@link ConstantNode} of the caller class by walking the stack.
+    //
+    // @return ConstantNode of the caller class, or null
+    ///
     private ConstantNode getCallerClassNode(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection)
     {
         // Walk back up the frame states to find the caller at the required depth.

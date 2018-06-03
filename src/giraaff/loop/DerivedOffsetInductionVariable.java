@@ -15,112 +15,112 @@ import giraaff.util.GraalError;
 public final class DerivedOffsetInductionVariable extends DerivedInductionVariable
 {
     // @field
-    private final ValueNode offset;
+    private final ValueNode ___offset;
     // @field
-    private final BinaryArithmeticNode<?> value;
+    private final BinaryArithmeticNode<?> ___value;
 
     // @cons
     public DerivedOffsetInductionVariable(LoopEx __loop, InductionVariable __base, ValueNode __offset, BinaryArithmeticNode<?> __value)
     {
         super(__loop, __base);
-        this.offset = __offset;
-        this.value = __value;
+        this.___offset = __offset;
+        this.___value = __value;
     }
 
     public ValueNode getOffset()
     {
-        return offset;
+        return this.___offset;
     }
 
     @Override
     public Direction direction()
     {
-        return base.direction();
+        return this.___base.direction();
     }
 
     @Override
     public ValueNode valueNode()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
     public boolean isConstantInit()
     {
-        return offset.isConstant() && base.isConstantInit();
+        return this.___offset.isConstant() && this.___base.isConstantInit();
     }
 
     @Override
     public boolean isConstantStride()
     {
-        return base.isConstantStride();
+        return this.___base.isConstantStride();
     }
 
     @Override
     public long constantInit()
     {
-        return op(base.constantInit(), offset.asJavaConstant().asLong());
+        return op(this.___base.constantInit(), this.___offset.asJavaConstant().asLong());
     }
 
     @Override
     public long constantStride()
     {
-        if (value instanceof SubNode && base.valueNode() == value.getY())
+        if (this.___value instanceof SubNode && this.___base.valueNode() == this.___value.getY())
         {
-            return -base.constantStride();
+            return -this.___base.constantStride();
         }
-        return base.constantStride();
+        return this.___base.constantStride();
     }
 
     @Override
     public ValueNode initNode()
     {
-        return op(base.initNode(), offset);
+        return op(this.___base.initNode(), this.___offset);
     }
 
     @Override
     public ValueNode strideNode()
     {
-        if (value instanceof SubNode && base.valueNode() == value.getY())
+        if (this.___value instanceof SubNode && this.___base.valueNode() == this.___value.getY())
         {
-            return graph().addOrUniqueWithInputs(NegateNode.create(base.strideNode(), NodeView.DEFAULT));
+            return graph().addOrUniqueWithInputs(NegateNode.create(this.___base.strideNode(), NodeView.DEFAULT));
         }
-        return base.strideNode();
+        return this.___base.strideNode();
     }
 
     @Override
     public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __stamp)
     {
-        return op(base.extremumNode(__assumePositiveTripCount, __stamp), IntegerConvertNode.convert(offset, __stamp, graph(), NodeView.DEFAULT));
+        return op(this.___base.extremumNode(__assumePositiveTripCount, __stamp), IntegerConvertNode.convert(this.___offset, __stamp, graph(), NodeView.DEFAULT));
     }
 
     @Override
     public ValueNode exitValueNode()
     {
-        return op(base.exitValueNode(), offset);
+        return op(this.___base.exitValueNode(), this.___offset);
     }
 
     @Override
     public boolean isConstantExtremum()
     {
-        return offset.isConstant() && base.isConstantExtremum();
+        return this.___offset.isConstant() && this.___base.isConstantExtremum();
     }
 
     @Override
     public long constantExtremum()
     {
-        return op(base.constantExtremum(), offset.asJavaConstant().asLong());
+        return op(this.___base.constantExtremum(), this.___offset.asJavaConstant().asLong());
     }
 
     private long op(long __b, long __o)
     {
-        if (value instanceof AddNode)
+        if (this.___value instanceof AddNode)
         {
             return __b + __o;
         }
-        if (value instanceof SubNode)
+        if (this.___value instanceof SubNode)
         {
-            if (base.valueNode() == value.getX())
+            if (this.___base.valueNode() == this.___value.getX())
             {
                 return __b - __o;
             }
@@ -134,13 +134,13 @@ public final class DerivedOffsetInductionVariable extends DerivedInductionVariab
 
     private ValueNode op(ValueNode __b, ValueNode __o)
     {
-        if (value instanceof AddNode)
+        if (this.___value instanceof AddNode)
         {
             return MathUtil.add(graph(), __b, __o);
         }
-        if (value instanceof SubNode)
+        if (this.___value instanceof SubNode)
         {
-            if (base.valueNode() == value.getX())
+            if (this.___base.valueNode() == this.___value.getX())
             {
                 return MathUtil.sub(graph(), __b, __o);
             }

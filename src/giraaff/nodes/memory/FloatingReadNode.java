@@ -15,10 +15,10 @@ import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * A floating read of a value from memory specified in terms of an object base and an object
- * relative location. This node does not null check the object.
- */
+///
+// A floating read of a value from memory specified in terms of an object base and an object
+// relative location. This node does not null check the object.
+///
 // @class FloatingReadNode
 public final class FloatingReadNode extends FloatingAccessNode implements LIRLowerableAccess, Canonicalizable
 {
@@ -27,7 +27,7 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
 
     @OptionalInput(InputType.Memory)
     // @field
-    MemoryNode lastLocationAccess;
+    MemoryNode ___lastLocationAccess;
 
     // @cons
     public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp)
@@ -45,7 +45,7 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
     public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
     {
         super(TYPE, __address, __location, __stamp, __guard, __barrierType);
-        this.lastLocationAccess = __lastLocationAccess;
+        this.___lastLocationAccess = __lastLocationAccess;
 
         // The input to floating reads must be always non-null or have at least a guard.
     }
@@ -53,21 +53,21 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
     @Override
     public MemoryNode getLastLocationAccess()
     {
-        return lastLocationAccess;
+        return this.___lastLocationAccess;
     }
 
     @Override
     public void setLastLocationAccess(MemoryNode __newlla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__newlla));
-        lastLocationAccess = __newlla;
+        updateUsages(ValueNodeUtil.asNode(this.___lastLocationAccess), ValueNodeUtil.asNode(__newlla));
+        this.___lastLocationAccess = __newlla;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
         LIRKind __readKind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
-        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitLoad(__readKind, __gen.operand(address), null));
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitLoad(__readKind, __gen.operand(this.___address), null));
     }
 
     @Override
@@ -78,9 +78,9 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
         {
             return __result;
         }
-        if (__tool.canonicalizeReads() && getAddress().hasMoreThanOneUsage() && lastLocationAccess instanceof WriteNode)
+        if (__tool.canonicalizeReads() && getAddress().hasMoreThanOneUsage() && this.___lastLocationAccess instanceof WriteNode)
         {
-            WriteNode __write = (WriteNode) lastLocationAccess;
+            WriteNode __write = (WriteNode) this.___lastLocationAccess;
             if (__write.getAddress() == getAddress() && __write.getAccessStamp().isCompatible(getAccessStamp()))
             {
                 // same memory location with no intervening write

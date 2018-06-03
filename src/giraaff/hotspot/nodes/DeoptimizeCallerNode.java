@@ -10,9 +10,9 @@ import giraaff.nodes.ControlSinkNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Removes the current frame and tail calls the uncommon trap routine.
- */
+///
+// Removes the current frame and tail calls the uncommon trap routine.
+///
 // @class DeoptimizeCallerNode
 public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLowerable
 {
@@ -20,24 +20,24 @@ public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLo
     public static final NodeClass<DeoptimizeCallerNode> TYPE = NodeClass.create(DeoptimizeCallerNode.class);
 
     // @field
-    protected final DeoptimizationAction action;
+    protected final DeoptimizationAction ___action;
     // @field
-    protected final DeoptimizationReason reason;
+    protected final DeoptimizationReason ___reason;
 
     // @cons
     public DeoptimizeCallerNode(DeoptimizationAction __action, DeoptimizationReason __reason)
     {
         super(TYPE, StampFactory.forVoid());
-        this.action = __action;
-        this.reason = __reason;
+        this.___action = __action;
+        this.___reason = __reason;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitDeoptimizeCaller(action, reason);
+        ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitDeoptimizeCaller(this.___action, this.___reason);
     }
 
     @NodeIntrinsic
-    public static native void deopt(@ConstantNodeParameter DeoptimizationAction action, @ConstantNodeParameter DeoptimizationReason reason);
+    public static native void deopt(@ConstantNodeParameter DeoptimizationAction __action, @ConstantNodeParameter DeoptimizationReason __reason);
 }

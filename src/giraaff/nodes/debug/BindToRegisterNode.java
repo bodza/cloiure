@@ -16,18 +16,18 @@ public final class BindToRegisterNode extends FixedWithNextNode implements LIRLo
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
 
     // @cons
     public BindToRegisterNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.getLIRGeneratorTool().append(new StandardOp.BindToRegisterOp(__gen.getLIRGeneratorTool().asAllocatable(__gen.operand(value))));
+        __gen.getLIRGeneratorTool().append(new StandardOp.BindToRegisterOp(__gen.getLIRGeneratorTool().asAllocatable(__gen.operand(this.___value))));
     }
 }

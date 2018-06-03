@@ -41,18 +41,18 @@ public class AMD64AddressLowering extends AddressLowering
         return __value == null || __value.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(__value.stamp(NodeView.DEFAULT)) == ADDRESS_BITS;
     }
 
-    /**
-     * Tries to optimize addresses so that they match the AMD64-specific addressing mode better
-     * (base + index * scale + displacement).
-     *
-     * @param graph the current graph
-     * @param ret the address that should be optimized
-     * @param isBaseNegated determines if the address base is negated. if so, all values that are
-     *            extracted from the base will be negated as well
-     * @param isIndexNegated determines if the index is negated. if so, all values that are
-     *            extracted from the index will be negated as well
-     * @return true if the address was modified
-     */
+    ///
+    // Tries to optimize addresses so that they match the AMD64-specific addressing mode better
+    // (base + index * scale + displacement).
+    //
+    // @param graph the current graph
+    // @param ret the address that should be optimized
+    // @param isBaseNegated determines if the address base is negated. if so, all values that are
+    //            extracted from the base will be negated as well
+    // @param isIndexNegated determines if the index is negated. if so, all values that are
+    //            extracted from the index will be negated as well
+    // @return true if the address was modified
+    ///
     protected boolean improve(StructuredGraph __graph, AMD64AddressNode __ret, boolean __isBaseNegated, boolean __isIndexNegated)
     {
         ValueNode __newBase = improveInput(__ret, __ret.getBase(), 0, __isBaseNegated);
@@ -62,7 +62,7 @@ public class AMD64AddressLowering extends AddressLowering
             return true;
         }
 
-        ValueNode __newIdx = improveInput(__ret, __ret.getIndex(), __ret.getScale().log2, __isIndexNegated);
+        ValueNode __newIdx = improveInput(__ret, __ret.getIndex(), __ret.getScale().___log2, __isIndexNegated);
         if (__newIdx != __ret.getIndex())
         {
             __ret.setIndex(__newIdx);
@@ -74,7 +74,7 @@ public class AMD64AddressLowering extends AddressLowering
             LeftShiftNode __shift = (LeftShiftNode) __ret.getIndex();
             if (__shift.getY().isConstant())
             {
-                int __amount = __ret.getScale().log2 + __shift.getY().asJavaConstant().asInt();
+                int __amount = __ret.getScale().___log2 + __shift.getY().asJavaConstant().asInt();
                 Scale __scale = Scale.fromShift(__amount);
                 if (__scale != null)
                 {
@@ -196,23 +196,21 @@ public class AMD64AddressLowering extends AddressLowering
         {
             if (__node.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
             {
-                /*
-                 * we can't swallow zero-extends because of multiple reasons:
-                 *
-                 * a) we might encounter something like the following: ZeroExtend(Add(negativeValue,
-                 * positiveValue)). if we swallow the zero-extend in this case and subsequently
-                 * optimize the add, we might end up with a negative value that has less than 64
-                 * bits in base or index. such a value would require sign extension instead of
-                 * zero-extension but the backend can only do (implicit) zero-extension by using a
-                 * larger register (e.g. rax instead of eax).
-                 *
-                 * b) our backend does not guarantee that the upper half of a 64-bit register equals
-                 * 0 if a 32-bit value is stored in there.
-                 *
-                 * c) we also can't swallow zero-extends with less than 32 bits as most of these
-                 * values are immediately sign-extended to 32 bit by the backend (therefore, the
-                 * subsequent implicit zero-extension to 64 bit won't do what we expect).
-                 */
+                // we can't swallow zero-extends because of multiple reasons:
+                //
+                // a) we might encounter something like the following: ZeroExtend(Add(negativeValue,
+                // positiveValue)). if we swallow the zero-extend in this case and subsequently
+                // optimize the add, we might end up with a negative value that has less than 64
+                // bits in base or index. such a value would require sign extension instead of
+                // zero-extension but the backend can only do (implicit) zero-extension by using a
+                // larger register (e.g. rax instead of eax).
+                //
+                // b) our backend does not guarantee that the upper half of a 64-bit register equals
+                // 0 if a 32-bit value is stored in there.
+                //
+                // c) we also can't swallow zero-extends with less than 32 bits as most of these
+                // values are immediately sign-extended to 32 bit by the backend (therefore, the
+                // subsequent implicit zero-extension to 64 bit won't do what we expect).
 
                 if (__node instanceof AddNode)
                 {

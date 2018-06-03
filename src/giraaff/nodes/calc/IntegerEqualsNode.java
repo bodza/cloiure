@@ -122,7 +122,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
             {
                 if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
-                    return FloatLessThanNode.create(__b, __a, !__normalizeNode.isUnorderedLess, __view);
+                    return FloatLessThanNode.create(__b, __a, !__normalizeNode.___isUnorderedLess, __view);
                 }
                 else
                 {
@@ -133,7 +133,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
             {
                 if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
-                    return FloatLessThanNode.create(__a, __b, __normalizeNode.isUnorderedLess, __view);
+                    return FloatLessThanNode.create(__a, __b, __normalizeNode.___isUnorderedLess, __view);
                 }
                 else
                 {

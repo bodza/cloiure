@@ -11,50 +11,50 @@ import giraaff.hotspot.nodes.type.MethodCountersPointerStamp;
 import giraaff.hotspot.nodes.type.MethodPointerStamp;
 import giraaff.word.WordTypes;
 
-/**
- * Extends {@link WordTypes} with information about HotSpot metaspace pointer types.
- */
+///
+// Extends {@link WordTypes} with information about HotSpot metaspace pointer types.
+///
 // @class HotSpotWordTypes
 public final class HotSpotWordTypes extends WordTypes
 {
-    /**
-     * Resolved type for {@link MetaspacePointer}.
-     */
+    ///
+    // Resolved type for {@link MetaspacePointer}.
+    ///
     // @field
-    private final ResolvedJavaType metaspacePointerType;
+    private final ResolvedJavaType ___metaspacePointerType;
 
-    /**
-     * Resolved type for {@link KlassPointer}.
-     */
+    ///
+    // Resolved type for {@link KlassPointer}.
+    ///
     // @field
-    private final ResolvedJavaType klassPointerType;
+    private final ResolvedJavaType ___klassPointerType;
 
-    /**
-     * Resolved type for {@link MethodPointer}.
-     */
+    ///
+    // Resolved type for {@link MethodPointer}.
+    ///
     // @field
-    private final ResolvedJavaType methodPointerType;
+    private final ResolvedJavaType ___methodPointerType;
 
-    /**
-     * Resolved type for {@link MethodCountersPointer}.
-     */
+    ///
+    // Resolved type for {@link MethodCountersPointer}.
+    ///
     // @field
-    private final ResolvedJavaType methodCountersPointerType;
+    private final ResolvedJavaType ___methodCountersPointerType;
 
     // @cons
     public HotSpotWordTypes(MetaAccessProvider __metaAccess, JavaKind __wordKind)
     {
         super(__metaAccess, __wordKind);
-        this.metaspacePointerType = __metaAccess.lookupJavaType(MetaspacePointer.class);
-        this.klassPointerType = __metaAccess.lookupJavaType(KlassPointer.class);
-        this.methodPointerType = __metaAccess.lookupJavaType(MethodPointer.class);
-        this.methodCountersPointerType = __metaAccess.lookupJavaType(MethodCountersPointer.class);
+        this.___metaspacePointerType = __metaAccess.lookupJavaType(MetaspacePointer.class);
+        this.___klassPointerType = __metaAccess.lookupJavaType(KlassPointer.class);
+        this.___methodPointerType = __metaAccess.lookupJavaType(MethodPointer.class);
+        this.___methodCountersPointerType = __metaAccess.lookupJavaType(MethodCountersPointer.class);
     }
 
     @Override
     public boolean isWord(JavaType __type)
     {
-        if (__type instanceof ResolvedJavaType && metaspacePointerType.isAssignableFrom((ResolvedJavaType) __type))
+        if (__type instanceof ResolvedJavaType && this.___metaspacePointerType.isAssignableFrom((ResolvedJavaType) __type))
         {
             return true;
         }
@@ -64,7 +64,7 @@ public final class HotSpotWordTypes extends WordTypes
     @Override
     public JavaKind asKind(JavaType __type)
     {
-        if (klassPointerType.equals(__type) || methodPointerType.equals(__type))
+        if (this.___klassPointerType.equals(__type) || this.___methodPointerType.equals(__type))
         {
             return getWordKind();
         }
@@ -74,15 +74,15 @@ public final class HotSpotWordTypes extends WordTypes
     @Override
     public Stamp getWordStamp(ResolvedJavaType __type)
     {
-        if (__type.equals(klassPointerType))
+        if (__type.equals(this.___klassPointerType))
         {
             return KlassPointerStamp.klass();
         }
-        else if (__type.equals(methodPointerType))
+        else if (__type.equals(this.___methodPointerType))
         {
             return MethodPointerStamp.method();
         }
-        else if (__type.equals(methodCountersPointerType))
+        else if (__type.equals(this.___methodCountersPointerType))
         {
             return MethodCountersPointerStamp.methodCounters();
         }

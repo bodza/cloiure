@@ -23,30 +23,30 @@ import giraaff.nodes.StructuredGraph;
 public abstract class ScopedPostOrderNodeIterator
 {
     // @field
-    private final Deque<FixedNode> nodeQueue;
+    private final Deque<FixedNode> ___nodeQueue;
     // @field
-    private final NodeBitMap queuedNodes;
+    private final NodeBitMap ___queuedNodes;
     // @field
-    private final Deque<FixedNode> scopes;
+    private final Deque<FixedNode> ___scopes;
 
     // @field
-    protected FixedNode currentScopeStart;
+    protected FixedNode ___currentScopeStart;
 
     // @cons
     public ScopedPostOrderNodeIterator(StructuredGraph __graph)
     {
         super();
-        this.queuedNodes = __graph.createNodeBitMap();
-        this.nodeQueue = new ArrayDeque<>();
-        this.scopes = getScopes(__graph);
+        this.___queuedNodes = __graph.createNodeBitMap();
+        this.___nodeQueue = new ArrayDeque<>();
+        this.___scopes = getScopes(__graph);
     }
 
     public void apply()
     {
-        while (!scopes.isEmpty())
+        while (!this.___scopes.isEmpty())
         {
-            queuedNodes.clearAll();
-            this.currentScopeStart = scopes.pop();
+            this.___queuedNodes.clearAll();
+            this.___currentScopeStart = this.___scopes.pop();
             initializeScope();
             processScope();
         }
@@ -55,7 +55,7 @@ public abstract class ScopedPostOrderNodeIterator
     public void processScope()
     {
         FixedNode __current;
-        queue(currentScopeStart);
+        queue(this.___currentScopeStart);
 
         while ((__current = nextQueuedNode()) != null)
         {
@@ -101,17 +101,17 @@ public abstract class ScopedPostOrderNodeIterator
 
     protected void queueLoopBeginSuccessors(LoopBeginNode __node)
     {
-        if (currentScopeStart == __node)
+        if (this.___currentScopeStart == __node)
         {
             queue(__node.next());
         }
-        else if (currentScopeStart instanceof LoopBeginNode)
+        else if (this.___currentScopeStart instanceof LoopBeginNode)
         {
             // so we are currently processing loop A and found another loop B
             // -> queue all loop exits of B except those that also exit loop A
             for (LoopExitNode __loopExit : __node.loopExits())
             {
-                if (!((LoopBeginNode) currentScopeStart).loopExits().contains(__loopExit))
+                if (!((LoopBeginNode) this.___currentScopeStart).loopExits().contains(__loopExit))
                 {
                     queue(__loopExit);
                 }
@@ -125,7 +125,7 @@ public abstract class ScopedPostOrderNodeIterator
 
     protected void queueLoopExitSuccessors(LoopExitNode __node)
     {
-        if (!(currentScopeStart instanceof LoopBeginNode) || !((LoopBeginNode) currentScopeStart).loopExits().contains(__node))
+        if (!(this.___currentScopeStart instanceof LoopBeginNode) || !((LoopBeginNode) this.___currentScopeStart).loopExits().contains(__node))
         {
             queueSuccessors(__node);
         }
@@ -157,27 +157,27 @@ public abstract class ScopedPostOrderNodeIterator
 
     private void queue(Node __node)
     {
-        if (__node != null && !queuedNodes.isMarked(__node))
+        if (__node != null && !this.___queuedNodes.isMarked(__node))
         {
-            queuedNodes.mark(__node);
-            nodeQueue.addFirst((FixedNode) __node);
+            this.___queuedNodes.mark(__node);
+            this.___nodeQueue.addFirst((FixedNode) __node);
         }
     }
 
     private FixedNode nextQueuedNode()
     {
-        if (nodeQueue.isEmpty())
+        if (this.___nodeQueue.isEmpty())
         {
             return null;
         }
 
-        return nodeQueue.removeFirst();
+        return this.___nodeQueue.removeFirst();
     }
 
     private void queueMerge(AbstractEndNode __end)
     {
         AbstractMergeNode __merge = __end.merge();
-        if (!queuedNodes.isMarked(__merge) && visitedAllEnds(__merge))
+        if (!this.___queuedNodes.isMarked(__merge) && visitedAllEnds(__merge))
         {
             queue(__merge);
         }
@@ -187,7 +187,7 @@ public abstract class ScopedPostOrderNodeIterator
     {
         for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
         {
-            if (!queuedNodes.isMarked(__merge.forwardEndAt(__i)))
+            if (!this.___queuedNodes.isMarked(__merge.forwardEndAt(__i)))
             {
                 return false;
             }
@@ -197,5 +197,5 @@ public abstract class ScopedPostOrderNodeIterator
 
     protected abstract void initializeScope();
 
-    protected abstract void invoke(Invoke invoke);
+    protected abstract void invoke(Invoke __invoke);
 }

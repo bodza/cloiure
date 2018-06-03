@@ -14,18 +14,18 @@ import giraaff.nodeinfo.InputType;
 import giraaff.nodes.extended.AnchoringNode;
 import giraaff.nodes.extended.GuardingNode;
 
-/**
- * A guard is a node that deoptimizes based on a conditional expression. Guards are not attached to
- * a certain frame state, they can move around freely and will always use the correct frame state
- * when the nodes are scheduled (i.e., the last emitted frame state). The node that is guarded has a
- * data dependency on the guard and the guard in turn has a data dependency on the condition. A
- * guard may only be executed if it is guaranteed that the guarded node is executed too (if no
- * exceptions are thrown). Therefore, an anchor is placed after a control flow split and the guard
- * has a data dependency to the anchor. The anchor is the most distant node that is post-dominated
- * by the guarded node and the guard can be scheduled anywhere between those two nodes. This ensures
- * maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
- * control flow would have reached the guarded node (without taking exceptions into account).
- */
+///
+// A guard is a node that deoptimizes based on a conditional expression. Guards are not attached to
+// a certain frame state, they can move around freely and will always use the correct frame state
+// when the nodes are scheduled (i.e., the last emitted frame state). The node that is guarded has a
+// data dependency on the guard and the guard in turn has a data dependency on the condition. A
+// guard may only be executed if it is guaranteed that the guarded node is executed too (if no
+// exceptions are thrown). Therefore, an anchor is placed after a control flow split and the guard
+// has a data dependency to the anchor. The anchor is the most distant node that is post-dominated
+// by the guarded node and the guard can be scheduled anywhere between those two nodes. This ensures
+// maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
+// control flow would have reached the guarded node (without taking exceptions into account).
+///
 // @NodeInfo.allowedUsageTypes "Guard"
 // @class GuardNode
 public final class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
@@ -35,15 +35,15 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
 
     @Input(InputType.Condition)
     // @field
-    protected LogicNode condition;
+    protected LogicNode ___condition;
     // @field
-    protected DeoptimizationReason reason;
+    protected DeoptimizationReason ___reason;
     // @field
-    protected DeoptimizationAction action;
+    protected DeoptimizationAction ___action;
     // @field
-    protected JavaConstant speculation;
+    protected JavaConstant ___speculation;
     // @field
-    protected boolean negated;
+    protected boolean ___negated;
 
     // @cons
     public GuardNode(LogicNode __condition, AnchoringNode __anchor, DeoptimizationReason __reason, DeoptimizationAction __action, boolean __negated, JavaConstant __speculation)
@@ -55,57 +55,57 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
     protected GuardNode(NodeClass<? extends GuardNode> __c, LogicNode __condition, AnchoringNode __anchor, DeoptimizationReason __reason, DeoptimizationAction __action, boolean __negated, JavaConstant __speculation)
     {
         super(__c, StampFactory.forVoid(), __anchor);
-        this.condition = __condition;
-        this.reason = __reason;
-        this.action = __action;
-        this.negated = __negated;
-        this.speculation = __speculation;
+        this.___condition = __condition;
+        this.___reason = __reason;
+        this.___action = __action;
+        this.___negated = __negated;
+        this.___speculation = __speculation;
     }
 
-    /**
-     * The instruction that produces the tested boolean value.
-     */
+    ///
+    // The instruction that produces the tested boolean value.
+    ///
     @Override
     public LogicNode getCondition()
     {
-        return condition;
+        return this.___condition;
     }
 
     @Override
     public void setCondition(LogicNode __x, boolean __negated)
     {
-        updateUsages(condition, __x);
-        condition = __x;
-        this.negated = __negated;
+        updateUsages(this.___condition, __x);
+        this.___condition = __x;
+        this.___negated = __negated;
     }
 
     @Override
     public boolean isNegated()
     {
-        return negated;
+        return this.___negated;
     }
 
     @Override
     public DeoptimizationReason getReason()
     {
-        return reason;
+        return this.___reason;
     }
 
     @Override
     public DeoptimizationAction getAction()
     {
-        return action;
+        return this.___action;
     }
 
     @Override
     public JavaConstant getSpeculation()
     {
-        return speculation;
+        return this.___speculation;
     }
 
     public void setSpeculation(JavaConstant __speculation)
     {
-        this.speculation = __speculation;
+        this.___speculation = __speculation;
     }
 
     @Override
@@ -114,12 +114,12 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
         if (getCondition() instanceof LogicNegationNode)
         {
             LogicNegationNode __negation = (LogicNegationNode) getCondition();
-            return new GuardNode(__negation.getValue(), getAnchor(), reason, action, !negated, speculation);
+            return new GuardNode(__negation.getValue(), getAnchor(), this.___reason, this.___action, !this.___negated, this.___speculation);
         }
         if (getCondition() instanceof LogicConstantNode)
         {
             LogicConstantNode __c = (LogicConstantNode) getCondition();
-            if (__c.getValue() != negated)
+            if (__c.getValue() != this.___negated)
             {
                 return null;
             }
@@ -134,18 +134,18 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
 
     public void negate()
     {
-        negated = !negated;
+        this.___negated = !this.___negated;
     }
 
     @Override
     public void setAction(DeoptimizationAction __invalidaterecompile)
     {
-        this.action = __invalidaterecompile;
+        this.___action = __invalidaterecompile;
     }
 
     @Override
     public void setReason(DeoptimizationReason __reason)
     {
-        this.reason = __reason;
+        this.___reason = __reason;
     }
 }

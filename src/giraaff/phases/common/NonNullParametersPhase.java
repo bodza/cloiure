@@ -8,10 +8,10 @@ import giraaff.nodes.ParameterNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.phases.Phase;
 
-/**
- * Modifies the stamp of all object {@linkplain ParameterNode parameters} in a graph to denote they
- * are non-null. This can be used for graphs where the caller null checks all arguments.
- */
+///
+// Modifies the stamp of all object {@linkplain ParameterNode parameters} in a graph to denote they
+// are non-null. This can be used for graphs where the caller null checks all arguments.
+///
 // @class NonNullParametersPhase
 public final class NonNullParametersPhase extends Phase
 {

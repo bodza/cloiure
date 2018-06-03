@@ -5,9 +5,9 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * The {@code LogicConstantNode} represents a boolean constant.
- */
+///
+// The {@code LogicConstantNode} represents a boolean constant.
+///
 // @class LogicConstantNode
 public final class LogicConstantNode extends LogicNode implements LIRLowerable
 {
@@ -15,64 +15,64 @@ public final class LogicConstantNode extends LogicNode implements LIRLowerable
     public static final NodeClass<LogicConstantNode> TYPE = NodeClass.create(LogicConstantNode.class);
 
     // @field
-    protected final boolean value;
+    protected final boolean ___value;
 
     // @cons
     public LogicConstantNode(boolean __value)
     {
         super(TYPE);
-        this.value = __value;
+        this.___value = __value;
     }
 
-    /**
-     * Returns a node for a boolean constant.
-     *
-     * @param v the boolean value for which to create the instruction
-     * @return a node representing the boolean
-     */
+    ///
+    // Returns a node for a boolean constant.
+    //
+    // @param v the boolean value for which to create the instruction
+    // @return a node representing the boolean
+    ///
     public static LogicConstantNode forBoolean(boolean __v, Graph __graph)
     {
         return __graph.unique(new LogicConstantNode(__v));
     }
 
-    /**
-     * Returns a node for a boolean constant.
-     *
-     * @param v the boolean value for which to create the instruction
-     * @return a node representing the boolean
-     */
+    ///
+    // Returns a node for a boolean constant.
+    //
+    // @param v the boolean value for which to create the instruction
+    // @return a node representing the boolean
+    ///
     public static LogicConstantNode forBoolean(boolean __v)
     {
         return new LogicConstantNode(__v);
     }
 
-    /**
-     * Gets a constant for {@code true}.
-     */
+    ///
+    // Gets a constant for {@code true}.
+    ///
     public static LogicConstantNode tautology(Graph __graph)
     {
         return forBoolean(true, __graph);
     }
 
-    /**
-     * Gets a constant for {@code false}.
-     */
+    ///
+    // Gets a constant for {@code false}.
+    ///
     public static LogicConstantNode contradiction(Graph __graph)
     {
         return forBoolean(false, __graph);
     }
 
-    /**
-     * Gets a constant for {@code true}.
-     */
+    ///
+    // Gets a constant for {@code true}.
+    ///
     public static LogicConstantNode tautology()
     {
         return forBoolean(true);
     }
 
-    /**
-     * Gets a constant for {@code false}.
-     */
+    ///
+    // Gets a constant for {@code false}.
+    ///
     public static LogicConstantNode contradiction()
     {
         return forBoolean(false);
@@ -80,7 +80,7 @@ public final class LogicConstantNode extends LogicNode implements LIRLowerable
 
     public boolean getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override

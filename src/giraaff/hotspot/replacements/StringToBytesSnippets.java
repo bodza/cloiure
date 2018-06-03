@@ -21,9 +21,9 @@ import giraaff.replacements.nodes.CStringConstant;
 import giraaff.word.Word;
 import giraaff.util.UnsafeAccess;
 
-/**
- * The {@code StringToBytesSnippets} contains a snippet for lowering {@link StringToBytesNode}.
- */
+///
+// The {@code StringToBytesSnippets} contains a snippet for lowering {@link StringToBytesNode}.
+///
 // @class StringToBytesSnippets
 public final class StringToBytesSnippets implements Snippets
 {
@@ -54,21 +54,21 @@ public final class StringToBytesSnippets implements Snippets
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final SnippetInfo create;
+        private final SnippetInfo ___create;
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
-            create = snippet(StringToBytesSnippets.class, "transform", NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+            this.___create = snippet(StringToBytesSnippets.class, "transform", NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
         }
 
         public void lower(StringToBytesNode __stringToBytesNode, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(create, __stringToBytesNode.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___create, __stringToBytesNode.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.addConst("compilationTimeString", __stringToBytesNode.getValue());
             SnippetTemplate __template = template(__stringToBytesNode, __args);
-            __template.instantiate(providers.getMetaAccess(), __stringToBytesNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+            __template.instantiate(this.___providers.getMetaAccess(), __stringToBytesNode, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

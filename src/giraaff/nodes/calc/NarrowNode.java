@@ -15,9 +15,9 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * The {@code NarrowNode} converts an integer to a narrower integer.
- */
+///
+// The {@code NarrowNode} converts an integer to a narrower integer.
+///
 // @class NarrowNode
 public final class NarrowNode extends IntegerConvertNode<Narrow, SignExtend>
 {

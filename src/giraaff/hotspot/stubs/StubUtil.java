@@ -16,9 +16,9 @@ import giraaff.hotspot.nodes.StubForeignCallNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.word.Word;
 
-/**
- * A collection of methods used in {@link Stub}s.
- */
+///
+// A collection of methods used in {@link Stub}s.
+///
 // @class StubUtil
 public final class StubUtil
 {
@@ -27,11 +27,11 @@ public final class StubUtil
         return new ForeignCallDescriptor(__name, __resultType, __argumentTypes);
     }
 
-    /**
-     * Looks for a {@link StubForeignCallNode} node intrinsic named {@code name} in
-     * {@code stubClass} and returns a {@link ForeignCallDescriptor} based on its signature and the
-     * value of {@code hasSideEffect}.
-     */
+    ///
+    // Looks for a {@link StubForeignCallNode} node intrinsic named {@code name} in
+    // {@code stubClass} and returns a {@link ForeignCallDescriptor} based on its signature and the
+    // value of {@code hasSideEffect}.
+    ///
     private static ForeignCallDescriptor descriptorFor(Class<?> __stubClass, String __name)
     {
         Method __found = null;

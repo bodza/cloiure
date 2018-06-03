@@ -53,7 +53,7 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
         return false;
     }
 
-    protected abstract boolean improveUncompression(AMD64AddressNode addr, CompressionNode compression, ValueNode other);
+    protected abstract boolean improveUncompression(AMD64AddressNode __addr, CompressionNode __compression, ValueNode __other);
 
     // @class AMD64CompressAddressLowering.HeapBaseNode
     public static final class HeapBaseNode extends FloatingNode implements LIRLowerable
@@ -62,20 +62,20 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
         public static final NodeClass<HeapBaseNode> TYPE = NodeClass.create(HeapBaseNode.class);
 
         // @field
-        private final Register heapBaseRegister;
+        private final Register ___heapBaseRegister;
 
         // @cons
         public HeapBaseNode(Register __heapBaseRegister)
         {
             super(TYPE, StampFactory.pointer());
-            this.heapBaseRegister = __heapBaseRegister;
+            this.___heapBaseRegister = __heapBaseRegister;
         }
 
         @Override
         public void generate(NodeLIRBuilderTool __gen)
         {
             LIRKind __kind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
-            __gen.setResult(this, heapBaseRegister.asValue(__kind));
+            __gen.setResult(this, this.___heapBaseRegister.asValue(__kind));
         }
     }
 }

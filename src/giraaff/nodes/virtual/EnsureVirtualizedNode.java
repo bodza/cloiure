@@ -28,22 +28,22 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
     // @field
-    private final boolean localOnly;
+    private final boolean ___localOnly;
 
     // @cons
     public EnsureVirtualizedNode(ValueNode __object, boolean __localOnly)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = __object;
-        this.localOnly = __localOnly;
+        this.___object = __object;
+        this.___localOnly = __localOnly;
     }
 
     @Override
     public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode __alias = __tool.getAlias(object);
+        ValueNode __alias = __tool.getAlias(this.___object);
         if (__alias instanceof VirtualObjectNode)
         {
             VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
@@ -51,7 +51,7 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
             {
                 throw new BailoutException("ensureVirtual is not valid for boxing objects: %s", __virtual.type().getName());
             }
-            if (!localOnly)
+            if (!this.___localOnly)
             {
                 __tool.setEnsureVirtualized(__virtual, true);
             }
@@ -62,7 +62,7 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
     @Override
     public void lower(LoweringTool __tool)
     {
-        ensureVirtualFailure(this, object.stamp(NodeView.DEFAULT));
+        ensureVirtualFailure(this, this.___object.stamp(NodeView.DEFAULT));
     }
 
     public static void ensureVirtualFailure(Node __location, Stamp __stamp)

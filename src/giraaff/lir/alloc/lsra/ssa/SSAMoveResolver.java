@@ -23,9 +23,9 @@ public final class SSAMoveResolver extends MoveResolver
     // @def
     private static final int STACK_SLOT_IN_CALLER_FRAME_IDX = -1;
     // @field
-    private int[] stackBlocked;
+    private int[] ___stackBlocked;
     // @field
-    private final int firstVirtualStackIndex;
+    private final int ___firstVirtualStackIndex;
 
     // @cons
     public SSAMoveResolver(LinearScan __allocator)
@@ -33,8 +33,8 @@ public final class SSAMoveResolver extends MoveResolver
         super(__allocator);
         FrameMapBuilderTool __frameMapBuilderTool = (FrameMapBuilderTool) __allocator.getFrameMapBuilder();
         FrameMap __frameMap = __frameMapBuilderTool.getFrameMap();
-        this.stackBlocked = new int[__frameMapBuilderTool.getNumberOfStackSlots()];
-        this.firstVirtualStackIndex = !__frameMap.frameNeedsAllocating() ? 0 : __frameMap.currentFrameSize() + 1;
+        this.___stackBlocked = new int[__frameMapBuilderTool.getNumberOfStackSlots()];
+        this.___firstVirtualStackIndex = !__frameMap.frameNeedsAllocating() ? 0 : __frameMap.currentFrameSize() + 1;
     }
 
     @Override
@@ -88,7 +88,7 @@ public final class SSAMoveResolver extends MoveResolver
 
     private int getStackArrayIndex(VirtualStackSlot __virtualStackSlot)
     {
-        return firstVirtualStackIndex + __virtualStackSlot.getId();
+        return this.___firstVirtualStackIndex + __virtualStackSlot.getId();
     }
 
     @Override
@@ -102,11 +102,11 @@ public final class SSAMoveResolver extends MoveResolver
                 // incoming stack arguments can be ignored
                 return;
             }
-            if (__stackIdx >= stackBlocked.length)
+            if (__stackIdx >= this.___stackBlocked.length)
             {
-                stackBlocked = Arrays.copyOf(stackBlocked, __stackIdx + 1);
+                this.___stackBlocked = Arrays.copyOf(this.___stackBlocked, __stackIdx + 1);
             }
-            stackBlocked[__stackIdx] += __direction;
+            this.___stackBlocked[__stackIdx] += __direction;
         }
         else
         {
@@ -125,11 +125,11 @@ public final class SSAMoveResolver extends MoveResolver
                 // incoming stack arguments are always blocked (aka they can not be written)
                 return 1;
             }
-            if (__stackIdx >= stackBlocked.length)
+            if (__stackIdx >= this.___stackBlocked.length)
             {
                 return 0;
             }
-            return stackBlocked[__stackIdx];
+            return this.___stackBlocked[__stackIdx];
         }
         return super.valueBlocked(__location);
     }

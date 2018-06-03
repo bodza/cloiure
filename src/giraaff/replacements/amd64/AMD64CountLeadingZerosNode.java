@@ -17,9 +17,9 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.type.StampTool;
 
-/**
- * Count the number of leading zeros using the {@code lzcntq} or {@code lzcntl} instructions.
- */
+///
+// Count the number of leading zeros using the {@code lzcntq} or {@code lzcntl} instructions.
+///
 // @class AMD64CountLeadingZerosNode
 public final class AMD64CountLeadingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
 {

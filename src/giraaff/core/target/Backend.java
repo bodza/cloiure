@@ -38,16 +38,16 @@ import giraaff.phases.tiers.SuitesProvider;
 import giraaff.phases.tiers.TargetProvider;
 import giraaff.phases.util.Providers;
 
-/**
- * Represents a compiler backend for Graal.
- */
+///
+// Represents a compiler backend for Graal.
+///
 // @class Backend
 public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKind>
 {
     // @field
-    private final Providers providers;
+    private final Providers ___providers;
     // @field
-    private final ArrayList<CodeInstallationTaskFactory> codeInstallationTaskFactories;
+    private final ArrayList<CodeInstallationTaskFactory> ___codeInstallationTaskFactories;
 
     // @def
     public static final ForeignCallDescriptor ARITHMETIC_FREM = new ForeignCallDescriptor("arithmeticFrem", float.class, float.class, float.class);
@@ -58,38 +58,38 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     protected Backend(Providers __providers)
     {
         super();
-        this.providers = __providers;
-        this.codeInstallationTaskFactories = new ArrayList<>();
+        this.___providers = __providers;
+        this.___codeInstallationTaskFactories = new ArrayList<>();
     }
 
     public synchronized void addCodeInstallationTask(CodeInstallationTaskFactory __factory)
     {
-        this.codeInstallationTaskFactories.add(__factory);
+        this.___codeInstallationTaskFactories.add(__factory);
     }
 
     public Providers getProviders()
     {
-        return providers;
+        return this.___providers;
     }
 
     public CodeCacheProvider getCodeCache()
     {
-        return providers.getCodeCache();
+        return this.___providers.getCodeCache();
     }
 
     public MetaAccessProvider getMetaAccess()
     {
-        return providers.getMetaAccess();
+        return this.___providers.getMetaAccess();
     }
 
     public ConstantReflectionProvider getConstantReflection()
     {
-        return providers.getConstantReflection();
+        return this.___providers.getConstantReflection();
     }
 
     public ForeignCallsProvider getForeignCalls()
     {
-        return providers.getForeignCalls();
+        return this.___providers.getForeignCalls();
     }
 
     public abstract SuitesProvider getSuites();
@@ -97,7 +97,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     @Override
     public TargetDescription getTarget()
     {
-        return providers.getCodeCache().getTarget();
+        return this.___providers.getCodeCache().getTarget();
     }
 
     @Override
@@ -106,76 +106,76 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
         return LIRKind.fromJavaKind(getTarget().arch, __javaKind);
     }
 
-    /**
-     * The given registerConfig is optional, in case null is passed the default RegisterConfig from
-     * the CodeCacheProvider will be used.
-     */
-    public abstract FrameMapBuilder newFrameMapBuilder(RegisterConfig registerConfig);
+    ///
+    // The given registerConfig is optional, in case null is passed the default RegisterConfig from
+    // the CodeCacheProvider will be used.
+    ///
+    public abstract FrameMapBuilder newFrameMapBuilder(RegisterConfig __registerConfig);
 
-    /**
-     * Creates a new configuration for register allocation.
-     */
-    public abstract RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig registerConfig);
+    ///
+    // Creates a new configuration for register allocation.
+    ///
+    public abstract RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig __registerConfig);
 
-    public abstract FrameMap newFrameMap(RegisterConfig registerConfig);
+    public abstract FrameMap newFrameMap(RegisterConfig __registerConfig);
 
-    public abstract LIRGeneratorTool newLIRGenerator(LIRGenerationResult lirGenRes);
+    public abstract LIRGeneratorTool newLIRGenerator(LIRGenerationResult __lirGenRes);
 
-    public abstract LIRGenerationResult newLIRGenerationResult(LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub);
+    public abstract LIRGenerationResult newLIRGenerationResult(LIR __lir, FrameMapBuilder __frameMapBuilder, StructuredGraph __graph, Object __stub);
 
-    public abstract NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool lirGen);
+    public abstract NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __lirGen);
 
-    /**
-     * Creates the assembler used to emit the machine code.
-     */
-    protected abstract Assembler createAssembler(FrameMap frameMap);
+    ///
+    // Creates the assembler used to emit the machine code.
+    ///
+    protected abstract Assembler createAssembler(FrameMap __frameMap);
 
-    /**
-     * Creates the object used to fill in the details of a given compilation result.
-     */
-    public abstract CompilationResultBuilder newCompilationResultBuilder(LIRGenerationResult lirGenResult, FrameMap frameMap, CompilationResult compilationResult, CompilationResultBuilderFactory factory);
+    ///
+    // Creates the object used to fill in the details of a given compilation result.
+    ///
+    public abstract CompilationResultBuilder newCompilationResultBuilder(LIRGenerationResult __lirGenResult, FrameMap __frameMap, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory);
 
-    /**
-     * Turns a Graal {@link CompilationResult} into a {@link CompiledCode} object that can be passed
-     * to the VM for code installation.
-     */
-    protected abstract CompiledCode createCompiledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult);
+    ///
+    // Turns a Graal {@link CompilationResult} into a {@link CompiledCode} object that can be passed
+    // to the VM for code installation.
+    ///
+    protected abstract CompiledCode createCompiledCode(ResolvedJavaMethod __method, CompilationRequest __compilationRequest, CompilationResult __compilationResult);
 
-    /**
-     * @see #createInstalledCode(ResolvedJavaMethod, CompilationRequest, CompilationResult, SpeculationLog, InstalledCode, boolean)
-     */
+    ///
+    // @see #createInstalledCode(ResolvedJavaMethod, CompilationRequest, CompilationResult, SpeculationLog, InstalledCode, boolean)
+    ///
     public InstalledCode createInstalledCode(ResolvedJavaMethod __method, CompilationResult __compilationResult, SpeculationLog __speculationLog, InstalledCode __predefinedInstalledCode, boolean __isDefault)
     {
         return createInstalledCode(__method, null, __compilationResult, __speculationLog, __predefinedInstalledCode, __isDefault);
     }
 
-    /**
-     * Installs code based on a given compilation result.
-     *
-     * @param method the method compiled to produce {@code compiledCode} or {@code null} if the
-     *            input to {@code compResult} was not a {@link ResolvedJavaMethod}
-     * @param compilationRequest the compilation request or {@code null}
-     * @param compilationResult the code to be installed
-     * @param predefinedInstalledCode a pre-allocated {@link InstalledCode} object to use as a
-     *            reference to the installed code. If {@code null}, a new {@link InstalledCode}
-     *            object will be created.
-     * @param speculationLog the speculation log to be used
-     * @param isDefault specifies if the installed code should be made the default implementation of
-     *            {@code compRequest.getMethod()}. The default implementation for a method is the
-     *            code executed for standard calls to the method. This argument is ignored if
-     *            {@code compRequest == null}.
-     * @return a reference to the compiled and ready-to-run installed code
-     * @throws BailoutException if the code installation failed
-     */
+    ///
+    // Installs code based on a given compilation result.
+    //
+    // @param method the method compiled to produce {@code compiledCode} or {@code null} if the
+    //            input to {@code compResult} was not a {@link ResolvedJavaMethod}
+    // @param compilationRequest the compilation request or {@code null}
+    // @param compilationResult the code to be installed
+    // @param predefinedInstalledCode a pre-allocated {@link InstalledCode} object to use as a
+    //            reference to the installed code. If {@code null}, a new {@link InstalledCode}
+    //            object will be created.
+    // @param speculationLog the speculation log to be used
+    // @param isDefault specifies if the installed code should be made the default implementation of
+    //            {@code compRequest.getMethod()}. The default implementation for a method is the
+    //            code executed for standard calls to the method. This argument is ignored if
+    //            {@code compRequest == null}.
+    // @return a reference to the compiled and ready-to-run installed code
+    // @throws BailoutException if the code installation failed
+    ///
     public InstalledCode createInstalledCode(ResolvedJavaMethod __method, CompilationRequest __compilationRequest, CompilationResult __compilationResult, SpeculationLog __speculationLog, InstalledCode __predefinedInstalledCode, boolean __isDefault)
     {
         CodeInstallationTask[] __tasks;
         synchronized (this)
         {
-            __tasks = new CodeInstallationTask[codeInstallationTaskFactories.size()];
-            for (int __i = 0; __i < codeInstallationTaskFactories.size(); __i++)
+            __tasks = new CodeInstallationTask[this.___codeInstallationTaskFactories.size()];
+            for (int __i = 0; __i < this.___codeInstallationTaskFactories.size(); __i++)
             {
-                __tasks[__i] = codeInstallationTaskFactories.get(__i).create();
+                __tasks[__i] = this.___codeInstallationTaskFactories.get(__i).create();
             }
         }
         InstalledCode __installedCode;
@@ -228,90 +228,90 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
         }
     }
 
-    /**
-     * Installs code based on a given compilation result.
-     *
-     * @param method the method compiled to produce {@code compiledCode} or {@code null} if the
-     *            input to {@code compResult} was not a {@link ResolvedJavaMethod}
-     * @param compilationRequest the request or {@code null}
-     * @param compilationResult the code to be compiled
-     * @return a reference to the compiled and ready-to-run installed code
-     * @throws BailoutException if the code installation failed
-     */
+    ///
+    // Installs code based on a given compilation result.
+    //
+    // @param method the method compiled to produce {@code compiledCode} or {@code null} if the
+    //            input to {@code compResult} was not a {@link ResolvedJavaMethod}
+    // @param compilationRequest the request or {@code null}
+    // @param compilationResult the code to be compiled
+    // @return a reference to the compiled and ready-to-run installed code
+    // @throws BailoutException if the code installation failed
+    ///
     public InstalledCode addInstalledCode(ResolvedJavaMethod __method, CompilationRequest __compilationRequest, CompilationResult __compilationResult)
     {
         return createInstalledCode(__method, __compilationRequest, __compilationResult, null, null, false);
     }
 
-    /**
-     * Installs code based on a given compilation result and sets it as the default code to be used
-     * when {@code method} is invoked.
-     *
-     * @param method the method compiled to produce {@code compiledCode} or {@code null} if the
-     *            input to {@code compResult} was not a {@link ResolvedJavaMethod}
-     * @param compilationResult the code to be compiled
-     * @return a reference to the compiled and ready-to-run installed code
-     * @throws BailoutException if the code installation failed
-     */
+    ///
+    // Installs code based on a given compilation result and sets it as the default code to be used
+    // when {@code method} is invoked.
+    //
+    // @param method the method compiled to produce {@code compiledCode} or {@code null} if the
+    //            input to {@code compResult} was not a {@link ResolvedJavaMethod}
+    // @param compilationResult the code to be compiled
+    // @return a reference to the compiled and ready-to-run installed code
+    // @throws BailoutException if the code installation failed
+    ///
     public InstalledCode createDefaultInstalledCode(ResolvedJavaMethod __method, CompilationResult __compilationResult)
     {
         return createInstalledCode(__method, __compilationResult, null, null, true);
     }
 
-    /**
-     * Emits the code for a given graph.
-     *
-     * @param installedCodeOwner the method the compiled code will be associated with once
-     *            installed. This argument can be null.
-     */
-    public abstract void emitCode(CompilationResultBuilder crb, LIR lir, ResolvedJavaMethod installedCodeOwner);
+    ///
+    // Emits the code for a given graph.
+    //
+    // @param installedCodeOwner the method the compiled code will be associated with once
+    //            installed. This argument can be null.
+    ///
+    public abstract void emitCode(CompilationResultBuilder __crb, LIR __lir, ResolvedJavaMethod __installedCodeOwner);
 
-    /**
-     * Translates a set of registers from the callee's perspective to the caller's perspective. This
-     * is needed for architectures where input/output registers are renamed during a call (e.g.
-     * register windows on SPARC). Registers which are not visible by the caller are removed.
-     */
-    public abstract EconomicSet<Register> translateToCallerRegisters(EconomicSet<Register> calleeRegisters);
+    ///
+    // Translates a set of registers from the callee's perspective to the caller's perspective. This
+    // is needed for architectures where input/output registers are renamed during a call (e.g.
+    // register windows on SPARC). Registers which are not visible by the caller are removed.
+    ///
+    public abstract EconomicSet<Register> translateToCallerRegisters(EconomicSet<Register> __calleeRegisters);
 
-    /**
-     * Encapsulates custom tasks done before and after code installation.
-     */
+    ///
+    // Encapsulates custom tasks done before and after code installation.
+    ///
     // @class Backend.CodeInstallationTask
     public abstract static class CodeInstallationTask
     {
-        /**
-         * Task to run before code installation.
-         *
-         * @param compilationResult the code about to be installed
-         * @param predefinedInstalledCode a pre-allocated {@link InstalledCode} object that will be
-         *            used as a reference to the installed code. May be {@code null}.
-         */
+        ///
+        // Task to run before code installation.
+        //
+        // @param compilationResult the code about to be installed
+        // @param predefinedInstalledCode a pre-allocated {@link InstalledCode} object that will be
+        //            used as a reference to the installed code. May be {@code null}.
+        ///
         public void preProcess(CompilationResult __compilationResult, InstalledCode __predefinedInstalledCode)
         {
         }
 
-        /**
-         * Task to run after the code is installed.
-         *
-         * @param installedCode a reference to the installed code
-         */
+        ///
+        // Task to run after the code is installed.
+        //
+        // @param installedCode a reference to the installed code
+        ///
         public void postProcess(InstalledCode __installedCode)
         {
         }
 
-        /**
-         * Invoked after {@link #preProcess} when code installation fails.
-         *
-         * @param cause the cause of the installation failure
-         */
+        ///
+        // Invoked after {@link #preProcess} when code installation fails.
+        //
+        // @param cause the cause of the installation failure
+        ///
         public void installFailed(Throwable __cause)
         {
         }
     }
 
-    /**
-     * Creates code installation tasks.
-     */
+    ///
+    // Creates code installation tasks.
+    ///
     // @class Backend.CodeInstallationTaskFactory
     public abstract static class CodeInstallationTaskFactory
     {

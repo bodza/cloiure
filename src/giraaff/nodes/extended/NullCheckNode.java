@@ -16,24 +16,24 @@ public final class NullCheckNode extends DeoptimizingFixedWithNextNode implement
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
 
     // @cons
     public NullCheckNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = __object;
+        this.___object = __object;
     }
 
     public ValueNode getObject()
     {
-        return object;
+        return this.___object;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.getLIRGeneratorTool().emitNullCheck(__gen.operand(object), __gen.state(this));
+        __gen.getLIRGeneratorTool().emitNullCheck(__gen.operand(this.___object), __gen.state(this));
     }
 
     @Override
@@ -43,5 +43,5 @@ public final class NullCheckNode extends DeoptimizingFixedWithNextNode implement
     }
 
     @NodeIntrinsic
-    public static native void nullCheck(Object object);
+    public static native void nullCheck(Object __object);
 }

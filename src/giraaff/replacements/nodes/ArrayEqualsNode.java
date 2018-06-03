@@ -28,61 +28,61 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * Compares two arrays with the same length.
- */
+///
+// Compares two arrays with the same length.
+///
 // @class ArrayEqualsNode
 public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
     // @def
     public static final NodeClass<ArrayEqualsNode> TYPE = NodeClass.create(ArrayEqualsNode.class);
 
-    /** {@link JavaKind} of the arrays to compare. */
+    /// {@link JavaKind} of the arrays to compare.
     // @field
-    protected final JavaKind kind;
+    protected final JavaKind ___kind;
 
-    /** One array to be tested for equality. */
+    /// One array to be tested for equality.
     @Input
     // @field
-    ValueNode array1;
+    ValueNode ___array1;
 
-    /** The other array to be tested for equality. */
+    /// The other array to be tested for equality.
     @Input
     // @field
-    ValueNode array2;
+    ValueNode ___array2;
 
-    /** Length of both arrays. */
+    /// Length of both arrays.
     @Input
     // @field
-    ValueNode length;
+    ValueNode ___length;
 
     @OptionalInput(InputType.Memory)
     // @field
-    MemoryNode lastLocationAccess;
+    MemoryNode ___lastLocationAccess;
 
     // @cons
     public ArrayEqualsNode(ValueNode __array1, ValueNode __array2, ValueNode __length, @ConstantNodeParameter JavaKind __kind)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));
-        this.kind = __kind;
-        this.array1 = __array1;
-        this.array2 = __array2;
-        this.length = __length;
+        this.___kind = __kind;
+        this.___array1 = __array1;
+        this.___array2 = __array2;
+        this.___length = __length;
     }
 
     public ValueNode getArray1()
     {
-        return array1;
+        return this.___array1;
     }
 
     public ValueNode getArray2()
     {
-        return array2;
+        return this.___array2;
     }
 
     public ValueNode getLength()
     {
-        return length;
+        return this.___length;
     }
 
     private static boolean isNaNFloat(JavaConstant __constant)
@@ -112,19 +112,19 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
         {
             return null;
         }
-        ValueNode __a1 = GraphUtil.unproxify(array1);
-        ValueNode __a2 = GraphUtil.unproxify(array2);
+        ValueNode __a1 = GraphUtil.unproxify(this.___array1);
+        ValueNode __a2 = GraphUtil.unproxify(this.___array2);
         if (__a1 == __a2)
         {
             return ConstantNode.forBoolean(true);
         }
-        if (__a1.isConstant() && __a2.isConstant() && length.isConstant())
+        if (__a1.isConstant() && __a2.isConstant() && this.___length.isConstant())
         {
             ConstantNode __c1 = (ConstantNode) __a1;
             ConstantNode __c2 = (ConstantNode) __a2;
             if (__c1.getStableDimension() >= 1 && __c2.getStableDimension() >= 1)
             {
-                boolean __ret = arrayEquals(__tool.getConstantReflection(), __c1.asJavaConstant(), __c2.asJavaConstant(), length.asJavaConstant().asInt());
+                boolean __ret = arrayEquals(__tool.getConstantReflection(), __c1.asJavaConstant(), __c2.asJavaConstant(), this.___length.asJavaConstant().asInt());
                 return ConstantNode.forBoolean(__ret);
             }
         }
@@ -134,8 +134,8 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
     @Override
     public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode __alias1 = __tool.getAlias(array1);
-        ValueNode __alias2 = __tool.getAlias(array2);
+        ValueNode __alias1 = __tool.getAlias(this.___array1);
+        ValueNode __alias2 = __tool.getAlias(this.___array2);
         if (__alias1 == __alias2)
         {
             // the same virtual objects will always have the same contents
@@ -205,7 +205,7 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
     }
 
     @NodeIntrinsic
-    public static native boolean equals(Object array1, Object array2, int length, @ConstantNodeParameter JavaKind kind);
+    public static native boolean equals(Object __array1, Object __array2, int __length, @ConstantNodeParameter JavaKind __kind);
 
     public static boolean equals(boolean[] __array1, boolean[] __array2, int __length)
     {
@@ -250,26 +250,26 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __result = __gen.getLIRGeneratorTool().emitArrayEquals(kind, __gen.operand(array1), __gen.operand(array2), __gen.operand(length));
+        Value __result = __gen.getLIRGeneratorTool().emitArrayEquals(this.___kind, __gen.operand(this.___array1), __gen.operand(this.___array2), __gen.operand(this.___length));
         __gen.setResult(this, __result);
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return NamedLocationIdentity.getArrayLocation(kind);
+        return NamedLocationIdentity.getArrayLocation(this.___kind);
     }
 
     @Override
     public MemoryNode getLastLocationAccess()
     {
-        return lastLocationAccess;
+        return this.___lastLocationAccess;
     }
 
     @Override
     public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__lla));
-        lastLocationAccess = __lla;
+        updateUsages(ValueNodeUtil.asNode(this.___lastLocationAccess), ValueNodeUtil.asNode(__lla));
+        this.___lastLocationAccess = __lla;
     }
 }

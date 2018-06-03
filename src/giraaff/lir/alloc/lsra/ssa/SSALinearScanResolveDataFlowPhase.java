@@ -30,12 +30,12 @@ final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowP
 
         if (__toBlock.getPredecessorCount() > 1)
         {
-            int __toBlockFirstInstructionId = allocator.getFirstLirInstructionId(__toBlock);
-            int __fromBlockLastInstructionId = allocator.getLastLirInstructionId(__fromBlock) + 1;
+            int __toBlockFirstInstructionId = this.___allocator.getFirstLirInstructionId(__toBlock);
+            int __fromBlockLastInstructionId = this.___allocator.getLastLirInstructionId(__fromBlock) + 1;
 
             AbstractBlockBase<?> __phiOutBlock = __midBlock != null ? __midBlock : __fromBlock;
-            ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__phiOutBlock);
-            int __phiOutIdx = SSAUtil.phiOutIndex(allocator.getLIR(), __phiOutBlock);
+            ArrayList<LIRInstruction> __instructions = this.___allocator.getLIR().getLIRforBlock(__phiOutBlock);
+            int __phiOutIdx = SSAUtil.phiOutIndex(this.___allocator.getLIR(), __phiOutBlock);
             int __phiOutId = __midBlock != null ? __fromBlockLastInstructionId : __instructions.get(__phiOutIdx).id();
 
             // @closure
@@ -44,14 +44,14 @@ final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowP
                 @Override
                 public void visit(Value __phiIn, Value __phiOut)
                 {
-                    Interval __toInterval = allocator.splitChildAtOpId(allocator.intervalFor(__phiIn), __toBlockFirstInstructionId, LIRInstruction.OperandMode.DEF);
+                    Interval __toInterval = SSALinearScanResolveDataFlowPhase.this.___allocator.splitChildAtOpId(SSALinearScanResolveDataFlowPhase.this.___allocator.intervalFor(__phiIn), __toBlockFirstInstructionId, LIRInstruction.OperandMode.DEF);
                     if (LIRValueUtil.isConstantValue(__phiOut))
                     {
                         __moveResolver.addMapping(LIRValueUtil.asConstant(__phiOut), __toInterval);
                     }
                     else
                     {
-                        Interval __fromInterval = allocator.splitChildAtOpId(allocator.intervalFor(__phiOut), __phiOutId, LIRInstruction.OperandMode.DEF);
+                        Interval __fromInterval = SSALinearScanResolveDataFlowPhase.this.___allocator.splitChildAtOpId(SSALinearScanResolveDataFlowPhase.this.___allocator.intervalFor(__phiOut), __phiOutId, LIRInstruction.OperandMode.DEF);
                         if (__fromInterval != __toInterval && !__fromInterval.location().equals(__toInterval.location()))
                         {
                             if (!(LIRValueUtil.isStackSlotValue(__toInterval.location()) && LIRValueUtil.isStackSlotValue(__fromInterval.location())))
@@ -67,8 +67,8 @@ final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowP
                 }
             };
 
-            SSAUtil.forEachPhiValuePair(allocator.getLIR(), __toBlock, __phiOutBlock, visitor);
-            SSAUtil.removePhiOut(allocator.getLIR(), __phiOutBlock);
+            SSAUtil.forEachPhiValuePair(this.___allocator.getLIR(), __toBlock, __phiOutBlock, visitor);
+            SSAUtil.removePhiOut(this.___allocator.getLIR(), __phiOutBlock);
         }
     }
 }

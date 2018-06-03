@@ -79,9 +79,9 @@ import giraaff.replacements.StandardGraphBuilderPlugins;
 import giraaff.word.WordOperationPlugin;
 import giraaff.word.WordTypes;
 
-/**
- * Defines the {@link Plugins} used when running on HotSpot.
- */
+///
+// Defines the {@link Plugins} used when running on HotSpot.
+///
 // @class HotSpotGraphBuilderPlugins
 public final class HotSpotGraphBuilderPlugins
 {
@@ -91,9 +91,9 @@ public final class HotSpotGraphBuilderPlugins
         super();
     }
 
-    /**
-     * Creates a {@link Plugins} object that should be used when running on HotSpot.
-     */
+    ///
+    // Creates a {@link Plugins} object that should be used when running on HotSpot.
+    ///
     public static Plugins create(CompilerConfiguration __compilerConfiguration, HotSpotWordTypes __wordTypes, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, SnippetReflectionProvider __snippetReflection, ForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, StampProvider __stampProvider, ReplacementsImpl __replacements)
     {
         InvocationPlugins __invocationPlugins = new HotSpotInvocationPlugins();
@@ -209,7 +209,7 @@ public final class HotSpotGraphBuilderPlugins
     private static void registerCallSitePlugins(InvocationPlugins __plugins)
     {
         // @closure
-        InvocationPlugin plugin = new InvocationPlugin()
+        InvocationPlugin __plugin = new InvocationPlugin()
         {
             @Override
             public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver)
@@ -233,9 +233,9 @@ public final class HotSpotGraphBuilderPlugins
                 return true;
             }
         };
-        __plugins.register(plugin, ConstantCallSite.class, "getTarget", Receiver.class);
-        __plugins.register(plugin, MutableCallSite.class, "getTarget", Receiver.class);
-        __plugins.register(plugin, VolatileCallSite.class, "getTarget", Receiver.class);
+        __plugins.register(__plugin, ConstantCallSite.class, "getTarget", Receiver.class);
+        __plugins.register(__plugin, MutableCallSite.class, "getTarget", Receiver.class);
+        __plugins.register(__plugin, VolatileCallSite.class, "getTarget", Receiver.class);
     }
 
     private static void registerReflectionPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
@@ -271,14 +271,14 @@ public final class HotSpotGraphBuilderPlugins
     // @def
     private static final LocationIdentity CONSTANT_POOL_LENGTH = NamedLocationIdentity.immutable("ConstantPool::_length");
 
-    /**
-     * Emits a node to get the metaspace {@code ConstantPool} pointer given the value of the
-     * {@code constantPoolOop} field in a ConstantPool value.
-     *
-     * @param constantPoolOop value of the {@code constantPoolOop} field in a ConstantPool value
-     * @return a node representing the metaspace {@code ConstantPool} pointer associated with
-     *         {@code constantPoolOop}
-     */
+    ///
+    // Emits a node to get the metaspace {@code ConstantPool} pointer given the value of the
+    // {@code constantPoolOop} field in a ConstantPool value.
+    //
+    // @param constantPoolOop value of the {@code constantPoolOop} field in a ConstantPool value
+    // @return a node representing the metaspace {@code ConstantPool} pointer associated with
+    //         {@code constantPoolOop}
+    ///
     private static ValueNode getMetaspaceConstantPool(GraphBuilderContext __b, ValueNode __constantPoolOop, WordTypes __wordTypes)
     {
         // ConstantPool.constantPoolOop is in fact the holder class.
@@ -290,11 +290,11 @@ public final class HotSpotGraphBuilderPlugins
         return WordOperationPlugin.readOp(__b, __wordTypes.getWordKind(), __constantsAddress, INSTANCE_KLASS_CONSTANTS, BarrierType.NONE, __notCompressible);
     }
 
-    /**
-     * Emits a node representing an element in a metaspace {@code ConstantPool}.
-     *
-     * @param constantPoolOop value of the {@code constantPoolOop} field in a ConstantPool value
-     */
+    ///
+    // Emits a node representing an element in a metaspace {@code ConstantPool}.
+    //
+    // @param constantPoolOop value of the {@code constantPoolOop} field in a ConstantPool value
+    ///
     private static boolean readMetaspaceConstantPoolElement(GraphBuilderContext __b, ValueNode __constantPoolOop, ValueNode __index, JavaKind __elementKind, WordTypes __wordTypes)
     {
         ValueNode __constants = getMetaspaceConstantPool(__b, __constantPoolOop, __wordTypes);

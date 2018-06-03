@@ -29,7 +29,7 @@ final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitch
     @Override
     public void emitCode(final CompilationResultBuilder __crb, final AMD64MacroAssembler __masm)
     {
-        strategy.run(new HotSpotSwitchClosure(ValueUtil.asRegister(key), __crb, __masm));
+        this.___strategy.run(new HotSpotSwitchClosure(ValueUtil.asRegister(this.___key), __crb, __masm));
     }
 
     // @class AMD64HotSpotStrategySwitchOp.HotSpotSwitchClosure
@@ -50,13 +50,13 @@ final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitch
                 HotSpotMetaspaceConstant __meta = (HotSpotMetaspaceConstant) __c;
                 if (__meta.isCompressed())
                 {
-                    crb.recordInlineDataInCode(__meta);
-                    masm.cmpl(keyRegister, 0xDEADDEAD);
+                    this.___crb.recordInlineDataInCode(__meta);
+                    this.___masm.cmpl(this.___keyRegister, 0xDEADDEAD);
                 }
                 else
                 {
-                    AMD64Address __addr = (AMD64Address) crb.recordDataReferenceInCode(__meta, 8);
-                    masm.cmpq(keyRegister, __addr);
+                    AMD64Address __addr = (AMD64Address) this.___crb.recordDataReferenceInCode(__meta, 8);
+                    this.___masm.cmpq(this.___keyRegister, __addr);
                 }
             }
             else

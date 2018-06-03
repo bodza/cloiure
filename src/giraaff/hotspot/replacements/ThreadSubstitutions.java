@@ -13,16 +13,16 @@ import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.word.Word;
 
-/**
- * Substitutions for {@link java.lang.Thread} methods.
- */
+///
+// Substitutions for {@link java.lang.Thread} methods.
+///
 @ClassSubstitution(Thread.class)
 // @class ThreadSubstitutions
 public final class ThreadSubstitutions
 {
-    /**
-     * hidden in 9.
-     */
+    ///
+    // hidden in 9.
+    ///
     @MethodSubstitution(isStatic = false, optional = true)
     public static boolean isInterrupted(final Thread __thisObject, boolean __clearInterrupted)
     {
@@ -45,5 +45,5 @@ public final class ThreadSubstitutions
     public static final ForeignCallDescriptor THREAD_IS_INTERRUPTED = new ForeignCallDescriptor("thread_is_interrupted", boolean.class, Thread.class, boolean.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native boolean threadIsInterruptedStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Thread thread, boolean clearIsInterrupted);
+    private static native boolean threadIsInterruptedStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Thread __thread, boolean __clearIsInterrupted);
 }

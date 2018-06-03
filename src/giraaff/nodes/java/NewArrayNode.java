@@ -27,10 +27,10 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code NewArrayNode} is used for all array allocations where the element type is know at
- * compile time.
- */
+///
+// The {@code NewArrayNode} is used for all array allocations where the element type is know at
+// compile time.
+///
 // @class NewArrayNode
 public final class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable
 {
@@ -38,7 +38,7 @@ public final class NewArrayNode extends AbstractNewArrayNode implements Virtuali
     public static final NodeClass<NewArrayNode> TYPE = NodeClass.create(NewArrayNode.class);
 
     // @field
-    private final ResolvedJavaType elementType;
+    private final ResolvedJavaType ___elementType;
 
     // @cons
     public NewArrayNode(ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents)
@@ -56,25 +56,25 @@ public final class NewArrayNode extends AbstractNewArrayNode implements Virtuali
     protected NewArrayNode(NodeClass<? extends NewArrayNode> __c, ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__elementType.getArrayClass())), __length, __fillContents, __stateBefore);
-        this.elementType = __elementType;
+        this.___elementType = __elementType;
     }
 
     @NodeIntrinsic
-    private static native Object newArray(@ConstantNodeParameter Class<?> elementType, int length, @ConstantNodeParameter boolean fillContents);
+    private static native Object newArray(@ConstantNodeParameter Class<?> __elementType, int __length, @ConstantNodeParameter boolean __fillContents);
 
     public static Object newUninitializedArray(Class<?> __elementType, int __length)
     {
         return newArray(__elementType, __length, false);
     }
 
-    /**
-     * Gets the element type of the array.
-     *
-     * @return the element type of the array
-     */
+    ///
+    // Gets the element type of the array.
+    //
+    // @return the element type of the array
+    ///
     public ResolvedJavaType elementType()
     {
-        return elementType;
+        return this.___elementType;
     }
 
     @Override

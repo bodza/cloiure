@@ -21,13 +21,13 @@ import giraaff.util.GraalError;
 public final class HotSpotDataBuilder extends DataBuilder
 {
     // @field
-    private final TargetDescription target;
+    private final TargetDescription ___target;
 
     // @cons
     public HotSpotDataBuilder(TargetDescription __target)
     {
         super();
-        this.target = __target;
+        this.___target = __target;
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class HotSpotDataBuilder extends DataBuilder
     {
         if (JavaConstant.isNull(__constant))
         {
-            int __size = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__constant) ? 4 : target.wordSize;
+            int __size = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__constant) ? 4 : this.___target.wordSize;
             return ZeroData.create(__size, __size);
         }
         else if (__constant instanceof VMConstant)
@@ -47,7 +47,7 @@ public final class HotSpotDataBuilder extends DataBuilder
             }
 
             HotSpotConstant __c = (HotSpotConstant) __vmConstant;
-            int __size = __c.isCompressed() ? 4 : target.wordSize;
+            int __size = __c.isCompressed() ? 4 : this.___target.wordSize;
             // @closure
             return new Data(__size, __size)
             {

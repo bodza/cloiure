@@ -15,10 +15,10 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * A node that represents an exception thrown implicitly by a Java bytecode. It can be lowered to
- * either a {@linkplain ForeignCallDescriptor foreign} call or a pre-allocated exception object.
- */
+///
+// A node that represents an exception thrown implicitly by a Java bytecode. It can be lowered to
+// either a {@linkplain ForeignCallDescriptor foreign} call or a pre-allocated exception object.
+///
 // @class BytecodeExceptionNode
 public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
@@ -26,22 +26,22 @@ public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implem
     public static final NodeClass<BytecodeExceptionNode> TYPE = NodeClass.create(BytecodeExceptionNode.class);
 
     // @field
-    protected final Class<? extends Throwable> exceptionClass;
+    protected final Class<? extends Throwable> ___exceptionClass;
     @Input
     // @field
-    NodeInputList<ValueNode> arguments;
+    NodeInputList<ValueNode> ___arguments;
 
     // @cons
     public BytecodeExceptionNode(MetaAccessProvider __metaAccess, Class<? extends Throwable> __exceptionClass, ValueNode... __arguments)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(__metaAccess.lookupJavaType(__exceptionClass))));
-        this.exceptionClass = __exceptionClass;
-        this.arguments = new NodeInputList<>(this, __arguments);
+        this.___exceptionClass = __exceptionClass;
+        this.___arguments = new NodeInputList<>(this, __arguments);
     }
 
     public Class<? extends Throwable> getExceptionClass()
     {
-        return exceptionClass;
+        return this.___exceptionClass;
     }
 
     @Override
@@ -58,6 +58,6 @@ public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implem
 
     public NodeInputList<ValueNode> getArguments()
     {
-        return arguments;
+        return this.___arguments;
     }
 }

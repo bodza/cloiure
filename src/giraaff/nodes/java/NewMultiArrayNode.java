@@ -13,9 +13,9 @@ import giraaff.nodes.spi.ArrayLengthProvider;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * The {@code NewMultiArrayNode} represents an allocation of a multi-dimensional object array.
- */
+///
+// The {@code NewMultiArrayNode} represents an allocation of a multi-dimensional object array.
+///
 // @class NewMultiArrayNode
 public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements Lowerable, ArrayLengthProvider
 {
@@ -24,23 +24,23 @@ public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode imple
 
     @Input
     // @field
-    protected NodeInputList<ValueNode> dimensions;
+    protected NodeInputList<ValueNode> ___dimensions;
     // @field
-    protected final ResolvedJavaType type;
+    protected final ResolvedJavaType ___type;
 
     public ValueNode dimension(int __index)
     {
-        return dimensions.get(__index);
+        return this.___dimensions.get(__index);
     }
 
     public int dimensionCount()
     {
-        return dimensions.size();
+        return this.___dimensions.size();
     }
 
     public NodeList<ValueNode> dimensions()
     {
-        return dimensions;
+        return this.___dimensions;
     }
 
     // @cons
@@ -53,8 +53,8 @@ public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode imple
     protected NewMultiArrayNode(NodeClass<? extends NewMultiArrayNode> __c, ResolvedJavaType __type, ValueNode[] __dimensions)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)));
-        this.type = __type;
-        this.dimensions = new NodeInputList<>(this, __dimensions);
+        this.___type = __type;
+        this.___dimensions = new NodeInputList<>(this, __dimensions);
     }
 
     @Override
@@ -65,7 +65,7 @@ public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode imple
 
     public ResolvedJavaType type()
     {
-        return type;
+        return this.___type;
     }
 
     @Override

@@ -18,28 +18,28 @@ import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.Phase;
 
-/**
- * Created by adinn on 09/05/17.
- */
+///
+// Created by adinn on 09/05/17.
+///
 // @class AddressLoweringByUsePhase
 public final class AddressLoweringByUsePhase extends Phase
 {
     // @class AddressLoweringByUsePhase.AddressLoweringByUse
     public abstract static class AddressLoweringByUse
     {
-        public abstract AddressNode lower(ValueNode use, Stamp stamp, AddressNode address);
+        public abstract AddressNode lower(ValueNode __use, Stamp __stamp, AddressNode __address);
 
-        public abstract AddressNode lower(AddressNode address);
+        public abstract AddressNode lower(AddressNode __address);
     }
 
     // @field
-    private final AddressLoweringByUse lowering;
+    private final AddressLoweringByUse ___lowering;
 
     // @cons
     public AddressLoweringByUsePhase(AddressLoweringByUse __lowering)
     {
         super();
-        this.lowering = __lowering;
+        this.___lowering = __lowering;
     }
 
     @Override
@@ -55,35 +55,35 @@ public final class AddressLoweringByUsePhase extends Phase
                 ReadNode __readNode = (ReadNode) __node;
                 Stamp __stamp = __readNode.stamp(NodeView.DEFAULT);
                 __address = __readNode.getAddress();
-                __lowered = lowering.lower(__readNode, __stamp, __address);
+                __lowered = this.___lowering.lower(__readNode, __stamp, __address);
             }
             else if (__node instanceof JavaReadNode)
             {
                 JavaReadNode __javaReadNode = (JavaReadNode) __node;
                 Stamp __stamp = __javaReadNode.stamp(NodeView.DEFAULT);
                 __address = __javaReadNode.getAddress();
-                __lowered = lowering.lower(__javaReadNode, __stamp, __address);
+                __lowered = this.___lowering.lower(__javaReadNode, __stamp, __address);
             }
             else if (__node instanceof FloatingReadNode)
             {
                 FloatingReadNode __floatingReadNode = (FloatingReadNode) __node;
                 Stamp __stamp = __floatingReadNode.stamp(NodeView.DEFAULT);
                 __address = __floatingReadNode.getAddress();
-                __lowered = lowering.lower(__floatingReadNode, __stamp, __address);
+                __lowered = this.___lowering.lower(__floatingReadNode, __stamp, __address);
             }
             else if (__node instanceof AbstractWriteNode)
             {
                 AbstractWriteNode __abstractWriteNode = (AbstractWriteNode) __node;
                 Stamp __stamp = __abstractWriteNode.value().stamp(NodeView.DEFAULT);
                 __address = __abstractWriteNode.getAddress();
-                __lowered = lowering.lower(__abstractWriteNode, __stamp, __address);
+                __lowered = this.___lowering.lower(__abstractWriteNode, __stamp, __address);
             }
             else if (__node instanceof PrefetchAllocateNode)
             {
                 PrefetchAllocateNode __prefetchAllocateNode = (PrefetchAllocateNode) __node;
                 Stamp __stamp = StampFactory.forKind(JavaKind.Object);
                 __address = (AddressNode) __prefetchAllocateNode.inputs().first();
-                __lowered = lowering.lower(__prefetchAllocateNode, __stamp, __address);
+                __lowered = this.___lowering.lower(__prefetchAllocateNode, __stamp, __address);
             }
             else
             {
@@ -111,7 +111,7 @@ public final class AddressLoweringByUsePhase extends Phase
             if (__node instanceof OffsetAddressNode)
             {
                 AddressNode __address = (AddressNode) __node;
-                __lowered = lowering.lower(__address);
+                __lowered = this.___lowering.lower(__address);
             }
             else
             {

@@ -8,42 +8,42 @@ import giraaff.graph.iterators.NodeIterable;
 final class NodeUsageIterable implements NodeIterable<Node>
 {
     // @field
-    private final Node node;
+    private final Node ___node;
 
     // @cons
     NodeUsageIterable(Node __node)
     {
         super();
-        this.node = __node;
+        this.___node = __node;
     }
 
     @Override
     public NodeUsageIterator iterator()
     {
-        return new NodeUsageIterator(node);
+        return new NodeUsageIterator(this.___node);
     }
 
     @Override
     public Node first()
     {
-        return node.usage0;
+        return this.___node.___usage0;
     }
 
     @Override
     public boolean isEmpty()
     {
-        return node.usage0 == null;
+        return this.___node.___usage0 == null;
     }
 
     @Override
     public boolean isNotEmpty()
     {
-        return node.usage0 != null;
+        return this.___node.___usage0 != null;
     }
 
     @Override
     public int count()
     {
-        return node.getUsageCount();
+        return this.___node.getUsageCount();
     }
 }

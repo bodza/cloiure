@@ -18,9 +18,9 @@ import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Emits a safepoint poll.
- */
+///
+// Emits a safepoint poll.
+///
 @Opcode
 // @class AMD64HotSpotSafepointOp
 public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
@@ -30,35 +30,35 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 
     // @State
     // @field
-    protected LIRFrameState state;
+    protected LIRFrameState ___state;
     @Temp({OperandFlag.REG, OperandFlag.ILLEGAL})
     // @field
-    private AllocatableValue temp;
+    private AllocatableValue ___temp;
 
     // @field
-    private final Register thread;
+    private final Register ___thread;
 
     // @cons
     public AMD64HotSpotSafepointOp(LIRFrameState __state, NodeLIRBuilderTool __tool, Register __thread)
     {
         super(TYPE);
-        this.state = __state;
-        this.thread = __thread;
+        this.___state = __state;
+        this.___thread = __thread;
         if (HotSpotRuntime.threadLocalHandshakes || isPollingPageFar())
         {
-            temp = __tool.getLIRGeneratorTool().newVariable(LIRKind.value(__tool.getLIRGeneratorTool().target().arch.getWordKind()));
+            this.___temp = __tool.getLIRGeneratorTool().newVariable(LIRKind.value(__tool.getLIRGeneratorTool().target().arch.getWordKind()));
         }
         else
         {
             // don't waste a register if it's unneeded
-            temp = Value.ILLEGAL;
+            this.___temp = Value.ILLEGAL;
         }
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __asm)
     {
-        emitCode(__crb, __asm, false, state, thread, temp instanceof RegisterValue ? ((RegisterValue) temp).getRegister() : null);
+        emitCode(__crb, __asm, false, this.___state, this.___thread, this.___temp instanceof RegisterValue ? ((RegisterValue) this.___temp).getRegister() : null);
     }
 
     public static void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __asm, boolean __atReturn, LIRFrameState __state, Register __thread, Register __scratch)
@@ -73,9 +73,9 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
         }
     }
 
-    /**
-     * Tests if the polling page address can be reached from the code cache with 32-bit displacements.
-     */
+    ///
+    // Tests if the polling page address can be reached from the code cache with 32-bit displacements.
+    ///
     private static boolean isPollingPageFar()
     {
         final long __pollingPageAddress = HotSpotRuntime.safepointPollingAddress;

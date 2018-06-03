@@ -44,9 +44,9 @@ import giraaff.phases.tiers.TargetProvider;
 import giraaff.phases.util.Providers;
 import giraaff.util.GraalError;
 
-/**
- * Static methods for orchestrating the compilation of a {@linkplain StructuredGraph graph}.
- */
+///
+// Static methods for orchestrating the compilation of a {@linkplain StructuredGraph graph}.
+///
 // @class GraalCompiler
 public final class GraalCompiler
 {
@@ -56,85 +56,85 @@ public final class GraalCompiler
         super();
     }
 
-    /**
-     * Encapsulates all the inputs to a {@linkplain GraalCompiler#compile(Request) compilation}.
-     */
+    ///
+    // Encapsulates all the inputs to a {@linkplain GraalCompiler#compile(Request) compilation}.
+    ///
     // @class GraalCompiler.Request
     public static final class Request
     {
         // @field
-        public final StructuredGraph graph;
+        public final StructuredGraph ___graph;
         // @field
-        public final ResolvedJavaMethod installedCodeOwner;
+        public final ResolvedJavaMethod ___installedCodeOwner;
         // @field
-        public final Providers providers;
+        public final Providers ___providers;
         // @field
-        public final Backend backend;
+        public final Backend ___backend;
         // @field
-        public final PhaseSuite<HighTierContext> graphBuilderSuite;
+        public final PhaseSuite<HighTierContext> ___graphBuilderSuite;
         // @field
-        public final OptimisticOptimizations optimisticOpts;
+        public final OptimisticOptimizations ___optimisticOpts;
         // @field
-        public final ProfilingInfo profilingInfo;
+        public final ProfilingInfo ___profilingInfo;
         // @field
-        public final Suites suites;
+        public final Suites ___suites;
         // @field
-        public final LIRSuites lirSuites;
+        public final LIRSuites ___lirSuites;
         // @field
-        public final CompilationResult compilationResult;
+        public final CompilationResult ___compilationResult;
         // @field
-        public final CompilationResultBuilderFactory factory;
+        public final CompilationResultBuilderFactory ___factory;
 
-        /**
-         * @param graph the graph to be compiled
-         * @param installedCodeOwner the method the compiled code will be associated with once installed. This argument can be null.
-         */
+        ///
+        // @param graph the graph to be compiled
+        // @param installedCodeOwner the method the compiled code will be associated with once installed. This argument can be null.
+        ///
         // @cons
         public Request(StructuredGraph __graph, ResolvedJavaMethod __installedCodeOwner, Providers __providers, Backend __backend, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites, LIRSuites __lirSuites, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory)
         {
             super();
-            this.graph = __graph;
-            this.installedCodeOwner = __installedCodeOwner;
-            this.providers = __providers;
-            this.backend = __backend;
-            this.graphBuilderSuite = __graphBuilderSuite;
-            this.optimisticOpts = __optimisticOpts;
-            this.profilingInfo = __profilingInfo;
-            this.suites = __suites;
-            this.lirSuites = __lirSuites;
-            this.compilationResult = __compilationResult;
-            this.factory = __factory;
+            this.___graph = __graph;
+            this.___installedCodeOwner = __installedCodeOwner;
+            this.___providers = __providers;
+            this.___backend = __backend;
+            this.___graphBuilderSuite = __graphBuilderSuite;
+            this.___optimisticOpts = __optimisticOpts;
+            this.___profilingInfo = __profilingInfo;
+            this.___suites = __suites;
+            this.___lirSuites = __lirSuites;
+            this.___compilationResult = __compilationResult;
+            this.___factory = __factory;
         }
     }
 
-    /**
-     * Requests compilation of a given graph.
-     *
-     * @param graph the graph to be compiled
-     * @param installedCodeOwner the method the compiled code will be associated with once
-     *            installed. This argument can be null.
-     * @return the result of the compilation
-     */
+    ///
+    // Requests compilation of a given graph.
+    //
+    // @param graph the graph to be compiled
+    // @param installedCodeOwner the method the compiled code will be associated with once
+    //            installed. This argument can be null.
+    // @return the result of the compilation
+    ///
     public static CompilationResult compileGraph(StructuredGraph __graph, ResolvedJavaMethod __installedCodeOwner, Providers __providers, Backend __backend, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites, LIRSuites __lirSuites, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory)
     {
         return compile(new Request(__graph, __installedCodeOwner, __providers, __backend, __graphBuilderSuite, __optimisticOpts, __profilingInfo, __suites, __lirSuites, __compilationResult, __factory));
     }
 
-    /**
-     * Services a given compilation request.
-     *
-     * @return the result of the compilation
-     */
+    ///
+    // Services a given compilation request.
+    //
+    // @return the result of the compilation
+    ///
     public static CompilationResult compile(Request __r)
     {
-        emitFrontEnd(__r.providers, __r.backend, __r.graph, __r.graphBuilderSuite, __r.optimisticOpts, __r.profilingInfo, __r.suites);
-        emitBackEnd(__r.graph, null, __r.installedCodeOwner, __r.backend, __r.compilationResult, __r.factory, null, __r.lirSuites);
-        return __r.compilationResult;
+        emitFrontEnd(__r.___providers, __r.___backend, __r.___graph, __r.___graphBuilderSuite, __r.___optimisticOpts, __r.___profilingInfo, __r.___suites);
+        emitBackEnd(__r.___graph, null, __r.___installedCodeOwner, __r.___backend, __r.___compilationResult, __r.___factory, null, __r.___lirSuites);
+        return __r.___compilationResult;
     }
 
-    /**
-     * Builds the graph, optimizes it.
-     */
+    ///
+    // Builds the graph, optimizes it.
+    ///
     public static void emitFrontEnd(Providers __providers, TargetProvider __target, StructuredGraph __graph, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites)
     {
         HighTierContext __highTierContext = new HighTierContext(__providers, __graphBuilderSuite, __optimisticOpts);
@@ -168,7 +168,7 @@ public final class GraalCompiler
         {
             return emitLIR0(__backend, __graph, __stub, __registerConfig, __lirSuites);
         }
-        catch (/*OutOfRegistersException*/ BailoutException __e)
+        catch (BailoutException __e) // OutOfRegistersException
         {
             throw new GraalError(__e);
         }

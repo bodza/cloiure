@@ -21,24 +21,24 @@ public final class FinalFieldBarrierNode extends FixedWithNextNode implements Vi
 
     @OptionalInput
     // @field
-    private ValueNode value;
+    private ValueNode ___value;
 
     // @cons
     public FinalFieldBarrierNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = __value;
+        this.___value = __value;
     }
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
     public void virtualize(VirtualizerTool __tool)
     {
-        if (value != null && __tool.getAlias(value) instanceof VirtualObjectNode)
+        if (this.___value != null && __tool.getAlias(this.___value) instanceof VirtualObjectNode)
         {
             __tool.delete();
         }

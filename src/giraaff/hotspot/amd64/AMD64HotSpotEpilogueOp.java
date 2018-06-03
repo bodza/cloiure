@@ -12,9 +12,9 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Superclass for operations that use the value of RBP saved in a method's prologue.
- */
+///
+// Superclass for operations that use the value of RBP saved in a method's prologue.
+///
 // @class AMD64HotSpotEpilogueOp
 abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD64HotSpotRestoreRbpOp
 {
@@ -26,11 +26,11 @@ abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD
 
     @Use({OperandFlag.REG, OperandFlag.STACK})
     // @field
-    private AllocatableValue savedRbp = PLACEHOLDER;
+    private AllocatableValue ___savedRbp = AMD64HotSpotRestoreRbpOp.PLACEHOLDER;
 
     protected void leaveFrameAndRestoreRbp(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        leaveFrameAndRestoreRbp(savedRbp, __crb, __masm);
+        leaveFrameAndRestoreRbp(this.___savedRbp, __crb, __masm);
     }
 
     static void leaveFrameAndRestoreRbp(AllocatableValue __savedRbp, CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
@@ -48,12 +48,12 @@ abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD
                 __masm.movq(AMD64.rbp, __framePointer);
             }
         }
-        __crb.frameContext.leave(__crb);
+        __crb.___frameContext.leave(__crb);
     }
 
     @Override
     public void setSavedRbp(AllocatableValue __value)
     {
-        savedRbp = __value;
+        this.___savedRbp = __value;
     }
 }

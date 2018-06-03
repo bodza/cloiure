@@ -9,48 +9,48 @@ import java.util.PriorityQueue;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.Loop;
 
-/**
- * Computes an ordering of the block that can be used by the linear scan register allocator and the
- * machine code generator. The machine code generation order will start with the first block and
- * produce a straight sequence always following the most likely successor. Then it will continue
- * with the most likely path that was left out during this process. The process iteratively
- * continues until all blocks are scheduled. Additionally, it is guaranteed that all blocks of a
- * loop are scheduled before any block following the loop is scheduled.
- *
- * The machine code generator order includes reordering of loop headers such that the backward jump
- * is a conditional jump if there is only one loop end block. Additionally, the target of loop
- * backward jumps are always marked as aligned. Aligning the target of conditional jumps does not
- * bring a measurable benefit and is therefore avoided to keep the code size small.
- *
- * The linear scan register allocator order has an additional mechanism that prevents merge nodes
- * from being scheduled if there is at least one highly likely predecessor still unscheduled. This
- * increases the probability that the merge node and the corresponding predecessor are more closely
- * together in the schedule thus decreasing the probability for inserted phi moves. Also, the
- * algorithm sets the linear scan order number of the block that corresponds to its index in the
- * linear scan order.
- */
+///
+// Computes an ordering of the block that can be used by the linear scan register allocator and the
+// machine code generator. The machine code generation order will start with the first block and
+// produce a straight sequence always following the most likely successor. Then it will continue
+// with the most likely path that was left out during this process. The process iteratively
+// continues until all blocks are scheduled. Additionally, it is guaranteed that all blocks of a
+// loop are scheduled before any block following the loop is scheduled.
+//
+// The machine code generator order includes reordering of loop headers such that the backward jump
+// is a conditional jump if there is only one loop end block. Additionally, the target of loop
+// backward jumps are always marked as aligned. Aligning the target of conditional jumps does not
+// bring a measurable benefit and is therefore avoided to keep the code size small.
+//
+// The linear scan register allocator order has an additional mechanism that prevents merge nodes
+// from being scheduled if there is at least one highly likely predecessor still unscheduled. This
+// increases the probability that the merge node and the corresponding predecessor are more closely
+// together in the schedule thus decreasing the probability for inserted phi moves. Also, the
+// algorithm sets the linear scan order number of the block that corresponds to its index in the
+// linear scan order.
+///
 // @class ComputeBlockOrder
 public final class ComputeBlockOrder
 {
-    /**
-     * The initial capacities of the worklists used for iteratively finding the block order.
-     */
+    ///
+    // The initial capacities of the worklists used for iteratively finding the block order.
+    ///
     // @def
     private static final int INITIAL_WORKLIST_CAPACITY = 10;
 
-    /**
-     * Divisor used for degrading the probability of the current path versus unscheduled paths at
-     * a merge node when calculating the linear scan order. A high value means that predecessors
-     * of merge nodes are more likely to be scheduled before the merge node.
-     */
+    ///
+    // Divisor used for degrading the probability of the current path versus unscheduled paths at
+    // a merge node when calculating the linear scan order. A high value means that predecessors
+    // of merge nodes are more likely to be scheduled before the merge node.
+    ///
     // @def
     private static final int PENALTY_VERSUS_UNSCHEDULED = 10;
 
-    /**
-     * Computes the block order used for the linear scan register allocator.
-     *
-     * @return sorted list of blocks
-     */
+    ///
+    // Computes the block order used for the linear scan register allocator.
+    //
+    // @return sorted list of blocks
+    ///
     public static <T extends AbstractBlockBase<T>> AbstractBlockBase<?>[] computeLinearScanOrder(int __blockCount, T __startBlock)
     {
         List<T> __order = new ArrayList<>();
@@ -59,11 +59,11 @@ public final class ComputeBlockOrder
         return __order.toArray(new AbstractBlockBase<?>[0]);
     }
 
-    /**
-     * Computes the block order used for code emission.
-     *
-     * @return sorted list of blocks
-     */
+    ///
+    // Computes the block order used for code emission.
+    //
+    // @return sorted list of blocks
+    ///
     public static <T extends AbstractBlockBase<T>> AbstractBlockBase<?>[] computeCodeEmittingOrder(int __blockCount, T __startBlock)
     {
         List<T> __order = new ArrayList<>();
@@ -72,9 +72,9 @@ public final class ComputeBlockOrder
         return __order.toArray(new AbstractBlockBase<?>[0]);
     }
 
-    /**
-     * Iteratively adds paths to the code emission block order.
-     */
+    ///
+    // Iteratively adds paths to the code emission block order.
+    ///
     private static <T extends AbstractBlockBase<T>> void computeCodeEmittingOrder(List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
         while (!__worklist.isEmpty())
@@ -83,9 +83,9 @@ public final class ComputeBlockOrder
         }
     }
 
-    /**
-     * Iteratively adds paths to the linear scan block order.
-     */
+    ///
+    // Iteratively adds paths to the linear scan block order.
+    ///
     private static <T extends AbstractBlockBase<T>> void computeLinearScanOrder(List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
         while (!__worklist.isEmpty())
@@ -98,9 +98,9 @@ public final class ComputeBlockOrder
         }
     }
 
-    /**
-     * Initializes the priority queue used for the work list of blocks and adds the start block.
-     */
+    ///
+    // Initializes the priority queue used for the work list of blocks and adds the start block.
+    ///
     private static <T extends AbstractBlockBase<T>> PriorityQueue<T> initializeWorklist(T __startBlock, BitSet __visitedBlocks)
     {
         PriorityQueue<T> __result = new PriorityQueue<>(INITIAL_WORKLIST_CAPACITY, new BlockOrderComparator<>());
@@ -109,9 +109,9 @@ public final class ComputeBlockOrder
         return __result;
     }
 
-    /**
-     * Add a linear path to the linear scan order greedily following the most likely successor.
-     */
+    ///
+    // Add a linear path to the linear scan order greedily following the most likely successor.
+    ///
     private static <T extends AbstractBlockBase<T>> T addPathToLinearScanOrder(T __block, List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
         __block.setLinearScanNumber(__order.size());
@@ -144,9 +144,9 @@ public final class ComputeBlockOrder
         return null;
     }
 
-    /**
-     * Add a linear path to the code emission order greedily following the most likely successor.
-     */
+    ///
+    // Add a linear path to the code emission order greedily following the most likely successor.
+    ///
     private static <T extends AbstractBlockBase<T>> void addPathToCodeEmittingOrder(T __initialBlock, List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
         T __block = __initialBlock;
@@ -188,17 +188,17 @@ public final class ComputeBlockOrder
         }
     }
 
-    /**
-     * Adds a block to the ordering.
-     */
+    ///
+    // Adds a block to the ordering.
+    ///
     private static <T extends AbstractBlockBase<T>> void addBlock(T __header, List<T> __order)
     {
         __order.add(__header);
     }
 
-    /**
-     * Find the highest likely unvisited successor block of a given block.
-     */
+    ///
+    // Find the highest likely unvisited successor block of a given block.
+    ///
     private static <T extends AbstractBlockBase<T>> T findAndMarkMostLikelySuccessor(T __block, BitSet __visitedBlocks)
     {
         T __result = null;
@@ -216,9 +216,9 @@ public final class ComputeBlockOrder
         return __result;
     }
 
-    /**
-     * Add successor blocks into the given work list if they are not already marked as visited.
-     */
+    ///
+    // Add successor blocks into the given work list if they are not already marked as visited.
+    ///
     private static <T extends AbstractBlockBase<T>> void enqueueSuccessors(T __block, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
         for (T __successor : __block.getSuccessors())
@@ -231,18 +231,18 @@ public final class ComputeBlockOrder
         }
     }
 
-    /**
-     * Skip the loop header block if the loop consists of more than one block and it has only a
-     * single loop end block.
-     */
+    ///
+    // Skip the loop header block if the loop consists of more than one block and it has only a
+    // single loop end block.
+    ///
     private static <T extends AbstractBlockBase<T>> boolean skipLoopHeader(AbstractBlockBase<T> __block)
     {
         return (__block.isLoopHeader() && !__block.isLoopEnd() && __block.getLoop().numBackedges() == 1);
     }
 
-    /**
-     * Comparator for sorting blocks based on loop depth and probability.
-     */
+    ///
+    // Comparator for sorting blocks based on loop depth and probability.
+    ///
     // @class ComputeBlockOrder.BlockOrderComparator
     private static final class BlockOrderComparator<T extends AbstractBlockBase<T>> implements Comparator<T>
     {

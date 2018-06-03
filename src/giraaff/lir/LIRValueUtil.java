@@ -87,11 +87,11 @@ public final class LIRValueUtil
         return sameRegister(__v1, __v2) && sameRegister(__v1, __v3);
     }
 
-    /**
-     * Checks if all the provided values are different physical registers. The parameters can be
-     * either {@link Register registers}, {@link Value values} or arrays of them. All values that
-     * are not {@link RegisterValue registers} are ignored.
-     */
+    ///
+    // Checks if all the provided values are different physical registers. The parameters can be
+    // either {@link Register registers}, {@link Value values} or arrays of them. All values that
+    // are not {@link RegisterValue registers} are ignored.
+    ///
     public static boolean differentRegisters(Object... __values)
     {
         List<Register> __registers = collectRegisters(__values, new ArrayList<Register>());
@@ -137,13 +137,13 @@ public final class LIRValueUtil
         return __registers;
     }
 
-    /**
-     * Subtract sets of registers (x - y).
-     *
-     * @param x a set of register to subtract from.
-     * @param y a set of registers to subtract.
-     * @return resulting set of registers (x - y).
-     */
+    ///
+    // Subtract sets of registers (x - y).
+    //
+    // @param x a set of register to subtract from.
+    // @param y a set of registers to subtract.
+    // @return resulting set of registers (x - y).
+    ///
     public static Value[] subtractRegisters(Value[] __x, Value[] __y)
     {
         ArrayList<Value> __result = new ArrayList<>(__x.length);

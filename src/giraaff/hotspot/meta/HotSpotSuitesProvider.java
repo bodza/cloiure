@@ -9,31 +9,31 @@ import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.Suites;
 import giraaff.phases.tiers.SuitesCreator;
 
-/**
- * HotSpot implementation of {@link SuitesCreator}.
- */
+///
+// HotSpot implementation of {@link SuitesCreator}.
+///
 // @class HotSpotSuitesProvider
 public class HotSpotSuitesProvider extends SuitesProviderBase
 {
     // @field
-    protected final HotSpotGraalRuntime runtime;
+    protected final HotSpotGraalRuntime ___runtime;
 
     // @field
-    private final SuitesCreator defaultSuitesCreator;
+    private final SuitesCreator ___defaultSuitesCreator;
 
     // @cons
     public HotSpotSuitesProvider(SuitesCreator __defaultSuitesCreator, HotSpotGraalRuntime __runtime)
     {
         super();
-        this.defaultSuitesCreator = __defaultSuitesCreator;
-        this.runtime = __runtime;
-        this.defaultGraphBuilderSuite = createGraphBuilderSuite();
+        this.___defaultSuitesCreator = __defaultSuitesCreator;
+        this.___runtime = __runtime;
+        this.___defaultGraphBuilderSuite = createGraphBuilderSuite();
     }
 
     @Override
     public Suites createSuites()
     {
-        Suites __ret = defaultSuitesCreator.createSuites();
+        Suites __ret = this.___defaultSuitesCreator.createSuites();
 
         __ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase());
 
@@ -42,12 +42,12 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
 
     protected PhaseSuite<HighTierContext> createGraphBuilderSuite()
     {
-        return defaultSuitesCreator.getDefaultGraphBuilderSuite().copy();
+        return this.___defaultSuitesCreator.getDefaultGraphBuilderSuite().copy();
     }
 
     @Override
     public LIRSuites createLIRSuites()
     {
-        return defaultSuitesCreator.createLIRSuites();
+        return this.___defaultSuitesCreator.createLIRSuites();
     }
 }

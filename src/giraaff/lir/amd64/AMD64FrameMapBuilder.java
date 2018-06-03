@@ -16,10 +16,10 @@ public final class AMD64FrameMapBuilder extends FrameMapBuilderImpl
         super(__frameMap, __codeCache, __registerConfig);
     }
 
-    /**
-     * For non-leaf methods, RBP is preserved in the special stack slot required by the HotSpot
-     * runtime for walking/inspecting frames of such methods.
-     */
+    ///
+    // For non-leaf methods, RBP is preserved in the special stack slot required by the HotSpot
+    // runtime for walking/inspecting frames of such methods.
+    ///
     public StackSlot allocateRBPSpillSlot()
     {
         return ((AMD64FrameMap) getFrameMap()).allocateRBPSpillSlot();

@@ -13,10 +13,10 @@ import giraaff.nodes.extended.RawStoreNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * A special purpose store node that differs from {@link RawStoreNode} in that it is not a
- * {@link StateSplit} and takes a computed address instead of an object.
- */
+///
+// A special purpose store node that differs from {@link RawStoreNode} in that it is not a
+// {@link StateSplit} and takes a computed address instead of an object.
+///
 // @class DirectStoreNode
 public final class DirectStoreNode extends FixedWithNextNode implements LIRLowerable
 {
@@ -25,40 +25,40 @@ public final class DirectStoreNode extends FixedWithNextNode implements LIRLower
 
     @Input
     // @field
-    protected ValueNode address;
+    protected ValueNode ___address;
     @Input
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     // @field
-    protected final JavaKind kind;
+    protected final JavaKind ___kind;
 
     // @cons
     public DirectStoreNode(ValueNode __address, ValueNode __value, JavaKind __kind)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = __address;
-        this.value = __value;
-        this.kind = __kind;
+        this.___address = __address;
+        this.___value = __value;
+        this.___kind = __kind;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __v = __gen.operand(value);
-        LIRKind __lirKind = LIRKind.fromJavaKind(__gen.getLIRGeneratorTool().target().arch, kind);
-        __gen.getLIRGeneratorTool().getArithmetic().emitStore(__lirKind, __gen.operand(address), __v, null);
+        Value __v = __gen.operand(this.___value);
+        LIRKind __lirKind = LIRKind.fromJavaKind(__gen.getLIRGeneratorTool().target().arch, this.___kind);
+        __gen.getLIRGeneratorTool().getArithmetic().emitStore(__lirKind, __gen.operand(this.___address), __v, null);
     }
 
     public ValueNode getAddress()
     {
-        return address;
+        return this.___address;
     }
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @NodeIntrinsic
-    public static native void storeBoolean(long address, boolean value, @ConstantNodeParameter JavaKind kind);
+    public static native void storeBoolean(long __address, boolean __value, @ConstantNodeParameter JavaKind __kind);
 }

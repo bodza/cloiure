@@ -42,10 +42,10 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
-/**
- * The {@code IfNode} represents a branch that can go one of two directions depending on the outcome
- * of a comparison.
- */
+///
+// The {@code IfNode} represents a branch that can go one of two directions depending on the outcome
+// of a comparison.
+///
 // @class IfNode
 public final class IfNode extends ControlSplitNode implements Simplifiable, LIRLowerable
 {
@@ -54,25 +54,25 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
     @Successor
     // @field
-    AbstractBeginNode trueSuccessor;
+    AbstractBeginNode ___trueSuccessor;
     @Successor
     // @field
-    AbstractBeginNode falseSuccessor;
+    AbstractBeginNode ___falseSuccessor;
     @Input(InputType.Condition)
     // @field
-    LogicNode condition;
+    LogicNode ___condition;
     // @field
-    protected double trueSuccessorProbability;
+    protected double ___trueSuccessorProbability;
 
     public LogicNode condition()
     {
-        return condition;
+        return this.___condition;
     }
 
     public void setCondition(LogicNode __x)
     {
-        updateUsages(condition, __x);
-        condition = __x;
+        updateUsages(this.___condition, __x);
+        this.___condition = __x;
     }
 
     // @cons
@@ -85,69 +85,69 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     public IfNode(LogicNode __condition, AbstractBeginNode __trueSuccessor, AbstractBeginNode __falseSuccessor, double __trueSuccessorProbability)
     {
         super(TYPE, StampFactory.forVoid());
-        this.condition = __condition;
-        this.falseSuccessor = __falseSuccessor;
-        this.trueSuccessor = __trueSuccessor;
+        this.___condition = __condition;
+        this.___falseSuccessor = __falseSuccessor;
+        this.___trueSuccessor = __trueSuccessor;
         setTrueSuccessorProbability(__trueSuccessorProbability);
     }
 
-    /**
-     * Gets the true successor.
-     *
-     * @return the true successor
-     */
+    ///
+    // Gets the true successor.
+    //
+    // @return the true successor
+    ///
     public AbstractBeginNode trueSuccessor()
     {
-        return trueSuccessor;
+        return this.___trueSuccessor;
     }
 
-    /**
-     * Gets the false successor.
-     *
-     * @return the false successor
-     */
+    ///
+    // Gets the false successor.
+    //
+    // @return the false successor
+    ///
     public AbstractBeginNode falseSuccessor()
     {
-        return falseSuccessor;
+        return this.___falseSuccessor;
     }
 
     public double getTrueSuccessorProbability()
     {
-        return this.trueSuccessorProbability;
+        return this.___trueSuccessorProbability;
     }
 
     public void setTrueSuccessor(AbstractBeginNode __node)
     {
-        updatePredecessor(trueSuccessor, __node);
-        trueSuccessor = __node;
+        updatePredecessor(this.___trueSuccessor, __node);
+        this.___trueSuccessor = __node;
     }
 
     public void setFalseSuccessor(AbstractBeginNode __node)
     {
-        updatePredecessor(falseSuccessor, __node);
-        falseSuccessor = __node;
+        updatePredecessor(this.___falseSuccessor, __node);
+        this.___falseSuccessor = __node;
     }
 
-    /**
-     * Gets the node corresponding to the specified outcome of the branch.
-     *
-     * @param istrue {@code true} if the true successor is requested, {@code false} otherwise
-     * @return the corresponding successor
-     */
+    ///
+    // Gets the node corresponding to the specified outcome of the branch.
+    //
+    // @param istrue {@code true} if the true successor is requested, {@code false} otherwise
+    // @return the corresponding successor
+    ///
     public AbstractBeginNode successor(boolean __istrue)
     {
-        return __istrue ? trueSuccessor : falseSuccessor;
+        return __istrue ? this.___trueSuccessor : this.___falseSuccessor;
     }
 
     public void setTrueSuccessorProbability(double __prob)
     {
-        trueSuccessorProbability = Math.min(1.0, Math.max(0.0, __prob));
+        this.___trueSuccessorProbability = Math.min(1.0, Math.max(0.0, __prob));
     }
 
     @Override
     public double probability(AbstractBeginNode __successor)
     {
-        return __successor == trueSuccessor ? trueSuccessorProbability : 1 - trueSuccessorProbability;
+        return __successor == this.___trueSuccessor ? this.___trueSuccessorProbability : 1 - this.___trueSuccessorProbability;
     }
 
     @Override
@@ -158,12 +158,12 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
     public void eliminateNegation()
     {
-        AbstractBeginNode __oldTrueSuccessor = trueSuccessor;
-        AbstractBeginNode __oldFalseSuccessor = falseSuccessor;
-        trueSuccessor = __oldFalseSuccessor;
-        falseSuccessor = __oldTrueSuccessor;
-        trueSuccessorProbability = 1 - trueSuccessorProbability;
-        setCondition(((LogicNegationNode) condition).getValue());
+        AbstractBeginNode __oldTrueSuccessor = this.___trueSuccessor;
+        AbstractBeginNode __oldFalseSuccessor = this.___falseSuccessor;
+        this.___trueSuccessor = __oldFalseSuccessor;
+        this.___falseSuccessor = __oldTrueSuccessor;
+        this.___trueSuccessorProbability = 1 - this.___trueSuccessorProbability;
+        setCondition(((LogicNegationNode) this.___condition).getValue());
     }
 
     @Override
@@ -171,16 +171,16 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     {
         if (trueSuccessor().next() instanceof DeoptimizeNode)
         {
-            if (trueSuccessorProbability != 0)
+            if (this.___trueSuccessorProbability != 0)
             {
-                trueSuccessorProbability = 0;
+                this.___trueSuccessorProbability = 0;
             }
         }
         else if (falseSuccessor().next() instanceof DeoptimizeNode)
         {
-            if (trueSuccessorProbability != 1)
+            if (this.___trueSuccessorProbability != 1)
             {
-                trueSuccessorProbability = 1;
+                this.___trueSuccessorProbability = 1;
             }
         }
 
@@ -234,8 +234,8 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         {
             AbstractBeginNode __intermediateBegin = falseSuccessor();
             IfNode __nextIf = (IfNode) __intermediateBegin.next();
-            double __probabilityB = (1.0 - this.trueSuccessorProbability) * __nextIf.trueSuccessorProbability;
-            if (this.trueSuccessorProbability < __probabilityB)
+            double __probabilityB = (1.0 - this.___trueSuccessorProbability) * __nextIf.___trueSuccessorProbability;
+            if (this.___trueSuccessorProbability < __probabilityB)
             {
                 // Reordering of those two if statements is beneficial from the point of view of their probabilities.
                 if (prepareForSwap(__tool, condition(), __nextIf.condition()))
@@ -258,7 +258,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     }
                     else
                     {
-                        double __newProbability = this.trueSuccessorProbability / (1.0 - __probabilityB);
+                        double __newProbability = this.___trueSuccessorProbability / (1.0 - __probabilityB);
                         this.setTrueSuccessorProbability(Math.min(1.0, __newProbability));
                     }
                     return;
@@ -306,36 +306,36 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
     }
 
-    /**
-     * Attempts to replace the following pattern:
-     *
-     * <pre>
-     * Integer x = ...;
-     * Integer y = ...;
-     * if ((x == y) || x.equals(y)) { ... }
-     * </pre>
-     *
-     * with:
-     *
-     * <pre>
-     * Integer x = ...;
-     * Integer y = ...;
-     * if (x.equals(y)) { ... }
-     * </pre>
-     *
-     * whenever the probability that the reference check will pass is relatively small.
-     *
-     * See GR-1315 for more information.
-     */
+    ///
+    // Attempts to replace the following pattern:
+    //
+    // <pre>
+    // Integer x = ...;
+    // Integer y = ...;
+    // if ((x == y) || x.equals(y)) { ... }
+    // </pre>
+    //
+    // with:
+    //
+    // <pre>
+    // Integer x = ...;
+    // Integer y = ...;
+    // if (x.equals(y)) { ... }
+    // </pre>
+    //
+    // whenever the probability that the reference check will pass is relatively small.
+    //
+    // See GR-1315 for more information.
+    ///
     private boolean tryEliminateBoxedReferenceEquals(SimplifierTool __tool)
     {
-        if (!(condition instanceof ObjectEqualsNode))
+        if (!(this.___condition instanceof ObjectEqualsNode))
         {
             return false;
         }
 
         MetaAccessProvider __meta = __tool.getMetaAccess();
-        ObjectEqualsNode __equalsCondition = (ObjectEqualsNode) condition;
+        ObjectEqualsNode __equalsCondition = (ObjectEqualsNode) this.___condition;
         ValueNode __x = __equalsCondition.getX();
         ValueNode __y = __equalsCondition.getY();
         ResolvedJavaType __integerType = __meta.lookupJavaType(Integer.class);
@@ -356,9 +356,9 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
 
         // True branch must be empty.
-        if (trueSuccessor instanceof BeginNode || trueSuccessor instanceof LoopExitNode)
+        if (this.___trueSuccessor instanceof BeginNode || this.___trueSuccessor instanceof LoopExitNode)
         {
-            if (trueSuccessor.next() instanceof EndNode)
+            if (this.___trueSuccessor.next() instanceof EndNode)
             {
                 // Empty true branch.
             }
@@ -375,7 +375,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         // False branch must only check the unboxed values.
         UnboxNode __unbox = null;
         FixedGuardNode __unboxCheck = null;
-        for (FixedNode __node : falseSuccessor.getBlockNodes())
+        for (FixedNode __node : this.___falseSuccessor.getBlockNodes())
         {
             if (!(__node instanceof BeginNode || __node instanceof UnboxNode || __node instanceof FixedGuardNode || __node instanceof EndNode || __node instanceof LoadFieldNode || __node instanceof LoopExitNode))
             {
@@ -418,9 +418,9 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         return true;
     }
 
-    /**
-     * Try to optimize this as if it were a {@link ConditionalNode}.
-     */
+    ///
+    // Try to optimize this as if it were a {@link ConditionalNode}.
+    ///
     private boolean conditionalNodeOptimization(SimplifierTool __tool)
     {
         if (trueSuccessor().next() instanceof AbstractEndNode && falseSuccessor().next() instanceof AbstractEndNode)
@@ -451,7 +451,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             ValueNode __trueValue = __phi.valueAt(__trueEnd);
 
             NodeView __view = NodeView.from(__tool);
-            ValueNode __result = ConditionalNode.canonicalizeConditional(condition, __trueValue, __falseValue, __phi.stamp(__view), __view);
+            ValueNode __result = ConditionalNode.canonicalizeConditional(this.___condition, __trueValue, __falseValue, __phi.stamp(__view), __view);
             if (__result != null)
             {
                 // canonicalizeConditional returns possibly new nodes so add them to the graph
@@ -460,10 +460,8 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     __result = graph().addOrUniqueWithInputs(__result);
                 }
                 __result = proxyReplacement(__result);
-                /*
-                 * This optimization can be performed even if multiple values merge at this phi
-                 * since the two inputs get simplified into one.
-                 */
+                // This optimization can be performed even if multiple values merge at this phi
+                // since the two inputs get simplified into one.
                 __phi.setValueAt(__trueEnd, __result);
                 removeThroughFalseBranch(__tool, __merge);
                 return true;
@@ -525,11 +523,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         } while (true);
     }
 
-    /**
-     * Recognize a couple patterns that can be merged into an unsigned compare.
-     *
-     * @return true if a replacement was done.
-     */
+    ///
+    // Recognize a couple patterns that can be merged into an unsigned compare.
+    //
+    // @return true if a replacement was done.
+    ///
     private boolean checkForUnsignedCompare(SimplifierTool __tool)
     {
         if (condition() instanceof IntegerLessThanNode)
@@ -546,10 +544,8 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     AbstractBeginNode __falseSucc = __ifNode2.falseSuccessor();
                     AbstractBeginNode __trueSucc = __ifNode2.trueSuccessor();
                     IntegerBelowNode __below = null;
-                    /*
-                     * Convert x >= 0 && x < positive which is represented as !(x < 0) && x < <positive> into an unsigned compare.
-                     */
-                    if (__lessThan2.getX() == __lessThan.getX() && __lessThan2.getY().stamp(__view) instanceof IntegerStamp && ((IntegerStamp) __lessThan2.getY().stamp(__view)).isPositive() && sameDestination(trueSuccessor(), __ifNode2.falseSuccessor))
+                    // Convert x >= 0 && x < positive which is represented as !(x < 0) && x < <positive> into an unsigned compare.
+                    if (__lessThan2.getX() == __lessThan.getX() && __lessThan2.getY().stamp(__view) instanceof IntegerStamp && ((IntegerStamp) __lessThan2.getY().stamp(__view)).isPositive() && sameDestination(trueSuccessor(), __ifNode2.___falseSuccessor))
                     {
                         __below = graph().unique(new IntegerBelowNode(__lessThan2.getX(), __lessThan2.getY()));
                         // swap direction
@@ -557,14 +553,12 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                         __falseSucc = __trueSucc;
                         __trueSucc = __tmp;
                     }
-                    else if (__lessThan2.getY() == __lessThan.getX() && sameDestination(trueSuccessor(), __ifNode2.trueSuccessor))
+                    else if (__lessThan2.getY() == __lessThan.getX() && sameDestination(trueSuccessor(), __ifNode2.___trueSuccessor))
                     {
-                        /*
-                         * Convert x >= 0 && x <= positive which is represented as !(x < 0) &&
-                         * !(<positive> > x), into x <| positive + 1. This can only be done for
-                         * constants since there isn't a IntegerBelowEqualThanNode but that doesn't
-                         * appear to be interesting.
-                         */
+                        // Convert x >= 0 && x <= positive which is represented as !(x < 0) &&
+                        // !(<positive> > x), into x <| positive + 1. This can only be done for
+                        // constants since there isn't a IntegerBelowEqualThanNode but that doesn't
+                        // appear to be interesting.
                         JavaConstant __positive = __lessThan2.getX().asJavaConstant();
                         if (__positive != null && __positive.asLong() > 0 && __positive.asLong() < __positive.getJavaKind().getMaxValue())
                         {
@@ -577,10 +571,10 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                         __ifNode2.setTrueSuccessor(null);
                         __ifNode2.setFalseSuccessor(null);
 
-                        IfNode __newIfNode = graph().add(new IfNode(__below, __falseSucc, __trueSucc, 1 - trueSuccessorProbability));
+                        IfNode __newIfNode = graph().add(new IfNode(__below, __falseSucc, __trueSucc, 1 - this.___trueSuccessorProbability));
                         // Remove the < 0 test.
-                        __tool.deleteBranch(trueSuccessor);
-                        graph().removeSplit(this, falseSuccessor);
+                        __tool.deleteBranch(this.___trueSuccessor);
+                        graph().removeSplit(this, this.___falseSuccessor);
 
                         // Replace the second test with the new one.
                         __ifNode2.predecessor().replaceFirstSuccessor(__ifNode2, __newIfNode);
@@ -593,10 +587,10 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         return false;
     }
 
-    /**
-     * Check it these two blocks end up at the same place. Meeting at the same merge, or
-     * deoptimizing in the same way.
-     */
+    ///
+    // Check it these two blocks end up at the same place. Meeting at the same merge, or
+    // deoptimizing in the same way.
+    ///
     private static boolean sameDestination(AbstractBeginNode __succ1, AbstractBeginNode __succ2)
     {
         Node __next1 = __succ1.next();
@@ -761,11 +755,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         return __stampA.alwaysDistinct(__stampB);
     }
 
-    /**
-     * Tries to remove an empty if construct or replace an if construct with a materialization.
-     *
-     * @return true if a transformation was made, false otherwise
-     */
+    ///
+    // Tries to remove an empty if construct or replace an if construct with a materialization.
+    //
+    // @return true if a transformation was made, false otherwise
+    ///
     private boolean removeOrMaterializeIf(SimplifierTool __tool)
     {
         if (trueSuccessor().next() instanceof AbstractEndNode && falseSuccessor().next() instanceof AbstractEndNode)
@@ -840,29 +834,27 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
     private ValueNode proxyReplacement(ValueNode __replacement)
     {
-        /*
-         * Special case: Every empty diamond we collapse to a conditional node can potentially
-         * contain loop exit nodes on both branches. See the graph below: The two loop exits
-         * (instanceof begin node) exit the same loop. The resulting phi is defined outside the
-         * loop, but the resulting conditional node will be inside the loop, so we need to proxy the
-         * resulting conditional node. Callers of this method ensure that true and false successor
-         * have no usages, therefore a and b in the graph below can never be proxies themselves.
-         *
-         *              +--+
-         *              |If|
-         *              +--+      +-----+ +-----+
-         *         +----+  +----+ |  a  | |  b  |
-         *         |Lex |  |Lex | +----^+ +^----+
-         *         +----+  +----+      |   |
-         *           +-------+         +---+
-         *           | Merge +---------+Phi|
-         *           +-------+         +---+
-         */
+        // Special case: Every empty diamond we collapse to a conditional node can potentially
+        // contain loop exit nodes on both branches. See the graph below: The two loop exits
+        // (instanceof begin node) exit the same loop. The resulting phi is defined outside the
+        // loop, but the resulting conditional node will be inside the loop, so we need to proxy the
+        // resulting conditional node. Callers of this method ensure that true and false successor
+        // have no usages, therefore a and b in the graph below can never be proxies themselves.
+        //
+        //              +--+
+        //              |If|
+        //              +--+      +-----+ +-----+
+        //         +----+  +----+ |  a  | |  b  |
+        //         |Lex |  |Lex | +----^+ +^----+
+        //         +----+  +----+      |   |
+        //           +-------+         +---+
+        //           | Merge +---------+Phi|
+        //           +-------+         +---+
         if (this.graph().hasValueProxies())
         {
-            if (trueSuccessor instanceof LoopExitNode && falseSuccessor instanceof LoopExitNode)
+            if (this.___trueSuccessor instanceof LoopExitNode && this.___falseSuccessor instanceof LoopExitNode)
             {
-                return this.graph().addOrUnique(new ValueProxyNode(__replacement, (LoopExitNode) trueSuccessor));
+                return this.graph().addOrUnique(new ValueProxyNode(__replacement, (LoopExitNode) this.___trueSuccessor));
             }
         }
         return __replacement;
@@ -975,11 +967,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         return null;
     }
 
-    /**
-     * Take an if that is immediately dominated by a merge with a single phi and split off any paths
-     * where the test would be statically decidable creating a new merge below the approriate side
-     * of the IfNode. Any undecidable tests will continue to use the original IfNode.
-     */
+    ///
+    // Take an if that is immediately dominated by a merge with a single phi and split off any paths
+    // where the test would be statically decidable creating a new merge below the approriate side
+    // of the IfNode. Any undecidable tests will continue to use the original IfNode.
+    ///
     private boolean splitIfAtPhi(SimplifierTool __tool)
     {
         if (graph().getGuardsStage().areFrameStatesAtSideEffects())
@@ -1020,11 +1012,9 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             return false;
         }
 
-        /*
-         * We could additionally filter for the case that at least some of the Phi inputs or one of
-         * the condition inputs are constants but there are cases where a non-constant is simplifiable,
-         * usually where the stamp allows the question to be answered.
-         */
+        // We could additionally filter for the case that at least some of the Phi inputs or one of
+        // the condition inputs are constants but there are cases where a non-constant is simplifiable,
+        // usually where the stamp allows the question to be answered.
 
         // each successor of the if gets a new merge if needed
         MergeNode __trueMerge = null;
@@ -1033,7 +1023,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         for (EndNode __end : __merge.forwardEnds().snapshot())
         {
             Node __value = __phi.valueAt(__end);
-            LogicNode __result = computeCondition(__tool, condition, __phi, __value);
+            LogicNode __result = computeCondition(__tool, this.___condition, __phi, __value);
             if (__result instanceof LogicConstantNode)
             {
                 __merge.removeEnd(__end);
@@ -1054,7 +1044,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     __falseMerge.addForwardEnd(__end);
                 }
             }
-            else if (__result != condition)
+            else if (__result != this.___condition)
             {
                 // build a new IfNode using the new condition
                 BeginNode __trueBegin = graph().add(new BeginNode());
@@ -1064,7 +1054,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 {
                     __result = graph().addOrUniqueWithInputs(__result);
                 }
-                IfNode __newIfNode = graph().add(new IfNode(__result, __trueBegin, __falseBegin, trueSuccessorProbability));
+                IfNode __newIfNode = graph().add(new IfNode(__result, __trueBegin, __falseBegin, this.___trueSuccessorProbability));
                 __merge.removeEnd(__end);
                 ((FixedWithNextNode) __end.predecessor()).setNext(__newIfNode);
 
@@ -1096,11 +1086,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         return true;
     }
 
-    /**
-     * @return true if the passed in {@code condition} uses {@code phi} and the condition is only
-     *         used once. Since the phi will go dead the condition using it will also have to be
-     *         dead after the optimization.
-     */
+    ///
+    // @return true if the passed in {@code condition} uses {@code phi} and the condition is only
+    //         used once. Since the phi will go dead the condition using it will also have to be
+    //         dead after the optimization.
+    ///
     private static boolean conditionUses(LogicNode __condition, PhiNode __phi)
     {
         if (__condition.usages().count() != 1)
@@ -1111,13 +1101,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         {
             if (__condition.graph().getGuardsStage().areDeoptsFixed())
             {
-                /*
-                 * It can be unsafe to simplify a ShortCircuitOr before deopts are fixed because
-                 * conversion to guards assumes that all the required conditions are being tested.
-                 * Simplfying the condition based on context before this happens may lose a condition.
-                 */
+                // It can be unsafe to simplify a ShortCircuitOr before deopts are fixed because
+                // conversion to guards assumes that all the required conditions are being tested.
+                // Simplfying the condition based on context before this happens may lose a condition.
                 ShortCircuitOrNode __orNode = (ShortCircuitOrNode) __condition;
-                return (conditionUses(__orNode.x, __phi) || conditionUses(__orNode.y, __phi));
+                return (conditionUses(__orNode.___x, __phi) || conditionUses(__orNode.___y, __phi));
             }
         }
         else if (__condition instanceof Canonicalizable.Unary<?>)
@@ -1133,11 +1121,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         return false;
     }
 
-    /**
-     * Canonicalize {@code} condition using {@code value} in place of {@code phi}.
-     *
-     * @return an improved LogicNode or the original condition
-     */
+    ///
+    // Canonicalize {@code} condition using {@code value} in place of {@code phi}.
+    //
+    // @return an improved LogicNode or the original condition
+    ///
     @SuppressWarnings("unchecked")
     private static LogicNode computeCondition(SimplifierTool __tool, LogicNode __condition, PhiNode __phi, Node __value)
     {
@@ -1146,9 +1134,9 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             if (__condition.graph().getGuardsStage().areDeoptsFixed() && !__condition.graph().isAfterExpandLogic())
             {
                 ShortCircuitOrNode __orNode = (ShortCircuitOrNode) __condition;
-                LogicNode __resultX = computeCondition(__tool, __orNode.x, __phi, __value);
-                LogicNode __resultY = computeCondition(__tool, __orNode.y, __phi, __value);
-                if (__resultX != __orNode.x || __resultY != __orNode.y)
+                LogicNode __resultX = computeCondition(__tool, __orNode.___x, __phi, __value);
+                LogicNode __resultY = computeCondition(__tool, __orNode.___y, __phi, __value);
+                if (__resultX != __orNode.___x || __resultY != __orNode.___y)
                 {
                     LogicNode __result = __orNode.canonical(__tool, __resultX, __resultY);
                     if (__result != __orNode)
@@ -1156,7 +1144,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                         return __result;
                     }
                     // Create a new node to carry the optimized inputs.
-                    ShortCircuitOrNode __newOr = new ShortCircuitOrNode(__resultX, __orNode.xNegated, __resultY, __orNode.yNegated, __orNode.getShortCircuitProbability());
+                    ShortCircuitOrNode __newOr = new ShortCircuitOrNode(__resultX, __orNode.___xNegated, __resultY, __orNode.___yNegated, __orNode.getShortCircuitProbability());
                     return __newOr.canonical(__tool);
                 }
                 return __orNode;
@@ -1243,51 +1231,51 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         return __merge;
     }
 
-    /**
-     * Tries to connect code that initializes a variable directly with the successors of an if
-     * construct that switches on the variable. For example, the pseudo code below:
-     *
-     * <pre>
-     * contains(list, e, yes, no) {
-     *     if (list == null || e == null) {
-     *         condition = false;
-     *     } else {
-     *         condition = false;
-     *         for (i in list) {
-     *             if (i.equals(e)) {
-     *                 condition = true;
-     *                 break;
-     *             }
-     *         }
-     *     }
-     *     if (condition) {
-     *         return yes;
-     *     } else {
-     *         return no;
-     *     }
-     * }
-     * </pre>
-     *
-     * will be transformed into:
-     *
-     * <pre>
-     * contains(list, e, yes, no) {
-     *     if (list == null || e == null) {
-     *         return no;
-     *     } else {
-     *         condition = false;
-     *         for (i in list) {
-     *             if (i.equals(e)) {
-     *                 return yes;
-     *             }
-     *         }
-     *         return no;
-     *     }
-     * }
-     * </pre>
-     *
-     * @return true if a transformation was made, false otherwise
-     */
+    ///
+    // Tries to connect code that initializes a variable directly with the successors of an if
+    // construct that switches on the variable. For example, the pseudo code below:
+    //
+    // <pre>
+    // contains(list, e, yes, no) {
+    //     if (list == null || e == null) {
+    //         condition = false;
+    //     } else {
+    //         condition = false;
+    //         for (i in list) {
+    //             if (i.equals(e)) {
+    //                 condition = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     if (condition) {
+    //         return yes;
+    //     } else {
+    //         return no;
+    //     }
+    // }
+    // </pre>
+    //
+    // will be transformed into:
+    //
+    // <pre>
+    // contains(list, e, yes, no) {
+    //     if (list == null || e == null) {
+    //         return no;
+    //     } else {
+    //         condition = false;
+    //         for (i in list) {
+    //             if (i.equals(e)) {
+    //                 return yes;
+    //             }
+    //         }
+    //         return no;
+    //     }
+    // }
+    // </pre>
+    //
+    // @return true if a transformation was made, false otherwise
+    ///
     private boolean removeIntermediateMaterialization(SimplifierTool __tool)
     {
         if (!(predecessor() instanceof AbstractMergeNode) || predecessor() instanceof LoopBeginNode)
@@ -1377,7 +1365,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         connectEnds(__falseEnds, __phiValues, __oldFalseSuccessor, __merge, __tool);
         connectEnds(__trueEnds, __phiValues, __oldTrueSuccessor, __merge, __tool);
 
-        if (this.trueSuccessorProbability == 0.0)
+        if (this.___trueSuccessorProbability == 0.0)
         {
             for (AbstractEndNode __endNode : __trueEnds)
             {
@@ -1385,7 +1373,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             }
         }
 
-        if (this.trueSuccessorProbability == 1.0)
+        if (this.___trueSuccessorProbability == 1.0)
         {
             for (AbstractEndNode __endNode : __falseEnds)
             {
@@ -1393,10 +1381,8 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             }
         }
 
-        /*
-         * Remove obsolete ends only after processing all ends, otherwise oldTrueSuccessor or
-         * oldFalseSuccessor might have been removed if it is a LoopExitNode.
-         */
+        // Remove obsolete ends only after processing all ends, otherwise oldTrueSuccessor or
+        // oldFalseSuccessor might have been removed if it is a LoopExitNode.
         if (__falseEnds.isEmpty())
         {
             GraphUtil.killCFG(__oldFalseSuccessor);
@@ -1420,11 +1406,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 IfNode __ifNode = (IfNode) __node;
                 if (__ifNode.trueSuccessor() == __prev)
                 {
-                    if (__ifNode.trueSuccessorProbability == 0.0)
+                    if (__ifNode.___trueSuccessorProbability == 0.0)
                     {
                         return;
                     }
-                    else if (__ifNode.trueSuccessorProbability == 1.0)
+                    else if (__ifNode.___trueSuccessorProbability == 1.0)
                     {
                         continue;
                     }
@@ -1436,11 +1422,11 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 }
                 else if (__ifNode.falseSuccessor() == __prev)
                 {
-                    if (__ifNode.trueSuccessorProbability == 1.0)
+                    if (__ifNode.___trueSuccessorProbability == 1.0)
                     {
                         return;
                     }
-                    else if (__ifNode.trueSuccessorProbability == 0.0)
+                    else if (__ifNode.___trueSuccessorProbability == 0.0)
                     {
                         continue;
                     }
@@ -1526,14 +1512,14 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
     }
 
-    /**
-     * Connects a set of ends to a given successor, inserting a merge node if there is more than one
-     * end. If {@code ends} is not empty, then {@code successor} is added to {@code tool}'s
-     * {@linkplain SimplifierTool#addToWorkList(giraaff.graph.Node) work list}.
-     *
-     * @param oldMerge the merge being removed
-     * @param phiValues the values of the phi at the merge, keyed by the merge ends
-     */
+    ///
+    // Connects a set of ends to a given successor, inserting a merge node if there is more than one
+    // end. If {@code ends} is not empty, then {@code successor} is added to {@code tool}'s
+    // {@linkplain SimplifierTool#addToWorkList(giraaff.graph.Node) work list}.
+    //
+    // @param oldMerge the merge being removed
+    // @param phiValues the values of the phi at the merge, keyed by the merge ends
+    ///
     private void connectEnds(List<EndNode> __ends, EconomicMap<AbstractEndNode, ValueNode> __phiValues, AbstractBeginNode __successor, AbstractMergeNode __oldMerge, SimplifierTool __tool)
     {
         if (!__ends.isEmpty())
@@ -1573,14 +1559,14 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
     }
 
-    /**
-     * Gets an array of constants derived from a node that is either a {@link ConstantNode} or a
-     * {@link PhiNode} whose input values are all constants. The length of the returned array is
-     * equal to the number of ends terminating in a given merge node.
-     *
-     * @return null if {@code node} is neither a {@link ConstantNode} nor a {@link PhiNode} whose
-     *         input values are all constants
-     */
+    ///
+    // Gets an array of constants derived from a node that is either a {@link ConstantNode} or a
+    // {@link PhiNode} whose input values are all constants. The length of the returned array is
+    // equal to the number of ends terminating in a given merge node.
+    //
+    // @return null if {@code node} is neither a {@link ConstantNode} nor a {@link PhiNode} whose
+    //         input values are all constants
+    ///
     public static Constant[] constantValues(ValueNode __node, AbstractMergeNode __merge, boolean __allowNull)
     {
         if (__node.isConstant())

@@ -43,9 +43,9 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
-/**
- * Node for invocation methods defined on the class {@link MethodHandle}.
- */
+///
+// Node for invocation methods defined on the class {@link MethodHandle}.
+///
 // @class MethodHandleNode
 public final class MethodHandleNode extends MacroStateSplitNode implements Simplifiable
 {
@@ -53,27 +53,27 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     public static final NodeClass<MethodHandleNode> TYPE = NodeClass.create(MethodHandleNode.class);
 
     // @field
-    protected final IntrinsicMethod intrinsicMethod;
+    protected final IntrinsicMethod ___intrinsicMethod;
 
     // @cons
     public MethodHandleNode(IntrinsicMethod __intrinsicMethod, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
-        this.intrinsicMethod = __intrinsicMethod;
+        this.___intrinsicMethod = __intrinsicMethod;
     }
 
-    /**
-     * Attempts to transform application of an intrinsifiable {@link MethodHandle} method into an
-     * invocation on another method with possibly transformed arguments.
-     *
-     * @param methodHandleAccess objects for accessing the implementation internals of a
-     *            {@link MethodHandle}
-     * @param intrinsicMethod denotes the intrinsifiable {@link MethodHandle} method being processed
-     * @param bci the BCI of the original {@link MethodHandle} call
-     * @param returnStamp return stamp of the original {@link MethodHandle} call
-     * @param arguments arguments to the original {@link MethodHandle} call
-     * @return a more direct invocation derived from the {@link MethodHandle} call or null
-     */
+    ///
+    // Attempts to transform application of an intrinsifiable {@link MethodHandle} method into an
+    // invocation on another method with possibly transformed arguments.
+    //
+    // @param methodHandleAccess objects for accessing the implementation internals of a
+    //            {@link MethodHandle}
+    // @param intrinsicMethod denotes the intrinsifiable {@link MethodHandle} method being processed
+    // @param bci the BCI of the original {@link MethodHandle} call
+    // @param returnStamp return stamp of the original {@link MethodHandle} call
+    // @param arguments arguments to the original {@link MethodHandle} call
+    // @return a more direct invocation derived from the {@link MethodHandle} call or null
+    ///
     public static InvokeNode tryResolveTargetInvoke(GraphAdder __adder, MethodHandleAccessProvider __methodHandleAccess, IntrinsicMethod __intrinsicMethod, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         switch (__intrinsicMethod)
@@ -90,34 +90,34 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         }
     }
 
-    /**
-     * A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
-     */
+    ///
+    // A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
+    ///
     // @class MethodHandleNode.GraphAdder
     public abstract static class GraphAdder
     {
         // @field
-        private final StructuredGraph graph;
+        private final StructuredGraph ___graph;
 
         // @cons
         public GraphAdder(StructuredGraph __graph)
         {
             super();
-            this.graph = __graph;
+            this.___graph = __graph;
         }
 
-        /**
-         * Call {@link StructuredGraph#addOrUnique(giraaff.graph.Node)} on {@code node}
-         * and link any {@link FixedWithNextNode}s into the current control flow.
-         *
-         * @return the newly added node
-         */
-        public abstract <T extends ValueNode> T add(T node);
+        ///
+        // Call {@link StructuredGraph#addOrUnique(giraaff.graph.Node)} on {@code node}
+        // and link any {@link FixedWithNextNode}s into the current control flow.
+        //
+        // @return the newly added node
+        ///
+        public abstract <T extends ValueNode> T add(T __node);
 
-        /**
-         * @return an {@link AnchoringNode} if floating guards should be created, otherwise
-         *         {@link FixedGuardNode}s will be used.
-         */
+        ///
+        // @return an {@link AnchoringNode} if floating guards should be created, otherwise
+        //         {@link FixedGuardNode}s will be used.
+        ///
         public AnchoringNode getGuardAnchor()
         {
             return null;
@@ -125,7 +125,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
 
         public Assumptions getAssumptions()
         {
-            return graph.getAssumptions();
+            return this.___graph.getAssumptions();
         }
     }
 
@@ -133,7 +133,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     public void simplify(SimplifierTool __tool)
     {
         MethodHandleAccessProvider __methodHandleAccess = __tool.getConstantReflection().getMethodHandleAccess();
-        ValueNode[] __argumentsArray = arguments.toArray(new ValueNode[arguments.size()]);
+        ValueNode[] __argumentsArray = this.___arguments.toArray(new ValueNode[this.___arguments.size()]);
 
         final FixedNode __before = this;
         // @closure
@@ -150,7 +150,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
                 return __added;
             }
         };
-        InvokeNode __invoke = tryResolveTargetInvoke(adder, __methodHandleAccess, intrinsicMethod, targetMethod, bci, returnStamp, __argumentsArray);
+        InvokeNode __invoke = tryResolveTargetInvoke(adder, __methodHandleAccess, this.___intrinsicMethod, this.___targetMethod, this.___bci, this.___returnStamp, __argumentsArray);
         if (__invoke != null)
         {
             __invoke = graph().addOrUniqueWithInputs(__invoke);
@@ -162,32 +162,32 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         }
     }
 
-    /**
-     * Get the receiver of a MethodHandle.invokeBasic call.
-     *
-     * @return the receiver argument node
-     */
+    ///
+    // Get the receiver of a MethodHandle.invokeBasic call.
+    //
+    // @return the receiver argument node
+    ///
     private static ValueNode getReceiver(ValueNode[] __arguments)
     {
         return __arguments[0];
     }
 
-    /**
-     * Get the MemberName argument of a MethodHandle.linkTo* call.
-     *
-     * @return the MemberName argument node (which is the last argument)
-     */
+    ///
+    // Get the MemberName argument of a MethodHandle.linkTo* call.
+    //
+    // @return the MemberName argument node (which is the last argument)
+    ///
     private static ValueNode getMemberName(ValueNode[] __arguments)
     {
         return __arguments[__arguments.length - 1];
     }
 
-    /**
-     * Used for the MethodHandle.invokeBasic method (the {@link IntrinsicMethod#INVOKE_BASIC }
-     * method) to get the target {@link InvokeNode} if the method handle receiver is constant.
-     *
-     * @return invoke node for the {@link java.lang.invoke.MethodHandle} target
-     */
+    ///
+    // Used for the MethodHandle.invokeBasic method (the {@link IntrinsicMethod#INVOKE_BASIC }
+    // method) to get the target {@link InvokeNode} if the method handle receiver is constant.
+    //
+    // @return invoke node for the {@link java.lang.invoke.MethodHandle} target
+    ///
     private static InvokeNode getInvokeBasicTarget(GraphAdder __adder, IntrinsicMethod __intrinsicMethod, MethodHandleAccessProvider __methodHandleAccess, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
     {
         ValueNode __methodHandleNode = getReceiver(__arguments);
@@ -198,14 +198,14 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         return null;
     }
 
-    /**
-     * Used for the MethodHandle.linkTo* methods (the {@link IntrinsicMethod#LINK_TO_STATIC},
-     * {@link IntrinsicMethod#LINK_TO_SPECIAL}, {@link IntrinsicMethod#LINK_TO_VIRTUAL}, and
-     * {@link IntrinsicMethod#LINK_TO_INTERFACE} methods) to get the target {@link InvokeNode} if
-     * the member name argument is constant.
-     *
-     * @return invoke node for the member name target
-     */
+    ///
+    // Used for the MethodHandle.linkTo* methods (the {@link IntrinsicMethod#LINK_TO_STATIC},
+    // {@link IntrinsicMethod#LINK_TO_SPECIAL}, {@link IntrinsicMethod#LINK_TO_VIRTUAL}, and
+    // {@link IntrinsicMethod#LINK_TO_INTERFACE} methods) to get the target {@link InvokeNode} if
+    // the member name argument is constant.
+    //
+    // @return invoke node for the member name target
+    ///
     private static InvokeNode getLinkToTarget(GraphAdder __adder, IntrinsicMethod __intrinsicMethod, MethodHandleAccessProvider __methodHandleAccess, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
     {
         ValueNode __memberNameNode = getMemberName(__arguments);
@@ -216,13 +216,13 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         return null;
     }
 
-    /**
-     * Helper function to get the {@link InvokeNode} for the targetMethod of a java.lang.invoke.MemberName.
-     *
-     * @param target the target, already loaded from the member name node
-     *
-     * @return invoke node for the member name target
-     */
+    ///
+    // Helper function to get the {@link InvokeNode} for the targetMethod of a java.lang.invoke.MemberName.
+    //
+    // @param target the target, already loaded from the member name node
+    //
+    // @return invoke node for the member name target
+    ///
     private static InvokeNode getTargetInvokeNode(GraphAdder __adder, IntrinsicMethod __intrinsicMethod, int __bci, StampPair __returnStamp, ValueNode[] __originalArguments, ResolvedJavaMethod __target, ResolvedJavaMethod __original)
     {
         if (__target == null)
@@ -291,13 +291,13 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         return null;
     }
 
-    /**
-     * Inserts a node to cast the argument at index to the given type if the given type is more
-     * concrete than the argument type.
-     *
-     * @param index of the argument to be cast
-     * @param type the type the argument should be cast to
-     */
+    ///
+    // Inserts a node to cast the argument at index to the given type if the given type is more
+    // concrete than the argument type.
+    //
+    // @param index of the argument to be cast
+    // @param type the type the argument should be cast to
+    ///
     private static void maybeCastArgument(GraphAdder __adder, ValueNode[] __arguments, int __index, JavaType __type)
     {
         ValueNode __argument = __arguments[__index];
@@ -305,11 +305,9 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         {
             Assumptions __assumptions = __adder.getAssumptions();
             TypeReference __targetType = TypeReference.create(__assumptions, (ResolvedJavaType) __type);
-            /*
-             * When an argument is a Word type, we can have a mismatch of primitive/object types
-             * here. Not inserting a PiNode is a safe fallback, and Word types need no additional
-             * type information anyway.
-             */
+            // When an argument is a Word type, we can have a mismatch of primitive/object types
+            // here. Not inserting a PiNode is a safe fallback, and Word types need no additional
+            // type information anyway.
             if (__targetType != null && !__targetType.getType().isPrimitive() && !__argument.getStackKind().isPrimitive())
             {
                 ResolvedJavaType __argumentType = StampTool.typeOrNull(__argument.stamp(NodeView.DEFAULT));
@@ -343,12 +341,12 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         }
     }
 
-    /**
-     * Creates an {@link InvokeNode} for the given target method. The {@link CallTargetNode} passed
-     * to the InvokeNode is in fact a {@link ResolvedMethodHandleCallTargetNode}.
-     *
-     * @return invoke node for the member name target
-     */
+    ///
+    // Creates an {@link InvokeNode} for the given target method. The {@link CallTargetNode} passed
+    // to the InvokeNode is in fact a {@link ResolvedMethodHandleCallTargetNode}.
+    //
+    // @return invoke node for the member name target
+    ///
     private static InvokeNode createTargetInvokeNode(Assumptions __assumptions, IntrinsicMethod __intrinsicMethod, ResolvedJavaMethod __target, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
     {
         InvokeKind __targetInvokeKind = __target.isStatic() ? InvokeKind.Static : InvokeKind.Special;
@@ -359,14 +357,18 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         switch (__intrinsicMethod)
         {
             case INVOKE_BASIC:
+            {
                 __targetArguments = __arguments;
                 break;
+            }
             case LINK_TO_STATIC:
             case LINK_TO_SPECIAL:
             case LINK_TO_VIRTUAL:
             case LINK_TO_INTERFACE:
+            {
                 __targetArguments = Arrays.copyOfRange(__arguments, 0, __arguments.length - 1);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }

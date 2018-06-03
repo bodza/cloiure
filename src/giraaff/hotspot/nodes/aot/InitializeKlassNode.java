@@ -19,13 +19,13 @@ public final class InitializeKlassNode extends DeoptimizingFixedWithNextNode imp
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
 
     // @cons
     public InitializeKlassNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override
@@ -36,7 +36,7 @@ public final class InitializeKlassNode extends DeoptimizingFixedWithNextNode imp
 
     public ValueNode value()
     {
-        return value;
+        return this.___value;
     }
 
     @Override

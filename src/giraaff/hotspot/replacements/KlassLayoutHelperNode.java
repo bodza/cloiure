@@ -25,10 +25,10 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Read {@code Klass::_layout_helper} and incorporate any useful stamp information based on any type
- * information in {@code klass}.
- */
+///
+// Read {@code Klass::_layout_helper} and incorporate any useful stamp information based on any type
+// information in {@code klass}.
+///
 // @class KlassLayoutHelperNode
 public final class KlassLayoutHelperNode extends FloatingNode implements Canonicalizable, Lowerable
 {
@@ -37,13 +37,13 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
 
     @Input
     // @field
-    protected ValueNode klass;
+    protected ValueNode ___klass;
 
     // @cons
     public KlassLayoutHelperNode(ValueNode __klass)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.klass = __klass;
+        this.___klass = __klass;
     }
 
     public static ValueNode create(ValueNode __klass, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess)
@@ -63,9 +63,9 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
     @Override
     public boolean inferStamp()
     {
-        if (klass instanceof LoadHubNode)
+        if (this.___klass instanceof LoadHubNode)
         {
-            LoadHubNode __hub = (LoadHubNode) klass;
+            LoadHubNode __hub = (LoadHubNode) this.___klass;
             Stamp __hubStamp = __hub.getValue().stamp(NodeView.DEFAULT);
             if (__hubStamp instanceof ObjectStamp)
             {
@@ -97,7 +97,7 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
         }
         else
         {
-            return canonical(this, klass, stamp(NodeView.DEFAULT), __tool.getConstantReflection(), __tool.getMetaAccess());
+            return canonical(this, this.___klass, stamp(NodeView.DEFAULT), __tool.getConstantReflection(), __tool.getMetaAccess());
         }
     }
 
@@ -143,6 +143,6 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
 
     public ValueNode getHub()
     {
-        return klass;
+        return this.___klass;
     }
 }

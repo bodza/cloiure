@@ -7,7 +7,7 @@ import java.util.Queue;
 public abstract class NodeWorkList implements Iterable<Node>
 {
     // @field
-    protected final Queue<Node> worklist = new ArrayDeque<>();
+    protected final Queue<Node> ___worklist = new ArrayDeque<>();
 
     // @cons
     protected NodeWorkList(Graph __graph, boolean __fill)
@@ -17,7 +17,7 @@ public abstract class NodeWorkList implements Iterable<Node>
         {
             for (Node __node : __graph.getNodes())
             {
-                this.worklist.add(__node);
+                this.___worklist.add(__node);
             }
         }
     }
@@ -33,7 +33,7 @@ public abstract class NodeWorkList implements Iterable<Node>
         }
     }
 
-    public abstract void add(Node node);
+    public abstract void add(Node __node);
 
-    public abstract boolean contains(Node node);
+    public abstract boolean contains(Node __node);
 }

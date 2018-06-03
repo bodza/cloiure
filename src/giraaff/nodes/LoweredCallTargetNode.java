@@ -14,25 +14,25 @@ public abstract class LoweredCallTargetNode extends CallTargetNode
     public static final NodeClass<LoweredCallTargetNode> TYPE = NodeClass.create(LoweredCallTargetNode.class);
 
     // @field
-    protected final JavaType[] signature;
+    protected final JavaType[] ___signature;
     // @field
-    protected final CallingConvention.Type callType;
+    protected final CallingConvention.Type ___callType;
 
     // @cons
     protected LoweredCallTargetNode(NodeClass<? extends LoweredCallTargetNode> __c, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, InvokeKind __invokeKind)
     {
         super(__c, __arguments, __target, __invokeKind, __returnStamp);
-        this.signature = __signature;
-        this.callType = __callType;
+        this.___signature = __signature;
+        this.___callType = __callType;
     }
 
     public JavaType[] signature()
     {
-        return signature;
+        return this.___signature;
     }
 
     public CallingConvention.Type callType()
     {
-        return callType;
+        return this.___callType;
     }
 }

@@ -15,23 +15,23 @@ public final class OpaqueNode extends FloatingNode implements LIRLowerable
 
     @Input
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
 
     // @cons
     public OpaqueNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT).unrestricted());
-        this.value = __value;
+        this.___value = __value;
     }
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.setResult(this, __gen.operand(value));
+        __gen.setResult(this, __gen.operand(this.___value));
     }
 }

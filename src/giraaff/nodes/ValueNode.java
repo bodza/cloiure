@@ -13,27 +13,27 @@ import giraaff.graph.iterators.NodePredicate;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.NodeValueMap;
 
-/**
- * This class represents a value within the graph, including local variables, phis, and all other instructions.
- */
+///
+// This class represents a value within the graph, including local variables, phis, and all other instructions.
+///
 // @class ValueNode
 public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeInterface
 {
     // @def
     public static final NodeClass<ValueNode> TYPE = NodeClass.create(ValueNode.class);
 
-    /**
-     * The kind of this value. This is {@link JavaKind#Void} for instructions that produce no value.
-     * This kind is guaranteed to be a {@linkplain JavaKind#getStackKind() stack kind}.
-     */
+    ///
+    // The kind of this value. This is {@link JavaKind#Void} for instructions that produce no value.
+    // This kind is guaranteed to be a {@linkplain JavaKind#getStackKind() stack kind}.
+    ///
     // @field
-    protected Stamp stamp;
+    protected Stamp ___stamp;
 
     // @cons
     public ValueNode(NodeClass<? extends ValueNode> __c, Stamp __stamp)
     {
         super(__c);
-        this.stamp = __stamp;
+        this.___stamp = __stamp;
     }
 
     public final Stamp stamp(NodeView __view)
@@ -43,7 +43,7 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
 
     public final void setStamp(Stamp __stamp)
     {
-        this.stamp = __stamp;
+        this.___stamp = __stamp;
     }
 
     @Override
@@ -52,33 +52,33 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
         return (StructuredGraph) super.graph();
     }
 
-    /**
-     * Checks if the given stamp is different than the current one (
-     * {@code newStamp.equals(oldStamp) == false}). If it is different then the new stamp will
-     * become the current stamp for this node.
-     *
-     * @return true if the stamp has changed, false otherwise.
-     */
+    ///
+    // Checks if the given stamp is different than the current one (
+    // {@code newStamp.equals(oldStamp) == false}). If it is different then the new stamp will
+    // become the current stamp for this node.
+    //
+    // @return true if the stamp has changed, false otherwise.
+    ///
     protected final boolean updateStamp(Stamp __newStamp)
     {
-        if (__newStamp == null || __newStamp.equals(stamp))
+        if (__newStamp == null || __newStamp.equals(this.___stamp))
         {
             return false;
         }
         else
         {
-            stamp = __newStamp;
+            this.___stamp = __newStamp;
             return true;
         }
     }
 
-    /**
-     * This method can be overridden by subclasses of {@link ValueNode} if they need to recompute
-     * their stamp if their inputs change. A typical implementation will compute the stamp and pass
-     * it to {@link #updateStamp(Stamp)}, whose return value can be used as the result of this method.
-     *
-     * @return true if the stamp has changed, false otherwise.
-     */
+    ///
+    // This method can be overridden by subclasses of {@link ValueNode} if they need to recompute
+    // their stamp if their inputs change. A typical implementation will compute the stamp and pass
+    // it to {@link #updateStamp(Stamp)}, whose return value can be used as the result of this method.
+    //
+    // @return true if the stamp has changed, false otherwise.
+    ///
     public boolean inferStamp()
     {
         return false;
@@ -89,11 +89,11 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
         return stamp(NodeView.DEFAULT).getStackKind();
     }
 
-    /**
-     * Checks whether this value is a constant (i.e. it is of type {@link ConstantNode}.
-     *
-     * @return {@code true} if this value is a constant
-     */
+    ///
+    // Checks whether this value is a constant (i.e. it is of type {@link ConstantNode}.
+    //
+    // @return {@code true} if this value is a constant
+    ///
     public final boolean isConstant()
     {
         return this instanceof ConstantNode;
@@ -114,22 +114,22 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
         return IS_CONSTANT;
     }
 
-    /**
-     * Checks whether this value represents the null constant.
-     *
-     * @return {@code true} if this value represents the null constant
-     */
+    ///
+    // Checks whether this value represents the null constant.
+    //
+    // @return {@code true} if this value represents the null constant
+    ///
     public final boolean isNullConstant()
     {
         JavaConstant __value = asJavaConstant();
         return __value != null && __value.isNull();
     }
 
-    /**
-     * Convert this value to a constant if it is a constant, otherwise return null.
-     *
-     * @return the {@link JavaConstant} represented by this value if it is a constant; {@code null} otherwise
-     */
+    ///
+    // Convert this value to a constant if it is a constant, otherwise return null.
+    //
+    // @return the {@link JavaConstant} represented by this value if it is a constant; {@code null} otherwise
+    ///
     public final Constant asConstant()
     {
         if (this instanceof ConstantNode)
@@ -179,12 +179,12 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
         }
     }
 
-    /**
-     * Checks if this node has usages other than the given node {@code node}.
-     *
-     * @param node node which is ignored when searching for usages
-     * @return true if this node has other usages, false otherwise
-     */
+    ///
+    // Checks if this node has usages other than the given node {@code node}.
+    //
+    // @param node node which is ignored when searching for usages
+    // @return true if this node has other usages, false otherwise
+    ///
     public boolean hasUsagesOtherThan(ValueNode __node, NodeValueMap __nodeValueMap)
     {
         for (Node __usage : usages())

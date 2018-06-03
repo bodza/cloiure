@@ -22,9 +22,9 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * A call to the VM via a regular stub.
- */
+///
+// A call to the VM via a regular stub.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class InitializeKlassStubCall
 public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
@@ -34,33 +34,33 @@ public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint impl
 
     @OptionalInput
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     @Input
     // @field
-    protected ValueNode string;
+    protected ValueNode ___string;
     @OptionalInput(InputType.State)
     // @field
-    protected FrameState stateBefore;
+    protected FrameState ___stateBefore;
     // @field
-    protected Constant constant;
+    protected Constant ___constant;
 
     // @cons
     protected InitializeKlassStubCall(ValueNode __value, ValueNode __string)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
-        this.string = __string;
+        this.___value = __value;
+        this.___string = __string;
     }
 
     @NodeIntrinsic
-    public static native KlassPointer initializeKlass(KlassPointer value, Object string);
+    public static native KlassPointer initializeKlass(KlassPointer __value, Object __string);
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (value != null)
+        if (this.___value != null)
         {
-            constant = GraphUtil.foldIfConstantAndRemove(this, value);
+            this.___constant = GraphUtil.foldIfConstantAndRemove(this, this.___value);
         }
         return this;
     }
@@ -68,7 +68,7 @@ public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint impl
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, __gen.operand(string), __gen.state(this)));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(this.___constant, __gen.operand(this.___string), __gen.state(this)));
     }
 
     @Override
@@ -86,13 +86,13 @@ public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint impl
     @Override
     public FrameState stateBefore()
     {
-        return stateBefore;
+        return this.___stateBefore;
     }
 
     @Override
     public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, __f);
-        stateBefore = __f;
+        updateUsages(this.___stateBefore, __f);
+        this.___stateBefore = __f;
     }
 }

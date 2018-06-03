@@ -4,28 +4,28 @@ import java.nio.ByteBuffer;
 
 import jdk.vm.ci.meta.SerializableConstant;
 
-/**
- * Type describing values that support arithmetic operations.
- */
+///
+// Type describing values that support arithmetic operations.
+///
 // @class ArithmeticStamp
 public abstract class ArithmeticStamp extends Stamp
 {
     // @field
-    private final ArithmeticOpTable ops;
+    private final ArithmeticOpTable ___ops;
 
     // @cons
     protected ArithmeticStamp(ArithmeticOpTable __ops)
     {
         super();
-        this.ops = __ops;
+        this.___ops = __ops;
     }
 
     public ArithmeticOpTable getOps()
     {
-        return ops;
+        return this.___ops;
     }
 
-    public abstract SerializableConstant deserialize(ByteBuffer buffer);
+    public abstract SerializableConstant deserialize(ByteBuffer __buffer);
 
     @Override
     public Stamp improveWith(Stamp __other)
@@ -42,7 +42,7 @@ public abstract class ArithmeticStamp extends Stamp
     public int hashCode()
     {
         final int __prime = 31;
-        return __prime * 1 + ops.hashCode();
+        return __prime * 1 + this.___ops.hashCode();
     }
 
     @Override

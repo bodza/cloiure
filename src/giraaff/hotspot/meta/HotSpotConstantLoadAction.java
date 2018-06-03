@@ -9,15 +9,15 @@ public enum HotSpotConstantLoadAction
     LOAD_COUNTERS(3);
 
     // @field
-    private int value;
+    private int ___value;
 
     HotSpotConstantLoadAction(int __value)
     {
-        this.value = __value;
+        this.___value = __value;
     }
 
     public int value()
     {
-        return value;
+        return this.___value;
     }
 }

@@ -16,34 +16,34 @@ import giraaff.nodes.FixedNode;
 import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.cfg.ControlFlowGraph;
 
-/**
- * Compute probabilities for fixed nodes on the fly and cache them at {@link AbstractBeginNode}s.
- */
+///
+// Compute probabilities for fixed nodes on the fly and cache them at {@link AbstractBeginNode}s.
+///
 // @class FixedNodeProbabilityCache
 public final class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
 {
     // @field
-    private final EconomicMap<FixedNode, Double> cache = EconomicMap.create(Equivalence.IDENTITY);
+    private final EconomicMap<FixedNode, Double> ___cache = EconomicMap.create(Equivalence.IDENTITY);
 
-    /**
-     * Given a {@link FixedNode} this method finds the most immediate {@link AbstractBeginNode}
-     * preceding it that either:
-     *
-     * - has no predecessor (ie, the begin-node is a merge, in particular a loop-begin, or the start-node)
-     * - has a control-split predecessor
-     *
-     * The thus found {@link AbstractBeginNode} is equi-probable with the {@link FixedNode} it was
-     * obtained from. When computed for the first time (afterwards a cache lookup returns it) that
-     * probability is computed as follows, again depending on the begin-node's predecessor:
-     *
-     * - No predecessor. In this case the begin-node is either:
-     * -- a merge-node, whose probability adds up those of its forward-ends
-     * -- a loop-begin, with probability as above multiplied by the loop-frequency
-     * - Control-split predecessor: probability of the branch times that of the control-split
-     *
-     * As an exception to all the above, a probability of 1 is assumed for a {@link FixedNode} that
-     * appears to be dead-code (ie, lacks a predecessor).
-     */
+    ///
+    // Given a {@link FixedNode} this method finds the most immediate {@link AbstractBeginNode}
+    // preceding it that either:
+    //
+    // - has no predecessor (ie, the begin-node is a merge, in particular a loop-begin, or the start-node)
+    // - has a control-split predecessor
+    //
+    // The thus found {@link AbstractBeginNode} is equi-probable with the {@link FixedNode} it was
+    // obtained from. When computed for the first time (afterwards a cache lookup returns it) that
+    // probability is computed as follows, again depending on the begin-node's predecessor:
+    //
+    // - No predecessor. In this case the begin-node is either:
+    // -- a merge-node, whose probability adds up those of its forward-ends
+    // -- a loop-begin, with probability as above multiplied by the loop-frequency
+    // - Control-split predecessor: probability of the branch times that of the control-split
+    //
+    // As an exception to all the above, a probability of 1 is assumed for a {@link FixedNode} that
+    // appears to be dead-code (ie, lacks a predecessor).
+    ///
     @Override
     public double applyAsDouble(FixedNode __node)
     {
@@ -54,7 +54,7 @@ public final class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNo
             return 1D;
         }
 
-        Double __cachedValue = cache.get(__current);
+        Double __cachedValue = this.___cache.get(__current);
         if (__cachedValue != null)
         {
             return __cachedValue;
@@ -77,7 +77,7 @@ public final class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNo
             ControlSplitNode __split = (ControlSplitNode) __current.predecessor();
             __probability = ControlFlowGraph.multiplyProbabilities(__split.probability((AbstractBeginNode) __current), applyAsDouble(__split));
         }
-        cache.put(__current, __probability);
+        this.___cache.put(__current, __probability);
         return __probability;
     }
 
@@ -86,10 +86,8 @@ public final class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNo
         double __result = __probability;
         AbstractMergeNode __currentMerge = (AbstractMergeNode) __current;
         NodeInputList<EndNode> __currentForwardEnds = __currentMerge.forwardEnds();
-        /*
-         * Use simple iteration instead of streams, since the stream infrastructure adds many frames
-         * which causes the recursion to overflow the stack earlier than it would otherwise.
-         */
+        // Use simple iteration instead of streams, since the stream infrastructure adds many frames
+        // which causes the recursion to overflow the stack earlier than it would otherwise.
         for (AbstractEndNode __endNode : __currentForwardEnds)
         {
             __result += applyAsDouble(__endNode);

@@ -61,12 +61,10 @@ public final class GreedyInliningPolicy extends AbstractInliningPolicy
             return InliningPolicy.Decision.YES;
         }
 
-        /*
-         * TODO invoked methods that are on important paths but not yet compiled -> will be
-         * compiled anyways and it is likely that we are the only caller... might be useful
-         * to inline those methods but increases bootstrap time (maybe those methods are
-         * also getting queued in the compilation queue concurrently)
-         */
+        // TODO invoked methods that are on important paths but not yet compiled -> will be
+        // compiled anyways and it is likely that we are the only caller... might be useful
+        // to inline those methods but increases bootstrap time (maybe those methods are
+        // also getting queued in the compilation queue concurrently)
         double __invokes = determineInvokeProbability(__info);
         if (GraalOptions.limitInlinedInvokes > 0 && __fullyProcessed && __invokes > GraalOptions.limitInlinedInvokes * __inliningBonus)
         {

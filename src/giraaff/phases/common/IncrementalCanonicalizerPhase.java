@@ -7,28 +7,28 @@ import giraaff.phases.PhaseSuite;
 import giraaff.phases.common.util.HashSetNodeEventListener;
 import giraaff.phases.tiers.PhaseContext;
 
-/**
- * A phase suite that applies {@linkplain CanonicalizerPhase canonicalization} to a graph after all
- * phases in the suite have been applied if any of the phases changed the graph.
- */
+///
+// A phase suite that applies {@linkplain CanonicalizerPhase canonicalization} to a graph after all
+// phases in the suite have been applied if any of the phases changed the graph.
+///
 // @class IncrementalCanonicalizerPhase
 public final class IncrementalCanonicalizerPhase<C extends PhaseContext> extends PhaseSuite<C>
 {
     // @field
-    private final CanonicalizerPhase canonicalizer;
+    private final CanonicalizerPhase ___canonicalizer;
 
     // @cons
     public IncrementalCanonicalizerPhase(CanonicalizerPhase __canonicalizer)
     {
         super();
-        this.canonicalizer = __canonicalizer;
+        this.___canonicalizer = __canonicalizer;
     }
 
     // @cons
     public IncrementalCanonicalizerPhase(CanonicalizerPhase __canonicalizer, BasePhase<? super C> __phase)
     {
         super();
-        this.canonicalizer = __canonicalizer;
+        this.___canonicalizer = __canonicalizer;
         appendPhase(__phase);
     }
 
@@ -44,7 +44,7 @@ public final class IncrementalCanonicalizerPhase<C extends PhaseContext> extends
 
         if (!__listener.getNodes().isEmpty())
         {
-            canonicalizer.applyIncremental(__graph, __context, __listener.getNodes(), null);
+            this.___canonicalizer.applyIncremental(__graph, __context, __listener.getNodes(), null);
         }
     }
 }

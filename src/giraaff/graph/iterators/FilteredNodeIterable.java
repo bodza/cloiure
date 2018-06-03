@@ -8,27 +8,27 @@ import giraaff.graph.Node;
 public final class FilteredNodeIterable<T extends Node> implements NodeIterable<T>
 {
     // @field
-    protected final NodeIterable<T> nodeIterable;
+    protected final NodeIterable<T> ___nodeIterable;
     // @field
-    protected NodePredicate predicate = NodePredicates.alwaysTrue();
+    protected NodePredicate ___predicate = NodePredicates.alwaysTrue();
 
     // @cons
     public FilteredNodeIterable(NodeIterable<T> __nodeIterable)
     {
         super();
-        this.nodeIterable = __nodeIterable;
+        this.___nodeIterable = __nodeIterable;
     }
 
     public FilteredNodeIterable<T> and(NodePredicate __nodePredicate)
     {
-        this.predicate = this.predicate.and(__nodePredicate);
+        this.___predicate = this.___predicate.and(__nodePredicate);
         return this;
     }
 
     @Override
     public Iterator<T> iterator()
     {
-        return new PredicatedProxyNodeIterator<>(nodeIterable.iterator(), predicate);
+        return new PredicatedProxyNodeIterator<>(this.___nodeIterable.iterator(), this.___predicate);
     }
 
     @SuppressWarnings("unchecked")

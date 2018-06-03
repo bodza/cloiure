@@ -16,9 +16,9 @@ import giraaff.nodes.spi.VirtualizableAllocation;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualInstanceNode;
 
-/**
- * The {@code NewInstanceNode} represents the allocation of an instance class object.
- */
+///
+// The {@code NewInstanceNode} represents the allocation of an instance class object.
+///
 // @class NewInstanceNode
 public final class NewInstanceNode extends AbstractNewObjectNode implements VirtualizableAllocation
 {
@@ -26,7 +26,7 @@ public final class NewInstanceNode extends AbstractNewObjectNode implements Virt
     public static final NodeClass<NewInstanceNode> TYPE = NodeClass.create(NewInstanceNode.class);
 
     // @field
-    protected final ResolvedJavaType instanceClass;
+    protected final ResolvedJavaType ___instanceClass;
 
     // @cons
     public NewInstanceNode(ResolvedJavaType __type, boolean __fillContents)
@@ -44,27 +44,25 @@ public final class NewInstanceNode extends AbstractNewObjectNode implements Virt
     protected NewInstanceNode(NodeClass<? extends NewInstanceNode> __c, ResolvedJavaType __type, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)), __fillContents, __stateBefore);
-        this.instanceClass = __type;
+        this.___instanceClass = __type;
     }
 
-    /**
-     * Gets the instance class being allocated by this node.
-     *
-     * @return the instance class allocated
-     */
+    ///
+    // Gets the instance class being allocated by this node.
+    //
+    // @return the instance class allocated
+    ///
     public ResolvedJavaType instanceClass()
     {
-        return instanceClass;
+        return this.___instanceClass;
     }
 
     @Override
     public void virtualize(VirtualizerTool __tool)
     {
-        /*
-         * Reference objects can escape into their ReferenceQueue at any safepoint, therefore
-         * they're excluded from escape analysis.
-         */
-        if (!__tool.getMetaAccessProvider().lookupJavaType(Reference.class).isAssignableFrom(instanceClass))
+        // Reference objects can escape into their ReferenceQueue at any safepoint, therefore
+        // they're excluded from escape analysis.
+        if (!__tool.getMetaAccessProvider().lookupJavaType(Reference.class).isAssignableFrom(this.___instanceClass))
         {
             VirtualInstanceNode __virtualObject = createVirtualInstanceNode(true);
             ResolvedJavaField[] __fields = __virtualObject.getFields();

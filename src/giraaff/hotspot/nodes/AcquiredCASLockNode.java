@@ -7,10 +7,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Marks the control flow path where an object acquired a lightweight lock based on an atomic
- * compare-and-swap (CAS) of the mark word in the object's header.
- */
+///
+// Marks the control flow path where an object acquired a lightweight lock based on an atomic
+// compare-and-swap (CAS) of the mark word in the object's header.
+///
 // @class AcquiredCASLockNode
 public final class AcquiredCASLockNode extends FixedWithNextNode implements LIRLowerable
 {
@@ -19,18 +19,18 @@ public final class AcquiredCASLockNode extends FixedWithNextNode implements LIRL
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
 
     // @cons
     public AcquiredCASLockNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = __object;
+        this.___object = __object;
     }
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
     @Override
@@ -40,5 +40,5 @@ public final class AcquiredCASLockNode extends FixedWithNextNode implements LIRL
     }
 
     @NodeIntrinsic
-    public static native void mark(Object object);
+    public static native void mark(Object __object);
 }

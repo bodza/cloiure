@@ -17,17 +17,17 @@ public final class HotSpotIndirectCallTargetNode extends IndirectCallTargetNode
 
     @Input
     // @field
-    ValueNode metaspaceMethod;
+    ValueNode ___metaspaceMethod;
 
     // @cons
     public HotSpotIndirectCallTargetNode(ValueNode __metaspaceMethod, ValueNode __computedAddress, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, Type __callType, InvokeKind __invokeKind)
     {
         super(TYPE, __computedAddress, __arguments, __returnStamp, __signature, __target, __callType, __invokeKind);
-        this.metaspaceMethod = __metaspaceMethod;
+        this.___metaspaceMethod = __metaspaceMethod;
     }
 
     public ValueNode metaspaceMethod()
     {
-        return metaspaceMethod;
+        return this.___metaspaceMethod;
     }
 }

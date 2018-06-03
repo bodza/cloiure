@@ -47,9 +47,9 @@ import giraaff.phases.schedule.SchedulePhase;
 import giraaff.phases.tiers.PhaseContext;
 import giraaff.util.GraalError;
 
-/**
- * Processes all {@link Lowerable} nodes to do their lowering.
- */
+///
+// Processes all {@link Lowerable} nodes to do their lowering.
+///
 // @class LoweringPhase
 public final class LoweringPhase extends BasePhase<PhaseContext>
 {
@@ -61,26 +61,26 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
 
         @Input(InputType.Guard)
         // @field
-        GuardingNode guard;
+        GuardingNode ___guard;
 
         // @cons
         protected DummyGuardHandle(GuardingNode __guard)
         {
             super(TYPE, StampFactory.forVoid());
-            this.guard = __guard;
+            this.___guard = __guard;
         }
 
         @Override
         public GuardingNode getGuard()
         {
-            return guard;
+            return this.___guard;
         }
 
         @Override
         public void setGuard(GuardingNode __guard)
         {
-            updateUsagesInterface(this.guard, __guard);
-            this.guard = __guard;
+            updateUsagesInterface(this.___guard, __guard);
+            this.___guard = __guard;
         }
 
         @Override
@@ -95,64 +95,64 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
     final class LoweringToolImpl implements LoweringTool
     {
         // @field
-        private final PhaseContext context;
+        private final PhaseContext ___context;
         // @field
-        private final NodeBitMap activeGuards;
+        private final NodeBitMap ___activeGuards;
         // @field
-        private AnchoringNode guardAnchor;
+        private AnchoringNode ___guardAnchor;
         // @field
-        private FixedWithNextNode lastFixedNode;
+        private FixedWithNextNode ___lastFixedNode;
 
         // @cons
         LoweringToolImpl(PhaseContext __context, AnchoringNode __guardAnchor, NodeBitMap __activeGuards, FixedWithNextNode __lastFixedNode)
         {
             super();
-            this.context = __context;
-            this.guardAnchor = __guardAnchor;
-            this.activeGuards = __activeGuards;
-            this.lastFixedNode = __lastFixedNode;
+            this.___context = __context;
+            this.___guardAnchor = __guardAnchor;
+            this.___activeGuards = __activeGuards;
+            this.___lastFixedNode = __lastFixedNode;
         }
 
         @Override
         public LoweringStage getLoweringStage()
         {
-            return LoweringPhase.this.loweringStage;
+            return LoweringPhase.this.___loweringStage;
         }
 
         @Override
         public ConstantReflectionProvider getConstantReflection()
         {
-            return context.getConstantReflection();
+            return this.___context.getConstantReflection();
         }
 
         @Override
         public ConstantFieldProvider getConstantFieldProvider()
         {
-            return context.getConstantFieldProvider();
+            return this.___context.getConstantFieldProvider();
         }
 
         @Override
         public MetaAccessProvider getMetaAccess()
         {
-            return context.getMetaAccess();
+            return this.___context.getMetaAccess();
         }
 
         @Override
         public LoweringProvider getLowerer()
         {
-            return context.getLowerer();
+            return this.___context.getLowerer();
         }
 
         @Override
         public Replacements getReplacements()
         {
-            return context.getReplacements();
+            return this.___context.getReplacements();
         }
 
         @Override
         public AnchoringNode getCurrentGuardAnchor()
         {
-            return guardAnchor;
+            return this.___guardAnchor;
         }
 
         @Override
@@ -164,7 +164,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         @Override
         public StampProvider getStampProvider()
         {
-            return context.getStampProvider();
+            return this.___context.getStampProvider();
         }
 
         @Override
@@ -175,7 +175,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             {
                 for (Node __usage : __condition.usages())
                 {
-                    if (!activeGuards.isNew(__usage) && activeGuards.isMarked(__usage) && ((GuardNode) __usage).isNegated() == __negated)
+                    if (!this.___activeGuards.isNew(__usage) && this.___activeGuards.isMarked(__usage) && ((GuardNode) __usage).isNegated() == __negated)
                     {
                         return (GuardNode) __usage;
                     }
@@ -193,10 +193,10 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             }
             else
             {
-                GuardNode __newGuard = __graph.unique(new GuardNode(__condition, guardAnchor, __deoptReason, __action, __negated, __speculation));
+                GuardNode __newGuard = __graph.unique(new GuardNode(__condition, this.___guardAnchor, __deoptReason, __action, __negated, __speculation));
                 if (GraalOptions.optEliminateGuards)
                 {
-                    activeGuards.markAndGrow(__newGuard);
+                    this.___activeGuards.markAndGrow(__newGuard);
                 }
                 return __newGuard;
             }
@@ -205,33 +205,33 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         @Override
         public FixedWithNextNode lastFixedNode()
         {
-            return lastFixedNode;
+            return this.___lastFixedNode;
         }
 
         private void setLastFixedNode(FixedWithNextNode __n)
         {
-            lastFixedNode = __n;
+            this.___lastFixedNode = __n;
         }
     }
 
     // @field
-    private final CanonicalizerPhase canonicalizer;
+    private final CanonicalizerPhase ___canonicalizer;
     // @field
-    private final LoweringTool.LoweringStage loweringStage;
+    private final LoweringTool.LoweringStage ___loweringStage;
 
     // @cons
     public LoweringPhase(CanonicalizerPhase __canonicalizer, LoweringTool.LoweringStage __loweringStage)
     {
         super();
-        this.canonicalizer = __canonicalizer;
-        this.loweringStage = __loweringStage;
+        this.___canonicalizer = __canonicalizer;
+        this.___loweringStage = __loweringStage;
     }
 
-    /**
-     * Checks that second lowering of a given graph did not introduce any new nodes.
-     *
-     * @param graph a graph that was just {@linkplain #lower lowered}
-     */
+    ///
+    // Checks that second lowering of a given graph did not introduce any new nodes.
+    //
+    // @param graph a graph that was just {@linkplain #lower lowered}
+    ///
     private boolean checkPostLowering(StructuredGraph __graph, PhaseContext __context)
     {
         Mark __expectedMark = __graph.getMark();
@@ -248,7 +248,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
 
     private void lower(StructuredGraph __graph, PhaseContext __context, LoweringMode __mode)
     {
-        IncrementalCanonicalizerPhase<PhaseContext> __incrementalCanonicalizer = new IncrementalCanonicalizerPhase<>(canonicalizer);
+        IncrementalCanonicalizerPhase<PhaseContext> __incrementalCanonicalizer = new IncrementalCanonicalizerPhase<>(this.___canonicalizer);
         __incrementalCanonicalizer.appendPhase(new Round(__context, __mode));
         __incrementalCanonicalizer.apply(__graph, __context);
     }
@@ -265,34 +265,32 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
     private final class Round extends Phase
     {
         // @field
-        private final PhaseContext context;
+        private final PhaseContext ___context;
         // @field
-        private final LoweringMode mode;
+        private final LoweringMode ___mode;
         // @field
-        private ScheduleResult schedule;
+        private ScheduleResult ___schedule;
         // @field
-        private final SchedulePhase schedulePhase;
+        private final SchedulePhase ___schedulePhase;
 
         // @cons
         private Round(PhaseContext __context, LoweringMode __mode)
         {
             super();
-            this.context = __context;
-            this.mode = __mode;
+            this.___context = __context;
+            this.___mode = __mode;
 
-            /*
-             * In VERIFY_LOWERING, we want to verify whether the lowering itself changes the graph.
-             * Make sure we're not detecting spurious changes because the SchedulePhase modifies the graph.
-             */
+            // In VERIFY_LOWERING, we want to verify whether the lowering itself changes the graph.
+            // Make sure we're not detecting spurious changes because the SchedulePhase modifies the graph.
             boolean __immutableSchedule = __mode == LoweringMode.VERIFY_LOWERING;
 
-            this.schedulePhase = new SchedulePhase(__immutableSchedule);
+            this.___schedulePhase = new SchedulePhase(__immutableSchedule);
         }
 
         @Override
         protected CharSequence getName()
         {
-            switch (mode)
+            switch (this.___mode)
             {
                 case LOWERING:
                     return "LoweringRound";
@@ -306,10 +304,10 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         @Override
         public void run(StructuredGraph __graph)
         {
-            schedulePhase.apply(__graph);
-            schedule = __graph.getLastSchedule();
-            schedule.getCFG().computePostdominators();
-            Block __startBlock = schedule.getCFG().getStartBlock();
+            this.___schedulePhase.apply(__graph);
+            this.___schedule = __graph.getLastSchedule();
+            this.___schedule.getCFG().computePostdominators();
+            Block __startBlock = this.___schedule.getCFG().getStartBlock();
             ProcessFrame __rootFrame = new ProcessFrame(__startBlock, __graph.createNodeBitMap(), __startBlock.getBeginNode(), null);
             LoweringPhase.processBlock(__rootFrame);
         }
@@ -319,52 +317,52 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         private final class ProcessFrame extends Frame<ProcessFrame>
         {
             // @field
-            private final NodeBitMap activeGuards;
+            private final NodeBitMap ___activeGuards;
             // @field
-            private AnchoringNode anchor;
+            private AnchoringNode ___anchor;
 
             // @cons
             ProcessFrame(Block __block, NodeBitMap __activeGuards, AnchoringNode __anchor, ProcessFrame __parent)
             {
                 super(__block, __parent);
-                this.activeGuards = __activeGuards;
-                this.anchor = __anchor;
+                this.___activeGuards = __activeGuards;
+                this.___anchor = __anchor;
             }
 
             @Override
             public void preprocess()
             {
-                this.anchor = Round.this.process(block, activeGuards, anchor);
+                this.___anchor = Round.this.process(this.___block, this.___activeGuards, this.___anchor);
             }
 
             @Override
             public ProcessFrame enter(Block __b)
             {
-                return new ProcessFrame(__b, activeGuards, __b.getBeginNode(), this);
+                return new ProcessFrame(__b, this.___activeGuards, __b.getBeginNode(), this);
             }
 
             @Override
             public Frame<?> enterAlwaysReached(Block __b)
             {
-                AnchoringNode __newAnchor = anchor;
-                if (parent != null && __b.getLoop() != parent.block.getLoop() && !__b.isLoopHeader())
+                AnchoringNode __newAnchor = this.___anchor;
+                if (this.___parent != null && __b.getLoop() != this.___parent.___block.getLoop() && !__b.isLoopHeader())
                 {
                     // We are exiting a loop => cannot reuse the anchor without inserting loop proxies.
                     __newAnchor = __b.getBeginNode();
                 }
-                return new ProcessFrame(__b, activeGuards, __newAnchor, this);
+                return new ProcessFrame(__b, this.___activeGuards, __newAnchor, this);
             }
 
             @Override
             public void postprocess()
             {
-                if (anchor == block.getBeginNode() && GraalOptions.optEliminateGuards)
+                if (this.___anchor == this.___block.getBeginNode() && GraalOptions.optEliminateGuards)
                 {
-                    for (GuardNode __guard : anchor.asNode().usages().filter(GuardNode.class))
+                    for (GuardNode __guard : this.___anchor.asNode().usages().filter(GuardNode.class))
                     {
-                        if (activeGuards.isMarkedAndGrow(__guard))
+                        if (this.___activeGuards.isMarkedAndGrow(__guard))
                         {
-                            activeGuards.clear(__guard);
+                            this.___activeGuards.clear(__guard);
                         }
                     }
                 }
@@ -373,10 +371,10 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
 
         private AnchoringNode process(final Block __b, final NodeBitMap __activeGuards, final AnchoringNode __startAnchor)
         {
-            final LoweringToolImpl __loweringTool = new LoweringToolImpl(context, __startAnchor, __activeGuards, __b.getBeginNode());
+            final LoweringToolImpl __loweringTool = new LoweringToolImpl(this.___context, __startAnchor, __activeGuards, __b.getBeginNode());
 
             // Lower the instructions of this block.
-            List<Node> __nodes = schedule.nodesFor(__b);
+            List<Node> __nodes = this.___schedule.nodesFor(__b);
             for (Node __node : __nodes)
             {
                 if (__node.isDeleted())
@@ -399,10 +397,10 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
                 if (__node instanceof Lowerable)
                 {
                     ((Lowerable) __node).lower(__loweringTool);
-                    if (__loweringTool.guardAnchor.asNode().isDeleted())
+                    if (__loweringTool.___guardAnchor.asNode().isDeleted())
                     {
                         // TODO nextNode could be deleted but this is not currently supported
-                        __loweringTool.guardAnchor = AbstractBeginNode.prevBegin(__nextNode);
+                        __loweringTool.___guardAnchor = AbstractBeginNode.prevBegin(__nextNode);
                     }
                 }
 
@@ -432,16 +430,16 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             return __loweringTool.getCurrentGuardAnchor();
         }
 
-        /**
-         * Gets all usages of a floating, lowerable node that are unscheduled.
-         *
-         * Given that the lowering of such nodes may introduce fixed nodes, they must be lowered in
-         * the context of a usage that dominates all other usages. The fixed nodes resulting from
-         * lowering are attached to the fixed node context of the dominating usage. This ensures the
-         * post-lowering graph still has a valid schedule.
-         *
-         * @param node a {@link Lowerable} node
-         */
+        ///
+        // Gets all usages of a floating, lowerable node that are unscheduled.
+        //
+        // Given that the lowering of such nodes may introduce fixed nodes, they must be lowered in
+        // the context of a usage that dominates all other usages. The fixed nodes resulting from
+        // lowering are attached to the fixed node context of the dominating usage. This ensures the
+        // post-lowering graph still has a valid schedule.
+        //
+        // @param node a {@link Lowerable} node
+        ///
         private Collection<Node> getUnscheduledUsages(Node __node)
         {
             List<Node> __unscheduledUsages = new ArrayList<>();
@@ -451,7 +449,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
                 {
                     if (__usage instanceof ValueNode && !(__usage instanceof PhiNode) && !(__usage instanceof ProxyNode))
                     {
-                        if (schedule.getCFG().getNodeToBlock().isNew(__usage) || schedule.getCFG().blockFor(__usage) == null)
+                        if (this.___schedule.getCFG().getNodeToBlock().isNew(__usage) || this.___schedule.getCFG().blockFor(__usage) == null)
                         {
                             __unscheduledUsages.add(__usage);
                         }
@@ -472,33 +470,33 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
         ST_PROCESS_ALWAYS_REACHED;
     }
 
-    /**
-     * This state-machine resembles the following recursion:
-     *
-     * <pre>
-     * void processBlock(Block block) {
-     *     preprocess();
-     *     // Process always reached block first.
-     *     Block alwaysReachedBlock = block.getPostdominator();
-     *     if (alwaysReachedBlock != null &amp;&amp; alwaysReachedBlock.getDominator() == block) {
-     *         processBlock(alwaysReachedBlock);
-     *     }
-     *
-     *     // Now go for the other dominators.
-     *     for (Block dominated : block.getDominated()) {
-     *         if (dominated != alwaysReachedBlock) {
-     *             assert dominated.getDominator() == block;
-     *             processBlock(dominated);
-     *         }
-     *     }
-     *     postprocess();
-     * }
-     * </pre>
-     *
-     * This is necessary, as the recursive implementation quickly exceed the stack depth on SPARC.
-     *
-     * @param rootFrame contains the starting block.
-     */
+    ///
+    // This state-machine resembles the following recursion:
+    //
+    // <pre>
+    // void processBlock(Block block) {
+    //     preprocess();
+    //     // Process always reached block first.
+    //     Block alwaysReachedBlock = block.getPostdominator();
+    //     if (alwaysReachedBlock != null &amp;&amp; alwaysReachedBlock.getDominator() == block) {
+    //         processBlock(alwaysReachedBlock);
+    //     }
+    //
+    //     // Now go for the other dominators.
+    //     for (Block dominated : block.getDominated()) {
+    //         if (dominated != alwaysReachedBlock) {
+    //             assert dominated.getDominator() == block;
+    //             processBlock(dominated);
+    //         }
+    //     }
+    //     postprocess();
+    // }
+    // </pre>
+    //
+    // This is necessary, as the recursive implementation quickly exceed the stack depth on SPARC.
+    //
+    // @param rootFrame contains the starting block.
+    ///
     public static void processBlock(final Frame<?> __rootFrame)
     {
         ProcessBlockState __state = ProcessBlockState.ST_PROCESS;
@@ -513,9 +511,9 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             }
             else if (__state == ProcessBlockState.ST_ENTER_ALWAYS_REACHED)
             {
-                if (__f.alwaysReachedBlock != null && __f.alwaysReachedBlock.getDominator() == __f.block)
+                if (__f.___alwaysReachedBlock != null && __f.___alwaysReachedBlock.getDominator() == __f.___block)
                 {
-                    __f = __f.enterAlwaysReached(__f.alwaysReachedBlock);
+                    __f = __f.enterAlwaysReached(__f.___alwaysReachedBlock);
                     __nextState = ProcessBlockState.ST_PROCESS;
                 }
                 else
@@ -525,16 +523,16 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             }
             else if (__state == ProcessBlockState.ST_ENTER)
             {
-                if (__f.dominated != null)
+                if (__f.___dominated != null)
                 {
-                    Block __n = __f.dominated;
-                    __f.dominated = __n.getDominatedSibling();
-                    if (__n == __f.alwaysReachedBlock)
+                    Block __n = __f.___dominated;
+                    __f.___dominated = __n.getDominatedSibling();
+                    if (__n == __f.___alwaysReachedBlock)
                     {
-                        if (__f.dominated != null)
+                        if (__f.___dominated != null)
                         {
-                            __n = __f.dominated;
-                            __f.dominated = __n.getDominatedSibling();
+                            __n = __f.___dominated;
+                            __f.___dominated = __n.getDominatedSibling();
                         }
                         else
                         {
@@ -559,7 +557,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             else if (__state == ProcessBlockState.ST_LEAVE)
             {
                 __f.postprocess();
-                __f = __f.parent;
+                __f = __f.___parent;
                 __nextState = ProcessBlockState.ST_ENTER;
             }
             else
@@ -584,14 +582,14 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             }
             else if (__state == ProcessBlockState.ST_ENTER_ALWAYS_REACHED)
             {
-                if (__f.alwaysReachedBlock != null && __f.alwaysReachedBlock.getDominator() == __f.block)
+                if (__f.___alwaysReachedBlock != null && __f.___alwaysReachedBlock.getDominator() == __f.___block)
                 {
-                    Frame<?> __continueRecur = __f.enterAlwaysReached(__f.alwaysReachedBlock);
+                    Frame<?> __continueRecur = __f.enterAlwaysReached(__f.___alwaysReachedBlock);
                     if (__continueRecur == null)
                     {
                         // stop recursion here
                         __f.postprocess();
-                        __f = __f.parent;
+                        __f = __f.___parent;
                         __state = ProcessBlockState.ST_ENTER;
                         continue;
                     }
@@ -605,16 +603,16 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             }
             else if (__state == ProcessBlockState.ST_ENTER)
             {
-                if (__f.dominated != null)
+                if (__f.___dominated != null)
                 {
-                    Block __n = __f.dominated;
-                    __f.dominated = __n.getDominatedSibling();
-                    if (__n == __f.alwaysReachedBlock)
+                    Block __n = __f.___dominated;
+                    __f.___dominated = __n.getDominatedSibling();
+                    if (__n == __f.___alwaysReachedBlock)
                     {
-                        if (__f.dominated != null)
+                        if (__f.___dominated != null)
                         {
-                            __n = __f.dominated;
-                            __f.dominated = __n.getDominatedSibling();
+                            __n = __f.___dominated;
+                            __f.___dominated = __n.getDominatedSibling();
                         }
                         else
                         {
@@ -632,7 +630,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
                         {
                             // stop recursion here
                             __f.postprocess();
-                            __f = __f.parent;
+                            __f = __f.___parent;
                             __state = ProcessBlockState.ST_ENTER;
                             continue;
                         }
@@ -648,7 +646,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             else if (__state == ProcessBlockState.ST_LEAVE)
             {
                 __f.postprocess();
-                __f = __f.parent;
+                __f = __f.___parent;
                 __nextState = ProcessBlockState.ST_ENTER;
             }
             else
@@ -663,22 +661,22 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
     public abstract static class Frame<T extends Frame<?>>
     {
         // @field
-        protected final Block block;
+        protected final Block ___block;
         // @field
-        final T parent;
+        final T ___parent;
         // @field
-        Block dominated;
+        Block ___dominated;
         // @field
-        final Block alwaysReachedBlock;
+        final Block ___alwaysReachedBlock;
 
         // @cons
         public Frame(Block __block, T __parent)
         {
             super();
-            this.block = __block;
-            this.alwaysReachedBlock = __block.getPostdominator();
-            this.dominated = __block.getFirstDominated();
-            this.parent = __parent;
+            this.___block = __block;
+            this.___alwaysReachedBlock = __block.getPostdominator();
+            this.___dominated = __block.getFirstDominated();
+            this.___parent = __parent;
         }
 
         public Frame<?> enterAlwaysReached(Block __b)
@@ -686,7 +684,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
             return enter(__b);
         }
 
-        public abstract Frame<?> enter(Block b);
+        public abstract Frame<?> enter(Block __b);
 
         public abstract void preprocess();
 

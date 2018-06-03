@@ -8,9 +8,9 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 import giraaff.core.common.spi.JavaConstantFieldProvider;
 import giraaff.hotspot.HotSpotRuntime;
 
-/**
- * Implements the default constant folding semantics for Java fields in the HotSpot VM.
- */
+///
+// Implements the default constant folding semantics for Java fields in the HotSpot VM.
+///
 // @class HotSpotConstantFieldProvider
 public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
 {

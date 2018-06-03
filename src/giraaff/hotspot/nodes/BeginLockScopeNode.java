@@ -17,12 +17,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
-/**
- * Intrinsic for opening a scope binding a stack-based lock with an object. A lock scope must be
- * closed with an {@link EndLockScopeNode}. The frame state after this node denotes that the object
- * is locked (ensuring the GC sees and updates the object) so it must come after any null pointer
- * check on the object.
- */
+///
+// Intrinsic for opening a scope binding a stack-based lock with an object. A lock scope must be
+// closed with an {@link EndLockScopeNode}. The frame state after this node denotes that the object
+// is locked (ensuring the GC sees and updates the object) so it must come after any null pointer
+// check on the object.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class BeginLockScopeNode
 public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single
@@ -31,20 +31,20 @@ public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implement
     public static final NodeClass<BeginLockScopeNode> TYPE = NodeClass.create(BeginLockScopeNode.class);
 
     // @field
-    protected int lockDepth;
+    protected int ___lockDepth;
 
     // @cons
     public BeginLockScopeNode(@InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
     {
         super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
-        this.lockDepth = __lockDepth;
+        this.___lockDepth = __lockDepth;
     }
 
     // @cons
     public BeginLockScopeNode(JavaKind __kind, int __lockDepth)
     {
         super(TYPE, StampFactory.forKind(__kind));
-        this.lockDepth = __lockDepth;
+        this.___lockDepth = __lockDepth;
     }
 
     @Override
@@ -63,11 +63,11 @@ public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implement
     public void generate(NodeLIRBuilderTool __gen)
     {
         HotSpotLIRGenerator __hsGen = (HotSpotLIRGenerator) __gen.getLIRGeneratorTool();
-        VirtualStackSlot __slot = __hsGen.getLockSlot(lockDepth);
+        VirtualStackSlot __slot = __hsGen.getLockSlot(this.___lockDepth);
         Value __result = __gen.getLIRGeneratorTool().emitAddress(__slot);
         __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic
-    public static native Word beginLockScope(@ConstantNodeParameter int lockDepth);
+    public static native Word beginLockScope(@ConstantNodeParameter int __lockDepth);
 }

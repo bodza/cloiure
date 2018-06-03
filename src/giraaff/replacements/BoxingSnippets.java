@@ -133,17 +133,25 @@ public final class BoxingSnippets implements Snippets
                 switch (__box.getBoxingKind())
                 {
                     case Boolean:
+                    {
                         __sourceConstant = JavaConstant.forBoolean(__sourceConstant.asLong() != 0L);
                         break;
+                    }
                     case Byte:
+                    {
                         __sourceConstant = JavaConstant.forByte((byte) __sourceConstant.asLong());
                         break;
+                    }
                     case Char:
+                    {
                         __sourceConstant = JavaConstant.forChar((char) __sourceConstant.asLong());
                         break;
+                    }
                     case Short:
+                    {
                         __sourceConstant = JavaConstant.forShort((short) __sourceConstant.asLong());
                         break;
+                    }
                 }
             }
             JavaConstant __boxedConstant = __constantReflection.boxPrimitive(__sourceConstant);
@@ -159,9 +167,9 @@ public final class BoxingSnippets implements Snippets
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final EnumMap<JavaKind, SnippetInfo> boxSnippets = new EnumMap<>(JavaKind.class);
+        private final EnumMap<JavaKind, SnippetInfo> ___boxSnippets = new EnumMap<>(JavaKind.class);
         // @field
-        private final EnumMap<JavaKind, SnippetInfo> unboxSnippets = new EnumMap<>(JavaKind.class);
+        private final EnumMap<JavaKind, SnippetInfo> ___unboxSnippets = new EnumMap<>(JavaKind.class);
 
         // @cons
         public Templates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
@@ -169,14 +177,14 @@ public final class BoxingSnippets implements Snippets
             super(__providers, __snippetReflection, __target);
             for (JavaKind __kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short })
             {
-                boxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "ValueOf"));
-                unboxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "Value"));
+                this.___boxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "ValueOf"));
+                this.___unboxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "Value"));
             }
         }
 
         public void lower(BoxNode __box, LoweringTool __tool)
         {
-            FloatingNode __canonical = canonicalizeBoxing(__box, providers.getMetaAccess(), providers.getConstantReflection());
+            FloatingNode __canonical = canonicalizeBoxing(__box, this.___providers.getMetaAccess(), this.___providers.getConstantReflection());
             // if in AOT mode, we don't want to embed boxed constants.
             if (__canonical != null)
             {
@@ -184,21 +192,21 @@ public final class BoxingSnippets implements Snippets
             }
             else
             {
-                Arguments __args = new Arguments(boxSnippets.get(__box.getBoxingKind()), __box.graph().getGuardsStage(), __tool.getLoweringStage());
+                Arguments __args = new Arguments(this.___boxSnippets.get(__box.getBoxingKind()), __box.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("value", __box.getValue());
 
                 SnippetTemplate __template = template(__box, __args);
-                __template.instantiate(providers.getMetaAccess(), __box, SnippetTemplate.DEFAULT_REPLACER, __args);
+                __template.instantiate(this.___providers.getMetaAccess(), __box, SnippetTemplate.DEFAULT_REPLACER, __args);
             }
         }
 
         public void lower(UnboxNode __unbox, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(unboxSnippets.get(__unbox.getBoxingKind()), __unbox.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___unboxSnippets.get(__unbox.getBoxingKind()), __unbox.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("value", __unbox.getValue());
 
             SnippetTemplate __template = template(__unbox, __args);
-            __template.instantiate(providers.getMetaAccess(), __unbox, SnippetTemplate.DEFAULT_REPLACER, __args);
+            __template.instantiate(this.___providers.getMetaAccess(), __unbox, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

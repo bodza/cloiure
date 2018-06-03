@@ -12,16 +12,16 @@ public enum CanonicalCondition
     BT(Condition.BT);
 
     // @field
-    private final Condition condition;
+    private final Condition ___condition;
 
     CanonicalCondition(Condition __condition)
     {
-        this.condition = __condition;
+        this.___condition = __condition;
     }
 
     public Condition asCondition()
     {
-        return condition;
+        return this.___condition;
     }
 
     public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)

@@ -41,9 +41,9 @@ import giraaff.nodes.java.ForeignCallDescriptors;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
-/**
- * HotSpot implementation of {@link ForeignCallsProvider}.
- */
+///
+// HotSpot implementation of {@link ForeignCallsProvider}.
+///
 // @class HotSpotHostForeignCallsProvider
 public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCallsProviderImpl
 {
@@ -155,11 +155,9 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
     private void registerArrayCopy(JavaKind __kind, long __routine, long __alignedRoutine, long __disjointRoutine, long __alignedDisjointRoutine, boolean __uninit)
     {
-        /*
-         * Sometimes the same function is used for multiple cases so share them when that's the case
-         * but only within the same Kind. For instance short and char are the same copy routines but
-         * they kill different memory so they still have to be distinct.
-         */
+        // Sometimes the same function is used for multiple cases so share them when that's the case
+        // but only within the same Kind. For instance short and char are the same copy routines but
+        // they kill different memory so they still have to be distinct.
         EconomicMap<Long, ForeignCallDescriptor> __descMap = EconomicMap.create();
         registerArraycopyDescriptor(__descMap, __kind, false, false, __uninit, false, __routine);
         registerArraycopyDescriptor(__descMap, __kind, true, false, __uninit, false, __alignedRoutine);
@@ -198,7 +196,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
         link(new NewInstanceStub(__providers, registerStubCall(HotSpotBackend.NEW_INSTANCE, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
         link(new NewArrayStub(__providers, registerStubCall(HotSpotBackend.NEW_ARRAY, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
-        link(new ExceptionHandlerStub(__providers, foreignCalls.get(HotSpotBackend.EXCEPTION_HANDLER)));
+        link(new ExceptionHandlerStub(__providers, this.___foreignCalls.get(HotSpotBackend.EXCEPTION_HANDLER)));
         link(new UnwindExceptionToCallerStub(__providers, registerStubCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER, NOT_REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
         link(new ArrayStoreExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
         link(new ClassCastExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
@@ -280,6 +278,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
     public HotSpotForeignCallLinkage getForeignCall(ForeignCallDescriptor __descriptor)
     {
-        return foreignCalls.get(__descriptor);
+        return this.___foreignCalls.get(__descriptor);
     }
 }

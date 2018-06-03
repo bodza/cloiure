@@ -15,23 +15,23 @@ public final class BlackholeNode extends FixedWithNextNode implements LIRLowerab
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
 
     // @cons
     public BlackholeNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = __value;
+        this.___value = __value;
     }
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.getLIRGeneratorTool().emitBlackhole(__gen.operand(value));
+        __gen.getLIRGeneratorTool().emitBlackhole(__gen.operand(this.___value));
     }
 }

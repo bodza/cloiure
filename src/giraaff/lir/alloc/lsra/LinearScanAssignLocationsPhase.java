@@ -22,20 +22,20 @@ import giraaff.lir.Variable;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
 
-/**
- * Phase 7: Assign register numbers back to LIR.
- */
+///
+// Phase 7: Assign register numbers back to LIR.
+///
 // @class LinearScanAssignLocationsPhase
 public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
 {
     // @field
-    protected final LinearScan allocator;
+    protected final LinearScan ___allocator;
 
     // @cons
     public LinearScanAssignLocationsPhase(LinearScan __allocator)
     {
         super();
-        this.allocator = __allocator;
+        this.___allocator = __allocator;
     }
 
     @Override
@@ -44,23 +44,23 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
         assignLocations();
     }
 
-    /**
-     * Assigns the allocated location for an LIR instruction operand back into the instruction.
-     *
-     * @param op current {@link LIRInstruction}
-     * @param operand an LIR instruction operand
-     * @param mode the usage mode for {@code operand} by the instruction
-     * @return the location assigned for the operand
-     */
+    ///
+    // Assigns the allocated location for an LIR instruction operand back into the instruction.
+    //
+    // @param op current {@link LIRInstruction}
+    // @param operand an LIR instruction operand
+    // @param mode the usage mode for {@code operand} by the instruction
+    // @return the location assigned for the operand
+    ///
     protected Value colorLirOperand(LIRInstruction __op, Variable __operand, OperandMode __mode)
     {
         int __opId = __op.id();
-        Interval __interval = allocator.intervalFor(__operand);
+        Interval __interval = this.___allocator.intervalFor(__operand);
 
         if (__opId != -1)
         {
             // Operands are not changed when an interval is split during allocation, so search the right interval here.
-            __interval = allocator.splitChildAtOpId(__interval, __opId, __mode);
+            __interval = this.___allocator.splitChildAtOpId(__interval, __opId, __mode);
         }
 
         if (ValueUtil.isIllegal(__interval.location()) && __interval.canMaterialize())
@@ -111,25 +111,23 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
         }
     };
 
-    /**
-     * Assigns the operand of an {@link LIRInstruction}.
-     *
-     * @param op The {@link LIRInstruction} that should be colored.
-     * @return {@code true} if the instruction should be deleted.
-     */
+    ///
+    // Assigns the operand of an {@link LIRInstruction}.
+    //
+    // @param op The {@link LIRInstruction} that should be colored.
+    // @return {@code true} if the instruction should be deleted.
+    ///
     protected boolean assignLocations(LIRInstruction __op)
     {
         // remove useless moves
         if (MoveOp.isMoveOp(__op))
         {
             AllocatableValue __result = MoveOp.asMoveOp(__op).getResult();
-            if (LIRValueUtil.isVariable(__result) && allocator.isMaterialized(__result, __op.id(), OperandMode.DEF))
+            if (LIRValueUtil.isVariable(__result) && this.___allocator.isMaterialized(__result, __op.id(), OperandMode.DEF))
             {
-                /*
-                 * This happens if a materializable interval is originally not spilled but then
-                 * kicked out in LinearScanWalker.splitForSpilling(). When kicking out such an
-                 * interval this move operation was already generated.
-                 */
+                // This happens if a materializable interval is originally not spilled but then
+                // kicked out in LinearScanWalker.splitForSpilling(). When kicking out such an
+                // interval this move operation was already generated.
                 return true;
             }
         }
@@ -153,9 +151,9 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
 
     private void assignLocations()
     {
-        for (AbstractBlockBase<?> __block : allocator.sortedBlocks())
+        for (AbstractBlockBase<?> __block : this.___allocator.sortedBlocks())
         {
-            assignLocations(allocator.getLIR().getLIRforBlock(__block));
+            assignLocations(this.___allocator.getLIR().getLIRforBlock(__block));
         }
     }
 }

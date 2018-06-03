@@ -7,9 +7,9 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Unwinds the current frame to an exception handler in the caller frame.
- */
+///
+// Unwinds the current frame to an exception handler in the caller frame.
+///
 // @class UnwindNode
 public final class UnwindNode extends ControlSinkNode implements Lowerable, LIRLowerable
 {
@@ -18,18 +18,18 @@ public final class UnwindNode extends ControlSinkNode implements Lowerable, LIRL
 
     @Input
     // @field
-    ValueNode exception;
+    ValueNode ___exception;
 
     public ValueNode exception()
     {
-        return exception;
+        return this.___exception;
     }
 
     // @cons
     public UnwindNode(ValueNode __exception)
     {
         super(TYPE, StampFactory.forVoid());
-        this.exception = __exception;
+        this.___exception = __exception;
     }
 
     @Override

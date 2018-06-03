@@ -8,15 +8,15 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
 
-/**
- * This class performs basic optimizations on the control flow graph after LIR generation.
- */
+///
+// This class performs basic optimizations on the control flow graph after LIR generation.
+///
 // @class ControlFlowOptimizer
 public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
 {
-    /**
-     * Performs control flow optimizations on the given LIR graph.
-     */
+    ///
+    // Performs control flow optimizations on the given LIR graph.
+    ///
     @Override
     protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
     {
@@ -28,22 +28,22 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
     private static final class Optimizer
     {
         // @field
-        private final LIR lir;
+        private final LIR ___lir;
 
         // @cons
         private Optimizer(LIR __lir)
         {
             super();
-            this.lir = __lir;
+            this.___lir = __lir;
         }
 
-        /**
-         * Checks whether a block can be deleted. Only blocks with exactly one successor and an
-         * unconditional branch to this successor are eligable.
-         *
-         * @param block the block checked for deletion
-         * @return whether the block can be deleted
-         */
+        ///
+        // Checks whether a block can be deleted. Only blocks with exactly one successor and an
+        // unconditional branch to this successor are eligable.
+        //
+        // @param block the block checked for deletion
+        // @return whether the block can be deleted
+        ///
         private boolean canDeleteBlock(AbstractBlockBase<?> __block)
         {
             if (__block == null || __block.getSuccessorCount() != 1 || __block.getPredecessorCount() == 0 || __block.getSuccessors()[0] == __block)
@@ -51,7 +51,7 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
                 return false;
             }
 
-            ArrayList<LIRInstruction> __instructions = lir.getLIRforBlock(__block);
+            ArrayList<LIRInstruction> __instructions = this.___lir.getLIRforBlock(__block);
 
             // Block must have exactly one successor.
             return __instructions.size() == 2 && !__block.isExceptionEntry();
@@ -62,7 +62,7 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
             if (!__block.isAligned())
             {
                 __block.setAlign(true);
-                ArrayList<LIRInstruction> __instructions = lir.getLIRforBlock(__block);
+                ArrayList<LIRInstruction> __instructions = this.___lir.getLIRforBlock(__block);
                 StandardOp.LabelOp __label = (StandardOp.LabelOp) __instructions.get(0);
                 __instructions.set(0, new StandardOp.LabelOp(__label.getLabel(), true));
             }

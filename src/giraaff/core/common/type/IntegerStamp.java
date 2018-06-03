@@ -22,33 +22,33 @@ import giraaff.core.common.type.ArithmeticOpTable.ShiftOp;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp;
 import giraaff.util.GraalError;
 
-/**
- * Describes the possible values of a node that produces an int or long result.
- *
- * The description consists of (inclusive) lower and upper bounds and up (may be set) and down
- * (always set) bit-masks.
- */
+///
+// Describes the possible values of a node that produces an int or long result.
+//
+// The description consists of (inclusive) lower and upper bounds and up (may be set) and down
+// (always set) bit-masks.
+///
 // @class IntegerStamp
 public final class IntegerStamp extends PrimitiveStamp
 {
     // @field
-    private final long lowerBound;
+    private final long ___lowerBound;
     // @field
-    private final long upperBound;
+    private final long ___upperBound;
     // @field
-    private final long downMask;
+    private final long ___downMask;
     // @field
-    private final long upMask;
+    private final long ___upMask;
 
     // @cons
     private IntegerStamp(int __bits, long __lowerBound, long __upperBound, long __downMask, long __upMask)
     {
         super(__bits, OPS);
 
-        this.lowerBound = __lowerBound;
-        this.upperBound = __upperBound;
-        this.downMask = __downMask;
-        this.upMask = __upMask;
+        this.___lowerBound = __lowerBound;
+        this.___upperBound = __upperBound;
+        this.___downMask = __downMask;
+        this.___upMask = __upMask;
     }
 
     public static IntegerStamp create(int __bits, long __lowerBoundInput, long __upperBoundInput)
@@ -189,7 +189,7 @@ public final class IntegerStamp extends PrimitiveStamp
     @Override
     public boolean hasValues()
     {
-        return lowerBound <= upperBound;
+        return this.___lowerBound <= this.___upperBound;
     }
 
     @Override
@@ -231,47 +231,47 @@ public final class IntegerStamp extends PrimitiveStamp
         }
     }
 
-    /**
-     * The signed inclusive lower bound on the value described by this stamp.
-     */
+    ///
+    // The signed inclusive lower bound on the value described by this stamp.
+    ///
     public long lowerBound()
     {
-        return lowerBound;
+        return this.___lowerBound;
     }
 
-    /**
-     * The signed inclusive upper bound on the value described by this stamp.
-     */
+    ///
+    // The signed inclusive upper bound on the value described by this stamp.
+    ///
     public long upperBound()
     {
-        return upperBound;
+        return this.___upperBound;
     }
 
-    /**
-     * This bit-mask describes the bits that are always set in the value described by this stamp.
-     */
+    ///
+    // This bit-mask describes the bits that are always set in the value described by this stamp.
+    ///
     public long downMask()
     {
-        return downMask;
+        return this.___downMask;
     }
 
-    /**
-     * This bit-mask describes the bits that can be set in the value described by this stamp.
-     */
+    ///
+    // This bit-mask describes the bits that can be set in the value described by this stamp.
+    ///
     public long upMask()
     {
-        return upMask;
+        return this.___upMask;
     }
 
     @Override
     public boolean isUnrestricted()
     {
-        return lowerBound == CodeUtil.minValue(getBits()) && upperBound == CodeUtil.maxValue(getBits()) && downMask == 0 && upMask == CodeUtil.mask(getBits());
+        return this.___lowerBound == CodeUtil.minValue(getBits()) && this.___upperBound == CodeUtil.maxValue(getBits()) && this.___downMask == 0 && this.___upMask == CodeUtil.mask(getBits());
     }
 
     public boolean contains(long __value)
     {
-        return __value >= lowerBound && __value <= upperBound && (__value & downMask) == downMask && (__value & upMask) == (__value & CodeUtil.mask(getBits()));
+        return __value >= this.___lowerBound && __value <= this.___upperBound && (__value & this.___downMask) == this.___downMask && (__value & this.___upMask) == (__value & CodeUtil.mask(getBits()));
     }
 
     public boolean isPositive()
@@ -310,11 +310,11 @@ public final class IntegerStamp extends PrimitiveStamp
         {
             return empty();
         }
-        else if (__newLowerBound == lowerBound && __newUpperBound == upperBound && __newDownMask == downMask && __newUpMask == upMask)
+        else if (__newLowerBound == this.___lowerBound && __newUpperBound == this.___upperBound && __newDownMask == this.___downMask && __newUpMask == this.___upMask)
         {
             return this;
         }
-        else if (__newLowerBound == __other.lowerBound && __newUpperBound == __other.upperBound && __newDownMask == __other.downMask && __newUpMask == __other.upMask)
+        else if (__newLowerBound == __other.___lowerBound && __newUpperBound == __other.___upperBound && __newDownMask == __other.___downMask && __newUpMask == __other.___upMask)
         {
             return __other;
         }
@@ -340,7 +340,7 @@ public final class IntegerStamp extends PrimitiveStamp
             return this;
         }
         IntegerStamp __other = (IntegerStamp) __otherStamp;
-        return createStamp(__other, Math.max(upperBound, __other.upperBound), Math.min(lowerBound, __other.lowerBound), downMask & __other.downMask, upMask | __other.upMask);
+        return createStamp(__other, Math.max(this.___upperBound, __other.___upperBound), Math.min(this.___lowerBound, __other.___lowerBound), this.___downMask & __other.___downMask, this.___upMask | __other.___upMask);
     }
 
     @Override
@@ -351,10 +351,10 @@ public final class IntegerStamp extends PrimitiveStamp
             return this;
         }
         IntegerStamp __other = (IntegerStamp) __otherStamp;
-        long __newDownMask = downMask | __other.downMask;
-        long __newLowerBound = Math.max(lowerBound, __other.lowerBound);
-        long __newUpperBound = Math.min(upperBound, __other.upperBound);
-        long __newUpMask = upMask & __other.upMask;
+        long __newDownMask = this.___downMask | __other.___downMask;
+        long __newLowerBound = Math.max(this.___lowerBound, __other.___lowerBound);
+        long __newUpperBound = Math.min(this.___upperBound, __other.___upperBound);
+        long __newUpMask = this.___upMask & __other.___upMask;
         return createStamp(__other, __newUpperBound, __newLowerBound, __newDownMask, __newUpMask);
     }
 
@@ -404,7 +404,7 @@ public final class IntegerStamp extends PrimitiveStamp
 
     private boolean sameSignBounds()
     {
-        return NumUtil.sameSign(lowerBound, upperBound);
+        return NumUtil.sameSign(this.___lowerBound, this.___upperBound);
     }
 
     @Override
@@ -413,10 +413,10 @@ public final class IntegerStamp extends PrimitiveStamp
         final int __prime = 31;
         int __result = 1;
         __result = __prime * __result + super.hashCode();
-        __result = __prime * __result + (int) (lowerBound ^ (lowerBound >>> 32));
-        __result = __prime * __result + (int) (upperBound ^ (upperBound >>> 32));
-        __result = __prime * __result + (int) (downMask ^ (downMask >>> 32));
-        __result = __prime * __result + (int) (upMask ^ (upMask >>> 32));
+        __result = __prime * __result + (int) (this.___lowerBound ^ (this.___lowerBound >>> 32));
+        __result = __prime * __result + (int) (this.___upperBound ^ (this.___upperBound >>> 32));
+        __result = __prime * __result + (int) (this.___downMask ^ (this.___downMask >>> 32));
+        __result = __prime * __result + (int) (this.___upMask ^ (this.___upMask >>> 32));
         return __result;
     }
 
@@ -432,7 +432,7 @@ public final class IntegerStamp extends PrimitiveStamp
             return false;
         }
         IntegerStamp __other = (IntegerStamp) __obj;
-        if (lowerBound != __other.lowerBound || upperBound != __other.upperBound || downMask != __other.downMask || upMask != __other.upMask)
+        if (this.___lowerBound != __other.___lowerBound || this.___upperBound != __other.___upperBound || this.___downMask != __other.___downMask || this.___upMask != __other.___upMask)
         {
             return false;
         }
@@ -452,12 +452,12 @@ public final class IntegerStamp extends PrimitiveStamp
         }
     }
 
-    /**
-     * Checks if the 2 stamps represent values of the same sign. Returns true if the two stamps are
-     * both positive of null or if they are both strictly negative
-     *
-     * @return true if the two stamps are both positive of null or if they are both strictly negative
-     */
+    ///
+    // Checks if the 2 stamps represent values of the same sign. Returns true if the two stamps are
+    // both positive of null or if they are both strictly negative
+    //
+    // @return true if the two stamps are both positive of null or if they are both strictly negative
+    ///
     public static boolean sameSign(IntegerStamp __s1, IntegerStamp __s2)
     {
         return __s1.isPositive() && __s2.isPositive() || __s1.isStrictlyNegative() && __s2.isStrictlyNegative();
@@ -466,20 +466,20 @@ public final class IntegerStamp extends PrimitiveStamp
     @Override
     public JavaConstant asConstant()
     {
-        if (lowerBound == upperBound)
+        if (this.___lowerBound == this.___upperBound)
         {
             switch (getBits())
             {
                 case 1:
-                    return JavaConstant.forBoolean(lowerBound != 0);
+                    return JavaConstant.forBoolean(this.___lowerBound != 0);
                 case 8:
-                    return JavaConstant.forByte((byte) lowerBound);
+                    return JavaConstant.forByte((byte) this.___lowerBound);
                 case 16:
-                    return JavaConstant.forShort((short) lowerBound);
+                    return JavaConstant.forShort((short) this.___lowerBound);
                 case 32:
-                    return JavaConstant.forInt((int) lowerBound);
+                    return JavaConstant.forInt((int) this.___lowerBound);
                 case 64:
-                    return JavaConstant.forLong(lowerBound);
+                    return JavaConstant.forLong(this.___lowerBound);
             }
         }
         return null;
@@ -673,7 +673,7 @@ public final class IntegerStamp extends PrimitiveStamp
                 }
                 IntegerStamp __stamp = (IntegerStamp) __s;
                 int __bits = __stamp.getBits();
-                if (__stamp.lowerBound == __stamp.upperBound)
+                if (__stamp.___lowerBound == __stamp.___upperBound)
                 {
                     long __value = CodeUtil.convert(-__stamp.lowerBound(), __stamp.getBits(), false);
                     return StampFactory.forInteger(__stamp.getBits(), __value, __value);
@@ -717,7 +717,7 @@ public final class IntegerStamp extends PrimitiveStamp
 
                 int __bits = __a.getBits();
 
-                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound)
+                if (__a.___lowerBound == __a.___upperBound && __b.___lowerBound == __b.___upperBound)
                 {
                     long __value = CodeUtil.convert(__a.lowerBound() + __b.lowerBound(), __a.getBits(), false);
                     return StampFactory.forInteger(__a.getBits(), __value, __value);
@@ -831,7 +831,7 @@ public final class IntegerStamp extends PrimitiveStamp
 
                 int __bits = __a.getBits();
 
-                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound)
+                if (__a.___lowerBound == __a.___upperBound && __b.___lowerBound == __b.___upperBound)
                 {
                     long __value = CodeUtil.convert(__a.lowerBound() * __b.lowerBound(), __a.getBits(), false);
                     return StampFactory.forInteger(__a.getBits(), __value, __value);
@@ -860,49 +860,48 @@ public final class IntegerStamp extends PrimitiveStamp
                     // a!=0 && b!=0 holds
                     long __newLowerBound = Long.MAX_VALUE;
                     long __newUpperBound = Long.MIN_VALUE;
-                    /*
-                     * Based on the signs of the incoming stamps lower and upper bound
-                     * of the result of the multiplication may be swapped. LowerBound
-                     * can become upper bound if both signs are negative, and so on. To
-                     * determine the new values for lower and upper bound we need to
-                     * look at the max and min of the cases blow:
-                     *
-                     * a.lowerBound * b.lowerBound
-                     * a.lowerBound * b.upperBound
-                     * a.upperBound * b.lowerBound
-                     * a.upperBound * b.upperBound
-                     *
-                     * We are only interested in those cases that are relevant due to
-                     * the sign of the involved stamps (whether a stamp includes
-                     * negative and / or positive values). Based on the signs, the maximum
-                     * or minimum of the above multiplications form the new lower and
-                     * upper bounds.
-                     *
-                     * The table below contains the interesting candidates for lower and
-                     * upper bound after multiplication.
-                     *
-                     * For example if we consider two stamps a & b that both contain
-                     * negative and positive values, the product of minNegA * minNegB
-                     * (both the smallest negative value for each stamp) can only be the
-                     * highest positive number. The other candidates can be computed in
-                     * a similar fashion. Some of them can never be a new minimum or
-                     * maximum and are therefore excluded.
-                     *
-                     *          [x................0................y]
-                     *          -------------------------------------
-                     *          [minNeg     maxNeg minPos     maxPos]
-                     *
-                     *          where maxNeg = min(0,y) && minPos = max(0,x)
-                     *
-                     *
-                     *                 |minNegA  maxNegA    minPosA  maxPosA
-                     *         _______ |____________________________________
-                     *         minNegB | MAX        /     :     /      MIN
-                     *         maxNegB |  /        MIN    :    MAX      /
-                     *                 |------------------+-----------------
-                     *         minPosB |  /        MAX    :    MIN      /
-                     *         maxPosB | MIN        /     :     /      MAX
-                     */
+                    // Based on the signs of the incoming stamps lower and upper bound
+                    // of the result of the multiplication may be swapped. LowerBound
+                    // can become upper bound if both signs are negative, and so on. To
+                    // determine the new values for lower and upper bound we need to
+                    // look at the max and min of the cases blow:
+                    //
+                    // a.lowerBound * b.lowerBound
+                    // a.lowerBound * b.upperBound
+                    // a.upperBound * b.lowerBound
+                    // a.upperBound * b.upperBound
+                    //
+                    // We are only interested in those cases that are relevant due to
+                    // the sign of the involved stamps (whether a stamp includes
+                    // negative and / or positive values). Based on the signs, the maximum
+                    // or minimum of the above multiplications form the new lower and
+                    // upper bounds.
+                    //
+                    // The table below contains the interesting candidates for lower and
+                    // upper bound after multiplication.
+                    //
+                    // For example if we consider two stamps a & b that both contain
+                    // negative and positive values, the product of minNegA * minNegB
+                    // (both the smallest negative value for each stamp) can only be the
+                    // highest positive number. The other candidates can be computed in
+                    // a similar fashion. Some of them can never be a new minimum or
+                    // maximum and are therefore excluded.
+                    //
+                    //          [x................0................y]
+                    //          -------------------------------------
+                    //          [minNeg     maxNeg minPos     maxPos]
+                    //
+                    //          where maxNeg = min(0,y) && minPos = max(0,x)
+                    //
+                    //
+                    //                 |minNegA  maxNegA    minPosA  maxPosA
+                    //         _______ |____________________________________
+                    //         minNegB | MAX        /     :     /      MIN
+                    //         maxNegB |  /        MIN    :    MAX      /
+                    //                 |------------------+-----------------
+                    //         minPosB |  /        MAX    :    MIN      /
+                    //         maxPosB | MIN        /     :     /      MAX
+
                     // We materialize all factors here. If they are needed, the signs of
                     // the stamp will ensure the correct value is used.
                     long __minNegA = __a.lowerBound();
@@ -916,7 +915,7 @@ public final class IntegerStamp extends PrimitiveStamp
                     long __maxPosB = __b.upperBound();
 
                     // multiplication has shift semantics
-                    long __newUpMask = ~CodeUtil.mask(Math.min(64, Long.numberOfTrailingZeros(__a.upMask) + Long.numberOfTrailingZeros(__b.upMask))) & CodeUtil.mask(__bits);
+                    long __newUpMask = ~CodeUtil.mask(Math.min(64, Long.numberOfTrailingZeros(__a.___upMask) + Long.numberOfTrailingZeros(__b.___upMask))) & CodeUtil.mask(__bits);
 
                     if (__a.canBePositive())
                     {
@@ -1151,10 +1150,8 @@ public final class IntegerStamp extends PrimitiveStamp
             {
                 if (__stamp.lowerBound() < 0 && __stamp.upperBound() >= 0)
                 {
-                    /*
-                     * If -1 and 0 are both in the signed range, then we can't say anything
-                     * about the unsigned range, so we have to return [0, MAX_UNSIGNED].
-                     */
+                    // If -1 and 0 are both in the signed range, then we can't say anything
+                    // about the unsigned range, so we have to return [0, MAX_UNSIGNED].
                     return new long[] { 0, -1L };
                 }
                 else
@@ -1219,7 +1216,7 @@ public final class IntegerStamp extends PrimitiveStamp
                 }
                 IntegerStamp __a = (IntegerStamp) __stamp1;
                 IntegerStamp __b = (IntegerStamp) __stamp2;
-                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound && __b.lowerBound != 0)
+                if (__a.___lowerBound == __a.___upperBound && __b.___lowerBound == __b.___upperBound && __b.___lowerBound != 0)
                 {
                     long __value = CodeUtil.convert(__a.lowerBound() / __b.lowerBound(), __a.getBits(), false);
                     return StampFactory.forInteger(__a.getBits(), __value, __value);
@@ -1273,7 +1270,7 @@ public final class IntegerStamp extends PrimitiveStamp
                 IntegerStamp __a = (IntegerStamp) __stamp1;
                 IntegerStamp __b = (IntegerStamp) __stamp2;
 
-                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound && __b.lowerBound != 0)
+                if (__a.___lowerBound == __a.___upperBound && __b.___lowerBound == __b.___upperBound && __b.___lowerBound != 0)
                 {
                     long __value = CodeUtil.convert(__a.lowerBound() % __b.lowerBound(), __a.getBits(), false);
                     return StampFactory.forInteger(__a.getBits(), __value, __value);
@@ -1662,7 +1659,7 @@ public final class IntegerStamp extends PrimitiveStamp
                 }
                 IntegerStamp __stamp = (IntegerStamp) __input;
                 int __bits = __stamp.getBits();
-                if (__stamp.lowerBound == __stamp.upperBound)
+                if (__stamp.___lowerBound == __stamp.___upperBound)
                 {
                     long __value = CodeUtil.convert(Math.abs(__stamp.lowerBound()), __stamp.getBits(), false);
                     return StampFactory.forInteger(__stamp.getBits(), __value, __value);

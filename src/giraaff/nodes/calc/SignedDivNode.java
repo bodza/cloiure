@@ -83,7 +83,7 @@ public final class SignedDivNode extends IntegerDivRemNode implements LIRLowerab
                 if (__integerSubNode.stamp(__view).isCompatible(__stamp) && __integerRemNode.stamp(__view).isCompatible(__stamp) && __integerSubNode.getX() == __integerRemNode.getX() && __forY == __integerRemNode.getY())
                 {
                     SignedDivNode __sd = new SignedDivNode(__integerSubNode.getX(), __forY);
-                    __sd.stateBefore = __self != null ? __self.stateBefore : null;
+                    __sd.___stateBefore = __self != null ? __self.___stateBefore : null;
                     return __sd;
                 }
             }

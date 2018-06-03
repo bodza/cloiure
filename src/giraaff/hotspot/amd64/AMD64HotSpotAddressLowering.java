@@ -38,22 +38,22 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
     private static final int INT_BITS = 32;
 
     // @field
-    private final long heapBase;
+    private final long ___heapBase;
     // @field
-    private final Register heapBaseRegister;
+    private final Register ___heapBaseRegister;
 
     // @cons
     public AMD64HotSpotAddressLowering(Register __heapBaseRegister)
     {
         super();
-        this.heapBase = HotSpotRuntime.oopEncoding.getBase();
-        if (heapBase == 0)
+        this.___heapBase = HotSpotRuntime.oopEncoding.getBase();
+        if (this.___heapBase == 0)
         {
-            this.heapBaseRegister = null;
+            this.___heapBaseRegister = null;
         }
         else
         {
-            this.heapBaseRegister = __heapBaseRegister;
+            this.___heapBaseRegister = __heapBaseRegister;
         }
     }
 
@@ -67,11 +67,11 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
             return false;
         }
 
-        if (heapBaseRegister != null && __encoding.getBase() == heapBase)
+        if (this.___heapBaseRegister != null && __encoding.getBase() == this.___heapBase)
         {
             if (__other == null)
             {
-                ValueNode __base = __compression.graph().unique(new HeapBaseNode(heapBaseRegister));
+                ValueNode __base = __compression.graph().unique(new HeapBaseNode(this.___heapBaseRegister));
                 __addr.setBase(__base);
             }
             else
@@ -168,9 +168,9 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
         }
     }
 
-    /**
-     * Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
-     */
+    ///
+    // Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
+    ///
     private static void optimizeAdd(ZeroExtendNode __zeroExtendNode, ConstantNode __constant, ValueNode __other, LoopEx __loop)
     {
         StructuredGraph __graph = __zeroExtendNode.graph();
@@ -178,9 +178,9 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
         __zeroExtendNode.replaceAtUsages(__addNode);
     }
 
-    /**
-     * Create a sign extend for {@code input}, or zero extend if {@code input} can be proven positive.
-     */
+    ///
+    // Create a sign extend for {@code input}, or zero extend if {@code input} can be proven positive.
+    ///
     private static ValueNode signExtend(ValueNode __input, LoopEx __loop)
     {
         StructuredGraph __graph = __input.graph();

@@ -22,9 +22,9 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * This node is used to perform the finalizer registration at the end of the java.lang.Object constructor.
- */
+///
+// This node is used to perform the finalizer registration at the end of the java.lang.Object constructor.
+///
 // @class RegisterFinalizerNode
 public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter
 {
@@ -33,22 +33,22 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
 
     @OptionalInput(InputType.State)
     // @field
-    FrameState deoptState;
+    FrameState ___deoptState;
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
 
     // @cons
     public RegisterFinalizerNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
@@ -61,10 +61,10 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
         __gen.getLIRGeneratorTool().emitForeignCall(__linkage, __gen.state(this), __gen.operand(getValue()));
     }
 
-    /**
-     * Determines if the compiler should emit code to test whether a given object has a finalizer
-     * that must be registered with the runtime upon object initialization.
-     */
+    ///
+    // Determines if the compiler should emit code to test whether a given object has a finalizer
+    // that must be registered with the runtime upon object initialization.
+    ///
     public static boolean mayHaveFinalizer(ValueNode __object, Assumptions __assumptions)
     {
         ObjectStamp __objectStamp = (ObjectStamp) __object.stamp(NodeView.DEFAULT);
@@ -117,5 +117,5 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
     }
 
     @NodeIntrinsic
-    public static native void register(Object thisObj);
+    public static native void register(Object __thisObj);
 }

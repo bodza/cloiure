@@ -10,9 +10,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Absolute value.
- */
+///
+// Absolute value.
+///
 // @class AbsNode
 public final class AbsNode extends UnaryArithmeticNode<Abs> implements ArithmeticLIRLowerable, NarrowableArithmeticNode
 {

@@ -17,10 +17,10 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Represents the lowered version of an atomic read-and-write operation like
- * {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
- */
+///
+// Represents the lowered version of an atomic read-and-write operation like
+// {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class LoweredAtomicReadAndWriteNode
 public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
@@ -30,29 +30,29 @@ public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode impleme
 
     @Input
     // @field
-    ValueNode newValue;
+    ValueNode ___newValue;
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateAfter;
+    FrameState ___stateAfter;
 
     // @cons
     public LoweredAtomicReadAndWriteNode(AddressNode __address, LocationIdentity __location, ValueNode __newValue, BarrierType __barrierType)
     {
         super(TYPE, __address, __location, __newValue.stamp(NodeView.DEFAULT).unrestricted(), __barrierType);
-        this.newValue = __newValue;
+        this.___newValue = __newValue;
     }
 
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
     @Override
@@ -76,7 +76,7 @@ public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode impleme
 
     public ValueNode getNewValue()
     {
-        return newValue;
+        return this.___newValue;
     }
 
     @Override

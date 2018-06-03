@@ -4,32 +4,32 @@ package giraaff.core.common;
 public abstract class FieldIntrospection<T>
 {
     // @field
-    private final Class<T> clazz;
+    private final Class<T> ___clazz;
 
-    /**
-     * The set of fields in {@link #clazz} that do long belong to a more specific category.
-     */
+    ///
+    // The set of fields in {@link #clazz} that do long belong to a more specific category.
+    ///
     // @field
-    protected Fields data;
+    protected Fields ___data;
 
     // @cons
     public FieldIntrospection(Class<T> __clazz)
     {
         super();
-        this.clazz = __clazz;
+        this.___clazz = __clazz;
     }
 
     public Class<T> getClazz()
     {
-        return clazz;
+        return this.___clazz;
     }
 
-    /**
-     * Gets the fields in {@link #getClazz()} that do long belong to specific category.
-     */
+    ///
+    // Gets the fields in {@link #getClazz()} that do long belong to specific category.
+    ///
     public Fields getData()
     {
-        return data;
+        return this.___data;
     }
 
     public abstract Fields[] getAllFields();

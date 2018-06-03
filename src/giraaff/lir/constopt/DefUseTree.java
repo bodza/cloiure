@@ -12,60 +12,60 @@ import giraaff.lir.LIRInstruction;
 import giraaff.lir.StandardOp.LoadConstantOp;
 import giraaff.lir.Variable;
 
-/**
- * Represents def-use tree of a constant.
- */
+///
+// Represents def-use tree of a constant.
+///
 // @class DefUseTree
 final class DefUseTree
 {
     // @field
-    private final LoadConstantOp instruction;
+    private final LoadConstantOp ___instruction;
     // @field
-    private final AbstractBlockBase<?> block;
+    private final AbstractBlockBase<?> ___block;
     // @field
-    private final List<UseEntry> uses;
+    private final List<UseEntry> ___uses;
 
     // @cons
     DefUseTree(LIRInstruction __instruction, AbstractBlockBase<?> __block)
     {
         super();
-        this.instruction = LoadConstantOp.asLoadConstantOp(__instruction);
-        this.block = __block;
-        this.uses = new ArrayList<>();
+        this.___instruction = LoadConstantOp.asLoadConstantOp(__instruction);
+        this.___block = __block;
+        this.___uses = new ArrayList<>();
     }
 
     public Variable getVariable()
     {
-        return (Variable) instruction.getResult();
+        return (Variable) this.___instruction.getResult();
     }
 
     public Constant getConstant()
     {
-        return instruction.getConstant();
+        return this.___instruction.getConstant();
     }
 
     public LIRInstruction getInstruction()
     {
-        return (LIRInstruction) instruction;
+        return (LIRInstruction) this.___instruction;
     }
 
     public AbstractBlockBase<?> getBlock()
     {
-        return block;
+        return this.___block;
     }
 
     public void addUsage(AbstractBlockBase<?> __b, LIRInstruction __inst, Value __value)
     {
-        uses.add(new UseEntry(__b, __inst, __value));
+        this.___uses.add(new UseEntry(__b, __inst, __value));
     }
 
     public int usageCount()
     {
-        return uses.size();
+        return this.___uses.size();
     }
 
     public void forEach(Consumer<? super UseEntry> __action)
     {
-        uses.forEach(__action);
+        this.___uses.forEach(__action);
     }
 }

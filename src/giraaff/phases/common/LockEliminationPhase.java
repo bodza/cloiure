@@ -26,10 +26,8 @@ public final class LockEliminationPhase extends Phase
                 AccessMonitorNode __monitorEnterNode = (AccessMonitorNode) __next;
                 if (GraphUtil.unproxify(__monitorEnterNode.object()) == GraphUtil.unproxify(__monitorExitNode.object()))
                 {
-                    /*
-                     * We've coarsened the lock so use the same monitor id for the whole region,
-                     * otherwise the monitor operations appear to be unrelated.
-                     */
+                    // We've coarsened the lock so use the same monitor id for the whole region,
+                    // otherwise the monitor operations appear to be unrelated.
                     MonitorIdNode __enterId = __monitorEnterNode.getMonitorId();
                     MonitorIdNode __exitId = __monitorExitNode.getMonitorId();
                     if (__enterId != __exitId)

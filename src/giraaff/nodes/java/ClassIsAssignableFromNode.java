@@ -15,10 +15,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * The {@code ClassIsAssignableFromNode} represents a type check against {@link Class} instead of
- * against instances. This is used, for instance, to intrinsify {@link Class#isAssignableFrom(Class)}.
- */
+///
+// The {@code ClassIsAssignableFromNode} represents a type check against {@link Class} instead of
+// against instances. This is used, for instance, to intrinsify {@link Class#isAssignableFrom(Class)}.
+///
 // @class ClassIsAssignableFromNode
 public final class ClassIsAssignableFromNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {

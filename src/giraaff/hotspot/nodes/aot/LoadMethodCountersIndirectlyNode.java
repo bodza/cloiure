@@ -28,24 +28,24 @@ public final class LoadMethodCountersIndirectlyNode extends FloatingNode impleme
 
     @OptionalInput
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     // @field
-    protected Constant constant;
+    protected Constant ___constant;
 
     // @cons
     public LoadMethodCountersIndirectlyNode(ValueNode __value)
     {
         super(TYPE, MethodCountersPointerStamp.methodCounters());
-        this.value = __value;
-        this.constant = null;
+        this.___value = __value;
+        this.___constant = null;
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (value != null)
+        if (this.___value != null)
         {
-            constant = GraphUtil.foldIfConstantAndRemove(this, value);
+            this.___constant = GraphUtil.foldIfConstantAndRemove(this, this.___value);
         }
         return this;
     }
@@ -54,17 +54,17 @@ public final class LoadMethodCountersIndirectlyNode extends FloatingNode impleme
     public void generate(NodeLIRBuilderTool __gen)
     {
         Value __result;
-        if (constant instanceof HotSpotMetaspaceConstant)
+        if (this.___constant instanceof HotSpotMetaspaceConstant)
         {
-            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, HotSpotConstantLoadAction.LOAD_COUNTERS);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(this.___constant, HotSpotConstantLoadAction.LOAD_COUNTERS);
         }
         else
         {
-            throw new BailoutException("unsupported constant type: " + constant);
+            throw new BailoutException("unsupported constant type: " + this.___constant);
         }
         __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic
-    public static native MethodCountersPointer loadMethodCounters(MethodPointer methodPointer);
+    public static native MethodCountersPointer loadMethodCounters(MethodPointer __methodPointer);
 }

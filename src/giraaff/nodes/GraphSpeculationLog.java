@@ -5,62 +5,62 @@ import jdk.vm.ci.meta.SpeculationLog;
 
 import org.graalvm.collections.EconomicMap;
 
-/**
- * A wrapper around a {@link SpeculationLog} instance.
- *
- * This should be used when the wrapped instance may be accessed by multiple threads. Due to races,
- * such an instance can return true for a call to {@link SpeculationLog#maySpeculate} but still fail
- * (i.e. raise an {@link IllegalArgumentException}) when {@link SpeculationLog#speculate} is called.
- *
- * A {@link GraphSpeculationLog} must only be used by a single thread and is typically closely
- * coupled with a {@link StructuredGraph} (hence the name).
- */
+///
+// A wrapper around a {@link SpeculationLog} instance.
+//
+// This should be used when the wrapped instance may be accessed by multiple threads. Due to races,
+// such an instance can return true for a call to {@link SpeculationLog#maySpeculate} but still fail
+// (i.e. raise an {@link IllegalArgumentException}) when {@link SpeculationLog#speculate} is called.
+//
+// A {@link GraphSpeculationLog} must only be used by a single thread and is typically closely
+// coupled with a {@link StructuredGraph} (hence the name).
+///
 // @class GraphSpeculationLog
 public final class GraphSpeculationLog implements SpeculationLog
 {
     // @field
-    private final SpeculationLog log;
+    private final SpeculationLog ___log;
     // @field
-    private final EconomicMap<SpeculationReason, JavaConstant> speculations;
+    private final EconomicMap<SpeculationReason, JavaConstant> ___speculations;
 
     // @cons
     public GraphSpeculationLog(SpeculationLog __log)
     {
         super();
-        this.log = __log;
-        this.speculations = EconomicMap.create();
+        this.___log = __log;
+        this.___speculations = EconomicMap.create();
     }
 
-    /**
-     * Unwraps {@code log} if it is a {@link GraphSpeculationLog}.
-     */
+    ///
+    // Unwraps {@code log} if it is a {@link GraphSpeculationLog}.
+    ///
     public static SpeculationLog unwrap(SpeculationLog __log)
     {
         if (__log instanceof GraphSpeculationLog)
         {
-            return ((GraphSpeculationLog) __log).log;
+            return ((GraphSpeculationLog) __log).___log;
         }
         return __log;
     }
 
-    /**
-     * Determines if the compiler is allowed to speculate with {@code reason}. Note that a
-     * {@code true} return value guarantees that a subsequent call to
-     * {@link #speculate(SpeculationReason)} with an argument {@linkplain Object#equals(Object)
-     * equal} to {@code reason} will succeed.
-     */
+    ///
+    // Determines if the compiler is allowed to speculate with {@code reason}. Note that a
+    // {@code true} return value guarantees that a subsequent call to
+    // {@link #speculate(SpeculationReason)} with an argument {@linkplain Object#equals(Object)
+    // equal} to {@code reason} will succeed.
+    ///
     @Override
     public boolean maySpeculate(SpeculationReason __reason)
     {
-        JavaConstant __speculation = speculations.get(__reason);
+        JavaConstant __speculation = this.___speculations.get(__reason);
         if (__speculation == null)
         {
-            if (log.maySpeculate(__reason))
+            if (this.___log.maySpeculate(__reason))
             {
                 try
                 {
-                    __speculation = log.speculate(__reason);
-                    speculations.put(__reason, __speculation);
+                    __speculation = this.___log.speculate(__reason);
+                    this.___speculations.put(__reason, __speculation);
                 }
                 catch (IllegalArgumentException __e)
                 {
@@ -77,7 +77,7 @@ public final class GraphSpeculationLog implements SpeculationLog
     {
         if (maySpeculate(__reason))
         {
-            return speculations.get(__reason);
+            return this.___speculations.get(__reason);
         }
         throw new IllegalArgumentException("Cannot make speculation with reason " + __reason + " as it is known to fail");
     }
@@ -88,7 +88,7 @@ public final class GraphSpeculationLog implements SpeculationLog
         if (__obj instanceof GraphSpeculationLog)
         {
             GraphSpeculationLog __that = (GraphSpeculationLog) __obj;
-            return this.log == __that.log;
+            return this.___log == __that.___log;
         }
         return false;
     }
@@ -96,24 +96,24 @@ public final class GraphSpeculationLog implements SpeculationLog
     @Override
     public int hashCode()
     {
-        return log.hashCode();
+        return this.___log.hashCode();
     }
 
     @Override
     public void collectFailedSpeculations()
     {
-        log.collectFailedSpeculations();
+        this.___log.collectFailedSpeculations();
     }
 
-    /**
-     * Returns if this log has speculations.
-     *
-     * @return true if {@link #maySpeculate(SpeculationReason)} has ever returned {@code true} for
-     *         this object
-     */
+    ///
+    // Returns if this log has speculations.
+    //
+    // @return true if {@link #maySpeculate(SpeculationReason)} has ever returned {@code true} for
+    //         this object
+    ///
     @Override
     public boolean hasSpeculations()
     {
-        return !speculations.isEmpty();
+        return !this.___speculations.isEmpty();
     }
 }

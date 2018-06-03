@@ -7,9 +7,9 @@ import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.CompressEncoding;
 
-/**
- * Native configuration details.
- */
+///
+// Native configuration details.
+///
 // @class HotSpotRuntime
 public final class HotSpotRuntime
 {
@@ -25,6 +25,7 @@ public final class HotSpotRuntime
     // @def
     private static final HotSpotVMConfigAccess c = new HotSpotVMConfigAccess(JVMCI.getConfigStore());
 
+    // @defs
     public static final boolean
         useFastLocking                 = c.getFlag("JVMCIUseFastLocking",            Boolean.class),
         foldStableValues               = c.getFlag("FoldStableValues",               Boolean.class),
@@ -45,6 +46,7 @@ public final class HotSpotRuntime
         useG1GC                        = c.getFlag("UseG1GC",                        Boolean.class),
         useDeferredInitBarriers        = c.getFlag("ReduceInitialCardMarks",         Boolean.class);
 
+    // @defs
     public static final int
         allocatePrefetchStyle         = c.getFlag("AllocatePrefetchStyle",         Integer.class),
         allocatePrefetchInstr         = c.getFlag("AllocatePrefetchInstr",         Integer.class),
@@ -57,14 +59,17 @@ public final class HotSpotRuntime
         heapWordSize                  = c.getConstant("HeapWordSize",              Integer.class);
 
     // Compressed Oops related values.
+    // @defs
     public static final boolean
         useCompressedOops          = c.getFlag("UseCompressedOops",          Boolean.class),
         useCompressedClassPointers = c.getFlag("UseCompressedClassPointers", Boolean.class);
 
+    // @defs
     public static final long
         narrowOopBase   = c.getFieldValue("CompilerToVM::Data::Universe_narrow_oop_base",   Long.class, "address"),
         narrowKlassBase = c.getFieldValue("CompilerToVM::Data::Universe_narrow_klass_base", Long.class, "address");
 
+    // @defs
     public static final int
         narrowOopShift   = c.getFieldValue("CompilerToVM::Data::Universe_narrow_oop_shift",   Integer.class, "int"),
         narrowKlassShift = c.getFieldValue("CompilerToVM::Data::Universe_narrow_klass_shift", Integer.class, "int"),
@@ -72,6 +77,7 @@ public final class HotSpotRuntime
         arrayOopDescSize = c.getFieldValue("CompilerToVM::Data::sizeof_arrayOopDesc",         Integer.class, "int"),
         vmPageSize       = c.getFieldValue("CompilerToVM::Data::vm_page_size",                Integer.class, "int");
 
+    // @defs
     public static final CompressEncoding
         oopEncoding   = new CompressEncoding(narrowOopBase, narrowOopShift),
         klassEncoding = new CompressEncoding(narrowKlassBase, narrowKlassShift);
@@ -83,10 +89,12 @@ public final class HotSpotRuntime
     // @def
     public static final int stackBias = c.getConstant("STACK_BIAS", Integer.class);
 
+    // @defs
     public static final int
         markOffset = c.getFieldOffset("oopDesc::_mark",            Integer.class, "markOop"),
         hubOffset  = c.getFieldOffset("oopDesc::_metadata._klass", Integer.class, "Klass*");
 
+    // @defs
     public static final int
         prototypeMarkWordOffset   = c.getFieldOffset("Klass::_prototype_header",      Integer.class, "markOop"),
         superCheckOffsetOffset    = c.getFieldOffset("Klass::_super_check_offset",    Integer.class, "juint"),
@@ -98,6 +106,7 @@ public final class HotSpotRuntime
         klassAccessFlagsOffset    = c.getFieldOffset("Klass::_access_flags",          Integer.class, "AccessFlags"),
         klassLayoutHelperOffset   = c.getFieldOffset("Klass::_layout_helper",         Integer.class, "jint");
 
+    // @defs
     public static final int
         klassLayoutHelperNeutralValue    = c.getConstant("Klass::_lh_neutral_value",           Integer.class),
         layoutHelperLog2ElementSizeShift = c.getConstant("Klass::_lh_log2_element_size_shift", Integer.class),
@@ -114,12 +123,13 @@ public final class HotSpotRuntime
     // @def
     public static final int instanceKlassStateFullyInitialized = c.getConstant("InstanceKlass::fully_initialized", Integer.class);
 
-    /**
-     * The offset of the array length word in an array object's header.
-     */
+    ///
+    // The offset of the array length word in an array object's header.
+    ///
     // @def
     public static final int arrayLengthOffset = useCompressedClassPointers ? hubOffset + narrowKlassSize : arrayOopDescSize;
 
+    // @defs
     public static final int
         metaspaceArrayBaseOffset        = c.getFieldOffset("Array<Klass*>::_data[0]",       Integer.class, "Klass*"),
         metaspaceArrayLengthOffset      = c.getFieldOffset("Array<Klass*>::_length",        Integer.class, "int"),
@@ -129,6 +139,7 @@ public final class HotSpotRuntime
     // @def
     public static final int jvmAccWrittenFlags = c.getConstant("JVM_ACC_WRITTEN_FLAGS", Integer.class);
 
+    // @defs
     public static final int
         threadTlabOffset                 = c.getFieldOffset("Thread::_tlab",                        Integer.class, "ThreadLocalAllocBuffer"),
         javaThreadAnchorOffset           = c.getFieldOffset("JavaThread::_anchor",                  Integer.class, "JavaFrameAnchor"),
@@ -137,9 +148,10 @@ public final class HotSpotRuntime
         threadIsMethodHandleReturnOffset = c.getFieldOffset("JavaThread::_is_method_handle_return", Integer.class, "int"),
         objectResultOffset               = c.getFieldOffset("JavaThread::_vm_result",               Integer.class, "oop");
 
-    /**
-     * This field is used to pass exception objects into and out of the runtime system during exception handling for compiled code.
-     */
+    ///
+    // This field is used to pass exception objects into and out of the runtime system during exception handling for compiled code.
+    ///
+    // @defs
     public static final int
         threadExceptionOopOffset       = c.getFieldOffset("JavaThread::_exception_oop",              Integer.class, "oop"),
         threadExceptionPcOffset        = c.getFieldOffset("JavaThread::_exception_pc",               Integer.class, "address"),
@@ -148,40 +160,44 @@ public final class HotSpotRuntime
         pendingFailedSpeculationOffset = c.getFieldOffset("JavaThread::_pending_failed_speculation", Integer.class, "oop"),
         osThreadInterruptedOffset      = c.getFieldOffset("OSThread::_interrupted",                  Integer.class, "jint");
 
+    // @defs
     public static final int
         threadLastJavaSpOffset = javaThreadAnchorOffset + c.getFieldOffset("JavaFrameAnchor::_last_Java_sp", Integer.class, "intptr_t*"),
         threadLastJavaPcOffset = javaThreadAnchorOffset + c.getFieldOffset("JavaFrameAnchor::_last_Java_pc", Integer.class, "address"),
         threadLastJavaFpOffset = javaThreadAnchorOffset + c.getFieldOffset("JavaFrameAnchor::_last_Java_fp", Integer.class, "intptr_t*");
 
+    // @defs
     public static final int
         frameInterpreterFrameSenderSpOffset = c.getConstant("frame::interpreter_frame_sender_sp_offset", Integer.class),
         frameInterpreterFrameLastSpOffset   = c.getConstant("frame::interpreter_frame_last_sp_offset",   Integer.class);
 
+    // @defs
     public static final long
         markOopDescHashShift       = c.getConstant("markOopDesc::hash_shift",         Long.class),
         markOopDescHashMask        = c.getConstant("markOopDesc::hash_mask",          Long.class),
         markOopDescHashMaskInPlace = c.getConstant("markOopDesc::hash_mask_in_place", Long.class);
 
-    /**
-     * Mask for a biasable, locked or unlocked mark word.
-     *
-     * <pre>
-     * +----------------------------------+-+-+
-     * |                                 1|1|1|
-     * +----------------------------------+-+-+
-     * </pre>
-     */
+    ///
+    // Mask for a biasable, locked or unlocked mark word.
+    //
+    // <pre>
+    // +----------------------------------+-+-+
+    // |                                 1|1|1|
+    // +----------------------------------+-+-+
+    // </pre>
+    ///
 
-    /**
-     * Pattern for a biasable, unlocked mark word.
-     *
-     * <pre>
-     * +----------------------------------+-+-+
-     * |                                 1|0|1|
-     * +----------------------------------+-+-+
-     * </pre>
-     */
+    ///
+    // Pattern for a biasable, unlocked mark word.
+    //
+    // <pre>
+    // +----------------------------------+-+-+
+    // |                                 1|0|1|
+    // +----------------------------------+-+-+
+    // </pre>
+    ///
 
+    // @defs
     public static final int
         biasedLockMaskInPlace = c.getConstant("markOopDesc::biased_lock_mask_in_place", Integer.class),
         biasedLockPattern     = c.getConstant("markOopDesc::biased_lock_pattern",       Integer.class),
@@ -191,29 +207,32 @@ public final class HotSpotRuntime
         monitorMask           = c.getConstant("markOopDesc::monitor_value",             Integer.class, -1);
 
     // this field has no type in vmStructs.cpp
+    // @defs
     public static final int
         objectMonitorOwnerOffset      = c.getFieldOffset("ObjectMonitor::_owner",      Integer.class, null,            -1),
         objectMonitorRecursionsOffset = c.getFieldOffset("ObjectMonitor::_recursions", Integer.class, "intptr_t",      -1),
         objectMonitorCxqOffset        = c.getFieldOffset("ObjectMonitor::_cxq",        Integer.class, "ObjectWaiter*", -1),
         objectMonitorEntryListOffset  = c.getFieldOffset("ObjectMonitor::_EntryList",  Integer.class, "ObjectWaiter*", -1);
 
+    // @defs
     public static final int
         markWordNoHashInPlace = c.getConstant("markOopDesc::no_hash_in_place", Integer.class),
         markWordNoLockInPlace = c.getConstant("markOopDesc::no_lock_in_place", Integer.class);
 
+    // @defs
     public static final long
         arrayPrototypeMarkWord = markWordNoHashInPlace | markWordNoLockInPlace,
         tlabIntArrayMarkWord   = (arrayPrototypeMarkWord & (~markOopDescHashMaskInPlace)) | ((0x2 & markOopDescHashMask) << markOopDescHashShift);
 
-    /**
-     * Mark word right shift to get identity hash code.
-     */
+    ///
+    // Mark word right shift to get identity hash code.
+    ///
     // @def
     public static final int identityHashCodeShift = c.getConstant("markOopDesc::hash_shift", Integer.class);
 
-    /**
-     * Identity hash code value when uninitialized.
-     */
+    ///
+    // Identity hash code value when uninitialized.
+    ///
     // @def
     public static final int uninitializedIdentityHashCodeValue = c.getConstant("markOopDesc::no_hash", Integer.class);
 
@@ -228,10 +247,10 @@ public final class HotSpotRuntime
     // @def
     public static final int constantPoolLengthOffset = c.getFieldOffset("ConstantPool::_length", Integer.class, "int");
 
-    /**
-     * Bit pattern that represents a non-oop. Neither the high bits nor the low bits of this value
-     * are allowed to look like (respectively) the high or low bits of a real oop.
-     */
+    ///
+    // Bit pattern that represents a non-oop. Neither the high bits nor the low bits of this value
+    // are allowed to look like (respectively) the high or low bits of a real oop.
+    ///
     // @def
     public static final long nonOopBits = c.getFieldValue("CompilerToVM::Data::Universe_non_oop_bits", Long.class, "void*");
 
@@ -247,14 +266,17 @@ public final class HotSpotRuntime
     public static final long safepointPollingAddress = c.getFieldValue("os::_polling_page", Long.class, "address");
 
     // G1 Collector Related Values.
+    // @defs
     public static final byte
         dirtyCardValue   = c.getConstant("CardTableModRefBS::dirty_card",         Byte.class),
         g1YoungCardValue = c.getConstant("G1SATBCardTableModRefBS::g1_young_gen", Byte.class);
 
+    // @defs
     public static final int
         javaThreadDirtyCardQueueOffset = c.getFieldOffset("JavaThread::_dirty_card_queue", Integer.class, "DirtyCardQueue"),
         javaThreadSatbMarkQueueOffset  = c.getFieldOffset("JavaThread::_satb_mark_queue",  Integer.class);
 
+    // @defs
     public static final int
         g1CardQueueIndexOffset   = javaThreadDirtyCardQueueOffset + c.getConstant("dirtyCardQueueIndexOffset",  Integer.class),
         g1CardQueueBufferOffset  = javaThreadDirtyCardQueueOffset + c.getConstant("dirtyCardQueueBufferOffset", Integer.class),
@@ -262,6 +284,7 @@ public final class HotSpotRuntime
         g1SATBQueueIndexOffset   = javaThreadSatbMarkQueueOffset  + c.getConstant("satbMarkQueueIndexOffset",   Integer.class),
         g1SATBQueueBufferOffset  = javaThreadSatbMarkQueueOffset  + c.getConstant("satbMarkQueueBufferOffset",  Integer.class);
 
+    // @defs
     public static final int
         klassOffset      = c.getFieldValue("java_lang_Class::_klass_offset",       Integer.class, "int"),
         arrayKlassOffset = c.getFieldValue("java_lang_Class::_array_klass_offset", Integer.class, "int");
@@ -269,6 +292,7 @@ public final class HotSpotRuntime
     // @def
     public static final int lockDisplacedMarkOffset = c.getFieldOffset("BasicLock::_displaced_header", Integer.class, "markOop");
 
+    // @defs
     public static final int
         threadPollingPageOffset    = c.getFieldOffset("Thread::_polling_page",    Integer.class, "address"),
         threadAllocatedBytesOffset = c.getFieldOffset("Thread::_allocated_bytes", Integer.class, "jlong");
@@ -276,12 +300,14 @@ public final class HotSpotRuntime
     // @def
     public static final int tlabRefillWasteIncrement = c.getFlag("TLABWasteIncrement", Integer.class);
 
+    // @defs
     public static final int
         tlabSlowAllocationsOffset  = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_slow_allocations",   Integer.class, "unsigned"),
         tlabFastRefillWasteOffset  = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_fast_refill_waste",  Integer.class, "unsigned"),
         tlabNumberOfRefillsOffset  = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_number_of_refills",  Integer.class, "unsigned"),
         tlabRefillWasteLimitOffset = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_refill_waste_limit", Integer.class, "size_t");
 
+    // @defs
     public static final int
         threadTlabSizeOffset  = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_desired_size", Integer.class, "size_t"),
         threadTlabStartOffset = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_start",        Integer.class, "HeapWord*"),
@@ -297,6 +323,7 @@ public final class HotSpotRuntime
     // @def
     public static final boolean inlineContiguousAllocationSupported = c.getFieldValue("CompilerToVM::Data::_supports_inline_contig_alloc", Boolean.class);
 
+    // @defs
     public static final long
         heapEndAddress      = c.getFieldValue("CompilerToVM::Data::_heap_end_addr",                         Long.class, "HeapWord**"),
         heapTopAddress      = c.getFieldValue("CompilerToVM::Data::_heap_top_addr",                         Long.class, "HeapWord* volatile*"),
@@ -304,10 +331,12 @@ public final class HotSpotRuntime
         handleDeoptStub     = c.getFieldValue("CompilerToVM::Data::SharedRuntime_deopt_blob_unpack",        Long.class, "address"),
         uncommonTrapStub    = c.getFieldValue("CompilerToVM::Data::SharedRuntime_deopt_blob_uncommon_trap", Long.class, "address");
 
+    // @defs
     public static final long
         codeCacheLowBound  = c.getFieldValue("CodeCache::_low_bound",  Long.class, "address"),
         codeCacheHighBound = c.getFieldValue("CodeCache::_high_bound", Long.class, "address");
 
+    // @defs
     public static final long
         aescryptEncryptBlockStub               = c.getFieldValue("StubRoutines::_aescrypt_encryptBlock",               Long.class, "address"),
         aescryptDecryptBlockStub               = c.getFieldValue("StubRoutines::_aescrypt_decryptBlock",               Long.class, "address"),
@@ -324,6 +353,7 @@ public final class HotSpotRuntime
         montgomeryMultiply                     = c.getFieldValue("StubRoutines::_montgomeryMultiply",                  Long.class, "address"),
         montgomerySquare                       = c.getFieldValue("StubRoutines::_montgomerySquare",                    Long.class, "address");
 
+    // @defs
     public static final long
         jbyteArraycopy     = c.getFieldValue("StubRoutines::_jbyte_arraycopy",      Long.class, "address"),
         jshortArraycopy    = c.getFieldValue("StubRoutines::_jshort_arraycopy",     Long.class, "address"),
@@ -332,6 +362,7 @@ public final class HotSpotRuntime
         oopArraycopy       = c.getFieldValue("StubRoutines::_oop_arraycopy",        Long.class, "address"),
         oopArraycopyUninit = c.getFieldValue("StubRoutines::_oop_arraycopy_uninit", Long.class, "address");
 
+    // @defs
     public static final long
         jbyteDisjointArraycopy     = c.getFieldValue("StubRoutines::_jbyte_disjoint_arraycopy",      Long.class, "address"),
         jshortDisjointArraycopy    = c.getFieldValue("StubRoutines::_jshort_disjoint_arraycopy",     Long.class, "address"),
@@ -340,6 +371,7 @@ public final class HotSpotRuntime
         oopDisjointArraycopy       = c.getFieldValue("StubRoutines::_oop_disjoint_arraycopy",        Long.class, "address"),
         oopDisjointArraycopyUninit = c.getFieldValue("StubRoutines::_oop_disjoint_arraycopy_uninit", Long.class, "address");
 
+    // @defs
     public static final long
         jbyteAlignedArraycopy     = c.getFieldValue("StubRoutines::_arrayof_jbyte_arraycopy",      Long.class, "address"),
         jshortAlignedArraycopy    = c.getFieldValue("StubRoutines::_arrayof_jshort_arraycopy",     Long.class, "address"),
@@ -348,6 +380,7 @@ public final class HotSpotRuntime
         oopAlignedArraycopy       = c.getFieldValue("StubRoutines::_arrayof_oop_arraycopy",        Long.class, "address"),
         oopAlignedArraycopyUninit = c.getFieldValue("StubRoutines::_arrayof_oop_arraycopy_uninit", Long.class, "address");
 
+    // @defs
     public static final long
         jbyteAlignedDisjointArraycopy     = c.getFieldValue("StubRoutines::_arrayof_jbyte_disjoint_arraycopy",      Long.class, "address"),
         jshortAlignedDisjointArraycopy    = c.getFieldValue("StubRoutines::_arrayof_jshort_disjoint_arraycopy",     Long.class, "address"),
@@ -356,12 +389,14 @@ public final class HotSpotRuntime
         oopAlignedDisjointArraycopy       = c.getFieldValue("StubRoutines::_arrayof_oop_disjoint_arraycopy",        Long.class, "address"),
         oopAlignedDisjointArraycopyUninit = c.getFieldValue("StubRoutines::_arrayof_oop_disjoint_arraycopy_uninit", Long.class, "address");
 
+    // @defs
     public static final long
         checkcastArraycopy       = c.getFieldValue("StubRoutines::_checkcast_arraycopy",        Long.class, "address"),
         checkcastArraycopyUninit = c.getFieldValue("StubRoutines::_checkcast_arraycopy_uninit", Long.class, "address"),
         unsafeArraycopy          = c.getFieldValue("StubRoutines::_unsafe_arraycopy",           Long.class, "address"),
         genericArraycopy         = c.getFieldValue("StubRoutines::_generic_arraycopy",          Long.class, "address");
 
+    // @defs
     public static final long
         newInstanceAddress                     = c.getAddress("JVMCIRuntime::new_instance"),
         newArrayAddress                        = c.getAddress("JVMCIRuntime::new_array"),
@@ -380,19 +415,23 @@ public final class HotSpotRuntime
         writeBarrierPreAddress                 = c.getAddress("JVMCIRuntime::write_barrier_pre"),
         writeBarrierPostAddress                = c.getAddress("JVMCIRuntime::write_barrier_post");
 
+    // @defs
     public static final long
         registerFinalizerAddress                = c.getAddress("SharedRuntime::register_finalizer"),
         exceptionHandlerForReturnAddressAddress = c.getAddress("SharedRuntime::exception_handler_for_return_address"),
         osrMigrationEndAddress                  = c.getAddress("SharedRuntime::OSR_migration_end");
 
+    // @defs
     public static final long
         javaTimeMillisAddress = c.getAddress("os::javaTimeMillis"),
         javaTimeNanosAddress  = c.getAddress("os::javaTimeNanos");
 
+    // @defs
     public static final long
         fremAddress = c.getAddress("SharedRuntime::frem"),
         dremAddress = c.getAddress("SharedRuntime::drem");
 
+    // @defs
     public static final int
         verifiedEntryMark                       = c.getConstant("CodeInstaller::VERIFIED_ENTRY",                         Integer.class),
         unverifiedEntryMark                     = c.getConstant("CodeInstaller::UNVERIFIED_ENTRY",                       Integer.class),

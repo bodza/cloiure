@@ -14,7 +14,7 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
 {
     FixedNode next();
 
-    void setNext(FixedNode x);
+    void setNext(FixedNode __x);
 
     CallTargetNode callTarget();
 
@@ -25,20 +25,20 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
 
     ValueNode classInit();
 
-    void setClassInit(ValueNode node);
+    void setClassInit(ValueNode __node);
 
-    void intrinsify(Node node);
+    void intrinsify(Node __node);
 
     boolean useForInlining();
 
-    void setUseForInlining(boolean value);
+    void setUseForInlining(boolean __value);
 
-    /**
-     * True if this invocation is almost certainly polymorphic, false when in doubt.
-     */
+    ///
+    // True if this invocation is almost certainly polymorphic, false when in doubt.
+    ///
     boolean isPolymorphic();
 
-    void setPolymorphic(boolean value);
+    void setPolymorphic(boolean __value);
 
     @Override
     default ResolvedJavaMethod getTargetMethod()
@@ -46,13 +46,13 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
         return callTarget() != null ? callTarget().targetMethod() : null;
     }
 
-    /**
-     * Returns the {@linkplain ResolvedJavaMethod method} from which this invoke is executed. This
-     * is the caller method and in the case of inlining may be different from the method of the
-     * graph this node is in.
-     *
-     * @return the method from which this invoke is executed.
-     */
+    ///
+    // Returns the {@linkplain ResolvedJavaMethod method} from which this invoke is executed. This
+    // is the caller method and in the case of inlining may be different from the method of the
+    // graph this node is in.
+    //
+    // @return the method from which this invoke is executed.
+    ///
     default ResolvedJavaMethod getContextMethod()
     {
         FrameState __state = stateAfter();
@@ -63,12 +63,12 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
         return __state.getMethod();
     }
 
-    /**
-     * Returns the {@linkplain ResolvedJavaType type} from which this invoke is executed. This is
-     * the declaring type of the caller method.
-     *
-     * @return the type from which this invoke is executed.
-     */
+    ///
+    // Returns the {@linkplain ResolvedJavaType type} from which this invoke is executed. This is
+    // the declaring type of the caller method.
+    //
+    // @return the type from which this invoke is executed.
+    ///
     default ResolvedJavaType getContextType()
     {
         ResolvedJavaMethod __contextMethod = getContextMethod();
@@ -80,9 +80,9 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
     }
 
     @Override
-    default void computeStateDuring(FrameState stateAfter)
+    default void computeStateDuring(FrameState __stateAfter)
     {
-        FrameState __newStateDuring = stateAfter.duplicateModifiedDuringCall(bci(), asNode().getStackKind());
+        FrameState __newStateDuring = __stateAfter.duplicateModifiedDuringCall(bci(), asNode().getStackKind());
         setStateDuring(__newStateDuring);
     }
 

@@ -17,58 +17,58 @@ import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.BytecodeProvider;
 
-/**
- * A {@link BytecodeProvider} that provides bytecode properties of a {@link ResolvedJavaMethod} as
- * parsed from a class file. This avoids all {@linkplain java.lang.instrument.Instrumentation
- * instrumentation} and any bytecode rewriting performed by the VM.
- *
- * This mechanism retrieves class files based on the name and {@link ClassLoader} of existing
- * {@link Class} instances. It bypasses all VM parsing and verification of the class file and
- * assumes the class files are well formed. As such, it should only be used for classes from a
- * trusted source such as the boot class (or module) path.
- *
- * A combination of {@link Class#forName(String)} and an existing {@link MetaAccessProvider} is used
- * to resolve constant pool references. This opens up the opportunity for linkage errors if the
- * referee is structurally changed through redefinition (e.g. a referred to method is renamed or
- * deleted). This will result in an appropriate {@link LinkageError} being thrown. The only way to
- * avoid this is to have a completely isolated {@code jdk.vm.ci.meta} implementation for parsing
- * snippet/intrinsic bytecodes.
- */
+///
+// A {@link BytecodeProvider} that provides bytecode properties of a {@link ResolvedJavaMethod} as
+// parsed from a class file. This avoids all {@linkplain java.lang.instrument.Instrumentation
+// instrumentation} and any bytecode rewriting performed by the VM.
+//
+// This mechanism retrieves class files based on the name and {@link ClassLoader} of existing
+// {@link Class} instances. It bypasses all VM parsing and verification of the class file and
+// assumes the class files are well formed. As such, it should only be used for classes from a
+// trusted source such as the boot class (or module) path.
+//
+// A combination of {@link Class#forName(String)} and an existing {@link MetaAccessProvider} is used
+// to resolve constant pool references. This opens up the opportunity for linkage errors if the
+// referee is structurally changed through redefinition (e.g. a referred to method is renamed or
+// deleted). This will result in an appropriate {@link LinkageError} being thrown. The only way to
+// avoid this is to have a completely isolated {@code jdk.vm.ci.meta} implementation for parsing
+// snippet/intrinsic bytecodes.
+///
 // @class ClassfileBytecodeProvider
 public final class ClassfileBytecodeProvider implements BytecodeProvider
 {
     // @field
-    private final ClassLoader loader;
+    private final ClassLoader ___loader;
     // @field
-    private final EconomicMap<Class<?>, Classfile> classfiles = EconomicMap.create(Equivalence.IDENTITY);
+    private final EconomicMap<Class<?>, Classfile> ___classfiles = EconomicMap.create(Equivalence.IDENTITY);
     // @field
-    private final EconomicMap<String, Class<?>> classes = EconomicMap.create();
+    private final EconomicMap<String, Class<?>> ___classes = EconomicMap.create();
     // @field
-    private final EconomicMap<ResolvedJavaType, FieldsCache> fields = EconomicMap.create();
+    private final EconomicMap<ResolvedJavaType, FieldsCache> ___fields = EconomicMap.create();
     // @field
-    private final EconomicMap<ResolvedJavaType, MethodsCache> methods = EconomicMap.create();
+    private final EconomicMap<ResolvedJavaType, MethodsCache> ___methods = EconomicMap.create();
     // @field
-    final MetaAccessProvider metaAccess;
+    final MetaAccessProvider ___metaAccess;
     // @field
-    final SnippetReflectionProvider snippetReflection;
+    final SnippetReflectionProvider ___snippetReflection;
 
     // @cons
     public ClassfileBytecodeProvider(MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection)
     {
         super();
-        this.metaAccess = __metaAccess;
-        this.snippetReflection = __snippetReflection;
+        this.___metaAccess = __metaAccess;
+        this.___snippetReflection = __snippetReflection;
         ClassLoader __cl = getClass().getClassLoader();
-        this.loader = __cl == null ? ClassLoader.getSystemClassLoader() : __cl;
+        this.___loader = __cl == null ? ClassLoader.getSystemClassLoader() : __cl;
     }
 
     // @cons
     public ClassfileBytecodeProvider(MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection, ClassLoader __loader)
     {
         super();
-        this.metaAccess = __metaAccess;
-        this.snippetReflection = __snippetReflection;
-        this.loader = __loader;
+        this.___metaAccess = __metaAccess;
+        this.___snippetReflection = __snippetReflection;
+        this.___loader = __loader;
     }
 
     @Override
@@ -90,33 +90,33 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         return false;
     }
 
-    /**
-     * Gets the class file bytes for {@code c}.
-     */
+    ///
+    // Gets the class file bytes for {@code c}.
+    ///
     private static InputStream getClassfileAsStream(Class<?> __c) throws IOException
     {
         return __c.getModule().getResourceAsStream(__c.getName().replace('.', '/') + ".class");
     }
 
-    /**
-     * Gets a {@link Classfile} created by parsing the class file bytes for {@code c}.
-     *
-     * @throws NoClassDefFoundError if the class file cannot be found
-     */
+    ///
+    // Gets a {@link Classfile} created by parsing the class file bytes for {@code c}.
+    //
+    // @throws NoClassDefFoundError if the class file cannot be found
+    ///
     private synchronized Classfile getClassfile(Class<?> __c)
     {
-        Classfile __classfile = classfiles.get(__c);
+        Classfile __classfile = this.___classfiles.get(__c);
         if (__classfile == null)
         {
             try
             {
-                ResolvedJavaType __type = metaAccess.lookupJavaType(__c);
+                ResolvedJavaType __type = this.___metaAccess.lookupJavaType(__c);
                 InputStream __in = getClassfileAsStream(__c);
                 if (__in != null)
                 {
                     DataInputStream __stream = new DataInputStream(__in);
                     __classfile = new Classfile(__type, __stream, this);
-                    classfiles.put(__c, __classfile);
+                    this.___classfiles.put(__c, __classfile);
                     return __classfile;
                 }
                 throw new NoClassDefFoundError(__c.getName());
@@ -131,7 +131,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
 
     synchronized Class<?> resolveToClass(String __descriptor)
     {
-        Class<?> __c = classes.get(__descriptor);
+        Class<?> __c = this.___classes.get(__descriptor);
         if (__c == null)
         {
             if (__descriptor.length() == 1)
@@ -156,8 +156,8 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
                 }
                 try
                 {
-                    __c = Class.forName(__name, true, loader);
-                    classes.put(__descriptor, __c);
+                    __c = Class.forName(__name, true, this.___loader);
+                    this.___classes.put(__descriptor, __c);
                 }
                 catch (ClassNotFoundException __e)
                 {
@@ -168,23 +168,23 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         return __c;
     }
 
-    /**
-     * Name and type of a field.
-     */
+    ///
+    // Name and type of a field.
+    ///
     // @class ClassfileBytecodeProvider.FieldKey
     static final class FieldKey
     {
         // @field
-        final String name;
+        final String ___name;
         // @field
-        final String type;
+        final String ___type;
 
         // @cons
         FieldKey(String __name, String __type)
         {
             super();
-            this.name = __name;
-            this.type = __type;
+            this.___name = __name;
+            this.___type = __type;
         }
 
         @Override
@@ -193,7 +193,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             if (__obj instanceof FieldKey)
             {
                 FieldKey __that = (FieldKey) __obj;
-                return __that.name.equals(this.name) && __that.type.equals(this.type);
+                return __that.___name.equals(this.___name) && __that.___type.equals(this.___type);
             }
             return false;
         }
@@ -201,27 +201,27 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         @Override
         public int hashCode()
         {
-            return name.hashCode() ^ type.hashCode();
+            return this.___name.hashCode() ^ this.___type.hashCode();
         }
     }
 
-    /**
-     * Name and descriptor of a method.
-     */
+    ///
+    // Name and descriptor of a method.
+    ///
     // @class ClassfileBytecodeProvider.MethodKey
     static final class MethodKey
     {
         // @field
-        final String name;
+        final String ___name;
         // @field
-        final String descriptor;
+        final String ___descriptor;
 
         // @cons
         MethodKey(String __name, String __descriptor)
         {
             super();
-            this.name = __name;
-            this.descriptor = __descriptor;
+            this.___name = __name;
+            this.___descriptor = __descriptor;
         }
 
         @Override
@@ -230,7 +230,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             if (__obj instanceof MethodKey)
             {
                 MethodKey __that = (MethodKey) __obj;
-                return __that.name.equals(this.name) && __that.descriptor.equals(this.descriptor);
+                return __that.___name.equals(this.___name) && __that.___descriptor.equals(this.___descriptor);
             }
             return false;
         }
@@ -238,20 +238,20 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         @Override
         public int hashCode()
         {
-            return name.hashCode() ^ descriptor.hashCode();
+            return this.___name.hashCode() ^ this.___descriptor.hashCode();
         }
     }
 
-    /**
-     * Method cache for a {@link ResolvedJavaType}.
-     */
+    ///
+    // Method cache for a {@link ResolvedJavaType}.
+    ///
     // @class ClassfileBytecodeProvider.MethodsCache
     static final class MethodsCache
     {
         // @field
-        volatile EconomicMap<MethodKey, ResolvedJavaMethod> constructors;
+        volatile EconomicMap<MethodKey, ResolvedJavaMethod> ___constructors;
         // @field
-        volatile EconomicMap<MethodKey, ResolvedJavaMethod> methods;
+        volatile EconomicMap<MethodKey, ResolvedJavaMethod> ___methods;
 
         ResolvedJavaMethod lookup(ResolvedJavaType __type, String __name, String __descriptor)
         {
@@ -264,22 +264,22 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             }
             if (!__name.equals("<init>"))
             {
-                if (methods == null)
+                if (this.___methods == null)
                 {
                     // racy initialization is safe since 'methods' is volatile
-                    methods = createMethodMap(__type.getDeclaredMethods());
+                    this.___methods = createMethodMap(__type.getDeclaredMethods());
                 }
 
-                return methods.get(__key);
+                return this.___methods.get(__key);
             }
             else
             {
-                if (constructors == null)
+                if (this.___constructors == null)
                 {
                     // racy initialization is safe since instanceFields is volatile
-                    constructors = createMethodMap(__type.getDeclaredConstructors());
+                    this.___constructors = createMethodMap(__type.getDeclaredConstructors());
                 }
-                return constructors.get(__key);
+                return this.___constructors.get(__key);
             }
         }
 
@@ -294,16 +294,16 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         }
     }
 
-    /**
-     * Field cache for a {@link ResolvedJavaType}.
-     */
+    ///
+    // Field cache for a {@link ResolvedJavaType}.
+    ///
     // @class ClassfileBytecodeProvider.FieldsCache
     static final class FieldsCache
     {
         // @field
-        volatile EconomicMap<FieldKey, ResolvedJavaField> instanceFields;
+        volatile EconomicMap<FieldKey, ResolvedJavaField> ___instanceFields;
         // @field
-        volatile EconomicMap<FieldKey, ResolvedJavaField> staticFields;
+        volatile EconomicMap<FieldKey, ResolvedJavaField> ___staticFields;
 
         ResolvedJavaField lookup(ResolvedJavaType __type, String __name, String __fieldType, boolean __isStatic)
         {
@@ -311,21 +311,21 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
 
             if (__isStatic)
             {
-                if (staticFields == null)
+                if (this.___staticFields == null)
                 {
                     // racy initialization is safe since staticFields is volatile
-                    staticFields = createFieldMap(__type.getStaticFields());
+                    this.___staticFields = createFieldMap(__type.getStaticFields());
                 }
-                return staticFields.get(__key);
+                return this.___staticFields.get(__key);
             }
             else
             {
-                if (instanceFields == null)
+                if (this.___instanceFields == null)
                 {
                     // racy initialization is safe since instanceFields is volatile
-                    instanceFields = createFieldMap(__type.getInstanceFields(false));
+                    this.___instanceFields = createFieldMap(__type.getInstanceFields(false));
                 }
-                return instanceFields.get(__key);
+                return this.___instanceFields.get(__key);
             }
         }
 
@@ -340,34 +340,34 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         }
     }
 
-    /**
-     * Gets the methods cache for {@code type}.
-     *
-     * Synchronized since the cache is lazily created.
-     */
+    ///
+    // Gets the methods cache for {@code type}.
+    //
+    // Synchronized since the cache is lazily created.
+    ///
     private synchronized MethodsCache getMethods(ResolvedJavaType __type)
     {
-        MethodsCache __methodsCache = methods.get(__type);
+        MethodsCache __methodsCache = this.___methods.get(__type);
         if (__methodsCache == null)
         {
             __methodsCache = new MethodsCache();
-            methods.put(__type, __methodsCache);
+            this.___methods.put(__type, __methodsCache);
         }
         return __methodsCache;
     }
 
-    /**
-     * Gets the fields cache for {@code type}.
-     *
-     * Synchronized since the cache is lazily created.
-     */
+    ///
+    // Gets the fields cache for {@code type}.
+    //
+    // Synchronized since the cache is lazily created.
+    ///
     private synchronized FieldsCache getFields(ResolvedJavaType __type)
     {
-        FieldsCache __fieldsCache = fields.get(__type);
+        FieldsCache __fieldsCache = this.___fields.get(__type);
         if (__fieldsCache == null)
         {
             __fieldsCache = new FieldsCache();
-            fields.put(__type, __fieldsCache);
+            this.___fields.put(__type, __fieldsCache);
         }
         return __fieldsCache;
     }

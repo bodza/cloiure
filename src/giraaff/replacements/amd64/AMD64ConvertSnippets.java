@@ -15,24 +15,24 @@ import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 
-/**
- * Snippets used for conversion operations on AMD64 where the AMD64 instruction used does not match
- * the semantics of the JVM specification.
- */
+///
+// Snippets used for conversion operations on AMD64 where the AMD64 instruction used does not match
+// the semantics of the JVM specification.
+///
 // @class AMD64ConvertSnippets
 public final class AMD64ConvertSnippets implements Snippets
 {
-    /**
-     * Converts a float to an int.
-     *
-     * This snippet accounts for the semantics of the x64 CVTTSS2SI instruction used to do the
-     * conversion. If the float value is a NaN, infinity or if the result of the conversion is
-     * larger than {@link Integer#MAX_VALUE} then CVTTSS2SI returns {@link Integer#MIN_VALUE} and
-     * extra tests are required on the float value to return the correct int value.
-     *
-     * @param input the float being converted
-     * @param result the result produced by the CVTTSS2SI instruction
-     */
+    ///
+    // Converts a float to an int.
+    //
+    // This snippet accounts for the semantics of the x64 CVTTSS2SI instruction used to do the
+    // conversion. If the float value is a NaN, infinity or if the result of the conversion is
+    // larger than {@link Integer#MAX_VALUE} then CVTTSS2SI returns {@link Integer#MIN_VALUE} and
+    // extra tests are required on the float value to return the correct int value.
+    //
+    // @param input the float being converted
+    // @param result the result produced by the CVTTSS2SI instruction
+    ///
     @Snippet
     public static int f2i(float __input, int __result)
     {
@@ -52,17 +52,17 @@ public final class AMD64ConvertSnippets implements Snippets
         return __result;
     }
 
-    /**
-     * Converts a float to a long.
-     *
-     * This snippet accounts for the semantics of the x64 CVTTSS2SI instruction used to do the
-     * conversion. If the float value is a NaN or infinity then CVTTSS2SI returns
-     * {@link Long#MIN_VALUE} and extra tests are required on the float value to return the correct
-     * long value.
-     *
-     * @param input the float being converted
-     * @param result the result produced by the CVTTSS2SI instruction
-     */
+    ///
+    // Converts a float to a long.
+    //
+    // This snippet accounts for the semantics of the x64 CVTTSS2SI instruction used to do the
+    // conversion. If the float value is a NaN or infinity then CVTTSS2SI returns
+    // {@link Long#MIN_VALUE} and extra tests are required on the float value to return the correct
+    // long value.
+    //
+    // @param input the float being converted
+    // @param result the result produced by the CVTTSS2SI instruction
+    ///
     @Snippet
     public static long f2l(float __input, long __result)
     {
@@ -82,17 +82,17 @@ public final class AMD64ConvertSnippets implements Snippets
         return __result;
     }
 
-    /**
-     * Converts a double to an int.
-     *
-     * This snippet accounts for the semantics of the x64 CVTTSD2SI instruction used to do the
-     * conversion. If the double value is a NaN, infinity or if the result of the conversion is
-     * larger than {@link Integer#MAX_VALUE} then CVTTSD2SI returns {@link Integer#MIN_VALUE} and
-     * extra tests are required on the double value to return the correct int value.
-     *
-     * @param input the double being converted
-     * @param result the result produced by the CVTTSS2SI instruction
-     */
+    ///
+    // Converts a double to an int.
+    //
+    // This snippet accounts for the semantics of the x64 CVTTSD2SI instruction used to do the
+    // conversion. If the double value is a NaN, infinity or if the result of the conversion is
+    // larger than {@link Integer#MAX_VALUE} then CVTTSD2SI returns {@link Integer#MIN_VALUE} and
+    // extra tests are required on the double value to return the correct int value.
+    //
+    // @param input the double being converted
+    // @param result the result produced by the CVTTSS2SI instruction
+    ///
     @Snippet
     public static int d2i(double __input, int __result)
     {
@@ -112,17 +112,17 @@ public final class AMD64ConvertSnippets implements Snippets
         return __result;
     }
 
-    /**
-     * Converts a double to a long.
-     *
-     * This snippet accounts for the semantics of the x64 CVTTSD2SI instruction used to do the
-     * conversion. If the double value is a NaN, infinity or if the result of the conversion is
-     * larger than {@link Long#MAX_VALUE} then CVTTSD2SI returns {@link Long#MIN_VALUE} and extra
-     * tests are required on the double value to return the correct long value.
-     *
-     * @param input the double being converted
-     * @param result the result produced by the CVTTSS2SI instruction
-     */
+    ///
+    // Converts a double to a long.
+    //
+    // This snippet accounts for the semantics of the x64 CVTTSD2SI instruction used to do the
+    // conversion. If the double value is a NaN, infinity or if the result of the conversion is
+    // larger than {@link Long#MAX_VALUE} then CVTTSD2SI returns {@link Long#MIN_VALUE} and extra
+    // tests are required on the double value to return the correct long value.
+    //
+    // @param input the double being converted
+    // @param result the result produced by the CVTTSS2SI instruction
+    ///
     @Snippet
     public static long d2l(double __input, long __result)
     {
@@ -146,23 +146,23 @@ public final class AMD64ConvertSnippets implements Snippets
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final SnippetInfo f2i;
+        private final SnippetInfo ___f2i;
         // @field
-        private final SnippetInfo f2l;
+        private final SnippetInfo ___f2l;
         // @field
-        private final SnippetInfo d2i;
+        private final SnippetInfo ___d2i;
         // @field
-        private final SnippetInfo d2l;
+        private final SnippetInfo ___d2l;
 
         // @cons
         public Templates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
         {
             super(__providers, __snippetReflection, __target);
 
-            f2i = snippet(AMD64ConvertSnippets.class, "f2i");
-            f2l = snippet(AMD64ConvertSnippets.class, "f2l");
-            d2i = snippet(AMD64ConvertSnippets.class, "d2i");
-            d2l = snippet(AMD64ConvertSnippets.class, "d2l");
+            this.___f2i = snippet(AMD64ConvertSnippets.class, "f2i");
+            this.___f2l = snippet(AMD64ConvertSnippets.class, "f2l");
+            this.___d2i = snippet(AMD64ConvertSnippets.class, "d2i");
+            this.___d2l = snippet(AMD64ConvertSnippets.class, "d2l");
         }
 
         public void lower(FloatConvertNode __convert, LoweringTool __tool)
@@ -171,17 +171,25 @@ public final class AMD64ConvertSnippets implements Snippets
             switch (__convert.getFloatConvert())
             {
                 case F2I:
-                    __key = f2i;
+                {
+                    __key = this.___f2i;
                     break;
+                }
                 case F2L:
-                    __key = f2l;
+                {
+                    __key = this.___f2l;
                     break;
+                }
                 case D2I:
-                    __key = d2i;
+                {
+                    __key = this.___d2i;
                     break;
+                }
                 case D2L:
-                    __key = d2l;
+                {
+                    __key = this.___d2l;
                     break;
+                }
                 default:
                     return;
             }
@@ -193,7 +201,7 @@ public final class AMD64ConvertSnippets implements Snippets
             __args.add("result", __graph.unique(new AMD64FloatConvertNode(__convert.getFloatConvert(), __convert.getValue())));
 
             SnippetTemplate __template = template(__convert, __args);
-            __template.instantiate(providers.getMetaAccess(), __convert, SnippetTemplate.DEFAULT_REPLACER, __tool, __args);
+            __template.instantiate(this.___providers.getMetaAccess(), __convert, SnippetTemplate.DEFAULT_REPLACER, __tool, __args);
             __convert.safeDelete();
         }
     }

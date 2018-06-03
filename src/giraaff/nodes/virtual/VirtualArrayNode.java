@@ -20,9 +20,9 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     public static final NodeClass<VirtualArrayNode> TYPE = NodeClass.create(VirtualArrayNode.class);
 
     // @field
-    protected final ResolvedJavaType componentType;
+    protected final ResolvedJavaType ___componentType;
     // @field
-    protected final int length;
+    protected final int ___length;
 
     // @cons
     public VirtualArrayNode(ResolvedJavaType __componentType, int __length)
@@ -34,25 +34,25 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     protected VirtualArrayNode(NodeClass<? extends VirtualObjectNode> __c, ResolvedJavaType __componentType, int __length)
     {
         super(__c, __componentType.getArrayClass(), true);
-        this.componentType = __componentType;
-        this.length = __length;
+        this.___componentType = __componentType;
+        this.___length = __length;
     }
 
     @Override
     public ResolvedJavaType type()
     {
-        return componentType.getArrayClass();
+        return this.___componentType.getArrayClass();
     }
 
     public ResolvedJavaType componentType()
     {
-        return componentType;
+        return this.___componentType;
     }
 
     @Override
     public int entryCount()
     {
-        return length;
+        return this.___length;
     }
 
     @Override
@@ -70,7 +70,7 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     @Override
     public int entryIndexForOffset(ArrayOffsetProvider __arrayOffsetProvider, long __constantOffset, JavaKind __expectedEntryKind)
     {
-        return entryIndexForOffset(__arrayOffsetProvider, __constantOffset, __expectedEntryKind, componentType, length);
+        return entryIndexForOffset(__arrayOffsetProvider, __constantOffset, __expectedEntryKind, this.___componentType, this.___length);
     }
 
     public static int entryIndexForOffset(ArrayOffsetProvider __arrayOffsetProvider, long __constantOffset, JavaKind __expectedEntryKind, ResolvedJavaType __componentType, int __length)
@@ -105,13 +105,13 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     @Override
     public JavaKind entryKind(int __index)
     {
-        return componentType.getJavaKind();
+        return this.___componentType.getJavaKind();
     }
 
     @Override
     public VirtualArrayNode duplicate()
     {
-        return new VirtualArrayNode(componentType, length);
+        return new VirtualArrayNode(this.___componentType, this.___length);
     }
 
     @Override
@@ -123,6 +123,6 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     @Override
     public ValueNode length()
     {
-        return ConstantNode.forInt(length);
+        return ConstantNode.forInt(this.___length);
     }
 }

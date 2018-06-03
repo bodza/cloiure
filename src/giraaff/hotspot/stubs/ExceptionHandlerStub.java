@@ -18,14 +18,14 @@ import giraaff.hotspot.stubs.StubUtil;
 import giraaff.util.GraalError;
 import giraaff.word.Word;
 
-/**
- * Stub called by the {@linkplain HotSpotRuntime#exceptionHandlerEntryMark exception
- * handler entry point} in a compiled method. This entry point is used when returning to a method to
- * handle an exception thrown by a callee. It is not used for routing implicit exceptions.
- * Therefore, it does not need to save any registers as HotSpot uses a caller save convention.
- *
- * The descriptor for a call to this stub is {@link HotSpotBackend#EXCEPTION_HANDLER}.
- */
+///
+// Stub called by the {@linkplain HotSpotRuntime#exceptionHandlerEntryMark exception
+// handler entry point} in a compiled method. This entry point is used when returning to a method to
+// handle an exception thrown by a callee. It is not used for routing implicit exceptions.
+// Therefore, it does not need to save any registers as HotSpot uses a caller save convention.
+//
+// The descriptor for a call to this stub is {@link HotSpotBackend#EXCEPTION_HANDLER}.
+///
 // @class ExceptionHandlerStub
 public final class ExceptionHandlerStub extends SnippetStub
 {
@@ -35,11 +35,11 @@ public final class ExceptionHandlerStub extends SnippetStub
         super("exceptionHandler", __providers, __linkage);
     }
 
-    /**
-     * This stub is called when returning to a method to handle an exception thrown by a callee.
-     * It is not used for routing implicit exceptions. Therefore, it does not need to save any
-     * registers as HotSpot uses a caller save convention.
-     */
+    ///
+    // This stub is called when returning to a method to handle an exception thrown by a callee.
+    // It is not used for routing implicit exceptions. Therefore, it does not need to save any
+    // registers as HotSpot uses a caller save convention.
+    ///
     @Override
     public boolean preservesRegisters()
     {
@@ -51,9 +51,9 @@ public final class ExceptionHandlerStub extends SnippetStub
     {
         if (__index == 2)
         {
-            return providers.getRegisters().getThreadRegister();
+            return this.___providers.getRegisters().getThreadRegister();
         }
-        throw GraalError.shouldNotReachHere("unknown parameter " + __name + " at __index " + __index);
+        throw GraalError.shouldNotReachHere("unknown parameter " + __name + " at index " + __index);
     }
 
     @Snippet
@@ -76,5 +76,5 @@ public final class ExceptionHandlerStub extends SnippetStub
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_PC = StubUtil.newDescriptor(ExceptionHandlerStub.class, "exceptionHandlerForPc", Word.class, Word.class);
 
     @NodeIntrinsic(value = StubForeignCallNode.class)
-    public static native Word exceptionHandlerForPc(@ConstantNodeParameter ForeignCallDescriptor exceptionHandlerForPc, Word thread);
+    public static native Word exceptionHandlerForPc(@ConstantNodeParameter ForeignCallDescriptor __exceptionHandlerForPc, Word __thread);
 }

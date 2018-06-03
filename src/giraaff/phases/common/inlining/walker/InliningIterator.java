@@ -21,41 +21,41 @@ import giraaff.nodes.StartNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.java.MethodCallTargetNode;
 
-/**
- * Given a graph, visit all fixed nodes in dominator-based order, collecting in the process the
- * {@link Invoke} nodes with {@link MethodCallTargetNode}. Such list of callsites is returned by
- * {@link #apply()}
- */
+///
+// Given a graph, visit all fixed nodes in dominator-based order, collecting in the process the
+// {@link Invoke} nodes with {@link MethodCallTargetNode}. Such list of callsites is returned by
+// {@link #apply()}
+///
 // @class InliningIterator
 public final class InliningIterator
 {
     // @field
-    private final StartNode start;
+    private final StartNode ___start;
     // @field
-    private final Deque<FixedNode> nodeQueue;
+    private final Deque<FixedNode> ___nodeQueue;
     // @field
-    private final NodeBitMap queuedNodes;
+    private final NodeBitMap ___queuedNodes;
 
     // @cons
     public InliningIterator(StructuredGraph __graph)
     {
         super();
-        this.start = __graph.start();
-        this.nodeQueue = new ArrayDeque<>();
-        this.queuedNodes = __graph.createNodeBitMap();
+        this.___start = __graph.start();
+        this.___nodeQueue = new ArrayDeque<>();
+        this.___queuedNodes = __graph.createNodeBitMap();
     }
 
     public LinkedList<Invoke> apply()
     {
         LinkedList<Invoke> __invokes = new LinkedList<>();
         FixedNode __current;
-        forcedQueue(start);
+        forcedQueue(this.___start);
 
         while ((__current = nextQueuedNode()) != null)
         {
             if (__current instanceof Invoke && ((Invoke) __current).callTarget() instanceof MethodCallTargetNode)
             {
-                if (__current != start)
+                if (__current != this.___start)
                 {
                     __invokes.addLast((Invoke) __current);
                 }
@@ -104,7 +104,7 @@ public final class InliningIterator
 
     private void queue(Node __node)
     {
-        if (__node != null && !queuedNodes.isMarked(__node))
+        if (__node != null && !this.___queuedNodes.isMarked(__node))
         {
             forcedQueue(__node);
         }
@@ -112,27 +112,27 @@ public final class InliningIterator
 
     private void forcedQueue(Node __node)
     {
-        queuedNodes.mark(__node);
-        nodeQueue.addFirst((FixedNode) __node);
+        this.___queuedNodes.mark(__node);
+        this.___nodeQueue.addFirst((FixedNode) __node);
     }
 
     private FixedNode nextQueuedNode()
     {
-        if (nodeQueue.isEmpty())
+        if (this.___nodeQueue.isEmpty())
         {
             return null;
         }
 
-        return nodeQueue.removeFirst();
+        return this.___nodeQueue.removeFirst();
     }
 
     private void queueMerge(AbstractEndNode __end)
     {
         AbstractMergeNode __merge = __end.merge();
-        if (!queuedNodes.isMarked(__merge) && visitedAllEnds(__merge))
+        if (!this.___queuedNodes.isMarked(__merge) && visitedAllEnds(__merge))
         {
-            queuedNodes.mark(__merge);
-            nodeQueue.add(__merge);
+            this.___queuedNodes.mark(__merge);
+            this.___nodeQueue.add(__merge);
         }
     }
 
@@ -140,7 +140,7 @@ public final class InliningIterator
     {
         for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
         {
-            if (!queuedNodes.isMarked(__merge.forwardEndAt(__i)))
+            if (!this.___queuedNodes.isMarked(__merge.forwardEndAt(__i)))
             {
                 return false;
             }

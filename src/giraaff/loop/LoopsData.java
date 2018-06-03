@@ -20,29 +20,29 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 public final class LoopsData
 {
     // @field
-    private final EconomicMap<LoopBeginNode, LoopEx> loopBeginToEx = EconomicMap.create(Equivalence.IDENTITY);
+    private final EconomicMap<LoopBeginNode, LoopEx> ___loopBeginToEx = EconomicMap.create(Equivalence.IDENTITY);
     // @field
-    private final ControlFlowGraph cfg;
+    private final ControlFlowGraph ___cfg;
     // @field
-    private final List<LoopEx> loops;
+    private final List<LoopEx> ___loops;
 
     // @cons
     public LoopsData(final StructuredGraph __graph)
     {
         super();
-        cfg = ControlFlowGraph.compute(__graph, true, true, true, true);
-        loops = new ArrayList<>(cfg.getLoops().size());
-        for (Loop<Block> __loop : cfg.getLoops())
+        this.___cfg = ControlFlowGraph.compute(__graph, true, true, true, true);
+        this.___loops = new ArrayList<>(this.___cfg.getLoops().size());
+        for (Loop<Block> __loop : this.___cfg.getLoops())
         {
             LoopEx __ex = new LoopEx(__loop, this);
-            loops.add(__ex);
-            loopBeginToEx.put(__ex.loopBegin(), __ex);
+            this.___loops.add(__ex);
+            this.___loopBeginToEx.put(__ex.loopBegin(), __ex);
         }
     }
 
-    /**
-     * Checks that loops are ordered such that outer loops appear first.
-     */
+    ///
+    // Checks that loops are ordered such that outer loops appear first.
+    ///
     private static boolean checkLoopOrder(Iterable<Loop<Block>> __loops)
     {
         EconomicSet<Loop<Block>> __seen = EconomicSet.create(Equivalence.IDENTITY);
@@ -59,22 +59,22 @@ public final class LoopsData
 
     public LoopEx loop(Loop<Block> __loop)
     {
-        return loopBeginToEx.get((LoopBeginNode) __loop.getHeader().getBeginNode());
+        return this.___loopBeginToEx.get((LoopBeginNode) __loop.getHeader().getBeginNode());
     }
 
     public LoopEx loop(LoopBeginNode __loopBegin)
     {
-        return loopBeginToEx.get(__loopBegin);
+        return this.___loopBeginToEx.get(__loopBegin);
     }
 
     public List<LoopEx> loops()
     {
-        return loops;
+        return this.___loops;
     }
 
     public List<LoopEx> outerFirst()
     {
-        return loops;
+        return this.___loops;
     }
 
     public Collection<LoopEx> countedLoops()
@@ -100,7 +100,7 @@ public final class LoopsData
 
     public ControlFlowGraph getCFG()
     {
-        return cfg;
+        return this.___cfg;
     }
 
     public InductionVariable getInductionVariable(ValueNode __value)
@@ -121,9 +121,9 @@ public final class LoopsData
         return __match;
     }
 
-    /**
-     * Deletes any nodes created within the scope of this object that have no usages.
-     */
+    ///
+    // Deletes any nodes created within the scope of this object that have no usages.
+    ///
     public void deleteUnusedNodes()
     {
         for (LoopEx __loop : loops())

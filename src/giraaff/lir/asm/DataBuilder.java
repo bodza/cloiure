@@ -7,5 +7,5 @@ import giraaff.code.DataSection.Data;
 // @class DataBuilder
 public abstract class DataBuilder
 {
-    public abstract Data createDataItem(Constant c);
+    public abstract Data createDataItem(Constant __c);
 }

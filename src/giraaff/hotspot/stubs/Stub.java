@@ -25,76 +25,76 @@ import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.Suites;
 
-/**
- * Base class for implementing some low level code providing the out-of-line slow path for a snippet
- * and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java method.
- */
+///
+// Base class for implementing some low level code providing the out-of-line slow path for a snippet
+// and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java method.
+///
 // @class Stub
 public abstract class Stub
 {
-    /**
-     * The linkage information for a call to this stub from compiled code.
-     */
+    ///
+    // The linkage information for a call to this stub from compiled code.
+    ///
     // @field
-    protected final HotSpotForeignCallLinkage linkage;
+    protected final HotSpotForeignCallLinkage ___linkage;
 
-    /**
-     * The code installed for the stub.
-     */
+    ///
+    // The code installed for the stub.
+    ///
     // @field
-    protected InstalledCode code;
+    protected InstalledCode ___code;
 
-    /**
-     * The registers destroyed by this stub (from the caller's perspective).
-     */
+    ///
+    // The registers destroyed by this stub (from the caller's perspective).
+    ///
     // @field
-    private EconomicSet<Register> destroyedCallerRegisters;
+    private EconomicSet<Register> ___destroyedCallerRegisters;
 
     public void initDestroyedCallerRegisters(EconomicSet<Register> __registers)
     {
-        destroyedCallerRegisters = __registers;
+        this.___destroyedCallerRegisters = __registers;
     }
 
-    /**
-     * Gets the registers destroyed by this stub from a caller's perspective. These are the
-     * temporaries of this stub and must thus be caller saved by a callers of this stub.
-     */
+    ///
+    // Gets the registers destroyed by this stub from a caller's perspective. These are the
+    // temporaries of this stub and must thus be caller saved by a callers of this stub.
+    ///
     public EconomicSet<Register> getDestroyedCallerRegisters()
     {
-        return destroyedCallerRegisters;
+        return this.___destroyedCallerRegisters;
     }
 
-    /**
-     * Determines if this stub preserves all registers apart from those it
-     * {@linkplain #getDestroyedCallerRegisters() destroys}.
-     */
+    ///
+    // Determines if this stub preserves all registers apart from those it
+    // {@linkplain #getDestroyedCallerRegisters() destroys}.
+    ///
     public boolean preservesRegisters()
     {
         return true;
     }
 
     // @field
-    protected final HotSpotProviders providers;
+    protected final HotSpotProviders ___providers;
 
-    /**
-     * Creates a new stub.
-     *
-     * @param linkage linkage details for a call to the stub
-     */
+    ///
+    // Creates a new stub.
+    //
+    // @param linkage linkage details for a call to the stub
+    ///
     // @cons
     public Stub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super();
-        this.linkage = __linkage;
-        this.providers = __providers;
+        this.___linkage = __linkage;
+        this.___providers = __providers;
     }
 
-    /**
-     * Gets the linkage for a call to this stub from compiled code.
-     */
+    ///
+    // Gets the linkage for a call to this stub from compiled code.
+    ///
     public HotSpotForeignCallLinkage getLinkage()
     {
-        return linkage;
+        return this.___linkage;
     }
 
     public RegisterConfig getRegisterConfig()
@@ -102,30 +102,30 @@ public abstract class Stub
         return null;
     }
 
-    /**
-     * Gets the graph that from which the code for this stub will be compiled.
-     */
+    ///
+    // Gets the graph that from which the code for this stub will be compiled.
+    ///
     protected abstract StructuredGraph getStubGraph();
 
-    /**
-     * Gets the method the stub's code will be associated with once installed. This may be null.
-     */
+    ///
+    // Gets the method the stub's code will be associated with once installed. This may be null.
+    ///
     protected abstract ResolvedJavaMethod getInstalledCodeOwner();
 
-    /**
-     * Gets the code for this stub, compiling it first if necessary.
-     */
+    ///
+    // Gets the code for this stub, compiling it first if necessary.
+    ///
     public synchronized InstalledCode getCode(final Backend __backend)
     {
-        if (this.code == null)
+        if (this.___code == null)
         {
-            CodeCacheProvider __codeCache = providers.getCodeCache();
+            CodeCacheProvider __codeCache = this.___providers.getCodeCache();
             CompilationResult __compResult = buildCompilationResult(__backend);
             HotSpotCompiledCode __compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(__codeCache, null, null, __compResult);
-            this.code = __codeCache.installCode(null, __compiledCode, null, null, false);
+            this.___code = __codeCache.installCode(null, __compiledCode, null, null, false);
         }
 
-        return this.code;
+        return this.___code;
     }
 
     private final CompilationResult buildCompilationResult(final Backend __backend)
@@ -140,11 +140,11 @@ public abstract class Stub
             __graph.replaceFixed(__graph.start(), __newStart);
         }
 
-        Suites __suites = providers.getSuites().getDefaultSuites();
+        Suites __suites = this.___providers.getSuites().getDefaultSuites();
         __suites = new Suites(new PhaseSuite<>(), __suites.getMidTier(), __suites.getLowTier());
-        GraalCompiler.emitFrontEnd(providers, __backend, __graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), __suites);
+        GraalCompiler.emitFrontEnd(this.___providers, __backend, __graph, this.___providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), __suites);
         CompilationResult __result = new CompilationResult();
-        LIRSuites __lirSuites = new LIRSuites(providers.getSuites().getDefaultLIRSuites());
+        LIRSuites __lirSuites = new LIRSuites(this.___providers.getSuites().getDefaultLIRSuites());
         GraalCompiler.emitBackEnd(__graph, Stub.this, getInstalledCodeOwner(), __backend, __result, CompilationResultBuilderFactory.DEFAULT, getRegisterConfig(), __lirSuites);
         return __result;
     }

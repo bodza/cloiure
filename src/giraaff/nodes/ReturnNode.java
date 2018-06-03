@@ -19,14 +19,14 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
 
     @OptionalInput
     // @field
-    ValueNode result;
+    ValueNode ___result;
     @OptionalInput(InputType.Extension)
     // @field
-    MemoryMapNode memoryMap;
+    MemoryMapNode ___memoryMap;
 
     public ValueNode result()
     {
-        return result;
+        return this.___result;
     }
 
     // @cons
@@ -39,39 +39,39 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
     public ReturnNode(ValueNode __result, MemoryMapNode __memoryMap)
     {
         super(TYPE, StampFactory.forVoid());
-        this.result = __result;
-        this.memoryMap = __memoryMap;
+        this.___result = __result;
+        this.___memoryMap = __memoryMap;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        if (result == null)
+        if (this.___result == null)
         {
             __gen.getLIRGeneratorTool().emitReturn(JavaKind.Void, null);
         }
         else
         {
-            __gen.getLIRGeneratorTool().emitReturn(result.getStackKind(), __gen.operand(result));
+            __gen.getLIRGeneratorTool().emitReturn(this.___result.getStackKind(), __gen.operand(this.___result));
         }
     }
 
     public void setMemoryMap(MemoryMapNode __memoryMap)
     {
-        updateUsages(this.memoryMap, __memoryMap);
-        this.memoryMap = __memoryMap;
+        updateUsages(this.___memoryMap, __memoryMap);
+        this.___memoryMap = __memoryMap;
     }
 
     public MemoryMapNode getMemoryMap()
     {
-        return memoryMap;
+        return this.___memoryMap;
     }
 
     private boolean verifyReturn(TargetDescription __target)
     {
         if (graph().method() != null)
         {
-            JavaKind __actual = result == null ? JavaKind.Void : result.getStackKind();
+            JavaKind __actual = this.___result == null ? JavaKind.Void : this.___result.getStackKind();
             JavaKind __expected = graph().method().getSignature().getReturnKind().getStackKind();
             if (__actual == __target.wordJavaKind && __expected == JavaKind.Object)
             {

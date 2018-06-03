@@ -17,9 +17,9 @@ import giraaff.lir.StandardOp.SaveRegistersOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMap;
 
-/**
- * Saves registers to stack slots.
- */
+///
+// Saves registers to stack slots.
+///
 @Opcode
 // @class AMD64SaveRegistersOp
 public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
@@ -27,30 +27,30 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
     // @def
     public static final LIRInstructionClass<AMD64SaveRegistersOp> TYPE = LIRInstructionClass.create(AMD64SaveRegistersOp.class);
 
-    /**
-     * The registers (potentially) saved by this operation.
-     */
+    ///
+    // The registers (potentially) saved by this operation.
+    ///
     // @field
-    protected final Register[] savedRegisters;
+    protected final Register[] ___savedRegisters;
 
-    /**
-     * The slots to which the registers are saved.
-     */
+    ///
+    // The slots to which the registers are saved.
+    ///
     @Def(OperandFlag.STACK)
     // @field
-    protected final AllocatableValue[] slots;
+    protected final AllocatableValue[] ___slots;
 
-    /**
-     * Specifies if {@link #remove(EconomicSet)} should have an effect.
-     */
+    ///
+    // Specifies if {@link #remove(EconomicSet)} should have an effect.
+    ///
     // @field
-    protected final boolean supportsRemove;
+    protected final boolean ___supportsRemove;
 
-    /**
-     * @param savedRegisters the registers saved by this operation which may be subject to {@linkplain #remove(EconomicSet) pruning}
-     * @param savedRegisterLocations the slots to which the registers are saved
-     * @param supportsRemove determines if registers can be {@linkplain #remove(EconomicSet) pruned}
-     */
+    ///
+    // @param savedRegisters the registers saved by this operation which may be subject to {@linkplain #remove(EconomicSet) pruning}
+    // @param savedRegisterLocations the slots to which the registers are saved
+    // @param supportsRemove determines if registers can be {@linkplain #remove(EconomicSet) pruned}
+    ///
     // @cons
     public AMD64SaveRegistersOp(Register[] __savedRegisters, AllocatableValue[] __savedRegisterLocations, boolean __supportsRemove)
     {
@@ -61,9 +61,9 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
     public AMD64SaveRegistersOp(LIRInstructionClass<? extends AMD64SaveRegistersOp> __c, Register[] __savedRegisters, AllocatableValue[] __savedRegisterLocations, boolean __supportsRemove)
     {
         super(__c);
-        this.savedRegisters = __savedRegisters;
-        this.slots = __savedRegisterLocations;
-        this.supportsRemove = __supportsRemove;
+        this.___savedRegisters = __savedRegisters;
+        this.___slots = __savedRegisterLocations;
+        this.___supportsRemove = __supportsRemove;
     }
 
     protected void saveRegister(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, StackSlot __result, Register __input)
@@ -74,34 +74,34 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        for (int __i = 0; __i < savedRegisters.length; __i++)
+        for (int __i = 0; __i < this.___savedRegisters.length; __i++)
         {
-            if (savedRegisters[__i] != null)
+            if (this.___savedRegisters[__i] != null)
             {
-                saveRegister(__crb, __masm, ValueUtil.asStackSlot(slots[__i]), savedRegisters[__i]);
+                saveRegister(__crb, __masm, ValueUtil.asStackSlot(this.___slots[__i]), this.___savedRegisters[__i]);
             }
         }
     }
 
     public AllocatableValue[] getSlots()
     {
-        return slots;
+        return this.___slots;
     }
 
     @Override
     public boolean supportsRemove()
     {
-        return supportsRemove;
+        return this.___supportsRemove;
     }
 
     @Override
     public int remove(EconomicSet<Register> __doNotSave)
     {
-        if (!supportsRemove)
+        if (!this.___supportsRemove)
         {
             throw new UnsupportedOperationException();
         }
-        return prune(__doNotSave, savedRegisters);
+        return prune(__doNotSave, this.___savedRegisters);
     }
 
     static int prune(EconomicSet<Register> __toRemove, Register[] __registers)
@@ -125,9 +125,9 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
     public RegisterSaveLayout getMap(FrameMap __frameMap)
     {
         int __total = 0;
-        for (int __i = 0; __i < savedRegisters.length; __i++)
+        for (int __i = 0; __i < this.___savedRegisters.length; __i++)
         {
-            if (savedRegisters[__i] != null)
+            if (this.___savedRegisters[__i] != null)
             {
                 __total++;
             }
@@ -137,12 +137,12 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
         if (__total != 0)
         {
             int __mapIndex = 0;
-            for (int __i = 0; __i < savedRegisters.length; __i++)
+            for (int __i = 0; __i < this.___savedRegisters.length; __i++)
             {
-                if (savedRegisters[__i] != null)
+                if (this.___savedRegisters[__i] != null)
                 {
-                    __keys[__mapIndex] = savedRegisters[__i];
-                    StackSlot __slot = ValueUtil.asStackSlot(slots[__i]);
+                    __keys[__mapIndex] = this.___savedRegisters[__i];
+                    StackSlot __slot = ValueUtil.asStackSlot(this.___slots[__i]);
                     __values[__mapIndex] = indexForStackSlot(__frameMap, __slot);
                     __mapIndex++;
                 }
@@ -151,13 +151,13 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
         return new RegisterSaveLayout(__keys, __values);
     }
 
-    /**
-     * Computes the index of a stack slot relative to slot 0. This is also the bit index of stack
-     * slots in the reference map.
-     *
-     * @param slot a stack slot
-     * @return the index of the stack slot
-     */
+    ///
+    // Computes the index of a stack slot relative to slot 0. This is also the bit index of stack
+    // slots in the reference map.
+    //
+    // @param slot a stack slot
+    // @return the index of the stack slot
+    ///
     private static int indexForStackSlot(FrameMap __frameMap, StackSlot __slot)
     {
         return __frameMap.offsetForStackSlot(__slot) / __frameMap.getTarget().wordSize;

@@ -10,10 +10,10 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.util.GraalError;
 
-/**
- * Type describing pointers to raw memory. This stamp is used for example for direct pointers to
- * fields or array elements.
- */
+///
+// Type describing pointers to raw memory. This stamp is used for example for direct pointers to
+// fields or array elements.
+///
 // @class RawPointerStamp
 public final class RawPointerStamp extends AbstractPointerStamp
 {

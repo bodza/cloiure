@@ -269,9 +269,9 @@ public final class GraphUtil
         }
     }
 
-    /**
-     * Removes all nodes created after the {@code mark}, assuming no "old" nodes point to "new" nodes.
-     */
+    ///
+    // Removes all nodes created after the {@code mark}, assuming no "old" nodes point to "new" nodes.
+    ///
     public static void removeNewNodes(Graph __graph, Graph.Mark __mark)
     {
         for (Node __n : __graph.getNewNodes(__mark))
@@ -371,18 +371,18 @@ public final class GraphUtil
         }
     }
 
-    /**
-     * Remove loop header without loop ends. This can happen with degenerated loops like this one:
-     *
-     * <pre>
-     * for ( ; ; ) {
-     *     try {
-     *         break;
-     *     } catch (UnresolvedException iioe) {
-     *     }
-     * }
-     * </pre>
-     */
+    ///
+    // Remove loop header without loop ends. This can happen with degenerated loops like this one:
+    //
+    // <pre>
+    // for ( ; ; ) {
+    //     try {
+    //         break;
+    //     } catch (UnresolvedException iioe) {
+    //     }
+    // }
+    // </pre>
+    ///
     public static void normalizeLoops(StructuredGraph __graph)
     {
         boolean __loopRemoved = false;
@@ -401,10 +401,8 @@ public final class GraphUtil
 
         if (__loopRemoved)
         {
-            /*
-             * Removing a degenerated loop can make non-loop phi functions unnecessary. Therefore,
-             * we re-check all phi functions and remove redundant ones.
-             */
+            // Removing a degenerated loop can make non-loop phi functions unnecessary. Therefore,
+            // we re-check all phi functions and remove redundant ones.
             for (Node __node : __graph.getNodes())
             {
                 if (__node instanceof PhiNode)
@@ -431,12 +429,12 @@ public final class GraphUtil
         }
     }
 
-    /**
-     * Gets the original value by iterating through all {@link ValueProxy ValueProxies}.
-     *
-     * @param value the start value.
-     * @return the first non-proxy value encountered
-     */
+    ///
+    // Gets the original value by iterating through all {@link ValueProxy ValueProxies}.
+    //
+    // @param value the start value.
+    // @return the first non-proxy value encountered
+    ///
     public static ValueNode unproxify(ValueNode __value)
     {
         if (__value instanceof ValueProxy)
@@ -449,12 +447,12 @@ public final class GraphUtil
         }
     }
 
-    /**
-     * Gets the original value by iterating through all {@link ValueProxy ValueProxies}.
-     *
-     * @param value the start value proxy.
-     * @return the first non-proxy value encountered
-     */
+    ///
+    // Gets the original value by iterating through all {@link ValueProxy ValueProxies}.
+    //
+    // @param value the start value proxy.
+    // @return the first non-proxy value encountered
+    ///
     public static ValueNode unproxify(ValueProxy __value)
     {
         if (__value != null)
@@ -502,12 +500,12 @@ public final class GraphUtil
         return __n;
     }
 
-    /**
-     * Looks for an {@link ArrayLengthProvider} while iterating through all {@link ValueProxy ValueProxies}.
-     *
-     * @param value The start value.
-     * @return The array length if one was found, or null otherwise.
-     */
+    ///
+    // Looks for an {@link ArrayLengthProvider} while iterating through all {@link ValueProxy ValueProxies}.
+    //
+    // @param value The start value.
+    // @return The array length if one was found, or null otherwise.
+    ///
     public static ValueNode arrayLength(ValueNode __value)
     {
         ValueNode __current = __value;
@@ -533,14 +531,14 @@ public final class GraphUtil
         return null;
     }
 
-    /**
-     * Tries to find an original value of the given node by traversing through proxies and
-     * unambiguous phis. Note that this method will perform an exhaustive search through phis. It is
-     * intended to be used during graph building, when phi nodes aren't yet canonicalized.
-     *
-     * @param value The node whose original value should be determined.
-     * @return The original value (which might be the input value itself).
-     */
+    ///
+    // Tries to find an original value of the given node by traversing through proxies and
+    // unambiguous phis. Note that this method will perform an exhaustive search through phis. It is
+    // intended to be used during graph building, when phi nodes aren't yet canonicalized.
+    //
+    // @param value The node whose original value should be determined.
+    // @return The original value (which might be the input value itself).
+    ///
     public static ValueNode originalValue(ValueNode __value)
     {
         return originalValueSimple(__value);
@@ -576,29 +574,23 @@ public final class GraphUtil
 
                     if (__phiSingleValue instanceof PhiNode || __phiCurValue instanceof PhiNode)
                     {
-                        /*
-                         * We have two different input values for the phi function, and at least one
-                         * of the inputs is another phi function. We need to do a complicated
-                         * exhaustive check.
-                         */
+                        // We have two different input values for the phi function, and at least one
+                        // of the inputs is another phi function. We need to do a complicated
+                        // exhaustive check.
                         return originalValueForComplicatedPhi(__phi, new NodeBitMap(__value.graph()));
                     }
                     else
                     {
-                        /*
-                         * We have two different input values for the phi function, but none of them
-                         * is another phi function. This phi function cannot be reduce any further,
-                         * so the phi function is the original value.
-                         */
+                        // We have two different input values for the phi function, but none of them
+                        // is another phi function. This phi function cannot be reduce any further,
+                        // so the phi function is the original value.
                         return __phi;
                     }
                 }
             }
 
-            /*
-             * Successfully reduced the phi function to a single input value. The single input value
-             * can itself be a phi function again, so we might take another loop iteration.
-             */
+            // Successfully reduced the phi function to a single input value. The single input value
+            // can itself be a phi function again, so we might take another loop iteration.
             __cur = __phiSingleValue;
         }
 
@@ -616,18 +608,16 @@ public final class GraphUtil
         return __cur;
     }
 
-    /**
-     * Handling for complicated nestings of phi functions. We need to reduce phi functions
-     * recursively, and need a temporary map of visited nodes to avoid endless recursion of cycles.
-     */
+    ///
+    // Handling for complicated nestings of phi functions. We need to reduce phi functions
+    // recursively, and need a temporary map of visited nodes to avoid endless recursion of cycles.
+    ///
     private static ValueNode originalValueForComplicatedPhi(PhiNode __phi, NodeBitMap __visited)
     {
         if (__visited.isMarked(__phi))
         {
-            /*
-             * Found a phi function that was already seen. Either a cycle, or just a second phi
-             * input to a path we have already processed.
-             */
+            // Found a phi function that was already seen. Either a cycle, or just a second phi
+            // input to a path we have already processed.
             return null;
         }
         __visited.mark(__phi);
@@ -654,11 +644,9 @@ public final class GraphUtil
             }
             else if (__phiCurValue != __phiSingleValue)
             {
-                /*
-                 * Another input that is different from the first input. Since we already
-                 * recursively looked through other phi functions, we now know that this phi
-                 * function cannot be reduce any further, so the phi function is the original value.
-                 */
+                // Another input that is different from the first input. Since we already
+                // recursively looked through other phi functions, we now know that this phi
+                // function cannot be reduce any further, so the phi function is the original value.
                 return __phi;
             }
         }
@@ -675,12 +663,12 @@ public final class GraphUtil
         return false;
     }
 
-    /**
-     * Returns an iterator that will return the given node followed by all its predecessors, up
-     * until the point where {@link Node#predecessor()} returns null.
-     *
-     * @param start the node at which to start iterating
-     */
+    ///
+    // Returns an iterator that will return the given node followed by all its predecessors, up
+    // until the point where {@link Node#predecessor()} returns null.
+    //
+    // @param start the node at which to start iterating
+    ///
     public static NodeIterable<FixedNode> predecessorIterable(final FixedNode __start)
     {
         // @closure
@@ -693,12 +681,12 @@ public final class GraphUtil
                 return new Iterator<FixedNode>()
                 {
                     // @field
-                    public FixedNode current = __start;
+                    public FixedNode ___current = __start;
 
                     @Override
                     public boolean hasNext()
                     {
-                        return current != null;
+                        return this.___current != null;
                     }
 
                     @Override
@@ -706,11 +694,11 @@ public final class GraphUtil
                     {
                         try
                         {
-                            return current;
+                            return this.___current;
                         }
                         finally
                         {
-                            current = (FixedNode) current.predecessor();
+                            this.___current = (FixedNode) this.___current.predecessor();
                         }
                     }
                 };
@@ -722,52 +710,52 @@ public final class GraphUtil
     private static final class DefaultSimplifierTool implements SimplifierTool
     {
         // @field
-        private final MetaAccessProvider metaAccess;
+        private final MetaAccessProvider ___metaAccess;
         // @field
-        private final ConstantReflectionProvider constantReflection;
+        private final ConstantReflectionProvider ___constantReflection;
         // @field
-        private final ConstantFieldProvider constantFieldProvider;
+        private final ConstantFieldProvider ___constantFieldProvider;
         // @field
-        private final boolean canonicalizeReads;
+        private final boolean ___canonicalizeReads;
         // @field
-        private final Assumptions assumptions;
+        private final Assumptions ___assumptions;
         // @field
-        private final LoweringProvider loweringProvider;
+        private final LoweringProvider ___loweringProvider;
 
         // @cons
         DefaultSimplifierTool(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, boolean __canonicalizeReads, Assumptions __assumptions, LoweringProvider __loweringProvider)
         {
             super();
-            this.metaAccess = __metaAccess;
-            this.constantReflection = __constantReflection;
-            this.constantFieldProvider = __constantFieldProvider;
-            this.canonicalizeReads = __canonicalizeReads;
-            this.assumptions = __assumptions;
-            this.loweringProvider = __loweringProvider;
+            this.___metaAccess = __metaAccess;
+            this.___constantReflection = __constantReflection;
+            this.___constantFieldProvider = __constantFieldProvider;
+            this.___canonicalizeReads = __canonicalizeReads;
+            this.___assumptions = __assumptions;
+            this.___loweringProvider = __loweringProvider;
         }
 
         @Override
         public MetaAccessProvider getMetaAccess()
         {
-            return metaAccess;
+            return this.___metaAccess;
         }
 
         @Override
         public ConstantReflectionProvider getConstantReflection()
         {
-            return constantReflection;
+            return this.___constantReflection;
         }
 
         @Override
         public ConstantFieldProvider getConstantFieldProvider()
         {
-            return constantFieldProvider;
+            return this.___constantFieldProvider;
         }
 
         @Override
         public boolean canonicalizeReads()
         {
-            return canonicalizeReads;
+            return this.___canonicalizeReads;
         }
 
         @Override
@@ -803,15 +791,15 @@ public final class GraphUtil
         @Override
         public Assumptions getAssumptions()
         {
-            return assumptions;
+            return this.___assumptions;
         }
 
         @Override
         public Integer smallestCompareWidth()
         {
-            if (loweringProvider != null)
+            if (this.___loweringProvider != null)
             {
-                return loweringProvider.smallestCompareWidth();
+                return this.___loweringProvider.smallestCompareWidth();
             }
             else
             {
@@ -842,20 +830,20 @@ public final class GraphUtil
         return null;
     }
 
-    /**
-     * Virtualize an array copy.
-     *
-     * @param tool the virtualization tool
-     * @param source the source array
-     * @param sourceLength the length of the source array
-     * @param newLength the length of the new array
-     * @param from the start index in the source array
-     * @param newComponentType the component type of the new array
-     * @param elementKind the kind of the new array elements
-     * @param graph the node graph
-     * @param virtualArrayProvider a functional provider that returns a new virtual array given the
-     *            component type and length
-     */
+    ///
+    // Virtualize an array copy.
+    //
+    // @param tool the virtualization tool
+    // @param source the source array
+    // @param sourceLength the length of the source array
+    // @param newLength the length of the new array
+    // @param from the start index in the source array
+    // @param newComponentType the component type of the new array
+    // @param elementKind the kind of the new array elements
+    // @param graph the node graph
+    // @param virtualArrayProvider a functional provider that returns a new virtual array given the
+    //            component type and length
+    ///
     public static void virtualizeArrayCopy(VirtualizerTool __tool, ValueNode __source, ValueNode __sourceLength, ValueNode __newLength, ValueNode __from, ResolvedJavaType __newComponentType, JavaKind __elementKind, StructuredGraph __graph, BiFunction<ResolvedJavaType, Integer, VirtualArrayNode> __virtualArrayProvider)
     {
         ValueNode __sourceAlias = __tool.getAlias(__source);

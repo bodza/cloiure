@@ -18,7 +18,7 @@ public abstract class ContextlessLoopPhase<P extends LoopPolicies> extends LoopP
         apply(__graph, null);
     }
 
-    protected abstract void run(StructuredGraph graph);
+    protected abstract void run(StructuredGraph __graph);
 
     @Override
     protected final void run(StructuredGraph __graph, PhaseContext __context)

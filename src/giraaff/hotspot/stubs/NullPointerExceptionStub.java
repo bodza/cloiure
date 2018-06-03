@@ -8,9 +8,9 @@ import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.util.GraalError;
 
-/**
- * Stub to allocate a {@link NullPointerException} thrown by a bytecode.
- */
+///
+// Stub to allocate a {@link NullPointerException} thrown by a bytecode.
+///
 // @class NullPointerExceptionStub
 public final class NullPointerExceptionStub extends CreateExceptionStub
 {
@@ -24,7 +24,7 @@ public final class NullPointerExceptionStub extends CreateExceptionStub
     protected Object getConstantParameterValue(int __index, String __name)
     {
         GraalError.guarantee(__index == 0, "unknown parameter %s at index %d", __name, __index);
-        return providers.getRegisters().getThreadRegister();
+        return this.___providers.getRegisters().getThreadRegister();
     }
 
     @Snippet

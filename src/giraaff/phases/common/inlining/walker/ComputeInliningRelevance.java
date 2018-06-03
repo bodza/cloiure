@@ -39,54 +39,54 @@ public final class ComputeInliningRelevance
     private static final int EXPECTED_LOOP_COUNT = 3;
 
     // @field
-    private final StructuredGraph graph;
+    private final StructuredGraph ___graph;
     // @field
-    private final ToDoubleFunction<FixedNode> nodeProbabilities;
+    private final ToDoubleFunction<FixedNode> ___nodeProbabilities;
 
-    /**
-     * Node relevances are pre-computed for all invokes if the graph contains loops. If there are no
-     * loops, the computation happens lazily based on {@link #rootScope}.
-     */
+    ///
+    // Node relevances are pre-computed for all invokes if the graph contains loops. If there are no
+    // loops, the computation happens lazily based on {@link #rootScope}.
+    ///
     // @field
-    private EconomicMap<FixedNode, Double> nodeRelevances;
-    /**
-     * This scope is non-null if (and only if) there are no loops in the graph. In this case, the
-     * root scope is used to compute invoke relevances on the fly.
-     */
+    private EconomicMap<FixedNode, Double> ___nodeRelevances;
+    ///
+    // This scope is non-null if (and only if) there are no loops in the graph. In this case, the
+    // root scope is used to compute invoke relevances on the fly.
+    ///
     // @field
-    private Scope rootScope;
+    private Scope ___rootScope;
 
     // @cons
     public ComputeInliningRelevance(StructuredGraph __graph, ToDoubleFunction<FixedNode> __nodeProbabilities)
     {
         super();
-        this.graph = __graph;
-        this.nodeProbabilities = __nodeProbabilities;
+        this.___graph = __graph;
+        this.___nodeProbabilities = __nodeProbabilities;
     }
 
-    /**
-     * Initializes or updates the relevance computation. If there are no loops within the graph,
-     * most computation happens lazily.
-     */
+    ///
+    // Initializes or updates the relevance computation. If there are no loops within the graph,
+    // most computation happens lazily.
+    ///
     public void compute()
     {
-        rootScope = null;
-        if (!graph.hasLoops())
+        this.___rootScope = null;
+        if (!this.___graph.hasLoops())
         {
             // fast path for the frequent case of no loops
-            rootScope = new Scope(graph.start(), null);
+            this.___rootScope = new Scope(this.___graph.start(), null);
         }
         else
         {
-            if (nodeRelevances == null)
+            if (this.___nodeRelevances == null)
             {
-                nodeRelevances = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_MIN_INVOKE_COUNT + InliningUtil.getNodeCount(graph) / EXPECTED_INVOKE_RATIO);
+                this.___nodeRelevances = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_MIN_INVOKE_COUNT + InliningUtil.getNodeCount(this.___graph) / EXPECTED_INVOKE_RATIO);
             }
-            NodeWorkList __workList = graph.createNodeWorkList();
+            NodeWorkList __workList = this.___graph.createNodeWorkList();
             EconomicMap<LoopBeginNode, Scope> __loops = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_LOOP_COUNT);
 
-            Scope __topScope = new Scope(graph.start(), null);
-            for (LoopBeginNode __loopBegin : graph.getNodes(LoopBeginNode.TYPE))
+            Scope __topScope = new Scope(this.___graph.start(), null);
+            for (LoopBeginNode __loopBegin : this.___graph.getNodes(LoopBeginNode.TYPE))
             {
                 createLoopScope(__loopBegin, __loops, __topScope);
             }
@@ -101,17 +101,17 @@ public final class ComputeInliningRelevance
 
     public double getRelevance(Invoke __invoke)
     {
-        if (rootScope != null)
+        if (this.___rootScope != null)
         {
-            return rootScope.computeInvokeRelevance(__invoke);
+            return this.___rootScope.computeInvokeRelevance(__invoke);
         }
-        return nodeRelevances.get(__invoke.asNode());
+        return this.___nodeRelevances.get(__invoke.asNode());
     }
 
-    /**
-     * Determines the parent of the given loop and creates a {@link Scope} object for each one. This
-     * method will call itself recursively if no {@link Scope} for the parent loop exists.
-     */
+    ///
+    // Determines the parent of the given loop and creates a {@link Scope} object for each one. This
+    // method will call itself recursively if no {@link Scope} for the parent loop exists.
+    ///
     private Scope createLoopScope(LoopBeginNode __loopBegin, EconomicMap<LoopBeginNode, Scope> __loops, Scope __topScope)
     {
         Scope __scope = __loops.get(__loopBegin);
@@ -145,7 +145,7 @@ public final class ComputeInliningRelevance
                 else if (__current instanceof LoopExitNode)
                 {
                     // if we reach a loop exit then we follow this loop and have the same parent
-                    __parent = createLoopScope(((LoopExitNode) __current).loopBegin(), __loops, __topScope).parent;
+                    __parent = createLoopScope(((LoopExitNode) __current).loopBegin(), __loops, __topScope).___parent;
                     break;
                 }
                 else
@@ -159,85 +159,85 @@ public final class ComputeInliningRelevance
         return __scope;
     }
 
-    /**
-     * A scope holds information for the contents of one loop or of the root of the method. It does
-     * not include child loops, i.e., the iteration in {@link #process(NodeWorkList)} explicitly
-     * excludes the nodes of child loops.
-     */
+    ///
+    // A scope holds information for the contents of one loop or of the root of the method. It does
+    // not include child loops, i.e., the iteration in {@link #process(NodeWorkList)} explicitly
+    // excludes the nodes of child loops.
+    ///
     // @class ComputeInliningRelevance.Scope
     // @closure
     private final class Scope
     {
         // @field
-        public final FixedNode start;
+        public final FixedNode ___start;
         // @field
-        public final Scope parent; // can be null for the outermost scope
+        public final Scope ___parent; // can be null for the outermost scope
 
-        /**
-         * The minimum probability along the most probable path in this scope. Computed lazily.
-         */
+        ///
+        // The minimum probability along the most probable path in this scope. Computed lazily.
+        ///
         // @field
-        private double fastPathMinProbability = ComputeInliningRelevance.UNINITIALIZED;
-        /**
-         * A measure of how important this scope is within its parent scope. Computed lazily.
-         */
+        private double ___fastPathMinProbability = ComputeInliningRelevance.UNINITIALIZED;
+        ///
+        // A measure of how important this scope is within its parent scope. Computed lazily.
+        ///
         // @field
-        private double scopeRelevanceWithinParent = ComputeInliningRelevance.UNINITIALIZED;
+        private double ___scopeRelevanceWithinParent = ComputeInliningRelevance.UNINITIALIZED;
 
         // @cons
         Scope(FixedNode __start, Scope __parent)
         {
             super();
-            this.start = __start;
-            this.parent = __parent;
+            this.___start = __start;
+            this.___parent = __parent;
         }
 
         public double getFastPathMinProbability()
         {
-            if (fastPathMinProbability == ComputeInliningRelevance.UNINITIALIZED)
+            if (this.___fastPathMinProbability == ComputeInliningRelevance.UNINITIALIZED)
             {
-                fastPathMinProbability = Math.max(ComputeInliningRelevance.EPSILON, ComputeInliningRelevance.this.computeFastPathMinProbability(start));
+                this.___fastPathMinProbability = Math.max(ComputeInliningRelevance.EPSILON, ComputeInliningRelevance.this.computeFastPathMinProbability(this.___start));
             }
-            return fastPathMinProbability;
+            return this.___fastPathMinProbability;
         }
 
-        /**
-         * Computes the ratio between the probabilities of the current scope's entry point and the
-         * parent scope's fastPathMinProbability.
-         */
+        ///
+        // Computes the ratio between the probabilities of the current scope's entry point and the
+        // parent scope's fastPathMinProbability.
+        ///
         public double getScopeRelevanceWithinParent()
         {
-            if (scopeRelevanceWithinParent == ComputeInliningRelevance.UNINITIALIZED)
+            if (this.___scopeRelevanceWithinParent == ComputeInliningRelevance.UNINITIALIZED)
             {
-                if (start instanceof LoopBeginNode)
+                if (this.___start instanceof LoopBeginNode)
                 {
-                    double __scopeEntryProbability = ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(((LoopBeginNode) start).forwardEnd());
+                    double __scopeEntryProbability = ComputeInliningRelevance.this.___nodeProbabilities.applyAsDouble(((LoopBeginNode) this.___start).forwardEnd());
 
-                    scopeRelevanceWithinParent = __scopeEntryProbability / parent.getFastPathMinProbability();
+                    this.___scopeRelevanceWithinParent = __scopeEntryProbability / this.___parent.getFastPathMinProbability();
                 }
                 else
                 {
-                    scopeRelevanceWithinParent = 1D;
+                    this.___scopeRelevanceWithinParent = 1D;
                 }
             }
-            return scopeRelevanceWithinParent;
+            return this.___scopeRelevanceWithinParent;
         }
 
-        /**
-         * Processes all invokes in this scope by starting at the scope's start node and iterating
-         * all fixed nodes. Child loops are skipped by going from loop entries directly to the loop
-         * exits. Processing stops at loop exits of the current loop.
-         */
+        ///
+        // Processes all invokes in this scope by starting at the scope's start node and iterating
+        // all fixed nodes. Child loops are skipped by going from loop entries directly to the loop
+        // exits. Processing stops at loop exits of the current loop.
+        ///
         public void process(NodeWorkList __workList)
         {
-            __workList.addAll(start.successors());
+            __workList.addAll(this.___start.successors());
 
             for (Node __current : __workList)
             {
                 if (__current instanceof Invoke)
                 {
                     // process the invoke and queue its successors
-                    ComputeInliningRelevance.this.nodeRelevances.put((FixedNode) __current, computeInvokeRelevance((Invoke) __current));
+                    ComputeInliningRelevance.this.___nodeRelevances.put((FixedNode) __current, computeInvokeRelevance((Invoke) __current));
                     __workList.addAll(__current.successors());
                 }
                 else if (__current instanceof LoopBeginNode)
@@ -272,25 +272,25 @@ public final class ComputeInliningRelevance
             }
         }
 
-        /**
-         * The relevance of an invoke is the ratio between the invoke's probability and the current
-         * scope's fastPathMinProbability, adjusted by scopeRelevanceWithinParent.
-         */
+        ///
+        // The relevance of an invoke is the ratio between the invoke's probability and the current
+        // scope's fastPathMinProbability, adjusted by scopeRelevanceWithinParent.
+        ///
         public double computeInvokeRelevance(Invoke __invoke)
         {
-            return (ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(__invoke.asNode()) / getFastPathMinProbability()) * Math.min(getScopeRelevanceWithinParent(), 1.0);
+            return (ComputeInliningRelevance.this.___nodeProbabilities.applyAsDouble(__invoke.asNode()) / getFastPathMinProbability()) * Math.min(getScopeRelevanceWithinParent(), 1.0);
         }
     }
 
-    /**
-     * Computes the minimum probability along the most probable path within the scope. During
-     * iteration, the method returns immediately once a loop exit is discovered.
-     */
+    ///
+    // Computes the minimum probability along the most probable path within the scope. During
+    // iteration, the method returns immediately once a loop exit is discovered.
+    ///
     private double computeFastPathMinProbability(FixedNode __scopeStart)
     {
         ArrayList<FixedNode> __pathBeginNodes = new ArrayList<>();
         __pathBeginNodes.add(__scopeStart);
-        double __minPathProbability = nodeProbabilities.applyAsDouble(__scopeStart);
+        double __minPathProbability = this.___nodeProbabilities.applyAsDouble(__scopeStart);
         boolean __isLoopScope = __scopeStart instanceof LoopBeginNode;
 
         do
@@ -324,13 +324,13 @@ public final class ComputeInliningRelevance
 
     private double getMinPathProbability(FixedNode __current, double __minPathProbability)
     {
-        return __current == null ? __minPathProbability : Math.min(__minPathProbability, nodeProbabilities.applyAsDouble(__current));
+        return __current == null ? __minPathProbability : Math.min(__minPathProbability, this.___nodeProbabilities.applyAsDouble(__current));
     }
 
-    /**
-     * Returns the most probable successor. If multiple successors share the maximum probability,
-     * one is returned and the others are enqueued in pathBeginNodes.
-     */
+    ///
+    // Returns the most probable successor. If multiple successors share the maximum probability,
+    // one is returned and the others are enqueued in pathBeginNodes.
+    ///
     private static Node getMaxProbabilitySux(ControlSplitNode __controlSplit, ArrayList<FixedNode> __pathBeginNodes)
     {
         Node __maxSux = null;
@@ -355,10 +355,10 @@ public final class ComputeInliningRelevance
         return __maxSux;
     }
 
-    /**
-     * Returns the most probable loop exit. If multiple successors share the maximum probability,
-     * one is returned and the others are enqueued in pathBeginNodes.
-     */
+    ///
+    // Returns the most probable loop exit. If multiple successors share the maximum probability,
+    // one is returned and the others are enqueued in pathBeginNodes.
+    ///
     private Node getMaxProbabilityLoopExit(LoopBeginNode __loopBegin, ArrayList<FixedNode> __pathBeginNodes)
     {
         Node __maxSux = null;
@@ -367,7 +367,7 @@ public final class ComputeInliningRelevance
 
         for (LoopExitNode __sux : __loopBegin.loopExits())
         {
-            double __probability = nodeProbabilities.applyAsDouble(__sux);
+            double __probability = this.___nodeProbabilities.applyAsDouble(__sux);
             if (__probability > __maxProbability)
             {
                 __maxProbability = __probability;

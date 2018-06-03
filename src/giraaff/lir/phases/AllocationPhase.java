@@ -10,16 +10,16 @@ public abstract class AllocationPhase extends LIRPhase<AllocationPhase.Allocatio
     public static final class AllocationContext extends GenericContext
     {
         // @field
-        public final MoveFactory spillMoveFactory;
+        public final MoveFactory ___spillMoveFactory;
         // @field
-        public final RegisterAllocationConfig registerAllocationConfig;
+        public final RegisterAllocationConfig ___registerAllocationConfig;
 
         // @cons
         public AllocationContext(MoveFactory __spillMoveFactory, RegisterAllocationConfig __registerAllocationConfig)
         {
             super();
-            this.spillMoveFactory = __spillMoveFactory;
-            this.registerAllocationConfig = __registerAllocationConfig;
+            this.___spillMoveFactory = __spillMoveFactory;
+            this.___registerAllocationConfig = __registerAllocationConfig;
         }
     }
 }

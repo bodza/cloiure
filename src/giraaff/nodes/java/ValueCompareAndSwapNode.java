@@ -9,10 +9,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * A special purpose store node that differs from {@link LogicCompareAndSwapNode} in that it returns
- * either the expected value or the compared against value instead of a boolean.
- */
+///
+// A special purpose store node that differs from {@link LogicCompareAndSwapNode} in that it returns
+// either the expected value or the compared against value instead of a boolean.
+///
 // @class ValueCompareAndSwapNode
 public final class ValueCompareAndSwapNode extends AbstractCompareAndSwapNode
 {

@@ -41,14 +41,14 @@ import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.ExplodeLoopNode;
 import giraaff.util.GraalError;
 
-/**
- * Snippets used for implementing the type test of an instanceof instruction. Since instanceof is a
- * floating node, it is lowered separately for each of its usages.
- *
- * The type tests implemented are described in the paper
- * <a href="http://dl.acm.org/citation.cfm?id=583821"> Fast subtype checking in the HotSpot JVM</a>
- * by Cliff Click and John Rose.
- */
+///
+// Snippets used for implementing the type test of an instanceof instruction. Since instanceof is a
+// floating node, it is lowered separately for each of its usages.
+//
+// The type tests implemented are described in the paper
+// <a href="http://dl.acm.org/citation.cfm?id=583821"> Fast subtype checking in the HotSpot JVM</a>
+// by Cliff Click and John Rose.
+///
 // @class InstanceOfSnippets
 public final class InstanceOfSnippets implements Snippets
 {
@@ -58,10 +58,10 @@ public final class InstanceOfSnippets implements Snippets
         super();
     }
 
-    /**
-     * A test against a set of hints derived from a profile with 100% precise coverage of seen
-     * types. This snippet deoptimizes on hint miss paths.
-     */
+    ///
+    // A test against a set of hints derived from a profile with 100% precise coverage of seen
+    // types. This snippet deoptimizes on hint miss paths.
+    ///
     @Snippet
     public static Object instanceofWithProfile(Object __object, @VarargsParameter KlassPointer[] __hints, @VarargsParameter boolean[] __hintIsPositive, Object __trueValue, Object __falseValue, @ConstantParameter boolean __nullSeen)
     {
@@ -94,9 +94,9 @@ public final class InstanceOfSnippets implements Snippets
         return __falseValue;
     }
 
-    /**
-     * A test against a final type.
-     */
+    ///
+    // A test against a final type.
+    ///
     @Snippet
     public static Object instanceofExact(Object __object, KlassPointer __exactHub, Object __trueValue, Object __falseValue)
     {
@@ -113,9 +113,9 @@ public final class InstanceOfSnippets implements Snippets
         return __trueValue;
     }
 
-    /**
-     * A test against a primary type.
-     */
+    ///
+    // A test against a primary type.
+    ///
     @Snippet
     public static Object instanceofPrimary(KlassPointer __hub, Object __object, @ConstantParameter int __superCheckOffset, Object __trueValue, Object __falseValue)
     {
@@ -132,9 +132,9 @@ public final class InstanceOfSnippets implements Snippets
         return __trueValue;
     }
 
-    /**
-     * A test against a restricted secondary type type.
-     */
+    ///
+    // A test against a restricted secondary type type.
+    ///
     @Snippet
     public static Object instanceofSecondary(KlassPointer __hub, Object __object, @VarargsParameter KlassPointer[] __hints, @VarargsParameter boolean[] __hintIsPositive, Object __trueValue, Object __falseValue)
     {
@@ -162,9 +162,9 @@ public final class InstanceOfSnippets implements Snippets
         return __trueValue;
     }
 
-    /**
-     * Type test used when the type being tested against is not known at compile time.
-     */
+    ///
+    // Type test used when the type being tested against is not known at compile time.
+    ///
     @Snippet
     public static Object instanceofDynamic(KlassPointer __hub, Object __object, Object __trueValue, Object __falseValue, @ConstantParameter boolean __allowNull)
     {
@@ -231,17 +231,17 @@ public final class InstanceOfSnippets implements Snippets
     public static final class Templates extends InstanceOfSnippetsTemplates
     {
         // @field
-        private final SnippetInfo instanceofWithProfile = snippet(InstanceOfSnippets.class, "instanceofWithProfile");
+        private final SnippetInfo ___instanceofWithProfile = snippet(InstanceOfSnippets.class, "instanceofWithProfile");
         // @field
-        private final SnippetInfo instanceofExact = snippet(InstanceOfSnippets.class, "instanceofExact");
+        private final SnippetInfo ___instanceofExact = snippet(InstanceOfSnippets.class, "instanceofExact");
         // @field
-        private final SnippetInfo instanceofPrimary = snippet(InstanceOfSnippets.class, "instanceofPrimary");
+        private final SnippetInfo ___instanceofPrimary = snippet(InstanceOfSnippets.class, "instanceofPrimary");
         // @field
-        private final SnippetInfo instanceofSecondary = snippet(InstanceOfSnippets.class, "instanceofSecondary", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+        private final SnippetInfo ___instanceofSecondary = snippet(InstanceOfSnippets.class, "instanceofSecondary", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
         // @field
-        private final SnippetInfo instanceofDynamic = snippet(InstanceOfSnippets.class, "instanceofDynamic", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+        private final SnippetInfo ___instanceofDynamic = snippet(InstanceOfSnippets.class, "instanceofDynamic", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
         // @field
-        private final SnippetInfo isAssignableFrom = snippet(InstanceOfSnippets.class, "isAssignableFrom", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+        private final SnippetInfo ___isAssignableFrom = snippet(InstanceOfSnippets.class, "isAssignableFrom", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target)
@@ -252,79 +252,79 @@ public final class InstanceOfSnippets implements Snippets
         @Override
         protected Arguments makeArguments(InstanceOfUsageReplacer __replacer, LoweringTool __tool)
         {
-            if (__replacer.instanceOf instanceof InstanceOfNode)
+            if (__replacer.___instanceOf instanceof InstanceOfNode)
             {
-                InstanceOfNode __instanceOf = (InstanceOfNode) __replacer.instanceOf;
+                InstanceOfNode __instanceOf = (InstanceOfNode) __replacer.___instanceOf;
                 ValueNode __object = __instanceOf.getValue();
                 Assumptions __assumptions = __instanceOf.graph().getAssumptions();
 
                 JavaTypeProfile __profile = __instanceOf.profile();
                 TypeCheckHints __hintInfo = new TypeCheckHints(__instanceOf.type(), __profile, __assumptions, GraalOptions.typeCheckMinProfileHitProbability, GraalOptions.typeCheckMaxHints);
                 final HotSpotResolvedObjectType __type = (HotSpotResolvedObjectType) __instanceOf.type().getType();
-                ConstantNode __hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __type.klass(), providers.getMetaAccess(), __instanceOf.graph());
+                ConstantNode __hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __type.klass(), this.___providers.getMetaAccess(), __instanceOf.graph());
 
                 Arguments __args;
 
                 StructuredGraph __graph = __instanceOf.graph();
-                if (__hintInfo.hintHitProbability >= 1.0 && __hintInfo.exact == null)
+                if (__hintInfo.___hintHitProbability >= 1.0 && __hintInfo.___exact == null)
                 {
-                    Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, providers.getMetaAccess(), false, __graph);
-                    __args = new Arguments(instanceofWithProfile, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, this.___providers.getMetaAccess(), false, __graph);
+                    __args = new Arguments(this.___instanceofWithProfile, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("object", __object);
-                    __args.addVarargs("hints", KlassPointer.class, KlassPointerStamp.klassNonNull(), __hints.hubs);
-                    __args.addVarargs("hintIsPositive", boolean.class, StampFactory.forKind(JavaKind.Boolean), __hints.isPositive);
+                    __args.addVarargs("hints", KlassPointer.class, KlassPointerStamp.klassNonNull(), __hints.___hubs);
+                    __args.addVarargs("hintIsPositive", boolean.class, StampFactory.forKind(JavaKind.Boolean), __hints.___isPositive);
                 }
-                else if (__hintInfo.exact != null)
+                else if (__hintInfo.___exact != null)
                 {
-                    __args = new Arguments(instanceofExact, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    __args = new Arguments(this.___instanceofExact, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("object", __object);
-                    __args.add("exactHub", ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) __hintInfo.exact).klass(), providers.getMetaAccess(), __graph));
+                    __args.add("exactHub", ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) __hintInfo.___exact).klass(), this.___providers.getMetaAccess(), __graph));
                 }
                 else if (__type.isPrimaryType())
                 {
-                    __args = new Arguments(instanceofPrimary, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    __args = new Arguments(this.___instanceofPrimary, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("hub", __hub);
                     __args.add("object", __object);
                     __args.addConst("superCheckOffset", __type.superCheckOffset());
                 }
                 else
                 {
-                    Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, providers.getMetaAccess(), false, __graph);
-                    __args = new Arguments(instanceofSecondary, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, this.___providers.getMetaAccess(), false, __graph);
+                    __args = new Arguments(this.___instanceofSecondary, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("hub", __hub);
                     __args.add("object", __object);
-                    __args.addVarargs("hints", KlassPointer.class, KlassPointerStamp.klassNonNull(), __hints.hubs);
-                    __args.addVarargs("hintIsPositive", boolean.class, StampFactory.forKind(JavaKind.Boolean), __hints.isPositive);
+                    __args.addVarargs("hints", KlassPointer.class, KlassPointerStamp.klassNonNull(), __hints.___hubs);
+                    __args.addVarargs("hintIsPositive", boolean.class, StampFactory.forKind(JavaKind.Boolean), __hints.___isPositive);
                 }
-                __args.add("trueValue", __replacer.trueValue);
-                __args.add("falseValue", __replacer.falseValue);
-                if (__hintInfo.hintHitProbability >= 1.0 && __hintInfo.exact == null)
+                __args.add("trueValue", __replacer.___trueValue);
+                __args.add("falseValue", __replacer.___falseValue);
+                if (__hintInfo.___hintHitProbability >= 1.0 && __hintInfo.___exact == null)
                 {
-                    __args.addConst("nullSeen", __hintInfo.profile.getNullSeen() != TriState.FALSE);
+                    __args.addConst("nullSeen", __hintInfo.___profile.getNullSeen() != TriState.FALSE);
                 }
                 return __args;
             }
-            else if (__replacer.instanceOf instanceof InstanceOfDynamicNode)
+            else if (__replacer.___instanceOf instanceof InstanceOfDynamicNode)
             {
-                InstanceOfDynamicNode __instanceOf = (InstanceOfDynamicNode) __replacer.instanceOf;
+                InstanceOfDynamicNode __instanceOf = (InstanceOfDynamicNode) __replacer.___instanceOf;
                 ValueNode __object = __instanceOf.getObject();
 
-                Arguments __args = new Arguments(instanceofDynamic, __instanceOf.graph().getGuardsStage(), __tool.getLoweringStage());
+                Arguments __args = new Arguments(this.___instanceofDynamic, __instanceOf.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("hub", __instanceOf.getMirrorOrHub());
                 __args.add("object", __object);
-                __args.add("trueValue", __replacer.trueValue);
-                __args.add("falseValue", __replacer.falseValue);
+                __args.add("trueValue", __replacer.___trueValue);
+                __args.add("falseValue", __replacer.___falseValue);
                 __args.addConst("allowNull", __instanceOf.allowsNull());
                 return __args;
             }
-            else if (__replacer.instanceOf instanceof ClassIsAssignableFromNode)
+            else if (__replacer.___instanceOf instanceof ClassIsAssignableFromNode)
             {
-                ClassIsAssignableFromNode __isAssignable = (ClassIsAssignableFromNode) __replacer.instanceOf;
-                Arguments __args = new Arguments(isAssignableFrom, __isAssignable.graph().getGuardsStage(), __tool.getLoweringStage());
+                ClassIsAssignableFromNode __isAssignable = (ClassIsAssignableFromNode) __replacer.___instanceOf;
+                Arguments __args = new Arguments(this.___isAssignableFrom, __isAssignable.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("thisClassNonNull", __isAssignable.getThisClass());
                 __args.add("otherClass", __isAssignable.getOtherClass());
-                __args.add("trueValue", __replacer.trueValue);
-                __args.add("falseValue", __replacer.falseValue);
+                __args.add("trueValue", __replacer.___trueValue);
+                __args.add("falseValue", __replacer.___falseValue);
                 return __args;
             }
             else

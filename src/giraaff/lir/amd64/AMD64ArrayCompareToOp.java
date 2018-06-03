@@ -26,10 +26,10 @@ import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.util.UnsafeAccess;
 
-/**
- * Emits code which compares two arrays lexicographically. If the CPU supports any vector
- * instructions specialized code is emitted to leverage these instructions.
- */
+///
+// Emits code which compares two arrays lexicographically. If the CPU supports any vector
+// instructions specialized code is emitted to leverage these instructions.
+///
 @Opcode
 // @class AMD64ArrayCompareToOp
 public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
@@ -38,83 +38,81 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
     public static final LIRInstructionClass<AMD64ArrayCompareToOp> TYPE = LIRInstructionClass.create(AMD64ArrayCompareToOp.class);
 
     // @field
-    private final JavaKind kind1;
+    private final JavaKind ___kind1;
     // @field
-    private final JavaKind kind2;
+    private final JavaKind ___kind2;
     // @field
-    private final int array1BaseOffset;
+    private final int ___array1BaseOffset;
     // @field
-    private final int array2BaseOffset;
+    private final int ___array2BaseOffset;
 
     @Def({OperandFlag.REG})
     // @field
-    protected Value resultValue;
+    protected Value ___resultValue;
     @Alive({OperandFlag.REG})
     // @field
-    protected Value array1Value;
+    protected Value ___array1Value;
     @Alive({OperandFlag.REG})
     // @field
-    protected Value array2Value;
+    protected Value ___array2Value;
     @Use({OperandFlag.REG})
     // @field
-    protected Value length1Value;
+    protected Value ___length1Value;
     @Use({OperandFlag.REG})
     // @field
-    protected Value length2Value;
+    protected Value ___length2Value;
     @Temp({OperandFlag.REG})
     // @field
-    protected Value length1ValueTemp;
+    protected Value ___length1ValueTemp;
     @Temp({OperandFlag.REG})
     // @field
-    protected Value length2ValueTemp;
+    protected Value ___length2ValueTemp;
     @Temp({OperandFlag.REG})
     // @field
-    protected Value temp1;
+    protected Value ___temp1;
     @Temp({OperandFlag.REG})
     // @field
-    protected Value temp2;
+    protected Value ___temp2;
 
     @Temp({OperandFlag.REG, OperandFlag.ILLEGAL})
     // @field
-    protected Value vectorTemp1;
+    protected Value ___vectorTemp1;
 
     // @cons
     public AMD64ArrayCompareToOp(LIRGeneratorTool __tool, JavaKind __kind1, JavaKind __kind2, Value __result, Value __array1, Value __array2, Value __length1, Value __length2)
     {
         super(TYPE);
-        this.kind1 = __kind1;
-        this.kind2 = __kind2;
+        this.___kind1 = __kind1;
+        this.___kind2 = __kind2;
 
         // Both offsets should be the same but better be safe than sorry.
         Class<?> __array1Class = Array.newInstance(__kind1.toJavaClass(), 0).getClass();
         Class<?> __array2Class = Array.newInstance(__kind2.toJavaClass(), 0).getClass();
-        this.array1BaseOffset = UnsafeAccess.UNSAFE.arrayBaseOffset(__array1Class);
-        this.array2BaseOffset = UnsafeAccess.UNSAFE.arrayBaseOffset(__array2Class);
+        this.___array1BaseOffset = UnsafeAccess.UNSAFE.arrayBaseOffset(__array1Class);
+        this.___array2BaseOffset = UnsafeAccess.UNSAFE.arrayBaseOffset(__array2Class);
 
-        this.resultValue = __result;
-        this.array1Value = __array1;
-        this.array2Value = __array2;
-        /*
-         * The length values are inputs but are also killed like temporaries so need both Use and
-         * Temp annotations, which will only work with fixed registers.
-         */
-        this.length1Value = __length1;
-        this.length2Value = __length2;
-        this.length1ValueTemp = __length1;
-        this.length2ValueTemp = __length2;
+        this.___resultValue = __result;
+        this.___array1Value = __array1;
+        this.___array2Value = __array2;
+        // The length values are inputs but are also killed like temporaries so need both Use and
+        // Temp annotations, which will only work with fixed registers.
+        this.___length1Value = __length1;
+        this.___length2Value = __length2;
+        this.___length1ValueTemp = __length1;
+        this.___length2ValueTemp = __length2;
 
         // Allocate some temporaries.
-        this.temp1 = __tool.newVariable(LIRKind.unknownReference(__tool.target().arch.getWordKind()));
-        this.temp2 = __tool.newVariable(LIRKind.unknownReference(__tool.target().arch.getWordKind()));
+        this.___temp1 = __tool.newVariable(LIRKind.unknownReference(__tool.target().arch.getWordKind()));
+        this.___temp2 = __tool.newVariable(LIRKind.unknownReference(__tool.target().arch.getWordKind()));
 
         // We only need the vector temporaries if we generate SSE code.
         if (supportsSSE42(__tool.target()))
         {
-            this.vectorTemp1 = __tool.newVariable(LIRKind.value(AMD64Kind.DOUBLE));
+            this.___vectorTemp1 = __tool.newVariable(LIRKind.value(AMD64Kind.DOUBLE));
         }
         else
         {
-            this.vectorTemp1 = Value.ILLEGAL;
+            this.___vectorTemp1 = Value.ILLEGAL;
         }
     }
 
@@ -140,15 +138,15 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        Register __result = ValueUtil.asRegister(resultValue);
-        Register __str1 = ValueUtil.asRegister(temp1);
-        Register __str2 = ValueUtil.asRegister(temp2);
+        Register __result = ValueUtil.asRegister(this.___resultValue);
+        Register __str1 = ValueUtil.asRegister(this.___temp1);
+        Register __str2 = ValueUtil.asRegister(this.___temp2);
 
         // Load array base addresses.
-        __masm.leaq(__str1, new AMD64Address(ValueUtil.asRegister(array1Value), array1BaseOffset));
-        __masm.leaq(__str2, new AMD64Address(ValueUtil.asRegister(array2Value), array2BaseOffset));
-        Register __cnt1 = ValueUtil.asRegister(length1Value);
-        Register __cnt2 = ValueUtil.asRegister(length2Value);
+        __masm.leaq(__str1, new AMD64Address(ValueUtil.asRegister(this.___array1Value), this.___array1BaseOffset));
+        __masm.leaq(__str2, new AMD64Address(ValueUtil.asRegister(this.___array2Value), this.___array2BaseOffset));
+        Register __cnt1 = ValueUtil.asRegister(this.___length1Value);
+        Register __cnt2 = ValueUtil.asRegister(this.___length2Value);
 
         Label __LENGTH_DIFF_LABEL = new Label();
         Label __POP_LABEL = new Label();
@@ -164,12 +162,12 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         AMD64Address.Scale __scale1 = null;
         AMD64Address.Scale __scale2 = null;
 
-        if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+        if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
         {
             __stride2x2 = 0x20;
         }
 
-        if (kind1 != kind2)
+        if (this.___kind1 != this.___kind2)
         {
             __masm.shrl(__cnt2, 1);
         }
@@ -183,13 +181,13 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         // Is the minimum length zero?
         __masm.testl(__cnt2, __cnt2);
         __masm.jcc(ConditionFlag.Zero, __LENGTH_DIFF_LABEL);
-        if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+        if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
         {
             // load first bytes
             __masm.movzbl(__result, new AMD64Address(__str1, 0)); // result = str1[0]
             __masm.movzbl(__cnt1, new AMD64Address(__str2, 0)); // cnt1 = str2[0]
         }
-        else if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
+        else if (this.___kind1 == JavaKind.Char && this.___kind2 == JavaKind.Char)
         {
             // load first characters
             __masm.movzwl(__result, new AMD64Address(__str1, 0));
@@ -203,7 +201,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         __masm.subl(__result, __cnt1);
         __masm.jcc(ConditionFlag.NotZero, __POP_LABEL);
 
-        if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
+        if (this.___kind1 == JavaKind.Char && this.___kind2 == JavaKind.Char)
         {
             // divide length by 2 to get number of chars
             __masm.shrl(__cnt2, 1);
@@ -212,11 +210,11 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         __masm.jcc(ConditionFlag.Equal, __LENGTH_DIFF_LABEL);
 
         // check if the strings start at the same location and setup scale and stride
-        if (kind1 == kind2)
+        if (this.___kind1 == this.___kind2)
         {
             __masm.cmpptr(__str1, __str2);
             __masm.jcc(ConditionFlag.Equal, __LENGTH_DIFF_LABEL);
-            if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+            if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
             {
                 __scale = AMD64Address.Scale.Times1;
                 stride = 16;
@@ -235,9 +233,9 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             stride = 8;
         }
 
-        if (supportsAVX2(__crb.target) && supportsSSE42(__crb.target))
+        if (supportsAVX2(__crb.___target) && supportsSSE42(__crb.___target))
         {
-            Register __vec1 = ValueUtil.asRegister(vectorTemp1, AMD64Kind.DOUBLE);
+            Register __vec1 = ValueUtil.asRegister(this.___vectorTemp1, AMD64Kind.DOUBLE);
 
             Label __COMPARE_WIDE_VECTORS = new Label();
             Label __VECTOR_NOT_EQUAL = new Label();
@@ -251,13 +249,13 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             Label __COMPARE_WIDE_VECTORS_LOOP_AVX3 = new Label(); // used only _LP64 && AVX3
 
             int __pcmpmask = 0x19;
-            if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+            if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
             {
                 __pcmpmask &= ~0x01;
             }
 
             // Setup to compare 16-chars (32-bytes) vectors, start from first character again because it has aligned address.
-            if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+            if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
             {
                 stride2 = 32;
             }
@@ -265,9 +263,9 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             {
                 stride2 = 16;
             }
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
-                __adr_stride = stride << __scale.log2;
+                __adr_stride = stride << __scale.___log2;
             }
             else
             {
@@ -282,7 +280,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
             // fast path : compare first 2 8-char vectors.
             __masm.bind(__COMPARE_16_CHARS);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.movdqu(__vec1, new AMD64Address(__str1, 0));
             }
@@ -293,7 +291,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             __masm.pcmpestri(__vec1, new AMD64Address(__str2, 0), __pcmpmask);
             __masm.jccb(ConditionFlag.Below, __COMPARE_INDEX_CHAR);
 
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.movdqu(__vec1, new AMD64Address(__str1, __adr_stride));
                 __masm.pcmpestri(__vec1, new AMD64Address(__str2, __adr_stride), __pcmpmask);
@@ -314,7 +312,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
             // setup the registers to start vector comparison loop
             __masm.bind(__COMPARE_WIDE_VECTORS);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.leaq(__str1, new AMD64Address(__str1, __result, __scale));
                 __masm.leaq(__str2, new AMD64Address(__str2, __result, __scale));
@@ -332,7 +330,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             // in a loop, compare 16-chars (32-bytes) at once using (vpxor+vptest)
             __masm.bind(__COMPARE_WIDE_VECTORS_LOOP);
 
-            if (supportsAVX512VLBW(__crb.target)) // trying 64 bytes fast loop
+            if (supportsAVX512VLBW(__crb.___target)) // trying 64 bytes fast loop
             {
                 __masm.cmpl(__cnt2, __stride2x2);
                 __masm.jccb(ConditionFlag.Below, __COMPARE_WIDE_VECTORS_LOOP_AVX2);
@@ -341,7 +339,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
                 __masm.jccb(ConditionFlag.NotZero, __COMPARE_WIDE_VECTORS_LOOP_AVX2);
 
                 __masm.bind(__COMPARE_WIDE_VECTORS_LOOP_AVX3); // the hottest loop
-                if (kind1 == kind2)
+                if (this.___kind1 == this.___kind2)
                 {
                     __masm.evmovdquq(__vec1, new AMD64Address(__str1, __result, __scale), AvxVectorLen.AVX_512bit);
                     // k7 == 11..11, if operands equal, otherwise k7 has some 0
@@ -364,7 +362,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             }
 
             __masm.bind(__COMPARE_WIDE_VECTORS_LOOP_AVX2);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.vmovdqu(__vec1, new AMD64Address(__str1, __result, __scale));
                 __masm.vpxor(__vec1, __vec1, new AMD64Address(__str2, __result, __scale));
@@ -396,7 +394,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             __masm.bind(__VECTOR_NOT_EQUAL);
             // clean upper bits of YMM registers
             __masm.vpxor(__vec1, __vec1, __vec1);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.leaq(__str1, new AMD64Address(__str1, __result, __scale));
                 __masm.leaq(__str2, new AMD64Address(__str2, __result, __scale));
@@ -414,7 +412,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             __masm.cmpl(__cnt2, stride);
             __masm.jcc(ConditionFlag.Less, __COMPARE_SMALL_STR);
 
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.movdqu(__vec1, new AMD64Address(__str1, 0));
             }
@@ -426,7 +424,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             __masm.jcc(ConditionFlag.Below, __COMPARE_INDEX_CHAR);
             __masm.subq(__cnt2, stride);
             __masm.jcc(ConditionFlag.Zero, __LENGTH_DIFF_LABEL);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.leaq(__str1, new AMD64Address(__str1, __result, __scale));
                 __masm.leaq(__str2, new AMD64Address(__str2, __result, __scale));
@@ -441,9 +439,9 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
             __masm.bind(__COMPARE_SMALL_STR);
         }
-        else if (supportsSSE42(__crb.target))
+        else if (supportsSSE42(__crb.___target))
         {
-            Register __vec1 = ValueUtil.asRegister(vectorTemp1, AMD64Kind.DOUBLE);
+            Register __vec1 = ValueUtil.asRegister(this.___vectorTemp1, AMD64Kind.DOUBLE);
 
             Label __COMPARE_WIDE_VECTORS = new Label();
             Label __VECTOR_NOT_EQUAL = new Label();
@@ -454,12 +452,12 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             // start from first character again because it has aligned address
             __masm.movl(__result, __cnt2);
             __masm.andl(__cnt2, ~(stride - 1)); // cnt2 holds the vector count
-            if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+            if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
             {
                 __pcmpmask &= ~0x01;
             }
             __masm.jcc(ConditionFlag.Zero, __COMPARE_TAIL);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.leaq(__str1, new AMD64Address(__str1, __result, __scale));
                 __masm.leaq(__str2, new AMD64Address(__str2, __result, __scale));
@@ -483,7 +481,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             // rcx - first mismatched element index
 
             __masm.bind(__COMPARE_WIDE_VECTORS);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.movdqu(__vec1, new AMD64Address(__str1, __result, __scale));
                 __masm.pcmpestri(__vec1, new AMD64Address(__str2, __result, __scale), __pcmpmask);
@@ -507,7 +505,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             __masm.movl(__cnt2, stride);
             __masm.movl(__result, stride);
             __masm.negq(__result);
-            if (kind1 == kind2)
+            if (this.___kind1 == this.___kind2)
             {
                 __masm.movdqu(__vec1, new AMD64Address(__str1, __result, __scale));
                 __masm.pcmpestri(__vec1, new AMD64Address(__str2, __result, __scale), __pcmpmask);
@@ -532,7 +530,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         }
 
         // shift str2 and str1 to the end of the arrays, negate min
-        if (kind1 == kind2)
+        if (this.___kind1 == this.___kind2)
         {
             __masm.leaq(__str1, new AMD64Address(__str1, __cnt2, __scale));
             __masm.leaq(__str2, new AMD64Address(__str2, __cnt2, __scale));
@@ -556,32 +554,32 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
         // strings are equal up to min length: return the length difference
         __masm.bind(__LENGTH_DIFF_LABEL);
         __masm.pop(__result);
-        if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
+        if (this.___kind1 == JavaKind.Char && this.___kind2 == JavaKind.Char)
         {
             // divide diff by 2 to get number of chars
             __masm.sarl(__result, 1);
         }
         __masm.jmpb(__DONE_LABEL);
 
-        if (supportsAVX512VLBW(__crb.target))
+        if (supportsAVX512VLBW(__crb.___target))
         {
             __masm.bind(__COMPARE_WIDE_VECTORS_LOOP_FAILED);
 
             __masm.kmovql(__cnt1, AMD64.k7);
             __masm.notq(__cnt1);
             __masm.bsfq(__cnt2, __cnt1);
-            if (kind1 != JavaKind.Byte && kind2 != JavaKind.Byte)
+            if (this.___kind1 != JavaKind.Byte && this.___kind2 != JavaKind.Byte)
             {
                 // divide diff by 2 to get number of chars
                 __masm.sarl(__cnt2, 1);
             }
             __masm.addq(__result, __cnt2);
-            if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+            if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
             {
                 __masm.movzbl(__cnt1, new AMD64Address(__str2, __result, Scale.Times1));
                 __masm.movzbl(__result, new AMD64Address(__str1, __result, Scale.Times1));
             }
-            else if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
+            else if (this.___kind1 == JavaKind.Char && this.___kind2 == JavaKind.Char)
             {
                 __masm.movzwl(__cnt1, new AMD64Address(__str2, __result, __scale));
                 __masm.movzwl(__result, new AMD64Address(__str1, __result, __scale));
@@ -601,7 +599,7 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
         // that's it
         __masm.bind(__DONE_LABEL);
-        if (kind1 == JavaKind.Char && kind2 == JavaKind.Byte)
+        if (this.___kind1 == JavaKind.Char && this.___kind2 == JavaKind.Byte)
         {
             __masm.negl(__result);
         }
@@ -609,12 +607,12 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
 
     private void loadNextElements(AMD64MacroAssembler __masm, Register __elem1, Register __elem2, Register __str1, Register __str2, AMD64Address.Scale __scale, AMD64Address.Scale __scale1, AMD64Address.Scale __scale2, Register __index)
     {
-        if (kind1 == JavaKind.Byte && kind2 == JavaKind.Byte)
+        if (this.___kind1 == JavaKind.Byte && this.___kind2 == JavaKind.Byte)
         {
             __masm.movzbl(__elem1, new AMD64Address(__str1, __index, __scale, 0));
             __masm.movzbl(__elem2, new AMD64Address(__str2, __index, __scale, 0));
         }
-        else if (kind1 == JavaKind.Char && kind2 == JavaKind.Char)
+        else if (this.___kind1 == JavaKind.Char && this.___kind2 == JavaKind.Char)
         {
             __masm.movzwl(__elem1, new AMD64Address(__str1, __index, __scale, 0));
             __masm.movzwl(__elem2, new AMD64Address(__str2, __index, __scale, 0));

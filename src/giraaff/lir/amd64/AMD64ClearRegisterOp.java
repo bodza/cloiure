@@ -20,26 +20,26 @@ public final class AMD64ClearRegisterOp extends AMD64LIRInstruction
 
     @Opcode
     // @field
-    private final AMD64RMOp op;
+    private final AMD64RMOp ___op;
     // @field
-    private final OperandSize size;
+    private final OperandSize ___size;
 
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue result;
+    protected AllocatableValue ___result;
 
     // @cons
     public AMD64ClearRegisterOp(OperandSize __size, AllocatableValue __result)
     {
         super(TYPE);
-        this.op = AMD64BinaryArithmetic.XOR.getRMOpcode(__size);
-        this.size = __size;
-        this.result = __result;
+        this.___op = AMD64BinaryArithmetic.XOR.getRMOpcode(__size);
+        this.___size = __size;
+        this.___result = __result;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        op.emit(__masm, size, ValueUtil.asRegister(result), ValueUtil.asRegister(result));
+        this.___op.emit(__masm, this.___size, ValueUtil.asRegister(this.___result), ValueUtil.asRegister(this.___result));
     }
 }

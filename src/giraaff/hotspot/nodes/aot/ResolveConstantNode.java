@@ -16,24 +16,24 @@ public final class ResolveConstantNode extends DeoptimizingFixedWithNextNode imp
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
     // @field
-    protected HotSpotConstantLoadAction action;
+    protected HotSpotConstantLoadAction ___action;
 
     // @cons
     public ResolveConstantNode(ValueNode __value, HotSpotConstantLoadAction __action)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
-        this.action = __action;
+        this.___value = __value;
+        this.___action = __action;
     }
 
     // @cons
     public ResolveConstantNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
-        this.action = HotSpotConstantLoadAction.RESOLVE;
+        this.___value = __value;
+        this.___action = HotSpotConstantLoadAction.RESOLVE;
     }
 
     @Override
@@ -44,12 +44,12 @@ public final class ResolveConstantNode extends DeoptimizingFixedWithNextNode imp
 
     public ValueNode value()
     {
-        return value;
+        return this.___value;
     }
 
     public HotSpotConstantLoadAction action()
     {
-        return action;
+        return this.___action;
     }
 
     @Override

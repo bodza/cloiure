@@ -15,21 +15,21 @@ import giraaff.hotspot.stubs.Stub;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.nodes.StructuredGraph;
 
-/**
- * Common functionality of HotSpot host backends.
- */
+///
+// Common functionality of HotSpot host backends.
+///
 // @class HotSpotHostBackend
 public abstract class HotSpotHostBackend extends HotSpotBackend
 {
-    /**
-     * Descriptor for {@code SharedRuntime::deopt_blob()->unpack()}.
-     */
+    ///
+    // Descriptor for {@code SharedRuntime::deopt_blob()->unpack()}.
+    ///
     // @def
     public static final ForeignCallDescriptor DEOPTIMIZATION_HANDLER = new ForeignCallDescriptor("deoptHandler", void.class);
 
-    /**
-     * Descriptor for {@code SharedRuntime::deopt_blob()->uncommon_trap()}.
-     */
+    ///
+    // Descriptor for {@code SharedRuntime::deopt_blob()->uncommon_trap()}.
+    ///
     // @def
     public static final ForeignCallDescriptor UNCOMMON_TRAP_HANDLER = new ForeignCallDescriptor("uncommonTrapHandler", void.class);
 
@@ -86,7 +86,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
             // This is how far the previous frame's stack banging extended.
             int __bangEndSafe = __bangEnd;
 
-            int __frameSize = __crb.frameMap.frameSize();
+            int __frameSize = __crb.___frameMap.frameSize();
             if (__frameSize > __pageSize)
             {
                 __bangEnd += __frameSize;
@@ -102,5 +102,5 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
         }
     }
 
-    protected abstract void bangStackWithOffset(CompilationResultBuilder crb, int bangOffset);
+    protected abstract void bangStackWithOffset(CompilationResultBuilder __crb, int __bangOffset);
 }

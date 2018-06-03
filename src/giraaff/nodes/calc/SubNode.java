@@ -140,11 +140,9 @@ public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArit
             Constant __c = __forX.asConstant();
             if (ArithmeticOpTable.forStamp(__stamp).getAdd().isNeutral(__c))
             {
-                /*
-                 * Note that for floating point numbers, + and - have different neutral elements.
-                 * We have to test for the neutral element of +, because we are doing this
-                 * transformation: 0 - x == (-x) + 0 == -x.
-                 */
+                // Note that for floating point numbers, + and - have different neutral elements.
+                // We have to test for the neutral element of +, because we are doing this
+                // transformation: 0 - x == (-x) + 0 == -x.
                 return NegateNode.create(__forY, __view);
             }
             if (__associative && __self != null)
@@ -170,7 +168,7 @@ public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArit
         }
 
         BinaryOp<Sub> __op = getOp(__forX, __forY);
-        return canonical(this, __op, stamp, __forX, __forY, __view);
+        return canonical(this, __op, this.___stamp, __forX, __forY, __view);
     }
 
     @Override

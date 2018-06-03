@@ -18,22 +18,22 @@ final class AMD64HotSpotCRuntimeCallPrologueOp extends AMD64LIRInstruction
     public static final LIRInstructionClass<AMD64HotSpotCRuntimeCallPrologueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotCRuntimeCallPrologueOp.class);
 
     // @field
-    private final int threadLastJavaSpOffset;
+    private final int ___threadLastJavaSpOffset;
     // @field
-    private final Register thread;
+    private final Register ___thread;
 
     // @cons
     AMD64HotSpotCRuntimeCallPrologueOp(int __threadLastJavaSpOffset, Register __thread)
     {
         super(TYPE);
-        this.threadLastJavaSpOffset = __threadLastJavaSpOffset;
-        this.thread = __thread;
+        this.___threadLastJavaSpOffset = __threadLastJavaSpOffset;
+        this.___thread = __thread;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         // save last Java frame
-        __masm.movq(new AMD64Address(thread, threadLastJavaSpOffset), AMD64.rsp);
+        __masm.movq(new AMD64Address(this.___thread, this.___threadLastJavaSpOffset), AMD64.rsp);
     }
 }

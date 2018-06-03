@@ -56,53 +56,53 @@ import giraaff.util.GraalError;
 public final class LoopEx
 {
     // @field
-    private final Loop<Block> loop;
+    private final Loop<Block> ___loop;
     // @field
-    private LoopFragmentInside inside;
+    private LoopFragmentInside ___inside;
     // @field
-    private LoopFragmentWhole whole;
+    private LoopFragmentWhole ___whole;
     // @field
-    private CountedLoopInfo counted;
+    private CountedLoopInfo ___counted;
     // @field
-    private LoopsData data;
+    private LoopsData ___data;
     // @field
-    private EconomicMap<Node, InductionVariable> ivs;
+    private EconomicMap<Node, InductionVariable> ___ivs;
 
     // @cons
     LoopEx(Loop<Block> __loop, LoopsData __data)
     {
         super();
-        this.loop = __loop;
-        this.data = __data;
+        this.___loop = __loop;
+        this.___data = __data;
     }
 
     public Loop<Block> loop()
     {
-        return loop;
+        return this.___loop;
     }
 
     public LoopFragmentInside inside()
     {
-        if (inside == null)
+        if (this.___inside == null)
         {
-            inside = new LoopFragmentInside(this);
+            this.___inside = new LoopFragmentInside(this);
         }
-        return inside;
+        return this.___inside;
     }
 
     public LoopFragmentWhole whole()
     {
-        if (whole == null)
+        if (this.___whole == null)
         {
-            whole = new LoopFragmentWhole(this);
+            this.___whole = new LoopFragmentWhole(this);
         }
-        return whole;
+        return this.___whole;
     }
 
     public void invalidateFragments()
     {
-        inside = null;
-        whole = null;
+        this.___inside = null;
+        this.___whole = null;
     }
 
     @SuppressWarnings("unused")
@@ -141,21 +141,21 @@ public final class LoopEx
 
     public boolean isCounted()
     {
-        return counted != null;
+        return this.___counted != null;
     }
 
     public CountedLoopInfo counted()
     {
-        return counted;
+        return this.___counted;
     }
 
     public LoopEx parent()
     {
-        if (loop.getParent() == null)
+        if (this.___loop.getParent() == null)
         {
             return null;
         }
-        return data.loop(loop.getParent());
+        return this.___data.loop(this.___loop.getParent());
     }
 
     public int size()
@@ -168,19 +168,19 @@ public final class LoopEx
     private final class InvariantPredicate implements NodePredicate
     {
         // @field
-        private final Graph.Mark mark;
+        private final Graph.Mark ___mark;
 
         // @cons
         InvariantPredicate()
         {
             super();
-            this.mark = LoopEx.this.loopBegin().graph().getMark();
+            this.___mark = LoopEx.this.loopBegin().graph().getMark();
         }
 
         @Override
         public boolean apply(Node __n)
         {
-            if (LoopEx.this.loopBegin().graph().isNew(mark, __n))
+            if (LoopEx.this.loopBegin().graph().isNew(this.___mark, __n))
             {
                 // Newly created nodes are unknown.
                 return false;
@@ -332,7 +332,7 @@ public final class LoopEx
                 default:
                     throw GraalError.shouldNotReachHere();
             }
-            counted = new CountedLoopInfo(this, __iv, __ifNode, __limit, __oneOff, __negated ? __ifNode.falseSuccessor() : __ifNode.trueSuccessor());
+            this.___counted = new CountedLoopInfo(this, __iv, __ifNode, __limit, __oneOff, __negated ? __ifNode.falseSuccessor() : __ifNode.trueSuccessor());
             return true;
         }
         return false;
@@ -340,7 +340,7 @@ public final class LoopEx
 
     public LoopsData loopsData()
     {
-        return data;
+        return this.___data;
     }
 
     public void nodesInLoopBranch(NodeBitMap __branchNodes, AbstractBeginNode __branch)
@@ -362,7 +362,7 @@ public final class LoopEx
                 Block __d = __b.getDominatedSibling();
                 while (__d != null)
                 {
-                    if (loop.getBlocks().contains(__d))
+                    if (this.___loop.getBlocks().contains(__d))
                     {
                         __work.add(__d);
                     }
@@ -375,19 +375,19 @@ public final class LoopEx
 
     public EconomicMap<Node, InductionVariable> getInductionVariables()
     {
-        if (ivs == null)
+        if (this.___ivs == null)
         {
-            ivs = findInductionVariables(this);
+            this.___ivs = findInductionVariables(this);
         }
-        return ivs;
+        return this.___ivs;
     }
 
-    /**
-     * Collect all the basic induction variables for the loop and the find any induction variables
-     * which are derived from the basic ones.
-     *
-     * @return a map from node to induction variable
-     */
+    ///
+    // Collect all the basic induction variables for the loop and the find any induction variables
+    // which are derived from the basic ones.
+    //
+    // @return a map from node to induction variable
+    ///
     private static EconomicMap<Node, InductionVariable> findInductionVariables(LoopEx __loop)
     {
         EconomicMap<Node, InductionVariable> __ivs = EconomicMap.create(Equivalence.IDENTITY);
@@ -508,23 +508,23 @@ public final class LoopEx
         return null;
     }
 
-    /**
-     * Deletes any nodes created within the scope of this object that have no usages.
-     */
+    ///
+    // Deletes any nodes created within the scope of this object that have no usages.
+    ///
     public void deleteUnusedNodes()
     {
-        if (ivs != null)
+        if (this.___ivs != null)
         {
-            for (InductionVariable __iv : ivs.getValues())
+            for (InductionVariable __iv : this.___ivs.getValues())
             {
                 __iv.deleteUnusedNodes();
             }
         }
     }
 
-    /**
-     * @return true if all nodes in the loop can be duplicated.
-     */
+    ///
+    // @return true if all nodes in the loop can be duplicated.
+    ///
     public boolean canDuplicateLoop()
     {
         for (Node __node : inside().nodes())
@@ -536,7 +536,7 @@ public final class LoopEx
             if (__node instanceof FrameState)
             {
                 FrameState __frameState = (FrameState) __node;
-                if (__frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI || __frameState.bci == BytecodeFrame.UNWIND_BCI)
+                if (__frameState.___bci == BytecodeFrame.AFTER_EXCEPTION_BCI || __frameState.___bci == BytecodeFrame.UNWIND_BCI)
                 {
                     return false;
                 }

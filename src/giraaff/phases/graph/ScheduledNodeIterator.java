@@ -8,68 +8,68 @@ import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.cfg.Block;
 
-/**
- * Iterates over a list of nodes, which usually comes from
- * {@link ScheduleResult#getBlockToNodesMap()}.
- *
- * While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
- * {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
- */
+///
+// Iterates over a list of nodes, which usually comes from
+// {@link ScheduleResult#getBlockToNodesMap()}.
+//
+// While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
+// {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
+///
 // @class ScheduledNodeIterator
 public abstract class ScheduledNodeIterator
 {
     // @field
-    private FixedWithNextNode lastFixed;
+    private FixedWithNextNode ___lastFixed;
     // @field
-    private FixedWithNextNode reconnect;
+    private FixedWithNextNode ___reconnect;
     // @field
-    private ListIterator<Node> iterator;
+    private ListIterator<Node> ___iterator;
 
     public void processNodes(Block __block, ScheduleResult __schedule)
     {
-        lastFixed = __block.getBeginNode();
-        reconnect = null;
-        iterator = __schedule.nodesFor(__block).listIterator();
+        this.___lastFixed = __block.getBeginNode();
+        this.___reconnect = null;
+        this.___iterator = __schedule.nodesFor(__block).listIterator();
 
-        while (iterator.hasNext())
+        while (this.___iterator.hasNext())
         {
-            Node __node = iterator.next();
+            Node __node = this.___iterator.next();
             if (!__node.isAlive())
             {
                 continue;
             }
-            if (reconnect != null && __node instanceof FixedNode)
+            if (this.___reconnect != null && __node instanceof FixedNode)
             {
-                reconnect.setNext((FixedNode) __node);
-                reconnect = null;
+                this.___reconnect.setNext((FixedNode) __node);
+                this.___reconnect = null;
             }
             if (__node instanceof FixedWithNextNode)
             {
-                lastFixed = (FixedWithNextNode) __node;
+                this.___lastFixed = (FixedWithNextNode) __node;
             }
             processNode(__node);
         }
-        if (reconnect != null)
+        if (this.___reconnect != null)
         {
-            reconnect.setNext(__block.getFirstSuccessor().getBeginNode());
+            this.___reconnect.setNext(__block.getFirstSuccessor().getBeginNode());
         }
     }
 
     protected void insert(FixedNode __start, FixedWithNextNode __end)
     {
-        this.lastFixed.setNext(__start);
-        this.lastFixed = __end;
-        this.reconnect = __end;
+        this.___lastFixed.setNext(__start);
+        this.___lastFixed = __end;
+        this.___reconnect = __end;
     }
 
     protected void replaceCurrent(FixedWithNextNode __newNode)
     {
-        Node __current = iterator.previous();
-        iterator.next(); // needed because of the previous() call
+        Node __current = this.___iterator.previous();
+        this.___iterator.next(); // needed because of the previous() call
         __current.replaceAndDelete(__newNode);
         insert(__newNode, __newNode);
-        iterator.set(__newNode);
+        this.___iterator.set(__newNode);
     }
 
-    protected abstract void processNode(Node node);
+    protected abstract void processNode(Node __node);
 }

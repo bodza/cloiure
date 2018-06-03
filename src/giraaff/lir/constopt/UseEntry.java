@@ -6,41 +6,41 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.ValueProcedure;
 
-/**
- * Represents a usage of a constant.
- */
+///
+// Represents a usage of a constant.
+///
 // @class UseEntry
 final class UseEntry
 {
     // @field
-    private final AbstractBlockBase<?> block;
+    private final AbstractBlockBase<?> ___block;
     // @field
-    private final LIRInstruction instruction;
+    private final LIRInstruction ___instruction;
     // @field
-    private final Value value;
+    private final Value ___value;
 
     // @cons
     UseEntry(AbstractBlockBase<?> __block, LIRInstruction __instruction, Value __value)
     {
         super();
-        this.block = __block;
-        this.instruction = __instruction;
-        this.value = __value;
+        this.___block = __block;
+        this.___instruction = __instruction;
+        this.___value = __value;
     }
 
     public LIRInstruction getInstruction()
     {
-        return instruction;
+        return this.___instruction;
     }
 
     public AbstractBlockBase<?> getBlock()
     {
-        return block;
+        return this.___block;
     }
 
     public void setValue(Value __newValue)
     {
-        replaceValue(instruction, value, __newValue);
+        replaceValue(this.___instruction, this.___value, __newValue);
     }
 
     private static void replaceValue(LIRInstruction __op, Value __oldValue, Value __newValue)
@@ -55,6 +55,6 @@ final class UseEntry
 
     public Value getValue()
     {
-        return value;
+        return this.___value;
     }
 }

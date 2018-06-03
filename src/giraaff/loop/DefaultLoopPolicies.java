@@ -58,13 +58,11 @@ public final class DefaultLoopPolicies implements LoopPolicies
         int __maxNodes = (__counted.isExactTripCount() && __counted.isConstantExactTripCount()) ? GraalOptions.exactFullUnrollMaxNodes : GraalOptions.fullUnrollMaxNodes;
         __maxNodes = Math.min(__maxNodes, Math.max(0, GraalOptions.maximumDesiredSize - __loop.loopBegin().graph().getNodeCount()));
         int __size = Math.max(1, __loop.size() - 1 - __loop.loopBegin().phis().count());
-        /*
-         * The check below should not throw ArithmeticException because:
-         * maxTrips is guaranteed to be >= 1 by the check above
-         * - maxTrips * size can not overfow because:
-         *   - maxTrips <= FullUnrollMaxIterations <= Integer.MAX_VALUE
-         *   - 1 <= size <= Integer.MAX_VALUE
-         */
+        // The check below should not throw ArithmeticException because:
+        // maxTrips is guaranteed to be >= 1 by the check above
+        // - maxTrips * size can not overfow because:
+        //   - maxTrips <= FullUnrollMaxIterations <= Integer.MAX_VALUE
+        //   - 1 <= size <= Integer.MAX_VALUE
         if (__maxTrips.isLessOrEqualTo(GraalOptions.fullUnrollMaxIterations) && __maxTrips.minus(1).times(__size).isLessOrEqualTo(__maxNodes))
         {
             // check whether we're allowed to unroll this loop
@@ -143,12 +141,12 @@ public final class DefaultLoopPolicies implements LoopPolicies
     private static final class CountingClosure implements VirtualClosure
     {
         // @field
-        int count;
+        int ___count;
 
         @Override
         public void apply(VirtualState __node)
         {
-            count++;
+            this.___count++;
         }
     }
 
@@ -183,7 +181,7 @@ public final class DefaultLoopPolicies implements LoopPolicies
         __maxDiff = Math.min(__maxDiff, __remainingGraphSpace);
 
         __loop.loopBegin().stateAfter().applyToVirtual(__stateNodesCount);
-        int __loopTotal = __loop.size() - __loop.loopBegin().phis().count() - __stateNodesCount.count - 1;
+        int __loopTotal = __loop.size() - __loop.loopBegin().phis().count() - __stateNodesCount.___count - 1;
         int __actualDiff = (__loopTotal - __inBranchTotal);
         ControlSplitNode __firstSplit = __controlSplits.get(0);
         if (__firstSplit instanceof TypeSwitchNode)

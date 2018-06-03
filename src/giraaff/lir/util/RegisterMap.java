@@ -9,43 +9,43 @@ import jdk.vm.ci.code.Register;
 public final class RegisterMap<T>
 {
     // @field
-    private final Object[] values;
+    private final Object[] ___values;
     // @field
-    private final Architecture arch;
+    private final Architecture ___arch;
 
     // @cons
     public RegisterMap(Architecture __arch)
     {
         super();
-        this.values = new Object[__arch.getRegisters().size()];
-        this.arch = __arch;
+        this.___values = new Object[__arch.getRegisters().size()];
+        this.___arch = __arch;
     }
 
     @SuppressWarnings("unchecked")
     public T get(Register __reg)
     {
-        return (T) values[index(__reg)];
+        return (T) this.___values[index(__reg)];
     }
 
     public void remove(Register __reg)
     {
-        values[index(__reg)] = null;
+        this.___values[index(__reg)] = null;
     }
 
     public void put(Register __reg, T __value)
     {
-        values[index(__reg)] = __value;
+        this.___values[index(__reg)] = __value;
     }
 
     @SuppressWarnings("unchecked")
     public void forEach(BiConsumer<? super Register, ? super T> __consumer)
     {
-        for (int __i = 0; __i < values.length; ++__i)
+        for (int __i = 0; __i < this.___values.length; ++__i)
         {
-            T __value = (T) values[__i];
+            T __value = (T) this.___values[__i];
             if (__value != null)
             {
-                __consumer.accept(arch.getRegisters().get(__i), __value);
+                __consumer.accept(this.___arch.getRegisters().get(__i), __value);
             }
         }
     }

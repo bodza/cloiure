@@ -11,19 +11,19 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.replacements.classfile.ClassfileConstant.Utf8;
 
-/**
- * Container for objects representing the {@code Code} attributes parsed from a class file.
- *
- * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Code attributes</a>
- * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">Constant Pool</a>
- */
+///
+// Container for objects representing the {@code Code} attributes parsed from a class file.
+//
+// @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Code attributes</a>
+// @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">Constant Pool</a>
+///
 // @class Classfile
 public final class Classfile
 {
     // @field
-    private final ResolvedJavaType type;
+    private final ResolvedJavaType ___type;
     // @field
-    private final List<ClassfileBytecode> codeAttributes;
+    private final List<ClassfileBytecode> ___codeAttributes;
 
     // @def
     private static final int MAJOR_VERSION_JAVA_MIN = 51; // JDK7
@@ -32,16 +32,16 @@ public final class Classfile
     // @def
     private static final int MAGIC = 0xCAFEBABE;
 
-    /**
-     * Creates a {@link Classfile} by parsing the class file bytes for {@code type} loadable from {@code context}.
-     *
-     * @throws NoClassDefFoundError if there is an IO error while parsing the class file
-     */
+    ///
+    // Creates a {@link Classfile} by parsing the class file bytes for {@code type} loadable from {@code context}.
+    //
+    // @throws NoClassDefFoundError if there is an IO error while parsing the class file
+    ///
     // @cons
     public Classfile(ResolvedJavaType __type, DataInputStream __stream, ClassfileBytecodeProvider __context) throws IOException
     {
         super();
-        this.type = __type;
+        this.___type = __type;
 
         // magic
         int __magic = __stream.readInt();
@@ -65,7 +65,7 @@ public final class Classfile
         skipFields(__stream);
 
         // methods
-        codeAttributes = readMethods(__stream, __cp);
+        this.___codeAttributes = readMethods(__stream, __cp);
 
         // attributes
         skipAttributes(__stream);
@@ -73,7 +73,7 @@ public final class Classfile
 
     public ClassfileBytecode getCode(String __name, String __descriptor)
     {
-        for (ClassfileBytecode __code : codeAttributes)
+        for (ClassfileBytecode __code : this.___codeAttributes)
         {
             ResolvedJavaMethod __method = __code.getMethod();
             if (__method.getName().equals(__name) && __method.getSignature().toMethodDescriptor().equals(__descriptor))
@@ -81,7 +81,7 @@ public final class Classfile
                 return __code;
             }
         }
-        throw new NoSuchMethodError(type.toJavaName() + "." + __name + __descriptor);
+        throw new NoSuchMethodError(this.___type.toJavaName() + "." + __name + __descriptor);
     }
 
     private static void skipAttributes(DataInputStream __stream) throws IOException
@@ -122,11 +122,11 @@ public final class Classfile
         ClassfileBytecode __code = null;
         for (int __i = 0; __i < __attributesCount; __i++)
         {
-            String __attributeName = __cp.get(Utf8.class, __stream.readUnsignedShort()).value;
+            String __attributeName = __cp.get(Utf8.class, __stream.readUnsignedShort()).___value;
             int __attributeLength = __stream.readInt();
             if (__code == null && __attributeName.equals("Code"))
             {
-                ResolvedJavaMethod __method = __cp.context.findMethod(type, __name, __descriptor, __isStatic);
+                ResolvedJavaMethod __method = __cp.___context.findMethod(this.___type, __name, __descriptor, __isStatic);
                 // Even if we will discard the Code attribute (see below), we still need to parse it
                 // to reach the following class file content.
                 __code = new ClassfileBytecode(__method, __stream, __cp);
@@ -162,8 +162,8 @@ public final class Classfile
         {
             int __accessFlags = __stream.readUnsignedShort();
             boolean __isStatic = Modifier.isStatic(__accessFlags);
-            String __name = __cp.get(Utf8.class, __stream.readUnsignedShort()).value;
-            String __descriptor = __cp.get(Utf8.class, __stream.readUnsignedShort()).value;
+            String __name = __cp.get(Utf8.class, __stream.readUnsignedShort()).___value;
+            String __descriptor = __cp.get(Utf8.class, __stream.readUnsignedShort()).___value;
             ClassfileBytecode __code = findCodeAttribute(__stream, __cp, __name, __descriptor, __isStatic);
             if (__code != null)
             {

@@ -247,25 +247,25 @@ public final class ArrayCopySnippets implements Snippets
     public static final class Templates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final SnippetInfo arraycopyGenericSnippet = snippet("arraycopyGenericSnippet");
+        private final SnippetInfo ___arraycopyGenericSnippet = snippet("arraycopyGenericSnippet");
         // @field
-        private final SnippetInfo arraycopyUnrolledSnippet = snippet("arraycopyUnrolledSnippet");
+        private final SnippetInfo ___arraycopyUnrolledSnippet = snippet("arraycopyUnrolledSnippet");
         // @field
-        private final SnippetInfo arraycopyExactSnippet = snippet("arraycopyExactSnippet");
+        private final SnippetInfo ___arraycopyExactSnippet = snippet("arraycopyExactSnippet");
         // @field
-        private final SnippetInfo arraycopyZeroLengthSnippet = snippet("arraycopyZeroLengthSnippet");
+        private final SnippetInfo ___arraycopyZeroLengthSnippet = snippet("arraycopyZeroLengthSnippet");
         // @field
-        private final SnippetInfo arraycopyCheckcastSnippet = snippet("arraycopyCheckcastSnippet");
+        private final SnippetInfo ___arraycopyCheckcastSnippet = snippet("arraycopyCheckcastSnippet");
         // @field
-        private final SnippetInfo arraycopyNativeSnippet = snippet("arraycopyNativeSnippet");
+        private final SnippetInfo ___arraycopyNativeSnippet = snippet("arraycopyNativeSnippet");
 
         // @field
-        private final SnippetInfo checkcastArraycopyWithSlowPathWork = snippet("checkcastArraycopyWithSlowPathWork");
+        private final SnippetInfo ___checkcastArraycopyWithSlowPathWork = snippet("checkcastArraycopyWithSlowPathWork");
         // @field
-        private final SnippetInfo genericArraycopyWithSlowPathWork = snippet("genericArraycopyWithSlowPathWork");
+        private final SnippetInfo ___genericArraycopyWithSlowPathWork = snippet("genericArraycopyWithSlowPathWork");
 
         // @field
-        private ResolvedJavaMethod originalArraycopy;
+        private ResolvedJavaMethod ___originalArraycopy;
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target)
@@ -292,7 +292,7 @@ public final class ArrayCopySnippets implements Snippets
             {
                 // at least one of the objects is definitely not an array - use the native call
                 // right away as the copying will fail anyways
-                __snippetInfo = arraycopyNativeSnippet;
+                __snippetInfo = this.___arraycopyNativeSnippet;
                 __arrayTypeCheck = ArrayCopyTypeCheck.UNDEFINED_ARRAY_TYPE_CHECK;
             }
             else
@@ -303,13 +303,13 @@ public final class ArrayCopySnippets implements Snippets
                 if (__arraycopy.isExact())
                 {
                     // there is a sufficient type match - we don't need any additional type checks
-                    __snippetInfo = arraycopyExactSnippet;
+                    __snippetInfo = this.___arraycopyExactSnippet;
                     __arrayTypeCheck = ArrayCopyTypeCheck.NO_ARRAY_TYPE_CHECK;
                 }
                 else if (__srcComponentType == null && __destComponentType == null)
                 {
                     // we don't know anything about the types - use the generic copying
-                    __snippetInfo = arraycopyGenericSnippet;
+                    __snippetInfo = this.___arraycopyGenericSnippet;
                     // no need for additional type check to avoid duplicated work
                     __arrayTypeCheck = ArrayCopyTypeCheck.NO_ARRAY_TYPE_CHECK;
                 }
@@ -319,14 +319,14 @@ public final class ArrayCopySnippets implements Snippets
                     {
                         // it depends on the array content if the copy succeeds - we need
                         // a type check for every store
-                        __snippetInfo = arraycopyCheckcastSnippet;
+                        __snippetInfo = this.___arraycopyCheckcastSnippet;
                         __arrayTypeCheck = ArrayCopyTypeCheck.NO_ARRAY_TYPE_CHECK;
                     }
                     else
                     {
                         // one object is an object array, the other one is a primitive array:
                         // this copy will always fail - use the native call right away
-                        __snippetInfo = arraycopyNativeSnippet;
+                        __snippetInfo = this.___arraycopyNativeSnippet;
                         __arrayTypeCheck = ArrayCopyTypeCheck.UNDEFINED_ARRAY_TYPE_CHECK;
                     }
                 }
@@ -337,7 +337,7 @@ public final class ArrayCopySnippets implements Snippets
                     {
                         // one involved object is a primitive array - it is sufficient to directly
                         // compare the hub
-                        __snippetInfo = arraycopyExactSnippet;
+                        __snippetInfo = this.___arraycopyExactSnippet;
                         __arrayTypeCheck = ArrayCopyTypeCheck.HUB_BASED_ARRAY_TYPE_CHECK;
                         __elementKind = __nonNullComponentType.getJavaKind();
                     }
@@ -345,25 +345,25 @@ public final class ArrayCopySnippets implements Snippets
                     {
                         // one involved object is an object array - the other array's element type
                         // may be primitive or object, hence we compare the layout helper
-                        __snippetInfo = arraycopyCheckcastSnippet;
+                        __snippetInfo = this.___arraycopyCheckcastSnippet;
                         __arrayTypeCheck = ArrayCopyTypeCheck.LAYOUT_HELPER_BASED_ARRAY_TYPE_CHECK;
                     }
                 }
             }
 
             // a few special cases that are easier to handle when all other variables already have a value
-            if (__snippetInfo != arraycopyNativeSnippet && __snippetInfo != arraycopyGenericSnippet && __arraycopy.getLength().isConstant() && __arraycopy.getLength().asJavaConstant().asLong() == 0)
+            if (__snippetInfo != this.___arraycopyNativeSnippet && __snippetInfo != this.___arraycopyGenericSnippet && __arraycopy.getLength().isConstant() && __arraycopy.getLength().asJavaConstant().asLong() == 0)
             {
                 // Copying 0 element between object arrays with conflicting types will not throw an
                 // exception - once we pass the preliminary element type checks that we are not
                 // mixing arrays of different basic types, ArrayStoreException is only thrown when
                 // an *astore would have thrown it. Therefore, copying null between object arrays
                 // with conflicting types will also succeed (we do not optimize for such case here).
-                __snippetInfo = arraycopyZeroLengthSnippet;
+                __snippetInfo = this.___arraycopyZeroLengthSnippet;
             }
-            else if (__snippetInfo == arraycopyExactSnippet && shouldUnroll(__arraycopy.getLength()))
+            else if (__snippetInfo == this.___arraycopyExactSnippet && shouldUnroll(__arraycopy.getLength()))
             {
-                __snippetInfo = arraycopyUnrolledSnippet;
+                __snippetInfo = this.___arraycopyUnrolledSnippet;
             }
 
             // create the snippet
@@ -373,27 +373,27 @@ public final class ArrayCopySnippets implements Snippets
             __args.add("dest", __arraycopy.getDestination());
             __args.add("destPos", __arraycopy.getDestinationPosition());
             __args.add("length", __arraycopy.getLength());
-            if (__snippetInfo != arraycopyNativeSnippet)
+            if (__snippetInfo != this.___arraycopyNativeSnippet)
             {
                 __args.addConst("arrayTypeCheck", __arrayTypeCheck);
             }
-            if (__snippetInfo == arraycopyUnrolledSnippet)
+            if (__snippetInfo == this.___arraycopyUnrolledSnippet)
             {
                 __args.addConst("elementKind", __elementKind != null ? __elementKind : JavaKind.Illegal);
                 __args.addConst("unrolledLength", __arraycopy.getLength().asJavaConstant().asInt());
             }
-            if (__snippetInfo == arraycopyExactSnippet)
+            if (__snippetInfo == this.___arraycopyExactSnippet)
             {
                 __args.addConst("elementKind", __elementKind);
             }
-            if (__snippetInfo == arraycopyCheckcastSnippet)
+            if (__snippetInfo == this.___arraycopyCheckcastSnippet)
             {
-                __args.addConst("workSnippet", checkcastArraycopyWithSlowPathWork);
+                __args.addConst("workSnippet", this.___checkcastArraycopyWithSlowPathWork);
                 __args.addConst("elementKind", JavaKind.Illegal);
             }
-            if (__snippetInfo == arraycopyGenericSnippet)
+            if (__snippetInfo == this.___arraycopyGenericSnippet)
             {
-                __args.addConst("workSnippet", genericArraycopyWithSlowPathWork);
+                __args.addConst("workSnippet", this.___genericArraycopyWithSlowPathWork);
                 __args.addConst("elementKind", JavaKind.Illegal);
             }
 
@@ -449,15 +449,15 @@ public final class ArrayCopySnippets implements Snippets
             return __length.isConstant() && __length.asJavaConstant().asInt() <= 8 && __length.asJavaConstant().asInt() != 0;
         }
 
-        /**
-         * Instantiate the snippet template and fix up the FrameState of any Invokes of
-         * System.arraycopy and propagate the captured bci in the ArrayCopySlowPathNode.
-         */
+        ///
+        // Instantiate the snippet template and fix up the FrameState of any Invokes of
+        // System.arraycopy and propagate the captured bci in the ArrayCopySlowPathNode.
+        ///
         private void instantiate(Arguments __args, BasicArrayCopyNode __arraycopy)
         {
             StructuredGraph __graph = __arraycopy.graph();
             SnippetTemplate __template = template(__arraycopy, __args);
-            UnmodifiableEconomicMap<Node, Node> __replacements = __template.instantiate(providers.getMetaAccess(), __arraycopy, SnippetTemplate.DEFAULT_REPLACER, __args, false);
+            UnmodifiableEconomicMap<Node, Node> __replacements = __template.instantiate(this.___providers.getMetaAccess(), __arraycopy, SnippetTemplate.DEFAULT_REPLACER, __args, false);
             for (Node __originalNode : __replacements.getKeys())
             {
                 if (__originalNode instanceof Invoke)
@@ -465,7 +465,7 @@ public final class ArrayCopySnippets implements Snippets
                     Invoke __invoke = (Invoke) __replacements.get(__originalNode);
                     CallTargetNode __call = __invoke.callTarget();
 
-                    if (!__call.targetMethod().equals(originalArraycopy))
+                    if (!__call.targetMethod().equals(this.___originalArraycopy))
                     {
                         throw new GraalError("unexpected invoke %s in snippet", __call.targetMethod());
                     }
@@ -492,7 +492,7 @@ public final class ArrayCopySnippets implements Snippets
 
         private ResolvedJavaMethod originalArraycopy()
         {
-            if (originalArraycopy == null)
+            if (this.___originalArraycopy == null)
             {
                 Method __method;
                 try
@@ -503,9 +503,9 @@ public final class ArrayCopySnippets implements Snippets
                 {
                     throw new GraalError(__e);
                 }
-                originalArraycopy = providers.getMetaAccess().lookupJavaMethod(__method);
+                this.___originalArraycopy = this.___providers.getMetaAccess().lookupJavaMethod(__method);
             }
-            return originalArraycopy;
+            return this.___originalArraycopy;
         }
     }
 }

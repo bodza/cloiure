@@ -13,13 +13,13 @@ public final class KillingBeginNode extends AbstractBeginNode implements MemoryC
     public static final NodeClass<KillingBeginNode> TYPE = NodeClass.create(KillingBeginNode.class);
 
     // @field
-    protected LocationIdentity locationIdentity;
+    protected LocationIdentity ___locationIdentity;
 
     // @cons
     public KillingBeginNode(LocationIdentity __locationIdentity)
     {
         super(TYPE);
-        this.locationIdentity = __locationIdentity;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public static AbstractBeginNode begin(FixedNode __with, LocationIdentity __locationIdentity)
@@ -41,6 +41,6 @@ public final class KillingBeginNode extends AbstractBeginNode implements MemoryC
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 }

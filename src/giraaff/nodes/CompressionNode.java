@@ -17,9 +17,9 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.util.GraalError;
 
-/**
- * Compress or uncompress an oop or metaspace pointer.
- */
+///
+// Compress or uncompress an oop or metaspace pointer.
+///
 // @class CompressionNode
 public abstract class CompressionNode extends UnaryNode implements ConvertNode, LIRLowerable
 {
@@ -34,16 +34,16 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     }
 
     // @field
-    protected final CompressionOp op;
+    protected final CompressionOp ___op;
     // @field
-    protected final CompressEncoding encoding;
+    protected final CompressEncoding ___encoding;
 
     // @cons
     public CompressionNode(NodeClass<? extends UnaryNode> __c, CompressionOp __op, ValueNode __input, Stamp __stamp, CompressEncoding __encoding)
     {
         super(__c, __stamp, __input);
-        this.op = __op;
-        this.encoding = __encoding;
+        this.___op = __op;
+        this.___encoding = __encoding;
     }
 
     @Override
@@ -52,14 +52,14 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
         return mkStamp(__newStamp);
     }
 
-    protected abstract Constant compress(Constant c);
+    protected abstract Constant compress(Constant __c);
 
-    protected abstract Constant uncompress(Constant c);
+    protected abstract Constant uncompress(Constant __c);
 
     @Override
     public Constant convert(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        switch (op)
+        switch (this.___op)
         {
             case Compress:
                 return compress(__c);
@@ -73,7 +73,7 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     @Override
     public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        switch (op)
+        switch (this.___op)
         {
             case Compress:
                 return uncompress(__c);
@@ -90,16 +90,16 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
         return true;
     }
 
-    protected abstract Stamp mkStamp(Stamp input);
+    protected abstract Stamp mkStamp(Stamp __input);
 
     public CompressionOp getOp()
     {
-        return op;
+        return this.___op;
     }
 
     public CompressEncoding getEncoding()
     {
-        return encoding;
+        return this.___encoding;
     }
 
     @Override
@@ -113,7 +113,7 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
         else if (__forValue instanceof CompressionNode)
         {
             CompressionNode __other = (CompressionNode) __forValue;
-            if (op != __other.op && encoding.equals(__other.encoding))
+            if (this.___op != __other.___op && this.___encoding.equals(__other.___encoding))
             {
                 return __other.getValue();
             }
@@ -125,9 +125,9 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     public void generate(NodeLIRBuilderTool __gen)
     {
         boolean __nonNull;
-        if (value.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp)
+        if (this.___value.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp)
         {
-            __nonNull = StampTool.isPointerNonNull(value.stamp(NodeView.DEFAULT));
+            __nonNull = StampTool.isPointerNonNull(this.___value.stamp(NodeView.DEFAULT));
         }
         else
         {
@@ -137,14 +137,18 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
 
         LIRGeneratorTool __tool = __gen.getLIRGeneratorTool();
         Value __result;
-        switch (op)
+        switch (this.___op)
         {
             case Compress:
-                __result = __tool.emitCompress(__gen.operand(value), encoding, __nonNull);
+            {
+                __result = __tool.emitCompress(__gen.operand(this.___value), this.___encoding, __nonNull);
                 break;
+            }
             case Uncompress:
-                __result = __tool.emitUncompress(__gen.operand(value), encoding, __nonNull);
+            {
+                __result = __tool.emitUncompress(__gen.operand(this.___value), this.___encoding, __nonNull);
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }

@@ -9,9 +9,9 @@ import giraaff.hotspot.HotSpotRuntime;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.graphbuilderconf.InvocationPlugins;
 
-/**
- * Extension of {@link InvocationPlugins} that disables plugins based on runtime configuration.
- */
+///
+// Extension of {@link InvocationPlugins} that disables plugins based on runtime configuration.
+///
 // @class HotSpotInvocationPlugins
 final class HotSpotInvocationPlugins extends InvocationPlugins
 {

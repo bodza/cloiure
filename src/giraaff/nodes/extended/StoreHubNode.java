@@ -15,27 +15,27 @@ public final class StoreHubNode extends FixedWithNextNode implements Lowerable
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
 
     public ValueNode getValue()
     {
-        return value;
+        return this.___value;
     }
 
     public ValueNode getObject()
     {
-        return object;
+        return this.___object;
     }
 
     // @cons
     public StoreHubNode(ValueNode __object, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = __value;
-        this.object = __object;
+        this.___value = __value;
+        this.___object = __object;
     }
 
     @Override
@@ -45,5 +45,5 @@ public final class StoreHubNode extends FixedWithNextNode implements Lowerable
     }
 
     @NodeIntrinsic
-    public static native void write(Object object, Object value);
+    public static native void write(Object __object, Object __value);
 }

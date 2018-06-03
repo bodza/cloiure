@@ -1,42 +1,42 @@
 package giraaff.core.common;
 
-/**
- * A compact representation of the different encoding strategies for Objects and metadata.
- */
+///
+// A compact representation of the different encoding strategies for Objects and metadata.
+///
 // @class CompressEncoding
 public final class CompressEncoding
 {
     // @field
-    private final long base;
+    private final long ___base;
     // @field
-    private final int shift;
+    private final int ___shift;
 
     // @cons
     public CompressEncoding(long __base, int __shift)
     {
         super();
-        this.base = __base;
-        this.shift = __shift;
+        this.___base = __base;
+        this.___shift = __shift;
     }
 
     public boolean hasBase()
     {
-        return base != 0;
+        return this.___base != 0;
     }
 
     public boolean hasShift()
     {
-        return shift != 0;
+        return this.___shift != 0;
     }
 
     public long getBase()
     {
-        return base;
+        return this.___base;
     }
 
     public int getShift()
     {
-        return shift;
+        return this.___shift;
     }
 
     @Override
@@ -44,8 +44,8 @@ public final class CompressEncoding
     {
         final int __prime = 31;
         int __result = 1;
-        __result = __prime * __result + (int) (base ^ (base >>> 32));
-        __result = __prime * __result + shift;
+        __result = __prime * __result + (int) (this.___base ^ (this.___base >>> 32));
+        __result = __prime * __result + this.___shift;
         return __result;
     }
 
@@ -55,7 +55,7 @@ public final class CompressEncoding
         if (__obj instanceof CompressEncoding)
         {
             CompressEncoding __other = (CompressEncoding) __obj;
-            return base == __other.base && shift == __other.shift;
+            return this.___base == __other.___base && this.___shift == __other.___shift;
         }
         return false;
     }

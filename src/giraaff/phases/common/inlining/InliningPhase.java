@@ -17,14 +17,14 @@ import giraaff.phases.tiers.HighTierContext;
 public final class InliningPhase extends AbstractInliningPhase
 {
     // @field
-    private final InliningPolicy inliningPolicy;
+    private final InliningPolicy ___inliningPolicy;
     // @field
-    private final CanonicalizerPhase canonicalizer;
+    private final CanonicalizerPhase ___canonicalizer;
     // @field
-    private LinkedList<Invoke> rootInvokes = null;
+    private LinkedList<Invoke> ___rootInvokes = null;
 
     // @field
-    private int maxMethodPerInlining = Integer.MAX_VALUE;
+    private int ___maxMethodPerInlining = Integer.MAX_VALUE;
 
     // @cons
     public InliningPhase(CanonicalizerPhase __canonicalizer)
@@ -42,35 +42,35 @@ public final class InliningPhase extends AbstractInliningPhase
     public InliningPhase(InliningPolicy __policy, CanonicalizerPhase __canonicalizer)
     {
         super();
-        this.inliningPolicy = __policy;
-        this.canonicalizer = __canonicalizer;
+        this.___inliningPolicy = __policy;
+        this.___canonicalizer = __canonicalizer;
     }
 
     public CanonicalizerPhase getCanonicalizer()
     {
-        return canonicalizer;
+        return this.___canonicalizer;
     }
 
     public void setMaxMethodsPerInlining(int __max)
     {
-        maxMethodPerInlining = __max;
+        this.___maxMethodPerInlining = __max;
     }
 
     public void setRootInvokes(LinkedList<Invoke> __rootInvokes)
     {
-        this.rootInvokes = __rootInvokes;
+        this.___rootInvokes = __rootInvokes;
     }
 
-    /**
-     * This method sets in motion the inlining machinery.
-     *
-     * @see InliningData
-     * @see InliningData#moveForward()
-     */
+    ///
+    // This method sets in motion the inlining machinery.
+    //
+    // @see InliningData
+    // @see InliningData#moveForward()
+    ///
     @Override
     protected void run(final StructuredGraph __graph, final HighTierContext __context)
     {
-        final InliningData __data = new InliningData(__graph, __context, maxMethodPerInlining, canonicalizer, inliningPolicy, rootInvokes);
+        final InliningData __data = new InliningData(__graph, __context, this.___maxMethodPerInlining, this.___canonicalizer, this.___inliningPolicy, this.___rootInvokes);
 
         int __count = 0;
         int __limit = GraalOptions.methodInlineBailoutLimit;

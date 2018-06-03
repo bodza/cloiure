@@ -11,10 +11,10 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Cast between Word and metaspace pointers exposed by the {@link HotspotOpcode#FROM_POINTER} and
- * {@link HotspotOpcode#TO_KLASS_POINTER} operations.
- */
+///
+// Cast between Word and metaspace pointers exposed by the {@link HotspotOpcode#FROM_POINTER} and
+// {@link HotspotOpcode#TO_KLASS_POINTER} operations.
+///
 // @class PointerCastNode
 public final class PointerCastNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable
 {
@@ -23,23 +23,23 @@ public final class PointerCastNode extends FloatingNode implements LIRLowerable,
 
     @Input
     // @field
-    ValueNode input;
+    ValueNode ___input;
 
     // @cons
     public PointerCastNode(Stamp __stamp, ValueNode __input)
     {
         super(TYPE, __stamp);
-        this.input = __input;
+        this.___input = __input;
     }
 
     public ValueNode getInput()
     {
-        return input;
+        return this.___input;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.setResult(this, __gen.operand(input));
+        __gen.setResult(this, __gen.operand(this.___input));
     }
 }

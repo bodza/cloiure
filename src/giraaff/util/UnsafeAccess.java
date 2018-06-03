@@ -4,9 +4,9 @@ import java.lang.reflect.Field;
 
 import sun.misc.Unsafe;
 
-/**
- * Public access to the {@link Unsafe} capability.
- */
+///
+// Public access to the {@link Unsafe} capability.
+///
 // @class UnsafeAccess
 public final class UnsafeAccess
 {

@@ -23,21 +23,21 @@ public final class EncodedSymbolNode extends FloatingNode implements Canonicaliz
 
     @OptionalInput
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
 
     // @cons
     public EncodedSymbolNode(@InjectedNodeParameter Stamp __stamp, ValueNode __value)
     {
         super(TYPE, __stamp);
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (value != null)
+        if (this.___value != null)
         {
-            Constant __constant = GraphUtil.foldIfConstantAndRemove(this, value);
+            Constant __constant = GraphUtil.foldIfConstantAndRemove(this, this.___value);
             if (__constant != null)
             {
                 return new ConstantNode(new EncodedSymbolConstant(__constant), StampFactory.pointer());
@@ -47,5 +47,5 @@ public final class EncodedSymbolNode extends FloatingNode implements Canonicaliz
     }
 
     @NodeIntrinsic
-    public static native Word encode(Object constant);
+    public static native Word encode(Object __constant);
 }

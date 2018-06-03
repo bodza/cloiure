@@ -23,22 +23,22 @@ public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGen
     public static final class LIRGenerationContext
     {
         // @field
-        private final NodeLIRBuilderTool nodeLirBuilder;
+        private final NodeLIRBuilderTool ___nodeLirBuilder;
         // @field
-        private final LIRGeneratorTool lirGen;
+        private final LIRGeneratorTool ___lirGen;
         // @field
-        private final StructuredGraph graph;
+        private final StructuredGraph ___graph;
         // @field
-        private final ScheduleResult schedule;
+        private final ScheduleResult ___schedule;
 
         // @cons
         public LIRGenerationContext(LIRGeneratorTool __lirGen, NodeLIRBuilderTool __nodeLirBuilder, StructuredGraph __graph, ScheduleResult __schedule)
         {
             super();
-            this.nodeLirBuilder = __nodeLirBuilder;
-            this.lirGen = __lirGen;
-            this.graph = __graph;
-            this.schedule = __schedule;
+            this.___nodeLirBuilder = __nodeLirBuilder;
+            this.___lirGen = __lirGen;
+            this.___graph = __graph;
+            this.___schedule = __schedule;
         }
     }
 
@@ -51,14 +51,14 @@ public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGen
     @Override
     protected final void run(TargetDescription __target, LIRGenerationResult __lirGenRes, LIRGenerationPhase.LIRGenerationContext __context)
     {
-        NodeLIRBuilderTool __nodeLirBuilder = __context.nodeLirBuilder;
-        StructuredGraph __graph = __context.graph;
-        ScheduleResult __schedule = __context.schedule;
+        NodeLIRBuilderTool __nodeLirBuilder = __context.___nodeLirBuilder;
+        StructuredGraph __graph = __context.___graph;
+        ScheduleResult __schedule = __context.___schedule;
         for (AbstractBlockBase<?> __b : __lirGenRes.getLIR().getControlFlowGraph().getBlocks())
         {
             emitBlock(__nodeLirBuilder, __lirGenRes, (Block) __b, __graph, __schedule.getBlockToNodesMap());
         }
-        __context.lirGen.beforeRegisterAllocation();
+        __context.___lirGen.beforeRegisterAllocation();
     }
 
     private static void emitBlock(NodeLIRBuilderTool __nodeLirGen, LIRGenerationResult __lirGenRes, Block __b, StructuredGraph __graph, BlockMap<List<Node>> __blockMap)

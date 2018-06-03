@@ -32,40 +32,40 @@ import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.VirtualizableAllocation;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * A graph that contains at least one distinguished node : the {@link #start() start} node. This
- * node is the start of the control flow of the graph.
- */
+///
+// A graph that contains at least one distinguished node : the {@link #start() start} node. This
+// node is the start of the control flow of the graph.
+///
 // @class StructuredGraph
 public final class StructuredGraph extends Graph
 {
-    /**
-     * The different stages of the compilation of a {@link Graph} regarding the status of
-     * {@link GuardNode guards}, {@link DeoptimizingNode deoptimizations} and {@link FrameState
-     * framestates}. The stage of a graph progresses monotonously.
-     */
+    ///
+    // The different stages of the compilation of a {@link Graph} regarding the status of
+    // {@link GuardNode guards}, {@link DeoptimizingNode deoptimizations} and {@link FrameState
+    // framestates}. The stage of a graph progresses monotonously.
+    ///
     // @enum StructuredGraph.GuardsStage
     public enum GuardsStage
     {
-        /**
-         * During this stage, there can be {@link FloatingNode floating} {@link DeoptimizingNode}
-         * such as {@link GuardNode GuardNodes}. New {@link DeoptimizingNode DeoptimizingNodes} can
-         * be introduced without constraints. {@link FrameState} nodes are associated with
-         * {@link StateSplit} nodes.
-         */
+        ///
+        // During this stage, there can be {@link FloatingNode floating} {@link DeoptimizingNode}
+        // such as {@link GuardNode GuardNodes}. New {@link DeoptimizingNode DeoptimizingNodes} can
+        // be introduced without constraints. {@link FrameState} nodes are associated with
+        // {@link StateSplit} nodes.
+        ///
         FLOATING_GUARDS,
-        /**
-         * During this stage, all {@link DeoptimizingNode DeoptimizingNodes} must be
-         * {@link FixedNode fixed} but new {@link DeoptimizingNode DeoptimizingNodes} can still be
-         * introduced. {@link FrameState} nodes are still associated with {@link StateSplit} nodes.
-         */
+        ///
+        // During this stage, all {@link DeoptimizingNode DeoptimizingNodes} must be
+        // {@link FixedNode fixed} but new {@link DeoptimizingNode DeoptimizingNodes} can still be
+        // introduced. {@link FrameState} nodes are still associated with {@link StateSplit} nodes.
+        ///
         FIXED_DEOPTS,
-        /**
-         * During this stage, all {@link DeoptimizingNode DeoptimizingNodes} must be
-         * {@link FixedNode fixed}. New {@link DeoptimizingNode DeoptimizingNodes} can not be
-         * introduced any more. {@link FrameState} nodes are now associated with
-         * {@link DeoptimizingNode} nodes.
-         */
+        ///
+        // During this stage, all {@link DeoptimizingNode DeoptimizingNodes} must be
+        // {@link FixedNode fixed}. New {@link DeoptimizingNode DeoptimizingNodes} can not be
+        // introduced any more. {@link FrameState} nodes are now associated with
+        // {@link DeoptimizingNode} nodes.
+        ///
         AFTER_FSA;
 
         public boolean allowsFloatingGuards()
@@ -89,9 +89,9 @@ public final class StructuredGraph extends Graph
         }
     }
 
-    /**
-     * Constants denoting whether or not {@link Assumption}s can be made while processing a graph.
-     */
+    ///
+    // Constants denoting whether or not {@link Assumption}s can be made while processing a graph.
+    ///
     // @enum StructuredGraph.AllowAssumptions
     public enum AllowAssumptions
     {
@@ -112,126 +112,126 @@ public final class StructuredGraph extends Graph
     public static final class ScheduleResult
     {
         // @field
-        private final ControlFlowGraph cfg;
+        private final ControlFlowGraph ___cfg;
         // @field
-        private final NodeMap<Block> nodeToBlockMap;
+        private final NodeMap<Block> ___nodeToBlockMap;
         // @field
-        private final BlockMap<List<Node>> blockToNodesMap;
+        private final BlockMap<List<Node>> ___blockToNodesMap;
 
         // @cons
         public ScheduleResult(ControlFlowGraph __cfg, NodeMap<Block> __nodeToBlockMap, BlockMap<List<Node>> __blockToNodesMap)
         {
             super();
-            this.cfg = __cfg;
-            this.nodeToBlockMap = __nodeToBlockMap;
-            this.blockToNodesMap = __blockToNodesMap;
+            this.___cfg = __cfg;
+            this.___nodeToBlockMap = __nodeToBlockMap;
+            this.___blockToNodesMap = __blockToNodesMap;
         }
 
         public ControlFlowGraph getCFG()
         {
-            return cfg;
+            return this.___cfg;
         }
 
         public NodeMap<Block> getNodeToBlockMap()
         {
-            return nodeToBlockMap;
+            return this.___nodeToBlockMap;
         }
 
         public BlockMap<List<Node>> getBlockToNodesMap()
         {
-            return blockToNodesMap;
+            return this.___blockToNodesMap;
         }
 
         public List<Node> nodesFor(Block __block)
         {
-            return blockToNodesMap.get(__block);
+            return this.___blockToNodesMap.get(__block);
         }
     }
 
-    /**
-     * Object used to create a {@link StructuredGraph}.
-     */
+    ///
+    // Object used to create a {@link StructuredGraph}.
+    ///
     // @class StructuredGraph.Builder
     public static final class Builder
     {
         // @field
-        private final Assumptions assumptions;
+        private final Assumptions ___assumptions;
         // @field
-        private SpeculationLog speculationLog;
+        private SpeculationLog ___speculationLog;
         // @field
-        private ResolvedJavaMethod rootMethod;
+        private ResolvedJavaMethod ___rootMethod;
         // @field
-        private int entryBCI = JVMCICompiler.INVOCATION_ENTRY_BCI;
+        private int ___entryBCI = JVMCICompiler.INVOCATION_ENTRY_BCI;
         // @field
-        private boolean useProfilingInfo = true;
+        private boolean ___useProfilingInfo = true;
 
-        /**
-         * Creates a builder for a graph.
-         */
+        ///
+        // Creates a builder for a graph.
+        ///
         // @cons
         public Builder(AllowAssumptions __allowAssumptions)
         {
             super();
-            this.assumptions = __allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
+            this.___assumptions = __allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
         }
 
-        /**
-         * Creates a builder for a graph that does not support {@link Assumptions}.
-         */
+        ///
+        // Creates a builder for a graph that does not support {@link Assumptions}.
+        ///
         // @cons
         public Builder()
         {
             super();
-            this.assumptions = null;
+            this.___assumptions = null;
         }
 
         public ResolvedJavaMethod getMethod()
         {
-            return rootMethod;
+            return this.___rootMethod;
         }
 
         public Builder method(ResolvedJavaMethod __method)
         {
-            this.rootMethod = __method;
+            this.___rootMethod = __method;
             return this;
         }
 
         public SpeculationLog getSpeculationLog()
         {
-            return speculationLog;
+            return this.___speculationLog;
         }
 
         public Builder speculationLog(SpeculationLog __log)
         {
-            this.speculationLog = __log;
+            this.___speculationLog = __log;
             return this;
         }
 
         public int getEntryBCI()
         {
-            return entryBCI;
+            return this.___entryBCI;
         }
 
         public Builder entryBCI(int __bci)
         {
-            this.entryBCI = __bci;
+            this.___entryBCI = __bci;
             return this;
         }
 
         public boolean getUseProfilingInfo()
         {
-            return useProfilingInfo;
+            return this.___useProfilingInfo;
         }
 
         public Builder useProfilingInfo(boolean __flag)
         {
-            this.useProfilingInfo = __flag;
+            this.___useProfilingInfo = __flag;
             return this;
         }
 
         public StructuredGraph build()
         {
-            return new StructuredGraph(rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo);
+            return new StructuredGraph(this.___rootMethod, this.___entryBCI, this.___assumptions, this.___speculationLog, this.___useProfilingInfo);
         }
     }
 
@@ -241,50 +241,50 @@ public final class StructuredGraph extends Graph
     private static final AtomicLong uniqueGraphIds = new AtomicLong();
 
     // @field
-    private StartNode start;
+    private StartNode ___start;
     // @field
-    private ResolvedJavaMethod rootMethod;
+    private ResolvedJavaMethod ___rootMethod;
     // @field
-    private final long graphId;
+    private final long ___graphId;
     // @field
-    private final int entryBCI;
+    private final int ___entryBCI;
     // @field
-    private GuardsStage guardsStage = GuardsStage.FLOATING_GUARDS;
+    private GuardsStage ___guardsStage = GuardsStage.FLOATING_GUARDS;
     // @field
-    private boolean isAfterFloatingReadPhase = false;
+    private boolean ___isAfterFloatingReadPhase = false;
     // @field
-    private boolean isAfterFixedReadPhase = false;
+    private boolean ___isAfterFixedReadPhase = false;
     // @field
-    private boolean hasValueProxies = true;
+    private boolean ___hasValueProxies = true;
     // @field
-    private boolean isAfterExpandLogic = false;
+    private boolean ___isAfterExpandLogic = false;
     // @field
-    private final boolean useProfilingInfo;
-    /**
-     * The assumptions made while constructing and transforming this graph.
-     */
+    private final boolean ___useProfilingInfo;
+    ///
+    // The assumptions made while constructing and transforming this graph.
+    ///
     // @field
-    private final Assumptions assumptions;
+    private final Assumptions ___assumptions;
 
     // @field
-    private SpeculationLog speculationLog;
+    private SpeculationLog ___speculationLog;
 
     // @field
-    private ScheduleResult lastSchedule;
+    private ScheduleResult ___lastSchedule;
 
-    /**
-     * Records the methods that were used while constructing this graph, one entry for each time a
-     * specific method is used.
-     */
+    ///
+    // Records the methods that were used while constructing this graph, one entry for each time a
+    // specific method is used.
+    ///
     // @field
-    private final List<ResolvedJavaMethod> methods = new ArrayList<>();
+    private final List<ResolvedJavaMethod> ___methods = new ArrayList<>();
 
-    /**
-     * Records the fields that were accessed while constructing this graph.
-     */
+    ///
+    // Records the fields that were accessed while constructing this graph.
+    ///
 
     // @field
-    private EconomicSet<ResolvedJavaField> fields = null;
+    private EconomicSet<ResolvedJavaField> ___fields = null;
 
     // @enum StructuredGraph.UnsafeAccessState
     private enum UnsafeAccessState
@@ -295,7 +295,7 @@ public final class StructuredGraph extends Graph
     }
 
     // @field
-    private UnsafeAccessState hasUnsafeAccess = UnsafeAccessState.NO_ACCESS;
+    private UnsafeAccessState ___hasUnsafeAccess = UnsafeAccessState.NO_ACCESS;
 
     // @def
     public static final boolean USE_PROFILING_INFO = true;
@@ -308,29 +308,29 @@ public final class StructuredGraph extends Graph
     {
         super();
         this.setStart(add(new StartNode()));
-        this.rootMethod = __method;
-        this.graphId = uniqueGraphIds.incrementAndGet();
-        this.entryBCI = __entryBCI;
-        this.assumptions = __assumptions;
+        this.___rootMethod = __method;
+        this.___graphId = uniqueGraphIds.incrementAndGet();
+        this.___entryBCI = __entryBCI;
+        this.___assumptions = __assumptions;
         if (__speculationLog != null && !(__speculationLog instanceof GraphSpeculationLog))
         {
-            this.speculationLog = new GraphSpeculationLog(__speculationLog);
+            this.___speculationLog = new GraphSpeculationLog(__speculationLog);
         }
         else
         {
-            this.speculationLog = __speculationLog;
+            this.___speculationLog = __speculationLog;
         }
-        this.useProfilingInfo = __useProfilingInfo;
+        this.___useProfilingInfo = __useProfilingInfo;
     }
 
     public void setLastSchedule(ScheduleResult __result)
     {
-        lastSchedule = __result;
+        this.___lastSchedule = __result;
     }
 
     public ScheduleResult getLastSchedule()
     {
-        return lastSchedule;
+        return this.___lastSchedule;
     }
 
     public void clearLastSchedule()
@@ -373,55 +373,55 @@ public final class StructuredGraph extends Graph
 
     public StartNode start()
     {
-        return start;
+        return this.___start;
     }
 
-    /**
-     * Gets the root method from which this graph was built.
-     *
-     * @return null if this method was not built from a method or the method is not available
-     */
+    ///
+    // Gets the root method from which this graph was built.
+    //
+    // @return null if this method was not built from a method or the method is not available
+    ///
     public ResolvedJavaMethod method()
     {
-        return rootMethod;
+        return this.___rootMethod;
     }
 
     public int getEntryBCI()
     {
-        return entryBCI;
+        return this.___entryBCI;
     }
 
     public boolean isOSR()
     {
-        return entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
+        return this.___entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
     }
 
     public long graphId()
     {
-        return graphId;
+        return this.___graphId;
     }
 
     public void setStart(StartNode __start)
     {
-        this.start = __start;
+        this.___start = __start;
     }
 
-    /**
-     * Creates a copy of this graph.
-     */
+    ///
+    // Creates a copy of this graph.
+    ///
     @Override
     public StructuredGraph copy()
     {
-        StructuredGraph __copy = new StructuredGraph(method(), entryBCI, assumptions != null ? new Assumptions() : null, speculationLog, useProfilingInfo);
-        if (AllowAssumptions.ifNonNull(assumptions) == AllowAssumptions.YES && assumptions != null)
+        StructuredGraph __copy = new StructuredGraph(method(), this.___entryBCI, this.___assumptions != null ? new Assumptions() : null, this.___speculationLog, this.___useProfilingInfo);
+        if (AllowAssumptions.ifNonNull(this.___assumptions) == AllowAssumptions.YES && this.___assumptions != null)
         {
-            __copy.assumptions.record(assumptions);
+            __copy.___assumptions.record(this.___assumptions);
         }
-        __copy.hasUnsafeAccess = hasUnsafeAccess;
+        __copy.___hasUnsafeAccess = this.___hasUnsafeAccess;
         __copy.setGuardsStage(getGuardsStage());
-        __copy.isAfterFloatingReadPhase = isAfterFloatingReadPhase;
-        __copy.hasValueProxies = hasValueProxies;
-        __copy.isAfterExpandLogic = isAfterExpandLogic;
+        __copy.___isAfterFloatingReadPhase = this.___isAfterFloatingReadPhase;
+        __copy.___hasValueProxies = this.___hasValueProxies;
+        __copy.___isAfterExpandLogic = this.___isAfterExpandLogic;
         return __copy;
     }
 
@@ -444,7 +444,7 @@ public final class StructuredGraph extends Graph
         return new Iterable<Invoke>()
         {
             // @field
-            private Invoke next;
+            private Invoke ___next;
 
             @Override
             public Iterator<Invoke> iterator()
@@ -455,14 +455,14 @@ public final class StructuredGraph extends Graph
                     @Override
                     public boolean hasNext()
                     {
-                        if (next == null)
+                        if (___next == null)
                         {
                             while (__callTargets.hasNext())
                             {
                                 Invoke __i = __callTargets.next().invoke();
                                 if (__i != null)
                                 {
-                                    next = __i;
+                                    ___next = __i;
                                     return true;
                                 }
                             }
@@ -479,11 +479,11 @@ public final class StructuredGraph extends Graph
                     {
                         try
                         {
-                            return next;
+                            return ___next;
                         }
                         finally
                         {
-                            next = null;
+                            ___next = null;
                         }
                     }
 
@@ -502,12 +502,12 @@ public final class StructuredGraph extends Graph
         return hasNode(LoopBeginNode.TYPE);
     }
 
-    /**
-     * Unlinks a node from all its control flow neighbors and then removes it from its graph. The
-     * node must have no {@linkplain Node#usages() usages}.
-     *
-     * @param node the node to be unlinked and removed
-     */
+    ///
+    // Unlinks a node from all its control flow neighbors and then removes it from its graph. The
+    // node must have no {@linkplain Node#usages() usages}.
+    //
+    // @param node the node to be unlinked and removed
+    ///
     @SuppressWarnings("static-method")
     public void removeFixed(FixedWithNextNode __node)
     {
@@ -537,7 +537,7 @@ public final class StructuredGraph extends Graph
         __node.setNext(null);
         __replacement.setNext(__next);
         __node.replaceAndDelete(__replacement);
-        if (__node == start)
+        if (__node == this.___start)
         {
             setStart((StartNode) __replacement);
         }
@@ -689,77 +689,77 @@ public final class StructuredGraph extends Graph
 
     public GuardsStage getGuardsStage()
     {
-        return guardsStage;
+        return this.___guardsStage;
     }
 
     public void setGuardsStage(GuardsStage __guardsStage)
     {
-        this.guardsStage = __guardsStage;
+        this.___guardsStage = __guardsStage;
     }
 
     public boolean isAfterFloatingReadPhase()
     {
-        return isAfterFloatingReadPhase;
+        return this.___isAfterFloatingReadPhase;
     }
 
     public boolean isAfterFixedReadPhase()
     {
-        return isAfterFixedReadPhase;
+        return this.___isAfterFixedReadPhase;
     }
 
     public void setAfterFloatingReadPhase(boolean __state)
     {
-        isAfterFloatingReadPhase = __state;
+        this.___isAfterFloatingReadPhase = __state;
     }
 
     public void setAfterFixReadPhase(boolean __state)
     {
-        isAfterFixedReadPhase = __state;
+        this.___isAfterFixedReadPhase = __state;
     }
 
     public boolean hasValueProxies()
     {
-        return hasValueProxies;
+        return this.___hasValueProxies;
     }
 
     public void setHasValueProxies(boolean __state)
     {
-        hasValueProxies = __state;
+        this.___hasValueProxies = __state;
     }
 
     public boolean isAfterExpandLogic()
     {
-        return isAfterExpandLogic;
+        return this.___isAfterExpandLogic;
     }
 
     public void setAfterExpandLogic()
     {
-        isAfterExpandLogic = true;
+        this.___isAfterExpandLogic = true;
     }
 
-    /**
-     * Determines if {@link ProfilingInfo} is used during construction of this graph.
-     */
+    ///
+    // Determines if {@link ProfilingInfo} is used during construction of this graph.
+    ///
     public boolean useProfilingInfo()
     {
-        return useProfilingInfo;
+        return this.___useProfilingInfo;
     }
 
-    /**
-     * Gets the profiling info for the {@linkplain #method() root method} of this graph.
-     */
+    ///
+    // Gets the profiling info for the {@linkplain #method() root method} of this graph.
+    ///
     public ProfilingInfo getProfilingInfo()
     {
         return getProfilingInfo(method());
     }
 
-    /**
-     * Gets the profiling info for a given method that is or will be part of this graph, taking into
-     * account {@link #useProfilingInfo()}.
-     */
+    ///
+    // Gets the profiling info for a given method that is or will be part of this graph, taking into
+    // account {@link #useProfilingInfo()}.
+    ///
     public ProfilingInfo getProfilingInfo(ResolvedJavaMethod __m)
     {
-        if (useProfilingInfo && __m != null)
+        if (this.___useProfilingInfo && __m != null)
         {
             return __m.getProfilingInfo();
         }
@@ -769,128 +769,128 @@ public final class StructuredGraph extends Graph
         }
     }
 
-    /**
-     * Gets the object for recording assumptions while constructing of this graph.
-     *
-     * @return {@code null} if assumptions cannot be made for this graph
-     */
+    ///
+    // Gets the object for recording assumptions while constructing of this graph.
+    //
+    // @return {@code null} if assumptions cannot be made for this graph
+    ///
     public Assumptions getAssumptions()
     {
-        return assumptions;
+        return this.___assumptions;
     }
 
-    /**
-     * Gets the methods that were inlined while constructing this graph.
-     */
+    ///
+    // Gets the methods that were inlined while constructing this graph.
+    ///
     public List<ResolvedJavaMethod> getMethods()
     {
-        return methods;
+        return this.___methods;
     }
 
-    /**
-     * Records that {@code method} was used to build this graph.
-     */
+    ///
+    // Records that {@code method} was used to build this graph.
+    ///
     public void recordMethod(ResolvedJavaMethod __method)
     {
-        methods.add(__method);
+        this.___methods.add(__method);
     }
 
-    /**
-     * Updates the {@linkplain #getMethods() methods} used to build this graph with the methods used
-     * to build another graph.
-     */
+    ///
+    // Updates the {@linkplain #getMethods() methods} used to build this graph with the methods used
+    // to build another graph.
+    ///
     public void updateMethods(StructuredGraph __other)
     {
-        this.methods.addAll(__other.methods);
+        this.___methods.addAll(__other.___methods);
     }
 
-    /**
-     * Gets the fields that were accessed while constructing this graph.
-     */
+    ///
+    // Gets the fields that were accessed while constructing this graph.
+    ///
     public EconomicSet<ResolvedJavaField> getFields()
     {
-        return fields;
+        return this.___fields;
     }
 
-    /**
-     * Records that {@code field} was accessed in this graph.
-     */
+    ///
+    // Records that {@code field} was accessed in this graph.
+    ///
     public void recordField(ResolvedJavaField __field)
     {
-        if (this.fields == null)
+        if (this.___fields == null)
         {
-            this.fields = EconomicSet.create(Equivalence.IDENTITY);
+            this.___fields = EconomicSet.create(Equivalence.IDENTITY);
         }
-        fields.add(__field);
+        this.___fields.add(__field);
     }
 
-    /**
-     * Updates the {@linkplain #getFields() fields} of this graph with the accessed fields of
-     * another graph.
-     */
+    ///
+    // Updates the {@linkplain #getFields() fields} of this graph with the accessed fields of
+    // another graph.
+    ///
     public void updateFields(StructuredGraph __other)
     {
-        if (__other.fields != null)
+        if (__other.___fields != null)
         {
-            if (this.fields == null)
+            if (this.___fields == null)
             {
-                this.fields = EconomicSet.create(Equivalence.IDENTITY);
+                this.___fields = EconomicSet.create(Equivalence.IDENTITY);
             }
-            this.fields.addAll(__other.fields);
+            this.___fields.addAll(__other.___fields);
         }
     }
 
-    /**
-     * Gets the input bytecode {@linkplain ResolvedJavaMethod#getCodeSize() size} from which this
-     * graph is constructed. This ignores how many bytecodes in each constituent method are actually
-     * parsed (which may be none for methods whose IR is retrieved from a cache or less than the
-     * full amount for any given method due to profile guided branch pruning).
-     */
+    ///
+    // Gets the input bytecode {@linkplain ResolvedJavaMethod#getCodeSize() size} from which this
+    // graph is constructed. This ignores how many bytecodes in each constituent method are actually
+    // parsed (which may be none for methods whose IR is retrieved from a cache or less than the
+    // full amount for any given method due to profile guided branch pruning).
+    ///
     public int getBytecodeSize()
     {
         int __res = 0;
-        for (ResolvedJavaMethod __e : methods)
+        for (ResolvedJavaMethod __e : this.___methods)
         {
             __res += __e.getCodeSize();
         }
         return __res;
     }
 
-    /**
-     * @return true if the graph contains only a {@link StartNode} and {@link ReturnNode}
-     */
+    ///
+    // @return true if the graph contains only a {@link StartNode} and {@link ReturnNode}
+    ///
     public boolean isTrivial()
     {
-        return !(start.next() instanceof ReturnNode);
+        return !(this.___start.next() instanceof ReturnNode);
     }
 
     public boolean hasUnsafeAccess()
     {
-        return hasUnsafeAccess == UnsafeAccessState.HAS_ACCESS;
+        return this.___hasUnsafeAccess == UnsafeAccessState.HAS_ACCESS;
     }
 
     public void markUnsafeAccess()
     {
-        if (hasUnsafeAccess == UnsafeAccessState.DISABLED)
+        if (this.___hasUnsafeAccess == UnsafeAccessState.DISABLED)
         {
             return;
         }
-        hasUnsafeAccess = UnsafeAccessState.HAS_ACCESS;
+        this.___hasUnsafeAccess = UnsafeAccessState.HAS_ACCESS;
     }
 
     public void disableUnsafeAccessTracking()
     {
-        hasUnsafeAccess = UnsafeAccessState.DISABLED;
+        this.___hasUnsafeAccess = UnsafeAccessState.DISABLED;
     }
 
     public boolean isUnsafeAccessTrackingEnabled()
     {
-        return hasUnsafeAccess != UnsafeAccessState.DISABLED;
+        return this.___hasUnsafeAccess != UnsafeAccessState.DISABLED;
     }
 
     public SpeculationLog getSpeculationLog()
     {
-        return speculationLog;
+        return this.___speculationLog;
     }
 
     public void clearAllStateAfter()

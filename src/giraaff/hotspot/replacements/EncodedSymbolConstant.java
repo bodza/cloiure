@@ -13,22 +13,22 @@ import jdk.vm.ci.meta.Constant;
 
 import giraaff.core.common.type.DataPointerConstant;
 
-/**
- * Represents an encoded representation of a constant.
- */
+///
+// Represents an encoded representation of a constant.
+///
 // @class EncodedSymbolConstant
 public final class EncodedSymbolConstant extends DataPointerConstant
 {
     // @field
-    private final Constant constant;
+    private final Constant ___constant;
     // @field
-    private byte[] bytes;
+    private byte[] ___bytes;
 
     // @cons
     public EncodedSymbolConstant(Constant __constant)
     {
         super(1);
-        this.constant = __constant;
+        this.___constant = __constant;
     }
 
     @Override
@@ -43,12 +43,12 @@ public final class EncodedSymbolConstant extends DataPointerConstant
         __buffer.put(getEncodedConstant());
     }
 
-    /**
-     * Converts a string to a byte array with modified UTF-8 encoding. The first two bytes of the
-     * byte array store the length of the string in bytes.
-     *
-     * @param s a java.lang.String in UTF-16
-     */
+    ///
+    // Converts a string to a byte array with modified UTF-8 encoding. The first two bytes of the
+    // byte array store the length of the string in bytes.
+    //
+    // @param s a java.lang.String in UTF-16
+    ///
     private static byte[] toUTF8String(String __s)
     {
         try (ByteArrayOutputStream __bytes = new ByteArrayOutputStream())
@@ -96,16 +96,16 @@ public final class EncodedSymbolConstant extends DataPointerConstant
 
     public byte[] getEncodedConstant()
     {
-        if (bytes == null)
+        if (this.___bytes == null)
         {
-            bytes = encodeConstant(constant);
+            this.___bytes = encodeConstant(this.___constant);
         }
-        return bytes;
+        return this.___bytes;
     }
 
     @Override
     public String toValueString()
     {
-        return "encoded symbol\"" + constant.toValueString() + "\"";
+        return "encoded symbol\"" + this.___constant.toValueString() + "\"";
     }
 }

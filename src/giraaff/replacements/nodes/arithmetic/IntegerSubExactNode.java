@@ -14,10 +14,10 @@ import giraaff.nodes.calc.SubNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * Node representing an exact integer substraction that will throw an {@link ArithmeticException} in
- * case the addition would overflow the 32 bit range.
- */
+///
+// Node representing an exact integer substraction that will throw an {@link ArithmeticException} in
+// case the addition would overflow the 32 bit range.
+///
 // @class IntegerSubExactNode
 public final class IntegerSubExactNode extends SubNode implements IntegerExactArithmeticNode
 {
@@ -34,11 +34,9 @@ public final class IntegerSubExactNode extends SubNode implements IntegerExactAr
     @Override
     public boolean inferStamp()
     {
-        /*
-         * Note: it is not allowed to use the foldStamp method of the regular sub node as we do not know
-         * the result stamp of this node if we do not know whether we may deopt. If we know we can never
-         * overflow we will replace this node with its non overflow checking counterpart anyway.
-         */
+        // Note: it is not allowed to use the foldStamp method of the regular sub node as we do not know
+        // the result stamp of this node if we do not know whether we may deopt. If we know we can never
+        // overflow we will replace this node with its non overflow checking counterpart anyway.
         return false;
     }
 
@@ -61,9 +59,9 @@ public final class IntegerSubExactNode extends SubNode implements IntegerExactAr
                 return __forX;
             }
         }
-        if (!IntegerStamp.subtractionCanOverflow((IntegerStamp) x.stamp(NodeView.DEFAULT), (IntegerStamp) y.stamp(NodeView.DEFAULT)))
+        if (!IntegerStamp.subtractionCanOverflow((IntegerStamp) this.___x.stamp(NodeView.DEFAULT), (IntegerStamp) this.___y.stamp(NodeView.DEFAULT)))
         {
-            return new SubNode(x, y).canonical(__tool);
+            return new SubNode(this.___x, this.___y).canonical(__tool);
         }
         return this;
     }

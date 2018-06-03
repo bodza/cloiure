@@ -10,7 +10,7 @@ public interface Access extends GuardedNode, HeapAccess
 {
     AddressNode getAddress();
 
-    void setAddress(AddressNode address);
+    void setAddress(AddressNode __address);
 
     LocationIdentity getLocationIdentity();
 

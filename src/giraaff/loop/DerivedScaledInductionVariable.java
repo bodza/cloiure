@@ -14,51 +14,51 @@ import giraaff.nodes.util.GraphUtil;
 public final class DerivedScaledInductionVariable extends DerivedInductionVariable
 {
     // @field
-    private final ValueNode scale;
+    private final ValueNode ___scale;
     // @field
-    private final ValueNode value;
+    private final ValueNode ___value;
 
     // @cons
     public DerivedScaledInductionVariable(LoopEx __loop, InductionVariable __base, ValueNode __scale, ValueNode __value)
     {
         super(__loop, __base);
-        this.scale = __scale;
-        this.value = __value;
+        this.___scale = __scale;
+        this.___value = __value;
     }
 
     // @cons
     public DerivedScaledInductionVariable(LoopEx __loop, InductionVariable __base, NegateNode __value)
     {
         super(__loop, __base);
-        this.scale = ConstantNode.forIntegerStamp(__value.stamp(NodeView.DEFAULT), -1, __value.graph());
-        this.value = __value;
+        this.___scale = ConstantNode.forIntegerStamp(__value.stamp(NodeView.DEFAULT), -1, __value.graph());
+        this.___value = __value;
     }
 
     public ValueNode getScale()
     {
-        return scale;
+        return this.___scale;
     }
 
     @Override
     public ValueNode valueNode()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
     public Direction direction()
     {
-        Stamp __stamp = scale.stamp(NodeView.DEFAULT);
+        Stamp __stamp = this.___scale.stamp(NodeView.DEFAULT);
         if (__stamp instanceof IntegerStamp)
         {
             IntegerStamp __integerStamp = (IntegerStamp) __stamp;
             if (__integerStamp.isStrictlyPositive())
             {
-                return base.direction();
+                return this.___base.direction();
             }
             else if (__integerStamp.isStrictlyNegative())
             {
-                return base.direction().opposite();
+                return this.___base.direction().opposite();
             }
         }
         return null;
@@ -67,66 +67,66 @@ public final class DerivedScaledInductionVariable extends DerivedInductionVariab
     @Override
     public ValueNode initNode()
     {
-        return MathUtil.mul(graph(), base.initNode(), scale);
+        return MathUtil.mul(graph(), this.___base.initNode(), this.___scale);
     }
 
     @Override
     public ValueNode strideNode()
     {
-        return MathUtil.mul(graph(), base.strideNode(), scale);
+        return MathUtil.mul(graph(), this.___base.strideNode(), this.___scale);
     }
 
     @Override
     public boolean isConstantInit()
     {
-        return scale.isConstant() && base.isConstantInit();
+        return this.___scale.isConstant() && this.___base.isConstantInit();
     }
 
     @Override
     public boolean isConstantStride()
     {
-        return scale.isConstant() && base.isConstantStride();
+        return this.___scale.isConstant() && this.___base.isConstantStride();
     }
 
     @Override
     public long constantInit()
     {
-        return base.constantInit() * scale.asJavaConstant().asLong();
+        return this.___base.constantInit() * this.___scale.asJavaConstant().asLong();
     }
 
     @Override
     public long constantStride()
     {
-        return base.constantStride() * scale.asJavaConstant().asLong();
+        return this.___base.constantStride() * this.___scale.asJavaConstant().asLong();
     }
 
     @Override
     public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __stamp)
     {
-        return MathUtil.mul(graph(), base.extremumNode(__assumePositiveTripCount, __stamp), IntegerConvertNode.convert(scale, __stamp, graph(), NodeView.DEFAULT));
+        return MathUtil.mul(graph(), this.___base.extremumNode(__assumePositiveTripCount, __stamp), IntegerConvertNode.convert(this.___scale, __stamp, graph(), NodeView.DEFAULT));
     }
 
     @Override
     public ValueNode exitValueNode()
     {
-        return MathUtil.mul(graph(), base.exitValueNode(), scale);
+        return MathUtil.mul(graph(), this.___base.exitValueNode(), this.___scale);
     }
 
     @Override
     public boolean isConstantExtremum()
     {
-        return scale.isConstant() && base.isConstantExtremum();
+        return this.___scale.isConstant() && this.___base.isConstantExtremum();
     }
 
     @Override
     public long constantExtremum()
     {
-        return base.constantExtremum() * scale.asJavaConstant().asLong();
+        return this.___base.constantExtremum() * this.___scale.asJavaConstant().asLong();
     }
 
     @Override
     public void deleteUnusedNodes()
     {
-        GraphUtil.tryKillUnused(scale);
+        GraphUtil.tryKillUnused(this.___scale);
     }
 }

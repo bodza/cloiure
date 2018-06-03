@@ -40,7 +40,7 @@ public abstract class BasicObjectCloneNode extends MacroStateSplitNode implement
     @Override
     public boolean inferStamp()
     {
-        return updateStamp(stamp.improveWith(computeStamp(getObject())));
+        return updateStamp(this.___stamp.improveWith(computeStamp(getObject())));
     }
 
     protected Stamp computeStamp(ValueNode __object)
@@ -55,15 +55,13 @@ public abstract class BasicObjectCloneNode extends MacroStateSplitNode implement
 
     public ValueNode getObject()
     {
-        return arguments.get(0);
+        return this.___arguments.get(0);
     }
 
-    /*
-     * Looks at the given stamp and determines if it is an exact type (or can be assumed to be an
-     * exact type) and if it is a cloneable type.
-     *
-     * If yes, then the exact type is returned, otherwise it returns null.
-     */
+    // Looks at the given stamp and determines if it is an exact type (or can be assumed to be an
+    // exact type) and if it is a cloneable type.
+    //
+    // If yes, then the exact type is returned, otherwise it returns null.
     protected ResolvedJavaType getConcreteType(Stamp __forStamp)
     {
         if (!(__forStamp instanceof ObjectStamp))

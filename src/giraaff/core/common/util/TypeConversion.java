@@ -1,8 +1,8 @@
 package giraaff.core.common.util;
 
-/**
- * Provides low-level value checks and conversion for signed and unsigned values of size 1, 2, and 4 bytes.
- */
+///
+// Provides low-level value checks and conversion for signed and unsigned values of size 1, 2, and 4 bytes.
+///
 // @class TypeConversion
 public final class TypeConversion
 {

@@ -9,9 +9,9 @@ import giraaff.asm.amd64.AMD64Address.Scale;
 import giraaff.asm.amd64.AMD64AsmOptions;
 import giraaff.core.common.NumUtil;
 
-/**
- * This class implements commonly used X86 code patterns.
- */
+///
+// This class implements commonly used X86 code patterns.
+///
 // @class AMD64MacroAssembler
 public final class AMD64MacroAssembler extends AMD64Assembler
 {
@@ -310,10 +310,10 @@ public final class AMD64MacroAssembler extends AMD64Assembler
         movsd(__dst, __src);
     }
 
-    /**
-     * Non-atomic write of a 64-bit constant to memory.
-     * Do not use if the address might be a volatile field!
-     */
+    ///
+    // Non-atomic write of a 64-bit constant to memory.
+    // Do not use if the address might be a volatile field!
+    ///
     public final void movlong(AMD64Address __dst, long __src)
     {
         if (NumUtil.isInt(__src))

@@ -8,10 +8,10 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * The {@code AccessIndexedNode} class is the base class of instructions that read or write elements
- * of an array.
- */
+///
+// The {@code AccessIndexedNode} class is the base class of instructions that read or write elements
+// of an array.
+///
 // @class AccessIndexedNode
 public abstract class AccessIndexedNode extends AccessArrayNode implements Lowerable
 {
@@ -20,39 +20,39 @@ public abstract class AccessIndexedNode extends AccessArrayNode implements Lower
 
     @Input
     // @field
-    protected ValueNode index;
+    protected ValueNode ___index;
     // @field
-    protected final JavaKind elementKind;
+    protected final JavaKind ___elementKind;
 
     public ValueNode index()
     {
-        return index;
+        return this.___index;
     }
 
-    /**
-     * Create an new AccessIndexedNode.
-     *
-     * @param stamp the result kind of the access
-     * @param array the instruction producing the array
-     * @param index the instruction producing the index
-     * @param elementKind the kind of the elements of the array
-     */
+    ///
+    // Create an new AccessIndexedNode.
+    //
+    // @param stamp the result kind of the access
+    // @param array the instruction producing the array
+    // @param index the instruction producing the index
+    // @param elementKind the kind of the elements of the array
+    ///
     // @cons
     protected AccessIndexedNode(NodeClass<? extends AccessIndexedNode> __c, Stamp __stamp, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
         super(__c, __stamp, __array);
-        this.index = __index;
-        this.elementKind = __elementKind;
+        this.___index = __index;
+        this.___elementKind = __elementKind;
     }
 
-    /**
-     * Gets the element type of the array.
-     *
-     * @return the element type
-     */
+    ///
+    // Gets the element type of the array.
+    //
+    // @return the element type
+    ///
     public JavaKind elementKind()
     {
-        return elementKind;
+        return this.___elementKind;
     }
 
     @Override

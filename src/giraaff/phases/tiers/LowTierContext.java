@@ -8,22 +8,22 @@ import giraaff.phases.util.Providers;
 public final class LowTierContext extends PhaseContext
 {
     // @field
-    private final TargetProvider target;
+    private final TargetProvider ___target;
 
     // @cons
     public LowTierContext(Providers __copyFrom, TargetProvider __target)
     {
         super(__copyFrom);
-        this.target = __target;
+        this.___target = __target;
     }
 
     public TargetDescription getTarget()
     {
-        return target.getTarget();
+        return this.___target.getTarget();
     }
 
     public TargetProvider getTargetProvider()
     {
-        return target;
+        return this.___target;
     }
 }

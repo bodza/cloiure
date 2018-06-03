@@ -12,10 +12,10 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * The {@code StringToBytesNode} transforms a compilation-time String into a byte array in the
- * compiled code.
- */
+///
+// The {@code StringToBytesNode} transforms a compilation-time String into a byte array in the
+// compiled code.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class StringToBytesNode
 public final class StringToBytesNode extends FixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
@@ -24,18 +24,18 @@ public final class StringToBytesNode extends FixedWithNextNode implements Lowera
     public static final NodeClass<StringToBytesNode> TYPE = NodeClass.create(StringToBytesNode.class);
 
     // @field
-    private final String value;
+    private final String ___value;
 
     // @cons
     public StringToBytesNode(String __value, Stamp __stamp)
     {
         super(TYPE, __stamp);
-        this.value = __value;
+        this.___value = __value;
     }
 
     public String getValue()
     {
-        return value;
+        return this.___value;
     }
 
     @Override

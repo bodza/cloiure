@@ -5,10 +5,10 @@ import java.lang.reflect.Modifier;
 
 import giraaff.bytecode.Bytecodes.Flags;
 
-/**
- * Definitions of the standard Java bytecodes defined by
- * <a href= "http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html"> Java Virtual Machine Specification</a>.
- */
+///
+// Definitions of the standard Java bytecodes defined by
+// <a href= "http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html"> Java Virtual Machine Specification</a>.
+///
 // @class Bytecodes
 public final class Bytecodes
 {
@@ -18,6 +18,7 @@ public final class Bytecodes
         super();
     }
 
+    // @defs
     public static final int
         NOP             =   0, // 0x00
         ACONST_NULL     =   1, // 0x01
@@ -225,85 +226,85 @@ public final class Bytecodes
         ILLEGAL         = 255,
         END             = 256;
 
-    /**
-     * The last opcode defined by the JVM specification. To iterate over all JVM bytecodes:
-     *
-     * <pre>
-     * for (int opcode = 0; opcode &lt;= Bytecodes.LAST_JVM_OPCODE; ++opcode) {
-     * }
-     * </pre>
-     */
+    ///
+    // The last opcode defined by the JVM specification. To iterate over all JVM bytecodes:
+    //
+    // <pre>
+    // for (int opcode = 0; opcode &lt;= Bytecodes.LAST_JVM_OPCODE; ++opcode) {
+    // }
+    // </pre>
+    ///
     // @def
     public static final int LAST_JVM_OPCODE = JSR_W;
 
-    /**
-     * A collection of flags describing various bytecode attributes.
-     */
+    ///
+    // A collection of flags describing various bytecode attributes.
+    ///
     // @class Bytecodes.Flags
     static final class Flags
     {
-        /**
-         * Denotes an instruction that ends a basic block and does not let control flow fall through
-         * to its lexical successor.
-         */
+        ///
+        // Denotes an instruction that ends a basic block and does not let control flow fall through
+        // to its lexical successor.
+        ///
         // @def
         static final int STOP = 0x00000001;
 
-        /**
-         * Denotes an instruction that ends a basic block and may let control flow fall through to
-         * its lexical successor. In practice this means it is a conditional branch.
-         */
+        ///
+        // Denotes an instruction that ends a basic block and may let control flow fall through to
+        // its lexical successor. In practice this means it is a conditional branch.
+        ///
         // @def
         static final int FALL_THROUGH = 0x00000002;
 
-        /**
-         * Denotes an instruction that has a 2 or 4 byte operand that is an offset to another
-         * instruction in the same method. This does not include the {@link Bytecodes#TABLESWITCH}
-         * or {@link Bytecodes#LOOKUPSWITCH} instructions.
-         */
+        ///
+        // Denotes an instruction that has a 2 or 4 byte operand that is an offset to another
+        // instruction in the same method. This does not include the {@link Bytecodes#TABLESWITCH}
+        // or {@link Bytecodes#LOOKUPSWITCH} instructions.
+        ///
         // @def
         static final int BRANCH = 0x00000004;
 
-        /**
-         * Denotes an instruction that reads the value of a static or instance field.
-         */
+        ///
+        // Denotes an instruction that reads the value of a static or instance field.
+        ///
         // @def
         static final int FIELD_READ = 0x00000008;
 
-        /**
-         * Denotes an instruction that writes the value of a static or instance field.
-         */
+        ///
+        // Denotes an instruction that writes the value of a static or instance field.
+        ///
         // @def
         static final int FIELD_WRITE = 0x00000010;
 
-        /**
-         * Denotes an instruction that can cause a trap.
-         */
+        ///
+        // Denotes an instruction that can cause a trap.
+        ///
         // @def
         static final int TRAP = 0x00000080;
-        /**
-         * Denotes an instruction that is commutative.
-         */
+        ///
+        // Denotes an instruction that is commutative.
+        ///
         // @def
         static final int COMMUTATIVE = 0x00000100;
-        /**
-         * Denotes an instruction that is associative.
-         */
+        ///
+        // Denotes an instruction that is associative.
+        ///
         // @def
         static final int ASSOCIATIVE = 0x00000200;
-        /**
-         * Denotes an instruction that loads an operand.
-         */
+        ///
+        // Denotes an instruction that loads an operand.
+        ///
         // @def
         static final int LOAD = 0x00000400;
-        /**
-         * Denotes an instruction that stores an operand.
-         */
+        ///
+        // Denotes an instruction that stores an operand.
+        ///
         // @def
         static final int STORE = 0x00000800;
-        /**
-         * Denotes the 4 INVOKE* instructions.
-         */
+        ///
+        // Denotes the 4 INVOKE* instructions.
+        ///
         // @def
         static final int INVOKE = 0x00001000;
     }
@@ -330,29 +331,29 @@ public final class Bytecodes
         }
     }
 
-    /**
-     * An array that maps from a bytecode value to a {@link String} for the corresponding
-     * instruction mnemonic.
-     */
+    ///
+    // An array that maps from a bytecode value to a {@link String} for the corresponding
+    // instruction mnemonic.
+    ///
     // @def
     private static final String[] nameArray = new String[256];
 
-    /**
-     * An array that maps from a bytecode value to the set of {@link Flags} for the corresponding instruction.
-     */
+    ///
+    // An array that maps from a bytecode value to the set of {@link Flags} for the corresponding instruction.
+    ///
     // @def
     private static final int[] flagsArray = new int[256];
 
-    /**
-     * An array that maps from a bytecode value to the length in bytes for the corresponding instruction.
-     */
+    ///
+    // An array that maps from a bytecode value to the length in bytes for the corresponding instruction.
+    ///
     // @def
     private static final int[] lengthArray = new int[256];
 
-    /**
-     * An array that maps from a bytecode value to the number of slots pushed on the stack by the
-     * corresponding instruction.
-     */
+    ///
+    // An array that maps from a bytecode value to the number of slots pushed on the stack by the
+    // corresponding instruction.
+    ///
     // @def
     private static final int[] stackEffectArray = new int[256];
 
@@ -562,50 +563,50 @@ public final class Bytecodes
         def(JSR_W           , "jsr_w"           , "boooo",  0, Flags.STOP | Flags.BRANCH);
     }
 
-    /**
-     * Determines if an opcode is commutative.
-     *
-     * @param opcode the opcode to check
-     * @return {@code true} iff commutative
-     */
+    ///
+    // Determines if an opcode is commutative.
+    //
+    // @param opcode the opcode to check
+    // @return {@code true} iff commutative
+    ///
     public static boolean isCommutative(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.COMMUTATIVE) != 0;
     }
 
-    /**
-     * Gets the length of an instruction denoted by a given opcode.
-     *
-     * @param opcode an instruction opcode
-     * @return the length of the instruction denoted by {@code opcode}. If {@code opcode} is an
-     *         illegal instruction or denotes a variable length instruction (e.g.
-     *         {@link #TABLESWITCH}), then 0 is returned.
-     */
+    ///
+    // Gets the length of an instruction denoted by a given opcode.
+    //
+    // @param opcode an instruction opcode
+    // @return the length of the instruction denoted by {@code opcode}. If {@code opcode} is an
+    //         illegal instruction or denotes a variable length instruction (e.g.
+    //         {@link #TABLESWITCH}), then 0 is returned.
+    ///
     public static int lengthOf(int __opcode)
     {
         return lengthArray[__opcode & 0xff];
     }
 
-    /**
-     * Gets the effect on the depth of the expression stack of an instruction denoted by a given opcode.
-     *
-     * @param opcode an instruction opcode
-     * @return the change in the stack caused by the instruction denoted by {@code opcode}. If
-     *         {@code opcode} is an illegal instruction then 0 is returned. Note that invoke
-     *         instructions may pop more arguments so this value is a minimum stack effect.
-     */
+    ///
+    // Gets the effect on the depth of the expression stack of an instruction denoted by a given opcode.
+    //
+    // @param opcode an instruction opcode
+    // @return the change in the stack caused by the instruction denoted by {@code opcode}. If
+    //         {@code opcode} is an illegal instruction then 0 is returned. Note that invoke
+    //         instructions may pop more arguments so this value is a minimum stack effect.
+    ///
     public static int stackEffectOf(int __opcode)
     {
         return stackEffectArray[__opcode & 0xff];
     }
 
-    /**
-     * Gets the lower-case mnemonic for a given opcode.
-     *
-     * @param opcode an opcode
-     * @return the mnemonic for {@code opcode} or {@code "<illegal opcode: " + opcode + ">"} if
-     *         {@code opcode} is not a legal opcode
-     */
+    ///
+    // Gets the lower-case mnemonic for a given opcode.
+    //
+    // @param opcode an opcode
+    // @return the mnemonic for {@code opcode} or {@code "<illegal opcode: " + opcode + ">"} if
+    //         {@code opcode} is not a legal opcode
+    ///
     public static String nameOf(int __opcode)
     {
         String __name = nameArray[__opcode & 0xff];
@@ -616,13 +617,13 @@ public final class Bytecodes
         return __name;
     }
 
-    /**
-     * Allocation-free version of {@linkplain #nameOf(int)}.
-     *
-     * @param opcode an opcode.
-     * @return the mnemonic for {@code opcode} or {@code "<illegal opcode>"} if {@code opcode} is
-     *         not a legal opcode.
-     */
+    ///
+    // Allocation-free version of {@linkplain #nameOf(int)}.
+    //
+    // @param opcode an opcode.
+    // @return the mnemonic for {@code opcode} or {@code "<illegal opcode>"} if {@code opcode} is
+    //         not a legal opcode.
+    ///
     public static String baseNameOf(int __opcode)
     {
         String __name = nameArray[__opcode & 0xff];
@@ -633,13 +634,13 @@ public final class Bytecodes
         return __name;
     }
 
-    /**
-     * Gets the opcode corresponding to a given mnemonic.
-     *
-     * @param name an opcode mnemonic
-     * @return the opcode corresponding to {@code mnemonic}
-     * @throws IllegalArgumentException if {@code name} does not denote a valid opcode
-     */
+    ///
+    // Gets the opcode corresponding to a given mnemonic.
+    //
+    // @param name an opcode mnemonic
+    // @return the opcode corresponding to {@code mnemonic}
+    // @throws IllegalArgumentException if {@code name} does not denote a valid opcode
+    ///
     public static int valueOf(String __name)
     {
         for (int __opcode = 0; __opcode < nameArray.length; ++__opcode)
@@ -652,107 +653,107 @@ public final class Bytecodes
         throw new IllegalArgumentException("No opcode for " + __name);
     }
 
-    /**
-     * Determines if a given opcode denotes an instruction that can cause an implicit exception.
-     *
-     * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} can cause an implicit exception, {@code false} otherwise
-     */
+    ///
+    // Determines if a given opcode denotes an instruction that can cause an implicit exception.
+    //
+    // @param opcode an opcode to test
+    // @return {@code true} iff {@code opcode} can cause an implicit exception, {@code false} otherwise
+    ///
     public static boolean canTrap(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.TRAP) != 0;
     }
 
-    /**
-     * Determines if a given opcode denotes an instruction that loads a local variable to the
-     * operand stack.
-     *
-     * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} loads a local variable to the operand stack,
-     *         {@code false} otherwise
-     */
+    ///
+    // Determines if a given opcode denotes an instruction that loads a local variable to the
+    // operand stack.
+    //
+    // @param opcode an opcode to test
+    // @return {@code true} iff {@code opcode} loads a local variable to the operand stack,
+    //         {@code false} otherwise
+    ///
     public static boolean isLoad(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.LOAD) != 0;
     }
 
-    /**
-     * Determines if a given opcode denotes an instruction that ends a basic block and does not let
-     * control flow fall through to its lexical successor.
-     *
-     * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} properly ends a basic block
-     */
+    ///
+    // Determines if a given opcode denotes an instruction that ends a basic block and does not let
+    // control flow fall through to its lexical successor.
+    //
+    // @param opcode an opcode to test
+    // @return {@code true} iff {@code opcode} properly ends a basic block
+    ///
     public static boolean isStop(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.STOP) != 0;
     }
 
-    /**
-     * Determines if a given opcode denotes an instruction that stores a value to a local variable
-     * after popping it from the operand stack.
-     *
-     * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false} otherwise
-     */
+    ///
+    // Determines if a given opcode denotes an instruction that stores a value to a local variable
+    // after popping it from the operand stack.
+    //
+    // @param opcode an opcode to test
+    // @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false} otherwise
+    ///
     public static boolean isInvoke(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.INVOKE) != 0;
     }
 
-    /**
-     * Determines if a given opcode denotes an instruction that stores a value to a local variable
-     * after popping it from the operand stack.
-     *
-     * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false} otherwise
-     */
+    ///
+    // Determines if a given opcode denotes an instruction that stores a value to a local variable
+    // after popping it from the operand stack.
+    //
+    // @param opcode an opcode to test
+    // @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false} otherwise
+    ///
     public static boolean isStore(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.STORE) != 0;
     }
 
-    /**
-     * Determines if a given opcode is an instruction that delimits a basic block.
-     *
-     * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} delimits a basic block
-     */
+    ///
+    // Determines if a given opcode is an instruction that delimits a basic block.
+    //
+    // @param opcode an opcode to test
+    // @return {@code true} iff {@code opcode} delimits a basic block
+    ///
     public static boolean isBlockEnd(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & (Flags.STOP | Flags.FALL_THROUGH)) != 0;
     }
 
-    /**
-     * Determines if a given opcode is an instruction that has a 2 or 4 byte operand that is an
-     * offset to another instruction in the same method. This does not include the
-     * {@linkplain #TABLESWITCH switch} instructions.
-     *
-     * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} is a branch instruction with a single operand
-     */
+    ///
+    // Determines if a given opcode is an instruction that has a 2 or 4 byte operand that is an
+    // offset to another instruction in the same method. This does not include the
+    // {@linkplain #TABLESWITCH switch} instructions.
+    //
+    // @param opcode an opcode to test
+    // @return {@code true} iff {@code opcode} is a branch instruction with a single operand
+    ///
     public static boolean isBranch(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.BRANCH) != 0;
     }
 
-    /**
-     * Determines if a given opcode denotes a conditional branch.
-     *
-     * @return {@code true} iff {@code opcode} is a conditional branch
-     */
+    ///
+    // Determines if a given opcode denotes a conditional branch.
+    //
+    // @return {@code true} iff {@code opcode} is a conditional branch
+    ///
     public static boolean isConditionalBranch(int __opcode)
     {
         return (flagsArray[__opcode & 0xff] & Flags.FALL_THROUGH) != 0;
     }
 
-    /**
-     * Gets the arithmetic operator name for a given opcode. If {@code opcode} does not denote an
-     * arithmetic instruction, then the {@linkplain #nameOf(int) name} of the opcode is returned instead.
-     *
-     * @param op an opcode
-     * @return the arithmetic operator name
-     */
+    ///
+    // Gets the arithmetic operator name for a given opcode. If {@code opcode} does not denote an
+    // arithmetic instruction, then the {@linkplain #nameOf(int) name} of the opcode is returned instead.
+    //
+    // @param op an opcode
+    // @return the arithmetic operator name
+    ///
     public static String operator(int __op)
     {
         switch (__op)
@@ -807,24 +808,24 @@ public final class Bytecodes
         return nameOf(__op);
     }
 
-    /**
-     * Defines a bytecode by entering it into the arrays that record its name, length and flags.
-     *
-     * @param name instruction name (should be lower case)
-     * @param format encodes the length of the instruction
-     */
+    ///
+    // Defines a bytecode by entering it into the arrays that record its name, length and flags.
+    //
+    // @param name instruction name (should be lower case)
+    // @param format encodes the length of the instruction
+    ///
     private static void def(int __opcode, String __name, String __format, int __stackEffect)
     {
         def(__opcode, __name, __format, __stackEffect, 0);
     }
 
-    /**
-     * Defines a bytecode by entering it into the arrays that record its name, length and flags.
-     *
-     * @param name instruction name (lower case)
-     * @param format encodes the length of the instruction
-     * @param flags the set of {@link Flags} associated with the instruction
-     */
+    ///
+    // Defines a bytecode by entering it into the arrays that record its name, length and flags.
+    //
+    // @param name instruction name (lower case)
+    // @param format encodes the length of the instruction
+    // @param flags the set of {@link Flags} associated with the instruction
+    ///
     private static void def(int __opcode, String __name, String __format, int __stackEffect, int __flags)
     {
         nameArray[__opcode] = __name;

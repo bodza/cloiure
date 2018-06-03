@@ -57,7 +57,7 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
     @Override
     protected EconomicMap<LoopExitNode, Double> processLoop(LoopBeginNode __loop, Double __initialState)
     {
-        EconomicMap<LoopExitNode, Double> __exitStates = ReentrantNodeIterator.processLoop(this, __loop, 1D).exitStates;
+        EconomicMap<LoopExitNode, Double> __exitStates = ReentrantNodeIterator.processLoop(this, __loop, 1D).___exitStates;
 
         double __exitProbability = 0.0;
         for (double __d : __exitStates.getValues())
@@ -75,11 +75,11 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
         return __exitStates;
     }
 
-    /**
-     * Computes the frequencies of all loops in the given graph. This is done by performing a
-     * reverse postorder iteration and computing the probability of all fixed nodes. The combined
-     * probability of all exits of a loop can be used to compute the loop's expected frequency.
-     */
+    ///
+    // Computes the frequencies of all loops in the given graph. This is done by performing a
+    // reverse postorder iteration and computing the probability of all fixed nodes. The combined
+    // probability of all exits of a loop can be used to compute the loop's expected frequency.
+    ///
     public static void compute(StructuredGraph __graph)
     {
         if (__graph.hasLoops())

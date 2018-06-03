@@ -24,31 +24,31 @@ public final class AddressLoweringPhase extends Phase
         {
         }
 
-        public abstract AddressNode lower(ValueNode base, ValueNode offset);
+        public abstract AddressNode lower(ValueNode __base, ValueNode __offset);
     }
 
     // @field
-    private final AddressLowering lowering;
+    private final AddressLowering ___lowering;
 
     // @cons
     public AddressLoweringPhase(AddressLowering __lowering)
     {
         super();
-        this.lowering = __lowering;
+        this.___lowering = __lowering;
     }
 
     @Override
     protected void run(StructuredGraph __graph)
     {
-        lowering.preProcess(__graph);
+        this.___lowering.preProcess(__graph);
         for (Node __node : __graph.getNodes())
         {
             AddressNode __lowered;
             if (__node instanceof OffsetAddressNode)
             {
                 OffsetAddressNode __address = (OffsetAddressNode) __node;
-                __lowered = lowering.lower(__address.getBase(), __address.getOffset());
-                lowering.postProcess(__lowered);
+                __lowered = this.___lowering.lower(__address.getBase(), __address.getOffset());
+                this.___lowering.postProcess(__lowered);
             }
             else
             {

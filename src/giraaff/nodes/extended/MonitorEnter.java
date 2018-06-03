@@ -1,8 +1,8 @@
 package giraaff.nodes.extended;
 
-/**
- * Denotes monitor locking transition.
- */
+///
+// Denotes monitor locking transition.
+///
 // @iface MonitorEnter
 public interface MonitorEnter
 {

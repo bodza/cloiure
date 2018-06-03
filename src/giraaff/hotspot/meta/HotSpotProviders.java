@@ -13,33 +13,33 @@ import giraaff.nodes.spi.Replacements;
 import giraaff.phases.tiers.SuitesProvider;
 import giraaff.phases.util.Providers;
 
-/**
- * Extends {@link Providers} to include a number of extra capabilities used by the HotSpot parts of
- * the compiler.
- */
+///
+// Extends {@link Providers} to include a number of extra capabilities used by the HotSpot parts of
+// the compiler.
+///
 // @class HotSpotProviders
 public final class HotSpotProviders extends Providers
 {
     // @field
-    private final SuitesProvider suites;
+    private final SuitesProvider ___suites;
     // @field
-    private final HotSpotRegistersProvider registers;
+    private final HotSpotRegistersProvider ___registers;
     // @field
-    private final SnippetReflectionProvider snippetReflection;
+    private final SnippetReflectionProvider ___snippetReflection;
     // @field
-    private final HotSpotWordTypes wordTypes;
+    private final HotSpotWordTypes ___wordTypes;
     // @field
-    private final Plugins graphBuilderPlugins;
+    private final Plugins ___graphBuilderPlugins;
 
     // @cons
     public HotSpotProviders(MetaAccessProvider __metaAccess, HotSpotCodeCacheProvider __codeCache, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantField, HotSpotForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, Replacements __replacements, SuitesProvider __suites, HotSpotRegistersProvider __registers, SnippetReflectionProvider __snippetReflection, HotSpotWordTypes __wordTypes, Plugins __graphBuilderPlugins)
     {
         super(__metaAccess, __codeCache, __constantReflection, __constantField, __foreignCalls, __lowerer, __replacements, new HotSpotStampProvider());
-        this.suites = __suites;
-        this.registers = __registers;
-        this.snippetReflection = __snippetReflection;
-        this.wordTypes = __wordTypes;
-        this.graphBuilderPlugins = __graphBuilderPlugins;
+        this.___suites = __suites;
+        this.___registers = __registers;
+        this.___snippetReflection = __snippetReflection;
+        this.___wordTypes = __wordTypes;
+        this.___graphBuilderPlugins = __graphBuilderPlugins;
     }
 
     @Override
@@ -56,26 +56,26 @@ public final class HotSpotProviders extends Providers
 
     public SuitesProvider getSuites()
     {
-        return suites;
+        return this.___suites;
     }
 
     public HotSpotRegistersProvider getRegisters()
     {
-        return registers;
+        return this.___registers;
     }
 
     public SnippetReflectionProvider getSnippetReflection()
     {
-        return snippetReflection;
+        return this.___snippetReflection;
     }
 
     public Plugins getGraphBuilderPlugins()
     {
-        return graphBuilderPlugins;
+        return this.___graphBuilderPlugins;
     }
 
     public HotSpotWordTypes getWordTypes()
     {
-        return wordTypes;
+        return this.___wordTypes;
     }
 }

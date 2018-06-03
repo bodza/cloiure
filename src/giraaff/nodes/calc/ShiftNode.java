@@ -16,9 +16,9 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 
-/**
- * The {@code ShiftOp} class represents shift operations.
- */
+///
+// The {@code ShiftOp} class represents shift operations.
+///
 // @class ShiftNode
 public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, NarrowableArithmeticNode
 {
@@ -32,24 +32,24 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     }
 
     // @field
-    protected final SerializableShiftFunction<OP> getOp;
+    protected final SerializableShiftFunction<OP> ___getOp;
 
-    /**
-     * Creates a new shift operation.
-     *
-     * @param x the first input value
-     * @param s the second input value
-     */
+    ///
+    // Creates a new shift operation.
+    //
+    // @param x the first input value
+    // @param s the second input value
+    ///
     // @cons
     protected ShiftNode(NodeClass<? extends ShiftNode<OP>> __c, SerializableShiftFunction<OP> __getOp, ValueNode __x, ValueNode __s)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT))).foldStamp(__x.stamp(NodeView.DEFAULT), (IntegerStamp) __s.stamp(NodeView.DEFAULT)), __x, __s);
-        this.getOp = __getOp;
+        this.___getOp = __getOp;
     }
 
     protected final ShiftOp<OP> getOp(ValueNode __forValue)
     {
-        return getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
+        return this.___getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
@@ -98,10 +98,8 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
         int __narrowMask = __resultBits - 1;
         int __wideMask = getShiftAmountMask();
 
-        /*
-         * Shifts are special because narrowing them also changes the implicit mask of the shift amount.
-         * We can narrow only if (y & wideMask) == (y & narrowMask) for all possible values of y.
-         */
+        // Shifts are special because narrowing them also changes the implicit mask of the shift amount.
+        // We can narrow only if (y & wideMask) == (y & narrowMask) for all possible values of y.
         IntegerStamp __yStamp = (IntegerStamp) getY().stamp(NodeView.DEFAULT);
         return (__yStamp.upMask() & (__wideMask & ~__narrowMask)) == 0;
     }

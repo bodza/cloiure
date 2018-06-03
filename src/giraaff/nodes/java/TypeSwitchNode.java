@@ -25,10 +25,10 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * The {@code TypeSwitchNode} performs a lookup based on the type of the input value. The type
- * comparison is an exact type comparison, not an instanceof.
- */
+///
+// The {@code TypeSwitchNode} performs a lookup based on the type of the input value. The type
+// comparison is an exact type comparison, not an instanceof.
+///
 // @class TypeSwitchNode
 public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Simplifiable
 {
@@ -36,31 +36,31 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
     public static final NodeClass<TypeSwitchNode> TYPE = NodeClass.create(TypeSwitchNode.class);
 
     // @field
-    protected final ResolvedJavaType[] keys;
+    protected final ResolvedJavaType[] ___keys;
     // @field
-    protected final Constant[] hubs;
+    protected final Constant[] ___hubs;
 
     // @cons
     public TypeSwitchNode(ValueNode __value, AbstractBeginNode[] __successors, ResolvedJavaType[] __keys, double[] __keyProbabilities, int[] __keySuccessors, ConstantReflectionProvider __constantReflection)
     {
         super(TYPE, __value, __successors, __keySuccessors, __keyProbabilities);
-        this.keys = __keys;
+        this.___keys = __keys;
 
-        hubs = new Constant[__keys.length];
-        for (int __i = 0; __i < hubs.length; __i++)
+        this.___hubs = new Constant[__keys.length];
+        for (int __i = 0; __i < this.___hubs.length; __i++)
         {
-            hubs[__i] = __constantReflection.asObjectHub(__keys[__i]);
+            this.___hubs[__i] = __constantReflection.asObjectHub(__keys[__i]);
         }
     }
 
-    /**
-     * Don't allow duplicate keys.
-     */
+    ///
+    // Don't allow duplicate keys.
+    ///
     private boolean assertKeys()
     {
-        for (int __i = 0; __i < keys.length; __i++)
+        for (int __i = 0; __i < this.___keys.length; __i++)
         {
-            for (int __j = 0; __j < keys.length; __j++)
+            for (int __j = 0; __j < this.___keys.length; __j++)
             {
                 if (__i == __j)
                 {
@@ -80,13 +80,13 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
     @Override
     public int keyCount()
     {
-        return keys.length;
+        return this.___keys.length;
     }
 
     @Override
     public Constant keyAt(int __index)
     {
-        return hubs[__index];
+        return this.___hubs[__index];
     }
 
     @Override
@@ -97,12 +97,12 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
             return false;
         }
         TypeSwitchNode __other = (TypeSwitchNode) __switchNode;
-        return Arrays.equals(keys, __other.keys);
+        return Arrays.equals(this.___keys, __other.___keys);
     }
 
     public ResolvedJavaType typeAt(int __index)
     {
-        return keys[__index];
+        return this.___keys[__index];
     }
 
     @Override
@@ -144,7 +144,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
                 int __validKeys = 0;
                 for (int __i = 0; __i < keyCount(); __i++)
                 {
-                    if (__objectStamp.type().isAssignableFrom(keys[__i]))
+                    if (__objectStamp.type().isAssignableFrom(this.___keys[__i]))
                     {
                         __validKeys++;
                     }
@@ -154,7 +154,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
                     __tool.addToWorkList(defaultSuccessor());
                     graph().removeSplitPropagate(this, defaultSuccessor());
                 }
-                else if (__validKeys != keys.length)
+                else if (__validKeys != this.___keys.length)
                 {
                     ArrayList<AbstractBeginNode> __newSuccessors = new ArrayList<>(blockSuccessorCount());
                     ResolvedJavaType[] __newKeys = new ResolvedJavaType[__validKeys];
@@ -164,7 +164,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
                     int __current = 0;
                     for (int __i = 0; __i < keyCount() + 1; __i++)
                     {
-                        if (__i == keyCount() || __objectStamp.type().isAssignableFrom(keys[__i]))
+                        if (__i == keyCount() || __objectStamp.type().isAssignableFrom(this.___keys[__i]))
                         {
                             int __index = __newSuccessors.indexOf(keySuccessor(__i));
                             if (__index == -1)
@@ -175,7 +175,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
                             __newKeySuccessors[__current] = __index;
                             if (__i < keyCount())
                             {
-                                __newKeys[__current] = keys[__i];
+                                __newKeys[__current] = this.___keys[__i];
                             }
                             __newKeyProbabilities[__current] = keyProbability(__i);
                             __totalProbability += keyProbability(__i);

@@ -14,9 +14,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Produces the platform dependent first or second half of a long or double value as an int.
- */
+///
+// Produces the platform dependent first or second half of a long or double value as an int.
+///
 // @class UnpackEndianHalfNode
 public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
 {
@@ -24,13 +24,13 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
     public static final NodeClass<UnpackEndianHalfNode> TYPE = NodeClass.create(UnpackEndianHalfNode.class);
 
     // @field
-    private final boolean firstHalf;
+    private final boolean ___firstHalf;
 
     // @cons
     protected UnpackEndianHalfNode(ValueNode __value, boolean __firstHalf)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int), __value);
-        this.firstHalf = __firstHalf;
+        this.___firstHalf = __firstHalf;
     }
 
     @SuppressWarnings("unused")
@@ -45,7 +45,7 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
 
     public boolean isFirstHalf()
     {
-        return firstHalf;
+        return this.___firstHalf;
     }
 
     @Override
@@ -53,7 +53,7 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
     {
         if (__forValue.isConstant() && __forValue.asConstant().isDefaultForKind())
         {
-            return ConstantNode.defaultForKind(stamp.getStackKind());
+            return ConstantNode.defaultForKind(this.___stamp.getStackKind());
         }
         return this;
     }
@@ -66,12 +66,12 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
 
     public void lower(ByteOrder __byteOrder)
     {
-        ValueNode __result = value;
-        if (value.getStackKind() == JavaKind.Double)
+        ValueNode __result = this.___value;
+        if (this.___value.getStackKind() == JavaKind.Double)
         {
-            __result = graph().unique(new ReinterpretNode(JavaKind.Long, value));
+            __result = graph().unique(new ReinterpretNode(JavaKind.Long, this.___value));
         }
-        if ((__byteOrder == ByteOrder.BIG_ENDIAN) == firstHalf)
+        if ((__byteOrder == ByteOrder.BIG_ENDIAN) == this.___firstHalf)
         {
             __result = graph().unique(new UnsignedRightShiftNode(__result, ConstantNode.forInt(32, graph())));
         }

@@ -6,9 +6,9 @@ import giraaff.nodes.AbstractStateSplit;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.StateSplit;
 
-/**
- * Provides an implementation of {@link StateSplit}.
- */
+///
+// Provides an implementation of {@link StateSplit}.
+///
 // @class AbstractMemoryCheckpoint
 public abstract class AbstractMemoryCheckpoint extends AbstractStateSplit implements MemoryCheckpoint
 {

@@ -28,48 +28,48 @@ import giraaff.util.GraalError;
 class LinearScanWalker extends IntervalWalker
 {
     // @field
-    protected Register[] availableRegs;
+    protected Register[] ___availableRegs;
 
     // @field
-    protected final int[] usePos;
+    protected final int[] ___usePos;
     // @field
-    protected final int[] blockPos;
+    protected final int[] ___blockPos;
 
     // @field
-    protected List<Interval>[] spillIntervals;
+    protected List<Interval>[] ___spillIntervals;
 
     // @field
-    private MoveResolver moveResolver; // for ordering spill moves
+    private MoveResolver ___moveResolver; // for ordering spill moves
 
     // @field
-    private int minReg;
+    private int ___minReg;
 
     // @field
-    private int maxReg;
+    private int ___maxReg;
 
-    /**
-     * Only 10% of the lists in {@link #spillIntervals} are actually used. But when they are used,
-     * they can grow quite long. The maximum length observed was 45 (all numbers taken from a
-     * bootstrap run of Graal). Therefore, we initialize {@link #spillIntervals} with this marker
-     * value, and allocate a "real" list only on demand in {@link #setUsePos}.
-     */
+    ///
+    // Only 10% of the lists in {@link #spillIntervals} are actually used. But when they are used,
+    // they can grow quite long. The maximum length observed was 45 (all numbers taken from a
+    // bootstrap run of Graal). Therefore, we initialize {@link #spillIntervals} with this marker
+    // value, and allocate a "real" list only on demand in {@link #setUsePos}.
+    ///
     // @def
     private static final List<Interval> EMPTY_LIST = Collections.emptyList();
 
     // accessors mapped to same functions in class LinearScan
     int blockCount()
     {
-        return allocator.blockCount();
+        return this.___allocator.blockCount();
     }
 
     AbstractBlockBase<?> blockAt(int __idx)
     {
-        return allocator.blockAt(__idx);
+        return this.___allocator.blockAt(__idx);
     }
 
     AbstractBlockBase<?> blockOfOpWithId(int __opId)
     {
-        return allocator.blockForId(__opId);
+        return this.___allocator.blockForId(__opId);
     }
 
     // @cons
@@ -77,39 +77,39 @@ class LinearScanWalker extends IntervalWalker
     {
         super(__allocator, __unhandledFixedFirst, __unhandledAnyFirst);
 
-        moveResolver = __allocator.createMoveResolver();
-        spillIntervals = Util.uncheckedCast(new List<?>[__allocator.getRegisters().size()]);
+        this.___moveResolver = __allocator.createMoveResolver();
+        this.___spillIntervals = Util.uncheckedCast(new List<?>[__allocator.getRegisters().size()]);
         for (int __i = 0; __i < __allocator.getRegisters().size(); __i++)
         {
-            spillIntervals[__i] = EMPTY_LIST;
+            this.___spillIntervals[__i] = EMPTY_LIST;
         }
-        usePos = new int[__allocator.getRegisters().size()];
-        blockPos = new int[__allocator.getRegisters().size()];
+        this.___usePos = new int[__allocator.getRegisters().size()];
+        this.___blockPos = new int[__allocator.getRegisters().size()];
     }
 
     void initUseLists(boolean __onlyProcessUsePos)
     {
-        for (Register __register : availableRegs)
+        for (Register __register : this.___availableRegs)
         {
             int __i = __register.number;
-            usePos[__i] = Integer.MAX_VALUE;
+            this.___usePos[__i] = Integer.MAX_VALUE;
 
             if (!__onlyProcessUsePos)
             {
-                blockPos[__i] = Integer.MAX_VALUE;
-                spillIntervals[__i].clear();
+                this.___blockPos[__i] = Integer.MAX_VALUE;
+                this.___spillIntervals[__i].clear();
             }
         }
     }
 
     int maxRegisterNumber()
     {
-        return maxReg;
+        return this.___maxReg;
     }
 
     int minRegisterNumber()
     {
-        return minReg;
+        return this.___minReg;
     }
 
     boolean isRegisterInRange(int __reg)
@@ -123,7 +123,7 @@ class LinearScanWalker extends IntervalWalker
         int __i1 = ValueUtil.asRegister(__location).number;
         if (isRegisterInRange(__i1))
         {
-            usePos[__i1] = 0;
+            this.___usePos[__i1] = 0;
         }
     }
 
@@ -134,17 +134,17 @@ class LinearScanWalker extends IntervalWalker
             int __i = ValueUtil.asRegister(__interval.location()).number;
             if (isRegisterInRange(__i))
             {
-                if (this.usePos[__i] > __usePos)
+                if (this.___usePos[__i] > __usePos)
                 {
-                    this.usePos[__i] = __usePos;
+                    this.___usePos[__i] = __usePos;
                 }
                 if (!__onlyProcessUsePos)
                 {
-                    List<Interval> __list = spillIntervals[__i];
+                    List<Interval> __list = this.___spillIntervals[__i];
                     if (__list == EMPTY_LIST)
                     {
                         __list = new ArrayList<>(2);
-                        spillIntervals[__i] = __list;
+                        this.___spillIntervals[__i] = __list;
                     }
                     __list.add(__interval);
                 }
@@ -159,13 +159,13 @@ class LinearScanWalker extends IntervalWalker
             int __reg = ValueUtil.asRegister(__i.location()).number;
             if (isRegisterInRange(__reg))
             {
-                if (this.blockPos[__reg] > __blockPos)
+                if (this.___blockPos[__reg] > __blockPos)
                 {
-                    this.blockPos[__reg] = __blockPos;
+                    this.___blockPos[__reg] = __blockPos;
                 }
-                if (usePos[__reg] > __blockPos)
+                if (this.___usePos[__reg] > __blockPos)
                 {
-                    usePos[__reg] = __blockPos;
+                    this.___usePos[__reg] = __blockPos;
                 }
             }
         }
@@ -173,27 +173,27 @@ class LinearScanWalker extends IntervalWalker
 
     void freeExcludeActiveFixed()
     {
-        Interval __interval = activeLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___activeLists.get(RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             excludeFromUse(__interval);
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void freeExcludeActiveAny()
     {
-        Interval __interval = activeLists.get(RegisterBinding.Any);
+        Interval __interval = this.___activeLists.get(RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
             excludeFromUse(__interval);
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void freeCollectInactiveFixed(Interval __current)
     {
-        Interval __interval = inactiveLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___inactiveLists.get(RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             if (__current.to() <= __interval.currentFrom())
@@ -204,23 +204,23 @@ class LinearScanWalker extends IntervalWalker
             {
                 setUsePos(__interval, __interval.currentIntersectsAt(__current), true);
             }
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void freeCollectInactiveAny(Interval __current)
     {
-        Interval __interval = inactiveLists.get(RegisterBinding.Any);
+        Interval __interval = this.___inactiveLists.get(RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
             setUsePos(__interval, __interval.currentIntersectsAt(__current), true);
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void freeCollectUnhandled(RegisterBinding __kind, Interval __current)
     {
-        Interval __interval = unhandledLists.get(__kind);
+        Interval __interval = this.___unhandledLists.get(__kind);
         while (!__interval.isEndMarker())
         {
             setUsePos(__interval, __interval.intersectsAt(__current), true);
@@ -228,33 +228,33 @@ class LinearScanWalker extends IntervalWalker
             {
                 setUsePos(__interval, __interval.from(), true);
             }
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void spillExcludeActiveFixed()
     {
-        Interval __interval = activeLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___activeLists.get(RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             excludeFromUse(__interval);
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void spillBlockUnhandledFixed(Interval __current)
     {
-        Interval __interval = unhandledLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___unhandledLists.get(RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             setBlockPos(__interval, __interval.intersectsAt(__current));
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void spillBlockInactiveFixed(Interval __current)
     {
-        Interval __interval = inactiveLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___inactiveLists.get(RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             if (__current.to() > __interval.currentFrom())
@@ -262,30 +262,30 @@ class LinearScanWalker extends IntervalWalker
                 setBlockPos(__interval, __interval.currentIntersectsAt(__current));
             }
 
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
     void spillCollectActiveAny(RegisterPriority __registerPriority)
     {
-        Interval __interval = activeLists.get(RegisterBinding.Any);
+        Interval __interval = this.___activeLists.get(RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
-            setUsePos(__interval, Math.min(__interval.nextUsage(__registerPriority, currentPosition), __interval.to()), false);
-            __interval = __interval.next;
+            setUsePos(__interval, Math.min(__interval.nextUsage(__registerPriority, this.___currentPosition), __interval.to()), false);
+            __interval = __interval.___next;
         }
     }
 
     void spillCollectInactiveAny(Interval __current)
     {
-        Interval __interval = inactiveLists.get(RegisterBinding.Any);
+        Interval __interval = this.___inactiveLists.get(RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
             if (__interval.currentIntersects(__current))
             {
-                setUsePos(__interval, Math.min(__interval.nextUsage(RegisterPriority.LiveAtLoopEnd, currentPosition), __interval.to()), false);
+                setUsePos(__interval, Math.min(__interval.nextUsage(RegisterPriority.LiveAtLoopEnd, this.___currentPosition), __interval.to()), false);
             }
-            __interval = __interval.next;
+            __interval = __interval.___next;
         }
     }
 
@@ -294,14 +294,14 @@ class LinearScanWalker extends IntervalWalker
         // Output all moves here. When source and target are equal, the move is optimized
         // away later in assignRegNums.
         int __opId = (__operandId + 1) & ~1;
-        AbstractBlockBase<?> __opBlock = allocator.blockForId(__opId);
+        AbstractBlockBase<?> __opBlock = this.___allocator.blockForId(__opId);
 
         // Calculate index of instruction inside instruction list of current block.
         // The minimal index (for a block with no spill moves) can be calculated, because
         // the numbering of instructions is known.
         // When the block already contains spill moves, the index must be increased until
         // the correct index is reached.
-        ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__opBlock);
+        ArrayList<LIRInstruction> __instructions = this.___allocator.getLIR().getLIRforBlock(__opBlock);
         int __index = (__opId - __instructions.get(0).id()) >> 1;
 
         while (__instructions.get(__index).id() != __opId)
@@ -310,8 +310,8 @@ class LinearScanWalker extends IntervalWalker
         }
 
         // insert new instruction before instruction at position index
-        moveResolver.moveInsertPosition(__instructions, __index);
-        moveResolver.addMapping(__srcIt, __dstIt);
+        this.___moveResolver.moveInsertPosition(__instructions, __index);
+        this.___moveResolver.addMapping(__srcIt, __dstIt);
     }
 
     int findOptimalSplitPos(AbstractBlockBase<?> __minBlock, AbstractBlockBase<?> __maxBlock, int __maxSplitPos)
@@ -320,10 +320,10 @@ class LinearScanWalker extends IntervalWalker
         int __toBlockNr = __maxBlock.getLinearScanNumber();
 
         // Try to split at end of maxBlock. If this would be after maxSplitPos, then use the begin of maxBlock.
-        int __optimalSplitPos = allocator.getLastLirInstructionId(__maxBlock) + 2;
+        int __optimalSplitPos = this.___allocator.getLastLirInstructionId(__maxBlock) + 2;
         if (__optimalSplitPos > __maxSplitPos)
         {
-            __optimalSplitPos = allocator.getFirstLirInstructionId(__maxBlock);
+            __optimalSplitPos = this.___allocator.getFirstLirInstructionId(__maxBlock);
         }
 
         int __minLoopDepth = __maxBlock.getLoopDepth();
@@ -335,7 +335,7 @@ class LinearScanWalker extends IntervalWalker
             {
                 // block with lower loop-depth found . split at the end of this block
                 __minLoopDepth = __cur.getLoopDepth();
-                __optimalSplitPos = allocator.getLastLirInstructionId(__cur) + 2;
+                __optimalSplitPos = this.___allocator.getLastLirInstructionId(__cur) + 2;
             }
         }
 
@@ -355,12 +355,12 @@ class LinearScanWalker extends IntervalWalker
             // Reason for using minSplitPos - 1: when the minimal split pos is exactly at the beginning of a block,
             // then minSplitPos is also a possible split position.
             // Use the block before as minBlock, because then minBlock.lastLirInstructionId() + 2 == minSplitPos.
-            AbstractBlockBase<?> __minBlock = allocator.blockForId(__minSplitPos - 1);
+            AbstractBlockBase<?> __minBlock = this.___allocator.blockForId(__minSplitPos - 1);
 
             // Reason for using maxSplitPos - 1: otherwise there would be an assert on failure when an interval
             // ends at the end of the last block of the method
             // (in this case, maxSplitPos == allocator().maxLirOpId() + 2, and there is no block at this opId).
-            AbstractBlockBase<?> __maxBlock = allocator.blockForId(__maxSplitPos - 1);
+            AbstractBlockBase<?> __maxBlock = this.___allocator.blockForId(__maxSplitPos - 1);
 
             if (__minBlock == __maxBlock)
             {
@@ -369,7 +369,7 @@ class LinearScanWalker extends IntervalWalker
             }
             else
             {
-                if (__interval.hasHoleBetween(__maxSplitPos - 1, __maxSplitPos) && !allocator.isBlockBegin(__maxSplitPos))
+                if (__interval.hasHoleBetween(__maxSplitPos - 1, __maxSplitPos) && !this.___allocator.isBlockBegin(__maxSplitPos))
                 {
                     // Do not move split position if the interval has a hole before maxSplitPos.
                     // Intervals resulting from Phi-functions have more than one definition (marked
@@ -384,7 +384,7 @@ class LinearScanWalker extends IntervalWalker
                     {
                         // Loop optimization: if a loop-end marker is found between min- and max-position,
                         // then split before this loop.
-                        int __loopEndPos = __interval.nextUsageExact(RegisterPriority.LiveAtLoopEnd, allocator.getLastLirInstructionId(__minBlock) + 2);
+                        int __loopEndPos = __interval.nextUsageExact(RegisterPriority.LiveAtLoopEnd, this.___allocator.getLastLirInstructionId(__minBlock) + 2);
 
                         if (__loopEndPos < __maxSplitPos)
                         {
@@ -392,9 +392,9 @@ class LinearScanWalker extends IntervalWalker
                             // for the same loop as the min-position, move the max-position to this loop block.
                             // Desired result: uses tagged as shouldHaveRegister inside a loop cause a reloading
                             // of the interval (normally, only mustHaveRegister causes a reloading).
-                            AbstractBlockBase<?> __loopBlock = allocator.blockForId(__loopEndPos);
+                            AbstractBlockBase<?> __loopBlock = this.___allocator.blockForId(__loopEndPos);
 
-                            int __maxSpillPos = allocator.getLastLirInstructionId(__loopBlock) + 2;
+                            int __maxSpillPos = this.___allocator.getLastLirInstructionId(__loopBlock) + 2;
                             __optimalSplitPos = findOptimalSplitPos(__minBlock, __loopBlock, __maxSpillPos);
                             if (__optimalSplitPos == __maxSpillPos)
                             {
@@ -432,19 +432,19 @@ class LinearScanWalker extends IntervalWalker
 
         // must calculate this before the actual split is performed and before split position is
         // moved to odd opId
-        boolean __moveNecessary = !allocator.isBlockBegin(__optimalSplitPos) && !__interval.hasHoleBetween(__optimalSplitPos - 1, __optimalSplitPos);
+        boolean __moveNecessary = !this.___allocator.isBlockBegin(__optimalSplitPos) && !__interval.hasHoleBetween(__optimalSplitPos - 1, __optimalSplitPos);
 
-        if (!allocator.isBlockBegin(__optimalSplitPos))
+        if (!this.___allocator.isBlockBegin(__optimalSplitPos))
         {
             // move position before actual instruction (odd opId)
             __optimalSplitPos = (__optimalSplitPos - 1) | 1;
         }
 
-        Interval __splitPart = __interval.split(__optimalSplitPos, allocator);
+        Interval __splitPart = __interval.split(__optimalSplitPos, this.___allocator);
 
         __splitPart.setInsertMoveWhenActivated(__moveNecessary);
 
-        unhandledLists.addToListSortedByStartAndUsePositions(RegisterBinding.Any, __splitPart);
+        this.___unhandledLists.addToListSortedByStartAndUsePositions(RegisterBinding.Any, __splitPart);
     }
 
     // split an interval at the optimal position between minSplitPos and
@@ -454,15 +454,13 @@ class LinearScanWalker extends IntervalWalker
     void splitForSpilling(Interval __interval)
     {
         // calculate allowed range of splitting position
-        int __maxSplitPos = currentPosition;
+        int __maxSplitPos = this.___currentPosition;
         int __previousUsage = __interval.previousUsage(RegisterPriority.ShouldHaveRegister, __maxSplitPos);
-        if (__previousUsage == currentPosition)
+        if (__previousUsage == this.___currentPosition)
         {
-            /*
-             * If there is a usage with ShouldHaveRegister priority at the current position fall
-             * back to MustHaveRegister priority. This only happens if register priority was
-             * downgraded to MustHaveRegister in #allocLockedRegister.
-             */
+            // If there is a usage with ShouldHaveRegister priority at the current position fall
+            // back to MustHaveRegister priority. This only happens if register priority was
+            // downgraded to MustHaveRegister in #allocLockedRegister.
             __previousUsage = __interval.previousUsage(RegisterPriority.MustHaveRegister, __maxSplitPos);
         }
         int __minSplitPos = Math.max(__previousUsage + 1, __interval.from());
@@ -471,7 +469,7 @@ class LinearScanWalker extends IntervalWalker
         {
             // the whole interval is never used, so spill it entirely to memory
 
-            allocator.assignSpillSlot(__interval);
+            this.___allocator.assignSpillSlot(__interval);
             handleSpillSlot(__interval);
             changeSpillState(__interval, __minSplitPos);
 
@@ -488,7 +486,7 @@ class LinearScanWalker extends IntervalWalker
                     if (__parent.firstUsage(RegisterPriority.ShouldHaveRegister) == Integer.MAX_VALUE)
                     {
                         // parent is never used, so kick it out of its assigned register
-                        allocator.assignSpillSlot(__parent);
+                        this.___allocator.assignSpillSlot(__parent);
                         handleSpillSlot(__parent);
                     }
                     else
@@ -505,18 +503,18 @@ class LinearScanWalker extends IntervalWalker
             // search optimal split pos, split interval and spill only the right hand part
             int __optimalSplitPos = findOptimalSplitPos(__interval, __minSplitPos, __maxSplitPos, false);
 
-            if (!allocator.isBlockBegin(__optimalSplitPos))
+            if (!this.___allocator.isBlockBegin(__optimalSplitPos))
             {
                 // move position before actual instruction (odd opId)
                 __optimalSplitPos = (__optimalSplitPos - 1) | 1;
             }
 
-            Interval __spilledPart = __interval.split(__optimalSplitPos, allocator);
-            allocator.assignSpillSlot(__spilledPart);
+            Interval __spilledPart = __interval.split(__optimalSplitPos, this.___allocator);
+            this.___allocator.assignSpillSlot(__spilledPart);
             handleSpillSlot(__spilledPart);
             changeSpillState(__spilledPart, __optimalSplitPos);
 
-            if (!allocator.isBlockBegin(__optimalSplitPos))
+            if (!this.___allocator.isBlockBegin(__optimalSplitPos))
             {
                 insertMove(__optimalSplitPos, __interval, __spilledPart);
             }
@@ -533,15 +531,13 @@ class LinearScanWalker extends IntervalWalker
         {
             case NoSpillStore:
             {
-                int __defLoopDepth = allocator.blockForId(__interval.spillDefinitionPos()).getLoopDepth();
-                int __spillLoopDepth = allocator.blockForId(__spillPos).getLoopDepth();
+                int __defLoopDepth = this.___allocator.blockForId(__interval.spillDefinitionPos()).getLoopDepth();
+                int __spillLoopDepth = this.___allocator.blockForId(__spillPos).getLoopDepth();
 
                 if (__defLoopDepth < __spillLoopDepth)
                 {
-                    /*
-                     * The loop depth of the spilling position is higher then the loop depth at the
-                     * definition of the interval. Move write to memory out of loop.
-                     */
+                    // The loop depth of the spilling position is higher then the loop depth at the
+                    // definition of the interval. Move write to memory out of loop.
                     if (GraalOptions.lirOptLSRAOptimizeSpillPosition)
                     {
                         // find best spill position in dominator the tree
@@ -555,10 +551,8 @@ class LinearScanWalker extends IntervalWalker
                 }
                 else
                 {
-                    /*
-                     * The interval is currently spilled only once, so for now there is no reason to
-                     * store the interval at the definition.
-                     */
+                    // The interval is currently spilled only once, so for now there is no reason to
+                    // store the interval at the definition.
                     __interval.setSpillState(SpillState.OneSpillStore);
                 }
                 break;
@@ -566,8 +560,8 @@ class LinearScanWalker extends IntervalWalker
 
             case OneSpillStore:
             {
-                int __defLoopDepth = allocator.blockForId(__interval.spillDefinitionPos()).getLoopDepth();
-                int __spillLoopDepth = allocator.blockForId(__spillPos).getLoopDepth();
+                int __defLoopDepth = this.___allocator.blockForId(__interval.spillDefinitionPos()).getLoopDepth();
+                int __spillLoopDepth = this.___allocator.blockForId(__spillPos).getLoopDepth();
 
                 if (__defLoopDepth <= __spillLoopDepth)
                 {
@@ -590,17 +584,19 @@ class LinearScanWalker extends IntervalWalker
             case StartInMemory:
             case NoOptimization:
             case NoDefinitionFound:
+            {
                 // nothing to do
                 break;
+            }
 
             default:
                 throw GraalError.shouldNotReachHere("other states not allowed at this time");
         }
     }
 
-    /**
-     * This is called for every interval that is assigned to a stack slot.
-     */
+    ///
+    // This is called for every interval that is assigned to a stack slot.
+    ///
     protected void handleSpillSlot(Interval __interval)
     {
         // Do nothing. Stack slots are not processed in this implementation.
@@ -608,7 +604,7 @@ class LinearScanWalker extends IntervalWalker
 
     void splitStackInterval(Interval __interval)
     {
-        int __minSplitPos = currentPosition + 1;
+        int __minSplitPos = this.___currentPosition + 1;
         int __maxSplitPos = Math.min(__interval.firstUsage(RegisterPriority.ShouldHaveRegister), __interval.to());
 
         splitBeforeUsage(__interval, __minSplitPos, __maxSplitPos);
@@ -622,8 +618,8 @@ class LinearScanWalker extends IntervalWalker
 
     void splitAndSpillInterval(Interval __interval)
     {
-        int __currentPos = currentPosition;
-        if (__interval.state == State.Inactive)
+        int __currentPos = this.___currentPosition;
+        if (__interval.___state == State.Inactive)
         {
             // The interval is currently inactive, so no spill slot is needed for now.
             // When the split part is activated, the interval has a new chance to get a register,
@@ -675,21 +671,21 @@ class LinearScanWalker extends IntervalWalker
         Register __minFullReg = null;
         Register __maxPartialReg = null;
 
-        for (Register __availableReg : availableRegs)
+        for (Register __availableReg : this.___availableRegs)
         {
             int __number = __availableReg.number;
-            if (usePos[__number] >= __intervalTo)
+            if (this.___usePos[__number] >= __intervalTo)
             {
                 // this register is free for the full interval
-                if (__minFullReg == null || __availableReg.equals(__hint) || (usePos[__number] < usePos[__minFullReg.number] && !__minFullReg.equals(__hint)))
+                if (__minFullReg == null || __availableReg.equals(__hint) || (this.___usePos[__number] < this.___usePos[__minFullReg.number] && !__minFullReg.equals(__hint)))
                 {
                     __minFullReg = __availableReg;
                 }
             }
-            else if (usePos[__number] > __regNeededUntil)
+            else if (this.___usePos[__number] > __regNeededUntil)
             {
                 // this register is at least free until regNeededUntil
-                if (__maxPartialReg == null || __availableReg.equals(__hint) || (usePos[__number] > usePos[__maxPartialReg.number] && !__maxPartialReg.equals(__hint)))
+                if (__maxPartialReg == null || __availableReg.equals(__hint) || (this.___usePos[__number] > this.___usePos[__maxPartialReg.number] && !__maxPartialReg.equals(__hint)))
                 {
                     __maxPartialReg = __availableReg;
                 }
@@ -710,7 +706,7 @@ class LinearScanWalker extends IntervalWalker
             return false;
         }
 
-        __splitPos = usePos[__reg.number];
+        __splitPos = this.___usePos[__reg.number];
         __interval.assignLocation(__reg.asValue(__interval.kind()));
 
         if (__needSplit)
@@ -724,9 +720,9 @@ class LinearScanWalker extends IntervalWalker
 
     void splitAndSpillIntersectingIntervals(Register __reg)
     {
-        for (int __i = 0; __i < spillIntervals[__reg.number].size(); __i++)
+        for (int __i = 0; __i < this.___spillIntervals[__reg.number].size(); __i++)
         {
-            Interval __interval = spillIntervals[__reg.number].get(__i);
+            Interval __interval = this.___spillIntervals[__reg.number].get(__i);
             removeFromList(__interval);
             splitAndSpillInterval(__interval);
         }
@@ -743,12 +739,10 @@ class LinearScanWalker extends IntervalWalker
 
         Register __reg;
         Register __ignore;
-        /*
-         * In the common case we don't spill registers that have _any_ use position that is
-         * closer than the next use of the current interval, but if we can't spill the current
-         * interval we weaken this strategy and also allow spilling of intervals that have a
-         * non-mandatory requirements (no MustHaveRegister use position).
-         */
+        // In the common case we don't spill registers that have _any_ use position that is
+        // closer than the next use of the current interval, but if we can't spill the current
+        // interval we weaken this strategy and also allow spilling of intervals that have a
+        // non-mandatory requirements (no MustHaveRegister use position).
         for (RegisterPriority __registerPriority = RegisterPriority.LiveAtLoopEnd; true; __registerPriority = RegisterPriority.MustHaveRegister)
         {
             // collect current usage of registers
@@ -762,38 +756,36 @@ class LinearScanWalker extends IntervalWalker
             __reg = null;
             __ignore = __interval.location() != null && ValueUtil.isRegister(__interval.location()) ? ValueUtil.asRegister(__interval.location()) : null;
 
-            for (Register __availableReg : availableRegs)
+            for (Register __availableReg : this.___availableRegs)
             {
                 int __number = __availableReg.number;
                 if (__availableReg.equals(__ignore))
                 {
                     // this register must be ignored
                 }
-                else if (usePos[__number] > __regNeededUntil)
+                else if (this.___usePos[__number] > __regNeededUntil)
                 {
-                    if (__reg == null || (usePos[__number] > usePos[__reg.number]))
+                    if (__reg == null || (this.___usePos[__number] > this.___usePos[__reg.number]))
                     {
                         __reg = __availableReg;
                     }
                 }
             }
 
-            int __regUsePos = (__reg == null ? 0 : usePos[__reg.number]);
+            int __regUsePos = (__reg == null ? 0 : this.___usePos[__reg.number]);
             if (__regUsePos <= __firstShouldHaveUsage)
             {
                 if (__firstUsage <= __interval.from() + 1)
                 {
                     if (__registerPriority.equals(RegisterPriority.LiveAtLoopEnd))
                     {
-                        /*
-                         * Tool of last resort: we can not spill the current interval so we try
-                         * to spill an active interval that has a usage but do not require a register.
-                         */
+                        // Tool of last resort: we can not spill the current interval so we try
+                        // to spill an active interval that has a usage but do not require a register.
                         continue;
                     }
                     // assign a reasonable register and do a bailout in product mode to avoid errors
-                    allocator.assignSpillSlot(__interval);
-                    throw new /*OutOfRegistersException*/ BailoutException("linear scan: no register found");
+                    this.___allocator.assignSpillSlot(__interval);
+                    throw new BailoutException("linear scan: no register found"); // OutOfRegistersException
                 }
 
                 splitAndSpillInterval(__interval);
@@ -802,9 +794,9 @@ class LinearScanWalker extends IntervalWalker
             break;
         }
 
-        boolean __needSplit = blockPos[__reg.number] <= __intervalTo;
+        boolean __needSplit = this.___blockPos[__reg.number] <= __intervalTo;
 
-        int __splitPos = blockPos[__reg.number];
+        int __splitPos = this.___blockPos[__reg.number];
 
         __interval.assignLocation(__reg.asValue(__interval.kind()));
         if (__needSplit)
@@ -820,7 +812,7 @@ class LinearScanWalker extends IntervalWalker
 
     boolean noAllocationPossible(Interval __interval)
     {
-        if (allocator.callKillsRegisters())
+        if (this.___allocator.callKillsRegisters())
         {
             // fast calculation of intervals that can never get a register because the
             // the next instruction is a call that blocks all registers
@@ -831,7 +823,7 @@ class LinearScanWalker extends IntervalWalker
             if (CodeUtil.isOdd(__pos))
             {
                 // the current instruction is a call that blocks all registers
-                if (__pos < allocator.maxOpId() && allocator.hasCall(__pos + 1) && __interval.to() > __pos + 1)
+                if (__pos < this.___allocator.maxOpId() && this.___allocator.hasCall(__pos + 1) && __interval.to() > __pos + 1)
                 {
                     return true;
                 }
@@ -842,10 +834,10 @@ class LinearScanWalker extends IntervalWalker
 
     void initVarsForAlloc(Interval __interval)
     {
-        AllocatableRegisters __allocatableRegisters = allocator.getRegisterAllocationConfig().getAllocatableRegisters(__interval.kind().getPlatformKind());
-        availableRegs = __allocatableRegisters.allocatableRegisters;
-        minReg = __allocatableRegisters.minRegisterNumber;
-        maxReg = __allocatableRegisters.maxRegisterNumber;
+        AllocatableRegisters __allocatableRegisters = this.___allocator.getRegisterAllocationConfig().getAllocatableRegisters(__interval.kind().getPlatformKind());
+        this.___availableRegs = __allocatableRegisters.___allocatableRegisters;
+        this.___minReg = __allocatableRegisters.___minRegisterNumber;
+        this.___maxReg = __allocatableRegisters.___maxRegisterNumber;
     }
 
     static boolean isMove(LIRInstruction __op, Interval __from, Interval __to)
@@ -855,7 +847,7 @@ class LinearScanWalker extends IntervalWalker
             ValueMoveOp __move = ValueMoveOp.asValueMoveOp(__op);
             if (LIRValueUtil.isVariable(__move.getInput()) && LIRValueUtil.isVariable(__move.getResult()))
             {
-                return __move.getInput() != null && __move.getInput().equals(__from.operand) && __move.getResult() != null && __move.getResult().equals(__to.operand);
+                return __move.getInput() != null && __move.getInput().equals(__from.___operand) && __move.getResult() != null && __move.getResult().equals(__to.___operand);
             }
         }
         return false;
@@ -887,20 +879,20 @@ class LinearScanWalker extends IntervalWalker
 
         int __beginPos = __interval.from();
         int __endPos = __interval.to();
-        if (__endPos > allocator.maxOpId() || CodeUtil.isOdd(__beginPos) || CodeUtil.isOdd(__endPos))
+        if (__endPos > this.___allocator.maxOpId() || CodeUtil.isOdd(__beginPos) || CodeUtil.isOdd(__endPos))
         {
             // safety check that lirOpWithId is allowed
             return;
         }
 
-        if (!isMove(allocator.instructionForId(__beginPos), __registerHint, __interval) || !isMove(allocator.instructionForId(__endPos), __interval, __registerHint))
+        if (!isMove(this.___allocator.instructionForId(__beginPos), __registerHint, __interval) || !isMove(this.___allocator.instructionForId(__endPos), __interval, __registerHint))
         {
             // cur and registerHint are not connected with two moves
             return;
         }
 
-        Interval __beginHint = __registerHint.getSplitChildAtOpId(__beginPos, LIRInstruction.OperandMode.USE, allocator);
-        Interval __endHint = __registerHint.getSplitChildAtOpId(__endPos, LIRInstruction.OperandMode.DEF, allocator);
+        Interval __beginHint = __registerHint.getSplitChildAtOpId(__beginPos, LIRInstruction.OperandMode.USE, this.___allocator);
+        Interval __endHint = __registerHint.getSplitChildAtOpId(__endPos, LIRInstruction.OperandMode.DEF, this.___allocator);
         if (__beginHint == __endHint || __beginHint.to() != __beginPos || __endHint.from() != __endPos)
         {
             // registerHint must be split : otherwise the re-writing of use positions does not work
@@ -926,7 +918,7 @@ class LinearScanWalker extends IntervalWalker
     protected boolean activateCurrent(Interval __interval)
     {
         boolean __result = true;
-        final Value __operand = __interval.operand;
+        final Value __operand = __interval.___operand;
         if (__interval.location() != null && LIRValueUtil.isStackSlotValue(__interval.location()))
         {
             // activating an interval that has a stack slot assigned . split it at first use
@@ -974,6 +966,6 @@ class LinearScanWalker extends IntervalWalker
     public void finishAllocation()
     {
         // must be called when all intervals are allocated
-        moveResolver.resolveAndAppendMoves();
+        this.___moveResolver.resolveAndAppendMoves();
     }
 }

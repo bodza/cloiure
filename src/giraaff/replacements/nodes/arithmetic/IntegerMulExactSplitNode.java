@@ -34,12 +34,12 @@ public final class IntegerMulExactSplitNode extends IntegerExactArithmeticSplitN
     public void simplify(SimplifierTool __tool)
     {
         NodeView __view = NodeView.from(__tool);
-        if (!IntegerStamp.multiplicationCanOverflow((IntegerStamp) x.stamp(__view), (IntegerStamp) y.stamp(__view)))
+        if (!IntegerStamp.multiplicationCanOverflow((IntegerStamp) this.___x.stamp(__view), (IntegerStamp) this.___y.stamp(__view)))
         {
-            __tool.deleteBranch(overflowSuccessor);
-            __tool.addToWorkList(next);
-            MulNode __replacement = graph().unique(new MulNode(x, y));
-            graph().replaceSplitWithFloating(this, __replacement, next);
+            __tool.deleteBranch(this.___overflowSuccessor);
+            __tool.addToWorkList(this.___next);
+            MulNode __replacement = graph().unique(new MulNode(this.___x, this.___y));
+            graph().replaceSplitWithFloating(this, __replacement, this.___next);
             __tool.addToWorkList(__replacement);
         }
     }

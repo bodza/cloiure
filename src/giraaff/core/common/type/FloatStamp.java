@@ -23,11 +23,11 @@ import giraaff.util.GraalError;
 public final class FloatStamp extends PrimitiveStamp
 {
     // @field
-    private final double lowerBound;
+    private final double ___lowerBound;
     // @field
-    private final double upperBound;
+    private final double ___upperBound;
     // @field
-    private final boolean nonNaN;
+    private final boolean ___nonNaN;
 
     // @cons
     protected FloatStamp(int __bits)
@@ -39,9 +39,9 @@ public final class FloatStamp extends PrimitiveStamp
     public FloatStamp(int __bits, double __lowerBound, double __upperBound, boolean __nonNaN)
     {
         super(__bits, OPS);
-        this.lowerBound = __lowerBound;
-        this.upperBound = __upperBound;
-        this.nonNaN = __nonNaN;
+        this.___lowerBound = __lowerBound;
+        this.___upperBound = __upperBound;
+        this.___nonNaN = __nonNaN;
     }
 
     @Override
@@ -80,7 +80,7 @@ public final class FloatStamp extends PrimitiveStamp
     @Override
     public boolean hasValues()
     {
-        return lowerBound <= upperBound || !nonNaN;
+        return this.___lowerBound <= this.___upperBound || !this.___nonNaN;
     }
 
     @Override
@@ -116,57 +116,55 @@ public final class FloatStamp extends PrimitiveStamp
         }
     }
 
-    /**
-     * The (inclusive) lower bound on the value described by this stamp.
-     */
+    ///
+    // The (inclusive) lower bound on the value described by this stamp.
+    ///
     public double lowerBound()
     {
-        return lowerBound;
+        return this.___lowerBound;
     }
 
-    /**
-     * The (inclusive) upper bound on the value described by this stamp.
-     */
+    ///
+    // The (inclusive) upper bound on the value described by this stamp.
+    ///
     public double upperBound()
     {
-        return upperBound;
+        return this.___upperBound;
     }
 
-    /**
-     * Returns true if NaN is non included in the value described by this stamp.
-     */
+    ///
+    // Returns true if NaN is non included in the value described by this stamp.
+    ///
     public boolean isNonNaN()
     {
-        return nonNaN;
+        return this.___nonNaN;
     }
 
-    /**
-     * Returns true if this stamp represents the NaN value.
-     */
+    ///
+    // Returns true if this stamp represents the NaN value.
+    ///
     public boolean isNaN()
     {
-        return Double.isNaN(lowerBound);
+        return Double.isNaN(this.___lowerBound);
     }
 
     @Override
     public boolean isUnrestricted()
     {
-        return lowerBound == Double.NEGATIVE_INFINITY && upperBound == Double.POSITIVE_INFINITY && !nonNaN;
+        return this.___lowerBound == Double.NEGATIVE_INFINITY && this.___upperBound == Double.POSITIVE_INFINITY && !this.___nonNaN;
     }
 
     public boolean contains(double __value)
     {
         if (Double.isNaN(__value))
         {
-            return !nonNaN;
+            return !this.___nonNaN;
         }
         else
         {
-            /*
-             * Don't use Double.compare for checking the bounds as -0.0 isn't correctly tracked, so
-             * the presence of 0.0 means -0.0 might also exist in the range.
-             */
-            return __value >= lowerBound && __value <= upperBound;
+            // Don't use Double.compare for checking the bounds as -0.0 isn't correctly tracked, so
+            // the presence of 0.0 means -0.0 might also exist in the range.
+            return __value >= this.___lowerBound && __value <= this.___upperBound;
         }
     }
 
@@ -202,14 +200,14 @@ public final class FloatStamp extends PrimitiveStamp
             return __otherStamp;
         }
         FloatStamp __other = (FloatStamp) __otherStamp;
-        double __meetUpperBound = meetBounds(upperBound, __other.upperBound, Math::max);
-        double __meetLowerBound = meetBounds(lowerBound, __other.lowerBound, Math::min);
-        boolean __meetNonNaN = nonNaN && __other.nonNaN;
-        if (Double.compare(__meetLowerBound, lowerBound) == 0 && Double.compare(__meetUpperBound, upperBound) == 0 && __meetNonNaN == nonNaN)
+        double __meetUpperBound = meetBounds(this.___upperBound, __other.___upperBound, Math::max);
+        double __meetLowerBound = meetBounds(this.___lowerBound, __other.___lowerBound, Math::min);
+        boolean __meetNonNaN = this.___nonNaN && __other.___nonNaN;
+        if (Double.compare(__meetLowerBound, this.___lowerBound) == 0 && Double.compare(__meetUpperBound, this.___upperBound) == 0 && __meetNonNaN == this.___nonNaN)
         {
             return this;
         }
-        else if (Double.compare(__meetLowerBound, __other.lowerBound) == 0 && Double.compare(__meetUpperBound, __other.upperBound) == 0 && __meetNonNaN == __other.nonNaN)
+        else if (Double.compare(__meetLowerBound, __other.___lowerBound) == 0 && Double.compare(__meetUpperBound, __other.___upperBound) == 0 && __meetNonNaN == __other.___nonNaN)
         {
             return __other;
         }
@@ -227,14 +225,14 @@ public final class FloatStamp extends PrimitiveStamp
             return this;
         }
         FloatStamp __other = (FloatStamp) __otherStamp;
-        double __joinUpperBound = Math.min(upperBound, __other.upperBound);
-        double __joinLowerBound = Math.max(lowerBound, __other.lowerBound);
-        boolean __joinNonNaN = nonNaN || __other.nonNaN;
-        if (Double.compare(__joinLowerBound, lowerBound) == 0 && Double.compare(__joinUpperBound, upperBound) == 0 && __joinNonNaN == nonNaN)
+        double __joinUpperBound = Math.min(this.___upperBound, __other.___upperBound);
+        double __joinLowerBound = Math.max(this.___lowerBound, __other.___lowerBound);
+        boolean __joinNonNaN = this.___nonNaN || __other.___nonNaN;
+        if (Double.compare(__joinLowerBound, this.___lowerBound) == 0 && Double.compare(__joinUpperBound, this.___upperBound) == 0 && __joinNonNaN == this.___nonNaN)
         {
             return this;
         }
-        else if (Double.compare(__joinLowerBound, __other.lowerBound) == 0 && Double.compare(__joinUpperBound, __other.upperBound) == 0 && __joinNonNaN == __other.nonNaN)
+        else if (Double.compare(__joinLowerBound, __other.___lowerBound) == 0 && Double.compare(__joinUpperBound, __other.___upperBound) == 0 && __joinNonNaN == __other.___nonNaN)
         {
             return __other;
         }
@@ -251,10 +249,10 @@ public final class FloatStamp extends PrimitiveStamp
         int __result = 1;
         long __temp;
         __result = __prime * __result + super.hashCode();
-        __temp = Double.doubleToLongBits(lowerBound);
+        __temp = Double.doubleToLongBits(this.___lowerBound);
         __result = __prime * __result + (int) (__temp ^ (__temp >>> 32));
-        __result = __prime * __result + (nonNaN ? 1231 : 1237);
-        __temp = Double.doubleToLongBits(upperBound);
+        __result = __prime * __result + (this.___nonNaN ? 1231 : 1237);
+        __temp = Double.doubleToLongBits(this.___upperBound);
         __result = __prime * __result + (int) (__temp ^ (__temp >>> 32));
         return __result;
     }
@@ -297,15 +295,15 @@ public final class FloatStamp extends PrimitiveStamp
             return false;
         }
         FloatStamp __other = (FloatStamp) __obj;
-        if (Double.doubleToLongBits(lowerBound) != Double.doubleToLongBits(__other.lowerBound))
+        if (Double.doubleToLongBits(this.___lowerBound) != Double.doubleToLongBits(__other.___lowerBound))
         {
             return false;
         }
-        if (Double.doubleToLongBits(upperBound) != Double.doubleToLongBits(__other.upperBound))
+        if (Double.doubleToLongBits(this.___upperBound) != Double.doubleToLongBits(__other.___upperBound))
         {
             return false;
         }
-        if (nonNaN != __other.nonNaN)
+        if (this.___nonNaN != __other.___nonNaN)
         {
             return false;
         }
@@ -320,9 +318,9 @@ public final class FloatStamp extends PrimitiveStamp
             switch (getBits())
             {
                 case 32:
-                    return JavaConstant.forFloat((float) lowerBound);
+                    return JavaConstant.forFloat((float) this.___lowerBound);
                 case 64:
-                    return JavaConstant.forDouble(lowerBound);
+                    return JavaConstant.forDouble(this.___lowerBound);
             }
         }
         return null;
@@ -330,11 +328,9 @@ public final class FloatStamp extends PrimitiveStamp
 
     private boolean isConstant()
     {
-        /*
-         * There are many forms of NaNs and any operations on them can silently convert them into
-         * the canonical NaN.
-         */
-        return (Double.compare(lowerBound, upperBound) == 0 && nonNaN);
+        // There are many forms of NaNs and any operations on them can silently convert them into
+        // the canonical NaN.
+        return (Double.compare(this.___lowerBound, this.___upperBound) == 0 && this.___nonNaN);
     }
 
     private static FloatStamp stampForConstant(Constant __constant)

@@ -6,10 +6,10 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.util.GraalError;
 
-/**
- * This node will be inserted at point specified by {@link StructuredGraph#getEntryBCI()}, usually
- * by the graph builder.
- */
+///
+// This node will be inserted at point specified by {@link StructuredGraph#getEntryBCI()}, usually
+// by the graph builder.
+///
 // @NodeInfo.allowedUsageTypes "Association"
 // @class EntryMarkerNode
 public final class EntryMarkerNode extends BeginStateSplitNode implements IterableNodeType, LIRLowerable

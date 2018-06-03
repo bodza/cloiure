@@ -85,9 +85,9 @@ import giraaff.replacements.nodes.arithmetic.IntegerMulExactNode;
 import giraaff.replacements.nodes.arithmetic.IntegerSubExactNode;
 import giraaff.util.GraalError;
 
-/**
- * Provides non-runtime specific {@link InvocationPlugin}s.
- */
+///
+// Provides non-runtime specific {@link InvocationPlugin}s.
+///
 // @class StandardGraphBuilderPlugins
 public final class StandardGraphBuilderPlugins
 {
@@ -486,19 +486,19 @@ public final class StandardGraphBuilderPlugins
     public static final class UnsignedMathPlugin implements InvocationPlugin
     {
         // @field
-        private final Condition condition;
+        private final Condition ___condition;
 
         // @cons
         public UnsignedMathPlugin(Condition __condition)
         {
             super();
-            this.condition = __condition;
+            this.___condition = __condition;
         }
 
         @Override
         public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __x, ValueNode __y)
         {
-            CanonicalizedCondition __canonical = condition.canonicalize();
+            CanonicalizedCondition __canonical = this.___condition.canonicalize();
             StructuredGraph __graph = __b.getGraph();
 
             ValueNode __lhs = __canonical.mustMirror() ? __y : __x;
@@ -547,11 +547,9 @@ public final class StandardGraphBuilderPlugins
             @Override
             public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver)
             {
-                /*
-                 * Object.<init> is a common instrumentation point so only perform this rewrite if
-                 * the current definition is the normal empty method with a single return bytecode.
-                 * The finalizer registration will instead be performed by the BytecodeParser.
-                 */
+                // Object.<init> is a common instrumentation point so only perform this rewrite if
+                // the current definition is the normal empty method with a single return bytecode.
+                // The finalizer registration will instead be performed by the BytecodeParser.
                 if (__targetMethod.getCodeSize() == 1)
                 {
                     ValueNode __object = __receiver.get();
@@ -613,11 +611,11 @@ public final class StandardGraphBuilderPlugins
         });
     }
 
-    /**
-     * Substitutions for improving the performance of some critical methods in {@link Edges}. These
-     * substitutions improve the performance by forcing the relevant methods to be inlined
-     * (intrinsification being a special form of inlining) and removing a checked cast.
-     */
+    ///
+    // Substitutions for improving the performance of some critical methods in {@link Edges}. These
+    // substitutions improve the performance by forcing the relevant methods to be inlined
+    // (intrinsification being a special form of inlining) and removing a checked cast.
+    ///
     private static void registerEdgesPlugins(MetaAccessProvider __metaAccess, InvocationPlugins __plugins)
     {
         Registration __r = new Registration(__plugins, Edges.class);
@@ -652,13 +650,13 @@ public final class StandardGraphBuilderPlugins
     public static final class BoxPlugin implements InvocationPlugin
     {
         // @field
-        private final JavaKind kind;
+        private final JavaKind ___kind;
 
         // @cons
         BoxPlugin(JavaKind __kind)
         {
             super();
-            this.kind = __kind;
+            this.___kind = __kind;
         }
 
         @Override
@@ -673,14 +671,14 @@ public final class StandardGraphBuilderPlugins
                     return false;
                 }
             }
-            ResolvedJavaType __resultType = __b.getMetaAccess().lookupJavaType(kind.toBoxedJavaClass());
-            __b.addPush(JavaKind.Object, new BoxNode(__value, __resultType, kind));
+            ResolvedJavaType __resultType = __b.getMetaAccess().lookupJavaType(this.___kind.toBoxedJavaClass());
+            __b.addPush(JavaKind.Object, new BoxNode(__value, __resultType, this.___kind));
             return true;
         }
 
         void register(InvocationPlugins __plugins)
         {
-            __plugins.register(this, kind.toBoxedJavaClass(), "valueOf", kind.toJavaClass());
+            __plugins.register(this, this.___kind.toBoxedJavaClass(), "valueOf", this.___kind.toJavaClass());
         }
     }
 
@@ -688,13 +686,13 @@ public final class StandardGraphBuilderPlugins
     public static final class UnboxPlugin implements InvocationPlugin
     {
         // @field
-        private final JavaKind kind;
+        private final JavaKind ___kind;
 
         // @cons
         UnboxPlugin(JavaKind __kind)
         {
             super();
-            this.kind = __kind;
+            this.___kind = __kind;
         }
 
         @Override
@@ -709,15 +707,15 @@ public final class StandardGraphBuilderPlugins
                     return false;
                 }
             }
-            ValueNode __valueNode = UnboxNode.create(__b.getMetaAccess(), __b.getConstantReflection(), __receiver.get(), kind);
-            __b.addPush(kind, __valueNode);
+            ValueNode __valueNode = UnboxNode.create(__b.getMetaAccess(), __b.getConstantReflection(), __receiver.get(), this.___kind);
+            __b.addPush(this.___kind, __valueNode);
             return true;
         }
 
         void register(InvocationPlugins __plugins)
         {
-            String __name = kind.toJavaClass().getSimpleName() + "Value";
-            __plugins.register(this, kind.toBoxedJavaClass(), __name, Receiver.class);
+            String __name = this.___kind.toJavaClass().getSimpleName() + "Value";
+            __plugins.register(this, this.___kind.toBoxedJavaClass(), __name, Receiver.class);
         }
     }
 
@@ -725,16 +723,16 @@ public final class StandardGraphBuilderPlugins
     public static final class UnsafeGetPlugin implements InvocationPlugin
     {
         // @field
-        private final JavaKind returnKind;
+        private final JavaKind ___returnKind;
         // @field
-        private final boolean isVolatile;
+        private final boolean ___isVolatile;
 
         // @cons
         public UnsafeGetPlugin(JavaKind __returnKind, boolean __isVolatile)
         {
             super();
-            this.returnKind = __returnKind;
-            this.isVolatile = __isVolatile;
+            this.___returnKind = __returnKind;
+            this.___isVolatile = __isVolatile;
         }
 
         @Override
@@ -742,7 +740,7 @@ public final class StandardGraphBuilderPlugins
         {
             // emits a null-check for the otherwise unused receiver
             __unsafe.get();
-            __b.addPush(returnKind, new UnsafeMemoryLoadNode(__address, returnKind, NamedLocationIdentity.OFF_HEAP_LOCATION));
+            __b.addPush(this.___returnKind, new UnsafeMemoryLoadNode(__address, this.___returnKind, NamedLocationIdentity.OFF_HEAP_LOCATION));
             __b.getGraph().markUnsafeAccess();
             return true;
         }
@@ -752,13 +750,13 @@ public final class StandardGraphBuilderPlugins
         {
             // emits a null-check for the otherwise unused receiver
             __unsafe.get();
-            if (isVolatile)
+            if (this.___isVolatile)
             {
                 __b.add(new MembarNode(MemoryBarriers.JMM_PRE_VOLATILE_READ));
             }
             LocationIdentity __locationIdentity = __object.isNullConstant() ? NamedLocationIdentity.OFF_HEAP_LOCATION : LocationIdentity.any();
-            __b.addPush(returnKind, new RawLoadNode(__object, __offset, returnKind, __locationIdentity));
-            if (isVolatile)
+            __b.addPush(this.___returnKind, new RawLoadNode(__object, __offset, this.___returnKind, __locationIdentity));
+            if (this.___isVolatile)
             {
                 __b.add(new MembarNode(MemoryBarriers.JMM_POST_VOLATILE_READ));
             }
@@ -771,13 +769,13 @@ public final class StandardGraphBuilderPlugins
     public static final class UnsafePutPlugin implements InvocationPlugin
     {
         // @field
-        private final JavaKind kind;
+        private final JavaKind ___kind;
         // @field
-        private final boolean hasBarrier;
+        private final boolean ___hasBarrier;
         // @field
-        private final int preWrite;
+        private final int ___preWrite;
         // @field
-        private final int postWrite;
+        private final int ___postWrite;
 
         // @cons
         public UnsafePutPlugin(JavaKind __kind, boolean __isVolatile)
@@ -789,10 +787,10 @@ public final class StandardGraphBuilderPlugins
         private UnsafePutPlugin(JavaKind __kind, boolean __hasBarrier, int __preWrite, int __postWrite)
         {
             super();
-            this.kind = __kind;
-            this.hasBarrier = __hasBarrier;
-            this.preWrite = __preWrite;
-            this.postWrite = __postWrite;
+            this.___kind = __kind;
+            this.___hasBarrier = __hasBarrier;
+            this.___preWrite = __preWrite;
+            this.___postWrite = __postWrite;
         }
 
         public static UnsafePutPlugin putOrdered(JavaKind __kind)
@@ -805,7 +803,7 @@ public final class StandardGraphBuilderPlugins
         {
             // emits a null-check for the otherwise unused receiver
             __unsafe.get();
-            __b.add(new UnsafeMemoryStoreNode(__address, __value, kind, NamedLocationIdentity.OFF_HEAP_LOCATION));
+            __b.add(new UnsafeMemoryStoreNode(__address, __value, this.___kind, NamedLocationIdentity.OFF_HEAP_LOCATION));
             __b.getGraph().markUnsafeAccess();
             return true;
         }
@@ -815,15 +813,15 @@ public final class StandardGraphBuilderPlugins
         {
             // emits a null-check for the otherwise unused receiver
             __unsafe.get();
-            if (hasBarrier)
+            if (this.___hasBarrier)
             {
-                __b.add(new MembarNode(preWrite));
+                __b.add(new MembarNode(this.___preWrite));
             }
             LocationIdentity __locationIdentity = __object.isNullConstant() ? NamedLocationIdentity.OFF_HEAP_LOCATION : LocationIdentity.any();
-            __b.add(new RawStoreNode(__object, __offset, __value, kind, __locationIdentity));
-            if (hasBarrier)
+            __b.add(new RawStoreNode(__object, __offset, __value, this.___kind, __locationIdentity));
+            if (this.___hasBarrier)
             {
-                __b.add(new MembarNode(postWrite));
+                __b.add(new MembarNode(this.___postWrite));
             }
             __b.getGraph().markUnsafeAccess();
             return true;
@@ -834,13 +832,13 @@ public final class StandardGraphBuilderPlugins
     public static final class UnsafeFencePlugin implements InvocationPlugin
     {
         // @field
-        private final int barriers;
+        private final int ___barriers;
 
         // @cons
         public UnsafeFencePlugin(int __barriers)
         {
             super();
-            this.barriers = __barriers;
+            this.___barriers = __barriers;
         }
 
         @Override
@@ -848,7 +846,7 @@ public final class StandardGraphBuilderPlugins
         {
             // emits a null-check for the otherwise unused receiver
             __unsafe.get();
-            __b.add(new MembarNode(barriers));
+            __b.add(new MembarNode(this.___barriers));
             return true;
         }
     }
@@ -857,25 +855,25 @@ public final class StandardGraphBuilderPlugins
     private static final class DirectiveSpeculationReason implements SpeculationLog.SpeculationReason
     {
         // @field
-        private final BytecodePosition pos;
+        private final BytecodePosition ___pos;
 
         // @cons
         private DirectiveSpeculationReason(BytecodePosition __pos)
         {
             super();
-            this.pos = __pos;
+            this.___pos = __pos;
         }
 
         @Override
         public int hashCode()
         {
-            return pos.hashCode();
+            return this.___pos.hashCode();
         }
 
         @Override
         public boolean equals(Object __obj)
         {
-            return __obj instanceof DirectiveSpeculationReason && ((DirectiveSpeculationReason) __obj).pos.equals(this.pos);
+            return __obj instanceof DirectiveSpeculationReason && ((DirectiveSpeculationReason) __obj).___pos.equals(this.___pos);
         }
     }
 

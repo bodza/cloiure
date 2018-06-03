@@ -33,12 +33,12 @@ import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Read {@code Class::_klass} to get the hub for a {@link java.lang.Class}. This node mostly exists
- * to replace {@code _klass._java_mirror._klass} with {@code _klass}. The constant folding could be
- * handled by
- * {@link ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool)}.
- */
+///
+// Read {@code Class::_klass} to get the hub for a {@link java.lang.Class}. This node mostly exists
+// to replace {@code _klass._java_mirror._klass} with {@code _klass}. The constant folding could be
+// handled by
+// {@link ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool)}.
+///
 // @class ClassGetHubNode
 public final class ClassGetHubNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
@@ -47,13 +47,13 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
 
     @Input
     // @field
-    protected ValueNode clazz;
+    protected ValueNode ___clazz;
 
     // @cons
     public ClassGetHubNode(ValueNode __clazz)
     {
         super(TYPE, KlassPointerStamp.klass());
-        this.clazz = __clazz;
+        this.___clazz = __clazz;
     }
 
     public static ValueNode create(ValueNode __clazz, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, boolean __allUsagesAvailable)
@@ -114,7 +114,7 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        return canonical(this, __tool.getMetaAccess(), __tool.getConstantReflection(), __tool.allUsagesAvailable(), stamp(NodeView.DEFAULT), clazz);
+        return canonical(this, __tool.getMetaAccess(), __tool.getConstantReflection(), __tool.allUsagesAvailable(), stamp(NodeView.DEFAULT), this.___clazz);
     }
 
     @Override
@@ -124,15 +124,15 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     }
 
     @NodeIntrinsic
-    public static native KlassPointer readClass(Class<?> clazzNonNull);
+    public static native KlassPointer readClass(Class<?> __clazzNonNull);
 
     @NodeIntrinsic(PiNode.class)
-    public static native KlassPointer piCastNonNull(Object object, GuardingNode anchor);
+    public static native KlassPointer piCastNonNull(Object __object, GuardingNode __anchor);
 
     @Override
     public ValueNode getValue()
     {
-        return clazz;
+        return this.___clazz;
     }
 
     @Override
@@ -162,9 +162,9 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
         return false;
     }
 
-    /**
-     * There is more than one {@link java.lang.Class} value that has a NULL hub.
-     */
+    ///
+    // There is more than one {@link java.lang.Class} value that has a NULL hub.
+    ///
     @Override
     public boolean mayNullCheckSkipConversion()
     {

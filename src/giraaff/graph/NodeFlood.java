@@ -8,32 +8,32 @@ import java.util.Queue;
 public final class NodeFlood implements Iterable<Node>
 {
     // @field
-    private final NodeBitMap visited;
+    private final NodeBitMap ___visited;
     // @field
-    private final Queue<Node> worklist = new ArrayDeque<>();
+    private final Queue<Node> ___worklist = new ArrayDeque<>();
     // @field
-    private int totalMarkedCount;
+    private int ___totalMarkedCount;
 
     // @cons
     public NodeFlood(Graph __graph)
     {
         super();
-        visited = __graph.createNodeBitMap();
+        this.___visited = __graph.createNodeBitMap();
     }
 
     public void add(Node __node)
     {
-        if (__node != null && !visited.isMarked(__node))
+        if (__node != null && !this.___visited.isMarked(__node))
         {
-            visited.mark(__node);
-            worklist.add(__node);
-            totalMarkedCount++;
+            this.___visited.mark(__node);
+            this.___worklist.add(__node);
+            this.___totalMarkedCount++;
         }
     }
 
     public int getTotalMarkedCount()
     {
-        return totalMarkedCount;
+        return this.___totalMarkedCount;
     }
 
     public void addAll(Iterable<? extends Node> __nodes)
@@ -46,17 +46,17 @@ public final class NodeFlood implements Iterable<Node>
 
     public NodeBitMap getVisited()
     {
-        return visited;
+        return this.___visited;
     }
 
     public boolean isMarked(Node __node)
     {
-        return visited.isMarked(__node);
+        return this.___visited.isMarked(__node);
     }
 
     public boolean isNew(Node __node)
     {
-        return visited.isNew(__node);
+        return this.___visited.isNew(__node);
     }
 
     @Override
@@ -68,13 +68,13 @@ public final class NodeFlood implements Iterable<Node>
             @Override
             public boolean hasNext()
             {
-                return !NodeFlood.this.worklist.isEmpty();
+                return !NodeFlood.this.___worklist.isEmpty();
             }
 
             @Override
             public Node next()
             {
-                return NodeFlood.this.worklist.remove();
+                return NodeFlood.this.___worklist.remove();
             }
 
             @Override
@@ -89,18 +89,18 @@ public final class NodeFlood implements Iterable<Node>
     private static final class UnmarkedNodeIterator implements Iterator<Node>
     {
         // @field
-        private final NodeBitMap visited;
+        private final NodeBitMap ___visited;
         // @field
-        private Iterator<Node> nodes;
+        private Iterator<Node> ___nodes;
         // @field
-        private Node nextNode;
+        private Node ___nextNode;
 
         // @cons
         UnmarkedNodeIterator(NodeBitMap __visited, Iterator<Node> __nodes)
         {
             super();
-            this.visited = __visited;
-            this.nodes = __nodes;
+            this.___visited = __visited;
+            this.___nodes = __nodes;
             forward();
         }
 
@@ -108,19 +108,19 @@ public final class NodeFlood implements Iterable<Node>
         {
             do
             {
-                if (!nodes.hasNext())
+                if (!this.___nodes.hasNext())
                 {
-                    nextNode = null;
+                    this.___nextNode = null;
                     return;
                 }
-                nextNode = nodes.next();
-            } while (visited.isMarked(nextNode));
+                this.___nextNode = this.___nodes.next();
+            } while (this.___visited.isMarked(this.___nextNode));
         }
 
         @Override
         public boolean hasNext()
         {
-            return nextNode != null;
+            return this.___nextNode != null;
         }
 
         @Override
@@ -128,7 +128,7 @@ public final class NodeFlood implements Iterable<Node>
         {
             try
             {
-                return nextNode;
+                return this.___nextNode;
             }
             finally
             {
@@ -151,7 +151,7 @@ public final class NodeFlood implements Iterable<Node>
             @Override
             public Iterator<Node> iterator()
             {
-                return new UnmarkedNodeIterator(visited, visited.graph().getNodes().iterator());
+                return new UnmarkedNodeIterator(NodeFlood.this.___visited, NodeFlood.this.___visited.graph().getNodes().iterator());
             }
         };
     }

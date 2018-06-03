@@ -11,34 +11,34 @@ import giraaff.nodes.Invoke;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.util.Providers;
 
-/**
- * Represents an inlining opportunity where the current class hierarchy leads to a monomorphic
- * target method, but for which an assumption has to be registered because of non-final classes.
- */
+///
+// Represents an inlining opportunity where the current class hierarchy leads to a monomorphic
+// target method, but for which an assumption has to be registered because of non-final classes.
+///
 // @class AssumptionInlineInfo
 public final class AssumptionInlineInfo extends ExactInlineInfo
 {
     // @field
-    private final AssumptionResult<?> takenAssumption;
+    private final AssumptionResult<?> ___takenAssumption;
 
     // @cons
     public AssumptionInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete, AssumptionResult<?> __takenAssumption)
     {
         super(__invoke, __concrete);
-        this.takenAssumption = __takenAssumption;
+        this.___takenAssumption = __takenAssumption;
     }
 
     @Override
     public EconomicSet<Node> inline(Providers __providers, String __reason)
     {
-        takenAssumption.recordTo(invoke.asNode().graph().getAssumptions());
+        this.___takenAssumption.recordTo(this.___invoke.asNode().graph().getAssumptions());
         return super.inline(__providers, __reason);
     }
 
     @Override
     public void tryToDevirtualizeInvoke(Providers __providers)
     {
-        takenAssumption.recordTo(invoke.asNode().graph().getAssumptions());
-        InliningUtil.replaceInvokeCallTarget(invoke, graph(), InvokeKind.Special, concrete);
+        this.___takenAssumption.recordTo(this.___invoke.asNode().graph().getAssumptions());
+        InliningUtil.replaceInvokeCallTarget(this.___invoke, graph(), InvokeKind.Special, this.___concrete);
     }
 }

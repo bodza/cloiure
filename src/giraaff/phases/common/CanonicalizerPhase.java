@@ -40,13 +40,13 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
     private static final int MAX_ITERATION_PER_NODE = 10;
 
     // @field
-    private boolean globalValueNumber = true;
+    private boolean ___globalValueNumber = true;
     // @field
-    private boolean canonicalizeReads = true;
+    private boolean ___canonicalizeReads = true;
     // @field
-    private boolean simplify = true;
+    private boolean ___simplify = true;
     // @field
-    private final CustomCanonicalizer customCanonicalizer;
+    private final CustomCanonicalizer ___customCanonicalizer;
 
     // @class CanonicalizerPhase.CustomCanonicalizer
     public abstract static class CustomCanonicalizer
@@ -72,22 +72,22 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
     public CanonicalizerPhase(CustomCanonicalizer __customCanonicalizer)
     {
         super();
-        this.customCanonicalizer = __customCanonicalizer;
+        this.___customCanonicalizer = __customCanonicalizer;
     }
 
     public void disableGVN()
     {
-        this.globalValueNumber = false;
+        this.___globalValueNumber = false;
     }
 
     public void disableReadCanonicalization()
     {
-        this.canonicalizeReads = false;
+        this.___canonicalizeReads = false;
     }
 
     public void disableSimplification()
     {
-        this.simplify = false;
+        this.___simplify = false;
     }
 
     @Override
@@ -96,19 +96,19 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         new Instance(__context).run(__graph);
     }
 
-    /**
-     * @param newNodesMark only the {@linkplain Graph#getNewNodes(Mark) new nodes} specified by this
-     *            mark are processed
-     */
+    ///
+    // @param newNodesMark only the {@linkplain Graph#getNewNodes(Mark) new nodes} specified by this
+    //            mark are processed
+    ///
     public void applyIncremental(StructuredGraph __graph, PhaseContext __context, Mark __newNodesMark)
     {
         new Instance(__context, __newNodesMark).apply(__graph);
     }
 
-    /**
-     * @param workingSet the initial working set of nodes on which the canonicalizer works, should
-     *            be an auto-grow node bitmap
-     */
+    ///
+    // @param workingSet the initial working set of nodes on which the canonicalizer works, should
+    //            be an auto-grow node bitmap
+    ///
     public void applyIncremental(StructuredGraph __graph, PhaseContext __context, Iterable<? extends Node> __workingSet)
     {
         new Instance(__context, __workingSet).apply(__graph);
@@ -129,16 +129,16 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
     private final class Instance extends Phase
     {
         // @field
-        private final Mark newNodesMark;
+        private final Mark ___newNodesMark;
         // @field
-        private final PhaseContext context;
+        private final PhaseContext ___context;
         // @field
-        private final Iterable<? extends Node> initWorkingSet;
+        private final Iterable<? extends Node> ___initWorkingSet;
 
         // @field
-        private NodeWorkList workList;
+        private NodeWorkList ___workList;
         // @field
-        private Tool tool;
+        private Tool ___tool;
 
         // @cons
         private Instance(PhaseContext __context)
@@ -162,29 +162,29 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         private Instance(PhaseContext __context, Iterable<? extends Node> __workingSet, Mark __newNodesMark)
         {
             super();
-            this.newNodesMark = __newNodesMark;
-            this.context = __context;
-            this.initWorkingSet = __workingSet;
+            this.___newNodesMark = __newNodesMark;
+            this.___context = __context;
+            this.___initWorkingSet = __workingSet;
         }
 
         @Override
         protected void run(StructuredGraph __graph)
         {
-            boolean __wholeGraph = newNodesMark == null || newNodesMark.isStart();
-            if (initWorkingSet == null)
+            boolean __wholeGraph = this.___newNodesMark == null || this.___newNodesMark.isStart();
+            if (this.___initWorkingSet == null)
             {
-                this.workList = __graph.createIterativeNodeWorkList(__wholeGraph, MAX_ITERATION_PER_NODE);
+                this.___workList = __graph.createIterativeNodeWorkList(__wholeGraph, MAX_ITERATION_PER_NODE);
             }
             else
             {
-                this.workList = __graph.createIterativeNodeWorkList(false, MAX_ITERATION_PER_NODE);
-                this.workList.addAll(initWorkingSet);
+                this.___workList = __graph.createIterativeNodeWorkList(false, MAX_ITERATION_PER_NODE);
+                this.___workList.addAll(this.___initWorkingSet);
             }
             if (!__wholeGraph)
             {
-                this.workList.addAll(__graph.getNewNodes(newNodesMark));
+                this.___workList.addAll(__graph.getNewNodes(this.___newNodesMark));
             }
-            tool = new Tool(__graph.getAssumptions());
+            this.___tool = new Tool(__graph.getAssumptions());
             processWorkSet(__graph);
         }
 
@@ -197,18 +197,18 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 @Override
                 public void nodeAdded(Node __node)
                 {
-                    CanonicalizerPhase.Instance.this.workList.add(__node);
+                    CanonicalizerPhase.Instance.this.___workList.add(__node);
                 }
 
                 @Override
                 public void inputChanged(Node __node)
                 {
-                    CanonicalizerPhase.Instance.this.workList.add(__node);
+                    CanonicalizerPhase.Instance.this.___workList.add(__node);
                     if (__node instanceof IndirectCanonicalization)
                     {
                         for (Node __usage : __node.usages())
                         {
-                            CanonicalizerPhase.Instance.this.workList.add(__usage);
+                            CanonicalizerPhase.Instance.this.___workList.add(__usage);
                         }
                     }
                 }
@@ -216,22 +216,22 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 @Override
                 public void usagesDroppedToZero(Node __node)
                 {
-                    CanonicalizerPhase.Instance.this.workList.add(__node);
+                    CanonicalizerPhase.Instance.this.___workList.add(__node);
                 }
             };
 
             try (NodeEventScope __nes = __graph.trackNodeEvents(listener))
             {
-                for (Node __n : this.workList)
+                for (Node __n : this.___workList)
                 {
                     boolean __changed = processNode(__n);
                 }
             }
         }
 
-        /**
-         * @return true if the graph was changed.
-         */
+        ///
+        // @return true if the graph was changed.
+        ///
         private boolean processNode(Node __node)
         {
             if (!__node.isAlive())
@@ -248,7 +248,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             {
                 return true;
             }
-            if (CanonicalizerPhase.this.globalValueNumber && tryGlobalValueNumbering(__node, __nodeClass))
+            if (CanonicalizerPhase.this.___globalValueNumber && tryGlobalValueNumbering(__node, __nodeClass))
             {
                 return true;
             }
@@ -259,7 +259,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 Constant __constant = __valueNode.stamp(NodeView.DEFAULT).asConstant();
                 if (__constant != null && !(__node instanceof ConstantNode))
                 {
-                    ConstantNode __stampConstant = ConstantNode.forConstant(__valueNode.stamp(NodeView.DEFAULT), __constant, this.context.getMetaAccess(), __graph);
+                    ConstantNode __stampConstant = ConstantNode.forConstant(__valueNode.stamp(NodeView.DEFAULT), __constant, this.___context.getMetaAccess(), __graph);
                     __valueNode.replaceAtUsages(InputType.Value, __stampConstant);
                     GraphUtil.tryKillUnused(__valueNode);
                     return true;
@@ -271,7 +271,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                     {
                         return true;
                     }
-                    __valueNode.usages().forEach(this.workList::add);
+                    __valueNode.usages().forEach(this.___workList::add);
                 }
             }
             return false;
@@ -293,16 +293,16 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
 
         public boolean tryCanonicalize(final Node __node, NodeClass<?> __nodeClass)
         {
-            if (CanonicalizerPhase.this.customCanonicalizer != null)
+            if (CanonicalizerPhase.this.___customCanonicalizer != null)
             {
-                Node __canonical = CanonicalizerPhase.this.customCanonicalizer.canonicalize(__node);
+                Node __canonical = CanonicalizerPhase.this.___customCanonicalizer.canonicalize(__node);
                 if (performReplacement(__node, __canonical))
                 {
                     return true;
                 }
                 else
                 {
-                    CanonicalizerPhase.this.customCanonicalizer.simplify(__node, tool);
+                    CanonicalizerPhase.this.___customCanonicalizer.simplify(__node, this.___tool);
                     if (__node.isDeleted())
                     {
                         return true;
@@ -314,7 +314,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 Node __canonical;
                 try
                 {
-                    __canonical = ((Canonicalizable) __node).canonical(tool);
+                    __canonical = ((Canonicalizable) __node).canonical(this.___tool);
                     if (__canonical == __node && __nodeClass.isCommutative())
                     {
                         __canonical = ((BinaryCommutative<?>) __node).maybeCommuteInputs();
@@ -330,9 +330,9 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 }
             }
 
-            if (__nodeClass.isSimplifiable() && CanonicalizerPhase.this.simplify)
+            if (__nodeClass.isSimplifiable() && CanonicalizerPhase.this.___simplify)
             {
-                __node.simplify(tool);
+                __node.simplify(this.___tool);
                 return __node.isDeleted();
             }
             return false;
@@ -386,7 +386,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                     {
                         FixedWithNextNode __fixedWithNext = (FixedWithNextNode) __fixed;
                         // when removing a fixed node, new canonicalization opportunities for its successor may arise
-                        tool.addToWorkList(__fixedWithNext.next());
+                        this.___tool.addToWorkList(__fixedWithNext.next());
                         if (__canonical == null)
                         {
                             // case 3
@@ -418,12 +418,12 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             }
         }
 
-        /**
-         * Calls {@link ValueNode#inferStamp()} on the node and, if it returns true (which means
-         * that the stamp has changed), re-queues the node's usages. If the stamp has changed then
-         * this method also checks if the stamp now describes a constant integer value, in which
-         * case the node is replaced with a constant.
-         */
+        ///
+        // Calls {@link ValueNode#inferStamp()} on the node and, if it returns true (which means
+        // that the stamp has changed), re-queues the node's usages. If the stamp has changed then
+        // this method also checks if the stamp now describes a constant integer value, in which
+        // case the node is replaced with a constant.
+        ///
         private boolean tryInferStamp(ValueNode __node)
         {
             if (__node.isAlive())
@@ -432,7 +432,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
                 {
                     for (Node __usage : __node.usages())
                     {
-                        this.workList.add(__usage);
+                        this.___workList.add(__usage);
                     }
                     return true;
                 }
@@ -445,16 +445,16 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         private final class Tool implements SimplifierTool, NodeView
         {
             // @field
-            private final Assumptions assumptions;
+            private final Assumptions ___assumptions;
             // @field
-            private NodeView nodeView;
+            private NodeView ___nodeView;
 
             // @cons
             Tool(Assumptions __assumptions)
             {
                 super();
-                this.assumptions = __assumptions;
-                this.nodeView = getNodeView();
+                this.___assumptions = __assumptions;
+                this.___nodeView = getNodeView();
             }
 
             @Override
@@ -468,31 +468,31 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             @Override
             public MetaAccessProvider getMetaAccess()
             {
-                return CanonicalizerPhase.Instance.this.context.getMetaAccess();
+                return CanonicalizerPhase.Instance.this.___context.getMetaAccess();
             }
 
             @Override
             public ConstantReflectionProvider getConstantReflection()
             {
-                return CanonicalizerPhase.Instance.this.context.getConstantReflection();
+                return CanonicalizerPhase.Instance.this.___context.getConstantReflection();
             }
 
             @Override
             public ConstantFieldProvider getConstantFieldProvider()
             {
-                return CanonicalizerPhase.Instance.this.context.getConstantFieldProvider();
+                return CanonicalizerPhase.Instance.this.___context.getConstantFieldProvider();
             }
 
             @Override
             public void addToWorkList(Node __node)
             {
-                CanonicalizerPhase.Instance.this.workList.add(__node);
+                CanonicalizerPhase.Instance.this.___workList.add(__node);
             }
 
             @Override
             public void addToWorkList(Iterable<? extends Node> __nodes)
             {
-                CanonicalizerPhase.Instance.this.workList.addAll(__nodes);
+                CanonicalizerPhase.Instance.this.___workList.addAll(__nodes);
             }
 
             @Override
@@ -504,7 +504,7 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             @Override
             public boolean canonicalizeReads()
             {
-                return CanonicalizerPhase.this.canonicalizeReads;
+                return CanonicalizerPhase.this.___canonicalizeReads;
             }
 
             @Override
@@ -516,25 +516,25 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             @Override
             public Assumptions getAssumptions()
             {
-                return assumptions;
+                return this.___assumptions;
             }
 
             @Override
             public Integer smallestCompareWidth()
             {
-                return CanonicalizerPhase.Instance.this.context.getLowerer().smallestCompareWidth();
+                return CanonicalizerPhase.Instance.this.___context.getLowerer().smallestCompareWidth();
             }
 
             @Override
             public Stamp stamp(ValueNode __node)
             {
-                return nodeView.stamp(__node);
+                return this.___nodeView.stamp(__node);
             }
         }
     }
 
     public boolean getCanonicalizeReads()
     {
-        return this.canonicalizeReads;
+        return this.___canonicalizeReads;
     }
 }

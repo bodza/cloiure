@@ -18,9 +18,9 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * A {@code FloatConvert} converts between integers and floating point numbers according to Java semantics.
- */
+///
+// A {@code FloatConvert} converts between integers and floating point numbers according to Java semantics.
+///
 // @class FloatConvertNode
 public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ConvertNode, Lowerable, ArithmeticLIRLowerable
 {
@@ -28,7 +28,7 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
     public static final NodeClass<FloatConvertNode> TYPE = NodeClass.create(FloatConvertNode.class);
 
     // @field
-    protected final FloatConvert op;
+    protected final FloatConvert ___op;
 
     // @def
     private static final EnumMap<FloatConvert, SerializableUnaryFunction<FloatConvertOp>> getOps;
@@ -45,7 +45,7 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
     public FloatConvertNode(FloatConvert __op, ValueNode __input)
     {
         super(TYPE, getOps.get(__op), __input);
-        this.op = __op;
+        this.___op = __op;
     }
 
     public static ValueNode create(FloatConvert __op, ValueNode __input, NodeView __view)
@@ -60,7 +60,7 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
 
     public FloatConvert getFloatConvert()
     {
-        return op;
+        return this.___op;
     }
 
     @Override
@@ -72,7 +72,7 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
     @Override
     public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        FloatConvertOp __reverse = ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)).getFloatConvert(op.reverse());
+        FloatConvertOp __reverse = ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)).getFloatConvert(this.___op.reverse());
         return __reverse.foldConstant(__c);
     }
 
@@ -101,7 +101,7 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
         if (__forValue instanceof FloatConvertNode)
         {
             FloatConvertNode __other = (FloatConvertNode) __forValue;
-            if (__other.isLossless() && __other.op == this.op.reverse())
+            if (__other.isLossless() && __other.___op == this.___op.reverse())
             {
                 return __other.getValue();
             }

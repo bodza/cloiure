@@ -22,76 +22,76 @@ import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.VirtualStackSlot;
 
-/**
- * Calculates the stack intervals using a worklist-based backwards data-flow analysis.
- */
+///
+// Calculates the stack intervals using a worklist-based backwards data-flow analysis.
+///
 // @class FixPointIntervalBuilder
 final class FixPointIntervalBuilder
 {
     // @field
-    private final LIR lir;
+    private final LIR ___lir;
     // @field
-    private final StackInterval[] stackSlotMap;
+    private final StackInterval[] ___stackSlotMap;
     // @field
-    private final int maxOpId;
+    private final int ___maxOpId;
     // @field
-    private final BlockMap<BitSet> liveInMap;
+    private final BlockMap<BitSet> ___liveInMap;
     // @field
-    private final BlockMap<BitSet> liveOutMap;
+    private final BlockMap<BitSet> ___liveOutMap;
     // @field
-    private final EconomicSet<LIRInstruction> usePos = EconomicSet.create(Equivalence.IDENTITY);
+    private final EconomicSet<LIRInstruction> ___usePos = EconomicSet.create(Equivalence.IDENTITY);
 
     // @cons
     FixPointIntervalBuilder(LIR __lir, StackInterval[] __stackSlotMap, int __maxOpId)
     {
         super();
-        this.lir = __lir;
-        this.stackSlotMap = __stackSlotMap;
-        this.maxOpId = __maxOpId;
-        this.liveInMap = new BlockMap<>(__lir.getControlFlowGraph());
-        this.liveOutMap = new BlockMap<>(__lir.getControlFlowGraph());
+        this.___lir = __lir;
+        this.___stackSlotMap = __stackSlotMap;
+        this.___maxOpId = __maxOpId;
+        this.___liveInMap = new BlockMap<>(__lir.getControlFlowGraph());
+        this.___liveOutMap = new BlockMap<>(__lir.getControlFlowGraph());
     }
 
-    /**
-     * Builds the lifetime intervals for {@link VirtualStackSlot virtual stack slots}, sets up
-     * {@link #stackSlotMap} and returns a set of use positions, i.e. instructions that contain
-     * virtual stack slots.
-     */
+    ///
+    // Builds the lifetime intervals for {@link VirtualStackSlot virtual stack slots}, sets up
+    // {@link #stackSlotMap} and returns a set of use positions, i.e. instructions that contain
+    // virtual stack slots.
+    ///
     EconomicSet<LIRInstruction> build()
     {
         Deque<AbstractBlockBase<?>> __worklist = new ArrayDeque<>();
-        AbstractBlockBase<?>[] __blocks = this.lir.getControlFlowGraph().getBlocks();
+        AbstractBlockBase<?>[] __blocks = this.___lir.getControlFlowGraph().getBlocks();
         for (int __i = __blocks.length - 1; __i >= 0; __i--)
         {
             __worklist.add(__blocks[__i]);
         }
-        for (AbstractBlockBase<?> __block : this.lir.getControlFlowGraph().getBlocks())
+        for (AbstractBlockBase<?> __block : this.___lir.getControlFlowGraph().getBlocks())
         {
-            this.liveInMap.put(__block, new BitSet(this.stackSlotMap.length));
+            this.___liveInMap.put(__block, new BitSet(this.___stackSlotMap.length));
         }
         while (!__worklist.isEmpty())
         {
             AbstractBlockBase<?> __block = __worklist.poll();
             processBlock(__block, __worklist);
         }
-        return this.usePos;
+        return this.___usePos;
     }
 
-    /**
-     * Merge outSet with in-set of successors.
-     */
+    ///
+    // Merge outSet with in-set of successors.
+    ///
     private boolean updateOutBlock(AbstractBlockBase<?> __block)
     {
-        BitSet __union = new BitSet(this.stackSlotMap.length);
+        BitSet __union = new BitSet(this.___stackSlotMap.length);
         for (AbstractBlockBase<?> __succ : __block.getSuccessors())
         {
-            __union.or(this.liveInMap.get(__succ));
+            __union.or(this.___liveInMap.get(__succ));
         }
-        BitSet __outSet = this.liveOutMap.get(__block);
+        BitSet __outSet = this.___liveOutMap.get(__block);
         // check if changed
         if (__outSet == null || !__union.equals(__outSet))
         {
-            this.liveOutMap.put(__block, __union);
+            this.___liveOutMap.put(__block, __union);
             return true;
         }
         return false;
@@ -101,9 +101,9 @@ final class FixPointIntervalBuilder
     {
         if (updateOutBlock(__block))
         {
-            ArrayList<LIRInstruction> __instructions = this.lir.getLIRforBlock(__block);
+            ArrayList<LIRInstruction> __instructions = this.___lir.getLIRforBlock(__block);
             // get out set and mark intervals
-            BitSet __outSet = this.liveOutMap.get(__block);
+            BitSet __outSet = this.___liveOutMap.get(__block);
             markOutInterval(__outSet, getBlockEnd(__instructions));
 
             // process instructions
@@ -121,7 +121,7 @@ final class FixPointIntervalBuilder
             }
             // set in set and mark intervals
             BitSet __inSet = __closure.getCurrentSet();
-            this.liveInMap.put(__block, __inSet);
+            this.___liveInMap.put(__block, __inSet);
             markInInterval(__inSet, getBlockBegin(__instructions));
         }
     }
@@ -149,24 +149,24 @@ final class FixPointIntervalBuilder
     private final class BlockClosure
     {
         // @field
-        private final BitSet currentSet;
+        private final BitSet ___currentSet;
 
         // @cons
         private BlockClosure(BitSet __set)
         {
             super();
-            currentSet = __set;
+            this.___currentSet = __set;
         }
 
         private BitSet getCurrentSet()
         {
-            return currentSet;
+            return this.___currentSet;
         }
 
-        /**
-         * Process all values of an instruction bottom-up, i.e. definitions before usages.
-         * Values that start or end at the current operation are not included.
-         */
+        ///
+        // Process all values of an instruction bottom-up, i.e. definitions before usages.
+        // Values that start or end at the current operation are not included.
+        ///
         private void processInstructionBottomUp(LIRInstruction __op)
         {
             __op.visitEachTemp(defConsumer);
@@ -187,8 +187,8 @@ final class FixPointIntervalBuilder
                     VirtualStackSlot __vslot = LIRValueUtil.asVirtualStackSlot(__operand);
                     addUse(__vslot, __inst, __flags);
                     addRegisterHint(__inst, __vslot, __mode, __flags, false);
-                    FixPointIntervalBuilder.this.usePos.add(__inst);
-                    currentSet.set(__vslot.getId());
+                    FixPointIntervalBuilder.this.___usePos.add(__inst);
+                    BlockClosure.this.___currentSet.set(__vslot.getId());
                 }
             }
         };
@@ -204,8 +204,8 @@ final class FixPointIntervalBuilder
                     VirtualStackSlot __vslot = LIRValueUtil.asVirtualStackSlot(__operand);
                     addDef(__vslot, __inst);
                     addRegisterHint(__inst, __vslot, __mode, __flags, true);
-                    FixPointIntervalBuilder.this.usePos.add(__inst);
-                    currentSet.clear(__vslot.getId());
+                    FixPointIntervalBuilder.this.___usePos.add(__inst);
+                    BlockClosure.this.___currentSet.clear(__vslot.getId());
                 }
             }
         };
@@ -217,7 +217,7 @@ final class FixPointIntervalBuilder
             {
                 // Stack slot is marked uninitialized so we have to assume it is live all the time.
                 __interval.addFrom(0);
-                __interval.addTo(FixPointIntervalBuilder.this.maxOpId);
+                __interval.addTo(FixPointIntervalBuilder.this.___maxOpId);
             }
             else
             {
@@ -268,12 +268,12 @@ final class FixPointIntervalBuilder
 
     private StackInterval get(VirtualStackSlot __stackSlot)
     {
-        return this.stackSlotMap[__stackSlot.getId()];
+        return this.___stackSlotMap[__stackSlot.getId()];
     }
 
     private void put(VirtualStackSlot __stackSlot, StackInterval __interval)
     {
-        this.stackSlotMap[__stackSlot.getId()] = __interval;
+        this.___stackSlotMap[__stackSlot.getId()] = __interval;
     }
 
     private StackInterval getOrCreateInterval(VirtualStackSlot __stackSlot)
@@ -289,7 +289,7 @@ final class FixPointIntervalBuilder
 
     private StackInterval getIntervalFromStackId(int __id)
     {
-        return this.stackSlotMap[__id];
+        return this.___stackSlotMap[__id];
     }
 
     private static int getBlockBegin(ArrayList<LIRInstruction> __instructions)

@@ -43,84 +43,84 @@ import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.word.Word;
 
-/**
- * Snippets used for implementing the monitorenter and monitorexit instructions.
- *
- * The locking algorithm used is described in the paper
- * <a href="http://dl.acm.org/citation.cfm?id=1167515.1167496"> Eliminating synchronization-related
- * atomic operations with biased locking and bulk rebiasing</a> by Kenneth Russell and David Detlefs.
- *
- * Comment below is reproduced from {@code markOop.hpp} for convenience:
- *
- * <pre>
- *  Bit-format of an object header (most significant first, big endian layout below):
- *  32 bits:
- *  --------
- *             hash:25 ------------>| age:4    biased_lock:1 lock:2 (normal object)
- *             JavaThread*:23 epoch:2 age:4    biased_lock:1 lock:2 (biased object)
- *             size:32 ------------------------------------------>| (CMS free block)
- *             PromotedObject*:29 ---------->| promo_bits:3 ----->| (CMS promoted object)
- *
- *  64 bits:
- *  --------
- *  unused:25 hash:31 -->| unused:1   age:4    biased_lock:1 lock:2 (normal object)
- *  JavaThread*:54 epoch:2 unused:1   age:4    biased_lock:1 lock:2 (biased object)
- *  PromotedObject*:61 --------------------->| promo_bits:3 ----->| (CMS promoted object)
- *  size:64 ----------------------------------------------------->| (CMS free block)
- *
- *  unused:25 hash:31 -->| cms_free:1 age:4    biased_lock:1 lock:2 (COOPs && normal object)
- *  JavaThread*:54 epoch:2 cms_free:1 age:4    biased_lock:1 lock:2 (COOPs && biased object)
- *  narrowOop:32 unused:24 cms_free:1 unused:4 promo_bits:3 ----->| (COOPs && CMS promoted object)
- *  unused:21 size:35 -->| cms_free:1 unused:7 ------------------>| (COOPs && CMS free block)
- *
- *  - hash contains the identity hash value: largest value is
- *    31 bits, see os::random().  Also, 64-bit vm's require
- *    a hash value no bigger than 32 bits because they will not
- *    properly generate a mask larger than that: see library_call.cpp
- *    and c1_CodePatterns_sparc.cpp.
- *
- *  - the biased lock pattern is used to bias a lock toward a given
- *    thread. When this pattern is set in the low three bits, the lock
- *    is either biased toward a given thread or "anonymously" biased,
- *    indicating that it is possible for it to be biased. When the
- *    lock is biased toward a given thread, locking and unlocking can
- *    be performed by that thread without using atomic operations.
- *    When a lock's bias is revoked, it reverts back to the normal
- *    locking scheme described below.
- *
- *    Note that we are overloading the meaning of the "unlocked" state
- *    of the header. Because we steal a bit from the age we can
- *    guarantee that the bias pattern will never be seen for a truly
- *    unlocked object.
- *
- *    Note also that the biased state contains the age bits normally
- *    contained in the object header. Large increases in scavenge
- *    times were seen when these bits were absent and an arbitrary age
- *    assigned to all biased objects, because they tended to consume a
- *    significant fraction of the eden semispaces and were not
- *    promoted promptly, causing an increase in the amount of copying
- *    performed. The runtime system aligns all JavaThread* pointers to
- *    a very large value (currently 128 bytes (32bVM) or 256 bytes (64bVM))
- *    to make room for the age bits & the epoch bits (used in support of
- *    biased locking), and for the CMS "freeness" bit in the 64bVM (+COOPs).
- *
- *    [JavaThread* | epoch | age | 1 | 01]       lock is biased toward given thread
- *    [0           | epoch | age | 1 | 01]       lock is anonymously biased
- *
- *  - the two lock bits are used to describe three states: locked/unlocked and monitor.
- *
- *    [ptr             | 00]  locked             ptr points to real header on stack
- *    [header      | 0 | 01]  unlocked           regular object header
- *    [ptr             | 10]  monitor            inflated lock (header is wapped out)
- *    [ptr             | 11]  marked             used by markSweep to mark an object
- *                                               not valid at any other time
- *
- *    We assume that stack/thread pointers have the lowest two bits cleared.
- * </pre>
- *
- * Note that {@code Thread::allocate} enforces {@code JavaThread} objects to be aligned
- * appropriately to comply with the layouts above.
- */
+///
+// Snippets used for implementing the monitorenter and monitorexit instructions.
+//
+// The locking algorithm used is described in the paper
+// <a href="http://dl.acm.org/citation.cfm?id=1167515.1167496"> Eliminating synchronization-related
+// atomic operations with biased locking and bulk rebiasing</a> by Kenneth Russell and David Detlefs.
+//
+// Comment below is reproduced from {@code markOop.hpp} for convenience:
+//
+// <pre>
+//  Bit-format of an object header (most significant first, big endian layout below):
+//  32 bits:
+//  --------
+//             hash:25 ------------>| age:4    biased_lock:1 lock:2 (normal object)
+//             JavaThread*:23 epoch:2 age:4    biased_lock:1 lock:2 (biased object)
+//             size:32 ------------------------------------------>| (CMS free block)
+//             PromotedObject*:29 ---------->| promo_bits:3 ----->| (CMS promoted object)
+//
+//  64 bits:
+//  --------
+//  unused:25 hash:31 -->| unused:1   age:4    biased_lock:1 lock:2 (normal object)
+//  JavaThread*:54 epoch:2 unused:1   age:4    biased_lock:1 lock:2 (biased object)
+//  PromotedObject*:61 --------------------->| promo_bits:3 ----->| (CMS promoted object)
+//  size:64 ----------------------------------------------------->| (CMS free block)
+//
+//  unused:25 hash:31 -->| cms_free:1 age:4    biased_lock:1 lock:2 (COOPs && normal object)
+//  JavaThread*:54 epoch:2 cms_free:1 age:4    biased_lock:1 lock:2 (COOPs && biased object)
+//  narrowOop:32 unused:24 cms_free:1 unused:4 promo_bits:3 ----->| (COOPs && CMS promoted object)
+//  unused:21 size:35 -->| cms_free:1 unused:7 ------------------>| (COOPs && CMS free block)
+//
+//  - hash contains the identity hash value: largest value is
+//    31 bits, see os::random().  Also, 64-bit vm's require
+//    a hash value no bigger than 32 bits because they will not
+//    properly generate a mask larger than that: see library_call.cpp
+//    and c1_CodePatterns_sparc.cpp.
+//
+//  - the biased lock pattern is used to bias a lock toward a given
+//    thread. When this pattern is set in the low three bits, the lock
+//    is either biased toward a given thread or "anonymously" biased,
+//    indicating that it is possible for it to be biased. When the
+//    lock is biased toward a given thread, locking and unlocking can
+//    be performed by that thread without using atomic operations.
+//    When a lock's bias is revoked, it reverts back to the normal
+//    locking scheme described below.
+//
+//    Note that we are overloading the meaning of the "unlocked" state
+//    of the header. Because we steal a bit from the age we can
+//    guarantee that the bias pattern will never be seen for a truly
+//    unlocked object.
+//
+//    Note also that the biased state contains the age bits normally
+//    contained in the object header. Large increases in scavenge
+//    times were seen when these bits were absent and an arbitrary age
+//    assigned to all biased objects, because they tended to consume a
+//    significant fraction of the eden semispaces and were not
+//    promoted promptly, causing an increase in the amount of copying
+//    performed. The runtime system aligns all JavaThread* pointers to
+//    a very large value (currently 128 bytes (32bVM) or 256 bytes (64bVM))
+//    to make room for the age bits & the epoch bits (used in support of
+//    biased locking), and for the CMS "freeness" bit in the 64bVM (+COOPs).
+//
+//    [JavaThread* | epoch | age | 1 | 01]       lock is biased toward given thread
+//    [0           | epoch | age | 1 | 01]       lock is anonymously biased
+//
+//  - the two lock bits are used to describe three states: locked/unlocked and monitor.
+//
+//    [ptr             | 00]  locked             ptr points to real header on stack
+//    [header      | 0 | 01]  unlocked           regular object header
+//    [ptr             | 10]  monitor            inflated lock (header is wapped out)
+//    [ptr             | 11]  marked             used by markSweep to mark an object
+//                                               not valid at any other time
+//
+//    We assume that stack/thread pointers have the lowest two bits cleared.
+// </pre>
+//
+// Note that {@code Thread::allocate} enforces {@code JavaThread} objects to be aligned
+// appropriately to comply with the layouts above.
+///
 // @class MonitorSnippets
 public final class MonitorSnippets implements Snippets
 {
@@ -320,9 +320,9 @@ public final class MonitorSnippets implements Snippets
         return false;
     }
 
-    /**
-     * Calls straight out to the monitorenter stub.
-     */
+    ///
+    // Calls straight out to the monitorenter stub.
+    ///
     @Snippet
     public static void monitorenterStub(Object __object, @ConstantParameter int __lockDepth)
     {
@@ -432,9 +432,9 @@ public final class MonitorSnippets implements Snippets
         return false;
     }
 
-    /**
-     * Calls straight out to the monitorexit stub.
-     */
+    ///
+    // Calls straight out to the monitorexit stub.
+    ///
     @Snippet
     public static void monitorexitStub(Object __object, @ConstantParameter int __lockDepth)
     {
@@ -447,22 +447,22 @@ public final class MonitorSnippets implements Snippets
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final SnippetInfo monitorenter = snippet(MonitorSnippets.class, "monitorenter");
+        private final SnippetInfo ___monitorenter = snippet(MonitorSnippets.class, "monitorenter");
         // @field
-        private final SnippetInfo monitorexit = snippet(MonitorSnippets.class, "monitorexit");
+        private final SnippetInfo ___monitorexit = snippet(MonitorSnippets.class, "monitorexit");
         // @field
-        private final SnippetInfo monitorenterStub = snippet(MonitorSnippets.class, "monitorenterStub");
+        private final SnippetInfo ___monitorenterStub = snippet(MonitorSnippets.class, "monitorenterStub");
         // @field
-        private final SnippetInfo monitorexitStub = snippet(MonitorSnippets.class, "monitorexitStub");
+        private final SnippetInfo ___monitorexitStub = snippet(MonitorSnippets.class, "monitorexitStub");
 
         // @field
-        private final boolean useFastLocking;
+        private final boolean ___useFastLocking;
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target, boolean __useFastLocking)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
-            this.useFastLocking = __useFastLocking;
+            this.___useFastLocking = __useFastLocking;
         }
 
         public void lower(RawMonitorEnterNode __monitorenterNode, HotSpotRegistersProvider __registers, LoweringTool __tool)
@@ -470,9 +470,9 @@ public final class MonitorSnippets implements Snippets
             StructuredGraph __graph = __monitorenterNode.graph();
 
             Arguments __args;
-            if (useFastLocking)
+            if (this.___useFastLocking)
             {
-                __args = new Arguments(monitorenter, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new Arguments(this.___monitorenter, __graph.getGuardsStage(), __tool.getLoweringStage());
                 __args.add("object", __monitorenterNode.object());
                 __args.add("hub", __monitorenterNode.getHub());
                 __args.addConst("lockDepth", __monitorenterNode.getMonitorId().getLockDepth());
@@ -481,12 +481,12 @@ public final class MonitorSnippets implements Snippets
             }
             else
             {
-                __args = new Arguments(monitorenterStub, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new Arguments(this.___monitorenterStub, __graph.getGuardsStage(), __tool.getLoweringStage());
                 __args.add("object", __monitorenterNode.object());
                 __args.addConst("lockDepth", __monitorenterNode.getMonitorId().getLockDepth());
             }
 
-            template(__monitorenterNode, __args).instantiate(providers.getMetaAccess(), __monitorenterNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__monitorenterNode, __args).instantiate(this.___providers.getMetaAccess(), __monitorenterNode, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
         public void lower(MonitorExitNode __monitorexitNode, HotSpotRegistersProvider __registers, LoweringTool __tool)
@@ -494,19 +494,19 @@ public final class MonitorSnippets implements Snippets
             StructuredGraph __graph = __monitorexitNode.graph();
 
             Arguments __args;
-            if (useFastLocking)
+            if (this.___useFastLocking)
             {
-                __args = new Arguments(monitorexit, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new Arguments(this.___monitorexit, __graph.getGuardsStage(), __tool.getLoweringStage());
             }
             else
             {
-                __args = new Arguments(monitorexitStub, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new Arguments(this.___monitorexitStub, __graph.getGuardsStage(), __tool.getLoweringStage());
             }
             __args.add("object", __monitorexitNode.object());
             __args.addConst("lockDepth", __monitorexitNode.getMonitorId().getLockDepth());
             __args.addConst("threadRegister", __registers.getThreadRegister());
 
-            template(__monitorexitNode, __args).instantiate(providers.getMetaAccess(), __monitorexitNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__monitorexitNode, __args).instantiate(this.___providers.getMetaAccess(), __monitorexitNode, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 
@@ -516,8 +516,8 @@ public final class MonitorSnippets implements Snippets
     public static final ForeignCallDescriptor MONITOREXIT = new ForeignCallDescriptor("monitorexit", void.class, Object.class, Word.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    private static native void monitorenterStubC(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object object, Word lock);
+    private static native void monitorenterStubC(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object, Word __lock);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void monitorexitStubC(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object object, Word lock);
+    public static native void monitorexitStubC(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object, Word __lock);
 }

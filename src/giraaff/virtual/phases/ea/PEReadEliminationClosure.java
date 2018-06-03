@@ -199,7 +199,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                 JavaKind __accessKind = __load.accessKind();
                 JavaKind __componentKind = __type.getComponentType().getJavaKind();
                 long __offset = __load.offset().asJavaConstant().asLong();
-                int __index = VirtualArrayNode.entryIndexForOffset(tool.getArrayOffsetProvider(), __offset, __accessKind, __type.getComponentType(), Integer.MAX_VALUE);
+                int __index = VirtualArrayNode.entryIndexForOffset(this.___tool.getArrayOffsetProvider(), __offset, __accessKind, __type.getComponentType(), Integer.MAX_VALUE);
                 ValueNode __object = GraphUtil.unproxify(__load.object());
                 LocationIdentity __location = NamedLocationIdentity.getArrayLocation(__componentKind);
                 ValueNode __cachedValue = __state.getReadCache(__object, __location, __index, __accessKind, this);
@@ -230,7 +230,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
             {
                 long __offset = __store.offset().asJavaConstant().asLong();
                 boolean __overflowAccess = isOverflowAccess(__accessKind, __componentKind);
-                int __index = __overflowAccess ? -1 : VirtualArrayNode.entryIndexForOffset(tool.getArrayOffsetProvider(), __offset, __accessKind, __type.getComponentType(), Integer.MAX_VALUE);
+                int __index = __overflowAccess ? -1 : VirtualArrayNode.entryIndexForOffset(this.___tool.getArrayOffsetProvider(), __offset, __accessKind, __type.getComponentType(), Integer.MAX_VALUE);
                 return processStore(__store, __store.object(), __location, __index, __accessKind, __overflowAccess, __store.value(), __state, __effects);
             }
             else
@@ -386,13 +386,13 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
 
                 for (ReadCacheEntry __entry : __entries)
                 {
-                    ValueNode __object = __entry.object;
+                    ValueNode __object = __entry.___object;
                     if (__object != null)
                     {
                         Pair<ValueNode, Object> __pair = __firstValueSet.get(__object);
                         while (__pair != null)
                         {
-                            __initialState.addReadCache(__pair.getLeft(), __entry.identity, __entry.index, __entry.kind, __entry.overflowAccess, __initialState.getReadCache().get(__entry), this);
+                            __initialState.addReadCache(__pair.getLeft(), __entry.___identity, __entry.___index, __entry.___kind, __entry.___overflowAccess, __initialState.getReadCache().get(__entry), this);
                             __pair = (Pair<ValueNode, Object>) __pair.getRight();
                         }
                     }
@@ -413,7 +413,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
             {
                 if (__initialState.getReadCache().get(__entry.getKey()) != __entry.getValue())
                 {
-                    ValueNode __value = __exitState.getReadCache(__entry.getKey().object, __entry.getKey().identity, __entry.getKey().index, __entry.getKey().kind, this);
+                    ValueNode __value = __exitState.getReadCache(__entry.getKey().___object, __entry.getKey().___identity, __entry.getKey().___index, __entry.getKey().___kind, this);
                     if (!(__value instanceof ProxyNode) || ((ProxyNode) __value).proxyPoint() != __exitNode)
                     {
                         ProxyNode __proxy = new ValueProxyNode(__value, __exitNode);
@@ -457,7 +457,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
 
         private void mergeReadCache(List<PEReadEliminationBlockState> __states)
         {
-            MapCursor<ReadCacheEntry, ValueNode> __cursor = __states.get(0).readCache.getEntries();
+            MapCursor<ReadCacheEntry, ValueNode> __cursor = __states.get(0).___readCache.getEntries();
             while (__cursor.advance())
             {
                 ReadCacheEntry __key = __cursor.getKey();
@@ -465,7 +465,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                 boolean __phi = false;
                 for (int __i = 1; __i < __states.size(); __i++)
                 {
-                    ValueNode __otherValue = __states.get(__i).readCache.get(__key);
+                    ValueNode __otherValue = __states.get(__i).___readCache.get(__key);
                     // e.g. unsafe loads / stores with different access kinds have different stamps
                     // although location, object and offset are the same, in this case we cannot
                     // create a phi nor can we set a common value
@@ -483,17 +483,17 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                 if (__phi)
                 {
                     PhiNode __phiNode = getPhi(__key, __value.stamp(NodeView.DEFAULT).unrestricted());
-                    mergeEffects.addFloatingNode(__phiNode, "mergeReadCache");
+                    this.___mergeEffects.addFloatingNode(__phiNode, "mergeReadCache");
                     for (int __i = 0; __i < __states.size(); __i++)
                     {
-                        ValueNode __v = __states.get(__i).getReadCache(__key.object, __key.identity, __key.index, __key.kind, PEReadEliminationClosure.this);
+                        ValueNode __v = __states.get(__i).getReadCache(__key.___object, __key.___identity, __key.___index, __key.___kind, PEReadEliminationClosure.this);
                         setPhiInput(__phiNode, __i, __v);
                     }
-                    newState.readCache.put(__key, __phiNode);
+                    this.___newState.___readCache.put(__key, __phiNode);
                 }
                 else if (__value != null)
                 {
-                    newState.readCache.put(__key, __value);
+                    this.___newState.___readCache.put(__key, __value);
                 }
             }
             // For object phis, see if there are known reads on all predecessors, for which we could create new phis.
@@ -501,11 +501,11 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
             {
                 if (__phi.getStackKind() == JavaKind.Object)
                 {
-                    for (ReadCacheEntry __entry : __states.get(0).readCache.getKeys())
+                    for (ReadCacheEntry __entry : __states.get(0).___readCache.getKeys())
                     {
-                        if (__entry.object == getPhiValueAt(__phi, 0))
+                        if (__entry.___object == getPhiValueAt(__phi, 0))
                         {
-                            mergeReadCachePhi(__phi, __entry.identity, __entry.index, __entry.kind, __entry.overflowAccess, __states);
+                            mergeReadCachePhi(__phi, __entry.___identity, __entry.___index, __entry.___kind, __entry.___overflowAccess, __states);
                         }
                     }
                 }
@@ -530,12 +530,12 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                 }
 
                 PhiNode __phiNode = getPhi(new ReadCacheEntry(__identity, __phi, __index, __kind, __overflowAccess), __values[0].stamp(NodeView.DEFAULT).unrestricted());
-                mergeEffects.addFloatingNode(__phiNode, "mergeReadCachePhi");
+                this.___mergeEffects.addFloatingNode(__phiNode, "mergeReadCachePhi");
                 for (int __i = 0; __i < __values.length; __i++)
                 {
                     setPhiInput(__phiNode, __i, __values[__i]);
                 }
-                newState.readCache.put(new ReadCacheEntry(__identity, __phi, __index, __kind, __overflowAccess), __phiNode);
+                this.___newState.___readCache.put(new ReadCacheEntry(__identity, __phi, __index, __kind, __overflowAccess), __phiNode);
             }
         }
     }
@@ -543,14 +543,14 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     @Override
     protected void processKilledLoopLocations(Loop<Block> __loop, PEReadEliminationBlockState __initialState, PEReadEliminationBlockState __mergedStates)
     {
-        if (__initialState.readCache.size() > 0)
+        if (__initialState.___readCache.size() > 0)
         {
-            LoopKillCache __loopKilledLocations = loopLocationKillCache.get(__loop);
+            LoopKillCache __loopKilledLocations = this.___loopLocationKillCache.get(__loop);
             // we have fully processed this loop the first time, remember to cache it the next time it is visited
             if (__loopKilledLocations == null)
             {
-                __loopKilledLocations = new LoopKillCache(1/* 1.visit */);
-                loopLocationKillCache.put(__loop, __loopKilledLocations);
+                __loopKilledLocations = new LoopKillCache(1); // 1.visit
+                this.___loopLocationKillCache.put(__loop, __loopKilledLocations);
             }
             else
             {
@@ -564,13 +564,13 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                 {
                     // we have fully processed this loop >1 times, update the killed locations
                     EconomicSet<LocationIdentity> __forwardEndLiveLocations = EconomicSet.create(Equivalence.DEFAULT);
-                    for (ReadCacheEntry __entry : __initialState.readCache.getKeys())
+                    for (ReadCacheEntry __entry : __initialState.___readCache.getKeys())
                     {
-                        __forwardEndLiveLocations.add(__entry.identity);
+                        __forwardEndLiveLocations.add(__entry.___identity);
                     }
-                    for (ReadCacheEntry __entry : __mergedStates.readCache.getKeys())
+                    for (ReadCacheEntry __entry : __mergedStates.___readCache.getKeys())
                     {
-                        __forwardEndLiveLocations.remove(__entry.identity);
+                        __forwardEndLiveLocations.remove(__entry.___identity);
                     }
                     // every location that is alive before the loop but not after is killed by the loop
                     for (LocationIdentity __location : __forwardEndLiveLocations)
@@ -588,14 +588,14 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     protected PEReadEliminationBlockState stripKilledLoopLocations(Loop<Block> __loop, PEReadEliminationBlockState __originalInitialState)
     {
         PEReadEliminationBlockState __initialState = super.stripKilledLoopLocations(__loop, __originalInitialState);
-        LoopKillCache __loopKilledLocations = loopLocationKillCache.get(__loop);
+        LoopKillCache __loopKilledLocations = this.___loopLocationKillCache.get(__loop);
         if (__loopKilledLocations != null && __loopKilledLocations.loopKillsLocations())
         {
-            Iterator<ReadCacheEntry> __it = __initialState.readCache.getKeys().iterator();
+            Iterator<ReadCacheEntry> __it = __initialState.___readCache.getKeys().iterator();
             while (__it.hasNext())
             {
                 ReadCacheEntry __entry = __it.next();
-                if (__loopKilledLocations.containsLocation(__entry.identity))
+                if (__loopKilledLocations.containsLocation(__entry.___identity))
                 {
                     __it.remove();
                 }

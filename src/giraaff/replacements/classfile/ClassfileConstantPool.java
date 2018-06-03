@@ -24,9 +24,9 @@ import giraaff.util.GraalError;
 final class ClassfileConstantPool implements ConstantPool
 {
     // @field
-    final ClassfileConstant[] entries;
+    final ClassfileConstant[] ___entries;
     // @field
-    final ClassfileBytecodeProvider context;
+    final ClassfileBytecodeProvider ___context;
 
     // @class ClassfileConstantPool.Bytecodes
     public static final class Bytecodes
@@ -37,6 +37,7 @@ final class ClassfileConstantPool implements ConstantPool
             super();
         }
 
+        // @defs
         public static final int
             GETSTATIC       = 178, // 0xB2
             PUTSTATIC       = 179, // 0xB3
@@ -53,17 +54,17 @@ final class ClassfileConstantPool implements ConstantPool
     ClassfileConstantPool(DataInputStream __stream, ClassfileBytecodeProvider __context) throws IOException
     {
         super();
-        this.context = __context;
+        this.___context = __context;
         byte __tag;
 
         int __count = __stream.readUnsignedShort();
-        entries = new ClassfileConstant[__count];
+        this.___entries = new ClassfileConstant[__count];
 
         int __i = 1;
         while (__i < __count)
         {
-            entries[__i] = readConstant(__stream);
-            __tag = entries[__i].tag;
+            this.___entries[__i] = readConstant(__stream);
+            __tag = this.___entries[__i].___tag;
 
             if ((__tag == ClassfileConstant.CONSTANT_Double) || (__tag == ClassfileConstant.CONSTANT_Long))
             {
@@ -105,17 +106,25 @@ final class ClassfileConstantPool implements ConstantPool
             case ClassfileConstant.CONSTANT_Utf8:
                 return new ClassfileConstant.Utf8(__stream.readUTF());
             case ClassfileConstant.CONSTANT_MethodHandle:
+            {
                 Classfile.skipFully(__stream, 3); // reference_kind, reference_index
                 return new ClassfileConstant.Unsupported(__tag, "CONSTANT_MethodHandle_info");
+            }
             case ClassfileConstant.CONSTANT_MethodType:
+            {
                 Classfile.skipFully(__stream, 2); // descriptor_index
                 return new ClassfileConstant.Unsupported(__tag, "CONSTANT_MethodType_info");
+            }
             case ClassfileConstant.CONSTANT_Dynamic:
+            {
                 Classfile.skipFully(__stream, 4); // bootstrap_method_attr_index, name_and_type_index
                 return new ClassfileConstant.Unsupported(__tag, "CONSTANT_Dynamic_info");
+            }
             case ClassfileConstant.CONSTANT_InvokeDynamic:
+            {
                 Classfile.skipFully(__stream, 4); // bootstrap_method_attr_index, name_and_type_index
                 return new ClassfileConstant.Unsupported(__tag, "CONSTANT_InvokeDynamic_info");
+            }
             default:
                 throw new GraalError("Invalid constant pool tag: " + __tag);
         }
@@ -124,12 +133,12 @@ final class ClassfileConstantPool implements ConstantPool
     @Override
     public int length()
     {
-        return entries.length;
+        return this.___entries.length;
     }
 
     <T extends ClassfileConstant> T get(Class<T> __c, int __index)
     {
-        return __c.cast(entries[__index]);
+        return __c.cast(this.___entries[__index]);
     }
 
     @Override
@@ -139,7 +148,7 @@ final class ClassfileConstantPool implements ConstantPool
         {
             throw new GraalError("INVOKEDYNAMIC not supported by " + ClassfileBytecodeProvider.class.getSimpleName());
         }
-        entries[__index].loadReferencedType(this, __index, __opcode);
+        this.___entries[__index].loadReferencedType(this, __index, __opcode);
     }
 
     @Override
@@ -167,7 +176,7 @@ final class ClassfileConstantPool implements ConstantPool
     @Override
     public String lookupUtf8(int __index)
     {
-        return ((Utf8) entries[__index]).value;
+        return ((Utf8) this.___entries[__index]).___value;
     }
 
     @Override
@@ -179,20 +188,20 @@ final class ClassfileConstantPool implements ConstantPool
     @Override
     public Object lookupConstant(int __index)
     {
-        ClassfileConstant __c = entries[__index];
+        ClassfileConstant __c = this.___entries[__index];
         if (__c instanceof Primitive)
         {
             Primitive __p = (Primitive) __c;
-            return __p.value;
+            return __p.___value;
         }
-        switch (__c.tag)
+        switch (__c.___tag)
         {
             case ClassfileConstant.CONSTANT_Class:
                 return lookupType(__index, -1);
             case ClassfileConstant.CONSTANT_String:
                 return ((ClassfileConstant.StringRef) __c).getValue(this);
             default:
-                throw new GraalError("Unexpected constant pool tag %s", __c.tag);
+                throw new GraalError("unexpected constant pool tag %s", __c.___tag);
         }
     }
 

@@ -66,14 +66,14 @@ import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.util.GraalError;
 
-/**
- * LIR generator specialized for AMD64 HotSpot.
- */
+///
+// LIR generator specialized for AMD64 HotSpot.
+///
 // @class AMD64HotSpotLIRGenerator
 public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSpotLIRGenerator
 {
     // @field
-    private HotSpotLockStackHolder lockStackHolder;
+    private HotSpotLockStackHolder ___lockStackHolder;
 
     // @cons
     protected AMD64HotSpotLIRGenerator(HotSpotProviders __providers, LIRGenerationResult __lirGenRes)
@@ -99,42 +99,42 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         return (HotSpotProviders) super.getProviders();
     }
 
-    /**
-     * Utility for emitting the instruction to save RBP.
-     */
+    ///
+    // Utility for emitting the instruction to save RBP.
+    ///
     // @class AMD64HotSpotLIRGenerator.SaveRbp
     // @closure
     final class SaveRbp
     {
         // @field
-        final NoOp placeholder;
+        final NoOp ___placeholder;
 
-        /**
-         * The slot reserved for saving RBP.
-         */
+        ///
+        // The slot reserved for saving RBP.
+        ///
         // @field
-        final StackSlot reservedSlot;
+        final StackSlot ___reservedSlot;
 
         // @cons
         SaveRbp(NoOp __placeholder)
         {
             super();
-            this.placeholder = __placeholder;
+            this.___placeholder = __placeholder;
             AMD64FrameMapBuilder __frameMapBuilder = (AMD64FrameMapBuilder) AMD64HotSpotLIRGenerator.this.getResult().getFrameMapBuilder();
-            this.reservedSlot = __frameMapBuilder.allocateRBPSpillSlot();
+            this.___reservedSlot = __frameMapBuilder.allocateRBPSpillSlot();
         }
 
-        /**
-         * Replaces this operation with the appropriate move for saving rbp.
-         *
-         * @param useStack specifies if rbp must be saved to the stack
-         */
+        ///
+        // Replaces this operation with the appropriate move for saving rbp.
+        //
+        // @param useStack specifies if rbp must be saved to the stack
+        ///
         public AllocatableValue finalize(boolean __useStack)
         {
             AllocatableValue __dst;
             if (__useStack)
             {
-                __dst = reservedSlot;
+                __dst = this.___reservedSlot;
             }
             else
             {
@@ -142,31 +142,31 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
                 __dst = AMD64HotSpotLIRGenerator.this.newVariable(LIRKind.value(AMD64Kind.QWORD));
             }
 
-            placeholder.replace(AMD64HotSpotLIRGenerator.this.getResult().getLIR(), new MoveFromRegOp(AMD64Kind.QWORD, __dst, AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD))));
+            this.___placeholder.replace(AMD64HotSpotLIRGenerator.this.getResult().getLIR(), new MoveFromRegOp(AMD64Kind.QWORD, __dst, AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD))));
             return __dst;
         }
     }
 
     // @field
-    private SaveRbp saveRbp;
+    private SaveRbp ___saveRbp;
 
     protected void emitSaveRbp()
     {
         NoOp __placeholder = new NoOp(getCurrentBlock(), getResult().getLIR().getLIRforBlock(getCurrentBlock()).size());
         append(__placeholder);
-        saveRbp = new SaveRbp(__placeholder);
+        this.___saveRbp = new SaveRbp(__placeholder);
     }
 
     protected SaveRbp getSaveRbp()
     {
-        return saveRbp;
+        return this.___saveRbp;
     }
 
-    /**
-     * Helper instruction to reserve a stack slot for the whole method. Note that the actual users
-     * of the stack slot might be inserted after stack slot allocation. This dummy instruction
-     * ensures that the stack slot is alive and gets a real stack slot assigned.
-     */
+    ///
+    // Helper instruction to reserve a stack slot for the whole method. Note that the actual users
+    // of the stack slot might be inserted after stack slot allocation. This dummy instruction
+    // ensures that the stack slot is alive and gets a real stack slot assigned.
+    ///
     // @class AMD64HotSpotLIRGenerator.RescueSlotDummyOp
     private static final class RescueSlotDummyOp extends LIRInstruction
     {
@@ -175,18 +175,18 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
 
         @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
         // @field
-        private AllocatableValue slot;
+        private AllocatableValue ___slot;
 
         // @cons
         RescueSlotDummyOp(FrameMapBuilder __frameMapBuilder, LIRKind __kind)
         {
             super(TYPE);
-            slot = __frameMapBuilder.allocateSpillSlot(__kind);
+            this.___slot = __frameMapBuilder.allocateSpillSlot(__kind);
         }
 
         public AllocatableValue getSlot()
         {
-            return slot;
+            return this.___slot;
         }
 
         @Override
@@ -196,7 +196,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     }
 
     // @field
-    private RescueSlotDummyOp rescueSlotOp;
+    private RescueSlotDummyOp ___rescueSlotOp;
 
     private AllocatableValue getOrInitRescueSlot()
     {
@@ -205,19 +205,19 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
 
     private RescueSlotDummyOp getOrInitRescueSlotOp()
     {
-        if (rescueSlotOp == null)
+        if (this.___rescueSlotOp == null)
         {
             // create dummy instruction to keep the rescue slot alive
-            rescueSlotOp = new RescueSlotDummyOp(getResult().getFrameMapBuilder(), getLIRKindTool().getWordKind());
+            this.___rescueSlotOp = new RescueSlotDummyOp(getResult().getFrameMapBuilder(), getLIRKindTool().getWordKind());
         }
-        return rescueSlotOp;
+        return this.___rescueSlotOp;
     }
 
-    /**
-     * List of epilogue operations that need to restore RBP.
-     */
+    ///
+    // List of epilogue operations that need to restore RBP.
+    ///
     // @field
-    List<AMD64HotSpotRestoreRbpOp> epilogueOps = new ArrayList<>(2);
+    List<AMD64HotSpotRestoreRbpOp> ___epilogueOps = new ArrayList<>(2);
 
     @Override
     public <I extends LIRInstruction> I append(I __op)
@@ -225,7 +225,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         I __ret = super.append(__op);
         if (__op instanceof AMD64HotSpotRestoreRbpOp)
         {
-            epilogueOps.add((AMD64HotSpotRestoreRbpOp) __op);
+            this.___epilogueOps.add((AMD64HotSpotRestoreRbpOp) __op);
         }
         return __ret;
     }
@@ -238,7 +238,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
 
     private HotSpotLockStack getLockStack()
     {
-        return lockStackHolder.lockStack();
+        return this.___lockStackHolder.lockStack();
     }
 
     private Register findPollOnReturnScratchRegister()
@@ -255,7 +255,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     }
 
     // @field
-    private Register pollOnReturnScratchRegister;
+    private Register ___pollOnReturnScratchRegister;
 
     @Override
     public void emitReturn(JavaKind __kind, Value __input)
@@ -266,12 +266,12 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
             __operand = resultOperandFor(__kind, __input.getValueKind());
             emitMove(__operand, __input);
         }
-        if (pollOnReturnScratchRegister == null)
+        if (this.___pollOnReturnScratchRegister == null)
         {
-            pollOnReturnScratchRegister = findPollOnReturnScratchRegister();
+            this.___pollOnReturnScratchRegister = findPollOnReturnScratchRegister();
         }
         Register __thread = getProviders().getRegisters().getThreadRegister();
-        append(new AMD64HotSpotReturnOp(__operand, getStub() != null, __thread, pollOnReturnScratchRegister));
+        append(new AMD64HotSpotReturnOp(__operand, getStub() != null, __thread, this.___pollOnReturnScratchRegister));
     }
 
     @Override
@@ -282,35 +282,33 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     }
 
     // @field
-    private LIRFrameState currentRuntimeCallInfo;
+    private LIRFrameState ___currentRuntimeCallInfo;
 
     @Override
     protected void emitForeignCallOp(ForeignCallLinkage __linkage, Value __result, Value[] __arguments, Value[] __temps, LIRFrameState __info)
     {
-        currentRuntimeCallInfo = __info;
+        this.___currentRuntimeCallInfo = __info;
         HotSpotForeignCallLinkage __hsLinkage = (HotSpotForeignCallLinkage) __linkage;
         AMD64 __arch = (AMD64) target().arch;
         if (__arch.getFeatures().contains(AMD64.CPUFeature.AVX) && __hsLinkage.mayContainFP() && !__hsLinkage.isCompiledStub())
         {
-            /*
-             * If the target may contain FP ops, and it is not compiled by us, we may have an
-             * AVX-SSE transition.
-             *
-             * We exclude the argument registers from the zeroing LIR instruction since it violates
-             * the LIR semantics of @Temp that values must not be live. Note that the emitted
-             * machine instruction actually zeros _all_ XMM registers which is fine since we know
-             * that their upper half is not used.
-             */
+            // If the target may contain FP ops, and it is not compiled by us, we may have an
+            // AVX-SSE transition.
+            //
+            // We exclude the argument registers from the zeroing LIR instruction since it violates
+            // the LIR semantics of @Temp that values must not be live. Note that the emitted
+            // machine instruction actually zeros _all_ XMM registers which is fine since we know
+            // that their upper half is not used.
             append(new AMD64VZeroUpper(__arguments));
         }
         super.emitForeignCallOp(__linkage, __result, __arguments, __temps, __info);
     }
 
-    /**
-     * @param savedRegisters the registers saved by this operation which may be subject to pruning
-     * @param savedRegisterLocations the slots to which the registers are saved
-     * @param supportsRemove determines if registers can be pruned
-     */
+    ///
+    // @param savedRegisters the registers saved by this operation which may be subject to pruning
+    // @param savedRegisterLocations the slots to which the registers are saved
+    // @param supportsRemove determines if registers can be pruned
+    ///
     protected AMD64SaveRegistersOp emitSaveRegisters(Register[] __savedRegisters, AllocatableValue[] __savedRegisterLocations, boolean __supportsRemove)
     {
         AMD64SaveRegistersOp __save = new AMD64SaveRegistersOp(__savedRegisters, __savedRegisterLocations, __supportsRemove);
@@ -318,9 +316,9 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         return __save;
     }
 
-    /**
-     * Allocate a stack slot for saving a register.
-     */
+    ///
+    // Allocate a stack slot for saving a register.
+    ///
     protected VirtualStackSlot allocateSaveRegisterLocation(Register __register)
     {
         PlatformKind __kind = target().arch.getLargestStorableKind(__register.getRegisterCategory());
@@ -332,12 +330,12 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         return getResult().getFrameMapBuilder().allocateSpillSlot(LIRKind.value(__kind));
     }
 
-    /**
-     * Adds a node to the graph that saves all allocatable registers to the stack.
-     *
-     * @param supportsRemove determines if registers can be pruned
-     * @return the register save node
-     */
+    ///
+    // Adds a node to the graph that saves all allocatable registers to the stack.
+    //
+    // @param supportsRemove determines if registers can be pruned
+    // @return the register save node
+    ///
     private AMD64SaveRegistersOp emitSaveAllRegisters(Register[] __savedRegisters, boolean __supportsRemove)
     {
         AllocatableValue[] __savedRegisterLocations = new AllocatableValue[__savedRegisters.length];
@@ -353,10 +351,10 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         append(new AMD64RestoreRegistersOp(__save.getSlots().clone(), __save));
     }
 
-    /**
-     * Gets the {@link Stub} this generator is generating code for or {@code null} if a stub is not
-     * being generated.
-     */
+    ///
+    // Gets the {@link Stub} this generator is generating code for or {@code null} if a stub is not
+    // being generated.
+    ///
     public Stub getStub()
     {
         return getResult().getStub();
@@ -370,7 +368,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
 
     public void setLockStackHolder(HotSpotLockStackHolder __lockStackHolder)
     {
-        this.lockStackHolder = __lockStackHolder;
+        this.___lockStackHolder = __lockStackHolder;
     }
 
     @Override
@@ -416,7 +414,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
                 if (__stub.preservesRegisters())
                 {
                     HotSpotLIRGenerationResult __generationResult = getResult();
-                    LIRFrameState __key = currentRuntimeCallInfo;
+                    LIRFrameState __key = this.___currentRuntimeCallInfo;
                     if (__key == null)
                     {
                         __key = LIRFrameState.NO_STATE;
@@ -566,7 +564,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         LIRKind __wordKind = LIRKind.value(target().arch.getWordKind());
         RegisterValue __thread = getProviders().getRegisters().getThreadRegister().asValue(__wordKind);
         AMD64AddressValue __address = new AMD64AddressValue(__wordKind, __thread, __offset);
-        arithmeticLIRGen.emitStore(__v.getValueKind(), __address, __v, null);
+        this.___arithmeticLIRGen.emitStore(__v.getValueKind(), __address, __v, null);
     }
 
     @Override
@@ -589,9 +587,9 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     public void beforeRegisterAllocation()
     {
         super.beforeRegisterAllocation();
-        AllocatableValue __savedRbp = saveRbp.finalize(false);
+        AllocatableValue __savedRbp = this.___saveRbp.finalize(false);
 
-        for (AMD64HotSpotRestoreRbpOp __op : epilogueOps)
+        for (AMD64HotSpotRestoreRbpOp __op : this.___epilogueOps)
         {
             __op.setSavedRbp(__savedRbp);
         }

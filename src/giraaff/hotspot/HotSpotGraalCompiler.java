@@ -38,19 +38,19 @@ import giraaff.phases.tiers.Suites;
 public final class HotSpotGraalCompiler implements GraalJVMCICompiler
 {
     // @field
-    private final HotSpotGraalRuntime graalRuntime;
+    private final HotSpotGraalRuntime ___graalRuntime;
 
     // @cons
     public HotSpotGraalCompiler(HotSpotGraalRuntime __graalRuntime)
     {
         super();
-        this.graalRuntime = __graalRuntime;
+        this.___graalRuntime = __graalRuntime;
     }
 
     @Override
     public HotSpotGraalRuntime getGraalRuntime()
     {
-        return graalRuntime;
+        return this.___graalRuntime;
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
 
     public StructuredGraph createGraph(ResolvedJavaMethod __method, int __entryBCI, boolean __useProfilingInfo)
     {
-        HotSpotBackend __backend = graalRuntime.getBackend();
+        HotSpotBackend __backend = this.___graalRuntime.getBackend();
         HotSpotProviders __providers = __backend.getProviders();
         final boolean __isOSR = __entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
         StructuredGraph __graph = __method.isNative() || __isOSR ? null : getIntrinsicGraph(__method, __providers);
@@ -99,7 +99,7 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         CompilationResult __result =  new CompilationResult();
         __result.setEntryBCI(__entryBCI);
 
-        HotSpotBackend __backend = graalRuntime.getBackend();
+        HotSpotBackend __backend = this.___graalRuntime.getBackend();
         HotSpotProviders __providers = __backend.getProviders();
         PhaseSuite<HighTierContext> __graphBuilderSuite = configGraphBuilderSuite(__providers.getSuites().getDefaultGraphBuilderSuite(), __isOSR);
 
@@ -114,12 +114,12 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         return __result;
     }
 
-    /**
-     * Gets a graph produced from the intrinsic for a given method that can be compiled and
-     * installed for the method.
-     *
-     * @return an intrinsic graph that can be compiled and installed for {@code method} or null
-     */
+    ///
+    // Gets a graph produced from the intrinsic for a given method that can be compiled and
+    // installed for the method.
+    //
+    // @return an intrinsic graph that can be compiled and installed for {@code method} or null
+    ///
     public StructuredGraph getIntrinsicGraph(ResolvedJavaMethod __method, HotSpotProviders __providers)
     {
         Replacements __replacements = __providers.getReplacements();
@@ -152,15 +152,15 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         return __providers.getSuites().getDefaultLIRSuites();
     }
 
-    /**
-     * Reconfigures a given graph builder suite (GBS) if one of the given GBS parameter values is
-     * not the default.
-     *
-     * @param suite the graph builder suite
-     * @param isOSR specifies if extra OSR-specific post-processing is required (default is false)
-     * @return a new suite derived from {@code suite} if any of the GBS parameters did not have a
-     *         default value otherwise {@code suite}
-     */
+    ///
+    // Reconfigures a given graph builder suite (GBS) if one of the given GBS parameter values is
+    // not the default.
+    //
+    // @param suite the graph builder suite
+    // @param isOSR specifies if extra OSR-specific post-processing is required (default is false)
+    // @return a new suite derived from {@code suite} if any of the GBS parameters did not have a
+    //         default value otherwise {@code suite}
+    ///
     protected PhaseSuite<HighTierContext> configGraphBuilderSuite(PhaseSuite<HighTierContext> __suite, boolean __isOSR)
     {
         if (__isOSR)

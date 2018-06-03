@@ -26,26 +26,26 @@ public final class GraphEffectList extends EffectList
         super();
     }
 
-    /**
-     * Determines how many objects are virtualized (positive) or materialized (negative) by this effect.
-     */
+    ///
+    // Determines how many objects are virtualized (positive) or materialized (negative) by this effect.
+    ///
     // @field
-    private int virtualizationDelta;
+    private int ___virtualizationDelta;
 
     @Override
     public void clear()
     {
         super.clear();
-        virtualizationDelta = 0;
+        this.___virtualizationDelta = 0;
     }
 
-    /**
-     * Adds the given fixed node to the graph's control flow, before position (so that the original
-     * predecessor of position will then be node's predecessor).
-     *
-     * @param node The fixed node to be added to the graph.
-     * @param position The fixed node before which the node should be added.
-     */
+    ///
+    // Adds the given fixed node to the graph's control flow, before position (so that the original
+    // predecessor of position will then be node's predecessor).
+    //
+    // @param node The fixed node to be added to the graph.
+    // @param position The fixed node before which the node should be added.
+    ///
     public void addFixedNodeBefore(FixedWithNextNode __node, FixedNode __position)
     {
         add("add fixed node", __graph ->
@@ -71,19 +71,19 @@ public final class GraphEffectList extends EffectList
 
     public void addVirtualizationDelta(int __delta)
     {
-        virtualizationDelta += __delta;
+        this.___virtualizationDelta += __delta;
     }
 
     public int getVirtualizationDelta()
     {
-        return virtualizationDelta;
+        return this.___virtualizationDelta;
     }
 
-    /**
-     * Add the given floating node to the graph.
-     *
-     * @param node The floating node to be added.
-     */
+    ///
+    // Add the given floating node to the graph.
+    //
+    // @param node The floating node to be added.
+    ///
     public void addFloatingNode(ValueNode __node, @SuppressWarnings("unused") String __cause)
     {
         add("add floating node", __graph ->
@@ -92,13 +92,13 @@ public final class GraphEffectList extends EffectList
         });
     }
 
-    /**
-     * Sets the phi node's input at the given index to the given value, adding new phi inputs as needed.
-     *
-     * @param node The phi node whose input should be changed.
-     * @param index The index of the phi input to be changed.
-     * @param value The new value for the phi input.
-     */
+    ///
+    // Sets the phi node's input at the given index to the given value, adding new phi inputs as needed.
+    //
+    // @param node The phi node whose input should be changed.
+    // @param index The index of the phi input to be changed.
+    // @param value The new value for the phi input.
+    ///
     public void initializePhiInput(PhiNode __node, int __index, ValueNode __value)
     {
         add("set phi input", (__graph, __obsoleteNodes) ->
@@ -107,13 +107,13 @@ public final class GraphEffectList extends EffectList
         });
     }
 
-    /**
-     * Adds a virtual object's state to the given frame state. If the given reusedVirtualObjects set
-     * contains the virtual object then old states for this object will be removed.
-     *
-     * @param node The frame state to which the state should be added.
-     * @param state The virtual object state to add.
-     */
+    ///
+    // Adds a virtual object's state to the given frame state. If the given reusedVirtualObjects set
+    // contains the virtual object then old states for this object will be removed.
+    //
+    // @param node The frame state to which the state should be added.
+    // @param state The virtual object state to add.
+    ///
     public void addVirtualMapping(FrameState __node, EscapeObjectState __state)
     {
         // @closure
@@ -144,11 +144,11 @@ public final class GraphEffectList extends EffectList
         });
     }
 
-    /**
-     * Removes the given fixed node from the control flow and deletes it.
-     *
-     * @param node The fixed node that should be deleted.
-     */
+    ///
+    // Removes the given fixed node from the control flow and deletes it.
+    //
+    // @param node The fixed node that should be deleted.
+    ///
     public void deleteNode(Node __node)
     {
         add("delete fixed node", (__graph, __obsoleteNodes) ->
@@ -201,15 +201,15 @@ public final class GraphEffectList extends EffectList
         });
     }
 
-    /**
-     * Replaces the given node at its usages without deleting it. If the current node is a fixed
-     * node it will be disconnected from the control flow, so that it will be deleted by a
-     * subsequent {@link DeadCodeEliminationPhase}
-     *
-     * @param node The node to be replaced.
-     * @param replacement The node that should replace the original value. If the replacement is a
-     *            non-connected {@link FixedWithNextNode} it will be added to the control flow.
-     */
+    ///
+    // Replaces the given node at its usages without deleting it. If the current node is a fixed
+    // node it will be disconnected from the control flow, so that it will be deleted by a
+    // subsequent {@link DeadCodeEliminationPhase}
+    //
+    // @param node The node to be replaced.
+    // @param replacement The node that should replace the original value. If the replacement is a
+    //            non-connected {@link FixedWithNextNode} it will be added to the control flow.
+    ///
     public void replaceAtUsages(ValueNode __node, ValueNode __replacement, FixedNode __insertBefore)
     {
         add("replace at usages", (__graph, __obsoleteNodes) ->
@@ -219,13 +219,11 @@ public final class GraphEffectList extends EffectList
             {
                 __graph.addBeforeFixed(__insertBefore, (FixedWithNextNode) __replacementNode);
             }
-            /*
-             * Keep the (better) stamp information when replacing a node with another one if the
-             * replacement has a less precise stamp than the original node. This can happen for
-             * example in the context of read nodes and unguarded pi nodes where the pi will be used
-             * to improve the stamp information of the read. Such a read might later be replaced
-             * with a read with a less precise stamp.
-             */
+            // Keep the (better) stamp information when replacing a node with another one if the
+            // replacement has a less precise stamp than the original node. This can happen for
+            // example in the context of read nodes and unguarded pi nodes where the pi will be used
+            // to improve the stamp information of the read. Such a read might later be replaced
+            // with a read with a less precise stamp.
             if (!__node.stamp(NodeView.DEFAULT).equals(__replacementNode.stamp(NodeView.DEFAULT)))
             {
                 __replacementNode = __graph.unique(new PiNode(__replacementNode, __node.stamp(NodeView.DEFAULT)));
@@ -239,13 +237,13 @@ public final class GraphEffectList extends EffectList
         });
     }
 
-    /**
-     * Replaces the first occurrence of oldInput in node with newInput.
-     *
-     * @param node The node whose input should be changed.
-     * @param oldInput The value to look for.
-     * @param newInput The value to replace with.
-     */
+    ///
+    // Replaces the first occurrence of oldInput in node with newInput.
+    //
+    // @param node The node whose input should be changed.
+    // @param oldInput The value to look for.
+    // @param newInput The value to replace with.
+    ///
     public void replaceFirstInput(Node __node, Node __oldInput, Node __newInput)
     {
         // @closure

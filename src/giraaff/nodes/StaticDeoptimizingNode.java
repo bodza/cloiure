@@ -11,19 +11,19 @@ public interface StaticDeoptimizingNode extends ValueNodeInterface
 {
     DeoptimizationReason getReason();
 
-    void setReason(DeoptimizationReason reason);
+    void setReason(DeoptimizationReason __reason);
 
     DeoptimizationAction getAction();
 
-    void setAction(DeoptimizationAction action);
+    void setAction(DeoptimizationAction __action);
 
     JavaConstant getSpeculation();
 
-    /**
-     * Describes how much information is gathered when deoptimization triggers.
-     *
-     * This enum is {@link Comparable} and orders its element from highest priority to lowest priority.
-     */
+    ///
+    // Describes how much information is gathered when deoptimization triggers.
+    //
+    // This enum is {@link Comparable} and orders its element from highest priority to lowest priority.
+    ///
     // @enum StaticDeoptimizingNode.GuardPriority
     enum GuardPriority
     {

@@ -12,10 +12,10 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * AMD64 shift/rotate operation. This operation has a single operand for the first input and output.
- * The second input must be in the RCX register.
- */
+///
+// AMD64 shift/rotate operation. This operation has a single operand for the first input and output.
+// The second input must be in the RCX register.
+///
 // @class AMD64ShiftOp
 public final class AMD64ShiftOp extends AMD64LIRInstruction
 {
@@ -24,36 +24,36 @@ public final class AMD64ShiftOp extends AMD64LIRInstruction
 
     @Opcode
     // @field
-    private final AMD64MOp opcode;
+    private final AMD64MOp ___opcode;
     // @field
-    private final OperandSize size;
+    private final OperandSize ___size;
 
     @Def({OperandFlag.REG, OperandFlag.HINT})
     // @field
-    protected AllocatableValue result;
+    protected AllocatableValue ___result;
     @Use({OperandFlag.REG, OperandFlag.STACK})
     // @field
-    protected AllocatableValue x;
+    protected AllocatableValue ___x;
     @Alive({OperandFlag.REG})
     // @field
-    protected AllocatableValue y;
+    protected AllocatableValue ___y;
 
     // @cons
     public AMD64ShiftOp(AMD64MOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
     {
         super(TYPE);
-        this.opcode = __opcode;
-        this.size = __size;
+        this.___opcode = __opcode;
+        this.___size = __size;
 
-        this.result = __result;
-        this.x = __x;
-        this.y = __y;
+        this.___result = __result;
+        this.___x = __x;
+        this.___y = __y;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        AMD64Move.move(__crb, __masm, result, x);
-        opcode.emit(__masm, size, ValueUtil.asRegister(result));
+        AMD64Move.move(__crb, __masm, this.___result, this.___x);
+        this.___opcode.emit(__masm, this.___size, ValueUtil.asRegister(this.___result));
     }
 }

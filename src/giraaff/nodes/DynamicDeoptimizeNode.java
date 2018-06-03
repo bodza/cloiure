@@ -20,27 +20,27 @@ public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implemen
 
     @Input
     // @field
-    ValueNode actionAndReason;
+    ValueNode ___actionAndReason;
     @Input
     // @field
-    ValueNode speculation;
+    ValueNode ___speculation;
 
     // @cons
     public DynamicDeoptimizeNode(ValueNode __actionAndReason, ValueNode __speculation)
     {
         super(TYPE, null);
-        this.actionAndReason = __actionAndReason;
-        this.speculation = __speculation;
+        this.___actionAndReason = __actionAndReason;
+        this.___speculation = __speculation;
     }
 
     public ValueNode getActionAndReason()
     {
-        return actionAndReason;
+        return this.___actionAndReason;
     }
 
     public ValueNode getSpeculation()
     {
-        return speculation;
+        return this.___speculation;
     }
 
     @Override
@@ -64,16 +64,16 @@ public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implemen
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.getLIRGeneratorTool().emitDeoptimize(__gen.operand(actionAndReason), __gen.operand(speculation), __gen.state(this));
+        __gen.getLIRGeneratorTool().emitDeoptimize(__gen.operand(this.___actionAndReason), __gen.operand(this.___speculation), __gen.state(this));
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (actionAndReason.isConstant() && speculation.isConstant())
+        if (this.___actionAndReason.isConstant() && this.___speculation.isConstant())
         {
-            JavaConstant __constant = actionAndReason.asJavaConstant();
-            JavaConstant __speculationConstant = speculation.asJavaConstant();
+            JavaConstant __constant = this.___actionAndReason.asJavaConstant();
+            JavaConstant __speculationConstant = this.___speculation.asJavaConstant();
             return new DeoptimizeNode(__tool.getMetaAccess().decodeDeoptAction(__constant), __tool.getMetaAccess().decodeDeoptReason(__constant), __tool.getMetaAccess().decodeDebugId(__constant), __speculationConstant, stateBefore());
         }
         return this;

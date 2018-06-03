@@ -25,14 +25,14 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * A node that changes the type of its input, usually narrowing it. For example, a {@link PiNode}
- * refines the type of a receiver during type-guarded inlining to be the type tested by the guard.
- *
- * In contrast to a {@link GuardedValueNode}, a {@link PiNode} is useless as soon as the type of its
- * input is as narrow or narrower than the {@link PiNode}'s type. The {@link PiNode}, and therefore
- * also the scheduling restriction enforced by the guard, will go away.
- */
+///
+// A node that changes the type of its input, usually narrowing it. For example, a {@link PiNode}
+// refines the type of a receiver during type-guarded inlining to be the type tested by the guard.
+//
+// In contrast to a {@link GuardedValueNode}, a {@link PiNode} is useless as soon as the type of its
+// input is as narrow or narrower than the {@link PiNode}'s type. The {@link PiNode}, and therefore
+// also the scheduling restriction enforced by the guard, will go away.
+///
 // @class PiNode
 public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy
 {
@@ -41,21 +41,21 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
     // @field
-    protected Stamp piStamp;
+    protected Stamp ___piStamp;
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
     // @cons
     protected PiNode(NodeClass<? extends PiNode> __c, ValueNode __object, Stamp __stamp, GuardingNode __guard)
     {
         super(__c, __stamp, __guard);
-        this.object = __object;
-        this.piStamp = __stamp;
+        this.___object = __object;
+        this.___piStamp = __stamp;
         inferStamp();
     }
 
@@ -142,20 +142,20 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
 
     public final Stamp piStamp()
     {
-        return piStamp;
+        return this.___piStamp;
     }
 
     public void strengthenPiStamp(Stamp __newPiStamp)
     {
-        this.piStamp = __newPiStamp;
+        this.___piStamp = __newPiStamp;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        if (__gen.hasOperand(object))
+        if (__gen.hasOperand(this.___object))
         {
-            __gen.setResult(this, __gen.operand(object));
+            __gen.setResult(this, __gen.operand(this.___object));
         }
     }
 
@@ -167,7 +167,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
 
     private Stamp computeStamp()
     {
-        return piStamp.improveWith(object().stamp(NodeView.DEFAULT));
+        return this.___piStamp.improveWith(object().stamp(NodeView.DEFAULT));
     }
 
     @Override
@@ -215,8 +215,8 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
                     if (__object == __otherPi.object() && __computedStamp.equals(__otherPi.stamp(NodeView.DEFAULT)))
                     {
                         // Two PiNodes with the same guard and same result, so return the one with the more precise piStamp.
-                        Stamp __newStamp = __stamp.join(__otherPi.piStamp);
-                        if (__newStamp.equals(__otherPi.piStamp))
+                        Stamp __newStamp = __stamp.join(__otherPi.___piStamp);
+                        if (__newStamp.equals(__otherPi.___piStamp))
                         {
                             return __otherPi;
                         }
@@ -241,70 +241,70 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
     @Override
     public ValueNode getOriginalNode()
     {
-        return object;
+        return this.___object;
     }
 
     public void setOriginalNode(ValueNode __newNode)
     {
-        this.updateUsages(object, __newNode);
-        this.object = __newNode;
+        this.updateUsages(this.___object, __newNode);
+        this.___object = __newNode;
     }
 
-    /**
-     * Casts an object to have an exact, non-null stamp representing {@link Class}.
-     */
+    ///
+    // Casts an object to have an exact, non-null stamp representing {@link Class}.
+    ///
     public static Class<?> asNonNullClass(Object __object)
     {
         return asNonNullClassIntrinsic(__object, Class.class, true, true);
     }
 
-    /**
-     * Casts an object to have an exact, non-null stamp representing {@link Class}.
-     */
+    ///
+    // Casts an object to have an exact, non-null stamp representing {@link Class}.
+    ///
     public static Class<?> asNonNullObject(Object __object)
     {
         return asNonNullClassIntrinsic(__object, Object.class, false, true);
     }
 
     @NodeIntrinsic(PiNode.class)
-    private static native Class<?> asNonNullClassIntrinsic(Object object, @ConstantNodeParameter Class<?> toType, @ConstantNodeParameter boolean exactType, @ConstantNodeParameter boolean nonNull);
+    private static native Class<?> asNonNullClassIntrinsic(Object __object, @ConstantNodeParameter Class<?> __toType, @ConstantNodeParameter boolean __exactType, @ConstantNodeParameter boolean __nonNull);
 
-    /**
-     * Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
-     */
+    ///
+    // Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
+    ///
     @NodeIntrinsic(PiNode.Placeholder.class)
-    public static native Object piCastToSnippetReplaceeStamp(Object object);
+    public static native Object piCastToSnippetReplaceeStamp(Object __object);
 
-    /**
-     * Changes the stamp of an object and ensures the newly stamped value is non-null and does not
-     * float above a given guard.
-     */
+    ///
+    // Changes the stamp of an object and ensures the newly stamped value is non-null and does not
+    // float above a given guard.
+    ///
     @NodeIntrinsic
-    public static native Object piCastNonNull(Object object, GuardingNode guard);
+    public static native Object piCastNonNull(Object __object, GuardingNode __guard);
 
-    /**
-     * Changes the stamp of an object and ensures the newly stamped value is non-null and does not
-     * float above a given guard.
-     */
+    ///
+    // Changes the stamp of an object and ensures the newly stamped value is non-null and does not
+    // float above a given guard.
+    ///
     @NodeIntrinsic
-    public static native Class<?> piCastNonNullClass(Class<?> type, GuardingNode guard);
+    public static native Class<?> piCastNonNullClass(Class<?> __type, GuardingNode __guard);
 
-    /**
-     * Changes the stamp of an object to represent a given type and to indicate that the object is
-     * not null.
-     */
+    ///
+    // Changes the stamp of an object to represent a given type and to indicate that the object is
+    // not null.
+    ///
     public static Object piCastNonNull(Object __object, @ConstantNodeParameter Class<?> __toType)
     {
         return piCast(__object, __toType, false, true);
     }
 
     @NodeIntrinsic
-    public static native Object piCast(Object object, @ConstantNodeParameter Class<?> toType, @ConstantNodeParameter boolean exactType, @ConstantNodeParameter boolean nonNull);
+    public static native Object piCast(Object __object, @ConstantNodeParameter Class<?> __toType, @ConstantNodeParameter boolean __exactType, @ConstantNodeParameter boolean __nonNull);
 
-    /**
-     * A placeholder node in a snippet that will be replaced with a {@link PiNode} when the snippet
-     * is instantiated.
-     */
+    ///
+    // A placeholder node in a snippet that will be replaced with a {@link PiNode} when the snippet
+    // is instantiated.
+    ///
     // @class PiNode.Placeholder
     public static class Placeholder extends FloatingGuardedNode
     {
@@ -313,18 +313,18 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
 
         @Input
         // @field
-        ValueNode object;
+        ValueNode ___object;
 
         public ValueNode object()
         {
-            return object;
+            return this.___object;
         }
 
         // @cons
         protected Placeholder(NodeClass<? extends Placeholder> __c, ValueNode __object)
         {
             super(__c, PlaceholderStamp.SINGLETON, null);
-            this.object = __object;
+            this.___object = __object;
         }
 
         // @cons
@@ -333,11 +333,11 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
             this(TYPE, __object);
         }
 
-        /**
-         * Replaces this node with a {@link PiNode} during snippet instantiation.
-         *
-         * @param snippetReplaceeStamp the stamp of the node being replace by the snippet
-         */
+        ///
+        // Replaces this node with a {@link PiNode} during snippet instantiation.
+        //
+        // @param snippetReplaceeStamp the stamp of the node being replace by the snippet
+        ///
         public void makeReplacement(Stamp __snippetReplaceeStamp)
         {
             ValueNode __value = graph().maybeAddOrUnique(PiNode.create(object(), __snippetReplaceeStamp, null));
@@ -345,10 +345,10 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
         }
     }
 
-    /**
-     * A stamp for {@link Placeholder} nodes which are only used in snippets. It is replaced by an
-     * actual stamp when the snippet is instantiated.
-     */
+    ///
+    // A stamp for {@link Placeholder} nodes which are only used in snippets. It is replaced by an
+    // actual stamp when the snippet is instantiated.
+    ///
     // @class PiNode.PlaceholderStamp
     public static final class PlaceholderStamp extends ObjectStamp
     {

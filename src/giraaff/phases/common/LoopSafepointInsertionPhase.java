@@ -7,9 +7,9 @@ import giraaff.nodes.SafepointNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.phases.Phase;
 
-/**
- * Adds safepoints to loops.
- */
+///
+// Adds safepoints to loops.
+///
 // @class LoopSafepointInsertionPhase
 public final class LoopSafepointInsertionPhase extends Phase
 {

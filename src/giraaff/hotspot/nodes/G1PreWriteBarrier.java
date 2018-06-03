@@ -15,18 +15,18 @@ public final class G1PreWriteBarrier extends ObjectWriteBarrier implements Deopt
 
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateBefore;
+    FrameState ___stateBefore;
     // @field
-    protected final boolean nullCheck;
+    protected final boolean ___nullCheck;
     // @field
-    protected final boolean doLoad;
+    protected final boolean ___doLoad;
 
     // @cons
     public G1PreWriteBarrier(AddressNode __address, ValueNode __expectedObject, boolean __doLoad, boolean __nullCheck)
     {
         super(TYPE, __address, __expectedObject, true);
-        this.doLoad = __doLoad;
-        this.nullCheck = __nullCheck;
+        this.___doLoad = __doLoad;
+        this.___nullCheck = __nullCheck;
     }
 
     public ValueNode getExpectedObject()
@@ -36,30 +36,30 @@ public final class G1PreWriteBarrier extends ObjectWriteBarrier implements Deopt
 
     public boolean doLoad()
     {
-        return doLoad;
+        return this.___doLoad;
     }
 
     public boolean getNullCheck()
     {
-        return nullCheck;
+        return this.___nullCheck;
     }
 
     @Override
     public boolean canDeoptimize()
     {
-        return nullCheck;
+        return this.___nullCheck;
     }
 
     @Override
     public FrameState stateBefore()
     {
-        return stateBefore;
+        return this.___stateBefore;
     }
 
     @Override
     public void setStateBefore(FrameState __state)
     {
-        updateUsages(stateBefore, __state);
-        stateBefore = __state;
+        updateUsages(this.___stateBefore, __state);
+        this.___stateBefore = __state;
     }
 }

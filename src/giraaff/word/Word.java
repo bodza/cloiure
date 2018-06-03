@@ -48,9 +48,9 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
         // Calling this method ensures that the static initializer has been executed.
     }
 
-    /**
-     * Links a method to a canonical operation represented by an {@link Opcode} val.
-     */
+    ///
+    // Links a method to a canonical operation represented by an {@link Opcode} val.
+    ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     public @interface Operation
@@ -64,9 +64,9 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
         Condition condition() default Condition.EQ;
     }
 
-    /**
-     * The canonical {@link Operation} represented by a method in the {@link Word} class.
-     */
+    ///
+    // The canonical {@link Operation} represented by a method in the {@link Word} class.
+    ///
     // @enum Word.Opcode
     public enum Opcode
     {
@@ -108,10 +108,8 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
         }
     }
 
-    /*
-     * Outside users must use the different signed() and unsigned() methods to ensure proper
-     * expansion of 32-bit values on 64-bit systems.
-     */
+    // Outside users must use the different signed() and unsigned() methods to ensure proper
+    // expansion of 32-bit values on 64-bit systems.
     @SuppressWarnings("unchecked")
     private static <T extends WordBase> T box(long __val)
     {
@@ -132,32 +130,32 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
         return unbox();
     }
 
-    /**
-     * Convert an {@link Object} to a {@link Pointer}, keeping the reference information. If the
-     * returned pointer or any value derived from it is alive across a safepoint, it will be
-     * tracked. Depending on the arithmetic on the pointer and the capabilities of the backend to
-     * deal with derived references, this may work correctly, or result in a compiler error.
-     */
+    ///
+    // Convert an {@link Object} to a {@link Pointer}, keeping the reference information. If the
+    // returned pointer or any value derived from it is alive across a safepoint, it will be
+    // tracked. Depending on the arithmetic on the pointer and the capabilities of the backend to
+    // deal with derived references, this may work correctly, or result in a compiler error.
+    ///
     @Operation(opcode = Opcode.OBJECT_TO_TRACKED)
-    public static native Word objectToTrackedPointer(Object val);
+    public static native Word objectToTrackedPointer(Object __val);
 
-    /**
-     * Convert an {@link Object} to a {@link Pointer}, dropping the reference information. If the
-     * returned pointer or any value derived from it is alive across a safepoint, it will be treated
-     * as a simple integer and not tracked by the garbage collector.
-     *
-     * This is a dangerous operation, the GC could move the object without updating the pointer! Use
-     * only in combination with some mechanism to prevent the GC from moving or freeing the object
-     * as long as the pointer is in use.
-     *
-     * If the result value should not be alive across a safepoint, it's better to use
-     * {@link #objectToTrackedPointer(Object)} instead.
-     */
+    ///
+    // Convert an {@link Object} to a {@link Pointer}, dropping the reference information. If the
+    // returned pointer or any value derived from it is alive across a safepoint, it will be treated
+    // as a simple integer and not tracked by the garbage collector.
+    //
+    // This is a dangerous operation, the GC could move the object without updating the pointer! Use
+    // only in combination with some mechanism to prevent the GC from moving or freeing the object
+    // as long as the pointer is in use.
+    //
+    // If the result value should not be alive across a safepoint, it's better to use
+    // {@link #objectToTrackedPointer(Object)} instead.
+    ///
     @Operation(opcode = Opcode.OBJECT_TO_UNTRACKED)
-    public static native Word objectToUntrackedPointer(Object val);
+    public static native Word objectToUntrackedPointer(Object __val);
 
     @Operation(opcode = Opcode.FROM_ADDRESS)
-    public static native Word fromAddress(Address address);
+    public static native Word fromAddress(Address __address);
 
     @Override
     @Operation(opcode = Opcode.TO_OBJECT)
@@ -776,7 +774,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
-    public native Object readObject(WordBase offset, LocationIdentity locationIdentity);
+    public native Object readObject(WordBase __offset, LocationIdentity __locationIdentity);
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
@@ -906,7 +904,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public native void writeObject(WordBase offset, Object val, LocationIdentity locationIdentity);
+    public native void writeObject(WordBase __offset, Object __val, LocationIdentity __locationIdentity);
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
@@ -1036,10 +1034,10 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
-    public native Object readObject(WordBase offset);
+    public native Object readObject(WordBase __offset);
 
     @Operation(opcode = Opcode.READ_HEAP)
-    public native Object readObject(WordBase offset, BarrierType barrierType);
+    public native Object readObject(WordBase __offset, BarrierType __barrierType);
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
@@ -1161,19 +1159,19 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
-    public native int compareAndSwapInt(WordBase offset, int expectedValue, int newValue, LocationIdentity locationIdentity);
+    public native int compareAndSwapInt(WordBase __offset, int __expectedValue, int __newValue, LocationIdentity __locationIdentity);
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
-    public native long compareAndSwapLong(WordBase offset, long expectedValue, long newValue, LocationIdentity locationIdentity);
+    public native long compareAndSwapLong(WordBase __offset, long __expectedValue, long __newValue, LocationIdentity __locationIdentity);
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
-    public native <T extends WordBase> T compareAndSwapWord(WordBase offset, T expectedValue, T newValue, LocationIdentity locationIdentity);
+    public native <T extends WordBase> T compareAndSwapWord(WordBase __offset, T __expectedValue, T __newValue, LocationIdentity __locationIdentity);
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
-    public native Object compareAndSwapObject(WordBase offset, Object expectedValue, Object newValue, LocationIdentity locationIdentity);
+    public native Object compareAndSwapObject(WordBase __offset, Object __expectedValue, Object __newValue, LocationIdentity __locationIdentity);
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
@@ -1191,7 +1189,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
-    public native boolean logicCompareAndSwapWord(WordBase offset, WordBase expectedValue, WordBase newValue, LocationIdentity locationIdentity);
+    public native boolean logicCompareAndSwapWord(WordBase __offset, WordBase __expectedValue, WordBase __newValue, LocationIdentity __locationIdentity);
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
@@ -1209,7 +1207,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
-    public native void writeObject(WordBase offset, Object val);
+    public native void writeObject(WordBase __offset, Object __val);
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
@@ -1330,11 +1328,11 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
         return logicCompareAndSwapObject(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
-    /**
-     * This is deprecated because of the easy to mistype name collision between {@link #equals} and
-     * the other equals routines like {@link #equal(Word)}. In general you should never be
-     * statically calling this method for Word types.
-     */
+    ///
+    // This is deprecated because of the easy to mistype name collision between {@link #equals} and
+    // the other equals routines like {@link #equal(Word)}. In general you should never be
+    // statically calling this method for Word types.
+    ///
     @SuppressWarnings("deprecation")
     @Deprecated
     @Override
@@ -1370,13 +1368,13 @@ final class HostedWord extends Word
     }
 
     // @field
-    private final long rawValue;
+    private final long ___rawValue;
 
     // @cons
     private HostedWord(long __rawValue)
     {
         super();
-        this.rawValue = __rawValue;
+        this.___rawValue = __rawValue;
     }
 
     protected static Word boxLong(long __val)
@@ -1391,6 +1389,6 @@ final class HostedWord extends Word
     @Override
     protected long unbox()
     {
-        return rawValue;
+        return this.___rawValue;
     }
 }

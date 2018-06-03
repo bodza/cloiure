@@ -12,41 +12,41 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import giraaff.nodes.java.ExceptionObjectNode;
 
-/**
- * An intrinsic is a substitute implementation of a Java method (or a bytecode in the case of
- * snippets) that is itself implemented in Java. This interface provides information about the
- * intrinsic currently being processed by the graph builder.
- *
- * When in the scope of an intrinsic, the graph builder does not check the value kinds flowing
- * through the JVM state since intrinsics can employ non-Java kinds to represent values such as raw
- * machine words and pointers.
- */
+///
+// An intrinsic is a substitute implementation of a Java method (or a bytecode in the case of
+// snippets) that is itself implemented in Java. This interface provides information about the
+// intrinsic currently being processed by the graph builder.
+//
+// When in the scope of an intrinsic, the graph builder does not check the value kinds flowing
+// through the JVM state since intrinsics can employ non-Java kinds to represent values such as raw
+// machine words and pointers.
+///
 // @class IntrinsicContext
 public final class IntrinsicContext
 {
-    /**
-     * Method being intrinsified.
-     */
+    ///
+    // Method being intrinsified.
+    ///
     // @field
-    final ResolvedJavaMethod originalMethod;
+    final ResolvedJavaMethod ___originalMethod;
 
-    /**
-     * Method providing the intrinsic implementation.
-     */
+    ///
+    // Method providing the intrinsic implementation.
+    ///
     // @field
-    final ResolvedJavaMethod intrinsicMethod;
+    final ResolvedJavaMethod ___intrinsicMethod;
 
-    /**
-     * Provider of bytecode to be parsed for a method that is part of an intrinsic.
-     */
+    ///
+    // Provider of bytecode to be parsed for a method that is part of an intrinsic.
+    ///
     // @field
-    final BytecodeProvider bytecodeProvider;
-
-    // @field
-    final CompilationContext compilationContext;
+    final BytecodeProvider ___bytecodeProvider;
 
     // @field
-    final boolean allowPartialIntrinsicArgumentMismatch;
+    final CompilationContext ___compilationContext;
+
+    // @field
+    final boolean ___allowPartialIntrinsicArgumentMismatch;
 
     // @cons
     public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, CompilationContext __compilationContext)
@@ -58,111 +58,111 @@ public final class IntrinsicContext
     public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, CompilationContext __compilationContext, boolean __allowPartialIntrinsicArgumentMismatch)
     {
         super();
-        this.originalMethod = __method;
-        this.intrinsicMethod = __intrinsic;
-        this.bytecodeProvider = __bytecodeProvider;
-        this.compilationContext = __compilationContext;
-        this.allowPartialIntrinsicArgumentMismatch = __allowPartialIntrinsicArgumentMismatch;
+        this.___originalMethod = __method;
+        this.___intrinsicMethod = __intrinsic;
+        this.___bytecodeProvider = __bytecodeProvider;
+        this.___compilationContext = __compilationContext;
+        this.___allowPartialIntrinsicArgumentMismatch = __allowPartialIntrinsicArgumentMismatch;
     }
 
-    /**
-     * A partial intrinsic exits by (effectively) calling the intrinsified method. Normally, this
-     * call must use exactly the same arguments as the call that is being intrinsified. This allows
-     * to override this behavior.
-     */
+    ///
+    // A partial intrinsic exits by (effectively) calling the intrinsified method. Normally, this
+    // call must use exactly the same arguments as the call that is being intrinsified. This allows
+    // to override this behavior.
+    ///
     public boolean allowPartialIntrinsicArgumentMismatch()
     {
-        return allowPartialIntrinsicArgumentMismatch;
+        return this.___allowPartialIntrinsicArgumentMismatch;
     }
 
-    /**
-     * Gets the method being intrinsified.
-     */
+    ///
+    // Gets the method being intrinsified.
+    ///
     public ResolvedJavaMethod getOriginalMethod()
     {
-        return originalMethod;
+        return this.___originalMethod;
     }
 
-    /**
-     * Gets the method providing the intrinsic implementation.
-     */
+    ///
+    // Gets the method providing the intrinsic implementation.
+    ///
     public ResolvedJavaMethod getIntrinsicMethod()
     {
-        return intrinsicMethod;
+        return this.___intrinsicMethod;
     }
 
-    /**
-     * Gets provider of bytecode to be parsed for a method that is part of an intrinsic.
-     */
+    ///
+    // Gets provider of bytecode to be parsed for a method that is part of an intrinsic.
+    ///
     public BytecodeProvider getBytecodeProvider()
     {
-        return bytecodeProvider;
+        return this.___bytecodeProvider;
     }
 
-    /**
-     * Determines if a call within the compilation scope of this intrinsic represents a call to the
-     * {@linkplain #getOriginalMethod() original} method. This denotes the path where a partial
-     * intrinsification falls back to the original method.
-     */
+    ///
+    // Determines if a call within the compilation scope of this intrinsic represents a call to the
+    // {@linkplain #getOriginalMethod() original} method. This denotes the path where a partial
+    // intrinsification falls back to the original method.
+    ///
     public boolean isCallToOriginal(ResolvedJavaMethod __targetMethod)
     {
-        return originalMethod.equals(__targetMethod) || intrinsicMethod.equals(__targetMethod);
+        return this.___originalMethod.equals(__targetMethod) || this.___intrinsicMethod.equals(__targetMethod);
     }
 
     public boolean isPostParseInlined()
     {
-        return compilationContext.equals(CompilationContext.INLINE_AFTER_PARSING);
+        return this.___compilationContext.equals(CompilationContext.INLINE_AFTER_PARSING);
     }
 
     public boolean isCompilationRoot()
     {
-        return compilationContext.equals(CompilationContext.ROOT_COMPILATION);
+        return this.___compilationContext.equals(CompilationContext.ROOT_COMPILATION);
     }
 
-    /**
-     * Denotes the compilation context in which an intrinsic is being parsed.
-     */
+    ///
+    // Denotes the compilation context in which an intrinsic is being parsed.
+    ///
     // @enum IntrinsicContext.CompilationContext
     public enum CompilationContext
     {
-        /**
-         * An intrinsic is being processed when parsing an invoke bytecode that calls the
-         * intrinsified method.
-         */
+        ///
+        // An intrinsic is being processed when parsing an invoke bytecode that calls the
+        // intrinsified method.
+        ///
         INLINE_DURING_PARSING,
 
-        /**
-         * An intrinsic is being processed when inlining an {@link Invoke} in an existing graph.
-         */
+        ///
+        // An intrinsic is being processed when inlining an {@link Invoke} in an existing graph.
+        ///
         INLINE_AFTER_PARSING,
 
-        /**
-         * An intrinsic is the root of compilation.
-         */
+        ///
+        // An intrinsic is the root of compilation.
+        ///
         ROOT_COMPILATION
     }
 
-    /**
-     * Models the state of a graph in terms of {@link StateSplit#hasSideEffect() side effects} that
-     * are control flow predecessors of the current point in a graph.
-     */
+    ///
+    // Models the state of a graph in terms of {@link StateSplit#hasSideEffect() side effects} that
+    // are control flow predecessors of the current point in a graph.
+    ///
     // @iface IntrinsicContext.SideEffectsState
     public interface SideEffectsState
     {
-        /**
-         * Determines if the current program point is preceded by one or more side effects.
-         */
+        ///
+        // Determines if the current program point is preceded by one or more side effects.
+        ///
         boolean isAfterSideEffect();
 
-        /**
-         * Gets the side effects preceding the current program point.
-         */
+        ///
+        // Gets the side effects preceding the current program point.
+        ///
         Iterable<StateSplit> sideEffects();
 
-        /**
-         * Records a side effect for the current program point.
-         */
-        void addSideEffect(StateSplit sideEffect);
+        ///
+        // Records a side effect for the current program point.
+        ///
+        void addSideEffect(StateSplit __sideEffect);
     }
 
     public FrameState createFrameState(StructuredGraph __graph, SideEffectsState __sideEffects, StateSplit __forStateSplit)

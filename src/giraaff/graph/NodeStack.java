@@ -7,9 +7,9 @@ public final class NodeStack
     private static final int DEFAULT_INITIAL_SIZE = 8;
 
     // @field
-    protected Node[] values;
+    protected Node[] ___values;
     // @field
-    public int tos;
+    public int ___tos;
 
     // @cons
     public NodeStack()
@@ -21,55 +21,55 @@ public final class NodeStack
     public NodeStack(int __initialSize)
     {
         super();
-        values = new Node[__initialSize];
+        this.___values = new Node[__initialSize];
     }
 
     public int size()
     {
-        return tos;
+        return this.___tos;
     }
 
     public void push(Node __n)
     {
-        int __newIndex = tos++;
-        int __valuesLength = values.length;
+        int __newIndex = this.___tos++;
+        int __valuesLength = this.___values.length;
         if (__newIndex >= __valuesLength)
         {
             grow();
         }
-        values[__newIndex] = __n;
+        this.___values[__newIndex] = __n;
     }
 
     private void grow()
     {
-        int __valuesLength = values.length;
+        int __valuesLength = this.___values.length;
         Node[] __newValues = new Node[__valuesLength << 1];
-        System.arraycopy(values, 0, __newValues, 0, __valuesLength);
-        values = __newValues;
+        System.arraycopy(this.___values, 0, __newValues, 0, __valuesLength);
+        this.___values = __newValues;
     }
 
     public Node get(int __index)
     {
-        return values[__index];
+        return this.___values[__index];
     }
 
     public Node pop()
     {
-        return values[--tos];
+        return this.___values[--this.___tos];
     }
 
     public Node peek()
     {
-        return values[tos - 1];
+        return this.___values[this.___tos - 1];
     }
 
     public boolean isEmpty()
     {
-        return tos == 0;
+        return this.___tos == 0;
     }
 
     public void clear()
     {
-        tos = 0;
+        this.___tos = 0;
     }
 }

@@ -8,10 +8,10 @@ import giraaff.graph.Node;
 import giraaff.nodes.StructuredGraph;
 import giraaff.util.GraalError;
 
-/**
- * An {@link EffectList} can be used to maintain a list of {@link Effect}s and backtrack to a
- * previous state by truncating the list.
- */
+///
+// An {@link EffectList} can be used to maintain a list of {@link Effect}s and backtrack to a
+// previous state by truncating the list.
+///
 // @class EffectList
 public class EffectList implements Iterable<EffectList.Effect>
 {
@@ -28,19 +28,19 @@ public class EffectList implements Iterable<EffectList.Effect>
             return false;
         }
 
-        void apply(StructuredGraph graph, ArrayList<Node> obsoleteNodes);
+        void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes);
     }
 
     // @iface EffectList.SimpleEffect
     public interface SimpleEffect extends Effect
     {
         @Override
-        default void apply(StructuredGraph graph, ArrayList<Node> obsoleteNodes)
+        default void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes)
         {
-            apply(graph);
+            apply(__graph);
         }
 
-        void apply(StructuredGraph graph);
+        void apply(StructuredGraph __graph);
     }
 
     // @def
@@ -49,9 +49,9 @@ public class EffectList implements Iterable<EffectList.Effect>
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     // @field
-    private Effect[] effects = EMPTY_ARRAY;
+    private Effect[] ___effects = EMPTY_ARRAY;
     // @field
-    private int size;
+    private int ___size;
 
     // @cons
     public EffectList()
@@ -61,14 +61,14 @@ public class EffectList implements Iterable<EffectList.Effect>
 
     private void enlarge(int __elements)
     {
-        int __length = effects.length;
-        if (size + __elements > __length)
+        int __length = this.___effects.length;
+        if (this.___size + __elements > __length)
         {
-            while (size + __elements > __length)
+            while (this.___size + __elements > __length)
             {
                 __length = Math.max(__length * 2, 4);
             }
-            effects = Arrays.copyOf(effects, __length);
+            this.___effects = Arrays.copyOf(this.___effects, __length);
         }
     }
 
@@ -80,37 +80,37 @@ public class EffectList implements Iterable<EffectList.Effect>
     public void add(String __name, Effect __effect)
     {
         enlarge(1);
-        effects[size++] = __effect;
+        this.___effects[this.___size++] = __effect;
     }
 
     public void addAll(EffectList __list)
     {
-        enlarge(__list.size);
-        System.arraycopy(__list.effects, 0, effects, size, __list.size);
-        size += __list.size;
+        enlarge(__list.___size);
+        System.arraycopy(__list.___effects, 0, this.___effects, this.___size, __list.___size);
+        this.___size += __list.___size;
     }
 
     public void insertAll(EffectList __list, int __position)
     {
-        enlarge(__list.size);
-        System.arraycopy(effects, __position, effects, __position + __list.size, size - __position);
-        System.arraycopy(__list.effects, 0, effects, __position, __list.size);
-        size += __list.size;
+        enlarge(__list.___size);
+        System.arraycopy(this.___effects, __position, this.___effects, __position + __list.___size, this.___size - __position);
+        System.arraycopy(__list.___effects, 0, this.___effects, __position, __list.___size);
+        this.___size += __list.___size;
     }
 
     public int checkpoint()
     {
-        return size;
+        return this.___size;
     }
 
     public int size()
     {
-        return size;
+        return this.___size;
     }
 
     public void backtrack(int __checkpoint)
     {
-        size = __checkpoint;
+        this.___size = __checkpoint;
     }
 
     @Override
@@ -120,20 +120,20 @@ public class EffectList implements Iterable<EffectList.Effect>
         return new Iterator<Effect>()
         {
             // @field
-            int index;
+            int ___index;
             // @field
-            final int listSize = EffectList.this.size;
+            final int ___listSize = EffectList.this.___size;
 
             @Override
             public boolean hasNext()
             {
-                return index < listSize;
+                return this.___index < this.___listSize;
             }
 
             @Override
             public Effect next()
             {
-                return effects[index++];
+                return EffectList.this.___effects[this.___index++];
             }
 
             @Override
@@ -146,21 +146,21 @@ public class EffectList implements Iterable<EffectList.Effect>
 
     public Effect get(int __index)
     {
-        if (__index >= size)
+        if (__index >= this.___size)
         {
             throw new IndexOutOfBoundsException();
         }
-        return effects[__index];
+        return this.___effects[__index];
     }
 
     public void clear()
     {
-        size = 0;
+        this.___size = 0;
     }
 
     public boolean isEmpty()
     {
-        return size == 0;
+        return this.___size == 0;
     }
 
     public void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes, boolean __cfgKills)
@@ -168,7 +168,7 @@ public class EffectList implements Iterable<EffectList.Effect>
         boolean __message = false;
         for (int __i = 0; __i < size(); __i++)
         {
-            Effect __effect = effects[__i];
+            Effect __effect = this.___effects[__i];
             if (__effect.isCfgKill() == __cfgKills)
             {
                 if (!__message)

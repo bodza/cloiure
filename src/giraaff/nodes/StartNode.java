@@ -5,9 +5,9 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.memory.MemoryCheckpoint;
 
-/**
- * The start node of a graph.
- */
+///
+// The start node of a graph.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class StartNode
 public class StartNode extends BeginStateSplitNode implements MemoryCheckpoint.Single

@@ -1,8 +1,8 @@
 package giraaff.lir;
 
-/**
- * This class represents garbage collection and deoptimization information attached to a LIR instruction.
- */
+///
+// This class represents garbage collection and deoptimization information attached to a LIR instruction.
+///
 // @class LIRFrameState
 public final class LIRFrameState
 {
@@ -10,12 +10,12 @@ public final class LIRFrameState
     public static final LIRFrameState NO_STATE = new LIRFrameState(null);
 
     // @field
-    public final LabelRef exceptionEdge;
+    public final LabelRef ___exceptionEdge;
 
     // @cons
     public LIRFrameState(LabelRef __exceptionEdge)
     {
         super();
-        this.exceptionEdge = __exceptionEdge;
+        this.___exceptionEdge = __exceptionEdge;
     }
 }

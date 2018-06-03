@@ -10,9 +10,9 @@ import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.PhiNode;
 import giraaff.nodes.ValueNode;
 
-/**
- * Memory {@code PhiNode}s merge memory dependencies at control flow merges.
- */
+///
+// Memory {@code PhiNode}s merge memory dependencies at control flow merges.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class MemoryPhiNode
 public final class MemoryPhiNode extends PhiNode implements MemoryNode
@@ -22,34 +22,34 @@ public final class MemoryPhiNode extends PhiNode implements MemoryNode
 
     @Input(InputType.Memory)
     // @field
-    NodeInputList<ValueNode> values;
+    NodeInputList<ValueNode> ___values;
     // @field
-    protected final LocationIdentity locationIdentity;
+    protected final LocationIdentity ___locationIdentity;
 
     // @cons
     public MemoryPhiNode(AbstractMergeNode __merge, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forVoid(), __merge);
-        this.locationIdentity = __locationIdentity;
-        this.values = new NodeInputList<>(this);
+        this.___locationIdentity = __locationIdentity;
+        this.___values = new NodeInputList<>(this);
     }
 
     // @cons
     public MemoryPhiNode(AbstractMergeNode __merge, LocationIdentity __locationIdentity, ValueNode[] __values)
     {
         super(TYPE, StampFactory.forVoid(), __merge);
-        this.locationIdentity = __locationIdentity;
-        this.values = new NodeInputList<>(this, __values);
+        this.___locationIdentity = __locationIdentity;
+        this.___values = new NodeInputList<>(this, __values);
     }
 
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 
     @Override
     public NodeInputList<ValueNode> values()
     {
-        return values;
+        return this.___values;
     }
 }

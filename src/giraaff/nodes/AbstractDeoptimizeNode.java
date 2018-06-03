@@ -7,12 +7,12 @@ import giraaff.graph.IterableNodeType;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 
-/**
- * This node represents an unconditional explicit request for immediate deoptimization.
- *
- * After this node, execution will continue using a fallback execution engine (such as an
- * interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
- */
+///
+// This node represents an unconditional explicit request for immediate deoptimization.
+//
+// After this node, execution will continue using a fallback execution engine (such as an
+// interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
+///
 // @class AbstractDeoptimizeNode
 public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements IterableNodeType, DeoptimizingNode.DeoptBefore
 {
@@ -21,13 +21,13 @@ public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements 
 
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateBefore;
+    FrameState ___stateBefore;
 
     // @cons
     protected AbstractDeoptimizeNode(NodeClass<? extends AbstractDeoptimizeNode> __c, FrameState __stateBefore)
     {
         super(__c, StampFactory.forVoid());
-        this.stateBefore = __stateBefore;
+        this.___stateBefore = __stateBefore;
     }
 
     @Override
@@ -39,17 +39,17 @@ public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements 
     @Override
     public FrameState stateBefore()
     {
-        return stateBefore;
+        return this.___stateBefore;
     }
 
     @Override
     public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, __f);
-        stateBefore = __f;
+        updateUsages(this.___stateBefore, __f);
+        this.___stateBefore = __f;
     }
 
-    public abstract ValueNode getActionAndReason(MetaAccessProvider metaAccess);
+    public abstract ValueNode getActionAndReason(MetaAccessProvider __metaAccess);
 
-    public abstract ValueNode getSpeculation(MetaAccessProvider metaAccess);
+    public abstract ValueNode getSpeculation(MetaAccessProvider __metaAccess);
 }

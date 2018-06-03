@@ -36,9 +36,7 @@ public final class OSRMonitorEnterNode extends MonitorEnterNode implements LIRLo
     @Override
     public void lower(LoweringTool __tool)
     {
-        /*
-         * Nothing to do for OSR compilations with locks the monitor enter operation already
-         * happened when we do the compilation.
-         */
+        // Nothing to do for OSR compilations with locks the monitor enter operation already
+        // happened when we do the compilation.
     }
 }

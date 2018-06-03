@@ -12,10 +12,10 @@ import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMapBuilder;
 
-/**
- * Manages allocation and re-use of lock slots in a scoped manner. The slots are used in HotSpot's
- * lightweight locking mechanism to store the mark word of an object being locked.
- */
+///
+// Manages allocation and re-use of lock slots in a scoped manner. The slots are used in HotSpot's
+// lightweight locking mechanism to store the mark word of an object being locked.
+///
 // @class HotSpotLockStack
 public final class HotSpotLockStack extends LIRInstruction
 {
@@ -27,39 +27,39 @@ public final class HotSpotLockStack extends LIRInstruction
 
     @Def({OperandFlag.STACK})
     // @field
-    private AllocatableValue[] locks;
+    private AllocatableValue[] ___locks;
     // @field
-    private final FrameMapBuilder frameMapBuilder;
+    private final FrameMapBuilder ___frameMapBuilder;
     // @field
-    private final LIRKind slotKind;
+    private final LIRKind ___slotKind;
 
     // @cons
     public HotSpotLockStack(FrameMapBuilder __frameMapBuilder, LIRKind __slotKind)
     {
         super(TYPE);
-        this.frameMapBuilder = __frameMapBuilder;
-        this.slotKind = __slotKind;
-        this.locks = EMPTY;
+        this.___frameMapBuilder = __frameMapBuilder;
+        this.___slotKind = __slotKind;
+        this.___locks = EMPTY;
     }
 
-    /**
-     * Gets a stack slot for a lock at a given lock nesting depth, allocating it first if necessary.
-     */
+    ///
+    // Gets a stack slot for a lock at a given lock nesting depth, allocating it first if necessary.
+    ///
     public VirtualStackSlot makeLockSlot(int __lockDepth)
     {
-        if (locks == EMPTY)
+        if (this.___locks == EMPTY)
         {
-            locks = new AllocatableValue[__lockDepth + 1];
+            this.___locks = new AllocatableValue[__lockDepth + 1];
         }
-        else if (locks.length < __lockDepth + 1)
+        else if (this.___locks.length < __lockDepth + 1)
         {
-            locks = Arrays.copyOf(locks, __lockDepth + 1);
+            this.___locks = Arrays.copyOf(this.___locks, __lockDepth + 1);
         }
-        if (locks[__lockDepth] == null)
+        if (this.___locks[__lockDepth] == null)
         {
-            locks[__lockDepth] = frameMapBuilder.allocateSpillSlot(slotKind);
+            this.___locks[__lockDepth] = this.___frameMapBuilder.allocateSpillSlot(this.___slotKind);
         }
-        return (VirtualStackSlot) locks[__lockDepth];
+        return (VirtualStackSlot) this.___locks[__lockDepth];
     }
 
     @Override

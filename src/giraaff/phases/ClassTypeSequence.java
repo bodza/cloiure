@@ -8,19 +8,19 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 final class ClassTypeSequence implements JavaType, CharSequence
 {
     // @field
-    private final Class<?> clazz;
+    private final Class<?> ___clazz;
 
     // @cons
     ClassTypeSequence(Class<?> __clazz)
     {
         super();
-        this.clazz = __clazz;
+        this.___clazz = __clazz;
     }
 
     @Override
     public String getName()
     {
-        return "L" + clazz.getName().replace('.', '/') + ";";
+        return "L" + this.___clazz.getName().replace('.', '/') + ";";
     }
 
     @Override
@@ -34,12 +34,12 @@ final class ClassTypeSequence implements JavaType, CharSequence
     {
         if (__qualified)
         {
-            return clazz.getName();
+            return this.___clazz.getName();
         }
         else
         {
-            int __lastDot = clazz.getName().lastIndexOf('.');
-            return clazz.getName().substring(__lastDot + 1);
+            int __lastDot = this.___clazz.getName().lastIndexOf('.');
+            return this.___clazz.getName().substring(__lastDot + 1);
         }
     }
 
@@ -70,18 +70,18 @@ final class ClassTypeSequence implements JavaType, CharSequence
     @Override
     public int length()
     {
-        return clazz.getName().length();
+        return this.___clazz.getName().length();
     }
 
     @Override
     public char charAt(int __index)
     {
-        return clazz.getName().charAt(__index);
+        return this.___clazz.getName().charAt(__index);
     }
 
     @Override
     public CharSequence subSequence(int __start, int __end)
     {
-        return clazz.getName().subSequence(__start, __end);
+        return this.___clazz.getName().subSequence(__start, __end);
     }
 }

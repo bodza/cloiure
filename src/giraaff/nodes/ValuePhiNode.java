@@ -7,9 +7,9 @@ import giraaff.nodes.spi.ArrayLengthProvider;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * Value {@link PhiNode}s merge data flow values at control flow merges.
- */
+///
+// Value {@link PhiNode}s merge data flow values at control flow merges.
+///
 // @class ValuePhiNode
 public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
 {
@@ -18,7 +18,7 @@ public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
 
     @Input
     // @field
-    protected NodeInputList<ValueNode> values;
+    protected NodeInputList<ValueNode> ___values;
 
     // @cons
     public ValuePhiNode(Stamp __stamp, AbstractMergeNode __merge)
@@ -30,20 +30,20 @@ public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
     protected ValuePhiNode(NodeClass<? extends ValuePhiNode> __c, Stamp __stamp, AbstractMergeNode __merge)
     {
         super(__c, __stamp, __merge);
-        values = new NodeInputList<>(this);
+        this.___values = new NodeInputList<>(this);
     }
 
     // @cons
     public ValuePhiNode(Stamp __stamp, AbstractMergeNode __merge, ValueNode[] __values)
     {
         super(TYPE, __stamp, __merge);
-        this.values = new NodeInputList<>(this, __values);
+        this.___values = new NodeInputList<>(this, __values);
     }
 
     @Override
     public NodeInputList<ValueNode> values()
     {
-        return values;
+        return this.___values;
     }
 
     @Override
@@ -53,11 +53,11 @@ public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
         Stamp __valuesStamp = StampTool.meetOrNull(values(), this);
         if (__valuesStamp == null)
         {
-            __valuesStamp = stamp;
+            __valuesStamp = this.___stamp;
         }
-        else if (stamp.isCompatible(__valuesStamp))
+        else if (this.___stamp.isCompatible(__valuesStamp))
         {
-            __valuesStamp = stamp.join(__valuesStamp);
+            __valuesStamp = this.___stamp.join(__valuesStamp);
         }
         return updateStamp(__valuesStamp);
     }

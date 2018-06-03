@@ -66,9 +66,9 @@ import giraaff.lir.gen.LIRGenerator;
 import giraaff.phases.util.Providers;
 import giraaff.util.GraalError;
 
-/**
- * This class implements the AMD64 specific portion of the LIR generator.
- */
+///
+// This class implements the AMD64 specific portion of the LIR generator.
+///
 // @class AMD64LIRGenerator
 public abstract class AMD64LIRGenerator extends LIRGenerator
 {
@@ -78,13 +78,13 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         super(__lirKindTool, __arithmeticLIRGen, __moveFactory, __providers, __lirGenRes);
     }
 
-    /**
-     * Checks whether the supplied constant can be used without loading it into a register for store
-     * operations, i.e., on the right hand side of a memory access.
-     *
-     * @param c The constant to check.
-     * @return True if the constant can be used directly, false if the constant needs to be in a register.
-     */
+    ///
+    // Checks whether the supplied constant can be used without loading it into a register for store
+    // operations, i.e., on the right hand side of a memory access.
+    //
+    // @param c The constant to check.
+    // @return True if the constant can be used directly, false if the constant needs to be in a register.
+    ///
     protected static final boolean canStoreConstant(JavaConstant __c)
     {
         // there is no immediate move of 64-bit constants on Intel
@@ -151,10 +151,10 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         return __result;
     }
 
-    /**
-     * The AMD64 backend only uses DWORD and QWORD values in registers because of a performance penalty
-     * when accessing WORD or BYTE registers. This function converts small integer kinds to DWORD.
-     */
+    ///
+    // The AMD64 backend only uses DWORD and QWORD values in registers because of a performance penalty
+    // when accessing WORD or BYTE registers. This function converts small integer kinds to DWORD.
+    ///
     @Override
     public <K extends ValueKind<K>> K toRegisterKind(K __kind)
     {
@@ -393,36 +393,48 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         }
     }
 
-    /**
-     * This method emits the compare against memory instruction, and may reorder the operands. It
-     * returns true if it did so.
-     *
-     * @param b the right operand of the comparison
-     * @return true if the left and right operands were switched, false otherwise
-     */
+    ///
+    // This method emits the compare against memory instruction, and may reorder the operands. It
+    // returns true if it did so.
+    //
+    // @param b the right operand of the comparison
+    // @return true if the left and right operands were switched, false otherwise
+    ///
     private boolean emitCompareMemory(AMD64Kind __cmpKind, Value __a, AMD64AddressValue __b, LIRFrameState __state)
     {
         OperandSize __size;
         switch (__cmpKind)
         {
             case BYTE:
+            {
                 __size = OperandSize.BYTE;
                 break;
+            }
             case WORD:
+            {
                 __size = OperandSize.WORD;
                 break;
+            }
             case DWORD:
+            {
                 __size = OperandSize.DWORD;
                 break;
+            }
             case QWORD:
+            {
                 __size = OperandSize.QWORD;
                 break;
+            }
             case SINGLE:
+            {
                 append(new AMD64BinaryConsumer.MemoryRMOp(SSEOp.UCOMIS, OperandSize.PS, asAllocatable(__a), __b, __state));
                 return false;
+            }
             case DOUBLE:
+            {
                 append(new AMD64BinaryConsumer.MemoryRMOp(SSEOp.UCOMIS, OperandSize.PD, asAllocatable(__a), __b, __state));
                 return false;
+            }
             default:
                 throw GraalError.shouldNotReachHere("unexpected kind: " + __cmpKind);
         }
@@ -472,15 +484,15 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         return false;
     }
 
-    /**
-     * This method emits the compare instruction, and may reorder the operands. It returns true if
-     * it did so.
-     *
-     * @param a the left operand of the comparison
-     * @param b the right operand of the comparison
-     * @param cond the condition of the comparison
-     * @return true if the left and right operands were switched, false otherwise
-     */
+    ///
+    // This method emits the compare instruction, and may reorder the operands. It returns true if
+    // it did so.
+    //
+    // @param a the left operand of the comparison
+    // @param b the right operand of the comparison
+    // @param cond the condition of the comparison
+    // @return true if the left and right operands were switched, false otherwise
+    ///
     private Condition emitCompare(PlatformKind __cmpKind, Value __a, Value __b, Condition __cond)
     {
         if (LIRValueUtil.isVariable(__b))
@@ -497,7 +509,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
 
     private void emitRawCompare(PlatformKind __cmpKind, Value __left, Value __right)
     {
-        ((AMD64ArithmeticLIRGeneratorTool) arithmeticLIRGen).emitCompareOp((AMD64Kind) __cmpKind, load(__left), loadNonConst(__right));
+        ((AMD64ArithmeticLIRGeneratorTool) this.___arithmeticLIRGen).emitCompareOp((AMD64Kind) __cmpKind, load(__left), loadNonConst(__right));
     }
 
     @Override
@@ -510,7 +522,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         }
     }
 
-    public abstract void emitCCall(long address, CallingConvention nativeCallingConvention, Value[] args, int numberOfFloatingPointArguments);
+    public abstract void emitCCall(long __address, CallingConvention __nativeCallingConvention, Value[] __args, int __numberOfFloatingPointArguments);
 
     @Override
     protected void emitForeignCallOp(ForeignCallLinkage __linkage, Value __result, Value[] __arguments, Value[] __temps, LIRFrameState __info)

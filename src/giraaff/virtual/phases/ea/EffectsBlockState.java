@@ -9,12 +9,12 @@ import org.graalvm.collections.UnmodifiableMapCursor;
 // @class EffectsBlockState
 public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
 {
-    /**
-     * This flag specifies whether this block is unreachable, which can happen during analysis if
-     * conditions turn constant or nodes canonicalize to cfg sinks.
-     */
+    ///
+    // This flag specifies whether this block is unreachable, which can happen during analysis if
+    // conditions turn constant or nodes canonicalize to cfg sinks.
+    ///
     // @field
-    private boolean dead;
+    private boolean ___dead;
 
     // @cons
     public EffectsBlockState()
@@ -27,24 +27,24 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
     public EffectsBlockState(EffectsBlockState<T> __other)
     {
         super();
-        this.dead = __other.dead;
+        this.___dead = __other.___dead;
     }
 
-    protected abstract boolean equivalentTo(T other);
+    protected abstract boolean equivalentTo(T __other);
 
     public boolean isDead()
     {
-        return dead;
+        return this.___dead;
     }
 
     public void markAsDead()
     {
-        this.dead = true;
+        this.___dead = true;
     }
 
-    /**
-     * Returns true if every value in subMap is also present in the superMap (according to "equals" semantics).
-     */
+    ///
+    // Returns true if every value in subMap is also present in the superMap (according to "equals" semantics).
+    ///
     protected static <K, V> boolean isSubMapOf(EconomicMap<K, V> __superMap, EconomicMap<K, V> __subMap)
     {
         if (__superMap == __subMap)
@@ -65,9 +65,9 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
         return true;
     }
 
-    /**
-     * Modifies target so that only entries that have corresponding entries in source remain.
-     */
+    ///
+    // Modifies target so that only entries that have corresponding entries in source remain.
+    ///
     protected static <U, V> void meetMaps(Map<U, V> __target, Map<U, V> __source)
     {
         Iterator<Map.Entry<U, V>> __iter = __target.entrySet().iterator();

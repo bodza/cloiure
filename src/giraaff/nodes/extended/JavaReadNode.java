@@ -15,10 +15,10 @@ import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Read a raw memory location according to Java field or array read semantics. It will perform read
- * barriers, implicit conversions and optionally oop uncompression.
- */
+///
+// Read a raw memory location according to Java field or array read semantics. It will perform read
+// barriers, implicit conversions and optionally oop uncompression.
+///
 // @class JavaReadNode
 public final class JavaReadNode extends FixedAccessNode implements Lowerable, GuardingNode, Canonicalizable
 {
@@ -26,16 +26,16 @@ public final class JavaReadNode extends FixedAccessNode implements Lowerable, Gu
     public static final NodeClass<JavaReadNode> TYPE = NodeClass.create(JavaReadNode.class);
 
     // @field
-    protected final JavaKind readKind;
+    protected final JavaKind ___readKind;
     // @field
-    protected final boolean compressible;
+    protected final boolean ___compressible;
 
     // @cons
     public JavaReadNode(JavaKind __readKind, AddressNode __address, LocationIdentity __location, BarrierType __barrierType, boolean __compressible)
     {
         super(TYPE, __address, __location, StampFactory.forKind(__readKind), __barrierType);
-        this.readKind = __readKind;
-        this.compressible = __compressible;
+        this.___readKind = __readKind;
+        this.___compressible = __compressible;
     }
 
     @Override
@@ -52,12 +52,12 @@ public final class JavaReadNode extends FixedAccessNode implements Lowerable, Gu
 
     public JavaKind getReadKind()
     {
-        return readKind;
+        return this.___readKind;
     }
 
     public boolean isCompressible()
     {
-        return compressible;
+        return this.___compressible;
     }
 
     @Override

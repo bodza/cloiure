@@ -2,15 +2,15 @@ package giraaff.bytecode;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-/**
- * {@link BytecodeProvider} that returns {@link ResolvedJavaMethodBytecode} objects.
- */
+///
+// {@link BytecodeProvider} that returns {@link ResolvedJavaMethodBytecode} objects.
+///
 // @class ResolvedJavaMethodBytecodeProvider
 public final class ResolvedJavaMethodBytecodeProvider implements BytecodeProvider
 {
-    /**
-     * A state-less, shared {@link ResolvedJavaMethodBytecodeProvider} instance.
-     */
+    ///
+    // A state-less, shared {@link ResolvedJavaMethodBytecodeProvider} instance.
+    ///
     // @def
     public static final ResolvedJavaMethodBytecodeProvider INSTANCE = new ResolvedJavaMethodBytecodeProvider();
 

@@ -4,19 +4,19 @@ import giraaff.lir.gen.LIRGenerator;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * This interface defines the contract a HotSpot backend LIR generator needs to fulfill in addition
- * to abstract methods from {@link LIRGenerator} and {@link NodeLIRBuilderTool}.
- */
+///
+// This interface defines the contract a HotSpot backend LIR generator needs to fulfill in addition
+// to abstract methods from {@link LIRGenerator} and {@link NodeLIRBuilderTool}.
+///
 // @iface HotSpotNodeLIRBuilder
 public interface HotSpotNodeLIRBuilder
 {
-    void emitPatchReturnAddress(ValueNode address);
+    void emitPatchReturnAddress(ValueNode __address);
 
-    default void emitJumpToExceptionHandler(ValueNode address)
+    default void emitJumpToExceptionHandler(ValueNode __address)
     {
-        emitPatchReturnAddress(address);
+        emitPatchReturnAddress(__address);
     }
 
-    void emitJumpToExceptionHandlerInCaller(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc);
+    void emitJumpToExceptionHandlerInCaller(ValueNode __handlerInCallerPc, ValueNode __exception, ValueNode __exceptionPc);
 }

@@ -16,9 +16,9 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code StoreIndexedNode} represents a write to an array element.
- */
+///
+// The {@code StoreIndexedNode} represents a write to an array element.
+///
 // @class StoreIndexedNode
 public final class StoreIndexedNode extends AccessIndexedNode implements StateSplit, Lowerable, Virtualizable
 {
@@ -27,22 +27,22 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateAfter;
+    FrameState ___stateAfter;
 
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
     @Override
@@ -53,14 +53,14 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
 
     public ValueNode value()
     {
-        return value;
+        return this.___value;
     }
 
     // @cons
     public StoreIndexedNode(ValueNode __array, ValueNode __index, JavaKind __elementKind, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid(), __array, __index, __elementKind);
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override
@@ -75,7 +75,7 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
             if (__idx >= 0 && __idx < __virtual.entryCount())
             {
                 ResolvedJavaType __componentType = __virtual.type().getComponentType();
-                if (__componentType.isPrimitive() || StampTool.isPointerAlwaysNull(value) || __componentType.getSuperclass() == null || (StampTool.typeReferenceOrNull(value) != null && __componentType.isAssignableFrom(StampTool.typeOrNull(value))))
+                if (__componentType.isPrimitive() || StampTool.isPointerAlwaysNull(this.___value) || __componentType.getSuperclass() == null || (StampTool.typeReferenceOrNull(this.___value) != null && __componentType.isAssignableFrom(StampTool.typeOrNull(this.___value))))
                 {
                     __tool.setVirtualEntry(__virtual, __idx, value());
                     __tool.delete();
@@ -86,6 +86,6 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
 
     public FrameState getState()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 }

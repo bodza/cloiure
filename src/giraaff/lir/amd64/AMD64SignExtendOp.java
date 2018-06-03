@@ -19,44 +19,44 @@ public final class AMD64SignExtendOp extends AMD64LIRInstruction
     public static final LIRInstructionClass<AMD64SignExtendOp> TYPE = LIRInstructionClass.create(AMD64SignExtendOp.class);
 
     // @field
-    private final OperandSize size;
+    private final OperandSize ___size;
 
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue highResult;
+    protected AllocatableValue ___highResult;
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue lowResult;
+    protected AllocatableValue ___lowResult;
 
     @Use({OperandFlag.REG})
     // @field
-    protected AllocatableValue input;
+    protected AllocatableValue ___input;
 
     // @cons
     public AMD64SignExtendOp(OperandSize __size, LIRKind __resultKind, AllocatableValue __input)
     {
         super(TYPE);
-        this.size = __size;
+        this.___size = __size;
 
-        this.highResult = AMD64.rdx.asValue(__resultKind);
-        this.lowResult = AMD64.rax.asValue(__resultKind);
-        this.input = __input;
+        this.___highResult = AMD64.rdx.asValue(__resultKind);
+        this.___lowResult = AMD64.rax.asValue(__resultKind);
+        this.___input = __input;
     }
 
     public AllocatableValue getHighResult()
     {
-        return highResult;
+        return this.___highResult;
     }
 
     public AllocatableValue getLowResult()
     {
-        return lowResult;
+        return this.___lowResult;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        if (size == OperandSize.DWORD)
+        if (this.___size == OperandSize.DWORD)
         {
             __masm.cdql();
         }

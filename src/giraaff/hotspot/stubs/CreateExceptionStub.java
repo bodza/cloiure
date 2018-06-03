@@ -20,9 +20,9 @@ import giraaff.hotspot.word.KlassPointer;
 import giraaff.replacements.nodes.CStringConstant;
 import giraaff.word.Word;
 
-/**
- * Base class for stubs that create a runtime exception.
- */
+///
+// Base class for stubs that create a runtime exception.
+///
 // @class CreateExceptionStub
 public class CreateExceptionStub extends SnippetStub
 {
@@ -71,13 +71,13 @@ public class CreateExceptionStub extends SnippetStub
     private static final ForeignCallDescriptor THROW_CLASS_CAST_EXCEPTION = new ForeignCallDescriptor("throw_class_cast_exception", void.class, Word.class, Word.class, KlassPointer.class, KlassPointer.class);
 
     @NodeIntrinsic(StubForeignCallNode.class)
-    private static native void throwAndPostJvmtiException(@ConstantNodeParameter ForeignCallDescriptor d, Word thread, Word type, Word message);
+    private static native void throwAndPostJvmtiException(@ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, Word __message);
 
     @NodeIntrinsic(StubForeignCallNode.class)
-    private static native void throwKlassExternalNameException(@ConstantNodeParameter ForeignCallDescriptor d, Word thread, Word type, KlassPointer klass);
+    private static native void throwKlassExternalNameException(@ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, KlassPointer __klass);
 
     @NodeIntrinsic(StubForeignCallNode.class)
-    private static native void throwClassCastException(@ConstantNodeParameter ForeignCallDescriptor d, Word thread, Word type, KlassPointer objKlass, KlassPointer targetKlass);
+    private static native void throwClassCastException(@ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, KlassPointer __objKlass, KlassPointer __targetKlass);
 
     public static void registerForeignCalls(HotSpotForeignCallsProviderImpl __foreignCalls)
     {

@@ -17,25 +17,25 @@ import giraaff.phases.tiers.HighTierContext;
 public abstract class AbstractInlineInfo implements InlineInfo
 {
     // @field
-    protected final Invoke invoke;
+    protected final Invoke ___invoke;
 
     // @cons
     public AbstractInlineInfo(Invoke __invoke)
     {
         super();
-        this.invoke = __invoke;
+        this.___invoke = __invoke;
     }
 
     @Override
     public StructuredGraph graph()
     {
-        return invoke.asNode().graph();
+        return this.___invoke.asNode().graph();
     }
 
     @Override
     public Invoke invoke()
     {
-        return invoke;
+        return this.___invoke;
     }
 
     protected static EconomicSet<Node> inline(Invoke __invoke, ResolvedJavaMethod __concrete, Inlineable __inlineable, boolean __receiverNullCheck, String __reason)
@@ -49,7 +49,7 @@ public abstract class AbstractInlineInfo implements InlineInfo
     {
         for (int __i = 0; __i < numberOfMethods(); __i++)
         {
-            Inlineable __elem = Inlineable.getInlineableElement(methodAt(__i), invoke, __context, __canonicalizer);
+            Inlineable __elem = Inlineable.getInlineableElement(methodAt(__i), this.___invoke, __context, __canonicalizer);
             setInlinableElement(__i, __elem);
         }
     }

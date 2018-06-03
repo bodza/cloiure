@@ -10,21 +10,21 @@ import giraaff.nodeinfo.InputType;
 public final class InputEdges extends Edges
 {
     // @field
-    private final InputType[] inputTypes;
+    private final InputType[] ___inputTypes;
     // @field
-    private final boolean[] isOptional;
+    private final boolean[] ___isOptional;
 
     // @cons
     public InputEdges(int __directCount, ArrayList<InputInfo> __edges)
     {
         super(Type.Inputs, __directCount, __edges);
 
-        this.inputTypes = new InputType[__edges.size()];
-        this.isOptional = new boolean[__edges.size()];
+        this.___inputTypes = new InputType[__edges.size()];
+        this.___isOptional = new boolean[__edges.size()];
         for (int __i = 0; __i < __edges.size(); __i++)
         {
-            this.inputTypes[__i] = __edges.get(__i).inputType;
-            this.isOptional[__i] = __edges.get(__i).optional;
+            this.___inputTypes[__i] = __edges.get(__i).___inputType;
+            this.___isOptional[__i] = __edges.get(__i).___optional;
         }
     }
 
@@ -32,18 +32,18 @@ public final class InputEdges extends Edges
     {
         for (int __index = 0; __index < __inputs.getCount(); __index++)
         {
-            __infos.add(new InputInfo(__inputs.offsets[__index], __inputs.getName(__index), __inputs.getType(__index), __inputs.getDeclaringClass(__index), __inputs.inputTypes[__index], __inputs.isOptional(__index)));
+            __infos.add(new InputInfo(__inputs.___offsets[__index], __inputs.getName(__index), __inputs.getType(__index), __inputs.getDeclaringClass(__index), __inputs.___inputTypes[__index], __inputs.isOptional(__index)));
         }
     }
 
     public InputType getInputType(int __index)
     {
-        return inputTypes[__index];
+        return this.___inputTypes[__index];
     }
 
     public boolean isOptional(int __index)
     {
-        return isOptional[__index];
+        return this.___isOptional[__index];
     }
 
     @Override

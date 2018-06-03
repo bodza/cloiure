@@ -9,9 +9,9 @@ import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.nodes.java.DynamicNewArrayNode;
 
-/**
- * Substitutions for {@link Array} methods.
- */
+///
+// Substitutions for {@link Array} methods.
+///
 @ClassSubstitution(Array.class)
 // @class HotSpotArraySubstitutions
 public final class HotSpotArraySubstitutions

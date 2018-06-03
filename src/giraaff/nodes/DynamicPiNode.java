@@ -12,10 +12,10 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.extended.GuardingNode;
 
-/**
- * A {@link PiNode} where the type is not yet known. If the type becomes known at a later point in
- * the compilation, this can canonicalize to a regular {@link PiNode}.
- */
+///
+// A {@link PiNode} where the type is not yet known. If the type becomes known at a later point in
+// the compilation, this can canonicalize to a regular {@link PiNode}.
+///
 // @class DynamicPiNode
 public final class DynamicPiNode extends PiNode
 {
@@ -24,16 +24,16 @@ public final class DynamicPiNode extends PiNode
 
     @Input
     // @field
-    ValueNode typeMirror;
+    ValueNode ___typeMirror;
     // @field
-    private final boolean exact;
+    private final boolean ___exact;
 
     // @cons
     protected DynamicPiNode(ValueNode __object, GuardingNode __guard, ValueNode __typeMirror, boolean __exact)
     {
         super(TYPE, __object, StampFactory.object(), __guard);
-        this.typeMirror = __typeMirror;
-        this.exact = __exact;
+        this.___typeMirror = __typeMirror;
+        this.___exact = __exact;
     }
 
     public static ValueNode create(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __object, GuardingNode __guard, ValueNode __typeMirror, boolean __exact)
@@ -53,7 +53,7 @@ public final class DynamicPiNode extends PiNode
 
     public boolean isExact()
     {
-        return exact;
+        return this.___exact;
     }
 
     private static ValueNode findSynonym(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __object, GuardingNode __guard, ValueNode __typeMirror, boolean __exact)
@@ -84,7 +84,7 @@ public final class DynamicPiNode extends PiNode
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        ValueNode __synonym = findSynonym(__tool.getAssumptions(), __tool.getConstantReflection(), object, guard, typeMirror, exact);
+        ValueNode __synonym = findSynonym(__tool.getAssumptions(), __tool.getConstantReflection(), this.___object, this.___guard, this.___typeMirror, this.___exact);
         if (__synonym != null)
         {
             return __synonym;

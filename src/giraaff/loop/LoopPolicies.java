@@ -10,13 +10,13 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 // @iface LoopPolicies
 public interface LoopPolicies
 {
-    boolean shouldPeel(LoopEx loop, ControlFlowGraph cfg, MetaAccessProvider metaAccess);
+    boolean shouldPeel(LoopEx __loop, ControlFlowGraph __cfg, MetaAccessProvider __metaAccess);
 
-    boolean shouldFullUnroll(LoopEx loop);
+    boolean shouldFullUnroll(LoopEx __loop);
 
-    boolean shouldPartiallyUnroll(LoopEx loop);
+    boolean shouldPartiallyUnroll(LoopEx __loop);
 
-    boolean shouldTryUnswitch(LoopEx loop);
+    boolean shouldTryUnswitch(LoopEx __loop);
 
-    boolean shouldUnswitch(LoopEx loop, List<ControlSplitNode> controlSplits);
+    boolean shouldUnswitch(LoopEx __loop, List<ControlSplitNode> __controlSplits);
 }

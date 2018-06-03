@@ -4,12 +4,12 @@ import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 
-/**
- * Base class for {@link AbstractBeginNode}s that are associated with a frame state.
- *
- * TODO this not needed until {@link AbstractBeginNode} no longer implements {@link StateSplit}
- * which is not possible until loop peeling works without requiring begin nodes to have frames states.
- */
+///
+// Base class for {@link AbstractBeginNode}s that are associated with a frame state.
+//
+// TODO this not needed until {@link AbstractBeginNode} no longer implements {@link StateSplit}
+// which is not possible until loop peeling works without requiring begin nodes to have frames states.
+///
 // @class BeginStateSplitNode
 public abstract class BeginStateSplitNode extends AbstractBeginNode implements StateSplit
 {
@@ -18,7 +18,7 @@ public abstract class BeginStateSplitNode extends AbstractBeginNode implements S
 
     @OptionalInput(InputType.State)
     // @field
-    protected FrameState stateAfter;
+    protected FrameState ___stateAfter;
 
     // @cons
     protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> __c)
@@ -35,19 +35,19 @@ public abstract class BeginStateSplitNode extends AbstractBeginNode implements S
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
-    /**
-     * A begin node has no side effect.
-     */
+    ///
+    // A begin node has no side effect.
+    ///
     @Override
     public boolean hasSideEffect()
     {

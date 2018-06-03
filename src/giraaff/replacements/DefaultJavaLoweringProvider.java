@@ -104,43 +104,43 @@ import giraaff.phases.util.Providers;
 import giraaff.replacements.SnippetLowerableMemoryNode.SnippetLowering;
 import giraaff.util.GraalError;
 
-/**
- * VM-independent lowerings for standard Java nodes.
- * VM-specific methods are abstract and must be implemented by VM-specific subclasses.
- */
+///
+// VM-independent lowerings for standard Java nodes.
+// VM-specific methods are abstract and must be implemented by VM-specific subclasses.
+///
 // @class DefaultJavaLoweringProvider
 public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 {
     // @field
-    protected final MetaAccessProvider metaAccess;
+    protected final MetaAccessProvider ___metaAccess;
     // @field
-    protected final ForeignCallsProvider foreignCalls;
+    protected final ForeignCallsProvider ___foreignCalls;
     // @field
-    protected final TargetDescription target;
+    protected final TargetDescription ___target;
     // @field
-    private final boolean useCompressedOops;
+    private final boolean ___useCompressedOops;
 
     // @field
-    private BoxingSnippets.Templates boxingSnippets;
+    private BoxingSnippets.Templates ___boxingSnippets;
 
     // @cons
     public DefaultJavaLoweringProvider(MetaAccessProvider __metaAccess, ForeignCallsProvider __foreignCalls, TargetDescription __target, boolean __useCompressedOops)
     {
         super();
-        this.metaAccess = __metaAccess;
-        this.foreignCalls = __foreignCalls;
-        this.target = __target;
-        this.useCompressedOops = __useCompressedOops;
+        this.___metaAccess = __metaAccess;
+        this.___foreignCalls = __foreignCalls;
+        this.___target = __target;
+        this.___useCompressedOops = __useCompressedOops;
     }
 
     public void initialize(Providers __providers, SnippetReflectionProvider __snippetReflection)
     {
-        boxingSnippets = new BoxingSnippets.Templates(__providers, __snippetReflection, target);
+        this.___boxingSnippets = new BoxingSnippets.Templates(__providers, __snippetReflection, this.___target);
     }
 
     public final TargetDescription getTarget()
     {
-        return target;
+        return this.___target;
     }
 
     @Override
@@ -213,11 +213,11 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         }
         else if (__n instanceof BoxNode)
         {
-            boxingSnippets.lower((BoxNode) __n, __tool);
+            this.___boxingSnippets.lower((BoxNode) __n, __tool);
         }
         else if (__n instanceof UnboxNode)
         {
-            boxingSnippets.lower((UnboxNode) __n, __tool);
+            this.___boxingSnippets.lower((UnboxNode) __n, __tool);
         }
         else if (__n instanceof UnpackEndianHalfNode)
         {
@@ -231,13 +231,13 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 
     private void lowerSecondHalf(UnpackEndianHalfNode __n)
     {
-        ByteOrder __byteOrder = target.arch.getByteOrder();
+        ByteOrder __byteOrder = this.___target.arch.getByteOrder();
         __n.lower(__byteOrder);
     }
 
     protected AddressNode createOffsetAddress(StructuredGraph __graph, ValueNode __object, long __offset)
     {
-        ValueNode __o = ConstantNode.forIntegerKind(target.wordJavaKind, __offset, __graph);
+        ValueNode __o = ConstantNode.forIntegerKind(this.___target.wordJavaKind, __offset, __graph);
         return __graph.unique(new OffsetAddressNode(__object, __o));
     }
 
@@ -254,7 +254,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         }
     }
 
-    protected abstract JavaKind getStorageKind(ResolvedJavaField field);
+    protected abstract JavaKind getStorageKind(ResolvedJavaField __field);
 
     protected void lowerLoadFieldNode(LoadFieldNode __loadField, LoweringTool __tool)
     {
@@ -302,10 +302,10 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         }
     }
 
-    /**
-     * Create a PiNode on the index proving that the index is positive. On some platforms this is
-     * important to allow the index to be used as an int in the address mode.
-     */
+    ///
+    // Create a PiNode on the index proving that the index is positive. On some platforms this is
+    // important to allow the index to be used as an int in the address mode.
+    ///
     public AddressNode createArrayIndexAddress(StructuredGraph __graph, ValueNode __array, JavaKind __elementKind, ValueNode __index, GuardingNode __boundsCheck)
     {
         IntegerStamp __indexStamp = StampFactory.forInteger(32, 0, Integer.MAX_VALUE - 1);
@@ -316,9 +316,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     public AddressNode createArrayAddress(StructuredGraph __graph, ValueNode __array, JavaKind __elementKind, ValueNode __index)
     {
         ValueNode __wordIndex;
-        if (target.wordSize > 4)
+        if (this.___target.wordSize > 4)
         {
-            __wordIndex = __graph.unique(new SignExtendNode(__index, target.wordSize * 8));
+            __wordIndex = __graph.unique(new SignExtendNode(__index, this.___target.wordSize * 8));
         }
         else
         {
@@ -329,7 +329,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         ValueNode __scaledIndex = __graph.unique(new LeftShiftNode(__wordIndex, ConstantNode.forInt(__shift, __graph)));
 
         int __base = arrayBaseOffset(__elementKind);
-        ValueNode __offset = __graph.unique(new AddNode(__scaledIndex, ConstantNode.forIntegerKind(target.wordJavaKind, __base, __graph)));
+        ValueNode __offset = __graph.unique(new AddNode(__scaledIndex, ConstantNode.forIntegerKind(this.___target.wordJavaKind, __base, __graph)));
 
         return __graph.unique(new OffsetAddressNode(__array, __offset));
     }
@@ -408,11 +408,11 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         __graph.removeFixed(__arrayLengthNode);
     }
 
-    /**
-     * Creates a read node that read the array length and is guarded by a null-check.
-     *
-     * The created node is placed before {@code before} in the CFG.
-     */
+    ///
+    // Creates a read node that read the array length and is guarded by a null-check.
+    //
+    // The created node is placed before {@code before} in the CFG.
+    ///
     protected ReadNode createReadArrayLength(ValueNode __array, FixedNode __before, LoweringTool __tool)
     {
         StructuredGraph __graph = __array.graph();
@@ -481,9 +481,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         __graph.replaceFixedWithFixed(__n, __memoryRead);
     }
 
-    /**
-     * @param tool utility for performing the lowering
-     */
+    ///
+    // @param tool utility for performing the lowering
+    ///
     protected void lowerUnsafeLoadNode(RawLoadNode __load, LoweringTool __tool)
     {
         StructuredGraph __graph = __load.graph();
@@ -765,15 +765,13 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
             __allocations[__objIndex] = __anchor;
             __graph.addBeforeFixed(__commit, __anchor);
         }
-        /*
-         * Note that the FrameState that is assigned to these MonitorEnterNodes isn't the correct state.
-         * It will be the state from before the allocation occurred instead of a valid state after the
-         * locking is performed. In practice this should be fine since these are newly allocated objects.
-         * The bytecodes themselves permit allocating an object, doing a monitorenter and then dropping
-         * all references to the object which would produce the same state, though that would normally
-         * produce an IllegalMonitorStateException. In HotSpot some form of fast path locking should
-         * always occur so the FrameState should never actually be used.
-         */
+        // Note that the FrameState that is assigned to these MonitorEnterNodes isn't the correct state.
+        // It will be the state from before the allocation occurred instead of a valid state after the
+        // locking is performed. In practice this should be fine since these are newly allocated objects.
+        // The bytecodes themselves permit allocating an object, doing a monitorenter and then dropping
+        // all references to the object which would produce the same state, though that would normally
+        // produce an IllegalMonitorStateException. In HotSpot some form of fast path locking should
+        // always occur so the FrameState should never actually be used.
         ArrayList<MonitorEnterNode> __enters = null;
         for (int __objIndex = 0; __objIndex < __commit.getVirtualObjects().size(); __objIndex++)
         {
@@ -821,11 +819,11 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         insertAllocationBarrier(__commit, __graph);
     }
 
-    /**
-     * Insert the required {@link MemoryBarriers#STORE_STORE} barrier for an allocation and also
-     * include the {@link MemoryBarriers#LOAD_STORE} required for final fields if any final fields
-     * are being written, as if {@link FinalFieldBarrierNode} were emitted.
-     */
+    ///
+    // Insert the required {@link MemoryBarriers#STORE_STORE} barrier for an allocation and also
+    // include the {@link MemoryBarriers#LOAD_STORE} required for final fields if any final fields
+    // are being written, as if {@link FinalFieldBarrierNode} were emitted.
+    ///
     private static void insertAllocationBarrier(CommitAllocationNode __commit, StructuredGraph __graph)
     {
         int __barrier = MemoryBarriers.STORE_STORE;
@@ -843,9 +841,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         __graph.addAfterFixed(__commit, __graph.add(new MembarNode(__barrier, LocationIdentity.init())));
     }
 
-    /**
-     * @param field the field whose barrier type should be returned
-     */
+    ///
+    // @param field the field whose barrier type should be returned
+    ///
     protected BarrierType fieldLoadBarrierType(ResolvedJavaField __field)
     {
         return BarrierType.NONE;
@@ -905,19 +903,19 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         return BarrierType.NONE;
     }
 
-    public abstract int fieldOffset(ResolvedJavaField field);
+    public abstract int fieldOffset(ResolvedJavaField __field);
 
     public FieldLocationIdentity fieldLocationIdentity(ResolvedJavaField __field)
     {
         return new FieldLocationIdentity(__field);
     }
 
-    public abstract ValueNode staticFieldBase(StructuredGraph graph, ResolvedJavaField field);
+    public abstract ValueNode staticFieldBase(StructuredGraph __graph, ResolvedJavaField __field);
 
     @Override
     public int arrayScalingFactor(JavaKind __elementKind)
     {
-        return target.arch.getPlatformKind(__elementKind).getSizeInBytes();
+        return this.___target.arch.getPlatformKind(__elementKind).getSizeInBytes();
     }
 
     public Stamp loadStamp(Stamp __stamp, JavaKind __kind)
@@ -927,14 +925,14 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 
     private boolean useCompressedOops(JavaKind __kind, boolean __compressible)
     {
-        return __kind == JavaKind.Object && __compressible && useCompressedOops;
+        return __kind == JavaKind.Object && __compressible && this.___useCompressedOops;
     }
 
-    protected abstract Stamp loadCompressedStamp(ObjectStamp stamp);
+    protected abstract Stamp loadCompressedStamp(ObjectStamp __stamp);
 
-    /**
-     * @param compressible whether the stamp should be compressible
-     */
+    ///
+    // @param compressible whether the stamp should be compressible
+    ///
     protected Stamp loadStamp(Stamp __stamp, JavaKind __kind, boolean __compressible)
     {
         if (useCompressedOops(__kind, __compressible))
@@ -974,11 +972,11 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         return __ret;
     }
 
-    protected abstract ValueNode newCompressionNode(CompressionOp op, ValueNode value);
+    protected abstract ValueNode newCompressionNode(CompressionOp __op, ValueNode __value);
 
-    /**
-     * @param compressible whether the convert should be compressible
-     */
+    ///
+    // @param compressible whether the convert should be compressible
+    ///
     protected ValueNode implicitLoadConvert(JavaKind __kind, ValueNode __value, boolean __compressible)
     {
         if (useCompressedOops(__kind, __compressible))
@@ -1018,9 +1016,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         return __ret;
     }
 
-    /**
-     * @param compressible whether the covert should be compressible
-     */
+    ///
+    // @param compressible whether the covert should be compressible
+    ///
     protected ValueNode implicitStoreConvert(JavaKind __kind, ValueNode __value, boolean __compressible)
     {
         if (useCompressedOops(__kind, __compressible))
@@ -1040,9 +1038,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         return __value;
     }
 
-    protected abstract ValueNode createReadHub(StructuredGraph graph, ValueNode object, LoweringTool tool);
+    protected abstract ValueNode createReadHub(StructuredGraph __graph, ValueNode __object, LoweringTool __tool);
 
-    protected abstract ValueNode createReadArrayComponentHub(StructuredGraph graph, ValueNode arrayHub, FixedNode anchor);
+    protected abstract ValueNode createReadArrayComponentHub(StructuredGraph __graph, ValueNode __arrayHub, FixedNode __anchor);
 
     protected GuardingNode getBoundsCheck(AccessIndexedNode __n, ValueNode __array, LoweringTool __tool)
     {

@@ -25,55 +25,55 @@ public final class Block extends AbstractBlockBase<Block>
     public static final Block[] EMPTY_ARRAY = new Block[0];
 
     // @field
-    protected final AbstractBeginNode beginNode;
+    protected final AbstractBeginNode ___beginNode;
 
     // @field
-    protected FixedNode endNode;
+    protected FixedNode ___endNode;
 
     // @field
-    protected double probability;
+    protected double ___probability;
     // @field
-    private Loop<Block> loop;
+    private Loop<Block> ___loop;
 
     // @field
-    protected Block postdominator;
+    protected Block ___postdominator;
     // @field
-    private LocationSet killLocations;
+    private LocationSet ___killLocations;
     // @field
-    private LocationSet killLocationsBetweenThisAndDominator;
+    private LocationSet ___killLocationsBetweenThisAndDominator;
 
     // @cons
     public Block(AbstractBeginNode __node)
     {
         super();
-        this.beginNode = __node;
+        this.___beginNode = __node;
     }
 
     public AbstractBeginNode getBeginNode()
     {
-        return beginNode;
+        return this.___beginNode;
     }
 
     public FixedNode getEndNode()
     {
-        return endNode;
+        return this.___endNode;
     }
 
-    /**
-     * Return the {@link LoopExitNode} for this block if it exists.
-     */
+    ///
+    // Return the {@link LoopExitNode} for this block if it exists.
+    ///
     public LoopExitNode getLoopExit()
     {
-        if (beginNode instanceof BeginNode)
+        if (this.___beginNode instanceof BeginNode)
         {
-            if (beginNode.next() instanceof LoopExitNode)
+            if (this.___beginNode.next() instanceof LoopExitNode)
             {
-                return (LoopExitNode) beginNode.next();
+                return (LoopExitNode) this.___beginNode.next();
             }
         }
-        if (beginNode instanceof LoopExitNode)
+        if (this.___beginNode instanceof LoopExitNode)
         {
-            return (LoopExitNode) beginNode;
+            return (LoopExitNode) this.___beginNode;
         }
         return null;
     }
@@ -81,18 +81,18 @@ public final class Block extends AbstractBlockBase<Block>
     @Override
     public Loop<Block> getLoop()
     {
-        return loop;
+        return this.___loop;
     }
 
     public void setLoop(Loop<Block> __loop)
     {
-        this.loop = __loop;
+        this.___loop = __loop;
     }
 
     @Override
     public int getLoopDepth()
     {
-        return loop == null ? 0 : loop.getDepth();
+        return this.___loop == null ? 0 : this.___loop.getDepth();
     }
 
     @Override
@@ -145,7 +145,7 @@ public final class Block extends AbstractBlockBase<Block>
     @Override
     public Block getPostdominator()
     {
-        return postdominator;
+        return this.___postdominator;
     }
 
     // @class Block.NodeIterator
@@ -153,25 +153,25 @@ public final class Block extends AbstractBlockBase<Block>
     private final class NodeIterator implements Iterator<FixedNode>
     {
         // @field
-        private FixedNode cur;
+        private FixedNode ___cur;
 
         // @cons
         NodeIterator()
         {
             super();
-            cur = Block.this.getBeginNode();
+            this.___cur = Block.this.getBeginNode();
         }
 
         @Override
         public boolean hasNext()
         {
-            return cur != null;
+            return this.___cur != null;
         }
 
         @Override
         public FixedNode next()
         {
-            FixedNode __result = cur;
+            FixedNode __result = this.___cur;
             if (__result instanceof FixedWithNextNode)
             {
                 FixedNode __next = ((FixedWithNextNode) __result).next();
@@ -179,11 +179,11 @@ public final class Block extends AbstractBlockBase<Block>
                 {
                     __next = null;
                 }
-                cur = __next;
+                this.___cur = __next;
             }
             else
             {
-                cur = null;
+                this.___cur = null;
             }
             return __result;
         }
@@ -211,12 +211,12 @@ public final class Block extends AbstractBlockBase<Block>
     @Override
     public double probability()
     {
-        return probability;
+        return this.___probability;
     }
 
     public void setProbability(double __probability)
     {
-        this.probability = __probability;
+        this.___probability = __probability;
     }
 
     @Override
@@ -241,11 +241,11 @@ public final class Block extends AbstractBlockBase<Block>
 
     public LocationSet getKillLocations()
     {
-        if (killLocations == null)
+        if (this.___killLocations == null)
         {
-            killLocations = calcKillLocations();
+            this.___killLocations = calcKillLocations();
         }
-        return killLocations;
+        return this.___killLocations;
     }
 
     private LocationSet calcKillLocations()
@@ -284,7 +284,7 @@ public final class Block extends AbstractBlockBase<Block>
 
     private LocationSet getKillLocationsBetweenThisAndDominator()
     {
-        if (this.killLocationsBetweenThisAndDominator == null)
+        if (this.___killLocationsBetweenThisAndDominator == null)
         {
             LocationSet __dominatorResult = new LocationSet();
             Block __stopBlock = getDominator();
@@ -311,9 +311,9 @@ public final class Block extends AbstractBlockBase<Block>
                     }
                 }
             }
-            this.killLocationsBetweenThisAndDominator = __dominatorResult;
+            this.___killLocationsBetweenThisAndDominator = __dominatorResult;
         }
-        return this.killLocationsBetweenThisAndDominator;
+        return this.___killLocationsBetweenThisAndDominator;
     }
 
     private void calcKillLocationsBetweenThisAndTarget(LocationSet __result, Block __stopBlock)
@@ -351,7 +351,7 @@ public final class Block extends AbstractBlockBase<Block>
         Block __next = getSuccessors()[0];
         for (Block __pred : getPredecessors())
         {
-            Block[] __predSuccs = __pred.successors;
+            Block[] __predSuccs = __pred.___successors;
             Block[] __newPredSuccs = new Block[__predSuccs.length];
             for (int __i = 0; __i < __predSuccs.length; ++__i)
             {
@@ -389,6 +389,6 @@ public final class Block extends AbstractBlockBase<Block>
 
     protected void setPostDominator(Block __postdominator)
     {
-        this.postdominator = __postdominator;
+        this.___postdominator = __postdominator;
     }
 }

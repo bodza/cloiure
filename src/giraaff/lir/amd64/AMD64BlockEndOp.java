@@ -21,8 +21,8 @@ public abstract class AMD64BlockEndOp extends LIRInstruction implements BlockEnd
     @Override
     public final void emitCode(CompilationResultBuilder __crb)
     {
-        emitCode(__crb, (AMD64MacroAssembler) __crb.asm);
+        emitCode(__crb, (AMD64MacroAssembler) __crb.___asm);
     }
 
-    public abstract void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm);
+    public abstract void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm);
 }

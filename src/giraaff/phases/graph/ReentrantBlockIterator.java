@@ -30,16 +30,16 @@ public final class ReentrantBlockIterator
     public static final class LoopInfo<StateT>
     {
         // @field
-        public final List<StateT> endStates;
+        public final List<StateT> ___endStates;
         // @field
-        public final List<StateT> exitStates;
+        public final List<StateT> ___exitStates;
 
         // @cons
         public LoopInfo(int __endCount, int __exitCount)
         {
             super();
-            endStates = new ArrayList<>(__endCount);
-            exitStates = new ArrayList<>(__exitCount);
+            this.___endStates = new ArrayList<>(__endCount);
+            this.___exitStates = new ArrayList<>(__exitCount);
         }
     }
 
@@ -48,13 +48,13 @@ public final class ReentrantBlockIterator
     {
         protected abstract StateT getInitialState();
 
-        protected abstract StateT processBlock(Block block, StateT currentState);
+        protected abstract StateT processBlock(Block __block, StateT __currentState);
 
-        protected abstract StateT merge(Block merge, List<StateT> states);
+        protected abstract StateT merge(Block __merge, List<StateT> __states);
 
-        protected abstract StateT cloneState(StateT oldState);
+        protected abstract StateT cloneState(StateT __oldState);
 
-        protected abstract List<StateT> processLoop(Loop<Block> loop, StateT initialState);
+        protected abstract List<StateT> processLoop(Loop<Block> __loop, StateT __initialState);
     }
 
     public static <StateT> LoopInfo<StateT> processLoop(BlockIteratorClosure<StateT> __closure, Loop<Block> __loop, StateT __initialState)
@@ -67,13 +67,13 @@ public final class ReentrantBlockIterator
         {
             StateT __endState = __blockEndStates.get(__predecessors[__i].getEndNode());
             // make sure all end states are unique objects
-            __info.endStates.add(__closure.cloneState(__endState));
+            __info.___endStates.add(__closure.cloneState(__endState));
         }
         for (Block __loopExit : __loop.getExits())
         {
             StateT __exitState = __blockEndStates.get(__loopExit.getBeginNode());
             // make sure all exit states are unique objects
-            __info.exitStates.add(__closure.cloneState(__exitState));
+            __info.___exitStates.add(__closure.cloneState(__exitState));
         }
         return __info;
     }

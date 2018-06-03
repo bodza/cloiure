@@ -16,9 +16,9 @@ public class VirtualInstanceNode extends VirtualObjectNode
     public static final NodeClass<VirtualInstanceNode> TYPE = NodeClass.create(VirtualInstanceNode.class);
 
     // @field
-    protected final ResolvedJavaType type;
+    protected final ResolvedJavaType ___type;
     // @field
-    protected final ResolvedJavaField[] fields;
+    protected final ResolvedJavaField[] ___fields;
 
     // @cons
     public VirtualInstanceNode(ResolvedJavaType __type, boolean __hasIdentity)
@@ -42,44 +42,44 @@ public class VirtualInstanceNode extends VirtualObjectNode
     protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> __c, ResolvedJavaType __type, ResolvedJavaField[] __fields, boolean __hasIdentity)
     {
         super(__c, __type, __hasIdentity);
-        this.type = __type;
-        this.fields = __fields;
+        this.___type = __type;
+        this.___fields = __fields;
     }
 
     @Override
     public ResolvedJavaType type()
     {
-        return type;
+        return this.___type;
     }
 
     @Override
     public int entryCount()
     {
-        return fields.length;
+        return this.___fields.length;
     }
 
     public ResolvedJavaField field(int __index)
     {
-        return fields[__index];
+        return this.___fields[__index];
     }
 
     public ResolvedJavaField[] getFields()
     {
-        return fields;
+        return this.___fields;
     }
 
     @Override
     public String entryName(int __index)
     {
-        return fields[__index].getName();
+        return this.___fields[__index].getName();
     }
 
     public int fieldIndex(ResolvedJavaField __field)
     {
         // on average fields.length == ~6, so a linear search is fast enough
-        for (int __i = 0; __i < fields.length; __i++)
+        for (int __i = 0; __i < this.___fields.length; __i++)
         {
-            if (fields[__i].equals(__field))
+            if (this.___fields[__i].equals(__field))
             {
                 return __i;
             }
@@ -90,19 +90,19 @@ public class VirtualInstanceNode extends VirtualObjectNode
     @Override
     public int entryIndexForOffset(ArrayOffsetProvider __arrayOffsetProvider, long __constantOffset, JavaKind __expectedEntryKind)
     {
-        return fieldIndex(type.findInstanceFieldWithOffset(__constantOffset, __expectedEntryKind));
+        return fieldIndex(this.___type.findInstanceFieldWithOffset(__constantOffset, __expectedEntryKind));
     }
 
     @Override
     public JavaKind entryKind(int __index)
     {
-        return fields[__index].getJavaKind();
+        return this.___fields[__index].getJavaKind();
     }
 
     @Override
     public VirtualInstanceNode duplicate()
     {
-        return new VirtualInstanceNode(type, fields, super.hasIdentity());
+        return new VirtualInstanceNode(this.___type, this.___fields, super.hasIdentity());
     }
 
     @Override

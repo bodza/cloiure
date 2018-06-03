@@ -6,9 +6,9 @@ import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.java.LoadFieldNode;
 import giraaff.replacements.nodes.ArrayEqualsNode;
 
-/**
- * Substitutions for {@link java.lang.String} methods.
- */
+///
+// Substitutions for {@link java.lang.String} methods.
+///
 @ClassSubstitution(String.class)
 // @class StringSubstitutions
 public final class StringSubstitutions
@@ -40,8 +40,8 @@ public final class StringSubstitutions
         return ArrayEqualsNode.equals(__array1, __array2, __array1.length);
     }
 
-    /**
-     * Will be intrinsified with an {@link InvocationPlugin} to a {@link LoadFieldNode}.
-     */
-    public static native char[] getValue(String s);
+    ///
+    // Will be intrinsified with an {@link InvocationPlugin} to a {@link LoadFieldNode}.
+    ///
+    public static native char[] getValue(String __s);
 }

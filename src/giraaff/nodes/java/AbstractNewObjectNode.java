@@ -7,9 +7,9 @@ import giraaff.nodes.FrameState;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * The {@code AbstractNewObjectNode} is the base class for the new instance and new array nodes.
- */
+///
+// The {@code AbstractNewObjectNode} is the base class for the new instance and new array nodes.
+///
 // @class AbstractNewObjectNode
 public abstract class AbstractNewObjectNode extends DeoptimizingFixedWithNextNode implements Lowerable
 {
@@ -17,21 +17,21 @@ public abstract class AbstractNewObjectNode extends DeoptimizingFixedWithNextNod
     public static final NodeClass<AbstractNewObjectNode> TYPE = NodeClass.create(AbstractNewObjectNode.class);
 
     // @field
-    protected final boolean fillContents;
+    protected final boolean ___fillContents;
 
     // @cons
     protected AbstractNewObjectNode(NodeClass<? extends AbstractNewObjectNode> __c, Stamp __stamp, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, __stamp, __stateBefore);
-        this.fillContents = __fillContents;
+        this.___fillContents = __fillContents;
     }
 
-    /**
-     * @return <code>true</code> if the object's contents should be initialized to zero/null.
-     */
+    ///
+    // @return <code>true</code> if the object's contents should be initialized to zero/null.
+    ///
     public boolean fillContents()
     {
-        return fillContents;
+        return this.___fillContents;
     }
 
     @Override

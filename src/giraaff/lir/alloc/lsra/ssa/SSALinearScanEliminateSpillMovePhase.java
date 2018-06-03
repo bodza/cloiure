@@ -30,7 +30,7 @@ public final class SSALinearScanEliminateSpillMovePhase extends LinearScanElimin
         if (super.canEliminateSpillMove(__block, __move))
         {
             // SSA Linear Scan might introduce moves to stack slots
-            Interval __curInterval = allocator.intervalFor(__move.getResult());
+            Interval __curInterval = this.___allocator.intervalFor(__move.getResult());
             if (!isPhiResolutionMove(__block, __move, __curInterval))
             {
                 return true;
@@ -54,12 +54,12 @@ public final class SSALinearScanEliminateSpillMovePhase extends LinearScanElimin
         {
             return false;
         }
-        LIRInstruction __op = allocator.instructionForId(__toInterval.from());
+        LIRInstruction __op = this.___allocator.instructionForId(__toInterval.from());
         if (!(__op instanceof LabelOp))
         {
             return false;
         }
-        AbstractBlockBase<?> __intStartBlock = allocator.blockForId(__toInterval.from());
+        AbstractBlockBase<?> __intStartBlock = this.___allocator.blockForId(__toInterval.from());
         if (!__block.getSuccessors()[0].equals(__intStartBlock))
         {
             return false;

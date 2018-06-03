@@ -2,9 +2,9 @@ package giraaff.core.common.cfg;
 
 import java.util.function.BiConsumer;
 
-/**
- * A {@linkplain PrintableCFG printable} {@link DominatorOptimizationProblem}.
- */
+///
+// A {@linkplain PrintableCFG printable} {@link DominatorOptimizationProblem}.
+///
 // @class PrintableDominatorOptimizationProblem
 public abstract class PrintableDominatorOptimizationProblem<E extends Enum<E>, C extends PropertyConsumable> extends DominatorOptimizationProblem<E, C> implements PrintableCFG
 {

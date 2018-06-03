@@ -14,14 +14,14 @@ public final class SpillRegistersNode extends FixedWithNextNode implements LIRLo
     public static final NodeClass<SpillRegistersNode> TYPE = NodeClass.create(SpillRegistersNode.class);
 
     // @field
-    protected Object unique;
+    protected Object ___unique;
 
     // @cons
     public SpillRegistersNode()
     {
         super(TYPE, StampFactory.forVoid());
         // prevent control-flow optimization
-        this.unique = new Object();
+        this.___unique = new Object();
     }
 
     @Override

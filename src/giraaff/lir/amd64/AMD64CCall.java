@@ -17,25 +17,25 @@ public final class AMD64CCall extends AMD64LIRInstruction
 
     @Def({OperandFlag.REG, OperandFlag.ILLEGAL})
     // @field
-    protected Value result;
+    protected Value ___result;
     @Use({OperandFlag.REG, OperandFlag.STACK})
     // @field
-    protected Value[] parameters;
+    protected Value[] ___parameters;
     @Use({OperandFlag.REG})
     // @field
-    protected Value functionPtr;
+    protected Value ___functionPtr;
     @Use({OperandFlag.REG})
     // @field
-    protected Value numberOfFloatingPointArguments;
+    protected Value ___numberOfFloatingPointArguments;
 
     // @cons
     public AMD64CCall(Value __result, Value __functionPtr, Value __numberOfFloatingPointArguments, Value[] __parameters)
     {
         super(TYPE);
-        this.result = __result;
-        this.functionPtr = __functionPtr;
-        this.parameters = __parameters;
-        this.numberOfFloatingPointArguments = __numberOfFloatingPointArguments;
+        this.___result = __result;
+        this.___functionPtr = __functionPtr;
+        this.___parameters = __parameters;
+        this.___numberOfFloatingPointArguments = __numberOfFloatingPointArguments;
     }
 
     @Override
@@ -46,7 +46,7 @@ public final class AMD64CCall extends AMD64LIRInstruction
 
     private void directCall(AMD64MacroAssembler __masm)
     {
-        Register __reg = ValueUtil.asRegister(functionPtr);
+        Register __reg = ValueUtil.asRegister(this.___functionPtr);
         __masm.call(__reg);
         __masm.ensureUniquePC();
     }

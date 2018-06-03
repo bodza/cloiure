@@ -18,39 +18,39 @@ public final class ValueProxyNode extends ProxyNode implements Canonicalizable, 
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
     // @field
-    private final boolean loopPhiProxy;
+    private final boolean ___loopPhiProxy;
 
     // @cons
     public ValueProxyNode(ValueNode __value, LoopExitNode __loopExit)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT), __loopExit);
-        this.value = __value;
-        loopPhiProxy = __loopExit.loopBegin().isPhiAtMerge(__value);
+        this.___value = __value;
+        this.___loopPhiProxy = __loopExit.loopBegin().isPhiAtMerge(__value);
     }
 
     @Override
     public ValueNode value()
     {
-        return value;
+        return this.___value;
     }
 
     @Override
     public boolean inferStamp()
     {
-        return updateStamp(value.stamp(NodeView.DEFAULT));
+        return updateStamp(this.___value.stamp(NodeView.DEFAULT));
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        ValueNode __curValue = value;
+        ValueNode __curValue = this.___value;
         if (__curValue.isConstant())
         {
             return __curValue;
         }
-        if (loopPhiProxy && !loopExit.loopBegin().isPhiAtMerge(__curValue))
+        if (this.___loopPhiProxy && !this.___loopExit.loopBegin().isPhiAtMerge(__curValue))
         {
             return __curValue;
         }
@@ -60,7 +60,7 @@ public final class ValueProxyNode extends ProxyNode implements Canonicalizable, 
     @Override
     public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode __alias = __tool.getAlias(value);
+        ValueNode __alias = __tool.getAlias(this.___value);
         if (__alias instanceof VirtualObjectNode)
         {
             __tool.replaceWithVirtual((VirtualObjectNode) __alias);

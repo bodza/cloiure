@@ -96,36 +96,36 @@ import giraaff.replacements.nodes.ExplodeLoopNode;
 import giraaff.replacements.nodes.LoadSnippetVarargParameterNode;
 import giraaff.util.GraalError;
 
-/**
- * A snippet template is a graph created by parsing a snippet method and then specialized by binding
- * constants to the snippet's {@link ConstantParameter} parameters.
- *
- * Snippet templates can be managed in a cache maintained by {@link AbstractTemplates}.
- */
+///
+// A snippet template is a graph created by parsing a snippet method and then specialized by binding
+// constants to the snippet's {@link ConstantParameter} parameters.
+//
+// Snippet templates can be managed in a cache maintained by {@link AbstractTemplates}.
+///
 // @class SnippetTemplate
 public class SnippetTemplate
 {
     // @field
-    private boolean mayRemoveLocation = false;
+    private boolean ___mayRemoveLocation = false;
 
-    /**
-     * Holds the {@link ResolvedJavaMethod} of the snippet, together with some information about the
-     * method that needs to be computed only once. The {@link SnippetInfo} should be created once
-     * per snippet and then cached.
-     */
+    ///
+    // Holds the {@link ResolvedJavaMethod} of the snippet, together with some information about the
+    // method that needs to be computed only once. The {@link SnippetInfo} should be created once
+    // per snippet and then cached.
+    ///
     // @class SnippetTemplate.SnippetInfo
     public abstract static class SnippetInfo
     {
         // @field
-        protected final ResolvedJavaMethod method;
+        protected final ResolvedJavaMethod ___method;
         // @field
-        protected ResolvedJavaMethod original;
+        protected ResolvedJavaMethod ___original;
         // @field
-        protected final LocationIdentity[] privateLocations;
+        protected final LocationIdentity[] ___privateLocations;
 
-        /**
-         * Lazily constructed parts of {@link SnippetInfo}.
-         */
+        ///
+        // Lazily constructed parts of {@link SnippetInfo}.
+        ///
         // @class SnippetTemplate.SnippetInfo.Lazy
         static final class Lazy
         {
@@ -134,23 +134,23 @@ public class SnippetTemplate
             {
                 super();
                 int __count = __method.getSignature().getParameterCount(false);
-                constantParameters = new boolean[__count];
-                varargsParameters = new boolean[__count];
-                nonNullParameters = new boolean[__count];
+                this.___constantParameters = new boolean[__count];
+                this.___varargsParameters = new boolean[__count];
+                this.___nonNullParameters = new boolean[__count];
                 for (int __i = 0; __i < __count; __i++)
                 {
-                    constantParameters[__i] = __method.getParameterAnnotation(ConstantParameter.class, __i) != null;
-                    varargsParameters[__i] = __method.getParameterAnnotation(VarargsParameter.class, __i) != null;
-                    nonNullParameters[__i] = __method.getParameterAnnotation(NonNullParameter.class, __i) != null;
+                    this.___constantParameters[__i] = __method.getParameterAnnotation(ConstantParameter.class, __i) != null;
+                    this.___varargsParameters[__i] = __method.getParameterAnnotation(VarargsParameter.class, __i) != null;
+                    this.___nonNullParameters[__i] = __method.getParameterAnnotation(NonNullParameter.class, __i) != null;
                 }
             }
 
             // @field
-            final boolean[] constantParameters;
+            final boolean[] ___constantParameters;
             // @field
-            final boolean[] varargsParameters;
+            final boolean[] ___varargsParameters;
             // @field
-            final boolean[] nonNullParameters;
+            final boolean[] ___nonNullParameters;
         }
 
         protected abstract Lazy lazy();
@@ -159,38 +159,38 @@ public class SnippetTemplate
         protected SnippetInfo(ResolvedJavaMethod __method, LocationIdentity[] __privateLocations)
         {
             super();
-            this.method = __method;
-            this.privateLocations = __privateLocations;
+            this.___method = __method;
+            this.___privateLocations = __privateLocations;
         }
 
         public ResolvedJavaMethod getMethod()
         {
-            return method;
+            return this.___method;
         }
 
         public int getParameterCount()
         {
-            return lazy().constantParameters.length;
+            return lazy().___constantParameters.length;
         }
 
         public void setOriginalMethod(ResolvedJavaMethod __original)
         {
-            this.original = __original;
+            this.___original = __original;
         }
 
         public boolean isConstantParameter(int __paramIdx)
         {
-            return lazy().constantParameters[__paramIdx];
+            return lazy().___constantParameters[__paramIdx];
         }
 
         public boolean isVarargsParameter(int __paramIdx)
         {
-            return lazy().varargsParameters[__paramIdx];
+            return lazy().___varargsParameters[__paramIdx];
         }
 
         public boolean isNonNullParameter(int __paramIdx)
         {
-            return lazy().nonNullParameters[__paramIdx];
+            return lazy().___nonNullParameters[__paramIdx];
         }
     }
 
@@ -198,7 +198,7 @@ public class SnippetTemplate
     protected static final class LazySnippetInfo extends SnippetInfo
     {
         // @field
-        protected final AtomicReference<Lazy> lazy = new AtomicReference<>(null);
+        protected final AtomicReference<Lazy> ___lazy = new AtomicReference<>(null);
 
         // @cons
         protected LazySnippetInfo(ResolvedJavaMethod __method, LocationIdentity[] __privateLocations)
@@ -209,11 +209,11 @@ public class SnippetTemplate
         @Override
         protected Lazy lazy()
         {
-            if (lazy.get() == null)
+            if (this.___lazy.get() == null)
             {
-                lazy.compareAndSet(null, new Lazy(method));
+                this.___lazy.compareAndSet(null, new Lazy(this.___method));
             }
-            return lazy.get();
+            return this.___lazy.get();
         }
     }
 
@@ -221,72 +221,72 @@ public class SnippetTemplate
     protected static final class EagerSnippetInfo extends SnippetInfo
     {
         // @field
-        protected final Lazy lazy;
+        protected final Lazy ___lazy;
 
         // @cons
         protected EagerSnippetInfo(ResolvedJavaMethod __method, LocationIdentity[] __privateLocations)
         {
             super(__method, __privateLocations);
-            lazy = new Lazy(__method);
+            this.___lazy = new Lazy(__method);
         }
 
         @Override
         protected Lazy lazy()
         {
-            return lazy;
+            return this.___lazy;
         }
     }
 
-    /**
-     * Values that are bound to the snippet method parameters. The methods {@link #add},
-     * {@link #addConst}, and {@link #addVarargs} must be called in the same order as in the
-     * signature of the snippet method. The parameter name is passed to the add methods for
-     * assertion checking, i.e., to enforce that the order matches. Which method needs to be called
-     * depends on the annotation of the snippet method parameter:
-     *
-     * Use {@link #add} for a parameter without an annotation. The value is bound when the
-     * {@link SnippetTemplate} is {@link SnippetTemplate#instantiate instantiated}.
-     *
-     * Use {@link #addConst} for a parameter annotated with {@link ConstantParameter}. The value
-     * is bound when the {@link SnippetTemplate} is {@link SnippetTemplate#SnippetTemplate created}.
-     *
-     * Use {@link #addVarargs} for an array parameter annotated with {@link VarargsParameter}. A
-     * separate {@link SnippetTemplate} is {@link SnippetTemplate#SnippetTemplate created} for every
-     * distinct array length. The actual values are bound when the {@link SnippetTemplate} is
-     * {@link SnippetTemplate#instantiate instantiated}
-     */
+    ///
+    // Values that are bound to the snippet method parameters. The methods {@link #add},
+    // {@link #addConst}, and {@link #addVarargs} must be called in the same order as in the
+    // signature of the snippet method. The parameter name is passed to the add methods for
+    // assertion checking, i.e., to enforce that the order matches. Which method needs to be called
+    // depends on the annotation of the snippet method parameter:
+    //
+    // Use {@link #add} for a parameter without an annotation. The value is bound when the
+    // {@link SnippetTemplate} is {@link SnippetTemplate#instantiate instantiated}.
+    //
+    // Use {@link #addConst} for a parameter annotated with {@link ConstantParameter}. The value
+    // is bound when the {@link SnippetTemplate} is {@link SnippetTemplate#SnippetTemplate created}.
+    //
+    // Use {@link #addVarargs} for an array parameter annotated with {@link VarargsParameter}. A
+    // separate {@link SnippetTemplate} is {@link SnippetTemplate#SnippetTemplate created} for every
+    // distinct array length. The actual values are bound when the {@link SnippetTemplate} is
+    // {@link SnippetTemplate#instantiate instantiated}
+    ///
     // @class SnippetTemplate.Arguments
     public static final class Arguments
     {
         // @field
-        protected final SnippetInfo info;
+        protected final SnippetInfo ___info;
         // @field
-        protected final CacheKey cacheKey;
+        protected final CacheKey ___cacheKey;
         // @field
-        protected final Object[] values;
+        protected final Object[] ___values;
         // @field
-        protected final Stamp[] constStamps;
+        protected final Stamp[] ___constStamps;
         // @field
-        protected boolean cacheable;
+        protected boolean ___cacheable;
 
         // @field
-        protected int nextParamIdx;
+        protected int ___nextParamIdx;
 
         // @cons
         public Arguments(SnippetInfo __info, GuardsStage __guardsStage, LoweringTool.LoweringStage __loweringStage)
         {
             super();
-            this.info = __info;
-            this.cacheKey = new CacheKey(__info, __guardsStage, __loweringStage);
-            this.values = new Object[__info.getParameterCount()];
-            this.constStamps = new Stamp[__info.getParameterCount()];
-            this.cacheable = true;
+            this.___info = __info;
+            this.___cacheKey = new CacheKey(__info, __guardsStage, __loweringStage);
+            this.___values = new Object[__info.getParameterCount()];
+            this.___constStamps = new Stamp[__info.getParameterCount()];
+            this.___cacheable = true;
         }
 
         public Arguments add(String __name, Object __value)
         {
-            values[nextParamIdx] = __value;
-            nextParamIdx++;
+            this.___values[this.___nextParamIdx] = __value;
+            this.___nextParamIdx++;
             return this;
         }
 
@@ -297,58 +297,58 @@ public class SnippetTemplate
 
         public Arguments addConst(String __name, Object __value, Stamp __stamp)
         {
-            values[nextParamIdx] = __value;
-            constStamps[nextParamIdx] = __stamp;
-            cacheKey.setParam(nextParamIdx, __value);
-            nextParamIdx++;
+            this.___values[this.___nextParamIdx] = __value;
+            this.___constStamps[this.___nextParamIdx] = __stamp;
+            this.___cacheKey.setParam(this.___nextParamIdx, __value);
+            this.___nextParamIdx++;
             return this;
         }
 
         public Arguments addVarargs(String __name, Class<?> __componentType, Stamp __argStamp, Object __value)
         {
             Varargs __varargs = new Varargs(__componentType, __argStamp, __value);
-            values[nextParamIdx] = __varargs;
+            this.___values[this.___nextParamIdx] = __varargs;
             // a separate template is necessary for every distinct array length
-            cacheKey.setParam(nextParamIdx, __varargs.length);
-            nextParamIdx++;
+            this.___cacheKey.setParam(this.___nextParamIdx, __varargs.___length);
+            this.___nextParamIdx++;
             return this;
         }
 
         public void setCacheable(boolean __cacheable)
         {
-            this.cacheable = __cacheable;
+            this.___cacheable = __cacheable;
         }
     }
 
-    /**
-     * Wrapper for the prototype value of a {@linkplain VarargsParameter varargs} parameter.
-     */
+    ///
+    // Wrapper for the prototype value of a {@linkplain VarargsParameter varargs} parameter.
+    ///
     // @class SnippetTemplate.Varargs
     static final class Varargs
     {
         // @field
-        protected final Class<?> componentType;
+        protected final Class<?> ___componentType;
         // @field
-        protected final Stamp stamp;
+        protected final Stamp ___stamp;
         // @field
-        protected final Object value;
+        protected final Object ___value;
         // @field
-        protected final int length;
+        protected final int ___length;
 
         // @cons
         protected Varargs(Class<?> __componentType, Stamp __stamp, Object __value)
         {
             super();
-            this.componentType = __componentType;
-            this.stamp = __stamp;
-            this.value = __value;
+            this.___componentType = __componentType;
+            this.___stamp = __stamp;
+            this.___value = __value;
             if (__value instanceof List)
             {
-                this.length = ((List<?>) __value).size();
+                this.___length = ((List<?>) __value).size();
             }
             else
             {
-                this.length = Array.getLength(__value);
+                this.___length = Array.getLength(__value);
             }
         }
     }
@@ -360,19 +360,19 @@ public class SnippetTemplate
         public static final NodeClass<VarargsPlaceholderNode> TYPE = NodeClass.create(VarargsPlaceholderNode.class);
 
         // @field
-        protected final Varargs varargs;
+        protected final Varargs ___varargs;
 
         // @cons
         protected VarargsPlaceholderNode(Varargs __varargs, MetaAccessProvider __metaAccess)
         {
-            super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(__metaAccess.lookupJavaType(__varargs.componentType).getArrayClass())));
-            this.varargs = __varargs;
+            super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(__metaAccess.lookupJavaType(__varargs.___componentType).getArrayClass())));
+            this.___varargs = __varargs;
         }
 
         @Override
         public ValueNode length()
         {
-            return ConstantNode.forInt(varargs.length);
+            return ConstantNode.forInt(this.___varargs.___length);
         }
     }
 
@@ -380,31 +380,31 @@ public class SnippetTemplate
     static final class CacheKey
     {
         // @field
-        private final ResolvedJavaMethod method;
+        private final ResolvedJavaMethod ___method;
         // @field
-        private final Object[] values;
+        private final Object[] ___values;
         // @field
-        private final GuardsStage guardsStage;
+        private final GuardsStage ___guardsStage;
         // @field
-        private final LoweringTool.LoweringStage loweringStage;
+        private final LoweringTool.LoweringStage ___loweringStage;
         // @field
-        private int hash;
+        private int ___hash;
 
         // @cons
         protected CacheKey(SnippetInfo __info, GuardsStage __guardsStage, LoweringTool.LoweringStage __loweringStage)
         {
             super();
-            this.method = __info.method;
-            this.guardsStage = __guardsStage;
-            this.loweringStage = __loweringStage;
-            this.values = new Object[__info.getParameterCount()];
-            this.hash = __info.method.hashCode() + 31 * __guardsStage.ordinal();
+            this.___method = __info.___method;
+            this.___guardsStage = __guardsStage;
+            this.___loweringStage = __loweringStage;
+            this.___values = new Object[__info.getParameterCount()];
+            this.___hash = __info.___method.hashCode() + 31 * __guardsStage.ordinal();
         }
 
         protected void setParam(int __paramIdx, Object __value)
         {
-            values[__paramIdx] = __value;
-            hash = (hash * 31) ^ (__value == null ? 0 : __value.hashCode());
+            this.___values[__paramIdx] = __value;
+            this.___hash = (this.___hash * 31) ^ (__value == null ? 0 : __value.hashCode());
         }
 
         @Override
@@ -415,17 +415,17 @@ public class SnippetTemplate
                 return false;
             }
             CacheKey __other = (CacheKey) __obj;
-            if (!method.equals(__other.method))
+            if (!this.___method.equals(__other.___method))
             {
                 return false;
             }
-            if (guardsStage != __other.guardsStage || loweringStage != __other.loweringStage)
+            if (this.___guardsStage != __other.___guardsStage || this.___loweringStage != __other.___loweringStage)
             {
                 return false;
             }
-            for (int __i = 0; __i < values.length; __i++)
+            for (int __i = 0; __i < this.___values.length; __i++)
             {
-                if (values[__i] != null && !values[__i].equals(__other.values[__i]))
+                if (this.___values[__i] != null && !this.___values[__i].equals(__other.___values[__i]))
                 {
                     return false;
                 }
@@ -436,40 +436,40 @@ public class SnippetTemplate
         @Override
         public int hashCode()
         {
-            return hash;
+            return this.___hash;
         }
     }
 
-    /**
-     * Base class for snippet classes. It provides a cache for {@link SnippetTemplate}s.
-     */
+    ///
+    // Base class for snippet classes. It provides a cache for {@link SnippetTemplate}s.
+    ///
     // @class SnippetTemplate.AbstractTemplates
     public abstract static class AbstractTemplates
     {
         // @field
-        protected final Providers providers;
+        protected final Providers ___providers;
         // @field
-        protected final SnippetReflectionProvider snippetReflection;
+        protected final SnippetReflectionProvider ___snippetReflection;
         // @field
-        protected final TargetDescription target;
+        protected final TargetDescription ___target;
         // @field
-        private final Map<CacheKey, SnippetTemplate> templates;
+        private final Map<CacheKey, SnippetTemplate> ___templates;
 
         // @cons
         protected AbstractTemplates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
         {
             super();
-            this.providers = __providers;
-            this.snippetReflection = __snippetReflection;
-            this.target = __target;
+            this.___providers = __providers;
+            this.___snippetReflection = __snippetReflection;
+            this.___target = __target;
             if (GraalOptions.useSnippetTemplateCache)
             {
                 int __size = GraalOptions.maxTemplatesPerSnippet;
-                this.templates = Collections.synchronizedMap(new LRUCache<>(__size, __size));
+                this.___templates = Collections.synchronizedMap(new LRUCache<>(__size, __size));
             }
             else
             {
-                this.templates = null;
+                this.___templates = null;
             }
         }
 
@@ -485,15 +485,15 @@ public class SnippetTemplate
             return null;
         }
 
-        /**
-         * Finds the unique method in {@code declaringClass} named {@code methodName} annotated by
-         * {@link Snippet} and returns a {@link SnippetInfo} value describing it. There must be
-         * exactly one snippet method in {@code declaringClass}.
-         */
+        ///
+        // Finds the unique method in {@code declaringClass} named {@code methodName} annotated by
+        // {@link Snippet} and returns a {@link SnippetInfo} value describing it. There must be
+        // exactly one snippet method in {@code declaringClass}.
+        ///
         protected SnippetInfo snippet(Class<? extends Snippets> __declaringClass, String __methodName, LocationIdentity... __initialPrivateLocations)
         {
             Method __method = findMethod(__declaringClass, __methodName, null);
-            ResolvedJavaMethod __javaMethod = providers.getMetaAccess().lookupJavaMethod(__method);
+            ResolvedJavaMethod __javaMethod = this.___providers.getMetaAccess().lookupJavaMethod(__method);
             if (GraalOptions.eagerSnippets)
             {
                 return new EagerSnippetInfo(__javaMethod, __initialPrivateLocations);
@@ -504,19 +504,19 @@ public class SnippetTemplate
             }
         }
 
-        /**
-         * Gets a template for a given key, creating it first if necessary.
-         */
+        ///
+        // Gets a template for a given key, creating it first if necessary.
+        ///
         protected SnippetTemplate template(ValueNode __replacee, final Arguments __args)
         {
             StructuredGraph __graph = __replacee.graph();
-            SnippetTemplate __template = GraalOptions.useSnippetTemplateCache && __args.cacheable ? templates.get(__args.cacheKey) : null;
+            SnippetTemplate __template = GraalOptions.useSnippetTemplateCache && __args.___cacheable ? this.___templates.get(__args.___cacheKey) : null;
             if (__template == null)
             {
-                __template = new SnippetTemplate(providers, snippetReflection, __args, __replacee);
-                if (GraalOptions.useSnippetTemplateCache && __args.cacheable)
+                __template = new SnippetTemplate(this.___providers, this.___snippetReflection, __args, __replacee);
+                if (GraalOptions.useSnippetTemplateCache && __args.___cacheable)
                 {
-                    templates.put(__args.cacheKey, __template);
+                    this.___templates.put(__args.___cacheKey, __template);
                 }
             }
             return __template;
@@ -527,19 +527,19 @@ public class SnippetTemplate
     private static final class LRUCache<K, V> extends LinkedHashMap<K, V>
     {
         // @field
-        private final int maxCacheSize;
+        private final int ___maxCacheSize;
 
         // @cons
         LRUCache(int __initialCapacity, int __maxCacheSize)
         {
             super(__initialCapacity, 0.75F, true);
-            this.maxCacheSize = __maxCacheSize;
+            this.___maxCacheSize = __maxCacheSize;
         }
 
         @Override
         protected boolean removeEldestEntry(java.util.Map.Entry<K, V> __eldest)
         {
-            return size() > maxCacheSize;
+            return size() > this.___maxCacheSize;
         }
     }
 
@@ -549,9 +549,9 @@ public class SnippetTemplate
     // @def
     private static final Object CONSTANT_PARAMETER = "CONSTANT_PARAMETER";
 
-    /**
-     * Determines if any parameter of a given method is annotated with {@link ConstantParameter}.
-     */
+    ///
+    // Determines if any parameter of a given method is annotated with {@link ConstantParameter}.
+    ///
     public static boolean hasConstantParameter(ResolvedJavaMethod __method)
     {
         for (ConstantParameter __p : __method.getParameterAnnotations(ConstantParameter.class))
@@ -565,20 +565,20 @@ public class SnippetTemplate
     }
 
     // @field
-    private final SnippetReflectionProvider snippetReflection;
+    private final SnippetReflectionProvider ___snippetReflection;
 
-    /**
-     * Creates a snippet template.
-     */
+    ///
+    // Creates a snippet template.
+    ///
     // @cons
     protected SnippetTemplate(final Providers __providers, SnippetReflectionProvider __snippetReflection, Arguments __args, Node __replacee)
     {
         super();
-        this.snippetReflection = __snippetReflection;
-        this.info = __args.info;
+        this.___snippetReflection = __snippetReflection;
+        this.___info = __args.___info;
 
         Object[] __constantArgs = getConstantArgs(__args);
-        StructuredGraph __snippetGraph = __providers.getReplacements().getSnippet(__args.info.method, __args.info.original, __constantArgs);
+        StructuredGraph __snippetGraph = __providers.getReplacements().getSnippet(__args.___info.___method, __args.___info.___original, __constantArgs);
 
         ResolvedJavaMethod __method = __snippetGraph.method();
         Signature __signature = __method.getSignature();
@@ -597,7 +597,7 @@ public class SnippetTemplate
 
         MetaAccessProvider __metaAccess = __providers.getMetaAccess();
 
-        int __parameterCount = __args.info.getParameterCount();
+        int __parameterCount = __args.___info.getParameterCount();
         VarargsPlaceholderNode[] __placeholders = new VarargsPlaceholderNode[__parameterCount];
 
         for (int __i = 0; __i < __parameterCount; __i++)
@@ -605,14 +605,14 @@ public class SnippetTemplate
             ParameterNode __parameter = __snippetGraph.getParameter(__i);
             if (__parameter != null)
             {
-                if (__args.info.isConstantParameter(__i))
+                if (__args.___info.isConstantParameter(__i))
                 {
-                    Object __arg = __args.values[__i];
+                    Object __arg = __args.___values[__i];
                     JavaKind __kind = __signature.getParameterKind(__i);
                     ConstantNode __constantNode;
                     if (__arg instanceof Constant)
                     {
-                        Stamp __stamp = __args.constStamps[__i];
+                        Stamp __stamp = __args.___constStamps[__i];
                         if (__stamp == null)
                         {
                             __constantNode = ConstantNode.forConstant((JavaConstant) __arg, __metaAccess, __snippetCopy);
@@ -628,14 +628,14 @@ public class SnippetTemplate
                     }
                     __nodeReplacements.put(__parameter, __constantNode);
                 }
-                else if (__args.info.isVarargsParameter(__i))
+                else if (__args.___info.isVarargsParameter(__i))
                 {
-                    Varargs __varargs = (Varargs) __args.values[__i];
+                    Varargs __varargs = (Varargs) __args.___values[__i];
                     VarargsPlaceholderNode __placeholder = __snippetCopy.unique(new VarargsPlaceholderNode(__varargs, __providers.getMetaAccess()));
                     __nodeReplacements.put(__parameter, __placeholder);
                     __placeholders[__i] = __placeholder;
                 }
-                else if (__args.info.isNonNullParameter(__i))
+                else if (__args.___info.isNonNullParameter(__i))
                 {
                     __parameter.setStamp(__parameter.stamp(NodeView.DEFAULT).join(StampFactory.objectNonNull()));
                 }
@@ -644,19 +644,19 @@ public class SnippetTemplate
         __snippetCopy.addDuplicates(__snippetGraph.getNodes(), __snippetGraph, __snippetGraph.getNodeCount(), __nodeReplacements);
 
         // gather the template parameters
-        parameters = new Object[__parameterCount];
+        this.___parameters = new Object[__parameterCount];
         for (int __i = 0; __i < __parameterCount; __i++)
         {
-            if (__args.info.isConstantParameter(__i))
+            if (__args.___info.isConstantParameter(__i))
             {
-                parameters[__i] = CONSTANT_PARAMETER;
+                this.___parameters[__i] = CONSTANT_PARAMETER;
             }
-            else if (__args.info.isVarargsParameter(__i))
+            else if (__args.___info.isVarargsParameter(__i))
             {
-                Varargs __varargs = (Varargs) __args.values[__i];
-                int __length = __varargs.length;
+                Varargs __varargs = (Varargs) __args.___values[__i];
+                int __length = __varargs.___length;
                 ParameterNode[] __params = new ParameterNode[__length];
-                Stamp __stamp = __varargs.stamp;
+                Stamp __stamp = __varargs.___stamp;
                 for (int __j = 0; __j < __length; __j++)
                 {
                     // use a decimal friendly numbering make it more obvious how values map
@@ -664,7 +664,7 @@ public class SnippetTemplate
                     ParameterNode __local = __snippetCopy.addOrUnique(new ParameterNode(__idx, StampPair.createSingle(__stamp)));
                     __params[__j] = __local;
                 }
-                parameters[__i] = __params;
+                this.___parameters[__i] = __params;
 
                 VarargsPlaceholderNode __placeholder = __placeholders[__i];
                 if (__placeholder != null)
@@ -679,11 +679,9 @@ public class SnippetTemplate
                         }
                         else if (__usage instanceof StoreIndexedNode)
                         {
-                            /*
-                             * The template lowering doesn't really treat this as an array,
-                             * so you can't store back into the varargs. Allocate your own
-                             * array if you really need this and EA should eliminate it.
-                             */
+                            // The template lowering doesn't really treat this as an array,
+                            // so you can't store back into the varargs. Allocate your own
+                            // array if you really need this and EA should eliminate it.
                             throw new GraalError("Can't store into VarargsParameter array");
                         }
                     }
@@ -695,25 +693,25 @@ public class SnippetTemplate
                 if (__local == null)
                 {
                     // parameter value was eliminated
-                    parameters[__i] = UNUSED_PARAMETER;
+                    this.___parameters[__i] = UNUSED_PARAMETER;
                 }
                 else
                 {
-                    parameters[__i] = __local;
+                    this.___parameters[__i] = __local;
                 }
             }
         }
 
         explodeLoops(__snippetCopy, __phaseContext);
 
-        GuardsStage __guardsStage = __args.cacheKey.guardsStage;
+        GuardsStage __guardsStage = __args.___cacheKey.___guardsStage;
         // perform lowering on the snippet
         if (!__guardsStage.allowsFloatingGuards())
         {
             new GuardLoweringPhase().apply(__snippetCopy, null);
         }
         __snippetCopy.setGuardsStage(__guardsStage);
-        new LoweringPhase(new CanonicalizerPhase(), __args.cacheKey.loweringStage).apply(__snippetCopy, __phaseContext);
+        new LoweringPhase(new CanonicalizerPhase(), __args.___cacheKey.___loweringStage).apply(__snippetCopy, __phaseContext);
 
         ArrayList<StateSplit> __curSideEffectNodes = new ArrayList<>();
         ArrayList<DeoptimizingNode> __curDeoptNodes = new ArrayList<>();
@@ -760,19 +758,19 @@ public class SnippetTemplate
         MemoryAnchorNode __anchor = __snippetCopy.add(new MemoryAnchorNode());
         __snippetCopy.start().replaceAtUsages(InputType.Memory, __anchor);
 
-        this.snippet = __snippetCopy;
+        this.___snippet = __snippetCopy;
 
-        StartNode __entryPointNode = snippet.start();
+        StartNode __entryPointNode = this.___snippet.start();
         if (__anchor.hasNoUsages())
         {
             __anchor.safeDelete();
-            this.memoryAnchor = null;
+            this.___memoryAnchor = null;
         }
         else
         {
             // find out if all the return memory maps point to the anchor (i.e. there's no kill anywhere)
             boolean __needsMemoryMaps = false;
-            for (ReturnNode __retNode : snippet.getNodes(ReturnNode.TYPE))
+            for (ReturnNode __retNode : this.___snippet.getNodes(ReturnNode.TYPE))
             {
                 MemoryMapNode __memoryMap = __retNode.getMemoryMap();
                 if (__memoryMap.getLocations().size() > 1 || __memoryMap.getLastLocationAccess(LocationIdentity.any()) != __anchor)
@@ -792,7 +790,7 @@ public class SnippetTemplate
                 __needsAnchor = __anchor.usages().filter(NodePredicates.isNotA(MemoryMapNode.class)).isNotEmpty();
                 // remove the useless memory map
                 MemoryMapNode __memoryMap = null;
-                for (ReturnNode __retNode : snippet.getNodes(ReturnNode.TYPE))
+                for (ReturnNode __retNode : this.___snippet.getNodes(ReturnNode.TYPE))
                 {
                     if (__memoryMap == null)
                     {
@@ -805,27 +803,27 @@ public class SnippetTemplate
             if (__needsAnchor)
             {
                 __snippetCopy.addAfterFixed(__snippetCopy.start(), __anchor);
-                this.memoryAnchor = __anchor;
+                this.___memoryAnchor = __anchor;
             }
             else
             {
                 __anchor.safeDelete();
-                this.memoryAnchor = null;
+                this.___memoryAnchor = null;
             }
         }
 
-        List<ReturnNode> __returnNodes = snippet.getNodes(ReturnNode.TYPE).snapshot();
+        List<ReturnNode> __returnNodes = this.___snippet.getNodes(ReturnNode.TYPE).snapshot();
         if (__returnNodes.isEmpty())
         {
-            this.returnNode = null;
+            this.___returnNode = null;
         }
         else if (__returnNodes.size() == 1)
         {
-            this.returnNode = __returnNodes.get(0);
+            this.___returnNode = __returnNodes.get(0);
         }
         else
         {
-            AbstractMergeNode __merge = snippet.add(new MergeNode());
+            AbstractMergeNode __merge = this.___snippet.add(new MergeNode());
             List<MemoryMapNode> __memMaps = new ArrayList<>();
             for (ReturnNode __retNode : __returnNodes)
             {
@@ -837,12 +835,12 @@ public class SnippetTemplate
             }
 
             ValueNode __returnValue = InliningUtil.mergeReturns(__merge, __returnNodes);
-            this.returnNode = snippet.add(new ReturnNode(__returnValue));
+            this.___returnNode = this.___snippet.add(new ReturnNode(__returnValue));
             if (!__memMaps.isEmpty())
             {
                 MemoryMapImpl __mmap = FloatingReadPhase.mergeMemoryMaps(__merge, __memMaps);
-                MemoryMapNode __memoryMap = snippet.unique(new MemoryMapNode(__mmap.getMap()));
-                this.returnNode.setMemoryMap(__memoryMap);
+                MemoryMapNode __memoryMap = this.___snippet.unique(new MemoryMapNode(__mmap.getMap()));
+                this.___returnNode.setMemoryMap(__memoryMap);
                 for (MemoryMapNode __mm : __memMaps)
                 {
                     if (__mm != __memoryMap && __mm.isAlive())
@@ -851,23 +849,23 @@ public class SnippetTemplate
                     }
                 }
             }
-            __merge.setNext(this.returnNode);
+            __merge.setNext(this.___returnNode);
         }
 
-        this.sideEffectNodes = __curSideEffectNodes;
-        this.deoptNodes = __curDeoptNodes;
-        this.placeholderStampedNodes = __curPlaceholderStampedNodes;
+        this.___sideEffectNodes = __curSideEffectNodes;
+        this.___deoptNodes = __curDeoptNodes;
+        this.___placeholderStampedNodes = __curPlaceholderStampedNodes;
 
-        nodes = new ArrayList<>(snippet.getNodeCount());
-        for (Node __node : snippet.getNodes())
+        this.___nodes = new ArrayList<>(this.___snippet.getNodeCount());
+        for (Node __node : this.___snippet.getNodes())
         {
             if (__node != __entryPointNode && __node != __entryPointNode.stateAfter())
             {
-                nodes.add(__node);
+                this.___nodes.add(__node);
             }
         }
 
-        this.snippet.freeze();
+        this.___snippet.freeze();
     }
 
     public static void explodeLoops(final StructuredGraph __snippetCopy, PhaseContext __phaseContext)
@@ -897,10 +895,10 @@ public class SnippetTemplate
 
     protected Object[] getConstantArgs(Arguments __args)
     {
-        Object[] __constantArgs = __args.values.clone();
-        for (int __i = 0; __i < __args.info.getParameterCount(); __i++)
+        Object[] __constantArgs = __args.___values.clone();
+        for (int __i = 0; __i < __args.___info.getParameterCount(); __i++)
         {
-            if (!__args.info.isConstantParameter(__i))
+            if (!__args.___info.isConstantParameter(__i))
             {
                 __constantArgs[__i] = null;
             }
@@ -908,72 +906,72 @@ public class SnippetTemplate
         return __constantArgs;
     }
 
-    /**
-     * The graph built from the snippet method.
-     */
+    ///
+    // The graph built from the snippet method.
+    ///
     // @field
-    private final StructuredGraph snippet;
+    private final StructuredGraph ___snippet;
 
     // @field
-    private final SnippetInfo info;
+    private final SnippetInfo ___info;
 
-    /**
-     * The named parameters of this template that must be bound to values during instantiation. For
-     * a parameter that is still live after specialization, the value in this map is either a
-     * {@link ParameterNode} instance or a {@link ParameterNode} array. For an eliminated parameter,
-     * the value is identical to the key.
-     */
+    ///
+    // The named parameters of this template that must be bound to values during instantiation. For
+    // a parameter that is still live after specialization, the value in this map is either a
+    // {@link ParameterNode} instance or a {@link ParameterNode} array. For an eliminated parameter,
+    // the value is identical to the key.
+    ///
     // @field
-    private final Object[] parameters;
+    private final Object[] ___parameters;
 
-    /**
-     * The return node (if any) of the snippet.
-     */
+    ///
+    // The return node (if any) of the snippet.
+    ///
     // @field
-    private final ReturnNode returnNode;
+    private final ReturnNode ___returnNode;
 
-    /**
-     * The memory anchor (if any) of the snippet.
-     */
+    ///
+    // The memory anchor (if any) of the snippet.
+    ///
     // @field
-    private final MemoryAnchorNode memoryAnchor;
+    private final MemoryAnchorNode ___memoryAnchor;
 
-    /**
-     * Nodes that inherit the {@link StateSplit#stateAfter()} from the replacee during instantiation.
-     */
+    ///
+    // Nodes that inherit the {@link StateSplit#stateAfter()} from the replacee during instantiation.
+    ///
     // @field
-    private final ArrayList<StateSplit> sideEffectNodes;
+    private final ArrayList<StateSplit> ___sideEffectNodes;
 
-    /**
-     * Nodes that inherit a deoptimization {@link FrameState} from the replacee during instantiation.
-     */
+    ///
+    // Nodes that inherit a deoptimization {@link FrameState} from the replacee during instantiation.
+    ///
     // @field
-    private final ArrayList<DeoptimizingNode> deoptNodes;
+    private final ArrayList<DeoptimizingNode> ___deoptNodes;
 
-    /**
-     * Nodes that have a stamp originating from a {@link Placeholder}.
-     */
+    ///
+    // Nodes that have a stamp originating from a {@link Placeholder}.
+    ///
     // @field
-    private final ArrayList<ValueNode> placeholderStampedNodes;
+    private final ArrayList<ValueNode> ___placeholderStampedNodes;
 
-    /**
-     * The nodes to be inlined when this specialization is instantiated.
-     */
+    ///
+    // The nodes to be inlined when this specialization is instantiated.
+    ///
     // @field
-    private final ArrayList<Node> nodes;
+    private final ArrayList<Node> ___nodes;
 
-    /**
-     * Gets the instantiation-time bindings to this template's parameters.
-     *
-     * @return the map that will be used to bind arguments to parameters when inlining this template
-     */
+    ///
+    // Gets the instantiation-time bindings to this template's parameters.
+    //
+    // @return the map that will be used to bind arguments to parameters when inlining this template
+    ///
     private EconomicMap<Node, Node> bind(StructuredGraph __replaceeGraph, MetaAccessProvider __metaAccess, Arguments __args)
     {
         EconomicMap<Node, Node> __replacements = EconomicMap.create(Equivalence.IDENTITY);
-        for (int __i = 0; __i < parameters.length; __i++)
+        for (int __i = 0; __i < this.___parameters.length; __i++)
         {
-            Object __parameter = parameters[__i];
-            Object __argument = __args.values[__i];
+            Object __parameter = this.___parameters[__i];
+            Object __argument = __args.___values[__i];
             if (__parameter instanceof ParameterNode)
             {
                 if (__argument instanceof ValueNode)
@@ -994,13 +992,13 @@ public class SnippetTemplate
                 int __length = __params.length;
                 List<?> __list = null;
                 Object __array = null;
-                if (__varargs.value instanceof List)
+                if (__varargs.___value instanceof List)
                 {
-                    __list = (List<?>) __varargs.value;
+                    __list = (List<?>) __varargs.___value;
                 }
                 else
                 {
-                    __array = __varargs.value;
+                    __array = __varargs.___value;
                 }
 
                 for (int __j = 0; __j < __length; __j++)
@@ -1023,42 +1021,42 @@ public class SnippetTemplate
         return __replacements;
     }
 
-    /**
-     * Converts a Java boxed value to a {@link JavaConstant} of the right kind. This adjusts for the
-     * limitation that a {@link Local}'s kind is a {@linkplain JavaKind#getStackKind() stack kind}
-     * and so cannot be used for re-boxing primitives smaller than an int.
-     *
-     * @param argument a Java boxed value
-     * @param localKind the kind of the {@link Local} to which {@code argument} will be bound
-     */
+    ///
+    // Converts a Java boxed value to a {@link JavaConstant} of the right kind. This adjusts for the
+    // limitation that a {@link Local}'s kind is a {@linkplain JavaKind#getStackKind() stack kind}
+    // and so cannot be used for re-boxing primitives smaller than an int.
+    //
+    // @param argument a Java boxed value
+    // @param localKind the kind of the {@link Local} to which {@code argument} will be bound
+    ///
     protected JavaConstant forBoxed(Object __argument, JavaKind __localKind)
     {
         if (__localKind == JavaKind.Int)
         {
             return JavaConstant.forBoxedPrimitive(__argument);
         }
-        return snippetReflection.forBoxed(__localKind, __argument);
+        return this.___snippetReflection.forBoxed(__localKind, __argument);
     }
 
-    /**
-     * Logic for replacing a snippet-lowered node at its usages with the return value of the
-     * snippet. An alternative to the {@linkplain SnippetTemplate#DEFAULT_REPLACER default}
-     * replacement logic can be used to handle mismatches between the stamp of the node being
-     * lowered and the stamp of the snippet's return value.
-     */
+    ///
+    // Logic for replacing a snippet-lowered node at its usages with the return value of the
+    // snippet. An alternative to the {@linkplain SnippetTemplate#DEFAULT_REPLACER default}
+    // replacement logic can be used to handle mismatches between the stamp of the node being
+    // lowered and the stamp of the snippet's return value.
+    ///
     // @iface SnippetTemplate.UsageReplacer
     public interface UsageReplacer
     {
-        /**
-         * Replaces all usages of {@code oldNode} with direct or indirect usages of {@code newNode}.
-         */
-        void replace(ValueNode oldNode, ValueNode newNode);
+        ///
+        // Replaces all usages of {@code oldNode} with direct or indirect usages of {@code newNode}.
+        ///
+        void replace(ValueNode __oldNode, ValueNode __newNode);
     }
 
-    /**
-     * Represents the default {@link UsageReplacer usage replacer} logic which simply delegates to
-     * {@link Node#replaceAtUsages(Node)}.
-     */
+    ///
+    // Represents the default {@link UsageReplacer usage replacer} logic which simply delegates to
+    // {@link Node#replaceAtUsages(Node)}.
+    ///
     // @closure
     public static final UsageReplacer DEFAULT_REPLACER = new UsageReplacer()
     {
@@ -1079,12 +1077,12 @@ public class SnippetTemplate
             // no floating reads yet, ignore locations created while lowering
             return true;
         }
-        if (returnNode == null)
+        if (this.___returnNode == null)
         {
             // the snippet terminates control flow
             return true;
         }
-        MemoryMapNode __memoryMap = returnNode.getMemoryMap();
+        MemoryMapNode __memoryMap = this.___returnNode.getMemoryMap();
         if (__memoryMap == null || __memoryMap.isEmpty())
         {
             // there are no kills in the snippet graph
@@ -1114,13 +1112,11 @@ public class SnippetTemplate
 
         // node can only lower to a ANY_LOCATION kill if the replacee also kills ANY_LOCATION
 
-        /*
-         * Kills to private locations are safe, since there can be no floating read to these
-         * locations except reads that are introduced by the snippet itself or related snippets in
-         * the same lowering round. These reads are anchored to a MemoryAnchor at the beginning of
-         * their snippet, so they can not float above a kill in another instance of the same snippet.
-         */
-        for (LocationIdentity __p : this.info.privateLocations)
+        // Kills to private locations are safe, since there can be no floating read to these
+        // locations except reads that are introduced by the snippet itself or related snippets in
+        // the same lowering round. These reads are anchored to a MemoryAnchor at the beginning of
+        // their snippet, so they can not float above a kill in another instance of the same snippet.
+        for (LocationIdentity __p : this.___info.___privateLocations)
         {
             __kills.remove(__p);
         }
@@ -1132,9 +1128,9 @@ public class SnippetTemplate
     private static class MemoryInputMap implements MemoryMap
     {
         // @field
-        private final LocationIdentity locationIdentity;
+        private final LocationIdentity ___locationIdentity;
         // @field
-        private final MemoryNode lastLocationAccess;
+        private final MemoryNode ___lastLocationAccess;
 
         // @cons
         MemoryInputMap(ValueNode __replacee)
@@ -1143,22 +1139,22 @@ public class SnippetTemplate
             if (__replacee instanceof MemoryAccess)
             {
                 MemoryAccess __access = (MemoryAccess) __replacee;
-                locationIdentity = __access.getLocationIdentity();
-                lastLocationAccess = __access.getLastLocationAccess();
+                this.___locationIdentity = __access.getLocationIdentity();
+                this.___lastLocationAccess = __access.getLastLocationAccess();
             }
             else
             {
-                locationIdentity = null;
-                lastLocationAccess = null;
+                this.___locationIdentity = null;
+                this.___lastLocationAccess = null;
             }
         }
 
         @Override
         public MemoryNode getLastLocationAccess(LocationIdentity __location)
         {
-            if (locationIdentity != null && locationIdentity.equals(__location))
+            if (this.___locationIdentity != null && this.___locationIdentity.equals(__location))
             {
-                return lastLocationAccess;
+                return this.___lastLocationAccess;
             }
             else
             {
@@ -1169,13 +1165,13 @@ public class SnippetTemplate
         @Override
         public Collection<LocationIdentity> getLocations()
         {
-            if (locationIdentity == null)
+            if (this.___locationIdentity == null)
             {
                 return Collections.emptySet();
             }
             else
             {
-                return Collections.singleton(locationIdentity);
+                return Collections.singleton(this.___locationIdentity);
             }
         }
     }
@@ -1185,33 +1181,33 @@ public class SnippetTemplate
     private final class MemoryOutputMap extends MemoryInputMap
     {
         // @field
-        private final UnmodifiableEconomicMap<Node, Node> duplicates;
+        private final UnmodifiableEconomicMap<Node, Node> ___duplicates;
 
         // @cons
         MemoryOutputMap(ValueNode __replacee, UnmodifiableEconomicMap<Node, Node> __duplicates)
         {
             super(__replacee);
-            this.duplicates = __duplicates;
+            this.___duplicates = __duplicates;
         }
 
         @Override
         public MemoryNode getLastLocationAccess(LocationIdentity __locationIdentity)
         {
-            MemoryNode __lastLocationAccess = SnippetTemplate.this.returnNode.getMemoryMap().getLastLocationAccess(__locationIdentity);
-            if (__lastLocationAccess == SnippetTemplate.this.memoryAnchor)
+            MemoryNode __lastLocationAccess = SnippetTemplate.this.___returnNode.getMemoryMap().getLastLocationAccess(__locationIdentity);
+            if (__lastLocationAccess == SnippetTemplate.this.___memoryAnchor)
             {
                 return super.getLastLocationAccess(__locationIdentity);
             }
             else
             {
-                return (MemoryNode) duplicates.get(ValueNodeUtil.asNode(__lastLocationAccess));
+                return (MemoryNode) this.___duplicates.get(ValueNodeUtil.asNode(__lastLocationAccess));
             }
         }
 
         @Override
         public Collection<LocationIdentity> getLocations()
         {
-            return SnippetTemplate.this.returnNode.getMemoryMap().getLocations();
+            return SnippetTemplate.this.___returnNode.getMemoryMap().getLocations();
         }
     }
 
@@ -1222,9 +1218,9 @@ public class SnippetTemplate
             // rewire outgoing memory edges
             replaceMemoryUsages(__replacee, new MemoryOutputMap(__replacee, __duplicates));
 
-            if (returnNode != null)
+            if (this.___returnNode != null)
             {
-                ReturnNode __ret = (ReturnNode) __duplicates.get(returnNode);
+                ReturnNode __ret = (ReturnNode) __duplicates.get(this.___returnNode);
                 if (__ret != null)
                 {
                     MemoryMapNode __memoryMap = __ret.getMemoryMap();
@@ -1235,10 +1231,10 @@ public class SnippetTemplate
                     }
                 }
             }
-            if (memoryAnchor != null)
+            if (this.___memoryAnchor != null)
             {
                 // rewire incoming memory edges
-                MemoryAnchorNode __memoryDuplicate = (MemoryAnchorNode) __duplicates.get(memoryAnchor);
+                MemoryAnchorNode __memoryDuplicate = (MemoryAnchorNode) __duplicates.get(this.___memoryAnchor);
                 replaceMemoryUsages(__memoryDuplicate, new MemoryInputMap(__replacee));
 
                 if (__memoryDuplicate.hasNoUsages())
@@ -1305,32 +1301,32 @@ public class SnippetTemplate
         }
     }
 
-    /**
-     * Replaces a given fixed node with this specialized snippet.
-     *
-     * @param replacee the node that will be replaced
-     * @param replacer object that replaces the usages of {@code replacee}
-     * @param args the arguments to be bound to the flattened positional parameters of the snippet
-     * @return the map of duplicated nodes (original -&gt; duplicate)
-     */
+    ///
+    // Replaces a given fixed node with this specialized snippet.
+    //
+    // @param replacee the node that will be replaced
+    // @param replacer object that replaces the usages of {@code replacee}
+    // @param args the arguments to be bound to the flattened positional parameters of the snippet
+    // @return the map of duplicated nodes (original -&gt; duplicate)
+    ///
     public UnmodifiableEconomicMap<Node, Node> instantiate(MetaAccessProvider __metaAccess, FixedNode __replacee, UsageReplacer __replacer, Arguments __args)
     {
         return instantiate(__metaAccess, __replacee, __replacer, __args, true);
     }
 
-    /**
-     * Replaces a given fixed node with this specialized snippet.
-     *
-     * @param replacee the node that will be replaced
-     * @param replacer object that replaces the usages of {@code replacee}
-     * @param args the arguments to be bound to the flattened positional parameters of the snippet
-     * @param killReplacee is true, the replacee node is deleted
-     * @return the map of duplicated nodes (original -&gt; duplicate)
-     */
+    ///
+    // Replaces a given fixed node with this specialized snippet.
+    //
+    // @param replacee the node that will be replaced
+    // @param replacer object that replaces the usages of {@code replacee}
+    // @param args the arguments to be bound to the flattened positional parameters of the snippet
+    // @param killReplacee is true, the replacee node is deleted
+    // @return the map of duplicated nodes (original -&gt; duplicate)
+    ///
     public UnmodifiableEconomicMap<Node, Node> instantiate(MetaAccessProvider __metaAccess, FixedNode __replacee, UsageReplacer __replacer, Arguments __args, boolean __killReplacee)
     {
         // inline the snippet nodes replacing parameters with the given args in the process
-        StartNode __entryPointNode = snippet.start();
+        StartNode __entryPointNode = this.___snippet.start();
         FixedNode __firstCFGNode = __entryPointNode.next();
         StructuredGraph __replaceeGraph = __replacee.graph();
         EconomicMap<Node, Node> __replacements = bind(__replaceeGraph, __metaAccess, __args);
@@ -1366,7 +1362,7 @@ public class SnippetTemplate
                 }
             }
 
-            for (DeoptimizingNode __deoptNode : deoptNodes)
+            for (DeoptimizingNode __deoptNode : this.___deoptNodes)
             {
                 DeoptimizingNode __deoptDup = (DeoptimizingNode) __duplicates.get(__deoptNode.asNode());
                 if (__deoptDup.canDeoptimize())
@@ -1413,9 +1409,9 @@ public class SnippetTemplate
 
         // replace all usages of the replacee with the value returned by the snippet
         ValueNode __returnValue = null;
-        if (returnNode != null && !(__replacee instanceof ControlSinkNode))
+        if (this.___returnNode != null && !(__replacee instanceof ControlSinkNode))
         {
-            ReturnNode __returnDuplicate = (ReturnNode) __duplicates.get(returnNode);
+            ReturnNode __returnDuplicate = (ReturnNode) __duplicates.get(this.___returnNode);
             __returnValue = __returnDuplicate.result();
             if (__returnValue == null && __replacee.usages().isNotEmpty() && __replacee instanceof MemoryCheckpoint)
             {
@@ -1449,7 +1445,7 @@ public class SnippetTemplate
 
     private UnmodifiableEconomicMap<Node, Node> inlineSnippet(Node __replacee, StructuredGraph __replaceeGraph, EconomicMap<Node, Node> __replacements)
     {
-        return __replaceeGraph.addDuplicates(nodes, snippet, snippet.getNodeCount(), __replacements);
+        return __replaceeGraph.addDuplicates(this.___nodes, this.___snippet, this.___snippet.getNodeCount(), __replacements);
     }
 
     private void propagateStamp(Node __node)
@@ -1469,7 +1465,7 @@ public class SnippetTemplate
 
     private void updateStamps(ValueNode __replacee, UnmodifiableEconomicMap<Node, Node> __duplicates)
     {
-        for (ValueNode __node : placeholderStampedNodes)
+        for (ValueNode __node : this.___placeholderStampedNodes)
         {
             ValueNode __dup = (ValueNode) __duplicates.get(__node);
             Stamp __replaceeStamp = __replacee.stamp(NodeView.DEFAULT);
@@ -1483,7 +1479,7 @@ public class SnippetTemplate
                 __dup.setStamp(__replaceeStamp);
             }
         }
-        for (ParameterNode __paramNode : snippet.getNodes(ParameterNode.TYPE))
+        for (ParameterNode __paramNode : this.___snippet.getNodes(ParameterNode.TYPE))
         {
             for (Node __usage : __paramNode.usages())
             {
@@ -1493,26 +1489,26 @@ public class SnippetTemplate
         }
     }
 
-    /**
-     * Gets a copy of the specialized graph.
-     */
+    ///
+    // Gets a copy of the specialized graph.
+    ///
     public StructuredGraph copySpecializedGraph()
     {
-        return (StructuredGraph) snippet.copy();
+        return (StructuredGraph) this.___snippet.copy();
     }
 
-    /**
-     * Replaces a given floating node with this specialized snippet.
-     *
-     * @param replacee the node that will be replaced
-     * @param replacer object that replaces the usages of {@code replacee}
-     * @param tool lowering tool used to insert the snippet into the control-flow
-     * @param args the arguments to be bound to the flattened positional parameters of the snippet
-     */
+    ///
+    // Replaces a given floating node with this specialized snippet.
+    //
+    // @param replacee the node that will be replaced
+    // @param replacer object that replaces the usages of {@code replacee}
+    // @param tool lowering tool used to insert the snippet into the control-flow
+    // @param args the arguments to be bound to the flattened positional parameters of the snippet
+    ///
     public void instantiate(MetaAccessProvider __metaAccess, FloatingNode __replacee, UsageReplacer __replacer, LoweringTool __tool, Arguments __args)
     {
         // inline the snippet nodes replacing parameters with the given args in the process
-        StartNode __entryPointNode = snippet.start();
+        StartNode __entryPointNode = this.___snippet.start();
         FixedNode __firstCFGNode = __entryPointNode.next();
         StructuredGraph __replaceeGraph = __replacee.graph();
         EconomicMap<Node, Node> __replacements = bind(__replaceeGraph, __metaAccess, __args);
@@ -1531,7 +1527,7 @@ public class SnippetTemplate
         rewireMemoryGraph(__replacee, __duplicates);
 
         // replace all usages of the replacee with the value returned by the snippet
-        ReturnNode __returnDuplicate = (ReturnNode) __duplicates.get(returnNode);
+        ReturnNode __returnDuplicate = (ReturnNode) __duplicates.get(this.___returnNode);
         ValueNode __returnValue = __returnDuplicate.result();
         __replacer.replace(__replacee, __returnValue);
 
@@ -1541,31 +1537,31 @@ public class SnippetTemplate
         }
     }
 
-    /**
-     * Replaces a given floating node with this specialized snippet.
-     *
-     * This snippet must be pure data-flow
-     *
-     * @param replacee the node that will be replaced
-     * @param replacer object that replaces the usages of {@code replacee}
-     * @param args the arguments to be bound to the flattened positional parameters of the snippet
-     */
+    ///
+    // Replaces a given floating node with this specialized snippet.
+    //
+    // This snippet must be pure data-flow
+    //
+    // @param replacee the node that will be replaced
+    // @param replacer object that replaces the usages of {@code replacee}
+    // @param args the arguments to be bound to the flattened positional parameters of the snippet
+    ///
     public void instantiate(MetaAccessProvider __metaAccess, FloatingNode __replacee, UsageReplacer __replacer, Arguments __args)
     {
         // inline the snippet nodes replacing parameters with the given args in the process
-        StartNode __entryPointNode = snippet.start();
+        StartNode __entryPointNode = this.___snippet.start();
         StructuredGraph __replaceeGraph = __replacee.graph();
         EconomicMap<Node, Node> __replacements = bind(__replaceeGraph, __metaAccess, __args);
         MemoryAnchorNode __anchorDuplicate = null;
-        if (memoryAnchor != null)
+        if (this.___memoryAnchor != null)
         {
             __anchorDuplicate = __replaceeGraph.add(new MemoryAnchorNode());
-            __replacements.put(memoryAnchor, __anchorDuplicate);
+            __replacements.put(this.___memoryAnchor, __anchorDuplicate);
         }
-        List<Node> __floatingNodes = new ArrayList<>(nodes.size() - 2);
-        for (Node __n : nodes)
+        List<Node> __floatingNodes = new ArrayList<>(this.___nodes.size() - 2);
+        for (Node __n : this.___nodes)
         {
-            if (__n != __entryPointNode && __n != returnNode)
+            if (__n != __entryPointNode && __n != this.___returnNode)
             {
                 __floatingNodes.add(__n);
             }
@@ -1578,7 +1574,7 @@ public class SnippetTemplate
         rewireMemoryGraph(__replacee, __duplicates);
 
         // replace all usages of the replacee with the value returned by the snippet
-        ValueNode __returnValue = (ValueNode) __duplicates.get(returnNode.result());
+        ValueNode __returnValue = (ValueNode) __duplicates.get(this.___returnNode.result());
         __replacer.replace(__replacee, __returnValue);
     }
 
@@ -1586,7 +1582,7 @@ public class SnippetTemplate
     {
         if (__replacee instanceof StateSplit)
         {
-            for (StateSplit __sideEffectNode : sideEffectNodes)
+            for (StateSplit __sideEffectNode : this.___sideEffectNodes)
             {
                 Node __sideEffectDup = __duplicates.get(__sideEffectNode.asNode());
                 ((StateSplit) __sideEffectDup).setStateAfter(((StateSplit) __replacee).stateAfter());
@@ -1596,15 +1592,15 @@ public class SnippetTemplate
 
     private static boolean checkTemplate(MetaAccessProvider __metaAccess, Arguments __args, ResolvedJavaMethod __method, Signature __signature)
     {
-        for (int __i = 0; __i < __args.info.getParameterCount(); __i++)
+        for (int __i = 0; __i < __args.___info.getParameterCount(); __i++)
         {
-            if (__args.info.isConstantParameter(__i))
+            if (__args.___info.isConstantParameter(__i))
             {
                 JavaKind __kind = __signature.getParameterKind(__i);
             }
-            else if (__args.info.isVarargsParameter(__i))
+            else if (__args.___info.isVarargsParameter(__i))
             {
-                Varargs __varargs = (Varargs) __args.values[__i];
+                Varargs __varargs = (Varargs) __args.___values[__i];
             }
         }
         return true;
@@ -1612,6 +1608,6 @@ public class SnippetTemplate
 
     public void setMayRemoveLocation(boolean __mayRemoveLocation)
     {
-        this.mayRemoveLocation = __mayRemoveLocation;
+        this.___mayRemoveLocation = __mayRemoveLocation;
     }
 }

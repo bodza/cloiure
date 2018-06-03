@@ -25,9 +25,9 @@ import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 import giraaff.word.Word;
 
-/**
- * Substitutions for {@code com.sun.crypto.provider.AESCrypt} methods.
- */
+///
+// Substitutions for {@code com.sun.crypto.provider.AESCrypt} methods.
+///
 @ClassSubstitution(className = "com.sun.crypto.provider.AESCrypt", optional = true)
 // @class AESCryptSubstitutions
 public final class AESCryptSubstitutions
@@ -45,10 +45,10 @@ public final class AESCryptSubstitutions
     // @def
     static final Class<?> AESCryptClass;
 
-    /**
-     * The AES block size is a constant 128 bits as defined by the
-     * <a href="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf">standard<a/>.
-     */
+    ///
+    // The AES block size is a constant 128 bits as defined by the
+    // <a href="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf">standard<a/>.
+    ///
     // @def
     static final int AES_BLOCK_SIZE_IN_BYTES = 16;
 
@@ -93,19 +93,19 @@ public final class AESCryptSubstitutions
         crypt(__rcvr, __in, __inOffset, __out, __outOffset, false, false);
     }
 
-    /**
-     * Variation for platforms (e.g. SPARC) that need do key expansion in stubs due to compatibility
-     * issues between Java key expansion and hardware crypto instructions.
-     */
+    ///
+    // Variation for platforms (e.g. SPARC) that need do key expansion in stubs due to compatibility
+    // issues between Java key expansion and hardware crypto instructions.
+    ///
     @MethodSubstitution(value = "decryptBlock", isStatic = false)
     static void decryptBlockWithOriginalKey(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
         crypt(__rcvr, __in, __inOffset, __out, __outOffset, false, true);
     }
 
-    /**
-     * @see #decryptBlockWithOriginalKey(Object, byte[], int, byte[], int)
-     */
+    ///
+    // @see #decryptBlockWithOriginalKey(Object, byte[], int, byte[], int)
+    ///
     @MethodSubstitution(value = "implDecryptBlock", isStatic = false)
     static void implDecryptBlockWithOriginalKey(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
@@ -139,9 +139,9 @@ public final class AESCryptSubstitutions
         }
     }
 
-    /**
-     * Perform null and array bounds checks for arguments to a cipher operation.
-     */
+    ///
+    // Perform null and array bounds checks for arguments to a cipher operation.
+    ///
     static void checkArgs(byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
         if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __inOffset < 0 || __in.length - AES_BLOCK_SIZE_IN_BYTES < __inOffset || __outOffset < 0 || __out.length - AES_BLOCK_SIZE_IN_BYTES < __outOffset))
@@ -151,11 +151,11 @@ public final class AESCryptSubstitutions
     }
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void encryptBlockStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key);
+    public static native void encryptBlockStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __in, Word __out, Pointer __key);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void decryptBlockStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key);
+    public static native void decryptBlockStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __in, Word __out, Pointer __key);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native void decryptBlockWithOriginalKeyStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Word in, Word out, Pointer key, Pointer originalKey);
+    public static native void decryptBlockWithOriginalKeyStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __in, Word __out, Pointer __key, Pointer __originalKey);
 }

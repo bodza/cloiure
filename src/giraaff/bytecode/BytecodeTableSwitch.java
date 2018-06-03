@@ -1,8 +1,8 @@
 package giraaff.bytecode;
 
-/**
- * A utility for processing {@link Bytecodes#TABLESWITCH} bytecodes.
- */
+///
+// A utility for processing {@link Bytecodes#TABLESWITCH} bytecodes.
+///
 // @class BytecodeTableSwitch
 public final class BytecodeTableSwitch extends BytecodeSwitch
 {
@@ -15,36 +15,36 @@ public final class BytecodeTableSwitch extends BytecodeSwitch
     // @def
     private static final int JUMP_OFFSET_SIZE = 4;
 
-    /**
-     * Constructor for a {@link BytecodeStream}.
-     *
-     * @param stream the {@code BytecodeStream} containing the switch instruction
-     * @param bci the index in the stream of the switch instruction
-     */
+    ///
+    // Constructor for a {@link BytecodeStream}.
+    //
+    // @param stream the {@code BytecodeStream} containing the switch instruction
+    // @param bci the index in the stream of the switch instruction
+    ///
     // @cons
     public BytecodeTableSwitch(BytecodeStream __stream, int __bci)
     {
         super(__stream, __bci);
     }
 
-    /**
-     * Gets the low key of the table switch.
-     *
-     * @return the low key
-     */
+    ///
+    // Gets the low key of the table switch.
+    //
+    // @return the low key
+    ///
     public int lowKey()
     {
-        return stream.readInt(alignedBci + OFFSET_TO_LOW_KEY);
+        return this.___stream.readInt(this.___alignedBci + OFFSET_TO_LOW_KEY);
     }
 
-    /**
-     * Gets the high key of the table switch.
-     *
-     * @return the high key
-     */
+    ///
+    // Gets the high key of the table switch.
+    //
+    // @return the high key
+    ///
     public int highKey()
     {
-        return stream.readInt(alignedBci + OFFSET_TO_HIGH_KEY);
+        return this.___stream.readInt(this.___alignedBci + OFFSET_TO_HIGH_KEY);
     }
 
     @Override
@@ -56,7 +56,7 @@ public final class BytecodeTableSwitch extends BytecodeSwitch
     @Override
     public int offsetAt(int __i)
     {
-        return stream.readInt(alignedBci + OFFSET_TO_FIRST_JUMP_OFFSET + JUMP_OFFSET_SIZE * __i);
+        return this.___stream.readInt(this.___alignedBci + OFFSET_TO_FIRST_JUMP_OFFSET + JUMP_OFFSET_SIZE * __i);
     }
 
     @Override
@@ -68,6 +68,6 @@ public final class BytecodeTableSwitch extends BytecodeSwitch
     @Override
     public int size()
     {
-        return alignedBci + OFFSET_TO_FIRST_JUMP_OFFSET + JUMP_OFFSET_SIZE * numberOfCases() - bci;
+        return this.___alignedBci + OFFSET_TO_FIRST_JUMP_OFFSET + JUMP_OFFSET_SIZE * numberOfCases() - this.___bci;
     }
 }

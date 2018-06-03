@@ -13,10 +13,10 @@ import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code RawMonitorEnterNode} represents the acquisition of a monitor. The object needs to
- * already be non-null and the hub is an additional parameter to the node.
- */
+///
+// The {@code RawMonitorEnterNode} represents the acquisition of a monitor. The object needs to
+// already be non-null and the hub is an additional parameter to the node.
+///
 // @class RawMonitorEnterNode
 public final class RawMonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
 {
@@ -25,13 +25,13 @@ public final class RawMonitorEnterNode extends AccessMonitorNode implements Virt
 
     @Input
     // @field
-    ValueNode hub;
+    ValueNode ___hub;
 
     // @cons
     public RawMonitorEnterNode(ValueNode __object, ValueNode __hub, MonitorIdNode __monitorId)
     {
         super(TYPE, __object, __monitorId);
-        this.hub = __hub;
+        this.___hub = __hub;
     }
 
     @Override
@@ -63,6 +63,6 @@ public final class RawMonitorEnterNode extends AccessMonitorNode implements Virt
 
     public ValueNode getHub()
     {
-        return hub;
+        return this.___hub;
     }
 }

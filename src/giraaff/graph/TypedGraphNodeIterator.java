@@ -7,48 +7,48 @@ import java.util.NoSuchElementException;
 final class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T>
 {
     // @field
-    private final Graph graph;
+    private final Graph ___graph;
     // @field
-    private final int[] ids;
+    private final int[] ___ids;
     // @field
-    private final Node[] current;
+    private final Node[] ___current;
 
     // @field
-    private int currentIdIndex;
+    private int ___currentIdIndex;
     // @field
-    private boolean needsForward;
+    private boolean ___needsForward;
 
     // @cons
     TypedGraphNodeIterator(NodeClass<?> __clazz, Graph __graph)
     {
         super();
-        this.graph = __graph;
-        ids = __clazz.iterableIds();
-        currentIdIndex = 0;
-        current = new Node[ids.length];
-        needsForward = true;
+        this.___graph = __graph;
+        this.___ids = __clazz.iterableIds();
+        this.___currentIdIndex = 0;
+        this.___current = new Node[this.___ids.length];
+        this.___needsForward = true;
     }
 
     private Node findNext()
     {
-        if (needsForward)
+        if (this.___needsForward)
         {
             forward();
         }
         else
         {
             Node __c = current();
-            Node __afterDeleted = graph.getIterableNodeNext(__c);
+            Node __afterDeleted = this.___graph.getIterableNodeNext(__c);
             if (__afterDeleted == null)
             {
-                needsForward = true;
+                this.___needsForward = true;
             }
             else if (__c != __afterDeleted)
             {
                 setCurrent(__afterDeleted);
             }
         }
-        if (needsForward)
+        if (this.___needsForward)
         {
             return null;
         }
@@ -57,29 +57,29 @@ final class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterat
 
     private void forward()
     {
-        needsForward = false;
-        int __startIdx = currentIdIndex;
+        this.___needsForward = false;
+        int __startIdx = this.___currentIdIndex;
         while (true)
         {
             Node __next;
             if (current() == null)
             {
-                __next = graph.getIterableNodeStart(ids[currentIdIndex]);
+                __next = this.___graph.getIterableNodeStart(this.___ids[this.___currentIdIndex]);
             }
             else
             {
-                __next = graph.getIterableNodeNext(current().typeCacheNext);
+                __next = this.___graph.getIterableNodeNext(current().___typeCacheNext);
             }
             if (__next == null)
             {
-                currentIdIndex++;
-                if (currentIdIndex >= ids.length)
+                this.___currentIdIndex++;
+                if (this.___currentIdIndex >= this.___ids.length)
                 {
-                    currentIdIndex = 0;
+                    this.___currentIdIndex = 0;
                 }
-                if (currentIdIndex == __startIdx)
+                if (this.___currentIdIndex == __startIdx)
                 {
-                    needsForward = true;
+                    this.___needsForward = true;
                     return;
                 }
             }
@@ -93,12 +93,12 @@ final class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterat
 
     private Node current()
     {
-        return current[currentIdIndex];
+        return this.___current[this.___currentIdIndex];
     }
 
     private void setCurrent(Node __n)
     {
-        current[currentIdIndex] = __n;
+        this.___current[this.___currentIdIndex] = __n;
     }
 
     @Override
@@ -116,7 +116,7 @@ final class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterat
         {
             throw new NoSuchElementException();
         }
-        needsForward = true;
+        this.___needsForward = true;
         return (T) __result;
     }
 

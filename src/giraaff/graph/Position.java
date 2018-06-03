@@ -2,88 +2,88 @@ package giraaff.graph;
 
 import giraaff.nodeinfo.InputType;
 
-/**
- * Describes an edge slot for a {@link NodeClass}.
- */
+///
+// Describes an edge slot for a {@link NodeClass}.
+///
 // @class Position
 public final class Position
 {
-    /**
-     * The edges in which this position lies.
-     */
+    ///
+    // The edges in which this position lies.
+    ///
     // @field
-    private final Edges edges;
+    private final Edges ___edges;
 
-    /**
-     * Index of the {@link Node} or {@link NodeList} field denoted by this position.
-     */
+    ///
+    // Index of the {@link Node} or {@link NodeList} field denoted by this position.
+    ///
     // @field
-    private final int index;
+    private final int ___index;
 
-    /**
-     * Index within a {@link NodeList} if {@link #index} denotes a {@link NodeList} field otherwise
-     * {@link Node#NOT_ITERABLE}.
-     */
+    ///
+    // Index within a {@link NodeList} if {@link #index} denotes a {@link NodeList} field otherwise
+    // {@link Node#NOT_ITERABLE}.
+    ///
     // @field
-    private final int subIndex;
+    private final int ___subIndex;
 
     // @cons
     public Position(Edges __edges, int __index, int __subIndex)
     {
         super();
-        this.edges = __edges;
-        this.index = __index;
-        this.subIndex = __subIndex;
+        this.___edges = __edges;
+        this.___index = __index;
+        this.___subIndex = __subIndex;
     }
 
     public Node get(Node __node)
     {
-        if (index < edges.getDirectCount())
+        if (this.___index < this.___edges.getDirectCount())
         {
-            return Edges.getNode(__node, edges.getOffsets(), index);
+            return Edges.getNode(__node, this.___edges.getOffsets(), this.___index);
         }
         else
         {
-            return Edges.getNodeList(__node, edges.getOffsets(), index).get(subIndex);
+            return Edges.getNodeList(__node, this.___edges.getOffsets(), this.___index).get(this.___subIndex);
         }
     }
 
     public InputType getInputType()
     {
-        return ((InputEdges) edges).getInputType(index);
+        return ((InputEdges) this.___edges).getInputType(this.___index);
     }
 
     public String getName()
     {
-        return edges.getName(index);
+        return this.___edges.getName(this.___index);
     }
 
     public boolean isInputOptional()
     {
-        return ((InputEdges) edges).isOptional(index);
+        return ((InputEdges) this.___edges).isOptional(this.___index);
     }
 
     public void set(Node __node, Node __value)
     {
-        if (index < edges.getDirectCount())
+        if (this.___index < this.___edges.getDirectCount())
         {
-            edges.setNode(__node, index, __value);
+            this.___edges.setNode(__node, this.___index, __value);
         }
         else
         {
-            Edges.getNodeList(__node, edges.getOffsets(), index).set(subIndex, __value);
+            Edges.getNodeList(__node, this.___edges.getOffsets(), this.___index).set(this.___subIndex, __value);
         }
     }
 
     public void initialize(Node __node, Node __value)
     {
-        if (index < edges.getDirectCount())
+        if (this.___index < this.___edges.getDirectCount())
         {
-            edges.initializeNode(__node, index, __value);
+            this.___edges.initializeNode(__node, this.___index, __value);
         }
         else
         {
-            Edges.getNodeList(__node, edges.getOffsets(), index).initialize(subIndex, __value);
+            Edges.getNodeList(__node, this.___edges.getOffsets(), this.___index).initialize(this.___subIndex, __value);
         }
     }
 
@@ -92,9 +92,9 @@ public final class Position
     {
         final int __prime = 31;
         int __result = 1;
-        __result = __prime * __result + index;
-        __result = __prime * __result + edges.hashCode();
-        __result = __prime * __result + subIndex;
+        __result = __prime * __result + this.___index;
+        __result = __prime * __result + this.___edges.hashCode();
+        __result = __prime * __result + this.___subIndex;
         return __result;
     }
 
@@ -114,35 +114,35 @@ public final class Position
             return false;
         }
         Position __other = (Position) __obj;
-        if (index != __other.index)
+        if (this.___index != __other.___index)
         {
             return false;
         }
-        if (edges != __other.edges)
+        if (this.___edges != __other.___edges)
         {
             return false;
         }
-        if (subIndex != __other.subIndex)
+        if (this.___subIndex != __other.___subIndex)
         {
             return false;
         }
         return true;
     }
 
-    /**
-     * Gets the index within a {@link NodeList} if {@link #getIndex()} denotes a {@link NodeList}
-     * field otherwise {@link Node#NOT_ITERABLE}.
-     */
+    ///
+    // Gets the index within a {@link NodeList} if {@link #getIndex()} denotes a {@link NodeList}
+    // field otherwise {@link Node#NOT_ITERABLE}.
+    ///
     public int getSubIndex()
     {
-        return subIndex;
+        return this.___subIndex;
     }
 
-    /**
-     * Gets the index of the {@link Node} or {@link NodeList} field denoted by this position.
-     */
+    ///
+    // Gets the index of the {@link Node} or {@link NodeList} field denoted by this position.
+    ///
     public int getIndex()
     {
-        return index;
+        return this.___index;
     }
 }

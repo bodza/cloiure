@@ -66,16 +66,16 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
     }
 
     // @field
-    private final DynamicTypeStore dynoStore;
+    private final DynamicTypeStore ___dynoStore;
     // @field
-    private final boolean treatAppendixAsConstant;
+    private final boolean ___treatAppendixAsConstant;
 
     // @cons
     public HotSpotInvokeDynamicPlugin(DynamicTypeStore __dynoStore, boolean __treatAppendixAsConstant)
     {
         super();
-        this.dynoStore = __dynoStore;
-        this.treatAppendixAsConstant = __treatAppendixAsConstant;
+        this.___dynoStore = __dynoStore;
+        this.___treatAppendixAsConstant = __treatAppendixAsConstant;
     }
 
     // @cons
@@ -112,7 +112,7 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
 
     public DynamicTypeStore getDynamicTypeStore()
     {
-        return dynoStore;
+        return this.___dynoStore;
     }
 
     @Override
@@ -122,9 +122,9 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
         HotSpotResolvedObjectType __methodHolder = __method.getDeclaringClass();
 
         HotSpotResolvedJavaMethod __adapter = (HotSpotResolvedJavaMethod) __target;
-        if (dynoStore != null)
+        if (this.___dynoStore != null)
         {
-            dynoStore.recordAdapter(__opcode, __methodHolder, __index, __adapter);
+            this.___dynoStore.recordAdapter(__opcode, __methodHolder, __index, __adapter);
         }
     }
 
@@ -135,15 +135,15 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
         HotSpotResolvedJavaMethod __method = (HotSpotResolvedJavaMethod) __builder.getMethod();
         HotSpotResolvedObjectType __methodHolder = __method.getDeclaringClass();
 
-        if (dynoStore != null)
+        if (this.___dynoStore != null)
         {
-            __appendix = dynoStore.recordAppendix(__opcode, __methodHolder, __index, __appendix);
+            __appendix = this.___dynoStore.recordAppendix(__opcode, __methodHolder, __index, __appendix);
         }
 
         ConstantNode __appendixNode = ConstantNode.forConstant(__appendix, __builder.getMetaAccess(), __builder.getGraph());
 
         Stamp __appendixStamp = __appendixNode.stamp(NodeView.DEFAULT);
-        Stamp __resolveStamp = treatAppendixAsConstant ? __appendixStamp : __appendixStamp.unrestricted();
+        Stamp __resolveStamp = this.___treatAppendixAsConstant ? __appendixStamp : __appendixStamp.unrestricted();
         ResolveDynamicConstantNode __resolveNode = new ResolveDynamicConstantNode(__resolveStamp, __appendixNode);
         ResolveDynamicConstantNode __added = __builder.append(__resolveNode);
         __added.setStateBefore(__frameState);
@@ -153,8 +153,8 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
     // @iface HotSpotInvokeDynamicPlugin.DynamicTypeStore
     public interface DynamicTypeStore
     {
-        void recordAdapter(int opcode, HotSpotResolvedObjectType holder, int cpi, HotSpotResolvedJavaMethod adapter);
+        void recordAdapter(int __opcode, HotSpotResolvedObjectType __holder, int __cpi, HotSpotResolvedJavaMethod __adapter);
 
-        JavaConstant recordAppendix(int opcode, HotSpotResolvedObjectType holder, int cpi, JavaConstant appendix);
+        JavaConstant recordAppendix(int __opcode, HotSpotResolvedObjectType __holder, int __cpi, JavaConstant __appendix);
     }
 }

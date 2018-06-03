@@ -11,10 +11,10 @@ import giraaff.nodes.FrameState;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.memory.address.AddressNode;
 
-/**
- * Accesses a value at an memory address specified by an {@linkplain #address address}. The access
- * does not include a null check on the object.
- */
+///
+// Accesses a value at an memory address specified by an {@linkplain #address address}. The access
+// does not include a null check on the object.
+///
 // @class FixedAccessNode
 public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode implements Access, IterableNodeType
 {
@@ -23,46 +23,46 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
 
     @OptionalInput(InputType.Guard)
     // @field
-    protected GuardingNode guard;
+    protected GuardingNode ___guard;
 
     @Input(InputType.Association)
     // @field
-    AddressNode address;
+    AddressNode ___address;
     // @field
-    protected final LocationIdentity location;
+    protected final LocationIdentity ___location;
 
     // @field
-    protected boolean nullCheck;
+    protected boolean ___nullCheck;
     // @field
-    protected BarrierType barrierType;
+    protected BarrierType ___barrierType;
 
     @Override
     public AddressNode getAddress()
     {
-        return address;
+        return this.___address;
     }
 
     @Override
     public void setAddress(AddressNode __address)
     {
-        updateUsages(this.address, __address);
-        this.address = __address;
+        updateUsages(this.___address, __address);
+        this.___address = __address;
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return location;
+        return this.___location;
     }
 
     public boolean getNullCheck()
     {
-        return nullCheck;
+        return this.___nullCheck;
     }
 
     public void setNullCheck(boolean __check)
     {
-        this.nullCheck = __check;
+        this.___nullCheck = __check;
     }
 
     // @cons
@@ -81,35 +81,35 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
     {
         super(__c, __stamp, __stateBefore);
-        this.address = __address;
-        this.location = __location;
-        this.guard = __guard;
-        this.barrierType = __barrierType;
-        this.nullCheck = __nullCheck;
+        this.___address = __address;
+        this.___location = __location;
+        this.___guard = __guard;
+        this.___barrierType = __barrierType;
+        this.___nullCheck = __nullCheck;
     }
 
     @Override
     public boolean canDeoptimize()
     {
-        return nullCheck;
+        return this.___nullCheck;
     }
 
     @Override
     public GuardingNode getGuard()
     {
-        return guard;
+        return this.___guard;
     }
 
     @Override
     public void setGuard(GuardingNode __guard)
     {
-        updateUsagesInterface(this.guard, __guard);
-        this.guard = __guard;
+        updateUsagesInterface(this.___guard, __guard);
+        this.___guard = __guard;
     }
 
     @Override
     public BarrierType getBarrierType()
     {
-        return barrierType;
+        return this.___barrierType;
     }
 }

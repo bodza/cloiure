@@ -11,36 +11,36 @@ import giraaff.phases.PhaseSuite;
 public final class Suites
 {
     // @field
-    private final PhaseSuite<HighTierContext> highTier;
+    private final PhaseSuite<HighTierContext> ___highTier;
     // @field
-    private final PhaseSuite<MidTierContext> midTier;
+    private final PhaseSuite<MidTierContext> ___midTier;
     // @field
-    private final PhaseSuite<LowTierContext> lowTier;
+    private final PhaseSuite<LowTierContext> ___lowTier;
     // @field
-    private boolean immutable;
+    private boolean ___immutable;
 
     public PhaseSuite<HighTierContext> getHighTier()
     {
-        return highTier;
+        return this.___highTier;
     }
 
     public PhaseSuite<MidTierContext> getMidTier()
     {
-        return midTier;
+        return this.___midTier;
     }
 
     public PhaseSuite<LowTierContext> getLowTier()
     {
-        return lowTier;
+        return this.___lowTier;
     }
 
     // @cons
     public Suites(PhaseSuite<HighTierContext> __highTier, PhaseSuite<MidTierContext> __midTier, PhaseSuite<LowTierContext> __lowTier)
     {
         super();
-        this.highTier = __highTier;
-        this.midTier = __midTier;
-        this.lowTier = __lowTier;
+        this.___highTier = __highTier;
+        this.___midTier = __midTier;
+        this.___lowTier = __lowTier;
     }
 
     public static Suites createSuites(CompilerConfiguration __config)
@@ -55,22 +55,22 @@ public final class Suites
 
     public boolean isImmutable()
     {
-        return immutable;
+        return this.___immutable;
     }
 
     public synchronized void setImmutable()
     {
-        if (!immutable)
+        if (!this.___immutable)
         {
-            highTier.setImmutable();
-            midTier.setImmutable();
-            lowTier.setImmutable();
-            immutable = true;
+            this.___highTier.setImmutable();
+            this.___midTier.setImmutable();
+            this.___lowTier.setImmutable();
+            this.___immutable = true;
         }
     }
 
     public Suites copy()
     {
-        return new Suites(highTier.copy(), midTier.copy(), lowTier.copy());
+        return new Suites(this.___highTier.copy(), this.___midTier.copy(), this.___lowTier.copy());
     }
 }

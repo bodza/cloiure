@@ -11,9 +11,9 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * AMD64 rdtsc operation. The result is in EDX:EAX.
- */
+///
+// AMD64 rdtsc operation. The result is in EDX:EAX.
+///
 @Opcode
 // @class AMD64ReadTimestampCounter
 public final class AMD64ReadTimestampCounter extends AMD64LIRInstruction
@@ -23,28 +23,28 @@ public final class AMD64ReadTimestampCounter extends AMD64LIRInstruction
 
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue highResult;
+    protected AllocatableValue ___highResult;
     @Def({OperandFlag.REG})
     // @field
-    protected AllocatableValue lowResult;
+    protected AllocatableValue ___lowResult;
 
     // @cons
     public AMD64ReadTimestampCounter()
     {
         super(TYPE);
 
-        this.highResult = AMD64.rdx.asValue(LIRKind.value(AMD64Kind.DWORD));
-        this.lowResult = AMD64.rax.asValue(LIRKind.value(AMD64Kind.DWORD));
+        this.___highResult = AMD64.rdx.asValue(LIRKind.value(AMD64Kind.DWORD));
+        this.___lowResult = AMD64.rax.asValue(LIRKind.value(AMD64Kind.DWORD));
     }
 
     public AllocatableValue getHighResult()
     {
-        return highResult;
+        return this.___highResult;
     }
 
     public AllocatableValue getLowResult()
     {
-        return lowResult;
+        return this.___lowResult;
     }
 
     @Override

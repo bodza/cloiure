@@ -17,9 +17,9 @@ import giraaff.lir.Opcode;
 import giraaff.lir.amd64.AMD64Call;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Removes the current frame and jumps to the {@link UnwindExceptionToCallerStub}.
- */
+///
+// Removes the current frame and jumps to the {@link UnwindExceptionToCallerStub}.
+///
 @Opcode
 // @class AMD64HotSpotUnwindOp
 final class AMD64HotSpotUnwindOp extends AMD64HotSpotEpilogueBlockEndOp
@@ -29,13 +29,13 @@ final class AMD64HotSpotUnwindOp extends AMD64HotSpotEpilogueBlockEndOp
 
     @Use({OperandFlag.REG})
     // @field
-    protected RegisterValue exception;
+    protected RegisterValue ___exception;
 
     // @cons
     AMD64HotSpotUnwindOp(RegisterValue __exception)
     {
         super(TYPE);
-        this.exception = __exception;
+        this.___exception = __exception;
     }
 
     @Override
@@ -43,7 +43,7 @@ final class AMD64HotSpotUnwindOp extends AMD64HotSpotEpilogueBlockEndOp
     {
         leaveFrameAndRestoreRbp(__crb, __masm);
 
-        ForeignCallLinkage __linkage = __crb.foreignCalls.lookupForeignCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER);
+        ForeignCallLinkage __linkage = __crb.___foreignCalls.lookupForeignCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER);
         CallingConvention __cc = __linkage.getOutgoingCallingConvention();
 
         // Get return address (is on top of stack after leave).

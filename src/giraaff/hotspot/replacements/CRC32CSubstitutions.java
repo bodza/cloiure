@@ -15,9 +15,9 @@ import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.word.Word;
 
-/**
- * Substitutions for java.util.zip.CRC32C.
- */
+///
+// Substitutions for java.util.zip.CRC32C.
+///
 @ClassSubstitution(className = "java.util.zip.CRC32C", optional = true)
 // @class CRC32CSubstitutions
 public final class CRC32CSubstitutions
@@ -32,7 +32,7 @@ public final class CRC32CSubstitutions
     public static final ForeignCallDescriptor UPDATE_BYTES_CRC32C = new ForeignCallDescriptor("updateBytesCRC32C", int.class, int.class, WordBase.class, int.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
-    public static native int updateBytesCRC32(@ConstantNodeParameter ForeignCallDescriptor descriptor, int crc, WordBase buf, int length);
+    public static native int updateBytesCRC32(@ConstantNodeParameter ForeignCallDescriptor __descriptor, int __crc, WordBase __buf, int __length);
 
     @MethodSubstitution
     static int updateBytes(int __crc, byte[] __b, int __off, int __end)

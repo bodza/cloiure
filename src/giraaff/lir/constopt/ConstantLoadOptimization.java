@@ -28,18 +28,18 @@ import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.lir.phases.PreAllocationOptimizationPhase;
 
-/**
- * This optimization tries to improve the handling of constants by replacing a single definition of
- * a constant, which is potentially scheduled into a block with high probability, with one or more
- * definitions in blocks with a lower probability.
- */
+///
+// This optimization tries to improve the handling of constants by replacing a single definition of
+// a constant, which is potentially scheduled into a block with high probability, with one or more
+// definitions in blocks with a lower probability.
+///
 // @class ConstantLoadOptimization
 public final class ConstantLoadOptimization extends PreAllocationOptimizationPhase
 {
     @Override
     protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PreAllocationOptimizationContext __context)
     {
-        LIRGeneratorTool __lirGen = __context.lirGen;
+        LIRGeneratorTool __lirGen = __context.___lirGen;
         new Optimization(__lirGenRes.getLIR(), __lirGen).apply();
     }
 
@@ -47,42 +47,42 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
     private static final class Optimization
     {
         // @field
-        private final LIR lir;
+        private final LIR ___lir;
         // @field
-        private final LIRGeneratorTool lirGen;
+        private final LIRGeneratorTool ___lirGen;
         // @field
-        private final VariableMap<DefUseTree> map;
+        private final VariableMap<DefUseTree> ___map;
         // @field
-        private final BitSet phiConstants;
+        private final BitSet ___phiConstants;
         // @field
-        private final BitSet defined;
+        private final BitSet ___defined;
         // @field
-        private final BlockMap<List<UseEntry>> blockMap;
+        private final BlockMap<List<UseEntry>> ___blockMap;
         // @field
-        private final BlockMap<LIRInsertionBuffer> insertionBuffers;
+        private final BlockMap<LIRInsertionBuffer> ___insertionBuffers;
 
         // @cons
         private Optimization(LIR __lir, LIRGeneratorTool __lirGen)
         {
             super();
-            this.lir = __lir;
-            this.lirGen = __lirGen;
-            this.map = new VariableMap<>();
-            this.phiConstants = new BitSet();
-            this.defined = new BitSet();
-            this.insertionBuffers = new BlockMap<>(__lir.getControlFlowGraph());
-            this.blockMap = new BlockMap<>(__lir.getControlFlowGraph());
+            this.___lir = __lir;
+            this.___lirGen = __lirGen;
+            this.___map = new VariableMap<>();
+            this.___phiConstants = new BitSet();
+            this.___defined = new BitSet();
+            this.___insertionBuffers = new BlockMap<>(__lir.getControlFlowGraph());
+            this.___blockMap = new BlockMap<>(__lir.getControlFlowGraph());
         }
 
         private void apply()
         {
             // build DefUseTree
-            for (AbstractBlockBase<?> __b : lir.getControlFlowGraph().getBlocks())
+            for (AbstractBlockBase<?> __b : this.___lir.getControlFlowGraph().getBlocks())
             {
                 this.analyzeBlock(__b);
             }
             // remove all with only one use
-            map.filter(__t ->
+            this.___map.filter(__t ->
             {
                 if (__t.usageCount() > 1)
                 {
@@ -94,13 +94,13 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
                 }
             });
             // collect block map
-            map.forEach(__tree -> __tree.forEach(this::addUsageToBlockMap));
+            this.___map.forEach(__tree -> __tree.forEach(this::addUsageToBlockMap));
 
             // create ConstantTree
-            map.forEach(this::createConstantTree);
+            this.___map.forEach(this::createConstantTree);
 
             // insert moves, delete null instructions and reset instruction ids
-            for (AbstractBlockBase<?> __b : lir.getControlFlowGraph().getBlocks())
+            for (AbstractBlockBase<?> __b : this.___lir.getControlFlowGraph().getBlocks())
             {
                 this.rewriteBlock(__b);
             }
@@ -118,18 +118,18 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         private void addUsageToBlockMap(UseEntry __entry)
         {
             AbstractBlockBase<?> __block = __entry.getBlock();
-            List<UseEntry> __list = blockMap.get(__block);
+            List<UseEntry> __list = this.___blockMap.get(__block);
             if (__list == null)
             {
                 __list = new ArrayList<>();
-                blockMap.put(__block, __list);
+                this.___blockMap.put(__block, __list);
             }
             __list.add(__entry);
         }
 
-        /**
-         * Collects def-use information for a {@code block}.
-         */
+        ///
+        // Collects def-use information for a {@code block}.
+        ///
         private void analyzeBlock(AbstractBlockBase<?> __block)
         {
             InstructionValueConsumer __loadConsumer = (__instruction, __value, __mode, __flags) ->
@@ -138,22 +138,22 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
                 {
                     Variable __var = (Variable) __value;
 
-                    if (!phiConstants.get(__var.index))
+                    if (!this.___phiConstants.get(__var.___index))
                     {
-                        if (!defined.get(__var.index))
+                        if (!this.___defined.get(__var.___index))
                         {
-                            defined.set(__var.index);
+                            this.___defined.set(__var.___index);
                             if (isConstantLoad(__instruction))
                             {
-                                map.put(__var, new DefUseTree(__instruction, __block));
+                                this.___map.put(__var, new DefUseTree(__instruction, __block));
                             }
                         }
                         else
                         {
                             // Variable is redefined, this only happens for constant loads
                             // introduced by phi resolution -> ignore.
-                            map.remove(__var);
-                            phiConstants.set(__var.index);
+                            this.___map.remove(__var);
+                            this.___phiConstants.set(__var.___index);
                         }
                     }
                 }
@@ -164,9 +164,9 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
                 if (LIRValueUtil.isVariable(__value))
                 {
                     Variable __var = (Variable) __value;
-                    if (!phiConstants.get(__var.index))
+                    if (!this.___phiConstants.get(__var.___index))
                     {
-                        DefUseTree __tree = map.get(__var);
+                        DefUseTree __tree = this.___map.get(__var);
                         if (__tree != null)
                         {
                             __tree.addUsage(__block, __instruction, __value);
@@ -176,7 +176,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
             };
 
             int __opId = 0;
-            for (LIRInstruction __inst : lir.getLIRforBlock(__block))
+            for (LIRInstruction __inst : this.___lir.getLIRforBlock(__block))
             {
                 // set instruction id to the index in the lir instruction list
                 __inst.setId(__opId++);
@@ -186,12 +186,12 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
             }
         }
 
-        /**
-         * Creates the dominator tree and searches for an solution.
-         */
+        ///
+        // Creates the dominator tree and searches for an solution.
+        ///
         private void createConstantTree(DefUseTree __tree)
         {
-            ConstantTree __constTree = new ConstantTree(lir.getControlFlowGraph(), __tree);
+            ConstantTree __constTree = new ConstantTree(this.___lir.getControlFlowGraph(), __tree);
             __constTree.set(Flags.SUBTREE, __tree.getBlock());
             __tree.forEach(__u -> __constTree.set(Flags.USAGE, __u.getBlock()));
 
@@ -251,9 +251,9 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         private void insertLoad(Constant __constant, ValueKind<?> __kind, AbstractBlockBase<?> __block, List<UseEntry> __usages)
         {
             // create variable
-            Variable __variable = lirGen.newVariable(__kind);
+            Variable __variable = this.___lirGen.newVariable(__kind);
             // create move
-            LIRInstruction __move = lirGen.getSpillMoveFactory().createLoad(__variable, __constant);
+            LIRInstruction __move = this.___lirGen.getSpillMoveFactory().createLoad(__variable, __constant);
             // insert instruction
             getInsertionBuffer(__block).append(1, __move);
             // update usages
@@ -263,21 +263,21 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
             }
         }
 
-        /**
-         * Inserts the constant loads created in {@link #createConstantTree} and deletes the
-         * original definition.
-         */
+        ///
+        // Inserts the constant loads created in {@link #createConstantTree} and deletes the
+        // original definition.
+        ///
         private void rewriteBlock(AbstractBlockBase<?> __block)
         {
             // insert moves
-            LIRInsertionBuffer __buffer = insertionBuffers.get(__block);
+            LIRInsertionBuffer __buffer = this.___insertionBuffers.get(__block);
             if (__buffer != null)
             {
                 __buffer.finish();
             }
 
             // delete instructions
-            ArrayList<LIRInstruction> __instructions = lir.getLIRforBlock(__block);
+            ArrayList<LIRInstruction> __instructions = this.___lir.getLIRforBlock(__block);
             boolean __hasDead = false;
             for (LIRInstruction __inst : __instructions)
             {
@@ -301,17 +301,17 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         {
             AbstractBlockBase<?> __block = __tree.getBlock();
             LIRInstruction __instruction = __tree.getInstruction();
-            lir.getLIRforBlock(__block).set(__instruction.id(), null);
+            this.___lir.getLIRforBlock(__block).set(__instruction.id(), null);
         }
 
         private LIRInsertionBuffer getInsertionBuffer(AbstractBlockBase<?> __block)
         {
-            LIRInsertionBuffer __insertionBuffer = insertionBuffers.get(__block);
+            LIRInsertionBuffer __insertionBuffer = this.___insertionBuffers.get(__block);
             if (__insertionBuffer == null)
             {
                 __insertionBuffer = new LIRInsertionBuffer();
-                insertionBuffers.put(__block, __insertionBuffer);
-                ArrayList<LIRInstruction> __instructions = lir.getLIRforBlock(__block);
+                this.___insertionBuffers.put(__block, __insertionBuffer);
+                ArrayList<LIRInstruction> __instructions = this.___lir.getLIRforBlock(__block);
                 __insertionBuffer.init(__instructions);
             }
             return __insertionBuffer;

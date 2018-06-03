@@ -4,9 +4,9 @@ import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 
-/**
- * Provides an implementation of {@link StateSplit}.
- */
+///
+// Provides an implementation of {@link StateSplit}.
+///
 // @class AbstractStateSplit
 public abstract class AbstractStateSplit extends FixedWithNextNode implements StateSplit
 {
@@ -15,19 +15,19 @@ public abstract class AbstractStateSplit extends FixedWithNextNode implements St
 
     @OptionalInput(InputType.State)
     // @field
-    protected FrameState stateAfter;
+    protected FrameState ___stateAfter;
 
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
     @Override
@@ -46,6 +46,6 @@ public abstract class AbstractStateSplit extends FixedWithNextNode implements St
     protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> __c, Stamp __stamp, FrameState __stateAfter)
     {
         super(__c, __stamp);
-        this.stateAfter = __stateAfter;
+        this.___stateAfter = __stateAfter;
     }
 }

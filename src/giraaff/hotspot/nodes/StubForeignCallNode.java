@@ -19,9 +19,9 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * Node for a {@linkplain ForeignCallDescriptor foreign} call from within a stub.
- */
+///
+// Node for a {@linkplain ForeignCallDescriptor foreign} call from within a stub.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class StubForeignCallNode
 public final class StubForeignCallNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Multi
@@ -31,31 +31,31 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
 
     @Input
     // @field
-    NodeInputList<ValueNode> arguments;
+    NodeInputList<ValueNode> ___arguments;
     // @field
-    protected final ForeignCallsProvider foreignCalls;
+    protected final ForeignCallsProvider ___foreignCalls;
 
     // @field
-    protected final ForeignCallDescriptor descriptor;
+    protected final ForeignCallDescriptor ___descriptor;
 
     // @cons
     public StubForeignCallNode(@InjectedNodeParameter ForeignCallsProvider __foreignCalls, @InjectedNodeParameter Stamp __stamp, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
         super(TYPE, __stamp);
-        this.arguments = new NodeInputList<>(this, __arguments);
-        this.descriptor = __descriptor;
-        this.foreignCalls = __foreignCalls;
+        this.___arguments = new NodeInputList<>(this, __arguments);
+        this.___descriptor = __descriptor;
+        this.___foreignCalls = __foreignCalls;
     }
 
     public ForeignCallDescriptor getDescriptor()
     {
-        return descriptor;
+        return this.___descriptor;
     }
 
     @Override
     public LocationIdentity[] getLocationIdentities()
     {
-        LocationIdentity[] __killedLocations = foreignCalls.getKilledLocations(descriptor);
+        LocationIdentity[] __killedLocations = this.___foreignCalls.getKilledLocations(this.___descriptor);
         __killedLocations = Arrays.copyOf(__killedLocations, __killedLocations.length + 1);
         __killedLocations[__killedLocations.length - 1] = HotSpotReplacementsUtil.PENDING_EXCEPTION_LOCATION;
         return __killedLocations;
@@ -63,10 +63,10 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
 
     protected Value[] operands(NodeLIRBuilderTool __gen)
     {
-        Value[] __operands = new Value[arguments.size()];
+        Value[] __operands = new Value[this.___arguments.size()];
         for (int __i = 0; __i < __operands.length; __i++)
         {
-            __operands[__i] = __gen.operand(arguments.get(__i));
+            __operands[__i] = __gen.operand(this.___arguments.get(__i));
         }
         return __operands;
     }
@@ -74,7 +74,7 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        ForeignCallLinkage __linkage = foreignCalls.lookupForeignCall(descriptor);
+        ForeignCallLinkage __linkage = this.___foreignCalls.lookupForeignCall(this.___descriptor);
         Value[] __operands = operands(__gen);
         Value __result = __gen.getLIRGeneratorTool().emitForeignCall(__linkage, null, __operands);
         if (__result != null)

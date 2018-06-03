@@ -12,9 +12,9 @@ import giraaff.nodes.calc.FixedBinaryNode;
 import giraaff.nodes.calc.SignedDivNode;
 import giraaff.nodes.calc.UnsignedDivNode;
 
-/**
- * Utility methods to perform integer math with some obvious constant folding first.
- */
+///
+// Utility methods to perform integer math with some obvious constant folding first.
+///
 // @class MathUtil
 public final class MathUtil
 {

@@ -19,9 +19,9 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.nodes.virtual.VirtualArrayNode;
 
-/**
- * The {@code ArrayLength} instruction gets the length of an array.
- */
+///
+// The {@code ArrayLength} instruction gets the length of an array.
+///
 // @class ArrayLengthNode
 public final class ArrayLengthNode extends FixedWithNextNode implements Canonicalizable.Unary<ValueNode>, Lowerable, Virtualizable
 {
@@ -30,24 +30,24 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
 
     @Input
     // @field
-    ValueNode array;
+    ValueNode ___array;
 
     public ValueNode array()
     {
-        return array;
+        return this.___array;
     }
 
     @Override
     public ValueNode getValue()
     {
-        return array;
+        return this.___array;
     }
 
     // @cons
     public ArrayLengthNode(ValueNode __array)
     {
         super(TYPE, StampFactory.positiveInt());
-        this.array = __array;
+        this.___array = __array;
     }
 
     public static ValueNode create(ValueNode __forValue, ConstantReflectionProvider __constantReflection)
@@ -77,13 +77,13 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
         return this;
     }
 
-    /**
-     * Replicate the {@link ValueProxyNode}s from {@code originalValue} onto {@code value}.
-     *
-     * @param originalValue a possibly proxied value
-     * @param value a value needing proxies
-     * @return proxies wrapping {@code value}
-     */
+    ///
+    // Replicate the {@link ValueProxyNode}s from {@code originalValue} onto {@code value}.
+    //
+    // @param originalValue a possibly proxied value
+    // @param value a value needing proxies
+    // @return proxies wrapping {@code value}
+    ///
     private static ValueNode reproxyValue(ValueNode __originalValue, ValueNode __value)
     {
         if (__value.isConstant())
@@ -107,11 +107,11 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
         }
     }
 
-    /**
-     * Gets the length of an array if possible.
-     *
-     * @return a node representing the length of {@code array} or null if it is not available
-     */
+    ///
+    // Gets the length of an array if possible.
+    //
+    // @return a node representing the length of {@code array} or null if it is not available
+    ///
     public static ValueNode readArrayLength(ValueNode __originalArray, ConstantReflectionProvider __constantReflection)
     {
         ValueNode __length = GraphUtil.arrayLength(__originalArray);
@@ -148,7 +148,7 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
     }
 
     @NodeIntrinsic
-    public static native int arrayLength(Object array);
+    public static native int arrayLength(Object __array);
 
     @Override
     public void virtualize(VirtualizerTool __tool)

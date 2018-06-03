@@ -10,10 +10,10 @@ import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 
-/**
- * Copy a value at a location specified as an offset relative to a source object to another location
- * specified as an offset relative to destination object. No null checks are performed.
- */
+///
+// Copy a value at a location specified as an offset relative to a source object to another location
+// specified as an offset relative to destination object. No null checks are performed.
+///
 // @class UnsafeCopyNode
 public final class UnsafeCopyNode
 {
@@ -25,5 +25,5 @@ public final class UnsafeCopyNode
     }
 
     @NodeIntrinsic
-    public static native void copy(Object srcObject, long srcOffset, Object destObject, long destOffset, @ConstantNodeParameter JavaKind kind, @ConstantNodeParameter LocationIdentity locationIdentity);
+    public static native void copy(Object __srcObject, long __srcOffset, Object __destObject, long __destOffset, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity);
 }

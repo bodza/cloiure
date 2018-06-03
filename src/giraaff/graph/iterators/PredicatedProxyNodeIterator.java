@@ -8,28 +8,28 @@ import giraaff.graph.Node;
 public final class PredicatedProxyNodeIterator<T extends Node> extends NodeIterator<T>
 {
     // @field
-    private final Iterator<T> iterator;
+    private final Iterator<T> ___iterator;
     // @field
-    private final NodePredicate predicate;
+    private final NodePredicate ___predicate;
 
     // @cons
     public PredicatedProxyNodeIterator(Iterator<T> __iterator, NodePredicate __predicate)
     {
         super();
-        this.iterator = __iterator;
-        this.predicate = __predicate;
+        this.___iterator = __iterator;
+        this.___predicate = __predicate;
     }
 
     @Override
     protected void forward()
     {
-        while ((current == null || !current.isAlive() || !predicate.apply(current)) && iterator.hasNext())
+        while ((this.___current == null || !this.___current.isAlive() || !this.___predicate.apply(this.___current)) && this.___iterator.hasNext())
         {
-            current = iterator.next();
+            this.___current = this.___iterator.next();
         }
-        if (current != null && (!current.isAlive() || !predicate.apply(current)))
+        if (this.___current != null && (!this.___current.isAlive() || !this.___predicate.apply(this.___current)))
         {
-            current = null;
+            this.___current = null;
         }
     }
 }

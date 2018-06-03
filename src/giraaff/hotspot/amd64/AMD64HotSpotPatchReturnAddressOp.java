@@ -12,9 +12,9 @@ import giraaff.lir.Opcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Patch the return address of the current frame.
- */
+///
+// Patch the return address of the current frame.
+///
 @Opcode
 // @class AMD64HotSpotPatchReturnAddressOp
 final class AMD64HotSpotPatchReturnAddressOp extends AMD64LIRInstruction
@@ -24,19 +24,19 @@ final class AMD64HotSpotPatchReturnAddressOp extends AMD64LIRInstruction
 
     @Use(OperandFlag.REG)
     // @field
-    AllocatableValue address;
+    AllocatableValue ___address;
 
     // @cons
     AMD64HotSpotPatchReturnAddressOp(AllocatableValue __address)
     {
         super(TYPE);
-        this.address = __address;
+        this.___address = __address;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        int __frameSize = __crb.frameMap.frameSize();
-        __masm.movq(new AMD64Address(AMD64.rsp, __frameSize), ValueUtil.asRegister(address));
+        int __frameSize = __crb.___frameMap.frameSize();
+        __masm.movq(new AMD64Address(AMD64.rsp, __frameSize), ValueUtil.asRegister(this.___address));
     }
 }

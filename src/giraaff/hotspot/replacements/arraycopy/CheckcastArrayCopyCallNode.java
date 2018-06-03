@@ -38,75 +38,75 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
 
     @Input
     // @field
-    ValueNode src;
+    ValueNode ___src;
     @Input
     // @field
-    ValueNode srcPos;
+    ValueNode ___srcPos;
     @Input
     // @field
-    ValueNode dest;
+    ValueNode ___dest;
     @Input
     // @field
-    ValueNode destPos;
+    ValueNode ___destPos;
     @Input
     // @field
-    ValueNode length;
+    ValueNode ___length;
     @Input
     // @field
-    ValueNode destElemKlass;
+    ValueNode ___destElemKlass;
     @Input
     // @field
-    ValueNode superCheckOffset;
+    ValueNode ___superCheckOffset;
 
     // @field
-    protected final boolean uninit;
+    protected final boolean ___uninit;
 
     // @field
-    protected final HotSpotGraalRuntime runtime;
+    protected final HotSpotGraalRuntime ___runtime;
 
     // @cons
     protected CheckcastArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, ValueNode __superCheckOffset, ValueNode __destElemKlass, boolean __uninit)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.src = __src;
-        this.srcPos = __srcPos;
-        this.dest = __dest;
-        this.destPos = __destPos;
-        this.length = __length;
-        this.superCheckOffset = __superCheckOffset;
-        this.destElemKlass = __destElemKlass;
-        this.uninit = __uninit;
-        this.runtime = __runtime;
+        this.___src = __src;
+        this.___srcPos = __srcPos;
+        this.___dest = __dest;
+        this.___destPos = __destPos;
+        this.___length = __length;
+        this.___superCheckOffset = __superCheckOffset;
+        this.___destElemKlass = __destElemKlass;
+        this.___uninit = __uninit;
+        this.___runtime = __runtime;
     }
 
     public ValueNode getSource()
     {
-        return src;
+        return this.___src;
     }
 
     public ValueNode getSourcePosition()
     {
-        return srcPos;
+        return this.___srcPos;
     }
 
     public ValueNode getDestination()
     {
-        return dest;
+        return this.___dest;
     }
 
     public ValueNode getDestinationPosition()
     {
-        return destPos;
+        return this.___destPos;
     }
 
     public ValueNode getLength()
     {
-        return length;
+        return this.___length;
     }
 
     public boolean isUninit()
     {
-        return uninit;
+        return this.___uninit;
     }
 
     private ValueNode computeBase(ValueNode __base, ValueNode __pos)
@@ -115,7 +115,7 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
         graph().addBeforeFixed(this, __basePtr);
 
         int __shift = CodeUtil.log2(HotSpotRuntime.getArrayIndexScale(JavaKind.Object));
-        ValueNode __extendedPos = IntegerConvertNode.convert(__pos, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
+        ValueNode __extendedPos = IntegerConvertNode.convert(__pos, StampFactory.forKind(this.___runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
         ValueNode __scaledIndex = graph().unique(new LeftShiftNode(__extendedPos, ConstantNode.forInt(__shift, graph())));
         ValueNode __offset = graph().unique(new AddNode(__scaledIndex, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(__scaledIndex.stamp(NodeView.DEFAULT)), HotSpotRuntime.getArrayBaseOffset(JavaKind.Object), graph())));
         return graph().unique(new OffsetAddressNode(__basePtr, __offset));
@@ -131,11 +131,11 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
             ValueNode __srcAddr = computeBase(getSource(), getSourcePosition());
             ValueNode __destAddr = computeBase(getDestination(), getDestinationPosition());
             ValueNode __len = getLength();
-            if (__len.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind)
+            if (__len.stamp(NodeView.DEFAULT).getStackKind() != this.___runtime.getTarget().wordJavaKind)
             {
-                __len = IntegerConvertNode.convert(__len, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
+                __len = IntegerConvertNode.convert(__len, StampFactory.forKind(this.___runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
             }
-            ForeignCallNode __call = __graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), __desc, __srcAddr, __destAddr, __len, superCheckOffset, destElemKlass));
+            ForeignCallNode __call = __graph.add(new ForeignCallNode(this.___runtime.getBackend().getForeignCalls(), __desc, __srcAddr, __destAddr, __len, this.___superCheckOffset, this.___destElemKlass));
             __call.setStateAfter(stateAfter());
             __graph.replaceFixedWithFixed(this, __call);
         }
@@ -149,5 +149,5 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
     }
 
     @NodeIntrinsic
-    public static native int checkcastArraycopy(Object src, int srcPos, Object dest, int destPos, int length, Word superCheckOffset, Object destElemKlass, @ConstantNodeParameter boolean uninit);
+    public static native int checkcastArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, Word __superCheckOffset, Object __destElemKlass, @ConstantNodeParameter boolean __uninit);
 }

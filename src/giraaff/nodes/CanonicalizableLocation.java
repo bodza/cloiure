@@ -6,5 +6,5 @@ import giraaff.nodes.memory.address.AddressNode;
 // @iface CanonicalizableLocation
 public interface CanonicalizableLocation
 {
-    ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool);
+    ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool);
 }

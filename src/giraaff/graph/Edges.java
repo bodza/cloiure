@@ -9,16 +9,16 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass.EdgeInfo;
 import giraaff.util.UnsafeAccess;
 
-/**
- * Describes {@link Node} fields representing the set of inputs for the node or the set of the
- * node's successors.
- */
+///
+// Describes {@link Node} fields representing the set of inputs for the node or the set of the
+// node's successors.
+///
 // @class Edges
 public abstract class Edges extends Fields
 {
-    /**
-     * Constants denoting whether a set of edges are inputs or successors.
-     */
+    ///
+    // Constants denoting whether a set of edges are inputs or successors.
+    ///
     // @enum Edges.Type
     public enum Type
     {
@@ -27,23 +27,23 @@ public abstract class Edges extends Fields
     }
 
     // @field
-    private final int directCount;
+    private final int ___directCount;
     // @field
-    private final Type type;
+    private final Type ___type;
 
     // @cons
     public Edges(Type __type, int __directCount, ArrayList<? extends FieldsScanner.FieldInfo> __edges)
     {
         super(__edges);
-        this.type = __type;
-        this.directCount = __directCount;
+        this.___type = __type;
+        this.___directCount = __directCount;
     }
 
     public static void translateInto(Edges __edges, ArrayList<EdgeInfo> __infos)
     {
         for (int __index = 0; __index < __edges.getCount(); __index++)
         {
-            __infos.add(new EdgeInfo(__edges.offsets[__index], __edges.getName(__index), __edges.getType(__index), __edges.getDeclaringClass(__index)));
+            __infos.add(new EdgeInfo(__edges.___offsets[__index], __edges.getName(__index), __edges.getType(__index), __edges.getDeclaringClass(__index)));
         }
     }
 
@@ -68,51 +68,51 @@ public abstract class Edges extends Fields
         UnsafeAccess.UNSAFE.putObject(__node, __offset, __value);
     }
 
-    /**
-     * Get the number of direct edges represented by this object. A direct edge goes directly to
-     * another {@link Node}. An indirect edge goes via a {@link NodeList}.
-     */
+    ///
+    // Get the number of direct edges represented by this object. A direct edge goes directly to
+    // another {@link Node}. An indirect edge goes via a {@link NodeList}.
+    ///
     public int getDirectCount()
     {
-        return directCount;
+        return this.___directCount;
     }
 
-    /**
-     * Gets the {@link Node} at the end point of a {@linkplain #getDirectCount() direct} edge.
-     *
-     * @param node one end point of the edge
-     * @param index the index of a non-list the edge (must be less than {@link #getDirectCount()})
-     * @return the Node at the other edge of the requested edge
-     */
+    ///
+    // Gets the {@link Node} at the end point of a {@linkplain #getDirectCount() direct} edge.
+    //
+    // @param node one end point of the edge
+    // @param index the index of a non-list the edge (must be less than {@link #getDirectCount()})
+    // @return the Node at the other edge of the requested edge
+    ///
     public static Node getNode(Node __node, long[] __offsets, int __index)
     {
         return getNodeUnsafe(__node, __offsets[__index]);
     }
 
-    /**
-     * Gets the {@link NodeList} at the end point of a {@linkplain #getDirectCount() direct} edge.
-     *
-     * @param node one end point of the edge
-     * @param index the index of a non-list the edge (must be equal to or greater than
-     *            {@link #getDirectCount()})
-     * @return the {@link NodeList} at the other edge of the requested edge
-     */
+    ///
+    // Gets the {@link NodeList} at the end point of a {@linkplain #getDirectCount() direct} edge.
+    //
+    // @param node one end point of the edge
+    // @param index the index of a non-list the edge (must be equal to or greater than
+    //            {@link #getDirectCount()})
+    // @return the {@link NodeList} at the other edge of the requested edge
+    ///
     public static NodeList<Node> getNodeList(Node __node, long[] __offsets, int __index)
     {
         return getNodeListUnsafe(__node, __offsets[__index]);
     }
 
-    /**
-     * Clear edges in a given node. This is accomplished by setting {@linkplain #getDirectCount()
-     * direct} edges to null and replacing the lists containing indirect edges with new lists. The
-     * latter is important so that this method can be used to clear the edges of cloned nodes.
-     *
-     * @param node the node whose edges are to be cleared
-     */
+    ///
+    // Clear edges in a given node. This is accomplished by setting {@linkplain #getDirectCount()
+    // direct} edges to null and replacing the lists containing indirect edges with new lists. The
+    // latter is important so that this method can be used to clear the edges of cloned nodes.
+    //
+    // @param node the node whose edges are to be cleared
+    ///
     public void clear(Node __node)
     {
-        final long[] __curOffsets = this.offsets;
-        final Type __curType = this.type;
+        final long[] __curOffsets = this.___offsets;
+        final Type __curType = this.___type;
         int __index = 0;
         int __curDirectCount = getDirectCount();
         while (__index < __curDirectCount)
@@ -125,7 +125,7 @@ public abstract class Edges extends Fields
             NodeList<Node> __list = getNodeList(__node, __curOffsets, __index);
             if (__list != null)
             {
-                int __size = __list.initialSize;
+                int __size = __list.___initialSize;
                 NodeList<Node> __newList = __curType == Edges.Type.Inputs ? new NodeInputList<>(__node, __size) : new NodeSuccessorList<>(__node, __size);
 
                 // replacing with a new list object is the expected behavior!
@@ -135,23 +135,23 @@ public abstract class Edges extends Fields
         }
     }
 
-    /**
-     * Initializes the list edges in a given node based on the size of the list edges in a prototype node.
-     *
-     * @param node the node whose list edges are to be initialized
-     * @param prototype the node whose list edge sizes are used when creating new edge lists
-     */
+    ///
+    // Initializes the list edges in a given node based on the size of the list edges in a prototype node.
+    //
+    // @param node the node whose list edges are to be initialized
+    // @param prototype the node whose list edge sizes are used when creating new edge lists
+    ///
     public void initializeLists(Node __node, Node __prototype)
     {
         int __index = getDirectCount();
-        final long[] __curOffsets = this.offsets;
-        final Edges.Type __curType = this.type;
+        final long[] __curOffsets = this.___offsets;
+        final Edges.Type __curType = this.___type;
         while (__index < getCount())
         {
             NodeList<Node> __list = getNodeList(__prototype, __curOffsets, __index);
             if (__list != null)
             {
-                int __size = __list.initialSize;
+                int __size = __list.___initialSize;
                 NodeList<Node> __newList = __curType == Edges.Type.Inputs ? new NodeInputList<>(__node, __size) : new NodeSuccessorList<>(__node, __size);
                 initializeList(__node, __index, __newList);
             }
@@ -159,18 +159,18 @@ public abstract class Edges extends Fields
         }
     }
 
-    /**
-     * Copies edges from {@code fromNode} to {@code toNode}. The nodes are expected to be of the
-     * exact same type.
-     *
-     * @param fromNode the node from which the edges should be copied.
-     * @param toNode the node to which the edges should be copied.
-     */
+    ///
+    // Copies edges from {@code fromNode} to {@code toNode}. The nodes are expected to be of the
+    // exact same type.
+    //
+    // @param fromNode the node from which the edges should be copied.
+    // @param toNode the node to which the edges should be copied.
+    ///
     public void copy(Node __fromNode, Node __toNode)
     {
         int __index = 0;
-        final long[] __curOffsets = this.offsets;
-        final Type __curType = this.type;
+        final long[] __curOffsets = this.___offsets;
+        final Type __curType = this.___type;
         int __curDirectCount = getDirectCount();
         while (__index < __curDirectCount)
         {
@@ -201,24 +201,24 @@ public abstract class Edges extends Fields
         throw new IllegalArgumentException("Cannot call set on " + this);
     }
 
-    /**
-     * Sets the value of a given edge without notifying the new and old nodes on the other end of
-     * the edge of the change.
-     *
-     * @param node the node whose edge is to be updated
-     * @param index the index of the edge (between 0 and {@link #getCount()})
-     * @param value the node to be written to the edge
-     */
+    ///
+    // Sets the value of a given edge without notifying the new and old nodes on the other end of
+    // the edge of the change.
+    //
+    // @param node the node whose edge is to be updated
+    // @param index the index of the edge (between 0 and {@link #getCount()})
+    // @param value the node to be written to the edge
+    ///
     public void initializeNode(Node __node, int __index, Node __value)
     {
         verifyUpdateValid(__node, __index, __value);
-        putNodeUnsafe(__node, offsets[__index], __value);
+        putNodeUnsafe(__node, this.___offsets[__index], __value);
     }
 
     public void initializeList(Node __node, int __index, NodeList<Node> __value)
     {
         verifyUpdateValid(__node, __index, __value);
-        putNodeListUnsafe(__node, offsets[__index], __value);
+        putNodeListUnsafe(__node, this.___offsets[__index], __value);
     }
 
     private void verifyUpdateValid(Node __node, int __index, Object __newValue)
@@ -229,34 +229,34 @@ public abstract class Edges extends Fields
         }
     }
 
-    /**
-     * Sets the value of a given edge and notifies the new and old nodes on the other end of the
-     * edge of the change.
-     *
-     * @param node the node whose edge is to be updated
-     * @param index the index of the edge (between 0 and {@link #getCount()})
-     * @param value the node to be written to the edge
-     */
+    ///
+    // Sets the value of a given edge and notifies the new and old nodes on the other end of the
+    // edge of the change.
+    //
+    // @param node the node whose edge is to be updated
+    // @param index the index of the edge (between 0 and {@link #getCount()})
+    // @param value the node to be written to the edge
+    ///
     public void setNode(Node __node, int __index, Node __value)
     {
-        Node __old = getNodeUnsafe(__node, offsets[__index]);
+        Node __old = getNodeUnsafe(__node, this.___offsets[__index]);
         initializeNode(__node, __index, __value);
         update(__node, __old, __value);
     }
 
-    public abstract void update(Node node, Node oldValue, Node newValue);
+    public abstract void update(Node __node, Node __oldValue, Node __newValue);
 
     public boolean contains(Node __node, Node __value)
     {
-        final long[] __curOffsets = this.offsets;
-        for (int __i = 0; __i < directCount; __i++)
+        final long[] __curOffsets = this.___offsets;
+        for (int __i = 0; __i < this.___directCount; __i++)
         {
             if (getNode(__node, __curOffsets, __i) == __value)
             {
                 return true;
             }
         }
-        for (int __i = directCount; __i < getCount(); __i++)
+        for (int __i = this.___directCount; __i < getCount(); __i++)
         {
             NodeList<?> __curList = getNodeList(__node, __curOffsets, __i);
             if (__curList != null && __curList.contains(__value))
@@ -267,62 +267,62 @@ public abstract class Edges extends Fields
         return false;
     }
 
-    /**
-     * An iterator that will iterate over edges.
-     *
-     * An iterator of this type will not return null values, unless edges are modified concurrently.
-     * Concurrent modifications are detected by an assertion on a best-effort basis.
-     */
+    ///
+    // An iterator that will iterate over edges.
+    //
+    // An iterator of this type will not return null values, unless edges are modified concurrently.
+    // Concurrent modifications are detected by an assertion on a best-effort basis.
+    ///
     // @class Edges.EdgesIterator
     private static final class EdgesIterator implements Iterator<Position>
     {
         // @field
-        protected final Node node;
+        protected final Node ___node;
         // @field
-        protected final Edges edges;
+        protected final Edges ___edges;
         // @field
-        protected int index;
+        protected int ___index;
         // @field
-        protected int subIndex;
+        protected int ___subIndex;
         // @field
-        protected boolean needsForward;
+        protected boolean ___needsForward;
         // @field
-        protected final int directCount;
+        protected final int ___directCount;
         // @field
-        protected final long[] offsets;
+        protected final long[] ___offsets;
 
-        /**
-         * Creates an iterator that will iterate over some given edges in a given node.
-         */
+        ///
+        // Creates an iterator that will iterate over some given edges in a given node.
+        ///
         // @cons
         EdgesIterator(Node __node, Edges __edges)
         {
             super();
-            this.node = __node;
-            this.edges = __edges;
-            index = Node.NOT_ITERABLE;
-            subIndex = 0;
-            needsForward = true;
-            this.directCount = __edges.getDirectCount();
-            this.offsets = __edges.getOffsets();
+            this.___node = __node;
+            this.___edges = __edges;
+            this.___index = Node.NOT_ITERABLE;
+            this.___subIndex = 0;
+            this.___needsForward = true;
+            this.___directCount = __edges.getDirectCount();
+            this.___offsets = __edges.getOffsets();
         }
 
         void forward()
         {
-            needsForward = false;
-            if (index < directCount)
+            this.___needsForward = false;
+            if (this.___index < this.___directCount)
             {
-                index++;
-                if (index < directCount)
+                this.___index++;
+                if (this.___index < this.___directCount)
                 {
                     return;
                 }
             }
             else
             {
-                subIndex++;
+                this.___subIndex++;
             }
-            if (index < edges.getCount())
+            if (this.___index < this.___edges.getCount())
             {
                 forwardNodeList();
             }
@@ -332,44 +332,44 @@ public abstract class Edges extends Fields
         {
             do
             {
-                NodeList<?> __list = Edges.getNodeList(node, offsets, index);
+                NodeList<?> __list = Edges.getNodeList(this.___node, this.___offsets, this.___index);
                 if (__list != null)
                 {
-                    if (subIndex < __list.size())
+                    if (this.___subIndex < __list.size())
                     {
                         return;
                     }
                 }
-                subIndex = 0;
-                index++;
-            } while (index < edges.getCount());
+                this.___subIndex = 0;
+                this.___index++;
+            } while (this.___index < this.___edges.getCount());
         }
 
         @Override
         public boolean hasNext()
         {
-            if (needsForward)
+            if (this.___needsForward)
             {
                 forward();
             }
-            return index < edges.getCount();
+            return this.___index < this.___edges.getCount();
         }
 
         @Override
         public Position next()
         {
-            if (needsForward)
+            if (this.___needsForward)
             {
                 forward();
             }
-            needsForward = true;
-            if (index < directCount)
+            this.___needsForward = true;
+            if (this.___index < this.___directCount)
             {
-                return new Position(edges, index, Node.NOT_ITERABLE);
+                return new Position(this.___edges, this.___index, Node.NOT_ITERABLE);
             }
             else
             {
-                return new Position(edges, index, subIndex);
+                return new Position(this.___edges, this.___index, this.___subIndex);
             }
         }
 
@@ -395,6 +395,6 @@ public abstract class Edges extends Fields
 
     public Type type()
     {
-        return type;
+        return this.___type;
     }
 }

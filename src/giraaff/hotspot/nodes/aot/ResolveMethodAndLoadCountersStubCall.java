@@ -19,9 +19,9 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * A call to the VM via a regular stub.
- */
+///
+// A call to the VM via a regular stub.
+///
 // @class ResolveMethodAndLoadCountersStubCall
 public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
@@ -30,34 +30,34 @@ public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStub
 
     @OptionalInput
     // @field
-    protected ValueNode method;
+    protected ValueNode ___method;
     @Input
     // @field
-    protected ValueNode klassHint;
+    protected ValueNode ___klassHint;
     @Input
     // @field
-    protected ValueNode methodDescription;
+    protected ValueNode ___methodDescription;
     // @field
-    protected Constant methodConstant;
+    protected Constant ___methodConstant;
 
     // @cons
     public ResolveMethodAndLoadCountersStubCall(ValueNode __method, ValueNode __klassHint, ValueNode __methodDescription)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());
-        this.klassHint = __klassHint;
-        this.method = __method;
-        this.methodDescription = __methodDescription;
+        this.___klassHint = __klassHint;
+        this.___method = __method;
+        this.___methodDescription = __methodDescription;
     }
 
     @NodeIntrinsic
-    public static native MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer method, KlassPointer klassHint, Object methodDescription);
+    public static native MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer __method, KlassPointer __klassHint, Object __methodDescription);
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (method != null)
+        if (this.___method != null)
         {
-            methodConstant = GraphUtil.foldIfConstantAndRemove(this, method);
+            this.___methodConstant = GraphUtil.foldIfConstantAndRemove(this, this.___method);
         }
         return this;
     }
@@ -65,10 +65,10 @@ public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStub
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __methodDescriptionValue = __gen.operand(methodDescription);
-        Value __klassHintValue = __gen.operand(klassHint);
+        Value __methodDescriptionValue = __gen.operand(this.___methodDescription);
+        Value __klassHintValue = __gen.operand(this.___klassHint);
         LIRFrameState __fs = __gen.state(this);
 
-        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitResolveMethodAndLoadCounters(methodConstant, __klassHintValue, __methodDescriptionValue, __fs));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitResolveMethodAndLoadCounters(this.___methodConstant, __klassHintValue, __methodDescriptionValue, __fs));
     }
 }

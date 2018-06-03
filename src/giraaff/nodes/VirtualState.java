@@ -3,10 +3,10 @@ package giraaff.nodes;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 
-/**
- * Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
- * Subclasses of this class will be treated in a special way by the scheduler.
- */
+///
+// Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
+// Subclasses of this class will be treated in a special way by the scheduler.
+///
 // @NodeInfo.allowedUsageTypes "State"
 // @class VirtualState
 public abstract class VirtualState extends Node
@@ -23,26 +23,26 @@ public abstract class VirtualState extends Node
     // @class VirtualState.NodeClosure
     public abstract static class NodeClosure<T extends Node>
     {
-        public abstract void apply(Node usage, T node);
+        public abstract void apply(Node __usage, T __node);
     }
 
     // @iface VirtualState.VirtualClosure
     public interface VirtualClosure
     {
-        void apply(VirtualState node);
+        void apply(VirtualState __node);
     }
 
     public abstract VirtualState duplicateWithVirtualState();
 
-    public abstract void applyToNonVirtual(NodeClosure<? super ValueNode> closure);
+    public abstract void applyToNonVirtual(NodeClosure<? super ValueNode> __closure);
 
-    /**
-     * Performs a <b>pre-order</b> iteration over all elements reachable from this state that
-     * are a subclass of {@link VirtualState}.
-     */
-    public abstract void applyToVirtual(VirtualClosure closure);
+    ///
+    // Performs a <b>pre-order</b> iteration over all elements reachable from this state that
+    // are a subclass of {@link VirtualState}.
+    ///
+    public abstract void applyToVirtual(VirtualClosure __closure);
 
-    public abstract boolean isPartOfThisState(VirtualState state);
+    public abstract boolean isPartOfThisState(VirtualState __state);
 
     @Override
     public final StructuredGraph graph()

@@ -13,10 +13,10 @@ import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.ValueNode;
 
-/**
- * This node class can be used to create {@link MacroNode}s for simple pure functions like
- * {@link System#identityHashCode(Object)}.
- */
+///
+// This node class can be used to create {@link MacroNode}s for simple pure functions like
+// {@link System#identityHashCode(Object)}.
+///
 // @class PureFunctionMacroNode
 public abstract class PureFunctionMacroNode extends MacroStateSplitNode implements Canonicalizable
 {
@@ -29,11 +29,11 @@ public abstract class PureFunctionMacroNode extends MacroStateSplitNode implemen
         super(__c, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }
 
-    /**
-     * This method should return either a constant that represents the result of the function, or
-     * null if no such result could be determined.
-     */
-    protected abstract JavaConstant evaluate(JavaConstant param, MetaAccessProvider metaAccess);
+    ///
+    // This method should return either a constant that represents the result of the function, or
+    // null if no such result could be determined.
+    ///
+    protected abstract JavaConstant evaluate(JavaConstant __param, MetaAccessProvider __metaAccess);
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
@@ -44,7 +44,7 @@ public abstract class PureFunctionMacroNode extends MacroStateSplitNode implemen
         }
         else
         {
-            ValueNode __param = arguments.get(0);
+            ValueNode __param = this.___arguments.get(0);
             if (__param.isConstant())
             {
                 JavaConstant __constant = evaluate(__param.asJavaConstant(), __tool.getMetaAccess());

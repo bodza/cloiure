@@ -13,38 +13,46 @@ public final class AMD64PrefetchOp extends AMD64LIRInstruction
     public static final LIRInstructionClass<AMD64PrefetchOp> TYPE = LIRInstructionClass.create(AMD64PrefetchOp.class);
 
     // @field
-    private final int instr; // AllocatePrefetchInstr
+    private final int ___instr; // AllocatePrefetchInstr
     @Alive({OperandFlag.COMPOSITE})
     // @field
-    protected AMD64AddressValue address;
+    protected AMD64AddressValue ___address;
 
     // @cons
     public AMD64PrefetchOp(AMD64AddressValue __address, int __instr)
     {
         super(TYPE);
-        this.address = __address;
-        this.instr = __instr;
+        this.___address = __address;
+        this.___instr = __instr;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        switch (instr)
+        switch (this.___instr)
         {
             case 0:
-                __masm.prefetchnta(address.toAddress());
+            {
+                __masm.prefetchnta(this.___address.toAddress());
                 break;
+            }
             case 1:
-                __masm.prefetcht0(address.toAddress());
+            {
+                __masm.prefetcht0(this.___address.toAddress());
                 break;
+            }
             case 2:
-                __masm.prefetcht2(address.toAddress());
+            {
+                __masm.prefetcht2(this.___address.toAddress());
                 break;
+            }
             case 3:
-                __masm.prefetchw(address.toAddress());
+            {
+                __masm.prefetchw(this.___address.toAddress());
                 break;
+            }
             default:
-                throw GraalError.shouldNotReachHere("unspported prefetch op " + instr);
+                throw GraalError.shouldNotReachHere("unspported prefetch op " + this.___instr);
         }
     }
 }

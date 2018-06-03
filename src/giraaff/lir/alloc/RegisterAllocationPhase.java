@@ -2,22 +2,22 @@ package giraaff.lir.alloc;
 
 import giraaff.lir.phases.AllocationPhase;
 
-/**
- * Marker class for register allocation phases.
- */
+///
+// Marker class for register allocation phases.
+///
 // @class RegisterAllocationPhase
 public abstract class RegisterAllocationPhase extends AllocationPhase
 {
     // @field
-    private boolean neverSpillConstants;
+    private boolean ___neverSpillConstants;
 
     public void setNeverSpillConstants(boolean __neverSpillConstants)
     {
-        this.neverSpillConstants = __neverSpillConstants;
+        this.___neverSpillConstants = __neverSpillConstants;
     }
 
     public boolean getNeverSpillConstants()
     {
-        return neverSpillConstants;
+        return this.___neverSpillConstants;
     }
 }

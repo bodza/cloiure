@@ -98,9 +98,9 @@ public final class InliningUtil extends ValueMergeUtil
         return __graph.unique(new PiNode(__receiver, __stamp, (ValueNode) __anchor));
     }
 
-    /**
-     * @return null iff the check succeeds, otherwise a (non-null) descriptive message.
-     */
+    ///
+    // @return null iff the check succeeds, otherwise a (non-null) descriptive message.
+    ///
     public static String checkInvokeConditions(Invoke __invoke)
     {
         if (__invoke.predecessor() == null || !__invoke.asNode().isAlive())
@@ -128,33 +128,33 @@ public final class InliningUtil extends ValueMergeUtil
         return null;
     }
 
-    /**
-     * Performs an actual inlining, thereby replacing the given invoke with the given
-     * {@code inlineGraph}.
-     *
-     * @param invoke the invoke that will be replaced
-     * @param inlineGraph the graph that the invoke will be replaced with
-     * @param receiverNullCheck true if a null check needs to be generated for non-static inlinings,
-     *            false if no such check is required
-     * @param inlineeMethod the actual method being inlined. Maybe be null for snippets.
-     */
+    ///
+    // Performs an actual inlining, thereby replacing the given invoke with the given
+    // {@code inlineGraph}.
+    //
+    // @param invoke the invoke that will be replaced
+    // @param inlineGraph the graph that the invoke will be replaced with
+    // @param receiverNullCheck true if a null check needs to be generated for non-static inlinings,
+    //            false if no such check is required
+    // @param inlineeMethod the actual method being inlined. Maybe be null for snippets.
+    ///
     public static UnmodifiableEconomicMap<Node, Node> inline(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod)
     {
         return inline(__invoke, __inlineGraph, __receiverNullCheck, __inlineeMethod, "reason not specified", "phase not specified");
     }
 
-    /**
-     * Performs an actual inlining, thereby replacing the given invoke with the given
-     * {@code inlineGraph}.
-     *
-     * @param invoke the invoke that will be replaced
-     * @param inlineGraph the graph that the invoke will be replaced with
-     * @param receiverNullCheck true if a null check needs to be generated for non-static inlinings,
-     *            false if no such check is required
-     * @param inlineeMethod the actual method being inlined. Maybe be null for snippets.
-     * @param reason the reason for inlining, used in tracing
-     * @param phase the phase that invoked inlining
-     */
+    ///
+    // Performs an actual inlining, thereby replacing the given invoke with the given
+    // {@code inlineGraph}.
+    //
+    // @param invoke the invoke that will be replaced
+    // @param inlineGraph the graph that the invoke will be replaced with
+    // @param receiverNullCheck true if a null check needs to be generated for non-static inlinings,
+    //            false if no such check is required
+    // @param inlineeMethod the actual method being inlined. Maybe be null for snippets.
+    // @param reason the reason for inlining, used in tracing
+    // @param phase the phase that invoked inlining
+    ///
     public static UnmodifiableEconomicMap<Node, Node> inline(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod, String __reason, String __phase)
     {
         FixedNode __invokeNode = __invoke.asNode();
@@ -286,13 +286,13 @@ public final class InliningUtil extends ValueMergeUtil
         return __duplicates;
     }
 
-    /**
-     * Inline {@code inlineGraph} into the current replacing the node {@code Invoke} and return the
-     * set of nodes which should be canonicalized. The set should only contain nodes which modified by
-     * the inlining since the current graph and {@code inlineGraph} are expected to already be canonical.
-     *
-     * @return the set of nodes to canonicalize
-     */
+    ///
+    // Inline {@code inlineGraph} into the current replacing the node {@code Invoke} and return the
+    // set of nodes which should be canonicalized. The set should only contain nodes which modified by
+    // the inlining since the current graph and {@code inlineGraph} are expected to already be canonical.
+    //
+    // @return the set of nodes to canonicalize
+    ///
     public static EconomicSet<Node> inlineForCanonicalization(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod, String __reason, String __phase)
     {
         return inlineForCanonicalization(__invoke, __inlineGraph, __receiverNullCheck, __inlineeMethod, null, __reason, __phase);
@@ -302,10 +302,8 @@ public final class InliningUtil extends ValueMergeUtil
     public static EconomicSet<Node> inlineForCanonicalization(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod, Consumer<UnmodifiableEconomicMap<Node, Node>> __duplicatesConsumer, String __reason, String __phase)
     {
         HashSetNodeEventListener __listener = new HashSetNodeEventListener();
-        /*
-         * This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
-         * only nodes which were modified into the process of inlining the graph into the current graph.
-         */
+        // This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
+        // only nodes which were modified into the process of inlining the graph into the current graph.
         try (NodeEventScope __nes = __invoke.asNode().graph().trackNodeEvents(__listener))
         {
             UnmodifiableEconomicMap<Node, Node> __duplicates = InliningUtil.inline(__invoke, __inlineGraph, __receiverNullCheck, __inlineeMethod, __reason, __phase);
@@ -514,7 +512,7 @@ public final class InliningUtil extends ValueMergeUtil
         final FrameState __stateAtReturn = __invoke.stateAfter();
         JavaKind __invokeReturnKind = __invoke.asNode().getStackKind();
 
-        if (__frameState.bci == BytecodeFrame.AFTER_BCI)
+        if (__frameState.___bci == BytecodeFrame.AFTER_BCI)
         {
             return handleAfterBciFrameState(__frameState, __invoke, __alwaysDuplicateStateAfter);
         }
@@ -530,19 +528,17 @@ public final class InliningUtil extends ValueMergeUtil
             __frameState.replaceAndDelete(__stateAfterException);
             return __stateAfterException;
         }
-        else if ((__frameState.bci == BytecodeFrame.UNWIND_BCI && __frameState.graph().getGuardsStage() == GuardsStage.FLOATING_GUARDS) || __frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
+        else if ((__frameState.___bci == BytecodeFrame.UNWIND_BCI && __frameState.graph().getGuardsStage() == GuardsStage.FLOATING_GUARDS) || __frameState.___bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
         {
-            /*
-             * This path converts the frame states relevant for exception unwinding to deoptimization.
-             * This is only allowed in configurations when Graal compiles code for speculative execution
-             * (e.g. JIT compilation in HotSpot) but not when compiled code must be deoptimization free
-             * (e.g. AOT compilation for native image generation). There is currently no global flag in StructuredGraph
-             * to distinguish such modes, but the GuardsStage during inlining indicates the mode in which Graal operates.
-             */
+            // This path converts the frame states relevant for exception unwinding to deoptimization.
+            // This is only allowed in configurations when Graal compiles code for speculative execution
+            // (e.g. JIT compilation in HotSpot) but not when compiled code must be deoptimization free
+            // (e.g. AOT compilation for native image generation). There is currently no global flag in StructuredGraph
+            // to distinguish such modes, but the GuardsStage during inlining indicates the mode in which Graal operates.
             handleMissingAfterExceptionFrameState(__frameState, __invoke, __replacements, __alwaysDuplicateStateAfter);
             return __frameState;
         }
-        else if (__frameState.bci == BytecodeFrame.BEFORE_BCI)
+        else if (__frameState.___bci == BytecodeFrame.BEFORE_BCI)
         {
             // This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
             ValueNode[] __invokeArgs = __invokeArgsList.isEmpty() ? NO_ARGS : __invokeArgsList.toArray(new ValueNode[__invokeArgsList.size()]);
@@ -607,7 +603,7 @@ public final class InliningUtil extends ValueMergeUtil
 
     private static boolean isStateAfterException(FrameState __frameState)
     {
-        return __frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI || (__frameState.bci == BytecodeFrame.UNWIND_BCI && !__frameState.getMethod().isSynchronized());
+        return __frameState.___bci == BytecodeFrame.AFTER_EXCEPTION_BCI || (__frameState.___bci == BytecodeFrame.UNWIND_BCI && !__frameState.getMethod().isSynchronized());
     }
 
     public static FrameState handleMissingAfterExceptionFrameState(FrameState __nonReplaceableFrameState, Invoke __invoke, EconomicMap<Node, Node> __replacements, boolean __alwaysDuplicateStateAfter)
@@ -680,10 +676,10 @@ public final class InliningUtil extends ValueMergeUtil
         return __graph.add(new DeoptimizeNode(__action, __reason));
     }
 
-    /**
-     * Gets the receiver for an invoke, adding a guard if necessary to ensure it is non-null, and
-     * ensuring that the resulting type is compatible with the method being invoked.
-     */
+    ///
+    // Gets the receiver for an invoke, adding a guard if necessary to ensure it is non-null, and
+    // ensuring that the resulting type is compatible with the method being invoked.
+    ///
     public static ValueNode nonNullReceiver(Invoke __invoke)
     {
         MethodCallTargetNode __callTarget = (MethodCallTargetNode) __invoke.callTarget();
@@ -769,9 +765,9 @@ public final class InliningUtil extends ValueMergeUtil
         }
     }
 
-    /**
-     * This method exclude InstrumentationNode from inlining heuristics.
-     */
+    ///
+    // This method exclude InstrumentationNode from inlining heuristics.
+    ///
     public static int getNodeCount(StructuredGraph __graph)
     {
         return __graph.getNodeCount();

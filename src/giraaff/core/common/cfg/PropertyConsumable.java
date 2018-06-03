@@ -5,5 +5,5 @@ import java.util.function.BiConsumer;
 // @iface PropertyConsumable
 public interface PropertyConsumable
 {
-    void forEachProperty(BiConsumer<String, String> action);
+    void forEachProperty(BiConsumer<String, String> __action);
 }

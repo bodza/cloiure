@@ -22,24 +22,24 @@ import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.graph.FixedNodeProbabilityCache;
 import giraaff.phases.tiers.HighTierContext;
 
-/**
- * Represents a feasible concrete target for inlining, whose graph has been copied already and thus
- * can be modified without affecting the original (usually cached) version.
- *
- * Instances of this class don't make sense in isolation but as part of an
- * {@link giraaff.phases.common.inlining.info.InlineInfo InlineInfo}.
- *
- * @see giraaff.phases.common.inlining.walker.InliningData#moveForward()
- * @see giraaff.phases.common.inlining.walker.CallsiteHolderExplorable
- */
+///
+// Represents a feasible concrete target for inlining, whose graph has been copied already and thus
+// can be modified without affecting the original (usually cached) version.
+//
+// Instances of this class don't make sense in isolation but as part of an
+// {@link giraaff.phases.common.inlining.info.InlineInfo InlineInfo}.
+//
+// @see giraaff.phases.common.inlining.walker.InliningData#moveForward()
+// @see giraaff.phases.common.inlining.walker.CallsiteHolderExplorable
+///
 // @class InlineableGraph
 public final class InlineableGraph implements Inlineable
 {
     // @field
-    private final StructuredGraph graph;
+    private final StructuredGraph ___graph;
 
     // @field
-    private FixedNodeProbabilityCache probabilites = new FixedNodeProbabilityCache();
+    private FixedNodeProbabilityCache ___probabilites = new FixedNodeProbabilityCache();
 
     // @cons
     public InlineableGraph(final ResolvedJavaMethod __method, final Invoke __invoke, final HighTierContext __context, CanonicalizerPhase __canonicalizer)
@@ -47,14 +47,14 @@ public final class InlineableGraph implements Inlineable
         super();
         StructuredGraph __original = getOriginalGraph(__method, __context, __canonicalizer, __invoke.asNode().graph(), __invoke.bci());
         // TODO copying the graph is only necessary if it is modified or if it contains any invokes
-        this.graph = (StructuredGraph) __original.copy();
+        this.___graph = (StructuredGraph) __original.copy();
         specializeGraphToArguments(__invoke, __context, __canonicalizer);
     }
 
-    /**
-     * This method looks up in a cache the graph for the argument, if not found bytecode is parsed.
-     * The graph thus obtained is returned, ie the caller is responsible for cloning before modification.
-     */
+    ///
+    // This method looks up in a cache the graph for the argument, if not found bytecode is parsed.
+    // The graph thus obtained is returned, ie the caller is responsible for cloning before modification.
+    ///
     private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod __method, final HighTierContext __context, CanonicalizerPhase __canonicalizer, StructuredGraph __caller, int __callerBci)
     {
         StructuredGraph __result = InliningUtil.getIntrinsicGraph(__context.getReplacements(), __method, __callerBci);
@@ -65,16 +65,16 @@ public final class InlineableGraph implements Inlineable
         return parseBytecodes(__method, __context, __canonicalizer, __caller);
     }
 
-    /**
-     * @return true iff one or more parameters <code>newGraph</code> were specialized to account for
-     *         a constant argument, or an argument with a more specific stamp.
-     */
+    ///
+    // @return true iff one or more parameters <code>newGraph</code> were specialized to account for
+    //         a constant argument, or an argument with a more specific stamp.
+    ///
     private boolean specializeGraphToArguments(final Invoke __invoke, final HighTierContext __context, CanonicalizerPhase __canonicalizer)
     {
         ArrayList<Node> __parameterUsages = replaceParamsWithMoreInformativeArguments(__invoke, __context);
         if (__parameterUsages != null)
         {
-            __canonicalizer.applyIncremental(graph, __context, __parameterUsages);
+            __canonicalizer.applyIncremental(this.___graph, __context, __parameterUsages);
             return true;
         }
         else
@@ -105,29 +105,27 @@ public final class InlineableGraph implements Inlineable
         return __joinedStamp;
     }
 
-    /**
-     * This method detects:
-     *
-     * <li>constants among the arguments to the <code>invoke</code></li>
-     * <li>arguments with more precise type than that declared by the corresponding parameter</li>
-     *
-     * The corresponding parameters are updated to reflect the above information. Before doing so,
-     * their usages are added to <code>parameterUsages</code> for later incremental canonicalization.
-     *
-     * @return null if no incremental canonicalization is need, a list of nodes for such
-     *         canonicalization otherwise.
-     */
+    ///
+    // This method detects:
+    //
+    // <li>constants among the arguments to the <code>invoke</code></li>
+    // <li>arguments with more precise type than that declared by the corresponding parameter</li>
+    //
+    // The corresponding parameters are updated to reflect the above information. Before doing so,
+    // their usages are added to <code>parameterUsages</code> for later incremental canonicalization.
+    //
+    // @return null if no incremental canonicalization is need, a list of nodes for such
+    //         canonicalization otherwise.
+    ///
     private ArrayList<Node> replaceParamsWithMoreInformativeArguments(final Invoke __invoke, final HighTierContext __context)
     {
         NodeInputList<ValueNode> __args = __invoke.callTarget().arguments();
         ArrayList<Node> __parameterUsages = null;
-        List<ParameterNode> __params = graph.getNodes(ParameterNode.TYPE).snapshot();
-        /*
-         * param-nodes that aren't used (eg, as a result of canonicalization) don't occur in
-         * 'params'. Thus, in general, the sizes of 'params' and 'args' don't always match. Still,
-         * it's always possible to pair a param-node with its corresponding arg-node using
-         * param.index() as index into 'args'.
-         */
+        List<ParameterNode> __params = this.___graph.getNodes(ParameterNode.TYPE).snapshot();
+        // param-nodes that aren't used (eg, as a result of canonicalization) don't occur in
+        // 'params'. Thus, in general, the sizes of 'params' and 'args' don't always match. Still,
+        // it's always possible to pair a param-node with its corresponding arg-node using
+        // param.index() as index into 'args'.
         for (ParameterNode __param : __params)
         {
             if (__param.usages().isNotEmpty())
@@ -138,7 +136,7 @@ public final class InlineableGraph implements Inlineable
                     ConstantNode __constant = (ConstantNode) __arg;
                     __parameterUsages = trackParameterUsages(__param, __parameterUsages);
                     // collect param usages before replacing the param
-                    __param.replaceAtUsagesAndDelete(graph.unique(ConstantNode.forConstant(__arg.stamp(NodeView.DEFAULT), __constant.getValue(), __constant.getStableDimension(), __constant.isDefaultStable(), __context.getMetaAccess())));
+                    __param.replaceAtUsagesAndDelete(this.___graph.unique(ConstantNode.forConstant(__arg.stamp(NodeView.DEFAULT), __constant.getValue(), __constant.getStableDimension(), __constant.isDefaultStable(), __context.getMetaAccess())));
                     // param-node gone, leaving a gap in the sequence given by param.index()
                 }
                 else
@@ -162,11 +160,11 @@ public final class InlineableGraph implements Inlineable
         return __result;
     }
 
-    /**
-     * This method builds the IR nodes for the given <code>method</code> and canonicalizes them.
-     * Provided profiling info is mature, the resulting graph is cached. The caller is responsible
-     * for cloning before modification.
-     */
+    ///
+    // This method builds the IR nodes for the given <code>method</code> and canonicalizes them.
+    // Provided profiling info is mature, the resulting graph is cached. The caller is responsible
+    // for cloning before modification.
+    ///
     private static StructuredGraph parseBytecodes(ResolvedJavaMethod __method, HighTierContext __context, CanonicalizerPhase __canonicalizer, StructuredGraph __caller)
     {
         StructuredGraph __newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(__caller.getAssumptions())).method(__method).build();
@@ -189,23 +187,23 @@ public final class InlineableGraph implements Inlineable
     @Override
     public int getNodeCount()
     {
-        return InliningUtil.getNodeCount(graph);
+        return InliningUtil.getNodeCount(this.___graph);
     }
 
     @Override
     public Iterable<Invoke> getInvokes()
     {
-        return graph.getInvokes();
+        return this.___graph.getInvokes();
     }
 
     @Override
     public double getProbability(Invoke __invoke)
     {
-        return probabilites.applyAsDouble(__invoke.asNode());
+        return this.___probabilites.applyAsDouble(__invoke.asNode());
     }
 
     public StructuredGraph getGraph()
     {
-        return graph;
+        return this.___graph;
     }
 }

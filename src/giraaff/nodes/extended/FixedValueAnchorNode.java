@@ -17,20 +17,20 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
     // @field
-    private Stamp predefinedStamp;
+    private Stamp ___predefinedStamp;
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
     // @cons
     protected FixedValueAnchorNode(NodeClass<? extends FixedValueAnchorNode> __c, ValueNode __object)
     {
         super(__c, __object.stamp(NodeView.DEFAULT));
-        this.object = __object;
+        this.___object = __object;
     }
 
     // @cons
@@ -43,16 +43,16 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
     public FixedValueAnchorNode(ValueNode __object, Stamp __predefinedStamp)
     {
         super(TYPE, __predefinedStamp);
-        this.object = __object;
-        this.predefinedStamp = __predefinedStamp;
+        this.___object = __object;
+        this.___predefinedStamp = __predefinedStamp;
     }
 
     @Override
     public boolean inferStamp()
     {
-        if (predefinedStamp == null)
+        if (this.___predefinedStamp == null)
         {
-            return updateStamp(object.stamp(NodeView.DEFAULT));
+            return updateStamp(this.___object.stamp(NodeView.DEFAULT));
         }
         else
         {
@@ -61,18 +61,18 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
     }
 
     @NodeIntrinsic
-    public static native Object getObject(Object object);
+    public static native Object getObject(Object __object);
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.setResult(this, __gen.operand(object));
+        __gen.setResult(this, __gen.operand(this.___object));
     }
 
     @Override
     public ValueNode getOriginalNode()
     {
-        return object;
+        return this.___object;
     }
 
     @Override

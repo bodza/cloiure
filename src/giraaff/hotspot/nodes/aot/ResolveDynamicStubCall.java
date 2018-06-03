@@ -22,9 +22,9 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
-/**
- * A call to the VM via a regular stub.
- */
+///
+// A call to the VM via a regular stub.
+///
 // @NodeInfo.allowedUsageTypes "Memory"
 // @class ResolveDynamicStubCall
 public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
@@ -34,29 +34,29 @@ public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint imple
 
     @OptionalInput
     // @field
-    protected ValueNode value;
+    protected ValueNode ___value;
     @OptionalInput(InputType.State)
     // @field
-    protected FrameState stateBefore;
+    protected FrameState ___stateBefore;
     // @field
-    protected Constant constant;
+    protected Constant ___constant;
 
     // @cons
     public ResolveDynamicStubCall(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
-        this.value = __value;
+        this.___value = __value;
     }
 
     @NodeIntrinsic
-    public static native Object resolveInvoke(Object value);
+    public static native Object resolveInvoke(Object __value);
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (value != null)
+        if (this.___value != null)
         {
-            constant = GraphUtil.foldIfConstantAndRemove(this, value);
+            this.___constant = GraphUtil.foldIfConstantAndRemove(this, this.___value);
         }
         return this;
     }
@@ -64,7 +64,7 @@ public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint imple
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitResolveDynamicInvoke(constant, __gen.state(this)));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitResolveDynamicInvoke(this.___constant, __gen.state(this)));
     }
 
     @Override
@@ -82,14 +82,14 @@ public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint imple
     @Override
     public FrameState stateBefore()
     {
-        return stateBefore;
+        return this.___stateBefore;
     }
 
     @Override
     public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, __f);
-        stateBefore = __f;
+        updateUsages(this.___stateBefore, __f);
+        this.___stateBefore = __f;
     }
 
     @Override

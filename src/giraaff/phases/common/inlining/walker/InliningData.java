@@ -46,62 +46,62 @@ import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.util.Providers;
 import giraaff.util.GraalError;
 
-/**
- * The space of inlining decisions is explored depth-first with the help of a stack realized by
- * {@link InliningData}. At any point in time, the topmost element of that stack consists of:
- *
- * <li>the callsite under consideration is tracked as a {@link MethodInvocation}.</li>
- * <li>one or more {@link CallsiteHolder}s, all of them associated to the callsite above. Why more
- * than one? Depending on the type-profile for the receiver more than one concrete method may be
- * feasible target.</li>
- *
- * The bottom element in the stack consists of:
- *
- * <li>a single {@link MethodInvocation} (the
- * {@link giraaff.phases.common.inlining.walker.MethodInvocation#isRoot root} one, ie
- * the unknown caller of the root graph)</li>
- * <li>a single {@link CallsiteHolder} (the root one, for the method on which inlining was called)</li>
- *
- * @see #moveForward()
- */
+///
+// The space of inlining decisions is explored depth-first with the help of a stack realized by
+// {@link InliningData}. At any point in time, the topmost element of that stack consists of:
+//
+// <li>the callsite under consideration is tracked as a {@link MethodInvocation}.</li>
+// <li>one or more {@link CallsiteHolder}s, all of them associated to the callsite above. Why more
+// than one? Depending on the type-profile for the receiver more than one concrete method may be
+// feasible target.</li>
+//
+// The bottom element in the stack consists of:
+//
+// <li>a single {@link MethodInvocation} (the
+// {@link giraaff.phases.common.inlining.walker.MethodInvocation#isRoot root} one, ie
+// the unknown caller of the root graph)</li>
+// <li>a single {@link CallsiteHolder} (the root one, for the method on which inlining was called)</li>
+//
+// @see #moveForward()
+///
 // @class InliningData
 public final class InliningData
 {
-    /**
-     * Call hierarchy from outer most call (i.e., compilation unit) to inner most callee.
-     */
+    ///
+    // Call hierarchy from outer most call (i.e., compilation unit) to inner most callee.
+    ///
     // @field
-    private final ArrayDeque<CallsiteHolder> graphQueue = new ArrayDeque<>();
+    private final ArrayDeque<CallsiteHolder> ___graphQueue = new ArrayDeque<>();
     // @field
-    private final ArrayDeque<MethodInvocation> invocationQueue = new ArrayDeque<>();
+    private final ArrayDeque<MethodInvocation> ___invocationQueue = new ArrayDeque<>();
 
     // @field
-    private final HighTierContext context;
+    private final HighTierContext ___context;
     // @field
-    private final int maxMethodPerInlining;
+    private final int ___maxMethodPerInlining;
     // @field
-    private final CanonicalizerPhase canonicalizer;
+    private final CanonicalizerPhase ___canonicalizer;
     // @field
-    private final InliningPolicy inliningPolicy;
+    private final InliningPolicy ___inliningPolicy;
     // @field
-    private final StructuredGraph rootGraph;
+    private final StructuredGraph ___rootGraph;
 
     // @field
-    private int maxGraphs;
+    private int ___maxGraphs;
 
     // @cons
     public InliningData(StructuredGraph __rootGraph, HighTierContext __context, int __maxMethodPerInlining, CanonicalizerPhase __canonicalizer, InliningPolicy __inliningPolicy, LinkedList<Invoke> __rootInvokes)
     {
         super();
-        this.context = __context;
-        this.maxMethodPerInlining = __maxMethodPerInlining;
-        this.canonicalizer = __canonicalizer;
-        this.inliningPolicy = __inliningPolicy;
-        this.maxGraphs = 1;
-        this.rootGraph = __rootGraph;
+        this.___context = __context;
+        this.___maxMethodPerInlining = __maxMethodPerInlining;
+        this.___canonicalizer = __canonicalizer;
+        this.___inliningPolicy = __inliningPolicy;
+        this.___maxGraphs = 1;
+        this.___rootGraph = __rootGraph;
 
-        invocationQueue.push(new MethodInvocation(null, 1.0, 1.0, null));
-        graphQueue.push(new CallsiteHolderExplorable(__rootGraph, 1.0, 1.0, null, __rootInvokes));
+        this.___invocationQueue.push(new MethodInvocation(null, 1.0, 1.0, null));
+        this.___graphQueue.push(new CallsiteHolderExplorable(__rootGraph, 1.0, 1.0, null, __rootInvokes));
     }
 
     public static boolean isFreshInstantiation(ValueNode __arg)
@@ -115,7 +115,7 @@ public final class InliningData
         {
             return "the method is not resolved";
         }
-        if (__method.isNative() && (!GraalOptions.intrinsify || !InliningUtil.canIntrinsify(context.getReplacements(), __method, __invokeBci)))
+        if (__method.isNative() && (!GraalOptions.intrinsify || !InliningUtil.canIntrinsify(this.___context.getReplacements(), __method, __invokeBci)))
         {
             return "it is a non-intrinsic native method";
         }
@@ -135,7 +135,7 @@ public final class InliningData
         {
             return "it exceeds the maximum recursive inlining depth";
         }
-        if (new OptimisticOptimizations(rootGraph.getProfilingInfo(__method)).lessOptimisticThan(context.getOptimisticOptimizations()))
+        if (new OptimisticOptimizations(this.___rootGraph.getProfilingInfo(__method)).lessOptimisticThan(this.___context.getOptimisticOptimizations()))
         {
             return "the callee uses less optimistic optimizations than caller";
         }
@@ -155,12 +155,12 @@ public final class InliningData
         }
     }
 
-    /**
-     * Determines if inlining is possible at the given invoke node.
-     *
-     * @param invoke the invoke that should be inlined
-     * @return an instance of InlineInfo, or null if no inlining is possible at the given invoke
-     */
+    ///
+    // Determines if inlining is possible at the given invoke node.
+    //
+    // @param invoke the invoke that should be inlined
+    // @return an instance of InlineInfo, or null if no inlining is possible at the given invoke
+    ///
     private InlineInfo getInlineInfo(Invoke __invoke)
     {
         final String __failureMessage = InliningUtil.checkInvokeConditions(__invoke);
@@ -268,7 +268,7 @@ public final class InliningData
         }
         ResolvedJavaType __contextType = __invoke.getContextType();
         double __notRecordedTypeProbability = __typeProfile.getNotRecordedProbability();
-        final OptimisticOptimizations __optimisticOpts = context.getOptimisticOptimizations();
+        final OptimisticOptimizations __optimisticOpts = this.___context.getOptimisticOptimizations();
         if (__ptypes.length == 1 && __notRecordedTypeProbability == 0)
         {
             if (!__optimisticOpts.inlineMonomorphicCalls())
@@ -347,7 +347,7 @@ public final class InliningData
                 __concreteMethodsProbabilities = __newConcreteMethodsProbabilities;
             }
 
-            if (__concreteMethods.size() > maxMethodPerInlining)
+            if (__concreteMethods.size() > this.___maxMethodPerInlining)
             {
                 return null;
             }
@@ -413,12 +413,12 @@ public final class InliningData
         {
             EconomicSet<Node> __canonicalizedNodes = EconomicSet.create(Equivalence.IDENTITY);
             __canonicalizedNodes.addAll(__calleeInfo.invoke().asNode().usages());
-            EconomicSet<Node> __parameterUsages = __calleeInfo.inline(new Providers(context), __reason);
+            EconomicSet<Node> __parameterUsages = __calleeInfo.inline(new Providers(this.___context), __reason);
             __canonicalizedNodes.addAll(__parameterUsages);
 
             Graph.Mark __markBeforeCanonicalization = __callerGraph.getMark();
 
-            canonicalizer.applyIncremental(__callerGraph, context, __canonicalizedNodes);
+            this.___canonicalizer.applyIncremental(__callerGraph, this.___context, __canonicalizedNodes);
 
             // process invokes that are possibly created during canonicalization
             for (Node __newNode : __callerGraph.getNewNodes(__markBeforeCanonicalization))
@@ -441,55 +441,55 @@ public final class InliningData
         }
     }
 
-    /**
-     * This method attempts:
-     *
-     * <li>to inline at the callsite given by <code>calleeInvocation</code>, where that callsite
-     * belongs to the {@link CallsiteHolderExplorable} at the top of the {@link #graphQueue}
-     * maintained in this class.</li>
-     * <li>otherwise, to devirtualize the callsite in question.</li>
-     *
-     * @return true iff inlining was actually performed
-     */
+    ///
+    // This method attempts:
+    //
+    // <li>to inline at the callsite given by <code>calleeInvocation</code>, where that callsite
+    // belongs to the {@link CallsiteHolderExplorable} at the top of the {@link #graphQueue}
+    // maintained in this class.</li>
+    // <li>otherwise, to devirtualize the callsite in question.</li>
+    //
+    // @return true iff inlining was actually performed
+    ///
     private boolean tryToInline(MethodInvocation __calleeInvocation, int __inliningDepth)
     {
         CallsiteHolderExplorable __callerCallsiteHolder = (CallsiteHolderExplorable) currentGraph();
         InlineInfo __calleeInfo = __calleeInvocation.callee();
 
-        InliningPolicy.Decision __decision = inliningPolicy.isWorthInlining(context.getReplacements(), __calleeInvocation, __inliningDepth, true);
-        if (__decision.shouldInline)
+        InliningPolicy.Decision __decision = this.___inliningPolicy.isWorthInlining(this.___context.getReplacements(), __calleeInvocation, __inliningDepth, true);
+        if (__decision.___shouldInline)
         {
-            doInline(__callerCallsiteHolder, __calleeInvocation, __decision.reason);
+            doInline(__callerCallsiteHolder, __calleeInvocation, __decision.___reason);
             return true;
         }
 
-        if (context.getOptimisticOptimizations().devirtualizeInvokes())
+        if (this.___context.getOptimisticOptimizations().devirtualizeInvokes())
         {
-            __calleeInfo.tryToDevirtualizeInvoke(new Providers(context));
+            __calleeInfo.tryToDevirtualizeInvoke(new Providers(this.___context));
         }
 
         return false;
     }
 
-    /**
-     * This method picks one of the callsites belonging to the current
-     * {@link CallsiteHolderExplorable}. Provided the callsite qualifies to be analyzed for
-     * inlining, this method prepares a new stack top in {@link InliningData} for such callsite,
-     * which comprises:
-     *
-     * <li>preparing a summary of feasible targets, ie preparing an {@link InlineInfo}</li>
-     * <li>based on it, preparing the stack top proper which consists of:</li>
-     *
-     * <li>one {@link MethodInvocation}</li>
-     * <li>a {@link CallsiteHolder} for each feasible target</li>
-     *
-     * The thus prepared "stack top" is needed by {@link #moveForward()} to explore the space of
-     * inlining decisions (each decision one of: backtracking, delving, inlining).
-     *
-     * The {@link InlineInfo} used to get things rolling is kept around in the
-     * {@link MethodInvocation}, it will be needed in case of inlining, see
-     * {@link InlineInfo#inline(Providers, String)}
-     */
+    ///
+    // This method picks one of the callsites belonging to the current
+    // {@link CallsiteHolderExplorable}. Provided the callsite qualifies to be analyzed for
+    // inlining, this method prepares a new stack top in {@link InliningData} for such callsite,
+    // which comprises:
+    //
+    // <li>preparing a summary of feasible targets, ie preparing an {@link InlineInfo}</li>
+    // <li>based on it, preparing the stack top proper which consists of:</li>
+    //
+    // <li>one {@link MethodInvocation}</li>
+    // <li>a {@link CallsiteHolder} for each feasible target</li>
+    //
+    // The thus prepared "stack top" is needed by {@link #moveForward()} to explore the space of
+    // inlining decisions (each decision one of: backtracking, delving, inlining).
+    //
+    // The {@link InlineInfo} used to get things rolling is kept around in the
+    // {@link MethodInvocation}, it will be needed in case of inlining, see
+    // {@link InlineInfo#inline(Providers, String)}
+    ///
     private void processNextInvoke()
     {
         CallsiteHolderExplorable __callsiteHolder = (CallsiteHolderExplorable) currentGraph();
@@ -498,7 +498,7 @@ public final class InliningData
 
         if (__info != null)
         {
-            __info.populateInlinableElements(context, currentGraph().graph(), canonicalizer);
+            __info.populateInlinableElements(this.___context, currentGraph().graph(), this.___canonicalizer);
             double __invokeProbability = __callsiteHolder.invokeProbability(__invoke);
             double __invokeRelevance = __callsiteHolder.invokeRelevance(__invoke);
             MethodInvocation __methodInvocation = new MethodInvocation(__info, __invokeProbability, __invokeRelevance, freshlyInstantiatedArguments(__invoke, __callsiteHolder.getFixedParams()));
@@ -506,17 +506,17 @@ public final class InliningData
         }
     }
 
-    /**
-     * Gets the freshly instantiated arguments.
-     *
-     * A freshly instantiated argument is either:
-     *
-     * <li>an {@link InliningData#isFreshInstantiation(giraaff.nodes.ValueNode)}</li>
-     * <li>a fixed-param, ie a {@link ParameterNode} receiving a freshly instantiated argument</li>
-     *
-     * @return the positions of freshly instantiated arguments in the argument list of the
-     *         <code>invoke</code>, or null if no such positions exist.
-     */
+    ///
+    // Gets the freshly instantiated arguments.
+    //
+    // A freshly instantiated argument is either:
+    //
+    // <li>an {@link InliningData#isFreshInstantiation(giraaff.nodes.ValueNode)}</li>
+    // <li>a fixed-param, ie a {@link ParameterNode} receiving a freshly instantiated argument</li>
+    //
+    // @return the positions of freshly instantiated arguments in the argument list of the
+    //         <code>invoke</code>, or null if no such positions exist.
+    ///
     public static BitSet freshlyInstantiatedArguments(Invoke __invoke, EconomicSet<ParameterNode> __fixedParams)
     {
         BitSet __result = null;
@@ -554,29 +554,29 @@ public final class InliningData
 
     public int graphCount()
     {
-        return graphQueue.size();
+        return this.___graphQueue.size();
     }
 
     public boolean hasUnprocessedGraphs()
     {
-        return !graphQueue.isEmpty();
+        return !this.___graphQueue.isEmpty();
     }
 
     private CallsiteHolder currentGraph()
     {
-        return graphQueue.peek();
+        return this.___graphQueue.peek();
     }
 
     private void popGraph()
     {
-        graphQueue.pop();
+        this.___graphQueue.pop();
     }
 
     private void popGraphs(int __count)
     {
         for (int __i = 0; __i < __count; __i++)
         {
-            graphQueue.pop();
+            this.___graphQueue.pop();
         }
     }
 
@@ -585,31 +585,31 @@ public final class InliningData
 
     private MethodInvocation currentInvocation()
     {
-        return invocationQueue.peekFirst();
+        return this.___invocationQueue.peekFirst();
     }
 
     private void pushInvocationAndGraphs(MethodInvocation __methodInvocation)
     {
-        invocationQueue.addFirst(__methodInvocation);
+        this.___invocationQueue.addFirst(__methodInvocation);
         InlineInfo __info = __methodInvocation.callee();
-        maxGraphs += __info.numberOfMethods();
+        this.___maxGraphs += __info.numberOfMethods();
         for (int __i = 0; __i < __info.numberOfMethods(); __i++)
         {
             CallsiteHolder __ch = __methodInvocation.buildCallsiteHolderForElement(__i);
-            graphQueue.push(__ch);
+            this.___graphQueue.push(__ch);
         }
     }
 
     private void popInvocation()
     {
-        maxGraphs -= invocationQueue.peekFirst().callee().numberOfMethods();
-        invocationQueue.removeFirst();
+        this.___maxGraphs -= this.___invocationQueue.peekFirst().callee().numberOfMethods();
+        this.___invocationQueue.removeFirst();
     }
 
     public int countRecursiveInlining(ResolvedJavaMethod __method)
     {
         int __count = 0;
-        for (CallsiteHolder __callsiteHolder : graphQueue)
+        for (CallsiteHolder __callsiteHolder : this.___graphQueue)
         {
             if (__method.equals(__callsiteHolder.method()))
             {
@@ -621,12 +621,12 @@ public final class InliningData
 
     public int inliningDepth()
     {
-        return invocationQueue.size() - 1;
+        return this.___invocationQueue.size() - 1;
     }
 
     private boolean contains(StructuredGraph __graph)
     {
-        for (CallsiteHolder __info : graphQueue)
+        for (CallsiteHolder __info : this.___graphQueue)
         {
             if (__info.graph() == __graph)
             {
@@ -636,44 +636,44 @@ public final class InliningData
         return false;
     }
 
-    /**
-     * The stack realized by {@link InliningData} grows and shrinks as choices are made among the
-     * alternatives below:
-     * <ol>
-     * <li>not worth inlining: pop stack top, which comprises:
-     * <ul>
-     * <li>pop any remaining graphs not yet delved into</li>
-     * <li>pop the current invocation</li>
-     * </ul>
-     * </li>
-     * <li>{@link #processNextInvoke() delve} into one of the callsites hosted in the current graph,
-     * such callsite is explored next by {@link #moveForward()}</li>
-     * <li>{@link #tryToInline(MethodInvocation, int) try to inline}: move past the current graph
-     * (remove it from the topmost element).
-     * <ul>
-     * <li>If that was the last one then {@link #tryToInline(MethodInvocation, int) try to inline}
-     * the callsite under consideration (ie, the "current invocation").</li>
-     * <li>Whether inlining occurs or not, that callsite is removed from the top of
-     * {@link InliningData} .</li>
-     * </ul>
-     * </li>
-     * </ol>
-     *
-     * Some facts about the alternatives above:
-     *
-     * <li>the first step amounts to backtracking, the 2nd one to depth-search, and the 3rd one also
-     * involves backtracking (however possibly after inlining).</li>
-     * <li>the choice of abandon-and-backtrack or delve-into depends on
-     * {@link InliningPolicy#isWorthInlining} and {@link InliningPolicy#continueInlining}.</li>
-     * <li>the 3rd choice is picked whenever none of the previous choices are made</li>
-     *
-     * @return true iff inlining was actually performed
-     */
+    ///
+    // The stack realized by {@link InliningData} grows and shrinks as choices are made among the
+    // alternatives below:
+    // <ol>
+    // <li>not worth inlining: pop stack top, which comprises:
+    // <ul>
+    // <li>pop any remaining graphs not yet delved into</li>
+    // <li>pop the current invocation</li>
+    // </ul>
+    // </li>
+    // <li>{@link #processNextInvoke() delve} into one of the callsites hosted in the current graph,
+    // such callsite is explored next by {@link #moveForward()}</li>
+    // <li>{@link #tryToInline(MethodInvocation, int) try to inline}: move past the current graph
+    // (remove it from the topmost element).
+    // <ul>
+    // <li>If that was the last one then {@link #tryToInline(MethodInvocation, int) try to inline}
+    // the callsite under consideration (ie, the "current invocation").</li>
+    // <li>Whether inlining occurs or not, that callsite is removed from the top of
+    // {@link InliningData} .</li>
+    // </ul>
+    // </li>
+    // </ol>
+    //
+    // Some facts about the alternatives above:
+    //
+    // <li>the first step amounts to backtracking, the 2nd one to depth-search, and the 3rd one also
+    // involves backtracking (however possibly after inlining).</li>
+    // <li>the choice of abandon-and-backtrack or delve-into depends on
+    // {@link InliningPolicy#isWorthInlining} and {@link InliningPolicy#continueInlining}.</li>
+    // <li>the 3rd choice is picked whenever none of the previous choices are made</li>
+    //
+    // @return true iff inlining was actually performed
+    ///
     public boolean moveForward()
     {
         final MethodInvocation __currentInvocation = currentInvocation();
 
-        final boolean __backtrack = (!__currentInvocation.isRoot() && !inliningPolicy.isWorthInlining(context.getReplacements(), __currentInvocation, inliningDepth(), false).shouldInline);
+        final boolean __backtrack = (!__currentInvocation.isRoot() && !this.___inliningPolicy.isWorthInlining(this.___context.getReplacements(), __currentInvocation, inliningDepth(), false).___shouldInline);
         if (__backtrack)
         {
             int __remainingGraphs = __currentInvocation.totalGraphs() - __currentInvocation.processedGraphs();
@@ -682,7 +682,7 @@ public final class InliningData
             return false;
         }
 
-        final boolean __delve = currentGraph().hasRemainingInvokes() && inliningPolicy.continueInlining(currentGraph().graph());
+        final boolean __delve = currentGraph().hasRemainingInvokes() && this.___inliningPolicy.continueInlining(currentGraph().graph());
         if (__delve)
         {
             processNextInvoke();
@@ -699,15 +699,13 @@ public final class InliningData
         __currentInvocation.incrementProcessedGraphs();
         if (__currentInvocation.processedGraphs() == __currentInvocation.totalGraphs())
         {
-            /*
-             * "all of currentInvocation's graphs processed" amounts to
-             * "all concrete methods that come into question already had the callees they contain analyzed for inlining"
-             */
+            // "all of currentInvocation's graphs processed" amounts to
+            // "all concrete methods that come into question already had the callees they contain analyzed for inlining"
             popInvocation();
             if (tryToInline(__currentInvocation, inliningDepth() + 1))
             {
                 // report real progress only if we inline into the root graph
-                return currentGraph().graph() == rootGraph;
+                return currentGraph().graph() == this.___rootGraph;
             }
             return false;
         }
@@ -715,14 +713,14 @@ public final class InliningData
         return false;
     }
 
-    /**
-     * Checks an invariant that {@link #moveForward()} must maintain: "the top invocation records
-     * how many concrete target methods (for it) remain on the {@link #graphQueue}; those targets
-     * 'belong' to the current invocation in question.
-     */
+    ///
+    // Checks an invariant that {@link #moveForward()} must maintain: "the top invocation records
+    // how many concrete target methods (for it) remain on the {@link #graphQueue}; those targets
+    // 'belong' to the current invocation in question.
+    ///
     private boolean topGraphsForTopInvocation()
     {
-        if (invocationQueue.isEmpty())
+        if (this.___invocationQueue.isEmpty())
         {
             return true;
         }
@@ -731,7 +729,7 @@ public final class InliningData
             return true;
         }
         final int __remainingGraphs = currentInvocation().totalGraphs() - currentInvocation().processedGraphs();
-        final Iterator<CallsiteHolder> __iter = graphQueue.iterator();
+        final Iterator<CallsiteHolder> __iter = this.___graphQueue.iterator();
         for (int __i = (__remainingGraphs - 1); __i >= 0; __i--)
         {
             if (!__iter.hasNext())
@@ -745,10 +743,10 @@ public final class InliningData
         return true;
     }
 
-    /**
-     * This method checks invariants for this class. Named after shorthand for "internal
-     * representation is ok".
-     */
+    ///
+    // This method checks invariants for this class. Named after shorthand for "internal
+    // representation is ok".
+    ///
     public boolean repOK()
     {
         return true;

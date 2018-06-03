@@ -6,9 +6,9 @@ import giraaff.api.replacements.ClassSubstitution;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.replacements.nodes.ArrayEqualsNode;
 
-/**
- * Substitutions for {@link java.util.Arrays} methods.
- */
+///
+// Substitutions for {@link java.util.Arrays} methods.
+///
 @ClassSubstitution(Arrays.class)
 // @class ArraysSubstitutions
 public final class ArraysSubstitutions

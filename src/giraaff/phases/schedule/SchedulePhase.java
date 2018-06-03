@@ -74,10 +74,10 @@ public final class SchedulePhase extends Phase
     }
 
     // @field
-    private final SchedulingStrategy selectedStrategy;
+    private final SchedulingStrategy ___selectedStrategy;
 
     // @field
-    private final boolean immutableGraph;
+    private final boolean ___immutableGraph;
 
     // @cons
     public SchedulePhase()
@@ -101,15 +101,15 @@ public final class SchedulePhase extends Phase
     public SchedulePhase(SchedulingStrategy __strategy, boolean __immutableGraph)
     {
         super();
-        this.selectedStrategy = __strategy;
-        this.immutableGraph = __immutableGraph;
+        this.___selectedStrategy = __strategy;
+        this.___immutableGraph = __immutableGraph;
     }
 
     @Override
     protected void run(StructuredGraph __graph)
     {
         Instance __inst = new Instance();
-        __inst.run(__graph, selectedStrategy, immutableGraph);
+        __inst.run(__graph, this.___selectedStrategy, this.___immutableGraph);
     }
 
     public static void run(StructuredGraph __graph, SchedulingStrategy __strategy, ControlFlowGraph __cfg)
@@ -123,15 +123,15 @@ public final class SchedulePhase extends Phase
     {
         // @def
         private static final double IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR = 2;
-        /**
-         * Map from blocks to the nodes in each block.
-         */
+        ///
+        // Map from blocks to the nodes in each block.
+        ///
         // @field
-        protected ControlFlowGraph cfg;
+        protected ControlFlowGraph ___cfg;
         // @field
-        protected BlockMap<List<Node>> blockToNodesMap;
+        protected BlockMap<List<Node>> ___blockToNodesMap;
         // @field
-        protected NodeMap<Block> nodeToBlockMap;
+        protected NodeMap<Block> ___nodeToBlockMap;
 
         // @cons
         public Instance()
@@ -143,47 +143,47 @@ public final class SchedulePhase extends Phase
         public Instance(ControlFlowGraph __cfg)
         {
             super();
-            this.cfg = __cfg;
+            this.___cfg = __cfg;
         }
 
         public void run(StructuredGraph __graph, SchedulingStrategy __selectedStrategy, boolean __immutableGraph)
         {
-            if (this.cfg == null)
+            if (this.___cfg == null)
             {
-                this.cfg = ControlFlowGraph.compute(__graph, true, true, true, false);
+                this.___cfg = ControlFlowGraph.compute(__graph, true, true, true, false);
             }
 
             NodeMap<Block> __currentNodeMap = __graph.createNodeMap();
             NodeBitMap __visited = __graph.createNodeBitMap();
-            BlockMap<List<Node>> __earliestBlockToNodesMap = new BlockMap<>(cfg);
-            this.nodeToBlockMap = __currentNodeMap;
-            this.blockToNodesMap = __earliestBlockToNodesMap;
+            BlockMap<List<Node>> __earliestBlockToNodesMap = new BlockMap<>(this.___cfg);
+            this.___nodeToBlockMap = __currentNodeMap;
+            this.___blockToNodesMap = __earliestBlockToNodesMap;
 
             scheduleEarliestIterative(__earliestBlockToNodesMap, __currentNodeMap, __visited, __graph, __immutableGraph, __selectedStrategy == SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
 
             if (!__selectedStrategy.isEarliest())
             {
                 // For non-earliest schedules, we need to do a second pass.
-                BlockMap<List<Node>> __latestBlockToNodesMap = new BlockMap<>(cfg);
-                for (Block __b : cfg.getBlocks())
+                BlockMap<List<Node>> __latestBlockToNodesMap = new BlockMap<>(this.___cfg);
+                for (Block __b : this.___cfg.getBlocks())
                 {
                     __latestBlockToNodesMap.put(__b, new ArrayList<>());
                 }
 
                 BlockMap<ArrayList<FloatingReadNode>> __watchListMap = calcLatestBlocks(__selectedStrategy, __currentNodeMap, __earliestBlockToNodesMap, __visited, __latestBlockToNodesMap, __immutableGraph);
-                sortNodesLatestWithinBlock(cfg, __earliestBlockToNodesMap, __latestBlockToNodesMap, __currentNodeMap, __watchListMap, __visited);
+                sortNodesLatestWithinBlock(this.___cfg, __earliestBlockToNodesMap, __latestBlockToNodesMap, __currentNodeMap, __watchListMap, __visited);
 
-                this.blockToNodesMap = __latestBlockToNodesMap;
+                this.___blockToNodesMap = __latestBlockToNodesMap;
             }
-            cfg.setNodeToBlock(__currentNodeMap);
+            this.___cfg.setNodeToBlock(__currentNodeMap);
 
-            __graph.setLastSchedule(new ScheduleResult(this.cfg, this.nodeToBlockMap, this.blockToNodesMap));
+            __graph.setLastSchedule(new ScheduleResult(this.___cfg, this.___nodeToBlockMap, this.___blockToNodesMap));
         }
 
         private BlockMap<ArrayList<FloatingReadNode>> calcLatestBlocks(SchedulingStrategy __strategy, NodeMap<Block> __currentNodeMap, BlockMap<List<Node>> __earliestBlockToNodesMap, NodeBitMap __visited, BlockMap<List<Node>> __latestBlockToNodesMap, boolean __immutableGraph)
         {
-            BlockMap<ArrayList<FloatingReadNode>> __watchListMap = new BlockMap<>(cfg);
-            Block[] __reversePostOrder = cfg.reversePostOrder();
+            BlockMap<ArrayList<FloatingReadNode>> __watchListMap = new BlockMap<>(this.___cfg);
+            Block[] __reversePostOrder = this.___cfg.reversePostOrder();
             for (int __j = __reversePostOrder.length - 1; __j >= 0; --__j)
             {
                 Block __currentBlock = __reversePostOrder[__j];
@@ -538,10 +538,8 @@ public final class SchedulePhase extends Phase
                 {
                     if (__immutableGraph && !__visited.contains(__usage))
                     {
-                        /*
-                         * Normally, dead nodes are deleted by the scheduler before we reach this point.
-                         * Only when the scheduler is asked to not modify a graph, we can see dead nodes here.
-                         */
+                        // Normally, dead nodes are deleted by the scheduler before we reach this point.
+                        // Only when the scheduler is asked to not modify a graph, we can see dead nodes here.
                         continue;
                     }
                     __latestBlock = calcBlockForUsage(__currentNode, __usage, __latestBlock, __currentNodeMap);
@@ -678,132 +676,132 @@ public final class SchedulePhase extends Phase
             return __currentBlock;
         }
 
-        /**
-         * Micro block that is allocated for each fixed node and captures all floating nodes that
-         * need to be scheduled immediately after the corresponding fixed node.
-         */
+        ///
+        // Micro block that is allocated for each fixed node and captures all floating nodes that
+        // need to be scheduled immediately after the corresponding fixed node.
+        ///
         // @class SchedulePhase.Instance.MicroBlock
         private static final class MicroBlock
         {
             // @field
-            private final int id;
+            private final int ___id;
             // @field
-            private int nodeCount;
+            private int ___nodeCount;
             // @field
-            private NodeEntry head;
+            private NodeEntry ___head;
             // @field
-            private NodeEntry tail;
+            private NodeEntry ___tail;
 
             // @cons
             MicroBlock(int __id)
             {
                 super();
-                this.id = __id;
+                this.___id = __id;
             }
 
-            /**
-             * Adds a new floating node into the micro block.
-             */
+            ///
+            // Adds a new floating node into the micro block.
+            ///
             public void add(Node __node)
             {
                 NodeEntry __newTail = new NodeEntry(__node);
-                if (tail == null)
+                if (this.___tail == null)
                 {
-                    tail = head = __newTail;
+                    this.___tail = this.___head = __newTail;
                 }
                 else
                 {
-                    tail.next = __newTail;
-                    tail = __newTail;
+                    this.___tail.___next = __newTail;
+                    this.___tail = __newTail;
                 }
-                nodeCount++;
+                this.___nodeCount++;
             }
 
-            /**
-             * Number of nodes in this micro block.
-             */
+            ///
+            // Number of nodes in this micro block.
+            ///
             public int getNodeCount()
             {
-                return nodeCount;
+                return this.___nodeCount;
             }
 
             private int getActualNodeCount()
             {
                 int __count = 0;
-                for (NodeEntry __e = head; __e != null; __e = __e.next)
+                for (NodeEntry __e = this.___head; __e != null; __e = __e.___next)
                 {
                     __count++;
                 }
                 return __count;
             }
 
-            /**
-             * The id of the micro block, with a block always associated with a lower id than its successors.
-             */
+            ///
+            // The id of the micro block, with a block always associated with a lower id than its successors.
+            ///
             public int getId()
             {
-                return id;
+                return this.___id;
             }
 
-            /**
-             * First node of the linked list of nodes of this micro block.
-             */
+            ///
+            // First node of the linked list of nodes of this micro block.
+            ///
             public NodeEntry getFirstNode()
             {
-                return head;
+                return this.___head;
             }
 
-            /**
-             * Takes all nodes in this micro blocks and prepends them to the nodes of the given parameter.
-             *
-             * @param newBlock the new block for the nodes
-             */
+            ///
+            // Takes all nodes in this micro blocks and prepends them to the nodes of the given parameter.
+            //
+            // @param newBlock the new block for the nodes
+            ///
             public void prependChildrenTo(MicroBlock __newBlock)
             {
-                if (tail != null)
+                if (this.___tail != null)
                 {
-                    tail.next = __newBlock.head;
-                    __newBlock.head = head;
-                    head = tail = null;
-                    __newBlock.nodeCount += nodeCount;
-                    nodeCount = 0;
+                    this.___tail.___next = __newBlock.___head;
+                    __newBlock.___head = this.___head;
+                    this.___head = this.___tail = null;
+                    __newBlock.___nodeCount += this.___nodeCount;
+                    this.___nodeCount = 0;
                 }
             }
 
             @Override
             public int hashCode()
             {
-                return id;
+                return this.___id;
             }
         }
 
-        /**
-         * Entry in the linked list of nodes.
-         */
+        ///
+        // Entry in the linked list of nodes.
+        ///
         // @class SchedulePhase.Instance.NodeEntry
         private static final class NodeEntry
         {
             // @field
-            private final Node node;
+            private final Node ___node;
             // @field
-            private NodeEntry next;
+            private NodeEntry ___next;
 
             // @cons
             NodeEntry(Node __node)
             {
                 super();
-                this.node = __node;
-                this.next = null;
+                this.___node = __node;
+                this.___next = null;
             }
 
             public NodeEntry getNext()
             {
-                return next;
+                return this.___next;
             }
 
             public Node getNode()
             {
-                return node;
+                return this.___node;
             }
         }
 
@@ -815,7 +813,7 @@ public final class SchedulePhase extends Phase
             // Initialize with fixed nodes.
             MicroBlock __startBlock = null;
             int __nextId = 1;
-            for (Block __b : cfg.reversePostOrder())
+            for (Block __b : this.___cfg.reversePostOrder())
             {
                 for (FixedNode __current : __b.getBeginNode().getBlockNodes())
                 {
@@ -853,7 +851,7 @@ public final class SchedulePhase extends Phase
             }
 
             // Now process inputs of fixed nodes.
-            for (Block __b : cfg.reversePostOrder())
+            for (Block __b : this.___cfg.reversePostOrder())
             {
                 for (FixedNode __current : __b.getBeginNode().getBlockNodes())
                 {
@@ -910,7 +908,7 @@ public final class SchedulePhase extends Phase
                 }
             }
 
-            for (Block __b : cfg.reversePostOrder())
+            for (Block __b : this.___cfg.reversePostOrder())
             {
                 FixedNode __fixedNode = __b.getEndNode();
                 if (__fixedNode instanceof ControlSplitNode)
@@ -926,7 +924,7 @@ public final class SchedulePhase extends Phase
             }
 
             // create lists for each block
-            for (Block __b : cfg.reversePostOrder())
+            for (Block __b : this.___cfg.reversePostOrder())
             {
                 // count nodes in block
                 int __totalCount = 0;
@@ -1051,13 +1049,13 @@ public final class SchedulePhase extends Phase
         // @class SchedulePhase.Instance.GuardOrder
         private static final class GuardOrder
         {
-            /**
-             * After an earliest schedule, this will re-sort guards to honor their
-             * {@linkplain StaticDeoptimizingNode#computePriority() priority}.
-             *
-             * Note that this only changes the order of nodes within {@linkplain MicroBlock
-             * micro-blocks}, nodes will not be moved from one micro-block to another.
-             */
+            ///
+            // After an earliest schedule, this will re-sort guards to honor their
+            // {@linkplain StaticDeoptimizingNode#computePriority() priority}.
+            //
+            // Note that this only changes the order of nodes within {@linkplain MicroBlock
+            // micro-blocks}, nodes will not be moved from one micro-block to another.
+            ///
             private static void resortGuards(StructuredGraph __graph, NodeMap<MicroBlock> __entries, NodeStack __stack)
             {
                 EconomicSet<MicroBlock> __blocksWithGuards = EconomicSet.create(Equivalence.IDENTITY);
@@ -1073,19 +1071,19 @@ public final class SchedulePhase extends Phase
                     MicroBlock __newBlock = resortGuards(__block, __stack, __blockNodes, __priorities);
                     if (__newBlock != null)
                     {
-                        __block.head = __newBlock.head;
-                        __block.tail = __newBlock.tail;
+                        __block.___head = __newBlock.___head;
+                        __block.___tail = __newBlock.___tail;
                     }
                 }
             }
 
-            /**
-             * This resorts guards within one micro-block.
-             *
-             * {@code stack}, {@code blockNodes} and {@code priorities} are just temporary
-             * data-structures which are allocated once by the callers of this method. They should
-             * be in their "initial"/"empty" state when calling this method and when it returns.
-             */
+            ///
+            // This resorts guards within one micro-block.
+            //
+            // {@code stack}, {@code blockNodes} and {@code priorities} are just temporary
+            // data-structures which are allocated once by the callers of this method. They should
+            // be in their "initial"/"empty" state when calling this method and when it returns.
+            ///
             private static MicroBlock resortGuards(MicroBlock __block, NodeStack __stack, NodeBitMap __blockNodes, NodeMap<GuardPriority> __priorities)
             {
                 if (!propagatePriority(__block, __stack, __priorities, __blockNodes))
@@ -1102,9 +1100,9 @@ public final class SchedulePhase extends Phase
                 NodeBitMap __sorted = __blockNodes;
                 __sorted.invert();
 
-                for (NodeEntry __e = __block.head; __e != null; __e = __e.next)
+                for (NodeEntry __e = __block.___head; __e != null; __e = __e.___next)
                 {
-                    checkIfAvailable(__e.node, __stack, __sorted, __newBlock, __availableGuards, false);
+                    checkIfAvailable(__e.___node, __stack, __sorted, __newBlock, __availableGuards, false);
                 }
                 do
                 {
@@ -1124,10 +1122,10 @@ public final class SchedulePhase extends Phase
                 return __newBlock;
             }
 
-            /**
-             * This checks if {@code n} can be scheduled, if it is the case, it schedules it now by
-             * calling {@link #addNodeToResort(Node, NodeStack, NodeBitMap, MicroBlock, boolean)}.
-             */
+            ///
+            // This checks if {@code n} can be scheduled, if it is the case, it schedules it now by
+            // calling {@link #addNodeToResort(Node, NodeStack, NodeBitMap, MicroBlock, boolean)}.
+            ///
             private static void checkIfAvailable(Node __n, NodeStack __stack, NodeBitMap __sorted, Instance.MicroBlock __newBlock, SortedSet<GuardNode> __availableGuardNodes, boolean __pushUsages)
             {
                 if (__sorted.isMarked(__n))
@@ -1151,10 +1149,10 @@ public final class SchedulePhase extends Phase
                 }
             }
 
-            /**
-             * Add a node to the re-sorted micro-block. This also pushes nodes that need to be
-             * (re-)examined on the stack.
-             */
+            ///
+            // Add a node to the re-sorted micro-block. This also pushes nodes that need to be
+            // (re-)examined on the stack.
+            ///
             private static void addNodeToResort(Node __n, NodeStack __stack, NodeBitMap __sorted, MicroBlock __newBlock, boolean __pushUsages)
             {
                 __sorted.mark(__n);
@@ -1171,24 +1169,24 @@ public final class SchedulePhase extends Phase
                 }
             }
 
-            /**
-             * This fills in a map of transitive priorities ({@code priorities}). It also marks the
-             * nodes from this micro-block in {@code blockNodes}.
-             *
-             * The transitive priority of a guard is the highest of its priority and the priority of
-             * the guards that depend on it (transitively).
-             *
-             * This method returns {@code false} if no re-ordering is necessary in this micro-block.
-             */
+            ///
+            // This fills in a map of transitive priorities ({@code priorities}). It also marks the
+            // nodes from this micro-block in {@code blockNodes}.
+            //
+            // The transitive priority of a guard is the highest of its priority and the priority of
+            // the guards that depend on it (transitively).
+            //
+            // This method returns {@code false} if no re-ordering is necessary in this micro-block.
+            ///
             private static boolean propagatePriority(MicroBlock __block, NodeStack __stack, NodeMap<GuardPriority> __priorities, NodeBitMap __blockNodes)
             {
                 GuardPriority __lowestPriority = GuardPriority.highest();
-                for (NodeEntry __e = __block.head; __e != null; __e = __e.next)
+                for (NodeEntry __e = __block.___head; __e != null; __e = __e.___next)
                 {
-                    __blockNodes.mark(__e.node);
-                    if (__e.node instanceof GuardNode)
+                    __blockNodes.mark(__e.___node);
+                    if (__e.___node instanceof GuardNode)
                     {
-                        GuardNode __guard = (GuardNode) __e.node;
+                        GuardNode __guard = (GuardNode) __e.___node;
                         GuardPriority __priority = __guard.computePriority();
                         if (__lowestPriority != null)
                         {
@@ -1234,11 +1232,11 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        /**
-         * Processes the inputs of given block. Pushes unprocessed inputs onto the stack. Returns
-         * null if there were still unprocessed inputs, otherwise returns the earliest block given
-         * node can be scheduled in.
-         */
+        ///
+        // Processes the inputs of given block. Pushes unprocessed inputs onto the stack. Returns
+        // null if there were still unprocessed inputs, otherwise returns the earliest block given
+        // node can be scheduled in.
+        ///
         private static MicroBlock processInputs(NodeMap<MicroBlock> __nodeToBlock, NodeStack __stack, MicroBlock __startBlock, Node __current)
         {
             if (__current.getNodeClass().isLeafNode())
@@ -1270,15 +1268,15 @@ public final class SchedulePhase extends Phase
 
         public ControlFlowGraph getCFG()
         {
-            return cfg;
+            return this.___cfg;
         }
 
-        /**
-         * Gets the nodes in a given block.
-         */
+        ///
+        // Gets the nodes in a given block.
+        ///
         public List<Node> nodesFor(Block __block)
         {
-            return blockToNodesMap.get(__block);
+            return this.___blockToNodesMap.get(__block);
         }
     }
 }

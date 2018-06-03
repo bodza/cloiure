@@ -23,14 +23,14 @@ public final class AMD64AddressValue extends CompositeValue
 {
     @Component({OperandFlag.REG, OperandFlag.ILLEGAL})
     // @field
-    protected AllocatableValue base;
+    protected AllocatableValue ___base;
     @Component({OperandFlag.REG, OperandFlag.ILLEGAL})
     // @field
-    protected AllocatableValue index;
+    protected AllocatableValue ___index;
     // @field
-    protected final Scale scale;
+    protected final Scale ___scale;
     // @field
-    protected final int displacement;
+    protected final int ___displacement;
 
     // @def
     private static final EnumSet<OperandFlag> flags = EnumSet.of(OperandFlag.REG, OperandFlag.ILLEGAL);
@@ -45,30 +45,30 @@ public final class AMD64AddressValue extends CompositeValue
     public AMD64AddressValue(ValueKind<?> __kind, AllocatableValue __base, AllocatableValue __index, Scale __scale, int __displacement)
     {
         super(__kind);
-        this.base = __base;
-        this.index = __index;
-        this.scale = __scale;
-        this.displacement = __displacement;
+        this.___base = __base;
+        this.___index = __index;
+        this.___scale = __scale;
+        this.___displacement = __displacement;
     }
 
     public AllocatableValue getBase()
     {
-        return base;
+        return this.___base;
     }
 
     public AllocatableValue getIndex()
     {
-        return index;
+        return this.___index;
     }
 
     @Override
     public CompositeValue forEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueProcedure __proc)
     {
-        AllocatableValue __newBase = (AllocatableValue) __proc.doValue(__inst, base, __mode, flags);
-        AllocatableValue __newIndex = (AllocatableValue) __proc.doValue(__inst, index, __mode, flags);
-        if (!base.identityEquals(__newBase) || !index.identityEquals(__newIndex))
+        AllocatableValue __newBase = (AllocatableValue) __proc.doValue(__inst, this.___base, __mode, flags);
+        AllocatableValue __newIndex = (AllocatableValue) __proc.doValue(__inst, this.___index, __mode, flags);
+        if (!this.___base.identityEquals(__newBase) || !this.___index.identityEquals(__newIndex))
         {
-            return new AMD64AddressValue(getValueKind(), __newBase, __newIndex, scale, displacement);
+            return new AMD64AddressValue(getValueKind(), __newBase, __newIndex, this.___scale, this.___displacement);
         }
         return this;
     }
@@ -76,13 +76,13 @@ public final class AMD64AddressValue extends CompositeValue
     @Override
     protected void visitEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueConsumer __proc)
     {
-        __proc.visitValue(__inst, base, __mode, flags);
-        __proc.visitValue(__inst, index, __mode, flags);
+        __proc.visitValue(__inst, this.___base, __mode, flags);
+        __proc.visitValue(__inst, this.___index, __mode, flags);
     }
 
     public AMD64AddressValue withKind(ValueKind<?> __newKind)
     {
-        return new AMD64AddressValue(__newKind, base, index, scale, displacement);
+        return new AMD64AddressValue(__newKind, this.___base, this.___index, this.___scale, this.___displacement);
     }
 
     private static Register toRegister(AllocatableValue __value)
@@ -100,12 +100,12 @@ public final class AMD64AddressValue extends CompositeValue
 
     public AMD64Address toAddress()
     {
-        return new AMD64Address(toRegister(base), toRegister(index), scale, displacement);
+        return new AMD64Address(toRegister(this.___base), toRegister(this.___index), this.___scale, this.___displacement);
     }
 
     public boolean isValidImplicitNullCheckFor(Value __value, int __implicitNullCheckLimit)
     {
-        return __value.equals(base) && index.equals(Value.ILLEGAL) && displacement >= 0 && displacement < __implicitNullCheckLimit;
+        return __value.equals(this.___base) && this.___index.equals(Value.ILLEGAL) && this.___displacement >= 0 && this.___displacement < __implicitNullCheckLimit;
     }
 
     @Override
@@ -114,7 +114,7 @@ public final class AMD64AddressValue extends CompositeValue
         if (__obj instanceof AMD64AddressValue)
         {
             AMD64AddressValue __addr = (AMD64AddressValue) __obj;
-            return getValueKind().equals(__addr.getValueKind()) && displacement == __addr.displacement && base.equals(__addr.base) && scale == __addr.scale && index.equals(__addr.index);
+            return getValueKind().equals(__addr.getValueKind()) && this.___displacement == __addr.___displacement && this.___base.equals(__addr.___base) && this.___scale == __addr.___scale && this.___index.equals(__addr.___index);
         }
         return false;
     }
@@ -122,6 +122,6 @@ public final class AMD64AddressValue extends CompositeValue
     @Override
     public int hashCode()
     {
-        return base.hashCode() ^ index.hashCode() ^ (displacement << 4) ^ (scale.value << 8) ^ getValueKind().hashCode();
+        return this.___base.hashCode() ^ this.___index.hashCode() ^ (this.___displacement << 4) ^ (this.___scale.___value << 8) ^ getValueKind().hashCode();
     }
 }

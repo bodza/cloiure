@@ -13,9 +13,9 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualInstanceNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
-/**
- * The {@code StoreFieldNode} represents a write to a static or instance field.
- */
+///
+// The {@code StoreFieldNode} represents a write to a static or instance field.
+///
 // @class StoreFieldNode
 public final class StoreFieldNode extends AccessFieldNode implements StateSplit, Virtualizable
 {
@@ -24,22 +24,22 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
 
     @Input
     // @field
-    ValueNode value;
+    ValueNode ___value;
     @OptionalInput(InputType.State)
     // @field
-    FrameState stateAfter;
+    FrameState ___stateAfter;
 
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
     @Override
@@ -50,22 +50,22 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
 
     public ValueNode value()
     {
-        return value;
+        return this.___value;
     }
 
     // @cons
     public StoreFieldNode(ValueNode __object, ResolvedJavaField __field, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid(), __object, __field);
-        this.value = __value;
+        this.___value = __value;
     }
 
     // @cons
     public StoreFieldNode(ValueNode __object, ResolvedJavaField __field, ValueNode __value, FrameState __stateAfter)
     {
         super(TYPE, StampFactory.forVoid(), __object, __field);
-        this.value = __value;
-        this.stateAfter = __stateAfter;
+        this.___value = __value;
+        this.___stateAfter = __stateAfter;
     }
 
     @Override
@@ -86,6 +86,6 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
 
     public FrameState getState()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 }

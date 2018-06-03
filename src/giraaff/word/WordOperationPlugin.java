@@ -54,27 +54,27 @@ import giraaff.util.GraalError;
 import giraaff.word.Word.Opcode;
 import giraaff.word.Word.Operation;
 
-/**
- * A plugin for calls to {@linkplain Operation word operations}, as well as all other nodes that
- * need special handling for {@link Word} types.
- */
+///
+// A plugin for calls to {@linkplain Operation word operations}, as well as all other nodes that
+// need special handling for {@link Word} types.
+///
 // @class WordOperationPlugin
 public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvokePlugin
 {
     // @field
-    protected final WordTypes wordTypes;
+    protected final WordTypes ___wordTypes;
     // @field
-    protected final JavaKind wordKind;
+    protected final JavaKind ___wordKind;
     // @field
-    protected final SnippetReflectionProvider snippetReflection;
+    protected final SnippetReflectionProvider ___snippetReflection;
 
     // @cons
     public WordOperationPlugin(SnippetReflectionProvider __snippetReflection, WordTypes __wordTypes)
     {
         super();
-        this.snippetReflection = __snippetReflection;
-        this.wordTypes = __wordTypes;
-        this.wordKind = __wordTypes.getWordKind();
+        this.___snippetReflection = __snippetReflection;
+        this.___wordTypes = __wordTypes;
+        this.___wordKind = __wordTypes.getWordKind();
     }
 
     @Override
@@ -83,21 +83,21 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         return true;
     }
 
-    /**
-     * Processes a call to a method if it is annotated as a word operation by adding nodes to the
-     * graph being built that implement the denoted operation.
-     *
-     * @return {@code true} iff {@code method} is annotated with {@link Operation} (and was thus
-     *         processed by this method)
-     */
+    ///
+    // Processes a call to a method if it is annotated as a word operation by adding nodes to the
+    // graph being built that implement the denoted operation.
+    //
+    // @return {@code true} iff {@code method} is annotated with {@link Operation} (and was thus
+    //         processed by this method)
+    ///
     @Override
     public boolean handleInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        if (!wordTypes.isWordOperation(__method))
+        if (!this.___wordTypes.isWordOperation(__method))
         {
             return false;
         }
-        processWordOperation(__b, __args, wordTypes.getWordOperation(__method, __b.getMethod().getDeclaringClass()));
+        processWordOperation(__b, __args, this.___wordTypes.getWordOperation(__method, __b.getMethod().getDeclaringClass()));
         return true;
     }
 
@@ -108,11 +108,11 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         if (__declaredType instanceof ResolvedJavaType)
         {
             ResolvedJavaType __resolved = (ResolvedJavaType) __declaredType;
-            if (wordTypes.isWord(__resolved))
+            if (this.___wordTypes.isWord(__resolved))
             {
-                __wordStamp = wordTypes.getWordStamp(__resolved);
+                __wordStamp = this.___wordTypes.getWordStamp(__resolved);
             }
-            else if (__resolved.isArray() && wordTypes.isWord(__resolved.getElementalType()))
+            else if (__resolved.isArray() && this.___wordTypes.isWord(__resolved.getElementalType()))
             {
                 TypeReference __trusted = TypeReference.createTrustedWithoutAssumptions(__resolved);
                 __wordStamp = StampFactory.object(__trusted, __nonNull);
@@ -131,9 +131,9 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     @Override
     public void notifyNotInlined(GraphBuilderContext __b, ResolvedJavaMethod __method, Invoke __invoke)
     {
-        if (wordTypes.isWord(__invoke.asNode()))
+        if (this.___wordTypes.isWord(__invoke.asNode()))
         {
-            __invoke.asNode().setStamp(wordTypes.getWordStamp(StampTool.typeOrNull(__invoke.asNode())));
+            __invoke.asNode().setStamp(this.___wordTypes.getWordStamp(StampTool.typeOrNull(__invoke.asNode())));
         }
     }
 
@@ -160,11 +160,9 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     public boolean handleLoadIndexed(GraphBuilderContext __b, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
         ResolvedJavaType __arrayType = StampTool.typeOrNull(__array);
-        /*
-         * There are cases where the array does not have a known type yet, i.e., the type is null.
-         * In that case we assume it is not a word type.
-         */
-        if (__arrayType != null && wordTypes.isWord(__arrayType.getComponentType()))
+        // There are cases where the array does not have a known type yet, i.e., the type is null.
+        // In that case we assume it is not a word type.
+        if (__arrayType != null && this.___wordTypes.isWord(__arrayType.getComponentType()))
         {
             __b.addPush(__elementKind, createLoadIndexedNode(__array, __index));
             return true;
@@ -174,7 +172,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
     protected LoadIndexedNode createLoadIndexedNode(ValueNode __array, ValueNode __index)
     {
-        return new LoadIndexedNode(null, __array, __index, wordKind);
+        return new LoadIndexedNode(null, __array, __index, this.___wordKind);
     }
 
     @Override
@@ -182,8 +180,8 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     {
         if (__field.getJavaKind() == JavaKind.Object)
         {
-            boolean __isWordField = wordTypes.isWord(__field.getType());
-            boolean __isWordValue = __value.getStackKind() == wordKind;
+            boolean __isWordField = this.___wordTypes.isWord(__field.getType());
+            boolean __isWordValue = __value.getStackKind() == this.___wordKind;
 
             if (__isWordField && !__isWordValue)
             {
@@ -209,16 +207,16 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     public boolean handleStoreIndexed(GraphBuilderContext __b, ValueNode __array, ValueNode __index, JavaKind __elementKind, ValueNode __value)
     {
         ResolvedJavaType __arrayType = StampTool.typeOrNull(__array);
-        if (__arrayType != null && wordTypes.isWord(__arrayType.getComponentType()))
+        if (__arrayType != null && this.___wordTypes.isWord(__arrayType.getComponentType()))
         {
-            if (__value.getStackKind() != wordKind)
+            if (__value.getStackKind() != this.___wordKind)
             {
                 throw __b.bailout("cannot store a non-word value into a word array: " + __arrayType.toJavaName(true));
             }
             __b.add(createStoreIndexedNode(__array, __index, __value));
             return true;
         }
-        if (__elementKind == JavaKind.Object && __value.getStackKind() == wordKind)
+        if (__elementKind == JavaKind.Object && __value.getStackKind() == this.___wordKind)
         {
             throw __b.bailout("cannot store a word value into a non-word array: " + __arrayType.toJavaName(true));
         }
@@ -227,13 +225,13 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
     protected StoreIndexedNode createStoreIndexedNode(ValueNode __array, ValueNode __index, ValueNode __value)
     {
-        return new StoreIndexedNode(__array, __index, wordKind, __value);
+        return new StoreIndexedNode(__array, __index, this.___wordKind, __value);
     }
 
     @Override
     public boolean handleCheckCast(GraphBuilderContext __b, ValueNode __object, ResolvedJavaType __type, JavaTypeProfile __profile)
     {
-        if (!wordTypes.isWord(__type))
+        if (!this.___wordTypes.isWord(__type))
         {
             if (__object.getStackKind() != JavaKind.Object)
             {
@@ -242,7 +240,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             return false;
         }
 
-        if (__object.getStackKind() != wordKind)
+        if (__object.getStackKind() != this.___wordKind)
         {
             throw __b.bailout("cannot cast a non-word value to a word type: " + __type.toJavaName(true));
         }
@@ -253,7 +251,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     @Override
     public boolean handleInstanceOf(GraphBuilderContext __b, ValueNode __object, ResolvedJavaType __type, JavaTypeProfile __profile)
     {
-        if (wordTypes.isWord(__type))
+        if (this.___wordTypes.isWord(__type))
         {
             throw __b.bailout("cannot use instanceof for word a type: " + __type.toJavaName(true));
         }
@@ -273,16 +271,22 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             switch (__factoryOperation.opcode())
             {
                 case ZERO:
-                    __b.addPush(__returnKind, ConstantNode.forIntegerKind(wordKind, 0L));
+                {
+                    __b.addPush(__returnKind, ConstantNode.forIntegerKind(this.___wordKind, 0L));
                     return;
+                }
 
                 case FROM_UNSIGNED:
+                {
                     __b.push(__returnKind, fromUnsigned(__b, __args[0]));
                     return;
+                }
 
                 case FROM_SIGNED:
+                {
                     __b.push(__returnKind, fromSigned(__b, __args[0]));
                     return;
+                }
             }
         }
 
@@ -303,26 +307,34 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             }
 
             case COMPARISON:
+            {
                 __b.push(__returnKind, comparisonOp(__b, __operation.condition(), __args[0], fromSigned(__b, __args[1])));
                 break;
+            }
 
             case IS_NULL:
-                __b.push(__returnKind, comparisonOp(__b, Condition.EQ, __args[0], ConstantNode.forIntegerKind(wordKind, 0L)));
+            {
+                __b.push(__returnKind, comparisonOp(__b, Condition.EQ, __args[0], ConstantNode.forIntegerKind(this.___wordKind, 0L)));
                 break;
+            }
 
             case IS_NON_NULL:
-                __b.push(__returnKind, comparisonOp(__b, Condition.NE, __args[0], ConstantNode.forIntegerKind(wordKind, 0L)));
+            {
+                __b.push(__returnKind, comparisonOp(__b, Condition.NE, __args[0], ConstantNode.forIntegerKind(this.___wordKind, 0L)));
                 break;
+            }
 
             case NOT:
-                __b.addPush(__returnKind, new XorNode(__args[0], __b.add(ConstantNode.forIntegerKind(wordKind, -1))));
+            {
+                __b.addPush(__returnKind, new XorNode(__args[0], __b.add(ConstantNode.forIntegerKind(this.___wordKind, -1))));
                 break;
+            }
 
             case READ_POINTER:
             case READ_OBJECT:
             case READ_BARRIERED:
             {
-                JavaKind __readKind = wordTypes.asKind(__wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass()));
+                JavaKind __readKind = this.___wordTypes.asKind(__wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass()));
                 AddressNode __address = makeAddress(__b, __args[0], __args[1]);
                 LocationIdentity __location;
                 if (__args.length == 2)
@@ -331,16 +343,16 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
                 }
                 else
                 {
-                    __location = snippetReflection.asObject(LocationIdentity.class, __args[2].asJavaConstant());
+                    __location = this.___snippetReflection.asObject(LocationIdentity.class, __args[2].asJavaConstant());
                 }
                 __b.push(__returnKind, readOp(__b, __readKind, __address, __location, __operation.opcode()));
                 break;
             }
             case READ_HEAP:
             {
-                JavaKind __readKind = wordTypes.asKind(__wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass()));
+                JavaKind __readKind = this.___wordTypes.asKind(__wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass()));
                 AddressNode __address = makeAddress(__b, __args[0], __args[1]);
-                BarrierType __barrierType = snippetReflection.asObject(BarrierType.class, __args[2].asJavaConstant());
+                BarrierType __barrierType = this.___snippetReflection.asObject(BarrierType.class, __args[2].asJavaConstant());
                 __b.push(__returnKind, readOp(__b, __readKind, __address, LocationIdentity.any(), __barrierType, true));
                 break;
             }
@@ -349,7 +361,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             case WRITE_BARRIERED:
             case INITIALIZE:
             {
-                JavaKind __writeKind = wordTypes.asKind(__wordMethod.getSignature().getParameterType(__wordMethod.isStatic() ? 2 : 1, __wordMethod.getDeclaringClass()));
+                JavaKind __writeKind = this.___wordTypes.asKind(__wordMethod.getSignature().getParameterType(__wordMethod.isStatic() ? 2 : 1, __wordMethod.getDeclaringClass()));
                 AddressNode __address = makeAddress(__b, __args[0], __args[1]);
                 LocationIdentity __location;
                 if (__args.length == 3)
@@ -358,47 +370,49 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
                 }
                 else
                 {
-                    __location = snippetReflection.asObject(LocationIdentity.class, __args[3].asJavaConstant());
+                    __location = this.___snippetReflection.asObject(LocationIdentity.class, __args[3].asJavaConstant());
                 }
                 writeOp(__b, __writeKind, __address, __location, __args[2], __operation.opcode());
                 break;
             }
 
             case TO_RAW_VALUE:
+            {
                 __b.push(__returnKind, toUnsigned(__b, __args[0], JavaKind.Long));
                 break;
+            }
 
             case OBJECT_TO_TRACKED:
             {
-                WordCastNode __objectToTracked = __b.add(WordCastNode.objectToTrackedPointer(__args[0], wordKind));
+                WordCastNode __objectToTracked = __b.add(WordCastNode.objectToTrackedPointer(__args[0], this.___wordKind));
                 __b.push(__returnKind, __objectToTracked);
                 break;
             }
 
             case OBJECT_TO_UNTRACKED:
             {
-                WordCastNode __objectToUntracked = __b.add(WordCastNode.objectToUntrackedPointer(__args[0], wordKind));
+                WordCastNode __objectToUntracked = __b.add(WordCastNode.objectToUntrackedPointer(__args[0], this.___wordKind));
                 __b.push(__returnKind, __objectToUntracked);
                 break;
             }
 
             case FROM_ADDRESS:
             {
-                WordCastNode __addressToWord = __b.add(WordCastNode.addressToWord(__args[0], wordKind));
+                WordCastNode __addressToWord = __b.add(WordCastNode.addressToWord(__args[0], this.___wordKind));
                 __b.push(__returnKind, __addressToWord);
                 break;
             }
 
             case TO_OBJECT:
             {
-                WordCastNode __wordToObject = __b.add(WordCastNode.wordToObject(__args[0], wordKind));
+                WordCastNode __wordToObject = __b.add(WordCastNode.wordToObject(__args[0], this.___wordKind));
                 __b.push(__returnKind, __wordToObject);
                 break;
             }
 
             case TO_OBJECT_NON_NULL:
             {
-                WordCastNode __wordToObjectNonNull = __b.add(WordCastNode.wordToObjectNonNull(__args[0], wordKind));
+                WordCastNode __wordToObjectNonNull = __b.add(WordCastNode.wordToObjectNonNull(__args[0], this.___wordKind));
                 __b.push(__returnKind, __wordToObjectNonNull);
                 break;
             }
@@ -406,23 +420,23 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             case CAS_POINTER:
             {
                 AddressNode __address = makeAddress(__b, __args[0], __args[1]);
-                JavaKind __valueKind = wordTypes.asKind(__wordMethod.getSignature().getParameterType(1, __wordMethod.getDeclaringClass()));
-                LocationIdentity __location = snippetReflection.asObject(LocationIdentity.class, __args[4].asJavaConstant());
+                JavaKind __valueKind = this.___wordTypes.asKind(__wordMethod.getSignature().getParameterType(1, __wordMethod.getDeclaringClass()));
+                LocationIdentity __location = this.___snippetReflection.asObject(LocationIdentity.class, __args[4].asJavaConstant());
                 JavaType __returnType = __wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass());
-                __b.addPush(__returnKind, casOp(__valueKind, wordTypes.asKind(__returnType), __address, __location, __args[2], __args[3]));
+                __b.addPush(__returnKind, casOp(__valueKind, this.___wordTypes.asKind(__returnType), __address, __location, __args[2], __args[3]));
                 break;
             }
 
             default:
-                throw new GraalError("Unknown opcode: %s", __operation.opcode());
+                throw new GraalError("unknown opcode: %s", __operation.opcode());
         }
     }
 
-    /**
-     * Create an instance of a binary node which is used to lower {@link Word} operations. This
-     * method is called for all {@link Word} operations which are annotated with @Operation(node =
-     * ...) and encapsulates the reflective allocation of the node.
-     */
+    ///
+    // Create an instance of a binary node which is used to lower {@link Word} operations. This
+    // method is called for all {@link Word} operations which are annotated with @Operation(node =
+    // ...) and encapsulates the reflective allocation of the node.
+    ///
     private static ValueNode createBinaryNodeInstance(Class<? extends ValueNode> __nodeClass, ValueNode __left, ValueNode __right)
     {
         try
@@ -479,10 +493,8 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
     public static ValueNode readOp(GraphBuilderContext __b, JavaKind __readKind, AddressNode __address, LocationIdentity __location, BarrierType __barrierType, boolean __compressible)
     {
-        /*
-         * A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float above
-         * an explicit zero check on its base address or any other test that ensures the read is safe.
-         */
+        // A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float above
+        // an explicit zero check on its base address or any other test that ensures the read is safe.
         return __b.add(new JavaReadNode(__readKind, __address, __location, __barrierType, __compressible));
     }
 
@@ -512,12 +524,12 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
     public ValueNode fromUnsigned(GraphBuilderContext __b, ValueNode __value)
     {
-        return convert(__b, __value, wordKind, true);
+        return convert(__b, __value, this.___wordKind, true);
     }
 
     public ValueNode fromSigned(GraphBuilderContext __b, ValueNode __value)
     {
-        return convert(__b, __value, wordKind, false);
+        return convert(__b, __value, this.___wordKind, false);
     }
 
     public ValueNode toUnsigned(GraphBuilderContext __b, ValueNode __value, JavaKind __toKind)

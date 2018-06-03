@@ -10,9 +10,9 @@ import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.PiNode;
 import giraaff.nodes.SnippetAnchorNode;
 
-/**
- * Substitutions for {@link java.lang.Class} methods.
- */
+///
+// Substitutions for {@link java.lang.Class} methods.
+///
 @ClassSubstitution(Class.class)
 // @class HotSpotClassSubstitutions
 public final class HotSpotClassSubstitutions

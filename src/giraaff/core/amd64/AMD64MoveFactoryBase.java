@@ -23,22 +23,22 @@ import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 public abstract class AMD64MoveFactoryBase implements MoveFactory
 {
     // @field
-    private final BackupSlotProvider backupSlotProvider;
+    private final BackupSlotProvider ___backupSlotProvider;
 
     // @class AMD64MoveFactoryBase.RegisterBackupPair
     private static final class RegisterBackupPair
     {
         // @field
-        public final Register register;
+        public final Register ___register;
         // @field
-        public final VirtualStackSlot backupSlot;
+        public final VirtualStackSlot ___backupSlot;
 
         // @cons
         RegisterBackupPair(Register __register, VirtualStackSlot __backupSlot)
         {
             super();
-            this.register = __register;
-            this.backupSlot = __backupSlot;
+            this.___register = __register;
+            this.___backupSlot = __backupSlot;
         }
     }
 
@@ -46,40 +46,40 @@ public abstract class AMD64MoveFactoryBase implements MoveFactory
     public static final class BackupSlotProvider
     {
         // @field
-        private final FrameMapBuilder frameMapBuilder;
+        private final FrameMapBuilder ___frameMapBuilder;
         // @field
-        private EconomicMap<PlatformKind.Key, RegisterBackupPair> categorized;
+        private EconomicMap<PlatformKind.Key, RegisterBackupPair> ___categorized;
 
         // @cons
         public BackupSlotProvider(FrameMapBuilder __frameMapBuilder)
         {
             super();
-            this.frameMapBuilder = __frameMapBuilder;
+            this.___frameMapBuilder = __frameMapBuilder;
         }
 
         protected RegisterBackupPair getScratchRegister(PlatformKind __kind)
         {
             PlatformKind.Key __key = __kind.getKey();
-            if (categorized == null)
+            if (this.___categorized == null)
             {
-                categorized = EconomicMap.create(Equivalence.DEFAULT);
+                this.___categorized = EconomicMap.create(Equivalence.DEFAULT);
             }
-            else if (categorized.containsKey(__key))
+            else if (this.___categorized.containsKey(__key))
             {
-                return categorized.get(__key);
+                return this.___categorized.get(__key);
             }
 
-            RegisterConfig __registerConfig = frameMapBuilder.getRegisterConfig();
+            RegisterConfig __registerConfig = this.___frameMapBuilder.getRegisterConfig();
 
             RegisterArray __availableRegister = __registerConfig.filterAllocatableRegisters(__kind, __registerConfig.getAllocatableRegisters());
             Register __scratchRegister = __availableRegister.get(0);
 
-            Architecture __arch = frameMapBuilder.getCodeCache().getTarget().arch;
+            Architecture __arch = this.___frameMapBuilder.getCodeCache().getTarget().arch;
             LIRKind __largestKind = LIRKind.value(__arch.getLargestStorableKind(__scratchRegister.getRegisterCategory()));
-            VirtualStackSlot __backupSlot = frameMapBuilder.allocateSpillSlot(__largestKind);
+            VirtualStackSlot __backupSlot = this.___frameMapBuilder.allocateSpillSlot(__largestKind);
 
             RegisterBackupPair __value = new RegisterBackupPair(__scratchRegister, __backupSlot);
-            categorized.put(__key, __value);
+            this.___categorized.put(__key, __value);
 
             return __value;
         }
@@ -89,7 +89,7 @@ public abstract class AMD64MoveFactoryBase implements MoveFactory
     public AMD64MoveFactoryBase(BackupSlotProvider __backupSlotProvider)
     {
         super();
-        this.backupSlotProvider = __backupSlotProvider;
+        this.___backupSlotProvider = __backupSlotProvider;
     }
 
     @Override
@@ -104,13 +104,13 @@ public abstract class AMD64MoveFactoryBase implements MoveFactory
                 return new AMD64PushPopStackMove(OperandSize.QWORD, __result, __input);
             default:
             {
-                RegisterBackupPair __backup = backupSlotProvider.getScratchRegister(__input.getPlatformKind());
-                Register __scratchRegister = __backup.register;
-                VirtualStackSlot __backupSlot = __backup.backupSlot;
+                RegisterBackupPair __backup = this.___backupSlotProvider.getScratchRegister(__input.getPlatformKind());
+                Register __scratchRegister = __backup.___register;
+                VirtualStackSlot __backupSlot = __backup.___backupSlot;
                 return createStackMove(__result, __input, __scratchRegister, __backupSlot);
             }
         }
     }
 
-    public abstract AMD64LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input, Register scratchRegister, AllocatableValue backupSlot);
+    public abstract AMD64LIRInstruction createStackMove(AllocatableValue __result, AllocatableValue __input, Register __scratchRegister, AllocatableValue __backupSlot);
 }

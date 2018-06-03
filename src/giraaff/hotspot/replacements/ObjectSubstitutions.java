@@ -8,9 +8,9 @@ import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.nodes.extended.ForeignCallNode;
 
-/**
- * Substitutions for {@link java.lang.Object} methods.
- */
+///
+// Substitutions for {@link java.lang.Object} methods.
+///
 @ClassSubstitution(Object.class)
 // @class ObjectSubstitutions
 public final class ObjectSubstitutions

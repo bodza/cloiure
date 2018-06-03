@@ -9,55 +9,55 @@ public final class JsrScope
     public static final JsrScope EMPTY_SCOPE = new JsrScope();
 
     // @field
-    private final long scope;
+    private final long ___scope;
 
     // @cons
     private JsrScope(long __scope)
     {
         super();
-        this.scope = __scope;
+        this.___scope = __scope;
     }
 
     // @cons
     public JsrScope()
     {
         super();
-        this.scope = 0;
+        this.___scope = 0;
     }
 
     public int nextReturnAddress()
     {
-        return (int) (scope & 0xffff);
+        return (int) (this.___scope & 0xffff);
     }
 
     public JsrScope push(int __jsrReturnBci)
     {
-        if ((scope & 0xffff000000000000L) != 0)
+        if ((this.___scope & 0xffff000000000000L) != 0)
         {
             throw new BailoutException("only 4 jsr nesting levels are supported");
         }
-        return new JsrScope((scope << 16) | __jsrReturnBci);
+        return new JsrScope((this.___scope << 16) | __jsrReturnBci);
     }
 
     public boolean isEmpty()
     {
-        return scope == 0;
+        return this.___scope == 0;
     }
 
     public boolean isPrefixOf(JsrScope __other)
     {
-        return (scope & __other.scope) == scope;
+        return (this.___scope & __other.___scope) == this.___scope;
     }
 
     public JsrScope pop()
     {
-        return new JsrScope(scope >>> 16);
+        return new JsrScope(this.___scope >>> 16);
     }
 
     @Override
     public int hashCode()
     {
-        return (int) (scope ^ (scope >>> 32));
+        return (int) (this.___scope ^ (this.___scope >>> 32));
     }
 
     @Override
@@ -67,6 +67,6 @@ public final class JsrScope
         {
             return true;
         }
-        return __obj != null && getClass() == __obj.getClass() && scope == ((JsrScope) __obj).scope;
+        return __obj != null && getClass() == __obj.getClass() && this.___scope == ((JsrScope) __obj).___scope;
     }
 }

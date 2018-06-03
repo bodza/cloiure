@@ -21,15 +21,15 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
 
     @Input
     // @field
-    ValueNode clazz;
+    ValueNode ___clazz;
 
-    /**
-     * Class pointer to class.class needs to be exposed earlier than this node is lowered so that it
-     * can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
-     */
+    ///
+    // Class pointer to class.class needs to be exposed earlier than this node is lowered so that it
+    // can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
+    ///
     @OptionalInput
     // @field
-    ValueNode classClass;
+    ValueNode ___classClass;
 
     // @cons
     public DynamicNewInstanceNode(ValueNode __clazz, boolean __fillContents)
@@ -41,20 +41,20 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
     protected DynamicNewInstanceNode(NodeClass<? extends DynamicNewInstanceNode> __c, ValueNode __clazz, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, StampFactory.objectNonNull(), __fillContents, __stateBefore);
-        this.clazz = __clazz;
+        this.___clazz = __clazz;
     }
 
     public ValueNode getInstanceType()
     {
-        return clazz;
+        return this.___clazz;
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (clazz.isConstant())
+        if (this.___clazz.isConstant())
         {
-            ResolvedJavaType __type = __tool.getConstantReflection().asJavaType(clazz.asConstant());
+            ResolvedJavaType __type = __tool.getConstantReflection().asJavaType(this.___clazz.asConstant());
             if (__type != null && __type.isInitialized() && !throwsInstantiationException(__type, __tool.getMetaAccess()))
             {
                 return createNewInstanceNode(__type);
@@ -63,9 +63,9 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
         return this;
     }
 
-    /**
-     * Hook for subclasses to instantiate a subclass of {@link NewInstanceNode}.
-     */
+    ///
+    // Hook for subclasses to instantiate a subclass of {@link NewInstanceNode}.
+    ///
     protected NewInstanceNode createNewInstanceNode(ResolvedJavaType __type)
     {
         return new NewInstanceNode(__type, fillContents(), stateBefore());
@@ -83,12 +83,12 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
 
     public ValueNode getClassClass()
     {
-        return classClass;
+        return this.___classClass;
     }
 
     public void setClassClass(ValueNode __newClassClass)
     {
-        updateUsages(classClass, __newClassClass);
-        classClass = __newClassClass;
+        updateUsages(this.___classClass, __newClassClass);
+        this.___classClass = __newClassClass;
     }
 }

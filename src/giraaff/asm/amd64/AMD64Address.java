@@ -4,76 +4,76 @@ import jdk.vm.ci.code.Register;
 
 import giraaff.asm.AbstractAddress;
 
-/**
- * Represents an address in target machine memory, specified via some combination of a base
- * register, an index register, a displacement and a scale. Note that the base and index registers
- * may be a variable that will get a register assigned later by the register allocator.
- */
+///
+// Represents an address in target machine memory, specified via some combination of a base
+// register, an index register, a displacement and a scale. Note that the base and index registers
+// may be a variable that will get a register assigned later by the register allocator.
+///
 // @class AMD64Address
 public final class AMD64Address extends AbstractAddress
 {
     // @field
-    private final Register base;
+    private final Register ___base;
     // @field
-    private final Register index;
+    private final Register ___index;
     // @field
-    private final Scale scale;
+    private final Scale ___scale;
     // @field
-    private final int displacement;
+    private final int ___displacement;
 
-    /**
-     * The start of the instruction, i.e., the value that is used as the key for looking up
-     * placeholder patching information. Only used for {@link AMD64Assembler#getPlaceholder
-     * placeholder addresses}.
-     */
+    ///
+    // The start of the instruction, i.e., the value that is used as the key for looking up
+    // placeholder patching information. Only used for {@link AMD64Assembler#getPlaceholder
+    // placeholder addresses}.
+    ///
     // @field
-    final int instructionStartPosition;
+    final int ___instructionStartPosition;
 
-    /**
-     * Creates an {@link AMD64Address} with given base register, no scaling and no displacement.
-     *
-     * @param base the base register
-     */
+    ///
+    // Creates an {@link AMD64Address} with given base register, no scaling and no displacement.
+    //
+    // @param base the base register
+    ///
     // @cons
     public AMD64Address(Register __base)
     {
         this(__base, Register.None, Scale.Times1, 0);
     }
 
-    /**
-     * Creates an {@link AMD64Address} with given base register, no scaling and a given displacement.
-     *
-     * @param base the base register
-     * @param displacement the displacement
-     */
+    ///
+    // Creates an {@link AMD64Address} with given base register, no scaling and a given displacement.
+    //
+    // @param base the base register
+    // @param displacement the displacement
+    ///
     // @cons
     public AMD64Address(Register __base, int __displacement)
     {
         this(__base, Register.None, Scale.Times1, __displacement);
     }
 
-    /**
-     * Creates an {@link AMD64Address} with given base and index registers, scaling and 0 displacement.
-     *
-     * @param base the base register
-     * @param index the index register
-     * @param scale the scaling factor
-     */
+    ///
+    // Creates an {@link AMD64Address} with given base and index registers, scaling and 0 displacement.
+    //
+    // @param base the base register
+    // @param index the index register
+    // @param scale the scaling factor
+    ///
     // @cons
     public AMD64Address(Register __base, Register __index, Scale __scale)
     {
         this(__base, __index, __scale, 0, -1);
     }
 
-    /**
-     * Creates an {@link AMD64Address} with given base and index registers, scaling and
-     * displacement. This is the most general constructor.
-     *
-     * @param base the base register
-     * @param index the index register
-     * @param scale the scaling factor
-     * @param displacement the displacement
-     */
+    ///
+    // Creates an {@link AMD64Address} with given base and index registers, scaling and
+    // displacement. This is the most general constructor.
+    //
+    // @param base the base register
+    // @param index the index register
+    // @param scale the scaling factor
+    // @param displacement the displacement
+    ///
     // @cons
     public AMD64Address(Register __base, Register __index, Scale __scale, int __displacement)
     {
@@ -84,16 +84,16 @@ public final class AMD64Address extends AbstractAddress
     AMD64Address(Register __base, Register __index, Scale __scale, int __displacement, int __instructionStartPosition)
     {
         super();
-        this.base = __base;
-        this.index = __index;
-        this.scale = __scale;
-        this.displacement = __displacement;
-        this.instructionStartPosition = __instructionStartPosition;
+        this.___base = __base;
+        this.___index = __index;
+        this.___scale = __scale;
+        this.___displacement = __displacement;
+        this.___instructionStartPosition = __instructionStartPosition;
     }
 
-    /**
-     * A scaling factor used in the SIB addressing mode.
-     */
+    ///
+    // A scaling factor used in the SIB addressing mode.
+    ///
     // @enum AMD64Address.Scale
     public enum Scale
     {
@@ -104,21 +104,21 @@ public final class AMD64Address extends AbstractAddress
 
         Scale(int __value, int __log2)
         {
-            this.value = __value;
-            this.log2 = __log2;
+            this.___value = __value;
+            this.___log2 = __log2;
         }
 
-        /**
-         * The value (or multiplier) of this scale.
-         */
+        ///
+        // The value (or multiplier) of this scale.
+        ///
         // @field
-        public final int value;
+        public final int ___value;
 
-        /**
-         * The {@linkplain #value value} of this scale log 2.
-         */
+        ///
+        // The {@linkplain #value value} of this scale log 2.
+        ///
         // @field
-        public final int log2;
+        public final int ___log2;
 
         public static Scale fromInt(int __scale)
         {
@@ -155,37 +155,37 @@ public final class AMD64Address extends AbstractAddress
         }
     }
 
-    /**
-     * @return Base register that defines the start of the address computation. If not present, is
-     *         denoted by {@link Register#None}.
-     */
+    ///
+    // @return Base register that defines the start of the address computation. If not present, is
+    //         denoted by {@link Register#None}.
+    ///
     public Register getBase()
     {
-        return base;
+        return this.___base;
     }
 
-    /**
-     * @return Index register, the value of which (possibly scaled by {@link #getScale}) is added to
-     *         {@link #getBase}. If not present, is denoted by {@link Register#None}.
-     */
+    ///
+    // @return Index register, the value of which (possibly scaled by {@link #getScale}) is added to
+    //         {@link #getBase}. If not present, is denoted by {@link Register#None}.
+    ///
     public Register getIndex()
     {
-        return index;
+        return this.___index;
     }
 
-    /**
-     * @return Scaling factor for indexing, dependent on target operand size.
-     */
+    ///
+    // @return Scaling factor for indexing, dependent on target operand size.
+    ///
     public Scale getScale()
     {
-        return scale;
+        return this.___scale;
     }
 
-    /**
-     * @return Optional additive displacement.
-     */
+    ///
+    // @return Optional additive displacement.
+    ///
     public int getDisplacement()
     {
-        return displacement;
+        return this.___displacement;
     }
 }

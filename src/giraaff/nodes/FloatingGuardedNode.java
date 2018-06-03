@@ -15,7 +15,7 @@ public abstract class FloatingGuardedNode extends FloatingNode implements Guarde
 
     @OptionalInput(InputType.Guard)
     // @field
-    protected GuardingNode guard;
+    protected GuardingNode ___guard;
 
     // @cons
     protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> __c, Stamp __stamp)
@@ -27,19 +27,19 @@ public abstract class FloatingGuardedNode extends FloatingNode implements Guarde
     protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> __c, Stamp __stamp, GuardingNode __guard)
     {
         super(__c, __stamp);
-        this.guard = __guard;
+        this.___guard = __guard;
     }
 
     @Override
     public GuardingNode getGuard()
     {
-        return guard;
+        return this.___guard;
     }
 
     @Override
     public void setGuard(GuardingNode __guard)
     {
-        updateUsagesInterface(this.guard, __guard);
-        this.guard = __guard;
+        updateUsagesInterface(this.___guard, __guard);
+        this.___guard = __guard;
     }
 }

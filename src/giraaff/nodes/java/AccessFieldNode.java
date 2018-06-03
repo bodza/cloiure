@@ -9,9 +9,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * The base class of all instructions that access fields.
- */
+///
+// The base class of all instructions that access fields.
+///
 // @class AccessFieldNode
 public abstract class AccessFieldNode extends FixedWithNextNode implements Lowerable
 {
@@ -20,58 +20,58 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
 
     @OptionalInput
     // @field
-    ValueNode object;
+    ValueNode ___object;
 
     // @field
-    protected final ResolvedJavaField field;
+    protected final ResolvedJavaField ___field;
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
-    /**
-     * Constructs a new access field object.
-     *
-     * @param object the instruction producing the receiver object
-     * @param field the compiler interface representation of the field
-     */
+    ///
+    // Constructs a new access field object.
+    //
+    // @param object the instruction producing the receiver object
+    // @param field the compiler interface representation of the field
+    ///
     // @cons
     public AccessFieldNode(NodeClass<? extends AccessFieldNode> __c, Stamp __stamp, ValueNode __object, ResolvedJavaField __field)
     {
         super(__c, __stamp);
-        this.object = __object;
-        this.field = __field;
+        this.___object = __object;
+        this.___field = __field;
     }
 
-    /**
-     * Gets the compiler interface field for this field access.
-     *
-     * @return the compiler interface field for this field access
-     */
+    ///
+    // Gets the compiler interface field for this field access.
+    //
+    // @return the compiler interface field for this field access
+    ///
     public ResolvedJavaField field()
     {
-        return field;
+        return this.___field;
     }
 
-    /**
-     * Checks whether this field access is an access to a static field.
-     *
-     * @return {@code true} if this field access is to a static field
-     */
+    ///
+    // Checks whether this field access is an access to a static field.
+    //
+    // @return {@code true} if this field access is to a static field
+    ///
     public boolean isStatic()
     {
-        return field.isStatic();
+        return this.___field.isStatic();
     }
 
-    /**
-     * Checks whether this field is declared volatile.
-     *
-     * @return {@code true} if the field is resolved and declared volatile
-     */
+    ///
+    // Checks whether this field is declared volatile.
+    //
+    // @return {@code true} if the field is resolved and declared volatile
+    ///
     public boolean isVolatile()
     {
-        return field.isVolatile();
+        return this.___field.isVolatile();
     }
 
     @Override

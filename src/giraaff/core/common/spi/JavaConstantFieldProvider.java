@@ -9,9 +9,9 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 import giraaff.core.common.GraalOptions;
 import giraaff.util.GraalError;
 
-/**
- * Utility for default constant folding semantics for Java fields.
- */
+///
+// Utility for default constant folding semantics for Java fields.
+///
 // @class JavaConstantFieldProvider
 public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
@@ -21,8 +21,8 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
         super();
         try
         {
-            this.stringValueField = __metaAccess.lookupJavaField(String.class.getDeclaredField("value"));
-            this.stringHashField = __metaAccess.lookupJavaField(String.class.getDeclaredField("hash"));
+            this.___stringValueField = __metaAccess.lookupJavaField(String.class.getDeclaredField("value"));
+            this.___stringHashField = __metaAccess.lookupJavaField(String.class.getDeclaredField("hash"));
         }
         catch (NoSuchFieldException | SecurityException __e)
         {
@@ -97,7 +97,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
         {
             return true;
         }
-        if (__field.equals(stringHashField))
+        if (__field.equals(this.___stringHashField))
         {
             return true;
         }
@@ -140,12 +140,12 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
     }
 
     // @field
-    private final ResolvedJavaField stringValueField;
+    private final ResolvedJavaField ___stringValueField;
     // @field
-    private final ResolvedJavaField stringHashField;
+    private final ResolvedJavaField ___stringHashField;
 
     protected boolean isWellKnownImplicitStableField(ResolvedJavaField __field)
     {
-        return __field.equals(stringValueField);
+        return __field.equals(this.___stringValueField);
     }
 }

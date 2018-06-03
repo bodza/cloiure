@@ -15,34 +15,34 @@ import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.LoopEndNode;
 
-/**
- * This iterator implements a reverse post order iteration over the fixed nodes in the graph,
- * starting at the given fixed node.
- *
- * No changes to the fixed nodes are expected during the iteration, they cause undefined behavior.
- */
+///
+// This iterator implements a reverse post order iteration over the fixed nodes in the graph,
+// starting at the given fixed node.
+//
+// No changes to the fixed nodes are expected during the iteration, they cause undefined behavior.
+///
 // @class StatelessPostOrderNodeIterator
 public abstract class StatelessPostOrderNodeIterator
 {
     // @field
-    private final NodeBitMap visitedEnds;
+    private final NodeBitMap ___visitedEnds;
     // @field
-    private final Deque<AbstractBeginNode> nodeQueue;
+    private final Deque<AbstractBeginNode> ___nodeQueue;
     // @field
-    private final FixedNode start;
+    private final FixedNode ___start;
 
     // @cons
     public StatelessPostOrderNodeIterator(FixedNode __start)
     {
         super();
-        visitedEnds = __start.graph().createNodeBitMap();
-        nodeQueue = new ArrayDeque<>();
-        this.start = __start;
+        this.___visitedEnds = __start.graph().createNodeBitMap();
+        this.___nodeQueue = new ArrayDeque<>();
+        this.___start = __start;
     }
 
     public void apply()
     {
-        FixedNode __current = start;
+        FixedNode __current = this.___start;
 
         do
         {
@@ -54,8 +54,8 @@ public abstract class StatelessPostOrderNodeIterator
             else if (__current instanceof LoopEndNode)
             {
                 loopEnd((LoopEndNode) __current);
-                visitedEnds.mark(__current);
-                __current = nodeQueue.pollFirst();
+                this.___visitedEnds.mark(__current);
+                __current = this.___nodeQueue.pollFirst();
             }
             else if (__current instanceof AbstractMergeNode)
             {
@@ -71,21 +71,21 @@ public abstract class StatelessPostOrderNodeIterator
             {
                 end((EndNode) __current);
                 queueMerge((EndNode) __current);
-                __current = nodeQueue.pollFirst();
+                __current = this.___nodeQueue.pollFirst();
             }
             else if (__current instanceof ControlSinkNode)
             {
                 node(__current);
-                __current = nodeQueue.pollFirst();
+                __current = this.___nodeQueue.pollFirst();
             }
             else if (__current instanceof ControlSplitNode)
             {
                 controlSplit((ControlSplitNode) __current);
                 for (Node __node : __current.successors())
                 {
-                    nodeQueue.addFirst((AbstractBeginNode) __node);
+                    this.___nodeQueue.addFirst((AbstractBeginNode) __node);
                 }
-                __current = nodeQueue.pollFirst();
+                __current = this.___nodeQueue.pollFirst();
             }
         } while (__current != null);
         finished();
@@ -93,12 +93,12 @@ public abstract class StatelessPostOrderNodeIterator
 
     private void queueMerge(EndNode __end)
     {
-        visitedEnds.mark(__end);
+        this.___visitedEnds.mark(__end);
         AbstractMergeNode __merge = __end.merge();
         boolean __endsVisited = true;
         for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
         {
-            if (!visitedEnds.isMarked(__merge.forwardEndAt(__i)))
+            if (!this.___visitedEnds.isMarked(__merge.forwardEndAt(__i)))
             {
                 __endsVisited = false;
                 break;
@@ -106,7 +106,7 @@ public abstract class StatelessPostOrderNodeIterator
         }
         if (__endsVisited)
         {
-            nodeQueue.add(__merge);
+            this.___nodeQueue.add(__merge);
         }
     }
 

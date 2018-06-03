@@ -52,35 +52,35 @@ import giraaff.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
 public final class FloatingReadPhase extends Phase
 {
     // @field
-    private boolean createFloatingReads;
+    private boolean ___createFloatingReads;
     // @field
-    private boolean createMemoryMapNodes;
+    private boolean ___createMemoryMapNodes;
 
     // @class FloatingReadPhase.MemoryMapImpl
     public static final class MemoryMapImpl implements MemoryMap
     {
         // @field
-        private final EconomicMap<LocationIdentity, MemoryNode> lastMemorySnapshot;
+        private final EconomicMap<LocationIdentity, MemoryNode> ___lastMemorySnapshot;
 
         // @cons
         public MemoryMapImpl(MemoryMapImpl __memoryMap)
         {
             super();
-            lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT, __memoryMap.lastMemorySnapshot);
+            this.___lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT, __memoryMap.___lastMemorySnapshot);
         }
 
         // @cons
         public MemoryMapImpl(StartNode __start)
         {
             this();
-            lastMemorySnapshot.put(LocationIdentity.any(), __start);
+            this.___lastMemorySnapshot.put(LocationIdentity.any(), __start);
         }
 
         // @cons
         public MemoryMapImpl()
         {
             super();
-            lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT);
+            this.___lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT);
         }
 
         @Override
@@ -93,10 +93,10 @@ public final class FloatingReadPhase extends Phase
             }
             else
             {
-                __lastLocationAccess = lastMemorySnapshot.get(__locationIdentity);
+                __lastLocationAccess = this.___lastMemorySnapshot.get(__locationIdentity);
                 if (__lastLocationAccess == null)
                 {
-                    __lastLocationAccess = lastMemorySnapshot.get(LocationIdentity.any());
+                    __lastLocationAccess = this.___lastMemorySnapshot.get(LocationIdentity.any());
                 }
                 return __lastLocationAccess;
             }
@@ -105,12 +105,12 @@ public final class FloatingReadPhase extends Phase
         @Override
         public Iterable<LocationIdentity> getLocations()
         {
-            return lastMemorySnapshot.getKeys();
+            return this.___lastMemorySnapshot.getKeys();
         }
 
         public EconomicMap<LocationIdentity, MemoryNode> getMap()
         {
-            return lastMemorySnapshot;
+            return this.___lastMemorySnapshot;
         }
     }
 
@@ -120,22 +120,22 @@ public final class FloatingReadPhase extends Phase
         this(true, false);
     }
 
-    /**
-     * @param createFloatingReads specifies whether {@link FloatableAccessNode}s like {@link ReadNode}
-     *            should be converted into floating nodes (e.g. {@link FloatingReadNode}s) where possible
-     * @param createMemoryMapNodes a {@link MemoryMapNode} will be created for each return if this is true
-     */
+    ///
+    // @param createFloatingReads specifies whether {@link FloatableAccessNode}s like {@link ReadNode}
+    //            should be converted into floating nodes (e.g. {@link FloatingReadNode}s) where possible
+    // @param createMemoryMapNodes a {@link MemoryMapNode} will be created for each return if this is true
+    ///
     // @cons
     public FloatingReadPhase(boolean __createFloatingReads, boolean __createMemoryMapNodes)
     {
         super();
-        this.createFloatingReads = __createFloatingReads;
-        this.createMemoryMapNodes = __createMemoryMapNodes;
+        this.___createFloatingReads = __createFloatingReads;
+        this.___createMemoryMapNodes = __createMemoryMapNodes;
     }
 
-    /**
-     * Removes nodes from a given set that (transitively) have a usage outside the set.
-     */
+    ///
+    // Removes nodes from a given set that (transitively) have a usage outside the set.
+    ///
     private static EconomicSet<Node> removeExternallyUsedNodes(EconomicSet<Node> __set)
     {
         boolean __change;
@@ -236,7 +236,7 @@ public final class FloatingReadPhase extends Phase
         HashSetNodeEventListener __listener = new HashSetNodeEventListener(EnumSet.of(NodeEvent.NODE_ADDED, NodeEvent.ZERO_USAGES));
         try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
         {
-            ReentrantNodeIterator.apply(new FloatingReadClosure(__modifiedInLoops, createFloatingReads, createMemoryMapNodes), __graph.start(), new MemoryMapImpl(__graph.start()));
+            ReentrantNodeIterator.apply(new FloatingReadClosure(__modifiedInLoops, this.___createFloatingReads, this.___createMemoryMapNodes), __graph.start(), new MemoryMapImpl(__graph.start()));
         }
 
         for (Node __n : removeExternallyUsedNodes(__listener.getNodes()))
@@ -247,7 +247,7 @@ public final class FloatingReadPhase extends Phase
                 GraphUtil.killWithUnusedFloatingInputs(__n);
             }
         }
-        if (createFloatingReads)
+        if (this.___createFloatingReads)
         {
             __graph.setAfterFloatingReadPhase(true);
         }
@@ -299,7 +299,7 @@ public final class FloatingReadPhase extends Phase
                 }
                 __mergedStatesCount++;
             }
-            __newState.lastMemorySnapshot.put(__key, __merged);
+            __newState.___lastMemorySnapshot.put(__key, __merged);
         }
         return __newState;
     }
@@ -308,19 +308,19 @@ public final class FloatingReadPhase extends Phase
     public static final class FloatingReadClosure extends NodeIteratorClosure<MemoryMapImpl>
     {
         // @field
-        private final EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops;
+        private final EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> ___modifiedInLoops;
         // @field
-        private boolean createFloatingReads;
+        private boolean ___createFloatingReads;
         // @field
-        private boolean createMemoryMapNodes;
+        private boolean ___createMemoryMapNodes;
 
         // @cons
         public FloatingReadClosure(EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> __modifiedInLoops, boolean __createFloatingReads, boolean __createMemoryMapNodes)
         {
             super();
-            this.modifiedInLoops = __modifiedInLoops;
-            this.createFloatingReads = __createFloatingReads;
-            this.createMemoryMapNodes = __createMemoryMapNodes;
+            this.___modifiedInLoops = __modifiedInLoops;
+            this.___createFloatingReads = __createFloatingReads;
+            this.___createMemoryMapNodes = __createMemoryMapNodes;
         }
 
         @Override
@@ -337,7 +337,7 @@ public final class FloatingReadPhase extends Phase
                 processAccess((MemoryAccess) __node, __state);
             }
 
-            if (createFloatingReads & __node instanceof FloatableAccessNode)
+            if (this.___createFloatingReads & __node instanceof FloatableAccessNode)
             {
                 processFloatable((FloatableAccessNode) __node, __state);
             }
@@ -350,17 +350,17 @@ public final class FloatingReadPhase extends Phase
                 processCheckpoint((MemoryCheckpoint.Multi) __node, __state);
             }
 
-            if (createMemoryMapNodes && __node instanceof ReturnNode)
+            if (this.___createMemoryMapNodes && __node instanceof ReturnNode)
             {
-                ((ReturnNode) __node).setMemoryMap(__node.graph().unique(new MemoryMapNode(__state.lastMemorySnapshot)));
+                ((ReturnNode) __node).setMemoryMap(__node.graph().unique(new MemoryMapNode(__state.___lastMemorySnapshot)));
             }
             return __state;
         }
 
-        /**
-         * Improve the memory graph by re-wiring all usages of a {@link MemoryAnchorNode} to the
-         * real last access location.
-         */
+        ///
+        // Improve the memory graph by re-wiring all usages of a {@link MemoryAnchorNode} to the
+        // real last access location.
+        ///
         private static void processAnchor(MemoryAnchorNode __anchor, MemoryMapImpl __state)
         {
             for (Node __node : __anchor.usages().snapshot())
@@ -409,11 +409,11 @@ public final class FloatingReadPhase extends Phase
         {
             if (__identity.isAny())
             {
-                __state.lastMemorySnapshot.clear();
+                __state.___lastMemorySnapshot.clear();
             }
             if (__identity.isMutable())
             {
-                __state.lastMemorySnapshot.put(__identity, __checkpoint);
+                __state.___lastMemorySnapshot.put(__identity, __checkpoint);
             }
         }
 
@@ -441,15 +441,13 @@ public final class FloatingReadPhase extends Phase
             MemoryMapImpl __result = new MemoryMapImpl(__oldState);
             if (__node.predecessor() instanceof InvokeWithExceptionNode)
             {
-                /*
-                 * InvokeWithException cannot be the lastLocationAccess for a FloatingReadNode.
-                 * Since it is both the invoke and a control flow split, the scheduler cannot
-                 * schedule anything immediately after the invoke. It can only schedule in the
-                 * normal or exceptional successor - and we have to tell the scheduler here which
-                 * side it needs to choose by putting in the location identity on both successors.
-                 */
+                // InvokeWithException cannot be the lastLocationAccess for a FloatingReadNode.
+                // Since it is both the invoke and a control flow split, the scheduler cannot
+                // schedule anything immediately after the invoke. It can only schedule in the
+                // normal or exceptional successor - and we have to tell the scheduler here which
+                // side it needs to choose by putting in the location identity on both successors.
                 InvokeWithExceptionNode __invoke = (InvokeWithExceptionNode) __node.predecessor();
-                __result.lastMemorySnapshot.put(__invoke.getLocationIdentity(), (MemoryCheckpoint) __node);
+                __result.___lastMemorySnapshot.put(__invoke.getLocationIdentity(), (MemoryCheckpoint) __node);
             }
             return __result;
         }
@@ -457,24 +455,24 @@ public final class FloatingReadPhase extends Phase
         @Override
         protected EconomicMap<LoopExitNode, MemoryMapImpl> processLoop(LoopBeginNode __loop, MemoryMapImpl __initialState)
         {
-            EconomicSet<LocationIdentity> __modifiedLocations = modifiedInLoops.get(__loop);
+            EconomicSet<LocationIdentity> __modifiedLocations = this.___modifiedInLoops.get(__loop);
             EconomicMap<LocationIdentity, MemoryPhiNode> __phis = EconomicMap.create(Equivalence.DEFAULT);
             if (__modifiedLocations.contains(LocationIdentity.any()))
             {
                 // create phis for all locations if ANY is modified in the loop
                 __modifiedLocations = EconomicSet.create(Equivalence.DEFAULT, __modifiedLocations);
-                __modifiedLocations.addAll(__initialState.lastMemorySnapshot.getKeys());
+                __modifiedLocations.addAll(__initialState.___lastMemorySnapshot.getKeys());
             }
 
             for (LocationIdentity __location : __modifiedLocations)
             {
                 createMemoryPhi(__loop, __initialState, __phis, __location);
             }
-            __initialState.lastMemorySnapshot.putAll(__phis);
+            __initialState.___lastMemorySnapshot.putAll(__phis);
 
             LoopInfo<MemoryMapImpl> __loopInfo = ReentrantNodeIterator.processLoop(this, __loop, __initialState);
 
-            UnmodifiableMapCursor<LoopEndNode, MemoryMapImpl> __endStateCursor = __loopInfo.endStates.getEntries();
+            UnmodifiableMapCursor<LoopEndNode, MemoryMapImpl> __endStateCursor = __loopInfo.___endStates.getEntries();
             while (__endStateCursor.advance())
             {
                 int __endIndex = __loop.phiPredecessorIndex(__endStateCursor.getKey());
@@ -486,7 +484,7 @@ public final class FloatingReadPhase extends Phase
                     __phi.initializeValueAt(__endIndex, ValueNodeUtil.asNode(__endStateCursor.getValue().getLastLocationAccess(__key)));
                 }
             }
-            return __loopInfo.exitStates;
+            return __loopInfo.___exitStates;
         }
 
         private static void createMemoryPhi(LoopBeginNode __loop, MemoryMapImpl __initialState, EconomicMap<LocationIdentity, MemoryPhiNode> __phis, LocationIdentity __location)

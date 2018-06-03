@@ -39,24 +39,22 @@ public final class AMD64ControlFlow
 
         @Use({OperandFlag.REG, OperandFlag.ILLEGAL})
         // @field
-        protected Value x;
+        protected Value ___x;
 
         // @cons
         public ReturnOp(Value __x)
         {
             super(TYPE);
-            this.x = __x;
+            this.___x = __x;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            __crb.frameContext.leave(__crb);
-            /*
-             * We potentially return to the interpreter, and that's an AVX-SSE transition. The only
-             * live value at this point should be the return value in either rax, or in xmm0 with
-             * the upper half of the register unused, so we don't destroy any value here.
-             */
+            __crb.___frameContext.leave(__crb);
+            // We potentially return to the interpreter, and that's an AVX-SSE transition. The only
+            // live value at this point should be the return value in either rax, or in xmm0 with
+            // the upper half of the register unused, so we don't destroy any value here.
             if (__masm.supports(CPUFeature.AVX))
             {
                 __masm.vzeroupper();
@@ -72,14 +70,14 @@ public final class AMD64ControlFlow
         public static final LIRInstructionClass<BranchOp> TYPE = LIRInstructionClass.create(BranchOp.class);
 
         // @field
-        protected final ConditionFlag condition;
+        protected final ConditionFlag ___condition;
         // @field
-        protected final LabelRef trueDestination;
+        protected final LabelRef ___trueDestination;
         // @field
-        protected final LabelRef falseDestination;
+        protected final LabelRef ___falseDestination;
 
         // @field
-        private final double trueDestinationProbability;
+        private final double ___trueDestinationProbability;
 
         // @cons
         public BranchOp(Condition __condition, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability)
@@ -97,10 +95,10 @@ public final class AMD64ControlFlow
         protected BranchOp(LIRInstructionClass<? extends BranchOp> __c, ConditionFlag __condition, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability)
         {
             super(__c);
-            this.condition = __condition;
-            this.trueDestination = __trueDestination;
-            this.falseDestination = __falseDestination;
-            this.trueDestinationProbability = __trueDestinationProbability;
+            this.___condition = __condition;
+            this.___trueDestination = __trueDestination;
+            this.___falseDestination = __falseDestination;
+            this.___trueDestinationProbability = __trueDestinationProbability;
         }
 
         @Override
@@ -108,40 +106,38 @@ public final class AMD64ControlFlow
         {
             boolean __isNegated = false;
             int __jccPos = __masm.position();
-            /*
-             * The strategy for emitting jumps is: If either trueDestination or falseDestination is
-             * the successor block, assume the block scheduler did the correct thing and jcc to the
-             * other. Otherwise, we need a jcc followed by a jmp. Use the branch probability to make
-             * sure it is more likely to branch on the jcc (= less likely to execute both the jcc
-             * and the jmp instead of just the jcc). In the case of loops, that means the jcc is the
-             * back-edge.
-             */
-            if (__crb.isSuccessorEdge(trueDestination))
+            // The strategy for emitting jumps is: If either trueDestination or falseDestination is
+            // the successor block, assume the block scheduler did the correct thing and jcc to the
+            // other. Otherwise, we need a jcc followed by a jmp. Use the branch probability to make
+            // sure it is more likely to branch on the jcc (= less likely to execute both the jcc
+            // and the jmp instead of just the jcc). In the case of loops, that means the jcc is the
+            // back-edge.
+            if (__crb.isSuccessorEdge(this.___trueDestination))
             {
-                jcc(__masm, true, falseDestination);
+                jcc(__masm, true, this.___falseDestination);
                 __isNegated = true;
             }
-            else if (__crb.isSuccessorEdge(falseDestination))
+            else if (__crb.isSuccessorEdge(this.___falseDestination))
             {
-                jcc(__masm, false, trueDestination);
+                jcc(__masm, false, this.___trueDestination);
             }
-            else if (trueDestinationProbability < 0.5)
+            else if (this.___trueDestinationProbability < 0.5)
             {
-                jcc(__masm, true, falseDestination);
-                __masm.jmp(trueDestination.label());
+                jcc(__masm, true, this.___falseDestination);
+                __masm.jmp(this.___trueDestination.label());
                 __isNegated = true;
             }
             else
             {
-                jcc(__masm, false, trueDestination);
-                __masm.jmp(falseDestination.label());
+                jcc(__masm, false, this.___trueDestination);
+                __masm.jmp(this.___falseDestination.label());
             }
             __crb.recordBranch(__jccPos, __isNegated);
         }
 
         protected void jcc(AMD64MacroAssembler __masm, boolean __negate, LabelRef __target)
         {
-            __masm.jcc(__negate ? condition.negate() : condition, __target.label());
+            __masm.jcc(__negate ? this.___condition.negate() : this.___condition, __target.label());
         }
     }
 
@@ -152,19 +148,19 @@ public final class AMD64ControlFlow
         public static final LIRInstructionClass<FloatBranchOp> TYPE = LIRInstructionClass.create(FloatBranchOp.class);
 
         // @field
-        protected boolean unorderedIsTrue;
+        protected boolean ___unorderedIsTrue;
 
         // @cons
         public FloatBranchOp(Condition __condition, boolean __unorderedIsTrue, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability)
         {
             super(TYPE, floatCond(__condition), __trueDestination, __falseDestination, __trueDestinationProbability);
-            this.unorderedIsTrue = __unorderedIsTrue;
+            this.___unorderedIsTrue = __unorderedIsTrue;
         }
 
         @Override
         protected void jcc(AMD64MacroAssembler __masm, boolean __negate, LabelRef __target)
         {
-            floatJcc(__masm, __negate ? condition.negate() : condition, __negate ? !unorderedIsTrue : unorderedIsTrue, __target.label());
+            floatJcc(__masm, __negate ? this.___condition.negate() : this.___condition, __negate ? !this.___unorderedIsTrue : this.___unorderedIsTrue, __target.label());
         }
     }
 
@@ -175,19 +171,19 @@ public final class AMD64ControlFlow
         public static final LIRInstructionClass<StrategySwitchOp> TYPE = LIRInstructionClass.create(StrategySwitchOp.class);
 
         // @field
-        protected final Constant[] keyConstants;
+        protected final Constant[] ___keyConstants;
         // @field
-        private final LabelRef[] keyTargets;
+        private final LabelRef[] ___keyTargets;
         // @field
-        private LabelRef defaultTarget;
+        private LabelRef ___defaultTarget;
         @Alive({OperandFlag.REG})
         // @field
-        protected Value key;
+        protected Value ___key;
         @Temp({OperandFlag.REG, OperandFlag.ILLEGAL})
         // @field
-        protected Value scratch;
+        protected Value ___scratch;
         // @field
-        protected final SwitchStrategy strategy;
+        protected final SwitchStrategy ___strategy;
 
         // @cons
         public StrategySwitchOp(SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Value __key, Value __scratch)
@@ -199,37 +195,37 @@ public final class AMD64ControlFlow
         protected StrategySwitchOp(LIRInstructionClass<? extends StrategySwitchOp> __c, SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Value __key, Value __scratch)
         {
             super(__c);
-            this.strategy = __strategy;
-            this.keyConstants = __strategy.getKeyConstants();
-            this.keyTargets = __keyTargets;
-            this.defaultTarget = __defaultTarget;
-            this.key = __key;
-            this.scratch = __scratch;
+            this.___strategy = __strategy;
+            this.___keyConstants = __strategy.getKeyConstants();
+            this.___keyTargets = __keyTargets;
+            this.___defaultTarget = __defaultTarget;
+            this.___key = __key;
+            this.___scratch = __scratch;
         }
 
         @Override
         public void emitCode(final CompilationResultBuilder __crb, final AMD64MacroAssembler __masm)
         {
-            strategy.run(new SwitchClosure(ValueUtil.asRegister(key), __crb, __masm));
+            this.___strategy.run(new SwitchClosure(ValueUtil.asRegister(this.___key), __crb, __masm));
         }
 
         // @class AMD64ControlFlow.StrategySwitchOp.SwitchClosure
         public class SwitchClosure extends BaseSwitchClosure
         {
             // @field
-            protected final Register keyRegister;
+            protected final Register ___keyRegister;
             // @field
-            protected final CompilationResultBuilder crb;
+            protected final CompilationResultBuilder ___crb;
             // @field
-            protected final AMD64MacroAssembler masm;
+            protected final AMD64MacroAssembler ___masm;
 
             // @cons
             protected SwitchClosure(Register __keyRegister, CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
             {
-                super(__crb, __masm, keyTargets, defaultTarget);
-                this.keyRegister = __keyRegister;
-                this.crb = __crb;
-                this.masm = __masm;
+                super(__crb, __masm, StrategySwitchOp.this.___keyTargets, StrategySwitchOp.this.___defaultTarget);
+                this.___keyRegister = __keyRegister;
+                this.___crb = __crb;
+                this.___masm = __masm;
             }
 
             protected void emitComparison(Constant __c)
@@ -240,16 +236,20 @@ public final class AMD64ControlFlow
                     case Int:
                     {
                         long __lc = __jc.asLong();
-                        masm.cmpl(keyRegister, (int) __lc);
+                        this.___masm.cmpl(this.___keyRegister, (int) __lc);
                         break;
                     }
                     case Long:
-                        masm.cmpq(keyRegister, (AMD64Address) crb.asLongConstRef(__jc));
+                    {
+                        this.___masm.cmpq(this.___keyRegister, (AMD64Address) this.___crb.asLongConstRef(__jc));
                         break;
+                    }
                     case Object:
-                        AMD64Move.const2reg(crb, masm, ValueUtil.asRegister(scratch), __jc);
-                        masm.cmpptr(keyRegister, ValueUtil.asRegister(scratch));
+                    {
+                        AMD64Move.const2reg(this.___crb, this.___masm, ValueUtil.asRegister(StrategySwitchOp.this.___scratch), __jc);
+                        this.___masm.cmpptr(this.___keyRegister, ValueUtil.asRegister(StrategySwitchOp.this.___scratch));
                         break;
+                    }
                     default:
                         throw new GraalError("switch only supported for int, long and object");
                 }
@@ -258,8 +258,8 @@ public final class AMD64ControlFlow
             @Override
             protected void conditionalJump(int __index, Condition __condition, Label __target)
             {
-                emitComparison(keyConstants[__index]);
-                masm.jcc(intCond(__condition), __target);
+                emitComparison(StrategySwitchOp.this.___keyConstants[__index]);
+                this.___masm.jcc(intCond(__condition), __target);
             }
         }
     }
@@ -271,39 +271,39 @@ public final class AMD64ControlFlow
         public static final LIRInstructionClass<TableSwitchOp> TYPE = LIRInstructionClass.create(TableSwitchOp.class);
 
         // @field
-        private final int lowKey;
+        private final int ___lowKey;
         // @field
-        private final LabelRef defaultTarget;
+        private final LabelRef ___defaultTarget;
         // @field
-        private final LabelRef[] targets;
+        private final LabelRef[] ___targets;
         @Use
         // @field
-        protected Value index;
+        protected Value ___index;
         @Temp({OperandFlag.REG, OperandFlag.HINT})
         // @field
-        protected Value idxScratch;
+        protected Value ___idxScratch;
         @Temp
         // @field
-        protected Value scratch;
+        protected Value ___scratch;
 
         // @cons
         public TableSwitchOp(final int __lowKey, final LabelRef __defaultTarget, final LabelRef[] __targets, Value __index, Variable __scratch, Variable __idxScratch)
         {
             super(TYPE);
-            this.lowKey = __lowKey;
-            this.defaultTarget = __defaultTarget;
-            this.targets = __targets;
-            this.index = __index;
-            this.scratch = __scratch;
-            this.idxScratch = __idxScratch;
+            this.___lowKey = __lowKey;
+            this.___defaultTarget = __defaultTarget;
+            this.___targets = __targets;
+            this.___index = __index;
+            this.___scratch = __scratch;
+            this.___idxScratch = __idxScratch;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            Register __indexReg = ValueUtil.asRegister(index, AMD64Kind.DWORD);
-            Register __idxScratchReg = ValueUtil.asRegister(idxScratch, AMD64Kind.DWORD);
-            Register __scratchReg = ValueUtil.asRegister(scratch, AMD64Kind.QWORD);
+            Register __indexReg = ValueUtil.asRegister(this.___index, AMD64Kind.DWORD);
+            Register __idxScratchReg = ValueUtil.asRegister(this.___idxScratch, AMD64Kind.DWORD);
+            Register __scratchReg = ValueUtil.asRegister(this.___scratch, AMD64Kind.QWORD);
 
             if (!__indexReg.equals(__idxScratchReg))
             {
@@ -311,12 +311,12 @@ public final class AMD64ControlFlow
             }
 
             // compare index against jump table bounds
-            int __highKey = lowKey + targets.length - 1;
-            if (lowKey != 0)
+            int __highKey = this.___lowKey + this.___targets.length - 1;
+            if (this.___lowKey != 0)
             {
                 // subtract the low value from the switch value
-                __masm.subl(__idxScratchReg, lowKey);
-                __masm.cmpl(__idxScratchReg, __highKey - lowKey);
+                __masm.subl(__idxScratchReg, this.___lowKey);
+                __masm.cmpl(__idxScratchReg, __highKey - this.___lowKey);
             }
             else
             {
@@ -324,9 +324,9 @@ public final class AMD64ControlFlow
             }
 
             // jump to default target if index is not within the jump table
-            if (defaultTarget != null)
+            if (this.___defaultTarget != null)
             {
-                __masm.jcc(ConditionFlag.Above, defaultTarget.label());
+                __masm.jcc(ConditionFlag.Above, this.___defaultTarget.label());
             }
 
             // set scratch to address of jump table
@@ -351,7 +351,7 @@ public final class AMD64ControlFlow
             __masm.emitInt(__jumpTablePos - __afterLea, __leaDisplacementPosition);
 
             // emit jump table entries
-            for (LabelRef __target : targets)
+            for (LabelRef __target : this.___targets)
             {
                 Label __label = __target.label();
                 int __offsetToJumpTableBase = __masm.position() - __jumpTablePos;
@@ -381,22 +381,22 @@ public final class AMD64ControlFlow
 
         @Def({OperandFlag.REG, OperandFlag.HINT})
         // @field
-        protected Value result;
+        protected Value ___result;
         // @field
-        private final ConditionFlag condition;
+        private final ConditionFlag ___condition;
 
         // @cons
         public CondSetOp(Variable __result, Condition __condition)
         {
             super(TYPE);
-            this.result = __result;
-            this.condition = intCond(__condition);
+            this.___result = __result;
+            this.___condition = intCond(__condition);
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            setcc(__masm, result, condition);
+            setcc(__masm, this.___result, this.___condition);
         }
     }
 
@@ -409,22 +409,22 @@ public final class AMD64ControlFlow
 
         @Def({OperandFlag.REG, OperandFlag.HINT})
         // @field
-        protected Value result;
+        protected Value ___result;
         // @field
-        private final ConditionFlag condition;
+        private final ConditionFlag ___condition;
 
         // @cons
         public FloatCondSetOp(Variable __result, Condition __condition)
         {
             super(TYPE);
-            this.result = __result;
-            this.condition = floatCond(__condition);
+            this.___result = __result;
+            this.___condition = floatCond(__condition);
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            setcc(__masm, result, condition);
+            setcc(__masm, this.___result, this.___condition);
         }
     }
 
@@ -437,30 +437,30 @@ public final class AMD64ControlFlow
 
         @Def({OperandFlag.REG, OperandFlag.HINT})
         // @field
-        protected Value result;
+        protected Value ___result;
         @Alive({OperandFlag.REG})
         // @field
-        protected Value trueValue;
+        protected Value ___trueValue;
         @Use({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST})
         // @field
-        protected Value falseValue;
+        protected Value ___falseValue;
         // @field
-        private final ConditionFlag condition;
+        private final ConditionFlag ___condition;
 
         // @cons
         public CondMoveOp(Variable __result, Condition __condition, AllocatableValue __trueValue, Value __falseValue)
         {
             super(TYPE);
-            this.result = __result;
-            this.condition = intCond(__condition);
-            this.trueValue = __trueValue;
-            this.falseValue = __falseValue;
+            this.___result = __result;
+            this.___condition = intCond(__condition);
+            this.___trueValue = __trueValue;
+            this.___falseValue = __falseValue;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            cmove(__crb, __masm, result, false, condition, false, trueValue, falseValue);
+            cmove(__crb, __masm, this.___result, false, this.___condition, false, this.___trueValue, this.___falseValue);
         }
     }
 
@@ -473,33 +473,33 @@ public final class AMD64ControlFlow
 
         @Def({OperandFlag.REG})
         // @field
-        protected Value result;
+        protected Value ___result;
         @Alive({OperandFlag.REG})
         // @field
-        protected Value trueValue;
+        protected Value ___trueValue;
         @Alive({OperandFlag.REG})
         // @field
-        protected Value falseValue;
+        protected Value ___falseValue;
         // @field
-        private final ConditionFlag condition;
+        private final ConditionFlag ___condition;
         // @field
-        private final boolean unorderedIsTrue;
+        private final boolean ___unorderedIsTrue;
 
         // @cons
         public FloatCondMoveOp(Variable __result, Condition __condition, boolean __unorderedIsTrue, Variable __trueValue, Variable __falseValue)
         {
             super(TYPE);
-            this.result = __result;
-            this.condition = floatCond(__condition);
-            this.unorderedIsTrue = __unorderedIsTrue;
-            this.trueValue = __trueValue;
-            this.falseValue = __falseValue;
+            this.___result = __result;
+            this.___condition = floatCond(__condition);
+            this.___unorderedIsTrue = __unorderedIsTrue;
+            this.___trueValue = __trueValue;
+            this.___falseValue = __falseValue;
         }
 
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            cmove(__crb, __masm, result, true, condition, unorderedIsTrue, trueValue, falseValue);
+            cmove(__crb, __masm, this.___result, true, this.___condition, this.___unorderedIsTrue, this.___trueValue, this.___falseValue);
         }
     }
 
@@ -545,11 +545,15 @@ public final class AMD64ControlFlow
                 case BYTE:
                 case WORD:
                 case DWORD:
+                {
                     __masm.cmovl(__cond, ValueUtil.asRegister(__result), ValueUtil.asRegister(__other));
                     break;
+                }
                 case QWORD:
+                {
                     __masm.cmovq(__cond, ValueUtil.asRegister(__result), ValueUtil.asRegister(__other));
                     break;
+                }
                 default:
                     throw GraalError.shouldNotReachHere();
             }
@@ -562,11 +566,15 @@ public final class AMD64ControlFlow
                 case BYTE:
                 case WORD:
                 case DWORD:
+                {
                     __masm.cmovl(__cond, ValueUtil.asRegister(__result), __addr);
                     break;
+                }
                 case QWORD:
+                {
                     __masm.cmovq(__cond, ValueUtil.asRegister(__result), __addr);
                     break;
+                }
                 default:
                     throw GraalError.shouldNotReachHere();
             }
@@ -580,11 +588,15 @@ public final class AMD64ControlFlow
             case BYTE:
             case WORD:
             case DWORD:
+            {
                 __masm.setl(__cond, ValueUtil.asRegister(__result));
                 break;
+            }
             case QWORD:
+            {
                 __masm.setq(__cond, ValueUtil.asRegister(__result));
                 break;
+            }
             default:
                 throw GraalError.shouldNotReachHere();
         }

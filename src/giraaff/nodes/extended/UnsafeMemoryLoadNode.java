@@ -11,9 +11,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Load of a value at a location specified as an absolute address.
- */
+///
+// Load of a value at a location specified as an absolute address.
+///
 // @class UnsafeMemoryLoadNode
 public final class UnsafeMemoryLoadNode extends FixedWithNextNode implements Lowerable
 {
@@ -22,29 +22,29 @@ public final class UnsafeMemoryLoadNode extends FixedWithNextNode implements Low
 
     @Input
     // @field
-    protected ValueNode address;
+    protected ValueNode ___address;
     // @field
-    protected final JavaKind kind;
+    protected final JavaKind ___kind;
     // @field
-    protected final LocationIdentity locationIdentity;
+    protected final LocationIdentity ___locationIdentity;
 
     // @cons
     public UnsafeMemoryLoadNode(ValueNode __address, JavaKind __kind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(__kind.getStackKind()));
-        this.address = __address;
-        this.kind = __kind;
-        this.locationIdentity = __locationIdentity;
+        this.___address = __address;
+        this.___kind = __kind;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public ValueNode getAddress()
     {
-        return address;
+        return this.___address;
     }
 
     public JavaKind getKind()
     {
-        return kind;
+        return this.___kind;
     }
 
     @Override
@@ -55,6 +55,6 @@ public final class UnsafeMemoryLoadNode extends FixedWithNextNode implements Low
 
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 }

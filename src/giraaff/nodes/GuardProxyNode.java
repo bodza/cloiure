@@ -20,13 +20,13 @@ public final class GuardProxyNode extends ProxyNode implements GuardingNode, Pro
 
     @OptionalInput(InputType.Guard)
     // @field
-    GuardingNode value;
+    GuardingNode ___value;
 
     // @cons
     public GuardProxyNode(GuardingNode __value, LoopExitNode __proxyPoint)
     {
         super(TYPE, StampFactory.forVoid(), __proxyPoint);
-        this.value = __value;
+        this.___value = __value;
     }
 
     @Override
@@ -36,26 +36,26 @@ public final class GuardProxyNode extends ProxyNode implements GuardingNode, Pro
 
     public void setValue(GuardingNode __newValue)
     {
-        this.updateUsages(value.asNode(), __newValue.asNode());
-        this.value = __newValue;
+        this.updateUsages(this.___value.asNode(), __newValue.asNode());
+        this.___value = __newValue;
     }
 
     @Override
     public ValueNode value()
     {
-        return (value == null ? null : value.asNode());
+        return (this.___value == null ? null : this.___value.asNode());
     }
 
     @Override
     public Node getOriginalNode()
     {
-        return (value == null ? null : value.asNode());
+        return (this.___value == null ? null : this.___value.asNode());
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool)
     {
-        if (value == null)
+        if (this.___value == null)
         {
             return null;
         }

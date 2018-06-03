@@ -12,9 +12,9 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.StampInverter;
 
-/**
- * The {@code NegateNode} node negates its operand.
- */
+///
+// The {@code NegateNode} node negates its operand.
+///
 // @class NegateNode
 public final class NegateNode extends UnaryArithmeticNode<Neg> implements NarrowableArithmeticNode, StampInverter
 {

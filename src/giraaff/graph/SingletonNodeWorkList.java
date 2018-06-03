@@ -6,13 +6,13 @@ import java.util.Iterator;
 public final class SingletonNodeWorkList extends NodeWorkList
 {
     // @field
-    private final NodeBitMap visited;
+    private final NodeBitMap ___visited;
 
     // @cons
     public SingletonNodeWorkList(Graph __graph)
     {
         super(__graph, false);
-        this.visited = __graph.createNodeBitMap();
+        this.___visited = __graph.createNodeBitMap();
     }
 
     @Override
@@ -20,10 +20,10 @@ public final class SingletonNodeWorkList extends NodeWorkList
     {
         if (__node != null)
         {
-            if (!this.visited.isMarkedAndGrow(__node))
+            if (!this.___visited.isMarkedAndGrow(__node))
             {
-                this.visited.mark(__node);
-                this.worklist.add(__node);
+                this.___visited.mark(__node);
+                this.___worklist.add(__node);
             }
         }
     }
@@ -31,7 +31,7 @@ public final class SingletonNodeWorkList extends NodeWorkList
     @Override
     public boolean contains(Node __node)
     {
-        return this.visited.isMarked(__node);
+        return this.___visited.isMarked(__node);
     }
 
     @Override
@@ -42,9 +42,9 @@ public final class SingletonNodeWorkList extends NodeWorkList
         {
             private void dropDeleted()
             {
-                while (!SingletonNodeWorkList.this.worklist.isEmpty() && SingletonNodeWorkList.this.worklist.peek().isDeleted())
+                while (!SingletonNodeWorkList.this.___worklist.isEmpty() && SingletonNodeWorkList.this.___worklist.peek().isDeleted())
                 {
-                    SingletonNodeWorkList.this.worklist.remove();
+                    SingletonNodeWorkList.this.___worklist.remove();
                 }
             }
 
@@ -52,14 +52,14 @@ public final class SingletonNodeWorkList extends NodeWorkList
             public boolean hasNext()
             {
                 dropDeleted();
-                return !SingletonNodeWorkList.this.worklist.isEmpty();
+                return !SingletonNodeWorkList.this.___worklist.isEmpty();
             }
 
             @Override
             public Node next()
             {
                 dropDeleted();
-                return SingletonNodeWorkList.this.worklist.remove();
+                return SingletonNodeWorkList.this.___worklist.remove();
             }
 
             @Override

@@ -35,13 +35,13 @@ import giraaff.nodeinfo.InputType;
 import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
-/**
- * Metadata for every {@link Node} type. The metadata includes:
- *
- * <li>The offsets of fields annotated with {@link Input} and {@link Successor} as well as methods
- * for iterating over such fields.</li>
- * <li>The identifier for an {@link IterableNodeType} class.</li>
- */
+///
+// Metadata for every {@link Node} type. The metadata includes:
+//
+// <li>The offsets of fields annotated with {@link Input} and {@link Successor} as well as methods
+// for iterating over such fields.</li>
+// <li>The identifier for an {@link IterableNodeType} class.</li>
+///
 // @class NodeClass
 public final class NodeClass<T> extends FieldIntrospection<T>
 {
@@ -61,9 +61,9 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return __e.getAnnotation(__annotationClass);
     }
 
-    /**
-     * Gets the {@link NodeClass} associated with a given {@link Class}.
-     */
+    ///
+    // Gets the {@link NodeClass} associated with a given {@link Class}.
+    ///
     public static <T> NodeClass<T> create(Class<T> __c)
     {
         Class<? super T> __superclass = __c.getSuperclass();
@@ -114,49 +114,49 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     private static AtomicInteger nextLeafId = new AtomicInteger();
 
     // @field
-    private final InputEdges inputs;
+    private final InputEdges ___inputs;
     // @field
-    private final SuccessorEdges successors;
+    private final SuccessorEdges ___successors;
     // @field
-    private final NodeClass<? super T> superNodeClass;
+    private final NodeClass<? super T> ___superNodeClass;
 
     // @field
-    private final boolean canGVN;
+    private final boolean ___canGVN;
     // @field
-    private final int startGVNNumber;
+    private final int ___startGVNNumber;
     // @field
-    private final int iterableId;
+    private final int ___iterableId;
     // @field
-    private final EnumSet<InputType> allowedUsageTypes;
+    private final EnumSet<InputType> ___allowedUsageTypes;
     // @field
-    private int[] iterableIds;
+    private int[] ___iterableIds;
     // @field
-    private final long inputsIteration;
+    private final long ___inputsIteration;
     // @field
-    private final long successorIteration;
+    private final long ___successorIteration;
 
-    /**
-     * Determines if this node type implements {@link Canonicalizable}.
-     */
+    ///
+    // Determines if this node type implements {@link Canonicalizable}.
+    ///
     // @field
-    private final boolean isCanonicalizable;
+    private final boolean ___isCanonicalizable;
 
-    /**
-     * Determines if this node type implements {@link BinaryCommutative}.
-     */
+    ///
+    // Determines if this node type implements {@link BinaryCommutative}.
+    ///
     // @field
-    private final boolean isCommutative;
+    private final boolean ___isCommutative;
 
-    /**
-     * Determines if this node type implements {@link Simplifiable}.
-     */
+    ///
+    // Determines if this node type implements {@link Simplifiable}.
+    ///
     // @field
-    private final boolean isSimplifiable;
+    private final boolean ___isSimplifiable;
     // @field
-    private final boolean isLeafNode;
+    private final boolean ___isLeafNode;
 
     // @field
-    private final int leafId;
+    private final int ___leafId;
 
     // @cons
     public NodeClass(Class<T> __clazz, NodeClass<? super T> __superNodeClass)
@@ -168,60 +168,60 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     public NodeClass(Class<T> __clazz, NodeClass<? super T> __superNodeClass, FieldsScanner.CalcOffset __calcOffset, int[] __presetIterableIds, int __presetIterableId)
     {
         super(__clazz);
-        this.superNodeClass = __superNodeClass;
+        this.___superNodeClass = __superNodeClass;
 
-        this.isCanonicalizable = Canonicalizable.class.isAssignableFrom(__clazz);
-        this.isCommutative = BinaryCommutative.class.isAssignableFrom(__clazz);
+        this.___isCanonicalizable = Canonicalizable.class.isAssignableFrom(__clazz);
+        this.___isCommutative = BinaryCommutative.class.isAssignableFrom(__clazz);
 
-        this.isSimplifiable = Simplifiable.class.isAssignableFrom(__clazz);
+        this.___isSimplifiable = Simplifiable.class.isAssignableFrom(__clazz);
 
         NodeFieldsScanner __fs = new NodeFieldsScanner(__calcOffset, __superNodeClass);
         __fs.scan(__clazz, __clazz.getSuperclass(), false);
 
-        successors = new SuccessorEdges(__fs.directSuccessors, __fs.successors);
-        successorIteration = computeIterationMask(successors.type(), successors.getDirectCount(), successors.getOffsets());
-        inputs = new InputEdges(__fs.directInputs, __fs.inputs);
-        inputsIteration = computeIterationMask(inputs.type(), inputs.getDirectCount(), inputs.getOffsets());
+        this.___successors = new SuccessorEdges(__fs.___directSuccessors, __fs.___successors);
+        this.___successorIteration = computeIterationMask(this.___successors.type(), this.___successors.getDirectCount(), this.___successors.getOffsets());
+        this.___inputs = new InputEdges(__fs.___directInputs, __fs.___inputs);
+        this.___inputsIteration = computeIterationMask(this.___inputs.type(), this.___inputs.getDirectCount(), this.___inputs.getOffsets());
 
-        data = new Fields(__fs.data);
+        this.___data = new Fields(__fs.___data);
 
-        isLeafNode = inputs.getCount() + successors.getCount() == 0;
-        if (isLeafNode)
+        this.___isLeafNode = this.___inputs.getCount() + this.___successors.getCount() == 0;
+        if (this.___isLeafNode)
         {
-            this.leafId = nextLeafId.getAndIncrement();
+            this.___leafId = nextLeafId.getAndIncrement();
         }
         else
         {
-            this.leafId = -1;
+            this.___leafId = -1;
         }
 
-        canGVN = Node.ValueNumberable.class.isAssignableFrom(__clazz);
-        startGVNNumber = __clazz.getName().hashCode();
+        this.___canGVN = Node.ValueNumberable.class.isAssignableFrom(__clazz);
+        this.___startGVNNumber = __clazz.getName().hashCode();
 
-        allowedUsageTypes = __superNodeClass == null ? EnumSet.noneOf(InputType.class) : __superNodeClass.allowedUsageTypes.clone();
+        this.___allowedUsageTypes = __superNodeClass == null ? EnumSet.noneOf(InputType.class) : __superNodeClass.___allowedUsageTypes.clone();
 
         if (__presetIterableIds != null)
         {
-            this.iterableIds = __presetIterableIds;
-            this.iterableId = __presetIterableId;
+            this.___iterableIds = __presetIterableIds;
+            this.___iterableId = __presetIterableId;
         }
         else if (IterableNodeType.class.isAssignableFrom(__clazz))
         {
-            this.iterableId = nextIterableId.getAndIncrement();
+            this.___iterableId = nextIterableId.getAndIncrement();
 
             NodeClass<?> __snc = __superNodeClass;
             while (__snc != null && IterableNodeType.class.isAssignableFrom(__snc.getClazz()))
             {
-                __snc.addIterableId(iterableId);
-                __snc = __snc.superNodeClass;
+                __snc.addIterableId(this.___iterableId);
+                __snc = __snc.___superNodeClass;
             }
 
-            this.iterableIds = new int[] { iterableId };
+            this.___iterableIds = new int[] { this.___iterableId };
         }
         else
         {
-            this.iterableId = Node.NOT_ITERABLE;
-            this.iterableIds = null;
+            this.___iterableId = Node.NOT_ITERABLE;
+            this.___iterableIds = null;
         }
     }
 
@@ -252,17 +252,17 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     private synchronized void addIterableId(int __newIterableId)
     {
-        int[] __copy = Arrays.copyOf(iterableIds, iterableIds.length + 1);
-        __copy[iterableIds.length] = __newIterableId;
-        iterableIds = __copy;
+        int[] __copy = Arrays.copyOf(this.___iterableIds, this.___iterableIds.length + 1);
+        __copy[this.___iterableIds.length] = __newIterableId;
+        this.___iterableIds = __copy;
     }
 
     private boolean verifyIterableIds()
     {
-        NodeClass<?> __snc = superNodeClass;
+        NodeClass<?> __snc = this.___superNodeClass;
         while (__snc != null && IterableNodeType.class.isAssignableFrom(__snc.getClazz()))
         {
-            __snc = __snc.superNodeClass;
+            __snc = __snc.___superNodeClass;
         }
         return true;
     }
@@ -280,68 +280,68 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     }
 
     // @field
-    private String shortName;
+    private String ___shortName;
 
     public String shortName()
     {
-        if (shortName == null)
+        if (this.___shortName == null)
         {
             String __localShortName = getClazz().getSimpleName();
             if (__localShortName.endsWith("Node") && !__localShortName.equals("StartNode") && !__localShortName.equals("EndNode"))
             {
-                shortName = __localShortName.substring(0, __localShortName.length() - 4);
+                this.___shortName = __localShortName.substring(0, __localShortName.length() - 4);
             }
             else
             {
-                shortName = __localShortName;
+                this.___shortName = __localShortName;
             }
         }
-        return shortName;
+        return this.___shortName;
     }
 
     @Override
     public Fields[] getAllFields()
     {
-        return new Fields[] { data, inputs, successors };
+        return new Fields[] { this.___data, this.___inputs, this.___successors };
     }
 
     int[] iterableIds()
     {
-        return iterableIds;
+        return this.___iterableIds;
     }
 
     public int iterableId()
     {
-        return iterableId;
+        return this.___iterableId;
     }
 
     public boolean valueNumberable()
     {
-        return canGVN;
+        return this.___canGVN;
     }
 
-    /**
-     * Determines if this node type implements {@link Canonicalizable}.
-     */
+    ///
+    // Determines if this node type implements {@link Canonicalizable}.
+    ///
     public boolean isCanonicalizable()
     {
-        return isCanonicalizable;
+        return this.___isCanonicalizable;
     }
 
-    /**
-     * Determines if this node type implements {@link BinaryCommutative}.
-     */
+    ///
+    // Determines if this node type implements {@link BinaryCommutative}.
+    ///
     public boolean isCommutative()
     {
-        return isCommutative;
+        return this.___isCommutative;
     }
 
-    /**
-     * Determines if this node type implements {@link Simplifiable}.
-     */
+    ///
+    // Determines if this node type implements {@link Simplifiable}.
+    ///
     public boolean isSimplifiable()
     {
-        return isSimplifiable;
+        return this.___isSimplifiable;
     }
 
     static int allocatedNodeIterabledIds()
@@ -351,12 +351,12 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public EnumSet<InputType> getAllowedUsageTypes()
     {
-        return allowedUsageTypes;
+        return this.___allowedUsageTypes;
     }
 
-    /**
-     * Describes a field representing an input or successor edge in a node.
-     */
+    ///
+    // Describes a field representing an input or successor edge in a node.
+    ///
     // @class NodeClass.EdgeInfo
     protected static class EdgeInfo extends FieldsScanner.FieldInfo
     {
@@ -366,22 +366,22 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             super(__offset, __name, __type, __declaringClass);
         }
 
-        /**
-         * Sorts non-list edges before list edges.
-         */
+        ///
+        // Sorts non-list edges before list edges.
+        ///
         @Override
         public int compareTo(FieldsScanner.FieldInfo __o)
         {
-            if (NodeList.class.isAssignableFrom(__o.type))
+            if (NodeList.class.isAssignableFrom(__o.___type))
             {
-                if (!NodeList.class.isAssignableFrom(type))
+                if (!NodeList.class.isAssignableFrom(this.___type))
                 {
                     return -1;
                 }
             }
             else
             {
-                if (NodeList.class.isAssignableFrom(type))
+                if (NodeList.class.isAssignableFrom(this.___type))
                 {
                     return 1;
                 }
@@ -390,23 +390,23 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    /**
-     * Describes a field representing an {@linkplain Type#Inputs input} edge in a node.
-     */
+    ///
+    // Describes a field representing an {@linkplain Type#Inputs input} edge in a node.
+    ///
     // @class NodeClass.InputInfo
     protected static final class InputInfo extends EdgeInfo
     {
         // @field
-        final InputType inputType;
+        final InputType ___inputType;
         // @field
-        final boolean optional;
+        final boolean ___optional;
 
         // @cons
         public InputInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass, InputType __inputType, boolean __optional)
         {
             super(__offset, __name, __type, __declaringClass);
-            this.inputType = __inputType;
-            this.optional = __optional;
+            this.___inputType = __inputType;
+            this.___optional = __optional;
         }
     }
 
@@ -414,13 +414,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     protected static final class NodeFieldsScanner extends FieldsScanner
     {
         // @field
-        public final ArrayList<InputInfo> inputs = new ArrayList<>();
+        public final ArrayList<InputInfo> ___inputs = new ArrayList<>();
         // @field
-        public final ArrayList<EdgeInfo> successors = new ArrayList<>();
+        public final ArrayList<EdgeInfo> ___successors = new ArrayList<>();
         // @field
-        int directInputs;
+        int ___directInputs;
         // @field
-        int directSuccessors;
+        int ___directSuccessors;
 
         // @cons
         protected NodeFieldsScanner(FieldsScanner.CalcOffset __calc, NodeClass<?> __superNodeClass)
@@ -428,11 +428,11 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             super(__calc);
             if (__superNodeClass != null)
             {
-                InputEdges.translateInto(__superNodeClass.inputs, inputs);
-                Edges.translateInto(__superNodeClass.successors, successors);
-                Fields.translateInto(__superNodeClass.data, data);
-                directInputs = __superNodeClass.inputs.getDirectCount();
-                directSuccessors = __superNodeClass.successors.getDirectCount();
+                InputEdges.translateInto(__superNodeClass.___inputs, this.___inputs);
+                Edges.translateInto(__superNodeClass.___successors, this.___successors);
+                Fields.translateInto(__superNodeClass.___data, this.___data);
+                this.___directInputs = __superNodeClass.___inputs.getDirectCount();
+                this.___directSuccessors = __superNodeClass.___successors.getDirectCount();
             }
         }
 
@@ -458,7 +458,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 {
                     GraalError.guarantee(NODE_CLASS.isAssignableFrom(__type) || __type.isInterface(), "invalid input type: %s", __type);
                     GraalError.guarantee(!Modifier.isFinal(__modifiers), "Node input field %s should not be final", __field);
-                    directInputs++;
+                    this.___directInputs++;
                 }
                 InputType __inputType;
                 if (__inputAnnotation != null)
@@ -469,7 +469,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 {
                     __inputType = __optionalInputAnnotation.value();
                 }
-                inputs.add(new InputInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __inputType, __field.isAnnotationPresent(Node.OptionalInput.class)));
+                this.___inputs.add(new InputInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __inputType, __field.isAnnotationPresent(Node.OptionalInput.class)));
             }
             else if (__successorAnnotation != null)
             {
@@ -483,13 +483,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 {
                     GraalError.guarantee(NODE_CLASS.isAssignableFrom(__type), "invalid successor type: %s", __type);
                     GraalError.guarantee(!Modifier.isFinal(__modifiers), "Node successor field %s should not be final", __field);
-                    directSuccessors++;
+                    this.___directSuccessors++;
                 }
-                successors.add(new EdgeInfo(__offset, __field.getName(), __type, __field.getDeclaringClass()));
+                this.___successors.add(new EdgeInfo(__offset, __field.getName(), __type, __field.getDeclaringClass()));
             }
             else
             {
-                GraalError.guarantee(!NODE_CLASS.isAssignableFrom(__type) || __field.getName().equals("Null"), "suspicious node __field: %s", __field);
+                GraalError.guarantee(!NODE_CLASS.isAssignableFrom(__type) || __field.getName().equals("Null"), "suspicious node field: %s", __field);
                 GraalError.guarantee(!INPUT_LIST_CLASS.isAssignableFrom(__type), "suspicious node input list field: %s", __field);
                 GraalError.guarantee(!SUCCESSOR_LIST_CLASS.isAssignableFrom(__type), "suspicious node successor list field: %s", __field);
                 super.scanField(__field, __offset);
@@ -552,27 +552,27 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     public int valueNumber(Node __n)
     {
         int __number = 0;
-        if (canGVN)
+        if (this.___canGVN)
         {
-            __number = startGVNNumber;
-            for (int __i = 0; __i < data.getCount(); ++__i)
+            __number = this.___startGVNNumber;
+            for (int __i = 0; __i < this.___data.getCount(); ++__i)
             {
-                Class<?> __type = data.getType(__i);
+                Class<?> __type = this.___data.getType(__i);
                 if (__type.isPrimitive())
                 {
                     if (__type == Integer.TYPE)
                     {
-                        int __intValue = data.getInt(__n, __i);
+                        int __intValue = this.___data.getInt(__n, __i);
                         __number += __intValue;
                     }
                     else if (__type == Long.TYPE)
                     {
-                        long __longValue = data.getLong(__n, __i);
+                        long __longValue = this.___data.getLong(__n, __i);
                         __number += __longValue ^ (__longValue >>> 32);
                     }
                     else if (__type == Boolean.TYPE)
                     {
-                        boolean __booleanValue = data.getBoolean(__n, __i);
+                        boolean __booleanValue = this.___data.getBoolean(__n, __i);
                         if (__booleanValue)
                         {
                             __number += 7;
@@ -580,34 +580,34 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                     }
                     else if (__type == Float.TYPE)
                     {
-                        float __floatValue = data.getFloat(__n, __i);
+                        float __floatValue = this.___data.getFloat(__n, __i);
                         __number += Float.floatToRawIntBits(__floatValue);
                     }
                     else if (__type == Double.TYPE)
                     {
-                        double __doubleValue = data.getDouble(__n, __i);
+                        double __doubleValue = this.___data.getDouble(__n, __i);
                         long __longValue = Double.doubleToRawLongBits(__doubleValue);
                         __number += __longValue ^ (__longValue >>> 32);
                     }
                     else if (__type == Short.TYPE)
                     {
-                        short __shortValue = data.getShort(__n, __i);
+                        short __shortValue = this.___data.getShort(__n, __i);
                         __number += __shortValue;
                     }
                     else if (__type == Character.TYPE)
                     {
-                        char __charValue = data.getChar(__n, __i);
+                        char __charValue = this.___data.getChar(__n, __i);
                         __number += __charValue;
                     }
                     else if (__type == Byte.TYPE)
                     {
-                        byte __byteValue = data.getByte(__n, __i);
+                        byte __byteValue = this.___data.getByte(__n, __i);
                         __number += __byteValue;
                     }
                 }
                 else
                 {
-                    Object __o = data.getObject(__n, __i);
+                    Object __o = this.___data.getObject(__n, __i);
                     __number += deepHashCode0(__o);
                 }
                 __number *= 13;
@@ -692,15 +692,15 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public boolean dataEquals(Node __a, Node __b)
     {
-        for (int __i = 0; __i < data.getCount(); ++__i)
+        for (int __i = 0; __i < this.___data.getCount(); ++__i)
         {
-            Class<?> __type = data.getType(__i);
+            Class<?> __type = this.___data.getType(__i);
             if (__type.isPrimitive())
             {
                 if (__type == Integer.TYPE)
                 {
-                    int __aInt = data.getInt(__a, __i);
-                    int __bInt = data.getInt(__b, __i);
+                    int __aInt = this.___data.getInt(__a, __i);
+                    int __bInt = this.___data.getInt(__b, __i);
                     if (__aInt != __bInt)
                     {
                         return false;
@@ -708,8 +708,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else if (__type == Boolean.TYPE)
                 {
-                    boolean __aBoolean = data.getBoolean(__a, __i);
-                    boolean __bBoolean = data.getBoolean(__b, __i);
+                    boolean __aBoolean = this.___data.getBoolean(__a, __i);
+                    boolean __bBoolean = this.___data.getBoolean(__b, __i);
                     if (__aBoolean != __bBoolean)
                     {
                         return false;
@@ -717,8 +717,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else if (__type == Long.TYPE)
                 {
-                    long __aLong = data.getLong(__a, __i);
-                    long __bLong = data.getLong(__b, __i);
+                    long __aLong = this.___data.getLong(__a, __i);
+                    long __bLong = this.___data.getLong(__b, __i);
                     if (__aLong != __bLong)
                     {
                         return false;
@@ -726,8 +726,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else if (__type == Float.TYPE)
                 {
-                    float __aFloat = data.getFloat(__a, __i);
-                    float __bFloat = data.getFloat(__b, __i);
+                    float __aFloat = this.___data.getFloat(__a, __i);
+                    float __bFloat = this.___data.getFloat(__b, __i);
                     if (__aFloat != __bFloat)
                     {
                         return false;
@@ -735,8 +735,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else if (__type == Double.TYPE)
                 {
-                    double __aDouble = data.getDouble(__a, __i);
-                    double __bDouble = data.getDouble(__b, __i);
+                    double __aDouble = this.___data.getDouble(__a, __i);
+                    double __bDouble = this.___data.getDouble(__b, __i);
                     if (__aDouble != __bDouble)
                     {
                         return false;
@@ -744,8 +744,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else if (__type == Short.TYPE)
                 {
-                    short __aShort = data.getShort(__a, __i);
-                    short __bShort = data.getShort(__b, __i);
+                    short __aShort = this.___data.getShort(__a, __i);
+                    short __bShort = this.___data.getShort(__b, __i);
                     if (__aShort != __bShort)
                     {
                         return false;
@@ -753,8 +753,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else if (__type == Character.TYPE)
                 {
-                    char __aChar = data.getChar(__a, __i);
-                    char __bChar = data.getChar(__b, __i);
+                    char __aChar = this.___data.getChar(__a, __i);
+                    char __bChar = this.___data.getChar(__b, __i);
                     if (__aChar != __bChar)
                     {
                         return false;
@@ -762,8 +762,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else if (__type == Byte.TYPE)
                 {
-                    byte __aByte = data.getByte(__a, __i);
-                    byte __bByte = data.getByte(__b, __i);
+                    byte __aByte = this.___data.getByte(__a, __i);
+                    byte __bByte = this.___data.getByte(__b, __i);
                     if (__aByte != __bByte)
                     {
                         return false;
@@ -772,8 +772,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             }
             else
             {
-                Object __objectA = data.getObject(__a, __i);
-                Object __objectB = data.getObject(__b, __i);
+                Object __objectA = this.___data.getObject(__a, __i);
+                Object __objectB = this.___data.getObject(__b, __i);
                 if (__objectA != __objectB)
                 {
                     if (__objectA != null && __objectB != null)
@@ -849,8 +849,8 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     void updateInputSuccInPlace(Node __node, InplaceUpdateClosure __duplicationReplacement)
     {
-        updateEdgesInPlace(__node, __duplicationReplacement, inputs);
-        updateEdgesInPlace(__node, __duplicationReplacement, successors);
+        updateEdgesInPlace(__node, __duplicationReplacement, this.___inputs);
+        updateEdgesInPlace(__node, __duplicationReplacement, this.___successors);
     }
 
     private static NodeList<Node> updateEdgeListCopy(Node __node, NodeList<Node> __list, InplaceUpdateClosure __duplicationReplacement, Edges.Type __type)
@@ -869,27 +869,27 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return __result;
     }
 
-    /**
-     * Gets the input or successor edges defined by this node class.
-     */
+    ///
+    // Gets the input or successor edges defined by this node class.
+    ///
     public Edges getEdges(Edges.Type __type)
     {
-        return __type == Edges.Type.Inputs ? inputs : successors;
+        return __type == Edges.Type.Inputs ? this.___inputs : this.___successors;
     }
 
     public Edges getInputEdges()
     {
-        return inputs;
+        return this.___inputs;
     }
 
     public Edges getSuccessorEdges()
     {
-        return successors;
+        return this.___successors;
     }
 
-    /**
-     * Returns a newly allocated node for which no subclass-specific constructor has been called.
-     */
+    ///
+    // Returns a newly allocated node for which no subclass-specific constructor has been called.
+    ///
     @SuppressWarnings("unchecked")
     public Node allocateInstance()
     {
@@ -913,7 +913,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     // @iface NodeClass.InplaceUpdateClosure
     interface InplaceUpdateClosure
     {
-        Node replacement(Node node, Edges.Type type);
+        Node replacement(Node __node, Edges.Type __type);
     }
 
     static EconomicMap<Node, Node> addGraphDuplicate(final Graph __graph, final Graph __oldGraph, int __estimatedNodeCount, Iterable<? extends Node> __nodes, final DuplicationReplacement __replacements)
@@ -1045,74 +1045,74 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    /**
-     * @return true if the node has no inputs and no successors
-     */
+    ///
+    // @return true if the node has no inputs and no successors
+    ///
     public boolean isLeafNode()
     {
-        return isLeafNode;
+        return this.___isLeafNode;
     }
 
     public int getLeafId()
     {
-        return this.leafId;
+        return this.___leafId;
     }
 
     public NodeClass<? super T> getSuperNodeClass()
     {
-        return superNodeClass;
+        return this.___superNodeClass;
     }
 
     public long inputsIteration()
     {
-        return inputsIteration;
+        return this.___inputsIteration;
     }
 
-    /**
-     * An iterator that will iterate over edges.
-     *
-     * An iterator of this type will not return null values, unless edges are modified concurrently.
-     * Concurrent modifications are detected by an assertion on a best-effort basis.
-     */
+    ///
+    // An iterator that will iterate over edges.
+    //
+    // An iterator of this type will not return null values, unless edges are modified concurrently.
+    // Concurrent modifications are detected by an assertion on a best-effort basis.
+    ///
     // @class NodeClass.RawEdgesIterator
     private static final class RawEdgesIterator implements Iterator<Node>
     {
         // @field
-        protected final Node node;
+        protected final Node ___node;
         // @field
-        protected long mask;
+        protected long ___mask;
         // @field
-        protected Node nextValue;
+        protected Node ___nextValue;
 
         // @cons
         RawEdgesIterator(Node __node, long __mask)
         {
             super();
-            this.node = __node;
-            this.mask = __mask;
+            this.___node = __node;
+            this.___mask = __mask;
         }
 
         @Override
         public boolean hasNext()
         {
-            Node __next = nextValue;
+            Node __next = this.___nextValue;
             if (__next != null)
             {
                 return true;
             }
             else
             {
-                nextValue = forward();
-                return nextValue != null;
+                this.___nextValue = forward();
+                return this.___nextValue != null;
             }
         }
 
         private Node forward()
         {
-            while (mask != 0)
+            while (this.___mask != 0)
             {
                 Node __next = getInput();
-                mask = advanceInput();
+                this.___mask = advanceInput();
                 if (__next != null)
                 {
                     return __next;
@@ -1124,7 +1124,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         @Override
         public Node next()
         {
-            Node __next = nextValue;
+            Node __next = this.___nextValue;
             if (__next == null)
             {
                 __next = forward();
@@ -1139,63 +1139,63 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             }
             else
             {
-                nextValue = null;
+                this.___nextValue = null;
                 return __next;
             }
         }
 
         public final long advanceInput()
         {
-            int __state = (int) mask & 0x03;
+            int __state = (int) this.___mask & 0x03;
             if (__state == 0)
             {
                 // Skip normal field.
-                return mask >>> NEXT_EDGE;
+                return this.___mask >>> NEXT_EDGE;
             }
             else if (__state == 1)
             {
                 // We are iterating a node list.
-                if ((mask & 0xFFFF00) != 0)
+                if ((this.___mask & 0xFFFF00) != 0)
                 {
                     // Node list count is non-zero, decrease by 1.
-                    return mask - 0x100;
+                    return this.___mask - 0x100;
                 }
                 else
                 {
                     // Node list is finished => go to next input.
-                    return mask >>> 24;
+                    return this.___mask >>> 24;
                 }
             }
             else
             {
                 // Need to expand node list.
-                NodeList<?> __nodeList = Edges.getNodeListUnsafe(node, mask & 0xFC);
+                NodeList<?> __nodeList = Edges.getNodeListUnsafe(this.___node, this.___mask & 0xFC);
                 if (__nodeList != null)
                 {
                     int __size = __nodeList.size();
                     if (__size != 0)
                     {
                         // Set pointer to upper most index of node list.
-                        return ((mask >>> NEXT_EDGE) << 24) | (mask & 0xFD) | ((__size - 1) << NEXT_EDGE);
+                        return ((this.___mask >>> NEXT_EDGE) << 24) | (this.___mask & 0xFD) | ((__size - 1) << NEXT_EDGE);
                     }
                 }
                 // Node list is empty or null => skip.
-                return mask >>> NEXT_EDGE;
+                return this.___mask >>> NEXT_EDGE;
             }
         }
 
         public Node getInput()
         {
-            int __state = (int) mask & 0x03;
+            int __state = (int) this.___mask & 0x03;
             if (__state == 0)
             {
-                return Edges.getNodeUnsafe(node, mask & 0xFC);
+                return Edges.getNodeUnsafe(this.___node, this.___mask & 0xFC);
             }
             else if (__state == 1)
             {
                 // We are iterating a node list.
-                NodeList<?> __nodeList = Edges.getNodeListUnsafe(node, mask & 0xFC);
-                return __nodeList.nodes[__nodeList.size() - 1 - (int) ((mask >>> NEXT_EDGE) & 0xFFFF)];
+                NodeList<?> __nodeList = Edges.getNodeListUnsafe(this.___node, this.___mask & 0xFC);
+                return __nodeList.___nodes[__nodeList.size() - 1 - (int) ((this.___mask >>> NEXT_EDGE) & 0xFFFF)];
             }
             else
             {
@@ -1218,7 +1218,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public NodeIterable<Node> getSuccessorIterable(final Node __node)
     {
-        long __mask = this.successorIteration;
+        long __mask = this.___successorIteration;
         // @closure
         return new NodeIterable<Node>()
         {
@@ -1232,7 +1232,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public NodeIterable<Node> getInputIterable(final Node __node)
     {
-        long __mask = this.inputsIteration;
+        long __mask = this.___inputsIteration;
         // @closure
         return new NodeIterable<Node>()
         {
@@ -1246,12 +1246,12 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public boolean equalSuccessors(Node __node, Node __other)
     {
-        return equalEdges(__node, __other, successorIteration);
+        return equalEdges(__node, __other, this.___successorIteration);
     }
 
     public boolean equalInputs(Node __node, Node __other)
     {
-        return equalEdges(__node, __other, inputsIteration);
+        return equalEdges(__node, __other, this.___inputsIteration);
     }
 
     private boolean equalEdges(Node __node, Node __other, long __mask)
@@ -1285,7 +1285,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public void pushInputs(Node __node, NodeStack __stack)
     {
-        long __myMask = this.inputsIteration;
+        long __myMask = this.___inputsIteration;
         while (__myMask != 0)
         {
             long __offset = (__myMask & OFFSET_MASK);
@@ -1323,12 +1323,12 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public void applySuccessors(Node __node, EdgeVisitor __consumer)
     {
-        applyEdges(__node, __consumer, this.successorIteration);
+        applyEdges(__node, __consumer, this.___successorIteration);
     }
 
     public void applyInputs(Node __node, EdgeVisitor __consumer)
     {
-        applyEdges(__node, __consumer, this.inputsIteration);
+        applyEdges(__node, __consumer, this.___inputsIteration);
     }
 
     private static void applyEdges(Node __node, EdgeVisitor __consumer, long __mask)
@@ -1379,7 +1379,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public void unregisterAtSuccessorsAsPredecessor(Node __node)
     {
-        long __myMask = this.successorIteration;
+        long __myMask = this.___successorIteration;
         while (__myMask != 0)
         {
             long __offset = (__myMask & OFFSET_MASK);
@@ -1419,7 +1419,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public void registerAtSuccessorsAsPredecessor(Node __node)
     {
-        long __myMask = this.successorIteration;
+        long __myMask = this.___successorIteration;
         while (__myMask != 0)
         {
             long __offset = (__myMask & OFFSET_MASK);
@@ -1457,12 +1457,12 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public boolean replaceFirstInput(Node __node, Node __key, Node __replacement)
     {
-        return replaceFirstEdge(__node, __key, __replacement, this.inputsIteration);
+        return replaceFirstEdge(__node, __key, __replacement, this.___inputsIteration);
     }
 
     public boolean replaceFirstSuccessor(Node __node, Node __key, Node __replacement)
     {
-        return replaceFirstEdge(__node, __key, __replacement, this.successorIteration);
+        return replaceFirstEdge(__node, __key, __replacement, this.___successorIteration);
     }
 
     public static boolean replaceFirstEdge(Node __node, Node __key, Node __replacement, long __mask)
@@ -1495,7 +1495,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public void registerAtInputsAsUsage(Node __node)
     {
-        long __myMask = this.inputsIteration;
+        long __myMask = this.___inputsIteration;
         while (__myMask != 0)
         {
             long __offset = (__myMask & OFFSET_MASK);
@@ -1533,7 +1533,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public void unregisterAtInputsAsUsage(Node __node)
     {
-        long __myMask = this.inputsIteration;
+        long __myMask = this.___inputsIteration;
         while (__myMask != 0)
         {
             long __offset = (__myMask & OFFSET_MASK);

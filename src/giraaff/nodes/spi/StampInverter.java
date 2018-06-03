@@ -6,13 +6,13 @@ import giraaff.nodes.ValueNode;
 // @iface StampInverter
 public interface StampInverter
 {
-    /**
-     * Computes the stamp of the input for the given output stamp.
-     */
-    Stamp invertStamp(Stamp outStamp);
+    ///
+    // Computes the stamp of the input for the given output stamp.
+    ///
+    Stamp invertStamp(Stamp __outStamp);
 
-    /**
-     * Gets the input node.
-     */
+    ///
+    // Gets the input node.
+    ///
     ValueNode getValue();
 }

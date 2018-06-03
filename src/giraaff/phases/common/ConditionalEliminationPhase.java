@@ -78,9 +78,9 @@ import giraaff.phases.tiers.PhaseContext;
 public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 {
     // @field
-    private final boolean fullSchedule;
+    private final boolean ___fullSchedule;
     // @field
-    private final boolean moveGuards;
+    private final boolean ___moveGuards;
 
     // @cons
     public ConditionalEliminationPhase(boolean __fullSchedule)
@@ -92,8 +92,8 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     public ConditionalEliminationPhase(boolean __fullSchedule, boolean __moveGuards)
     {
         super();
-        this.fullSchedule = __fullSchedule;
-        this.moveGuards = __moveGuards;
+        this.___fullSchedule = __fullSchedule;
+        this.___moveGuards = __moveGuards;
     }
 
     @Override
@@ -102,9 +102,9 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         BlockMap<List<Node>> __blockToNodes = null;
         NodeMap<Block> __nodeToBlock = null;
         ControlFlowGraph __cfg = ControlFlowGraph.compute(__graph, true, true, true, true);
-        if (fullSchedule)
+        if (this.___fullSchedule)
         {
-            if (moveGuards)
+            if (this.___moveGuards)
             {
                 __cfg.visitDominatorTree(new MoveGuardsUpwards(), __graph.hasValueProxies());
             }
@@ -136,25 +136,25 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     public static final class MoveGuardsUpwards implements ControlFlowGraph.RecursiveVisitor<Block>
     {
         // @field
-        Block anchorBlock;
+        Block ___anchorBlock;
 
         @Override
         public Block enter(Block __b)
         {
-            Block __oldAnchorBlock = anchorBlock;
+            Block __oldAnchorBlock = this.___anchorBlock;
             if (__b.getDominator() == null || __b.getDominator().getPostdominator() != __b)
             {
                 // New anchor.
-                anchorBlock = __b;
+                this.___anchorBlock = __b;
             }
 
             AbstractBeginNode __beginNode = __b.getBeginNode();
-            if (__beginNode instanceof AbstractMergeNode && anchorBlock != __b)
+            if (__beginNode instanceof AbstractMergeNode && this.___anchorBlock != __b)
             {
                 AbstractMergeNode __mergeNode = (AbstractMergeNode) __beginNode;
                 for (GuardNode __guard : __mergeNode.guards().snapshot())
                 {
-                    GuardNode __newlyCreatedGuard = new GuardNode(__guard.getCondition(), anchorBlock.getBeginNode(), __guard.getReason(), __guard.getAction(), __guard.isNegated(), __guard.getSpeculation());
+                    GuardNode __newlyCreatedGuard = new GuardNode(__guard.getCondition(), this.___anchorBlock.getBeginNode(), __guard.getReason(), __guard.getAction(), __guard.isNegated(), __guard.getSpeculation());
                     GuardNode __newGuard = __mergeNode.graph().unique(__newlyCreatedGuard);
                     __guard.replaceAndDelete(__newGuard);
                 }
@@ -194,7 +194,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                                 // Cannot optimize due to different speculations.
                                 continue;
                             }
-                            GuardNode __newlyCreatedGuard = new GuardNode(__guard.getCondition(), anchorBlock.getBeginNode(), __guard.getReason(), __guard.getAction(), __guard.isNegated(), __speculation);
+                            GuardNode __newlyCreatedGuard = new GuardNode(__guard.getCondition(), this.___anchorBlock.getBeginNode(), __guard.getReason(), __guard.getAction(), __guard.isNegated(), __speculation);
                             GuardNode __newGuard = __node.graph().unique(__newlyCreatedGuard);
                             if (__otherGuard.isAlive())
                             {
@@ -211,7 +211,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         @Override
         public void exit(Block __b, Block __value)
         {
-            anchorBlock = __value;
+            this.___anchorBlock = __value;
         }
     }
 
@@ -219,24 +219,24 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     private static final class PhiInfoElement
     {
         // @field
-        private EconomicMap<EndNode, InfoElement> infoElements;
+        private EconomicMap<EndNode, InfoElement> ___infoElements;
 
         public void set(EndNode __end, InfoElement __infoElement)
         {
-            if (infoElements == null)
+            if (this.___infoElements == null)
             {
-                infoElements = EconomicMap.create(Equivalence.IDENTITY);
+                this.___infoElements = EconomicMap.create(Equivalence.IDENTITY);
             }
-            infoElements.put(__end, __infoElement);
+            this.___infoElements.put(__end, __infoElement);
         }
 
         public InfoElement get(EndNode __end)
         {
-            if (infoElements == null)
+            if (this.___infoElements == null)
             {
                 return null;
             }
-            return infoElements.get(__end);
+            return this.___infoElements.get(__end);
         }
     }
 
@@ -244,38 +244,38 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     public static final class Instance implements ControlFlowGraph.RecursiveVisitor<Integer>
     {
         // @field
-        protected final NodeMap<InfoElement> map;
+        protected final NodeMap<InfoElement> ___map;
         // @field
-        protected final BlockMap<List<Node>> blockToNodes;
+        protected final BlockMap<List<Node>> ___blockToNodes;
         // @field
-        protected final NodeMap<Block> nodeToBlock;
+        protected final NodeMap<Block> ___nodeToBlock;
         // @field
-        protected final CanonicalizerTool tool;
+        protected final CanonicalizerTool ___tool;
         // @field
-        protected final NodeStack undoOperations;
+        protected final NodeStack ___undoOperations;
         // @field
-        protected final StructuredGraph graph;
+        protected final StructuredGraph ___graph;
         // @field
-        protected final EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>> mergeMaps;
+        protected final EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>> ___mergeMaps;
 
-        /**
-         * Tests which may be eliminated because post dominating tests to prove a broader condition.
-         */
+        ///
+        // Tests which may be eliminated because post dominating tests to prove a broader condition.
+        ///
         // @field
-        private Deque<DeoptimizingGuard> pendingTests;
+        private Deque<DeoptimizingGuard> ___pendingTests;
 
         // @cons
         public Instance(StructuredGraph __graph, BlockMap<List<Node>> __blockToNodes, NodeMap<Block> __nodeToBlock, PhaseContext __context)
         {
             super();
-            this.graph = __graph;
-            this.blockToNodes = __blockToNodes;
-            this.nodeToBlock = __nodeToBlock;
-            this.undoOperations = new NodeStack();
-            this.map = __graph.createNodeMap();
-            pendingTests = new ArrayDeque<>();
-            tool = GraphUtil.getDefaultSimplifier(__context.getMetaAccess(), __context.getConstantReflection(), __context.getConstantFieldProvider(), false, __graph.getAssumptions(), __context.getLowerer());
-            mergeMaps = EconomicMap.create();
+            this.___graph = __graph;
+            this.___blockToNodes = __blockToNodes;
+            this.___nodeToBlock = __nodeToBlock;
+            this.___undoOperations = new NodeStack();
+            this.___map = __graph.createNodeMap();
+            this.___pendingTests = new ArrayDeque<>();
+            this.___tool = GraphUtil.getDefaultSimplifier(__context.getMetaAccess(), __context.getConstantReflection(), __context.getConstantFieldProvider(), false, __graph.getAssumptions(), __context.getLowerer());
+            this.___mergeMaps = EconomicMap.create();
         }
 
         protected void processConditionAnchor(ConditionAnchorNode __node)
@@ -361,18 +361,18 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         @Override
         public Integer enter(Block __block)
         {
-            int __mark = undoOperations.size();
+            int __mark = this.___undoOperations.size();
             // For now conservatively collect guards only within the same block.
-            pendingTests.clear();
+            this.___pendingTests.clear();
             processNodes(__block);
             return __mark;
         }
 
         protected void processNodes(Block __block)
         {
-            if (blockToNodes != null)
+            if (this.___blockToNodes != null)
             {
-                for (Node __n : blockToNodes.get(__block))
+                for (Node __n : this.___blockToNodes.get(__block))
                 {
                     if (__n.isAlive())
                     {
@@ -411,7 +411,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         {
             if (__node instanceof NodeWithState && !(__node instanceof GuardingNode))
             {
-                pendingTests.clear();
+                this.___pendingTests.clear();
             }
 
             if (__node instanceof MergeNode)
@@ -421,7 +421,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
             if (__node instanceof AbstractBeginNode)
             {
-                if (__node instanceof LoopExitNode && graph.hasValueProxies())
+                if (__node instanceof LoopExitNode && this.___graph.hasValueProxies())
                 {
                     // Condition must not be used down this path.
                     return;
@@ -452,7 +452,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
         protected void introducePisForPhis(MergeNode __merge)
         {
-            EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.mergeMaps.get(__merge);
+            EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.___mergeMaps.get(__merge);
             if (__mergeMap != null)
             {
                 MapCursor<ValuePhiNode, PhiInfoElement> __entries = __mergeMap.getEntries();
@@ -532,7 +532,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
                         if (__allow)
                         {
-                            ValuePhiNode __newPhi = graph.addWithoutUnique(new ValuePhiNode(__bestPossibleStamp, __merge));
+                            ValuePhiNode __newPhi = this.___graph.addWithoutUnique(new ValuePhiNode(__bestPossibleStamp, __merge));
                             for (int __i = 0; __i < __phi.valueCount(); ++__i)
                             {
                                 ValueNode __valueAt = __phi.valueAt(__i);
@@ -549,7 +549,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                                     {
                                         __input = __valueAt;
                                     }
-                                    ValueNode __valueNode = graph.maybeAddOrUnique(PiNode.create(__input, __curBestStamp, (ValueNode) __infoElement.guard));
+                                    ValueNode __valueNode = this.___graph.maybeAddOrUnique(PiNode.create(__input, __curBestStamp, (ValueNode) __infoElement.___guard));
                                     __valueAt = __valueNode;
                                 }
                                 __newPhi.addInput(__valueAt);
@@ -568,7 +568,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             {
                 MergeNode __merge = (MergeNode) __abstractMerge;
 
-                EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.mergeMaps.get(__merge);
+                EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.___mergeMaps.get(__merge);
                 for (ValuePhiNode __phi : __merge.valuePhis())
                 {
                     ValueNode __valueAt = __phi.valueAt(__end);
@@ -581,7 +581,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                             if (__mergeMap == null)
                             {
                                 __mergeMap = EconomicMap.create();
-                                mergeMaps.put(__merge, __mergeMap);
+                                this.___mergeMaps.put(__merge, __mergeMap);
                             }
 
                             PhiInfoElement __phiInfoElement = __mergeMap.get(__phi);
@@ -639,10 +639,8 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                         ValueNode __andX = __and.getX();
                         if (__and.getY() == __y && maybeMultipleUsages(__andX))
                         {
-                            /*
-                             * This 'and' proves something about some of the bits in and.getX().
-                             * It's equivalent to or'ing in the mask value since those values are known to be set.
-                             */
+                            // This 'and' proves something about some of the bits in and.getX().
+                            // It's equivalent to or'ing in the mask value since those values are known to be set.
                             BinaryOp<Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
                             IntegerStamp __newStampX = (IntegerStamp) __op.foldStamp(getSafeStamp(__andX), getOtherSafeStamp(__y));
                             registerNewStamp(__andX, __newStampX, __guard);
@@ -652,7 +650,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             }
             if (__guard instanceof DeoptimizingGuard)
             {
-                pendingTests.push((DeoptimizingGuard) __guard);
+                this.___pendingTests.push((DeoptimizingGuard) __guard);
             }
             registerCondition(__condition, __negated, __guard);
         }
@@ -684,7 +682,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     InfoElement __infoElement = getInfoElements(__x);
                     while (__infoElement != null)
                     {
-                        Stamp __result = __binary.foldStamp(__infoElement.stamp, __y.stamp(NodeView.DEFAULT));
+                        Stamp __result = __binary.foldStamp(__infoElement.___stamp, __y.stamp(NodeView.DEFAULT));
                         if (__result != null)
                         {
                             return Pair.create(__infoElement, __result);
@@ -696,24 +694,24 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             return null;
         }
 
-        /**
-         * Get the stamp that may be used for the value for which we are registering the condition.
-         * We may directly use the stamp here without restriction, because any later lookup of the
-         * registered info elements is in the same chain of pi nodes.
-         */
+        ///
+        // Get the stamp that may be used for the value for which we are registering the condition.
+        // We may directly use the stamp here without restriction, because any later lookup of the
+        // registered info elements is in the same chain of pi nodes.
+        ///
         private static Stamp getSafeStamp(ValueNode __x)
         {
             return __x.stamp(NodeView.DEFAULT);
         }
 
-        /**
-         * We can only use the stamp of a second value involved in the condition if we are sure that
-         * we are not implicitly creating a dependency on a pi node that is responsible for that
-         * stamp. For now, we are conservatively only using the stamps of constants. Under certain
-         * circumstances, we may also be able to use the stamp of the value after skipping pi nodes
-         * (e.g. the stamp of a parameter after inlining, or the stamp of a fixed node that can
-         * never be replaced with a pi node via canonicalization).
-         */
+        ///
+        // We can only use the stamp of a second value involved in the condition if we are sure that
+        // we are not implicitly creating a dependency on a pi node that is responsible for that
+        // stamp. For now, we are conservatively only using the stamps of constants. Under certain
+        // circumstances, we may also be able to use the stamp of the value after skipping pi nodes
+        // (e.g. the stamp of a parameter after inlining, or the stamp of a fixed node that can
+        // never be replaced with a pi node via canonicalization).
+        ///
         private static Stamp getOtherSafeStamp(ValueNode __x)
         {
             if (__x.isConstant() || __x.graph().isAfterFixedReadPhase())
@@ -723,38 +721,38 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             return __x.stamp(NodeView.DEFAULT).unrestricted();
         }
 
-        /**
-         * Recursively try to fold stamps within this expression using information from
-         * {@link #getInfoElements(ValueNode)}. It's only safe to use constants and one
-         * {@link InfoElement} otherwise more than one guard would be required.
-         *
-         * @return the pair of the @{link InfoElement} used and the stamp produced for the whole expression
-         */
+        ///
+        // Recursively try to fold stamps within this expression using information from
+        // {@link #getInfoElements(ValueNode)}. It's only safe to use constants and one
+        // {@link InfoElement} otherwise more than one guard would be required.
+        //
+        // @return the pair of the @{link InfoElement} used and the stamp produced for the whole expression
+        ///
         Pair<InfoElement, Stamp> recursiveFoldStampFromInfo(Node __node)
         {
             return recursiveFoldStamp(__node);
         }
 
-        /**
-         * Look for a preceding guard whose condition is implied by {@code thisGuard}. If we find
-         * one, try to move this guard just above that preceding guard so that we can fold it:
-         *
-         * <pre>
-         *     guard(C1); // preceding guard
-         *     ...
-         *     guard(C2); // thisGuard
-         * </pre>
-         *
-         * If C2 => C1, transform to:
-         *
-         * <pre>
-         *     guard(C2);
-         *     ...
-         * </pre>
-         */
+        ///
+        // Look for a preceding guard whose condition is implied by {@code thisGuard}. If we find
+        // one, try to move this guard just above that preceding guard so that we can fold it:
+        //
+        // <pre>
+        //     guard(C1); // preceding guard
+        //     ...
+        //     guard(C2); // thisGuard
+        // </pre>
+        //
+        // If C2 => C1, transform to:
+        //
+        // <pre>
+        //     guard(C2);
+        //     ...
+        // </pre>
+        ///
         protected boolean foldPendingTest(DeoptimizingGuard __thisGuard, ValueNode __original, Stamp __newStamp, GuardRewirer __rewireGuardFunction)
         {
-            for (DeoptimizingGuard __pendingGuard : pendingTests)
+            for (DeoptimizingGuard __pendingGuard : this.___pendingTests)
             {
                 LogicNode __pendingCondition = __pendingGuard.getCondition();
                 TriState __result = TriState.UNKNOWN;
@@ -791,10 +789,8 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 }
                 if (__result.isKnown())
                 {
-                    /*
-                     * The test case be folded using the information available but the test can only
-                     * be moved up if we're sure there's no schedule dependence.
-                     */
+                    // The test case be folded using the information available but the test can only
+                    // be moved up if we're sure there's no schedule dependence.
                     if (canScheduleAbove(__thisGuard.getCondition(), __pendingGuard.asNode(), __original) && foldGuard(__thisGuard, __pendingGuard, __result.toBoolean(), __newStamp, __rewireGuardFunction))
                     {
                         return true;
@@ -806,13 +802,13 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
         private boolean canScheduleAbove(Node __n, Node __target, ValueNode __knownToBeAbove)
         {
-            Block __targetBlock = nodeToBlock.get(__target);
-            Block __testBlock = nodeToBlock.get(__n);
+            Block __targetBlock = this.___nodeToBlock.get(__target);
+            Block __testBlock = this.___nodeToBlock.get(__n);
             if (__targetBlock != null && __testBlock != null)
             {
                 if (__targetBlock == __testBlock)
                 {
-                    for (Node __fixed : blockToNodes.get(__targetBlock))
+                    for (Node __fixed : this.___blockToNodes.get(__targetBlock))
                     {
                         if (__fixed == __n)
                         {
@@ -831,7 +827,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             }
             InputFilter __v = new InputFilter(__knownToBeAbove);
             __n.applyInputs(__v);
-            return __v.ok;
+            return __v.___ok;
         }
 
         protected boolean foldGuard(DeoptimizingGuard __thisGuard, DeoptimizingGuard __otherGuard, boolean __outcome, Stamp __guardedValueStamp, GuardRewirer __rewireGuardFunction)
@@ -840,17 +836,16 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             if (__action != null && __otherGuard.getSpeculation() == __thisGuard.getSpeculation())
             {
                 LogicNode __condition = (LogicNode) __thisGuard.getCondition().copyWithInputs();
-                /*
-                 * We have ...; guard(C1); guard(C2);...
-                 *
-                 * Where the first guard is 'otherGuard' and the second one 'thisGuard'.
-                 *
-                 * Depending on 'outcome', we have C2 => C1 or C2 => !C1.
-                 *
-                 * - If C2 => C1, 'mustDeopt' below is false and we transform to ...; guard(C2); ...
-                 *
-                 * - If C2 => !C1, 'mustDeopt' is true and we transform to ..; guard(C1); deopt;
-                 */
+                // We have ...; guard(C1); guard(C2);...
+                //
+                // Where the first guard is 'otherGuard' and the second one 'thisGuard'.
+                //
+                // Depending on 'outcome', we have C2 => C1 or C2 => !C1.
+                //
+                // - If C2 => C1, 'mustDeopt' below is false and we transform to ...; guard(C2); ...
+                //
+                // - If C2 => !C1, 'mustDeopt' is true and we transform to ..; guard(C1); deopt;
+
                 // for the second case, the action of the deopt is copied from there:
                 __thisGuard.setAction(__action);
                 GuardRewirer __rewirer = (__guard, __result, __innerGuardedValueStamp, __newInput) ->
@@ -891,7 +886,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             {
                 return null;
             }
-            return map.getAndGrow(__value);
+            return this.___map.getAndGrow(__value);
         }
 
         protected boolean rewireGuards(GuardingNode __guard, boolean __result, ValueNode __proxifiedInput, Stamp __guardedValueStamp, GuardRewirer __rewireGuardFunction)
@@ -1013,13 +1008,11 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     }
                 }
 
-                /*
-                 * For complex expressions involving constants, see if it's possible to fold the
-                 * tests by using stamps one level up in the expression. For instance, (x + n < y)
-                 * might fold if something is known about x and all other values are constants. The
-                 * reason for the constant restriction is that if more than 1 real value is involved
-                 * the code might need to adopt multiple guards to have proper dependences.
-                 */
+                // For complex expressions involving constants, see if it's possible to fold the
+                // tests by using stamps one level up in the expression. For instance, (x + n < y)
+                // might fold if something is known about x and all other values are constants. The
+                // reason for the constant restriction is that if more than 1 real value is involved
+                // the code might need to adopt multiple guards to have proper dependences.
                 if (__x instanceof BinaryArithmeticNode<?> && __y.isConstant())
                 {
                     BinaryArithmeticNode<?> __binary = (BinaryArithmeticNode<?>) __x;
@@ -1046,10 +1039,8 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                         AndNode __and = (AndNode) __x;
                         if (__and.getY() == __y)
                         {
-                            /*
-                             * This 'and' proves something about some of the bits in and.getX().
-                             * It's equivalent to or'ing in the mask value since those values are known to be set.
-                             */
+                            // This 'and' proves something about some of the bits in and.getX().
+                            // It's equivalent to or'ing in the mask value since those values are known to be set.
                             BinaryOp<Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
                             IntegerStamp __newStampX = (IntegerStamp) __op.foldStamp(getSafeStamp(__and.getX()), getOtherSafeStamp(__y));
                             if (foldPendingTest(__thisGuard, __and.getX(), __newStampX, __rewireGuardFunction))
@@ -1142,8 +1133,8 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 {
                     __proxiedValue = __value;
                 }
-                map.setAndGrow(__value, new InfoElement(__stamp, __guard, __proxiedValue, map.getAndGrow(__value)));
-                undoOperations.push(__value);
+                this.___map.setAndGrow(__value, new InfoElement(__stamp, __guard, __proxiedValue, this.___map.getAndGrow(__value)));
+                this.___undoOperations.push(__value);
                 if (__propagateThroughPis && __value instanceof PiNode)
                 {
                     PiNode __piNode = (PiNode) __value;
@@ -1231,12 +1222,12 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         public void exit(Block __b, Integer __state)
         {
             int __mark = __state;
-            while (undoOperations.size() > __mark)
+            while (this.___undoOperations.size() > __mark)
             {
-                Node __node = undoOperations.pop();
+                Node __node = this.___undoOperations.pop();
                 if (__node.isAlive())
                 {
-                    map.set(__node, map.get(__node).getParent());
+                    this.___map.set(__node, this.___map.get(__node).getParent());
                 }
             }
         }
@@ -1246,43 +1237,43 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     // @iface ConditionalEliminationPhase.InfoElementProvider
     protected interface InfoElementProvider
     {
-        Iterable<InfoElement> getInfoElements(ValueNode value);
+        Iterable<InfoElement> getInfoElements(ValueNode __value);
     }
 
-    /**
-     * Checks for safe nodes when moving pending tests up.
-     */
+    ///
+    // Checks for safe nodes when moving pending tests up.
+    ///
     // @class ConditionalEliminationPhase.InputFilter
     static final class InputFilter extends Node.EdgeVisitor
     {
         // @field
-        boolean ok;
+        boolean ___ok;
         // @field
-        private ValueNode value;
+        private ValueNode ___value;
 
         // @cons
         InputFilter(ValueNode __value)
         {
             super();
-            this.value = __value;
-            this.ok = true;
+            this.___value = __value;
+            this.___ok = true;
         }
 
         @Override
         public Node apply(Node __node, Node __curNode)
         {
-            if (!ok)
+            if (!this.___ok)
             {
                 // abort the recursion
                 return __curNode;
             }
             if (!(__curNode instanceof ValueNode))
             {
-                ok = false;
+                this.___ok = false;
                 return __curNode;
             }
             ValueNode __curValue = (ValueNode) __curNode;
-            if (__curValue.isConstant() || __curValue == value || __curValue instanceof ParameterNode)
+            if (__curValue.isConstant() || __curValue == this.___value || __curValue instanceof ParameterNode)
             {
                 return __curNode;
             }
@@ -1292,7 +1283,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             }
             else
             {
-                ok = false;
+                this.___ok = false;
             }
             return __curNode;
         }
@@ -1302,58 +1293,58 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     // @iface ConditionalEliminationPhase.GuardRewirer
     protected interface GuardRewirer
     {
-        /**
-         * Called if the condition could be proven to have a constant value ({@code result}) under
-         * {@code guard}.
-         *
-         * @param guard the guard whose result is proven
-         * @param result the known result of the guard
-         * @param newInput new input to pi nodes depending on the new guard
-         * @return whether the transformation could be applied
-         */
-        boolean rewire(GuardingNode guard, boolean result, Stamp guardedValueStamp, ValueNode newInput);
+        ///
+        // Called if the condition could be proven to have a constant value ({@code result}) under
+        // {@code guard}.
+        //
+        // @param guard the guard whose result is proven
+        // @param result the known result of the guard
+        // @param newInput new input to pi nodes depending on the new guard
+        // @return whether the transformation could be applied
+        ///
+        boolean rewire(GuardingNode __guard, boolean __result, Stamp __guardedValueStamp, ValueNode __newInput);
     }
 
     // @class ConditionalEliminationPhase.InfoElement
     protected static final class InfoElement
     {
         // @field
-        private final Stamp stamp;
+        private final Stamp ___stamp;
         // @field
-        private final GuardingNode guard;
+        private final GuardingNode ___guard;
         // @field
-        private final ValueNode proxifiedInput;
+        private final ValueNode ___proxifiedInput;
         // @field
-        private final InfoElement parent;
+        private final InfoElement ___parent;
 
         // @cons
         public InfoElement(Stamp __stamp, GuardingNode __guard, ValueNode __proxifiedInput, InfoElement __parent)
         {
             super();
-            this.stamp = __stamp;
-            this.guard = __guard;
-            this.proxifiedInput = __proxifiedInput;
-            this.parent = __parent;
+            this.___stamp = __stamp;
+            this.___guard = __guard;
+            this.___proxifiedInput = __proxifiedInput;
+            this.___parent = __parent;
         }
 
         public InfoElement getParent()
         {
-            return parent;
+            return this.___parent;
         }
 
         public Stamp getStamp()
         {
-            return stamp;
+            return this.___stamp;
         }
 
         public GuardingNode getGuard()
         {
-            return guard;
+            return this.___guard;
         }
 
         public ValueNode getProxifiedInput()
         {
-            return proxifiedInput;
+            return this.___proxifiedInput;
         }
     }
 }

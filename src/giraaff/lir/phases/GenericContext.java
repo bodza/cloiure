@@ -3,37 +3,37 @@ package giraaff.lir.phases;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-/**
- * Allows storing of arbitrary data.
- */
+///
+// Allows storing of arbitrary data.
+///
 // @class GenericContext
 public class GenericContext
 {
     // @field
-    private ArrayList<Object> context;
+    private ArrayList<Object> ___context;
 
     // @cons
     public GenericContext()
     {
         super();
-        context = null;
+        this.___context = null;
     }
 
     public <T> void contextAdd(T __obj)
     {
-        if (context == null)
+        if (this.___context == null)
         {
-            context = new ArrayList<>();
+            this.___context = new ArrayList<>();
         }
-        context.add(__obj);
+        this.___context.add(__obj);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T contextLookup(Class<T> __clazz)
     {
-        if (context != null)
+        if (this.___context != null)
         {
-            for (Object __e : context)
+            for (Object __e : this.___context)
             {
                 if (__clazz.isInstance(__e))
                 {
@@ -47,9 +47,9 @@ public class GenericContext
     @SuppressWarnings("unchecked")
     public <T> T contextRemove(Class<T> __clazz)
     {
-        if (context != null)
+        if (this.___context != null)
         {
-            ListIterator<Object> __it = context.listIterator();
+            ListIterator<Object> __it = this.___context.listIterator();
             while (__it.hasNext())
             {
                 Object __e = __it.next();
@@ -57,9 +57,9 @@ public class GenericContext
                 {
                     // remove entry
                     __it.remove();
-                    if (context.isEmpty())
+                    if (this.___context.isEmpty())
                     {
-                        context = null;
+                        this.___context = null;
                     }
                     return (T) __e;
                 }

@@ -15,25 +15,23 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     // @def
     public static final NodeClass<LoopExitNode> TYPE = NodeClass.create(LoopExitNode.class);
 
-    /*
-     * The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
-     * evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
-     * after - but we still must not have type system violations for that short amount of time.
-     */
+    // The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
+    // evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
+    // after - but we still must not have type system violations for that short amount of time.
     @Input(InputType.Association)
     // @field
-    AbstractBeginNode loopBegin;
+    AbstractBeginNode ___loopBegin;
 
     // @cons
     public LoopExitNode(LoopBeginNode __loop)
     {
         super(TYPE);
-        loopBegin = __loop;
+        this.___loopBegin = __loop;
     }
 
     public LoopBeginNode loopBegin()
     {
-        return (LoopBeginNode) loopBegin;
+        return (LoopBeginNode) this.___loopBegin;
     }
 
     @Override

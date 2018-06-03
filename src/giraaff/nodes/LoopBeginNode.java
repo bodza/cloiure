@@ -21,21 +21,21 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     public static final NodeClass<LoopBeginNode> TYPE = NodeClass.create(LoopBeginNode.class);
 
     // @field
-    protected double loopFrequency;
+    protected double ___loopFrequency;
     // @field
-    protected double loopOrigFrequency;
+    protected double ___loopOrigFrequency;
     // @field
-    protected int nextEndIndex;
+    protected int ___nextEndIndex;
     // @field
-    protected int unswitches;
+    protected int ___unswitches;
     // @field
-    protected int splits;
+    protected int ___splits;
     // @field
-    protected int inversionCount;
+    protected int ___inversionCount;
     // @field
-    protected LoopType loopType;
+    protected LoopType ___loopType;
     // @field
-    protected int unrollFactor;
+    protected int ___unrollFactor;
 
     // @enum LoopBeginNode.LoopType
     public enum LoopType
@@ -46,81 +46,81 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         POST_LOOP
     }
 
-    /**
-     * See {@link LoopEndNode#canSafepoint} for more information.
-     */
+    ///
+    // See {@link LoopEndNode#canSafepoint} for more information.
+    ///
     // @field
-    boolean canEndsSafepoint;
+    boolean ___canEndsSafepoint;
 
     @OptionalInput(InputType.Guard)
     // @field
-    GuardingNode overflowGuard;
+    GuardingNode ___overflowGuard;
 
     // @cons
     public LoopBeginNode()
     {
         super(TYPE);
-        loopFrequency = 1;
-        loopOrigFrequency = 1;
-        unswitches = 0;
-        splits = 0;
-        this.canEndsSafepoint = true;
-        loopType = LoopType.SIMPLE_LOOP;
-        unrollFactor = 1;
+        this.___loopFrequency = 1;
+        this.___loopOrigFrequency = 1;
+        this.___unswitches = 0;
+        this.___splits = 0;
+        this.___canEndsSafepoint = true;
+        this.___loopType = LoopType.SIMPLE_LOOP;
+        this.___unrollFactor = 1;
     }
 
     public boolean isSimpleLoop()
     {
-        return (loopType == LoopType.SIMPLE_LOOP);
+        return (this.___loopType == LoopType.SIMPLE_LOOP);
     }
 
     public void setPreLoop()
     {
-        loopType = LoopType.PRE_LOOP;
+        this.___loopType = LoopType.PRE_LOOP;
     }
 
     public boolean isPreLoop()
     {
-        return (loopType == LoopType.PRE_LOOP);
+        return (this.___loopType == LoopType.PRE_LOOP);
     }
 
     public void setMainLoop()
     {
-        loopType = LoopType.MAIN_LOOP;
+        this.___loopType = LoopType.MAIN_LOOP;
     }
 
     public boolean isMainLoop()
     {
-        return (loopType == LoopType.MAIN_LOOP);
+        return (this.___loopType == LoopType.MAIN_LOOP);
     }
 
     public void setPostLoop()
     {
-        loopType = LoopType.POST_LOOP;
+        this.___loopType = LoopType.POST_LOOP;
     }
 
     public boolean isPostLoop()
     {
-        return (loopType == LoopType.POST_LOOP);
+        return (this.___loopType == LoopType.POST_LOOP);
     }
 
     public int getUnrollFactor()
     {
-        return unrollFactor;
+        return this.___unrollFactor;
     }
 
     public void setUnrollFactor(int __currentUnrollFactor)
     {
-        unrollFactor = __currentUnrollFactor;
+        this.___unrollFactor = __currentUnrollFactor;
     }
 
-    /**
-     * Disables safepoint for the whole loop, i.e., for all {@link LoopEndNode loop ends}.
-     */
+    ///
+    // Disables safepoint for the whole loop, i.e., for all {@link LoopEndNode loop ends}.
+    ///
     public void disableSafepoint()
     {
         // Store flag locally in case new loop ends are created later on.
-        this.canEndsSafepoint = false;
+        this.___canEndsSafepoint = false;
         // Propagate flag to all existing loop ends.
         for (LoopEndNode __loopEnd : loopEnds())
         {
@@ -130,31 +130,31 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public double loopOrigFrequency()
     {
-        return loopOrigFrequency;
+        return this.___loopOrigFrequency;
     }
 
     public void setLoopOrigFrequency(double __loopOrigFrequency)
     {
-        this.loopOrigFrequency = __loopOrigFrequency;
+        this.___loopOrigFrequency = __loopOrigFrequency;
     }
 
     public double loopFrequency()
     {
-        return loopFrequency;
+        return this.___loopFrequency;
     }
 
     public void setLoopFrequency(double __loopFrequency)
     {
-        this.loopFrequency = __loopFrequency;
+        this.___loopFrequency = __loopFrequency;
     }
 
-    /**
-     * Returns the <b>unordered</b> set of {@link LoopEndNode} that correspond to back-edges for
-     * this loop. The order of the back-edges is unspecified, if you need to get an ordering
-     * compatible for {@link PhiNode} creation, use {@link #orderedLoopEnds()}.
-     *
-     * @return the set of {@code LoopEndNode} that correspond to back-edges for this loop
-     */
+    ///
+    // Returns the <b>unordered</b> set of {@link LoopEndNode} that correspond to back-edges for
+    // this loop. The order of the back-edges is unspecified, if you need to get an ordering
+    // compatible for {@link PhiNode} creation, use {@link #orderedLoopEnds()}.
+    //
+    // @return the set of {@code LoopEndNode} that correspond to back-edges for this loop
+    ///
     public NodeIterable<LoopEndNode> loopEnds()
     {
         return usages().filter(LoopEndNode.class);
@@ -171,23 +171,23 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         return super.anchored().filter(NodePredicates.isNotA(LoopEndNode.class).nor(LoopExitNode.class));
     }
 
-    /**
-     * Returns the set of {@link LoopEndNode} that correspond to back-edges for this loop, in
-     * increasing {@link #phiPredecessorIndex} order. This method is suited to create new loop
-     * {@link PhiNode}.
-     *
-     * For example a new PhiNode may be added as follow:
-     *
-     * <pre>
-     * PhiNode phi = new ValuePhiNode(stamp, loop);
-     * phi.addInput(forwardEdgeValue);
-     * for (LoopEndNode loopEnd : loop.orderedLoopEnds()) {
-     *     phi.addInput(backEdgeValue(loopEnd));
-     * }
-     * </pre>
-     *
-     * @return the set of {@code LoopEndNode} that correspond to back-edges for this loop
-     */
+    ///
+    // Returns the set of {@link LoopEndNode} that correspond to back-edges for this loop, in
+    // increasing {@link #phiPredecessorIndex} order. This method is suited to create new loop
+    // {@link PhiNode}.
+    //
+    // For example a new PhiNode may be added as follow:
+    //
+    // <pre>
+    // PhiNode phi = new ValuePhiNode(stamp, loop);
+    // phi.addInput(forwardEdgeValue);
+    // for (LoopEndNode loopEnd : loop.orderedLoopEnds()) {
+    //     phi.addInput(backEdgeValue(loopEnd));
+    // }
+    // </pre>
+    //
+    // @return the set of {@code LoopEndNode} that correspond to back-edges for this loop
+    ///
     public LoopEndNode[] orderedLoopEnds()
     {
         LoopEndNode[] __result = new LoopEndNode[this.getLoopEndCount()];
@@ -210,12 +210,12 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public int splits()
     {
-        return splits;
+        return this.___splits;
     }
 
     public void incrementSplits()
     {
-        splits++;
+        this.___splits++;
     }
 
     @Override
@@ -240,7 +240,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
                     __le.setEndIndex(__leIdx - 1);
                 }
             }
-            nextEndIndex--;
+            this.___nextEndIndex--;
         }
         else
         {
@@ -269,7 +269,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         {
             return super.forwardEndIndex((EndNode) __pred);
         }
-        throw new InternalError("should not reach here: " + "unknown __pred : " + __pred);
+        throw new InternalError("should not reach here: " + "unknown pred : " + __pred);
     }
 
     @Override
@@ -292,32 +292,32 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     int nextEndIndex()
     {
-        return nextEndIndex++;
+        return this.___nextEndIndex++;
     }
 
     public int getLoopEndCount()
     {
-        return nextEndIndex;
+        return this.___nextEndIndex;
     }
 
     public int unswitches()
     {
-        return unswitches;
+        return this.___unswitches;
     }
 
     public void incrementUnswitches()
     {
-        unswitches++;
+        this.___unswitches++;
     }
 
     public int getInversionCount()
     {
-        return inversionCount;
+        return this.___inversionCount;
     }
 
     public void setInversionCount(int __count)
     {
-        inversionCount = __count;
+        this.___inversionCount = __count;
     }
 
     @Override
@@ -357,22 +357,22 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public GuardingNode getOverflowGuard()
     {
-        return overflowGuard;
+        return this.___overflowGuard;
     }
 
     public void setOverflowGuard(GuardingNode __overflowGuard)
     {
-        updateUsagesInterface(this.overflowGuard, __overflowGuard);
-        this.overflowGuard = __overflowGuard;
+        updateUsagesInterface(this.___overflowGuard, __overflowGuard);
+        this.___overflowGuard = __overflowGuard;
     }
 
     // @def
     private static final int NO_INCREMENT = Integer.MIN_VALUE;
 
-    /**
-     * Returns an array with one entry for each input of the phi, which is either {@link #NO_INCREMENT}
-     * or the increment, i.e., the value by which the phi is incremented in the corresponding branch.
-     */
+    ///
+    // Returns an array with one entry for each input of the phi, which is either {@link #NO_INCREMENT}
+    // or the increment, i.e., the value by which the phi is incremented in the corresponding branch.
+    ///
     private static int[] getSelfIncrements(PhiNode __phi)
     {
         int[] __selfIncrement = new int[__phi.valueCount()];
@@ -405,10 +405,10 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         return __selfIncrement;
     }
 
-    /**
-     * Coalesces loop phis that represent the same value (which is not handled by normal Global
-     * Value Numbering).
-     */
+    ///
+    // Coalesces loop phis that represent the same value (which is not handled by normal Global
+    // Value Numbering).
+    ///
     public void canonicalizePhis(SimplifierTool __tool)
     {
         int __phiCount = phis().count();

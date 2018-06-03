@@ -8,11 +8,11 @@ import giraaff.nodes.java.ArrayLengthNode;
 import giraaff.nodes.spi.ArrayLengthProvider;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * A {@link PiNode} that also provides an array length in addition to a more refined stamp. A usage
- * that reads the array length, such as an {@link ArrayLengthNode}, can be canonicalized based on
- * this information.
- */
+///
+// A {@link PiNode} that also provides an array length in addition to a more refined stamp. A usage
+// that reads the array length, such as an {@link ArrayLengthNode}, can be canonicalized based on
+// this information.
+///
 // @class PiArrayNode
 public final class PiArrayNode extends PiNode implements ArrayLengthProvider
 {
@@ -21,19 +21,19 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
 
     @Input
     // @field
-    ValueNode length;
+    ValueNode ___length;
 
     @Override
     public ValueNode length()
     {
-        return length;
+        return this.___length;
     }
 
     // @cons
     public PiArrayNode(ValueNode __object, ValueNode __length, Stamp __stamp)
     {
         super(TYPE, __object, __stamp, null);
-        this.length = __length;
+        this.___length = __length;
     }
 
     @Override
@@ -46,16 +46,16 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
         return super.canonical(__tool);
     }
 
-    /**
-     * Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
-     */
+    ///
+    // Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
+    ///
     @NodeIntrinsic(Placeholder.class)
-    public static native Object piArrayCastToSnippetReplaceeStamp(Object object, int length);
+    public static native Object piArrayCastToSnippetReplaceeStamp(Object __object, int __length);
 
-    /**
-     * A placeholder node in a snippet that will be replaced with a {@link PiArrayNode} when the
-     * snippet is instantiated.
-     */
+    ///
+    // A placeholder node in a snippet that will be replaced with a {@link PiArrayNode} when the
+    // snippet is instantiated.
+    ///
     // @class PiArrayNode.Placeholder
     public static final class Placeholder extends PiNode.Placeholder
     {
@@ -64,19 +64,19 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
 
         @Input
         // @field
-        ValueNode length;
+        ValueNode ___length;
 
         // @cons
         protected Placeholder(ValueNode __object, ValueNode __length)
         {
             super(TYPE, __object);
-            this.length = __length;
+            this.___length = __length;
         }
 
         @Override
         public void makeReplacement(Stamp __snippetReplaceeStamp)
         {
-            PiArrayNode __piArray = graph().addOrUnique(new PiArrayNode(object(), length, __snippetReplaceeStamp));
+            PiArrayNode __piArray = graph().addOrUnique(new PiArrayNode(object(), this.___length, __snippetReplaceeStamp));
             replaceAndDelete(__piArray);
         }
     }

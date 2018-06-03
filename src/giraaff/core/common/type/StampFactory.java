@@ -101,18 +101,18 @@ public final class StampFactory
         return booleanFalse;
     }
 
-    /**
-     * Return a stamp for a Java kind, as it would be represented on the bytecode stack.
-     */
+    ///
+    // Return a stamp for a Java kind, as it would be represented on the bytecode stack.
+    ///
     public static Stamp forKind(JavaKind __kind)
     {
         return stampCache[__kind.ordinal()];
     }
 
-    /**
-     * Return the stamp for the {@code void} type. This will return a singleton instance than can be
-     * compared using {@code ==}.
-     */
+    ///
+    // Return the stamp for the {@code void} type. This will return a singleton instance than can be
+    // compared using {@code ==}.
+    ///
     public static Stamp forVoid()
     {
         return VoidStamp.getInstance();
@@ -143,13 +143,13 @@ public final class StampFactory
         return forInteger(__kind.getBitCount(), __lowerBound, __upperBound);
     }
 
-    /**
-     * Create a new stamp use {@code newLowerBound} and {@code newUpperBound} computing the
-     * appropriate {@link IntegerStamp#upMask} and {@link IntegerStamp#downMask} and incorporating
-     * any mask information from {@code maskStamp}.
-     *
-     * @return a new stamp with the appropriate bounds and masks
-     */
+    ///
+    // Create a new stamp use {@code newLowerBound} and {@code newUpperBound} computing the
+    // appropriate {@link IntegerStamp#upMask} and {@link IntegerStamp#downMask} and incorporating
+    // any mask information from {@code maskStamp}.
+    //
+    // @return a new stamp with the appropriate bounds and masks
+    ///
     public static IntegerStamp forIntegerWithMask(int __bits, long __newLowerBound, long __newUpperBound, IntegerStamp __maskStamp)
     {
         IntegerStamp __limit = StampFactory.forInteger(__bits, __newLowerBound, __newUpperBound);

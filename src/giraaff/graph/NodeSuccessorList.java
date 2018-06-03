@@ -34,7 +34,7 @@ public final class NodeSuccessorList<T extends Node> extends NodeList<T>
     @Override
     protected void update(T __oldNode, T __newNode)
     {
-        self.updatePredecessor(__oldNode, __newNode);
+        this.___self.updatePredecessor(__oldNode, __newNode);
     }
 
     @Override

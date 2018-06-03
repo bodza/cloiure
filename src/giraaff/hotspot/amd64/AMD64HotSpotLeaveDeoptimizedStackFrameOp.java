@@ -11,9 +11,9 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Pops a deoptimized stack frame off the stack including the return address.
- */
+///
+// Pops a deoptimized stack frame off the stack including the return address.
+///
 @Opcode
 // @class AMD64HotSpotLeaveDeoptimizedStackFrameOp
 final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogueOp
@@ -23,29 +23,27 @@ final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogu
 
     @Use(OperandFlag.REG)
     // @field
-    AllocatableValue frameSize;
+    AllocatableValue ___frameSize;
     @Use(OperandFlag.REG)
     // @field
-    AllocatableValue framePointer;
+    AllocatableValue ___framePointer;
 
     // @cons
     AMD64HotSpotLeaveDeoptimizedStackFrameOp(AllocatableValue __frameSize, AllocatableValue __initialInfo)
     {
         super(TYPE);
-        this.frameSize = __frameSize;
-        this.framePointer = __initialInfo;
+        this.___frameSize = __frameSize;
+        this.___framePointer = __initialInfo;
     }
 
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        Register __stackPointer = __crb.frameMap.getRegisterConfig().getFrameRegister();
-        __masm.addq(__stackPointer, ValueUtil.asRegister(frameSize));
+        Register __stackPointer = __crb.___frameMap.getRegisterConfig().getFrameRegister();
+        __masm.addq(__stackPointer, ValueUtil.asRegister(this.___frameSize));
 
-        /*
-         * Restore the frame pointer before stack bang because if a stack overflow is thrown it
-         * needs to be pushed (and preserved).
-         */
-        __masm.movq(AMD64.rbp, ValueUtil.asRegister(framePointer));
+        // Restore the frame pointer before stack bang because if a stack overflow is thrown it
+        // needs to be pushed (and preserved).
+        __masm.movq(AMD64.rbp, ValueUtil.asRegister(this.___framePointer));
     }
 }

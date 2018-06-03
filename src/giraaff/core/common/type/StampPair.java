@@ -1,23 +1,23 @@
 package giraaff.core.common.type;
 
-/**
- * A pair of stamp with one being the stamp that can be trusted and the other one being a guess that
- * needs a dynamic check to be used.
- */
+///
+// A pair of stamp with one being the stamp that can be trusted and the other one being a guess that
+// needs a dynamic check to be used.
+///
 // @class StampPair
 public final class StampPair
 {
     // @field
-    private final Stamp trustedStamp;
+    private final Stamp ___trustedStamp;
     // @field
-    private final Stamp uncheckedStamp;
+    private final Stamp ___uncheckedStamp;
 
     // @cons
     private StampPair(Stamp __trustedStamp, Stamp __uncheckedStamp)
     {
         super();
-        this.trustedStamp = __trustedStamp;
-        this.uncheckedStamp = __uncheckedStamp;
+        this.___trustedStamp = __trustedStamp;
+        this.___uncheckedStamp = __uncheckedStamp;
     }
 
     public static StampPair create(Stamp __trustedStamp, Stamp __uncheckedStamp)
@@ -32,11 +32,11 @@ public final class StampPair
 
     public Stamp getUncheckedStamp()
     {
-        return uncheckedStamp;
+        return this.___uncheckedStamp;
     }
 
     public Stamp getTrustedStamp()
     {
-        return trustedStamp;
+        return this.___trustedStamp;
     }
 }

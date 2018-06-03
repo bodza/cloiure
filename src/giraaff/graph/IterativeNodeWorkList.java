@@ -10,15 +10,15 @@ public final class IterativeNodeWorkList extends NodeWorkList
     private static final int EXPLICIT_BITMAP_THRESHOLD = 10;
 
     // @field
-    private int iterationLimit;
+    private int ___iterationLimit;
     // @field
-    private NodeBitMap inQueue;
+    private NodeBitMap ___inQueue;
 
     // @cons
     public IterativeNodeWorkList(Graph __graph, boolean __fill, int __iterationLimitPerNode)
     {
         super(__graph, __fill);
-        iterationLimit = (int) Long.min(__graph.getNodeCount() * (long) __iterationLimitPerNode, Integer.MAX_VALUE);
+        this.___iterationLimit = (int) Long.min(__graph.getNodeCount() * (long) __iterationLimitPerNode, Integer.MAX_VALUE);
     }
 
     @Override
@@ -29,9 +29,9 @@ public final class IterativeNodeWorkList extends NodeWorkList
         {
             private void dropDeleted()
             {
-                while (!IterativeNodeWorkList.this.worklist.isEmpty() && IterativeNodeWorkList.this.worklist.peek().isDeleted())
+                while (!IterativeNodeWorkList.this.___worklist.isEmpty() && IterativeNodeWorkList.this.___worklist.peek().isDeleted())
                 {
-                    IterativeNodeWorkList.this.worklist.remove();
+                    IterativeNodeWorkList.this.___worklist.remove();
                 }
             }
 
@@ -39,25 +39,25 @@ public final class IterativeNodeWorkList extends NodeWorkList
             public boolean hasNext()
             {
                 dropDeleted();
-                if (iterationLimit <= 0)
+                if (IterativeNodeWorkList.this.___iterationLimit <= 0)
                 {
                     return false;
                 }
-                return !IterativeNodeWorkList.this.worklist.isEmpty();
+                return !IterativeNodeWorkList.this.___worklist.isEmpty();
             }
 
             @Override
             public Node next()
             {
-                if (iterationLimit-- <= 0)
+                if (IterativeNodeWorkList.this.___iterationLimit-- <= 0)
                 {
                     throw new NoSuchElementException();
                 }
                 dropDeleted();
-                Node __node = IterativeNodeWorkList.this.worklist.remove();
-                if (IterativeNodeWorkList.this.inQueue != null)
+                Node __node = IterativeNodeWorkList.this.___worklist.remove();
+                if (IterativeNodeWorkList.this.___inQueue != null)
                 {
-                    IterativeNodeWorkList.this.inQueue.clearAndGrow(__node);
+                    IterativeNodeWorkList.this.___inQueue.clearAndGrow(__node);
                 }
                 return __node;
             }
@@ -75,21 +75,21 @@ public final class IterativeNodeWorkList extends NodeWorkList
     {
         if (__node != null)
         {
-            if (this.inQueue == null && this.worklist.size() > EXPLICIT_BITMAP_THRESHOLD)
+            if (this.___inQueue == null && this.___worklist.size() > EXPLICIT_BITMAP_THRESHOLD)
             {
                 inflateToBitMap(__node.graph());
             }
 
-            if (this.inQueue != null)
+            if (this.___inQueue != null)
             {
-                if (this.inQueue.isMarkedAndGrow(__node))
+                if (this.___inQueue.isMarkedAndGrow(__node))
                 {
                     return;
                 }
             }
             else
             {
-                for (Node __queuedNode : this.worklist)
+                for (Node __queuedNode : this.___worklist)
                 {
                     if (__queuedNode == __node)
                     {
@@ -97,24 +97,24 @@ public final class IterativeNodeWorkList extends NodeWorkList
                     }
                 }
             }
-            if (this.inQueue != null)
+            if (this.___inQueue != null)
             {
-                this.inQueue.markAndGrow(__node);
+                this.___inQueue.markAndGrow(__node);
             }
-            this.worklist.add(__node);
+            this.___worklist.add(__node);
         }
     }
 
     @Override
     public boolean contains(Node __node)
     {
-        if (this.inQueue != null)
+        if (this.___inQueue != null)
         {
-            return this.inQueue.isMarked(__node);
+            return this.___inQueue.isMarked(__node);
         }
         else
         {
-            for (Node __queuedNode : this.worklist)
+            for (Node __queuedNode : this.___worklist)
             {
                 if (__queuedNode == __node)
                 {
@@ -127,12 +127,12 @@ public final class IterativeNodeWorkList extends NodeWorkList
 
     private void inflateToBitMap(Graph __graph)
     {
-        this.inQueue = __graph.createNodeBitMap();
-        for (Node __queuedNode : this.worklist)
+        this.___inQueue = __graph.createNodeBitMap();
+        for (Node __queuedNode : this.___worklist)
         {
             if (__queuedNode.isAlive())
             {
-                this.inQueue.mark(__queuedNode);
+                this.___inQueue.mark(__queuedNode);
             }
         }
     }

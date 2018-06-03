@@ -21,9 +21,9 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.util.GraalError;
 
-/**
- * The {@code ConstantNode} represents a {@link Constant constant}.
- */
+///
+// The {@code ConstantNode} represents a {@link Constant constant}.
+///
 // @class ConstantNode
 public final class ConstantNode extends FloatingNode implements LIRLowerable
 {
@@ -31,23 +31,23 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
     public static final NodeClass<ConstantNode> TYPE = NodeClass.create(ConstantNode.class);
 
     // @field
-    protected final Constant value;
+    protected final Constant ___value;
 
     // @field
-    private final int stableDimension;
+    private final int ___stableDimension;
     // @field
-    private final boolean isDefaultStable;
+    private final boolean ___isDefaultStable;
 
     private static ConstantNode createPrimitive(JavaConstant __value)
     {
         return new ConstantNode(__value, StampFactory.forConstant(__value));
     }
 
-    /**
-     * Constructs a new node representing the specified constant.
-     *
-     * @param value the constant
-     */
+    ///
+    // Constructs a new node representing the specified constant.
+    //
+    // @param value the constant
+    ///
     // @cons
     public ConstantNode(Constant __value, Stamp __stamp)
     {
@@ -58,58 +58,56 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
     private ConstantNode(Constant __value, Stamp __stamp, int __stableDimension, boolean __isDefaultStable)
     {
         super(TYPE, __stamp);
-        this.value = __value;
-        this.stableDimension = __stableDimension;
+        this.___value = __value;
+        this.___stableDimension = __stableDimension;
         if (__stableDimension == 0)
         {
-            /*
-             * Ensure that isDefaultStable has a canonical value to avoid having two constant nodes that only differ
-             * in this field. The value of isDefaultStable is only used when we have a stable array dimension.
-             */
-            this.isDefaultStable = false;
+            // Ensure that isDefaultStable has a canonical value to avoid having two constant nodes that only differ
+            // in this field. The value of isDefaultStable is only used when we have a stable array dimension.
+            this.___isDefaultStable = false;
         }
         else
         {
-            this.isDefaultStable = __isDefaultStable;
+            this.___isDefaultStable = __isDefaultStable;
         }
     }
 
-    /**
-     * @return the constant value represented by this node
-     */
+    ///
+    // @return the constant value represented by this node
+    ///
     public Constant getValue()
     {
-        return value;
+        return this.___value;
     }
 
-    /**
-     * @return the number of stable dimensions if this is a stable array, otherwise 0
-     */
+    ///
+    // @return the number of stable dimensions if this is a stable array, otherwise 0
+    ///
     public int getStableDimension()
     {
-        return stableDimension;
+        return this.___stableDimension;
     }
 
-    /**
-     * @return true if this is a stable array and the default elements are considered stable
-     */
+    ///
+    // @return true if this is a stable array and the default elements are considered stable
+    ///
     public boolean isDefaultStable()
     {
-        return isDefaultStable;
+        return this.___isDefaultStable;
     }
 
-    /**
-     * Gathers all the {@link ConstantNode}s that are inputs to the
-     * {@linkplain StructuredGraph#getNodes() live nodes} in a given graph.
-     */
+    ///
+    // Gathers all the {@link ConstantNode}s that are inputs to the
+    // {@linkplain StructuredGraph#getNodes() live nodes} in a given graph.
+    ///
     public static NodeIterable<ConstantNode> getConstantNodes(StructuredGraph __graph)
     {
         return __graph.getNodes().filter(ConstantNode.class);
     }
 
-    /**
-     * Replaces this node at its usages with another node.
-     */
+    ///
+    // Replaces this node at its usages with another node.
+    ///
     public void replace(StructuredGraph __graph, Node __replacement)
     {
         replaceAtUsagesAndDelete(__replacement);
@@ -121,11 +119,11 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         LIRKind __kind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
         if (onlyUsedInVirtualState())
         {
-            __gen.setResult(this, new ConstantValue(__kind, value));
+            __gen.setResult(this, new ConstantValue(__kind, this.___value));
         }
         else
         {
-            __gen.setResult(this, __gen.getLIRGeneratorTool().emitConstant(__kind, value));
+            __gen.setResult(this, __gen.getLIRGeneratorTool().emitConstant(__kind, this.___value));
         }
     }
 
@@ -197,25 +195,25 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         return new ConstantNode(__constant, __stamp.constant(__constant, __metaAccess));
     }
 
-    /**
-     * Returns a node for a Java primitive.
-     */
+    ///
+    // Returns a node for a Java primitive.
+    ///
     public static ConstantNode forPrimitive(JavaConstant __constant, StructuredGraph __graph)
     {
         return forConstant(__constant, null, __graph);
     }
 
-    /**
-     * Returns a node for a Java primitive.
-     */
+    ///
+    // Returns a node for a Java primitive.
+    ///
     public static ConstantNode forPrimitive(JavaConstant __constant)
     {
         return forConstant(__constant, null);
     }
 
-    /**
-     * Returns a node for a primitive of a given type.
-     */
+    ///
+    // Returns a node for a primitive of a given type.
+    ///
     public static ConstantNode forPrimitive(Stamp __stamp, JavaConstant __constant, StructuredGraph __graph)
     {
         if (__stamp instanceof IntegerStamp)
@@ -229,9 +227,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         }
     }
 
-    /**
-     * Returns a node for a primitive of a given type.
-     */
+    ///
+    // Returns a node for a primitive of a given type.
+    ///
     public static ConstantNode forPrimitive(Stamp __stamp, Constant __constant)
     {
         if (__stamp instanceof IntegerStamp)
@@ -251,144 +249,144 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         }
     }
 
-    /**
-     * Returns a node for a double constant.
-     *
-     * @param d the double value for which to create the instruction
-     * @return a node for a double constant
-     */
+    ///
+    // Returns a node for a double constant.
+    //
+    // @param d the double value for which to create the instruction
+    // @return a node for a double constant
+    ///
     public static ConstantNode forDouble(double __d, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forDouble(__d)));
     }
 
-    /**
-     * Returns a node for a double constant.
-     *
-     * @param d the double value for which to create the instruction
-     * @return a node for a double constant
-     */
+    ///
+    // Returns a node for a double constant.
+    //
+    // @param d the double value for which to create the instruction
+    // @return a node for a double constant
+    ///
     public static ConstantNode forDouble(double __d)
     {
         return createPrimitive(JavaConstant.forDouble(__d));
     }
 
-    /**
-     * Returns a node for a float constant.
-     *
-     * @param f the float value for which to create the instruction
-     * @return a node for a float constant
-     */
+    ///
+    // Returns a node for a float constant.
+    //
+    // @param f the float value for which to create the instruction
+    // @return a node for a float constant
+    ///
     public static ConstantNode forFloat(float __f, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forFloat(__f)));
     }
 
-    /**
-     * Returns a node for a float constant.
-     *
-     * @param f the float value for which to create the instruction
-     * @return a node for a float constant
-     */
+    ///
+    // Returns a node for a float constant.
+    //
+    // @param f the float value for which to create the instruction
+    // @return a node for a float constant
+    ///
     public static ConstantNode forFloat(float __f)
     {
         return createPrimitive(JavaConstant.forFloat(__f));
     }
 
-    /**
-     * Returns a node for an long constant.
-     *
-     * @param i the long value for which to create the instruction
-     * @return a node for an long constant
-     */
+    ///
+    // Returns a node for an long constant.
+    //
+    // @param i the long value for which to create the instruction
+    // @return a node for an long constant
+    ///
     public static ConstantNode forLong(long __i, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forLong(__i)));
     }
 
-    /**
-     * Returns a node for an long constant.
-     *
-     * @param i the long value for which to create the instruction
-     * @return a node for an long constant
-     */
+    ///
+    // Returns a node for an long constant.
+    //
+    // @param i the long value for which to create the instruction
+    // @return a node for an long constant
+    ///
     public static ConstantNode forLong(long __i)
     {
         return createPrimitive(JavaConstant.forLong(__i));
     }
 
-    /**
-     * Returns a node for an integer constant.
-     *
-     * @param i the integer value for which to create the instruction
-     * @return a node for an integer constant
-     */
+    ///
+    // Returns a node for an integer constant.
+    //
+    // @param i the integer value for which to create the instruction
+    // @return a node for an integer constant
+    ///
     public static ConstantNode forInt(int __i, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
     }
 
-    /**
-     * Returns a node for an integer constant.
-     *
-     * @param i the integer value for which to create the instruction
-     * @return a node for an integer constant
-     */
+    ///
+    // Returns a node for an integer constant.
+    //
+    // @param i the integer value for which to create the instruction
+    // @return a node for an integer constant
+    ///
     public static ConstantNode forInt(int __i)
     {
         return createPrimitive(JavaConstant.forInt(__i));
     }
 
-    /**
-     * Returns a node for a boolean constant.
-     *
-     * @param i the boolean value for which to create the instruction
-     * @return a node representing the boolean
-     */
+    ///
+    // Returns a node for a boolean constant.
+    //
+    // @param i the boolean value for which to create the instruction
+    // @return a node representing the boolean
+    ///
     public static ConstantNode forBoolean(boolean __i, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forInt(__i ? 1 : 0)));
     }
 
-    /**
-     * Returns a node for a boolean constant.
-     *
-     * @param i the boolean value for which to create the instruction
-     * @return a node representing the boolean
-     */
+    ///
+    // Returns a node for a boolean constant.
+    //
+    // @param i the boolean value for which to create the instruction
+    // @return a node representing the boolean
+    ///
     public static ConstantNode forBoolean(boolean __i)
     {
         return createPrimitive(JavaConstant.forInt(__i ? 1 : 0));
     }
 
-    /**
-     * Returns a node for a byte constant.
-     *
-     * @param i the byte value for which to create the instruction
-     * @return a node representing the byte
-     */
+    ///
+    // Returns a node for a byte constant.
+    //
+    // @param i the byte value for which to create the instruction
+    // @return a node representing the byte
+    ///
     public static ConstantNode forByte(byte __i, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
     }
 
-    /**
-     * Returns a node for a char constant.
-     *
-     * @param i the char value for which to create the instruction
-     * @return a node representing the char
-     */
+    ///
+    // Returns a node for a char constant.
+    //
+    // @param i the char value for which to create the instruction
+    // @return a node representing the char
+    ///
     public static ConstantNode forChar(char __i, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
     }
 
-    /**
-     * Returns a node for a short constant.
-     *
-     * @param i the short value for which to create the instruction
-     * @return a node representing the short
-     */
+    ///
+    // Returns a node for a short constant.
+    //
+    // @param i the short value for which to create the instruction
+    // @return a node representing the short
+    ///
     public static ConstantNode forShort(short __i, StructuredGraph __graph)
     {
         return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
@@ -406,10 +404,10 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         return unique(__graph, new ConstantNode(__constant, StampFactory.forInteger(__bits, __bounds, __bounds)));
     }
 
-    /**
-     * Returns a node for a constant integer that's not directly representable as Java primitive
-     * (e.g. short).
-     */
+    ///
+    // Returns a node for a constant integer that's not directly representable as Java primitive
+    // (e.g. short).
+    ///
     public static ConstantNode forIntegerBits(int __bits, long __value, StructuredGraph __graph)
     {
         return forIntegerBits(__bits, JavaConstant.forPrimitiveInt(__bits, __value), __graph);
@@ -422,18 +420,18 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         return new ConstantNode(__constant, StampFactory.forInteger(__bits, __bounds, __bounds));
     }
 
-    /**
-     * Returns a node for a constant integer that's not directly representable as Java primitive
-     * (e.g. short).
-     */
+    ///
+    // Returns a node for a constant integer that's not directly representable as Java primitive
+    // (e.g. short).
+    ///
     public static ConstantNode forIntegerBits(int __bits, long __value)
     {
         return forIntegerBits(__bits, JavaConstant.forPrimitiveInt(__bits, __value));
     }
 
-    /**
-     * Returns a node for a constant integer that's compatible to a given stamp.
-     */
+    ///
+    // Returns a node for a constant integer that's compatible to a given stamp.
+    ///
     public static ConstantNode forIntegerStamp(Stamp __stamp, long __value, StructuredGraph __graph)
     {
         if (__stamp instanceof IntegerStamp)
@@ -447,9 +445,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         }
     }
 
-    /**
-     * Returns a node for a constant integer that's compatible to a given stamp.
-     */
+    ///
+    // Returns a node for a constant integer that's compatible to a given stamp.
+    ///
     public static ConstantNode forIntegerStamp(Stamp __stamp, long __value)
     {
         if (__stamp instanceof IntegerStamp)
@@ -519,17 +517,17 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         }
     }
 
-    /**
-     * Returns a node for a constant double that's compatible to a given stamp.
-     */
+    ///
+    // Returns a node for a constant double that's compatible to a given stamp.
+    ///
     public static ConstantNode forFloatingStamp(Stamp __stamp, double __value, StructuredGraph __graph)
     {
         return forFloatingKind(__stamp.getStackKind(), __value, __graph);
     }
 
-    /**
-     * Returns a node for a constant double that's compatible to a given stamp.
-     */
+    ///
+    // Returns a node for a constant double that's compatible to a given stamp.
+    ///
     public static ConstantNode forFloatingStamp(Stamp __stamp, double __value)
     {
         return forFloatingKind(__stamp.getStackKind(), __value);

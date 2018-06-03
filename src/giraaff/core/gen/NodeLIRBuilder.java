@@ -69,40 +69,40 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.util.GraalError;
 
-/**
- * This class traverses the HIR instructions and generates LIR instructions from them.
- */
+///
+// This class traverses the HIR instructions and generates LIR instructions from them.
+///
 // @class NodeLIRBuilder
 public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 {
     // @field
-    private final NodeMap<Value> nodeOperands;
+    private final NodeMap<Value> ___nodeOperands;
     // @field
-    private final LockStackHolder lockStackHolder;
+    private final LockStackHolder ___lockStackHolder;
 
     // @field
-    protected final LIRGenerator gen;
+    protected final LIRGenerator ___gen;
 
     // @field
-    private ValueNode currentInstruction;
+    private ValueNode ___currentInstruction;
 
     // @cons
     public NodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __gen)
     {
         super();
-        this.gen = (LIRGenerator) __gen;
-        this.nodeOperands = __graph.createNodeMap();
-        this.lockStackHolder = createLockStackHolder();
+        this.___gen = (LIRGenerator) __gen;
+        this.___nodeOperands = __graph.createNodeMap();
+        this.___lockStackHolder = createLockStackHolder();
     }
 
     protected abstract LockStackHolder createLockStackHolder();
 
-    /**
-     * Returns the operand that has been previously initialized by {@link #setResult(ValueNode, Value)} with the result
-     * of an instruction. It's a code generation error to ask for the operand of ValueNode that doesn't have one yet.
-     *
-     * @param node A node that produces a result value.
-     */
+    ///
+    // Returns the operand that has been previously initialized by {@link #setResult(ValueNode, Value)} with the result
+    // of an instruction. It's a code generation error to ask for the operand of ValueNode that doesn't have one yet.
+    //
+    // @param node A node that produces a result value.
+    ///
     @Override
     public Value operand(Node __node)
     {
@@ -117,17 +117,17 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     private Value getOperand(Node __node)
     {
-        if (nodeOperands == null)
+        if (this.___nodeOperands == null)
         {
             return null;
         }
-        return nodeOperands.get(__node);
+        return this.___nodeOperands.get(__node);
     }
 
     @Override
     public ValueNode valueForOperand(Value __value)
     {
-        UnmodifiableMapCursor<Node, Value> __cursor = nodeOperands.getEntries();
+        UnmodifiableMapCursor<Node, Value> __cursor = this.___nodeOperands.getEntries();
         while (__cursor.advance())
         {
             if (__cursor.getValue().equals(__value))
@@ -141,19 +141,19 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     @Override
     public Value setResult(ValueNode __x, Value __operand)
     {
-        nodeOperands.set(__x, __operand);
+        this.___nodeOperands.set(__x, __operand);
         return __operand;
     }
 
     public LabelRef getLIRBlock(FixedNode __b)
     {
-        Block __result = ((ControlFlowGraph) gen.getResult().getLIR().getControlFlowGraph()).blockFor(__b);
+        Block __result = ((ControlFlowGraph) this.___gen.getResult().getLIR().getControlFlowGraph()).blockFor(__b);
         int __suxIndex = 0;
-        for (AbstractBlockBase<?> __succ : gen.getCurrentBlock().getSuccessors())
+        for (AbstractBlockBase<?> __succ : this.___gen.getCurrentBlock().getSuccessors())
         {
             if (__succ == __result)
             {
-                return LabelRef.forSuccessor(gen.getResult().getLIR(), gen.getCurrentBlock(), __suxIndex);
+                return LabelRef.forSuccessor(this.___gen.getResult().getLIR(), this.___gen.getCurrentBlock(), __suxIndex);
             }
             __suxIndex++;
         }
@@ -162,12 +162,12 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     public final void append(LIRInstruction __op)
     {
-        gen.append(__op);
+        this.___gen.append(__op);
     }
 
     protected LIRKind getExactPhiKind(PhiNode __phi)
     {
-        LIRKind __derivedKind = gen.toRegisterKind(gen.getLIRKind(__phi.stamp(NodeView.DEFAULT)));
+        LIRKind __derivedKind = this.___gen.toRegisterKind(this.___gen.getLIRKind(__phi.stamp(NodeView.DEFAULT)));
         // Collect reference information.
         for (int __i = 0; __i < __phi.valueCount() && !__derivedKind.isUnknownReference(); __i++)
         {
@@ -182,8 +182,8 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             }
             else
             {
-                LIRKind __kind = gen.getLIRKind(__node.stamp(NodeView.DEFAULT));
-                __valueKind = gen.toRegisterKind(__kind);
+                LIRKind __kind = this.___gen.getLIRKind(__node.stamp(NodeView.DEFAULT));
+                __valueKind = this.___gen.toRegisterKind(__kind);
             }
             // Merge the reference information of the derived kind and the input.
             __derivedKind = LIRKind.mergeReferenceInformation(__derivedKind, __valueKind);
@@ -203,16 +203,16 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         List<Value> __values = new ArrayList<>();
         for (ValuePhiNode __phi : __merge.valuePhis())
         {
-            Variable __value = gen.newVariable(getExactPhiKind(__phi));
+            Variable __value = this.___gen.newVariable(getExactPhiKind(__phi));
             __values.add(__value);
             setResult(__phi, __value);
         }
         return __values.toArray(new Value[__values.size()]);
     }
 
-    /**
-     * @return {@code true} if object constant to stack moves are supported.
-     */
+    ///
+    // @return {@code true} if object constant to stack moves are supported.
+    ///
     protected boolean allowObjectConstantToStackMove()
     {
         return true;
@@ -227,19 +227,15 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             Value __value = operand(__node);
             if (ValueUtil.isRegister(__value))
             {
-                /*
-                 * Fixed register intervals are not allowed at block boundaries so we introduce a new Variable.
-                 */
-                __value = gen.emitMove(__value);
+                // Fixed register intervals are not allowed at block boundaries so we introduce a new Variable.
+                __value = this.___gen.emitMove(__value);
             }
             else if (!allowObjectConstantToStackMove() && __node instanceof ConstantNode && !LIRKind.isValue(__value))
             {
-                /*
-                 * Some constants are not allowed as inputs for PHIs in certain backends. Explicitly create
-                 * a copy of this value to force it into a register. The new variable is only used in the PHI.
-                 */
-                Variable __result = gen.newVariable(__value.getValueKind());
-                gen.emitMove(__result, __value);
+                // Some constants are not allowed as inputs for PHIs in certain backends. Explicitly create
+                // a copy of this value to force it into a register. The new variable is only used in the PHI.
+                Variable __result = this.___gen.newVariable(__value.getValueKind());
+                this.___gen.emitMove(__result, __value);
                 __value = __result;
             }
             __values.add(__value);
@@ -255,9 +251,9 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     @SuppressWarnings("try")
     public void doBlock(Block __block, StructuredGraph __graph, BlockMap<List<Node>> __blockMap)
     {
-        try (BlockScope __blockScope = gen.getBlockScope(__block))
+        try (BlockScope __blockScope = this.___gen.getBlockScope(__block))
         {
-            if (__block == gen.getResult().getLIR().getControlFlowGraph().getStartBlock())
+            if (__block == this.___gen.getResult().getLIR().getControlFlowGraph().getStartBlock())
             {
                 emitPrologue(__graph);
             }
@@ -268,7 +264,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                 if (__begin instanceof AbstractMergeNode)
                 {
                     AbstractMergeNode __merge = (AbstractMergeNode) __begin;
-                    LabelOp __label = (LabelOp) gen.getResult().getLIR().getLIRforBlock(__block).get(0);
+                    LabelOp __label = (LabelOp) this.___gen.getResult().getLIR().getLIRforBlock(__block).get(0);
                     __label.setPhiValues(createPhiIn(__merge));
                 }
             }
@@ -308,27 +304,25 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                 }
             }
 
-            if (!gen.hasBlockEnd(__block))
+            if (!this.___gen.hasBlockEnd(__block))
             {
                 NodeIterable<Node> __successors = __block.getEndNode().successors();
                 if (__block.getSuccessorCount() != 1)
                 {
-                    /*
-                     * If we have more than one successor, we cannot just use the first one. Since
-                     * successors are unordered, this would be a random choice.
-                     */
+                    // If we have more than one successor, we cannot just use the first one. Since
+                    // successors are unordered, this would be a random choice.
                     throw new GraalError("Block without BlockEndOp: " + __block.getEndNode());
                 }
-                gen.emitJump(getLIRBlock((FixedNode) __successors.first()));
+                this.___gen.emitJump(getLIRBlock((FixedNode) __successors.first()));
             }
         }
     }
 
-    protected abstract boolean peephole(ValueNode valueNode);
+    protected abstract boolean peephole(ValueNode __valueNode);
 
     private void doRoot(ValueNode __instr)
     {
-        currentInstruction = __instr;
+        this.___currentInstruction = __instr;
         emitNode(__instr);
     }
 
@@ -346,7 +340,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     protected void emitPrologue(StructuredGraph __graph)
     {
-        CallingConvention __incomingArguments = gen.getResult().getCallingConvention();
+        CallingConvention __incomingArguments = this.___gen.getResult().getCallingConvention();
 
         Value[] __params = new Value[__incomingArguments.getArgumentCount()];
         for (int __i = 0; __i < __params.length; __i++)
@@ -355,19 +349,19 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             if (ValueUtil.isStackSlot(__params[__i]))
             {
                 StackSlot __slot = ValueUtil.asStackSlot(__params[__i]);
-                if (__slot.isInCallerFrame() && !gen.getResult().getLIR().hasArgInCallerFrame())
+                if (__slot.isInCallerFrame() && !this.___gen.getResult().getLIR().hasArgInCallerFrame())
                 {
-                    gen.getResult().getLIR().setHasArgInCallerFrame();
+                    this.___gen.getResult().getLIR().setHasArgInCallerFrame();
                 }
             }
         }
 
-        gen.emitIncomingValues(__params);
+        this.___gen.emitIncomingValues(__params);
 
         for (ParameterNode __param : __graph.getNodes(ParameterNode.TYPE))
         {
             Value __paramValue = __params[__param.index()];
-            setResult(__param, gen.emitMove(__paramValue));
+            setResult(__param, this.___gen.emitMove(__paramValue));
         }
     }
 
@@ -385,9 +379,9 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         append(__jump);
     }
 
-    /**
-     * Runtime specific classes can override this to insert a safepoint at the end of a loop.
-     */
+    ///
+    // Runtime specific classes can override this to insert a safepoint at the end of a loop.
+    ///
     @Override
     public void visitLoopEnd(LoopEndNode __x)
     {
@@ -400,7 +394,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     protected LIRKind getPhiKind(PhiNode __phi)
     {
-        return gen.getLIRKind(__phi.stamp(NodeView.DEFAULT));
+        return this.___gen.getLIRKind(__phi.stamp(NodeView.DEFAULT));
     }
 
     @Override
@@ -435,26 +429,26 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     private void emitNullCheckBranch(IsNullNode __node, LabelRef __trueSuccessor, LabelRef __falseSuccessor, double __trueSuccessorProbability)
     {
-        LIRKind __kind = gen.getLIRKind(__node.getValue().stamp(NodeView.DEFAULT));
-        Value __nullValue = gen.emitConstant(__kind, JavaConstant.NULL_POINTER);
-        gen.emitCompareBranch(__kind.getPlatformKind(), operand(__node.getValue()), __nullValue, Condition.EQ, false, __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
+        LIRKind __kind = this.___gen.getLIRKind(__node.getValue().stamp(NodeView.DEFAULT));
+        Value __nullValue = this.___gen.emitConstant(__kind, JavaConstant.NULL_POINTER);
+        this.___gen.emitCompareBranch(__kind.getPlatformKind(), operand(__node.getValue()), __nullValue, Condition.EQ, false, __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
     }
 
     public void emitCompareBranch(CompareNode __compare, LabelRef __trueSuccessor, LabelRef __falseSuccessor, double __trueSuccessorProbability)
     {
-        PlatformKind __kind = gen.getLIRKind(__compare.getX().stamp(NodeView.DEFAULT)).getPlatformKind();
-        gen.emitCompareBranch(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __compare.unorderedIsTrue(), __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
+        PlatformKind __kind = this.___gen.getLIRKind(__compare.getX().stamp(NodeView.DEFAULT)).getPlatformKind();
+        this.___gen.emitCompareBranch(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __compare.unorderedIsTrue(), __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
     }
 
     public void emitIntegerTestBranch(IntegerTestNode __test, LabelRef __trueSuccessor, LabelRef __falseSuccessor, double __trueSuccessorProbability)
     {
-        gen.emitIntegerTestBranch(operand(__test.getX()), operand(__test.getY()), __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
+        this.___gen.emitIntegerTestBranch(operand(__test.getX()), operand(__test.getY()), __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
     }
 
     public void emitConstantBranch(boolean __value, LabelRef __trueSuccessorBlock, LabelRef __falseSuccessorBlock)
     {
         LabelRef __block = __value ? __trueSuccessorBlock : __falseSuccessorBlock;
-        gen.emitJump(__block);
+        this.___gen.emitJump(__block);
     }
 
     @Override
@@ -470,24 +464,24 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         if (__node instanceof IsNullNode)
         {
             IsNullNode __isNullNode = (IsNullNode) __node;
-            LIRKind __kind = gen.getLIRKind(__isNullNode.getValue().stamp(NodeView.DEFAULT));
-            Value __nullValue = gen.emitConstant(__kind, JavaConstant.NULL_POINTER);
-            return gen.emitConditionalMove(__kind.getPlatformKind(), operand(__isNullNode.getValue()), __nullValue, Condition.EQ, false, __trueValue, __falseValue);
+            LIRKind __kind = this.___gen.getLIRKind(__isNullNode.getValue().stamp(NodeView.DEFAULT));
+            Value __nullValue = this.___gen.emitConstant(__kind, JavaConstant.NULL_POINTER);
+            return this.___gen.emitConditionalMove(__kind.getPlatformKind(), operand(__isNullNode.getValue()), __nullValue, Condition.EQ, false, __trueValue, __falseValue);
         }
         else if (__node instanceof CompareNode)
         {
             CompareNode __compare = (CompareNode) __node;
-            PlatformKind __kind = gen.getLIRKind(__compare.getX().stamp(NodeView.DEFAULT)).getPlatformKind();
-            return gen.emitConditionalMove(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __compare.unorderedIsTrue(), __trueValue, __falseValue);
+            PlatformKind __kind = this.___gen.getLIRKind(__compare.getX().stamp(NodeView.DEFAULT)).getPlatformKind();
+            return this.___gen.emitConditionalMove(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __compare.unorderedIsTrue(), __trueValue, __falseValue);
         }
         else if (__node instanceof LogicConstantNode)
         {
-            return gen.emitMove(((LogicConstantNode) __node).getValue() ? __trueValue : __falseValue);
+            return this.___gen.emitMove(((LogicConstantNode) __node).getValue() ? __trueValue : __falseValue);
         }
         else if (__node instanceof IntegerTestNode)
         {
             IntegerTestNode __test = (IntegerTestNode) __node;
-            return gen.emitIntegerTestMove(operand(__test.getX()), operand(__test.getY()), __trueValue, __falseValue);
+            return this.___gen.emitIntegerTestMove(operand(__test.getX()), operand(__test.getY()), __trueValue, __falseValue);
         }
         else
         {
@@ -499,8 +493,8 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     public void emitInvoke(Invoke __x)
     {
         LoweredCallTargetNode __callTarget = (LoweredCallTargetNode) __x.callTarget();
-        FrameMapBuilder __frameMapBuilder = gen.getResult().getFrameMapBuilder();
-        CallingConvention __invokeCc = __frameMapBuilder.getRegisterConfig().getCallingConvention(__callTarget.callType(), __x.asNode().stamp(NodeView.DEFAULT).javaType(gen.getMetaAccess()), __callTarget.signature(), gen);
+        FrameMapBuilder __frameMapBuilder = this.___gen.getResult().getFrameMapBuilder();
+        CallingConvention __invokeCc = __frameMapBuilder.getRegisterConfig().getCallingConvention(__callTarget.callType(), __x.asNode().stamp(NodeView.DEFAULT).javaType(this.___gen.getMetaAccess()), __callTarget.signature(), this.___gen);
         __frameMapBuilder.callsMethod(__invokeCc);
 
         Value[] __parameters = visitInvokeArguments(__invokeCc, __callTarget.arguments());
@@ -528,18 +522,18 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
         if (ValueUtil.isLegal(__result))
         {
-            setResult(__x.asNode(), gen.emitMove(__result));
+            setResult(__x.asNode(), this.___gen.emitMove(__result));
         }
 
         if (__x instanceof InvokeWithExceptionNode)
         {
-            gen.emitJump(getLIRBlock(((InvokeWithExceptionNode) __x).next()));
+            this.___gen.emitJump(getLIRBlock(((InvokeWithExceptionNode) __x).next()));
         }
     }
 
-    protected abstract void emitDirectCall(DirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState);
+    protected abstract void emitDirectCall(DirectCallTargetNode __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __callState);
 
-    protected abstract void emitIndirectCall(IndirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState);
+    protected abstract void emitIndirectCall(IndirectCallTargetNode __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __callState);
 
     @Override
     public Value[] visitInvokeArguments(CallingConvention __invokeCc, Collection<ValueNode> __arguments)
@@ -552,7 +546,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             if (__arg != null)
             {
                 AllocatableValue __operand = __invokeCc.getArgument(__j);
-                gen.emitMove(__operand, operand(__arg));
+                this.___gen.emitMove(__operand, operand(__arg));
                 __result[__j] = __operand;
                 __j++;
             }
@@ -564,12 +558,12 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         return __result;
     }
 
-    /**
-     * This method tries to create a switch implementation that is optimal for the given switch. It
-     * will either generate a sequential if/then/else cascade, a set of range tests or a table switch.
-     *
-     * If the given switch does not contain int keys, it will always create a sequential implementation.
-     */
+    ///
+    // This method tries to create a switch implementation that is optimal for the given switch. It
+    // will either generate a sequential if/then/else cascade, a set of range tests or a table switch.
+    //
+    // If the given switch does not contain int keys, it will always create a sequential implementation.
+    ///
     @Override
     public void emitSwitch(SwitchNode __x)
     {
@@ -577,17 +571,17 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         int __keyCount = __x.keyCount();
         if (__keyCount == 0)
         {
-            gen.emitJump(__defaultTarget);
+            this.___gen.emitJump(__defaultTarget);
         }
         else
         {
-            Variable __value = gen.load(operand(__x.value()));
+            Variable __value = this.___gen.load(operand(__x.value()));
             if (__keyCount == 1)
             {
                 double __probability = __x.probability(__x.keySuccessor(0));
-                LIRKind __kind = gen.getLIRKind(__x.value().stamp(NodeView.DEFAULT));
-                Value __key = gen.emitConstant(__kind, __x.keyAt(0));
-                gen.emitCompareBranch(__kind.getPlatformKind(), gen.load(operand(__x.value())), __key, Condition.EQ, false, getLIRBlock(__x.keySuccessor(0)), __defaultTarget, __probability);
+                LIRKind __kind = this.___gen.getLIRKind(__x.value().stamp(NodeView.DEFAULT));
+                Value __key = this.___gen.emitConstant(__kind, __x.keyAt(0));
+                this.___gen.emitCompareBranch(__kind.getPlatformKind(), this.___gen.load(operand(__x.value())), __key, Condition.EQ, false, getLIRBlock(__x.keySuccessor(0)), __defaultTarget, __probability);
             }
             else if (__x instanceof IntegerSwitchNode && __x.isSorted())
             {
@@ -602,7 +596,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                     __keyConstants[__i] = __intSwitch.keyAt(__i);
                     __keyProbabilities[__i] = __intSwitch.keyProbability(__i);
                 }
-                gen.emitStrategySwitch(__keyConstants, __keyProbabilities, __keyTargets, __defaultTarget, __value);
+                this.___gen.emitStrategySwitch(__keyConstants, __keyProbabilities, __keyTargets, __defaultTarget, __value);
             }
             else
             {
@@ -618,14 +612,14 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                 }
 
                 // hopefully only a few entries
-                gen.emitStrategySwitch(new SwitchStrategy.SequentialStrategy(__keyProbabilities, __keyConstants), __value, __keyTargets, __defaultTarget);
+                this.___gen.emitStrategySwitch(new SwitchStrategy.SequentialStrategy(__keyProbabilities, __keyConstants), __value, __keyTargets, __defaultTarget);
             }
         }
     }
 
     public LockStackHolder getLockStackHolder()
     {
-        return lockStackHolder;
+        return this.___lockStackHolder;
     }
 
     @Override
@@ -644,7 +638,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         {
             return null;
         }
-        if (gen.needOnlyOopMaps())
+        if (this.___gen.needOnlyOopMaps())
         {
             return LIRFrameState.NO_STATE;
         }
@@ -654,12 +648,12 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     @Override
     public void emitOverflowCheckBranch(AbstractBeginNode __overflowSuccessor, AbstractBeginNode __next, Stamp __stamp, double __probability)
     {
-        gen.emitOverflowCheckBranch(getLIRBlock(__overflowSuccessor), getLIRBlock(__next), getLIRGeneratorTool().getLIRKind(__stamp), __probability);
+        this.___gen.emitOverflowCheckBranch(getLIRBlock(__overflowSuccessor), getLIRBlock(__next), getLIRGeneratorTool().getLIRKind(__stamp), __probability);
     }
 
     @Override
     public LIRGeneratorTool getLIRGeneratorTool()
     {
-        return gen;
+        return this.___gen;
     }
 }

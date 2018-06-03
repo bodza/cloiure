@@ -14,29 +14,29 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
-/**
- * Reserves a block of memory in the stack frame of a method. The block is reserved in the frame for
- * the entire execution of the associated method.
- */
+///
+// Reserves a block of memory in the stack frame of a method. The block is reserved in the frame for
+// the entire execution of the associated method.
+///
 // @class AllocaNode
 public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
 {
     // @def
     public static final NodeClass<AllocaNode> TYPE = NodeClass.create(AllocaNode.class);
 
-    /**
-     * The number of slots in block.
-     */
+    ///
+    // The number of slots in block.
+    ///
     // @field
-    protected final int slots;
+    protected final int ___slots;
 
-    /**
-     * The indexes of the object pointer slots in the block. Each such object pointer slot must be
-     * initialized before any safepoint in the method otherwise the garbage collector will see
-     * garbage values when processing these slots.
-     */
+    ///
+    // The indexes of the object pointer slots in the block. Each such object pointer slot must be
+    // initialized before any safepoint in the method otherwise the garbage collector will see
+    // garbage values when processing these slots.
+    ///
     // @field
-    protected final BitSet objects;
+    protected final BitSet ___objects;
 
     // @cons
     public AllocaNode(@InjectedNodeParameter WordTypes __wordTypes, int __slots)
@@ -48,18 +48,18 @@ public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
     public AllocaNode(int __slots, JavaKind __wordKind, BitSet __objects)
     {
         super(TYPE, StampFactory.forKind(__wordKind));
-        this.slots = __slots;
-        this.objects = __objects;
+        this.___slots = __slots;
+        this.___objects = __objects;
     }
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        VirtualStackSlot __array = __gen.getLIRGeneratorTool().getResult().getFrameMapBuilder().allocateStackSlots(slots, objects, null);
+        VirtualStackSlot __array = __gen.getLIRGeneratorTool().getResult().getFrameMapBuilder().allocateStackSlots(this.___slots, this.___objects, null);
         Value __result = __gen.getLIRGeneratorTool().emitAddress(__array);
         __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic
-    public static native Word alloca(@ConstantNodeParameter int slots);
+    public static native Word alloca(@ConstantNodeParameter int __slots);
 }

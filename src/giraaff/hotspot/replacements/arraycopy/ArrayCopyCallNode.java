@@ -46,41 +46,41 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
 
     @Input
     // @field
-    protected ValueNode src;
+    protected ValueNode ___src;
     @Input
     // @field
-    protected ValueNode srcPos;
+    protected ValueNode ___srcPos;
     @Input
     // @field
-    protected ValueNode dest;
+    protected ValueNode ___dest;
     @Input
     // @field
-    protected ValueNode destPos;
+    protected ValueNode ___destPos;
     @Input
     // @field
-    protected ValueNode length;
+    protected ValueNode ___length;
 
     @OptionalInput(InputType.Memory)
     // @field
-    MemoryNode lastLocationAccess;
+    MemoryNode ___lastLocationAccess;
 
     // @field
-    protected final JavaKind elementKind;
+    protected final JavaKind ___elementKind;
     // @field
-    protected final LocationIdentity locationIdentity;
+    protected final LocationIdentity ___locationIdentity;
 
-    /**
-     * Aligned means that the offset of the copy is heap word aligned.
-     */
+    ///
+    // Aligned means that the offset of the copy is heap word aligned.
+    ///
     // @field
-    protected boolean aligned;
+    protected boolean ___aligned;
     // @field
-    protected boolean disjoint;
+    protected boolean ___disjoint;
     // @field
-    protected boolean uninitialized;
+    protected boolean ___uninitialized;
 
     // @field
-    protected final HotSpotGraalRuntime runtime;
+    protected final HotSpotGraalRuntime ___runtime;
 
     // @cons
     public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, boolean __aligned, boolean __disjoint, boolean __uninitialized)
@@ -98,58 +98,58 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
     protected ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, LocationIdentity __locationIdentity, boolean __aligned, boolean __disjoint, boolean __uninitialized)
     {
         super(TYPE, StampFactory.forVoid());
-        this.src = __src;
-        this.srcPos = __srcPos;
-        this.dest = __dest;
-        this.destPos = __destPos;
-        this.length = __length;
-        this.elementKind = __elementKind;
-        this.locationIdentity = (__locationIdentity != null ? __locationIdentity : NamedLocationIdentity.getArrayLocation(__elementKind));
-        this.aligned = __aligned;
-        this.disjoint = __disjoint;
-        this.uninitialized = __uninitialized;
-        this.runtime = __runtime;
+        this.___src = __src;
+        this.___srcPos = __srcPos;
+        this.___dest = __dest;
+        this.___destPos = __destPos;
+        this.___length = __length;
+        this.___elementKind = __elementKind;
+        this.___locationIdentity = (__locationIdentity != null ? __locationIdentity : NamedLocationIdentity.getArrayLocation(__elementKind));
+        this.___aligned = __aligned;
+        this.___disjoint = __disjoint;
+        this.___uninitialized = __uninitialized;
+        this.___runtime = __runtime;
     }
 
     public ValueNode getSource()
     {
-        return src;
+        return this.___src;
     }
 
     public ValueNode getSourcePosition()
     {
-        return srcPos;
+        return this.___srcPos;
     }
 
     public ValueNode getDestination()
     {
-        return dest;
+        return this.___dest;
     }
 
     public ValueNode getDestinationPosition()
     {
-        return destPos;
+        return this.___destPos;
     }
 
     public ValueNode getLength()
     {
-        return length;
+        return this.___length;
     }
 
     public JavaKind getElementKind()
     {
-        return elementKind;
+        return this.___elementKind;
     }
 
     private ValueNode computeBase(ValueNode __base, ValueNode __pos)
     {
         FixedWithNextNode __basePtr = graph().add(new GetObjectAddressNode(__base));
         graph().addBeforeFixed(this, __basePtr);
-        Stamp __wordStamp = StampFactory.forKind(runtime.getTarget().wordJavaKind);
+        Stamp __wordStamp = StampFactory.forKind(this.___runtime.getTarget().wordJavaKind);
         ValueNode __wordPos = IntegerConvertNode.convert(__pos, __wordStamp, graph(), NodeView.DEFAULT);
-        int __shift = CodeUtil.log2(HotSpotRuntime.getArrayIndexScale(elementKind));
+        int __shift = CodeUtil.log2(HotSpotRuntime.getArrayIndexScale(this.___elementKind));
         ValueNode __scaledIndex = graph().unique(new LeftShiftNode(__wordPos, ConstantNode.forInt(__shift, graph())));
-        ValueNode __offset = graph().unique(new AddNode(__scaledIndex, ConstantNode.forIntegerStamp(__wordStamp, HotSpotRuntime.getArrayBaseOffset(elementKind), graph())));
+        ValueNode __offset = graph().unique(new AddNode(__scaledIndex, ConstantNode.forIntegerStamp(__wordStamp, HotSpotRuntime.getArrayBaseOffset(this.___elementKind), graph())));
         return graph().unique(new OffsetAddressNode(__basePtr, __offset));
     }
 
@@ -159,7 +159,7 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
         if (graph().getGuardsStage().areFrameStatesAtDeopts())
         {
             updateAlignedDisjoint();
-            ForeignCallDescriptor __desc = HotSpotHostForeignCallsProvider.lookupArraycopyDescriptor(elementKind, isAligned(), isDisjoint(), isUninitialized(), locationIdentity.equals(LocationIdentity.any()));
+            ForeignCallDescriptor __desc = HotSpotHostForeignCallsProvider.lookupArraycopyDescriptor(this.___elementKind, isAligned(), isDisjoint(), isUninitialized(), this.___locationIdentity.equals(LocationIdentity.any()));
             StructuredGraph __graph = graph();
             ValueNode __srcAddr = computeBase(getSource(), getSourcePosition());
             ValueNode __destAddr = computeBase(getDestination(), getDestinationPosition());
@@ -168,7 +168,7 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
             {
                 __len = IntegerConvertNode.convert(__len, StampFactory.forKind(JavaKind.Long), graph(), NodeView.DEFAULT);
             }
-            ForeignCallNode __call = __graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), __desc, __srcAddr, __destAddr, __len));
+            ForeignCallNode __call = __graph.add(new ForeignCallNode(this.___runtime.getBackend().getForeignCalls(), __desc, __srcAddr, __destAddr, __len));
             __call.setStateAfter(stateAfter());
             __graph.replaceFixedWithFixed(this, __call);
         }
@@ -177,27 +177,27 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
     @Override
     public MemoryNode getLastLocationAccess()
     {
-        return lastLocationAccess;
+        return this.___lastLocationAccess;
     }
 
     @Override
     public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsagesInterface(lastLocationAccess, __lla);
-        lastLocationAccess = __lla;
+        updateUsagesInterface(this.___lastLocationAccess, __lla);
+        this.___lastLocationAccess = __lla;
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 
     @NodeIntrinsic
-    private static native void arraycopy(Object src, int srcPos, Object dest, int destPos, int length, @ConstantNodeParameter JavaKind elementKind, @ConstantNodeParameter boolean aligned, @ConstantNodeParameter boolean disjoint, @ConstantNodeParameter boolean uninitialized);
+    private static native void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @ConstantNodeParameter JavaKind __elementKind, @ConstantNodeParameter boolean __aligned, @ConstantNodeParameter boolean __disjoint, @ConstantNodeParameter boolean __uninitialized);
 
     @NodeIntrinsic
-    private static native void arraycopy(Object src, int srcPos, Object dest, int destPos, int length, @ConstantNodeParameter JavaKind elementKind, @ConstantNodeParameter LocationIdentity locationIdentity, @ConstantNodeParameter boolean aligned, @ConstantNodeParameter boolean disjoint, @ConstantNodeParameter boolean uninitialized);
+    private static native void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @ConstantNodeParameter JavaKind __elementKind, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter boolean __aligned, @ConstantNodeParameter boolean __disjoint, @ConstantNodeParameter boolean __uninitialized);
 
     public static void arraycopyObjectKillsAny(Object __src, int __srcPos, Object __dest, int __destPos, int __length)
     {
@@ -221,17 +221,17 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
 
     public boolean isAligned()
     {
-        return aligned;
+        return this.___aligned;
     }
 
     public boolean isDisjoint()
     {
-        return disjoint;
+        return this.___disjoint;
     }
 
     public boolean isUninitialized()
     {
-        return uninitialized;
+        return this.___uninitialized;
     }
 
     boolean isHeapWordAligned(JavaConstant __value, JavaKind __kind)
@@ -241,24 +241,24 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
 
     public void updateAlignedDisjoint()
     {
-        JavaKind __componentKind = elementKind;
-        if (srcPos == destPos)
+        JavaKind __componentKind = this.___elementKind;
+        if (this.___srcPos == this.___destPos)
         {
             // can treat as disjoint
-            disjoint = true;
+            this.___disjoint = true;
         }
-        PrimitiveConstant __constantSrc = (PrimitiveConstant) srcPos.stamp(NodeView.DEFAULT).asConstant();
-        PrimitiveConstant __constantDst = (PrimitiveConstant) destPos.stamp(NodeView.DEFAULT).asConstant();
+        PrimitiveConstant __constantSrc = (PrimitiveConstant) this.___srcPos.stamp(NodeView.DEFAULT).asConstant();
+        PrimitiveConstant __constantDst = (PrimitiveConstant) this.___destPos.stamp(NodeView.DEFAULT).asConstant();
         if (__constantSrc != null && __constantDst != null)
         {
-            if (!aligned)
+            if (!this.___aligned)
             {
-                aligned = isHeapWordAligned(__constantSrc, __componentKind) && isHeapWordAligned(__constantDst, __componentKind);
+                this.___aligned = isHeapWordAligned(__constantSrc, __componentKind) && isHeapWordAligned(__constantDst, __componentKind);
             }
             if (__constantSrc.asInt() >= __constantDst.asInt())
             {
                 // low to high copy so treat as disjoint
-                disjoint = true;
+                this.___disjoint = true;
             }
         }
     }
@@ -268,9 +268,9 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
     {
         if (getLength().isConstant() && getLength().asConstant().isDefaultForKind())
         {
-            if (lastLocationAccess != null)
+            if (this.___lastLocationAccess != null)
             {
-                replaceAtUsages(InputType.Memory, lastLocationAccess.asNode());
+                replaceAtUsages(InputType.Memory, this.___lastLocationAccess.asNode());
             }
             return null;
         }

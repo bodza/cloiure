@@ -17,19 +17,19 @@ public enum FloatConvert
     F2D(FloatConvertCategory.FloatingPointToFloatingPoint, 32);
 
     // @field
-    private final FloatConvertCategory category;
+    private final FloatConvertCategory ___category;
     // @field
-    private final int inputBits;
+    private final int ___inputBits;
 
     FloatConvert(FloatConvertCategory __category, int __inputBits)
     {
-        this.category = __category;
-        this.inputBits = __inputBits;
+        this.___category = __category;
+        this.___inputBits = __inputBits;
     }
 
     public FloatConvertCategory getCategory()
     {
-        return category;
+        return this.___category;
     }
 
     public FloatConvert reverse()
@@ -63,6 +63,6 @@ public enum FloatConvert
 
     public int getInputBits()
     {
-        return inputBits;
+        return this.___inputBits;
     }
 }

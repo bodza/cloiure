@@ -60,14 +60,12 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
     @Override
     public boolean isIdentityComparison()
     {
-        FloatStamp __xStamp = (FloatStamp) x.stamp(NodeView.DEFAULT);
-        FloatStamp __yStamp = (FloatStamp) y.stamp(NodeView.DEFAULT);
-        /*
-         * If both stamps have at most one 0.0 and it's the same 0.0 then this is an identity
-         * comparison. FloatStamp isn't careful about tracking the presence of -0.0 so assume that
-         * anything that includes 0.0 might include -0.0. So if either one is non-zero then it's an
-         * identity comparison.
-         */
+        FloatStamp __xStamp = (FloatStamp) this.___x.stamp(NodeView.DEFAULT);
+        FloatStamp __yStamp = (FloatStamp) this.___y.stamp(NodeView.DEFAULT);
+        // If both stamps have at most one 0.0 and it's the same 0.0 then this is an identity
+        // comparison. FloatStamp isn't careful about tracking the presence of -0.0 so assume that
+        // anything that includes 0.0 might include -0.0. So if either one is non-zero then it's an
+        // identity comparison.
         return (!__xStamp.contains(0.0) || !__yStamp.contains(0.0));
     }
 
@@ -75,7 +73,7 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
     public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, unorderedIsTrue, __forX, __forY, __view);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, this.___unorderedIsTrue, __forX, __forY, __view);
         if (__value != null)
         {
             return __value;

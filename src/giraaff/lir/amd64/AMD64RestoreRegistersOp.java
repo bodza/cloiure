@@ -12,9 +12,9 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Restores registers from stack slots.
- */
+///
+// Restores registers from stack slots.
+///
 @Opcode
 // @class AMD64RestoreRegistersOp
 public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
@@ -22,18 +22,18 @@ public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
     // @def
     public static final LIRInstructionClass<AMD64RestoreRegistersOp> TYPE = LIRInstructionClass.create(AMD64RestoreRegistersOp.class);
 
-    /**
-     * The slots from which the registers are restored.
-     */
+    ///
+    // The slots from which the registers are restored.
+    ///
     @Use(OperandFlag.STACK)
     // @field
-    protected final AllocatableValue[] slots;
+    protected final AllocatableValue[] ___slots;
 
-    /**
-     * The operation that saved the registers restored by this operation.
-     */
+    ///
+    // The operation that saved the registers restored by this operation.
+    ///
     // @field
-    private final AMD64SaveRegistersOp save;
+    private final AMD64SaveRegistersOp ___save;
 
     // @cons
     public AMD64RestoreRegistersOp(AllocatableValue[] __values, AMD64SaveRegistersOp __save)
@@ -45,13 +45,13 @@ public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
     protected AMD64RestoreRegistersOp(LIRInstructionClass<? extends AMD64RestoreRegistersOp> __c, AllocatableValue[] __values, AMD64SaveRegistersOp __save)
     {
         super(__c);
-        this.slots = __values;
-        this.save = __save;
+        this.___slots = __values;
+        this.___save = __save;
     }
 
     protected Register[] getSavedRegisters()
     {
-        return save.savedRegisters;
+        return this.___save.___savedRegisters;
     }
 
     protected void restoreRegister(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Register __result, StackSlot __input)
@@ -67,7 +67,7 @@ public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
         {
             if (__savedRegisters[__i] != null)
             {
-                restoreRegister(__crb, __masm, __savedRegisters[__i], ValueUtil.asStackSlot(slots[__i]));
+                restoreRegister(__crb, __masm, __savedRegisters[__i], ValueUtil.asStackSlot(this.___slots[__i]));
             }
         }
     }

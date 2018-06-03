@@ -37,7 +37,7 @@ public final class UnsafeLoadSnippets implements Snippets
     public static final class Templates extends AbstractTemplates
     {
         // @field
-        private final SnippetInfo unsafeLoad = snippet(UnsafeLoadSnippets.class, "lowerUnsafeLoad");
+        private final SnippetInfo ___unsafeLoad = snippet(UnsafeLoadSnippets.class, "lowerUnsafeLoad");
 
         // @cons
         public Templates(HotSpotProviders __providers, TargetDescription __target)
@@ -47,10 +47,10 @@ public final class UnsafeLoadSnippets implements Snippets
 
         public void lower(RawLoadNode __load, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(unsafeLoad, __load.graph().getGuardsStage(), __tool.getLoweringStage());
+            Arguments __args = new Arguments(this.___unsafeLoad, __load.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("object", __load.object());
             __args.add("offset", __load.offset());
-            template(__load, __args).instantiate(providers.getMetaAccess(), __load, SnippetTemplate.DEFAULT_REPLACER, __args);
+            template(__load, __args).instantiate(this.___providers.getMetaAccess(), __load, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

@@ -22,11 +22,11 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-/**
- * The {@code ReinterpretNode} class represents a reinterpreting conversion that changes the stamp
- * of a primitive value to some other incompatible stamp. The new stamp must have the same width as
- * the old stamp.
- */
+///
+// The {@code ReinterpretNode} class represents a reinterpreting conversion that changes the stamp
+// of a primitive value to some other incompatible stamp. The new stamp must have the same width as
+// the old stamp.
+///
 // @class ReinterpretNode
 public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLowerable
 {
@@ -90,17 +90,17 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
         return __node != null ? __node : new ReinterpretNode(__forStamp, __forValue);
     }
 
-    /**
-     * Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as possible.
-     *
-     * Sorting by their bit pattern reinterpreted as signed integers gives the following order of
-     * floating point numbers:
-     *
-     * -0 | negative numbers | -Inf | NaNs | 0 | positive numbers | +Inf | NaNs
-     *
-     * So we can compute a better integer range if we know that the input is positive, negative,
-     * finite, non-zero and/or not NaN.
-     */
+    ///
+    // Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as possible.
+    //
+    // Sorting by their bit pattern reinterpreted as signed integers gives the following order of
+    // floating point numbers:
+    //
+    // -0 | negative numbers | -Inf | NaNs | 0 | positive numbers | +Inf | NaNs
+    //
+    // So we can compute a better integer range if we know that the input is positive, negative,
+    // finite, non-zero and/or not NaN.
+    ///
     private static IntegerStamp floatToInt(FloatStamp __stamp)
     {
         int __bits = __stamp.getBits();
@@ -186,17 +186,17 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
         return StampFactory.forInteger(__bits, __lowerBound, __upperBound);
     }
 
-    /**
-     * Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as possible.
-     *
-     * Sorting by their bit pattern reinterpreted as signed integers gives the following order of
-     * floating point numbers:
-     *
-     * -0 | negative numbers | -Inf | NaNs | 0 | positive numbers | +Inf | NaNs
-     *
-     * So from certain integer ranges we may be able to infer something about the sign, finiteness
-     * or NaN-ness of the result.
-     */
+    ///
+    // Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as possible.
+    //
+    // Sorting by their bit pattern reinterpreted as signed integers gives the following order of
+    // floating point numbers:
+    //
+    // -0 | negative numbers | -Inf | NaNs | 0 | positive numbers | +Inf | NaNs
+    //
+    // So from certain integer ranges we may be able to infer something about the sign, finiteness
+    // or NaN-ness of the result.
+    ///
     private static FloatStamp intToFloat(IntegerStamp __stamp)
     {
         int __bits = __stamp.getBits();

@@ -4,128 +4,128 @@ package giraaff.core.common.cfg;
 public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
 {
     // @field
-    protected int id;
+    protected int ___id;
     // @field
-    protected int domDepth;
+    protected int ___domDepth;
 
     // @field
-    protected T[] predecessors;
+    protected T[] ___predecessors;
     // @field
-    protected T[] successors;
+    protected T[] ___successors;
 
     // @field
-    private T dominator;
+    private T ___dominator;
     // @field
-    private T firstDominated;
+    private T ___firstDominated;
     // @field
-    private T dominatedSibling;
+    private T ___dominatedSibling;
     // @field
-    private int domNumber;
+    private int ___domNumber;
     // @field
-    private int maxChildDomNumber;
+    private int ___maxChildDomNumber;
 
     // @field
-    private boolean align;
+    private boolean ___align;
     // @field
-    private int linearScanNumber;
+    private int ___linearScanNumber;
 
     // @cons
     protected AbstractBlockBase()
     {
         super();
-        this.id = AbstractControlFlowGraph.BLOCK_ID_INITIAL;
-        this.linearScanNumber = -1;
-        this.domNumber = -1;
-        this.maxChildDomNumber = -1;
+        this.___id = AbstractControlFlowGraph.BLOCK_ID_INITIAL;
+        this.___linearScanNumber = -1;
+        this.___domNumber = -1;
+        this.___maxChildDomNumber = -1;
     }
 
     public void setDominatorNumber(int __domNumber)
     {
-        this.domNumber = __domNumber;
+        this.___domNumber = __domNumber;
     }
 
     public void setMaxChildDomNumber(int __maxChildDomNumber)
     {
-        this.maxChildDomNumber = __maxChildDomNumber;
+        this.___maxChildDomNumber = __maxChildDomNumber;
     }
 
     public int getDominatorNumber()
     {
-        return domNumber;
+        return this.___domNumber;
     }
 
     public int getMaxChildDominatorNumber()
     {
-        return this.maxChildDomNumber;
+        return this.___maxChildDomNumber;
     }
 
     public int getId()
     {
-        return id;
+        return this.___id;
     }
 
     public void setId(int __id)
     {
-        this.id = __id;
+        this.___id = __id;
     }
 
     public T[] getPredecessors()
     {
-        return predecessors;
+        return this.___predecessors;
     }
 
     public void setPredecessors(T[] __predecessors)
     {
-        this.predecessors = __predecessors;
+        this.___predecessors = __predecessors;
     }
 
     public T[] getSuccessors()
     {
-        return successors;
+        return this.___successors;
     }
 
     public void setSuccessors(T[] __successors)
     {
-        this.successors = __successors;
+        this.___successors = __successors;
     }
 
     public T getDominator()
     {
-        return dominator;
+        return this.___dominator;
     }
 
     public void setDominator(T __dominator)
     {
-        this.dominator = __dominator;
-        this.domDepth = __dominator.domDepth + 1;
+        this.___dominator = __dominator;
+        this.___domDepth = __dominator.___domDepth + 1;
     }
 
-    /**
-     * Level in the dominator tree starting with 0 for the start block.
-     */
+    ///
+    // Level in the dominator tree starting with 0 for the start block.
+    ///
     public int getDominatorDepth()
     {
-        return domDepth;
+        return this.___domDepth;
     }
 
     public T getFirstDominated()
     {
-        return this.firstDominated;
+        return this.___firstDominated;
     }
 
     public void setFirstDominated(T __block)
     {
-        this.firstDominated = __block;
+        this.___firstDominated = __block;
     }
 
     public T getDominatedSibling()
     {
-        return this.dominatedSibling;
+        return this.___dominatedSibling;
     }
 
     public void setDominatedSibling(T __block)
     {
-        this.dominatedSibling = __block;
+        this.___dominatedSibling = __block;
     }
 
     public int getPredecessorCount()
@@ -140,22 +140,22 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
 
     public int getLinearScanNumber()
     {
-        return linearScanNumber;
+        return this.___linearScanNumber;
     }
 
     public void setLinearScanNumber(int __linearScanNumber)
     {
-        this.linearScanNumber = __linearScanNumber;
+        this.___linearScanNumber = __linearScanNumber;
     }
 
     public boolean isAligned()
     {
-        return align;
+        return this.___align;
     }
 
     public void setAlign(boolean __align)
     {
-        this.align = __align;
+        this.___align = __align;
     }
 
     public abstract boolean isExceptionEntry();
@@ -174,11 +174,11 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
 
     public abstract double probability();
 
-    public abstract T getDominator(int distance);
+    public abstract T getDominator(int __distance);
 
     @Override
     public int hashCode()
     {
-        return id;
+        return this.___id;
     }
 }

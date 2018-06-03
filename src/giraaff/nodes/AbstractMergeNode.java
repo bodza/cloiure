@@ -15,9 +15,9 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
-/**
- * Denotes the merging of multiple control-flow paths.
- */
+///
+// Denotes the merging of multiple control-flow paths.
+///
 // @NodeInfo.allowedUsageTypes "Association"
 // @class AbstractMergeNode
 public abstract class AbstractMergeNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable, LIRLowerable
@@ -33,7 +33,7 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
 
     @Input(InputType.Association)
     // @field
-    protected NodeInputList<EndNode> ends = new NodeInputList<>(this);
+    protected NodeInputList<EndNode> ___ends = new NodeInputList<>(this);
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)
@@ -43,47 +43,47 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
 
     public int forwardEndIndex(EndNode __end)
     {
-        return ends.indexOf(__end);
+        return this.___ends.indexOf(__end);
     }
 
     public void addForwardEnd(EndNode __end)
     {
-        ends.add(__end);
+        this.___ends.add(__end);
     }
 
     public final int forwardEndCount()
     {
-        return ends.size();
+        return this.___ends.size();
     }
 
     public final EndNode forwardEndAt(int __index)
     {
-        return ends.get(__index);
+        return this.___ends.get(__index);
     }
 
     @Override
     public NodeIterable<EndNode> cfgPredecessors()
     {
-        return ends;
+        return this.___ends;
     }
 
-    /**
-     * Determines if a given node is a phi whose {@linkplain PhiNode#merge() merge} is this node.
-     *
-     * @param value the instruction to test
-     * @return {@code true} if {@code value} is a phi and its merge is {@code this}
-     */
+    ///
+    // Determines if a given node is a phi whose {@linkplain PhiNode#merge() merge} is this node.
+    //
+    // @param value the instruction to test
+    // @return {@code true} if {@code value} is a phi and its merge is {@code this}
+    ///
     public boolean isPhiAtMerge(Node __value)
     {
         return __value instanceof PhiNode && ((PhiNode) __value).merge() == this;
     }
 
-    /**
-     * Removes the given end from the merge, along with the entries corresponding to this end in the
-     * phis connected to the merge.
-     *
-     * @param pred the end to remove
-     */
+    ///
+    // Removes the given end from the merge, along with the entries corresponding to this end in the
+    // phis connected to the merge.
+    //
+    // @param pred the end to remove
+    ///
     public void removeEnd(AbstractEndNode __pred)
     {
         int __predIndex = phiPredecessorIndex(__pred);
@@ -105,17 +105,17 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
 
     protected void deleteEnd(AbstractEndNode __end)
     {
-        ends.remove(__end);
+        this.___ends.remove(__end);
     }
 
     public void clearEnds()
     {
-        ends.clear();
+        this.___ends.clear();
     }
 
     public NodeInputList<EndNode> forwardEnds()
     {
-        return ends;
+        return this.___ends;
     }
 
     public int phiPredecessorCount()
@@ -154,9 +154,9 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
         return super.anchored().filter(__n -> !isPhiAtMerge(__n));
     }
 
-    /**
-     * This simplify method can deal with a null value for tool, so that it can be used outside of canonicalization.
-     */
+    ///
+    // This simplify method can deal with a null value for tool, so that it can be used outside of canonicalization.
+    ///
     @Override
     public void simplify(SimplifierTool __tool)
     {

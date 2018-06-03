@@ -20,20 +20,20 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
 
     @Input(InputType.Condition)
     // @field
-    protected LogicNode condition;
+    protected LogicNode ___condition;
     // @field
-    protected DeoptimizationReason reason;
+    protected DeoptimizationReason ___reason;
     // @field
-    protected DeoptimizationAction action;
+    protected DeoptimizationAction ___action;
     // @field
-    protected JavaConstant speculation;
+    protected JavaConstant ___speculation;
     // @field
-    protected boolean negated;
+    protected boolean ___negated;
 
     @Override
     public LogicNode getCondition()
     {
-        return condition;
+        return this.___condition;
     }
 
     public LogicNode condition()
@@ -44,53 +44,53 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     @Override
     public void setCondition(LogicNode __x, boolean __negated)
     {
-        updateUsages(condition, __x);
-        condition = __x;
-        this.negated = __negated;
+        updateUsages(this.___condition, __x);
+        this.___condition = __x;
+        this.___negated = __negated;
     }
 
     // @cons
     protected AbstractFixedGuardNode(NodeClass<? extends AbstractFixedGuardNode> __c, LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action, JavaConstant __speculation, boolean __negated)
     {
         super(__c, StampFactory.forVoid());
-        this.action = __action;
-        this.speculation = __speculation;
-        this.negated = __negated;
-        this.condition = __condition;
-        this.reason = __deoptReason;
+        this.___action = __action;
+        this.___speculation = __speculation;
+        this.___negated = __negated;
+        this.___condition = __condition;
+        this.___reason = __deoptReason;
     }
 
     @Override
     public DeoptimizationReason getReason()
     {
-        return reason;
+        return this.___reason;
     }
 
     @Override
     public DeoptimizationAction getAction()
     {
-        return action;
+        return this.___action;
     }
 
     @Override
     public JavaConstant getSpeculation()
     {
-        return speculation;
+        return this.___speculation;
     }
 
     @Override
     public boolean isNegated()
     {
-        return negated;
+        return this.___negated;
     }
 
     @Override
     public void simplify(SimplifierTool __tool)
     {
-        while (condition instanceof LogicNegationNode)
+        while (this.___condition instanceof LogicNegationNode)
         {
-            LogicNegationNode __negation = (LogicNegationNode) condition;
-            setCondition(__negation.getValue(), !negated);
+            LogicNegationNode __negation = (LogicNegationNode) this.___condition;
+            setCondition(__negation.getValue(), !this.___negated);
         }
     }
 
@@ -98,18 +98,18 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     {
         FixedNode __currentNext = next();
         setNext(null);
-        DeoptimizeNode __deopt = graph().add(new DeoptimizeNode(action, reason, speculation));
+        DeoptimizeNode __deopt = graph().add(new DeoptimizeNode(this.___action, this.___reason, this.___speculation));
         __deopt.setStateBefore(stateBefore());
         IfNode __ifNode;
         AbstractBeginNode __noDeoptSuccessor;
-        if (negated)
+        if (this.___negated)
         {
-            __ifNode = graph().add(new IfNode(condition, __deopt, __currentNext, 0));
+            __ifNode = graph().add(new IfNode(this.___condition, __deopt, __currentNext, 0));
             __noDeoptSuccessor = __ifNode.falseSuccessor();
         }
         else
         {
-            __ifNode = graph().add(new IfNode(condition, __currentNext, __deopt, 1));
+            __ifNode = graph().add(new IfNode(this.___condition, __currentNext, __deopt, 1));
             __noDeoptSuccessor = __ifNode.trueSuccessor();
         }
         ((FixedWithNextNode) predecessor()).setNext(__ifNode);
@@ -128,12 +128,12 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     @Override
     public void setAction(DeoptimizationAction __action)
     {
-        this.action = __action;
+        this.___action = __action;
     }
 
     @Override
     public void setReason(DeoptimizationReason __reason)
     {
-        this.reason = __reason;
+        this.___reason = __reason;
     }
 }

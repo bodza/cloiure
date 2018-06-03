@@ -6,9 +6,9 @@ import giraaff.graph.NodeInputList;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.extended.GuardingNode;
 
-/**
- * Guard {@link PhiNode}s merge guard dependencies at control flow merges.
- */
+///
+// Guard {@link PhiNode}s merge guard dependencies at control flow merges.
+///
 // @NodeInfo.allowedUsageTypes "Guard"
 // @class GuardPhiNode
 public final class GuardPhiNode extends PhiNode implements GuardingNode
@@ -18,25 +18,25 @@ public final class GuardPhiNode extends PhiNode implements GuardingNode
 
     @OptionalInput(InputType.Guard)
     // @field
-    NodeInputList<ValueNode> values;
+    NodeInputList<ValueNode> ___values;
 
     // @cons
     public GuardPhiNode(AbstractMergeNode __merge)
     {
         super(TYPE, StampFactory.forVoid(), __merge);
-        this.values = new NodeInputList<>(this);
+        this.___values = new NodeInputList<>(this);
     }
 
     // @cons
     public GuardPhiNode(AbstractMergeNode __merge, ValueNode[] __values)
     {
         super(TYPE, StampFactory.forVoid(), __merge);
-        this.values = new NodeInputList<>(this, __values);
+        this.___values = new NodeInputList<>(this, __values);
     }
 
     @Override
     public NodeInputList<ValueNode> values()
     {
-        return values;
+        return this.___values;
     }
 }

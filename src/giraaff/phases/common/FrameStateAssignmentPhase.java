@@ -23,16 +23,16 @@ import giraaff.phases.graph.ReentrantNodeIterator;
 import giraaff.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
 import giraaff.util.GraalError;
 
-/**
- * This phase transfers {@link FrameState} nodes from {@link StateSplit} nodes to
- * {@link DeoptimizingNode DeoptimizingNodes}.
- *
- * This allow to enter the {@link GuardsStage#AFTER_FSA AFTER_FSA} stage of the graph where no new
- * node that may cause deoptimization can be introduced anymore.
- *
- * This Phase processes the graph in post order, assigning the {@link FrameState} from the last
- * {@link StateSplit} node to {@link DeoptimizingNode DeoptimizingNodes}.
- */
+///
+// This phase transfers {@link FrameState} nodes from {@link StateSplit} nodes to
+// {@link DeoptimizingNode DeoptimizingNodes}.
+//
+// This allow to enter the {@link GuardsStage#AFTER_FSA AFTER_FSA} stage of the graph where no new
+// node that may cause deoptimization can be introduced anymore.
+//
+// This Phase processes the graph in post order, assigning the {@link FrameState} from the last
+// {@link StateSplit} node to {@link DeoptimizingNode DeoptimizingNodes}.
+///
 // @class FrameStateAssignmentPhase
 public final class FrameStateAssignmentPhase extends Phase
 {
@@ -59,7 +59,7 @@ public final class FrameStateAssignmentPhase extends Phase
                 FrameState __stateAfter = __stateSplit.stateAfter();
                 if (__stateAfter != null)
                 {
-                    if (__stateAfter.bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
+                    if (__stateAfter.___bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
                     {
                         __currentState = null;
                     }
@@ -110,7 +110,7 @@ public final class FrameStateAssignmentPhase extends Phase
         @Override
         protected EconomicMap<LoopExitNode, FrameState> processLoop(LoopBeginNode __loop, FrameState __initialState)
         {
-            return ReentrantNodeIterator.processLoop(this, __loop, __initialState).exitStates;
+            return ReentrantNodeIterator.processLoop(this, __loop, __initialState).___exitStates;
         }
     }
 
@@ -151,7 +151,7 @@ public final class FrameStateAssignmentPhase extends Phase
                 return null;
             }
         }
-        if (__singleState != null && __singleState.bci != BytecodeFrame.INVALID_FRAMESTATE_BCI)
+        if (__singleState != null && __singleState.___bci != BytecodeFrame.INVALID_FRAMESTATE_BCI)
         {
             return __singleState;
         }

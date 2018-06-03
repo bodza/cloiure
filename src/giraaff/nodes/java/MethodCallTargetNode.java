@@ -36,7 +36,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
     public static final NodeClass<MethodCallTargetNode> TYPE = NodeClass.create(MethodCallTargetNode.class);
 
     // @field
-    protected JavaTypeProfile profile;
+    protected JavaTypeProfile ___profile;
 
     // @cons
     public MethodCallTargetNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
@@ -48,25 +48,25 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
     protected MethodCallTargetNode(NodeClass<? extends MethodCallTargetNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
     {
         super(__c, __arguments, __targetMethod, __invokeKind, __returnStamp);
-        this.profile = __profile;
+        this.___profile = __profile;
     }
 
-    /**
-     * Gets the instruction that produces the receiver object for this invocation, if any.
-     *
-     * @return the instruction that produces the receiver object for this invocation if any,
-     *         {@code null} if this invocation does not take a receiver object
-     */
+    ///
+    // Gets the instruction that produces the receiver object for this invocation, if any.
+    //
+    // @return the instruction that produces the receiver object for this invocation if any,
+    //         {@code null} if this invocation does not take a receiver object
+    ///
     public ValueNode receiver()
     {
         return isStatic() ? null : arguments().get(0);
     }
 
-    /**
-     * Checks whether this is an invocation of a static method.
-     *
-     * @return {@code true} if the invocation is a static invocation
-     */
+    ///
+    // Checks whether this is an invocation of a static method.
+    //
+    // @return {@code true} if the invocation is a static invocation
+    ///
     public boolean isStatic()
     {
         return invokeKind() == InvokeKind.Static;
@@ -136,7 +136,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
             return;
         }
         ResolvedJavaType __contextType = (invoke().stateAfter() == null && invoke().stateDuring() == null) ? null : invoke().getContextType();
-        ResolvedJavaMethod __specialCallTarget = findSpecialCallTarget(invokeKind, receiver(), targetMethod, __contextType);
+        ResolvedJavaMethod __specialCallTarget = findSpecialCallTarget(this.___invokeKind, receiver(), this.___targetMethod, __contextType);
         if (__specialCallTarget != null)
         {
             this.setTargetMethod(__specialCallTarget);
@@ -145,10 +145,8 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
         }
 
         Assumptions __assumptions = graph().getAssumptions();
-        /*
-         * Even though we are not registering an assumption (see comment below), the optimization is
-         * only valid when speculative optimizations are enabled.
-         */
+        // Even though we are not registering an assumption (see comment below), the optimization is
+        // only valid when speculative optimizations are enabled.
         if (invokeKind().isIndirect() && invokeKind().isInterface() && __assumptions != null)
         {
             // check if the type of the receiver can narrow the result
@@ -195,17 +193,17 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
             ResolvedJavaMethod __singleImplementorMethod = __singleImplementor.resolveConcreteMethod(targetMethod(), invoke().getContextType());
             if (__singleImplementorMethod != null)
             {
-                /**
-                 * We have an invoke on an interface with a single implementor. We can replace this
-                 * with an invoke virtual.
-                 *
-                 * To do so we need to ensure two properties: 1) the receiver must implement the
-                 * interface (declaredReceiverType). The verifier does not prove this so we need a
-                 * dynamic check. 2) we need to ensure that there is still only one implementor of
-                 * this interface, i.e. that we are calling the right method. We could do this with
-                 * an assumption but as we need an instanceof check anyway we can verify both
-                 * properties by checking of the receiver is an instance of the single implementor.
-                 */
+                ///
+                // We have an invoke on an interface with a single implementor. We can replace this
+                // with an invoke virtual.
+                //
+                // To do so we need to ensure two properties: 1) the receiver must implement the
+                // interface (declaredReceiverType). The verifier does not prove this so we need a
+                // dynamic check. 2) we need to ensure that there is still only one implementor of
+                // this interface, i.e. that we are calling the right method. We could do this with
+                // an assumption but as we need an instanceof check anyway we can verify both
+                // properties by checking of the receiver is an instance of the single implementor.
+                ///
                 ValueAnchorNode __anchor = new ValueAnchorNode(null);
                 if (__anchor != null)
                 {
@@ -234,7 +232,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
 
     public JavaTypeProfile getProfile()
     {
-        return profile;
+        return this.___profile;
     }
 
     @Override

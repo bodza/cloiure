@@ -23,7 +23,7 @@ public final class ClassCastExceptionStub extends CreateExceptionStub
     protected Object getConstantParameterValue(int __index, String __name)
     {
         GraalError.guarantee(__index == 2, "unknown parameter %s at index %d", __name, __index);
-        return providers.getRegisters().getThreadRegister();
+        return this.___providers.getRegisters().getThreadRegister();
     }
 
     @Snippet

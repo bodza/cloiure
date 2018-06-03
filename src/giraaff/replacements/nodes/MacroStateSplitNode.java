@@ -18,10 +18,10 @@ import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.util.GraalError;
 
-/**
- * This is an extension of {@link MacroNode} that is a {@link StateSplit} and a
- * {@link MemoryCheckpoint}.
- */
+///
+// This is an extension of {@link MacroNode} that is a {@link StateSplit} and a
+// {@link MemoryCheckpoint}.
+///
 // @class MacroStateSplitNode
 public abstract class MacroStateSplitNode extends MacroNode implements StateSplit, MemoryCheckpoint.Single
 {
@@ -30,7 +30,7 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
 
     @OptionalInput(InputType.State)
     // @field
-    protected FrameState stateAfter;
+    protected FrameState ___stateAfter;
 
     // @cons
     protected MacroStateSplitNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
@@ -41,14 +41,14 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
     @Override
     public FrameState stateAfter()
     {
-        return stateAfter;
+        return this.___stateAfter;
     }
 
     @Override
     public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, __x);
-        stateAfter = __x;
+        updateUsages(this.___stateAfter, __x);
+        this.___stateAfter = __x;
     }
 
     @Override

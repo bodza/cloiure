@@ -13,97 +13,97 @@ public final class StackInterval
     // @def
     private static final int INVALID_END = Integer.MIN_VALUE;
     // @field
-    private final VirtualStackSlot operand;
+    private final VirtualStackSlot ___operand;
     // @field
-    private StackInterval hint;
+    private StackInterval ___hint;
     // @field
-    private final ValueKind<?> kind;
+    private final ValueKind<?> ___kind;
     // @field
-    private int from = INVALID_START;
+    private int ___from = INVALID_START;
     // @field
-    private int to = INVALID_END;
+    private int ___to = INVALID_END;
     // @field
-    private StackSlot location;
+    private StackSlot ___location;
 
     // @cons
     public StackInterval(VirtualStackSlot __operand, ValueKind<?> __kind)
     {
         super();
-        this.operand = __operand;
-        this.kind = __kind;
+        this.___operand = __operand;
+        this.___kind = __kind;
     }
 
     public VirtualStackSlot getOperand()
     {
-        return operand;
+        return this.___operand;
     }
 
     public void addTo(int __opId)
     {
-        if (__opId >= to)
+        if (__opId >= this.___to)
         {
-            to = __opId;
+            this.___to = __opId;
         }
     }
 
     protected void addFrom(int __opId)
     {
-        if (from > __opId)
+        if (this.___from > __opId)
         {
-            from = __opId;
+            this.___from = __opId;
             // set opId also as to if it has not yet been set
-            if (to == INVALID_END)
+            if (this.___to == INVALID_END)
             {
-                to = __opId;
+                this.___to = __opId;
             }
         }
     }
 
     public ValueKind<?> kind()
     {
-        return kind;
+        return this.___kind;
     }
 
     public StackSlot location()
     {
-        return location;
+        return this.___location;
     }
 
     public void setLocation(StackSlot __location)
     {
-        this.location = __location;
+        this.___location = __location;
     }
 
     public int from()
     {
-        return from;
+        return this.___from;
     }
 
     public int to()
     {
-        return to;
+        return this.___to;
     }
 
     public void fixFrom()
     {
-        if (from == INVALID_START)
+        if (this.___from == INVALID_START)
         {
-            from = 0;
+            this.___from = 0;
         }
     }
 
     public boolean isFixed()
     {
-        return from == 0;
+        return this.___from == 0;
     }
 
     public void setLocationHint(StackInterval __locationHint)
     {
-        hint = __locationHint;
+        this.___hint = __locationHint;
     }
 
     public StackInterval locationHint()
     {
-        return hint;
+        return this.___hint;
     }
 }

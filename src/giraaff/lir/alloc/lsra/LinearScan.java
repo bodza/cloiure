@@ -32,49 +32,49 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.util.GraalError;
 
-/**
- * An implementation of the linear scan register allocator algorithm described in
- * <a href="http://doi.acm.org/10.1145/1064979.1064998" > "Optimized Interval Splitting in a Linear
- * Scan Register Allocator"</a> by Christian Wimmer and Hanspeter Moessenboeck.
- */
+///
+// An implementation of the linear scan register allocator algorithm described in
+// <a href="http://doi.acm.org/10.1145/1064979.1064998" > "Optimized Interval Splitting in a Linear
+// Scan Register Allocator"</a> by Christian Wimmer and Hanspeter Moessenboeck.
+///
 // @class LinearScan
 public class LinearScan
 {
     // @class LinearScan.BlockData
     public static final class BlockData
     {
-        /**
-         * Bit map specifying which operands are live upon entry to this block. These are values
-         * used in this block or any of its successors where such value are not defined in this
-         * block. The bit index of an operand is its {@linkplain LinearScan#operandNumber(Value)
-         * operand number}.
-         */
+        ///
+        // Bit map specifying which operands are live upon entry to this block. These are values
+        // used in this block or any of its successors where such value are not defined in this
+        // block. The bit index of an operand is its {@linkplain LinearScan#operandNumber(Value)
+        // operand number}.
+        ///
         // @field
-        public BitSet liveIn;
+        public BitSet ___liveIn;
 
-        /**
-         * Bit map specifying which operands are live upon exit from this block. These are values
-         * used in a successor block that are either defined in this block or were live upon entry
-         * to this block. The bit index of an operand is its
-         * {@linkplain LinearScan#operandNumber(Value) operand number}.
-         */
+        ///
+        // Bit map specifying which operands are live upon exit from this block. These are values
+        // used in a successor block that are either defined in this block or were live upon entry
+        // to this block. The bit index of an operand is its
+        // {@linkplain LinearScan#operandNumber(Value) operand number}.
+        ///
         // @field
-        public BitSet liveOut;
+        public BitSet ___liveOut;
 
-        /**
-         * Bit map specifying which operands are used (before being defined) in this block. That is,
-         * these are the values that are live upon entry to the block. The bit index of an operand
-         * is its {@linkplain LinearScan#operandNumber(Value) operand number}.
-         */
+        ///
+        // Bit map specifying which operands are used (before being defined) in this block. That is,
+        // these are the values that are live upon entry to the block. The bit index of an operand
+        // is its {@linkplain LinearScan#operandNumber(Value) operand number}.
+        ///
         // @field
-        public BitSet liveGen;
+        public BitSet ___liveGen;
 
-        /**
-         * Bit map specifying which operands are defined/overwritten in this block. The bit index of
-         * an operand is its {@linkplain LinearScan#operandNumber(Value) operand number}.
-         */
+        ///
+        // Bit map specifying which operands are defined/overwritten in this block. The bit index of
+        // an operand is its {@linkplain LinearScan#operandNumber(Value) operand number}.
+        ///
         // @field
-        public BitSet liveKill;
+        public BitSet ___liveKill;
     }
 
     // @def
@@ -83,136 +83,136 @@ public class LinearScan
     private static final int SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT = 1;
 
     // @field
-    private final LIR ir;
+    private final LIR ___ir;
     // @field
-    private final FrameMapBuilder frameMapBuilder;
+    private final FrameMapBuilder ___frameMapBuilder;
     // @field
-    private final RegisterAttributes[] registerAttributes;
+    private final RegisterAttributes[] ___registerAttributes;
     // @field
-    private final RegisterArray registers;
+    private final RegisterArray ___registers;
     // @field
-    private final RegisterAllocationConfig regAllocConfig;
+    private final RegisterAllocationConfig ___regAllocConfig;
     // @field
-    private final MoveFactory moveFactory;
+    private final MoveFactory ___moveFactory;
 
     // @field
-    private final BlockMap<BlockData> blockData;
+    private final BlockMap<BlockData> ___blockData;
 
-    /**
-     * List of blocks in linear-scan order. This is only correct as long as the CFG does not change.
-     */
+    ///
+    // List of blocks in linear-scan order. This is only correct as long as the CFG does not change.
+    ///
     // @field
-    private final AbstractBlockBase<?>[] sortedBlocks;
+    private final AbstractBlockBase<?>[] ___sortedBlocks;
 
-    /**
-     * @see #intervals()
-     */
+    ///
+    // @see #intervals()
+    ///
     // @field
-    private Interval[] intervals;
+    private Interval[] ___intervals;
 
-    /**
-     * The number of valid entries in {@link #intervals}.
-     */
+    ///
+    // The number of valid entries in {@link #intervals}.
+    ///
     // @field
-    private int intervalsSize;
+    private int ___intervalsSize;
 
-    /**
-     * The index of the first entry in {@link #intervals} for a
-     * {@linkplain #createDerivedInterval(Interval) derived interval}.
-     */
+    ///
+    // The index of the first entry in {@link #intervals} for a
+    // {@linkplain #createDerivedInterval(Interval) derived interval}.
+    ///
     // @field
-    private int firstDerivedIntervalIndex = -1;
+    private int ___firstDerivedIntervalIndex = -1;
 
-    /**
-     * Intervals sorted by {@link Interval#from()}.
-     */
+    ///
+    // Intervals sorted by {@link Interval#from()}.
+    ///
     // @field
-    private Interval[] sortedIntervals;
+    private Interval[] ___sortedIntervals;
 
-    /**
-     * Map from an instruction {@linkplain LIRInstruction#id id} to the instruction. Entries should
-     * be retrieved with {@link #instructionForId(int)} as the id is not simply an index into this array.
-     */
+    ///
+    // Map from an instruction {@linkplain LIRInstruction#id id} to the instruction. Entries should
+    // be retrieved with {@link #instructionForId(int)} as the id is not simply an index into this array.
+    ///
     // @field
-    private LIRInstruction[] opIdToInstructionMap;
+    private LIRInstruction[] ___opIdToInstructionMap;
 
-    /**
-     * Map from an instruction {@linkplain LIRInstruction#id id} to the
-     * {@linkplain AbstractBlockBase block} containing the instruction. Entries should be retrieved
-     * with {@link #blockForId(int)} as the id is not simply an index into this array.
-     */
+    ///
+    // Map from an instruction {@linkplain LIRInstruction#id id} to the
+    // {@linkplain AbstractBlockBase block} containing the instruction. Entries should be retrieved
+    // with {@link #blockForId(int)} as the id is not simply an index into this array.
+    ///
     // @field
-    private AbstractBlockBase<?>[] opIdToBlockMap;
+    private AbstractBlockBase<?>[] ___opIdToBlockMap;
 
-    /**
-     * The {@linkplain #operandNumber(Value) number} of the first variable operand allocated.
-     */
+    ///
+    // The {@linkplain #operandNumber(Value) number} of the first variable operand allocated.
+    ///
     // @field
-    private final int firstVariableNumber;
-    /**
-     * Number of variables.
-     */
+    private final int ___firstVariableNumber;
+    ///
+    // Number of variables.
+    ///
     // @field
-    private int numVariables;
+    private int ___numVariables;
     // @field
-    private final boolean neverSpillConstants;
+    private final boolean ___neverSpillConstants;
 
-    /**
-     * Sentinel interval to denote the end of an interval list.
-     */
+    ///
+    // Sentinel interval to denote the end of an interval list.
+    ///
     // @field
-    protected final Interval intervalEndMarker;
+    protected final Interval ___intervalEndMarker;
     // @field
-    public final Range rangeEndMarker;
+    public final Range ___rangeEndMarker;
     // @field
-    private final LIRGenerationResult res;
+    private final LIRGenerationResult ___res;
 
     // @cons
     protected LinearScan(TargetDescription __target, LIRGenerationResult __res, MoveFactory __spillMoveFactory, RegisterAllocationConfig __regAllocConfig, AbstractBlockBase<?>[] __sortedBlocks, boolean __neverSpillConstants)
     {
         super();
-        this.ir = __res.getLIR();
-        this.res = __res;
-        this.moveFactory = __spillMoveFactory;
-        this.frameMapBuilder = __res.getFrameMapBuilder();
-        this.sortedBlocks = __sortedBlocks;
-        this.registerAttributes = __regAllocConfig.getRegisterConfig().getAttributesMap();
-        this.regAllocConfig = __regAllocConfig;
+        this.___ir = __res.getLIR();
+        this.___res = __res;
+        this.___moveFactory = __spillMoveFactory;
+        this.___frameMapBuilder = __res.getFrameMapBuilder();
+        this.___sortedBlocks = __sortedBlocks;
+        this.___registerAttributes = __regAllocConfig.getRegisterConfig().getAttributesMap();
+        this.___regAllocConfig = __regAllocConfig;
 
-        this.registers = __target.arch.getRegisters();
-        this.firstVariableNumber = getRegisters().size();
-        this.numVariables = ir.numVariables();
-        this.blockData = new BlockMap<>(ir.getControlFlowGraph());
-        this.neverSpillConstants = __neverSpillConstants;
-        this.rangeEndMarker = new Range(Integer.MAX_VALUE, Integer.MAX_VALUE, null);
-        this.intervalEndMarker = new Interval(Value.ILLEGAL, Interval.END_MARKER_OPERAND_NUMBER, null, rangeEndMarker);
-        this.intervalEndMarker.next = intervalEndMarker;
+        this.___registers = __target.arch.getRegisters();
+        this.___firstVariableNumber = getRegisters().size();
+        this.___numVariables = this.___ir.numVariables();
+        this.___blockData = new BlockMap<>(this.___ir.getControlFlowGraph());
+        this.___neverSpillConstants = __neverSpillConstants;
+        this.___rangeEndMarker = new Range(Integer.MAX_VALUE, Integer.MAX_VALUE, null);
+        this.___intervalEndMarker = new Interval(Value.ILLEGAL, Interval.END_MARKER_OPERAND_NUMBER, null, this.___rangeEndMarker);
+        this.___intervalEndMarker.___next = this.___intervalEndMarker;
     }
 
     public LIRGenerationResult getLIRGenerationResult()
     {
-        return res;
+        return this.___res;
     }
 
     public Interval intervalEndMarker()
     {
-        return intervalEndMarker;
+        return this.___intervalEndMarker;
     }
 
     public int getFirstLirInstructionId(AbstractBlockBase<?> __block)
     {
-        return ir.getLIRforBlock(__block).get(0).id();
+        return this.___ir.getLIRforBlock(__block).get(0).id();
     }
 
     public int getLastLirInstructionId(AbstractBlockBase<?> __block)
     {
-        ArrayList<LIRInstruction> __instructions = ir.getLIRforBlock(__block);
+        ArrayList<LIRInstruction> __instructions = this.___ir.getLIRforBlock(__block);
         return __instructions.get(__instructions.size() - 1).id();
     }
 
     public MoveFactory getSpillMoveFactory()
     {
-        return moveFactory;
+        return this.___moveFactory;
     }
 
     protected MoveResolver createMoveResolver()
@@ -225,44 +225,44 @@ public class LinearScan
         return LIRValueUtil.isVariable(__value) || ValueUtil.isRegister(__value);
     }
 
-    /**
-     * Converts an operand (variable or register) to an index in a flat address space covering all
-     * the {@linkplain Variable variables} and {@linkplain RegisterValue registers} being processed
-     * by this allocator.
-     */
+    ///
+    // Converts an operand (variable or register) to an index in a flat address space covering all
+    // the {@linkplain Variable variables} and {@linkplain RegisterValue registers} being processed
+    // by this allocator.
+    ///
     int operandNumber(Value __operand)
     {
         if (ValueUtil.isRegister(__operand))
         {
             return ValueUtil.asRegister(__operand).number;
         }
-        return firstVariableNumber + ((Variable) __operand).index;
+        return this.___firstVariableNumber + ((Variable) __operand).___index;
     }
 
-    /**
-     * Gets the number of operands. This value will increase by 1 for new variable.
-     */
+    ///
+    // Gets the number of operands. This value will increase by 1 for new variable.
+    ///
     int operandSize()
     {
-        return firstVariableNumber + numVariables;
+        return this.___firstVariableNumber + this.___numVariables;
     }
 
-    /**
-     * Gets the highest operand number for a register operand. This value will never change.
-     */
+    ///
+    // Gets the highest operand number for a register operand. This value will never change.
+    ///
     int maxRegisterNumber()
     {
-        return firstVariableNumber - 1;
+        return this.___firstVariableNumber - 1;
     }
 
     public BlockData getBlockData(AbstractBlockBase<?> __block)
     {
-        return blockData.get(__block);
+        return this.___blockData.get(__block);
     }
 
     void initBlockData(AbstractBlockBase<?> __block)
     {
-        blockData.put(__block, new BlockData());
+        this.___blockData.put(__block, new BlockData());
     }
 
     // @closure
@@ -271,7 +271,7 @@ public class LinearScan
         @Override
         public boolean apply(Interval __i)
         {
-            return ValueUtil.isRegister(__i.operand);
+            return ValueUtil.isRegister(__i.___operand);
         }
     };
 
@@ -281,7 +281,7 @@ public class LinearScan
         @Override
         public boolean apply(Interval __i)
         {
-            return LIRValueUtil.isVariable(__i.operand);
+            return LIRValueUtil.isVariable(__i.___operand);
         }
     };
 
@@ -291,24 +291,22 @@ public class LinearScan
         @Override
         public boolean apply(Interval __i)
         {
-            return !ValueUtil.isRegister(__i.operand);
+            return !ValueUtil.isRegister(__i.___operand);
         }
     };
 
-    /**
-     * Gets an object describing the attributes of a given register according to this register configuration.
-     */
+    ///
+    // Gets an object describing the attributes of a given register according to this register configuration.
+    ///
     public RegisterAttributes attributes(Register __reg)
     {
-        return registerAttributes[__reg.number];
+        return this.___registerAttributes[__reg.number];
     }
 
     void assignSpillSlot(Interval __interval)
     {
-        /*
-         * Assign the canonical spill slot of the parent (if a part of the interval is already
-         * spilled) or allocate a new spill slot.
-         */
+        // Assign the canonical spill slot of the parent (if a part of the interval is already
+        // spilled) or allocate a new spill slot.
         if (__interval.canMaterialize())
         {
             __interval.assignLocation(Value.ILLEGAL);
@@ -319,59 +317,59 @@ public class LinearScan
         }
         else
         {
-            VirtualStackSlot __slot = frameMapBuilder.allocateSpillSlot(__interval.kind());
+            VirtualStackSlot __slot = this.___frameMapBuilder.allocateSpillSlot(__interval.kind());
             __interval.setSpillSlot(__slot);
             __interval.assignLocation(__slot);
         }
     }
 
-    /**
-     * Map from {@linkplain #operandNumber(Value) operand numbers} to intervals.
-     */
+    ///
+    // Map from {@linkplain #operandNumber(Value) operand numbers} to intervals.
+    ///
     public Interval[] intervals()
     {
-        return intervals;
+        return this.___intervals;
     }
 
     void initIntervals()
     {
-        intervalsSize = operandSize();
-        intervals = new Interval[intervalsSize + (intervalsSize >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT)];
+        this.___intervalsSize = operandSize();
+        this.___intervals = new Interval[this.___intervalsSize + (this.___intervalsSize >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT)];
     }
 
-    /**
-     * Creates a new interval.
-     *
-     * @param operand the operand for the interval
-     * @return the created interval
-     */
+    ///
+    // Creates a new interval.
+    //
+    // @param operand the operand for the interval
+    // @return the created interval
+    ///
     Interval createInterval(AllocatableValue __operand)
     {
         int __operandNumber = operandNumber(__operand);
-        Interval __interval = new Interval(__operand, __operandNumber, intervalEndMarker, rangeEndMarker);
-        intervals[__operandNumber] = __interval;
+        Interval __interval = new Interval(__operand, __operandNumber, this.___intervalEndMarker, this.___rangeEndMarker);
+        this.___intervals[__operandNumber] = __interval;
         return __interval;
     }
 
-    /**
-     * Creates an interval as a result of splitting or spilling another interval.
-     *
-     * @param source an interval being split of spilled
-     * @return a new interval derived from {@code source}
-     */
+    ///
+    // Creates an interval as a result of splitting or spilling another interval.
+    //
+    // @param source an interval being split of spilled
+    // @return a new interval derived from {@code source}
+    ///
     Interval createDerivedInterval(Interval __source)
     {
-        if (firstDerivedIntervalIndex == -1)
+        if (this.___firstDerivedIntervalIndex == -1)
         {
-            firstDerivedIntervalIndex = intervalsSize;
+            this.___firstDerivedIntervalIndex = this.___intervalsSize;
         }
-        if (intervalsSize == intervals.length)
+        if (this.___intervalsSize == this.___intervals.length)
         {
-            intervals = Arrays.copyOf(intervals, intervals.length + (intervals.length >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT) + 1);
+            this.___intervals = Arrays.copyOf(this.___intervals, this.___intervals.length + (this.___intervals.length >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT) + 1);
         }
-        intervalsSize++;
+        this.___intervalsSize++;
         // note: these variables are not managed and must therefore never be inserted into the LIR
-        Variable __variable = new Variable(__source.kind(), numVariables++);
+        Variable __variable = new Variable(__source.kind(), this.___numVariables++);
 
         return createInterval(__variable);
     }
@@ -379,38 +377,38 @@ public class LinearScan
     // access to block list (sorted in linear scan order)
     public int blockCount()
     {
-        return sortedBlocks.length;
+        return this.___sortedBlocks.length;
     }
 
     public AbstractBlockBase<?> blockAt(int __index)
     {
-        return sortedBlocks[__index];
+        return this.___sortedBlocks[__index];
     }
 
-    /**
-     * Gets the size of the {@link BlockData#liveIn} and {@link BlockData#liveOut} sets for a basic
-     * block. These sets do not include any operands allocated as a result of creating
-     * {@linkplain #createDerivedInterval(Interval) derived intervals}.
-     */
+    ///
+    // Gets the size of the {@link BlockData#liveIn} and {@link BlockData#liveOut} sets for a basic
+    // block. These sets do not include any operands allocated as a result of creating
+    // {@linkplain #createDerivedInterval(Interval) derived intervals}.
+    ///
     public int liveSetSize()
     {
-        return firstDerivedIntervalIndex == -1 ? operandSize() : firstDerivedIntervalIndex;
+        return this.___firstDerivedIntervalIndex == -1 ? operandSize() : this.___firstDerivedIntervalIndex;
     }
 
     int numLoops()
     {
-        return ir.getControlFlowGraph().getLoops().size();
+        return this.___ir.getControlFlowGraph().getLoops().size();
     }
 
     Interval intervalFor(int __operandNumber)
     {
-        return intervals[__operandNumber];
+        return this.___intervals[__operandNumber];
     }
 
     public Interval intervalFor(Value __operand)
     {
         int __operandNumber = operandNumber(__operand);
-        return intervals[__operandNumber];
+        return this.___intervals[__operandNumber];
     }
 
     public Interval getOrCreateInterval(AllocatableValue __operand)
@@ -428,54 +426,54 @@ public class LinearScan
 
     void initOpIdMaps(int __numInstructions)
     {
-        opIdToInstructionMap = new LIRInstruction[__numInstructions];
-        opIdToBlockMap = new AbstractBlockBase<?>[__numInstructions];
+        this.___opIdToInstructionMap = new LIRInstruction[__numInstructions];
+        this.___opIdToBlockMap = new AbstractBlockBase<?>[__numInstructions];
     }
 
     void putOpIdMaps(int __index, LIRInstruction __op, AbstractBlockBase<?> __block)
     {
-        opIdToInstructionMap[__index] = __op;
-        opIdToBlockMap[__index] = __block;
+        this.___opIdToInstructionMap[__index] = __op;
+        this.___opIdToBlockMap[__index] = __block;
     }
 
-    /**
-     * Gets the highest instruction id allocated by this object.
-     */
+    ///
+    // Gets the highest instruction id allocated by this object.
+    ///
     int maxOpId()
     {
-        return (opIdToInstructionMap.length - 1) << 1;
+        return (this.___opIdToInstructionMap.length - 1) << 1;
     }
 
-    /**
-     * Converts an {@linkplain LIRInstruction#id instruction id} to an instruction index. All LIR
-     * instructions in a method have an index one greater than their linear-scan order predecessor
-     * with the first instruction having an index of 0.
-     */
+    ///
+    // Converts an {@linkplain LIRInstruction#id instruction id} to an instruction index. All LIR
+    // instructions in a method have an index one greater than their linear-scan order predecessor
+    // with the first instruction having an index of 0.
+    ///
     private static int opIdToIndex(int __opId)
     {
         return __opId >> 1;
     }
 
-    /**
-     * Retrieves the {@link LIRInstruction} based on its {@linkplain LIRInstruction#id id}.
-     *
-     * @param opId an instruction {@linkplain LIRInstruction#id id}
-     * @return the instruction whose {@linkplain LIRInstruction#id} {@code == id}
-     */
+    ///
+    // Retrieves the {@link LIRInstruction} based on its {@linkplain LIRInstruction#id id}.
+    //
+    // @param opId an instruction {@linkplain LIRInstruction#id id}
+    // @return the instruction whose {@linkplain LIRInstruction#id} {@code == id}
+    ///
     public LIRInstruction instructionForId(int __opId)
     {
-        return opIdToInstructionMap[opIdToIndex(__opId)];
+        return this.___opIdToInstructionMap[opIdToIndex(__opId)];
     }
 
-    /**
-     * Gets the block containing a given instruction.
-     *
-     * @param opId an instruction {@linkplain LIRInstruction#id id}
-     * @return the block containing the instruction denoted by {@code opId}
-     */
+    ///
+    // Gets the block containing a given instruction.
+    //
+    // @param opId an instruction {@linkplain LIRInstruction#id id}
+    // @return the block containing the instruction denoted by {@code opId}
+    ///
     public AbstractBlockBase<?> blockForId(int __opId)
     {
-        return opIdToBlockMap[opIdToIndex(__opId)];
+        return this.___opIdToBlockMap[opIdToIndex(__opId)];
     }
 
     boolean isBlockBegin(int __opId)
@@ -488,12 +486,12 @@ public class LinearScan
         return blockForId(__opId1) != blockForId(__opId2);
     }
 
-    /**
-     * Determines if an {@link LIRInstruction} destroys all caller saved registers.
-     *
-     * @param opId an instruction {@linkplain LIRInstruction#id id}
-     * @return {@code true} if the instruction denoted by {@code id} destroys all caller saved registers.
-     */
+    ///
+    // Determines if an {@link LIRInstruction} destroys all caller saved registers.
+    //
+    // @param opId an instruction {@linkplain LIRInstruction#id id}
+    // @return {@code true} if the instruction denoted by {@code id} destroys all caller saved registers.
+    ///
     boolean hasCall(int __opId)
     {
         return instructionForId(__opId).destroysCallerSavedRegisters();
@@ -502,7 +500,7 @@ public class LinearScan
     // @class LinearScan.IntervalPredicate
     abstract static class IntervalPredicate
     {
-        abstract boolean apply(Interval i);
+        abstract boolean apply(Interval __i);
     }
 
     public boolean isProcessed(Value __operand)
@@ -527,7 +525,7 @@ public class LinearScan
         Interval __newFirst = __first;
         if (__prev != null)
         {
-            __prev.next = __interval;
+            __prev.___next = __interval;
         }
         else
         {
@@ -538,17 +536,17 @@ public class LinearScan
 
     Pair<Interval, Interval> createUnhandledLists(IntervalPredicate __isList1, IntervalPredicate __isList2)
     {
-        Interval __list1 = intervalEndMarker;
-        Interval __list2 = intervalEndMarker;
+        Interval __list1 = this.___intervalEndMarker;
+        Interval __list2 = this.___intervalEndMarker;
 
         Interval __list1Prev = null;
         Interval __list2Prev = null;
         Interval __v;
 
-        int __n = sortedIntervals.length;
+        int __n = this.___sortedIntervals.length;
         for (int __i = 0; __i < __n; __i++)
         {
-            __v = sortedIntervals[__i];
+            __v = this.___sortedIntervals[__i];
             if (__v == null)
             {
                 continue;
@@ -568,11 +566,11 @@ public class LinearScan
 
         if (__list1Prev != null)
         {
-            __list1Prev.next = intervalEndMarker;
+            __list1Prev.___next = this.___intervalEndMarker;
         }
         if (__list2Prev != null)
         {
-            __list2Prev.next = intervalEndMarker;
+            __list2Prev.___next = this.___intervalEndMarker;
         }
 
         return Pair.create(__list1, __list2);
@@ -581,7 +579,7 @@ public class LinearScan
     protected void sortIntervalsBeforeAllocation()
     {
         int __sortedLen = 0;
-        for (Interval __interval : intervals)
+        for (Interval __interval : this.___intervals)
         {
             if (__interval != null)
             {
@@ -595,7 +593,7 @@ public class LinearScan
 
         // special sorting algorithm: the original interval-list is almost sorted,
         // only some intervals are swapped. So this is much faster than a complete QuickSort
-        for (Interval __interval : intervals)
+        for (Interval __interval : this.___intervals)
         {
             if (__interval != null)
             {
@@ -620,19 +618,19 @@ public class LinearScan
                 }
             }
         }
-        sortedIntervals = __sortedList;
+        this.___sortedIntervals = __sortedList;
     }
 
     void sortIntervalsAfterAllocation()
     {
-        if (firstDerivedIntervalIndex == -1)
+        if (this.___firstDerivedIntervalIndex == -1)
         {
             // no intervals have been added during allocation, so sorted list is already up to date
             return;
         }
 
-        Interval[] __oldList = sortedIntervals;
-        Interval[] __newList = Arrays.copyOfRange(intervals, firstDerivedIntervalIndex, intervalsSize);
+        Interval[] __oldList = this.___sortedIntervals;
+        Interval[] __newList = Arrays.copyOfRange(this.___intervals, this.___firstDerivedIntervalIndex, this.___intervalsSize);
         int __oldLen = __oldList.length;
         int __newLen = __newList.length;
 
@@ -658,7 +656,7 @@ public class LinearScan
             }
         }
 
-        sortedIntervals = __combinedList;
+        this.___sortedIntervals = __combinedList;
     }
 
     // wrapper for Interval.splitChildAtOpId that performs a bailout in product mode
@@ -754,36 +752,36 @@ public class LinearScan
 
     public LIR getLIR()
     {
-        return ir;
+        return this.___ir;
     }
 
     public FrameMapBuilder getFrameMapBuilder()
     {
-        return frameMapBuilder;
+        return this.___frameMapBuilder;
     }
 
     public AbstractBlockBase<?>[] sortedBlocks()
     {
-        return sortedBlocks;
+        return this.___sortedBlocks;
     }
 
     public RegisterArray getRegisters()
     {
-        return registers;
+        return this.___registers;
     }
 
     public RegisterAllocationConfig getRegisterAllocationConfig()
     {
-        return regAllocConfig;
+        return this.___regAllocConfig;
     }
 
     public boolean callKillsRegisters()
     {
-        return regAllocConfig.getRegisterConfig().areAllAllocatableRegistersCallerSaved();
+        return this.___regAllocConfig.getRegisterConfig().areAllAllocatableRegistersCallerSaved();
     }
 
     boolean neverSpillConstants()
     {
-        return neverSpillConstants;
+        return this.___neverSpillConstants;
     }
 }

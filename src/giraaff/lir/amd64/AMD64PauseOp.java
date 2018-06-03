@@ -5,9 +5,9 @@ import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-/**
- * Emits a pause.
- */
+///
+// Emits a pause.
+///
 @Opcode
 // @class AMD64PauseOp
 public final class AMD64PauseOp extends AMD64LIRInstruction

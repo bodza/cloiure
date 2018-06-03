@@ -20,9 +20,9 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
 
     @Input(InputType.Condition)
     // @field
-    LogicNode condition;
+    LogicNode ___condition;
     // @field
-    protected boolean negated;
+    protected boolean ___negated;
 
     // @cons
     public ConditionAnchorNode(LogicNode __condition)
@@ -34,18 +34,18 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
     public ConditionAnchorNode(LogicNode __condition, boolean __negated)
     {
         super(TYPE, StampFactory.forVoid());
-        this.negated = __negated;
-        this.condition = __condition;
+        this.___negated = __negated;
+        this.___condition = __condition;
     }
 
     public LogicNode condition()
     {
-        return condition;
+        return this.___condition;
     }
 
     public boolean isNegated()
     {
-        return negated;
+        return this.___negated;
     }
 
     @Override
@@ -54,12 +54,12 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
         if (__forValue instanceof LogicNegationNode)
         {
             LogicNegationNode __negation = (LogicNegationNode) __forValue;
-            return new ConditionAnchorNode(__negation.getValue(), !negated);
+            return new ConditionAnchorNode(__negation.getValue(), !this.___negated);
         }
         if (__forValue instanceof LogicConstantNode)
         {
             LogicConstantNode __c = (LogicConstantNode) __forValue;
-            if (__c.getValue() != negated)
+            if (__c.getValue() != this.___negated)
             {
                 return null;
             }
@@ -88,6 +88,6 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
     @Override
     public Node getValue()
     {
-        return condition;
+        return this.___condition;
     }
 }

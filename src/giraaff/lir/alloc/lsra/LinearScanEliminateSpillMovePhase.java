@@ -31,13 +31,13 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     };
 
     // @field
-    protected final LinearScan allocator;
+    protected final LinearScan ___allocator;
 
     // @cons
     protected LinearScanEliminateSpillMovePhase(LinearScan __allocator)
     {
         super();
-        this.allocator = __allocator;
+        this.___allocator = __allocator;
     }
 
     @Override
@@ -46,10 +46,10 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
         eliminateSpillMoves(__lirGenRes);
     }
 
-    /**
-     * @return the index of the first instruction that is of interest for
-     *         {@link #eliminateSpillMoves}
-     */
+    ///
+    // @return the index of the first instruction that is of interest for
+    //         {@link #eliminateSpillMoves}
+    ///
     protected int firstInstructionOfInterest()
     {
         // skip the first because it is always a label
@@ -59,16 +59,14 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     // called once before assignment of register numbers
     void eliminateSpillMoves(LIRGenerationResult __res)
     {
-        /*
-         * Collect all intervals that must be stored after their definition. The list is sorted
-         * by Interval.spillDefinitionPos.
-         */
-        Interval __interval = allocator.createUnhandledLists(mustStoreAtDefinition, null).getLeft();
+        // Collect all intervals that must be stored after their definition. The list is sorted
+        // by Interval.spillDefinitionPos.
+        Interval __interval = this.___allocator.createUnhandledLists(mustStoreAtDefinition, null).getLeft();
 
         LIRInsertionBuffer __insertionBuffer = new LIRInsertionBuffer();
-        for (AbstractBlockBase<?> __block : allocator.sortedBlocks())
+        for (AbstractBlockBase<?> __block : this.___allocator.sortedBlocks())
         {
-            ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__block);
+            ArrayList<LIRInstruction> __instructions = this.___allocator.getLIR().getLIRforBlock(__block);
             int __numInst = __instructions.size();
 
             // iterate all instructions of the block.
@@ -80,10 +78,8 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
                 if (__opId == -1)
                 {
                     MoveOp __move = MoveOp.asMoveOp(__op);
-                    /*
-                     * Remove move from register to stack if the stack slot is guaranteed to
-                     * be correct. Only moves that have been inserted by LinearScan can be removed.
-                     */
+                    // Remove move from register to stack if the stack slot is guaranteed to
+                    // be correct. Only moves that have been inserted by LinearScan can be removed.
                     if (GraalOptions.lirOptLSRAEliminateSpillMoves && canEliminateSpillMove(__block, __move))
                     {
                         // Move target is a stack slot that is always correct, so eliminate instruction.
@@ -109,11 +105,11 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
                             AllocatableValue __toLocation = LinearScan.canonicalSpillOpr(__interval);
                             if (!__fromLocation.equals(__toLocation))
                             {
-                                LIRInstruction __move = allocator.getSpillMoveFactory().createMove(__toLocation, __fromLocation);
+                                LIRInstruction __move = this.___allocator.getSpillMoveFactory().createMove(__toLocation, __fromLocation);
                                 __insertionBuffer.append(__j + 1, __move);
                             }
                         }
-                        __interval = __interval.next;
+                        __interval = __interval.___next;
                     }
                 }
             }
@@ -125,13 +121,13 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
         }
     }
 
-    /**
-     * @param block The block {@code move} is located in.
-     * @param move Spill move.
-     */
+    ///
+    // @param block The block {@code move} is located in.
+    // @param move Spill move.
+    ///
     protected boolean canEliminateSpillMove(AbstractBlockBase<?> __block, MoveOp __move)
     {
-        Interval __curInterval = allocator.intervalFor(__move.getResult());
+        Interval __curInterval = this.___allocator.intervalFor(__move.getResult());
 
         if (!ValueUtil.isRegister(__curInterval.location()) && __curInterval.alwaysInMemory())
         {

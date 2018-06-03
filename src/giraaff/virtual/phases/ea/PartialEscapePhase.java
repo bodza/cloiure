@@ -16,9 +16,9 @@ import giraaff.phases.tiers.PhaseContext;
 public final class PartialEscapePhase extends EffectsPhase<PhaseContext>
 {
     // @field
-    private final boolean readElimination;
+    private final boolean ___readElimination;
     // @field
-    private final BasePhase<PhaseContext> cleanupPhase;
+    private final BasePhase<PhaseContext> ___cleanupPhase;
 
     // @cons
     public PartialEscapePhase(boolean __iterative, CanonicalizerPhase __canonicalizer)
@@ -36,24 +36,24 @@ public final class PartialEscapePhase extends EffectsPhase<PhaseContext>
     public PartialEscapePhase(boolean __iterative, boolean __readElimination, CanonicalizerPhase __canonicalizer, BasePhase<PhaseContext> __cleanupPhase)
     {
         super(__iterative ? GraalOptions.escapeAnalysisIterations : 1, __canonicalizer);
-        this.readElimination = __readElimination;
-        this.cleanupPhase = __cleanupPhase;
+        this.___readElimination = __readElimination;
+        this.___cleanupPhase = __cleanupPhase;
     }
 
     @Override
     protected void postIteration(StructuredGraph __graph, PhaseContext __context, EconomicSet<Node> __changedNodes)
     {
         super.postIteration(__graph, __context, __changedNodes);
-        if (cleanupPhase != null)
+        if (this.___cleanupPhase != null)
         {
-            cleanupPhase.apply(__graph, __context);
+            this.___cleanupPhase.apply(__graph, __context);
         }
     }
 
     @Override
     protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        if (readElimination || __graph.hasVirtualizableAllocation())
+        if (this.___readElimination || __graph.hasVirtualizableAllocation())
         {
             runAnalysis(__graph, __context);
         }
@@ -62,11 +62,11 @@ public final class PartialEscapePhase extends EffectsPhase<PhaseContext>
     @Override
     protected Closure<?> createEffectsClosure(PhaseContext __context, ScheduleResult __schedule, ControlFlowGraph __cfg)
     {
-        for (VirtualObjectNode __virtual : __cfg.graph.getNodes(VirtualObjectNode.TYPE))
+        for (VirtualObjectNode __virtual : __cfg.___graph.getNodes(VirtualObjectNode.TYPE))
         {
             __virtual.resetObjectId();
         }
-        if (readElimination)
+        if (this.___readElimination)
         {
             return new PEReadEliminationClosure(__schedule, __context.getMetaAccess(), __context.getConstantReflection(), __context.getConstantFieldProvider(), __context.getLowerer());
         }

@@ -11,13 +11,13 @@ import giraaff.phases.tiers.PhaseContext;
 public final class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
 {
     // @field
-    private final CanonicalizerPhase canonicalizer;
+    private final CanonicalizerPhase ___canonicalizer;
 
     // @cons
     public LoopFullUnrollPhase(CanonicalizerPhase __canonicalizer, LoopPolicies __policies)
     {
         super(__policies);
-        this.canonicalizer = __canonicalizer;
+        this.___canonicalizer = __canonicalizer;
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
                 {
                     if (getPolicies().shouldFullUnroll(__loop))
                     {
-                        LoopTransformations.fullUnroll(__loop, __context, canonicalizer);
+                        LoopTransformations.fullUnroll(__loop, __context, this.___canonicalizer);
                         __peeled = true;
                         break;
                     }

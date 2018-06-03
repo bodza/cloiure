@@ -32,17 +32,17 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
 
     @Input
     // @field
-    NodeInputList<VirtualObjectNode> virtualObjects = new NodeInputList<>(this);
+    NodeInputList<VirtualObjectNode> ___virtualObjects = new NodeInputList<>(this);
     @Input
     // @field
-    NodeInputList<ValueNode> values = new NodeInputList<>(this);
+    NodeInputList<ValueNode> ___values = new NodeInputList<>(this);
     @Input(InputType.Association)
     // @field
-    NodeInputList<MonitorIdNode> locks = new NodeInputList<>(this);
+    NodeInputList<MonitorIdNode> ___locks = new NodeInputList<>(this);
     // @field
-    protected ArrayList<Integer> lockIndexes = new ArrayList<>(Arrays.asList(0));
+    protected ArrayList<Integer> ___lockIndexes = new ArrayList<>(Arrays.asList(0));
     // @field
-    protected ArrayList<Boolean> ensureVirtual = new ArrayList<>();
+    protected ArrayList<Boolean> ___ensureVirtual = new ArrayList<>();
 
     // @cons
     public CommitAllocationNode()
@@ -52,32 +52,32 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
 
     public List<VirtualObjectNode> getVirtualObjects()
     {
-        return virtualObjects;
+        return this.___virtualObjects;
     }
 
     public List<ValueNode> getValues()
     {
-        return values;
+        return this.___values;
     }
 
     public List<MonitorIdNode> getLocks(int __objIndex)
     {
-        return locks.subList(lockIndexes.get(__objIndex), lockIndexes.get(__objIndex + 1));
+        return this.___locks.subList(this.___lockIndexes.get(__objIndex), this.___lockIndexes.get(__objIndex + 1));
     }
 
     public List<Boolean> getEnsureVirtual()
     {
-        return ensureVirtual;
+        return this.___ensureVirtual;
     }
 
     @Override
     public void lower(LoweringTool __tool)
     {
-        for (int __i = 0; __i < virtualObjects.size(); __i++)
+        for (int __i = 0; __i < this.___virtualObjects.size(); __i++)
         {
-            if (ensureVirtual.get(__i))
+            if (this.___ensureVirtual.get(__i))
             {
-                EnsureVirtualizedNode.ensureVirtualFailure(this, virtualObjects.get(__i).stamp(NodeView.DEFAULT));
+                EnsureVirtualizedNode.ensureVirtualFailure(this, this.___virtualObjects.get(__i).stamp(NodeView.DEFAULT));
             }
         }
         __tool.getLowerer().lower(this, __tool);
@@ -86,30 +86,30 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locks.isEmpty() ? LocationIdentity.init() : LocationIdentity.any();
+        return this.___locks.isEmpty() ? LocationIdentity.init() : LocationIdentity.any();
     }
 
     @Override
     public void afterClone(Node __other)
     {
-        lockIndexes = new ArrayList<>(lockIndexes);
+        this.___lockIndexes = new ArrayList<>(this.___lockIndexes);
     }
 
     public void addLocks(List<MonitorIdNode> __monitorIds)
     {
-        locks.addAll(__monitorIds);
-        lockIndexes.add(locks.size());
+        this.___locks.addAll(__monitorIds);
+        this.___lockIndexes.add(this.___locks.size());
     }
 
     @Override
     public void virtualize(VirtualizerTool __tool)
     {
         int __pos = 0;
-        for (int __i = 0; __i < virtualObjects.size(); __i++)
+        for (int __i = 0; __i < this.___virtualObjects.size(); __i++)
         {
-            VirtualObjectNode __virtualObject = virtualObjects.get(__i);
+            VirtualObjectNode __virtualObject = this.___virtualObjects.get(__i);
             int __entryCount = __virtualObject.entryCount();
-            __tool.createVirtualObject(__virtualObject, values.subList(__pos, __pos + __entryCount).toArray(new ValueNode[__entryCount]), getLocks(__i), ensureVirtual.get(__i));
+            __tool.createVirtualObject(__virtualObject, this.___values.subList(__pos, __pos + __entryCount).toArray(new ValueNode[__entryCount]), getLocks(__i), this.___ensureVirtual.get(__i));
             __pos += __entryCount;
         }
         __tool.delete();
@@ -118,11 +118,11 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
     @Override
     public void simplify(SimplifierTool __tool)
     {
-        boolean[] __used = new boolean[virtualObjects.size()];
+        boolean[] __used = new boolean[this.___virtualObjects.size()];
         int __usedCount = 0;
         for (AllocatedObjectNode __addObject : usages().filter(AllocatedObjectNode.class))
         {
-            int __index = virtualObjects.indexOf(__addObject.getVirtualObject());
+            int __index = this.___virtualObjects.indexOf(__addObject.getVirtualObject());
             __used[__index] = true;
             __usedCount++;
         }
@@ -141,14 +141,14 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
         {
             __progress = false;
             int __valuePos = 0;
-            for (int __objIndex = 0; __objIndex < virtualObjects.size(); __objIndex++)
+            for (int __objIndex = 0; __objIndex < this.___virtualObjects.size(); __objIndex++)
             {
-                VirtualObjectNode __virtualObject = virtualObjects.get(__objIndex);
+                VirtualObjectNode __virtualObject = this.___virtualObjects.get(__objIndex);
                 if (__used[__objIndex])
                 {
                     for (int __i = 0; __i < __virtualObject.entryCount(); __i++)
                     {
-                        int __index = virtualObjects.indexOf(values.get(__valuePos + __i));
+                        int __index = this.___virtualObjects.indexOf(this.___values.get(__valuePos + __i));
                         if (__index != -1 && !__used[__index])
                         {
                             __progress = true;
@@ -161,7 +161,7 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
             }
         } while (__progress);
 
-        if (__usedCount < virtualObjects.size())
+        if (__usedCount < this.___virtualObjects.size())
         {
             List<VirtualObjectNode> __newVirtualObjects = new ArrayList<>(__usedCount);
             List<MonitorIdNode> __newLocks = new ArrayList<>(__usedCount);
@@ -170,27 +170,27 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
             __newLockIndexes.add(0);
             List<ValueNode> __newValues = new ArrayList<>();
             int __valuePos = 0;
-            for (int __objIndex = 0; __objIndex < virtualObjects.size(); __objIndex++)
+            for (int __objIndex = 0; __objIndex < this.___virtualObjects.size(); __objIndex++)
             {
-                VirtualObjectNode __virtualObject = virtualObjects.get(__objIndex);
+                VirtualObjectNode __virtualObject = this.___virtualObjects.get(__objIndex);
                 if (__used[__objIndex])
                 {
                     __newVirtualObjects.add(__virtualObject);
                     __newLocks.addAll(getLocks(__objIndex));
                     __newLockIndexes.add(__newLocks.size());
-                    __newValues.addAll(values.subList(__valuePos, __valuePos + __virtualObject.entryCount()));
-                    __newEnsureVirtual.add(ensureVirtual.get(__objIndex));
+                    __newValues.addAll(this.___values.subList(__valuePos, __valuePos + __virtualObject.entryCount()));
+                    __newEnsureVirtual.add(this.___ensureVirtual.get(__objIndex));
                 }
                 __valuePos += __virtualObject.entryCount();
             }
-            virtualObjects.clear();
-            virtualObjects.addAll(__newVirtualObjects);
-            locks.clear();
-            locks.addAll(__newLocks);
-            values.clear();
-            values.addAll(__newValues);
-            lockIndexes = __newLockIndexes;
-            ensureVirtual = __newEnsureVirtual;
+            this.___virtualObjects.clear();
+            this.___virtualObjects.addAll(__newVirtualObjects);
+            this.___locks.clear();
+            this.___locks.addAll(__newLocks);
+            this.___values.clear();
+            this.___values.addAll(__newValues);
+            this.___lockIndexes = __newLockIndexes;
+            this.___ensureVirtual = __newEnsureVirtual;
         }
     }
 }

@@ -16,17 +16,17 @@ public final class ResolveMethodAndLoadCountersNode extends DeoptimizingFixedWit
     public static final NodeClass<ResolveMethodAndLoadCountersNode> TYPE = NodeClass.create(ResolveMethodAndLoadCountersNode.class);
 
     // @field
-    ResolvedJavaMethod method;
+    ResolvedJavaMethod ___method;
     @Input
     // @field
-    ValueNode hub;
+    ValueNode ___hub;
 
     // @cons
     public ResolveMethodAndLoadCountersNode(ResolvedJavaMethod __method, ValueNode __hub)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());
-        this.method = __method;
-        this.hub = __hub;
+        this.___method = __method;
+        this.___hub = __hub;
     }
 
     @Override
@@ -37,12 +37,12 @@ public final class ResolveMethodAndLoadCountersNode extends DeoptimizingFixedWit
 
     public ResolvedJavaMethod getMethod()
     {
-        return method;
+        return this.___method;
     }
 
     public ValueNode getHub()
     {
-        return hub;
+        return this.___hub;
     }
 
     @Override

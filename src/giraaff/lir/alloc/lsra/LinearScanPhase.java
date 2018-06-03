@@ -14,8 +14,8 @@ public final class LinearScanPhase extends RegisterAllocationPhase
     @Override
     protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
     {
-        MoveFactory __spillMoveFactory = __context.spillMoveFactory;
-        RegisterAllocationConfig __registerAllocationConfig = __context.registerAllocationConfig;
+        MoveFactory __spillMoveFactory = __context.___spillMoveFactory;
+        RegisterAllocationConfig __registerAllocationConfig = __context.___registerAllocationConfig;
         final LinearScan __allocator = new SSALinearScan(__target, __lirGenRes, __spillMoveFactory, __registerAllocationConfig, __lirGenRes.getLIR().linearScanOrder(), getNeverSpillConstants());
         __allocator.allocate(__target, __lirGenRes, __context);
     }

@@ -9,13 +9,13 @@ public abstract class PostAllocationOptimizationPhase extends LIRPhase<PostAlloc
     public static final class PostAllocationOptimizationContext
     {
         // @field
-        public final DiagnosticLIRGeneratorTool diagnosticLirGenTool;
+        public final DiagnosticLIRGeneratorTool ___diagnosticLirGenTool;
 
         // @cons
         public PostAllocationOptimizationContext(DiagnosticLIRGeneratorTool __diagnosticTool)
         {
             super();
-            this.diagnosticLirGenTool = __diagnosticTool;
+            this.___diagnosticLirGenTool = __diagnosticTool;
         }
     }
 }

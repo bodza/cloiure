@@ -12,10 +12,10 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-/**
- * Represents an atomic compare-and-swap operation The result is a boolean that contains whether the
- * value matched the expected value.
- */
+///
+// Represents an atomic compare-and-swap operation The result is a boolean that contains whether the
+// value matched the expected value.
+///
 // @NodeInfo.allowedUsageTypes "Value, Memory"
 // @class UnsafeCompareAndSwapNode
 public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
@@ -25,63 +25,63 @@ public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint imp
 
     @Input
     // @field
-    ValueNode object;
+    ValueNode ___object;
     @Input
     // @field
-    ValueNode offset;
+    ValueNode ___offset;
     @Input
     // @field
-    ValueNode expected;
+    ValueNode ___expected;
     @Input
     // @field
-    ValueNode newValue;
+    ValueNode ___newValue;
 
     // @field
-    private final JavaKind valueKind;
+    private final JavaKind ___valueKind;
     // @field
-    private final LocationIdentity locationIdentity;
+    private final LocationIdentity ___locationIdentity;
 
     // @cons
     public UnsafeCompareAndSwapNode(ValueNode __object, ValueNode __offset, ValueNode __expected, ValueNode __newValue, JavaKind __valueKind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
-        this.object = __object;
-        this.offset = __offset;
-        this.expected = __expected;
-        this.newValue = __newValue;
-        this.valueKind = __valueKind;
-        this.locationIdentity = __locationIdentity;
+        this.___object = __object;
+        this.___offset = __offset;
+        this.___expected = __expected;
+        this.___newValue = __newValue;
+        this.___valueKind = __valueKind;
+        this.___locationIdentity = __locationIdentity;
     }
 
     public ValueNode object()
     {
-        return object;
+        return this.___object;
     }
 
     public ValueNode offset()
     {
-        return offset;
+        return this.___offset;
     }
 
     public ValueNode expected()
     {
-        return expected;
+        return this.___expected;
     }
 
     public ValueNode newValue()
     {
-        return newValue;
+        return this.___newValue;
     }
 
     public JavaKind getValueKind()
     {
-        return valueKind;
+        return this.___valueKind;
     }
 
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        return locationIdentity;
+        return this.___locationIdentity;
     }
 
     @Override
