@@ -7,12 +7,13 @@ import giraaff.nodes.DeoptimizingFixedWithNextNode;
 // @class DeoptimizingStubCall
 public abstract class DeoptimizingStubCall extends DeoptimizingFixedWithNextNode
 {
+    // @def
     public static final NodeClass<DeoptimizingStubCall> TYPE = NodeClass.create(DeoptimizingStubCall.class);
 
     // @cons
-    public DeoptimizingStubCall(NodeClass<? extends DeoptimizingStubCall> c, Stamp stamp)
+    public DeoptimizingStubCall(NodeClass<? extends DeoptimizingStubCall> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     @Override

@@ -16,8 +16,8 @@ import giraaff.nodes.extended.ForeignCallNode;
 public final class ObjectSubstitutions
 {
     @MethodSubstitution(isStatic = false)
-    public static int hashCode(final Object thisObj)
+    public static int hashCode(final Object __thisObj)
     {
-        return IdentityHashCodeNode.identityHashCode(thisObj);
+        return IdentityHashCodeNode.identityHashCode(__thisObj);
     }
 }

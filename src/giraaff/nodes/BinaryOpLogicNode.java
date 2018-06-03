@@ -13,10 +13,15 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class BinaryOpLogicNode
 public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Binary<ValueNode>
 {
+    // @def
     public static final NodeClass<BinaryOpLogicNode> TYPE = NodeClass.create(BinaryOpLogicNode.class);
 
-    @Input protected ValueNode x;
-    @Input protected ValueNode y;
+    @Input
+    // @field
+    protected ValueNode x;
+    @Input
+    // @field
+    protected ValueNode y;
 
     @Override
     public ValueNode getX()
@@ -31,15 +36,15 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
     }
 
     // @cons
-    public BinaryOpLogicNode(NodeClass<? extends BinaryOpLogicNode> c, ValueNode x, ValueNode y)
+    public BinaryOpLogicNode(NodeClass<? extends BinaryOpLogicNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c);
-        this.x = x;
-        this.y = y;
+        super(__c);
+        this.x = __x;
+        this.y = __y;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
     }
 
@@ -55,16 +60,16 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
     {
         if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId()))
         {
-            ValueNode tmp = x;
+            ValueNode __tmp = x;
             x = y;
-            y = tmp;
+            y = __tmp;
             if (graph() != null)
             {
                 // see if this node already exists
-                LogicNode duplicate = graph().findDuplicate(this);
-                if (duplicate != null)
+                LogicNode __duplicate = graph().findDuplicate(this);
+                if (__duplicate != null)
                 {
-                    return duplicate;
+                    return __duplicate;
                 }
             }
         }

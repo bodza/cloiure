@@ -31,112 +31,116 @@ import giraaff.util.GraalError;
 // @class IntegerStamp
 public final class IntegerStamp extends PrimitiveStamp
 {
+    // @field
     private final long lowerBound;
+    // @field
     private final long upperBound;
+    // @field
     private final long downMask;
+    // @field
     private final long upMask;
 
     // @cons
-    private IntegerStamp(int bits, long lowerBound, long upperBound, long downMask, long upMask)
+    private IntegerStamp(int __bits, long __lowerBound, long __upperBound, long __downMask, long __upMask)
     {
-        super(bits, OPS);
+        super(__bits, OPS);
 
-        this.lowerBound = lowerBound;
-        this.upperBound = upperBound;
-        this.downMask = downMask;
-        this.upMask = upMask;
+        this.lowerBound = __lowerBound;
+        this.upperBound = __upperBound;
+        this.downMask = __downMask;
+        this.upMask = __upMask;
     }
 
-    public static IntegerStamp create(int bits, long lowerBoundInput, long upperBoundInput)
+    public static IntegerStamp create(int __bits, long __lowerBoundInput, long __upperBoundInput)
     {
-        return create(bits, lowerBoundInput, upperBoundInput, 0, CodeUtil.mask(bits));
+        return create(__bits, __lowerBoundInput, __upperBoundInput, 0, CodeUtil.mask(__bits));
     }
 
-    public static IntegerStamp create(int bits, long lowerBoundInput, long upperBoundInput, long downMask, long upMask)
+    public static IntegerStamp create(int __bits, long __lowerBoundInput, long __upperBoundInput, long __downMask, long __upMask)
     {
         // Set lower bound, use masks to make it more precise.
-        long minValue = minValueForMasks(bits, downMask, upMask);
-        long lowerBoundTmp = Math.max(lowerBoundInput, minValue);
+        long __minValue = minValueForMasks(__bits, __downMask, __upMask);
+        long __lowerBoundTmp = Math.max(__lowerBoundInput, __minValue);
 
         // Set upper bound, use masks to make it more precise.
-        long maxValue = maxValueForMasks(bits, downMask, upMask);
-        long upperBoundTmp = Math.min(upperBoundInput, maxValue);
+        long __maxValue = maxValueForMasks(__bits, __downMask, __upMask);
+        long __upperBoundTmp = Math.min(__upperBoundInput, __maxValue);
 
         // Assign masks now with the bounds in mind.
-        final long boundedDownMask;
-        final long boundedUpMask;
-        long defaultMask = CodeUtil.mask(bits);
-        if (lowerBoundTmp == upperBoundTmp)
+        final long __boundedDownMask;
+        final long __boundedUpMask;
+        long __defaultMask = CodeUtil.mask(__bits);
+        if (__lowerBoundTmp == __upperBoundTmp)
         {
-            boundedDownMask = lowerBoundTmp;
-            boundedUpMask = lowerBoundTmp;
+            __boundedDownMask = __lowerBoundTmp;
+            __boundedUpMask = __lowerBoundTmp;
         }
-        else if (lowerBoundTmp >= 0)
+        else if (__lowerBoundTmp >= 0)
         {
-            int upperBoundLeadingZeros = Long.numberOfLeadingZeros(upperBoundTmp);
-            long differentBits = lowerBoundTmp ^ upperBoundTmp;
-            int sameBitCount = Long.numberOfLeadingZeros(differentBits << upperBoundLeadingZeros);
+            int __upperBoundLeadingZeros = Long.numberOfLeadingZeros(__upperBoundTmp);
+            long __differentBits = __lowerBoundTmp ^ __upperBoundTmp;
+            int __sameBitCount = Long.numberOfLeadingZeros(__differentBits << __upperBoundLeadingZeros);
 
-            boundedUpMask = upperBoundTmp | -1L >>> (upperBoundLeadingZeros + sameBitCount);
-            boundedDownMask = upperBoundTmp & ~(-1L >>> (upperBoundLeadingZeros + sameBitCount));
+            __boundedUpMask = __upperBoundTmp | -1L >>> (__upperBoundLeadingZeros + __sameBitCount);
+            __boundedDownMask = __upperBoundTmp & ~(-1L >>> (__upperBoundLeadingZeros + __sameBitCount));
         }
         else
         {
-            if (upperBoundTmp >= 0)
+            if (__upperBoundTmp >= 0)
             {
-                boundedUpMask = defaultMask;
-                boundedDownMask = 0;
+                __boundedUpMask = __defaultMask;
+                __boundedDownMask = 0;
             }
             else
             {
-                int lowerBoundLeadingOnes = Long.numberOfLeadingZeros(~lowerBoundTmp);
-                long differentBits = lowerBoundTmp ^ upperBoundTmp;
-                int sameBitCount = Long.numberOfLeadingZeros(differentBits << lowerBoundLeadingOnes);
+                int __lowerBoundLeadingOnes = Long.numberOfLeadingZeros(~__lowerBoundTmp);
+                long __differentBits = __lowerBoundTmp ^ __upperBoundTmp;
+                int __sameBitCount = Long.numberOfLeadingZeros(__differentBits << __lowerBoundLeadingOnes);
 
-                boundedUpMask = lowerBoundTmp | -1L >>> (lowerBoundLeadingOnes + sameBitCount) | ~(-1L >>> lowerBoundLeadingOnes);
-                boundedDownMask = lowerBoundTmp & ~(-1L >>> (lowerBoundLeadingOnes + sameBitCount)) | ~(-1L >>> lowerBoundLeadingOnes);
+                __boundedUpMask = __lowerBoundTmp | -1L >>> (__lowerBoundLeadingOnes + __sameBitCount) | ~(-1L >>> __lowerBoundLeadingOnes);
+                __boundedDownMask = __lowerBoundTmp & ~(-1L >>> (__lowerBoundLeadingOnes + __sameBitCount)) | ~(-1L >>> __lowerBoundLeadingOnes);
             }
         }
 
-        return new IntegerStamp(bits, lowerBoundTmp, upperBoundTmp, defaultMask & (downMask | boundedDownMask), defaultMask & upMask & boundedUpMask);
+        return new IntegerStamp(__bits, __lowerBoundTmp, __upperBoundTmp, __defaultMask & (__downMask | __boundedDownMask), __defaultMask & __upMask & __boundedUpMask);
     }
 
-    private static long significantBit(long bits, long value)
+    private static long significantBit(long __bits, long __value)
     {
-        return (value >>> (bits - 1)) & 1;
+        return (__value >>> (__bits - 1)) & 1;
     }
 
-    private static long minValueForMasks(int bits, long downMask, long upMask)
+    private static long minValueForMasks(int __bits, long __downMask, long __upMask)
     {
-        if (significantBit(bits, upMask) == 0)
+        if (significantBit(__bits, __upMask) == 0)
         {
             // Value is always positive. Minimum value always positive.
-            return downMask;
+            return __downMask;
         }
         else
         {
             // Value can be positive or negative. Minimum value always negative.
-            return downMask | (-1L << (bits - 1));
+            return __downMask | (-1L << (__bits - 1));
         }
     }
 
-    private static long maxValueForMasks(int bits, long downMask, long upMask)
+    private static long maxValueForMasks(int __bits, long __downMask, long __upMask)
     {
-        if (significantBit(bits, downMask) == 1)
+        if (significantBit(__bits, __downMask) == 1)
         {
             // Value is always negative. Maximum value always negative.
-            return CodeUtil.signExtend(upMask, bits);
+            return CodeUtil.signExtend(__upMask, __bits);
         }
         else
         {
             // Value can be positive or negative. Maximum value always positive.
-            return upMask & (CodeUtil.mask(bits) >>> 1);
+            return __upMask & (CodeUtil.mask(__bits) >>> 1);
         }
     }
 
-    public static IntegerStamp stampForMask(int bits, long downMask, long upMask)
+    public static IntegerStamp stampForMask(int __bits, long __downMask, long __upMask)
     {
-        return new IntegerStamp(bits, minValueForMasks(bits, downMask, upMask), maxValueForMasks(bits, downMask, upMask), downMask, upMask);
+        return new IntegerStamp(__bits, minValueForMasks(__bits, __downMask, __upMask), maxValueForMasks(__bits, __downMask, __upMask), __downMask, __upMask);
     }
 
     @Override
@@ -152,31 +156,31 @@ public final class IntegerStamp extends PrimitiveStamp
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta)
+    public Stamp constant(Constant __c, MetaAccessProvider __meta)
     {
-        if (c instanceof PrimitiveConstant)
+        if (__c instanceof PrimitiveConstant)
         {
-            long value = ((PrimitiveConstant) c).asLong();
-            return StampFactory.forInteger(getBits(), value, value);
+            long __value = ((PrimitiveConstant) __c).asLong();
+            return StampFactory.forInteger(getBits(), __value, __value);
         }
         return this;
     }
 
     @Override
-    public SerializableConstant deserialize(ByteBuffer buffer)
+    public SerializableConstant deserialize(ByteBuffer __buffer)
     {
         switch (getBits())
         {
             case 1:
-                return JavaConstant.forBoolean(buffer.get() != 0);
+                return JavaConstant.forBoolean(__buffer.get() != 0);
             case 8:
-                return JavaConstant.forByte(buffer.get());
+                return JavaConstant.forByte(__buffer.get());
             case 16:
-                return JavaConstant.forShort(buffer.getShort());
+                return JavaConstant.forShort(__buffer.getShort());
             case 32:
-                return JavaConstant.forInt(buffer.getInt());
+                return JavaConstant.forInt(__buffer.getInt());
             case 64:
-                return JavaConstant.forLong(buffer.getLong());
+                return JavaConstant.forLong(__buffer.getLong());
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -202,26 +206,26 @@ public final class IntegerStamp extends PrimitiveStamp
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool)
+    public LIRKind getLIRKind(LIRKindTool __tool)
     {
-        return tool.getIntegerKind(getBits());
+        return __tool.getIntegerKind(getBits());
     }
 
     @Override
-    public ResolvedJavaType javaType(MetaAccessProvider metaAccess)
+    public ResolvedJavaType javaType(MetaAccessProvider __metaAccess)
     {
         switch (getBits())
         {
             case 1:
-                return metaAccess.lookupJavaType(Boolean.TYPE);
+                return __metaAccess.lookupJavaType(Boolean.TYPE);
             case 8:
-                return metaAccess.lookupJavaType(Byte.TYPE);
+                return __metaAccess.lookupJavaType(Byte.TYPE);
             case 16:
-                return metaAccess.lookupJavaType(Short.TYPE);
+                return __metaAccess.lookupJavaType(Short.TYPE);
             case 32:
-                return metaAccess.lookupJavaType(Integer.TYPE);
+                return __metaAccess.lookupJavaType(Integer.TYPE);
             case 64:
-                return metaAccess.lookupJavaType(Long.TYPE);
+                return __metaAccess.lookupJavaType(Long.TYPE);
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -265,9 +269,9 @@ public final class IntegerStamp extends PrimitiveStamp
         return lowerBound == CodeUtil.minValue(getBits()) && upperBound == CodeUtil.maxValue(getBits()) && downMask == 0 && upMask == CodeUtil.mask(getBits());
     }
 
-    public boolean contains(long value)
+    public boolean contains(long __value)
     {
-        return value >= lowerBound && value <= upperBound && (value & downMask) == downMask && (value & upMask) == (value & CodeUtil.mask(getBits()));
+        return __value >= lowerBound && __value <= upperBound && (__value & downMask) == downMask && (__value & upMask) == (__value & CodeUtil.mask(getBits()));
     }
 
     public boolean isPositive()
@@ -300,82 +304,82 @@ public final class IntegerStamp extends PrimitiveStamp
         return lowerBound() < 0;
     }
 
-    private IntegerStamp createStamp(IntegerStamp other, long newUpperBound, long newLowerBound, long newDownMask, long newUpMask)
+    private IntegerStamp createStamp(IntegerStamp __other, long __newUpperBound, long __newLowerBound, long __newDownMask, long __newUpMask)
     {
-        if (newLowerBound > newUpperBound || (newDownMask & (~newUpMask)) != 0 || (newUpMask == 0 && (newLowerBound > 0 || newUpperBound < 0)))
+        if (__newLowerBound > __newUpperBound || (__newDownMask & (~__newUpMask)) != 0 || (__newUpMask == 0 && (__newLowerBound > 0 || __newUpperBound < 0)))
         {
             return empty();
         }
-        else if (newLowerBound == lowerBound && newUpperBound == upperBound && newDownMask == downMask && newUpMask == upMask)
+        else if (__newLowerBound == lowerBound && __newUpperBound == upperBound && __newDownMask == downMask && __newUpMask == upMask)
         {
             return this;
         }
-        else if (newLowerBound == other.lowerBound && newUpperBound == other.upperBound && newDownMask == other.downMask && newUpMask == other.upMask)
+        else if (__newLowerBound == __other.lowerBound && __newUpperBound == __other.upperBound && __newDownMask == __other.downMask && __newUpMask == __other.upMask)
         {
-            return other;
+            return __other;
         }
         else
         {
-            return IntegerStamp.create(getBits(), newLowerBound, newUpperBound, newDownMask, newUpMask);
+            return IntegerStamp.create(getBits(), __newLowerBound, __newUpperBound, __newDownMask, __newUpMask);
         }
     }
 
     @Override
-    public Stamp meet(Stamp otherStamp)
+    public Stamp meet(Stamp __otherStamp)
     {
-        if (otherStamp == this)
+        if (__otherStamp == this)
         {
             return this;
         }
         if (isEmpty())
         {
-            return otherStamp;
+            return __otherStamp;
         }
-        if (otherStamp.isEmpty())
+        if (__otherStamp.isEmpty())
         {
             return this;
         }
-        IntegerStamp other = (IntegerStamp) otherStamp;
-        return createStamp(other, Math.max(upperBound, other.upperBound), Math.min(lowerBound, other.lowerBound), downMask & other.downMask, upMask | other.upMask);
+        IntegerStamp __other = (IntegerStamp) __otherStamp;
+        return createStamp(__other, Math.max(upperBound, __other.upperBound), Math.min(lowerBound, __other.lowerBound), downMask & __other.downMask, upMask | __other.upMask);
     }
 
     @Override
-    public IntegerStamp join(Stamp otherStamp)
+    public IntegerStamp join(Stamp __otherStamp)
     {
-        if (otherStamp == this)
+        if (__otherStamp == this)
         {
             return this;
         }
-        IntegerStamp other = (IntegerStamp) otherStamp;
-        long newDownMask = downMask | other.downMask;
-        long newLowerBound = Math.max(lowerBound, other.lowerBound);
-        long newUpperBound = Math.min(upperBound, other.upperBound);
-        long newUpMask = upMask & other.upMask;
-        return createStamp(other, newUpperBound, newLowerBound, newDownMask, newUpMask);
+        IntegerStamp __other = (IntegerStamp) __otherStamp;
+        long __newDownMask = downMask | __other.downMask;
+        long __newLowerBound = Math.max(lowerBound, __other.lowerBound);
+        long __newUpperBound = Math.min(upperBound, __other.upperBound);
+        long __newUpMask = upMask & __other.upMask;
+        return createStamp(__other, __newUpperBound, __newLowerBound, __newDownMask, __newUpMask);
     }
 
     @Override
-    public boolean isCompatible(Stamp stamp)
+    public boolean isCompatible(Stamp __stamp)
     {
-        if (this == stamp)
+        if (this == __stamp)
         {
             return true;
         }
-        if (stamp instanceof IntegerStamp)
+        if (__stamp instanceof IntegerStamp)
         {
-            IntegerStamp other = (IntegerStamp) stamp;
-            return getBits() == other.getBits();
+            IntegerStamp __other = (IntegerStamp) __stamp;
+            return getBits() == __other.getBits();
         }
         return false;
     }
 
     @Override
-    public boolean isCompatible(Constant constant)
+    public boolean isCompatible(Constant __constant)
     {
-        if (constant instanceof PrimitiveConstant)
+        if (__constant instanceof PrimitiveConstant)
         {
-            PrimitiveConstant prim = (PrimitiveConstant) constant;
-            return prim.getJavaKind().isNumericInteger();
+            PrimitiveConstant __prim = (PrimitiveConstant) __constant;
+            return __prim.getJavaKind().isNumericInteger();
         }
         return false;
     }
@@ -406,45 +410,45 @@ public final class IntegerStamp extends PrimitiveStamp
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + super.hashCode();
-        result = prime * result + (int) (lowerBound ^ (lowerBound >>> 32));
-        result = prime * result + (int) (upperBound ^ (upperBound >>> 32));
-        result = prime * result + (int) (downMask ^ (downMask >>> 32));
-        result = prime * result + (int) (upMask ^ (upMask >>> 32));
-        return result;
+        final int __prime = 31;
+        int __result = 1;
+        __result = __prime * __result + super.hashCode();
+        __result = __prime * __result + (int) (lowerBound ^ (lowerBound >>> 32));
+        __result = __prime * __result + (int) (upperBound ^ (upperBound >>> 32));
+        __result = __prime * __result + (int) (downMask ^ (downMask >>> 32));
+        __result = __prime * __result + (int) (upMask ^ (upMask >>> 32));
+        return __result;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass() || !super.equals(obj))
+        if (__obj == null || getClass() != __obj.getClass() || !super.equals(__obj))
         {
             return false;
         }
-        IntegerStamp other = (IntegerStamp) obj;
-        if (lowerBound != other.lowerBound || upperBound != other.upperBound || downMask != other.downMask || upMask != other.upMask)
+        IntegerStamp __other = (IntegerStamp) __obj;
+        if (lowerBound != __other.lowerBound || upperBound != __other.upperBound || downMask != __other.downMask || upMask != __other.upMask)
         {
             return false;
         }
-        return super.equals(other);
+        return super.equals(__other);
     }
 
-    private static long upMaskFor(int bits, long lowerBound, long upperBound)
+    private static long upMaskFor(int __bits, long __lowerBound, long __upperBound)
     {
-        long mask = lowerBound | upperBound;
-        if (mask == 0)
+        long __mask = __lowerBound | __upperBound;
+        if (__mask == 0)
         {
             return 0;
         }
         else
         {
-            return ((-1L) >>> Long.numberOfLeadingZeros(mask)) & CodeUtil.mask(bits);
+            return ((-1L) >>> Long.numberOfLeadingZeros(__mask)) & CodeUtil.mask(__bits);
         }
     }
 
@@ -454,9 +458,9 @@ public final class IntegerStamp extends PrimitiveStamp
      *
      * @return true if the two stamps are both positive of null or if they are both strictly negative
      */
-    public static boolean sameSign(IntegerStamp s1, IntegerStamp s2)
+    public static boolean sameSign(IntegerStamp __s1, IntegerStamp __s2)
     {
-        return s1.isPositive() && s2.isPositive() || s1.isStrictlyNegative() && s2.isStrictlyNegative();
+        return __s1.isPositive() && __s2.isPositive() || __s1.isStrictlyNegative() && __s2.isStrictlyNegative();
     }
 
     @Override
@@ -481,206 +485,207 @@ public final class IntegerStamp extends PrimitiveStamp
         return null;
     }
 
-    public static boolean addCanOverflow(IntegerStamp a, IntegerStamp b)
+    public static boolean addCanOverflow(IntegerStamp __a, IntegerStamp __b)
     {
-        return addOverflowsPositively(a.upperBound(), b.upperBound(), a.getBits()) || addOverflowsNegatively(a.lowerBound(), b.lowerBound(), a.getBits());
+        return addOverflowsPositively(__a.upperBound(), __b.upperBound(), __a.getBits()) || addOverflowsNegatively(__a.lowerBound(), __b.lowerBound(), __a.getBits());
     }
 
-    public static boolean addOverflowsPositively(long x, long y, int bits)
+    public static boolean addOverflowsPositively(long __x, long __y, int __bits)
     {
-        long result = x + y;
-        if (bits == 64)
+        long __result = __x + __y;
+        if (__bits == 64)
         {
-            return (~x & ~y & result) < 0;
+            return (~__x & ~__y & __result) < 0;
         }
         else
         {
-            return result > CodeUtil.maxValue(bits);
+            return __result > CodeUtil.maxValue(__bits);
         }
     }
 
-    public static boolean addOverflowsNegatively(long x, long y, int bits)
+    public static boolean addOverflowsNegatively(long __x, long __y, int __bits)
     {
-        long result = x + y;
-        if (bits == 64)
+        long __result = __x + __y;
+        if (__bits == 64)
         {
-            return (x & y & ~result) < 0;
+            return (__x & __y & ~__result) < 0;
         }
         else
         {
-            return result < CodeUtil.minValue(bits);
+            return __result < CodeUtil.minValue(__bits);
         }
     }
 
-    public static long carryBits(long x, long y)
+    public static long carryBits(long __x, long __y)
     {
-        return (x + y) ^ x ^ y;
+        return (__x + __y) ^ __x ^ __y;
     }
 
-    private static long saturate(long v, int bits)
+    private static long saturate(long __v, int __bits)
     {
-        if (bits < 64)
+        if (__bits < 64)
         {
-            long max = CodeUtil.maxValue(bits);
-            if (v > max)
+            long __max = CodeUtil.maxValue(__bits);
+            if (__v > __max)
             {
-                return max;
+                return __max;
             }
-            long min = CodeUtil.minValue(bits);
-            if (v < min)
+            long __min = CodeUtil.minValue(__bits);
+            if (__v < __min)
             {
-                return min;
+                return __min;
             }
         }
-        return v;
+        return __v;
     }
 
-    public static boolean multiplicationOverflows(long a, long b, int bits)
+    public static boolean multiplicationOverflows(long __a, long __b, int __bits)
     {
-        long result = a * b;
+        long __result = __a * __b;
         // result is positive if the sign is the same
-        boolean positive = (a >= 0 && b >= 0) || (a < 0 && b < 0);
-        if (bits == 64)
+        boolean __positive = (__a >= 0 && __b >= 0) || (__a < 0 && __b < 0);
+        if (__bits == 64)
         {
-            if (a > 0 && b > 0)
+            if (__a > 0 && __b > 0)
             {
-                return a > 0x7FFFFFFF_FFFFFFFFL / b;
+                return __a > 0x7FFFFFFF_FFFFFFFFL / __b;
             }
-            else if (a > 0 && b <= 0)
+            else if (__a > 0 && __b <= 0)
             {
-                return b < 0x80000000_00000000L / a;
+                return __b < 0x80000000_00000000L / __a;
             }
-            else if (a <= 0 && b > 0)
+            else if (__a <= 0 && __b > 0)
             {
-                return a < 0x80000000_00000000L / b;
+                return __a < 0x80000000_00000000L / __b;
             }
             else
             {
-                // a<=0 && b <=0
-                return a != 0 && b < 0x7FFFFFFF_FFFFFFFFL / a;
+                // a<=0 && b<=0
+                return __a != 0 && __b < 0x7FFFFFFF_FFFFFFFFL / __a;
             }
         }
         else
         {
-            if (positive)
+            if (__positive)
             {
-                return result > CodeUtil.maxValue(bits);
+                return __result > CodeUtil.maxValue(__bits);
             }
             else
             {
-                return result < CodeUtil.minValue(bits);
+                return __result < CodeUtil.minValue(__bits);
             }
         }
     }
 
-    public static boolean multiplicationCanOverflow(IntegerStamp a, IntegerStamp b)
+    public static boolean multiplicationCanOverflow(IntegerStamp __a, IntegerStamp __b)
     {
         // see IntegerStamp#foldStamp for details
-        if (a.upMask() == 0)
+        if (__a.upMask() == 0)
         {
             return false;
         }
-        else if (b.upMask() == 0)
+        else if (__b.upMask() == 0)
         {
             return false;
         }
-        if (a.isUnrestricted())
+        if (__a.isUnrestricted())
         {
             return true;
         }
-        if (b.isUnrestricted())
+        if (__b.isUnrestricted())
         {
             return true;
         }
-        int bits = a.getBits();
-        long minNegA = a.lowerBound();
-        long maxNegA = Math.min(0, a.upperBound());
-        long minPosA = Math.max(0, a.lowerBound());
-        long maxPosA = a.upperBound();
+        int __bits = __a.getBits();
+        long __minNegA = __a.lowerBound();
+        long __maxNegA = Math.min(0, __a.upperBound());
+        long __minPosA = Math.max(0, __a.lowerBound());
+        long __maxPosA = __a.upperBound();
 
-        long minNegB = b.lowerBound();
-        long maxNegB = Math.min(0, b.upperBound());
-        long minPosB = Math.max(0, b.lowerBound());
-        long maxPosB = b.upperBound();
+        long __minNegB = __b.lowerBound();
+        long __maxNegB = Math.min(0, __b.upperBound());
+        long __minPosB = Math.max(0, __b.lowerBound());
+        long __maxPosB = __b.upperBound();
 
-        boolean mayOverflow = false;
-        if (a.canBePositive())
+        boolean __mayOverflow = false;
+        if (__a.canBePositive())
         {
-            if (b.canBePositive())
+            if (__b.canBePositive())
             {
-                mayOverflow |= IntegerStamp.multiplicationOverflows(maxPosA, maxPosB, bits);
-                mayOverflow |= IntegerStamp.multiplicationOverflows(minPosA, minPosB, bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__maxPosA, __maxPosB, __bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__minPosA, __minPosB, __bits);
             }
-            if (b.canBeNegative())
+            if (__b.canBeNegative())
             {
-                mayOverflow |= IntegerStamp.multiplicationOverflows(minPosA, maxNegB, bits);
-                mayOverflow |= IntegerStamp.multiplicationOverflows(maxPosA, minNegB, bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__minPosA, __maxNegB, __bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__maxPosA, __minNegB, __bits);
             }
         }
-        if (a.canBeNegative())
+        if (__a.canBeNegative())
         {
-            if (b.canBePositive())
+            if (__b.canBePositive())
             {
-                mayOverflow |= IntegerStamp.multiplicationOverflows(maxNegA, minPosB, bits);
-                mayOverflow |= IntegerStamp.multiplicationOverflows(minNegA, maxPosB, bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__maxNegA, __minPosB, __bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__minNegA, __maxPosB, __bits);
             }
-            if (b.canBeNegative())
+            if (__b.canBeNegative())
             {
-                mayOverflow |= IntegerStamp.multiplicationOverflows(minNegA, minNegB, bits);
-                mayOverflow |= IntegerStamp.multiplicationOverflows(maxNegA, maxNegB, bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__minNegA, __minNegB, __bits);
+                __mayOverflow |= IntegerStamp.multiplicationOverflows(__maxNegA, __maxNegB, __bits);
             }
         }
-        return mayOverflow;
+        return __mayOverflow;
     }
 
-    public static boolean subtractionCanOverflow(IntegerStamp x, IntegerStamp y)
+    public static boolean subtractionCanOverflow(IntegerStamp __x, IntegerStamp __y)
     {
-        return subtractionOverflows(x.lowerBound(), y.upperBound(), x.getBits()) || subtractionOverflows(x.upperBound(), y.lowerBound(), x.getBits());
+        return subtractionOverflows(__x.lowerBound(), __y.upperBound(), __x.getBits()) || subtractionOverflows(__x.upperBound(), __y.lowerBound(), __x.getBits());
     }
 
-    public static boolean subtractionOverflows(long x, long y, int bits)
+    public static boolean subtractionOverflows(long __x, long __y, int __bits)
     {
-        long result = x - y;
-        if (bits == 64)
+        long __result = __x - __y;
+        if (__bits == 64)
         {
-            return (((x ^ y) & (x ^ result)) < 0);
+            return (((__x ^ __y) & (__x ^ __result)) < 0);
         }
-        return result < CodeUtil.minValue(bits) || result > CodeUtil.maxValue(bits);
+        return __result < CodeUtil.minValue(__bits) || __result > CodeUtil.maxValue(__bits);
     }
 
+    // @def
     public static final ArithmeticOpTable OPS = new ArithmeticOpTable(
         // @closure
         new UnaryOp.Neg()
         {
             @Override
-            public Constant foldConstant(Constant value)
+            public Constant foldConstant(Constant __value)
             {
-                PrimitiveConstant c = (PrimitiveConstant) value;
-                return JavaConstant.forIntegerKind(c.getJavaKind(), -c.asLong());
+                PrimitiveConstant __c = (PrimitiveConstant) __value;
+                return JavaConstant.forIntegerKind(__c.getJavaKind(), -__c.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp s)
+            public Stamp foldStamp(Stamp __s)
             {
-                if (s.isEmpty())
+                if (__s.isEmpty())
                 {
-                    return s;
+                    return __s;
                 }
-                IntegerStamp stamp = (IntegerStamp) s;
-                int bits = stamp.getBits();
-                if (stamp.lowerBound == stamp.upperBound)
+                IntegerStamp __stamp = (IntegerStamp) __s;
+                int __bits = __stamp.getBits();
+                if (__stamp.lowerBound == __stamp.upperBound)
                 {
-                    long value = CodeUtil.convert(-stamp.lowerBound(), stamp.getBits(), false);
-                    return StampFactory.forInteger(stamp.getBits(), value, value);
+                    long __value = CodeUtil.convert(-__stamp.lowerBound(), __stamp.getBits(), false);
+                    return StampFactory.forInteger(__stamp.getBits(), __value, __value);
                 }
-                if (stamp.lowerBound() != CodeUtil.minValue(bits))
+                if (__stamp.lowerBound() != CodeUtil.minValue(__bits))
                 {
                     // TODO check if the mask calculation is correct
-                    return StampFactory.forInteger(bits, -stamp.upperBound(), -stamp.lowerBound());
+                    return StampFactory.forInteger(__bits, -__stamp.upperBound(), -__stamp.lowerBound());
                 }
                 else
                 {
-                    return stamp.unrestricted();
+                    return __stamp.unrestricted();
                 }
             }
         },
@@ -689,81 +694,81 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.Add(true, true)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() + b.asLong());
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() + __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
 
-                int bits = a.getBits();
+                int __bits = __a.getBits();
 
-                if (a.lowerBound == a.upperBound && b.lowerBound == b.upperBound)
+                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound)
                 {
-                    long value = CodeUtil.convert(a.lowerBound() + b.lowerBound(), a.getBits(), false);
-                    return StampFactory.forInteger(a.getBits(), value, value);
+                    long __value = CodeUtil.convert(__a.lowerBound() + __b.lowerBound(), __a.getBits(), false);
+                    return StampFactory.forInteger(__a.getBits(), __value, __value);
                 }
 
-                if (a.isUnrestricted())
+                if (__a.isUnrestricted())
                 {
-                    return a;
+                    return __a;
                 }
-                else if (b.isUnrestricted())
+                else if (__b.isUnrestricted())
                 {
-                    return b;
+                    return __b;
                 }
-                long defaultMask = CodeUtil.mask(bits);
-                long variableBits = (a.downMask() ^ a.upMask()) | (b.downMask() ^ b.upMask());
-                long variableBitsWithCarry = variableBits | (carryBits(a.downMask(), b.downMask()) ^ carryBits(a.upMask(), b.upMask()));
-                long newDownMask = (a.downMask() + b.downMask()) & ~variableBitsWithCarry;
-                long newUpMask = (a.downMask() + b.downMask()) | variableBitsWithCarry;
+                long __defaultMask = CodeUtil.mask(__bits);
+                long __variableBits = (__a.downMask() ^ __a.upMask()) | (__b.downMask() ^ __b.upMask());
+                long __variableBitsWithCarry = __variableBits | (carryBits(__a.downMask(), __b.downMask()) ^ carryBits(__a.upMask(), __b.upMask()));
+                long __newDownMask = (__a.downMask() + __b.downMask()) & ~__variableBitsWithCarry;
+                long __newUpMask = (__a.downMask() + __b.downMask()) | __variableBitsWithCarry;
 
-                newDownMask &= defaultMask;
-                newUpMask &= defaultMask;
+                __newDownMask &= __defaultMask;
+                __newUpMask &= __defaultMask;
 
-                long newLowerBound;
-                long newUpperBound;
-                boolean lowerOverflowsPositively = addOverflowsPositively(a.lowerBound(), b.lowerBound(), bits);
-                boolean upperOverflowsPositively = addOverflowsPositively(a.upperBound(), b.upperBound(), bits);
-                boolean lowerOverflowsNegatively = addOverflowsNegatively(a.lowerBound(), b.lowerBound(), bits);
-                boolean upperOverflowsNegatively = addOverflowsNegatively(a.upperBound(), b.upperBound(), bits);
-                if ((lowerOverflowsNegatively && !upperOverflowsNegatively) || (!lowerOverflowsPositively && upperOverflowsPositively))
+                long __newLowerBound;
+                long __newUpperBound;
+                boolean __lowerOverflowsPositively = addOverflowsPositively(__a.lowerBound(), __b.lowerBound(), __bits);
+                boolean __upperOverflowsPositively = addOverflowsPositively(__a.upperBound(), __b.upperBound(), __bits);
+                boolean __lowerOverflowsNegatively = addOverflowsNegatively(__a.lowerBound(), __b.lowerBound(), __bits);
+                boolean __upperOverflowsNegatively = addOverflowsNegatively(__a.upperBound(), __b.upperBound(), __bits);
+                if ((__lowerOverflowsNegatively && !__upperOverflowsNegatively) || (!__lowerOverflowsPositively && __upperOverflowsPositively))
                 {
-                    newLowerBound = CodeUtil.minValue(bits);
-                    newUpperBound = CodeUtil.maxValue(bits);
+                    __newLowerBound = CodeUtil.minValue(__bits);
+                    __newUpperBound = CodeUtil.maxValue(__bits);
                 }
                 else
                 {
-                    newLowerBound = CodeUtil.signExtend((a.lowerBound() + b.lowerBound()) & defaultMask, bits);
-                    newUpperBound = CodeUtil.signExtend((a.upperBound() + b.upperBound()) & defaultMask, bits);
+                    __newLowerBound = CodeUtil.signExtend((__a.lowerBound() + __b.lowerBound()) & __defaultMask, __bits);
+                    __newUpperBound = CodeUtil.signExtend((__a.upperBound() + __b.upperBound()) & __defaultMask, __bits);
                 }
-                IntegerStamp limit = StampFactory.forInteger(bits, newLowerBound, newUpperBound);
-                newUpMask &= limit.upMask();
-                newUpperBound = CodeUtil.signExtend(newUpperBound & newUpMask, bits);
-                newDownMask |= limit.downMask();
-                newLowerBound |= newDownMask;
-                return new IntegerStamp(bits, newLowerBound, newUpperBound, newDownMask, newUpMask);
+                IntegerStamp __limit = StampFactory.forInteger(__bits, __newLowerBound, __newUpperBound);
+                __newUpMask &= __limit.upMask();
+                __newUpperBound = CodeUtil.signExtend(__newUpperBound & __newUpMask, __bits);
+                __newDownMask |= __limit.downMask();
+                __newLowerBound |= __newDownMask;
+                return new IntegerStamp(__bits, __newLowerBound, __newUpperBound, __newDownMask, __newUpMask);
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
-                PrimitiveConstant n = (PrimitiveConstant) value;
-                return n.asLong() == 0;
+                PrimitiveConstant __n = (PrimitiveConstant) __value;
+                return __n.asLong() == 0;
             }
         },
 
@@ -771,31 +776,31 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.Sub(true, false)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() - b.asLong());
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() - __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp a, Stamp b)
+            public Stamp foldStamp(Stamp __a, Stamp __b)
             {
-                return OPS.getAdd().foldStamp(a, OPS.getNeg().foldStamp(b));
+                return OPS.getAdd().foldStamp(__a, OPS.getNeg().foldStamp(__b));
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
-                PrimitiveConstant n = (PrimitiveConstant) value;
-                return n.asLong() == 0;
+                PrimitiveConstant __n = (PrimitiveConstant) __value;
+                return __n.asLong() == 0;
             }
 
             @Override
-            public Constant getZero(Stamp s)
+            public Constant getZero(Stamp __s)
             {
-                IntegerStamp stamp = (IntegerStamp) s;
-                return JavaConstant.forPrimitiveInt(stamp.getBits(), 0);
+                IntegerStamp __stamp = (IntegerStamp) __s;
+                return JavaConstant.forPrimitiveInt(__stamp.getBits(), 0);
             }
         },
 
@@ -803,192 +808,192 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.Mul(true, true)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() * b.asLong());
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() * __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
 
-                int bits = a.getBits();
+                int __bits = __a.getBits();
 
-                if (a.lowerBound == a.upperBound && b.lowerBound == b.upperBound)
+                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound)
                 {
-                    long value = CodeUtil.convert(a.lowerBound() * b.lowerBound(), a.getBits(), false);
-                    return StampFactory.forInteger(a.getBits(), value, value);
+                    long __value = CodeUtil.convert(__a.lowerBound() * __b.lowerBound(), __a.getBits(), false);
+                    return StampFactory.forInteger(__a.getBits(), __value, __value);
                 }
 
                 // if a==0 or b==0 result of a*b is always 0
-                if (a.upMask() == 0)
+                if (__a.upMask() == 0)
                 {
-                    return a;
+                    return __a;
                 }
-                else if (b.upMask() == 0)
+                else if (__b.upMask() == 0)
                 {
-                    return b;
+                    return __b;
                 }
                 else
                 {
                     // if a has the full range or b, the result will also have it
-                    if (a.isUnrestricted())
+                    if (__a.isUnrestricted())
                     {
-                        return a;
+                        return __a;
                     }
-                    else if (b.isUnrestricted())
+                    else if (__b.isUnrestricted())
                     {
-                        return b;
+                        return __b;
                     }
-                    // a!=0 && b !=0 holds
-                    long newLowerBound = Long.MAX_VALUE;
-                    long newUpperBound = Long.MIN_VALUE;
+                    // a!=0 && b!=0 holds
+                    long __newLowerBound = Long.MAX_VALUE;
+                    long __newUpperBound = Long.MIN_VALUE;
                     /*
-                        * Based on the signs of the incoming stamps lower and upper bound
-                        * of the result of the multiplication may be swapped. LowerBound
-                        * can become upper bound if both signs are negative, and so on. To
-                        * determine the new values for lower and upper bound we need to
-                        * look at the max and min of the cases blow:
-                        *
-                        * a.lowerBound * b.lowerBound
-                        * a.lowerBound * b.upperBound
-                        * a.upperBound * b.lowerBound
-                        * a.upperBound * b.upperBound
-                        *
-                        * We are only interested in those cases that are relevant due to
-                        * the sign of the involved stamps (whether a stamp includes
-                        * negative and / or positive values). Based on the signs, the maximum
-                        * or minimum of the above multiplications form the new lower and
-                        * upper bounds.
-                        *
-                        * The table below contains the interesting candidates for lower and
-                        * upper bound after multiplication.
-                        *
-                        * For example if we consider two stamps a & b that both contain
-                        * negative and positive values, the product of minNegA * minNegB
-                        * (both the smallest negative value for each stamp) can only be the
-                        * highest positive number. The other candidates can be computed in
-                        * a similar fashion. Some of them can never be a new minimum or
-                        * maximum and are therefore excluded.
-                        *
-                        *          [x................0................y]
-                        *          -------------------------------------
-                        *          [minNeg     maxNeg minPos     maxPos]
-                        *
-                        *          where maxNeg = min(0,y) && minPos = max(0,x)
-                        *
-                        *
-                        *                 |minNegA  maxNegA    minPosA  maxPosA
-                        *         _______ |____________________________________
-                        *         minNegB | MAX        /     :     /      MIN
-                        *         maxNegB |  /        MIN    :    MAX      /
-                        *                 |------------------+-----------------
-                        *         minPosB |  /        MAX    :    MIN      /
-                        *         maxPosB | MIN        /     :     /      MAX
-                        */
+                     * Based on the signs of the incoming stamps lower and upper bound
+                     * of the result of the multiplication may be swapped. LowerBound
+                     * can become upper bound if both signs are negative, and so on. To
+                     * determine the new values for lower and upper bound we need to
+                     * look at the max and min of the cases blow:
+                     *
+                     * a.lowerBound * b.lowerBound
+                     * a.lowerBound * b.upperBound
+                     * a.upperBound * b.lowerBound
+                     * a.upperBound * b.upperBound
+                     *
+                     * We are only interested in those cases that are relevant due to
+                     * the sign of the involved stamps (whether a stamp includes
+                     * negative and / or positive values). Based on the signs, the maximum
+                     * or minimum of the above multiplications form the new lower and
+                     * upper bounds.
+                     *
+                     * The table below contains the interesting candidates for lower and
+                     * upper bound after multiplication.
+                     *
+                     * For example if we consider two stamps a & b that both contain
+                     * negative and positive values, the product of minNegA * minNegB
+                     * (both the smallest negative value for each stamp) can only be the
+                     * highest positive number. The other candidates can be computed in
+                     * a similar fashion. Some of them can never be a new minimum or
+                     * maximum and are therefore excluded.
+                     *
+                     *          [x................0................y]
+                     *          -------------------------------------
+                     *          [minNeg     maxNeg minPos     maxPos]
+                     *
+                     *          where maxNeg = min(0,y) && minPos = max(0,x)
+                     *
+                     *
+                     *                 |minNegA  maxNegA    minPosA  maxPosA
+                     *         _______ |____________________________________
+                     *         minNegB | MAX        /     :     /      MIN
+                     *         maxNegB |  /        MIN    :    MAX      /
+                     *                 |------------------+-----------------
+                     *         minPosB |  /        MAX    :    MIN      /
+                     *         maxPosB | MIN        /     :     /      MAX
+                     */
                     // We materialize all factors here. If they are needed, the signs of
                     // the stamp will ensure the correct value is used.
-                    long minNegA = a.lowerBound();
-                    long maxNegA = Math.min(0, a.upperBound());
-                    long minPosA = Math.max(0, a.lowerBound());
-                    long maxPosA = a.upperBound();
+                    long __minNegA = __a.lowerBound();
+                    long __maxNegA = Math.min(0, __a.upperBound());
+                    long __minPosA = Math.max(0, __a.lowerBound());
+                    long __maxPosA = __a.upperBound();
 
-                    long minNegB = b.lowerBound();
-                    long maxNegB = Math.min(0, b.upperBound());
-                    long minPosB = Math.max(0, b.lowerBound());
-                    long maxPosB = b.upperBound();
+                    long __minNegB = __b.lowerBound();
+                    long __maxNegB = Math.min(0, __b.upperBound());
+                    long __minPosB = Math.max(0, __b.lowerBound());
+                    long __maxPosB = __b.upperBound();
 
                     // multiplication has shift semantics
-                    long newUpMask = ~CodeUtil.mask(Math.min(64, Long.numberOfTrailingZeros(a.upMask) + Long.numberOfTrailingZeros(b.upMask))) & CodeUtil.mask(bits);
+                    long __newUpMask = ~CodeUtil.mask(Math.min(64, Long.numberOfTrailingZeros(__a.upMask) + Long.numberOfTrailingZeros(__b.upMask))) & CodeUtil.mask(__bits);
 
-                    if (a.canBePositive())
+                    if (__a.canBePositive())
                     {
-                        if (b.canBePositive())
+                        if (__b.canBePositive())
                         {
-                            if (multiplicationOverflows(maxPosA, maxPosB, bits))
+                            if (multiplicationOverflows(__maxPosA, __maxPosB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long maxCandidate = maxPosA * maxPosB;
-                            if (multiplicationOverflows(minPosA, minPosB, bits))
+                            long __maxCandidate = __maxPosA * __maxPosB;
+                            if (multiplicationOverflows(__minPosA, __minPosB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long minCandidate = minPosA * minPosB;
-                            newLowerBound = Math.min(newLowerBound, minCandidate);
-                            newUpperBound = Math.max(newUpperBound, maxCandidate);
+                            long __minCandidate = __minPosA * __minPosB;
+                            __newLowerBound = Math.min(__newLowerBound, __minCandidate);
+                            __newUpperBound = Math.max(__newUpperBound, __maxCandidate);
                         }
-                        if (b.canBeNegative())
+                        if (__b.canBeNegative())
                         {
-                            if (multiplicationOverflows(minPosA, maxNegB, bits))
+                            if (multiplicationOverflows(__minPosA, __maxNegB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long maxCandidate = minPosA * maxNegB;
-                            if (multiplicationOverflows(maxPosA, minNegB, bits))
+                            long __maxCandidate = __minPosA * __maxNegB;
+                            if (multiplicationOverflows(__maxPosA, __minNegB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long minCandidate = maxPosA * minNegB;
-                            newLowerBound = Math.min(newLowerBound, minCandidate);
-                            newUpperBound = Math.max(newUpperBound, maxCandidate);
+                            long __minCandidate = __maxPosA * __minNegB;
+                            __newLowerBound = Math.min(__newLowerBound, __minCandidate);
+                            __newUpperBound = Math.max(__newUpperBound, __maxCandidate);
                         }
                     }
-                    if (a.canBeNegative())
+                    if (__a.canBeNegative())
                     {
-                        if (b.canBePositive())
+                        if (__b.canBePositive())
                         {
-                            if (multiplicationOverflows(maxNegA, minPosB, bits))
+                            if (multiplicationOverflows(__maxNegA, __minPosB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long maxCandidate = maxNegA * minPosB;
-                            if (multiplicationOverflows(minNegA, maxPosB, bits))
+                            long __maxCandidate = __maxNegA * __minPosB;
+                            if (multiplicationOverflows(__minNegA, __maxPosB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long minCandidate = minNegA * maxPosB;
-                            newLowerBound = Math.min(newLowerBound, minCandidate);
-                            newUpperBound = Math.max(newUpperBound, maxCandidate);
+                            long __minCandidate = __minNegA * __maxPosB;
+                            __newLowerBound = Math.min(__newLowerBound, __minCandidate);
+                            __newUpperBound = Math.max(__newUpperBound, __maxCandidate);
                         }
-                        if (b.canBeNegative())
+                        if (__b.canBeNegative())
                         {
-                            if (multiplicationOverflows(minNegA, minNegB, bits))
+                            if (multiplicationOverflows(__minNegA, __minNegB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long maxCandidate = minNegA * minNegB;
-                            if (multiplicationOverflows(maxNegA, maxNegB, bits))
+                            long __maxCandidate = __minNegA * __minNegB;
+                            if (multiplicationOverflows(__maxNegA, __maxNegB, __bits))
                             {
-                                return a.unrestricted();
+                                return __a.unrestricted();
                             }
-                            long minCandidate = maxNegA * maxNegB;
-                            newLowerBound = Math.min(newLowerBound, minCandidate);
-                            newUpperBound = Math.max(newUpperBound, maxCandidate);
+                            long __minCandidate = __maxNegA * __maxNegB;
+                            __newLowerBound = Math.min(__newLowerBound, __minCandidate);
+                            __newUpperBound = Math.max(__newUpperBound, __maxCandidate);
                         }
                     }
 
-                    return StampFactory.forIntegerWithMask(bits, newLowerBound, newUpperBound, 0, newUpMask);
+                    return StampFactory.forIntegerWithMask(__bits, __newLowerBound, __newUpperBound, 0, __newUpMask);
                 }
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
-                PrimitiveConstant n = (PrimitiveConstant) value;
-                return n.asLong() == 1;
+                PrimitiveConstant __n = (PrimitiveConstant) __value;
+                return __n.asLong() == 1;
             }
         },
 
@@ -996,80 +1001,80 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.MulHigh(true, true)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), multiplyHigh(a.asLong(), b.asLong(), a.getJavaKind()));
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), multiplyHigh(__a.asLong(), __b.asLong(), __a.getJavaKind()));
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
-                JavaKind javaKind = a.getStackKind();
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
+                JavaKind __javaKind = __a.getStackKind();
 
-                if (a.isEmpty() || b.isEmpty())
+                if (__a.isEmpty() || __b.isEmpty())
                 {
-                    return a.empty();
+                    return __a.empty();
                 }
-                else if (a.isUnrestricted() || b.isUnrestricted())
+                else if (__a.isUnrestricted() || __b.isUnrestricted())
                 {
-                    return a.unrestricted();
+                    return __a.unrestricted();
                 }
 
-                long[] xExtremes = { a.lowerBound(), a.upperBound() };
-                long[] yExtremes = { b.lowerBound(), b.upperBound() };
-                long min = Long.MAX_VALUE;
-                long max = Long.MIN_VALUE;
-                for (long x : xExtremes)
+                long[] __xExtremes = { __a.lowerBound(), __a.upperBound() };
+                long[] __yExtremes = { __b.lowerBound(), __b.upperBound() };
+                long __min = Long.MAX_VALUE;
+                long __max = Long.MIN_VALUE;
+                for (long __x : __xExtremes)
                 {
-                    for (long y : yExtremes)
+                    for (long __y : __yExtremes)
                     {
-                        long result = multiplyHigh(x, y, javaKind);
-                        min = Math.min(min, result);
-                        max = Math.max(max, result);
+                        long __result = multiplyHigh(__x, __y, __javaKind);
+                        __min = Math.min(__min, __result);
+                        __max = Math.max(__max, __result);
                     }
                 }
-                return StampFactory.forInteger(javaKind, min, max);
+                return StampFactory.forInteger(__javaKind, __min, __max);
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
                 return false;
             }
 
-            private long multiplyHigh(long x, long y, JavaKind javaKind)
+            private long multiplyHigh(long __x, long __y, JavaKind __javaKind)
             {
-                if (javaKind == JavaKind.Int)
+                if (__javaKind == JavaKind.Int)
                 {
-                    return (x * y) >> 32;
+                    return (__x * __y) >> 32;
                 }
                 else
                 {
-                    long x0 = x & 0xFFFFFFFFL;
-                    long x1 = x >> 32;
+                    long __x0 = __x & 0xFFFFFFFFL;
+                    long __x1 = __x >> 32;
 
-                    long y0 = y & 0xFFFFFFFFL;
-                    long y1 = y >> 32;
+                    long __y0 = __y & 0xFFFFFFFFL;
+                    long __y1 = __y >> 32;
 
-                    long z0 = x0 * y0;
-                    long t = x1 * y0 + (z0 >>> 32);
-                    long z1 = t & 0xFFFFFFFFL;
-                    long z2 = t >> 32;
-                    z1 += x0 * y1;
+                    long __z0 = __x0 * __y0;
+                    long __t = __x1 * __y0 + (__z0 >>> 32);
+                    long __z1 = __t & 0xFFFFFFFFL;
+                    long __z2 = __t >> 32;
+                    __z1 += __x0 * __y1;
 
-                    return x1 * y1 + z2 + (z1 >> 32);
+                    return __x1 * __y1 + __z2 + (__z1 >> 32);
                 }
             }
         },
@@ -1078,110 +1083,110 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.UMulHigh(true, true)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), multiplyHighUnsigned(a.asLong(), b.asLong(), a.getJavaKind()));
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), multiplyHighUnsigned(__a.asLong(), __b.asLong(), __a.getJavaKind()));
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
-                JavaKind javaKind = a.getStackKind();
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
+                JavaKind __javaKind = __a.getStackKind();
 
-                if (a.isEmpty() || b.isEmpty())
+                if (__a.isEmpty() || __b.isEmpty())
                 {
-                    return a.empty();
+                    return __a.empty();
                 }
-                else if (a.isUnrestricted() || b.isUnrestricted())
+                else if (__a.isUnrestricted() || __b.isUnrestricted())
                 {
-                    return a.unrestricted();
+                    return __a.unrestricted();
                 }
 
                 // Note that the minima and maxima are calculated using signed min/max
                 // functions, while the values themselves are unsigned.
-                long[] xExtremes = getUnsignedExtremes(a);
-                long[] yExtremes = getUnsignedExtremes(b);
-                long min = Long.MAX_VALUE;
-                long max = Long.MIN_VALUE;
-                for (long x : xExtremes)
+                long[] __xExtremes = getUnsignedExtremes(__a);
+                long[] __yExtremes = getUnsignedExtremes(__b);
+                long __min = Long.MAX_VALUE;
+                long __max = Long.MIN_VALUE;
+                for (long __x : __xExtremes)
                 {
-                    for (long y : yExtremes)
+                    for (long __y : __yExtremes)
                     {
-                        long result = multiplyHighUnsigned(x, y, javaKind);
-                        min = Math.min(min, result);
-                        max = Math.max(max, result);
+                        long __result = multiplyHighUnsigned(__x, __y, __javaKind);
+                        __min = Math.min(__min, __result);
+                        __max = Math.max(__max, __result);
                     }
                 }
 
                 // if min is negative, then the value can reach into the unsigned range
-                if (min == max || min >= 0)
+                if (__min == __max || __min >= 0)
                 {
-                    return StampFactory.forInteger(javaKind, min, max);
+                    return StampFactory.forInteger(__javaKind, __min, __max);
                 }
                 else
                 {
-                    return StampFactory.forKind(javaKind);
+                    return StampFactory.forKind(__javaKind);
                 }
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
                 return false;
             }
 
-            private long[] getUnsignedExtremes(IntegerStamp stamp)
+            private long[] getUnsignedExtremes(IntegerStamp __stamp)
             {
-                if (stamp.lowerBound() < 0 && stamp.upperBound() >= 0)
+                if (__stamp.lowerBound() < 0 && __stamp.upperBound() >= 0)
                 {
                     /*
-                        * If -1 and 0 are both in the signed range, then we can't say anything
-                        * about the unsigned range, so we have to return [0, MAX_UNSIGNED].
-                        */
+                     * If -1 and 0 are both in the signed range, then we can't say anything
+                     * about the unsigned range, so we have to return [0, MAX_UNSIGNED].
+                     */
                     return new long[] { 0, -1L };
                 }
                 else
                 {
-                    return new long[] { stamp.lowerBound(), stamp.upperBound() };
+                    return new long[] { __stamp.lowerBound(), __stamp.upperBound() };
                 }
             }
 
-            private long multiplyHighUnsigned(long x, long y, JavaKind javaKind)
+            private long multiplyHighUnsigned(long __x, long __y, JavaKind __javaKind)
             {
-                if (javaKind == JavaKind.Int)
+                if (__javaKind == JavaKind.Int)
                 {
-                    long xl = x & 0xFFFFFFFFL;
-                    long yl = y & 0xFFFFFFFFL;
-                    long r = xl * yl;
-                    return (int) (r >>> 32);
+                    long __xl = __x & 0xFFFFFFFFL;
+                    long __yl = __y & 0xFFFFFFFFL;
+                    long __r = __xl * __yl;
+                    return (int) (__r >>> 32);
                 }
                 else
                 {
-                    long x0 = x & 0xFFFFFFFFL;
-                    long x1 = x >>> 32;
+                    long __x0 = __x & 0xFFFFFFFFL;
+                    long __x1 = __x >>> 32;
 
-                    long y0 = y & 0xFFFFFFFFL;
-                    long y1 = y >>> 32;
+                    long __y0 = __y & 0xFFFFFFFFL;
+                    long __y1 = __y >>> 32;
 
-                    long z0 = x0 * y0;
-                    long t = x1 * y0 + (z0 >>> 32);
-                    long z1 = t & 0xFFFFFFFFL;
-                    long z2 = t >>> 32;
-                    z1 += x0 * y1;
+                    long __z0 = __x0 * __y0;
+                    long __t = __x1 * __y0 + (__z0 >>> 32);
+                    long __z1 = __t & 0xFFFFFFFFL;
+                    long __z2 = __t >>> 32;
+                    __z1 += __x0 * __y1;
 
-                    return x1 * y1 + z2 + (z1 >>> 32);
+                    return __x1 * __y1 + __z2 + (__z1 >>> 32);
                 }
             }
         },
@@ -1190,52 +1195,52 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.Div(true, false)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                if (b.asLong() == 0)
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                if (__b.asLong() == 0)
                 {
                     return null;
                 }
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() / b.asLong());
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() / __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
-                if (a.lowerBound == a.upperBound && b.lowerBound == b.upperBound && b.lowerBound != 0)
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
+                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound && __b.lowerBound != 0)
                 {
-                    long value = CodeUtil.convert(a.lowerBound() / b.lowerBound(), a.getBits(), false);
-                    return StampFactory.forInteger(a.getBits(), value, value);
+                    long __value = CodeUtil.convert(__a.lowerBound() / __b.lowerBound(), __a.getBits(), false);
+                    return StampFactory.forInteger(__a.getBits(), __value, __value);
                 }
-                else if (b.isStrictlyPositive())
+                else if (__b.isStrictlyPositive())
                 {
-                    long newLowerBound = a.lowerBound() < 0 ? a.lowerBound() / b.lowerBound() : a.lowerBound() / b.upperBound();
-                    long newUpperBound = a.upperBound() < 0 ? a.upperBound() / b.upperBound() : a.upperBound() / b.lowerBound();
-                    return StampFactory.forInteger(a.getBits(), newLowerBound, newUpperBound);
+                    long __newLowerBound = __a.lowerBound() < 0 ? __a.lowerBound() / __b.lowerBound() : __a.lowerBound() / __b.upperBound();
+                    long __newUpperBound = __a.upperBound() < 0 ? __a.upperBound() / __b.upperBound() : __a.upperBound() / __b.lowerBound();
+                    return StampFactory.forInteger(__a.getBits(), __newLowerBound, __newUpperBound);
                 }
                 else
                 {
-                    return a.unrestricted();
+                    return __a.unrestricted();
                 }
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
-                PrimitiveConstant n = (PrimitiveConstant) value;
-                return n.asLong() == 1;
+                PrimitiveConstant __n = (PrimitiveConstant) __value;
+                return __n.asLong() == 1;
             }
         },
 
@@ -1243,56 +1248,56 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.Rem(false, false)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                if (b.asLong() == 0)
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                if (__b.asLong() == 0)
                 {
                     return null;
                 }
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() % b.asLong());
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() % __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
 
-                if (a.lowerBound == a.upperBound && b.lowerBound == b.upperBound && b.lowerBound != 0)
+                if (__a.lowerBound == __a.upperBound && __b.lowerBound == __b.upperBound && __b.lowerBound != 0)
                 {
-                    long value = CodeUtil.convert(a.lowerBound() % b.lowerBound(), a.getBits(), false);
-                    return StampFactory.forInteger(a.getBits(), value, value);
+                    long __value = CodeUtil.convert(__a.lowerBound() % __b.lowerBound(), __a.getBits(), false);
+                    return StampFactory.forInteger(__a.getBits(), __value, __value);
                 }
 
                 // zero is always possible
-                long newLowerBound = Math.min(a.lowerBound(), 0);
-                long newUpperBound = Math.max(a.upperBound(), 0);
+                long __newLowerBound = Math.min(__a.lowerBound(), 0);
+                long __newUpperBound = Math.max(__a.upperBound(), 0);
 
                 // the maximum absolute value of the result, derived from b
-                long magnitude;
-                if (b.lowerBound() == CodeUtil.minValue(b.getBits()))
+                long __magnitude;
+                if (__b.lowerBound() == CodeUtil.minValue(__b.getBits()))
                 {
                     // Math.abs(...) - 1 does not work in a case
-                    magnitude = CodeUtil.maxValue(b.getBits());
+                    __magnitude = CodeUtil.maxValue(__b.getBits());
                 }
                 else
                 {
-                    magnitude = Math.max(Math.abs(b.lowerBound()), Math.abs(b.upperBound())) - 1;
+                    __magnitude = Math.max(Math.abs(__b.lowerBound()), Math.abs(__b.upperBound())) - 1;
                 }
-                newLowerBound = Math.max(newLowerBound, -magnitude);
-                newUpperBound = Math.min(newUpperBound, magnitude);
+                __newLowerBound = Math.max(__newLowerBound, -__magnitude);
+                __newUpperBound = Math.min(__newUpperBound, __magnitude);
 
-                return StampFactory.forInteger(a.getBits(), newLowerBound, newUpperBound);
+                return StampFactory.forInteger(__a.getBits(), __newLowerBound, __newUpperBound);
             }
         },
 
@@ -1300,23 +1305,23 @@ public final class IntegerStamp extends PrimitiveStamp
         new UnaryOp.Not()
         {
             @Override
-            public Constant foldConstant(Constant c)
+            public Constant foldConstant(Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forIntegerKind(value.getJavaKind(), ~value.asLong());
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forIntegerKind(__value.getJavaKind(), ~__value.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp)
+            public Stamp foldStamp(Stamp __stamp)
             {
-                if (stamp.isEmpty())
+                if (__stamp.isEmpty())
                 {
-                    return stamp;
+                    return __stamp;
                 }
-                IntegerStamp integerStamp = (IntegerStamp) stamp;
-                int bits = integerStamp.getBits();
-                long defaultMask = CodeUtil.mask(bits);
-                return new IntegerStamp(bits, ~integerStamp.upperBound(), ~integerStamp.lowerBound(), (~integerStamp.upMask()) & defaultMask, (~integerStamp.downMask()) & defaultMask);
+                IntegerStamp __integerStamp = (IntegerStamp) __stamp;
+                int __bits = __integerStamp.getBits();
+                long __defaultMask = CodeUtil.mask(__bits);
+                return new IntegerStamp(__bits, ~__integerStamp.upperBound(), ~__integerStamp.lowerBound(), (~__integerStamp.upMask()) & __defaultMask, (~__integerStamp.downMask()) & __defaultMask);
             }
         },
 
@@ -1324,36 +1329,36 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.And(true, true)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() & b.asLong());
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() & __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
-                return stampForMask(a.getBits(), a.downMask() & b.downMask(), a.upMask() & b.upMask());
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
+                return stampForMask(__a.getBits(), __a.downMask() & __b.downMask(), __a.upMask() & __b.upMask());
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
-                PrimitiveConstant n = (PrimitiveConstant) value;
-                int bits = n.getJavaKind().getBitCount();
-                long mask = CodeUtil.mask(bits);
-                return (n.asLong() & mask) == mask;
+                PrimitiveConstant __n = (PrimitiveConstant) __value;
+                int __bits = __n.getJavaKind().getBitCount();
+                long __mask = CodeUtil.mask(__bits);
+                return (__n.asLong() & __mask) == __mask;
             }
         },
 
@@ -1361,34 +1366,34 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.Or(true, true)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() | b.asLong());
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() | __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
-                return stampForMask(a.getBits(), a.downMask() | b.downMask(), a.upMask() | b.upMask());
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
+                return stampForMask(__a.getBits(), __a.downMask() | __b.downMask(), __a.upMask() | __b.upMask());
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
-                PrimitiveConstant n = (PrimitiveConstant) value;
-                return n.asLong() == 0;
+                PrimitiveConstant __n = (PrimitiveConstant) __value;
+                return __n.asLong() == 0;
             }
         },
 
@@ -1396,45 +1401,45 @@ public final class IntegerStamp extends PrimitiveStamp
         new BinaryOp.Xor(true, true)
         {
             @Override
-            public Constant foldConstant(Constant const1, Constant const2)
+            public Constant foldConstant(Constant __const1, Constant __const2)
             {
-                PrimitiveConstant a = (PrimitiveConstant) const1;
-                PrimitiveConstant b = (PrimitiveConstant) const2;
-                return JavaConstant.forIntegerKind(a.getJavaKind(), a.asLong() ^ b.asLong());
+                PrimitiveConstant __a = (PrimitiveConstant) __const1;
+                PrimitiveConstant __b = (PrimitiveConstant) __const2;
+                return JavaConstant.forIntegerKind(__a.getJavaKind(), __a.asLong() ^ __b.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp1, Stamp stamp2)
+            public Stamp foldStamp(Stamp __stamp1, Stamp __stamp2)
             {
-                if (stamp1.isEmpty())
+                if (__stamp1.isEmpty())
                 {
-                    return stamp1;
+                    return __stamp1;
                 }
-                if (stamp2.isEmpty())
+                if (__stamp2.isEmpty())
                 {
-                    return stamp2;
+                    return __stamp2;
                 }
-                IntegerStamp a = (IntegerStamp) stamp1;
-                IntegerStamp b = (IntegerStamp) stamp2;
+                IntegerStamp __a = (IntegerStamp) __stamp1;
+                IntegerStamp __b = (IntegerStamp) __stamp2;
 
-                long variableBits = (a.downMask() ^ a.upMask()) | (b.downMask() ^ b.upMask());
-                long newDownMask = (a.downMask() ^ b.downMask()) & ~variableBits;
-                long newUpMask = (a.downMask() ^ b.downMask()) | variableBits;
-                return stampForMask(a.getBits(), newDownMask, newUpMask);
+                long __variableBits = (__a.downMask() ^ __a.upMask()) | (__b.downMask() ^ __b.upMask());
+                long __newDownMask = (__a.downMask() ^ __b.downMask()) & ~__variableBits;
+                long __newUpMask = (__a.downMask() ^ __b.downMask()) | __variableBits;
+                return stampForMask(__a.getBits(), __newDownMask, __newUpMask);
             }
 
             @Override
-            public boolean isNeutral(Constant value)
+            public boolean isNeutral(Constant __value)
             {
-                PrimitiveConstant n = (PrimitiveConstant) value;
-                return n.asLong() == 0;
+                PrimitiveConstant __n = (PrimitiveConstant) __value;
+                return __n.asLong() == 0;
             }
 
             @Override
-            public Constant getZero(Stamp s)
+            public Constant getZero(Stamp __s)
             {
-                IntegerStamp stamp = (IntegerStamp) s;
-                return JavaConstant.forPrimitiveInt(stamp.getBits(), 0);
+                IntegerStamp __stamp = (IntegerStamp) __s;
+                return JavaConstant.forPrimitiveInt(__stamp.getBits(), 0);
             }
         },
 
@@ -1442,78 +1447,78 @@ public final class IntegerStamp extends PrimitiveStamp
         new ShiftOp.Shl()
         {
             @Override
-            public Constant foldConstant(Constant value, int amount)
+            public Constant foldConstant(Constant __value, int __amount)
             {
-                PrimitiveConstant c = (PrimitiveConstant) value;
-                switch (c.getJavaKind())
+                PrimitiveConstant __c = (PrimitiveConstant) __value;
+                switch (__c.getJavaKind())
                 {
                     case Int:
-                        return JavaConstant.forInt(c.asInt() << amount);
+                        return JavaConstant.forInt(__c.asInt() << __amount);
                     case Long:
-                        return JavaConstant.forLong(c.asLong() << amount);
+                        return JavaConstant.forLong(__c.asLong() << __amount);
                     default:
                         throw GraalError.shouldNotReachHere();
                 }
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp, IntegerStamp shift)
+            public Stamp foldStamp(Stamp __stamp, IntegerStamp __shift)
             {
-                IntegerStamp value = (IntegerStamp) stamp;
-                int bits = value.getBits();
-                if (value.isEmpty())
+                IntegerStamp __value = (IntegerStamp) __stamp;
+                int __bits = __value.getBits();
+                if (__value.isEmpty())
                 {
-                    return value;
+                    return __value;
                 }
-                else if (shift.isEmpty())
+                else if (__shift.isEmpty())
                 {
-                    return StampFactory.forInteger(bits).empty();
+                    return StampFactory.forInteger(__bits).empty();
                 }
-                else if (value.upMask() == 0)
+                else if (__value.upMask() == 0)
                 {
-                    return value;
+                    return __value;
                 }
 
-                int shiftMask = getShiftAmountMask(stamp);
-                int shiftBits = Integer.bitCount(shiftMask);
-                if (shift.lowerBound() == shift.upperBound())
+                int __shiftMask = getShiftAmountMask(__stamp);
+                int __shiftBits = Integer.bitCount(__shiftMask);
+                if (__shift.lowerBound() == __shift.upperBound())
                 {
-                    int shiftAmount = (int) (shift.lowerBound() & shiftMask);
-                    if (shiftAmount == 0)
+                    int __shiftAmount = (int) (__shift.lowerBound() & __shiftMask);
+                    if (__shiftAmount == 0)
                     {
-                        return value;
+                        return __value;
                     }
                     // the mask of bits that will be lost or shifted into the sign bit
-                    long removedBits = -1L << (bits - shiftAmount - 1);
-                    if ((value.lowerBound() & removedBits) == 0 && (value.upperBound() & removedBits) == 0)
+                    long __removedBits = -1L << (__bits - __shiftAmount - 1);
+                    if ((__value.lowerBound() & __removedBits) == 0 && (__value.upperBound() & __removedBits) == 0)
                     {
                         // use a better stamp if neither lower nor upper bound can lose bits
-                        return new IntegerStamp(bits, value.lowerBound() << shiftAmount, value.upperBound() << shiftAmount, value.downMask() << shiftAmount, value.upMask() << shiftAmount);
+                        return new IntegerStamp(__bits, __value.lowerBound() << __shiftAmount, __value.upperBound() << __shiftAmount, __value.downMask() << __shiftAmount, __value.upMask() << __shiftAmount);
                     }
                 }
-                if ((shift.lowerBound() >>> shiftBits) == (shift.upperBound() >>> shiftBits))
+                if ((__shift.lowerBound() >>> __shiftBits) == (__shift.upperBound() >>> __shiftBits))
                 {
-                    long defaultMask = CodeUtil.mask(bits);
-                    long downMask = defaultMask;
-                    long upMask = 0;
-                    for (long i = shift.lowerBound(); i <= shift.upperBound(); i++)
+                    long __defaultMask = CodeUtil.mask(__bits);
+                    long __downMask = __defaultMask;
+                    long __upMask = 0;
+                    for (long __i = __shift.lowerBound(); __i <= __shift.upperBound(); __i++)
                     {
-                        if (shift.contains(i))
+                        if (__shift.contains(__i))
                         {
-                            downMask &= value.downMask() << (i & shiftMask);
-                            upMask |= value.upMask() << (i & shiftMask);
+                            __downMask &= __value.downMask() << (__i & __shiftMask);
+                            __upMask |= __value.upMask() << (__i & __shiftMask);
                         }
                     }
-                    return IntegerStamp.stampForMask(bits, downMask, upMask & defaultMask);
+                    return IntegerStamp.stampForMask(__bits, __downMask, __upMask & __defaultMask);
                 }
-                return value.unrestricted();
+                return __value.unrestricted();
             }
 
             @Override
-            public int getShiftAmountMask(Stamp s)
+            public int getShiftAmountMask(Stamp __s)
             {
-                IntegerStamp stamp = (IntegerStamp) s;
-                return stamp.getBits() - 1;
+                IntegerStamp __stamp = (IntegerStamp) __s;
+                return __stamp.getBits() - 1;
             }
         },
 
@@ -1521,57 +1526,57 @@ public final class IntegerStamp extends PrimitiveStamp
         new ShiftOp.Shr()
         {
             @Override
-            public Constant foldConstant(Constant value, int amount)
+            public Constant foldConstant(Constant __value, int __amount)
             {
-                PrimitiveConstant c = (PrimitiveConstant) value;
-                switch (c.getJavaKind())
+                PrimitiveConstant __c = (PrimitiveConstant) __value;
+                switch (__c.getJavaKind())
                 {
                     case Int:
-                        return JavaConstant.forInt(c.asInt() >> amount);
+                        return JavaConstant.forInt(__c.asInt() >> __amount);
                     case Long:
-                        return JavaConstant.forLong(c.asLong() >> amount);
+                        return JavaConstant.forLong(__c.asLong() >> __amount);
                     default:
                         throw GraalError.shouldNotReachHere();
                 }
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp, IntegerStamp shift)
+            public Stamp foldStamp(Stamp __stamp, IntegerStamp __shift)
             {
-                IntegerStamp value = (IntegerStamp) stamp;
-                int bits = value.getBits();
-                if (value.isEmpty())
+                IntegerStamp __value = (IntegerStamp) __stamp;
+                int __bits = __value.getBits();
+                if (__value.isEmpty())
                 {
-                    return value;
+                    return __value;
                 }
-                else if (shift.isEmpty())
+                else if (__shift.isEmpty())
                 {
-                    return StampFactory.forInteger(bits).empty();
+                    return StampFactory.forInteger(__bits).empty();
                 }
-                else if (shift.lowerBound() == shift.upperBound())
+                else if (__shift.lowerBound() == __shift.upperBound())
                 {
-                    long shiftCount = shift.lowerBound() & getShiftAmountMask(stamp);
-                    if (shiftCount == 0)
+                    long __shiftCount = __shift.lowerBound() & getShiftAmountMask(__stamp);
+                    if (__shiftCount == 0)
                     {
-                        return stamp;
+                        return __stamp;
                     }
 
-                    int extraBits = 64 - bits;
-                    long defaultMask = CodeUtil.mask(bits);
+                    int __extraBits = 64 - __bits;
+                    long __defaultMask = CodeUtil.mask(__bits);
                     // shifting back and forth performs sign extension
-                    long downMask = (value.downMask() << extraBits) >> (shiftCount + extraBits) & defaultMask;
-                    long upMask = (value.upMask() << extraBits) >> (shiftCount + extraBits) & defaultMask;
-                    return new IntegerStamp(bits, value.lowerBound() >> shiftCount, value.upperBound() >> shiftCount, downMask, upMask);
+                    long __downMask = (__value.downMask() << __extraBits) >> (__shiftCount + __extraBits) & __defaultMask;
+                    long __upMask = (__value.upMask() << __extraBits) >> (__shiftCount + __extraBits) & __defaultMask;
+                    return new IntegerStamp(__bits, __value.lowerBound() >> __shiftCount, __value.upperBound() >> __shiftCount, __downMask, __upMask);
                 }
-                long mask = IntegerStamp.upMaskFor(bits, value.lowerBound(), value.upperBound());
-                return IntegerStamp.stampForMask(bits, 0, mask);
+                long __mask = IntegerStamp.upMaskFor(__bits, __value.lowerBound(), __value.upperBound());
+                return IntegerStamp.stampForMask(__bits, 0, __mask);
             }
 
             @Override
-            public int getShiftAmountMask(Stamp s)
+            public int getShiftAmountMask(Stamp __s)
             {
-                IntegerStamp stamp = (IntegerStamp) s;
-                return stamp.getBits() - 1;
+                IntegerStamp __stamp = (IntegerStamp) __s;
+                return __stamp.getBits() - 1;
             }
         },
 
@@ -1579,62 +1584,62 @@ public final class IntegerStamp extends PrimitiveStamp
         new ShiftOp.UShr()
         {
             @Override
-            public Constant foldConstant(Constant value, int amount)
+            public Constant foldConstant(Constant __value, int __amount)
             {
-                PrimitiveConstant c = (PrimitiveConstant) value;
-                switch (c.getJavaKind())
+                PrimitiveConstant __c = (PrimitiveConstant) __value;
+                switch (__c.getJavaKind())
                 {
                     case Int:
-                        return JavaConstant.forInt(c.asInt() >>> amount);
+                        return JavaConstant.forInt(__c.asInt() >>> __amount);
                     case Long:
-                        return JavaConstant.forLong(c.asLong() >>> amount);
+                        return JavaConstant.forLong(__c.asLong() >>> __amount);
                     default:
                         throw GraalError.shouldNotReachHere();
                 }
             }
 
             @Override
-            public Stamp foldStamp(Stamp stamp, IntegerStamp shift)
+            public Stamp foldStamp(Stamp __stamp, IntegerStamp __shift)
             {
-                IntegerStamp value = (IntegerStamp) stamp;
-                int bits = value.getBits();
-                if (value.isEmpty())
+                IntegerStamp __value = (IntegerStamp) __stamp;
+                int __bits = __value.getBits();
+                if (__value.isEmpty())
                 {
-                    return value;
+                    return __value;
                 }
-                else if (shift.isEmpty())
+                else if (__shift.isEmpty())
                 {
-                    return StampFactory.forInteger(bits).empty();
+                    return StampFactory.forInteger(__bits).empty();
                 }
 
-                if (shift.lowerBound() == shift.upperBound())
+                if (__shift.lowerBound() == __shift.upperBound())
                 {
-                    long shiftCount = shift.lowerBound() & getShiftAmountMask(stamp);
-                    if (shiftCount == 0)
+                    long __shiftCount = __shift.lowerBound() & getShiftAmountMask(__stamp);
+                    if (__shiftCount == 0)
                     {
-                        return stamp;
+                        return __stamp;
                     }
 
-                    long downMask = value.downMask() >>> shiftCount;
-                    long upMask = value.upMask() >>> shiftCount;
-                    if (value.lowerBound() < 0)
+                    long __downMask = __value.downMask() >>> __shiftCount;
+                    long __upMask = __value.upMask() >>> __shiftCount;
+                    if (__value.lowerBound() < 0)
                     {
-                        return new IntegerStamp(bits, downMask, upMask, downMask, upMask);
+                        return new IntegerStamp(__bits, __downMask, __upMask, __downMask, __upMask);
                     }
                     else
                     {
-                        return new IntegerStamp(bits, value.lowerBound() >>> shiftCount, value.upperBound() >>> shiftCount, downMask, upMask);
+                        return new IntegerStamp(__bits, __value.lowerBound() >>> __shiftCount, __value.upperBound() >>> __shiftCount, __downMask, __upMask);
                     }
                 }
-                long mask = IntegerStamp.upMaskFor(bits, value.lowerBound(), value.upperBound());
-                return IntegerStamp.stampForMask(bits, 0, mask);
+                long __mask = IntegerStamp.upMaskFor(__bits, __value.lowerBound(), __value.upperBound());
+                return IntegerStamp.stampForMask(__bits, 0, __mask);
             }
 
             @Override
-            public int getShiftAmountMask(Stamp s)
+            public int getShiftAmountMask(Stamp __s)
             {
-                IntegerStamp stamp = (IntegerStamp) s;
-                return stamp.getBits() - 1;
+                IntegerStamp __stamp = (IntegerStamp) __s;
+                return __stamp.getBits() - 1;
             }
         },
 
@@ -1642,34 +1647,34 @@ public final class IntegerStamp extends PrimitiveStamp
         new UnaryOp.Abs()
         {
             @Override
-            public Constant foldConstant(Constant value)
+            public Constant foldConstant(Constant __value)
             {
-                PrimitiveConstant c = (PrimitiveConstant) value;
-                return JavaConstant.forIntegerKind(c.getJavaKind(), Math.abs(c.asLong()));
+                PrimitiveConstant __c = (PrimitiveConstant) __value;
+                return JavaConstant.forIntegerKind(__c.getJavaKind(), Math.abs(__c.asLong()));
             }
 
             @Override
-            public Stamp foldStamp(Stamp input)
+            public Stamp foldStamp(Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
-                    return input;
+                    return __input;
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
-                int bits = stamp.getBits();
-                if (stamp.lowerBound == stamp.upperBound)
+                IntegerStamp __stamp = (IntegerStamp) __input;
+                int __bits = __stamp.getBits();
+                if (__stamp.lowerBound == __stamp.upperBound)
                 {
-                    long value = CodeUtil.convert(Math.abs(stamp.lowerBound()), stamp.getBits(), false);
-                    return StampFactory.forInteger(stamp.getBits(), value, value);
+                    long __value = CodeUtil.convert(Math.abs(__stamp.lowerBound()), __stamp.getBits(), false);
+                    return StampFactory.forInteger(__stamp.getBits(), __value, __value);
                 }
-                if (stamp.lowerBound() == CodeUtil.minValue(bits))
+                if (__stamp.lowerBound() == CodeUtil.minValue(__bits))
                 {
-                    return input.unrestricted();
+                    return __input.unrestricted();
                 }
                 else
                 {
-                    long limit = Math.max(-stamp.lowerBound(), stamp.upperBound());
-                    return StampFactory.forInteger(bits, 0, limit);
+                    long __limit = Math.max(-__stamp.lowerBound(), __stamp.upperBound());
+                    return StampFactory.forInteger(__bits, 0, __limit);
                 }
             }
         },
@@ -1680,47 +1685,47 @@ public final class IntegerStamp extends PrimitiveStamp
         new IntegerConvertOp.ZeroExtend()
         {
             @Override
-            public Constant foldConstant(int inputBits, int resultBits, Constant c)
+            public Constant foldConstant(int __inputBits, int __resultBits, Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forPrimitiveInt(resultBits, CodeUtil.zeroExtend(value.asLong(), inputBits));
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forPrimitiveInt(__resultBits, CodeUtil.zeroExtend(__value.asLong(), __inputBits));
             }
 
             @Override
-            public Stamp foldStamp(int inputBits, int resultBits, Stamp input)
+            public Stamp foldStamp(int __inputBits, int __resultBits, Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
-                    return StampFactory.forInteger(resultBits).empty();
+                    return StampFactory.forInteger(__resultBits).empty();
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
+                IntegerStamp __stamp = (IntegerStamp) __input;
 
-                if (inputBits == resultBits)
+                if (__inputBits == __resultBits)
                 {
-                    return input;
-                }
-
-                if (input.isEmpty())
-                {
-                    return StampFactory.forInteger(resultBits).empty();
+                    return __input;
                 }
 
-                long downMask = CodeUtil.zeroExtend(stamp.downMask(), inputBits);
-                long upMask = CodeUtil.zeroExtend(stamp.upMask(), inputBits);
-                long lowerBound = stamp.unsignedLowerBound();
-                long upperBound = stamp.unsignedUpperBound();
-                return IntegerStamp.create(resultBits, lowerBound, upperBound, downMask, upMask);
+                if (__input.isEmpty())
+                {
+                    return StampFactory.forInteger(__resultBits).empty();
+                }
+
+                long __downMask = CodeUtil.zeroExtend(__stamp.downMask(), __inputBits);
+                long __upMask = CodeUtil.zeroExtend(__stamp.upMask(), __inputBits);
+                long __lowerBound = __stamp.unsignedLowerBound();
+                long __upperBound = __stamp.unsignedUpperBound();
+                return IntegerStamp.create(__resultBits, __lowerBound, __upperBound, __downMask, __upMask);
             }
 
             @Override
-            public Stamp invertStamp(int inputBits, int resultBits, Stamp outStamp)
+            public Stamp invertStamp(int __inputBits, int __resultBits, Stamp __outStamp)
             {
-                IntegerStamp stamp = (IntegerStamp) outStamp;
-                if (stamp.isEmpty())
+                IntegerStamp __stamp = (IntegerStamp) __outStamp;
+                if (__stamp.isEmpty())
                 {
-                    return StampFactory.forInteger(inputBits).empty();
+                    return StampFactory.forInteger(__inputBits).empty();
                 }
-                return StampFactory.forUnsignedInteger(inputBits, stamp.lowerBound(), stamp.upperBound(), stamp.downMask(), stamp.upMask());
+                return StampFactory.forUnsignedInteger(__inputBits, __stamp.lowerBound(), __stamp.upperBound(), __stamp.downMask(), __stamp.upMask());
             }
         },
 
@@ -1728,38 +1733,38 @@ public final class IntegerStamp extends PrimitiveStamp
         new IntegerConvertOp.SignExtend()
         {
             @Override
-            public Constant foldConstant(int inputBits, int resultBits, Constant c)
+            public Constant foldConstant(int __inputBits, int __resultBits, Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forPrimitiveInt(resultBits, CodeUtil.signExtend(value.asLong(), inputBits));
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forPrimitiveInt(__resultBits, CodeUtil.signExtend(__value.asLong(), __inputBits));
             }
 
             @Override
-            public Stamp foldStamp(int inputBits, int resultBits, Stamp input)
+            public Stamp foldStamp(int __inputBits, int __resultBits, Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
-                    return StampFactory.forInteger(resultBits).empty();
+                    return StampFactory.forInteger(__resultBits).empty();
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
+                IntegerStamp __stamp = (IntegerStamp) __input;
 
-                long defaultMask = CodeUtil.mask(resultBits);
-                long downMask = CodeUtil.signExtend(stamp.downMask(), inputBits) & defaultMask;
-                long upMask = CodeUtil.signExtend(stamp.upMask(), inputBits) & defaultMask;
+                long __defaultMask = CodeUtil.mask(__resultBits);
+                long __downMask = CodeUtil.signExtend(__stamp.downMask(), __inputBits) & __defaultMask;
+                long __upMask = CodeUtil.signExtend(__stamp.upMask(), __inputBits) & __defaultMask;
 
-                return new IntegerStamp(resultBits, stamp.lowerBound(), stamp.upperBound(), downMask, upMask);
+                return new IntegerStamp(__resultBits, __stamp.lowerBound(), __stamp.upperBound(), __downMask, __upMask);
             }
 
             @Override
-            public Stamp invertStamp(int inputBits, int resultBits, Stamp outStamp)
+            public Stamp invertStamp(int __inputBits, int __resultBits, Stamp __outStamp)
             {
-                if (outStamp.isEmpty())
+                if (__outStamp.isEmpty())
                 {
-                    return StampFactory.forInteger(inputBits).empty();
+                    return StampFactory.forInteger(__inputBits).empty();
                 }
-                IntegerStamp stamp = (IntegerStamp) outStamp;
-                long mask = CodeUtil.mask(inputBits);
-                return StampFactory.forIntegerWithMask(inputBits, stamp.lowerBound(), stamp.upperBound(), stamp.downMask() & mask, stamp.upMask() & mask);
+                IntegerStamp __stamp = (IntegerStamp) __outStamp;
+                long __mask = CodeUtil.mask(__inputBits);
+                return StampFactory.forIntegerWithMask(__inputBits, __stamp.lowerBound(), __stamp.upperBound(), __stamp.downMask() & __mask, __stamp.upMask() & __mask);
             }
         },
 
@@ -1767,50 +1772,50 @@ public final class IntegerStamp extends PrimitiveStamp
         new IntegerConvertOp.Narrow()
         {
             @Override
-            public Constant foldConstant(int inputBits, int resultBits, Constant c)
+            public Constant foldConstant(int __inputBits, int __resultBits, Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forPrimitiveInt(resultBits, CodeUtil.narrow(value.asLong(), resultBits));
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forPrimitiveInt(__resultBits, CodeUtil.narrow(__value.asLong(), __resultBits));
             }
 
             @Override
-            public Stamp foldStamp(int inputBits, int resultBits, Stamp input)
+            public Stamp foldStamp(int __inputBits, int __resultBits, Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
-                    return StampFactory.forInteger(resultBits).empty();
+                    return StampFactory.forInteger(__resultBits).empty();
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
-                if (resultBits == inputBits)
+                IntegerStamp __stamp = (IntegerStamp) __input;
+                if (__resultBits == __inputBits)
                 {
-                    return stamp;
+                    return __stamp;
                 }
 
-                final long upperBound;
-                if (stamp.lowerBound() < CodeUtil.minValue(resultBits))
+                final long __upperBound;
+                if (__stamp.lowerBound() < CodeUtil.minValue(__resultBits))
                 {
-                    upperBound = CodeUtil.maxValue(resultBits);
+                    __upperBound = CodeUtil.maxValue(__resultBits);
                 }
                 else
                 {
-                    upperBound = saturate(stamp.upperBound(), resultBits);
+                    __upperBound = saturate(__stamp.upperBound(), __resultBits);
                 }
-                final long lowerBound;
-                if (stamp.upperBound() > CodeUtil.maxValue(resultBits))
+                final long __lowerBound;
+                if (__stamp.upperBound() > CodeUtil.maxValue(__resultBits))
                 {
-                    lowerBound = CodeUtil.minValue(resultBits);
+                    __lowerBound = CodeUtil.minValue(__resultBits);
                 }
                 else
                 {
-                    lowerBound = saturate(stamp.lowerBound(), resultBits);
+                    __lowerBound = saturate(__stamp.lowerBound(), __resultBits);
                 }
 
-                long defaultMask = CodeUtil.mask(resultBits);
-                long newDownMask = stamp.downMask() & defaultMask;
-                long newUpMask = stamp.upMask() & defaultMask;
-                long newLowerBound = CodeUtil.signExtend((lowerBound | newDownMask) & newUpMask, resultBits);
-                long newUpperBound = CodeUtil.signExtend((upperBound | newDownMask) & newUpMask, resultBits);
-                return new IntegerStamp(resultBits, newLowerBound, newUpperBound, newDownMask, newUpMask);
+                long __defaultMask = CodeUtil.mask(__resultBits);
+                long __newDownMask = __stamp.downMask() & __defaultMask;
+                long __newUpMask = __stamp.upMask() & __defaultMask;
+                long __newLowerBound = CodeUtil.signExtend((__lowerBound | __newDownMask) & __newUpMask, __resultBits);
+                long __newUpperBound = CodeUtil.signExtend((__upperBound | __newDownMask) & __newUpMask, __resultBits);
+                return new IntegerStamp(__resultBits, __newLowerBound, __newUpperBound, __newDownMask, __newUpMask);
             }
         },
 
@@ -1818,23 +1823,23 @@ public final class IntegerStamp extends PrimitiveStamp
         new FloatConvertOp(FloatConvert.I2F)
         {
             @Override
-            public Constant foldConstant(Constant c)
+            public Constant foldConstant(Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forFloat(value.asInt());
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forFloat(__value.asInt());
             }
 
             @Override
-            public Stamp foldStamp(Stamp input)
+            public Stamp foldStamp(Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
                     return StampFactory.empty(JavaKind.Float);
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
-                float lowerBound = stamp.lowerBound();
-                float upperBound = stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Float, lowerBound, upperBound, true);
+                IntegerStamp __stamp = (IntegerStamp) __input;
+                float __lowerBound = __stamp.lowerBound();
+                float __upperBound = __stamp.upperBound();
+                return StampFactory.forFloat(JavaKind.Float, __lowerBound, __upperBound, true);
             }
         },
 
@@ -1842,23 +1847,23 @@ public final class IntegerStamp extends PrimitiveStamp
         new FloatConvertOp(FloatConvert.L2F)
         {
             @Override
-            public Constant foldConstant(Constant c)
+            public Constant foldConstant(Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forFloat(value.asLong());
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forFloat(__value.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp input)
+            public Stamp foldStamp(Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
                     return StampFactory.empty(JavaKind.Float);
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
-                float lowerBound = stamp.lowerBound();
-                float upperBound = stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Float, lowerBound, upperBound, true);
+                IntegerStamp __stamp = (IntegerStamp) __input;
+                float __lowerBound = __stamp.lowerBound();
+                float __upperBound = __stamp.upperBound();
+                return StampFactory.forFloat(JavaKind.Float, __lowerBound, __upperBound, true);
             }
         },
 
@@ -1866,23 +1871,23 @@ public final class IntegerStamp extends PrimitiveStamp
         new FloatConvertOp(FloatConvert.I2D)
         {
             @Override
-            public Constant foldConstant(Constant c)
+            public Constant foldConstant(Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forDouble(value.asInt());
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forDouble(__value.asInt());
             }
 
             @Override
-            public Stamp foldStamp(Stamp input)
+            public Stamp foldStamp(Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
                     return StampFactory.empty(JavaKind.Double);
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
-                double lowerBound = stamp.lowerBound();
-                double upperBound = stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Double, lowerBound, upperBound, true);
+                IntegerStamp __stamp = (IntegerStamp) __input;
+                double __lowerBound = __stamp.lowerBound();
+                double __upperBound = __stamp.upperBound();
+                return StampFactory.forFloat(JavaKind.Double, __lowerBound, __upperBound, true);
             }
         },
 
@@ -1890,23 +1895,23 @@ public final class IntegerStamp extends PrimitiveStamp
         new FloatConvertOp(FloatConvert.L2D)
         {
             @Override
-            public Constant foldConstant(Constant c)
+            public Constant foldConstant(Constant __c)
             {
-                PrimitiveConstant value = (PrimitiveConstant) c;
-                return JavaConstant.forDouble(value.asLong());
+                PrimitiveConstant __value = (PrimitiveConstant) __c;
+                return JavaConstant.forDouble(__value.asLong());
             }
 
             @Override
-            public Stamp foldStamp(Stamp input)
+            public Stamp foldStamp(Stamp __input)
             {
-                if (input.isEmpty())
+                if (__input.isEmpty())
                 {
                     return StampFactory.empty(JavaKind.Double);
                 }
-                IntegerStamp stamp = (IntegerStamp) input;
-                double lowerBound = stamp.lowerBound();
-                double upperBound = stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Double, lowerBound, upperBound, true);
+                IntegerStamp __stamp = (IntegerStamp) __input;
+                double __lowerBound = __stamp.lowerBound();
+                double __upperBound = __stamp.upperBound();
+                return StampFactory.forFloat(JavaKind.Double, __lowerBound, __upperBound, true);
             }
         }
     );

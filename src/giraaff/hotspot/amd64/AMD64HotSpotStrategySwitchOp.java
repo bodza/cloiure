@@ -17,18 +17,19 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotStrategySwitchOp
 final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitchOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotStrategySwitchOp> TYPE = LIRInstructionClass.create(AMD64HotSpotStrategySwitchOp.class);
 
     // @cons
-    AMD64HotSpotStrategySwitchOp(SwitchStrategy strategy, LabelRef[] keyTargets, LabelRef defaultTarget, Value key, Value scratch)
+    AMD64HotSpotStrategySwitchOp(SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Value __key, Value __scratch)
     {
-        super(TYPE, strategy, keyTargets, defaultTarget, key, scratch);
+        super(TYPE, __strategy, __keyTargets, __defaultTarget, __key, __scratch);
     }
 
     @Override
-    public void emitCode(final CompilationResultBuilder crb, final AMD64MacroAssembler masm)
+    public void emitCode(final CompilationResultBuilder __crb, final AMD64MacroAssembler __masm)
     {
-        strategy.run(new HotSpotSwitchClosure(ValueUtil.asRegister(key), crb, masm));
+        strategy.run(new HotSpotSwitchClosure(ValueUtil.asRegister(key), __crb, __masm));
     }
 
     // @class AMD64HotSpotStrategySwitchOp.HotSpotSwitchClosure
@@ -36,31 +37,31 @@ final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitch
     public final class HotSpotSwitchClosure extends SwitchClosure
     {
         // @cons
-        protected HotSpotSwitchClosure(Register keyRegister, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        protected HotSpotSwitchClosure(Register __keyRegister, CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            super(keyRegister, crb, masm);
+            super(__keyRegister, __crb, __masm);
         }
 
         @Override
-        protected void emitComparison(Constant c)
+        protected void emitComparison(Constant __c)
         {
-            if (c instanceof HotSpotMetaspaceConstant)
+            if (__c instanceof HotSpotMetaspaceConstant)
             {
-                HotSpotMetaspaceConstant meta = (HotSpotMetaspaceConstant) c;
-                if (meta.isCompressed())
+                HotSpotMetaspaceConstant __meta = (HotSpotMetaspaceConstant) __c;
+                if (__meta.isCompressed())
                 {
-                    crb.recordInlineDataInCode(meta);
+                    crb.recordInlineDataInCode(__meta);
                     masm.cmpl(keyRegister, 0xDEADDEAD);
                 }
                 else
                 {
-                    AMD64Address addr = (AMD64Address) crb.recordDataReferenceInCode(meta, 8);
-                    masm.cmpq(keyRegister, addr);
+                    AMD64Address __addr = (AMD64Address) crb.recordDataReferenceInCode(__meta, 8);
+                    masm.cmpq(keyRegister, __addr);
                 }
             }
             else
             {
-                super.emitComparison(c);
+                super.emitComparison(__c);
             }
         }
     }

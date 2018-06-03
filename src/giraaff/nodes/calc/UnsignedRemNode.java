@@ -15,65 +15,66 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class UnsignedRemNode
 public final class UnsignedRemNode extends IntegerDivRemNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<UnsignedRemNode> TYPE = NodeClass.create(UnsignedRemNode.class);
 
     // @cons
-    public UnsignedRemNode(ValueNode x, ValueNode y)
+    public UnsignedRemNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected UnsignedRemNode(NodeClass<? extends UnsignedRemNode> c, ValueNode x, ValueNode y)
+    protected UnsignedRemNode(NodeClass<? extends UnsignedRemNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, x.stamp(NodeView.DEFAULT).unrestricted(), Op.REM, Type.UNSIGNED, x, y);
+        super(__c, __x.stamp(NodeView.DEFAULT).unrestricted(), Op.REM, Type.UNSIGNED, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        Stamp stamp = x.stamp(view).unrestricted();
-        return canonical(null, x, y, stamp, view);
+        Stamp __stamp = __x.stamp(__view).unrestricted();
+        return canonical(null, __x, __y, __stamp, __view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        return canonical(this, forX, forY, stamp(view), view);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, __forX, __forY, stamp(__view), __view);
     }
 
     @SuppressWarnings("unused")
-    public static ValueNode canonical(UnsignedRemNode self, ValueNode forX, ValueNode forY, Stamp stamp, NodeView view)
+    public static ValueNode canonical(UnsignedRemNode __self, ValueNode __forX, ValueNode __forY, Stamp __stamp, NodeView __view)
     {
-        int bits = ((IntegerStamp) stamp).getBits();
-        if (forX.isConstant() && forY.isConstant())
+        int __bits = ((IntegerStamp) __stamp).getBits();
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            long yConst = CodeUtil.zeroExtend(forY.asJavaConstant().asLong(), bits);
-            if (yConst == 0)
+            long __yConst = CodeUtil.zeroExtend(__forY.asJavaConstant().asLong(), __bits);
+            if (__yConst == 0)
             {
-                return self != null ? self : new UnsignedRemNode(forX, forY); // this will trap,
+                return __self != null ? __self : new UnsignedRemNode(__forX, __forY); // this will trap,
                                                                               // cannot canonicalize
             }
-            return ConstantNode.forIntegerStamp(stamp, Long.remainderUnsigned(CodeUtil.zeroExtend(forX.asJavaConstant().asLong(), bits), yConst));
+            return ConstantNode.forIntegerStamp(__stamp, Long.remainderUnsigned(CodeUtil.zeroExtend(__forX.asJavaConstant().asLong(), __bits), __yConst));
         }
-        else if (forY.isConstant())
+        else if (__forY.isConstant())
         {
-            long c = CodeUtil.zeroExtend(forY.asJavaConstant().asLong(), bits);
-            if (c == 1)
+            long __c = CodeUtil.zeroExtend(__forY.asJavaConstant().asLong(), __bits);
+            if (__c == 1)
             {
-                return ConstantNode.forIntegerStamp(stamp, 0);
+                return ConstantNode.forIntegerStamp(__stamp, 0);
             }
-            else if (CodeUtil.isPowerOf2(c))
+            else if (CodeUtil.isPowerOf2(__c))
             {
-                return new AndNode(forX, ConstantNode.forIntegerStamp(stamp, c - 1));
+                return new AndNode(__forX, ConstantNode.forIntegerStamp(__stamp, __c - 1));
             }
         }
-        return self != null ? self : new UnsignedRemNode(forX, forY);
+        return __self != null ? __self : new UnsignedRemNode(__forX, __forY);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, gen.getLIRGeneratorTool().getArithmetic().emitURem(gen.operand(getX()), gen.operand(getY()), gen.state(this)));
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitURem(__gen.operand(getX()), __gen.operand(getY()), __gen.state(this)));
     }
 }

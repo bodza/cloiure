@@ -28,23 +28,27 @@ import giraaff.nodes.virtual.VirtualBoxingNode;
 // @class BoxNode
 public final class BoxNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Canonicalizable.Unary<ValueNode>
 {
+    // @def
     public static final NodeClass<BoxNode> TYPE = NodeClass.create(BoxNode.class);
 
-    @Input private ValueNode value;
+    @Input
+    // @field
+    private ValueNode value;
+    // @field
     protected final JavaKind boxingKind;
 
     // @cons
-    public BoxNode(ValueNode value, ResolvedJavaType resultType, JavaKind boxingKind)
+    public BoxNode(ValueNode __value, ResolvedJavaType __resultType, JavaKind __boxingKind)
     {
-        this(TYPE, value, resultType, boxingKind);
+        this(TYPE, __value, __resultType, __boxingKind);
     }
 
     // @cons
-    public BoxNode(NodeClass<? extends BoxNode> c, ValueNode value, ResolvedJavaType resultType, JavaKind boxingKind)
+    public BoxNode(NodeClass<? extends BoxNode> __c, ValueNode __value, ResolvedJavaType __resultType, JavaKind __boxingKind)
     {
-        super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(resultType)));
-        this.value = value;
-        this.boxingKind = boxingKind;
+        super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__resultType)));
+        this.value = __value;
+        this.boxingKind = __boxingKind;
     }
 
     public JavaKind getBoxingKind()
@@ -59,15 +63,15 @@ public final class BoxNode extends FixedWithNextNode implements VirtualizableAll
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             return null;
         }
@@ -80,13 +84,13 @@ public final class BoxNode extends FixedWithNextNode implements VirtualizableAll
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(getValue());
+        ValueNode __alias = __tool.getAlias(getValue());
 
-        VirtualBoxingNode newVirtual = createVirtualBoxingNode();
+        VirtualBoxingNode __newVirtual = createVirtualBoxingNode();
 
-        tool.createVirtualObject(newVirtual, new ValueNode[] { alias }, Collections.<MonitorIdNode> emptyList(), false);
-        tool.replaceWithVirtual(newVirtual);
+        __tool.createVirtualObject(__newVirtual, new ValueNode[] { __alias }, Collections.<MonitorIdNode> emptyList(), false);
+        __tool.replaceWithVirtual(__newVirtual);
     }
 }

@@ -15,44 +15,48 @@ public class Fields
     /**
      * Offsets used with {@link Unsafe} to access the fields.
      */
+    // @field
     protected final long[] offsets;
 
     /**
      * The names of the fields.
      */
+    // @field
     private final String[] names;
 
     /**
      * The types of the fields.
      */
+    // @field
     private final Class<?>[] types;
 
+    // @field
     private final Class<?>[] declaringClasses;
 
-    public static Fields forClass(Class<?> clazz, Class<?> endClazz, boolean includeTransient, FieldsScanner.CalcOffset calcOffset)
+    public static Fields forClass(Class<?> __clazz, Class<?> __endClazz, boolean __includeTransient, FieldsScanner.CalcOffset __calcOffset)
     {
-        FieldsScanner scanner = new FieldsScanner(calcOffset == null ? new FieldsScanner.DefaultCalcOffset() : calcOffset);
-        scanner.scan(clazz, endClazz, includeTransient);
-        return new Fields(scanner.data);
+        FieldsScanner __scanner = new FieldsScanner(__calcOffset == null ? new FieldsScanner.DefaultCalcOffset() : __calcOffset);
+        __scanner.scan(__clazz, __endClazz, __includeTransient);
+        return new Fields(__scanner.data);
     }
 
     // @cons
-    public Fields(ArrayList<? extends FieldsScanner.FieldInfo> fields)
+    public Fields(ArrayList<? extends FieldsScanner.FieldInfo> __fields)
     {
         super();
-        Collections.sort(fields);
-        this.offsets = new long[fields.size()];
+        Collections.sort(__fields);
+        this.offsets = new long[__fields.size()];
         this.names = new String[offsets.length];
         this.types = new Class<?>[offsets.length];
         this.declaringClasses = new Class<?>[offsets.length];
-        int index = 0;
-        for (FieldsScanner.FieldInfo f : fields)
+        int __index = 0;
+        for (FieldsScanner.FieldInfo __f : __fields)
         {
-            offsets[index] = f.offset;
-            names[index] = f.name;
-            types[index] = f.type;
-            declaringClasses[index] = f.declaringClass;
-            index++;
+            offsets[__index] = __f.offset;
+            names[__index] = __f.name;
+            types[__index] = __f.type;
+            declaringClasses[__index] = __f.declaringClass;
+            __index++;
         }
     }
 
@@ -64,11 +68,11 @@ public class Fields
         return offsets.length;
     }
 
-    public static void translateInto(Fields fields, ArrayList<FieldsScanner.FieldInfo> infos)
+    public static void translateInto(Fields __fields, ArrayList<FieldsScanner.FieldInfo> __infos)
     {
-        for (int index = 0; index < fields.getCount(); index++)
+        for (int __index = 0; __index < __fields.getCount(); __index++)
         {
-            infos.add(new FieldsScanner.FieldInfo(fields.offsets[index], fields.names[index], fields.types[index], fields.declaringClasses[index]));
+            __infos.add(new FieldsScanner.FieldInfo(__fields.offsets[__index], __fields.names[__index], __fields.types[__index], __fields.declaringClasses[__index]));
         }
     }
 
@@ -89,9 +93,9 @@ public class Fields
      * @param from the object from which the fields should be copied
      * @param to the object to which the fields should be copied
      */
-    public void copy(Object from, Object to)
+    public void copy(Object __from, Object __to)
     {
-        copy(from, to, null);
+        copy(__from, __to, null);
     }
 
     /**
@@ -102,51 +106,51 @@ public class Fields
      * @param trans function to applied to object field values as they are copied. If {@code null},
      *            the value is copied unchanged.
      */
-    public void copy(Object from, Object to, ObjectTransformer trans)
+    public void copy(Object __from, Object __to, ObjectTransformer __trans)
     {
-        for (int index = 0; index < offsets.length; index++)
+        for (int __index = 0; __index < offsets.length; __index++)
         {
-            long offset = offsets[index];
-            Class<?> type = types[index];
-            if (type.isPrimitive())
+            long __offset = offsets[__index];
+            Class<?> __type = types[__index];
+            if (__type.isPrimitive())
             {
-                if (type == Integer.TYPE)
+                if (__type == Integer.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putInt(to, offset, UnsafeAccess.UNSAFE.getInt(from, offset));
+                    UnsafeAccess.UNSAFE.putInt(__to, __offset, UnsafeAccess.UNSAFE.getInt(__from, __offset));
                 }
-                else if (type == Long.TYPE)
+                else if (__type == Long.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putLong(to, offset, UnsafeAccess.UNSAFE.getLong(from, offset));
+                    UnsafeAccess.UNSAFE.putLong(__to, __offset, UnsafeAccess.UNSAFE.getLong(__from, __offset));
                 }
-                else if (type == Boolean.TYPE)
+                else if (__type == Boolean.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putBoolean(to, offset, UnsafeAccess.UNSAFE.getBoolean(from, offset));
+                    UnsafeAccess.UNSAFE.putBoolean(__to, __offset, UnsafeAccess.UNSAFE.getBoolean(__from, __offset));
                 }
-                else if (type == Float.TYPE)
+                else if (__type == Float.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putFloat(to, offset, UnsafeAccess.UNSAFE.getFloat(from, offset));
+                    UnsafeAccess.UNSAFE.putFloat(__to, __offset, UnsafeAccess.UNSAFE.getFloat(__from, __offset));
                 }
-                else if (type == Double.TYPE)
+                else if (__type == Double.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putDouble(to, offset, UnsafeAccess.UNSAFE.getDouble(from, offset));
+                    UnsafeAccess.UNSAFE.putDouble(__to, __offset, UnsafeAccess.UNSAFE.getDouble(__from, __offset));
                 }
-                else if (type == Short.TYPE)
+                else if (__type == Short.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putShort(to, offset, UnsafeAccess.UNSAFE.getShort(from, offset));
+                    UnsafeAccess.UNSAFE.putShort(__to, __offset, UnsafeAccess.UNSAFE.getShort(__from, __offset));
                 }
-                else if (type == Character.TYPE)
+                else if (__type == Character.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putChar(to, offset, UnsafeAccess.UNSAFE.getChar(from, offset));
+                    UnsafeAccess.UNSAFE.putChar(__to, __offset, UnsafeAccess.UNSAFE.getChar(__from, __offset));
                 }
-                else if (type == Byte.TYPE)
+                else if (__type == Byte.TYPE)
                 {
-                    UnsafeAccess.UNSAFE.putByte(to, offset, UnsafeAccess.UNSAFE.getByte(from, offset));
+                    UnsafeAccess.UNSAFE.putByte(__to, __offset, UnsafeAccess.UNSAFE.getByte(__from, __offset));
                 }
             }
             else
             {
-                Object obj = UnsafeAccess.UNSAFE.getObject(from, offset);
-                UnsafeAccess.UNSAFE.putObject(to, offset, trans == null ? obj : trans.apply(index, obj));
+                Object __obj = UnsafeAccess.UNSAFE.getObject(__from, __offset);
+                UnsafeAccess.UNSAFE.putObject(__to, __offset, __trans == null ? __obj : __trans.apply(__index, __obj));
             }
         }
     }
@@ -158,51 +162,51 @@ public class Fields
      * @param index the index of the field (between 0 and {@link #getCount()})
      * @return the value of the specified field which will be boxed if the field type is primitive
      */
-    public Object get(Object object, int index)
+    public Object get(Object __object, int __index)
     {
-        long offset = offsets[index];
-        Class<?> type = types[index];
-        Object value = null;
-        if (type.isPrimitive())
+        long __offset = offsets[__index];
+        Class<?> __type = types[__index];
+        Object __value = null;
+        if (__type.isPrimitive())
         {
-            if (type == Integer.TYPE)
+            if (__type == Integer.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getInt(object, offset);
+                __value = UnsafeAccess.UNSAFE.getInt(__object, __offset);
             }
-            else if (type == Long.TYPE)
+            else if (__type == Long.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getLong(object, offset);
+                __value = UnsafeAccess.UNSAFE.getLong(__object, __offset);
             }
-            else if (type == Boolean.TYPE)
+            else if (__type == Boolean.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getBoolean(object, offset);
+                __value = UnsafeAccess.UNSAFE.getBoolean(__object, __offset);
             }
-            else if (type == Float.TYPE)
+            else if (__type == Float.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getFloat(object, offset);
+                __value = UnsafeAccess.UNSAFE.getFloat(__object, __offset);
             }
-            else if (type == Double.TYPE)
+            else if (__type == Double.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getDouble(object, offset);
+                __value = UnsafeAccess.UNSAFE.getDouble(__object, __offset);
             }
-            else if (type == Short.TYPE)
+            else if (__type == Short.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getShort(object, offset);
+                __value = UnsafeAccess.UNSAFE.getShort(__object, __offset);
             }
-            else if (type == Character.TYPE)
+            else if (__type == Character.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getChar(object, offset);
+                __value = UnsafeAccess.UNSAFE.getChar(__object, __offset);
             }
-            else if (type == Byte.TYPE)
+            else if (__type == Byte.TYPE)
             {
-                value = UnsafeAccess.UNSAFE.getByte(object, offset);
+                __value = UnsafeAccess.UNSAFE.getByte(__object, __offset);
             }
         }
         else
         {
-            value = UnsafeAccess.UNSAFE.getObject(object, offset);
+            __value = UnsafeAccess.UNSAFE.getObject(__object, __offset);
         }
-        return value;
+        return __value;
     }
 
     /**
@@ -212,42 +216,42 @@ public class Fields
      * @param index the index of the field (between 0 and {@link #getCount()})
      * @return the value of the specified field which will be boxed if the field type is primitive
      */
-    public long getRawPrimitive(Object object, int index)
+    public long getRawPrimitive(Object __object, int __index)
     {
-        long offset = offsets[index];
-        Class<?> type = types[index];
+        long __offset = offsets[__index];
+        Class<?> __type = types[__index];
 
-        if (type == Integer.TYPE)
+        if (__type == Integer.TYPE)
         {
-            return UnsafeAccess.UNSAFE.getInt(object, offset);
+            return UnsafeAccess.UNSAFE.getInt(__object, __offset);
         }
-        else if (type == Long.TYPE)
+        else if (__type == Long.TYPE)
         {
-            return UnsafeAccess.UNSAFE.getLong(object, offset);
+            return UnsafeAccess.UNSAFE.getLong(__object, __offset);
         }
-        else if (type == Boolean.TYPE)
+        else if (__type == Boolean.TYPE)
         {
-            return UnsafeAccess.UNSAFE.getBoolean(object, offset) ? 1 : 0;
+            return UnsafeAccess.UNSAFE.getBoolean(__object, __offset) ? 1 : 0;
         }
-        else if (type == Float.TYPE)
+        else if (__type == Float.TYPE)
         {
-            return Float.floatToRawIntBits(UnsafeAccess.UNSAFE.getFloat(object, offset));
+            return Float.floatToRawIntBits(UnsafeAccess.UNSAFE.getFloat(__object, __offset));
         }
-        else if (type == Double.TYPE)
+        else if (__type == Double.TYPE)
         {
-            return Double.doubleToRawLongBits(UnsafeAccess.UNSAFE.getDouble(object, offset));
+            return Double.doubleToRawLongBits(UnsafeAccess.UNSAFE.getDouble(__object, __offset));
         }
-        else if (type == Short.TYPE)
+        else if (__type == Short.TYPE)
         {
-            return UnsafeAccess.UNSAFE.getShort(object, offset);
+            return UnsafeAccess.UNSAFE.getShort(__object, __offset);
         }
-        else if (type == Character.TYPE)
+        else if (__type == Character.TYPE)
         {
-            return UnsafeAccess.UNSAFE.getChar(object, offset);
+            return UnsafeAccess.UNSAFE.getChar(__object, __offset);
         }
-        else if (type == Byte.TYPE)
+        else if (__type == Byte.TYPE)
         {
-            return UnsafeAccess.UNSAFE.getByte(object, offset);
+            return UnsafeAccess.UNSAFE.getByte(__object, __offset);
         }
         else
         {
@@ -259,9 +263,9 @@ public class Fields
      * Determines if a field in the domain of this object is the same as the field denoted by the
      * same index in another {@link Fields} object.
      */
-    public boolean isSame(Fields other, int index)
+    public boolean isSame(Fields __other, int __index)
     {
-        return other.offsets[index] == offsets[index];
+        return __other.offsets[__index] == offsets[__index];
     }
 
     public long[] getOffsets()
@@ -274,9 +278,9 @@ public class Fields
      *
      * @param index index of a field
      */
-    public String getName(int index)
+    public String getName(int __index)
     {
-        return names[index];
+        return names[__index];
     }
 
     /**
@@ -284,96 +288,96 @@ public class Fields
      *
      * @param index index of a field
      */
-    public Class<?> getType(int index)
+    public Class<?> getType(int __index)
     {
-        return types[index];
+        return types[__index];
     }
 
-    public Class<?> getDeclaringClass(int index)
+    public Class<?> getDeclaringClass(int __index)
     {
-        return declaringClasses[index];
+        return declaringClasses[__index];
     }
 
-    public void set(Object object, int index, Object value)
+    public void set(Object __object, int __index, Object __value)
     {
-        long offset = offsets[index];
-        Class<?> type = types[index];
-        if (type.isPrimitive())
+        long __offset = offsets[__index];
+        Class<?> __type = types[__index];
+        if (__type.isPrimitive())
         {
-            if (type == Integer.TYPE)
+            if (__type == Integer.TYPE)
             {
-                UnsafeAccess.UNSAFE.putInt(object, offset, (Integer) value);
+                UnsafeAccess.UNSAFE.putInt(__object, __offset, (Integer) __value);
             }
-            else if (type == Long.TYPE)
+            else if (__type == Long.TYPE)
             {
-                UnsafeAccess.UNSAFE.putLong(object, offset, (Long) value);
+                UnsafeAccess.UNSAFE.putLong(__object, __offset, (Long) __value);
             }
-            else if (type == Boolean.TYPE)
+            else if (__type == Boolean.TYPE)
             {
-                UnsafeAccess.UNSAFE.putBoolean(object, offset, (Boolean) value);
+                UnsafeAccess.UNSAFE.putBoolean(__object, __offset, (Boolean) __value);
             }
-            else if (type == Float.TYPE)
+            else if (__type == Float.TYPE)
             {
-                UnsafeAccess.UNSAFE.putFloat(object, offset, (Float) value);
+                UnsafeAccess.UNSAFE.putFloat(__object, __offset, (Float) __value);
             }
-            else if (type == Double.TYPE)
+            else if (__type == Double.TYPE)
             {
-                UnsafeAccess.UNSAFE.putDouble(object, offset, (Double) value);
+                UnsafeAccess.UNSAFE.putDouble(__object, __offset, (Double) __value);
             }
-            else if (type == Short.TYPE)
+            else if (__type == Short.TYPE)
             {
-                UnsafeAccess.UNSAFE.putShort(object, offset, (Short) value);
+                UnsafeAccess.UNSAFE.putShort(__object, __offset, (Short) __value);
             }
-            else if (type == Character.TYPE)
+            else if (__type == Character.TYPE)
             {
-                UnsafeAccess.UNSAFE.putChar(object, offset, (Character) value);
+                UnsafeAccess.UNSAFE.putChar(__object, __offset, (Character) __value);
             }
-            else if (type == Byte.TYPE)
+            else if (__type == Byte.TYPE)
             {
-                UnsafeAccess.UNSAFE.putByte(object, offset, (Byte) value);
+                UnsafeAccess.UNSAFE.putByte(__object, __offset, (Byte) __value);
             }
         }
         else
         {
-            UnsafeAccess.UNSAFE.putObject(object, offset, value);
+            UnsafeAccess.UNSAFE.putObject(__object, __offset, __value);
         }
     }
 
-    public void setRawPrimitive(Object object, int index, long value)
+    public void setRawPrimitive(Object __object, int __index, long __value)
     {
-        long offset = offsets[index];
-        Class<?> type = types[index];
-        if (type == Integer.TYPE)
+        long __offset = offsets[__index];
+        Class<?> __type = types[__index];
+        if (__type == Integer.TYPE)
         {
-            UnsafeAccess.UNSAFE.putInt(object, offset, (int) value);
+            UnsafeAccess.UNSAFE.putInt(__object, __offset, (int) __value);
         }
-        else if (type == Long.TYPE)
+        else if (__type == Long.TYPE)
         {
-            UnsafeAccess.UNSAFE.putLong(object, offset, value);
+            UnsafeAccess.UNSAFE.putLong(__object, __offset, __value);
         }
-        else if (type == Boolean.TYPE)
+        else if (__type == Boolean.TYPE)
         {
-            UnsafeAccess.UNSAFE.putBoolean(object, offset, value != 0);
+            UnsafeAccess.UNSAFE.putBoolean(__object, __offset, __value != 0);
         }
-        else if (type == Float.TYPE)
+        else if (__type == Float.TYPE)
         {
-            UnsafeAccess.UNSAFE.putFloat(object, offset, Float.intBitsToFloat((int) value));
+            UnsafeAccess.UNSAFE.putFloat(__object, __offset, Float.intBitsToFloat((int) __value));
         }
-        else if (type == Double.TYPE)
+        else if (__type == Double.TYPE)
         {
-            UnsafeAccess.UNSAFE.putDouble(object, offset, Double.longBitsToDouble(value));
+            UnsafeAccess.UNSAFE.putDouble(__object, __offset, Double.longBitsToDouble(__value));
         }
-        else if (type == Short.TYPE)
+        else if (__type == Short.TYPE)
         {
-            UnsafeAccess.UNSAFE.putShort(object, offset, (short) value);
+            UnsafeAccess.UNSAFE.putShort(__object, __offset, (short) __value);
         }
-        else if (type == Character.TYPE)
+        else if (__type == Character.TYPE)
         {
-            UnsafeAccess.UNSAFE.putChar(object, offset, (char) value);
+            UnsafeAccess.UNSAFE.putChar(__object, __offset, (char) __value);
         }
-        else if (type == Byte.TYPE)
+        else if (__type == Byte.TYPE)
         {
-            UnsafeAccess.UNSAFE.putByte(object, offset, (byte) value);
+            UnsafeAccess.UNSAFE.putByte(__object, __offset, (byte) __value);
         }
         else
         {
@@ -381,53 +385,53 @@ public class Fields
         }
     }
 
-    public boolean getBoolean(Object n, int i)
+    public boolean getBoolean(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getBoolean(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getBoolean(__n, offsets[__i]);
     }
 
-    public byte getByte(Object n, int i)
+    public byte getByte(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getByte(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getByte(__n, offsets[__i]);
     }
 
-    public short getShort(Object n, int i)
+    public short getShort(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getShort(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getShort(__n, offsets[__i]);
     }
 
-    public char getChar(Object n, int i)
+    public char getChar(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getChar(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getChar(__n, offsets[__i]);
     }
 
-    public int getInt(Object n, int i)
+    public int getInt(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getInt(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getInt(__n, offsets[__i]);
     }
 
-    public long getLong(Object n, int i)
+    public long getLong(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getLong(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getLong(__n, offsets[__i]);
     }
 
-    public float getFloat(Object n, int i)
+    public float getFloat(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getFloat(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getFloat(__n, offsets[__i]);
     }
 
-    public double getDouble(Object n, int i)
+    public double getDouble(Object __n, int __i)
     {
-        return UnsafeAccess.UNSAFE.getDouble(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getDouble(__n, offsets[__i]);
     }
 
-    public Object getObject(Object object, int i)
+    public Object getObject(Object __object, int __i)
     {
-        return UnsafeAccess.UNSAFE.getObject(object, offsets[i]);
+        return UnsafeAccess.UNSAFE.getObject(__object, offsets[__i]);
     }
 
-    public void putObject(Object object, int i, Object value)
+    public void putObject(Object __object, int __i, Object __value)
     {
-        UnsafeAccess.UNSAFE.putObject(object, offsets[i], value);
+        UnsafeAccess.UNSAFE.putObject(__object, offsets[__i], __value);
     }
 }

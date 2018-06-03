@@ -15,23 +15,27 @@ import giraaff.nodes.spi.LoweringTool;
 // @class ConditionAnchorNode
 public final class ConditionAnchorNode extends FixedWithNextNode implements Canonicalizable.Unary<Node>, Lowerable, GuardingNode
 {
+    // @def
     public static final NodeClass<ConditionAnchorNode> TYPE = NodeClass.create(ConditionAnchorNode.class);
 
-    @Input(InputType.Condition) LogicNode condition;
+    @Input(InputType.Condition)
+    // @field
+    LogicNode condition;
+    // @field
     protected boolean negated;
 
     // @cons
-    public ConditionAnchorNode(LogicNode condition)
+    public ConditionAnchorNode(LogicNode __condition)
     {
-        this(condition, false);
+        this(__condition, false);
     }
 
     // @cons
-    public ConditionAnchorNode(LogicNode condition, boolean negated)
+    public ConditionAnchorNode(LogicNode __condition, boolean __negated)
     {
         super(TYPE, StampFactory.forVoid());
-        this.negated = negated;
-        this.condition = condition;
+        this.negated = __negated;
+        this.condition = __condition;
     }
 
     public LogicNode condition()
@@ -45,17 +49,17 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, Node forValue)
+    public Node canonical(CanonicalizerTool __tool, Node __forValue)
     {
-        if (forValue instanceof LogicNegationNode)
+        if (__forValue instanceof LogicNegationNode)
         {
-            LogicNegationNode negation = (LogicNegationNode) forValue;
-            return new ConditionAnchorNode(negation.getValue(), !negated);
+            LogicNegationNode __negation = (LogicNegationNode) __forValue;
+            return new ConditionAnchorNode(__negation.getValue(), !negated);
         }
-        if (forValue instanceof LogicConstantNode)
+        if (__forValue instanceof LogicConstantNode)
         {
-            LogicConstantNode c = (LogicConstantNode) forValue;
-            if (c.getValue() != negated)
+            LogicConstantNode __c = (LogicConstantNode) __forValue;
+            if (__c.getValue() != negated)
             {
                 return null;
             }
@@ -64,7 +68,7 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
                 return new ValueAnchorNode(null);
             }
         }
-        if (tool.allUsagesAvailable() && this.hasNoUsages())
+        if (__tool.allUsagesAvailable() && this.hasNoUsages())
         {
             return null;
         }
@@ -72,12 +76,12 @@ public final class ConditionAnchorNode extends FixedWithNextNode implements Cano
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         if (graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
         {
-            ValueAnchorNode newAnchor = graph().add(new ValueAnchorNode(null));
-            graph().replaceFixedWithFixed(this, newAnchor);
+            ValueAnchorNode __newAnchor = graph().add(new ValueAnchorNode(null));
+            graph().replaceFixedWithFixed(this, __newAnchor);
         }
     }
 

@@ -14,9 +14,9 @@ abstract class LinearScanAllocationPhase
         return LIRPhase.createName(getClass());
     }
 
-    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, AllocationPhase.AllocationContext context)
+    public final void apply(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
-        run(target, lirGenRes, context);
+        run(__target, __lirGenRes, __context);
     }
 
     protected abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationPhase.AllocationContext context);

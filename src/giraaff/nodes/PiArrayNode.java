@@ -16,9 +16,12 @@ import giraaff.nodes.util.GraphUtil;
 // @class PiArrayNode
 public final class PiArrayNode extends PiNode implements ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<PiArrayNode> TYPE = NodeClass.create(PiArrayNode.class);
 
-    @Input ValueNode length;
+    @Input
+    // @field
+    ValueNode length;
 
     @Override
     public ValueNode length()
@@ -27,20 +30,20 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
     }
 
     // @cons
-    public PiArrayNode(ValueNode object, ValueNode length, Stamp stamp)
+    public PiArrayNode(ValueNode __object, ValueNode __length, Stamp __stamp)
     {
-        super(TYPE, object, stamp, null);
-        this.length = length;
+        super(TYPE, __object, __stamp, null);
+        this.length = __length;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (GraphUtil.arrayLength(object()) != length())
         {
             return this;
         }
-        return super.canonical(tool);
+        return super.canonical(__tool);
     }
 
     /**
@@ -56,22 +59,25 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
     // @class PiArrayNode.Placeholder
     public static final class Placeholder extends PiNode.Placeholder
     {
+        // @def
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
 
-        @Input ValueNode length;
+        @Input
+        // @field
+        ValueNode length;
 
         // @cons
-        protected Placeholder(ValueNode object, ValueNode length)
+        protected Placeholder(ValueNode __object, ValueNode __length)
         {
-            super(TYPE, object);
-            this.length = length;
+            super(TYPE, __object);
+            this.length = __length;
         }
 
         @Override
-        public void makeReplacement(Stamp snippetReplaceeStamp)
+        public void makeReplacement(Stamp __snippetReplaceeStamp)
         {
-            PiArrayNode piArray = graph().addOrUnique(new PiArrayNode(object(), length, snippetReplaceeStamp));
-            replaceAndDelete(piArray);
+            PiArrayNode __piArray = graph().addOrUnique(new PiArrayNode(object(), length, __snippetReplaceeStamp));
+            replaceAndDelete(__piArray);
         }
     }
 }

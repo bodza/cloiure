@@ -27,37 +27,42 @@ public final class IntrinsicContext
     /**
      * Method being intrinsified.
      */
+    // @field
     final ResolvedJavaMethod originalMethod;
 
     /**
      * Method providing the intrinsic implementation.
      */
+    // @field
     final ResolvedJavaMethod intrinsicMethod;
 
     /**
      * Provider of bytecode to be parsed for a method that is part of an intrinsic.
      */
+    // @field
     final BytecodeProvider bytecodeProvider;
 
+    // @field
     final CompilationContext compilationContext;
 
+    // @field
     final boolean allowPartialIntrinsicArgumentMismatch;
 
     // @cons
-    public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext)
+    public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, CompilationContext __compilationContext)
     {
-        this(method, intrinsic, bytecodeProvider, compilationContext, false);
+        this(__method, __intrinsic, __bytecodeProvider, __compilationContext, false);
     }
 
     // @cons
-    public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext, boolean allowPartialIntrinsicArgumentMismatch)
+    public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, CompilationContext __compilationContext, boolean __allowPartialIntrinsicArgumentMismatch)
     {
         super();
-        this.originalMethod = method;
-        this.intrinsicMethod = intrinsic;
-        this.bytecodeProvider = bytecodeProvider;
-        this.compilationContext = compilationContext;
-        this.allowPartialIntrinsicArgumentMismatch = allowPartialIntrinsicArgumentMismatch;
+        this.originalMethod = __method;
+        this.intrinsicMethod = __intrinsic;
+        this.bytecodeProvider = __bytecodeProvider;
+        this.compilationContext = __compilationContext;
+        this.allowPartialIntrinsicArgumentMismatch = __allowPartialIntrinsicArgumentMismatch;
     }
 
     /**
@@ -99,9 +104,9 @@ public final class IntrinsicContext
      * {@linkplain #getOriginalMethod() original} method. This denotes the path where a partial
      * intrinsification falls back to the original method.
      */
-    public boolean isCallToOriginal(ResolvedJavaMethod targetMethod)
+    public boolean isCallToOriginal(ResolvedJavaMethod __targetMethod)
     {
-        return originalMethod.equals(targetMethod) || intrinsicMethod.equals(targetMethod);
+        return originalMethod.equals(__targetMethod) || intrinsicMethod.equals(__targetMethod);
     }
 
     public boolean isPostParseInlined()
@@ -160,46 +165,46 @@ public final class IntrinsicContext
         void addSideEffect(StateSplit sideEffect);
     }
 
-    public FrameState createFrameState(StructuredGraph graph, SideEffectsState sideEffects, StateSplit forStateSplit)
+    public FrameState createFrameState(StructuredGraph __graph, SideEffectsState __sideEffects, StateSplit __forStateSplit)
     {
-        if (forStateSplit.hasSideEffect())
+        if (__forStateSplit.hasSideEffect())
         {
-            if (sideEffects.isAfterSideEffect())
+            if (__sideEffects.isAfterSideEffect())
             {
                 // Only the last side effect on any execution path in a replacement
                 // can inherit the stateAfter of the replaced node.
-                FrameState invalid = graph.add(new FrameState(BytecodeFrame.INVALID_FRAMESTATE_BCI));
-                for (StateSplit lastSideEffect : sideEffects.sideEffects())
+                FrameState __invalid = __graph.add(new FrameState(BytecodeFrame.INVALID_FRAMESTATE_BCI));
+                for (StateSplit __lastSideEffect : __sideEffects.sideEffects())
                 {
-                    lastSideEffect.setStateAfter(invalid);
+                    __lastSideEffect.setStateAfter(__invalid);
                 }
             }
-            sideEffects.addSideEffect(forStateSplit);
-            FrameState frameState;
-            if (forStateSplit instanceof ExceptionObjectNode)
+            __sideEffects.addSideEffect(__forStateSplit);
+            FrameState __frameState;
+            if (__forStateSplit instanceof ExceptionObjectNode)
             {
-                frameState = graph.add(new FrameState(BytecodeFrame.AFTER_EXCEPTION_BCI, (ExceptionObjectNode) forStateSplit));
+                __frameState = __graph.add(new FrameState(BytecodeFrame.AFTER_EXCEPTION_BCI, (ExceptionObjectNode) __forStateSplit));
             }
             else
             {
-                frameState = graph.add(new FrameState(BytecodeFrame.AFTER_BCI));
+                __frameState = __graph.add(new FrameState(BytecodeFrame.AFTER_BCI));
             }
-            return frameState;
+            return __frameState;
         }
         else
         {
-            if (forStateSplit instanceof AbstractMergeNode)
+            if (__forStateSplit instanceof AbstractMergeNode)
             {
                 // merge nodes always need a frame state
-                if (sideEffects.isAfterSideEffect())
+                if (__sideEffects.isAfterSideEffect())
                 {
                     // a merge after one or more side effects
-                    return graph.add(new FrameState(BytecodeFrame.AFTER_BCI));
+                    return __graph.add(new FrameState(BytecodeFrame.AFTER_BCI));
                 }
                 else
                 {
                     // a merge before any side effects
-                    return graph.add(new FrameState(BytecodeFrame.BEFORE_BCI));
+                    return __graph.add(new FrameState(BytecodeFrame.BEFORE_BCI));
                 }
             }
             else

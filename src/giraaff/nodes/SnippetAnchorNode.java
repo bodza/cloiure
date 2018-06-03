@@ -11,6 +11,7 @@ import giraaff.nodes.extended.GuardingNode;
 // @class SnippetAnchorNode
 public final class SnippetAnchorNode extends FixedWithNextNode implements Simplifiable, GuardingNode
 {
+    // @def
     public static final NodeClass<SnippetAnchorNode> TYPE = NodeClass.create(SnippetAnchorNode.class);
 
     // @cons
@@ -20,12 +21,12 @@ public final class SnippetAnchorNode extends FixedWithNextNode implements Simpli
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
-        AbstractBeginNode prevBegin = AbstractBeginNode.prevBegin(this);
-        replaceAtUsages(InputType.Anchor, prevBegin);
-        replaceAtUsages(InputType.Guard, prevBegin);
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        AbstractBeginNode __prevBegin = AbstractBeginNode.prevBegin(this);
+        replaceAtUsages(InputType.Anchor, __prevBegin);
+        replaceAtUsages(InputType.Guard, __prevBegin);
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             graph().removeFixed(this);
         }

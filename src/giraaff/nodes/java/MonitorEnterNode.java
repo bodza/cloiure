@@ -19,18 +19,19 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class MonitorEnterNode
 public class MonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<MonitorEnterNode> TYPE = NodeClass.create(MonitorEnterNode.class);
 
     // @cons
-    public MonitorEnterNode(ValueNode object, MonitorIdNode monitorId)
+    public MonitorEnterNode(ValueNode __object, MonitorIdNode __monitorId)
     {
-        this(TYPE, object, monitorId);
+        this(TYPE, __object, __monitorId);
     }
 
     // @cons
-    public MonitorEnterNode(NodeClass<? extends MonitorEnterNode> c, ValueNode object, MonitorIdNode monitorId)
+    public MonitorEnterNode(NodeClass<? extends MonitorEnterNode> __c, ValueNode __object, MonitorIdNode __monitorId)
     {
-        super(c, object, monitorId);
+        super(__c, __object, __monitorId);
     }
 
     @Override
@@ -40,22 +41,22 @@ public class MonitorEnterNode extends AccessMonitorNode implements Virtualizable
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            if (virtual.hasIdentity())
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            if (__virtual.hasIdentity())
             {
-                tool.addLock(virtual, getMonitorId());
-                tool.delete();
+                __tool.addLock(__virtual, getMonitorId());
+                __tool.delete();
             }
         }
     }

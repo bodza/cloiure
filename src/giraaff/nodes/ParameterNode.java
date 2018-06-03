@@ -12,15 +12,17 @@ import giraaff.nodes.spi.UncheckedInterfaceProvider;
 // @class ParameterNode
 public final class ParameterNode extends AbstractLocalNode implements IterableNodeType, UncheckedInterfaceProvider
 {
+    // @def
     public static final NodeClass<ParameterNode> TYPE = NodeClass.create(ParameterNode.class);
 
+    // @field
     private Stamp uncheckedStamp;
 
     // @cons
-    public ParameterNode(int index, StampPair stamp)
+    public ParameterNode(int __index, StampPair __stamp)
     {
-        super(TYPE, index, stamp.getTrustedStamp());
-        this.uncheckedStamp = stamp.getUncheckedStamp();
+        super(TYPE, __index, __stamp.getTrustedStamp());
+        this.uncheckedStamp = __stamp.getUncheckedStamp();
     }
 
     @Override

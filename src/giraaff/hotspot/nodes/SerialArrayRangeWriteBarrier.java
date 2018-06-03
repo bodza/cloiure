@@ -7,11 +7,12 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class SerialArrayRangeWriteBarrier
 public final class SerialArrayRangeWriteBarrier extends ArrayRangeWriteBarrier
 {
+    // @def
     public static final NodeClass<SerialArrayRangeWriteBarrier> TYPE = NodeClass.create(SerialArrayRangeWriteBarrier.class);
 
     // @cons
-    public SerialArrayRangeWriteBarrier(AddressNode address, ValueNode length, int elementStride)
+    public SerialArrayRangeWriteBarrier(AddressNode __address, ValueNode __length, int __elementStride)
     {
-        super(TYPE, address, length, elementStride);
+        super(TYPE, __address, __length, __elementStride);
     }
 }

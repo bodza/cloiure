@@ -15,46 +15,47 @@ public final class AddressLoweringPhase extends Phase
     public abstract static class AddressLowering
     {
         @SuppressWarnings("unused")
-        public void preProcess(StructuredGraph graph)
+        public void preProcess(StructuredGraph __graph)
         {
         }
 
         @SuppressWarnings("unused")
-        public void postProcess(AddressNode lowered)
+        public void postProcess(AddressNode __lowered)
         {
         }
 
         public abstract AddressNode lower(ValueNode base, ValueNode offset);
     }
 
+    // @field
     private final AddressLowering lowering;
 
     // @cons
-    public AddressLoweringPhase(AddressLowering lowering)
+    public AddressLoweringPhase(AddressLowering __lowering)
     {
         super();
-        this.lowering = lowering;
+        this.lowering = __lowering;
     }
 
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        lowering.preProcess(graph);
-        for (Node node : graph.getNodes())
+        lowering.preProcess(__graph);
+        for (Node __node : __graph.getNodes())
         {
-            AddressNode lowered;
-            if (node instanceof OffsetAddressNode)
+            AddressNode __lowered;
+            if (__node instanceof OffsetAddressNode)
             {
-                OffsetAddressNode address = (OffsetAddressNode) node;
-                lowered = lowering.lower(address.getBase(), address.getOffset());
-                lowering.postProcess(lowered);
+                OffsetAddressNode __address = (OffsetAddressNode) __node;
+                __lowered = lowering.lower(__address.getBase(), __address.getOffset());
+                lowering.postProcess(__lowered);
             }
             else
             {
                 continue;
             }
-            node.replaceAtUsages(lowered);
-            GraphUtil.killWithUnusedFloatingInputs(node);
+            __node.replaceAtUsages(__lowered);
+            GraphUtil.killWithUnusedFloatingInputs(__node);
         }
     }
 }

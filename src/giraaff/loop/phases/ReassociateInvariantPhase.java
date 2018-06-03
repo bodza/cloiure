@@ -14,20 +14,20 @@ import giraaff.phases.Phase;
 public final class ReassociateInvariantPhase extends Phase
 {
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        int iterations = 0;
-        boolean changed = true;
-        while (changed)
+        int __iterations = 0;
+        boolean __changed = true;
+        while (__changed)
         {
-            changed = false;
-            final LoopsData dataReassociate = new LoopsData(graph);
-            for (LoopEx loop : dataReassociate.loops())
+            __changed = false;
+            final LoopsData __dataReassociate = new LoopsData(__graph);
+            for (LoopEx __loop : __dataReassociate.loops())
             {
-                changed |= loop.reassociateInvariants();
+                __changed |= __loop.reassociateInvariants();
             }
-            dataReassociate.deleteUnusedNodes();
-            iterations++;
+            __dataReassociate.deleteUnusedNodes();
+            __iterations++;
         }
     }
 }

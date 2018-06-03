@@ -12,9 +12,9 @@ import giraaff.lir.alloc.lsra.LinearScanEliminateSpillMovePhase;
 public final class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpillMovePhase
 {
     // @cons
-    SSALinearScanEliminateSpillMovePhase(LinearScan allocator)
+    SSALinearScanEliminateSpillMovePhase(LinearScan __allocator)
     {
-        super(allocator);
+        super(__allocator);
     }
 
     @Override
@@ -25,13 +25,13 @@ public final class SSALinearScanEliminateSpillMovePhase extends LinearScanElimin
     }
 
     @Override
-    protected boolean canEliminateSpillMove(AbstractBlockBase<?> block, MoveOp move)
+    protected boolean canEliminateSpillMove(AbstractBlockBase<?> __block, MoveOp __move)
     {
-        if (super.canEliminateSpillMove(block, move))
+        if (super.canEliminateSpillMove(__block, __move))
         {
             // SSA Linear Scan might introduce moves to stack slots
-            Interval curInterval = allocator.intervalFor(move.getResult());
-            if (!isPhiResolutionMove(block, move, curInterval))
+            Interval __curInterval = allocator.intervalFor(__move.getResult());
+            if (!isPhiResolutionMove(__block, __move, __curInterval))
             {
                 return true;
             }
@@ -39,28 +39,28 @@ public final class SSALinearScanEliminateSpillMovePhase extends LinearScanElimin
         return false;
     }
 
-    private boolean isPhiResolutionMove(AbstractBlockBase<?> block, MoveOp move, Interval toInterval)
+    private boolean isPhiResolutionMove(AbstractBlockBase<?> __block, MoveOp __move, Interval __toInterval)
     {
-        if (!toInterval.isSplitParent())
+        if (!__toInterval.isSplitParent())
         {
             return false;
         }
-        if ((toInterval.from() & 1) == 1)
+        if ((__toInterval.from() & 1) == 1)
         {
             // phi intervals start at even positions.
             return false;
         }
-        if (block.getSuccessorCount() != 1)
+        if (__block.getSuccessorCount() != 1)
         {
             return false;
         }
-        LIRInstruction op = allocator.instructionForId(toInterval.from());
-        if (!(op instanceof LabelOp))
+        LIRInstruction __op = allocator.instructionForId(__toInterval.from());
+        if (!(__op instanceof LabelOp))
         {
             return false;
         }
-        AbstractBlockBase<?> intStartBlock = allocator.blockForId(toInterval.from());
-        if (!block.getSuccessors()[0].equals(intStartBlock))
+        AbstractBlockBase<?> __intStartBlock = allocator.blockForId(__toInterval.from());
+        if (!__block.getSuccessors()[0].equals(__intStartBlock))
         {
             return false;
         }

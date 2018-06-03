@@ -37,16 +37,16 @@ public interface TypeWriter
      */
     default void putSV(long value)
     {
-        long cur = value;
+        long __cur = value;
         while (true)
         {
-            if (cur >= -64 && cur < 64)
+            if (__cur >= -64 && __cur < 64)
             {
-                putU1(cur & 0x7f);
+                putU1(__cur & 0x7f);
                 return;
             }
-            putU1(0x80 | (cur & 0x7f));
-            cur = cur >> 7;
+            putU1(0x80 | (__cur & 0x7f));
+            __cur = __cur >> 7;
         }
     }
 
@@ -55,16 +55,16 @@ public interface TypeWriter
      */
     default void putUV(long value)
     {
-        long cur = value;
+        long __cur = value;
         while (true)
         {
-            if (cur < 128)
+            if (__cur < 128)
             {
-                putU1(cur & 0x7f);
+                putU1(__cur & 0x7f);
                 return;
             }
-            putU1(0x80 | (cur & 0x7f));
-            cur = cur >> 7;
+            putU1(0x80 | (__cur & 0x7f));
+            __cur = __cur >> 7;
         }
     }
 }

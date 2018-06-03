@@ -60,16 +60,16 @@ public interface GraphBuilderContext extends GraphBuilderTool
         {
             return value;
         }
-        T equivalentValue = append(value);
-        if (equivalentValue instanceof StateSplit)
+        T __equivalentValue = append(value);
+        if (__equivalentValue instanceof StateSplit)
         {
-            StateSplit stateSplit = (StateSplit) equivalentValue;
-            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect())
+            StateSplit __stateSplit = (StateSplit) __equivalentValue;
+            if (__stateSplit.stateAfter() == null && __stateSplit.hasSideEffect())
             {
-                setStateAfter(stateSplit);
+                setStateAfter(__stateSplit);
             }
         }
-        return equivalentValue;
+        return __equivalentValue;
     }
 
     /**
@@ -87,31 +87,31 @@ public interface GraphBuilderContext extends GraphBuilderTool
         {
             return value;
         }
-        T equivalentValue = append(value);
-        if (equivalentValue instanceof StateSplit)
+        T __equivalentValue = append(value);
+        if (__equivalentValue instanceof StateSplit)
         {
-            StateSplit stateSplit = (StateSplit) equivalentValue;
-            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect())
+            StateSplit __stateSplit = (StateSplit) __equivalentValue;
+            if (__stateSplit.stateAfter() == null && __stateSplit.hasSideEffect())
             {
-                setStateAfter(stateSplit);
+                setStateAfter(__stateSplit);
             }
         }
-        return equivalentValue;
+        return __equivalentValue;
     }
 
     default ValueNode addNonNullCast(ValueNode value)
     {
-        AbstractPointerStamp valueStamp = (AbstractPointerStamp) value.stamp(NodeView.DEFAULT);
-        if (valueStamp.nonNull())
+        AbstractPointerStamp __valueStamp = (AbstractPointerStamp) value.stamp(NodeView.DEFAULT);
+        if (__valueStamp.nonNull())
         {
             return value;
         }
         else
         {
-            LogicNode isNull = add(IsNullNode.create(value));
-            FixedGuardNode fixedGuard = add(new FixedGuardNode(isNull, DeoptimizationReason.NullCheckException, DeoptimizationAction.None, true));
-            Stamp newStamp = valueStamp.improveWith(StampFactory.objectNonNull());
-            return add(PiNode.create(value, newStamp, fixedGuard));
+            LogicNode __isNull = add(IsNullNode.create(value));
+            FixedGuardNode __fixedGuard = add(new FixedGuardNode(__isNull, DeoptimizationReason.NullCheckException, DeoptimizationAction.None, true));
+            Stamp __newStamp = __valueStamp.improveWith(StampFactory.objectNonNull());
+            return add(PiNode.create(value, __newStamp, __fixedGuard));
         }
     }
 
@@ -126,17 +126,17 @@ public interface GraphBuilderContext extends GraphBuilderTool
      */
     default <T extends ValueNode> T addPush(JavaKind kind, T value)
     {
-        T equivalentValue = value.graph() != null ? value : append(value);
-        push(kind, equivalentValue);
-        if (equivalentValue instanceof StateSplit)
+        T __equivalentValue = value.graph() != null ? value : append(value);
+        push(kind, __equivalentValue);
+        if (__equivalentValue instanceof StateSplit)
         {
-            StateSplit stateSplit = (StateSplit) equivalentValue;
-            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect())
+            StateSplit __stateSplit = (StateSplit) __equivalentValue;
+            if (__stateSplit.stateAfter() == null && __stateSplit.hasSideEffect())
             {
-                setStateAfter(stateSplit);
+                setStateAfter(__stateSplit);
             }
         }
-        return equivalentValue;
+        return __equivalentValue;
     }
 
     /**
@@ -187,12 +187,12 @@ public interface GraphBuilderContext extends GraphBuilderTool
      */
     default GraphBuilderContext getNonIntrinsicAncestor()
     {
-        GraphBuilderContext ancestor = getParent();
-        while (ancestor != null && ancestor.parsingIntrinsic())
+        GraphBuilderContext __ancestor = getParent();
+        while (__ancestor != null && __ancestor.parsingIntrinsic())
         {
-            ancestor = ancestor.getParent();
+            __ancestor = __ancestor.getParent();
         }
-        return ancestor;
+        return __ancestor;
     }
 
     /**
@@ -222,8 +222,8 @@ public interface GraphBuilderContext extends GraphBuilderTool
 
     default StampPair getInvokeReturnStamp(Assumptions assumptions)
     {
-        JavaType returnType = getInvokeReturnType();
-        return StampFactory.forDeclaredType(assumptions, returnType, false);
+        JavaType __returnType = getInvokeReturnType();
+        return StampFactory.forDeclaredType(assumptions, __returnType, false);
     }
 
     /**
@@ -232,14 +232,14 @@ public interface GraphBuilderContext extends GraphBuilderTool
      */
     default int getDepth()
     {
-        GraphBuilderContext parent = getParent();
-        int result = 0;
-        while (parent != null)
+        GraphBuilderContext __parent = getParent();
+        int __result = 0;
+        while (__parent != null)
         {
-            result++;
-            parent = parent.getParent();
+            __result++;
+            __parent = __parent.getParent();
         }
-        return result;
+        return __result;
     }
 
     /**
@@ -273,16 +273,16 @@ public interface GraphBuilderContext extends GraphBuilderTool
     {
         if (!StampTool.isPointerNonNull(value))
         {
-            LogicNode condition = getGraph().unique(IsNullNode.create(value));
-            ObjectStamp receiverStamp = (ObjectStamp) value.stamp(NodeView.DEFAULT);
-            Stamp stamp = receiverStamp.join(StampFactory.objectNonNull());
-            FixedGuardNode fixedGuard = append(new FixedGuardNode(condition, DeoptimizationReason.NullCheckException, action, true));
-            ValueNode nonNullReceiver = getGraph().addOrUniqueWithInputs(PiNode.create(value, stamp, fixedGuard));
+            LogicNode __condition = getGraph().unique(IsNullNode.create(value));
+            ObjectStamp __receiverStamp = (ObjectStamp) value.stamp(NodeView.DEFAULT);
+            Stamp __stamp = __receiverStamp.join(StampFactory.objectNonNull());
+            FixedGuardNode __fixedGuard = append(new FixedGuardNode(__condition, DeoptimizationReason.NullCheckException, action, true));
+            ValueNode __nonNullReceiver = getGraph().addOrUniqueWithInputs(PiNode.create(value, __stamp, __fixedGuard));
             // TODO Propogating the non-null into the frame state would remove subsequent null-checks on the same value.
             // However, it currently causes an assertion failure when merging states.
             //
             // frameState.replace(value, nonNullReceiver);
-            return nonNullReceiver;
+            return __nonNullReceiver;
         }
         return value;
     }

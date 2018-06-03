@@ -6,9 +6,13 @@ package giraaff.bytecode;
 // @class BytecodeLookupSwitch
 public final class BytecodeLookupSwitch extends BytecodeSwitch
 {
+    // @def
     private static final int OFFSET_TO_NUMBER_PAIRS = 4;
+    // @def
     private static final int OFFSET_TO_FIRST_PAIR_MATCH = 8;
+    // @def
     private static final int OFFSET_TO_FIRST_PAIR_OFFSET = 12;
+    // @def
     private static final int PAIR_SIZE = 8;
 
     /**
@@ -18,21 +22,21 @@ public final class BytecodeLookupSwitch extends BytecodeSwitch
      * @param bci the index in the stream of the switch instruction
      */
     // @cons
-    public BytecodeLookupSwitch(BytecodeStream stream, int bci)
+    public BytecodeLookupSwitch(BytecodeStream __stream, int __bci)
     {
-        super(stream, bci);
+        super(__stream, __bci);
     }
 
     @Override
-    public int offsetAt(int i)
+    public int offsetAt(int __i)
     {
-        return stream.readInt(alignedBci + OFFSET_TO_FIRST_PAIR_OFFSET + PAIR_SIZE * i);
+        return stream.readInt(alignedBci + OFFSET_TO_FIRST_PAIR_OFFSET + PAIR_SIZE * __i);
     }
 
     @Override
-    public int keyAt(int i)
+    public int keyAt(int __i)
     {
-        return stream.readInt(alignedBci + OFFSET_TO_FIRST_PAIR_MATCH + PAIR_SIZE * i);
+        return stream.readInt(alignedBci + OFFSET_TO_FIRST_PAIR_MATCH + PAIR_SIZE * __i);
     }
 
     @Override

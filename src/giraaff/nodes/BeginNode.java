@@ -9,6 +9,7 @@ import giraaff.graph.spi.SimplifierTool;
 // @class BeginNode
 public final class BeginNode extends AbstractBeginNode implements Simplifiable
 {
+    // @def
     public static final NodeClass<BeginNode> TYPE = NodeClass.create(BeginNode.class);
 
     // @cons
@@ -18,15 +19,15 @@ public final class BeginNode extends AbstractBeginNode implements Simplifiable
     }
 
     // @cons
-    public BeginNode(Stamp stamp)
+    public BeginNode(Stamp __stamp)
     {
-        super(TYPE, stamp);
+        super(TYPE, __stamp);
     }
 
     public void trySimplify()
     {
-        FixedNode prev = (FixedNode) this.predecessor();
-        if (prev instanceof ControlSplitNode)
+        FixedNode __prev = (FixedNode) this.predecessor();
+        if (__prev instanceof ControlSplitNode)
         {
             // This begin node is necessary.
         }
@@ -39,14 +40,14 @@ public final class BeginNode extends AbstractBeginNode implements Simplifiable
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
-        FixedNode prev = (FixedNode) this.predecessor();
-        if (prev == null)
+        FixedNode __prev = (FixedNode) this.predecessor();
+        if (__prev == null)
         {
             // This is the start node.
         }
-        else if (prev instanceof ControlSplitNode)
+        else if (__prev instanceof ControlSplitNode)
         {
             // This begin node is necessary.
         }
@@ -54,19 +55,19 @@ public final class BeginNode extends AbstractBeginNode implements Simplifiable
         {
             // This begin node can be removed and all guards moved up to the preceding begin node.
             prepareDelete();
-            tool.addToWorkList(next());
+            __tool.addToWorkList(next());
             graph().removeFixed(this);
         }
     }
 
-    public static AbstractBeginNode begin(FixedNode with)
+    public static AbstractBeginNode begin(FixedNode __with)
     {
-        if (with instanceof AbstractBeginNode)
+        if (__with instanceof AbstractBeginNode)
         {
-            return (AbstractBeginNode) with;
+            return (AbstractBeginNode) __with;
         }
-        BeginNode begin = with.graph().add(new BeginNode());
-        begin.setNext(with);
-        return begin;
+        BeginNode __begin = __with.graph().add(new BeginNode());
+        __begin.setNext(__with);
+        return __begin;
     }
 }

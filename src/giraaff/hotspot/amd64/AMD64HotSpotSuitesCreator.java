@@ -8,8 +8,8 @@ import giraaff.phases.tiers.CompilerConfiguration;
 public final class AMD64HotSpotSuitesCreator extends AMD64SuitesCreator
 {
     // @cons
-    public AMD64HotSpotSuitesCreator(CompilerConfiguration compilerConfiguration, Plugins plugins)
+    public AMD64HotSpotSuitesCreator(CompilerConfiguration __compilerConfiguration, Plugins __plugins)
     {
-        super(compilerConfiguration, plugins);
+        super(__compilerConfiguration, __plugins);
     }
 }

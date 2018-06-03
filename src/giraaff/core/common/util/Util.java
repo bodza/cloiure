@@ -27,18 +27,18 @@ public final class Util
      * Statically cast an object to an arbitrary Object type. Dynamically checked.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T uncheckedCast(@SuppressWarnings("unused") Class<T> type, Object object)
+    public static <T> T uncheckedCast(@SuppressWarnings("unused") Class<T> __type, Object __object)
     {
-        return (T) object;
+        return (T) __object;
     }
 
     /**
      * Statically cast an object to an arbitrary Object type. Dynamically checked.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T uncheckedCast(Object object)
+    public static <T> T uncheckedCast(Object __object)
     {
-        return (T) object;
+        return (T) __object;
     }
 
     /**
@@ -51,43 +51,43 @@ public final class Util
      * @param filler the filler element that is used for the intermediate positions in case the list
      *            is shorter than pos
      */
-    public static <T> void atPutGrow(List<T> list, int pos, T x, T filler)
+    public static <T> void atPutGrow(List<T> __list, int __pos, T __x, T __filler)
     {
-        if (list.size() < pos + 1)
+        if (__list.size() < __pos + 1)
         {
-            while (list.size() < pos + 1)
+            while (__list.size() < __pos + 1)
             {
-                list.add(filler);
+                __list.add(__filler);
             }
         }
 
-        list.set(pos, x);
+        __list.set(__pos, __x);
     }
 
     /**
      * Prepends the String {@code indentation} to every line in String {@code lines}, including a
      * possibly non-empty line following the final newline.
      */
-    public static String indent(String lines, String indentation)
+    public static String indent(String __lines, String __indentation)
     {
-        if (lines.length() == 0)
+        if (__lines.length() == 0)
         {
-            return lines;
+            return __lines;
         }
-        final String newLine = "\n";
-        if (lines.endsWith(newLine))
+        final String __newLine = "\n";
+        if (__lines.endsWith(__newLine))
         {
-            return indentation + (lines.substring(0, lines.length() - 1)).replace(newLine, newLine + indentation) + newLine;
+            return __indentation + (__lines.substring(0, __lines.length() - 1)).replace(__newLine, __newLine + __indentation) + __newLine;
         }
-        return indentation + lines.replace(newLine, newLine + indentation);
+        return __indentation + __lines.replace(__newLine, __newLine + __indentation);
     }
 
     /**
      * Returns the zero value for a given numeric kind.
      */
-    public static JavaConstant zero(JavaKind kind)
+    public static JavaConstant zero(JavaKind __kind)
     {
-        switch (kind)
+        switch (__kind)
         {
             case Boolean:
                 return JavaConstant.FALSE;
@@ -113,9 +113,9 @@ public final class Util
     /**
      * Returns the one value for a given numeric kind.
      */
-    public static JavaConstant one(JavaKind kind)
+    public static JavaConstant one(JavaKind __kind)
     {
-        switch (kind)
+        switch (__kind)
         {
             case Boolean:
                 return JavaConstant.TRUE;
@@ -138,26 +138,26 @@ public final class Util
         }
     }
 
-    private static String methodName(ResolvedJavaMethod method)
+    private static String methodName(ResolvedJavaMethod __method)
     {
-        return method.format("%H.%n(%p):%r") + " (" + method.getCodeSize() + " bytes)";
+        return __method.format("%H.%n(%p):%r") + " (" + __method.getCodeSize() + " bytes)";
     }
 
     /**
      * Calls {@link AccessibleObject#setAccessible(boolean)} on {@code field} with the value
      * {@code flag}.
      */
-    public static void setAccessible(Field field, boolean flag)
+    public static void setAccessible(Field __field, boolean __flag)
     {
-        field.setAccessible(flag);
+        __field.setAccessible(__flag);
     }
 
     /**
      * Calls {@link AccessibleObject#setAccessible(boolean)} on {@code executable} with the value
      * {@code flag}.
      */
-    public static void setAccessible(Executable executable, boolean flag)
+    public static void setAccessible(Executable __executable, boolean __flag)
     {
-        executable.setAccessible(flag);
+        __executable.setAccessible(__flag);
     }
 }

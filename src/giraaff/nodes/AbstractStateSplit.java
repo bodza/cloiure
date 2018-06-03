@@ -10,9 +10,12 @@ import giraaff.nodeinfo.InputType;
 // @class AbstractStateSplit
 public abstract class AbstractStateSplit extends FixedWithNextNode implements StateSplit
 {
+    // @def
     public static final NodeClass<AbstractStateSplit> TYPE = NodeClass.create(AbstractStateSplit.class);
 
-    @OptionalInput(InputType.State) protected FrameState stateAfter;
+    @OptionalInput(InputType.State)
+    // @field
+    protected FrameState stateAfter;
 
     @Override
     public FrameState stateAfter()
@@ -21,10 +24,10 @@ public abstract class AbstractStateSplit extends FixedWithNextNode implements St
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -34,15 +37,15 @@ public abstract class AbstractStateSplit extends FixedWithNextNode implements St
     }
 
     // @cons
-    protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> c, Stamp stamp)
+    protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> __c, Stamp __stamp)
     {
-        this(c, stamp, null);
+        this(__c, __stamp, null);
     }
 
     // @cons
-    protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> c, Stamp stamp, FrameState stateAfter)
+    protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> __c, Stamp __stamp, FrameState __stateAfter)
     {
-        super(c, stamp);
-        this.stateAfter = stateAfter;
+        super(__c, __stamp);
+        this.stateAfter = __stateAfter;
     }
 }

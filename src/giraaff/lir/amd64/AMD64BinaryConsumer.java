@@ -34,35 +34,43 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.Op
     public static final class Op extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<Op> TYPE = LIRInstructionClass.create(Op.class);
 
-        @Opcode private final AMD64RMOp opcode;
+        @Opcode
+        // @field
+        private final AMD64RMOp opcode;
+        // @field
         private final OperandSize size;
 
-        @Use({OperandFlag.REG}) protected AllocatableValue x;
-        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue y;
+        @Use({OperandFlag.REG})
+        // @field
+        protected AllocatableValue x;
+        @Use({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        protected AllocatableValue y;
 
         // @cons
-        public Op(AMD64RMOp opcode, OperandSize size, AllocatableValue x, AllocatableValue y)
+        public Op(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __x, AllocatableValue __y)
         {
             super(TYPE);
-            this.opcode = opcode;
-            this.size = size;
+            this.opcode = __opcode;
+            this.size = __size;
 
-            this.x = x;
-            this.y = y;
+            this.x = __x;
+            this.y = __y;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
             if (ValueUtil.isRegister(y))
             {
-                opcode.emit(masm, size, ValueUtil.asRegister(x), ValueUtil.asRegister(y));
+                opcode.emit(__masm, size, ValueUtil.asRegister(x), ValueUtil.asRegister(y));
             }
             else
             {
-                opcode.emit(masm, size, ValueUtil.asRegister(x), (AMD64Address) crb.asAddress(y));
+                opcode.emit(__masm, size, ValueUtil.asRegister(x), (AMD64Address) __crb.asAddress(y));
             }
         }
     }
@@ -73,47 +81,54 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.ConstOp
     public static class ConstOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<ConstOp> TYPE = LIRInstructionClass.create(ConstOp.class);
 
-        @Opcode private final AMD64MIOp opcode;
+        @Opcode
+        // @field
+        private final AMD64MIOp opcode;
+        // @field
         private final OperandSize size;
 
-        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue x;
+        @Use({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        protected AllocatableValue x;
+        // @field
         private final int y;
 
         // @cons
-        public ConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AllocatableValue x, int y)
+        public ConstOp(AMD64BinaryArithmetic __opcode, OperandSize __size, AllocatableValue __x, int __y)
         {
-            this(opcode.getMIOpcode(size, NumUtil.isByte(y)), size, x, y);
+            this(__opcode.getMIOpcode(__size, NumUtil.isByte(__y)), __size, __x, __y);
         }
 
         // @cons
-        public ConstOp(AMD64MIOp opcode, OperandSize size, AllocatableValue x, int y)
+        public ConstOp(AMD64MIOp __opcode, OperandSize __size, AllocatableValue __x, int __y)
         {
-            this(TYPE, opcode, size, x, y);
+            this(TYPE, __opcode, __size, __x, __y);
         }
 
         // @cons
-        protected ConstOp(LIRInstructionClass<? extends ConstOp> c, AMD64MIOp opcode, OperandSize size, AllocatableValue x, int y)
+        protected ConstOp(LIRInstructionClass<? extends ConstOp> __c, AMD64MIOp __opcode, OperandSize __size, AllocatableValue __x, int __y)
         {
-            super(c);
-            this.opcode = opcode;
-            this.size = size;
+            super(__c);
+            this.opcode = __opcode;
+            this.size = __size;
 
-            this.x = x;
-            this.y = y;
+            this.x = __x;
+            this.y = __y;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
             if (ValueUtil.isRegister(x))
             {
-                opcode.emit(masm, size, ValueUtil.asRegister(x), y);
+                opcode.emit(__masm, size, ValueUtil.asRegister(x), y);
             }
             else
             {
-                opcode.emit(masm, size, (AMD64Address) crb.asAddress(x), y);
+                opcode.emit(__masm, size, (AMD64Address) __crb.asAddress(x), y);
             }
         }
     }
@@ -125,22 +140,24 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.VMConstOp
     public static final class VMConstOp extends ConstOp
     {
+        // @def
         public static final LIRInstructionClass<VMConstOp> TYPE = LIRInstructionClass.create(VMConstOp.class);
 
+        // @field
         protected final VMConstant c;
 
         // @cons
-        public VMConstOp(AMD64MIOp opcode, AllocatableValue x, VMConstant c)
+        public VMConstOp(AMD64MIOp __opcode, AllocatableValue __x, VMConstant __c)
         {
-            super(TYPE, opcode, OperandSize.DWORD, x, 0xDEADDEAD);
-            this.c = c;
+            super(TYPE, __opcode, OperandSize.DWORD, __x, 0xDEADDEAD);
+            this.c = __c;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            crb.recordInlineDataInCode(c);
-            super.emitCode(crb, masm);
+            __crb.recordInlineDataInCode(c);
+            super.emitCode(__crb, __masm);
         }
     }
 
@@ -151,39 +168,47 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.DataOp
     public static final class DataOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<DataOp> TYPE = LIRInstructionClass.create(DataOp.class);
 
-        @Opcode private final AMD64RMOp opcode;
+        @Opcode
+        // @field
+        private final AMD64RMOp opcode;
+        // @field
         private final OperandSize size;
 
-        @Use({OperandFlag.REG}) protected AllocatableValue x;
+        @Use({OperandFlag.REG})
+        // @field
+        protected AllocatableValue x;
+        // @field
         private final Constant y;
 
+        // @field
         private final int alignment;
 
         // @cons
-        public DataOp(AMD64RMOp opcode, OperandSize size, AllocatableValue x, Constant y)
+        public DataOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __x, Constant __y)
         {
-            this(opcode, size, x, y, size.getBytes());
+            this(__opcode, __size, __x, __y, __size.getBytes());
         }
 
         // @cons
-        public DataOp(AMD64RMOp opcode, OperandSize size, AllocatableValue x, Constant y, int alignment)
+        public DataOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __x, Constant __y, int __alignment)
         {
             super(TYPE);
-            this.opcode = opcode;
-            this.size = size;
+            this.opcode = __opcode;
+            this.size = __size;
 
-            this.x = x;
-            this.y = y;
+            this.x = __x;
+            this.y = __y;
 
-            this.alignment = alignment;
+            this.alignment = __alignment;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            opcode.emit(masm, size, ValueUtil.asRegister(x), (AMD64Address) crb.recordDataReferenceInCode(y, alignment));
+            opcode.emit(__masm, size, ValueUtil.asRegister(x), (AMD64Address) __crb.recordDataReferenceInCode(y, alignment));
         }
     }
 
@@ -194,42 +219,51 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.MemoryRMOp
     public static final class MemoryRMOp extends AMD64LIRInstruction implements ImplicitNullCheck
     {
+        // @def
         public static final LIRInstructionClass<MemoryRMOp> TYPE = LIRInstructionClass.create(MemoryRMOp.class);
 
-        @Opcode private final AMD64RMOp opcode;
+        @Opcode
+        // @field
+        private final AMD64RMOp opcode;
+        // @field
         private final OperandSize size;
 
-        @Use({OperandFlag.REG}) protected AllocatableValue x;
-        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue y;
+        @Use({OperandFlag.REG})
+        // @field
+        protected AllocatableValue x;
+        @Use({OperandFlag.COMPOSITE})
+        // @field
+        protected AMD64AddressValue y;
 
         // @State
+        // @field
         protected LIRFrameState state;
 
         // @cons
-        public MemoryRMOp(AMD64RMOp opcode, OperandSize size, AllocatableValue x, AMD64AddressValue y, LIRFrameState state)
+        public MemoryRMOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __x, AMD64AddressValue __y, LIRFrameState __state)
         {
             super(TYPE);
-            this.opcode = opcode;
-            this.size = size;
+            this.opcode = __opcode;
+            this.size = __size;
 
-            this.x = x;
-            this.y = y;
+            this.x = __x;
+            this.y = __y;
 
-            this.state = state;
+            this.state = __state;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            opcode.emit(masm, size, ValueUtil.asRegister(x), y.toAddress());
+            opcode.emit(__masm, size, ValueUtil.asRegister(x), y.toAddress());
         }
 
         @Override
-        public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit)
+        public boolean makeNullCheckFor(Value __value, LIRFrameState __nullCheckState, int __implicitNullCheckLimit)
         {
-            if (state == null && y.isValidImplicitNullCheckFor(value, implicitNullCheckLimit))
+            if (state == null && y.isValidImplicitNullCheckFor(__value, __implicitNullCheckLimit))
             {
-                state = nullCheckState;
+                state = __nullCheckState;
                 return true;
             }
             return false;
@@ -243,42 +277,51 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.MemoryMROp
     public static final class MemoryMROp extends AMD64LIRInstruction implements ImplicitNullCheck
     {
+        // @def
         public static final LIRInstructionClass<MemoryMROp> TYPE = LIRInstructionClass.create(MemoryMROp.class);
 
-        @Opcode private final AMD64MROp opcode;
+        @Opcode
+        // @field
+        private final AMD64MROp opcode;
+        // @field
         private final OperandSize size;
 
-        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue x;
-        @Use({OperandFlag.REG}) protected AllocatableValue y;
+        @Use({OperandFlag.COMPOSITE})
+        // @field
+        protected AMD64AddressValue x;
+        @Use({OperandFlag.REG})
+        // @field
+        protected AllocatableValue y;
 
         // @State
+        // @field
         protected LIRFrameState state;
 
         // @cons
-        public MemoryMROp(AMD64MROp opcode, OperandSize size, AMD64AddressValue x, AllocatableValue y, LIRFrameState state)
+        public MemoryMROp(AMD64MROp __opcode, OperandSize __size, AMD64AddressValue __x, AllocatableValue __y, LIRFrameState __state)
         {
             super(TYPE);
-            this.opcode = opcode;
-            this.size = size;
+            this.opcode = __opcode;
+            this.size = __size;
 
-            this.x = x;
-            this.y = y;
+            this.x = __x;
+            this.y = __y;
 
-            this.state = state;
+            this.state = __state;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            opcode.emit(masm, size, x.toAddress(), ValueUtil.asRegister(y));
+            opcode.emit(__masm, size, x.toAddress(), ValueUtil.asRegister(y));
         }
 
         @Override
-        public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit)
+        public boolean makeNullCheckFor(Value __value, LIRFrameState __nullCheckState, int __implicitNullCheckLimit)
         {
-            if (state == null && x.isValidImplicitNullCheckFor(value, implicitNullCheckLimit))
+            if (state == null && x.isValidImplicitNullCheckFor(__value, __implicitNullCheckLimit))
             {
-                state = nullCheckState;
+                state = __nullCheckState;
                 return true;
             }
             return false;
@@ -291,54 +334,62 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.MemoryConstOp
     public static class MemoryConstOp extends AMD64LIRInstruction implements ImplicitNullCheck
     {
+        // @def
         public static final LIRInstructionClass<MemoryConstOp> TYPE = LIRInstructionClass.create(MemoryConstOp.class);
 
-        @Opcode private final AMD64MIOp opcode;
+        @Opcode
+        // @field
+        private final AMD64MIOp opcode;
+        // @field
         private final OperandSize size;
 
-        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue x;
+        @Use({OperandFlag.COMPOSITE})
+        // @field
+        protected AMD64AddressValue x;
+        // @field
         private final int y;
 
         // @State
+        // @field
         protected LIRFrameState state;
 
         // @cons
-        public MemoryConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AMD64AddressValue x, int y, LIRFrameState state)
+        public MemoryConstOp(AMD64BinaryArithmetic __opcode, OperandSize __size, AMD64AddressValue __x, int __y, LIRFrameState __state)
         {
-            this(opcode.getMIOpcode(size, NumUtil.isByte(y)), size, x, y, state);
+            this(__opcode.getMIOpcode(__size, NumUtil.isByte(__y)), __size, __x, __y, __state);
         }
 
         // @cons
-        public MemoryConstOp(AMD64MIOp opcode, OperandSize size, AMD64AddressValue x, int y, LIRFrameState state)
+        public MemoryConstOp(AMD64MIOp __opcode, OperandSize __size, AMD64AddressValue __x, int __y, LIRFrameState __state)
         {
-            this(TYPE, opcode, size, x, y, state);
+            this(TYPE, __opcode, __size, __x, __y, __state);
         }
 
         // @cons
-        protected MemoryConstOp(LIRInstructionClass<? extends MemoryConstOp> c, AMD64MIOp opcode, OperandSize size, AMD64AddressValue x, int y, LIRFrameState state)
+        protected MemoryConstOp(LIRInstructionClass<? extends MemoryConstOp> __c, AMD64MIOp __opcode, OperandSize __size, AMD64AddressValue __x, int __y, LIRFrameState __state)
         {
-            super(c);
-            this.opcode = opcode;
-            this.size = size;
+            super(__c);
+            this.opcode = __opcode;
+            this.size = __size;
 
-            this.x = x;
-            this.y = y;
+            this.x = __x;
+            this.y = __y;
 
-            this.state = state;
+            this.state = __state;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            opcode.emit(masm, size, x.toAddress(), y);
+            opcode.emit(__masm, size, x.toAddress(), y);
         }
 
         @Override
-        public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit)
+        public boolean makeNullCheckFor(Value __value, LIRFrameState __nullCheckState, int __implicitNullCheckLimit)
         {
-            if (state == null && x.isValidImplicitNullCheckFor(value, implicitNullCheckLimit))
+            if (state == null && x.isValidImplicitNullCheckFor(__value, __implicitNullCheckLimit))
             {
-                state = nullCheckState;
+                state = __nullCheckState;
                 return true;
             }
             return false;
@@ -357,22 +408,24 @@ public final class AMD64BinaryConsumer
     // @class AMD64BinaryConsumer.MemoryVMConstOp
     public static final class MemoryVMConstOp extends MemoryConstOp
     {
+        // @def
         public static final LIRInstructionClass<MemoryVMConstOp> TYPE = LIRInstructionClass.create(MemoryVMConstOp.class);
 
+        // @field
         protected final VMConstant c;
 
         // @cons
-        public MemoryVMConstOp(AMD64MIOp opcode, AMD64AddressValue x, VMConstant c, LIRFrameState state)
+        public MemoryVMConstOp(AMD64MIOp __opcode, AMD64AddressValue __x, VMConstant __c, LIRFrameState __state)
         {
-            super(TYPE, opcode, OperandSize.DWORD, x, 0xDEADDEAD, state);
-            this.c = c;
+            super(TYPE, __opcode, OperandSize.DWORD, __x, 0xDEADDEAD, __state);
+            this.c = __c;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            crb.recordInlineDataInCode(c);
-            super.emitCode(crb, masm);
+            __crb.recordInlineDataInCode(c);
+            super.emitCode(__crb, __masm);
         }
     }
 }

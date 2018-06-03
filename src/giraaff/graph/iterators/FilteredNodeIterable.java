@@ -7,19 +7,21 @@ import giraaff.graph.Node;
 // @class FilteredNodeIterable
 public final class FilteredNodeIterable<T extends Node> implements NodeIterable<T>
 {
+    // @field
     protected final NodeIterable<T> nodeIterable;
+    // @field
     protected NodePredicate predicate = NodePredicates.alwaysTrue();
 
     // @cons
-    public FilteredNodeIterable(NodeIterable<T> nodeIterable)
+    public FilteredNodeIterable(NodeIterable<T> __nodeIterable)
     {
         super();
-        this.nodeIterable = nodeIterable;
+        this.nodeIterable = __nodeIterable;
     }
 
-    public FilteredNodeIterable<T> and(NodePredicate nodePredicate)
+    public FilteredNodeIterable<T> and(NodePredicate __nodePredicate)
     {
-        this.predicate = this.predicate.and(nodePredicate);
+        this.predicate = this.predicate.and(__nodePredicate);
         return this;
     }
 
@@ -31,14 +33,14 @@ public final class FilteredNodeIterable<T extends Node> implements NodeIterable<
 
     @SuppressWarnings("unchecked")
     @Override
-    public <F extends T> FilteredNodeIterable<F> filter(Class<F> clazz)
+    public <F extends T> FilteredNodeIterable<F> filter(Class<F> __clazz)
     {
-        return (FilteredNodeIterable<F>) this.and(NodePredicates.isA(clazz));
+        return (FilteredNodeIterable<F>) this.and(NodePredicates.isA(__clazz));
     }
 
     @Override
-    public FilteredNodeIterable<T> filter(NodePredicate p)
+    public FilteredNodeIterable<T> filter(NodePredicate __p)
     {
-        return this.and(p);
+        return this.and(__p);
     }
 }

@@ -19,34 +19,35 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class SignExtendNode
 public final class SignExtendNode extends IntegerConvertNode<SignExtend, Narrow>
 {
+    // @def
     public static final NodeClass<SignExtendNode> TYPE = NodeClass.create(SignExtendNode.class);
 
     // @cons
-    public SignExtendNode(ValueNode input, int resultBits)
+    public SignExtendNode(ValueNode __input, int __resultBits)
     {
-        this(input, PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)), resultBits);
+        this(__input, PrimitiveStamp.getBits(__input.stamp(NodeView.DEFAULT)), __resultBits);
     }
 
     // @cons
-    public SignExtendNode(ValueNode input, int inputBits, int resultBits)
+    public SignExtendNode(ValueNode __input, int __inputBits, int __resultBits)
     {
-        super(TYPE, ArithmeticOpTable::getSignExtend, ArithmeticOpTable::getNarrow, inputBits, resultBits, input);
+        super(TYPE, ArithmeticOpTable::getSignExtend, ArithmeticOpTable::getNarrow, __inputBits, __resultBits, __input);
     }
 
-    public static ValueNode create(ValueNode input, int resultBits, NodeView view)
+    public static ValueNode create(ValueNode __input, int __resultBits, NodeView __view)
     {
-        return create(input, PrimitiveStamp.getBits(input.stamp(view)), resultBits, view);
+        return create(__input, PrimitiveStamp.getBits(__input.stamp(__view)), __resultBits, __view);
     }
 
-    public static ValueNode create(ValueNode input, int inputBits, int resultBits, NodeView view)
+    public static ValueNode create(ValueNode __input, int __inputBits, int __resultBits, NodeView __view)
     {
-        IntegerConvertOp<SignExtend> signExtend = ArithmeticOpTable.forStamp(input.stamp(view)).getSignExtend();
-        ValueNode synonym = findSynonym(signExtend, input, inputBits, resultBits, signExtend.foldStamp(inputBits, resultBits, input.stamp(view)));
-        if (synonym != null)
+        IntegerConvertOp<SignExtend> __signExtend = ArithmeticOpTable.forStamp(__input.stamp(__view)).getSignExtend();
+        ValueNode __synonym = findSynonym(__signExtend, __input, __inputBits, __resultBits, __signExtend.foldStamp(__inputBits, __resultBits, __input.stamp(__view)));
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return canonical(null, input, inputBits, resultBits, view);
+        return canonical(null, __input, __inputBits, __resultBits, __view);
     }
 
     @Override
@@ -56,56 +57,56 @@ public final class SignExtendNode extends IntegerConvertNode<SignExtend, Narrow>
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode ret = super.canonical(tool, forValue);
-        if (ret != this)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __ret = super.canonical(__tool, __forValue);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        return canonical(this, forValue, getInputBits(), getResultBits(), view);
+        return canonical(this, __forValue, getInputBits(), getResultBits(), __view);
     }
 
-    private static ValueNode canonical(SignExtendNode self, ValueNode forValue, int inputBits, int resultBits, NodeView view)
+    private static ValueNode canonical(SignExtendNode __self, ValueNode __forValue, int __inputBits, int __resultBits, NodeView __view)
     {
-        if (forValue instanceof SignExtendNode)
+        if (__forValue instanceof SignExtendNode)
         {
             // sxxx -(sign-extend)-> ssss sxxx -(sign-extend)-> ssssssss sssssxxx
             // ==> sxxx -(sign-extend)-> ssssssss sssssxxx
-            SignExtendNode other = (SignExtendNode) forValue;
-            return SignExtendNode.create(other.getValue(), other.getInputBits(), resultBits, view);
+            SignExtendNode __other = (SignExtendNode) __forValue;
+            return SignExtendNode.create(__other.getValue(), __other.getInputBits(), __resultBits, __view);
         }
-        else if (forValue instanceof ZeroExtendNode)
+        else if (__forValue instanceof ZeroExtendNode)
         {
-            ZeroExtendNode other = (ZeroExtendNode) forValue;
-            if (other.getResultBits() > other.getInputBits())
+            ZeroExtendNode __other = (ZeroExtendNode) __forValue;
+            if (__other.getResultBits() > __other.getInputBits())
             {
                 // sxxx -(zero-extend)-> 0000 sxxx -(sign-extend)-> 00000000 0000sxxx
                 // ==> sxxx -(zero-extend)-> 00000000 0000sxxx
-                return ZeroExtendNode.create(other.getValue(), other.getInputBits(), resultBits, view, other.isInputAlwaysPositive());
+                return ZeroExtendNode.create(__other.getValue(), __other.getInputBits(), __resultBits, __view, __other.isInputAlwaysPositive());
             }
         }
 
-        if (forValue.stamp(view) instanceof IntegerStamp)
+        if (__forValue.stamp(__view) instanceof IntegerStamp)
         {
-            IntegerStamp inputStamp = (IntegerStamp) forValue.stamp(view);
-            if ((inputStamp.upMask() & (1L << (inputBits - 1))) == 0L)
+            IntegerStamp __inputStamp = (IntegerStamp) __forValue.stamp(__view);
+            if ((__inputStamp.upMask() & (1L << (__inputBits - 1))) == 0L)
             {
                 // 0xxx -(sign-extend)-> 0000 0xxx
                 // ==> 0xxx -(zero-extend)-> 0000 0xxx
-                return ZeroExtendNode.create(forValue, inputBits, resultBits, view, true);
+                return ZeroExtendNode.create(__forValue, __inputBits, __resultBits, __view, true);
             }
         }
 
-        return self != null ? self : new SignExtendNode(forValue, inputBits, resultBits);
+        return __self != null ? __self : new SignExtendNode(__forValue, __inputBits, __resultBits);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitSignExtend(nodeValueMap.operand(getValue()), getInputBits(), getResultBits()));
+        __nodeValueMap.setResult(this, __gen.emitSignExtend(__nodeValueMap.operand(getValue()), getInputBits(), getResultBits()));
     }
 
     @Override

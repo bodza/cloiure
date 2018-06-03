@@ -13,20 +13,23 @@ import giraaff.nodeinfo.InputType;
 // @class BeginStateSplitNode
 public abstract class BeginStateSplitNode extends AbstractBeginNode implements StateSplit
 {
+    // @def
     public static final NodeClass<BeginStateSplitNode> TYPE = NodeClass.create(BeginStateSplitNode.class);
 
-    @OptionalInput(InputType.State) protected FrameState stateAfter;
+    @OptionalInput(InputType.State)
+    // @field
+    protected FrameState stateAfter;
 
     // @cons
-    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c)
+    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> __c)
     {
-        super(c);
+        super(__c);
     }
 
     // @cons
-    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c, Stamp stamp)
+    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     @Override
@@ -36,10 +39,10 @@ public abstract class BeginStateSplitNode extends AbstractBeginNode implements S
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     /**

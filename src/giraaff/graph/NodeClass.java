@@ -45,120 +45,145 @@ import giraaff.util.UnsafeAccess;
 // @class NodeClass
 public final class NodeClass<T> extends FieldIntrospection<T>
 {
+    // @def
     public static final long MAX_EDGES = 8;
+    // @def
     public static final long MAX_LIST_EDGES = 6;
+    // @def
     public static final long OFFSET_MASK = 0xFC;
+    // @def
     public static final long LIST_MASK = 0x01;
+    // @def
     public static final long NEXT_EDGE = 0x08;
 
-    private static <T extends Annotation> T getAnnotationTimed(AnnotatedElement e, Class<T> annotationClass)
+    private static <T extends Annotation> T getAnnotationTimed(AnnotatedElement __e, Class<T> __annotationClass)
     {
-        return e.getAnnotation(annotationClass);
+        return __e.getAnnotation(__annotationClass);
     }
 
     /**
      * Gets the {@link NodeClass} associated with a given {@link Class}.
      */
-    public static <T> NodeClass<T> create(Class<T> c)
+    public static <T> NodeClass<T> create(Class<T> __c)
     {
-        Class<? super T> superclass = c.getSuperclass();
-        NodeClass<? super T> nodeSuperclass = null;
-        if (superclass != NODE_CLASS)
+        Class<? super T> __superclass = __c.getSuperclass();
+        NodeClass<? super T> __nodeSuperclass = null;
+        if (__superclass != NODE_CLASS)
         {
-            nodeSuperclass = get(superclass);
+            __nodeSuperclass = get(__superclass);
         }
-        return new NodeClass<>(c, nodeSuperclass);
+        return new NodeClass<>(__c, __nodeSuperclass);
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> NodeClass<T> getUnchecked(Class<T> clazz)
+    private static <T> NodeClass<T> getUnchecked(Class<T> __clazz)
     {
         try
         {
-            Field field = clazz.getDeclaredField("TYPE");
-            field.setAccessible(true);
-            return (NodeClass<T>) field.get(null);
+            Field __field = __clazz.getDeclaredField("TYPE");
+            __field.setAccessible(true);
+            return (NodeClass<T>) __field.get(null);
         }
-        catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e)
+        catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException __e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException(__e);
         }
     }
 
-    public static <T> NodeClass<T> get(Class<T> clazz)
+    public static <T> NodeClass<T> get(Class<T> __clazz)
     {
-        NodeClass<T> result = getUnchecked(clazz);
-        if (result != null || clazz == NODE_CLASS)
+        NodeClass<T> __result = getUnchecked(__clazz);
+        if (__result != null || __clazz == NODE_CLASS)
         {
-            return result;
+            return __result;
         }
 
         throw GraalError.shouldNotReachHere("Reflective field access of TYPE field returned null. This is probably a bug in HotSpot class initialization.");
     }
 
+    // @def
     private static final Class<?> NODE_CLASS = Node.class;
+    // @def
     private static final Class<?> INPUT_LIST_CLASS = NodeInputList.class;
+    // @def
     private static final Class<?> SUCCESSOR_LIST_CLASS = NodeSuccessorList.class;
 
+    // @def
     private static AtomicInteger nextIterableId = new AtomicInteger();
+    // @def
     private static AtomicInteger nextLeafId = new AtomicInteger();
 
+    // @field
     private final InputEdges inputs;
+    // @field
     private final SuccessorEdges successors;
+    // @field
     private final NodeClass<? super T> superNodeClass;
 
+    // @field
     private final boolean canGVN;
+    // @field
     private final int startGVNNumber;
+    // @field
     private final int iterableId;
+    // @field
     private final EnumSet<InputType> allowedUsageTypes;
+    // @field
     private int[] iterableIds;
+    // @field
     private final long inputsIteration;
+    // @field
     private final long successorIteration;
 
     /**
      * Determines if this node type implements {@link Canonicalizable}.
      */
+    // @field
     private final boolean isCanonicalizable;
 
     /**
      * Determines if this node type implements {@link BinaryCommutative}.
      */
+    // @field
     private final boolean isCommutative;
 
     /**
      * Determines if this node type implements {@link Simplifiable}.
      */
+    // @field
     private final boolean isSimplifiable;
+    // @field
     private final boolean isLeafNode;
 
+    // @field
     private final int leafId;
 
     // @cons
-    public NodeClass(Class<T> clazz, NodeClass<? super T> superNodeClass)
+    public NodeClass(Class<T> __clazz, NodeClass<? super T> __superNodeClass)
     {
-        this(clazz, superNodeClass, new FieldsScanner.DefaultCalcOffset(), null, 0);
+        this(__clazz, __superNodeClass, new FieldsScanner.DefaultCalcOffset(), null, 0);
     }
 
     // @cons
-    public NodeClass(Class<T> clazz, NodeClass<? super T> superNodeClass, FieldsScanner.CalcOffset calcOffset, int[] presetIterableIds, int presetIterableId)
+    public NodeClass(Class<T> __clazz, NodeClass<? super T> __superNodeClass, FieldsScanner.CalcOffset __calcOffset, int[] __presetIterableIds, int __presetIterableId)
     {
-        super(clazz);
-        this.superNodeClass = superNodeClass;
+        super(__clazz);
+        this.superNodeClass = __superNodeClass;
 
-        this.isCanonicalizable = Canonicalizable.class.isAssignableFrom(clazz);
-        this.isCommutative = BinaryCommutative.class.isAssignableFrom(clazz);
+        this.isCanonicalizable = Canonicalizable.class.isAssignableFrom(__clazz);
+        this.isCommutative = BinaryCommutative.class.isAssignableFrom(__clazz);
 
-        this.isSimplifiable = Simplifiable.class.isAssignableFrom(clazz);
+        this.isSimplifiable = Simplifiable.class.isAssignableFrom(__clazz);
 
-        NodeFieldsScanner fs = new NodeFieldsScanner(calcOffset, superNodeClass);
-        fs.scan(clazz, clazz.getSuperclass(), false);
+        NodeFieldsScanner __fs = new NodeFieldsScanner(__calcOffset, __superNodeClass);
+        __fs.scan(__clazz, __clazz.getSuperclass(), false);
 
-        successors = new SuccessorEdges(fs.directSuccessors, fs.successors);
+        successors = new SuccessorEdges(__fs.directSuccessors, __fs.successors);
         successorIteration = computeIterationMask(successors.type(), successors.getDirectCount(), successors.getOffsets());
-        inputs = new InputEdges(fs.directInputs, fs.inputs);
+        inputs = new InputEdges(__fs.directInputs, __fs.inputs);
         inputsIteration = computeIterationMask(inputs.type(), inputs.getDirectCount(), inputs.getOffsets());
 
-        data = new Fields(fs.data);
+        data = new Fields(__fs.data);
 
         isLeafNode = inputs.getCount() + successors.getCount() == 0;
         if (isLeafNode)
@@ -170,25 +195,25 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             this.leafId = -1;
         }
 
-        canGVN = Node.ValueNumberable.class.isAssignableFrom(clazz);
-        startGVNNumber = clazz.getName().hashCode();
+        canGVN = Node.ValueNumberable.class.isAssignableFrom(__clazz);
+        startGVNNumber = __clazz.getName().hashCode();
 
-        allowedUsageTypes = superNodeClass == null ? EnumSet.noneOf(InputType.class) : superNodeClass.allowedUsageTypes.clone();
+        allowedUsageTypes = __superNodeClass == null ? EnumSet.noneOf(InputType.class) : __superNodeClass.allowedUsageTypes.clone();
 
-        if (presetIterableIds != null)
+        if (__presetIterableIds != null)
         {
-            this.iterableIds = presetIterableIds;
-            this.iterableId = presetIterableId;
+            this.iterableIds = __presetIterableIds;
+            this.iterableId = __presetIterableId;
         }
-        else if (IterableNodeType.class.isAssignableFrom(clazz))
+        else if (IterableNodeType.class.isAssignableFrom(__clazz))
         {
             this.iterableId = nextIterableId.getAndIncrement();
 
-            NodeClass<?> snc = superNodeClass;
-            while (snc != null && IterableNodeType.class.isAssignableFrom(snc.getClazz()))
+            NodeClass<?> __snc = __superNodeClass;
+            while (__snc != null && IterableNodeType.class.isAssignableFrom(__snc.getClazz()))
             {
-                snc.addIterableId(iterableId);
-                snc = snc.superNodeClass;
+                __snc.addIterableId(iterableId);
+                __snc = __snc.superNodeClass;
             }
 
             this.iterableIds = new int[] { iterableId };
@@ -200,53 +225,53 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    public static long computeIterationMask(Type type, int directCount, long[] offsets)
+    public static long computeIterationMask(Type __type, int __directCount, long[] __offsets)
     {
-        long mask = 0;
-        if (offsets.length > NodeClass.MAX_EDGES)
+        long __mask = 0;
+        if (__offsets.length > NodeClass.MAX_EDGES)
         {
-            throw new GraalError("Exceeded maximum of %d edges (%s)", NodeClass.MAX_EDGES, type);
+            throw new GraalError("Exceeded maximum of %d edges (%s)", NodeClass.MAX_EDGES, __type);
         }
-        if (offsets.length - directCount > NodeClass.MAX_LIST_EDGES)
+        if (__offsets.length - __directCount > NodeClass.MAX_LIST_EDGES)
         {
-            throw new GraalError("Exceeded maximum of %d list edges (%s)", NodeClass.MAX_LIST_EDGES, type);
+            throw new GraalError("Exceeded maximum of %d list edges (%s)", NodeClass.MAX_LIST_EDGES, __type);
         }
 
-        for (int i = offsets.length - 1; i >= 0; i--)
+        for (int __i = __offsets.length - 1; __i >= 0; __i--)
         {
-            long offset = offsets[i];
-            mask <<= NodeClass.NEXT_EDGE;
-            mask |= offset;
-            if (i >= directCount)
+            long __offset = __offsets[__i];
+            __mask <<= NodeClass.NEXT_EDGE;
+            __mask |= __offset;
+            if (__i >= __directCount)
             {
-                mask |= 0x3;
+                __mask |= 0x3;
             }
         }
-        return mask;
+        return __mask;
     }
 
-    private synchronized void addIterableId(int newIterableId)
+    private synchronized void addIterableId(int __newIterableId)
     {
-        int[] copy = Arrays.copyOf(iterableIds, iterableIds.length + 1);
-        copy[iterableIds.length] = newIterableId;
-        iterableIds = copy;
+        int[] __copy = Arrays.copyOf(iterableIds, iterableIds.length + 1);
+        __copy[iterableIds.length] = __newIterableId;
+        iterableIds = __copy;
     }
 
     private boolean verifyIterableIds()
     {
-        NodeClass<?> snc = superNodeClass;
-        while (snc != null && IterableNodeType.class.isAssignableFrom(snc.getClazz()))
+        NodeClass<?> __snc = superNodeClass;
+        while (__snc != null && IterableNodeType.class.isAssignableFrom(__snc.getClazz()))
         {
-            snc = snc.superNodeClass;
+            __snc = __snc.superNodeClass;
         }
         return true;
     }
 
-    private static boolean containsId(int iterableId, int[] iterableIds)
+    private static boolean containsId(int __iterableId, int[] __iterableIds)
     {
-        for (int i : iterableIds)
+        for (int __i : __iterableIds)
         {
-            if (i == iterableId)
+            if (__i == __iterableId)
             {
                 return true;
             }
@@ -254,20 +279,21 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return false;
     }
 
+    // @field
     private String shortName;
 
     public String shortName()
     {
         if (shortName == null)
         {
-            String localShortName = getClazz().getSimpleName();
-            if (localShortName.endsWith("Node") && !localShortName.equals("StartNode") && !localShortName.equals("EndNode"))
+            String __localShortName = getClazz().getSimpleName();
+            if (__localShortName.endsWith("Node") && !__localShortName.equals("StartNode") && !__localShortName.equals("EndNode"))
             {
-                shortName = localShortName.substring(0, localShortName.length() - 4);
+                shortName = __localShortName.substring(0, __localShortName.length() - 4);
             }
             else
             {
-                shortName = localShortName;
+                shortName = __localShortName;
             }
         }
         return shortName;
@@ -335,18 +361,18 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     protected static class EdgeInfo extends FieldsScanner.FieldInfo
     {
         // @cons
-        public EdgeInfo(long offset, String name, Class<?> type, Class<?> declaringClass)
+        public EdgeInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass)
         {
-            super(offset, name, type, declaringClass);
+            super(__offset, __name, __type, __declaringClass);
         }
 
         /**
          * Sorts non-list edges before list edges.
          */
         @Override
-        public int compareTo(FieldsScanner.FieldInfo o)
+        public int compareTo(FieldsScanner.FieldInfo __o)
         {
-            if (NodeList.class.isAssignableFrom(o.type))
+            if (NodeList.class.isAssignableFrom(__o.type))
             {
                 if (!NodeList.class.isAssignableFrom(type))
                 {
@@ -360,7 +386,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                     return 1;
                 }
             }
-            return super.compareTo(o);
+            return super.compareTo(__o);
         }
     }
 
@@ -370,146 +396,152 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     // @class NodeClass.InputInfo
     protected static final class InputInfo extends EdgeInfo
     {
+        // @field
         final InputType inputType;
+        // @field
         final boolean optional;
 
         // @cons
-        public InputInfo(long offset, String name, Class<?> type, Class<?> declaringClass, InputType inputType, boolean optional)
+        public InputInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass, InputType __inputType, boolean __optional)
         {
-            super(offset, name, type, declaringClass);
-            this.inputType = inputType;
-            this.optional = optional;
+            super(__offset, __name, __type, __declaringClass);
+            this.inputType = __inputType;
+            this.optional = __optional;
         }
     }
 
     // @class NodeClass.NodeFieldsScanner
     protected static final class NodeFieldsScanner extends FieldsScanner
     {
+        // @field
         public final ArrayList<InputInfo> inputs = new ArrayList<>();
+        // @field
         public final ArrayList<EdgeInfo> successors = new ArrayList<>();
+        // @field
         int directInputs;
+        // @field
         int directSuccessors;
 
         // @cons
-        protected NodeFieldsScanner(FieldsScanner.CalcOffset calc, NodeClass<?> superNodeClass)
+        protected NodeFieldsScanner(FieldsScanner.CalcOffset __calc, NodeClass<?> __superNodeClass)
         {
-            super(calc);
-            if (superNodeClass != null)
+            super(__calc);
+            if (__superNodeClass != null)
             {
-                InputEdges.translateInto(superNodeClass.inputs, inputs);
-                Edges.translateInto(superNodeClass.successors, successors);
-                Fields.translateInto(superNodeClass.data, data);
-                directInputs = superNodeClass.inputs.getDirectCount();
-                directSuccessors = superNodeClass.successors.getDirectCount();
+                InputEdges.translateInto(__superNodeClass.inputs, inputs);
+                Edges.translateInto(__superNodeClass.successors, successors);
+                Fields.translateInto(__superNodeClass.data, data);
+                directInputs = __superNodeClass.inputs.getDirectCount();
+                directSuccessors = __superNodeClass.successors.getDirectCount();
             }
         }
 
         @Override
-        protected void scanField(Field field, long offset)
+        protected void scanField(Field __field, long __offset)
         {
-            Input inputAnnotation = getAnnotationTimed(field, Node.Input.class);
-            OptionalInput optionalInputAnnotation = getAnnotationTimed(field, Node.OptionalInput.class);
-            Successor successorAnnotation = getAnnotationTimed(field, Successor.class);
+            Input __inputAnnotation = getAnnotationTimed(__field, Node.Input.class);
+            OptionalInput __optionalInputAnnotation = getAnnotationTimed(__field, Node.OptionalInput.class);
+            Successor __successorAnnotation = getAnnotationTimed(__field, Successor.class);
 
-            Class<?> type = field.getType();
-            int modifiers = field.getModifiers();
+            Class<?> __type = __field.getType();
+            int __modifiers = __field.getModifiers();
 
-            if (inputAnnotation != null || optionalInputAnnotation != null)
+            if (__inputAnnotation != null || __optionalInputAnnotation != null)
             {
-                if (INPUT_LIST_CLASS.isAssignableFrom(type))
+                if (INPUT_LIST_CLASS.isAssignableFrom(__type))
                 {
                     // NodeInputList fields should not be final, since they are written (via Unsafe) in clearInputs()
-                    GraalError.guarantee(!Modifier.isFinal(modifiers), "NodeInputList input field %s should not be final", field);
-                    GraalError.guarantee(!Modifier.isPublic(modifiers), "NodeInputList input field %s should not be public", field);
+                    GraalError.guarantee(!Modifier.isFinal(__modifiers), "NodeInputList input field %s should not be final", __field);
+                    GraalError.guarantee(!Modifier.isPublic(__modifiers), "NodeInputList input field %s should not be public", __field);
                 }
                 else
                 {
-                    GraalError.guarantee(NODE_CLASS.isAssignableFrom(type) || type.isInterface(), "invalid input type: %s", type);
-                    GraalError.guarantee(!Modifier.isFinal(modifiers), "Node input field %s should not be final", field);
+                    GraalError.guarantee(NODE_CLASS.isAssignableFrom(__type) || __type.isInterface(), "invalid input type: %s", __type);
+                    GraalError.guarantee(!Modifier.isFinal(__modifiers), "Node input field %s should not be final", __field);
                     directInputs++;
                 }
-                InputType inputType;
-                if (inputAnnotation != null)
+                InputType __inputType;
+                if (__inputAnnotation != null)
                 {
-                    inputType = inputAnnotation.value();
+                    __inputType = __inputAnnotation.value();
                 }
                 else
                 {
-                    inputType = optionalInputAnnotation.value();
+                    __inputType = __optionalInputAnnotation.value();
                 }
-                inputs.add(new InputInfo(offset, field.getName(), type, field.getDeclaringClass(), inputType, field.isAnnotationPresent(Node.OptionalInput.class)));
+                inputs.add(new InputInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __inputType, __field.isAnnotationPresent(Node.OptionalInput.class)));
             }
-            else if (successorAnnotation != null)
+            else if (__successorAnnotation != null)
             {
-                if (SUCCESSOR_LIST_CLASS.isAssignableFrom(type))
+                if (SUCCESSOR_LIST_CLASS.isAssignableFrom(__type))
                 {
                     // NodeSuccessorList fields should not be final, since they are written (via Unsafe) in clearSuccessors()
-                    GraalError.guarantee(!Modifier.isFinal(modifiers), "NodeSuccessorList successor field % should not be final", field);
-                    GraalError.guarantee(!Modifier.isPublic(modifiers), "NodeSuccessorList successor field %s should not be public", field);
+                    GraalError.guarantee(!Modifier.isFinal(__modifiers), "NodeSuccessorList successor field % should not be final", __field);
+                    GraalError.guarantee(!Modifier.isPublic(__modifiers), "NodeSuccessorList successor field %s should not be public", __field);
                 }
                 else
                 {
-                    GraalError.guarantee(NODE_CLASS.isAssignableFrom(type), "invalid successor type: %s", type);
-                    GraalError.guarantee(!Modifier.isFinal(modifiers), "Node successor field %s should not be final", field);
+                    GraalError.guarantee(NODE_CLASS.isAssignableFrom(__type), "invalid successor type: %s", __type);
+                    GraalError.guarantee(!Modifier.isFinal(__modifiers), "Node successor field %s should not be final", __field);
                     directSuccessors++;
                 }
-                successors.add(new EdgeInfo(offset, field.getName(), type, field.getDeclaringClass()));
+                successors.add(new EdgeInfo(__offset, __field.getName(), __type, __field.getDeclaringClass()));
             }
             else
             {
-                GraalError.guarantee(!NODE_CLASS.isAssignableFrom(type) || field.getName().equals("Null"), "suspicious node field: %s", field);
-                GraalError.guarantee(!INPUT_LIST_CLASS.isAssignableFrom(type), "suspicious node input list field: %s", field);
-                GraalError.guarantee(!SUCCESSOR_LIST_CLASS.isAssignableFrom(type), "suspicious node successor list field: %s", field);
-                super.scanField(field, offset);
+                GraalError.guarantee(!NODE_CLASS.isAssignableFrom(__type) || __field.getName().equals("Null"), "suspicious node __field: %s", __field);
+                GraalError.guarantee(!INPUT_LIST_CLASS.isAssignableFrom(__type), "suspicious node input list field: %s", __field);
+                GraalError.guarantee(!SUCCESSOR_LIST_CLASS.isAssignableFrom(__type), "suspicious node successor list field: %s", __field);
+                super.scanField(__field, __offset);
             }
         }
     }
 
-    private static int deepHashCode0(Object o)
+    private static int deepHashCode0(Object __o)
     {
-        if (o == null)
+        if (__o == null)
         {
             return 0;
         }
-        else if (!o.getClass().isArray())
+        else if (!__o.getClass().isArray())
         {
-            return o.hashCode();
+            return __o.hashCode();
         }
-        else if (o instanceof Object[])
+        else if (__o instanceof Object[])
         {
-            return Arrays.deepHashCode((Object[]) o);
+            return Arrays.deepHashCode((Object[]) __o);
         }
-        else if (o instanceof byte[])
+        else if (__o instanceof byte[])
         {
-            return Arrays.hashCode((byte[]) o);
+            return Arrays.hashCode((byte[]) __o);
         }
-        else if (o instanceof short[])
+        else if (__o instanceof short[])
         {
-            return Arrays.hashCode((short[]) o);
+            return Arrays.hashCode((short[]) __o);
         }
-        else if (o instanceof int[])
+        else if (__o instanceof int[])
         {
-            return Arrays.hashCode((int[]) o);
+            return Arrays.hashCode((int[]) __o);
         }
-        else if (o instanceof long[])
+        else if (__o instanceof long[])
         {
-            return Arrays.hashCode((long[]) o);
+            return Arrays.hashCode((long[]) __o);
         }
-        else if (o instanceof char[])
+        else if (__o instanceof char[])
         {
-            return Arrays.hashCode((char[]) o);
+            return Arrays.hashCode((char[]) __o);
         }
-        else if (o instanceof float[])
+        else if (__o instanceof float[])
         {
-            return Arrays.hashCode((float[]) o);
+            return Arrays.hashCode((float[]) __o);
         }
-        else if (o instanceof double[])
+        else if (__o instanceof double[])
         {
-            return Arrays.hashCode((double[]) o);
+            return Arrays.hashCode((double[]) __o);
         }
-        else if (o instanceof boolean[])
+        else if (__o instanceof boolean[])
         {
-            return Arrays.hashCode((boolean[]) o);
+            return Arrays.hashCode((boolean[]) __o);
         }
         else
         {
@@ -517,122 +549,122 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    public int valueNumber(Node n)
+    public int valueNumber(Node __n)
     {
-        int number = 0;
+        int __number = 0;
         if (canGVN)
         {
-            number = startGVNNumber;
-            for (int i = 0; i < data.getCount(); ++i)
+            __number = startGVNNumber;
+            for (int __i = 0; __i < data.getCount(); ++__i)
             {
-                Class<?> type = data.getType(i);
-                if (type.isPrimitive())
+                Class<?> __type = data.getType(__i);
+                if (__type.isPrimitive())
                 {
-                    if (type == Integer.TYPE)
+                    if (__type == Integer.TYPE)
                     {
-                        int intValue = data.getInt(n, i);
-                        number += intValue;
+                        int __intValue = data.getInt(__n, __i);
+                        __number += __intValue;
                     }
-                    else if (type == Long.TYPE)
+                    else if (__type == Long.TYPE)
                     {
-                        long longValue = data.getLong(n, i);
-                        number += longValue ^ (longValue >>> 32);
+                        long __longValue = data.getLong(__n, __i);
+                        __number += __longValue ^ (__longValue >>> 32);
                     }
-                    else if (type == Boolean.TYPE)
+                    else if (__type == Boolean.TYPE)
                     {
-                        boolean booleanValue = data.getBoolean(n, i);
-                        if (booleanValue)
+                        boolean __booleanValue = data.getBoolean(__n, __i);
+                        if (__booleanValue)
                         {
-                            number += 7;
+                            __number += 7;
                         }
                     }
-                    else if (type == Float.TYPE)
+                    else if (__type == Float.TYPE)
                     {
-                        float floatValue = data.getFloat(n, i);
-                        number += Float.floatToRawIntBits(floatValue);
+                        float __floatValue = data.getFloat(__n, __i);
+                        __number += Float.floatToRawIntBits(__floatValue);
                     }
-                    else if (type == Double.TYPE)
+                    else if (__type == Double.TYPE)
                     {
-                        double doubleValue = data.getDouble(n, i);
-                        long longValue = Double.doubleToRawLongBits(doubleValue);
-                        number += longValue ^ (longValue >>> 32);
+                        double __doubleValue = data.getDouble(__n, __i);
+                        long __longValue = Double.doubleToRawLongBits(__doubleValue);
+                        __number += __longValue ^ (__longValue >>> 32);
                     }
-                    else if (type == Short.TYPE)
+                    else if (__type == Short.TYPE)
                     {
-                        short shortValue = data.getShort(n, i);
-                        number += shortValue;
+                        short __shortValue = data.getShort(__n, __i);
+                        __number += __shortValue;
                     }
-                    else if (type == Character.TYPE)
+                    else if (__type == Character.TYPE)
                     {
-                        char charValue = data.getChar(n, i);
-                        number += charValue;
+                        char __charValue = data.getChar(__n, __i);
+                        __number += __charValue;
                     }
-                    else if (type == Byte.TYPE)
+                    else if (__type == Byte.TYPE)
                     {
-                        byte byteValue = data.getByte(n, i);
-                        number += byteValue;
+                        byte __byteValue = data.getByte(__n, __i);
+                        __number += __byteValue;
                     }
                 }
                 else
                 {
-                    Object o = data.getObject(n, i);
-                    number += deepHashCode0(o);
+                    Object __o = data.getObject(__n, __i);
+                    __number += deepHashCode0(__o);
                 }
-                number *= 13;
+                __number *= 13;
             }
         }
-        return number;
+        return __number;
     }
 
-    private static boolean deepEquals0(Object e1, Object e2)
+    private static boolean deepEquals0(Object __e1, Object __e2)
     {
-        if (e1 == e2)
+        if (__e1 == __e2)
         {
             return true;
         }
-        else if (e1 == null || e2 == null)
+        else if (__e1 == null || __e2 == null)
         {
             return false;
         }
-        else if (!e1.getClass().isArray() || e1.getClass() != e2.getClass())
+        else if (!__e1.getClass().isArray() || __e1.getClass() != __e2.getClass())
         {
-            return e1.equals(e2);
+            return __e1.equals(__e2);
         }
-        else if (e1 instanceof Object[] && e2 instanceof Object[])
+        else if (__e1 instanceof Object[] && __e2 instanceof Object[])
         {
-            return deepEquals((Object[]) e1, (Object[]) e2);
+            return deepEquals((Object[]) __e1, (Object[]) __e2);
         }
-        else if (e1 instanceof int[])
+        else if (__e1 instanceof int[])
         {
-            return Arrays.equals((int[]) e1, (int[]) e2);
+            return Arrays.equals((int[]) __e1, (int[]) __e2);
         }
-        else if (e1 instanceof long[])
+        else if (__e1 instanceof long[])
         {
-            return Arrays.equals((long[]) e1, (long[]) e2);
+            return Arrays.equals((long[]) __e1, (long[]) __e2);
         }
-        else if (e1 instanceof byte[])
+        else if (__e1 instanceof byte[])
         {
-            return Arrays.equals((byte[]) e1, (byte[]) e2);
+            return Arrays.equals((byte[]) __e1, (byte[]) __e2);
         }
-        else if (e1 instanceof char[])
+        else if (__e1 instanceof char[])
         {
-            return Arrays.equals((char[]) e1, (char[]) e2);
+            return Arrays.equals((char[]) __e1, (char[]) __e2);
         }
-        else if (e1 instanceof short[])
+        else if (__e1 instanceof short[])
         {
-            return Arrays.equals((short[]) e1, (short[]) e2);
+            return Arrays.equals((short[]) __e1, (short[]) __e2);
         }
-        else if (e1 instanceof float[])
+        else if (__e1 instanceof float[])
         {
-            return Arrays.equals((float[]) e1, (float[]) e2);
+            return Arrays.equals((float[]) __e1, (float[]) __e2);
         }
-        else if (e1 instanceof double[])
+        else if (__e1 instanceof double[])
         {
-            return Arrays.equals((double[]) e1, (double[]) e2);
+            return Arrays.equals((double[]) __e1, (double[]) __e2);
         }
-        else if (e1 instanceof boolean[])
+        else if (__e1 instanceof boolean[])
         {
-            return Arrays.equals((boolean[]) e1, (boolean[]) e2);
+            return Arrays.equals((boolean[]) __e1, (boolean[]) __e2);
         }
         else
         {
@@ -640,17 +672,17 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    private static boolean deepEquals(Object[] a1, Object[] a2)
+    private static boolean deepEquals(Object[] __a1, Object[] __a2)
     {
-        int length = a1.length;
-        if (a2.length != length)
+        int __length = __a1.length;
+        if (__a2.length != __length)
         {
             return false;
         }
 
-        for (int i = 0; i < length; i++)
+        for (int __i = 0; __i < __length; __i++)
         {
-            if (!deepEquals0(a1[i], a2[i]))
+            if (!deepEquals0(__a1[__i], __a2[__i]))
             {
                 return false;
             }
@@ -658,81 +690,81 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return true;
     }
 
-    public boolean dataEquals(Node a, Node b)
+    public boolean dataEquals(Node __a, Node __b)
     {
-        for (int i = 0; i < data.getCount(); ++i)
+        for (int __i = 0; __i < data.getCount(); ++__i)
         {
-            Class<?> type = data.getType(i);
-            if (type.isPrimitive())
+            Class<?> __type = data.getType(__i);
+            if (__type.isPrimitive())
             {
-                if (type == Integer.TYPE)
+                if (__type == Integer.TYPE)
                 {
-                    int aInt = data.getInt(a, i);
-                    int bInt = data.getInt(b, i);
-                    if (aInt != bInt)
+                    int __aInt = data.getInt(__a, __i);
+                    int __bInt = data.getInt(__b, __i);
+                    if (__aInt != __bInt)
                     {
                         return false;
                     }
                 }
-                else if (type == Boolean.TYPE)
+                else if (__type == Boolean.TYPE)
                 {
-                    boolean aBoolean = data.getBoolean(a, i);
-                    boolean bBoolean = data.getBoolean(b, i);
-                    if (aBoolean != bBoolean)
+                    boolean __aBoolean = data.getBoolean(__a, __i);
+                    boolean __bBoolean = data.getBoolean(__b, __i);
+                    if (__aBoolean != __bBoolean)
                     {
                         return false;
                     }
                 }
-                else if (type == Long.TYPE)
+                else if (__type == Long.TYPE)
                 {
-                    long aLong = data.getLong(a, i);
-                    long bLong = data.getLong(b, i);
-                    if (aLong != bLong)
+                    long __aLong = data.getLong(__a, __i);
+                    long __bLong = data.getLong(__b, __i);
+                    if (__aLong != __bLong)
                     {
                         return false;
                     }
                 }
-                else if (type == Float.TYPE)
+                else if (__type == Float.TYPE)
                 {
-                    float aFloat = data.getFloat(a, i);
-                    float bFloat = data.getFloat(b, i);
-                    if (aFloat != bFloat)
+                    float __aFloat = data.getFloat(__a, __i);
+                    float __bFloat = data.getFloat(__b, __i);
+                    if (__aFloat != __bFloat)
                     {
                         return false;
                     }
                 }
-                else if (type == Double.TYPE)
+                else if (__type == Double.TYPE)
                 {
-                    double aDouble = data.getDouble(a, i);
-                    double bDouble = data.getDouble(b, i);
-                    if (aDouble != bDouble)
+                    double __aDouble = data.getDouble(__a, __i);
+                    double __bDouble = data.getDouble(__b, __i);
+                    if (__aDouble != __bDouble)
                     {
                         return false;
                     }
                 }
-                else if (type == Short.TYPE)
+                else if (__type == Short.TYPE)
                 {
-                    short aShort = data.getShort(a, i);
-                    short bShort = data.getShort(b, i);
-                    if (aShort != bShort)
+                    short __aShort = data.getShort(__a, __i);
+                    short __bShort = data.getShort(__b, __i);
+                    if (__aShort != __bShort)
                     {
                         return false;
                     }
                 }
-                else if (type == Character.TYPE)
+                else if (__type == Character.TYPE)
                 {
-                    char aChar = data.getChar(a, i);
-                    char bChar = data.getChar(b, i);
-                    if (aChar != bChar)
+                    char __aChar = data.getChar(__a, __i);
+                    char __bChar = data.getChar(__b, __i);
+                    if (__aChar != __bChar)
                     {
                         return false;
                     }
                 }
-                else if (type == Byte.TYPE)
+                else if (__type == Byte.TYPE)
                 {
-                    byte aByte = data.getByte(a, i);
-                    byte bByte = data.getByte(b, i);
-                    if (aByte != bByte)
+                    byte __aByte = data.getByte(__a, __i);
+                    byte __bByte = data.getByte(__b, __i);
+                    if (__aByte != __bByte)
                     {
                         return false;
                     }
@@ -740,13 +772,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             }
             else
             {
-                Object objectA = data.getObject(a, i);
-                Object objectB = data.getObject(b, i);
-                if (objectA != objectB)
+                Object __objectA = data.getObject(__a, __i);
+                Object __objectB = data.getObject(__b, __i);
+                if (__objectA != __objectB)
                 {
-                    if (objectA != null && objectB != null)
+                    if (__objectA != null && __objectB != null)
                     {
-                        if (!deepEquals0(objectA, objectB))
+                        if (!deepEquals0(__objectA, __objectB))
                         {
                             return false;
                         }
@@ -761,88 +793,88 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return true;
     }
 
-    public boolean isValid(Position pos, NodeClass<?> from, Edges fromEdges)
+    public boolean isValid(Position __pos, NodeClass<?> __from, Edges __fromEdges)
     {
-        if (this == from)
+        if (this == __from)
         {
             return true;
         }
-        Edges toEdges = getEdges(fromEdges.type());
-        if (pos.getIndex() >= toEdges.getCount())
+        Edges __toEdges = getEdges(__fromEdges.type());
+        if (__pos.getIndex() >= __toEdges.getCount())
         {
             return false;
         }
-        if (pos.getIndex() >= fromEdges.getCount())
+        if (__pos.getIndex() >= __fromEdges.getCount())
         {
             return false;
         }
-        return toEdges.isSame(fromEdges, pos.getIndex());
+        return __toEdges.isSame(__fromEdges, __pos.getIndex());
     }
 
-    static void updateEdgesInPlace(Node node, InplaceUpdateClosure duplicationReplacement, Edges edges)
+    static void updateEdgesInPlace(Node __node, InplaceUpdateClosure __duplicationReplacement, Edges __edges)
     {
-        int index = 0;
-        Type curType = edges.type();
-        int directCount = edges.getDirectCount();
-        final long[] curOffsets = edges.getOffsets();
-        while (index < directCount)
+        int __index = 0;
+        Type __curType = __edges.type();
+        int __directCount = __edges.getDirectCount();
+        final long[] __curOffsets = __edges.getOffsets();
+        while (__index < __directCount)
         {
-            Node edge = Edges.getNode(node, curOffsets, index);
-            if (edge != null)
+            Node __edge = Edges.getNode(__node, __curOffsets, __index);
+            if (__edge != null)
             {
-                Node newEdge = duplicationReplacement.replacement(edge, curType);
-                if (curType == Edges.Type.Inputs)
+                Node __newEdge = __duplicationReplacement.replacement(__edge, __curType);
+                if (__curType == Edges.Type.Inputs)
                 {
-                    node.updateUsages(null, newEdge);
+                    __node.updateUsages(null, __newEdge);
                 }
                 else
                 {
-                    node.updatePredecessor(null, newEdge);
+                    __node.updatePredecessor(null, __newEdge);
                 }
-                edges.initializeNode(node, index, newEdge);
+                __edges.initializeNode(__node, __index, __newEdge);
             }
-            index++;
+            __index++;
         }
 
-        while (index < edges.getCount())
+        while (__index < __edges.getCount())
         {
-            NodeList<Node> list = Edges.getNodeList(node, curOffsets, index);
-            if (list != null)
+            NodeList<Node> __list = Edges.getNodeList(__node, __curOffsets, __index);
+            if (__list != null)
             {
-                edges.initializeList(node, index, updateEdgeListCopy(node, list, duplicationReplacement, curType));
+                __edges.initializeList(__node, __index, updateEdgeListCopy(__node, __list, __duplicationReplacement, __curType));
             }
-            index++;
+            __index++;
         }
     }
 
-    void updateInputSuccInPlace(Node node, InplaceUpdateClosure duplicationReplacement)
+    void updateInputSuccInPlace(Node __node, InplaceUpdateClosure __duplicationReplacement)
     {
-        updateEdgesInPlace(node, duplicationReplacement, inputs);
-        updateEdgesInPlace(node, duplicationReplacement, successors);
+        updateEdgesInPlace(__node, __duplicationReplacement, inputs);
+        updateEdgesInPlace(__node, __duplicationReplacement, successors);
     }
 
-    private static NodeList<Node> updateEdgeListCopy(Node node, NodeList<Node> list, InplaceUpdateClosure duplicationReplacement, Edges.Type type)
+    private static NodeList<Node> updateEdgeListCopy(Node __node, NodeList<Node> __list, InplaceUpdateClosure __duplicationReplacement, Edges.Type __type)
     {
-        NodeList<Node> result = type == Edges.Type.Inputs ? new NodeInputList<>(node, list.size()) : new NodeSuccessorList<>(node, list.size());
+        NodeList<Node> __result = __type == Edges.Type.Inputs ? new NodeInputList<>(__node, __list.size()) : new NodeSuccessorList<>(__node, __list.size());
 
-        for (int i = 0; i < list.count(); ++i)
+        for (int __i = 0; __i < __list.count(); ++__i)
         {
-            Node oldNode = list.get(i);
-            if (oldNode != null)
+            Node __oldNode = __list.get(__i);
+            if (__oldNode != null)
             {
-                Node newNode = duplicationReplacement.replacement(oldNode, type);
-                result.set(i, newNode);
+                Node __newNode = __duplicationReplacement.replacement(__oldNode, __type);
+                __result.set(__i, __newNode);
             }
         }
-        return result;
+        return __result;
     }
 
     /**
      * Gets the input or successor edges defined by this node class.
      */
-    public Edges getEdges(Edges.Type type)
+    public Edges getEdges(Edges.Type __type)
     {
-        return type == Edges.Type.Inputs ? inputs : successors;
+        return __type == Edges.Type.Inputs ? inputs : successors;
     }
 
     public Edges getInputEdges()
@@ -863,13 +895,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     {
         try
         {
-            Node node = (Node) UnsafeAccess.UNSAFE.allocateInstance(getJavaClass());
-            node.init((NodeClass<? extends Node>) this);
-            return node;
+            Node __node = (Node) UnsafeAccess.UNSAFE.allocateInstance(getJavaClass());
+            __node.init((NodeClass<? extends Node>) this);
+            return __node;
         }
-        catch (InstantiationException ex)
+        catch (InstantiationException __ex)
         {
-            throw GraalError.shouldNotReachHere(ex);
+            throw GraalError.shouldNotReachHere(__ex);
         }
     }
 
@@ -884,131 +916,131 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         Node replacement(Node node, Edges.Type type);
     }
 
-    static EconomicMap<Node, Node> addGraphDuplicate(final Graph graph, final Graph oldGraph, int estimatedNodeCount, Iterable<? extends Node> nodes, final DuplicationReplacement replacements)
+    static EconomicMap<Node, Node> addGraphDuplicate(final Graph __graph, final Graph __oldGraph, int __estimatedNodeCount, Iterable<? extends Node> __nodes, final DuplicationReplacement __replacements)
     {
-        final EconomicMap<Node, Node> newNodes;
-        int denseThreshold = oldGraph.getNodeCount() + oldGraph.getNodesDeletedSinceLastCompression() >> 4;
-        if (estimatedNodeCount > denseThreshold)
+        final EconomicMap<Node, Node> __newNodes;
+        int __denseThreshold = __oldGraph.getNodeCount() + __oldGraph.getNodesDeletedSinceLastCompression() >> 4;
+        if (__estimatedNodeCount > __denseThreshold)
         {
             // use dense map
-            newNodes = new NodeMap<>(oldGraph);
+            __newNodes = new NodeMap<>(__oldGraph);
         }
         else
         {
             // use sparse map
-            newNodes = EconomicMap.create(Equivalence.IDENTITY);
+            __newNodes = EconomicMap.create(Equivalence.IDENTITY);
         }
-        createNodeDuplicates(graph, nodes, replacements, newNodes);
+        createNodeDuplicates(__graph, __nodes, __replacements, __newNodes);
 
         // @closure
         InplaceUpdateClosure replacementClosure = new InplaceUpdateClosure()
         {
             @Override
-            public Node replacement(Node node, Edges.Type type)
+            public Node replacement(Node __node, Edges.Type __type)
             {
-                Node target = newNodes.get(node);
-                if (target == null)
+                Node __target = __newNodes.get(__node);
+                if (__target == null)
                 {
-                    Node replacement = node;
-                    if (replacements != null)
+                    Node __replacement = __node;
+                    if (__replacements != null)
                     {
-                        replacement = replacements.replacement(node);
+                        __replacement = __replacements.replacement(__node);
                     }
-                    if (replacement != node)
+                    if (__replacement != __node)
                     {
-                        target = replacement;
+                        __target = __replacement;
                     }
-                    else if (node.graph() == graph && type == Edges.Type.Inputs)
+                    else if (__node.graph() == __graph && __type == Edges.Type.Inputs)
                     {
                         // patch to the outer world
-                        target = node;
+                        __target = __node;
                     }
                 }
-                return target;
+                return __target;
             }
         };
 
         // re-wire inputs
-        for (Node oldNode : nodes)
+        for (Node __oldNode : __nodes)
         {
-            Node node = newNodes.get(oldNode);
-            NodeClass<?> nodeClass = node.getNodeClass();
-            if (replacements == null || replacements.replacement(oldNode) == oldNode)
+            Node __node = __newNodes.get(__oldNode);
+            NodeClass<?> __nodeClass = __node.getNodeClass();
+            if (__replacements == null || __replacements.replacement(__oldNode) == __oldNode)
             {
-                nodeClass.updateInputSuccInPlace(node, replacementClosure);
+                __nodeClass.updateInputSuccInPlace(__node, replacementClosure);
             }
             else
             {
-                transferEdgesDifferentNodeClass(graph, replacements, newNodes, oldNode, node);
+                transferEdgesDifferentNodeClass(__graph, __replacements, __newNodes, __oldNode, __node);
             }
         }
 
-        return newNodes;
+        return __newNodes;
     }
 
-    private static void createNodeDuplicates(final Graph graph, Iterable<? extends Node> nodes, final DuplicationReplacement replacements, final EconomicMap<Node, Node> newNodes)
+    private static void createNodeDuplicates(final Graph __graph, Iterable<? extends Node> __nodes, final DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes)
     {
-        for (Node node : nodes)
+        for (Node __node : __nodes)
         {
-            if (node != null)
+            if (__node != null)
             {
-                Node replacement = node;
-                if (replacements != null)
+                Node __replacement = __node;
+                if (__replacements != null)
                 {
-                    replacement = replacements.replacement(node);
+                    __replacement = __replacements.replacement(__node);
                 }
-                if (replacement != node)
+                if (__replacement != __node)
                 {
-                    newNodes.put(node, replacement);
+                    __newNodes.put(__node, __replacement);
                 }
                 else
                 {
-                    Node newNode = node.clone(graph, Node.WithAllEdges);
-                    newNodes.put(node, newNode);
+                    Node __newNode = __node.clone(__graph, Node.WithAllEdges);
+                    __newNodes.put(__node, __newNode);
                 }
             }
         }
     }
 
-    private static void transferEdgesDifferentNodeClass(final Graph graph, final DuplicationReplacement replacements, final EconomicMap<Node, Node> newNodes, Node oldNode, Node node)
+    private static void transferEdgesDifferentNodeClass(final Graph __graph, final DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes, Node __oldNode, Node __node)
     {
-        transferEdges(graph, replacements, newNodes, oldNode, node, Edges.Type.Inputs);
-        transferEdges(graph, replacements, newNodes, oldNode, node, Edges.Type.Successors);
+        transferEdges(__graph, __replacements, __newNodes, __oldNode, __node, Edges.Type.Inputs);
+        transferEdges(__graph, __replacements, __newNodes, __oldNode, __node, Edges.Type.Successors);
     }
 
-    private static void transferEdges(final Graph graph, final DuplicationReplacement replacements, final EconomicMap<Node, Node> newNodes, Node oldNode, Node node, Edges.Type type)
+    private static void transferEdges(final Graph __graph, final DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes, Node __oldNode, Node __node, Edges.Type __type)
     {
-        NodeClass<?> nodeClass = node.getNodeClass();
-        NodeClass<?> oldNodeClass = oldNode.getNodeClass();
-        Edges oldEdges = oldNodeClass.getEdges(type);
-        for (Position pos : oldEdges.getPositionsIterable(oldNode))
+        NodeClass<?> __nodeClass = __node.getNodeClass();
+        NodeClass<?> __oldNodeClass = __oldNode.getNodeClass();
+        Edges __oldEdges = __oldNodeClass.getEdges(__type);
+        for (Position __pos : __oldEdges.getPositionsIterable(__oldNode))
         {
-            if (!nodeClass.isValid(pos, oldNodeClass, oldEdges))
+            if (!__nodeClass.isValid(__pos, __oldNodeClass, __oldEdges))
             {
                 continue;
             }
-            Node oldEdge = pos.get(oldNode);
-            if (oldEdge != null)
+            Node __oldEdge = __pos.get(__oldNode);
+            if (__oldEdge != null)
             {
-                Node target = newNodes.get(oldEdge);
-                if (target == null)
+                Node __target = __newNodes.get(__oldEdge);
+                if (__target == null)
                 {
-                    Node replacement = oldEdge;
-                    if (replacements != null)
+                    Node __replacement = __oldEdge;
+                    if (__replacements != null)
                     {
-                        replacement = replacements.replacement(oldEdge);
+                        __replacement = __replacements.replacement(__oldEdge);
                     }
-                    if (replacement != oldEdge)
+                    if (__replacement != __oldEdge)
                     {
-                        target = replacement;
+                        __target = __replacement;
                     }
-                    else if (type == Edges.Type.Inputs && oldEdge.graph() == graph)
+                    else if (__type == Edges.Type.Inputs && __oldEdge.graph() == __graph)
                     {
                         // patch to the outer world
-                        target = oldEdge;
+                        __target = __oldEdge;
                     }
                 }
-                pos.set(node, target);
+                __pos.set(__node, __target);
             }
         }
     }
@@ -1045,23 +1077,26 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     // @class NodeClass.RawEdgesIterator
     private static final class RawEdgesIterator implements Iterator<Node>
     {
+        // @field
         protected final Node node;
+        // @field
         protected long mask;
+        // @field
         protected Node nextValue;
 
         // @cons
-        RawEdgesIterator(Node node, long mask)
+        RawEdgesIterator(Node __node, long __mask)
         {
             super();
-            this.node = node;
-            this.mask = mask;
+            this.node = __node;
+            this.mask = __mask;
         }
 
         @Override
         public boolean hasNext()
         {
-            Node next = nextValue;
-            if (next != null)
+            Node __next = nextValue;
+            if (__next != null)
             {
                 return true;
             }
@@ -1076,11 +1111,11 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         {
             while (mask != 0)
             {
-                Node next = getInput();
+                Node __next = getInput();
                 mask = advanceInput();
-                if (next != null)
+                if (__next != null)
                 {
-                    return next;
+                    return __next;
                 }
             }
             return null;
@@ -1089,35 +1124,35 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         @Override
         public Node next()
         {
-            Node next = nextValue;
-            if (next == null)
+            Node __next = nextValue;
+            if (__next == null)
             {
-                next = forward();
-                if (next == null)
+                __next = forward();
+                if (__next == null)
                 {
                     throw new NoSuchElementException();
                 }
                 else
                 {
-                    return next;
+                    return __next;
                 }
             }
             else
             {
                 nextValue = null;
-                return next;
+                return __next;
             }
         }
 
         public final long advanceInput()
         {
-            int state = (int) mask & 0x03;
-            if (state == 0)
+            int __state = (int) mask & 0x03;
+            if (__state == 0)
             {
                 // Skip normal field.
                 return mask >>> NEXT_EDGE;
             }
-            else if (state == 1)
+            else if (__state == 1)
             {
                 // We are iterating a node list.
                 if ((mask & 0xFFFF00) != 0)
@@ -1134,14 +1169,14 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             else
             {
                 // Need to expand node list.
-                NodeList<?> nodeList = Edges.getNodeListUnsafe(node, mask & 0xFC);
-                if (nodeList != null)
+                NodeList<?> __nodeList = Edges.getNodeListUnsafe(node, mask & 0xFC);
+                if (__nodeList != null)
                 {
-                    int size = nodeList.size();
-                    if (size != 0)
+                    int __size = __nodeList.size();
+                    if (__size != 0)
                     {
                         // Set pointer to upper most index of node list.
-                        return ((mask >>> NEXT_EDGE) << 24) | (mask & 0xFD) | ((size - 1) << NEXT_EDGE);
+                        return ((mask >>> NEXT_EDGE) << 24) | (mask & 0xFD) | ((__size - 1) << NEXT_EDGE);
                     }
                 }
                 // Node list is empty or null => skip.
@@ -1151,16 +1186,16 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
         public Node getInput()
         {
-            int state = (int) mask & 0x03;
-            if (state == 0)
+            int __state = (int) mask & 0x03;
+            if (__state == 0)
             {
                 return Edges.getNodeUnsafe(node, mask & 0xFC);
             }
-            else if (state == 1)
+            else if (__state == 1)
             {
                 // We are iterating a node list.
-                NodeList<?> nodeList = Edges.getNodeListUnsafe(node, mask & 0xFC);
-                return nodeList.nodes[nodeList.size() - 1 - (int) ((mask >>> NEXT_EDGE) & 0xFFFF)];
+                NodeList<?> __nodeList = Edges.getNodeListUnsafe(node, mask & 0xFC);
+                return __nodeList.nodes[__nodeList.size() - 1 - (int) ((mask >>> NEXT_EDGE) & 0xFFFF)];
             }
             else
             {
@@ -1181,366 +1216,366 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    public NodeIterable<Node> getSuccessorIterable(final Node node)
+    public NodeIterable<Node> getSuccessorIterable(final Node __node)
     {
-        long mask = this.successorIteration;
+        long __mask = this.successorIteration;
         // @closure
         return new NodeIterable<Node>()
         {
             @Override
             public Iterator<Node> iterator()
             {
-                return new RawEdgesIterator(node, mask);
+                return new RawEdgesIterator(__node, __mask);
             }
         };
     }
 
-    public NodeIterable<Node> getInputIterable(final Node node)
+    public NodeIterable<Node> getInputIterable(final Node __node)
     {
-        long mask = this.inputsIteration;
+        long __mask = this.inputsIteration;
         // @closure
         return new NodeIterable<Node>()
         {
             @Override
             public Iterator<Node> iterator()
             {
-                return new RawEdgesIterator(node, mask);
+                return new RawEdgesIterator(__node, __mask);
             }
         };
     }
 
-    public boolean equalSuccessors(Node node, Node other)
+    public boolean equalSuccessors(Node __node, Node __other)
     {
-        return equalEdges(node, other, successorIteration);
+        return equalEdges(__node, __other, successorIteration);
     }
 
-    public boolean equalInputs(Node node, Node other)
+    public boolean equalInputs(Node __node, Node __other)
     {
-        return equalEdges(node, other, inputsIteration);
+        return equalEdges(__node, __other, inputsIteration);
     }
 
-    private boolean equalEdges(Node node, Node other, long mask)
+    private boolean equalEdges(Node __node, Node __other, long __mask)
     {
-        long myMask = mask;
-        while (myMask != 0)
+        long __myMask = __mask;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Object v1 = Edges.getNodeUnsafe(node, offset);
-                Object v2 = Edges.getNodeUnsafe(other, offset);
-                if (v1 != v2)
+                Object __v1 = Edges.getNodeUnsafe(__node, __offset);
+                Object __v2 = Edges.getNodeUnsafe(__other, __offset);
+                if (__v1 != __v2)
                 {
                     return false;
                 }
             }
             else
             {
-                Object v1 = Edges.getNodeListUnsafe(node, offset);
-                Object v2 = Edges.getNodeListUnsafe(other, offset);
-                if (!Objects.equals(v1, v2))
+                Object __v1 = Edges.getNodeListUnsafe(__node, __offset);
+                Object __v2 = Edges.getNodeListUnsafe(__other, __offset);
+                if (!Objects.equals(__v1, __v2))
                 {
                     return false;
                 }
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
         return true;
     }
 
-    public void pushInputs(Node node, NodeStack stack)
+    public void pushInputs(Node __node, NodeStack __stack)
     {
-        long myMask = this.inputsIteration;
-        while (myMask != 0)
+        long __myMask = this.inputsIteration;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Node curNode = Edges.getNodeUnsafe(node, offset);
-                if (curNode != null)
+                Node __curNode = Edges.getNodeUnsafe(__node, __offset);
+                if (__curNode != null)
                 {
-                    stack.push(curNode);
+                    __stack.push(__curNode);
                 }
             }
             else
             {
-                pushAllHelper(stack, node, offset);
+                pushAllHelper(__stack, __node, __offset);
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
     }
 
-    private static void pushAllHelper(NodeStack stack, Node node, long offset)
+    private static void pushAllHelper(NodeStack __stack, Node __node, long __offset)
     {
-        NodeList<Node> list = Edges.getNodeListUnsafe(node, offset);
-        if (list != null)
+        NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
+        if (__list != null)
         {
-            for (int i = 0; i < list.size(); ++i)
+            for (int __i = 0; __i < __list.size(); ++__i)
             {
-                Node curNode = list.get(i);
-                if (curNode != null)
+                Node __curNode = __list.get(__i);
+                if (__curNode != null)
                 {
-                    stack.push(curNode);
+                    __stack.push(__curNode);
                 }
             }
         }
     }
 
-    public void applySuccessors(Node node, EdgeVisitor consumer)
+    public void applySuccessors(Node __node, EdgeVisitor __consumer)
     {
-        applyEdges(node, consumer, this.successorIteration);
+        applyEdges(__node, __consumer, this.successorIteration);
     }
 
-    public void applyInputs(Node node, EdgeVisitor consumer)
+    public void applyInputs(Node __node, EdgeVisitor __consumer)
     {
-        applyEdges(node, consumer, this.inputsIteration);
+        applyEdges(__node, __consumer, this.inputsIteration);
     }
 
-    private static void applyEdges(Node node, EdgeVisitor consumer, long mask)
+    private static void applyEdges(Node __node, EdgeVisitor __consumer, long __mask)
     {
-        long myMask = mask;
-        while (myMask != 0)
+        long __myMask = __mask;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Node curNode = Edges.getNodeUnsafe(node, offset);
-                if (curNode != null)
+                Node __curNode = Edges.getNodeUnsafe(__node, __offset);
+                if (__curNode != null)
                 {
-                    Node newNode = consumer.apply(node, curNode);
-                    if (newNode != curNode)
+                    Node __newNode = __consumer.apply(__node, __curNode);
+                    if (__newNode != __curNode)
                     {
-                        Edges.putNodeUnsafe(node, offset, newNode);
+                        Edges.putNodeUnsafe(__node, __offset, __newNode);
                     }
                 }
             }
             else
             {
-                applyHelper(node, consumer, offset);
+                applyHelper(__node, __consumer, __offset);
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
     }
 
-    private static void applyHelper(Node node, EdgeVisitor consumer, long offset)
+    private static void applyHelper(Node __node, EdgeVisitor __consumer, long __offset)
     {
-        NodeList<Node> list = Edges.getNodeListUnsafe(node, offset);
-        if (list != null)
+        NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
+        if (__list != null)
         {
-            for (int i = 0; i < list.size(); ++i)
+            for (int __i = 0; __i < __list.size(); ++__i)
             {
-                Node curNode = list.get(i);
-                if (curNode != null)
+                Node __curNode = __list.get(__i);
+                if (__curNode != null)
                 {
-                    Node newNode = consumer.apply(node, curNode);
-                    if (newNode != curNode)
+                    Node __newNode = __consumer.apply(__node, __curNode);
+                    if (__newNode != __curNode)
                     {
-                        list.initialize(i, newNode);
+                        __list.initialize(__i, __newNode);
                     }
                 }
             }
         }
     }
 
-    public void unregisterAtSuccessorsAsPredecessor(Node node)
+    public void unregisterAtSuccessorsAsPredecessor(Node __node)
     {
-        long myMask = this.successorIteration;
-        while (myMask != 0)
+        long __myMask = this.successorIteration;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Node curNode = Edges.getNodeUnsafe(node, offset);
-                if (curNode != null)
+                Node __curNode = Edges.getNodeUnsafe(__node, __offset);
+                if (__curNode != null)
                 {
-                    node.updatePredecessor(curNode, null);
-                    Edges.putNodeUnsafe(node, offset, null);
+                    __node.updatePredecessor(__curNode, null);
+                    Edges.putNodeUnsafe(__node, __offset, null);
                 }
             }
             else
             {
-                unregisterAtSuccessorsAsPredecessorHelper(node, offset);
+                unregisterAtSuccessorsAsPredecessorHelper(__node, __offset);
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
     }
 
-    private static void unregisterAtSuccessorsAsPredecessorHelper(Node node, long offset)
+    private static void unregisterAtSuccessorsAsPredecessorHelper(Node __node, long __offset)
     {
-        NodeList<Node> list = Edges.getNodeListUnsafe(node, offset);
-        if (list != null)
+        NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
+        if (__list != null)
         {
-            for (int i = 0; i < list.size(); ++i)
+            for (int __i = 0; __i < __list.size(); ++__i)
             {
-                Node curNode = list.get(i);
-                if (curNode != null)
+                Node __curNode = __list.get(__i);
+                if (__curNode != null)
                 {
-                    node.updatePredecessor(curNode, null);
+                    __node.updatePredecessor(__curNode, null);
                 }
             }
-            list.clearWithoutUpdate();
+            __list.clearWithoutUpdate();
         }
     }
 
-    public void registerAtSuccessorsAsPredecessor(Node node)
+    public void registerAtSuccessorsAsPredecessor(Node __node)
     {
-        long myMask = this.successorIteration;
-        while (myMask != 0)
+        long __myMask = this.successorIteration;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Node curNode = Edges.getNodeUnsafe(node, offset);
-                if (curNode != null)
+                Node __curNode = Edges.getNodeUnsafe(__node, __offset);
+                if (__curNode != null)
                 {
-                    node.updatePredecessor(null, curNode);
+                    __node.updatePredecessor(null, __curNode);
                 }
             }
             else
             {
-                registerAtSuccessorsAsPredecessorHelper(node, offset);
+                registerAtSuccessorsAsPredecessorHelper(__node, __offset);
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
     }
 
-    private static void registerAtSuccessorsAsPredecessorHelper(Node node, long offset)
+    private static void registerAtSuccessorsAsPredecessorHelper(Node __node, long __offset)
     {
-        NodeList<Node> list = Edges.getNodeListUnsafe(node, offset);
-        if (list != null)
+        NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
+        if (__list != null)
         {
-            for (int i = 0; i < list.size(); ++i)
+            for (int __i = 0; __i < __list.size(); ++__i)
             {
-                Node curNode = list.get(i);
-                if (curNode != null)
+                Node __curNode = __list.get(__i);
+                if (__curNode != null)
                 {
-                    node.updatePredecessor(null, curNode);
+                    __node.updatePredecessor(null, __curNode);
                 }
             }
         }
     }
 
-    public boolean replaceFirstInput(Node node, Node key, Node replacement)
+    public boolean replaceFirstInput(Node __node, Node __key, Node __replacement)
     {
-        return replaceFirstEdge(node, key, replacement, this.inputsIteration);
+        return replaceFirstEdge(__node, __key, __replacement, this.inputsIteration);
     }
 
-    public boolean replaceFirstSuccessor(Node node, Node key, Node replacement)
+    public boolean replaceFirstSuccessor(Node __node, Node __key, Node __replacement)
     {
-        return replaceFirstEdge(node, key, replacement, this.successorIteration);
+        return replaceFirstEdge(__node, __key, __replacement, this.successorIteration);
     }
 
-    public static boolean replaceFirstEdge(Node node, Node key, Node replacement, long mask)
+    public static boolean replaceFirstEdge(Node __node, Node __key, Node __replacement, long __mask)
     {
-        long myMask = mask;
-        while (myMask != 0)
+        long __myMask = __mask;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Object curNode = Edges.getNodeUnsafe(node, offset);
-                if (curNode == key)
+                Object __curNode = Edges.getNodeUnsafe(__node, __offset);
+                if (__curNode == __key)
                 {
-                    Edges.putNodeUnsafe(node, offset, replacement);
+                    Edges.putNodeUnsafe(__node, __offset, __replacement);
                     return true;
                 }
             }
             else
             {
-                NodeList<Node> list = Edges.getNodeListUnsafe(node, offset);
-                if (list != null && list.replaceFirst(key, replacement))
+                NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
+                if (__list != null && __list.replaceFirst(__key, __replacement))
                 {
                     return true;
                 }
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
         return false;
     }
 
-    public void registerAtInputsAsUsage(Node node)
+    public void registerAtInputsAsUsage(Node __node)
     {
-        long myMask = this.inputsIteration;
-        while (myMask != 0)
+        long __myMask = this.inputsIteration;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Node curNode = Edges.getNodeUnsafe(node, offset);
-                if (curNode != null)
+                Node __curNode = Edges.getNodeUnsafe(__node, __offset);
+                if (__curNode != null)
                 {
-                    curNode.addUsage(node);
+                    __curNode.addUsage(__node);
                 }
             }
             else
             {
-                registerAtInputsAsUsageHelper(node, offset);
+                registerAtInputsAsUsageHelper(__node, __offset);
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
     }
 
-    private static void registerAtInputsAsUsageHelper(Node node, long offset)
+    private static void registerAtInputsAsUsageHelper(Node __node, long __offset)
     {
-        NodeList<Node> list = Edges.getNodeListUnsafe(node, offset);
-        if (list != null)
+        NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
+        if (__list != null)
         {
-            for (int i = 0; i < list.size(); ++i)
+            for (int __i = 0; __i < __list.size(); ++__i)
             {
-                Node curNode = list.get(i);
-                if (curNode != null)
+                Node __curNode = __list.get(__i);
+                if (__curNode != null)
                 {
-                    curNode.addUsage(node);
+                    __curNode.addUsage(__node);
                 }
             }
         }
     }
 
-    public void unregisterAtInputsAsUsage(Node node)
+    public void unregisterAtInputsAsUsage(Node __node)
     {
-        long myMask = this.inputsIteration;
-        while (myMask != 0)
+        long __myMask = this.inputsIteration;
+        while (__myMask != 0)
         {
-            long offset = (myMask & OFFSET_MASK);
-            if ((myMask & LIST_MASK) == 0)
+            long __offset = (__myMask & OFFSET_MASK);
+            if ((__myMask & LIST_MASK) == 0)
             {
-                Node curNode = Edges.getNodeUnsafe(node, offset);
-                if (curNode != null)
+                Node __curNode = Edges.getNodeUnsafe(__node, __offset);
+                if (__curNode != null)
                 {
-                    node.removeThisFromUsages(curNode);
-                    if (curNode.hasNoUsages())
+                    __node.removeThisFromUsages(__curNode);
+                    if (__curNode.hasNoUsages())
                     {
-                        node.maybeNotifyZeroUsages(curNode);
+                        __node.maybeNotifyZeroUsages(__curNode);
                     }
-                    Edges.putNodeUnsafe(node, offset, null);
+                    Edges.putNodeUnsafe(__node, __offset, null);
                 }
             }
             else
             {
-                unregisterAtInputsAsUsageHelper(node, offset);
+                unregisterAtInputsAsUsageHelper(__node, __offset);
             }
-            myMask >>>= NEXT_EDGE;
+            __myMask >>>= NEXT_EDGE;
         }
     }
 
-    private static void unregisterAtInputsAsUsageHelper(Node node, long offset)
+    private static void unregisterAtInputsAsUsageHelper(Node __node, long __offset)
     {
-        NodeList<Node> list = Edges.getNodeListUnsafe(node, offset);
-        if (list != null)
+        NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
+        if (__list != null)
         {
-            for (int i = 0; i < list.size(); ++i)
+            for (int __i = 0; __i < __list.size(); ++__i)
             {
-                Node curNode = list.get(i);
-                if (curNode != null)
+                Node __curNode = __list.get(__i);
+                if (__curNode != null)
                 {
-                    node.removeThisFromUsages(curNode);
-                    if (curNode.hasNoUsages())
+                    __node.removeThisFromUsages(__curNode);
+                    if (__curNode.hasNoUsages())
                     {
-                        node.maybeNotifyZeroUsages(curNode);
+                        __node.maybeNotifyZeroUsages(__curNode);
                     }
                 }
             }
-            list.clearWithoutUpdate();
+            __list.clearWithoutUpdate();
         }
     }
 }

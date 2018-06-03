@@ -15,17 +15,22 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class DynamicDeoptimizeNode
 public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implements LIRLowerable, Lowerable, Canonicalizable
 {
+    // @def
     public static final NodeClass<DynamicDeoptimizeNode> TYPE = NodeClass.create(DynamicDeoptimizeNode.class);
 
-    @Input ValueNode actionAndReason;
-    @Input ValueNode speculation;
+    @Input
+    // @field
+    ValueNode actionAndReason;
+    @Input
+    // @field
+    ValueNode speculation;
 
     // @cons
-    public DynamicDeoptimizeNode(ValueNode actionAndReason, ValueNode speculation)
+    public DynamicDeoptimizeNode(ValueNode __actionAndReason, ValueNode __speculation)
     {
         super(TYPE, null);
-        this.actionAndReason = actionAndReason;
-        this.speculation = speculation;
+        this.actionAndReason = __actionAndReason;
+        this.speculation = __speculation;
     }
 
     public ValueNode getActionAndReason()
@@ -39,37 +44,37 @@ public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implemen
     }
 
     @Override
-    public ValueNode getActionAndReason(MetaAccessProvider metaAccess)
+    public ValueNode getActionAndReason(MetaAccessProvider __metaAccess)
     {
         return getActionAndReason();
     }
 
     @Override
-    public ValueNode getSpeculation(MetaAccessProvider metaAccess)
+    public ValueNode getSpeculation(MetaAccessProvider __metaAccess)
     {
         return getSpeculation();
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().emitDeoptimize(gen.operand(actionAndReason), gen.operand(speculation), gen.state(this));
+        __gen.getLIRGeneratorTool().emitDeoptimize(__gen.operand(actionAndReason), __gen.operand(speculation), __gen.state(this));
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (actionAndReason.isConstant() && speculation.isConstant())
         {
-            JavaConstant constant = actionAndReason.asJavaConstant();
-            JavaConstant speculationConstant = speculation.asJavaConstant();
-            return new DeoptimizeNode(tool.getMetaAccess().decodeDeoptAction(constant), tool.getMetaAccess().decodeDeoptReason(constant), tool.getMetaAccess().decodeDebugId(constant), speculationConstant, stateBefore());
+            JavaConstant __constant = actionAndReason.asJavaConstant();
+            JavaConstant __speculationConstant = speculation.asJavaConstant();
+            return new DeoptimizeNode(__tool.getMetaAccess().decodeDeoptAction(__constant), __tool.getMetaAccess().decodeDeoptReason(__constant), __tool.getMetaAccess().decodeDebugId(__constant), __speculationConstant, stateBefore());
         }
         return this;
     }

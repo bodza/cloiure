@@ -16,24 +16,25 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class ValueCompareAndSwapNode
 public final class ValueCompareAndSwapNode extends AbstractCompareAndSwapNode
 {
+    // @def
     public static final NodeClass<ValueCompareAndSwapNode> TYPE = NodeClass.create(ValueCompareAndSwapNode.class);
 
     // @cons
-    public ValueCompareAndSwapNode(ValueNode address, ValueNode expectedValue, ValueNode newValue, LocationIdentity location)
+    public ValueCompareAndSwapNode(ValueNode __address, ValueNode __expectedValue, ValueNode __newValue, LocationIdentity __location)
     {
-        this((AddressNode) address, expectedValue, newValue, location, BarrierType.NONE);
+        this((AddressNode) __address, __expectedValue, __newValue, __location, BarrierType.NONE);
     }
 
     // @cons
-    public ValueCompareAndSwapNode(AddressNode address, ValueNode expectedValue, ValueNode newValue, LocationIdentity location, BarrierType barrierType)
+    public ValueCompareAndSwapNode(AddressNode __address, ValueNode __expectedValue, ValueNode __newValue, LocationIdentity __location, BarrierType __barrierType)
     {
-        super(TYPE, address, location, expectedValue, newValue, barrierType, expectedValue.stamp(NodeView.DEFAULT).meet(newValue.stamp(NodeView.DEFAULT)).unrestricted());
+        super(TYPE, __address, __location, __expectedValue, __newValue, __barrierType, __expectedValue.stamp(NodeView.DEFAULT).meet(__newValue.stamp(NodeView.DEFAULT)).unrestricted());
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRGeneratorTool tool = gen.getLIRGeneratorTool();
-        gen.setResult(this, tool.emitValueCompareAndSwap(gen.operand(getAddress()), gen.operand(getExpectedValue()), gen.operand(getNewValue())));
+        LIRGeneratorTool __tool = __gen.getLIRGeneratorTool();
+        __gen.setResult(this, __tool.emitValueCompareAndSwap(__gen.operand(getAddress()), __gen.operand(getExpectedValue()), __gen.operand(getNewValue())));
     }
 }

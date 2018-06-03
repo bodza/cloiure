@@ -11,6 +11,7 @@ import giraaff.nodes.spi.LoweringTool;
 // @class IntegerDivRemNode
 public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lowerable
 {
+    // @def
     public static final NodeClass<IntegerDivRemNode> TYPE = NodeClass.create(IntegerDivRemNode.class);
 
     // @enum IntegerDivRemNode.Op
@@ -27,20 +28,23 @@ public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lower
         UNSIGNED
     }
 
+    // @field
     private final Op op;
+    // @field
     private final Type type;
+    // @field
     private final boolean canDeopt;
 
     // @cons
-    protected IntegerDivRemNode(NodeClass<? extends IntegerDivRemNode> c, Stamp stamp, Op op, Type type, ValueNode x, ValueNode y)
+    protected IntegerDivRemNode(NodeClass<? extends IntegerDivRemNode> __c, Stamp __stamp, Op __op, Type __type, ValueNode __x, ValueNode __y)
     {
-        super(c, stamp, x, y);
-        this.op = op;
-        this.type = type;
+        super(__c, __stamp, __x, __y);
+        this.op = __op;
+        this.type = __type;
 
         // Assigning canDeopt during constructor, because it must never change during lifetime of the node.
-        IntegerStamp yStamp = (IntegerStamp) getY().stamp(NodeView.DEFAULT);
-        this.canDeopt = yStamp.contains(0) || yStamp.contains(-1);
+        IntegerStamp __yStamp = (IntegerStamp) getY().stamp(NodeView.DEFAULT);
+        this.canDeopt = __yStamp.contains(0) || __yStamp.contains(-1);
     }
 
     public final Op getOp()
@@ -54,9 +58,9 @@ public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lower
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override

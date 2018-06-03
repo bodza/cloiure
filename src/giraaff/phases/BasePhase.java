@@ -16,9 +16,9 @@ public abstract class BasePhase<C>
         super();
     }
 
-    public final void apply(final StructuredGraph graph, final C context)
+    public final void apply(final StructuredGraph __graph, final C __context)
     {
-        this.run(graph, context);
+        this.run(__graph, __context);
     }
 
     protected CharSequence getName()

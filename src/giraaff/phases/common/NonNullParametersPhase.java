@@ -16,15 +16,15 @@ import giraaff.phases.Phase;
 public final class NonNullParametersPhase extends Phase
 {
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        Stamp nonNull = StampFactory.objectNonNull();
-        for (ParameterNode param : graph.getNodes(ParameterNode.TYPE))
+        Stamp __nonNull = StampFactory.objectNonNull();
+        for (ParameterNode __param : __graph.getNodes(ParameterNode.TYPE))
         {
-            if (param.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
+            if (__param.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
             {
-                ObjectStamp paramStamp = (ObjectStamp) param.stamp(NodeView.DEFAULT);
-                param.setStamp(paramStamp.join(nonNull));
+                ObjectStamp __paramStamp = (ObjectStamp) __param.stamp(NodeView.DEFAULT);
+                __param.setStamp(__paramStamp.join(__nonNull));
             }
         }
     }

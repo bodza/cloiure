@@ -28,16 +28,21 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class RegisterFinalizerNode
 public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter
 {
+    // @def
     public static final NodeClass<RegisterFinalizerNode> TYPE = NodeClass.create(RegisterFinalizerNode.class);
 
-    @OptionalInput(InputType.State) FrameState deoptState;
-    @Input ValueNode value;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState deoptState;
+    @Input
+    // @field
+    ValueNode value;
 
     // @cons
-    public RegisterFinalizerNode(ValueNode value)
+    public RegisterFinalizerNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = value;
+        this.value = __value;
     }
 
     @Override
@@ -47,47 +52,47 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // Note that an unconditional call to the runtime routine is made without
         // checking that the object actually has a finalizer. This requires the
         // runtime routine to do the check.
-        ForeignCallLinkage linkage = gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(ForeignCallDescriptors.REGISTER_FINALIZER);
-        gen.getLIRGeneratorTool().emitForeignCall(linkage, gen.state(this), gen.operand(getValue()));
+        ForeignCallLinkage __linkage = __gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(ForeignCallDescriptors.REGISTER_FINALIZER);
+        __gen.getLIRGeneratorTool().emitForeignCall(__linkage, __gen.state(this), __gen.operand(getValue()));
     }
 
     /**
      * Determines if the compiler should emit code to test whether a given object has a finalizer
      * that must be registered with the runtime upon object initialization.
      */
-    public static boolean mayHaveFinalizer(ValueNode object, Assumptions assumptions)
+    public static boolean mayHaveFinalizer(ValueNode __object, Assumptions __assumptions)
     {
-        ObjectStamp objectStamp = (ObjectStamp) object.stamp(NodeView.DEFAULT);
-        if (objectStamp.isExactType())
+        ObjectStamp __objectStamp = (ObjectStamp) __object.stamp(NodeView.DEFAULT);
+        if (__objectStamp.isExactType())
         {
-            return objectStamp.type().hasFinalizer();
+            return __objectStamp.type().hasFinalizer();
         }
-        else if (objectStamp.type() != null)
+        else if (__objectStamp.type() != null)
         {
-            AssumptionResult<Boolean> result = objectStamp.type().hasFinalizableSubclass();
-            if (result.canRecordTo(assumptions))
+            AssumptionResult<Boolean> __result = __objectStamp.type().hasFinalizableSubclass();
+            if (__result.canRecordTo(__assumptions))
             {
-                result.recordTo(assumptions);
-                return result.getResult();
+                __result.recordTo(__assumptions);
+                return __result.getResult();
             }
         }
         return true;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        NodeView view = NodeView.from(tool);
-        if (!(forValue.stamp(view) instanceof ObjectStamp))
+        NodeView __view = NodeView.from(__tool);
+        if (!(__forValue.stamp(__view) instanceof ObjectStamp))
         {
             return this;
         }
-        if (!mayHaveFinalizer(forValue, graph().getAssumptions()))
+        if (!mayHaveFinalizer(__forValue, graph().getAssumptions()))
         {
             return null;
         }
@@ -96,12 +101,12 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(getValue());
-        if (alias instanceof VirtualObjectNode && !((VirtualObjectNode) alias).type().hasFinalizer())
+        ValueNode __alias = __tool.getAlias(getValue());
+        if (__alias instanceof VirtualObjectNode && !((VirtualObjectNode) __alias).type().hasFinalizer())
         {
-            tool.delete();
+            __tool.delete();
         }
     }
 

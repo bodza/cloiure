@@ -30,42 +30,50 @@ import giraaff.word.WordTypes;
 // @class HotSpotForeignCallsProviderImpl
 public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignCallsProvider
 {
+    // @def
     public static final ForeignCallDescriptor OSR_MIGRATION_END = new ForeignCallDescriptor("OSR_migration_end", void.class, long.class);
+    // @def
     public static final ForeignCallDescriptor IDENTITY_HASHCODE = new ForeignCallDescriptor("identity_hashcode", int.class, Object.class);
+    // @def
     public static final ForeignCallDescriptor LOAD_AND_CLEAR_EXCEPTION = new ForeignCallDescriptor("load_and_clear_exception", Object.class, Word.class);
 
+    // @field
     protected final HotSpotGraalRuntime runtime;
 
+    // @field
     protected final EconomicMap<ForeignCallDescriptor, HotSpotForeignCallLinkage> foreignCalls = EconomicMap.create();
+    // @field
     protected final MetaAccessProvider metaAccess;
+    // @field
     protected final CodeCacheProvider codeCache;
+    // @field
     protected final WordTypes wordTypes;
 
     // @cons
-    public HotSpotForeignCallsProviderImpl(HotSpotGraalRuntime runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
+    public HotSpotForeignCallsProviderImpl(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes)
     {
         super();
-        this.runtime = runtime;
-        this.metaAccess = metaAccess;
-        this.codeCache = codeCache;
-        this.wordTypes = wordTypes;
+        this.runtime = __runtime;
+        this.metaAccess = __metaAccess;
+        this.codeCache = __codeCache;
+        this.wordTypes = __wordTypes;
     }
 
     /**
      * Registers the linkage for a foreign call.
      */
-    public HotSpotForeignCallLinkage register(HotSpotForeignCallLinkage linkage)
+    public HotSpotForeignCallLinkage register(HotSpotForeignCallLinkage __linkage)
     {
-        foreignCalls.put(linkage.getDescriptor(), linkage);
-        return linkage;
+        foreignCalls.put(__linkage.getDescriptor(), __linkage);
+        return __linkage;
     }
 
     /**
      * Return true if the descriptor has already been registered.
      */
-    public boolean isRegistered(ForeignCallDescriptor descriptor)
+    public boolean isRegistered(ForeignCallDescriptor __descriptor)
     {
-        return foreignCalls.containsKey(descriptor);
+        return foreignCalls.containsKey(__descriptor);
     }
 
     /**
@@ -78,9 +86,9 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      * @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
      * @param killedLocations the memory locations killed by the stub call
      */
-    public HotSpotForeignCallLinkage registerStubCall(ForeignCallDescriptor descriptor, boolean reexecutable, Transition transition, LocationIdentity... killedLocations)
+    public HotSpotForeignCallLinkage registerStubCall(ForeignCallDescriptor __descriptor, boolean __reexecutable, Transition __transition, LocationIdentity... __killedLocations)
     {
-        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, transition, reexecutable, killedLocations));
+        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, __descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, __transition, __reexecutable, __killedLocations));
     }
 
     /**
@@ -97,10 +105,10 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      *            cannot be re-executed.
      * @param killedLocations the memory locations killed by the foreign call
      */
-    public HotSpotForeignCallLinkage registerForeignCall(ForeignCallDescriptor descriptor, long address, CallingConvention.Type outgoingCcType, RegisterEffect effect, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    public HotSpotForeignCallLinkage registerForeignCall(ForeignCallDescriptor __descriptor, long __address, CallingConvention.Type __outgoingCcType, RegisterEffect __effect, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
-        Class<?> resultType = descriptor.getResultType();
-        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, descriptor, address, effect, outgoingCcType, null, transition, reexecutable, killedLocations));
+        Class<?> __resultType = __descriptor.getResultType();
+        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, __descriptor, __address, __effect, __outgoingCcType, null, __transition, __reexecutable, __killedLocations));
     }
 
     /**
@@ -116,74 +124,79 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      *            cannot be re-executed.
      * @param killedLocations the memory locations killed by the foreign call
      */
-    public void linkForeignCall(HotSpotProviders providers, ForeignCallDescriptor descriptor, long address, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    public void linkForeignCall(HotSpotProviders __providers, ForeignCallDescriptor __descriptor, long __address, boolean __prependThread, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
-        ForeignCallStub stub = new ForeignCallStub(providers, address, descriptor, prependThread, transition, reexecutable, killedLocations);
-        HotSpotForeignCallLinkage linkage = stub.getLinkage();
-        HotSpotForeignCallLinkage targetLinkage = stub.getTargetLinkage();
-        linkage.setCompiledStub(stub);
-        register(linkage);
-        register(targetLinkage);
+        ForeignCallStub __stub = new ForeignCallStub(__providers, __address, __descriptor, __prependThread, __transition, __reexecutable, __killedLocations);
+        HotSpotForeignCallLinkage __linkage = __stub.getLinkage();
+        HotSpotForeignCallLinkage __targetLinkage = __stub.getTargetLinkage();
+        __linkage.setCompiledStub(__stub);
+        register(__linkage);
+        register(__targetLinkage);
     }
 
+    // @def
     public static final boolean PREPEND_THREAD = true;
+    // @def
     public static final boolean DONT_PREPEND_THREAD = !PREPEND_THREAD;
 
+    // @def
     public static final boolean REEXECUTABLE = true;
+    // @def
     public static final boolean NOT_REEXECUTABLE = !REEXECUTABLE;
 
+    // @def
     public static final LocationIdentity[] NO_LOCATIONS = {};
 
     @Override
-    public HotSpotForeignCallLinkage lookupForeignCall(ForeignCallDescriptor descriptor)
+    public HotSpotForeignCallLinkage lookupForeignCall(ForeignCallDescriptor __descriptor)
     {
-        HotSpotForeignCallLinkage callTarget = foreignCalls.get(descriptor);
-        callTarget.finalizeAddress(runtime.getBackend());
-        return callTarget;
+        HotSpotForeignCallLinkage __callTarget = foreignCalls.get(__descriptor);
+        __callTarget.finalizeAddress(runtime.getBackend());
+        return __callTarget;
     }
 
     @Override
-    public boolean isReexecutable(ForeignCallDescriptor descriptor)
+    public boolean isReexecutable(ForeignCallDescriptor __descriptor)
     {
-        return foreignCalls.get(descriptor).isReexecutable();
+        return foreignCalls.get(__descriptor).isReexecutable();
     }
 
     @Override
-    public boolean canDeoptimize(ForeignCallDescriptor descriptor)
+    public boolean canDeoptimize(ForeignCallDescriptor __descriptor)
     {
-        return foreignCalls.get(descriptor).needsDebugInfo();
+        return foreignCalls.get(__descriptor).needsDebugInfo();
     }
 
     @Override
-    public boolean isGuaranteedSafepoint(ForeignCallDescriptor descriptor)
+    public boolean isGuaranteedSafepoint(ForeignCallDescriptor __descriptor)
     {
-        return foreignCalls.get(descriptor).isGuaranteedSafepoint();
+        return foreignCalls.get(__descriptor).isGuaranteedSafepoint();
     }
 
     @Override
-    public LocationIdentity[] getKilledLocations(ForeignCallDescriptor descriptor)
+    public LocationIdentity[] getKilledLocations(ForeignCallDescriptor __descriptor)
     {
-        return foreignCalls.get(descriptor).getKilledLocations();
+        return foreignCalls.get(__descriptor).getKilledLocations();
     }
 
     @Override
-    public LIRKind getValueKind(JavaKind javaKind)
+    public LIRKind getValueKind(JavaKind __javaKind)
     {
-        return LIRKind.fromJavaKind(codeCache.getTarget().arch, javaKind);
+        return LIRKind.fromJavaKind(codeCache.getTarget().arch, __javaKind);
     }
 
     @Override
     public List<Stub> getStubs()
     {
-        List<Stub> stubs = new ArrayList<>();
-        for (HotSpotForeignCallLinkage linkage : foreignCalls.getValues())
+        List<Stub> __stubs = new ArrayList<>();
+        for (HotSpotForeignCallLinkage __linkage : foreignCalls.getValues())
         {
-            if (linkage.isCompiledStub())
+            if (__linkage.isCompiledStub())
             {
-                Stub stub = linkage.getStub();
-                stubs.add(stub);
+                Stub __stub = __linkage.getStub();
+                __stubs.add(__stub);
             }
         }
-        return stubs;
+        return __stubs;
     }
 }

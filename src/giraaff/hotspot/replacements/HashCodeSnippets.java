@@ -29,50 +29,51 @@ public final class HashCodeSnippets implements Snippets
     }
 
     @Snippet
-    public static int identityHashCodeSnippet(final Object thisObj)
+    public static int identityHashCodeSnippet(final Object __thisObj)
     {
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, thisObj == null))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, __thisObj == null))
         {
             return 0;
         }
-        return computeHashCode(thisObj);
+        return computeHashCode(__thisObj);
     }
 
-    static int computeHashCode(final Object x)
+    static int computeHashCode(final Object __x)
     {
-        Word mark = HotSpotReplacementsUtil.loadWordFromObject(x, HotSpotRuntime.markOffset);
+        Word __mark = HotSpotReplacementsUtil.loadWordFromObject(__x, HotSpotRuntime.markOffset);
 
         // this code is independent from biased locking (although it does not look that way)
-        final Word biasedLock = mark.and(HotSpotRuntime.biasedLockMaskInPlace);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(HotSpotRuntime.unlockedMask))))
+        final Word __biasedLock = __mark.and(HotSpotRuntime.biasedLockMaskInPlace);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, __biasedLock.equal(WordFactory.unsigned(HotSpotRuntime.unlockedMask))))
         {
-            int hash = (int) mark.unsignedShiftRight(HotSpotRuntime.identityHashCodeShift).rawValue();
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, hash != HotSpotRuntime.uninitializedIdentityHashCodeValue))
+            int __hash = (int) __mark.unsignedShiftRight(HotSpotRuntime.identityHashCodeShift).rawValue();
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, __hash != HotSpotRuntime.uninitializedIdentityHashCodeValue))
             {
-                return hash;
+                return __hash;
             }
         }
-        return HotSpotReplacementsUtil.identityHashCode(HotSpotForeignCallsProviderImpl.IDENTITY_HASHCODE, x);
+        return HotSpotReplacementsUtil.identityHashCode(HotSpotForeignCallsProviderImpl.IDENTITY_HASHCODE, __x);
     }
 
     // @class HashCodeSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final SnippetInfo identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
         // @cons
-        public Templates(HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders __providers, TargetDescription __target)
         {
-            super(providers, providers.getSnippetReflection(), target);
+            super(__providers, __providers.getSnippetReflection(), __target);
         }
 
-        public void lower(IdentityHashCodeNode node, LoweringTool tool)
+        public void lower(IdentityHashCodeNode __node, LoweringTool __tool)
         {
-            StructuredGraph graph = node.graph();
-            Arguments args = new Arguments(identityHashCodeSnippet, graph.getGuardsStage(), tool.getLoweringStage());
-            args.add("thisObj", node.object);
-            SnippetTemplate template = template(node, args);
-            template.instantiate(providers.getMetaAccess(), node, SnippetTemplate.DEFAULT_REPLACER, args);
+            StructuredGraph __graph = __node.graph();
+            Arguments __args = new Arguments(identityHashCodeSnippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            __args.add("thisObj", __node.object);
+            SnippetTemplate __template = template(__node, __args);
+            __template.instantiate(providers.getMetaAccess(), __node, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

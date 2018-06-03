@@ -25,24 +25,24 @@ public abstract class GeneratedInvocationPlugin implements InvocationPlugin
     @Override
     public abstract boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] args);
 
-    protected boolean checkInjectedArgument(GraphBuilderContext b, ValueNode arg, ResolvedJavaMethod foldAnnotatedMethod)
+    protected boolean checkInjectedArgument(GraphBuilderContext __b, ValueNode __arg, ResolvedJavaMethod __foldAnnotatedMethod)
     {
-        if (arg.isNullConstant())
+        if (__arg.isNullConstant())
         {
             return true;
         }
 
-        MetaAccessProvider metaAccess = b.getMetaAccess();
-        ResolvedJavaMethod executeMethod = metaAccess.lookupJavaMethod(getExecuteMethod());
-        ResolvedJavaType thisClass = metaAccess.lookupJavaType(getClass());
-        ResolvedJavaMethod thisExecuteMethod = thisClass.resolveConcreteMethod(executeMethod, thisClass);
-        if (b.getMethod().equals(thisExecuteMethod))
+        MetaAccessProvider __metaAccess = __b.getMetaAccess();
+        ResolvedJavaMethod __executeMethod = __metaAccess.lookupJavaMethod(getExecuteMethod());
+        ResolvedJavaType __thisClass = __metaAccess.lookupJavaType(getClass());
+        ResolvedJavaMethod __thisExecuteMethod = __thisClass.resolveConcreteMethod(__executeMethod, __thisClass);
+        if (__b.getMethod().equals(__thisExecuteMethod))
         {
             // The "execute" method of this plugin is itself being compiled. In (only) this context,
             // the injected argument of the call to the @Fold annotated method will be non-null.
             return true;
         }
-        throw new AssertionError("must pass null to injected argument of " + foldAnnotatedMethod.format("%H.%n(%p)") + ", not " + arg);
+        throw new AssertionError("must pass null to injected argument of " + __foldAnnotatedMethod.format("%H.%n(%p)") + ", not " + __arg);
     }
 
     private static Method getExecuteMethod()
@@ -51,9 +51,9 @@ public abstract class GeneratedInvocationPlugin implements InvocationPlugin
         {
             return GeneratedInvocationPlugin.class.getMethod("execute", GraphBuilderContext.class, ResolvedJavaMethod.class, InvocationPlugin.Receiver.class, ValueNode[].class);
         }
-        catch (NoSuchMethodException | SecurityException e)
+        catch (NoSuchMethodException | SecurityException __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
     }
 }

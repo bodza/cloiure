@@ -25,9 +25,9 @@ public interface CompilationResultBuilderFactory
     CompilationResultBuilderFactory DEFAULT = new CompilationResultBuilderFactory()
     {
         @Override
-        public CompilationResultBuilder createBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, CompilationResult compilationResult)
+        public CompilationResultBuilder createBuilder(CodeCacheProvider __codeCache, ForeignCallsProvider __foreignCalls, FrameMap __frameMap, Assembler __asm, DataBuilder __dataBuilder, FrameContext __frameContext, CompilationResult __compilationResult)
         {
-            return new CompilationResultBuilder(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, compilationResult);
+            return new CompilationResultBuilder(__codeCache, __foreignCalls, __frameMap, __asm, __dataBuilder, __frameContext, __compilationResult);
         }
     };
 }

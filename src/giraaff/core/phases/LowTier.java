@@ -22,15 +22,15 @@ public final class LowTier extends PhaseSuite<LowTierContext>
     public LowTier()
     {
         super();
-        CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
+        CanonicalizerPhase __canonicalizer = new CanonicalizerPhase();
 
-        appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.LOW_TIER));
+        appendPhase(new LoweringPhase(__canonicalizer, LoweringTool.StandardLoweringStage.LOW_TIER));
         appendPhase(new ExpandLogicPhase());
         appendPhase(new FixReadsPhase(true, new SchedulePhase(GraalOptions.stressTestEarlyReads ? SchedulingStrategy.EARLIEST : SchedulingStrategy.LATEST_OUT_OF_LOOPS)));
 
-        CanonicalizerPhase canonicalizerWithoutGVN = new CanonicalizerPhase();
-        canonicalizerWithoutGVN.disableGVN();
-        appendPhase(canonicalizerWithoutGVN);
+        CanonicalizerPhase __canonicalizerWithoutGVN = new CanonicalizerPhase();
+        __canonicalizerWithoutGVN.disableGVN();
+        appendPhase(__canonicalizerWithoutGVN);
 
         appendPhase(new UseTrappingNullChecksPhase());
         appendPhase(new DeadCodeEliminationPhase(Optionality.Required));

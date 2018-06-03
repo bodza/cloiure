@@ -12,38 +12,38 @@ import giraaff.nodes.StructuredGraph;
 public final class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies>
 {
     // @cons
-    public LoopUnswitchingPhase(LoopPolicies policies)
+    public LoopUnswitchingPhase(LoopPolicies __policies)
     {
-        super(policies);
+        super(__policies);
     }
 
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        if (graph.hasLoops())
+        if (__graph.hasLoops())
         {
-            boolean unswitched;
+            boolean __unswitched;
             do
             {
-                unswitched = false;
-                final LoopsData dataUnswitch = new LoopsData(graph);
-                for (LoopEx loop : dataUnswitch.outerFirst())
+                __unswitched = false;
+                final LoopsData __dataUnswitch = new LoopsData(__graph);
+                for (LoopEx __loop : __dataUnswitch.outerFirst())
                 {
-                    if (getPolicies().shouldTryUnswitch(loop))
+                    if (getPolicies().shouldTryUnswitch(__loop))
                     {
-                        List<ControlSplitNode> controlSplits = LoopTransformations.findUnswitchable(loop);
-                        if (controlSplits != null)
+                        List<ControlSplitNode> __controlSplits = LoopTransformations.findUnswitchable(__loop);
+                        if (__controlSplits != null)
                         {
-                            if (getPolicies().shouldUnswitch(loop, controlSplits))
+                            if (getPolicies().shouldUnswitch(__loop, __controlSplits))
                             {
-                                LoopTransformations.unswitch(loop, controlSplits);
-                                unswitched = true;
+                                LoopTransformations.unswitch(__loop, __controlSplits);
+                                __unswitched = true;
                                 break;
                             }
                         }
                     }
                 }
-            } while (unswitched);
+            } while (__unswitched);
         }
     }
 }

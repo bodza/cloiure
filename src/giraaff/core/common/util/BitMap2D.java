@@ -8,25 +8,27 @@ import java.util.BitSet;
 // @class BitMap2D
 public final class BitMap2D
 {
+    // @field
     private BitSet map;
+    // @field
     private final int bitsPerSlot;
 
-    private int bitIndex(int slotIndex, int bitWithinSlotIndex)
+    private int bitIndex(int __slotIndex, int __bitWithinSlotIndex)
     {
-        return slotIndex * bitsPerSlot + bitWithinSlotIndex;
+        return __slotIndex * bitsPerSlot + __bitWithinSlotIndex;
     }
 
-    private boolean verifyBitWithinSlotIndex(int index)
+    private boolean verifyBitWithinSlotIndex(int __index)
     {
         return true;
     }
 
     // @cons
-    public BitMap2D(int sizeInSlots, int bitsPerSlot)
+    public BitMap2D(int __sizeInSlots, int __bitsPerSlot)
     {
         super();
-        map = new BitSet(sizeInSlots * bitsPerSlot);
-        this.bitsPerSlot = bitsPerSlot;
+        map = new BitSet(__sizeInSlots * __bitsPerSlot);
+        this.bitsPerSlot = __bitsPerSlot;
     }
 
     public int sizeInBits()
@@ -40,47 +42,47 @@ public final class BitMap2D
         return map.size() / bitsPerSlot;
     }
 
-    public boolean isValidIndex(int slotIndex, int bitWithinSlotIndex)
+    public boolean isValidIndex(int __slotIndex, int __bitWithinSlotIndex)
     {
-        return (bitIndex(slotIndex, bitWithinSlotIndex) < sizeInBits());
+        return (bitIndex(__slotIndex, __bitWithinSlotIndex) < sizeInBits());
     }
 
-    public boolean at(int slotIndex, int bitWithinSlotIndex)
+    public boolean at(int __slotIndex, int __bitWithinSlotIndex)
     {
-        return map.get(bitIndex(slotIndex, bitWithinSlotIndex));
+        return map.get(bitIndex(__slotIndex, __bitWithinSlotIndex));
     }
 
-    public void setBit(int slotIndex, int bitWithinSlotIndex)
+    public void setBit(int __slotIndex, int __bitWithinSlotIndex)
     {
-        map.set(bitIndex(slotIndex, bitWithinSlotIndex));
+        map.set(bitIndex(__slotIndex, __bitWithinSlotIndex));
     }
 
-    public void clearBit(int slotIndex, int bitWithinSlotIndex)
+    public void clearBit(int __slotIndex, int __bitWithinSlotIndex)
     {
-        map.clear(bitIndex(slotIndex, bitWithinSlotIndex));
+        map.clear(bitIndex(__slotIndex, __bitWithinSlotIndex));
     }
 
-    public void atPutGrow(int slotIndex, int bitWithinSlotIndex, boolean value)
+    public void atPutGrow(int __slotIndex, int __bitWithinSlotIndex, boolean __value)
     {
-        int size = sizeInSlots();
-        if (size <= slotIndex)
+        int __size = sizeInSlots();
+        if (__size <= __slotIndex)
         {
-            while (size <= slotIndex)
+            while (__size <= __slotIndex)
             {
-                size *= 2;
+                __size *= 2;
             }
-            BitSet newBitMap = new BitSet(size * bitsPerSlot);
-            newBitMap.or(map);
-            map = newBitMap;
+            BitSet __newBitMap = new BitSet(__size * bitsPerSlot);
+            __newBitMap.or(map);
+            map = __newBitMap;
         }
 
-        if (value)
+        if (__value)
         {
-            setBit(slotIndex, bitWithinSlotIndex);
+            setBit(__slotIndex, __bitWithinSlotIndex);
         }
         else
         {
-            clearBit(slotIndex, bitWithinSlotIndex);
+            clearBit(__slotIndex, __bitWithinSlotIndex);
         }
     }
 

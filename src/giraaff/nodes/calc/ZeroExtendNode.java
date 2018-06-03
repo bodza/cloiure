@@ -23,42 +23,44 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class ZeroExtendNode
 public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
 {
+    // @def
     public static final NodeClass<ZeroExtendNode> TYPE = NodeClass.create(ZeroExtendNode.class);
 
+    // @field
     private final boolean inputAlwaysPositive;
 
     // @cons
-    public ZeroExtendNode(ValueNode input, int resultBits)
+    public ZeroExtendNode(ValueNode __input, int __resultBits)
     {
-        this(input, PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)), resultBits, false);
+        this(__input, PrimitiveStamp.getBits(__input.stamp(NodeView.DEFAULT)), __resultBits, false);
     }
 
     // @cons
-    public ZeroExtendNode(ValueNode input, int inputBits, int resultBits, boolean inputAlwaysPositive)
+    public ZeroExtendNode(ValueNode __input, int __inputBits, int __resultBits, boolean __inputAlwaysPositive)
     {
-        super(TYPE, ArithmeticOpTable::getZeroExtend, ArithmeticOpTable::getNarrow, inputBits, resultBits, input);
-        this.inputAlwaysPositive = inputAlwaysPositive;
+        super(TYPE, ArithmeticOpTable::getZeroExtend, ArithmeticOpTable::getNarrow, __inputBits, __resultBits, __input);
+        this.inputAlwaysPositive = __inputAlwaysPositive;
     }
 
-    public static ValueNode create(ValueNode input, int resultBits, NodeView view)
+    public static ValueNode create(ValueNode __input, int __resultBits, NodeView __view)
     {
-        return create(input, PrimitiveStamp.getBits(input.stamp(view)), resultBits, view, false);
+        return create(__input, PrimitiveStamp.getBits(__input.stamp(__view)), __resultBits, __view, false);
     }
 
-    public static ValueNode create(ValueNode input, int inputBits, int resultBits, NodeView view)
+    public static ValueNode create(ValueNode __input, int __inputBits, int __resultBits, NodeView __view)
     {
-        return create(input, inputBits, resultBits, view, false);
+        return create(__input, __inputBits, __resultBits, __view, false);
     }
 
-    public static ValueNode create(ValueNode input, int inputBits, int resultBits, NodeView view, boolean alwaysPositive)
+    public static ValueNode create(ValueNode __input, int __inputBits, int __resultBits, NodeView __view, boolean __alwaysPositive)
     {
-        IntegerConvertOp<ZeroExtend> signExtend = ArithmeticOpTable.forStamp(input.stamp(view)).getZeroExtend();
-        ValueNode synonym = findSynonym(signExtend, input, inputBits, resultBits, signExtend.foldStamp(inputBits, resultBits, input.stamp(view)));
-        if (synonym != null)
+        IntegerConvertOp<ZeroExtend> __signExtend = ArithmeticOpTable.forStamp(__input.stamp(__view)).getZeroExtend();
+        ValueNode __synonym = findSynonym(__signExtend, __input, __inputBits, __resultBits, __signExtend.foldStamp(__inputBits, __resultBits, __input.stamp(__view)));
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return canonical(null, input, inputBits, resultBits, view, alwaysPositive);
+        return canonical(null, __input, __inputBits, __resultBits, __view, __alwaysPositive);
     }
 
     @Override
@@ -73,9 +75,9 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
     }
 
     @Override
-    public boolean preservesOrder(CanonicalCondition cond)
+    public boolean preservesOrder(CanonicalCondition __cond)
     {
-        switch (cond)
+        switch (__cond)
         {
             case LT:
                 return false;
@@ -85,71 +87,71 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode ret = super.canonical(tool, forValue);
-        if (ret != this)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __ret = super.canonical(__tool, __forValue);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        return canonical(this, forValue, getInputBits(), getResultBits(), view, inputAlwaysPositive);
+        return canonical(this, __forValue, getInputBits(), getResultBits(), __view, inputAlwaysPositive);
     }
 
-    private static ValueNode canonical(ZeroExtendNode zeroExtendNode, ValueNode forValue, int inputBits, int resultBits, NodeView view, boolean alwaysPositive)
+    private static ValueNode canonical(ZeroExtendNode __zeroExtendNode, ValueNode __forValue, int __inputBits, int __resultBits, NodeView __view, boolean __alwaysPositive)
     {
-        ZeroExtendNode self = zeroExtendNode;
-        if (forValue instanceof ZeroExtendNode)
+        ZeroExtendNode __self = __zeroExtendNode;
+        if (__forValue instanceof ZeroExtendNode)
         {
             // xxxx -(zero-extend)-> 0000 xxxx -(zero-extend)-> 00000000 0000xxxx
             // ==> xxxx -(zero-extend)-> 00000000 0000xxxx
-            ZeroExtendNode other = (ZeroExtendNode) forValue;
-            return new ZeroExtendNode(other.getValue(), other.getInputBits(), resultBits, other.isInputAlwaysPositive());
+            ZeroExtendNode __other = (ZeroExtendNode) __forValue;
+            return new ZeroExtendNode(__other.getValue(), __other.getInputBits(), __resultBits, __other.isInputAlwaysPositive());
         }
-        if (forValue instanceof NarrowNode)
+        if (__forValue instanceof NarrowNode)
         {
-            NarrowNode narrow = (NarrowNode) forValue;
-            Stamp inputStamp = narrow.getValue().stamp(view);
-            if (inputStamp instanceof IntegerStamp)
+            NarrowNode __narrow = (NarrowNode) __forValue;
+            Stamp __inputStamp = __narrow.getValue().stamp(__view);
+            if (__inputStamp instanceof IntegerStamp)
             {
-                IntegerStamp istamp = (IntegerStamp) inputStamp;
-                long mask = CodeUtil.mask(PrimitiveStamp.getBits(narrow.stamp(view)));
+                IntegerStamp __istamp = (IntegerStamp) __inputStamp;
+                long __mask = CodeUtil.mask(PrimitiveStamp.getBits(__narrow.stamp(__view)));
 
-                if ((istamp.upMask() & ~mask) == 0)
+                if ((__istamp.upMask() & ~__mask) == 0)
                 {
                     // The original value cannot change because of the narrow and zero extend.
 
-                    if (istamp.getBits() < resultBits)
+                    if (__istamp.getBits() < __resultBits)
                     {
                         // Need to keep the zero extend, skip the narrow.
-                        return create(narrow.getValue(), resultBits, view);
+                        return create(__narrow.getValue(), __resultBits, __view);
                     }
-                    else if (istamp.getBits() > resultBits)
+                    else if (__istamp.getBits() > __resultBits)
                     {
                         // Need to keep the narrow, skip the zero extend.
-                        return NarrowNode.create(narrow.getValue(), resultBits, view);
+                        return NarrowNode.create(__narrow.getValue(), __resultBits, __view);
                     }
                     else
                     {
                         // Just return the original value.
-                        return narrow.getValue();
+                        return __narrow.getValue();
                     }
                 }
             }
         }
 
-        if (self == null)
+        if (__self == null)
         {
-            self = new ZeroExtendNode(forValue, inputBits, resultBits, alwaysPositive);
+            __self = new ZeroExtendNode(__forValue, __inputBits, __resultBits, __alwaysPositive);
         }
-        return self;
+        return __self;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitZeroExtend(nodeValueMap.operand(getValue()), getInputBits(), getResultBits()));
+        __nodeValueMap.setResult(this, __gen.emitZeroExtend(__nodeValueMap.operand(getValue()), getInputBits(), getResultBits()));
     }
 
     @Override

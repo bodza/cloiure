@@ -7,13 +7,14 @@ import giraaff.graph.iterators.NodeIterable;
 // @class NodeUsageIterable
 final class NodeUsageIterable implements NodeIterable<Node>
 {
+    // @field
     private final Node node;
 
     // @cons
-    NodeUsageIterable(Node node)
+    NodeUsageIterable(Node __node)
     {
         super();
-        this.node = node;
+        this.node = __node;
     }
 
     @Override

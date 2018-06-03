@@ -17,11 +17,18 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class AbstractWriteNode
 public abstract class AbstractWriteNode extends FixedAccessNode implements StateSplit, MemoryCheckpoint.Single, MemoryAccess, GuardingNode
 {
+    // @def
     public static final NodeClass<AbstractWriteNode> TYPE = NodeClass.create(AbstractWriteNode.class);
 
-    @Input ValueNode value;
-    @OptionalInput(InputType.State) FrameState stateAfter;
-    @OptionalInput(InputType.Memory) Node lastLocationAccess;
+    @Input
+    // @field
+    ValueNode value;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateAfter;
+    @OptionalInput(InputType.Memory)
+    // @field
+    Node lastLocationAccess;
 
     @Override
     public FrameState stateAfter()
@@ -30,10 +37,10 @@ public abstract class AbstractWriteNode extends FixedAccessNode implements State
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -48,16 +55,16 @@ public abstract class AbstractWriteNode extends FixedAccessNode implements State
     }
 
     // @cons
-    protected AbstractWriteNode(NodeClass<? extends AbstractWriteNode> c, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType)
+    protected AbstractWriteNode(NodeClass<? extends AbstractWriteNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType)
     {
-        super(c, address, location, StampFactory.forVoid(), barrierType);
-        this.value = value;
+        super(__c, __address, __location, StampFactory.forVoid(), __barrierType);
+        this.value = __value;
     }
 
     @Override
-    public boolean isAllowedUsageType(InputType type)
+    public boolean isAllowedUsageType(InputType __type)
     {
-        return (type == InputType.Guard && getNullCheck()) ? true : super.isAllowedUsageType(type);
+        return (__type == InputType.Guard && getNullCheck()) ? true : super.isAllowedUsageType(__type);
     }
 
     @Override
@@ -67,10 +74,10 @@ public abstract class AbstractWriteNode extends FixedAccessNode implements State
     }
 
     @Override
-    public void setLastLocationAccess(MemoryNode lla)
+    public void setLastLocationAccess(MemoryNode __lla)
     {
-        Node newLla = ValueNodeUtil.asNode(lla);
-        updateUsages(lastLocationAccess, newLla);
-        lastLocationAccess = newLla;
+        Node __newLla = ValueNodeUtil.asNode(__lla);
+        updateUsages(lastLocationAccess, __newLla);
+        lastLocationAccess = __newLla;
     }
 }

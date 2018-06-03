@@ -22,27 +22,30 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class FloatingReadNode
 public final class FloatingReadNode extends FloatingAccessNode implements LIRLowerableAccess, Canonicalizable
 {
+    // @def
     public static final NodeClass<FloatingReadNode> TYPE = NodeClass.create(FloatingReadNode.class);
 
-    @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
+    @OptionalInput(InputType.Memory)
+    // @field
+    MemoryNode lastLocationAccess;
 
     // @cons
-    public FloatingReadNode(AddressNode address, LocationIdentity location, MemoryNode lastLocationAccess, Stamp stamp)
+    public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp)
     {
-        this(address, location, lastLocationAccess, stamp, null, BarrierType.NONE);
+        this(__address, __location, __lastLocationAccess, __stamp, null, BarrierType.NONE);
     }
 
     // @cons
-    public FloatingReadNode(AddressNode address, LocationIdentity location, MemoryNode lastLocationAccess, Stamp stamp, GuardingNode guard)
+    public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp, GuardingNode __guard)
     {
-        this(address, location, lastLocationAccess, stamp, guard, BarrierType.NONE);
+        this(__address, __location, __lastLocationAccess, __stamp, __guard, BarrierType.NONE);
     }
 
     // @cons
-    public FloatingReadNode(AddressNode address, LocationIdentity location, MemoryNode lastLocationAccess, Stamp stamp, GuardingNode guard, BarrierType barrierType)
+    public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
     {
-        super(TYPE, address, location, stamp, guard, barrierType);
-        this.lastLocationAccess = lastLocationAccess;
+        super(TYPE, __address, __location, __stamp, __guard, __barrierType);
+        this.lastLocationAccess = __lastLocationAccess;
 
         // The input to floating reads must be always non-null or have at least a guard.
     }
@@ -54,34 +57,34 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
     }
 
     @Override
-    public void setLastLocationAccess(MemoryNode newlla)
+    public void setLastLocationAccess(MemoryNode __newlla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(newlla));
-        lastLocationAccess = newlla;
+        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__newlla));
+        lastLocationAccess = __newlla;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRKind readKind = gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
-        gen.setResult(this, gen.getLIRGeneratorTool().getArithmetic().emitLoad(readKind, gen.operand(address), null));
+        LIRKind __readKind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitLoad(__readKind, __gen.operand(address), null));
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        Node result = ReadNode.canonicalizeRead(this, getAddress(), getLocationIdentity(), tool);
-        if (result != this)
+        Node __result = ReadNode.canonicalizeRead(this, getAddress(), getLocationIdentity(), __tool);
+        if (__result != this)
         {
-            return result;
+            return __result;
         }
-        if (tool.canonicalizeReads() && getAddress().hasMoreThanOneUsage() && lastLocationAccess instanceof WriteNode)
+        if (__tool.canonicalizeReads() && getAddress().hasMoreThanOneUsage() && lastLocationAccess instanceof WriteNode)
         {
-            WriteNode write = (WriteNode) lastLocationAccess;
-            if (write.getAddress() == getAddress() && write.getAccessStamp().isCompatible(getAccessStamp()))
+            WriteNode __write = (WriteNode) lastLocationAccess;
+            if (__write.getAddress() == getAddress() && __write.getAccessStamp().isCompatible(getAccessStamp()))
             {
                 // same memory location with no intervening write
-                return write.value();
+                return __write.value();
             }
         }
         return this;
@@ -90,9 +93,9 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
     @Override
     public FixedAccessNode asFixedNode()
     {
-        ReadNode result = graph().add(new ReadNode(getAddress(), getLocationIdentity(), stamp(NodeView.DEFAULT), getBarrierType()));
-        result.setGuard(getGuard());
-        return result;
+        ReadNode __result = graph().add(new ReadNode(getAddress(), getLocationIdentity(), stamp(NodeView.DEFAULT), getBarrierType()));
+        __result.setGuard(getGuard());
+        return __result;
     }
 
     @Override

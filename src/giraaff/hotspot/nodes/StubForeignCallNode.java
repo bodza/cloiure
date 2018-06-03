@@ -26,20 +26,25 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class StubForeignCallNode
 public final class StubForeignCallNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Multi
 {
+    // @def
     public static final NodeClass<StubForeignCallNode> TYPE = NodeClass.create(StubForeignCallNode.class);
 
-    @Input NodeInputList<ValueNode> arguments;
+    @Input
+    // @field
+    NodeInputList<ValueNode> arguments;
+    // @field
     protected final ForeignCallsProvider foreignCalls;
 
+    // @field
     protected final ForeignCallDescriptor descriptor;
 
     // @cons
-    public StubForeignCallNode(@InjectedNodeParameter ForeignCallsProvider foreignCalls, @InjectedNodeParameter Stamp stamp, ForeignCallDescriptor descriptor, ValueNode... arguments)
+    public StubForeignCallNode(@InjectedNodeParameter ForeignCallsProvider __foreignCalls, @InjectedNodeParameter Stamp __stamp, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
-        super(TYPE, stamp);
-        this.arguments = new NodeInputList<>(this, arguments);
-        this.descriptor = descriptor;
-        this.foreignCalls = foreignCalls;
+        super(TYPE, __stamp);
+        this.arguments = new NodeInputList<>(this, __arguments);
+        this.descriptor = __descriptor;
+        this.foreignCalls = __foreignCalls;
     }
 
     public ForeignCallDescriptor getDescriptor()
@@ -50,31 +55,31 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
     @Override
     public LocationIdentity[] getLocationIdentities()
     {
-        LocationIdentity[] killedLocations = foreignCalls.getKilledLocations(descriptor);
-        killedLocations = Arrays.copyOf(killedLocations, killedLocations.length + 1);
-        killedLocations[killedLocations.length - 1] = HotSpotReplacementsUtil.PENDING_EXCEPTION_LOCATION;
-        return killedLocations;
+        LocationIdentity[] __killedLocations = foreignCalls.getKilledLocations(descriptor);
+        __killedLocations = Arrays.copyOf(__killedLocations, __killedLocations.length + 1);
+        __killedLocations[__killedLocations.length - 1] = HotSpotReplacementsUtil.PENDING_EXCEPTION_LOCATION;
+        return __killedLocations;
     }
 
-    protected Value[] operands(NodeLIRBuilderTool gen)
+    protected Value[] operands(NodeLIRBuilderTool __gen)
     {
-        Value[] operands = new Value[arguments.size()];
-        for (int i = 0; i < operands.length; i++)
+        Value[] __operands = new Value[arguments.size()];
+        for (int __i = 0; __i < __operands.length; __i++)
         {
-            operands[i] = gen.operand(arguments.get(i));
+            __operands[__i] = __gen.operand(arguments.get(__i));
         }
-        return operands;
+        return __operands;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        ForeignCallLinkage linkage = foreignCalls.lookupForeignCall(descriptor);
-        Value[] operands = operands(gen);
-        Value result = gen.getLIRGeneratorTool().emitForeignCall(linkage, null, operands);
-        if (result != null)
+        ForeignCallLinkage __linkage = foreignCalls.lookupForeignCall(descriptor);
+        Value[] __operands = operands(__gen);
+        Value __result = __gen.getLIRGeneratorTool().emitForeignCall(__linkage, null, __operands);
+        if (__result != null)
         {
-            gen.setResult(this, result);
+            __gen.setResult(this, __result);
         }
     }
 }

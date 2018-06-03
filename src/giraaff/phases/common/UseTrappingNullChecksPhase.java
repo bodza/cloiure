@@ -36,206 +36,206 @@ import giraaff.phases.tiers.LowTierContext;
 public final class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
 {
     @Override
-    protected void run(StructuredGraph graph, LowTierContext context)
+    protected void run(StructuredGraph __graph, LowTierContext __context)
     {
-        if (!GraalOptions.useTrappingNullChecks || context.getTarget().implicitNullCheckLimit <= 0)
+        if (!GraalOptions.useTrappingNullChecks || __context.getTarget().implicitNullCheckLimit <= 0)
         {
             return;
         }
 
-        long implicitNullCheckLimit = context.getTarget().implicitNullCheckLimit;
-        for (DeoptimizeNode deopt : graph.getNodes(DeoptimizeNode.TYPE))
+        long __implicitNullCheckLimit = __context.getTarget().implicitNullCheckLimit;
+        for (DeoptimizeNode __deopt : __graph.getNodes(DeoptimizeNode.TYPE))
         {
-            tryUseTrappingNullCheck(deopt, deopt.predecessor(), deopt.getReason(), deopt.getSpeculation(), implicitNullCheckLimit);
+            tryUseTrappingNullCheck(__deopt, __deopt.predecessor(), __deopt.getReason(), __deopt.getSpeculation(), __implicitNullCheckLimit);
         }
-        for (DynamicDeoptimizeNode deopt : graph.getNodes(DynamicDeoptimizeNode.TYPE))
+        for (DynamicDeoptimizeNode __deopt : __graph.getNodes(DynamicDeoptimizeNode.TYPE))
         {
-            tryUseTrappingNullCheck(context.getMetaAccess(), deopt, implicitNullCheckLimit);
+            tryUseTrappingNullCheck(__context.getMetaAccess(), __deopt, __implicitNullCheckLimit);
         }
     }
 
-    private static void tryUseTrappingNullCheck(MetaAccessProvider metaAccessProvider, DynamicDeoptimizeNode deopt, long implicitNullCheckLimit)
+    private static void tryUseTrappingNullCheck(MetaAccessProvider __metaAccessProvider, DynamicDeoptimizeNode __deopt, long __implicitNullCheckLimit)
     {
-        Node predecessor = deopt.predecessor();
-        if (predecessor instanceof AbstractMergeNode)
+        Node __predecessor = __deopt.predecessor();
+        if (__predecessor instanceof AbstractMergeNode)
         {
-            AbstractMergeNode merge = (AbstractMergeNode) predecessor;
+            AbstractMergeNode __merge = (AbstractMergeNode) __predecessor;
 
             // Process each predecessor at the merge, unpacking the reasons and speculations as needed.
-            ValueNode reason = deopt.getActionAndReason();
-            ValuePhiNode reasonPhi = null;
-            List<ValueNode> reasons = null;
-            int expectedPhis = 0;
+            ValueNode __reason = __deopt.getActionAndReason();
+            ValuePhiNode __reasonPhi = null;
+            List<ValueNode> __reasons = null;
+            int __expectedPhis = 0;
 
-            if (reason instanceof ValuePhiNode)
+            if (__reason instanceof ValuePhiNode)
             {
-                reasonPhi = (ValuePhiNode) reason;
-                if (reasonPhi.merge() != merge)
+                __reasonPhi = (ValuePhiNode) __reason;
+                if (__reasonPhi.merge() != __merge)
                 {
                     return;
                 }
-                reasons = reasonPhi.values().snapshot();
-                expectedPhis++;
+                __reasons = __reasonPhi.values().snapshot();
+                __expectedPhis++;
             }
-            else if (!reason.isConstant())
+            else if (!__reason.isConstant())
             {
                 return;
             }
 
-            ValueNode speculation = deopt.getSpeculation();
-            ValuePhiNode speculationPhi = null;
-            List<ValueNode> speculations = null;
-            if (speculation instanceof ValuePhiNode)
+            ValueNode __speculation = __deopt.getSpeculation();
+            ValuePhiNode __speculationPhi = null;
+            List<ValueNode> __speculations = null;
+            if (__speculation instanceof ValuePhiNode)
             {
-                speculationPhi = (ValuePhiNode) speculation;
-                if (speculationPhi.merge() != merge)
+                __speculationPhi = (ValuePhiNode) __speculation;
+                if (__speculationPhi.merge() != __merge)
                 {
                     return;
                 }
-                speculations = speculationPhi.values().snapshot();
-                expectedPhis++;
+                __speculations = __speculationPhi.values().snapshot();
+                __expectedPhis++;
             }
 
-            if (merge.phis().count() != expectedPhis)
+            if (__merge.phis().count() != __expectedPhis)
             {
                 return;
             }
 
-            int index = 0;
-            for (AbstractEndNode end : merge.cfgPredecessors().snapshot())
+            int __index = 0;
+            for (AbstractEndNode __end : __merge.cfgPredecessors().snapshot())
             {
-                ValueNode thisReason = reasons != null ? reasons.get(index) : reason;
-                ValueNode thisSpeculation = speculations != null ? speculations.get(index++) : speculation;
-                if (!thisReason.isConstant() || !thisSpeculation.isConstant() || !thisSpeculation.asConstant().equals(JavaConstant.NULL_POINTER))
+                ValueNode __thisReason = __reasons != null ? __reasons.get(__index) : __reason;
+                ValueNode __thisSpeculation = __speculations != null ? __speculations.get(__index++) : __speculation;
+                if (!__thisReason.isConstant() || !__thisSpeculation.isConstant() || !__thisSpeculation.asConstant().equals(JavaConstant.NULL_POINTER))
                 {
                     continue;
                 }
-                DeoptimizationReason deoptimizationReason = metaAccessProvider.decodeDeoptReason(thisReason.asJavaConstant());
-                tryUseTrappingNullCheck(deopt, end.predecessor(), deoptimizationReason, null, implicitNullCheckLimit);
+                DeoptimizationReason __deoptimizationReason = __metaAccessProvider.decodeDeoptReason(__thisReason.asJavaConstant());
+                tryUseTrappingNullCheck(__deopt, __end.predecessor(), __deoptimizationReason, null, __implicitNullCheckLimit);
             }
         }
     }
 
-    private static void tryUseTrappingNullCheck(AbstractDeoptimizeNode deopt, Node predecessor, DeoptimizationReason deoptimizationReason, JavaConstant speculation, long implicitNullCheckLimit)
+    private static void tryUseTrappingNullCheck(AbstractDeoptimizeNode __deopt, Node __predecessor, DeoptimizationReason __deoptimizationReason, JavaConstant __speculation, long __implicitNullCheckLimit)
     {
-        if (deoptimizationReason != DeoptimizationReason.NullCheckException && deoptimizationReason != DeoptimizationReason.UnreachedCode)
+        if (__deoptimizationReason != DeoptimizationReason.NullCheckException && __deoptimizationReason != DeoptimizationReason.UnreachedCode)
         {
             return;
         }
-        if (speculation != null && !speculation.equals(JavaConstant.NULL_POINTER))
+        if (__speculation != null && !__speculation.equals(JavaConstant.NULL_POINTER))
         {
             return;
         }
-        if (predecessor instanceof AbstractMergeNode)
+        if (__predecessor instanceof AbstractMergeNode)
         {
-            AbstractMergeNode merge = (AbstractMergeNode) predecessor;
-            if (merge.phis().isEmpty())
+            AbstractMergeNode __merge = (AbstractMergeNode) __predecessor;
+            if (__merge.phis().isEmpty())
             {
-                for (AbstractEndNode end : merge.cfgPredecessors().snapshot())
+                for (AbstractEndNode __end : __merge.cfgPredecessors().snapshot())
                 {
-                    checkPredecessor(deopt, end.predecessor(), deoptimizationReason, implicitNullCheckLimit);
+                    checkPredecessor(__deopt, __end.predecessor(), __deoptimizationReason, __implicitNullCheckLimit);
                 }
             }
         }
-        else if (predecessor instanceof AbstractBeginNode)
+        else if (__predecessor instanceof AbstractBeginNode)
         {
-            checkPredecessor(deopt, predecessor, deoptimizationReason, implicitNullCheckLimit);
+            checkPredecessor(__deopt, __predecessor, __deoptimizationReason, __implicitNullCheckLimit);
         }
     }
 
-    private static void checkPredecessor(AbstractDeoptimizeNode deopt, Node predecessor, DeoptimizationReason deoptimizationReason, long implicitNullCheckLimit)
+    private static void checkPredecessor(AbstractDeoptimizeNode __deopt, Node __predecessor, DeoptimizationReason __deoptimizationReason, long __implicitNullCheckLimit)
     {
-        Node current = predecessor;
-        AbstractBeginNode branch = null;
-        while (current instanceof AbstractBeginNode)
+        Node __current = __predecessor;
+        AbstractBeginNode __branch = null;
+        while (__current instanceof AbstractBeginNode)
         {
-            branch = (AbstractBeginNode) current;
-            if (branch.anchored().isNotEmpty())
+            __branch = (AbstractBeginNode) __current;
+            if (__branch.anchored().isNotEmpty())
             {
                 // some input of the deopt framestate is anchored to this branch
                 return;
             }
-            current = current.predecessor();
+            __current = __current.predecessor();
         }
-        if (current instanceof IfNode)
+        if (__current instanceof IfNode)
         {
-            IfNode ifNode = (IfNode) current;
-            if (branch != ifNode.trueSuccessor())
+            IfNode __ifNode = (IfNode) __current;
+            if (__branch != __ifNode.trueSuccessor())
             {
                 return;
             }
-            LogicNode condition = ifNode.condition();
-            if (condition instanceof IsNullNode)
+            LogicNode __condition = __ifNode.condition();
+            if (__condition instanceof IsNullNode)
             {
-                replaceWithTrappingNullCheck(deopt, ifNode, condition, deoptimizationReason, implicitNullCheckLimit);
+                replaceWithTrappingNullCheck(__deopt, __ifNode, __condition, __deoptimizationReason, __implicitNullCheckLimit);
             }
         }
     }
 
-    private static void replaceWithTrappingNullCheck(AbstractDeoptimizeNode deopt, IfNode ifNode, LogicNode condition, DeoptimizationReason deoptimizationReason, long implicitNullCheckLimit)
+    private static void replaceWithTrappingNullCheck(AbstractDeoptimizeNode __deopt, IfNode __ifNode, LogicNode __condition, DeoptimizationReason __deoptimizationReason, long __implicitNullCheckLimit)
     {
-        IsNullNode isNullNode = (IsNullNode) condition;
-        AbstractBeginNode nonTrappingContinuation = ifNode.falseSuccessor();
-        AbstractBeginNode trappingContinuation = ifNode.trueSuccessor();
+        IsNullNode __isNullNode = (IsNullNode) __condition;
+        AbstractBeginNode __nonTrappingContinuation = __ifNode.falseSuccessor();
+        AbstractBeginNode __trappingContinuation = __ifNode.trueSuccessor();
 
-        DeoptimizingFixedWithNextNode trappingNullCheck = null;
-        FixedNode nextNonTrapping = nonTrappingContinuation.next();
-        ValueNode value = isNullNode.getValue();
-        if (GraalOptions.optImplicitNullChecks && implicitNullCheckLimit > 0)
+        DeoptimizingFixedWithNextNode __trappingNullCheck = null;
+        FixedNode __nextNonTrapping = __nonTrappingContinuation.next();
+        ValueNode __value = __isNullNode.getValue();
+        if (GraalOptions.optImplicitNullChecks && __implicitNullCheckLimit > 0)
         {
-            if (nextNonTrapping instanceof FixedAccessNode)
+            if (__nextNonTrapping instanceof FixedAccessNode)
             {
-                FixedAccessNode fixedAccessNode = (FixedAccessNode) nextNonTrapping;
-                if (fixedAccessNode.canNullCheck())
+                FixedAccessNode __fixedAccessNode = (FixedAccessNode) __nextNonTrapping;
+                if (__fixedAccessNode.canNullCheck())
                 {
-                    AddressNode address = fixedAccessNode.getAddress();
-                    ValueNode base = address.getBase();
-                    ValueNode index = address.getIndex();
+                    AddressNode __address = __fixedAccessNode.getAddress();
+                    ValueNode __base = __address.getBase();
+                    ValueNode __index = __address.getIndex();
                     // allow for architectures which cannot fold an
                     // intervening uncompress out of the address chain
-                    if (base != null && base instanceof CompressionNode)
+                    if (__base != null && __base instanceof CompressionNode)
                     {
-                        base = ((CompressionNode) base).getValue();
+                        __base = ((CompressionNode) __base).getValue();
                     }
-                    if (index != null && index instanceof CompressionNode)
+                    if (__index != null && __index instanceof CompressionNode)
                     {
-                        index = ((CompressionNode) index).getValue();
+                        __index = ((CompressionNode) __index).getValue();
                     }
-                    if (((base == value && index == null) || (base == null && index == value)) && address.getMaxConstantDisplacement() < implicitNullCheckLimit)
+                    if (((__base == __value && __index == null) || (__base == null && __index == __value)) && __address.getMaxConstantDisplacement() < __implicitNullCheckLimit)
                     {
                         // Opportunity for implicit null check as part of an existing read found!
-                        fixedAccessNode.setStateBefore(deopt.stateBefore());
-                        fixedAccessNode.setNullCheck(true);
-                        deopt.graph().removeSplit(ifNode, nonTrappingContinuation);
-                        trappingNullCheck = fixedAccessNode;
+                        __fixedAccessNode.setStateBefore(__deopt.stateBefore());
+                        __fixedAccessNode.setNullCheck(true);
+                        __deopt.graph().removeSplit(__ifNode, __nonTrappingContinuation);
+                        __trappingNullCheck = __fixedAccessNode;
                     }
                 }
             }
         }
 
-        if (trappingNullCheck == null)
+        if (__trappingNullCheck == null)
         {
             // Need to add a null check node.
-            trappingNullCheck = deopt.graph().add(new NullCheckNode(value));
-            deopt.graph().replaceSplit(ifNode, trappingNullCheck, nonTrappingContinuation);
+            __trappingNullCheck = __deopt.graph().add(new NullCheckNode(__value));
+            __deopt.graph().replaceSplit(__ifNode, __trappingNullCheck, __nonTrappingContinuation);
         }
 
-        trappingNullCheck.setStateBefore(deopt.stateBefore());
+        __trappingNullCheck.setStateBefore(__deopt.stateBefore());
 
         /*
          * We now have the pattern NullCheck/BeginNode/... It's possible some node is using the
          * BeginNode as a guard input, so replace guard users of the Begin with the NullCheck and
          * then remove the Begin from the graph.
          */
-        nonTrappingContinuation.replaceAtUsages(InputType.Guard, trappingNullCheck);
+        __nonTrappingContinuation.replaceAtUsages(InputType.Guard, __trappingNullCheck);
 
-        if (nonTrappingContinuation instanceof BeginNode)
+        if (__nonTrappingContinuation instanceof BeginNode)
         {
-            GraphUtil.unlinkFixedNode(nonTrappingContinuation);
-            nonTrappingContinuation.safeDelete();
+            GraphUtil.unlinkFixedNode(__nonTrappingContinuation);
+            __nonTrappingContinuation.safeDelete();
         }
 
-        GraphUtil.killCFG(trappingContinuation);
-        GraphUtil.tryKillUnused(isNullNode);
+        GraphUtil.killCFG(__trappingContinuation);
+        GraphUtil.tryKillUnused(__isNullNode);
     }
 }

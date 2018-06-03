@@ -36,29 +36,36 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
      * Graph in which inlining may be performed at one or more of the callsites containined in
      * {@link #remainingInvokes}.
      */
+    // @field
     private final StructuredGraph graph;
 
+    // @field
     private final LinkedList<Invoke> remainingInvokes;
+    // @field
     private final double probability;
+    // @field
     private final double relevance;
 
     /**
      * @see #getFixedParams()
      */
+    // @field
     private final EconomicSet<ParameterNode> fixedParams;
 
+    // @field
     private final ToDoubleFunction<FixedNode> probabilities;
+    // @field
     private final ComputeInliningRelevance computeInliningRelevance;
 
     // @cons
-    public CallsiteHolderExplorable(StructuredGraph graph, double probability, double relevance, BitSet freshlyInstantiatedArguments, LinkedList<Invoke> invokes)
+    public CallsiteHolderExplorable(StructuredGraph __graph, double __probability, double __relevance, BitSet __freshlyInstantiatedArguments, LinkedList<Invoke> __invokes)
     {
         super();
-        this.graph = graph;
-        this.probability = probability;
-        this.relevance = relevance;
-        this.fixedParams = fixedParamsAt(freshlyInstantiatedArguments);
-        remainingInvokes = invokes == null ? new InliningIterator(graph).apply() : invokes;
+        this.graph = __graph;
+        this.probability = __probability;
+        this.relevance = __relevance;
+        this.fixedParams = fixedParamsAt(__freshlyInstantiatedArguments);
+        remainingInvokes = __invokes == null ? new InliningIterator(__graph).apply() : __invokes;
         if (remainingInvokes.isEmpty())
         {
             probabilities = null;
@@ -67,7 +74,7 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         else
         {
             probabilities = new FixedNodeProbabilityCache();
-            computeInliningRelevance = new ComputeInliningRelevance(graph, probabilities);
+            computeInliningRelevance = new ComputeInliningRelevance(__graph, probabilities);
             computeProbabilities();
         }
     }
@@ -75,21 +82,21 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
     /**
      * @see #getFixedParams()
      */
-    private EconomicSet<ParameterNode> fixedParamsAt(BitSet freshlyInstantiatedArguments)
+    private EconomicSet<ParameterNode> fixedParamsAt(BitSet __freshlyInstantiatedArguments)
     {
-        if (freshlyInstantiatedArguments == null || freshlyInstantiatedArguments.isEmpty())
+        if (__freshlyInstantiatedArguments == null || __freshlyInstantiatedArguments.isEmpty())
         {
             return EconomicSet.create(Equivalence.IDENTITY);
         }
-        EconomicSet<ParameterNode> result = EconomicSet.create(Equivalence.IDENTITY);
-        for (ParameterNode p : graph.getNodes(ParameterNode.TYPE))
+        EconomicSet<ParameterNode> __result = EconomicSet.create(Equivalence.IDENTITY);
+        for (ParameterNode __p : graph.getNodes(ParameterNode.TYPE))
         {
-            if (freshlyInstantiatedArguments.get(p.index()))
+            if (__freshlyInstantiatedArguments.get(__p.index()))
             {
-                result.add(p);
+                __result.add(__p);
             }
         }
-        return result;
+        return __result;
     }
 
     /**
@@ -110,20 +117,20 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
 
     public boolean repOK()
     {
-        for (Invoke invoke : remainingInvokes)
+        for (Invoke __invoke : remainingInvokes)
         {
-            if (!invoke.asNode().isAlive() || !containsInvoke(invoke))
+            if (!__invoke.asNode().isAlive() || !containsInvoke(__invoke))
             {
                 return false;
             }
-            if (!allArgsNonNull(invoke))
+            if (!allArgsNonNull(__invoke))
             {
                 return false;
             }
         }
-        for (ParameterNode fixedParam : fixedParams)
+        for (ParameterNode __fixedParam : fixedParams)
         {
-            if (!containsParam(fixedParam))
+            if (!containsParam(__fixedParam))
             {
                 return false;
             }
@@ -154,16 +161,16 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         return remainingInvokes.removeFirst();
     }
 
-    public void pushInvoke(Invoke invoke)
+    public void pushInvoke(Invoke __invoke)
     {
-        remainingInvokes.push(invoke);
+        remainingInvokes.push(__invoke);
     }
 
-    public static boolean allArgsNonNull(Invoke invoke)
+    public static boolean allArgsNonNull(Invoke __invoke)
     {
-        for (ValueNode arg : invoke.callTarget().arguments())
+        for (ValueNode __arg : __invoke.callTarget().arguments())
         {
-            if (arg == null)
+            if (__arg == null)
             {
                 return false;
             }
@@ -171,11 +178,11 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         return true;
     }
 
-    public boolean containsInvoke(Invoke invoke)
+    public boolean containsInvoke(Invoke __invoke)
     {
-        for (Invoke i : graph().getInvokes())
+        for (Invoke __i : graph().getInvokes())
         {
-            if (i == invoke)
+            if (__i == __invoke)
             {
                 return true;
             }
@@ -183,11 +190,11 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         return false;
     }
 
-    public boolean containsParam(ParameterNode param)
+    public boolean containsParam(ParameterNode __param)
     {
-        for (ParameterNode p : graph.getNodes(ParameterNode.TYPE))
+        for (ParameterNode __p : graph.getNodes(ParameterNode.TYPE))
         {
-            if (p == param)
+            if (__p == __param)
             {
                 return true;
             }
@@ -200,13 +207,13 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         computeInliningRelevance.compute();
     }
 
-    public double invokeProbability(Invoke invoke)
+    public double invokeProbability(Invoke __invoke)
     {
-        return probability * probabilities.applyAsDouble(invoke.asNode());
+        return probability * probabilities.applyAsDouble(__invoke.asNode());
     }
 
-    public double invokeRelevance(Invoke invoke)
+    public double invokeRelevance(Invoke __invoke)
     {
-        return Math.min(AbstractInliningPolicy.CapInheritedRelevance, relevance) * computeInliningRelevance.getRelevance(invoke);
+        return Math.min(AbstractInliningPolicy.CapInheritedRelevance, relevance) * computeInliningRelevance.getRelevance(__invoke);
     }
 }

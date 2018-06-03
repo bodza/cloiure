@@ -16,7 +16,7 @@ public final class HotSpotStampProvider implements StampProvider
     }
 
     @Override
-    public Stamp createHubStamp(ObjectStamp object)
+    public Stamp createHubStamp(ObjectStamp __object)
     {
         return KlassPointerStamp.klassNonNull();
     }

@@ -9,17 +9,18 @@ import giraaff.nodes.spi.LoweringTool;
 // @class WriteBarrier
 public abstract class WriteBarrier extends FixedWithNextNode implements Lowerable
 {
+    // @def
     public static final NodeClass<WriteBarrier> TYPE = NodeClass.create(WriteBarrier.class);
 
     // @cons
-    protected WriteBarrier(NodeClass<? extends WriteBarrier> c)
+    protected WriteBarrier(NodeClass<? extends WriteBarrier> __c)
     {
-        super(c, StampFactory.forVoid());
+        super(__c, StampFactory.forVoid());
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 }

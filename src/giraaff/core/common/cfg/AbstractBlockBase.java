@@ -3,19 +3,30 @@ package giraaff.core.common.cfg;
 // @class AbstractBlockBase
 public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
 {
+    // @field
     protected int id;
+    // @field
     protected int domDepth;
 
+    // @field
     protected T[] predecessors;
+    // @field
     protected T[] successors;
 
+    // @field
     private T dominator;
+    // @field
     private T firstDominated;
+    // @field
     private T dominatedSibling;
+    // @field
     private int domNumber;
+    // @field
     private int maxChildDomNumber;
 
+    // @field
     private boolean align;
+    // @field
     private int linearScanNumber;
 
     // @cons
@@ -28,14 +39,14 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         this.maxChildDomNumber = -1;
     }
 
-    public void setDominatorNumber(int domNumber)
+    public void setDominatorNumber(int __domNumber)
     {
-        this.domNumber = domNumber;
+        this.domNumber = __domNumber;
     }
 
-    public void setMaxChildDomNumber(int maxChildDomNumber)
+    public void setMaxChildDomNumber(int __maxChildDomNumber)
     {
-        this.maxChildDomNumber = maxChildDomNumber;
+        this.maxChildDomNumber = __maxChildDomNumber;
     }
 
     public int getDominatorNumber()
@@ -53,9 +64,9 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return id;
     }
 
-    public void setId(int id)
+    public void setId(int __id)
     {
-        this.id = id;
+        this.id = __id;
     }
 
     public T[] getPredecessors()
@@ -63,9 +74,9 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return predecessors;
     }
 
-    public void setPredecessors(T[] predecessors)
+    public void setPredecessors(T[] __predecessors)
     {
-        this.predecessors = predecessors;
+        this.predecessors = __predecessors;
     }
 
     public T[] getSuccessors()
@@ -73,9 +84,9 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return successors;
     }
 
-    public void setSuccessors(T[] successors)
+    public void setSuccessors(T[] __successors)
     {
-        this.successors = successors;
+        this.successors = __successors;
     }
 
     public T getDominator()
@@ -83,10 +94,10 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return dominator;
     }
 
-    public void setDominator(T dominator)
+    public void setDominator(T __dominator)
     {
-        this.dominator = dominator;
-        this.domDepth = dominator.domDepth + 1;
+        this.dominator = __dominator;
+        this.domDepth = __dominator.domDepth + 1;
     }
 
     /**
@@ -102,9 +113,9 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return this.firstDominated;
     }
 
-    public void setFirstDominated(T block)
+    public void setFirstDominated(T __block)
     {
-        this.firstDominated = block;
+        this.firstDominated = __block;
     }
 
     public T getDominatedSibling()
@@ -112,9 +123,9 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return this.dominatedSibling;
     }
 
-    public void setDominatedSibling(T block)
+    public void setDominatedSibling(T __block)
     {
-        this.dominatedSibling = block;
+        this.dominatedSibling = __block;
     }
 
     public int getPredecessorCount()
@@ -132,9 +143,9 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return linearScanNumber;
     }
 
-    public void setLinearScanNumber(int linearScanNumber)
+    public void setLinearScanNumber(int __linearScanNumber)
     {
-        this.linearScanNumber = linearScanNumber;
+        this.linearScanNumber = __linearScanNumber;
     }
 
     public boolean isAligned()
@@ -142,9 +153,9 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
         return align;
     }
 
-    public void setAlign(boolean align)
+    public void setAlign(boolean __align)
     {
-        this.align = align;
+        this.align = __align;
     }
 
     public abstract boolean isExceptionEntry();

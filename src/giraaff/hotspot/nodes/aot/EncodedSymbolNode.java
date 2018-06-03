@@ -18,26 +18,29 @@ import giraaff.word.Word;
 // @class EncodedSymbolNode
 public final class EncodedSymbolNode extends FloatingNode implements Canonicalizable
 {
+    // @def
     public static final NodeClass<EncodedSymbolNode> TYPE = NodeClass.create(EncodedSymbolNode.class);
 
-    @OptionalInput protected ValueNode value;
+    @OptionalInput
+    // @field
+    protected ValueNode value;
 
     // @cons
-    public EncodedSymbolNode(@InjectedNodeParameter Stamp stamp, ValueNode value)
+    public EncodedSymbolNode(@InjectedNodeParameter Stamp __stamp, ValueNode __value)
     {
-        super(TYPE, stamp);
-        this.value = value;
+        super(TYPE, __stamp);
+        this.value = __value;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (value != null)
         {
-            Constant constant = GraphUtil.foldIfConstantAndRemove(this, value);
-            if (constant != null)
+            Constant __constant = GraphUtil.foldIfConstantAndRemove(this, value);
+            if (__constant != null)
             {
-                return new ConstantNode(new EncodedSymbolConstant(constant), StampFactory.pointer());
+                return new ConstantNode(new EncodedSymbolConstant(__constant), StampFactory.pointer());
             }
         }
         return this;

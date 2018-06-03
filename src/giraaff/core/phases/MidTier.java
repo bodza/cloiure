@@ -27,32 +27,32 @@ public final class MidTier extends PhaseSuite<MidTierContext>
     public MidTier()
     {
         super();
-        CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
+        CanonicalizerPhase __canonicalizer = new CanonicalizerPhase();
 
         appendPhase(new LockEliminationPhase());
 
         if (GraalOptions.optFloatingReads)
         {
-            appendPhase(new IncrementalCanonicalizerPhase<>(canonicalizer, new FloatingReadPhase()));
+            appendPhase(new IncrementalCanonicalizerPhase<>(__canonicalizer, new FloatingReadPhase()));
         }
 
         if (GraalOptions.conditionalElimination)
         {
-            appendPhase(new IterativeConditionalEliminationPhase(canonicalizer, true));
+            appendPhase(new IterativeConditionalEliminationPhase(__canonicalizer, true));
         }
 
         appendPhase(new LoopSafepointEliminationPhase());
         appendPhase(new LoopSafepointInsertionPhase());
         appendPhase(new GuardLoweringPhase());
-        appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.MID_TIER));
+        appendPhase(new LoweringPhase(__canonicalizer, LoweringTool.StandardLoweringStage.MID_TIER));
         appendPhase(new FrameStateAssignmentPhase());
 
-        LoopPolicies loopPolicies = createLoopPolicies();
+        LoopPolicies __loopPolicies = createLoopPolicies();
         if (GraalOptions.optLoopTransform)
         {
             if (GraalOptions.partialUnroll)
             {
-                appendPhase(new LoopPartialUnrollPhase(loopPolicies, canonicalizer));
+                appendPhase(new LoopPartialUnrollPhase(__loopPolicies, __canonicalizer));
             }
         }
         if (GraalOptions.reassociateInvariants)
@@ -65,7 +65,7 @@ public final class MidTier extends PhaseSuite<MidTierContext>
             appendPhase(new DeoptimizationGroupingPhase());
         }
 
-        appendPhase(canonicalizer);
+        appendPhase(__canonicalizer);
     }
 
     public LoopPolicies createLoopPolicies()

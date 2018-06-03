@@ -19,21 +19,24 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotPatchReturnAddressOp
 final class AMD64HotSpotPatchReturnAddressOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotPatchReturnAddressOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPatchReturnAddressOp.class);
 
-    @Use(OperandFlag.REG) AllocatableValue address;
+    @Use(OperandFlag.REG)
+    // @field
+    AllocatableValue address;
 
     // @cons
-    AMD64HotSpotPatchReturnAddressOp(AllocatableValue address)
+    AMD64HotSpotPatchReturnAddressOp(AllocatableValue __address)
     {
         super(TYPE);
-        this.address = address;
+        this.address = __address;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        int frameSize = crb.frameMap.frameSize();
-        masm.movq(new AMD64Address(AMD64.rsp, frameSize), ValueUtil.asRegister(address));
+        int __frameSize = __crb.frameMap.frameSize();
+        __masm.movq(new AMD64Address(AMD64.rsp, __frameSize), ValueUtil.asRegister(address));
     }
 }

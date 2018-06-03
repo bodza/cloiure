@@ -31,16 +31,19 @@ import giraaff.phases.util.Providers;
 // @class TypeGuardInlineInfo
 public final class TypeGuardInlineInfo extends AbstractInlineInfo
 {
+    // @field
     private final ResolvedJavaMethod concrete;
+    // @field
     private final ResolvedJavaType type;
+    // @field
     private Inlineable inlineableElement;
 
     // @cons
-    public TypeGuardInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, ResolvedJavaType type)
+    public TypeGuardInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete, ResolvedJavaType __type)
     {
-        super(invoke);
-        this.concrete = concrete;
-        this.type = type;
+        super(__invoke);
+        this.concrete = __concrete;
+        this.type = __type;
     }
 
     @Override
@@ -50,62 +53,62 @@ public final class TypeGuardInlineInfo extends AbstractInlineInfo
     }
 
     @Override
-    public ResolvedJavaMethod methodAt(int index)
+    public ResolvedJavaMethod methodAt(int __index)
     {
         return concrete;
     }
 
     @Override
-    public Inlineable inlineableElementAt(int index)
+    public Inlineable inlineableElementAt(int __index)
     {
         return inlineableElement;
     }
 
     @Override
-    public double probabilityAt(int index)
+    public double probabilityAt(int __index)
     {
         return 1.0;
     }
 
     @Override
-    public double relevanceAt(int index)
+    public double relevanceAt(int __index)
     {
         return 1.0;
     }
 
     @Override
-    public void setInlinableElement(int index, Inlineable inlineableElement)
+    public void setInlinableElement(int __index, Inlineable __inlineableElement)
     {
-        this.inlineableElement = inlineableElement;
+        this.inlineableElement = __inlineableElement;
     }
 
     @Override
-    public EconomicSet<Node> inline(Providers providers, String reason)
+    public EconomicSet<Node> inline(Providers __providers, String __reason)
     {
-        createGuard(graph(), providers);
-        return inline(invoke, concrete, inlineableElement, false, reason);
+        createGuard(graph(), __providers);
+        return inline(invoke, concrete, inlineableElement, false, __reason);
     }
 
     @Override
-    public void tryToDevirtualizeInvoke(Providers providers)
+    public void tryToDevirtualizeInvoke(Providers __providers)
     {
-        createGuard(graph(), providers);
+        createGuard(graph(), __providers);
         InliningUtil.replaceInvokeCallTarget(invoke, graph(), InvokeKind.Special, concrete);
     }
 
-    private void createGuard(StructuredGraph graph, Providers providers)
+    private void createGuard(StructuredGraph __graph, Providers __providers)
     {
-        ValueNode nonNullReceiver = InliningUtil.nonNullReceiver(invoke);
-        LoadHubNode receiverHub = graph.unique(new LoadHubNode(providers.getStampProvider(), nonNullReceiver));
-        ConstantNode typeHub = ConstantNode.forConstant(receiverHub.stamp(NodeView.DEFAULT), providers.getConstantReflection().asObjectHub(type), providers.getMetaAccess(), graph);
+        ValueNode __nonNullReceiver = InliningUtil.nonNullReceiver(invoke);
+        LoadHubNode __receiverHub = __graph.unique(new LoadHubNode(__providers.getStampProvider(), __nonNullReceiver));
+        ConstantNode __typeHub = ConstantNode.forConstant(__receiverHub.stamp(NodeView.DEFAULT), __providers.getConstantReflection().asObjectHub(type), __providers.getMetaAccess(), __graph);
 
-        LogicNode typeCheck = CompareNode.createCompareNode(graph, CanonicalCondition.EQ, receiverHub, typeHub, providers.getConstantReflection(), NodeView.DEFAULT);
-        FixedGuardNode guard = graph.add(new FixedGuardNode(typeCheck, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile));
+        LogicNode __typeCheck = CompareNode.createCompareNode(__graph, CanonicalCondition.EQ, __receiverHub, __typeHub, __providers.getConstantReflection(), NodeView.DEFAULT);
+        FixedGuardNode __guard = __graph.add(new FixedGuardNode(__typeCheck, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile));
 
-        ValueNode anchoredReceiver = InliningUtil.createAnchoredReceiver(graph, guard, type, nonNullReceiver, true);
-        invoke.callTarget().replaceFirstInput(nonNullReceiver, anchoredReceiver);
+        ValueNode __anchoredReceiver = InliningUtil.createAnchoredReceiver(__graph, __guard, type, __nonNullReceiver, true);
+        invoke.callTarget().replaceFirstInput(__nonNullReceiver, __anchoredReceiver);
 
-        graph.addBeforeFixed(invoke.asNode(), guard);
+        __graph.addBeforeFixed(invoke.asNode(), __guard);
     }
 
     @Override

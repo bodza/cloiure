@@ -11,9 +11,12 @@ import giraaff.nodes.ValueNode;
 // @class AccessArrayNode
 public abstract class AccessArrayNode extends FixedWithNextNode
 {
+    // @def
     public static final NodeClass<AccessArrayNode> TYPE = NodeClass.create(AccessArrayNode.class);
 
-    @Input protected ValueNode array;
+    @Input
+    // @field
+    protected ValueNode array;
 
     public ValueNode array()
     {
@@ -26,15 +29,15 @@ public abstract class AccessArrayNode extends FixedWithNextNode
      * @param array the instruction that produces the array object value
      */
     // @cons
-    public AccessArrayNode(NodeClass<? extends AccessArrayNode> c, Stamp stamp, ValueNode array)
+    public AccessArrayNode(NodeClass<? extends AccessArrayNode> __c, Stamp __stamp, ValueNode __array)
     {
-        super(c, stamp);
-        this.array = array;
+        super(__c, __stamp);
+        this.array = __array;
     }
 
-    public void setArray(ValueNode array)
+    public void setArray(ValueNode __array)
     {
-        updateUsages(this.array, array);
-        this.array = array;
+        updateUsages(this.array, __array);
+        this.array = __array;
     }
 }

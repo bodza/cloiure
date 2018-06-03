@@ -14,75 +14,76 @@ import giraaff.nodes.spi.LoweringTool;
 // @class FixedGuardNode
 public final class FixedGuardNode extends AbstractFixedGuardNode implements Lowerable, IterableNodeType
 {
+    // @def
     public static final NodeClass<FixedGuardNode> TYPE = NodeClass.create(FixedGuardNode.class);
 
     // @cons
-    public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action)
+    public FixedGuardNode(LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action)
     {
-        this(condition, deoptReason, action, JavaConstant.NULL_POINTER, false);
+        this(__condition, __deoptReason, __action, JavaConstant.NULL_POINTER, false);
     }
 
     // @cons
-    public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, boolean negated)
+    public FixedGuardNode(LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action, boolean __negated)
     {
-        this(condition, deoptReason, action, JavaConstant.NULL_POINTER, negated);
+        this(__condition, __deoptReason, __action, JavaConstant.NULL_POINTER, __negated);
     }
 
     // @cons
-    public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
+    public FixedGuardNode(LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action, JavaConstant __speculation, boolean __negated)
     {
-        super(TYPE, condition, deoptReason, action, speculation, negated);
+        super(TYPE, __condition, __deoptReason, __action, __speculation, __negated);
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
-        super.simplify(tool);
+        super.simplify(__tool);
 
         if (getCondition() instanceof LogicConstantNode)
         {
-            LogicConstantNode c = (LogicConstantNode) getCondition();
-            if (c.getValue() == isNegated())
+            LogicConstantNode __c = (LogicConstantNode) getCondition();
+            if (__c.getValue() == isNegated())
             {
-                FixedNode currentNext = this.next();
-                if (currentNext != null)
+                FixedNode __currentNext = this.next();
+                if (__currentNext != null)
                 {
-                    tool.deleteBranch(currentNext);
+                    __tool.deleteBranch(__currentNext);
                 }
 
-                DeoptimizeNode deopt = graph().add(new DeoptimizeNode(getAction(), getReason(), getSpeculation()));
-                deopt.setStateBefore(stateBefore());
-                setNext(deopt);
+                DeoptimizeNode __deopt = graph().add(new DeoptimizeNode(getAction(), getReason(), getSpeculation()));
+                __deopt.setStateBefore(stateBefore());
+                setNext(__deopt);
             }
             this.replaceAtUsages(null);
             graph().removeFixed(this);
         }
         else if (getCondition() instanceof ShortCircuitOrNode)
         {
-            ShortCircuitOrNode shortCircuitOr = (ShortCircuitOrNode) getCondition();
+            ShortCircuitOrNode __shortCircuitOr = (ShortCircuitOrNode) getCondition();
             if (isNegated() && hasNoUsages())
             {
-                graph().addAfterFixed(this, graph().add(new FixedGuardNode(shortCircuitOr.getY(), getReason(), getAction(), getSpeculation(), !shortCircuitOr.isYNegated())));
-                graph().replaceFixedWithFixed(this, graph().add(new FixedGuardNode(shortCircuitOr.getX(), getReason(), getAction(), getSpeculation(), !shortCircuitOr.isXNegated())));
+                graph().addAfterFixed(this, graph().add(new FixedGuardNode(__shortCircuitOr.getY(), getReason(), getAction(), getSpeculation(), !__shortCircuitOr.isYNegated())));
+                graph().replaceFixedWithFixed(this, graph().add(new FixedGuardNode(__shortCircuitOr.getX(), getReason(), getAction(), getSpeculation(), !__shortCircuitOr.isXNegated())));
             }
         }
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         if (graph().getGuardsStage().allowsFloatingGuards())
         {
             if (getAction() != DeoptimizationAction.None)
             {
-                ValueNode guard = tool.createGuard(this, getCondition(), getReason(), getAction(), getSpeculation(), isNegated()).asNode();
-                this.replaceAtUsages(guard);
+                ValueNode __guard = __tool.createGuard(this, getCondition(), getReason(), getAction(), getSpeculation(), isNegated()).asNode();
+                this.replaceAtUsages(__guard);
                 graph().removeFixed(this);
             }
         }
         else
         {
-            lowerToIf().lower(tool);
+            lowerToIf().lower(__tool);
         }
     }
 

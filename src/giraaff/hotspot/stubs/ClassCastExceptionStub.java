@@ -14,22 +14,22 @@ import giraaff.util.GraalError;
 public final class ClassCastExceptionStub extends CreateExceptionStub
 {
     // @cons
-    public ClassCastExceptionStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public ClassCastExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super("createClassCastException", providers, linkage);
+        super("createClassCastException", __providers, __linkage);
     }
 
     @Override
-    protected Object getConstantParameterValue(int index, String name)
+    protected Object getConstantParameterValue(int __index, String __name)
     {
-        GraalError.guarantee(index == 2, "unknown parameter %s at index %d", name, index);
+        GraalError.guarantee(__index == 2, "unknown parameter %s at index %d", __name, __index);
         return providers.getRegisters().getThreadRegister();
     }
 
     @Snippet
-    private static Object createClassCastException(@Snippet.NonNullParameter Object object, KlassPointer targetKlass, @ConstantParameter Register threadRegister)
+    private static Object createClassCastException(@Snippet.NonNullParameter Object __object, KlassPointer __targetKlass, @ConstantParameter Register __threadRegister)
     {
-        KlassPointer objKlass = HotSpotReplacementsUtil.loadHub(object);
-        return createException(threadRegister, ClassCastException.class, objKlass, targetKlass);
+        KlassPointer __objKlass = HotSpotReplacementsUtil.loadHub(__object);
+        return createException(__threadRegister, ClassCastException.class, __objKlass, __targetKlass);
     }
 }

@@ -34,20 +34,20 @@ import giraaff.word.Word;
 public final class NewArrayStub extends SnippetStub
 {
     // @cons
-    public NewArrayStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public NewArrayStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super("newArray", providers, linkage);
+        super("newArray", __providers, __linkage);
     }
 
     @Override
     protected Object[] makeConstArgs()
     {
-        HotSpotResolvedObjectType intArrayType = (HotSpotResolvedObjectType) providers.getMetaAccess().lookupJavaType(int[].class);
-        int count = method.getSignature().getParameterCount(false);
-        Object[] args = new Object[count];
-        args[3] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), intArrayType.klass(), null);
-        args[4] = providers.getRegisters().getThreadRegister();
-        return args;
+        HotSpotResolvedObjectType __intArrayType = (HotSpotResolvedObjectType) providers.getMetaAccess().lookupJavaType(int[].class);
+        int __count = method.getSignature().getParameterCount(false);
+        Object[] __args = new Object[__count];
+        __args[3] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __intArrayType.klass(), null);
+        __args[4] = providers.getRegisters().getThreadRegister();
+        return __args;
     }
 
     /**
@@ -59,30 +59,31 @@ public final class NewArrayStub extends SnippetStub
      * @param intArrayHub the hub for {@code int[].class}
      */
     @Snippet
-    private static Object newArray(KlassPointer hub, int length, boolean fillContents, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister)
+    private static Object newArray(KlassPointer __hub, int __length, boolean __fillContents, @ConstantParameter KlassPointer __intArrayHub, @ConstantParameter Register __threadRegister)
     {
-        int layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(hub);
-        int log2ElementSize = (layoutHelper >> HotSpotRuntime.layoutHelperLog2ElementSizeShift) & HotSpotRuntime.layoutHelperLog2ElementSizeMask;
-        int headerSize = (layoutHelper >> HotSpotRuntime.layoutHelperHeaderSizeShift) & HotSpotRuntime.layoutHelperHeaderSizeMask;
-        int elementKind = (layoutHelper >> HotSpotRuntime.layoutHelperElementTypeShift) & HotSpotRuntime.layoutHelperElementTypeMask;
-        int sizeInBytes = HotSpotReplacementsUtil.arrayAllocationSize(length, headerSize, log2ElementSize);
+        int __layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(__hub);
+        int __log2ElementSize = (__layoutHelper >> HotSpotRuntime.layoutHelperLog2ElementSizeShift) & HotSpotRuntime.layoutHelperLog2ElementSizeMask;
+        int __headerSize = (__layoutHelper >> HotSpotRuntime.layoutHelperHeaderSizeShift) & HotSpotRuntime.layoutHelperHeaderSizeMask;
+        int __elementKind = (__layoutHelper >> HotSpotRuntime.layoutHelperElementTypeShift) & HotSpotRuntime.layoutHelperElementTypeMask;
+        int __sizeInBytes = HotSpotReplacementsUtil.arrayAllocationSize(__length, __headerSize, __log2ElementSize);
 
         // check that array length is small enough for fast path.
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        if (GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported() && length >= 0 && length <= NewObjectSnippets.MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
+        Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+        if (GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported() && __length >= 0 && __length <= NewObjectSnippets.MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
         {
-            Word memory = NewInstanceStub.refillAllocate(thread, intArrayHub, sizeInBytes);
-            if (memory.notEqual(0))
+            Word __memory = NewInstanceStub.refillAllocate(__thread, __intArrayHub, __sizeInBytes);
+            if (__memory.notEqual(0))
             {
-                return NewObjectSnippets.formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(HotSpotRuntime.arrayPrototypeMarkWord), fillContents, false);
+                return NewObjectSnippets.formatArray(__hub, __sizeInBytes, __length, __headerSize, __memory, WordFactory.unsigned(HotSpotRuntime.arrayPrototypeMarkWord), __fillContents, false);
             }
         }
 
-        newArrayC(NEW_ARRAY_C, thread, hub, length);
-        StubUtil.handlePendingException(thread, true);
-        return HotSpotReplacementsUtil.getAndClearObjectResult(thread);
+        newArrayC(NEW_ARRAY_C, __thread, __hub, __length);
+        StubUtil.handlePendingException(__thread, true);
+        return HotSpotReplacementsUtil.getAndClearObjectResult(__thread);
     }
 
+    // @def
     public static final ForeignCallDescriptor NEW_ARRAY_C = StubUtil.newDescriptor(NewArrayStub.class, "newArrayC", void.class, Word.class, KlassPointer.class, int.class);
 
     @NodeIntrinsic(StubForeignCallNode.class)

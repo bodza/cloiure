@@ -20,27 +20,33 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class DirectStoreNode
 public final class DirectStoreNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<DirectStoreNode> TYPE = NodeClass.create(DirectStoreNode.class);
 
-    @Input protected ValueNode address;
-    @Input protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode address;
+    @Input
+    // @field
+    protected ValueNode value;
+    // @field
     protected final JavaKind kind;
 
     // @cons
-    public DirectStoreNode(ValueNode address, ValueNode value, JavaKind kind)
+    public DirectStoreNode(ValueNode __address, ValueNode __value, JavaKind __kind)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = address;
-        this.value = value;
-        this.kind = kind;
+        this.address = __address;
+        this.value = __value;
+        this.kind = __kind;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value v = gen.operand(value);
-        LIRKind lirKind = LIRKind.fromJavaKind(gen.getLIRGeneratorTool().target().arch, kind);
-        gen.getLIRGeneratorTool().getArithmetic().emitStore(lirKind, gen.operand(address), v, null);
+        Value __v = __gen.operand(value);
+        LIRKind __lirKind = LIRKind.fromJavaKind(__gen.getLIRGeneratorTool().target().arch, kind);
+        __gen.getLIRGeneratorTool().getArithmetic().emitStore(__lirKind, __gen.operand(address), __v, null);
     }
 
     public ValueNode getAddress()

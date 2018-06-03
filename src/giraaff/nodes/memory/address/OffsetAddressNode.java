@@ -23,22 +23,27 @@ import giraaff.nodes.calc.BinaryArithmeticNode;
 // @class OffsetAddressNode
 public final class OffsetAddressNode extends AddressNode implements Canonicalizable
 {
+    // @def
     public static final NodeClass<OffsetAddressNode> TYPE = NodeClass.create(OffsetAddressNode.class);
 
-    @Input ValueNode base;
-    @Input ValueNode offset;
+    @Input
+    // @field
+    ValueNode base;
+    @Input
+    // @field
+    ValueNode offset;
 
     // @cons
-    public OffsetAddressNode(ValueNode base, ValueNode offset)
+    public OffsetAddressNode(ValueNode __base, ValueNode __offset)
     {
         super(TYPE);
-        this.base = base;
-        this.offset = offset;
+        this.base = __base;
+        this.offset = __offset;
     }
 
-    public static OffsetAddressNode create(ValueNode base)
+    public static OffsetAddressNode create(ValueNode __base)
     {
-        return new OffsetAddressNode(base, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(base.stamp(NodeView.DEFAULT)), 0));
+        return new OffsetAddressNode(__base, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(__base.stamp(NodeView.DEFAULT)), 0));
     }
 
     @Override
@@ -47,10 +52,10 @@ public final class OffsetAddressNode extends AddressNode implements Canonicaliza
         return base;
     }
 
-    public void setBase(ValueNode base)
+    public void setBase(ValueNode __base)
     {
-        updateUsages(this.base, base);
-        this.base = base;
+        updateUsages(this.base, __base);
+        this.base = __base;
     }
 
     public ValueNode getOffset()
@@ -58,28 +63,28 @@ public final class OffsetAddressNode extends AddressNode implements Canonicaliza
         return offset;
     }
 
-    public void setOffset(ValueNode offset)
+    public void setOffset(ValueNode __offset)
     {
-        updateUsages(this.offset, offset);
-        this.offset = offset;
+        updateUsages(this.offset, __offset);
+        this.offset = __offset;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (base instanceof OffsetAddressNode)
         {
-            NodeView view = NodeView.from(tool);
+            NodeView __view = NodeView.from(__tool);
             // Rewrite (&base[offset1])[offset2] to base[offset1 + offset2].
-            OffsetAddressNode b = (OffsetAddressNode) base;
-            return new OffsetAddressNode(b.getBase(), BinaryArithmeticNode.add(b.getOffset(), this.getOffset(), view));
+            OffsetAddressNode __b = (OffsetAddressNode) base;
+            return new OffsetAddressNode(__b.getBase(), BinaryArithmeticNode.add(__b.getOffset(), this.getOffset(), __view));
         }
         else if (base instanceof AddNode)
         {
-            AddNode add = (AddNode) base;
-            if (add.getY().isConstant())
+            AddNode __add = (AddNode) base;
+            if (__add.getY().isConstant())
             {
-                return new OffsetAddressNode(add.getX(), new AddNode(add.getY(), getOffset()));
+                return new OffsetAddressNode(__add.getX(), new AddNode(__add.getY(), getOffset()));
             }
         }
         return this;
@@ -91,13 +96,13 @@ public final class OffsetAddressNode extends AddressNode implements Canonicaliza
     @Override
     public long getMaxConstantDisplacement()
     {
-        Stamp curStamp = offset.stamp(NodeView.DEFAULT);
-        if (curStamp instanceof IntegerStamp)
+        Stamp __curStamp = offset.stamp(NodeView.DEFAULT);
+        if (__curStamp instanceof IntegerStamp)
         {
-            IntegerStamp integerStamp = (IntegerStamp) curStamp;
-            if (integerStamp.lowerBound() >= 0)
+            IntegerStamp __integerStamp = (IntegerStamp) __curStamp;
+            if (__integerStamp.lowerBound() >= 0)
             {
-                return integerStamp.upperBound();
+                return __integerStamp.upperBound();
             }
         }
         return Long.MAX_VALUE;

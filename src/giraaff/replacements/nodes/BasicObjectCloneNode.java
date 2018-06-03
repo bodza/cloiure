@@ -27,12 +27,13 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class BasicObjectCloneNode
 public abstract class BasicObjectCloneNode extends MacroStateSplitNode implements VirtualizableAllocation, ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<BasicObjectCloneNode> TYPE = NodeClass.create(BasicObjectCloneNode.class);
 
     // @cons
-    public BasicObjectCloneNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    public BasicObjectCloneNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
-        super(c, invokeKind, targetMethod, bci, returnStamp, arguments);
+        super(__c, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
         updateStamp(computeStamp(getObject()));
     }
 
@@ -42,14 +43,14 @@ public abstract class BasicObjectCloneNode extends MacroStateSplitNode implement
         return updateStamp(stamp.improveWith(computeStamp(getObject())));
     }
 
-    protected Stamp computeStamp(ValueNode object)
+    protected Stamp computeStamp(ValueNode __object)
     {
-        Stamp objectStamp = object.stamp(NodeView.DEFAULT);
-        if (objectStamp instanceof ObjectStamp)
+        Stamp __objectStamp = __object.stamp(NodeView.DEFAULT);
+        if (__objectStamp instanceof ObjectStamp)
         {
-            objectStamp = objectStamp.join(StampFactory.objectNonNull());
+            __objectStamp = __objectStamp.join(StampFactory.objectNonNull());
         }
-        return objectStamp;
+        return __objectStamp;
     }
 
     public ValueNode getObject()
@@ -63,76 +64,76 @@ public abstract class BasicObjectCloneNode extends MacroStateSplitNode implement
      *
      * If yes, then the exact type is returned, otherwise it returns null.
      */
-    protected ResolvedJavaType getConcreteType(Stamp forStamp)
+    protected ResolvedJavaType getConcreteType(Stamp __forStamp)
     {
-        if (!(forStamp instanceof ObjectStamp))
+        if (!(__forStamp instanceof ObjectStamp))
         {
             return null;
         }
-        ObjectStamp objectStamp = (ObjectStamp) forStamp;
-        if (objectStamp.type() == null)
+        ObjectStamp __objectStamp = (ObjectStamp) __forStamp;
+        if (__objectStamp.type() == null)
         {
             return null;
         }
-        else if (objectStamp.isExactType())
+        else if (__objectStamp.isExactType())
         {
-            return objectStamp.type().isCloneableWithAllocation() ? objectStamp.type() : null;
+            return __objectStamp.type().isCloneableWithAllocation() ? __objectStamp.type() : null;
         }
-        else if (objectStamp.type().isArray())
+        else if (__objectStamp.type().isArray())
         {
-            return objectStamp.type();
+            return __objectStamp.type();
         }
         return null;
     }
 
-    protected LoadFieldNode genLoadFieldNode(Assumptions assumptions, ValueNode originalAlias, ResolvedJavaField field)
+    protected LoadFieldNode genLoadFieldNode(Assumptions __assumptions, ValueNode __originalAlias, ResolvedJavaField __field)
     {
-        return LoadFieldNode.create(assumptions, originalAlias, field);
+        return LoadFieldNode.create(__assumptions, __originalAlias, __field);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode originalAlias = tool.getAlias(getObject());
-        if (originalAlias instanceof VirtualObjectNode)
+        ValueNode __originalAlias = __tool.getAlias(getObject());
+        if (__originalAlias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode originalVirtual = (VirtualObjectNode) originalAlias;
-            if (originalVirtual.type().isCloneableWithAllocation())
+            VirtualObjectNode __originalVirtual = (VirtualObjectNode) __originalAlias;
+            if (__originalVirtual.type().isCloneableWithAllocation())
             {
-                ValueNode[] newEntryState = new ValueNode[originalVirtual.entryCount()];
-                for (int i = 0; i < newEntryState.length; i++)
+                ValueNode[] __newEntryState = new ValueNode[__originalVirtual.entryCount()];
+                for (int __i = 0; __i < __newEntryState.length; __i++)
                 {
-                    newEntryState[i] = tool.getEntry(originalVirtual, i);
+                    __newEntryState[__i] = __tool.getEntry(__originalVirtual, __i);
                 }
-                VirtualObjectNode newVirtual = originalVirtual.duplicate();
-                tool.createVirtualObject(newVirtual, newEntryState, Collections.<MonitorIdNode> emptyList(), false);
-                tool.replaceWithVirtual(newVirtual);
+                VirtualObjectNode __newVirtual = __originalVirtual.duplicate();
+                __tool.createVirtualObject(__newVirtual, __newEntryState, Collections.<MonitorIdNode> emptyList(), false);
+                __tool.replaceWithVirtual(__newVirtual);
             }
         }
         else
         {
-            ResolvedJavaType type = getConcreteType(originalAlias.stamp(NodeView.DEFAULT));
-            if (type != null && !type.isArray())
+            ResolvedJavaType __type = getConcreteType(__originalAlias.stamp(NodeView.DEFAULT));
+            if (__type != null && !__type.isArray())
             {
-                VirtualInstanceNode newVirtual = createVirtualInstanceNode(type, true);
-                ResolvedJavaField[] fields = newVirtual.getFields();
+                VirtualInstanceNode __newVirtual = createVirtualInstanceNode(__type, true);
+                ResolvedJavaField[] __fields = __newVirtual.getFields();
 
-                ValueNode[] state = new ValueNode[fields.length];
-                final LoadFieldNode[] loads = new LoadFieldNode[fields.length];
-                for (int i = 0; i < fields.length; i++)
+                ValueNode[] __state = new ValueNode[__fields.length];
+                final LoadFieldNode[] __loads = new LoadFieldNode[__fields.length];
+                for (int __i = 0; __i < __fields.length; __i++)
                 {
-                    state[i] = loads[i] = genLoadFieldNode(graph().getAssumptions(), originalAlias, fields[i]);
-                    tool.addNode(loads[i]);
+                    __state[__i] = __loads[__i] = genLoadFieldNode(graph().getAssumptions(), __originalAlias, __fields[__i]);
+                    __tool.addNode(__loads[__i]);
                 }
-                tool.createVirtualObject(newVirtual, state, Collections.<MonitorIdNode> emptyList(), false);
-                tool.replaceWithVirtual(newVirtual);
+                __tool.createVirtualObject(__newVirtual, __state, Collections.<MonitorIdNode> emptyList(), false);
+                __tool.replaceWithVirtual(__newVirtual);
             }
         }
     }
 
-    protected VirtualInstanceNode createVirtualInstanceNode(ResolvedJavaType type, boolean hasIdentity)
+    protected VirtualInstanceNode createVirtualInstanceNode(ResolvedJavaType __type, boolean __hasIdentity)
     {
-        return new VirtualInstanceNode(type, hasIdentity);
+        return new VirtualInstanceNode(__type, __hasIdentity);
     }
 
     @Override

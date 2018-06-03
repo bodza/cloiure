@@ -18,81 +18,82 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 // @class LinearScanOptimizeSpillPositionPhase
 public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAllocationPhase
 {
+    // @field
     private final LinearScan allocator;
 
     // @cons
-    LinearScanOptimizeSpillPositionPhase(LinearScan allocator)
+    LinearScanOptimizeSpillPositionPhase(LinearScan __allocator)
     {
         super();
-        this.allocator = allocator;
+        this.allocator = __allocator;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
     {
-        optimizeSpillPosition(lirGenRes);
+        optimizeSpillPosition(__lirGenRes);
     }
 
-    private void optimizeSpillPosition(LIRGenerationResult res)
+    private void optimizeSpillPosition(LIRGenerationResult __res)
     {
-        LIRInsertionBuffer[] insertionBuffers = new LIRInsertionBuffer[this.allocator.getLIR().linearScanOrder().length];
-        for (Interval interval : this.allocator.intervals())
+        LIRInsertionBuffer[] __insertionBuffers = new LIRInsertionBuffer[this.allocator.getLIR().linearScanOrder().length];
+        for (Interval __interval : this.allocator.intervals())
         {
-            optimizeInterval(insertionBuffers, interval, res);
+            optimizeInterval(__insertionBuffers, __interval, __res);
         }
-        for (LIRInsertionBuffer insertionBuffer : insertionBuffers)
+        for (LIRInsertionBuffer __insertionBuffer : __insertionBuffers)
         {
-            if (insertionBuffer != null)
+            if (__insertionBuffer != null)
             {
-                insertionBuffer.finish();
+                __insertionBuffer.finish();
             }
         }
     }
 
-    private void optimizeInterval(LIRInsertionBuffer[] insertionBuffers, Interval interval, LIRGenerationResult res)
+    private void optimizeInterval(LIRInsertionBuffer[] __insertionBuffers, Interval __interval, LIRGenerationResult __res)
     {
-        if (interval == null || !interval.isSplitParent() || interval.spillState() != SpillState.SpillInDominator)
+        if (__interval == null || !__interval.isSplitParent() || __interval.spillState() != SpillState.SpillInDominator)
         {
             return;
         }
-        AbstractBlockBase<?> defBlock = this.allocator.blockForId(interval.spillDefinitionPos());
-        AbstractBlockBase<?> spillBlock = null;
-        Interval firstSpillChild = null;
-        for (Interval splitChild : interval.getSplitChildren())
+        AbstractBlockBase<?> __defBlock = this.allocator.blockForId(__interval.spillDefinitionPos());
+        AbstractBlockBase<?> __spillBlock = null;
+        Interval __firstSpillChild = null;
+        for (Interval __splitChild : __interval.getSplitChildren())
         {
-            if (LIRValueUtil.isStackSlotValue(splitChild.location()))
+            if (LIRValueUtil.isStackSlotValue(__splitChild.location()))
             {
-                if (firstSpillChild == null || splitChild.from() < firstSpillChild.from())
+                if (__firstSpillChild == null || __splitChild.from() < __firstSpillChild.from())
                 {
-                    firstSpillChild = splitChild;
+                    __firstSpillChild = __splitChild;
                 }
                 // iterate all blocks where the interval has use positions
-                for (AbstractBlockBase<?> splitBlock : blocksForInterval(splitChild))
+                for (AbstractBlockBase<?> __splitBlock : blocksForInterval(__splitChild))
                 {
-                    if (AbstractControlFlowGraph.dominates(defBlock, splitBlock))
+                    if (AbstractControlFlowGraph.dominates(__defBlock, __splitBlock))
                     {
-                        if (spillBlock == null)
+                        if (__spillBlock == null)
                         {
-                            spillBlock = splitBlock;
+                            __spillBlock = __splitBlock;
                         }
                         else
                         {
-                            spillBlock = AbstractControlFlowGraph.commonDominator(spillBlock, splitBlock);
+                            __spillBlock = AbstractControlFlowGraph.commonDominator(__spillBlock, __splitBlock);
                         }
                     }
                 }
             }
         }
-        if (spillBlock == null)
+        if (__spillBlock == null)
         {
             // no spill interval
-            interval.setSpillState(SpillState.StoreAtDefinition);
+            __interval.setSpillState(SpillState.StoreAtDefinition);
             return;
         }
         // move out of loops
-        if (defBlock.getLoopDepth() < spillBlock.getLoopDepth())
+        if (__defBlock.getLoopDepth() < __spillBlock.getLoopDepth())
         {
-            spillBlock = moveSpillOutOfLoop(defBlock, spillBlock);
+            __spillBlock = moveSpillOutOfLoop(__defBlock, __spillBlock);
         }
 
         /*
@@ -102,42 +103,42 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
          * end of the predecessors might differ. Therefore, we would need a spill move in all
          * predecessors. To avoid this we spill in the dominator.
          */
-        if (!defBlock.equals(spillBlock) && spillBlock.equals(this.allocator.blockForId(firstSpillChild.from())))
+        if (!__defBlock.equals(__spillBlock) && __spillBlock.equals(this.allocator.blockForId(__firstSpillChild.from())))
         {
-            AbstractBlockBase<?> dom = spillBlock.getDominator();
-            spillBlock = dom;
+            AbstractBlockBase<?> __dom = __spillBlock.getDominator();
+            __spillBlock = __dom;
         }
-        if (defBlock.equals(spillBlock))
+        if (__defBlock.equals(__spillBlock))
         {
             // definition is the best choice
-            interval.setSpillState(SpillState.StoreAtDefinition);
+            __interval.setSpillState(SpillState.StoreAtDefinition);
             return;
         }
 
-        if (defBlock.probability() <= spillBlock.probability())
+        if (__defBlock.probability() <= __spillBlock.probability())
         {
             // better spill block has the same probability -> do nothing
-            interval.setSpillState(SpillState.StoreAtDefinition);
+            __interval.setSpillState(SpillState.StoreAtDefinition);
             return;
         }
 
-        LIRInsertionBuffer insertionBuffer = insertionBuffers[spillBlock.getId()];
-        if (insertionBuffer == null)
+        LIRInsertionBuffer __insertionBuffer = __insertionBuffers[__spillBlock.getId()];
+        if (__insertionBuffer == null)
         {
-            insertionBuffer = new LIRInsertionBuffer();
-            insertionBuffers[spillBlock.getId()] = insertionBuffer;
-            insertionBuffer.init(this.allocator.getLIR().getLIRforBlock(spillBlock));
+            __insertionBuffer = new LIRInsertionBuffer();
+            __insertionBuffers[__spillBlock.getId()] = __insertionBuffer;
+            __insertionBuffer.init(this.allocator.getLIR().getLIRforBlock(__spillBlock));
         }
-        int spillOpId = this.allocator.getFirstLirInstructionId(spillBlock);
+        int __spillOpId = this.allocator.getFirstLirInstructionId(__spillBlock);
         // insert spill move
-        AllocatableValue fromLocation = interval.getSplitChildAtOpId(spillOpId, OperandMode.DEF, this.allocator).location();
-        AllocatableValue toLocation = LinearScan.canonicalSpillOpr(interval);
-        LIRInstruction move = this.allocator.getSpillMoveFactory().createMove(toLocation, fromLocation);
-        move.setId(LinearScan.DOMINATOR_SPILL_MOVE_ID);
+        AllocatableValue __fromLocation = __interval.getSplitChildAtOpId(__spillOpId, OperandMode.DEF, this.allocator).location();
+        AllocatableValue __toLocation = LinearScan.canonicalSpillOpr(__interval);
+        LIRInstruction __move = this.allocator.getSpillMoveFactory().createMove(__toLocation, __fromLocation);
+        __move.setId(LinearScan.DOMINATOR_SPILL_MOVE_ID);
         // We can use the insertion buffer directly because we always insert at position 1.
-        insertionBuffer.append(1, move);
+        __insertionBuffer.append(1, __move);
 
-        interval.setSpillDefinitionPos(spillOpId);
+        __interval.setSpillDefinitionPos(__spillOpId);
     }
 
     /**
@@ -147,25 +148,27 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
     // @closure
     private final class IntervalBlockIterator implements Iterator<AbstractBlockBase<?>>
     {
+        // @field
         Range range;
+        // @field
         AbstractBlockBase<?> block;
 
         // @cons
-        IntervalBlockIterator(Interval interval)
+        IntervalBlockIterator(Interval __interval)
         {
             super();
-            range = interval.first();
+            range = __interval.first();
             block = LinearScanOptimizeSpillPositionPhase.this.allocator.blockForId(range.from);
         }
 
         @Override
         public AbstractBlockBase<?> next()
         {
-            AbstractBlockBase<?> currentBlock = block;
-            int nextBlockIndex = block.getLinearScanNumber() + 1;
-            if (nextBlockIndex < LinearScanOptimizeSpillPositionPhase.this.allocator.sortedBlocks().length)
+            AbstractBlockBase<?> __currentBlock = block;
+            int __nextBlockIndex = block.getLinearScanNumber() + 1;
+            if (__nextBlockIndex < LinearScanOptimizeSpillPositionPhase.this.allocator.sortedBlocks().length)
             {
-                block = LinearScanOptimizeSpillPositionPhase.this.allocator.sortedBlocks()[nextBlockIndex];
+                block = LinearScanOptimizeSpillPositionPhase.this.allocator.sortedBlocks()[__nextBlockIndex];
                 if (range.to <= LinearScanOptimizeSpillPositionPhase.this.allocator.getFirstLirInstructionId(block))
                 {
                     range = range.next;
@@ -183,7 +186,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
             {
                 block = null;
             }
-            return currentBlock;
+            return __currentBlock;
         }
 
         @Override
@@ -193,7 +196,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         }
     }
 
-    private Iterable<AbstractBlockBase<?>> blocksForInterval(Interval interval)
+    private Iterable<AbstractBlockBase<?>> blocksForInterval(Interval __interval)
     {
         // @closure
         return new Iterable<AbstractBlockBase<?>>()
@@ -201,21 +204,21 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
             @Override
             public Iterator<AbstractBlockBase<?>> iterator()
             {
-                return new IntervalBlockIterator(interval);
+                return new IntervalBlockIterator(__interval);
             }
         };
     }
 
-    private static AbstractBlockBase<?> moveSpillOutOfLoop(AbstractBlockBase<?> defBlock, AbstractBlockBase<?> spillBlock)
+    private static AbstractBlockBase<?> moveSpillOutOfLoop(AbstractBlockBase<?> __defBlock, AbstractBlockBase<?> __spillBlock)
     {
-        int defLoopDepth = defBlock.getLoopDepth();
-        for (AbstractBlockBase<?> block = spillBlock.getDominator(); !defBlock.equals(block); block = block.getDominator())
+        int __defLoopDepth = __defBlock.getLoopDepth();
+        for (AbstractBlockBase<?> __block = __spillBlock.getDominator(); !__defBlock.equals(__block); __block = __block.getDominator())
         {
-            if (block.getLoopDepth() <= defLoopDepth)
+            if (__block.getLoopDepth() <= __defLoopDepth)
             {
-                return block;
+                return __block;
             }
         }
-        return defBlock;
+        return __defBlock;
     }
 }

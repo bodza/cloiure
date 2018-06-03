@@ -13,15 +13,17 @@ import giraaff.nodes.spi.LoweringTool;
 // @class AbstractNewObjectNode
 public abstract class AbstractNewObjectNode extends DeoptimizingFixedWithNextNode implements Lowerable
 {
+    // @def
     public static final NodeClass<AbstractNewObjectNode> TYPE = NodeClass.create(AbstractNewObjectNode.class);
 
+    // @field
     protected final boolean fillContents;
 
     // @cons
-    protected AbstractNewObjectNode(NodeClass<? extends AbstractNewObjectNode> c, Stamp stamp, boolean fillContents, FrameState stateBefore)
+    protected AbstractNewObjectNode(NodeClass<? extends AbstractNewObjectNode> __c, Stamp __stamp, boolean __fillContents, FrameState __stateBefore)
     {
-        super(c, stamp, stateBefore);
-        this.fillContents = fillContents;
+        super(__c, __stamp, __stateBefore);
+        this.fillContents = __fillContents;
     }
 
     /**
@@ -33,9 +35,9 @@ public abstract class AbstractNewObjectNode extends DeoptimizingFixedWithNextNod
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override

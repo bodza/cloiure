@@ -28,73 +28,74 @@ import giraaff.util.GraalError;
 // @class ExpandLogicPhase
 public final class ExpandLogicPhase extends Phase
 {
+    // @def
     private static final double EPSILON = 1E-6;
 
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        for (ShortCircuitOrNode logic : graph.getNodes(ShortCircuitOrNode.TYPE))
+        for (ShortCircuitOrNode __logic : __graph.getNodes(ShortCircuitOrNode.TYPE))
         {
-            processBinary(logic);
+            processBinary(__logic);
         }
 
-        for (NormalizeCompareNode logic : graph.getNodes(NormalizeCompareNode.TYPE))
+        for (NormalizeCompareNode __logic : __graph.getNodes(NormalizeCompareNode.TYPE))
         {
-            processNormalizeCompareNode(logic);
+            processNormalizeCompareNode(__logic);
         }
-        graph.setAfterExpandLogic();
+        __graph.setAfterExpandLogic();
     }
 
-    private static void processNormalizeCompareNode(NormalizeCompareNode normalize)
+    private static void processNormalizeCompareNode(NormalizeCompareNode __normalize)
     {
-        LogicNode equalComp;
-        LogicNode lessComp;
-        StructuredGraph graph = normalize.graph();
-        ValueNode x = normalize.getX();
-        ValueNode y = normalize.getY();
-        if (x.stamp(NodeView.DEFAULT) instanceof FloatStamp)
+        LogicNode __equalComp;
+        LogicNode __lessComp;
+        StructuredGraph __graph = __normalize.graph();
+        ValueNode __x = __normalize.getX();
+        ValueNode __y = __normalize.getY();
+        if (__x.stamp(NodeView.DEFAULT) instanceof FloatStamp)
         {
-            equalComp = graph.addOrUniqueWithInputs(FloatEqualsNode.create(x, y, NodeView.DEFAULT));
-            lessComp = graph.addOrUniqueWithInputs(FloatLessThanNode.create(x, y, normalize.isUnorderedLess(), NodeView.DEFAULT));
+            __equalComp = __graph.addOrUniqueWithInputs(FloatEqualsNode.create(__x, __y, NodeView.DEFAULT));
+            __lessComp = __graph.addOrUniqueWithInputs(FloatLessThanNode.create(__x, __y, __normalize.isUnorderedLess(), NodeView.DEFAULT));
         }
         else
         {
-            equalComp = graph.addOrUniqueWithInputs(IntegerEqualsNode.create(x, y, NodeView.DEFAULT));
-            lessComp = graph.addOrUniqueWithInputs(IntegerLessThanNode.create(x, y, NodeView.DEFAULT));
+            __equalComp = __graph.addOrUniqueWithInputs(IntegerEqualsNode.create(__x, __y, NodeView.DEFAULT));
+            __lessComp = __graph.addOrUniqueWithInputs(IntegerLessThanNode.create(__x, __y, NodeView.DEFAULT));
         }
 
-        Stamp stamp = normalize.stamp(NodeView.DEFAULT);
-        ConditionalNode equalValue = graph.unique(new ConditionalNode(equalComp, ConstantNode.forIntegerStamp(stamp, 0, graph), ConstantNode.forIntegerStamp(stamp, 1, graph)));
-        ConditionalNode value = graph.unique(new ConditionalNode(lessComp, ConstantNode.forIntegerStamp(stamp, -1, graph), equalValue));
-        normalize.replaceAtUsagesAndDelete(value);
+        Stamp __stamp = __normalize.stamp(NodeView.DEFAULT);
+        ConditionalNode __equalValue = __graph.unique(new ConditionalNode(__equalComp, ConstantNode.forIntegerStamp(__stamp, 0, __graph), ConstantNode.forIntegerStamp(__stamp, 1, __graph)));
+        ConditionalNode __value = __graph.unique(new ConditionalNode(__lessComp, ConstantNode.forIntegerStamp(__stamp, -1, __graph), __equalValue));
+        __normalize.replaceAtUsagesAndDelete(__value);
     }
 
-    private static void processBinary(ShortCircuitOrNode binary)
+    private static void processBinary(ShortCircuitOrNode __binary)
     {
-        while (binary.usages().isNotEmpty())
+        while (__binary.usages().isNotEmpty())
         {
-            Node usage = binary.usages().first();
-            if (usage instanceof ShortCircuitOrNode)
+            Node __usage = __binary.usages().first();
+            if (__usage instanceof ShortCircuitOrNode)
             {
-                processBinary((ShortCircuitOrNode) usage);
+                processBinary((ShortCircuitOrNode) __usage);
             }
-            else if (usage instanceof IfNode)
+            else if (__usage instanceof IfNode)
             {
-                processIf(binary.getX(), binary.isXNegated(), binary.getY(), binary.isYNegated(), (IfNode) usage, binary.getShortCircuitProbability());
+                processIf(__binary.getX(), __binary.isXNegated(), __binary.getY(), __binary.isYNegated(), (IfNode) __usage, __binary.getShortCircuitProbability());
             }
-            else if (usage instanceof ConditionalNode)
+            else if (__usage instanceof ConditionalNode)
             {
-                processConditional(binary.getX(), binary.isXNegated(), binary.getY(), binary.isYNegated(), (ConditionalNode) usage);
+                processConditional(__binary.getX(), __binary.isXNegated(), __binary.getY(), __binary.isYNegated(), (ConditionalNode) __usage);
             }
             else
             {
                 throw GraalError.shouldNotReachHere();
             }
         }
-        binary.safeDelete();
+        __binary.safeDelete();
     }
 
-    private static void processIf(LogicNode x, boolean xNegated, LogicNode y, boolean yNegated, IfNode ifNode, double shortCircuitProbability)
+    private static void processIf(LogicNode __x, boolean __xNegated, LogicNode __y, boolean __yNegated, IfNode __ifNode, double __shortCircuitProbability)
     {
         /*
          * this method splits an IfNode, which has a ShortCircuitOrNode as its condition, into two
@@ -105,16 +106,16 @@ public final class ExpandLogicPhase extends Phase
          * created with each other in mind. If this assumption does not hold, we fall back to
          * another mechanism for computing the probabilities.
          */
-        AbstractBeginNode trueTarget = ifNode.trueSuccessor();
-        AbstractBeginNode falseTarget = ifNode.falseSuccessor();
+        AbstractBeginNode __trueTarget = __ifNode.trueSuccessor();
+        AbstractBeginNode __falseTarget = __ifNode.falseSuccessor();
 
         // 1st approach
         // assumption: P(originalIf.trueSuccessor) == P(X) + ((1 - P(X)) * P(Y))
-        double firstIfTrueProbability = shortCircuitProbability;
-        double secondIfTrueProbability = sanitizeProbability((ifNode.getTrueSuccessorProbability() - shortCircuitProbability) / (1 - shortCircuitProbability));
-        double expectedOriginalIfTrueProbability = firstIfTrueProbability + (1 - firstIfTrueProbability) * secondIfTrueProbability;
+        double __firstIfTrueProbability = __shortCircuitProbability;
+        double __secondIfTrueProbability = sanitizeProbability((__ifNode.getTrueSuccessorProbability() - __shortCircuitProbability) / (1 - __shortCircuitProbability));
+        double __expectedOriginalIfTrueProbability = __firstIfTrueProbability + (1 - __firstIfTrueProbability) * __secondIfTrueProbability;
 
-        if (!doubleEquals(ifNode.getTrueSuccessorProbability(), expectedOriginalIfTrueProbability))
+        if (!doubleEquals(__ifNode.getTrueSuccessorProbability(), __expectedOriginalIfTrueProbability))
         {
             /*
              * 2nd approach
@@ -126,57 +127,57 @@ public final class ExpandLogicPhase extends Phase
              * nodes according to the shortCircuitProbability. the following invariant is always
              * true in this case: P(originalIf.trueSuccessor) == P(X) + ((1 - P(X)) * P(Y))
              */
-            firstIfTrueProbability = ifNode.getTrueSuccessorProbability() * shortCircuitProbability;
-            secondIfTrueProbability = sanitizeProbability(1 - (ifNode.probability(falseTarget) / (1 - firstIfTrueProbability)));
+            __firstIfTrueProbability = __ifNode.getTrueSuccessorProbability() * __shortCircuitProbability;
+            __secondIfTrueProbability = sanitizeProbability(1 - (__ifNode.probability(__falseTarget) / (1 - __firstIfTrueProbability)));
         }
 
-        ifNode.clearSuccessors();
-        Graph graph = ifNode.graph();
-        AbstractMergeNode trueTargetMerge = graph.add(new MergeNode());
-        trueTargetMerge.setNext(trueTarget);
-        EndNode firstTrueEnd = graph.add(new EndNode());
-        EndNode secondTrueEnd = graph.add(new EndNode());
-        trueTargetMerge.addForwardEnd(firstTrueEnd);
-        trueTargetMerge.addForwardEnd(secondTrueEnd);
-        AbstractBeginNode firstTrueTarget = BeginNode.begin(firstTrueEnd);
-        AbstractBeginNode secondTrueTarget = BeginNode.begin(secondTrueEnd);
-        if (yNegated)
+        __ifNode.clearSuccessors();
+        Graph __graph = __ifNode.graph();
+        AbstractMergeNode __trueTargetMerge = __graph.add(new MergeNode());
+        __trueTargetMerge.setNext(__trueTarget);
+        EndNode __firstTrueEnd = __graph.add(new EndNode());
+        EndNode __secondTrueEnd = __graph.add(new EndNode());
+        __trueTargetMerge.addForwardEnd(__firstTrueEnd);
+        __trueTargetMerge.addForwardEnd(__secondTrueEnd);
+        AbstractBeginNode __firstTrueTarget = BeginNode.begin(__firstTrueEnd);
+        AbstractBeginNode __secondTrueTarget = BeginNode.begin(__secondTrueEnd);
+        if (__yNegated)
         {
-            secondIfTrueProbability = 1.0 - secondIfTrueProbability;
+            __secondIfTrueProbability = 1.0 - __secondIfTrueProbability;
         }
-        if (xNegated)
+        if (__xNegated)
         {
-            firstIfTrueProbability = 1.0 - firstIfTrueProbability;
+            __firstIfTrueProbability = 1.0 - __firstIfTrueProbability;
         }
-        IfNode secondIf = new IfNode(y, yNegated ? falseTarget : secondTrueTarget, yNegated ? secondTrueTarget : falseTarget, secondIfTrueProbability);
-        AbstractBeginNode secondIfBegin = BeginNode.begin(graph.add(secondIf));
-        IfNode firstIf = graph.add(new IfNode(x, xNegated ? secondIfBegin : firstTrueTarget, xNegated ? firstTrueTarget : secondIfBegin, firstIfTrueProbability));
-        ifNode.replaceAtPredecessor(firstIf);
-        ifNode.safeDelete();
+        IfNode __secondIf = new IfNode(__y, __yNegated ? __falseTarget : __secondTrueTarget, __yNegated ? __secondTrueTarget : __falseTarget, __secondIfTrueProbability);
+        AbstractBeginNode __secondIfBegin = BeginNode.begin(__graph.add(__secondIf));
+        IfNode __firstIf = __graph.add(new IfNode(__x, __xNegated ? __secondIfBegin : __firstTrueTarget, __xNegated ? __firstTrueTarget : __secondIfBegin, __firstIfTrueProbability));
+        __ifNode.replaceAtPredecessor(__firstIf);
+        __ifNode.safeDelete();
     }
 
-    private static boolean doubleEquals(double a, double b)
+    private static boolean doubleEquals(double __a, double __b)
     {
-        return a - EPSILON < b && a + EPSILON > b;
+        return __a - EPSILON < __b && __a + EPSILON > __b;
     }
 
-    private static double sanitizeProbability(double value)
+    private static double sanitizeProbability(double __value)
     {
-        double newValue = Math.min(1.0, Math.max(0.0, value));
-        if (Double.isNaN(newValue))
+        double __newValue = Math.min(1.0, Math.max(0.0, __value));
+        if (Double.isNaN(__newValue))
         {
-            newValue = 0.5;
+            __newValue = 0.5;
         }
-        return newValue;
+        return __newValue;
     }
 
-    private static void processConditional(LogicNode x, boolean xNegated, LogicNode y, boolean yNegated, ConditionalNode conditional)
+    private static void processConditional(LogicNode __x, boolean __xNegated, LogicNode __y, boolean __yNegated, ConditionalNode __conditional)
     {
-        ValueNode trueTarget = conditional.trueValue();
-        ValueNode falseTarget = conditional.falseValue();
-        Graph graph = conditional.graph();
-        ConditionalNode secondConditional = graph.unique(new ConditionalNode(y, yNegated ? falseTarget : trueTarget, yNegated ? trueTarget : falseTarget));
-        ConditionalNode firstConditional = graph.unique(new ConditionalNode(x, xNegated ? secondConditional : trueTarget, xNegated ? trueTarget : secondConditional));
-        conditional.replaceAndDelete(firstConditional);
+        ValueNode __trueTarget = __conditional.trueValue();
+        ValueNode __falseTarget = __conditional.falseValue();
+        Graph __graph = __conditional.graph();
+        ConditionalNode __secondConditional = __graph.unique(new ConditionalNode(__y, __yNegated ? __falseTarget : __trueTarget, __yNegated ? __trueTarget : __falseTarget));
+        ConditionalNode __firstConditional = __graph.unique(new ConditionalNode(__x, __xNegated ? __secondConditional : __trueTarget, __xNegated ? __trueTarget : __secondConditional));
+        __conditional.replaceAndDelete(__firstConditional);
     }
 }

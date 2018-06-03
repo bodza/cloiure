@@ -13,17 +13,22 @@ import giraaff.nodes.spi.ValueProxy;
 // @class EntryProxyNode
 public final class EntryProxyNode extends FloatingNode implements ValueProxy
 {
+    // @def
     public static final NodeClass<EntryProxyNode> TYPE = NodeClass.create(EntryProxyNode.class);
 
-    @Input(InputType.Association) EntryMarkerNode proxyPoint;
-    @Input ValueNode value;
+    @Input(InputType.Association)
+    // @field
+    EntryMarkerNode proxyPoint;
+    @Input
+    // @field
+    ValueNode value;
 
     // @cons
-    public EntryProxyNode(ValueNode value, EntryMarkerNode proxyPoint)
+    public EntryProxyNode(ValueNode __value, EntryMarkerNode __proxyPoint)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT).unrestricted());
-        this.value = value;
-        this.proxyPoint = proxyPoint;
+        super(TYPE, __value.stamp(NodeView.DEFAULT).unrestricted());
+        this.value = __value;
+        this.proxyPoint = __proxyPoint;
     }
 
     public ValueNode value()

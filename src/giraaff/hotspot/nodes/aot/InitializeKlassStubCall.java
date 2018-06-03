@@ -29,26 +29,34 @@ import giraaff.nodes.util.GraphUtil;
 // @class InitializeKlassStubCall
 public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<InitializeKlassStubCall> TYPE = NodeClass.create(InitializeKlassStubCall.class);
 
-    @OptionalInput protected ValueNode value;
-    @Input protected ValueNode string;
-    @OptionalInput(InputType.State) protected FrameState stateBefore;
+    @OptionalInput
+    // @field
+    protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode string;
+    @OptionalInput(InputType.State)
+    // @field
+    protected FrameState stateBefore;
+    // @field
     protected Constant constant;
 
     // @cons
-    protected InitializeKlassStubCall(ValueNode value, ValueNode string)
+    protected InitializeKlassStubCall(ValueNode __value, ValueNode __string)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT));
-        this.value = value;
-        this.string = string;
+        super(TYPE, __value.stamp(NodeView.DEFAULT));
+        this.value = __value;
+        this.string = __string;
     }
 
     @NodeIntrinsic
     public static native KlassPointer initializeKlass(KlassPointer value, Object string);
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (value != null)
         {
@@ -58,9 +66,9 @@ public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint impl
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, gen.operand(string), gen.state(this)));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, __gen.operand(string), __gen.state(this)));
     }
 
     @Override
@@ -82,9 +90,9 @@ public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint impl
     }
 
     @Override
-    public void setStateBefore(FrameState f)
+    public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, f);
-        stateBefore = f;
+        updateUsages(stateBefore, __f);
+        stateBefore = __f;
     }
 }

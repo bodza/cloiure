@@ -26,26 +26,27 @@ import giraaff.nodes.util.GraphUtil;
 // @class IsNullNode
 public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, Virtualizable
 {
+    // @def
     public static final NodeClass<IsNullNode> TYPE = NodeClass.create(IsNullNode.class);
 
     // @cons
-    public IsNullNode(ValueNode object)
+    public IsNullNode(ValueNode __object)
     {
-        super(TYPE, object);
+        super(TYPE, __object);
     }
 
-    public static LogicNode create(ValueNode forValue)
+    public static LogicNode create(ValueNode __forValue)
     {
-        return canonicalized(null, forValue);
+        return canonicalized(null, __forValue);
     }
 
-    public static LogicNode tryCanonicalize(ValueNode forValue)
+    public static LogicNode tryCanonicalize(ValueNode __forValue)
     {
-        if (StampTool.isPointerAlwaysNull(forValue))
+        if (StampTool.isPointerAlwaysNull(__forValue))
         {
             return LogicConstantNode.tautology();
         }
-        else if (StampTool.isPointerNonNull(forValue))
+        else if (StampTool.isPointerNonNull(__forValue))
         {
             return LogicConstantNode.contradiction();
         }
@@ -53,77 +54,77 @@ public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, 
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // Nothing to do.
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        return canonicalized(this, forValue);
+        return canonicalized(this, __forValue);
     }
 
-    private static LogicNode canonicalized(IsNullNode isNullNode, ValueNode forValue)
+    private static LogicNode canonicalized(IsNullNode __isNullNode, ValueNode __forValue)
     {
-        IsNullNode self = isNullNode;
-        LogicNode result = tryCanonicalize(forValue);
-        if (result != null)
+        IsNullNode __self = __isNullNode;
+        LogicNode __result = tryCanonicalize(__forValue);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
 
-        if (forValue instanceof PiNode)
+        if (__forValue instanceof PiNode)
         {
-            return IsNullNode.create(GraphUtil.skipPi(forValue));
+            return IsNullNode.create(GraphUtil.skipPi(__forValue));
         }
 
-        if (forValue instanceof ConvertNode)
+        if (__forValue instanceof ConvertNode)
         {
-            ConvertNode convertNode = (ConvertNode) forValue;
-            if (convertNode.mayNullCheckSkipConversion())
+            ConvertNode __convertNode = (ConvertNode) __forValue;
+            if (__convertNode.mayNullCheckSkipConversion())
             {
-                return IsNullNode.create(convertNode.getValue());
+                return IsNullNode.create(__convertNode.getValue());
             }
         }
 
-        if (self == null)
+        if (__self == null)
         {
-            self = new IsNullNode(GraphUtil.skipPi(forValue));
+            __self = new IsNullNode(GraphUtil.skipPi(__forValue));
         }
-        return self;
+        return __self;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(getValue());
-        TriState fold = tryFold(alias.stamp(NodeView.DEFAULT));
-        if (fold != TriState.UNKNOWN)
+        ValueNode __alias = __tool.getAlias(getValue());
+        TriState __fold = tryFold(__alias.stamp(NodeView.DEFAULT));
+        if (__fold != TriState.UNKNOWN)
         {
-            tool.replaceWithValue(LogicConstantNode.forBoolean(fold.isTrue(), graph()));
+            __tool.replaceWithValue(LogicConstantNode.forBoolean(__fold.isTrue(), graph()));
         }
     }
 
     @Override
-    public Stamp getSucceedingStampForValue(boolean negated)
+    public Stamp getSucceedingStampForValue(boolean __negated)
     {
         // ignore any more precise input stamp, since canonicalization will skip through PiNodes
-        AbstractPointerStamp pointerStamp = (AbstractPointerStamp) getValue().stamp(NodeView.DEFAULT).unrestricted();
-        return negated ? pointerStamp.asNonNull() : pointerStamp.asAlwaysNull();
+        AbstractPointerStamp __pointerStamp = (AbstractPointerStamp) getValue().stamp(NodeView.DEFAULT).unrestricted();
+        return __negated ? __pointerStamp.asNonNull() : __pointerStamp.asAlwaysNull();
     }
 
     @Override
-    public TriState tryFold(Stamp valueStamp)
+    public TriState tryFold(Stamp __valueStamp)
     {
-        if (valueStamp instanceof ObjectStamp)
+        if (__valueStamp instanceof ObjectStamp)
         {
-            ObjectStamp objectStamp = (ObjectStamp) valueStamp;
-            if (objectStamp.alwaysNull())
+            ObjectStamp __objectStamp = (ObjectStamp) __valueStamp;
+            if (__objectStamp.alwaysNull())
             {
                 return TriState.TRUE;
             }
-            else if (objectStamp.nonNull())
+            else if (__objectStamp.nonNull())
             {
                 return TriState.FALSE;
             }

@@ -8,48 +8,50 @@ import jdk.vm.ci.code.Register;
 // @class RegisterMap
 public final class RegisterMap<T>
 {
+    // @field
     private final Object[] values;
+    // @field
     private final Architecture arch;
 
     // @cons
-    public RegisterMap(Architecture arch)
+    public RegisterMap(Architecture __arch)
     {
         super();
-        this.values = new Object[arch.getRegisters().size()];
-        this.arch = arch;
+        this.values = new Object[__arch.getRegisters().size()];
+        this.arch = __arch;
     }
 
     @SuppressWarnings("unchecked")
-    public T get(Register reg)
+    public T get(Register __reg)
     {
-        return (T) values[index(reg)];
+        return (T) values[index(__reg)];
     }
 
-    public void remove(Register reg)
+    public void remove(Register __reg)
     {
-        values[index(reg)] = null;
+        values[index(__reg)] = null;
     }
 
-    public void put(Register reg, T value)
+    public void put(Register __reg, T __value)
     {
-        values[index(reg)] = value;
+        values[index(__reg)] = __value;
     }
 
     @SuppressWarnings("unchecked")
-    public void forEach(BiConsumer<? super Register, ? super T> consumer)
+    public void forEach(BiConsumer<? super Register, ? super T> __consumer)
     {
-        for (int i = 0; i < values.length; ++i)
+        for (int __i = 0; __i < values.length; ++__i)
         {
-            T value = (T) values[i];
-            if (value != null)
+            T __value = (T) values[__i];
+            if (__value != null)
             {
-                consumer.accept(arch.getRegisters().get(i), value);
+                __consumer.accept(arch.getRegisters().get(__i), __value);
             }
         }
     }
 
-    private static int index(Register reg)
+    private static int index(Register __reg)
     {
-        return reg.number;
+        return __reg.number;
     }
 }

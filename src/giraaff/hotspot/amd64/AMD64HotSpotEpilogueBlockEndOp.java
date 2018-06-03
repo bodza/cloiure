@@ -15,21 +15,23 @@ import giraaff.lir.asm.CompilationResultBuilder;
 abstract class AMD64HotSpotEpilogueBlockEndOp extends AMD64BlockEndOp implements AMD64HotSpotRestoreRbpOp
 {
     // @cons
-    protected AMD64HotSpotEpilogueBlockEndOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueBlockEndOp> c)
+    protected AMD64HotSpotEpilogueBlockEndOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueBlockEndOp> __c)
     {
-        super(c);
+        super(__c);
     }
 
-    @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue savedRbp = PLACEHOLDER;
+    @Use({OperandFlag.REG, OperandFlag.STACK})
+    // @field
+    protected AllocatableValue savedRbp = PLACEHOLDER;
 
-    protected void leaveFrameAndRestoreRbp(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    protected void leaveFrameAndRestoreRbp(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        AMD64HotSpotEpilogueOp.leaveFrameAndRestoreRbp(savedRbp, crb, masm);
+        AMD64HotSpotEpilogueOp.leaveFrameAndRestoreRbp(savedRbp, __crb, __masm);
     }
 
     @Override
-    public void setSavedRbp(AllocatableValue value)
+    public void setSavedRbp(AllocatableValue __value)
     {
-        savedRbp = value;
+        savedRbp = __value;
     }
 }

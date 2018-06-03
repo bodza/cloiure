@@ -16,15 +16,18 @@ import giraaff.phases.util.Providers;
 // @class ExactInlineInfo
 public class ExactInlineInfo extends AbstractInlineInfo
 {
+    // @field
     protected final ResolvedJavaMethod concrete;
+    // @field
     private Inlineable inlineableElement;
+    // @field
     private boolean suppressNullCheck;
 
     // @cons
-    public ExactInlineInfo(Invoke invoke, ResolvedJavaMethod concrete)
+    public ExactInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete)
     {
-        super(invoke);
-        this.concrete = concrete;
+        super(__invoke);
+        this.concrete = __concrete;
     }
 
     public void suppressNullCheck()
@@ -33,13 +36,13 @@ public class ExactInlineInfo extends AbstractInlineInfo
     }
 
     @Override
-    public EconomicSet<Node> inline(Providers providers, String reason)
+    public EconomicSet<Node> inline(Providers __providers, String __reason)
     {
-        return inline(invoke, concrete, inlineableElement, !suppressNullCheck, reason);
+        return inline(invoke, concrete, inlineableElement, !suppressNullCheck, __reason);
     }
 
     @Override
-    public void tryToDevirtualizeInvoke(Providers providers)
+    public void tryToDevirtualizeInvoke(Providers __providers)
     {
         // nothing todo, can already be bound statically
     }
@@ -51,33 +54,33 @@ public class ExactInlineInfo extends AbstractInlineInfo
     }
 
     @Override
-    public ResolvedJavaMethod methodAt(int index)
+    public ResolvedJavaMethod methodAt(int __index)
     {
         return concrete;
     }
 
     @Override
-    public double probabilityAt(int index)
+    public double probabilityAt(int __index)
     {
         return 1.0;
     }
 
     @Override
-    public double relevanceAt(int index)
+    public double relevanceAt(int __index)
     {
         return 1.0;
     }
 
     @Override
-    public Inlineable inlineableElementAt(int index)
+    public Inlineable inlineableElementAt(int __index)
     {
         return inlineableElement;
     }
 
     @Override
-    public void setInlinableElement(int index, Inlineable inlineableElement)
+    public void setInlinableElement(int __index, Inlineable __inlineableElement)
     {
-        this.inlineableElement = inlineableElement;
+        this.inlineableElement = __inlineableElement;
     }
 
     @Override

@@ -19,41 +19,42 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class BitCountNode
 public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<BitCountNode> TYPE = NodeClass.create(BitCountNode.class);
 
     // @cons
-    public BitCountNode(ValueNode value)
+    public BitCountNode(ValueNode __value)
     {
-        super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
+        super(TYPE, computeStamp(__value.stamp(NodeView.DEFAULT), __value), __value);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        ValueNode theValue = getValue();
-        return computeStamp(newStamp, theValue);
+        ValueNode __theValue = getValue();
+        return computeStamp(__newStamp, __theValue);
     }
 
-    static Stamp computeStamp(Stamp newStamp, ValueNode theValue)
+    static Stamp computeStamp(Stamp __newStamp, ValueNode __theValue)
     {
-        IntegerStamp valueStamp = (IntegerStamp) newStamp;
-        return StampFactory.forInteger(JavaKind.Int, Long.bitCount(valueStamp.downMask()), Long.bitCount(valueStamp.upMask()));
+        IntegerStamp __valueStamp = (IntegerStamp) __newStamp;
+        return StampFactory.forInteger(JavaKind.Int, Long.bitCount(__valueStamp.downMask()), Long.bitCount(__valueStamp.upMask()));
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        if (forValue.isConstant())
+        if (__forValue.isConstant())
         {
-            JavaConstant c = forValue.asJavaConstant();
-            return ConstantNode.forInt(forValue.getStackKind() == JavaKind.Int ? Integer.bitCount(c.asInt()) : Long.bitCount(c.asLong()));
+            JavaConstant __c = __forValue.asJavaConstant();
+            return ConstantNode.forInt(__forValue.getStackKind() == JavaKind.Int ? Integer.bitCount(__c.asInt()) : Long.bitCount(__c.asLong()));
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        builder.setResult(this, gen.emitBitCount(builder.operand(getValue())));
+        __builder.setResult(this, __gen.emitBitCount(__builder.operand(getValue())));
     }
 }

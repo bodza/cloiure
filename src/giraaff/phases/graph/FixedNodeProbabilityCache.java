@@ -22,6 +22,7 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 // @class FixedNodeProbabilityCache
 public final class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
 {
+    // @field
     private final EconomicMap<FixedNode, Double> cache = EconomicMap.create(Equivalence.IDENTITY);
 
     /**
@@ -44,86 +45,86 @@ public final class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNo
      * appears to be dead-code (ie, lacks a predecessor).
      */
     @Override
-    public double applyAsDouble(FixedNode node)
+    public double applyAsDouble(FixedNode __node)
     {
-        FixedNode current = findBegin(node);
-        if (current == null)
+        FixedNode __current = findBegin(__node);
+        if (__current == null)
         {
             // this should only appear for dead code
             return 1D;
         }
 
-        Double cachedValue = cache.get(current);
-        if (cachedValue != null)
+        Double __cachedValue = cache.get(__current);
+        if (__cachedValue != null)
         {
-            return cachedValue;
+            return __cachedValue;
         }
 
-        double probability = 0.0;
-        if (current.predecessor() == null)
+        double __probability = 0.0;
+        if (__current.predecessor() == null)
         {
-            if (current instanceof AbstractMergeNode)
+            if (__current instanceof AbstractMergeNode)
             {
-                probability = handleMerge(current, probability);
+                __probability = handleMerge(__current, __probability);
             }
             else
             {
-                probability = 1D;
+                __probability = 1D;
             }
         }
         else
         {
-            ControlSplitNode split = (ControlSplitNode) current.predecessor();
-            probability = ControlFlowGraph.multiplyProbabilities(split.probability((AbstractBeginNode) current), applyAsDouble(split));
+            ControlSplitNode __split = (ControlSplitNode) __current.predecessor();
+            __probability = ControlFlowGraph.multiplyProbabilities(__split.probability((AbstractBeginNode) __current), applyAsDouble(__split));
         }
-        cache.put(current, probability);
-        return probability;
+        cache.put(__current, __probability);
+        return __probability;
     }
 
-    private double handleMerge(FixedNode current, double probability)
+    private double handleMerge(FixedNode __current, double __probability)
     {
-        double result = probability;
-        AbstractMergeNode currentMerge = (AbstractMergeNode) current;
-        NodeInputList<EndNode> currentForwardEnds = currentMerge.forwardEnds();
+        double __result = __probability;
+        AbstractMergeNode __currentMerge = (AbstractMergeNode) __current;
+        NodeInputList<EndNode> __currentForwardEnds = __currentMerge.forwardEnds();
         /*
          * Use simple iteration instead of streams, since the stream infrastructure adds many frames
          * which causes the recursion to overflow the stack earlier than it would otherwise.
          */
-        for (AbstractEndNode endNode : currentForwardEnds)
+        for (AbstractEndNode __endNode : __currentForwardEnds)
         {
-            result += applyAsDouble(endNode);
+            __result += applyAsDouble(__endNode);
         }
-        if (current instanceof LoopBeginNode)
+        if (__current instanceof LoopBeginNode)
         {
-            result = ControlFlowGraph.multiplyProbabilities(result, ((LoopBeginNode) current).loopFrequency());
+            __result = ControlFlowGraph.multiplyProbabilities(__result, ((LoopBeginNode) __current).loopFrequency());
         }
-        return result;
+        return __result;
     }
 
-    private static FixedNode findBegin(FixedNode node)
+    private static FixedNode findBegin(FixedNode __node)
     {
-        FixedNode current = node;
+        FixedNode __current = __node;
         while (true)
         {
-            Node predecessor = current.predecessor();
-            if (current instanceof AbstractBeginNode)
+            Node __predecessor = __current.predecessor();
+            if (__current instanceof AbstractBeginNode)
             {
-                if (predecessor == null)
+                if (__predecessor == null)
                 {
                     break;
                 }
-                else if (predecessor.successors().count() != 1)
+                else if (__predecessor.successors().count() != 1)
                 {
                     break;
                 }
             }
-            else if (predecessor == null)
+            else if (__predecessor == null)
             {
-                current = null;
+                __current = null;
                 break;
             }
-            current = (FixedNode) predecessor;
+            __current = (FixedNode) __predecessor;
         }
-        return current;
+        return __current;
     }
 }

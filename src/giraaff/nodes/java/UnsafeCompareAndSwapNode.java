@@ -20,26 +20,37 @@ import giraaff.nodes.spi.LoweringTool;
 // @class UnsafeCompareAndSwapNode
 public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<UnsafeCompareAndSwapNode> TYPE = NodeClass.create(UnsafeCompareAndSwapNode.class);
 
-    @Input ValueNode object;
-    @Input ValueNode offset;
-    @Input ValueNode expected;
-    @Input ValueNode newValue;
+    @Input
+    // @field
+    ValueNode object;
+    @Input
+    // @field
+    ValueNode offset;
+    @Input
+    // @field
+    ValueNode expected;
+    @Input
+    // @field
+    ValueNode newValue;
 
+    // @field
     private final JavaKind valueKind;
+    // @field
     private final LocationIdentity locationIdentity;
 
     // @cons
-    public UnsafeCompareAndSwapNode(ValueNode object, ValueNode offset, ValueNode expected, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity)
+    public UnsafeCompareAndSwapNode(ValueNode __object, ValueNode __offset, ValueNode __expected, ValueNode __newValue, JavaKind __valueKind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
-        this.object = object;
-        this.offset = offset;
-        this.expected = expected;
-        this.newValue = newValue;
-        this.valueKind = valueKind;
-        this.locationIdentity = locationIdentity;
+        this.object = __object;
+        this.offset = __offset;
+        this.expected = __expected;
+        this.newValue = __newValue;
+        this.valueKind = __valueKind;
+        this.locationIdentity = __locationIdentity;
     }
 
     public ValueNode object()
@@ -74,8 +85,8 @@ public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint imp
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 }

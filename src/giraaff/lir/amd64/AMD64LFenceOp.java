@@ -9,6 +9,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64LFenceOp
 public final class AMD64LFenceOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64LFenceOp> TYPE = LIRInstructionClass.create(AMD64LFenceOp.class);
 
     // @cons
@@ -18,8 +19,8 @@ public final class AMD64LFenceOp extends AMD64LIRInstruction
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler asm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __asm)
     {
-        asm.lfence();
+        __asm.lfence();
     }
 }

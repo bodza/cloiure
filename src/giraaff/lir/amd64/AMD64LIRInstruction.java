@@ -11,18 +11,19 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64LIRInstruction
 public abstract class AMD64LIRInstruction extends LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64LIRInstruction> TYPE = LIRInstructionClass.create(AMD64LIRInstruction.class);
 
     // @cons
-    protected AMD64LIRInstruction(LIRInstructionClass<? extends AMD64LIRInstruction> c)
+    protected AMD64LIRInstruction(LIRInstructionClass<? extends AMD64LIRInstruction> __c)
     {
-        super(c);
+        super(__c);
     }
 
     @Override
-    public final void emitCode(CompilationResultBuilder crb)
+    public final void emitCode(CompilationResultBuilder __crb)
     {
-        emitCode(crb, (AMD64MacroAssembler) crb.asm);
+        emitCode(__crb, (AMD64MacroAssembler) __crb.asm);
     }
 
     public abstract void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm);

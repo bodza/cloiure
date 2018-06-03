@@ -35,44 +35,46 @@ import giraaff.phases.tiers.HighTierContext;
 // @class InlineableGraph
 public final class InlineableGraph implements Inlineable
 {
+    // @field
     private final StructuredGraph graph;
 
+    // @field
     private FixedNodeProbabilityCache probabilites = new FixedNodeProbabilityCache();
 
     // @cons
-    public InlineableGraph(final ResolvedJavaMethod method, final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer)
+    public InlineableGraph(final ResolvedJavaMethod __method, final Invoke __invoke, final HighTierContext __context, CanonicalizerPhase __canonicalizer)
     {
         super();
-        StructuredGraph original = getOriginalGraph(method, context, canonicalizer, invoke.asNode().graph(), invoke.bci());
+        StructuredGraph __original = getOriginalGraph(__method, __context, __canonicalizer, __invoke.asNode().graph(), __invoke.bci());
         // TODO copying the graph is only necessary if it is modified or if it contains any invokes
-        this.graph = (StructuredGraph) original.copy();
-        specializeGraphToArguments(invoke, context, canonicalizer);
+        this.graph = (StructuredGraph) __original.copy();
+        specializeGraphToArguments(__invoke, __context, __canonicalizer);
     }
 
     /**
      * This method looks up in a cache the graph for the argument, if not found bytecode is parsed.
      * The graph thus obtained is returned, ie the caller is responsible for cloning before modification.
      */
-    private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod method, final HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, int callerBci)
+    private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod __method, final HighTierContext __context, CanonicalizerPhase __canonicalizer, StructuredGraph __caller, int __callerBci)
     {
-        StructuredGraph result = InliningUtil.getIntrinsicGraph(context.getReplacements(), method, callerBci);
-        if (result != null)
+        StructuredGraph __result = InliningUtil.getIntrinsicGraph(__context.getReplacements(), __method, __callerBci);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
-        return parseBytecodes(method, context, canonicalizer, caller);
+        return parseBytecodes(__method, __context, __canonicalizer, __caller);
     }
 
     /**
      * @return true iff one or more parameters <code>newGraph</code> were specialized to account for
      *         a constant argument, or an argument with a more specific stamp.
      */
-    private boolean specializeGraphToArguments(final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer)
+    private boolean specializeGraphToArguments(final Invoke __invoke, final HighTierContext __context, CanonicalizerPhase __canonicalizer)
     {
-        ArrayList<Node> parameterUsages = replaceParamsWithMoreInformativeArguments(invoke, context);
-        if (parameterUsages != null)
+        ArrayList<Node> __parameterUsages = replaceParamsWithMoreInformativeArguments(__invoke, __context);
+        if (__parameterUsages != null)
         {
-            canonicalizer.applyIncremental(graph, context, parameterUsages);
+            __canonicalizer.applyIncremental(graph, __context, __parameterUsages);
             return true;
         }
         else
@@ -83,24 +85,24 @@ public final class InlineableGraph implements Inlineable
         }
     }
 
-    private static boolean isArgMoreInformativeThanParam(ValueNode arg, ParameterNode param)
+    private static boolean isArgMoreInformativeThanParam(ValueNode __arg, ParameterNode __param)
     {
-        return arg.isConstant() || canStampBeImproved(arg, param);
+        return __arg.isConstant() || canStampBeImproved(__arg, __param);
     }
 
-    private static boolean canStampBeImproved(ValueNode arg, ParameterNode param)
+    private static boolean canStampBeImproved(ValueNode __arg, ParameterNode __param)
     {
-        return improvedStamp(arg, param) != null;
+        return improvedStamp(__arg, __param) != null;
     }
 
-    private static Stamp improvedStamp(ValueNode arg, ParameterNode param)
+    private static Stamp improvedStamp(ValueNode __arg, ParameterNode __param)
     {
-        Stamp joinedStamp = param.stamp(NodeView.DEFAULT).join(arg.stamp(NodeView.DEFAULT));
-        if (joinedStamp == null || joinedStamp.equals(param.stamp(NodeView.DEFAULT)))
+        Stamp __joinedStamp = __param.stamp(NodeView.DEFAULT).join(__arg.stamp(NodeView.DEFAULT));
+        if (__joinedStamp == null || __joinedStamp.equals(__param.stamp(NodeView.DEFAULT)))
         {
             return null;
         }
-        return joinedStamp;
+        return __joinedStamp;
     }
 
     /**
@@ -115,49 +117,49 @@ public final class InlineableGraph implements Inlineable
      * @return null if no incremental canonicalization is need, a list of nodes for such
      *         canonicalization otherwise.
      */
-    private ArrayList<Node> replaceParamsWithMoreInformativeArguments(final Invoke invoke, final HighTierContext context)
+    private ArrayList<Node> replaceParamsWithMoreInformativeArguments(final Invoke __invoke, final HighTierContext __context)
     {
-        NodeInputList<ValueNode> args = invoke.callTarget().arguments();
-        ArrayList<Node> parameterUsages = null;
-        List<ParameterNode> params = graph.getNodes(ParameterNode.TYPE).snapshot();
+        NodeInputList<ValueNode> __args = __invoke.callTarget().arguments();
+        ArrayList<Node> __parameterUsages = null;
+        List<ParameterNode> __params = graph.getNodes(ParameterNode.TYPE).snapshot();
         /*
          * param-nodes that aren't used (eg, as a result of canonicalization) don't occur in
          * 'params'. Thus, in general, the sizes of 'params' and 'args' don't always match. Still,
          * it's always possible to pair a param-node with its corresponding arg-node using
          * param.index() as index into 'args'.
          */
-        for (ParameterNode param : params)
+        for (ParameterNode __param : __params)
         {
-            if (param.usages().isNotEmpty())
+            if (__param.usages().isNotEmpty())
             {
-                ValueNode arg = args.get(param.index());
-                if (arg.isConstant())
+                ValueNode __arg = __args.get(__param.index());
+                if (__arg.isConstant())
                 {
-                    ConstantNode constant = (ConstantNode) arg;
-                    parameterUsages = trackParameterUsages(param, parameterUsages);
+                    ConstantNode __constant = (ConstantNode) __arg;
+                    __parameterUsages = trackParameterUsages(__param, __parameterUsages);
                     // collect param usages before replacing the param
-                    param.replaceAtUsagesAndDelete(graph.unique(ConstantNode.forConstant(arg.stamp(NodeView.DEFAULT), constant.getValue(), constant.getStableDimension(), constant.isDefaultStable(), context.getMetaAccess())));
+                    __param.replaceAtUsagesAndDelete(graph.unique(ConstantNode.forConstant(__arg.stamp(NodeView.DEFAULT), __constant.getValue(), __constant.getStableDimension(), __constant.isDefaultStable(), __context.getMetaAccess())));
                     // param-node gone, leaving a gap in the sequence given by param.index()
                 }
                 else
                 {
-                    Stamp impro = improvedStamp(arg, param);
-                    if (impro != null)
+                    Stamp __impro = improvedStamp(__arg, __param);
+                    if (__impro != null)
                     {
-                        param.setStamp(impro);
-                        parameterUsages = trackParameterUsages(param, parameterUsages);
+                        __param.setStamp(__impro);
+                        __parameterUsages = trackParameterUsages(__param, __parameterUsages);
                     }
                 }
             }
         }
-        return parameterUsages;
+        return __parameterUsages;
     }
 
-    private static ArrayList<Node> trackParameterUsages(ParameterNode param, ArrayList<Node> parameterUsages)
+    private static ArrayList<Node> trackParameterUsages(ParameterNode __param, ArrayList<Node> __parameterUsages)
     {
-        ArrayList<Node> result = (parameterUsages == null) ? new ArrayList<>() : parameterUsages;
-        param.usages().snapshotTo(result);
-        return result;
+        ArrayList<Node> __result = (__parameterUsages == null) ? new ArrayList<>() : __parameterUsages;
+        __param.usages().snapshotTo(__result);
+        return __result;
     }
 
     /**
@@ -165,23 +167,23 @@ public final class InlineableGraph implements Inlineable
      * Provided profiling info is mature, the resulting graph is cached. The caller is responsible
      * for cloning before modification.
      */
-    private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller)
+    private static StructuredGraph parseBytecodes(ResolvedJavaMethod __method, HighTierContext __context, CanonicalizerPhase __canonicalizer, StructuredGraph __caller)
     {
-        StructuredGraph newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).build();
-        if (!caller.isUnsafeAccessTrackingEnabled())
+        StructuredGraph __newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(__caller.getAssumptions())).method(__method).build();
+        if (!__caller.isUnsafeAccessTrackingEnabled())
         {
-            newGraph.disableUnsafeAccessTracking();
+            __newGraph.disableUnsafeAccessTracking();
         }
-        if (context.getGraphBuilderSuite() != null)
+        if (__context.getGraphBuilderSuite() != null)
         {
-            context.getGraphBuilderSuite().apply(newGraph, context);
+            __context.getGraphBuilderSuite().apply(__newGraph, __context);
         }
 
-        new DeadCodeEliminationPhase(Optionality.Optional).apply(newGraph);
+        new DeadCodeEliminationPhase(Optionality.Optional).apply(__newGraph);
 
-        canonicalizer.apply(newGraph, context);
+        __canonicalizer.apply(__newGraph, __context);
 
-        return newGraph;
+        return __newGraph;
     }
 
     @Override
@@ -197,9 +199,9 @@ public final class InlineableGraph implements Inlineable
     }
 
     @Override
-    public double getProbability(Invoke invoke)
+    public double getProbability(Invoke __invoke)
     {
-        return probabilites.applyAsDouble(invoke.asNode());
+        return probabilites.applyAsDouble(__invoke.asNode());
     }
 
     public StructuredGraph getGraph()

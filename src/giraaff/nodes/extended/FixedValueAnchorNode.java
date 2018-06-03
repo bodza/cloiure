@@ -12,9 +12,13 @@ import giraaff.nodes.spi.ValueProxy;
 // @class FixedValueAnchorNode
 public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowerable, ValueProxy, GuardingNode
 {
+    // @def
     public static final NodeClass<FixedValueAnchorNode> TYPE = NodeClass.create(FixedValueAnchorNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
+    // @field
     private Stamp predefinedStamp;
 
     public ValueNode object()
@@ -23,24 +27,24 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
     }
 
     // @cons
-    protected FixedValueAnchorNode(NodeClass<? extends FixedValueAnchorNode> c, ValueNode object)
+    protected FixedValueAnchorNode(NodeClass<? extends FixedValueAnchorNode> __c, ValueNode __object)
     {
-        super(c, object.stamp(NodeView.DEFAULT));
-        this.object = object;
+        super(__c, __object.stamp(NodeView.DEFAULT));
+        this.object = __object;
     }
 
     // @cons
-    public FixedValueAnchorNode(ValueNode object)
+    public FixedValueAnchorNode(ValueNode __object)
     {
-        this(TYPE, object);
+        this(TYPE, __object);
     }
 
     // @cons
-    public FixedValueAnchorNode(ValueNode object, Stamp predefinedStamp)
+    public FixedValueAnchorNode(ValueNode __object, Stamp __predefinedStamp)
     {
-        super(TYPE, predefinedStamp);
-        this.object = object;
-        this.predefinedStamp = predefinedStamp;
+        super(TYPE, __predefinedStamp);
+        this.object = __object;
+        this.predefinedStamp = __predefinedStamp;
     }
 
     @Override
@@ -60,9 +64,9 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
     public static native Object getObject(Object object);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, gen.operand(object));
+        __gen.setResult(this, __gen.operand(object));
     }
 
     @Override

@@ -19,49 +19,52 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 // @class LoopsData
 public final class LoopsData
 {
+    // @field
     private final EconomicMap<LoopBeginNode, LoopEx> loopBeginToEx = EconomicMap.create(Equivalence.IDENTITY);
+    // @field
     private final ControlFlowGraph cfg;
+    // @field
     private final List<LoopEx> loops;
 
     // @cons
-    public LoopsData(final StructuredGraph graph)
+    public LoopsData(final StructuredGraph __graph)
     {
         super();
-        cfg = ControlFlowGraph.compute(graph, true, true, true, true);
+        cfg = ControlFlowGraph.compute(__graph, true, true, true, true);
         loops = new ArrayList<>(cfg.getLoops().size());
-        for (Loop<Block> loop : cfg.getLoops())
+        for (Loop<Block> __loop : cfg.getLoops())
         {
-            LoopEx ex = new LoopEx(loop, this);
-            loops.add(ex);
-            loopBeginToEx.put(ex.loopBegin(), ex);
+            LoopEx __ex = new LoopEx(__loop, this);
+            loops.add(__ex);
+            loopBeginToEx.put(__ex.loopBegin(), __ex);
         }
     }
 
     /**
      * Checks that loops are ordered such that outer loops appear first.
      */
-    private static boolean checkLoopOrder(Iterable<Loop<Block>> loops)
+    private static boolean checkLoopOrder(Iterable<Loop<Block>> __loops)
     {
-        EconomicSet<Loop<Block>> seen = EconomicSet.create(Equivalence.IDENTITY);
-        for (Loop<Block> loop : loops)
+        EconomicSet<Loop<Block>> __seen = EconomicSet.create(Equivalence.IDENTITY);
+        for (Loop<Block> __loop : __loops)
         {
-            if (loop.getParent() != null && !seen.contains(loop.getParent()))
+            if (__loop.getParent() != null && !__seen.contains(__loop.getParent()))
             {
                 return false;
             }
-            seen.add(loop);
+            __seen.add(__loop);
         }
         return true;
     }
 
-    public LoopEx loop(Loop<Block> loop)
+    public LoopEx loop(Loop<Block> __loop)
     {
-        return loopBeginToEx.get((LoopBeginNode) loop.getHeader().getBeginNode());
+        return loopBeginToEx.get((LoopBeginNode) __loop.getHeader().getBeginNode());
     }
 
-    public LoopEx loop(LoopBeginNode loopBegin)
+    public LoopEx loop(LoopBeginNode __loopBegin)
     {
-        return loopBeginToEx.get(loopBegin);
+        return loopBeginToEx.get(__loopBegin);
     }
 
     public List<LoopEx> loops()
@@ -76,22 +79,22 @@ public final class LoopsData
 
     public Collection<LoopEx> countedLoops()
     {
-        List<LoopEx> counted = new LinkedList<>();
-        for (LoopEx loop : loops())
+        List<LoopEx> __counted = new LinkedList<>();
+        for (LoopEx __loop : loops())
         {
-            if (loop.isCounted())
+            if (__loop.isCounted())
             {
-                counted.add(loop);
+                __counted.add(__loop);
             }
         }
-        return counted;
+        return __counted;
     }
 
     public void detectedCountedLoops()
     {
-        for (LoopEx loop : loops())
+        for (LoopEx __loop : loops())
         {
-            loop.detectCounted();
+            __loop.detectCounted();
         }
     }
 
@@ -100,22 +103,22 @@ public final class LoopsData
         return cfg;
     }
 
-    public InductionVariable getInductionVariable(ValueNode value)
+    public InductionVariable getInductionVariable(ValueNode __value)
     {
-        InductionVariable match = null;
-        for (LoopEx loop : loops())
+        InductionVariable __match = null;
+        for (LoopEx __loop : loops())
         {
-            InductionVariable iv = loop.getInductionVariables().get(value);
-            if (iv != null)
+            InductionVariable __iv = __loop.getInductionVariables().get(__value);
+            if (__iv != null)
             {
-                if (match != null)
+                if (__match != null)
                 {
                     return null;
                 }
-                match = iv;
+                __match = __iv;
             }
         }
-        return match;
+        return __match;
     }
 
     /**
@@ -123,9 +126,9 @@ public final class LoopsData
      */
     public void deleteUnusedNodes()
     {
-        for (LoopEx loop : loops())
+        for (LoopEx __loop : loops())
         {
-            loop.deleteUnusedNodes();
+            __loop.deleteUnusedNodes();
         }
     }
 }

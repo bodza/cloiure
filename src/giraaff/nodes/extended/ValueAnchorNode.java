@@ -24,19 +24,22 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class ValueAnchorNode
 public final class ValueAnchorNode extends FixedWithNextNode implements LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode
 {
+    // @def
     public static final NodeClass<ValueAnchorNode> TYPE = NodeClass.create(ValueAnchorNode.class);
 
-    @OptionalInput(InputType.Guard) ValueNode anchored;
+    @OptionalInput(InputType.Guard)
+    // @field
+    ValueNode anchored;
 
     // @cons
-    public ValueAnchorNode(ValueNode value)
+    public ValueAnchorNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.anchored = value;
+        this.anchored = __value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // Nothing to emit, since this node is used for structural purposes only.
     }
@@ -47,27 +50,27 @@ public final class ValueAnchorNode extends FixedWithNextNode implements LIRLower
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
         while (next() instanceof ValueAnchorNode)
         {
-            ValueAnchorNode nextAnchor = (ValueAnchorNode) next();
-            if (nextAnchor.anchored == anchored || nextAnchor.anchored == null)
+            ValueAnchorNode __nextAnchor = (ValueAnchorNode) next();
+            if (__nextAnchor.anchored == anchored || __nextAnchor.anchored == null)
             {
                 // two anchors for the same anchored -> coalesce
                 // nothing anchored on the next anchor -> coalesce
-                nextAnchor.replaceAtUsages(this);
-                GraphUtil.removeFixedWithUnusedInputs(nextAnchor);
+                __nextAnchor.replaceAtUsages(this);
+                GraphUtil.removeFixedWithUnusedInputs(__nextAnchor);
             }
             else
             {
                 break;
             }
         }
-        if (tool.allUsagesAvailable() && hasNoUsages() && next() instanceof FixedAccessNode)
+        if (__tool.allUsagesAvailable() && hasNoUsages() && next() instanceof FixedAccessNode)
         {
-            FixedAccessNode currentNext = (FixedAccessNode) next();
-            if (currentNext.getGuard() == anchored)
+            FixedAccessNode __currentNext = (FixedAccessNode) next();
+            if (__currentNext.getGuard() == anchored)
             {
                 GraphUtil.removeFixedWithUnusedInputs(this);
                 return;
@@ -88,18 +91,18 @@ public final class ValueAnchorNode extends FixedWithNextNode implements LIRLower
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
         if (anchored == null || anchored instanceof AbstractBeginNode)
         {
-            tool.delete();
+            __tool.delete();
         }
         else
         {
-            ValueNode alias = tool.getAlias(anchored);
-            if (alias instanceof VirtualObjectNode)
+            ValueNode __alias = __tool.getAlias(anchored);
+            if (__alias instanceof VirtualObjectNode)
             {
-                tool.delete();
+                __tool.delete();
             }
         }
     }

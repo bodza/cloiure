@@ -22,161 +22,162 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class MulNode
 public class MulNode extends BinaryArithmeticNode<Mul> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {
+    // @def
     public static final NodeClass<MulNode> TYPE = NodeClass.create(MulNode.class);
 
     // @cons
-    public MulNode(ValueNode x, ValueNode y)
+    public MulNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected MulNode(NodeClass<? extends MulNode> c, ValueNode x, ValueNode y)
+    protected MulNode(NodeClass<? extends MulNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, ArithmeticOpTable::getMul, x, y);
+        super(__c, ArithmeticOpTable::getMul, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Mul> op = ArithmeticOpTable.forStamp(x.stamp(view)).getMul();
-        Stamp stamp = op.foldStamp(x.stamp(view), y.stamp(view));
-        ConstantNode tryConstantFold = tryConstantFold(op, x, y, stamp, view);
-        if (tryConstantFold != null)
+        BinaryOp<Mul> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getMul();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
+        ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
+        if (__tryConstantFold != null)
         {
-            return tryConstantFold;
+            return __tryConstantFold;
         }
-        return canonical(null, op, stamp, x, y, view);
+        return canonical(null, __op, __stamp, __x, __y, __view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        if (forX.isConstant() && !forY.isConstant())
+        if (__forX.isConstant() && !__forY.isConstant())
         {
             // we try to swap and canonicalize
-            ValueNode improvement = canonical(tool, forY, forX);
-            if (improvement != this)
+            ValueNode __improvement = canonical(__tool, __forY, __forX);
+            if (__improvement != this)
             {
-                return improvement;
+                return __improvement;
             }
             // if this fails we only swap
-            return new MulNode(forY, forX);
+            return new MulNode(__forY, __forX);
         }
-        BinaryOp<Mul> op = getOp(forX, forY);
-        NodeView view = NodeView.from(tool);
-        return canonical(this, op, stamp(view), forX, forY, view);
+        BinaryOp<Mul> __op = getOp(__forX, __forY);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, __op, stamp(__view), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(MulNode self, BinaryOp<Mul> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    private static ValueNode canonical(MulNode __self, BinaryOp<Mul> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            Constant c = forY.asConstant();
-            if (op.isNeutral(c))
+            Constant __c = __forY.asConstant();
+            if (__op.isNeutral(__c))
             {
-                return forX;
+                return __forX;
             }
 
-            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger())
+            if (__c instanceof PrimitiveConstant && ((PrimitiveConstant) __c).getJavaKind().isNumericInteger())
             {
-                long i = ((PrimitiveConstant) c).asLong();
-                ValueNode result = canonical(stamp, forX, i, view);
-                if (result != null)
+                long __i = ((PrimitiveConstant) __c).asLong();
+                ValueNode __result = canonical(__stamp, __forX, __i, __view);
+                if (__result != null)
                 {
-                    return result;
+                    return __result;
                 }
             }
 
-            if (op.isAssociative())
+            if (__op.isAssociative())
             {
                 // canonicalize expressions like "(a * 1) * 2"
-                return reassociate(self != null ? self : (MulNode) new MulNode(forX, forY).maybeCommuteInputs(), ValueNode.isConstantPredicate(), forX, forY, view);
+                return reassociate(__self != null ? __self : (MulNode) new MulNode(__forX, __forY).maybeCommuteInputs(), ValueNode.isConstantPredicate(), __forX, __forY, __view);
             }
         }
-        return self != null ? self : new MulNode(forX, forY).maybeCommuteInputs();
+        return __self != null ? __self : new MulNode(__forX, __forY).maybeCommuteInputs();
     }
 
-    public static ValueNode canonical(Stamp stamp, ValueNode forX, long i, NodeView view)
+    public static ValueNode canonical(Stamp __stamp, ValueNode __forX, long __i, NodeView __view)
     {
-        if (i == 0)
+        if (__i == 0)
         {
-            return ConstantNode.forIntegerStamp(stamp, 0);
+            return ConstantNode.forIntegerStamp(__stamp, 0);
         }
-        else if (i == 1)
+        else if (__i == 1)
         {
-            return forX;
+            return __forX;
         }
-        else if (i == -1)
+        else if (__i == -1)
         {
-            return NegateNode.create(forX, view);
+            return NegateNode.create(__forX, __view);
         }
-        else if (i > 0)
+        else if (__i > 0)
         {
-            if (CodeUtil.isPowerOf2(i))
+            if (CodeUtil.isPowerOf2(__i))
             {
-                return new LeftShiftNode(forX, ConstantNode.forInt(CodeUtil.log2(i)));
+                return new LeftShiftNode(__forX, ConstantNode.forInt(CodeUtil.log2(__i)));
             }
-            else if (CodeUtil.isPowerOf2(i - 1))
+            else if (CodeUtil.isPowerOf2(__i - 1))
             {
-                return AddNode.create(new LeftShiftNode(forX, ConstantNode.forInt(CodeUtil.log2(i - 1))), forX, view);
+                return AddNode.create(new LeftShiftNode(__forX, ConstantNode.forInt(CodeUtil.log2(__i - 1))), __forX, __view);
             }
-            else if (CodeUtil.isPowerOf2(i + 1))
+            else if (CodeUtil.isPowerOf2(__i + 1))
             {
-                return SubNode.create(new LeftShiftNode(forX, ConstantNode.forInt(CodeUtil.log2(i + 1))), forX, view);
+                return SubNode.create(new LeftShiftNode(__forX, ConstantNode.forInt(CodeUtil.log2(__i + 1))), __forX, __view);
             }
             else
             {
-                int bitCount = Long.bitCount(i);
-                long highestBitValue = Long.highestOneBit(i);
-                if (bitCount == 2)
+                int __bitCount = Long.bitCount(__i);
+                long __highestBitValue = Long.highestOneBit(__i);
+                if (__bitCount == 2)
                 {
                     // e.g. 0b1000_0010
-                    long lowerBitValue = i - highestBitValue;
-                    ValueNode left = new LeftShiftNode(forX, ConstantNode.forInt(CodeUtil.log2(highestBitValue)));
-                    ValueNode right = lowerBitValue == 1 ? forX : new LeftShiftNode(forX, ConstantNode.forInt(CodeUtil.log2(lowerBitValue)));
-                    return AddNode.create(left, right, view);
+                    long __lowerBitValue = __i - __highestBitValue;
+                    ValueNode __left = new LeftShiftNode(__forX, ConstantNode.forInt(CodeUtil.log2(__highestBitValue)));
+                    ValueNode __right = __lowerBitValue == 1 ? __forX : new LeftShiftNode(__forX, ConstantNode.forInt(CodeUtil.log2(__lowerBitValue)));
+                    return AddNode.create(__left, __right, __view);
                 }
                 else
                 {
                     // e.g. 0b1111_1101
-                    int shiftToRoundUpToPowerOf2 = CodeUtil.log2(highestBitValue) + 1;
-                    long subValue = (1 << shiftToRoundUpToPowerOf2) - i;
-                    if (CodeUtil.isPowerOf2(subValue) && shiftToRoundUpToPowerOf2 < ((IntegerStamp) stamp).getBits())
+                    int __shiftToRoundUpToPowerOf2 = CodeUtil.log2(__highestBitValue) + 1;
+                    long __subValue = (1 << __shiftToRoundUpToPowerOf2) - __i;
+                    if (CodeUtil.isPowerOf2(__subValue) && __shiftToRoundUpToPowerOf2 < ((IntegerStamp) __stamp).getBits())
                     {
-                        ValueNode left = new LeftShiftNode(forX, ConstantNode.forInt(shiftToRoundUpToPowerOf2));
-                        ValueNode right = new LeftShiftNode(forX, ConstantNode.forInt(CodeUtil.log2(subValue)));
-                        return SubNode.create(left, right, view);
+                        ValueNode __left = new LeftShiftNode(__forX, ConstantNode.forInt(__shiftToRoundUpToPowerOf2));
+                        ValueNode __right = new LeftShiftNode(__forX, ConstantNode.forInt(CodeUtil.log2(__subValue)));
+                        return SubNode.create(__left, __right, __view);
                     }
                 }
             }
         }
-        else if (i < 0)
+        else if (__i < 0)
         {
-            if (CodeUtil.isPowerOf2(-i))
+            if (CodeUtil.isPowerOf2(-__i))
             {
-                return NegateNode.create(LeftShiftNode.create(forX, ConstantNode.forInt(CodeUtil.log2(-i)), view), view);
+                return NegateNode.create(LeftShiftNode.create(__forX, ConstantNode.forInt(CodeUtil.log2(-__i)), __view), __view);
             }
         }
         return null;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        Value op1 = nodeValueMap.operand(getX());
-        Value op2 = nodeValueMap.operand(getY());
-        if (shouldSwapInputs(nodeValueMap))
+        Value __op1 = __nodeValueMap.operand(getX());
+        Value __op2 = __nodeValueMap.operand(getY());
+        if (shouldSwapInputs(__nodeValueMap))
         {
-            Value tmp = op1;
-            op1 = op2;
-            op2 = tmp;
+            Value __tmp = __op1;
+            __op1 = __op2;
+            __op2 = __tmp;
         }
-        nodeValueMap.setResult(this, gen.emitMul(op1, op2, false));
+        __nodeValueMap.setResult(this, __gen.emitMul(__op1, __op2, false));
     }
 }

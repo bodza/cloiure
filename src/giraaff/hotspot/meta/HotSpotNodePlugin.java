@@ -35,39 +35,40 @@ import giraaff.word.WordOperationPlugin;
 // @class HotSpotNodePlugin
 public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
 {
+    // @field
     protected final WordOperationPlugin wordOperationPlugin;
 
     // @cons
-    public HotSpotNodePlugin(WordOperationPlugin wordOperationPlugin)
+    public HotSpotNodePlugin(WordOperationPlugin __wordOperationPlugin)
     {
         super();
-        this.wordOperationPlugin = wordOperationPlugin;
+        this.wordOperationPlugin = __wordOperationPlugin;
     }
 
     @Override
-    public boolean canChangeStackKind(GraphBuilderContext b)
+    public boolean canChangeStackKind(GraphBuilderContext __b)
     {
-        if (b.parsingIntrinsic())
+        if (__b.parsingIntrinsic())
         {
-            return wordOperationPlugin.canChangeStackKind(b);
+            return wordOperationPlugin.canChangeStackKind(__b);
         }
         return false;
     }
 
     @Override
-    public StampPair interceptType(GraphBuilderTool b, JavaType declaredType, boolean nonNull)
+    public StampPair interceptType(GraphBuilderTool __b, JavaType __declaredType, boolean __nonNull)
     {
-        if (b.parsingIntrinsic())
+        if (__b.parsingIntrinsic())
         {
-            return wordOperationPlugin.interceptType(b, declaredType, nonNull);
+            return wordOperationPlugin.interceptType(__b, __declaredType, __nonNull);
         }
         return null;
     }
 
     @Override
-    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    public boolean handleInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleInvoke(b, method, args))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleInvoke(__b, __method, __args))
         {
             return true;
         }
@@ -75,17 +76,17 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     }
 
     @Override
-    public boolean handleLoadField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field)
+    public boolean handleLoadField(GraphBuilderContext __b, ValueNode __object, ResolvedJavaField __field)
     {
-        if (object.isConstant())
+        if (__object.isConstant())
         {
-            JavaConstant asJavaConstant = object.asJavaConstant();
-            if (tryReadField(b, field, asJavaConstant))
+            JavaConstant __asJavaConstant = __object.asJavaConstant();
+            if (tryReadField(__b, __field, __asJavaConstant))
             {
                 return true;
             }
         }
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadField(b, object, field))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleLoadField(__b, __object, __field))
         {
             return true;
         }
@@ -93,50 +94,40 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     }
 
     @Override
-    public boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField field)
+    public boolean handleLoadStaticField(GraphBuilderContext __b, ResolvedJavaField __field)
     {
-        if (tryReadField(b, field, null))
+        if (tryReadField(__b, __field, null))
         {
             return true;
         }
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadStaticField(b, field))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleLoadStaticField(__b, __field))
         {
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean tryReadField(GraphBuilderContext b, ResolvedJavaField field, JavaConstant object)
-    {
-        return tryConstantFold(b, field, object);
-    }
-
-    private static boolean tryConstantFold(GraphBuilderContext b, ResolvedJavaField field, JavaConstant object)
-    {
-        ConstantNode result = ConstantFoldUtil.tryConstantFold(b.getConstantFieldProvider(), b.getConstantReflection(), b.getMetaAccess(), field, object);
-        if (result != null)
-        {
-            result = b.getGraph().unique(result);
-            b.push(field.getJavaKind(), result);
             return true;
         }
         return false;
     }
 
-    @Override
-    public boolean handleStoreField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field, ValueNode value)
+    private static boolean tryReadField(GraphBuilderContext __b, ResolvedJavaField __field, JavaConstant __object)
     {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreField(b, object, field, value))
+        return tryConstantFold(__b, __field, __object);
+    }
+
+    private static boolean tryConstantFold(GraphBuilderContext __b, ResolvedJavaField __field, JavaConstant __object)
+    {
+        ConstantNode __result = ConstantFoldUtil.tryConstantFold(__b.getConstantFieldProvider(), __b.getConstantReflection(), __b.getMetaAccess(), __field, __object);
+        if (__result != null)
         {
+            __result = __b.getGraph().unique(__result);
+            __b.push(__field.getJavaKind(), __result);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleStoreStaticField(GraphBuilderContext b, ResolvedJavaField field, ValueNode value)
+    public boolean handleStoreField(GraphBuilderContext __b, ValueNode __object, ResolvedJavaField __field, ValueNode __value)
     {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreStaticField(b, field, value))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleStoreField(__b, __object, __field, __value))
         {
             return true;
         }
@@ -144,9 +135,9 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     }
 
     @Override
-    public boolean handleLoadIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind)
+    public boolean handleStoreStaticField(GraphBuilderContext __b, ResolvedJavaField __field, ValueNode __value)
     {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadIndexed(b, array, index, elementKind))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleStoreStaticField(__b, __field, __value))
         {
             return true;
         }
@@ -154,9 +145,9 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     }
 
     @Override
-    public boolean handleStoreIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value)
+    public boolean handleLoadIndexed(GraphBuilderContext __b, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreIndexed(b, array, index, elementKind, value))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleLoadIndexed(__b, __array, __index, __elementKind))
         {
             return true;
         }
@@ -164,9 +155,9 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     }
 
     @Override
-    public boolean handleCheckCast(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    public boolean handleStoreIndexed(GraphBuilderContext __b, ValueNode __array, ValueNode __index, JavaKind __elementKind, ValueNode __value)
     {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleCheckCast(b, object, type, profile))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleStoreIndexed(__b, __array, __index, __elementKind, __value))
         {
             return true;
         }
@@ -174,9 +165,19 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     }
 
     @Override
-    public boolean handleInstanceOf(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    public boolean handleCheckCast(GraphBuilderContext __b, ValueNode __object, ResolvedJavaType __type, JavaTypeProfile __profile)
     {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleInstanceOf(b, object, type, profile))
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleCheckCast(__b, __object, __type, __profile))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean handleInstanceOf(GraphBuilderContext __b, ValueNode __object, ResolvedJavaType __type, JavaTypeProfile __profile)
+    {
+        if (__b.parsingIntrinsic() && wordOperationPlugin.handleInstanceOf(__b, __object, __type, __profile))
         {
             return true;
         }

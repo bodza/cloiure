@@ -13,22 +13,25 @@ import giraaff.nodes.extended.GuardingNode;
 // @class GuardPhiNode
 public final class GuardPhiNode extends PhiNode implements GuardingNode
 {
+    // @def
     public static final NodeClass<GuardPhiNode> TYPE = NodeClass.create(GuardPhiNode.class);
 
-    @OptionalInput(InputType.Guard) NodeInputList<ValueNode> values;
+    @OptionalInput(InputType.Guard)
+    // @field
+    NodeInputList<ValueNode> values;
 
     // @cons
-    public GuardPhiNode(AbstractMergeNode merge)
+    public GuardPhiNode(AbstractMergeNode __merge)
     {
-        super(TYPE, StampFactory.forVoid(), merge);
+        super(TYPE, StampFactory.forVoid(), __merge);
         this.values = new NodeInputList<>(this);
     }
 
     // @cons
-    public GuardPhiNode(AbstractMergeNode merge, ValueNode[] values)
+    public GuardPhiNode(AbstractMergeNode __merge, ValueNode[] __values)
     {
-        super(TYPE, StampFactory.forVoid(), merge);
-        this.values = new NodeInputList<>(this, values);
+        super(TYPE, StampFactory.forVoid(), __merge);
+        this.values = new NodeInputList<>(this, __values);
     }
 
     @Override

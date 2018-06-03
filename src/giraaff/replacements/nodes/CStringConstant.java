@@ -20,15 +20,17 @@ import giraaff.word.Word;
 // @class CStringConstant
 public final class CStringConstant extends DataPointerConstant
 {
+    // @def
     private static final Charset UTF8 = Charset.forName("utf8");
 
+    // @field
     private final String string;
 
     // @cons
-    public CStringConstant(String string)
+    public CStringConstant(String __string)
     {
         super(1);
-        this.string = string;
+        this.string = __string;
     }
 
     @Override
@@ -38,11 +40,11 @@ public final class CStringConstant extends DataPointerConstant
     }
 
     @Override
-    public void serialize(ByteBuffer buffer)
+    public void serialize(ByteBuffer __buffer)
     {
-        byte[] bytes = string.getBytes(UTF8);
-        buffer.put(bytes);
-        buffer.put((byte) 0);
+        byte[] __bytes = string.getBytes(UTF8);
+        __buffer.put(__bytes);
+        __buffer.put((byte) 0);
     }
 
     @Override
@@ -51,9 +53,9 @@ public final class CStringConstant extends DataPointerConstant
         return "c\"" + string + "\"";
     }
 
-    public static boolean intrinsify(GraphBuilderContext b, @SuppressWarnings("unused") ResolvedJavaMethod targetMethod, String string)
+    public static boolean intrinsify(GraphBuilderContext __b, @SuppressWarnings("unused") ResolvedJavaMethod __targetMethod, String __string)
     {
-        b.addPush(JavaKind.Object, new ConstantNode(new CStringConstant(string), StampFactory.pointer()));
+        __b.addPush(JavaKind.Object, new ConstantNode(new CStringConstant(__string), StampFactory.pointer()));
         return true;
     }
 

@@ -22,19 +22,23 @@ import giraaff.nodes.StructuredGraph;
 // @class ScopedPostOrderNodeIterator
 public abstract class ScopedPostOrderNodeIterator
 {
+    // @field
     private final Deque<FixedNode> nodeQueue;
+    // @field
     private final NodeBitMap queuedNodes;
+    // @field
     private final Deque<FixedNode> scopes;
 
+    // @field
     protected FixedNode currentScopeStart;
 
     // @cons
-    public ScopedPostOrderNodeIterator(StructuredGraph graph)
+    public ScopedPostOrderNodeIterator(StructuredGraph __graph)
     {
         super();
-        this.queuedNodes = graph.createNodeBitMap();
+        this.queuedNodes = __graph.createNodeBitMap();
         this.nodeQueue = new ArrayDeque<>();
-        this.scopes = getScopes(graph);
+        this.scopes = getScopes(__graph);
     }
 
     public void apply()
@@ -50,113 +54,113 @@ public abstract class ScopedPostOrderNodeIterator
 
     public void processScope()
     {
-        FixedNode current;
+        FixedNode __current;
         queue(currentScopeStart);
 
-        while ((current = nextQueuedNode()) != null)
+        while ((__current = nextQueuedNode()) != null)
         {
-            if (current instanceof Invoke)
+            if (__current instanceof Invoke)
             {
-                invoke((Invoke) current);
-                queueSuccessors(current);
+                invoke((Invoke) __current);
+                queueSuccessors(__current);
             }
-            else if (current instanceof LoopBeginNode)
+            else if (__current instanceof LoopBeginNode)
             {
-                queueLoopBeginSuccessors((LoopBeginNode) current);
+                queueLoopBeginSuccessors((LoopBeginNode) __current);
             }
-            else if (current instanceof LoopExitNode)
+            else if (__current instanceof LoopExitNode)
             {
-                queueLoopExitSuccessors((LoopExitNode) current);
+                queueLoopExitSuccessors((LoopExitNode) __current);
             }
-            else if (current instanceof LoopEndNode)
+            else if (__current instanceof LoopEndNode)
             {
                 // nothing todo
             }
-            else if (current instanceof AbstractMergeNode)
+            else if (__current instanceof AbstractMergeNode)
             {
-                queueSuccessors(current);
+                queueSuccessors(__current);
             }
-            else if (current instanceof FixedWithNextNode)
+            else if (__current instanceof FixedWithNextNode)
             {
-                queueSuccessors(current);
+                queueSuccessors(__current);
             }
-            else if (current instanceof EndNode)
+            else if (__current instanceof EndNode)
             {
-                queueMerge((EndNode) current);
+                queueMerge((EndNode) __current);
             }
-            else if (current instanceof ControlSinkNode)
+            else if (__current instanceof ControlSinkNode)
             {
                 // nothing todo
             }
-            else if (current instanceof ControlSplitNode)
+            else if (__current instanceof ControlSplitNode)
             {
-                queueSuccessors(current);
+                queueSuccessors(__current);
             }
         }
     }
 
-    protected void queueLoopBeginSuccessors(LoopBeginNode node)
+    protected void queueLoopBeginSuccessors(LoopBeginNode __node)
     {
-        if (currentScopeStart == node)
+        if (currentScopeStart == __node)
         {
-            queue(node.next());
+            queue(__node.next());
         }
         else if (currentScopeStart instanceof LoopBeginNode)
         {
             // so we are currently processing loop A and found another loop B
             // -> queue all loop exits of B except those that also exit loop A
-            for (LoopExitNode loopExit : node.loopExits())
+            for (LoopExitNode __loopExit : __node.loopExits())
             {
-                if (!((LoopBeginNode) currentScopeStart).loopExits().contains(loopExit))
+                if (!((LoopBeginNode) currentScopeStart).loopExits().contains(__loopExit))
                 {
-                    queue(loopExit);
+                    queue(__loopExit);
                 }
             }
         }
         else
         {
-            queue(node.loopExits());
+            queue(__node.loopExits());
         }
     }
 
-    protected void queueLoopExitSuccessors(LoopExitNode node)
+    protected void queueLoopExitSuccessors(LoopExitNode __node)
     {
-        if (!(currentScopeStart instanceof LoopBeginNode) || !((LoopBeginNode) currentScopeStart).loopExits().contains(node))
+        if (!(currentScopeStart instanceof LoopBeginNode) || !((LoopBeginNode) currentScopeStart).loopExits().contains(__node))
         {
-            queueSuccessors(node);
+            queueSuccessors(__node);
         }
     }
 
-    protected Deque<FixedNode> getScopes(StructuredGraph graph)
+    protected Deque<FixedNode> getScopes(StructuredGraph __graph)
     {
-        Deque<FixedNode> result = new ArrayDeque<>();
-        result.push(graph.start());
-        for (LoopBeginNode loopBegin : graph.getNodes(LoopBeginNode.TYPE))
+        Deque<FixedNode> __result = new ArrayDeque<>();
+        __result.push(__graph.start());
+        for (LoopBeginNode __loopBegin : __graph.getNodes(LoopBeginNode.TYPE))
         {
-            result.push(loopBegin);
+            __result.push(__loopBegin);
         }
-        return result;
+        return __result;
     }
 
-    private void queueSuccessors(FixedNode x)
+    private void queueSuccessors(FixedNode __x)
     {
-        queue(x.successors());
+        queue(__x.successors());
     }
 
-    private void queue(NodeIterable<? extends Node> iter)
+    private void queue(NodeIterable<? extends Node> __iter)
     {
-        for (Node node : iter)
+        for (Node __node : __iter)
         {
-            queue(node);
+            queue(__node);
         }
     }
 
-    private void queue(Node node)
+    private void queue(Node __node)
     {
-        if (node != null && !queuedNodes.isMarked(node))
+        if (__node != null && !queuedNodes.isMarked(__node))
         {
-            queuedNodes.mark(node);
-            nodeQueue.addFirst((FixedNode) node);
+            queuedNodes.mark(__node);
+            nodeQueue.addFirst((FixedNode) __node);
         }
     }
 
@@ -170,20 +174,20 @@ public abstract class ScopedPostOrderNodeIterator
         return nodeQueue.removeFirst();
     }
 
-    private void queueMerge(AbstractEndNode end)
+    private void queueMerge(AbstractEndNode __end)
     {
-        AbstractMergeNode merge = end.merge();
-        if (!queuedNodes.isMarked(merge) && visitedAllEnds(merge))
+        AbstractMergeNode __merge = __end.merge();
+        if (!queuedNodes.isMarked(__merge) && visitedAllEnds(__merge))
         {
-            queue(merge);
+            queue(__merge);
         }
     }
 
-    private boolean visitedAllEnds(AbstractMergeNode merge)
+    private boolean visitedAllEnds(AbstractMergeNode __merge)
     {
-        for (int i = 0; i < merge.forwardEndCount(); i++)
+        for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
         {
-            if (!queuedNodes.isMarked(merge.forwardEndAt(i)))
+            if (!queuedNodes.isMarked(__merge.forwardEndAt(__i)))
             {
                 return false;
             }

@@ -22,19 +22,23 @@ public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGen
     // @class LIRGenerationPhase.LIRGenerationContext
     public static final class LIRGenerationContext
     {
+        // @field
         private final NodeLIRBuilderTool nodeLirBuilder;
+        // @field
         private final LIRGeneratorTool lirGen;
+        // @field
         private final StructuredGraph graph;
+        // @field
         private final ScheduleResult schedule;
 
         // @cons
-        public LIRGenerationContext(LIRGeneratorTool lirGen, NodeLIRBuilderTool nodeLirBuilder, StructuredGraph graph, ScheduleResult schedule)
+        public LIRGenerationContext(LIRGeneratorTool __lirGen, NodeLIRBuilderTool __nodeLirBuilder, StructuredGraph __graph, ScheduleResult __schedule)
         {
             super();
-            this.nodeLirBuilder = nodeLirBuilder;
-            this.lirGen = lirGen;
-            this.graph = graph;
-            this.schedule = schedule;
+            this.nodeLirBuilder = __nodeLirBuilder;
+            this.lirGen = __lirGen;
+            this.graph = __graph;
+            this.schedule = __schedule;
         }
     }
 
@@ -45,26 +49,26 @@ public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGen
     }
 
     @Override
-    protected final void run(TargetDescription target, LIRGenerationResult lirGenRes, LIRGenerationPhase.LIRGenerationContext context)
+    protected final void run(TargetDescription __target, LIRGenerationResult __lirGenRes, LIRGenerationPhase.LIRGenerationContext __context)
     {
-        NodeLIRBuilderTool nodeLirBuilder = context.nodeLirBuilder;
-        StructuredGraph graph = context.graph;
-        ScheduleResult schedule = context.schedule;
-        for (AbstractBlockBase<?> b : lirGenRes.getLIR().getControlFlowGraph().getBlocks())
+        NodeLIRBuilderTool __nodeLirBuilder = __context.nodeLirBuilder;
+        StructuredGraph __graph = __context.graph;
+        ScheduleResult __schedule = __context.schedule;
+        for (AbstractBlockBase<?> __b : __lirGenRes.getLIR().getControlFlowGraph().getBlocks())
         {
-            emitBlock(nodeLirBuilder, lirGenRes, (Block) b, graph, schedule.getBlockToNodesMap());
+            emitBlock(__nodeLirBuilder, __lirGenRes, (Block) __b, __graph, __schedule.getBlockToNodesMap());
         }
-        context.lirGen.beforeRegisterAllocation();
+        __context.lirGen.beforeRegisterAllocation();
     }
 
-    private static void emitBlock(NodeLIRBuilderTool nodeLirGen, LIRGenerationResult lirGenRes, Block b, StructuredGraph graph, BlockMap<List<Node>> blockMap)
+    private static void emitBlock(NodeLIRBuilderTool __nodeLirGen, LIRGenerationResult __lirGenRes, Block __b, StructuredGraph __graph, BlockMap<List<Node>> __blockMap)
     {
-        nodeLirGen.doBlock(b, graph, blockMap);
-        LIR lir = lirGenRes.getLIR();
+        __nodeLirGen.doBlock(__b, __graph, __blockMap);
+        LIR __lir = __lirGenRes.getLIR();
     }
 
-    private static boolean isProcessed(LIRGenerationResult lirGenRes, Block b)
+    private static boolean isProcessed(LIRGenerationResult __lirGenRes, Block __b)
     {
-        return lirGenRes.getLIR().getLIRforBlock(b) != null;
+        return __lirGenRes.getLIR().getLIRforBlock(__b) != null;
     }
 }

@@ -16,22 +16,24 @@ import giraaff.lir.constopt.ConstantTree.NodeCost;
 // @class ConstantTreeAnalyzer
 public final class ConstantTreeAnalyzer
 {
+    // @field
     private final ConstantTree tree;
+    // @field
     private final BitSet visited;
 
-    public static NodeCost analyze(ConstantTree tree, AbstractBlockBase<?> startBlock)
+    public static NodeCost analyze(ConstantTree __tree, AbstractBlockBase<?> __startBlock)
     {
-        ConstantTreeAnalyzer analyzer = new ConstantTreeAnalyzer(tree);
-        analyzer.analyzeBlocks(startBlock);
-        return tree.getCost(startBlock);
+        ConstantTreeAnalyzer __analyzer = new ConstantTreeAnalyzer(__tree);
+        __analyzer.analyzeBlocks(__startBlock);
+        return __tree.getCost(__startBlock);
     }
 
     // @cons
-    private ConstantTreeAnalyzer(ConstantTree tree)
+    private ConstantTreeAnalyzer(ConstantTree __tree)
     {
         super();
-        this.tree = tree;
-        this.visited = new BitSet(tree.size());
+        this.tree = __tree;
+        this.visited = new BitSet(__tree.size());
     }
 
     /**
@@ -42,36 +44,36 @@ public final class ConstantTreeAnalyzer
      *
      * @param startBlock The start block of the dominator subtree.
      */
-    private void analyzeBlocks(AbstractBlockBase<?> startBlock)
+    private void analyzeBlocks(AbstractBlockBase<?> __startBlock)
     {
-        Deque<AbstractBlockBase<?>> worklist = new ArrayDeque<>();
-        worklist.offerLast(startBlock);
-        while (!worklist.isEmpty())
+        Deque<AbstractBlockBase<?>> __worklist = new ArrayDeque<>();
+        __worklist.offerLast(__startBlock);
+        while (!__worklist.isEmpty())
         {
-            AbstractBlockBase<?> block = worklist.pollLast();
+            AbstractBlockBase<?> __block = __worklist.pollLast();
 
-            if (isLeafBlock(block))
+            if (isLeafBlock(__block))
             {
-                leafCost(block);
+                leafCost(__block);
                 continue;
             }
 
-            if (!visited.get(block.getId()))
+            if (!visited.get(__block.getId()))
             {
                 // if not yet visited (and not a leaf block) process all children first!
-                worklist.offerLast(block);
-                AbstractBlockBase<?> dominated = block.getFirstDominated();
-                while (dominated != null)
+                __worklist.offerLast(__block);
+                AbstractBlockBase<?> __dominated = __block.getFirstDominated();
+                while (__dominated != null)
                 {
-                    filteredPush(worklist, dominated);
-                    dominated = dominated.getDominatedSibling();
+                    filteredPush(__worklist, __dominated);
+                    __dominated = __dominated.getDominatedSibling();
                 }
-                visited.set(block.getId());
+                visited.set(__block.getId());
             }
             else
             {
                 // otherwise, process block
-                process(block);
+                process(__block);
             }
         }
     }
@@ -82,45 +84,45 @@ public final class ConstantTreeAnalyzer
      *
      * @param block The block to be processed.
      */
-    private void process(AbstractBlockBase<?> block)
+    private void process(AbstractBlockBase<?> __block)
     {
-        List<UseEntry> usages = new ArrayList<>();
-        double bestCost = 0;
-        int numMat = 0;
+        List<UseEntry> __usages = new ArrayList<>();
+        double __bestCost = 0;
+        int __numMat = 0;
 
         // collect children costs
-        AbstractBlockBase<?> child = block.getFirstDominated();
-        while (child != null)
+        AbstractBlockBase<?> __child = __block.getFirstDominated();
+        while (__child != null)
         {
-            if (isMarked(child))
+            if (isMarked(__child))
             {
-                NodeCost childCost = tree.getCost(child);
-                usages.addAll(childCost.getUsages());
-                numMat += childCost.getNumMaterializations();
-                bestCost += childCost.getBestCost();
+                NodeCost __childCost = tree.getCost(__child);
+                __usages.addAll(__childCost.getUsages());
+                __numMat += __childCost.getNumMaterializations();
+                __bestCost += __childCost.getBestCost();
             }
-            child = child.getDominatedSibling();
+            __child = __child.getDominatedSibling();
         }
 
         // choose block
-        List<UseEntry> usagesBlock = tree.getUsages(block);
-        double probabilityBlock = block.probability();
+        List<UseEntry> __usagesBlock = tree.getUsages(__block);
+        double __probabilityBlock = __block.probability();
 
-        if (!usagesBlock.isEmpty() || shouldMaterializerInCurrentBlock(probabilityBlock, bestCost, numMat))
+        if (!__usagesBlock.isEmpty() || shouldMaterializerInCurrentBlock(__probabilityBlock, __bestCost, __numMat))
         {
             // mark current block as potential materialization position
-            usages.addAll(usagesBlock);
-            bestCost = probabilityBlock;
-            numMat = 1;
-            tree.set(Flags.CANDIDATE, block);
+            __usages.addAll(__usagesBlock);
+            __bestCost = __probabilityBlock;
+            __numMat = 1;
+            tree.set(Flags.CANDIDATE, __block);
         }
         else
         {
             // stick with the current solution
         }
 
-        NodeCost nodeCost = new NodeCost(bestCost, usages, numMat);
-        tree.setCost(block, nodeCost);
+        NodeCost __nodeCost = new NodeCost(__bestCost, __usages, __numMat);
+        tree.setCost(__block, __nodeCost);
     }
 
     /**
@@ -135,32 +137,32 @@ public final class ConstantTreeAnalyzer
      * @param numMat Number of materializations along the subtrees. We use {@code numMat - 1} to
      *            insert materializations as late as possible if the probabilities are the same.
      */
-    private static boolean shouldMaterializerInCurrentBlock(double probabilityBlock, double probabilityChildren, int numMat)
+    private static boolean shouldMaterializerInCurrentBlock(double __probabilityBlock, double __probabilityChildren, int __numMat)
     {
-        return probabilityBlock * Math.pow(0.9, numMat - 1) < probabilityChildren;
+        return __probabilityBlock * Math.pow(0.9, __numMat - 1) < __probabilityChildren;
     }
 
-    private void filteredPush(Deque<AbstractBlockBase<?>> worklist, AbstractBlockBase<?> block)
+    private void filteredPush(Deque<AbstractBlockBase<?>> __worklist, AbstractBlockBase<?> __block)
     {
-        if (isMarked(block))
+        if (isMarked(__block))
         {
-            worklist.offerLast(block);
+            __worklist.offerLast(__block);
         }
     }
 
-    private void leafCost(AbstractBlockBase<?> block)
+    private void leafCost(AbstractBlockBase<?> __block)
     {
-        tree.set(Flags.CANDIDATE, block);
-        tree.getOrInitCost(block);
+        tree.set(Flags.CANDIDATE, __block);
+        tree.getOrInitCost(__block);
     }
 
-    private boolean isMarked(AbstractBlockBase<?> block)
+    private boolean isMarked(AbstractBlockBase<?> __block)
     {
-        return tree.isMarked(block);
+        return tree.isMarked(__block);
     }
 
-    private boolean isLeafBlock(AbstractBlockBase<?> block)
+    private boolean isLeafBlock(AbstractBlockBase<?> __block)
     {
-        return tree.isLeafBlock(block);
+        return tree.isLeafBlock(__block);
     }
 }

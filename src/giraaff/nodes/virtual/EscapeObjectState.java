@@ -7,9 +7,12 @@ import giraaff.nodes.VirtualState;
 // @class EscapeObjectState
 public abstract class EscapeObjectState extends VirtualState implements ValueNumberable
 {
+    // @def
     public static final NodeClass<EscapeObjectState> TYPE = NodeClass.create(EscapeObjectState.class);
 
-    @Input protected VirtualObjectNode object;
+    @Input
+    // @field
+    protected VirtualObjectNode object;
 
     public VirtualObjectNode object()
     {
@@ -17,24 +20,24 @@ public abstract class EscapeObjectState extends VirtualState implements ValueNum
     }
 
     // @cons
-    public EscapeObjectState(NodeClass<? extends EscapeObjectState> c, VirtualObjectNode object)
+    public EscapeObjectState(NodeClass<? extends EscapeObjectState> __c, VirtualObjectNode __object)
     {
-        super(c);
-        this.object = object;
+        super(__c);
+        this.object = __object;
     }
 
     @Override
     public abstract EscapeObjectState duplicateWithVirtualState();
 
     @Override
-    public boolean isPartOfThisState(VirtualState state)
+    public boolean isPartOfThisState(VirtualState __state)
     {
-        return this == state;
+        return this == __state;
     }
 
     @Override
-    public void applyToVirtual(VirtualClosure closure)
+    public void applyToVirtual(VirtualClosure __closure)
     {
-        closure.apply(this);
+        __closure.apply(this);
     }
 }

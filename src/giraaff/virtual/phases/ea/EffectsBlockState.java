@@ -13,6 +13,7 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
      * This flag specifies whether this block is unreachable, which can happen during analysis if
      * conditions turn constant or nodes canonicalize to cfg sinks.
      */
+    // @field
     private boolean dead;
 
     // @cons
@@ -23,10 +24,10 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
     }
 
     // @cons
-    public EffectsBlockState(EffectsBlockState<T> other)
+    public EffectsBlockState(EffectsBlockState<T> __other)
     {
         super();
-        this.dead = other.dead;
+        this.dead = __other.dead;
     }
 
     protected abstract boolean equivalentTo(T other);
@@ -44,19 +45,19 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
     /**
      * Returns true if every value in subMap is also present in the superMap (according to "equals" semantics).
      */
-    protected static <K, V> boolean isSubMapOf(EconomicMap<K, V> superMap, EconomicMap<K, V> subMap)
+    protected static <K, V> boolean isSubMapOf(EconomicMap<K, V> __superMap, EconomicMap<K, V> __subMap)
     {
-        if (superMap == subMap)
+        if (__superMap == __subMap)
         {
             return true;
         }
-        UnmodifiableMapCursor<K, V> cursor = subMap.getEntries();
-        while (cursor.advance())
+        UnmodifiableMapCursor<K, V> __cursor = __subMap.getEntries();
+        while (__cursor.advance())
         {
-            K key = cursor.getKey();
-            V value = cursor.getValue();
-            V otherValue = superMap.get(key);
-            if (otherValue != value && !value.equals(otherValue))
+            K __key = __cursor.getKey();
+            V __value = __cursor.getValue();
+            V __otherValue = __superMap.get(__key);
+            if (__otherValue != __value && !__value.equals(__otherValue))
             {
                 return false;
             }
@@ -67,15 +68,15 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
     /**
      * Modifies target so that only entries that have corresponding entries in source remain.
      */
-    protected static <U, V> void meetMaps(Map<U, V> target, Map<U, V> source)
+    protected static <U, V> void meetMaps(Map<U, V> __target, Map<U, V> __source)
     {
-        Iterator<Map.Entry<U, V>> iter = target.entrySet().iterator();
-        while (iter.hasNext())
+        Iterator<Map.Entry<U, V>> __iter = __target.entrySet().iterator();
+        while (__iter.hasNext())
         {
-            Map.Entry<U, V> entry = iter.next();
-            if (!source.containsKey(entry.getKey()))
+            Map.Entry<U, V> __entry = __iter.next();
+            if (!__source.containsKey(__entry.getKey()))
             {
-                iter.remove();
+                __iter.remove();
             }
         }
     }

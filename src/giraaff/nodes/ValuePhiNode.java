@@ -13,28 +13,31 @@ import giraaff.nodes.util.GraphUtil;
 // @class ValuePhiNode
 public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<ValuePhiNode> TYPE = NodeClass.create(ValuePhiNode.class);
 
-    @Input protected NodeInputList<ValueNode> values;
+    @Input
+    // @field
+    protected NodeInputList<ValueNode> values;
 
     // @cons
-    public ValuePhiNode(Stamp stamp, AbstractMergeNode merge)
+    public ValuePhiNode(Stamp __stamp, AbstractMergeNode __merge)
     {
-        this(TYPE, stamp, merge);
+        this(TYPE, __stamp, __merge);
     }
 
     // @cons
-    protected ValuePhiNode(NodeClass<? extends ValuePhiNode> c, Stamp stamp, AbstractMergeNode merge)
+    protected ValuePhiNode(NodeClass<? extends ValuePhiNode> __c, Stamp __stamp, AbstractMergeNode __merge)
     {
-        super(c, stamp, merge);
+        super(__c, __stamp, __merge);
         values = new NodeInputList<>(this);
     }
 
     // @cons
-    public ValuePhiNode(Stamp stamp, AbstractMergeNode merge, ValueNode[] values)
+    public ValuePhiNode(Stamp __stamp, AbstractMergeNode __merge, ValueNode[] __values)
     {
-        super(TYPE, stamp, merge);
-        this.values = new NodeInputList<>(this, values);
+        super(TYPE, __stamp, __merge);
+        this.values = new NodeInputList<>(this, __values);
     }
 
     @Override
@@ -47,16 +50,16 @@ public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
     public boolean inferStamp()
     {
         // Meet all the values feeding this Phi but don't use the stamp of this Phi since that's what's being computed.
-        Stamp valuesStamp = StampTool.meetOrNull(values(), this);
-        if (valuesStamp == null)
+        Stamp __valuesStamp = StampTool.meetOrNull(values(), this);
+        if (__valuesStamp == null)
         {
-            valuesStamp = stamp;
+            __valuesStamp = stamp;
         }
-        else if (stamp.isCompatible(valuesStamp))
+        else if (stamp.isCompatible(__valuesStamp))
         {
-            valuesStamp = stamp.join(valuesStamp);
+            __valuesStamp = stamp.join(__valuesStamp);
         }
-        return updateStamp(valuesStamp);
+        return updateStamp(__valuesStamp);
     }
 
     @Override
@@ -66,23 +69,23 @@ public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
         {
             return null;
         }
-        ValueNode length = null;
-        for (ValueNode input : values())
+        ValueNode __length = null;
+        for (ValueNode __input : values())
         {
-            ValueNode l = GraphUtil.arrayLength(input);
-            if (l == null)
+            ValueNode __l = GraphUtil.arrayLength(__input);
+            if (__l == null)
             {
                 return null;
             }
-            if (length == null)
+            if (__length == null)
             {
-                length = l;
+                __length = __l;
             }
-            else if (length != l)
+            else if (__length != __l)
             {
                 return null;
             }
         }
-        return length;
+        return __length;
     }
 }

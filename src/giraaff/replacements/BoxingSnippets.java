@@ -27,129 +27,129 @@ import giraaff.replacements.SnippetTemplate.SnippetInfo;
 public final class BoxingSnippets implements Snippets
 {
     @Snippet
-    public static Object booleanValueOf(boolean value)
+    public static Object booleanValueOf(boolean __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Boolean.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Boolean.valueOf(__value));
     }
 
     @Snippet
-    public static Object byteValueOf(byte value)
+    public static Object byteValueOf(byte __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Byte.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Byte.valueOf(__value));
     }
 
     @Snippet
-    public static Object charValueOf(char value)
+    public static Object charValueOf(char __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Character.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Character.valueOf(__value));
     }
 
     @Snippet
-    public static Object doubleValueOf(double value)
+    public static Object doubleValueOf(double __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Double.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Double.valueOf(__value));
     }
 
     @Snippet
-    public static Object floatValueOf(float value)
+    public static Object floatValueOf(float __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Float.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Float.valueOf(__value));
     }
 
     @Snippet
-    public static Object intValueOf(int value)
+    public static Object intValueOf(int __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Integer.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Integer.valueOf(__value));
     }
 
     @Snippet
-    public static Object longValueOf(long value)
+    public static Object longValueOf(long __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Long.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Long.valueOf(__value));
     }
 
     @Snippet
-    public static Object shortValueOf(short value)
+    public static Object shortValueOf(short __value)
     {
-        return PiNode.piCastToSnippetReplaceeStamp(Short.valueOf(value));
+        return PiNode.piCastToSnippetReplaceeStamp(Short.valueOf(__value));
     }
 
     @Snippet
-    public static boolean booleanValue(Boolean value)
+    public static boolean booleanValue(Boolean __value)
     {
-        return value.booleanValue();
+        return __value.booleanValue();
     }
 
     @Snippet
-    public static byte byteValue(Byte value)
+    public static byte byteValue(Byte __value)
     {
-        return value.byteValue();
+        return __value.byteValue();
     }
 
     @Snippet
-    public static char charValue(Character value)
+    public static char charValue(Character __value)
     {
-        return value.charValue();
+        return __value.charValue();
     }
 
     @Snippet
-    public static double doubleValue(Double value)
+    public static double doubleValue(Double __value)
     {
-        return value.doubleValue();
+        return __value.doubleValue();
     }
 
     @Snippet
-    public static float floatValue(Float value)
+    public static float floatValue(Float __value)
     {
-        return value.floatValue();
+        return __value.floatValue();
     }
 
     @Snippet
-    public static int intValue(Integer value)
+    public static int intValue(Integer __value)
     {
-        return value.intValue();
+        return __value.intValue();
     }
 
     @Snippet
-    public static long longValue(Long value)
+    public static long longValue(Long __value)
     {
-        return value.longValue();
+        return __value.longValue();
     }
 
     @Snippet
-    public static short shortValue(Short value)
+    public static short shortValue(Short __value)
     {
-        return value.shortValue();
+        return __value.shortValue();
     }
 
-    public static FloatingNode canonicalizeBoxing(BoxNode box, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
+    public static FloatingNode canonicalizeBoxing(BoxNode __box, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection)
     {
-        ValueNode value = box.getValue();
-        if (value.isConstant())
+        ValueNode __value = __box.getValue();
+        if (__value.isConstant())
         {
-            JavaConstant sourceConstant = value.asJavaConstant();
-            if (sourceConstant.getJavaKind() != box.getBoxingKind() && sourceConstant.getJavaKind().isNumericInteger())
+            JavaConstant __sourceConstant = __value.asJavaConstant();
+            if (__sourceConstant.getJavaKind() != __box.getBoxingKind() && __sourceConstant.getJavaKind().isNumericInteger())
             {
-                switch (box.getBoxingKind())
+                switch (__box.getBoxingKind())
                 {
                     case Boolean:
-                        sourceConstant = JavaConstant.forBoolean(sourceConstant.asLong() != 0L);
+                        __sourceConstant = JavaConstant.forBoolean(__sourceConstant.asLong() != 0L);
                         break;
                     case Byte:
-                        sourceConstant = JavaConstant.forByte((byte) sourceConstant.asLong());
+                        __sourceConstant = JavaConstant.forByte((byte) __sourceConstant.asLong());
                         break;
                     case Char:
-                        sourceConstant = JavaConstant.forChar((char) sourceConstant.asLong());
+                        __sourceConstant = JavaConstant.forChar((char) __sourceConstant.asLong());
                         break;
                     case Short:
-                        sourceConstant = JavaConstant.forShort((short) sourceConstant.asLong());
+                        __sourceConstant = JavaConstant.forShort((short) __sourceConstant.asLong());
                         break;
                 }
             }
-            JavaConstant boxedConstant = constantReflection.boxPrimitive(sourceConstant);
-            if (boxedConstant != null && sourceConstant.getJavaKind() == box.getBoxingKind())
+            JavaConstant __boxedConstant = __constantReflection.boxPrimitive(__sourceConstant);
+            if (__boxedConstant != null && __sourceConstant.getJavaKind() == __box.getBoxingKind())
             {
-                return ConstantNode.forConstant(boxedConstant, metaAccess, box.graph());
+                return ConstantNode.forConstant(__boxedConstant, __metaAccess, __box.graph());
             }
         }
         return null;
@@ -158,45 +158,47 @@ public final class BoxingSnippets implements Snippets
     // @class BoxingSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final EnumMap<JavaKind, SnippetInfo> boxSnippets = new EnumMap<>(JavaKind.class);
+        // @field
         private final EnumMap<JavaKind, SnippetInfo> unboxSnippets = new EnumMap<>(JavaKind.class);
 
         // @cons
-        public Templates(Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        public Templates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
         {
-            super(providers, snippetReflection, target);
-            for (JavaKind kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short })
+            super(__providers, __snippetReflection, __target);
+            for (JavaKind __kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short })
             {
-                boxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "ValueOf"));
-                unboxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "Value"));
+                boxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "ValueOf"));
+                unboxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "Value"));
             }
         }
 
-        public void lower(BoxNode box, LoweringTool tool)
+        public void lower(BoxNode __box, LoweringTool __tool)
         {
-            FloatingNode canonical = canonicalizeBoxing(box, providers.getMetaAccess(), providers.getConstantReflection());
+            FloatingNode __canonical = canonicalizeBoxing(__box, providers.getMetaAccess(), providers.getConstantReflection());
             // if in AOT mode, we don't want to embed boxed constants.
-            if (canonical != null)
+            if (__canonical != null)
             {
-                box.graph().replaceFixedWithFloating(box, canonical);
+                __box.graph().replaceFixedWithFloating(__box, __canonical);
             }
             else
             {
-                Arguments args = new Arguments(boxSnippets.get(box.getBoxingKind()), box.graph().getGuardsStage(), tool.getLoweringStage());
-                args.add("value", box.getValue());
+                Arguments __args = new Arguments(boxSnippets.get(__box.getBoxingKind()), __box.graph().getGuardsStage(), __tool.getLoweringStage());
+                __args.add("value", __box.getValue());
 
-                SnippetTemplate template = template(box, args);
-                template.instantiate(providers.getMetaAccess(), box, SnippetTemplate.DEFAULT_REPLACER, args);
+                SnippetTemplate __template = template(__box, __args);
+                __template.instantiate(providers.getMetaAccess(), __box, SnippetTemplate.DEFAULT_REPLACER, __args);
             }
         }
 
-        public void lower(UnboxNode unbox, LoweringTool tool)
+        public void lower(UnboxNode __unbox, LoweringTool __tool)
         {
-            Arguments args = new Arguments(unboxSnippets.get(unbox.getBoxingKind()), unbox.graph().getGuardsStage(), tool.getLoweringStage());
-            args.add("value", unbox.getValue());
+            Arguments __args = new Arguments(unboxSnippets.get(__unbox.getBoxingKind()), __unbox.graph().getGuardsStage(), __tool.getLoweringStage());
+            __args.add("value", __unbox.getValue());
 
-            SnippetTemplate template = template(unbox, args);
-            template.instantiate(providers.getMetaAccess(), unbox, SnippetTemplate.DEFAULT_REPLACER, args);
+            SnippetTemplate __template = template(__unbox, __args);
+            __template.instantiate(providers.getMetaAccess(), __unbox, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

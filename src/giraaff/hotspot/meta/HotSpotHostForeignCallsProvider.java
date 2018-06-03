@@ -47,86 +47,93 @@ import giraaff.word.WordTypes;
 // @class HotSpotHostForeignCallsProvider
 public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCallsProviderImpl
 {
+    // @def
     public static final ForeignCallDescriptor JAVA_TIME_MILLIS = new ForeignCallDescriptor("javaTimeMillis", long.class);
+    // @def
     public static final ForeignCallDescriptor JAVA_TIME_NANOS = new ForeignCallDescriptor("javaTimeNanos", long.class);
 
     // @cons
-    public HotSpotHostForeignCallsProvider(HotSpotGraalRuntime runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
+    public HotSpotHostForeignCallsProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes)
     {
-        super(runtime, metaAccess, codeCache, wordTypes);
+        super(__runtime, __metaAccess, __codeCache, __wordTypes);
     }
 
-    protected static void link(Stub stub)
+    protected static void link(Stub __stub)
     {
-        stub.getLinkage().setCompiledStub(stub);
+        __stub.getLinkage().setCompiledStub(__stub);
     }
 
-    public static ForeignCallDescriptor lookupCheckcastArraycopyDescriptor(boolean uninit)
+    public static ForeignCallDescriptor lookupCheckcastArraycopyDescriptor(boolean __uninit)
     {
-        return checkcastArraycopyDescriptors[uninit ? 1 : 0];
+        return checkcastArraycopyDescriptors[__uninit ? 1 : 0];
     }
 
-    public static ForeignCallDescriptor lookupArraycopyDescriptor(JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny)
+    public static ForeignCallDescriptor lookupArraycopyDescriptor(JavaKind __kind, boolean __aligned, boolean __disjoint, boolean __uninit, boolean __killAny)
     {
-        if (uninit)
+        if (__uninit)
         {
-            return uninitObjectArraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0];
+            return uninitObjectArraycopyDescriptors[__aligned ? 1 : 0][__disjoint ? 1 : 0];
         }
-        if (killAny)
+        if (__killAny)
         {
-            return objectArraycopyDescriptorsKillAny[aligned ? 1 : 0][disjoint ? 1 : 0];
+            return objectArraycopyDescriptorsKillAny[__aligned ? 1 : 0][__disjoint ? 1 : 0];
         }
-        return arraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0].get(kind);
+        return arraycopyDescriptors[__aligned ? 1 : 0][__disjoint ? 1 : 0].get(__kind);
     }
 
-    @SuppressWarnings({"unchecked"}) private static final EnumMap<JavaKind, ForeignCallDescriptor>[][] arraycopyDescriptors = (EnumMap<JavaKind, ForeignCallDescriptor>[][]) new EnumMap<?, ?>[2][2];
+    @SuppressWarnings({"unchecked"})
+    // @def
+    private static final EnumMap<JavaKind, ForeignCallDescriptor>[][] arraycopyDescriptors = (EnumMap<JavaKind, ForeignCallDescriptor>[][]) new EnumMap<?, ?>[2][2];
 
+    // @def
     private static final ForeignCallDescriptor[][] uninitObjectArraycopyDescriptors = new ForeignCallDescriptor[2][2];
+    // @def
     private static final ForeignCallDescriptor[] checkcastArraycopyDescriptors = new ForeignCallDescriptor[2];
+    // @def
     private static ForeignCallDescriptor[][] objectArraycopyDescriptorsKillAny = new ForeignCallDescriptor[2][2];
 
     static
     {
         // populate the EnumMap instances
-        for (int i = 0; i < arraycopyDescriptors.length; i++)
+        for (int __i = 0; __i < arraycopyDescriptors.length; __i++)
         {
-            for (int j = 0; j < arraycopyDescriptors[i].length; j++)
+            for (int __j = 0; __j < arraycopyDescriptors[__i].length; __j++)
             {
-                arraycopyDescriptors[i][j] = new EnumMap<>(JavaKind.class);
+                arraycopyDescriptors[__i][__j] = new EnumMap<>(JavaKind.class);
             }
         }
     }
 
-    private void registerArraycopyDescriptor(EconomicMap<Long, ForeignCallDescriptor> descMap, JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny, long routine)
+    private void registerArraycopyDescriptor(EconomicMap<Long, ForeignCallDescriptor> __descMap, JavaKind __kind, boolean __aligned, boolean __disjoint, boolean __uninit, boolean __killAny, long __routine)
     {
-        ForeignCallDescriptor desc = descMap.get(routine);
-        if (desc == null)
+        ForeignCallDescriptor __desc = __descMap.get(__routine);
+        if (__desc == null)
         {
-            desc = buildDescriptor(kind, aligned, disjoint, uninit, killAny, routine);
-            descMap.put(routine, desc);
+            __desc = buildDescriptor(__kind, __aligned, __disjoint, __uninit, __killAny, __routine);
+            __descMap.put(__routine, __desc);
         }
-        if (uninit)
+        if (__uninit)
         {
-            uninitObjectArraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0] = desc;
+            uninitObjectArraycopyDescriptors[__aligned ? 1 : 0][__disjoint ? 1 : 0] = __desc;
         }
         else
         {
-            arraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0].put(kind, desc);
+            arraycopyDescriptors[__aligned ? 1 : 0][__disjoint ? 1 : 0].put(__kind, __desc);
         }
     }
 
-    private ForeignCallDescriptor buildDescriptor(JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny, long routine)
+    private ForeignCallDescriptor buildDescriptor(JavaKind __kind, boolean __aligned, boolean __disjoint, boolean __uninit, boolean __killAny, long __routine)
     {
-        String name = kind + (aligned ? "Aligned" : "") + (disjoint ? "Disjoint" : "") + (uninit ? "Uninit" : "") + "Arraycopy" + (killAny ? "KillAny" : "");
-        ForeignCallDescriptor desc = new ForeignCallDescriptor(name, void.class, Word.class, Word.class, Word.class);
-        LocationIdentity killed = killAny ? LocationIdentity.any() : NamedLocationIdentity.getArrayLocation(kind);
-        registerForeignCall(desc, routine, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, killed);
-        return desc;
+        String __name = __kind + (__aligned ? "Aligned" : "") + (__disjoint ? "Disjoint" : "") + (__uninit ? "Uninit" : "") + "Arraycopy" + (__killAny ? "KillAny" : "");
+        ForeignCallDescriptor __desc = new ForeignCallDescriptor(__name, void.class, Word.class, Word.class, Word.class);
+        LocationIdentity __killed = __killAny ? LocationIdentity.any() : NamedLocationIdentity.getArrayLocation(__kind);
+        registerForeignCall(__desc, __routine, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, __killed);
+        return __desc;
     }
 
-    private void registerCheckcastArraycopyDescriptor(boolean uninit, long routine)
+    private void registerCheckcastArraycopyDescriptor(boolean __uninit, long __routine)
     {
-        String name = "Object" + (uninit ? "Uninit" : "") + "Checkcast";
+        String __name = "Object" + (__uninit ? "Uninit" : "") + "Checkcast";
         // Input:
         // c_rarg0 - source array address
         // c_rarg1 - destination array address
@@ -135,40 +142,40 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         // c_rarg4 - oop ckval (super_klass)
         // Return:
         // 0 = success, n = number of copied elements xor'd with -1.
-        ForeignCallDescriptor desc = new ForeignCallDescriptor(name, int.class, Word.class, Word.class, Word.class, Word.class, Word.class);
-        LocationIdentity killed = NamedLocationIdentity.any();
-        registerForeignCall(desc, routine, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, killed);
-        checkcastArraycopyDescriptors[uninit ? 1 : 0] = desc;
+        ForeignCallDescriptor __desc = new ForeignCallDescriptor(__name, int.class, Word.class, Word.class, Word.class, Word.class, Word.class);
+        LocationIdentity __killed = NamedLocationIdentity.any();
+        registerForeignCall(__desc, __routine, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, __killed);
+        checkcastArraycopyDescriptors[__uninit ? 1 : 0] = __desc;
     }
 
-    private void registerArrayCopy(JavaKind kind, long routine, long alignedRoutine, long disjointRoutine, long alignedDisjointRoutine)
+    private void registerArrayCopy(JavaKind __kind, long __routine, long __alignedRoutine, long __disjointRoutine, long __alignedDisjointRoutine)
     {
-        registerArrayCopy(kind, routine, alignedRoutine, disjointRoutine, alignedDisjointRoutine, false);
+        registerArrayCopy(__kind, __routine, __alignedRoutine, __disjointRoutine, __alignedDisjointRoutine, false);
     }
 
-    private void registerArrayCopy(JavaKind kind, long routine, long alignedRoutine, long disjointRoutine, long alignedDisjointRoutine, boolean uninit)
+    private void registerArrayCopy(JavaKind __kind, long __routine, long __alignedRoutine, long __disjointRoutine, long __alignedDisjointRoutine, boolean __uninit)
     {
         /*
          * Sometimes the same function is used for multiple cases so share them when that's the case
          * but only within the same Kind. For instance short and char are the same copy routines but
          * they kill different memory so they still have to be distinct.
          */
-        EconomicMap<Long, ForeignCallDescriptor> descMap = EconomicMap.create();
-        registerArraycopyDescriptor(descMap, kind, false, false, uninit, false, routine);
-        registerArraycopyDescriptor(descMap, kind, true, false, uninit, false, alignedRoutine);
-        registerArraycopyDescriptor(descMap, kind, false, true, uninit, false, disjointRoutine);
-        registerArraycopyDescriptor(descMap, kind, true, true, uninit, false, alignedDisjointRoutine);
+        EconomicMap<Long, ForeignCallDescriptor> __descMap = EconomicMap.create();
+        registerArraycopyDescriptor(__descMap, __kind, false, false, __uninit, false, __routine);
+        registerArraycopyDescriptor(__descMap, __kind, true, false, __uninit, false, __alignedRoutine);
+        registerArraycopyDescriptor(__descMap, __kind, false, true, __uninit, false, __disjointRoutine);
+        registerArraycopyDescriptor(__descMap, __kind, true, true, __uninit, false, __alignedDisjointRoutine);
 
-        if (kind == JavaKind.Object && !uninit)
+        if (__kind == JavaKind.Object && !__uninit)
         {
-            objectArraycopyDescriptorsKillAny[0][0] = buildDescriptor(kind, false, false, uninit, true, routine);
-            objectArraycopyDescriptorsKillAny[1][0] = buildDescriptor(kind, true, false, uninit, true, alignedRoutine);
-            objectArraycopyDescriptorsKillAny[0][1] = buildDescriptor(kind, false, true, uninit, true, disjointRoutine);
-            objectArraycopyDescriptorsKillAny[1][1] = buildDescriptor(kind, true, true, uninit, true, alignedDisjointRoutine);
+            objectArraycopyDescriptorsKillAny[0][0] = buildDescriptor(__kind, false, false, __uninit, true, __routine);
+            objectArraycopyDescriptorsKillAny[1][0] = buildDescriptor(__kind, true, false, __uninit, true, __alignedRoutine);
+            objectArraycopyDescriptorsKillAny[0][1] = buildDescriptor(__kind, false, true, __uninit, true, __disjointRoutine);
+            objectArraycopyDescriptorsKillAny[1][1] = buildDescriptor(__kind, true, true, __uninit, true, __alignedDisjointRoutine);
         }
     }
 
-    public void initialize(HotSpotProviders providers)
+    public void initialize(HotSpotProviders __providers)
     {
         registerForeignCall(HotSpotHostBackend.DEOPTIMIZATION_HANDLER, HotSpotRuntime.handleDeoptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER, HotSpotRuntime.uncommonTrapStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
@@ -189,28 +196,28 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
         CreateExceptionStub.registerForeignCalls(this);
 
-        link(new NewInstanceStub(providers, registerStubCall(HotSpotBackend.NEW_INSTANCE, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
-        link(new NewArrayStub(providers, registerStubCall(HotSpotBackend.NEW_ARRAY, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
-        link(new ExceptionHandlerStub(providers, foreignCalls.get(HotSpotBackend.EXCEPTION_HANDLER)));
-        link(new UnwindExceptionToCallerStub(providers, registerStubCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER, NOT_REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new ArrayStoreExceptionStub(providers, registerStubCall(RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new ClassCastExceptionStub(providers, registerStubCall(RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new NullPointerExceptionStub(providers, registerStubCall(RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new OutOfBoundsExceptionStub(providers, registerStubCall(RuntimeCalls.CREATE_OUT_OF_BOUNDS_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new NewInstanceStub(__providers, registerStubCall(HotSpotBackend.NEW_INSTANCE, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
+        link(new NewArrayStub(__providers, registerStubCall(HotSpotBackend.NEW_ARRAY, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
+        link(new ExceptionHandlerStub(__providers, foreignCalls.get(HotSpotBackend.EXCEPTION_HANDLER)));
+        link(new UnwindExceptionToCallerStub(__providers, registerStubCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER, NOT_REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new ArrayStoreExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new ClassCastExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new NullPointerExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new OutOfBoundsExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_OUT_OF_BOUNDS_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
 
-        linkForeignCall(providers, IDENTITY_HASHCODE, HotSpotRuntime.identityHashCodeAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
-        linkForeignCall(providers, ForeignCallDescriptors.REGISTER_FINALIZER, HotSpotRuntime.registerFinalizerAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(providers, MonitorSnippets.MONITORENTER, HotSpotRuntime.monitorenterAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(providers, MonitorSnippets.MONITOREXIT, HotSpotRuntime.monitorexitAddress, PREPEND_THREAD, Transition.STACK_INSPECTABLE_LEAF, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(providers, HotSpotBackend.NEW_MULTI_ARRAY, HotSpotRuntime.newMultiArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
-        linkForeignCall(providers, NewObjectSnippets.DYNAMIC_NEW_ARRAY, HotSpotRuntime.dynamicNewArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
-        linkForeignCall(providers, NewObjectSnippets.DYNAMIC_NEW_INSTANCE, HotSpotRuntime.dynamicNewInstanceAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
-        linkForeignCall(providers, OSR_MIGRATION_END, HotSpotRuntime.osrMigrationEndAddress, DONT_PREPEND_THREAD, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NO_LOCATIONS);
-        linkForeignCall(providers, WriteBarrierSnippets.G1WBPRECALL, HotSpotRuntime.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        linkForeignCall(providers, WriteBarrierSnippets.G1WBPOSTCALL, HotSpotRuntime.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(__providers, IDENTITY_HASHCODE, HotSpotRuntime.identityHashCodeAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
+        linkForeignCall(__providers, ForeignCallDescriptors.REGISTER_FINALIZER, HotSpotRuntime.registerFinalizerAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(__providers, MonitorSnippets.MONITORENTER, HotSpotRuntime.monitorenterAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(__providers, MonitorSnippets.MONITOREXIT, HotSpotRuntime.monitorexitAddress, PREPEND_THREAD, Transition.STACK_INSPECTABLE_LEAF, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(__providers, HotSpotBackend.NEW_MULTI_ARRAY, HotSpotRuntime.newMultiArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        linkForeignCall(__providers, NewObjectSnippets.DYNAMIC_NEW_ARRAY, HotSpotRuntime.dynamicNewArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
+        linkForeignCall(__providers, NewObjectSnippets.DYNAMIC_NEW_INSTANCE, HotSpotRuntime.dynamicNewInstanceAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
+        linkForeignCall(__providers, OSR_MIGRATION_END, HotSpotRuntime.osrMigrationEndAddress, DONT_PREPEND_THREAD, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(__providers, WriteBarrierSnippets.G1WBPRECALL, HotSpotRuntime.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(__providers, WriteBarrierSnippets.G1WBPOSTCALL, HotSpotRuntime.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
         // cannot be a leaf, as VM acquires Thread_lock which requires thread_in_vm state
-        linkForeignCall(providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, HotSpotRuntime.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(__providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, HotSpotRuntime.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
 
         registerArrayCopy(JavaKind.Byte, HotSpotRuntime.jbyteArraycopy, HotSpotRuntime.jbyteAlignedArraycopy, HotSpotRuntime.jbyteDisjointArraycopy, HotSpotRuntime.jbyteAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Boolean, HotSpotRuntime.jbyteArraycopy, HotSpotRuntime.jbyteAlignedArraycopy, HotSpotRuntime.jbyteDisjointArraycopy, HotSpotRuntime.jbyteAlignedDisjointArraycopy);
@@ -271,8 +278,8 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         }
     }
 
-    public HotSpotForeignCallLinkage getForeignCall(ForeignCallDescriptor descriptor)
+    public HotSpotForeignCallLinkage getForeignCall(ForeignCallDescriptor __descriptor)
     {
-        return foreignCalls.get(descriptor);
+        return foreignCalls.get(__descriptor);
     }
 }

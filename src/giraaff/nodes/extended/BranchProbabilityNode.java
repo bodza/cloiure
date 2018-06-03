@@ -24,29 +24,42 @@ import giraaff.util.GraalError;
 // @class BranchProbabilityNode
 public final class BranchProbabilityNode extends FloatingNode implements Simplifiable, Lowerable
 {
+    // @def
     public static final NodeClass<BranchProbabilityNode> TYPE = NodeClass.create(BranchProbabilityNode.class);
 
+    // @def
     public static final double LIKELY_PROBABILITY = 0.6;
+    // @def
     public static final double NOT_LIKELY_PROBABILITY = 1 - LIKELY_PROBABILITY;
 
+    // @def
     public static final double FREQUENT_PROBABILITY = 0.9;
+    // @def
     public static final double NOT_FREQUENT_PROBABILITY = 1 - FREQUENT_PROBABILITY;
 
+    // @def
     public static final double FAST_PATH_PROBABILITY = 0.99;
+    // @def
     public static final double SLOW_PATH_PROBABILITY = 1 - FAST_PATH_PROBABILITY;
 
+    // @def
     public static final double VERY_FAST_PATH_PROBABILITY = 0.999;
+    // @def
     public static final double VERY_SLOW_PATH_PROBABILITY = 1 - VERY_FAST_PATH_PROBABILITY;
 
-    @Input ValueNode probability;
-    @Input ValueNode condition;
+    @Input
+    // @field
+    ValueNode probability;
+    @Input
+    // @field
+    ValueNode condition;
 
     // @cons
-    public BranchProbabilityNode(ValueNode probability, ValueNode condition)
+    public BranchProbabilityNode(ValueNode __probability, ValueNode __condition)
     {
-        super(TYPE, condition.stamp(NodeView.DEFAULT));
-        this.probability = probability;
-        this.condition = condition;
+        super(TYPE, __condition.stamp(NodeView.DEFAULT));
+        this.probability = __probability;
+        this.condition = __condition;
     }
 
     public ValueNode getProbability()
@@ -60,7 +73,7 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
         if (!hasUsages())
         {
@@ -68,16 +81,16 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
         }
         if (probability.isConstant())
         {
-            double probabilityValue = probability.asJavaConstant().asDouble();
-            if (probabilityValue < 0.0)
+            double __probabilityValue = probability.asJavaConstant().asDouble();
+            if (__probabilityValue < 0.0)
             {
-                throw new GraalError("A negative probability of " + probabilityValue + " is not allowed!");
+                throw new GraalError("A negative probability of " + __probabilityValue + " is not allowed!");
             }
-            else if (probabilityValue > 1.0)
+            else if (__probabilityValue > 1.0)
             {
-                throw new GraalError("A probability of more than 1.0 (" + probabilityValue + ") is not allowed!");
+                throw new GraalError("A probability of more than 1.0 (" + __probabilityValue + ") is not allowed!");
             }
-            else if (Double.isNaN(probabilityValue))
+            else if (Double.isNaN(__probabilityValue))
             {
                 /*
                  * We allow NaN if the node is in unreachable code that will eventually fall away,
@@ -85,39 +98,39 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
                  */
                 return;
             }
-            boolean usageFound = false;
-            for (IntegerEqualsNode node : this.usages().filter(IntegerEqualsNode.class))
+            boolean __usageFound = false;
+            for (IntegerEqualsNode __node : this.usages().filter(IntegerEqualsNode.class))
             {
-                ValueNode other = node.getX();
-                if (node.getX() == this)
+                ValueNode __other = __node.getX();
+                if (__node.getX() == this)
                 {
-                    other = node.getY();
+                    __other = __node.getY();
                 }
-                if (other.isConstant())
+                if (__other.isConstant())
                 {
-                    double probabilityToSet = probabilityValue;
-                    if (other.asJavaConstant().asInt() == 0)
+                    double __probabilityToSet = __probabilityValue;
+                    if (__other.asJavaConstant().asInt() == 0)
                     {
-                        probabilityToSet = 1.0 - probabilityToSet;
+                        __probabilityToSet = 1.0 - __probabilityToSet;
                     }
-                    for (IfNode ifNodeUsages : node.usages().filter(IfNode.class))
+                    for (IfNode __ifNodeUsages : __node.usages().filter(IfNode.class))
                     {
-                        usageFound = true;
-                        ifNodeUsages.setTrueSuccessorProbability(probabilityToSet);
+                        __usageFound = true;
+                        __ifNodeUsages.setTrueSuccessorProbability(__probabilityToSet);
                     }
-                    if (!usageFound)
+                    if (!__usageFound)
                     {
-                        usageFound = node.usages().filter(NodePredicates.isA(FixedGuardNode.class).or(ConditionalNode.class)).isNotEmpty();
+                        __usageFound = __node.usages().filter(NodePredicates.isA(FixedGuardNode.class).or(ConditionalNode.class)).isNotEmpty();
                     }
                 }
             }
-            if (usageFound)
+            if (__usageFound)
             {
-                ValueNode currentCondition = condition;
-                replaceAndDelete(currentCondition);
-                if (tool != null)
+                ValueNode __currentCondition = condition;
+                replaceAndDelete(__currentCondition);
+                if (__tool != null)
                 {
-                    tool.addToWorkList(currentCondition.usages());
+                    __tool.addToWorkList(__currentCondition.usages());
                 }
             }
             else
@@ -149,7 +162,7 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
     public static native boolean probability(double probability, boolean condition);
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         throw new GraalError("Branch probability could not be injected, because the probability value did not reduce to a constant value.");
     }

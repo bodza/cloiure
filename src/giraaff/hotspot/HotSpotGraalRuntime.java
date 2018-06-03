@@ -12,6 +12,7 @@ import giraaff.hotspot.amd64.AMD64HotSpotBackendFactory;
 // @class HotSpotGraalRuntime
 public final class HotSpotGraalRuntime implements GraalRuntime
 {
+    // @field
     private final HotSpotBackend backend;
 
     // @cons

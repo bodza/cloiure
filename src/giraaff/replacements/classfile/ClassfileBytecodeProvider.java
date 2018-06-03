@@ -37,38 +37,45 @@ import giraaff.bytecode.BytecodeProvider;
 // @class ClassfileBytecodeProvider
 public final class ClassfileBytecodeProvider implements BytecodeProvider
 {
+    // @field
     private final ClassLoader loader;
+    // @field
     private final EconomicMap<Class<?>, Classfile> classfiles = EconomicMap.create(Equivalence.IDENTITY);
+    // @field
     private final EconomicMap<String, Class<?>> classes = EconomicMap.create();
+    // @field
     private final EconomicMap<ResolvedJavaType, FieldsCache> fields = EconomicMap.create();
+    // @field
     private final EconomicMap<ResolvedJavaType, MethodsCache> methods = EconomicMap.create();
+    // @field
     final MetaAccessProvider metaAccess;
+    // @field
     final SnippetReflectionProvider snippetReflection;
 
     // @cons
-    public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection)
+    public ClassfileBytecodeProvider(MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection)
     {
         super();
-        this.metaAccess = metaAccess;
-        this.snippetReflection = snippetReflection;
-        ClassLoader cl = getClass().getClassLoader();
-        this.loader = cl == null ? ClassLoader.getSystemClassLoader() : cl;
+        this.metaAccess = __metaAccess;
+        this.snippetReflection = __snippetReflection;
+        ClassLoader __cl = getClass().getClassLoader();
+        this.loader = __cl == null ? ClassLoader.getSystemClassLoader() : __cl;
     }
 
     // @cons
-    public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection, ClassLoader loader)
+    public ClassfileBytecodeProvider(MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection, ClassLoader __loader)
     {
         super();
-        this.metaAccess = metaAccess;
-        this.snippetReflection = snippetReflection;
-        this.loader = loader;
+        this.metaAccess = __metaAccess;
+        this.snippetReflection = __snippetReflection;
+        this.loader = __loader;
     }
 
     @Override
-    public Bytecode getBytecode(ResolvedJavaMethod method)
+    public Bytecode getBytecode(ResolvedJavaMethod __method)
     {
-        Classfile classfile = getClassfile(resolveToClass(method.getDeclaringClass().getName()));
-        return classfile.getCode(method.getName(), method.getSignature().toMethodDescriptor());
+        Classfile __classfile = getClassfile(resolveToClass(__method.getDeclaringClass().getName()));
+        return __classfile.getCode(__method.getName(), __method.getSignature().toMethodDescriptor());
     }
 
     @Override
@@ -86,9 +93,9 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     /**
      * Gets the class file bytes for {@code c}.
      */
-    private static InputStream getClassfileAsStream(Class<?> c) throws IOException
+    private static InputStream getClassfileAsStream(Class<?> __c) throws IOException
     {
-        return c.getModule().getResourceAsStream(c.getName().replace('.', '/') + ".class");
+        return __c.getModule().getResourceAsStream(__c.getName().replace('.', '/') + ".class");
     }
 
     /**
@@ -96,69 +103,69 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
      *
      * @throws NoClassDefFoundError if the class file cannot be found
      */
-    private synchronized Classfile getClassfile(Class<?> c)
+    private synchronized Classfile getClassfile(Class<?> __c)
     {
-        Classfile classfile = classfiles.get(c);
-        if (classfile == null)
+        Classfile __classfile = classfiles.get(__c);
+        if (__classfile == null)
         {
             try
             {
-                ResolvedJavaType type = metaAccess.lookupJavaType(c);
-                InputStream in = getClassfileAsStream(c);
-                if (in != null)
+                ResolvedJavaType __type = metaAccess.lookupJavaType(__c);
+                InputStream __in = getClassfileAsStream(__c);
+                if (__in != null)
                 {
-                    DataInputStream stream = new DataInputStream(in);
-                    classfile = new Classfile(type, stream, this);
-                    classfiles.put(c, classfile);
-                    return classfile;
+                    DataInputStream __stream = new DataInputStream(__in);
+                    __classfile = new Classfile(__type, __stream, this);
+                    classfiles.put(__c, __classfile);
+                    return __classfile;
                 }
-                throw new NoClassDefFoundError(c.getName());
+                throw new NoClassDefFoundError(__c.getName());
             }
-            catch (IOException e)
+            catch (IOException __e)
             {
-                throw (NoClassDefFoundError) new NoClassDefFoundError(c.getName()).initCause(e);
+                throw (NoClassDefFoundError) new NoClassDefFoundError(__c.getName()).initCause(__e);
             }
         }
-        return classfile;
+        return __classfile;
     }
 
-    synchronized Class<?> resolveToClass(String descriptor)
+    synchronized Class<?> resolveToClass(String __descriptor)
     {
-        Class<?> c = classes.get(descriptor);
-        if (c == null)
+        Class<?> __c = classes.get(__descriptor);
+        if (__c == null)
         {
-            if (descriptor.length() == 1)
+            if (__descriptor.length() == 1)
             {
-                c = JavaKind.fromPrimitiveOrVoidTypeChar(descriptor.charAt(0)).toJavaClass();
+                __c = JavaKind.fromPrimitiveOrVoidTypeChar(__descriptor.charAt(0)).toJavaClass();
             }
             else
             {
-                int dimensions = 0;
-                while (descriptor.charAt(dimensions) == '[')
+                int __dimensions = 0;
+                while (__descriptor.charAt(__dimensions) == '[')
                 {
-                    dimensions++;
+                    __dimensions++;
                 }
-                String name;
-                if (dimensions == 0 && descriptor.startsWith("L") && descriptor.endsWith(";"))
+                String __name;
+                if (__dimensions == 0 && __descriptor.startsWith("L") && __descriptor.endsWith(";"))
                 {
-                    name = descriptor.substring(1, descriptor.length() - 1).replace('/', '.');
+                    __name = __descriptor.substring(1, __descriptor.length() - 1).replace('/', '.');
                 }
                 else
                 {
-                    name = descriptor.replace('/', '.');
+                    __name = __descriptor.replace('/', '.');
                 }
                 try
                 {
-                    c = Class.forName(name, true, loader);
-                    classes.put(descriptor, c);
+                    __c = Class.forName(__name, true, loader);
+                    classes.put(__descriptor, __c);
                 }
-                catch (ClassNotFoundException e)
+                catch (ClassNotFoundException __e)
                 {
-                    throw new NoClassDefFoundError(descriptor);
+                    throw new NoClassDefFoundError(__descriptor);
                 }
             }
         }
-        return c;
+        return __c;
     }
 
     /**
@@ -167,24 +174,26 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     // @class ClassfileBytecodeProvider.FieldKey
     static final class FieldKey
     {
+        // @field
         final String name;
+        // @field
         final String type;
 
         // @cons
-        FieldKey(String name, String type)
+        FieldKey(String __name, String __type)
         {
             super();
-            this.name = name;
-            this.type = type;
+            this.name = __name;
+            this.type = __type;
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (obj instanceof FieldKey)
+            if (__obj instanceof FieldKey)
             {
-                FieldKey that = (FieldKey) obj;
-                return that.name.equals(this.name) && that.type.equals(this.type);
+                FieldKey __that = (FieldKey) __obj;
+                return __that.name.equals(this.name) && __that.type.equals(this.type);
             }
             return false;
         }
@@ -202,24 +211,26 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     // @class ClassfileBytecodeProvider.MethodKey
     static final class MethodKey
     {
+        // @field
         final String name;
+        // @field
         final String descriptor;
 
         // @cons
-        MethodKey(String name, String descriptor)
+        MethodKey(String __name, String __descriptor)
         {
             super();
-            this.name = name;
-            this.descriptor = descriptor;
+            this.name = __name;
+            this.descriptor = __descriptor;
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (obj instanceof MethodKey)
+            if (__obj instanceof MethodKey)
             {
-                MethodKey that = (MethodKey) obj;
-                return that.name.equals(this.name) && that.descriptor.equals(this.descriptor);
+                MethodKey __that = (MethodKey) __obj;
+                return __that.name.equals(this.name) && __that.descriptor.equals(this.descriptor);
             }
             return false;
         }
@@ -237,47 +248,49 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     // @class ClassfileBytecodeProvider.MethodsCache
     static final class MethodsCache
     {
+        // @field
         volatile EconomicMap<MethodKey, ResolvedJavaMethod> constructors;
+        // @field
         volatile EconomicMap<MethodKey, ResolvedJavaMethod> methods;
 
-        ResolvedJavaMethod lookup(ResolvedJavaType type, String name, String descriptor)
+        ResolvedJavaMethod lookup(ResolvedJavaType __type, String __name, String __descriptor)
         {
-            MethodKey key = new MethodKey(name, descriptor);
+            MethodKey __key = new MethodKey(__name, __descriptor);
 
-            if (name.equals("<clinit>"))
+            if (__name.equals("<clinit>"))
             {
                 // no need to cache <clinit> as it will be looked up at most once
-                return type.getClassInitializer();
+                return __type.getClassInitializer();
             }
-            if (!name.equals("<init>"))
+            if (!__name.equals("<init>"))
             {
                 if (methods == null)
                 {
                     // racy initialization is safe since 'methods' is volatile
-                    methods = createMethodMap(type.getDeclaredMethods());
+                    methods = createMethodMap(__type.getDeclaredMethods());
                 }
 
-                return methods.get(key);
+                return methods.get(__key);
             }
             else
             {
                 if (constructors == null)
                 {
                     // racy initialization is safe since instanceFields is volatile
-                    constructors = createMethodMap(type.getDeclaredConstructors());
+                    constructors = createMethodMap(__type.getDeclaredConstructors());
                 }
-                return constructors.get(key);
+                return constructors.get(__key);
             }
         }
 
-        private static EconomicMap<MethodKey, ResolvedJavaMethod> createMethodMap(ResolvedJavaMethod[] methodArray)
+        private static EconomicMap<MethodKey, ResolvedJavaMethod> createMethodMap(ResolvedJavaMethod[] __methodArray)
         {
-            EconomicMap<MethodKey, ResolvedJavaMethod> map = EconomicMap.create();
-            for (ResolvedJavaMethod m : methodArray)
+            EconomicMap<MethodKey, ResolvedJavaMethod> __map = EconomicMap.create();
+            for (ResolvedJavaMethod __m : __methodArray)
             {
-                map.put(new MethodKey(m.getName(), m.getSignature().toMethodDescriptor()), m);
+                __map.put(new MethodKey(__m.getName(), __m.getSignature().toMethodDescriptor()), __m);
             }
-            return map;
+            return __map;
         }
     }
 
@@ -287,40 +300,43 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     // @class ClassfileBytecodeProvider.FieldsCache
     static final class FieldsCache
     {
+        // @field
         volatile EconomicMap<FieldKey, ResolvedJavaField> instanceFields;
+        // @field
         volatile EconomicMap<FieldKey, ResolvedJavaField> staticFields;
 
-        ResolvedJavaField lookup(ResolvedJavaType type, String name, String fieldType, boolean isStatic)
+        ResolvedJavaField lookup(ResolvedJavaType __type, String __name, String __fieldType, boolean __isStatic)
         {
-            FieldKey key = new FieldKey(name, fieldType);
-            if (isStatic)
+            FieldKey __key = new FieldKey(__name, __fieldType);
+
+            if (__isStatic)
             {
                 if (staticFields == null)
                 {
                     // racy initialization is safe since staticFields is volatile
-                    staticFields = createFieldMap(type.getStaticFields());
+                    staticFields = createFieldMap(__type.getStaticFields());
                 }
-                return staticFields.get(key);
+                return staticFields.get(__key);
             }
             else
             {
                 if (instanceFields == null)
                 {
                     // racy initialization is safe since instanceFields is volatile
-                    instanceFields = createFieldMap(type.getInstanceFields(false));
+                    instanceFields = createFieldMap(__type.getInstanceFields(false));
                 }
-                return instanceFields.get(key);
+                return instanceFields.get(__key);
             }
         }
 
-        private static EconomicMap<FieldKey, ResolvedJavaField> createFieldMap(ResolvedJavaField[] fieldArray)
+        private static EconomicMap<FieldKey, ResolvedJavaField> createFieldMap(ResolvedJavaField[] __fieldArray)
         {
-            EconomicMap<FieldKey, ResolvedJavaField> map = EconomicMap.create();
-            for (ResolvedJavaField f : fieldArray)
+            EconomicMap<FieldKey, ResolvedJavaField> __map = EconomicMap.create();
+            for (ResolvedJavaField __f : __fieldArray)
             {
-                map.put(new FieldKey(f.getName(), f.getType().getName()), f);
+                __map.put(new FieldKey(__f.getName(), __f.getType().getName()), __f);
             }
-            return map;
+            return __map;
         }
     }
 
@@ -329,15 +345,15 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
      *
      * Synchronized since the cache is lazily created.
      */
-    private synchronized MethodsCache getMethods(ResolvedJavaType type)
+    private synchronized MethodsCache getMethods(ResolvedJavaType __type)
     {
-        MethodsCache methodsCache = methods.get(type);
-        if (methodsCache == null)
+        MethodsCache __methodsCache = methods.get(__type);
+        if (__methodsCache == null)
         {
-            methodsCache = new MethodsCache();
-            methods.put(type, methodsCache);
+            __methodsCache = new MethodsCache();
+            methods.put(__type, __methodsCache);
         }
-        return methodsCache;
+        return __methodsCache;
     }
 
     /**
@@ -345,28 +361,28 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
      *
      * Synchronized since the cache is lazily created.
      */
-    private synchronized FieldsCache getFields(ResolvedJavaType type)
+    private synchronized FieldsCache getFields(ResolvedJavaType __type)
     {
-        FieldsCache fieldsCache = fields.get(type);
-        if (fieldsCache == null)
+        FieldsCache __fieldsCache = fields.get(__type);
+        if (__fieldsCache == null)
         {
-            fieldsCache = new FieldsCache();
-            fields.put(type, fieldsCache);
+            __fieldsCache = new FieldsCache();
+            fields.put(__type, __fieldsCache);
         }
-        return fieldsCache;
+        return __fieldsCache;
     }
 
-    ResolvedJavaField findField(ResolvedJavaType type, String name, String fieldType, boolean isStatic)
+    ResolvedJavaField findField(ResolvedJavaType __type, String __name, String __fieldType, boolean __isStatic)
     {
-        return getFields(type).lookup(type, name, fieldType, isStatic);
+        return getFields(__type).lookup(__type, __name, __fieldType, __isStatic);
     }
 
-    ResolvedJavaMethod findMethod(ResolvedJavaType type, String name, String descriptor, boolean isStatic)
+    ResolvedJavaMethod findMethod(ResolvedJavaType __type, String __name, String __descriptor, boolean __isStatic)
     {
-        ResolvedJavaMethod method = getMethods(type).lookup(type, name, descriptor);
-        if (method != null && method.isStatic() == isStatic)
+        ResolvedJavaMethod __method = getMethods(__type).lookup(__type, __name, __descriptor);
+        if (__method != null && __method.isStatic() == __isStatic)
         {
-            return method;
+            return __method;
         }
         return null;
     }

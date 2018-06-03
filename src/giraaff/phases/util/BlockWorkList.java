@@ -10,8 +10,11 @@ import giraaff.nodes.AbstractMergeNode;
 // @class BlockWorkList
 public final class BlockWorkList
 {
+    // @field
     AbstractMergeNode[] workList;
+    // @field
     int[] workListNumbers;
+    // @field
     int workListIndex;
 
     /**
@@ -19,7 +22,7 @@ public final class BlockWorkList
      *
      * @param block the block to add
      */
-    public void add(AbstractMergeNode block)
+    public void add(AbstractMergeNode __block)
     {
         if (workList == null)
         {
@@ -32,7 +35,7 @@ public final class BlockWorkList
             grow();
         }
         // put the block at the end of the array
-        workList[workListIndex++] = block;
+        workList[workListIndex++] = __block;
     }
 
     /**
@@ -42,7 +45,7 @@ public final class BlockWorkList
      * @param block the block to add
      * @param number the number used to sort the block
      */
-    public void addSorted(AbstractMergeNode block, int number)
+    public void addSorted(AbstractMergeNode __block, int __number)
     {
         if (workList == null)
         {
@@ -55,22 +58,22 @@ public final class BlockWorkList
             grow();
         }
         // put the block at the end of the array
-        workList[workListIndex] = block;
-        workListNumbers[workListIndex] = number;
+        workList[workListIndex] = __block;
+        workListNumbers[workListIndex] = __number;
         workListIndex++;
-        int i = workListIndex - 2;
+        int __i = workListIndex - 2;
         // push block towards the beginning of the array
-        for ( ; i >= 0; i--)
+        for ( ; __i >= 0; __i--)
         {
-            int n = workListNumbers[i];
-            if (n >= number)
+            int __n = workListNumbers[__i];
+            if (__n >= __number)
             {
                 break; // already in the right position
             }
-            workList[i + 1] = workList[i]; // bubble b down by one
-            workList[i] = block;           // and overwrite its place with block
-            workListNumbers[i + 1] = n;    // bubble n down by one
-            workListNumbers[i] = number;   // and overwrite its place with number
+            workList[__i + 1] = workList[__i]; // bubble b down by one
+            workList[__i] = __block;           // and overwrite its place with block
+            workListNumbers[__i + 1] = __n;    // bubble n down by one
+            workListNumbers[__i] = __number;   // and overwrite its place with number
         }
     }
 
@@ -107,13 +110,13 @@ public final class BlockWorkList
 
     private void grow()
     {
-        int prevLength = workList.length;
-        AbstractMergeNode[] nworkList = new AbstractMergeNode[prevLength * 3];
-        System.arraycopy(workList, 0, nworkList, 0, prevLength);
-        workList = nworkList;
+        int __prevLength = workList.length;
+        AbstractMergeNode[] __nworkList = new AbstractMergeNode[__prevLength * 3];
+        System.arraycopy(workList, 0, __nworkList, 0, __prevLength);
+        workList = __nworkList;
 
-        int[] nworkListNumbers = new int[prevLength * 3];
-        System.arraycopy(workListNumbers, 0, nworkListNumbers, 0, prevLength);
-        workListNumbers = nworkListNumbers;
+        int[] __nworkListNumbers = new int[__prevLength * 3];
+        System.arraycopy(workListNumbers, 0, __nworkListNumbers, 0, __prevLength);
+        workListNumbers = __nworkListNumbers;
     }
 }

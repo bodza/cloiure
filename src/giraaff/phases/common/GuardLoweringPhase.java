@@ -38,94 +38,95 @@ public final class GuardLoweringPhase extends BasePhase<MidTierContext>
     // @class GuardLoweringPhase.LowerGuards
     private static final class LowerGuards extends ScheduledNodeIterator
     {
+        // @field
         private final Block block;
 
         // @cons
-        LowerGuards(Block block)
+        LowerGuards(Block __block)
         {
             super();
-            this.block = block;
+            this.block = __block;
         }
 
         @Override
-        protected void processNode(Node node)
+        protected void processNode(Node __node)
         {
-            if (node instanceof GuardNode)
+            if (__node instanceof GuardNode)
             {
-                GuardNode guard = (GuardNode) node;
-                FixedWithNextNode lowered = guard.lowerGuard();
-                if (lowered != null)
+                GuardNode __guard = (GuardNode) __node;
+                FixedWithNextNode __lowered = __guard.lowerGuard();
+                if (__lowered != null)
                 {
-                    replaceCurrent(lowered);
+                    replaceCurrent(__lowered);
                 }
                 else
                 {
-                    lowerToIf(guard);
+                    lowerToIf(__guard);
                 }
             }
         }
 
-        private void lowerToIf(GuardNode guard)
+        private void lowerToIf(GuardNode __guard)
         {
-            StructuredGraph graph = guard.graph();
-            AbstractBeginNode fastPath = graph.add(new BeginNode());
-            DeoptimizeNode deopt = graph.add(new DeoptimizeNode(guard.getAction(), guard.getReason(), DeoptimizeNode.DEFAULT_DEBUG_ID, guard.getSpeculation(), null));
-            AbstractBeginNode deoptBranch = BeginNode.begin(deopt);
-            AbstractBeginNode trueSuccessor;
-            AbstractBeginNode falseSuccessor;
-            insertLoopExits(deopt);
-            if (guard.isNegated())
+            StructuredGraph __graph = __guard.graph();
+            AbstractBeginNode __fastPath = __graph.add(new BeginNode());
+            DeoptimizeNode __deopt = __graph.add(new DeoptimizeNode(__guard.getAction(), __guard.getReason(), DeoptimizeNode.DEFAULT_DEBUG_ID, __guard.getSpeculation(), null));
+            AbstractBeginNode __deoptBranch = BeginNode.begin(__deopt);
+            AbstractBeginNode __trueSuccessor;
+            AbstractBeginNode __falseSuccessor;
+            insertLoopExits(__deopt);
+            if (__guard.isNegated())
             {
-                trueSuccessor = deoptBranch;
-                falseSuccessor = fastPath;
+                __trueSuccessor = __deoptBranch;
+                __falseSuccessor = __fastPath;
             }
             else
             {
-                trueSuccessor = fastPath;
-                falseSuccessor = deoptBranch;
+                __trueSuccessor = __fastPath;
+                __falseSuccessor = __deoptBranch;
             }
-            IfNode ifNode = graph.add(new IfNode(guard.getCondition(), trueSuccessor, falseSuccessor, trueSuccessor == fastPath ? 1 : 0));
-            guard.replaceAndDelete(fastPath);
-            insert(ifNode, fastPath);
+            IfNode __ifNode = __graph.add(new IfNode(__guard.getCondition(), __trueSuccessor, __falseSuccessor, __trueSuccessor == __fastPath ? 1 : 0));
+            __guard.replaceAndDelete(__fastPath);
+            insert(__ifNode, __fastPath);
         }
 
-        private void insertLoopExits(DeoptimizeNode deopt)
+        private void insertLoopExits(DeoptimizeNode __deopt)
         {
-            Loop<Block> loop = block.getLoop();
-            StructuredGraph graph = deopt.graph();
-            while (loop != null)
+            Loop<Block> __loop = block.getLoop();
+            StructuredGraph __graph = __deopt.graph();
+            while (__loop != null)
             {
-                LoopExitNode exit = graph.add(new LoopExitNode((LoopBeginNode) loop.getHeader().getBeginNode()));
-                graph.addBeforeFixed(deopt, exit);
-                loop = loop.getParent();
+                LoopExitNode __exit = __graph.add(new LoopExitNode((LoopBeginNode) __loop.getHeader().getBeginNode()));
+                __graph.addBeforeFixed(__deopt, __exit);
+                __loop = __loop.getParent();
             }
         }
     }
 
     @Override
-    protected void run(StructuredGraph graph, MidTierContext context)
+    protected void run(StructuredGraph __graph, MidTierContext __context)
     {
-        if (graph.getGuardsStage().allowsFloatingGuards())
+        if (__graph.getGuardsStage().allowsFloatingGuards())
         {
-            SchedulePhase schedulePhase = new SchedulePhase(SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
-            schedulePhase.apply(graph);
-            ScheduleResult schedule = graph.getLastSchedule();
+            SchedulePhase __schedulePhase = new SchedulePhase(SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
+            __schedulePhase.apply(__graph);
+            ScheduleResult __schedule = __graph.getLastSchedule();
 
-            for (Block block : schedule.getCFG().getBlocks())
+            for (Block __block : __schedule.getCFG().getBlocks())
             {
-                processBlock(block, schedule);
+                processBlock(__block, __schedule);
             }
-            graph.setGuardsStage(GuardsStage.FIXED_DEOPTS);
+            __graph.setGuardsStage(GuardsStage.FIXED_DEOPTS);
         }
     }
 
-    private static boolean assertNoGuardsLeft(StructuredGraph graph)
+    private static boolean assertNoGuardsLeft(StructuredGraph __graph)
     {
         return true;
     }
 
-    private static void processBlock(Block block, ScheduleResult schedule)
+    private static void processBlock(Block __block, ScheduleResult __schedule)
     {
-        new LowerGuards(block).processNodes(block, schedule);
+        new LowerGuards(__block).processNodes(__block, __schedule);
     }
 }

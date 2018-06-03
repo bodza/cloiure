@@ -26,23 +26,29 @@ import giraaff.nodes.extended.GuardingNode;
 // @class CountedLoopInfo
 public final class CountedLoopInfo
 {
+    // @field
     private final LoopEx loop;
+    // @field
     private InductionVariable iv;
+    // @field
     private ValueNode end;
+    // @field
     private boolean oneOff;
+    // @field
     private AbstractBeginNode body;
+    // @field
     private IfNode ifNode;
 
     // @cons
-    CountedLoopInfo(LoopEx loop, InductionVariable iv, IfNode ifNode, ValueNode end, boolean oneOff, AbstractBeginNode body)
+    CountedLoopInfo(LoopEx __loop, InductionVariable __iv, IfNode __ifNode, ValueNode __end, boolean __oneOff, AbstractBeginNode __body)
     {
         super();
-        this.loop = loop;
-        this.iv = iv;
-        this.end = end;
-        this.oneOff = oneOff;
-        this.body = body;
-        this.ifNode = ifNode;
+        this.loop = __loop;
+        this.iv = __iv;
+        this.end = __end;
+        this.oneOff = __oneOff;
+        this.body = __body;
+        this.ifNode = __ifNode;
     }
 
     /**
@@ -70,45 +76,45 @@ public final class CountedLoopInfo
      *
      * @param assumePositive if true the check that the loop is entered at all will be omitted.
      */
-    public ValueNode maxTripCountNode(boolean assumePositive)
+    public ValueNode maxTripCountNode(boolean __assumePositive)
     {
-        StructuredGraph graph = iv.valueNode().graph();
-        Stamp stamp = iv.valueNode().stamp(NodeView.DEFAULT);
+        StructuredGraph __graph = iv.valueNode().graph();
+        Stamp __stamp = iv.valueNode().stamp(NodeView.DEFAULT);
 
-        ValueNode max;
-        ValueNode min;
-        ValueNode range;
-        ValueNode absStride;
+        ValueNode __max;
+        ValueNode __min;
+        ValueNode __range;
+        ValueNode __absStride;
         if (iv.direction() == Direction.Up)
         {
-            absStride = iv.strideNode();
-            range = MathUtil.sub(graph, end, iv.initNode());
-            max = end;
-            min = iv.initNode();
+            __absStride = iv.strideNode();
+            __range = MathUtil.sub(__graph, end, iv.initNode());
+            __max = end;
+            __min = iv.initNode();
         }
         else
         {
-            absStride = graph.maybeAddOrUnique(NegateNode.create(iv.strideNode(), NodeView.DEFAULT));
-            range = MathUtil.sub(graph, iv.initNode(), end);
-            max = iv.initNode();
-            min = end;
+            __absStride = __graph.maybeAddOrUnique(NegateNode.create(iv.strideNode(), NodeView.DEFAULT));
+            __range = MathUtil.sub(__graph, iv.initNode(), end);
+            __max = iv.initNode();
+            __min = end;
         }
 
-        ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
+        ConstantNode __one = ConstantNode.forIntegerStamp(__stamp, 1, __graph);
         if (oneOff)
         {
-            range = MathUtil.add(graph, range, one);
+            __range = MathUtil.add(__graph, __range, __one);
         }
         // round-away-from-zero divison: (range + stride -/+ 1) / stride
-        ValueNode denominator = MathUtil.add(graph, range, MathUtil.sub(graph, absStride, one));
-        ValueNode div = MathUtil.unsignedDivBefore(graph, loop.entryPoint(), denominator, absStride);
+        ValueNode __denominator = MathUtil.add(__graph, __range, MathUtil.sub(__graph, __absStride, __one));
+        ValueNode __div = MathUtil.unsignedDivBefore(__graph, loop.entryPoint(), __denominator, __absStride);
 
-        if (assumePositive)
+        if (__assumePositive)
         {
-            return div;
+            return __div;
         }
-        ConstantNode zero = ConstantNode.forIntegerStamp(stamp, 0, graph);
-        return graph.unique(new ConditionalNode(graph.unique(new IntegerLessThanNode(max, min)), zero, div));
+        ConstantNode __zero = ConstantNode.forIntegerStamp(__stamp, 0, __graph);
+        return __graph.unique(new ConditionalNode(__graph.unique(new IntegerLessThanNode(__max, __min)), __zero, __div));
     }
 
     /**
@@ -129,34 +135,34 @@ public final class CountedLoopInfo
      */
     private long rawConstantMaxTripCount()
     {
-        long endValue = end.asJavaConstant().asLong();
-        long initValue = iv.constantInit();
-        long range;
-        long absStride;
+        long __endValue = end.asJavaConstant().asLong();
+        long __initValue = iv.constantInit();
+        long __range;
+        long __absStride;
         if (iv.direction() == Direction.Up)
         {
-            if (endValue < initValue)
+            if (__endValue < __initValue)
             {
                 return 0;
             }
-            range = endValue - iv.constantInit();
-            absStride = iv.constantStride();
+            __range = __endValue - iv.constantInit();
+            __absStride = iv.constantStride();
         }
         else
         {
-            if (initValue < endValue)
+            if (__initValue < __endValue)
             {
                 return 0;
             }
-            range = iv.constantInit() - endValue;
-            absStride = -iv.constantStride();
+            __range = iv.constantInit() - __endValue;
+            __absStride = -iv.constantStride();
         }
         if (oneOff)
         {
-            range += 1;
+            __range += 1;
         }
-        long denominator = range + absStride - 1;
-        return Long.divideUnsigned(denominator, absStride);
+        long __denominator = __range + __absStride - 1;
+        return Long.divideUnsigned(__denominator, __absStride);
     }
 
     public boolean isExactTripCount()
@@ -221,36 +227,36 @@ public final class CountedLoopInfo
 
     public GuardingNode createOverFlowGuard()
     {
-        GuardingNode overflowGuard = getOverFlowGuard();
-        if (overflowGuard != null)
+        GuardingNode __overflowGuard = getOverFlowGuard();
+        if (__overflowGuard != null)
         {
-            return overflowGuard;
+            return __overflowGuard;
         }
-        IntegerStamp stamp = (IntegerStamp) iv.valueNode().stamp(NodeView.DEFAULT);
-        StructuredGraph graph = iv.valueNode().graph();
-        CompareNode cond; // we use a negated guard with a < condition to achieve a >=
-        ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
+        IntegerStamp __stamp = (IntegerStamp) iv.valueNode().stamp(NodeView.DEFAULT);
+        StructuredGraph __graph = iv.valueNode().graph();
+        CompareNode __cond; // we use a negated guard with a < condition to achieve a >=
+        ConstantNode __one = ConstantNode.forIntegerStamp(__stamp, 1, __graph);
         if (iv.direction() == Direction.Up)
         {
-            ValueNode v1 = MathUtil.sub(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.maxValue(stamp.getBits()), graph), MathUtil.sub(graph, iv.strideNode(), one));
+            ValueNode __v1 = MathUtil.sub(__graph, ConstantNode.forIntegerStamp(__stamp, CodeUtil.maxValue(__stamp.getBits()), __graph), MathUtil.sub(__graph, iv.strideNode(), __one));
             if (oneOff)
             {
-                v1 = MathUtil.sub(graph, v1, one);
+                __v1 = MathUtil.sub(__graph, __v1, __one);
             }
-            cond = graph.unique(new IntegerLessThanNode(v1, end));
+            __cond = __graph.unique(new IntegerLessThanNode(__v1, end));
         }
         else
         {
-            ValueNode v1 = MathUtil.add(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.minValue(stamp.getBits()), graph), MathUtil.sub(graph, one, iv.strideNode()));
+            ValueNode __v1 = MathUtil.add(__graph, ConstantNode.forIntegerStamp(__stamp, CodeUtil.minValue(__stamp.getBits()), __graph), MathUtil.sub(__graph, __one, iv.strideNode()));
             if (oneOff)
             {
-                v1 = MathUtil.add(graph, v1, one);
+                __v1 = MathUtil.add(__graph, __v1, __one);
             }
-            cond = graph.unique(new IntegerLessThanNode(end, v1));
+            __cond = __graph.unique(new IntegerLessThanNode(end, __v1));
         }
-        overflowGuard = graph.unique(new GuardNode(cond, AbstractBeginNode.prevBegin(loop.entryPoint()), DeoptimizationReason.LoopLimitCheck, DeoptimizationAction.InvalidateRecompile, true, JavaConstant.NULL_POINTER)); // TODO use speculation
-        loop.loopBegin().setOverflowGuard(overflowGuard);
-        return overflowGuard;
+        __overflowGuard = __graph.unique(new GuardNode(__cond, AbstractBeginNode.prevBegin(loop.entryPoint()), DeoptimizationReason.LoopLimitCheck, DeoptimizationAction.InvalidateRecompile, true, JavaConstant.NULL_POINTER)); // TODO use speculation
+        loop.loopBegin().setOverflowGuard(__overflowGuard);
+        return __overflowGuard;
     }
 
     public IntegerStamp getStamp()

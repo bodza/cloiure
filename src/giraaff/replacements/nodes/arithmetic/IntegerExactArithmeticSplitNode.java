@@ -23,21 +23,30 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class IntegerExactArithmeticSplitNode
 public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode implements Simplifiable, LIRLowerable
 {
+    // @def
     public static final NodeClass<IntegerExactArithmeticSplitNode> TYPE = NodeClass.create(IntegerExactArithmeticSplitNode.class);
 
-    @Successor AbstractBeginNode next;
-    @Successor AbstractBeginNode overflowSuccessor;
-    @Input ValueNode x;
-    @Input ValueNode y;
+    @Successor
+    // @field
+    AbstractBeginNode next;
+    @Successor
+    // @field
+    AbstractBeginNode overflowSuccessor;
+    @Input
+    // @field
+    ValueNode x;
+    @Input
+    // @field
+    ValueNode y;
 
     // @cons
-    protected IntegerExactArithmeticSplitNode(NodeClass<? extends IntegerExactArithmeticSplitNode> c, Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor)
+    protected IntegerExactArithmeticSplitNode(NodeClass<? extends IntegerExactArithmeticSplitNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y, AbstractBeginNode __next, AbstractBeginNode __overflowSuccessor)
     {
-        super(c, stamp);
-        this.x = x;
-        this.y = y;
-        this.overflowSuccessor = overflowSuccessor;
-        this.next = next;
+        super(__c, __stamp);
+        this.x = __x;
+        this.y = __y;
+        this.overflowSuccessor = __overflowSuccessor;
+        this.next = __next;
     }
 
     @Override
@@ -47,13 +56,13 @@ public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode i
     }
 
     @Override
-    public double probability(AbstractBeginNode successor)
+    public double probability(AbstractBeginNode __successor)
     {
-        return successor == next ? 1 : 0;
+        return __successor == next ? 1 : 0;
     }
 
     @Override
-    public boolean setProbability(AbstractBeginNode successor, double value)
+    public boolean setProbability(AbstractBeginNode __successor, double __value)
     {
         // Successor probabilities for arithmetic split nodes are fixed.
         return false;
@@ -80,28 +89,28 @@ public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode i
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, generateArithmetic(gen));
-        gen.emitOverflowCheckBranch(getOverflowSuccessor(), getNext(), stamp, probability(getOverflowSuccessor()));
+        __gen.setResult(this, generateArithmetic(__gen));
+        __gen.emitOverflowCheckBranch(getOverflowSuccessor(), getNext(), stamp, probability(getOverflowSuccessor()));
     }
 
     protected abstract Value generateArithmetic(NodeLIRBuilderTool gen);
 
-    static void lower(LoweringTool tool, IntegerExactArithmeticNode node)
+    static void lower(LoweringTool __tool, IntegerExactArithmeticNode __node)
     {
-        if (node.asNode().graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
+        if (__node.asNode().graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
         {
-            FloatingNode floatingNode = (FloatingNode) node;
-            FixedWithNextNode previous = tool.lastFixedNode();
-            FixedNode next = previous.next();
-            previous.setNext(null);
-            DeoptimizeNode deopt = floatingNode.graph().add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.ArithmeticException));
-            AbstractBeginNode normalBegin = floatingNode.graph().add(new BeginNode());
-            normalBegin.setNext(next);
-            IntegerExactArithmeticSplitNode split = node.createSplit(normalBegin, BeginNode.begin(deopt));
-            previous.setNext(split);
-            floatingNode.replaceAndDelete(split);
+            FloatingNode __floatingNode = (FloatingNode) __node;
+            FixedWithNextNode __previous = __tool.lastFixedNode();
+            FixedNode __next = __previous.next();
+            __previous.setNext(null);
+            DeoptimizeNode __deopt = __floatingNode.graph().add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.ArithmeticException));
+            AbstractBeginNode __normalBegin = __floatingNode.graph().add(new BeginNode());
+            __normalBegin.setNext(__next);
+            IntegerExactArithmeticSplitNode __split = __node.createSplit(__normalBegin, BeginNode.begin(__deopt));
+            __previous.setNext(__split);
+            __floatingNode.replaceAndDelete(__split);
         }
     }
 

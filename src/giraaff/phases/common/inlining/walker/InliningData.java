@@ -70,74 +70,82 @@ public final class InliningData
     /**
      * Call hierarchy from outer most call (i.e., compilation unit) to inner most callee.
      */
+    // @field
     private final ArrayDeque<CallsiteHolder> graphQueue = new ArrayDeque<>();
+    // @field
     private final ArrayDeque<MethodInvocation> invocationQueue = new ArrayDeque<>();
 
+    // @field
     private final HighTierContext context;
+    // @field
     private final int maxMethodPerInlining;
+    // @field
     private final CanonicalizerPhase canonicalizer;
+    // @field
     private final InliningPolicy inliningPolicy;
+    // @field
     private final StructuredGraph rootGraph;
 
+    // @field
     private int maxGraphs;
 
     // @cons
-    public InliningData(StructuredGraph rootGraph, HighTierContext context, int maxMethodPerInlining, CanonicalizerPhase canonicalizer, InliningPolicy inliningPolicy, LinkedList<Invoke> rootInvokes)
+    public InliningData(StructuredGraph __rootGraph, HighTierContext __context, int __maxMethodPerInlining, CanonicalizerPhase __canonicalizer, InliningPolicy __inliningPolicy, LinkedList<Invoke> __rootInvokes)
     {
         super();
-        this.context = context;
-        this.maxMethodPerInlining = maxMethodPerInlining;
-        this.canonicalizer = canonicalizer;
-        this.inliningPolicy = inliningPolicy;
+        this.context = __context;
+        this.maxMethodPerInlining = __maxMethodPerInlining;
+        this.canonicalizer = __canonicalizer;
+        this.inliningPolicy = __inliningPolicy;
         this.maxGraphs = 1;
-        this.rootGraph = rootGraph;
+        this.rootGraph = __rootGraph;
 
         invocationQueue.push(new MethodInvocation(null, 1.0, 1.0, null));
-        graphQueue.push(new CallsiteHolderExplorable(rootGraph, 1.0, 1.0, null, rootInvokes));
+        graphQueue.push(new CallsiteHolderExplorable(__rootGraph, 1.0, 1.0, null, __rootInvokes));
     }
 
-    public static boolean isFreshInstantiation(ValueNode arg)
+    public static boolean isFreshInstantiation(ValueNode __arg)
     {
-        return (arg instanceof AbstractNewObjectNode) || (arg instanceof AllocatedObjectNode) || (arg instanceof VirtualObjectNode);
+        return (__arg instanceof AbstractNewObjectNode) || (__arg instanceof AllocatedObjectNode) || (__arg instanceof VirtualObjectNode);
     }
 
-    private String checkTargetConditionsHelper(ResolvedJavaMethod method, int invokeBci)
+    private String checkTargetConditionsHelper(ResolvedJavaMethod __method, int __invokeBci)
     {
-        if (method == null)
+        if (__method == null)
         {
             return "the method is not resolved";
         }
-        if (method.isNative() && (!GraalOptions.intrinsify || !InliningUtil.canIntrinsify(context.getReplacements(), method, invokeBci)))
+        if (__method.isNative() && (!GraalOptions.intrinsify || !InliningUtil.canIntrinsify(context.getReplacements(), __method, __invokeBci)))
         {
             return "it is a non-intrinsic native method";
         }
-        if (method.isAbstract())
+        if (__method.isAbstract())
         {
             return "it is an abstract method";
         }
-        if (!method.getDeclaringClass().isInitialized())
+        if (!__method.getDeclaringClass().isInitialized())
         {
             return "the method's class is not initialized";
         }
-        if (!method.canBeInlined())
+        if (!__method.canBeInlined())
         {
             return "it is marked non-inlinable";
         }
-        if (countRecursiveInlining(method) > GraalOptions.maximumRecursiveInlining)
+        if (countRecursiveInlining(__method) > GraalOptions.maximumRecursiveInlining)
         {
             return "it exceeds the maximum recursive inlining depth";
         }
-        if (new OptimisticOptimizations(rootGraph.getProfilingInfo(method)).lessOptimisticThan(context.getOptimisticOptimizations()))
+        if (new OptimisticOptimizations(rootGraph.getProfilingInfo(__method)).lessOptimisticThan(context.getOptimisticOptimizations()))
         {
             return "the callee uses less optimistic optimizations than caller";
         }
         return null;
     }
 
-    private boolean checkTargetConditions(Invoke invoke, ResolvedJavaMethod method)
+    private boolean checkTargetConditions(Invoke __invoke, ResolvedJavaMethod __method)
     {
-        final String failureMessage = checkTargetConditionsHelper(method, invoke.bci());
-        if (failureMessage == null)
+        final String __failureMessage = checkTargetConditionsHelper(__method, __invoke.bci());
+        if (__failureMessage == null)
         {
             return true;
         }
@@ -153,138 +161,138 @@ public final class InliningData
      * @param invoke the invoke that should be inlined
      * @return an instance of InlineInfo, or null if no inlining is possible at the given invoke
      */
-    private InlineInfo getInlineInfo(Invoke invoke)
+    private InlineInfo getInlineInfo(Invoke __invoke)
     {
-        final String failureMessage = InliningUtil.checkInvokeConditions(invoke);
-        if (failureMessage != null)
+        final String __failureMessage = InliningUtil.checkInvokeConditions(__invoke);
+        if (__failureMessage != null)
         {
             return null;
         }
-        MethodCallTargetNode callTarget = (MethodCallTargetNode) invoke.callTarget();
-        ResolvedJavaMethod targetMethod = callTarget.targetMethod();
+        MethodCallTargetNode __callTarget = (MethodCallTargetNode) __invoke.callTarget();
+        ResolvedJavaMethod __targetMethod = __callTarget.targetMethod();
 
-        if (callTarget.invokeKind() == CallTargetNode.InvokeKind.Special || targetMethod.canBeStaticallyBound())
+        if (__callTarget.invokeKind() == CallTargetNode.InvokeKind.Special || __targetMethod.canBeStaticallyBound())
         {
-            return getExactInlineInfo(invoke, targetMethod);
+            return getExactInlineInfo(__invoke, __targetMethod);
         }
 
-        ResolvedJavaType holder = targetMethod.getDeclaringClass();
-        if (!(callTarget.receiver().stamp(NodeView.DEFAULT) instanceof ObjectStamp))
+        ResolvedJavaType __holder = __targetMethod.getDeclaringClass();
+        if (!(__callTarget.receiver().stamp(NodeView.DEFAULT) instanceof ObjectStamp))
         {
             return null;
         }
-        ObjectStamp receiverStamp = (ObjectStamp) callTarget.receiver().stamp(NodeView.DEFAULT);
-        if (receiverStamp.alwaysNull())
+        ObjectStamp __receiverStamp = (ObjectStamp) __callTarget.receiver().stamp(NodeView.DEFAULT);
+        if (__receiverStamp.alwaysNull())
         {
             // don't inline if receiver is known to be null
             return null;
         }
-        ResolvedJavaType contextType = invoke.getContextType();
-        if (receiverStamp.type() != null)
+        ResolvedJavaType __contextType = __invoke.getContextType();
+        if (__receiverStamp.type() != null)
         {
             // the invoke target might be more specific than the holder (happens after inlining:
             // parameters lose their declared type...)
-            ResolvedJavaType receiverType = receiverStamp.type();
-            if (receiverType != null && holder.isAssignableFrom(receiverType))
+            ResolvedJavaType __receiverType = __receiverStamp.type();
+            if (__receiverType != null && __holder.isAssignableFrom(__receiverType))
             {
-                holder = receiverType;
-                if (receiverStamp.isExactType())
+                __holder = __receiverType;
+                if (__receiverStamp.isExactType())
                 {
-                    ResolvedJavaMethod resolvedMethod = holder.resolveConcreteMethod(targetMethod, contextType);
-                    if (resolvedMethod != null)
+                    ResolvedJavaMethod __resolvedMethod = __holder.resolveConcreteMethod(__targetMethod, __contextType);
+                    if (__resolvedMethod != null)
                     {
-                        return getExactInlineInfo(invoke, resolvedMethod);
+                        return getExactInlineInfo(__invoke, __resolvedMethod);
                     }
                 }
             }
         }
 
-        if (holder.isArray())
+        if (__holder.isArray())
         {
             // arrays can be treated as Objects
-            ResolvedJavaMethod resolvedMethod = holder.resolveConcreteMethod(targetMethod, contextType);
-            if (resolvedMethod != null)
+            ResolvedJavaMethod __resolvedMethod = __holder.resolveConcreteMethod(__targetMethod, __contextType);
+            if (__resolvedMethod != null)
             {
-                return getExactInlineInfo(invoke, resolvedMethod);
+                return getExactInlineInfo(__invoke, __resolvedMethod);
             }
         }
 
-        AssumptionResult<ResolvedJavaType> leafConcreteSubtype = holder.findLeafConcreteSubtype();
-        if (leafConcreteSubtype != null)
+        AssumptionResult<ResolvedJavaType> __leafConcreteSubtype = __holder.findLeafConcreteSubtype();
+        if (__leafConcreteSubtype != null)
         {
-            ResolvedJavaMethod resolvedMethod = leafConcreteSubtype.getResult().resolveConcreteMethod(targetMethod, contextType);
-            if (resolvedMethod != null)
+            ResolvedJavaMethod __resolvedMethod = __leafConcreteSubtype.getResult().resolveConcreteMethod(__targetMethod, __contextType);
+            if (__resolvedMethod != null)
             {
-                if (leafConcreteSubtype.canRecordTo(callTarget.graph().getAssumptions()))
+                if (__leafConcreteSubtype.canRecordTo(__callTarget.graph().getAssumptions()))
                 {
-                    return getAssumptionInlineInfo(invoke, resolvedMethod, leafConcreteSubtype);
+                    return getAssumptionInlineInfo(__invoke, __resolvedMethod, __leafConcreteSubtype);
                 }
                 else
                 {
-                    return getTypeCheckedAssumptionInfo(invoke, resolvedMethod, leafConcreteSubtype.getResult());
+                    return getTypeCheckedAssumptionInfo(__invoke, __resolvedMethod, __leafConcreteSubtype.getResult());
                 }
             }
         }
 
-        AssumptionResult<ResolvedJavaMethod> concrete = holder.findUniqueConcreteMethod(targetMethod);
-        if (concrete != null && concrete.canRecordTo(callTarget.graph().getAssumptions()))
+        AssumptionResult<ResolvedJavaMethod> __concrete = __holder.findUniqueConcreteMethod(__targetMethod);
+        if (__concrete != null && __concrete.canRecordTo(__callTarget.graph().getAssumptions()))
         {
-            return getAssumptionInlineInfo(invoke, concrete.getResult(), concrete);
+            return getAssumptionInlineInfo(__invoke, __concrete.getResult(), __concrete);
         }
 
         // type check based inlining
-        return getTypeCheckedInlineInfo(invoke, targetMethod);
+        return getTypeCheckedInlineInfo(__invoke, __targetMethod);
     }
 
-    private InlineInfo getTypeCheckedAssumptionInfo(Invoke invoke, ResolvedJavaMethod method, ResolvedJavaType type)
+    private InlineInfo getTypeCheckedAssumptionInfo(Invoke __invoke, ResolvedJavaMethod __method, ResolvedJavaType __type)
     {
-        if (!checkTargetConditions(invoke, method))
+        if (!checkTargetConditions(__invoke, __method))
         {
             return null;
         }
-        return new TypeGuardInlineInfo(invoke, method, type);
+        return new TypeGuardInlineInfo(__invoke, __method, __type);
     }
 
-    private InlineInfo getTypeCheckedInlineInfo(Invoke invoke, ResolvedJavaMethod targetMethod)
+    private InlineInfo getTypeCheckedInlineInfo(Invoke __invoke, ResolvedJavaMethod __targetMethod)
     {
-        JavaTypeProfile typeProfile = ((MethodCallTargetNode) invoke.callTarget()).getProfile();
-        if (typeProfile == null)
+        JavaTypeProfile __typeProfile = ((MethodCallTargetNode) __invoke.callTarget()).getProfile();
+        if (__typeProfile == null)
         {
             return null;
         }
 
-        JavaTypeProfile.ProfiledType[] ptypes = typeProfile.getTypes();
-        if (ptypes == null || ptypes.length <= 0)
+        JavaTypeProfile.ProfiledType[] __ptypes = __typeProfile.getTypes();
+        if (__ptypes == null || __ptypes.length <= 0)
         {
             return null;
         }
-        ResolvedJavaType contextType = invoke.getContextType();
-        double notRecordedTypeProbability = typeProfile.getNotRecordedProbability();
-        final OptimisticOptimizations optimisticOpts = context.getOptimisticOptimizations();
-        if (ptypes.length == 1 && notRecordedTypeProbability == 0)
+        ResolvedJavaType __contextType = __invoke.getContextType();
+        double __notRecordedTypeProbability = __typeProfile.getNotRecordedProbability();
+        final OptimisticOptimizations __optimisticOpts = context.getOptimisticOptimizations();
+        if (__ptypes.length == 1 && __notRecordedTypeProbability == 0)
         {
-            if (!optimisticOpts.inlineMonomorphicCalls())
+            if (!__optimisticOpts.inlineMonomorphicCalls())
             {
                 return null;
             }
 
-            ResolvedJavaType type = ptypes[0].getType();
-            ResolvedJavaMethod concrete = type.resolveConcreteMethod(targetMethod, contextType);
-            if (!checkTargetConditions(invoke, concrete))
+            ResolvedJavaType __type = __ptypes[0].getType();
+            ResolvedJavaMethod __concrete = __type.resolveConcreteMethod(__targetMethod, __contextType);
+            if (!checkTargetConditions(__invoke, __concrete))
             {
                 return null;
             }
-            return new TypeGuardInlineInfo(invoke, concrete, type);
+            return new TypeGuardInlineInfo(__invoke, __concrete, __type);
         }
         else
         {
-            invoke.setPolymorphic(true);
+            __invoke.setPolymorphic(true);
 
-            if (!optimisticOpts.inlinePolymorphicCalls() && notRecordedTypeProbability == 0)
+            if (!__optimisticOpts.inlinePolymorphicCalls() && __notRecordedTypeProbability == 0)
             {
                 return null;
             }
-            if (!optimisticOpts.inlineMegamorphicCalls() && notRecordedTypeProbability > 0)
+            if (!__optimisticOpts.inlineMegamorphicCalls() && __notRecordedTypeProbability > 0)
             {
                 // due to filtering impossible types, notRecordedTypeProbability can be > 0 although
                 // the number of types is lower than what can be recorded in a type profile
@@ -292,144 +300,144 @@ public final class InliningData
             }
 
             // Find unique methods and their probabilities.
-            ArrayList<ResolvedJavaMethod> concreteMethods = new ArrayList<>();
-            ArrayList<Double> concreteMethodsProbabilities = new ArrayList<>();
-            for (int i = 0; i < ptypes.length; i++)
+            ArrayList<ResolvedJavaMethod> __concreteMethods = new ArrayList<>();
+            ArrayList<Double> __concreteMethodsProbabilities = new ArrayList<>();
+            for (int __i = 0; __i < __ptypes.length; __i++)
             {
-                ResolvedJavaMethod concrete = ptypes[i].getType().resolveConcreteMethod(targetMethod, contextType);
-                if (concrete == null)
+                ResolvedJavaMethod __concrete = __ptypes[__i].getType().resolveConcreteMethod(__targetMethod, __contextType);
+                if (__concrete == null)
                 {
                     return null;
                 }
-                int index = concreteMethods.indexOf(concrete);
-                double curProbability = ptypes[i].getProbability();
-                if (index < 0)
+                int __index = __concreteMethods.indexOf(__concrete);
+                double __curProbability = __ptypes[__i].getProbability();
+                if (__index < 0)
                 {
-                    index = concreteMethods.size();
-                    concreteMethods.add(concrete);
-                    concreteMethodsProbabilities.add(curProbability);
+                    __index = __concreteMethods.size();
+                    __concreteMethods.add(__concrete);
+                    __concreteMethodsProbabilities.add(__curProbability);
                 }
                 else
                 {
-                    concreteMethodsProbabilities.set(index, concreteMethodsProbabilities.get(index) + curProbability);
+                    __concreteMethodsProbabilities.set(__index, __concreteMethodsProbabilities.get(__index) + __curProbability);
                 }
             }
 
             // Clear methods that fall below the threshold.
-            if (notRecordedTypeProbability > 0)
+            if (__notRecordedTypeProbability > 0)
             {
-                ArrayList<ResolvedJavaMethod> newConcreteMethods = new ArrayList<>();
-                ArrayList<Double> newConcreteMethodsProbabilities = new ArrayList<>();
-                for (int i = 0; i < concreteMethods.size(); ++i)
+                ArrayList<ResolvedJavaMethod> __newConcreteMethods = new ArrayList<>();
+                ArrayList<Double> __newConcreteMethodsProbabilities = new ArrayList<>();
+                for (int __i = 0; __i < __concreteMethods.size(); ++__i)
                 {
-                    if (concreteMethodsProbabilities.get(i) >= GraalOptions.megamorphicInliningMinMethodProbability)
+                    if (__concreteMethodsProbabilities.get(__i) >= GraalOptions.megamorphicInliningMinMethodProbability)
                     {
-                        newConcreteMethods.add(concreteMethods.get(i));
-                        newConcreteMethodsProbabilities.add(concreteMethodsProbabilities.get(i));
+                        __newConcreteMethods.add(__concreteMethods.get(__i));
+                        __newConcreteMethodsProbabilities.add(__concreteMethodsProbabilities.get(__i));
                     }
                 }
 
-                if (newConcreteMethods.isEmpty())
+                if (__newConcreteMethods.isEmpty())
                 {
                     // No method left that is worth inlining.
                     return null;
                 }
 
-                concreteMethods = newConcreteMethods;
-                concreteMethodsProbabilities = newConcreteMethodsProbabilities;
+                __concreteMethods = __newConcreteMethods;
+                __concreteMethodsProbabilities = __newConcreteMethodsProbabilities;
             }
 
-            if (concreteMethods.size() > maxMethodPerInlining)
+            if (__concreteMethods.size() > maxMethodPerInlining)
             {
                 return null;
             }
 
             // Clean out types whose methods are no longer available.
-            ArrayList<JavaTypeProfile.ProfiledType> usedTypes = new ArrayList<>();
-            ArrayList<Integer> typesToConcretes = new ArrayList<>();
-            for (JavaTypeProfile.ProfiledType type : ptypes)
+            ArrayList<JavaTypeProfile.ProfiledType> __usedTypes = new ArrayList<>();
+            ArrayList<Integer> __typesToConcretes = new ArrayList<>();
+            for (JavaTypeProfile.ProfiledType __type : __ptypes)
             {
-                ResolvedJavaMethod concrete = type.getType().resolveConcreteMethod(targetMethod, contextType);
-                int index = concreteMethods.indexOf(concrete);
-                if (index == -1)
+                ResolvedJavaMethod __concrete = __type.getType().resolveConcreteMethod(__targetMethod, __contextType);
+                int __index = __concreteMethods.indexOf(__concrete);
+                if (__index == -1)
                 {
-                    notRecordedTypeProbability += type.getProbability();
+                    __notRecordedTypeProbability += __type.getProbability();
                 }
                 else
                 {
-                    usedTypes.add(type);
-                    typesToConcretes.add(index);
+                    __usedTypes.add(__type);
+                    __typesToConcretes.add(__index);
                 }
             }
 
-            if (usedTypes.isEmpty())
+            if (__usedTypes.isEmpty())
             {
                 // No type left that is worth checking for.
                 return null;
             }
 
-            for (ResolvedJavaMethod concrete : concreteMethods)
+            for (ResolvedJavaMethod __concrete : __concreteMethods)
             {
-                if (!checkTargetConditions(invoke, concrete))
+                if (!checkTargetConditions(__invoke, __concrete))
                 {
                     return null;
                 }
             }
-            return new MultiTypeGuardInlineInfo(invoke, concreteMethods, usedTypes, typesToConcretes, notRecordedTypeProbability);
+            return new MultiTypeGuardInlineInfo(__invoke, __concreteMethods, __usedTypes, __typesToConcretes, __notRecordedTypeProbability);
         }
     }
 
-    private InlineInfo getAssumptionInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, AssumptionResult<?> takenAssumption)
+    private InlineInfo getAssumptionInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete, AssumptionResult<?> __takenAssumption)
     {
-        if (checkTargetConditions(invoke, concrete))
+        if (checkTargetConditions(__invoke, __concrete))
         {
-            return new AssumptionInlineInfo(invoke, concrete, takenAssumption);
+            return new AssumptionInlineInfo(__invoke, __concrete, __takenAssumption);
         }
         return null;
     }
 
-    private InlineInfo getExactInlineInfo(Invoke invoke, ResolvedJavaMethod targetMethod)
+    private InlineInfo getExactInlineInfo(Invoke __invoke, ResolvedJavaMethod __targetMethod)
     {
-        if (checkTargetConditions(invoke, targetMethod))
+        if (checkTargetConditions(__invoke, __targetMethod))
         {
-            return new ExactInlineInfo(invoke, targetMethod);
+            return new ExactInlineInfo(__invoke, __targetMethod);
         }
         return null;
     }
 
-    private void doInline(CallsiteHolderExplorable callerCallsiteHolder, MethodInvocation calleeInvocation, String reason)
+    private void doInline(CallsiteHolderExplorable __callerCallsiteHolder, MethodInvocation __calleeInvocation, String __reason)
     {
-        StructuredGraph callerGraph = callerCallsiteHolder.graph();
-        InlineInfo calleeInfo = calleeInvocation.callee();
+        StructuredGraph __callerGraph = __callerCallsiteHolder.graph();
+        InlineInfo __calleeInfo = __calleeInvocation.callee();
         try
         {
-            EconomicSet<Node> canonicalizedNodes = EconomicSet.create(Equivalence.IDENTITY);
-            canonicalizedNodes.addAll(calleeInfo.invoke().asNode().usages());
-            EconomicSet<Node> parameterUsages = calleeInfo.inline(new Providers(context), reason);
-            canonicalizedNodes.addAll(parameterUsages);
+            EconomicSet<Node> __canonicalizedNodes = EconomicSet.create(Equivalence.IDENTITY);
+            __canonicalizedNodes.addAll(__calleeInfo.invoke().asNode().usages());
+            EconomicSet<Node> __parameterUsages = __calleeInfo.inline(new Providers(context), __reason);
+            __canonicalizedNodes.addAll(__parameterUsages);
 
-            Graph.Mark markBeforeCanonicalization = callerGraph.getMark();
+            Graph.Mark __markBeforeCanonicalization = __callerGraph.getMark();
 
-            canonicalizer.applyIncremental(callerGraph, context, canonicalizedNodes);
+            canonicalizer.applyIncremental(__callerGraph, context, __canonicalizedNodes);
 
             // process invokes that are possibly created during canonicalization
-            for (Node newNode : callerGraph.getNewNodes(markBeforeCanonicalization))
+            for (Node __newNode : __callerGraph.getNewNodes(__markBeforeCanonicalization))
             {
-                if (newNode instanceof Invoke)
+                if (__newNode instanceof Invoke)
                 {
-                    callerCallsiteHolder.pushInvoke((Invoke) newNode);
+                    __callerCallsiteHolder.pushInvoke((Invoke) __newNode);
                 }
             }
 
-            callerCallsiteHolder.computeProbabilities();
+            __callerCallsiteHolder.computeProbabilities();
         }
-        catch (BailoutException bailout)
+        catch (BailoutException __bailout)
         {
-            throw bailout;
+            throw __bailout;
         }
-        catch (AssertionError | RuntimeException e)
+        catch (AssertionError | RuntimeException __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
     }
 
@@ -443,21 +451,21 @@ public final class InliningData
      *
      * @return true iff inlining was actually performed
      */
-    private boolean tryToInline(MethodInvocation calleeInvocation, int inliningDepth)
+    private boolean tryToInline(MethodInvocation __calleeInvocation, int __inliningDepth)
     {
-        CallsiteHolderExplorable callerCallsiteHolder = (CallsiteHolderExplorable) currentGraph();
-        InlineInfo calleeInfo = calleeInvocation.callee();
+        CallsiteHolderExplorable __callerCallsiteHolder = (CallsiteHolderExplorable) currentGraph();
+        InlineInfo __calleeInfo = __calleeInvocation.callee();
 
-        InliningPolicy.Decision decision = inliningPolicy.isWorthInlining(context.getReplacements(), calleeInvocation, inliningDepth, true);
-        if (decision.shouldInline)
+        InliningPolicy.Decision __decision = inliningPolicy.isWorthInlining(context.getReplacements(), __calleeInvocation, __inliningDepth, true);
+        if (__decision.shouldInline)
         {
-            doInline(callerCallsiteHolder, calleeInvocation, decision.reason);
+            doInline(__callerCallsiteHolder, __calleeInvocation, __decision.reason);
             return true;
         }
 
         if (context.getOptimisticOptimizations().devirtualizeInvokes())
         {
-            calleeInfo.tryToDevirtualizeInvoke(new Providers(context));
+            __calleeInfo.tryToDevirtualizeInvoke(new Providers(context));
         }
 
         return false;
@@ -484,17 +492,17 @@ public final class InliningData
      */
     private void processNextInvoke()
     {
-        CallsiteHolderExplorable callsiteHolder = (CallsiteHolderExplorable) currentGraph();
-        Invoke invoke = callsiteHolder.popInvoke();
-        InlineInfo info = getInlineInfo(invoke);
+        CallsiteHolderExplorable __callsiteHolder = (CallsiteHolderExplorable) currentGraph();
+        Invoke __invoke = __callsiteHolder.popInvoke();
+        InlineInfo __info = getInlineInfo(__invoke);
 
-        if (info != null)
+        if (__info != null)
         {
-            info.populateInlinableElements(context, currentGraph().graph(), canonicalizer);
-            double invokeProbability = callsiteHolder.invokeProbability(invoke);
-            double invokeRelevance = callsiteHolder.invokeRelevance(invoke);
-            MethodInvocation methodInvocation = new MethodInvocation(info, invokeProbability, invokeRelevance, freshlyInstantiatedArguments(invoke, callsiteHolder.getFixedParams()));
-            pushInvocationAndGraphs(methodInvocation);
+            __info.populateInlinableElements(context, currentGraph().graph(), canonicalizer);
+            double __invokeProbability = __callsiteHolder.invokeProbability(__invoke);
+            double __invokeRelevance = __callsiteHolder.invokeRelevance(__invoke);
+            MethodInvocation __methodInvocation = new MethodInvocation(__info, __invokeProbability, __invokeRelevance, freshlyInstantiatedArguments(__invoke, __callsiteHolder.getFixedParams()));
+            pushInvocationAndGraphs(__methodInvocation);
         }
     }
 
@@ -509,34 +517,34 @@ public final class InliningData
      * @return the positions of freshly instantiated arguments in the argument list of the
      *         <code>invoke</code>, or null if no such positions exist.
      */
-    public static BitSet freshlyInstantiatedArguments(Invoke invoke, EconomicSet<ParameterNode> fixedParams)
+    public static BitSet freshlyInstantiatedArguments(Invoke __invoke, EconomicSet<ParameterNode> __fixedParams)
     {
-        BitSet result = null;
-        int argIdx = 0;
-        for (ValueNode arg : invoke.callTarget().arguments())
+        BitSet __result = null;
+        int __argIdx = 0;
+        for (ValueNode __arg : __invoke.callTarget().arguments())
         {
-            if (isFreshInstantiation(arg) || (arg instanceof ParameterNode && fixedParams.contains((ParameterNode) arg)))
+            if (isFreshInstantiation(__arg) || (__arg instanceof ParameterNode && __fixedParams.contains((ParameterNode) __arg)))
             {
-                if (result == null)
+                if (__result == null)
                 {
-                    result = new BitSet();
+                    __result = new BitSet();
                 }
-                result.set(argIdx);
+                __result.set(__argIdx);
             }
-            argIdx++;
+            __argIdx++;
         }
-        return result;
+        return __result;
     }
 
-    private static boolean paramsAndInvokeAreInSameGraph(Invoke invoke, EconomicSet<ParameterNode> fixedParams)
+    private static boolean paramsAndInvokeAreInSameGraph(Invoke __invoke, EconomicSet<ParameterNode> __fixedParams)
     {
-        if (fixedParams.isEmpty())
+        if (__fixedParams.isEmpty())
         {
             return true;
         }
-        for (ParameterNode p : fixedParams)
+        for (ParameterNode __p : __fixedParams)
         {
-            if (p.graph() != invoke.asNode().graph())
+            if (__p.graph() != __invoke.asNode().graph())
             {
                 return false;
             }
@@ -564,14 +572,15 @@ public final class InliningData
         graphQueue.pop();
     }
 
-    private void popGraphs(int count)
+    private void popGraphs(int __count)
     {
-        for (int i = 0; i < count; i++)
+        for (int __i = 0; __i < __count; __i++)
         {
             graphQueue.pop();
         }
     }
 
+    // @def
     private static final Object[] NO_CONTEXT = {};
 
     private MethodInvocation currentInvocation()
@@ -579,15 +588,15 @@ public final class InliningData
         return invocationQueue.peekFirst();
     }
 
-    private void pushInvocationAndGraphs(MethodInvocation methodInvocation)
+    private void pushInvocationAndGraphs(MethodInvocation __methodInvocation)
     {
-        invocationQueue.addFirst(methodInvocation);
-        InlineInfo info = methodInvocation.callee();
-        maxGraphs += info.numberOfMethods();
-        for (int i = 0; i < info.numberOfMethods(); i++)
+        invocationQueue.addFirst(__methodInvocation);
+        InlineInfo __info = __methodInvocation.callee();
+        maxGraphs += __info.numberOfMethods();
+        for (int __i = 0; __i < __info.numberOfMethods(); __i++)
         {
-            CallsiteHolder ch = methodInvocation.buildCallsiteHolderForElement(i);
-            graphQueue.push(ch);
+            CallsiteHolder __ch = __methodInvocation.buildCallsiteHolderForElement(__i);
+            graphQueue.push(__ch);
         }
     }
 
@@ -597,17 +606,17 @@ public final class InliningData
         invocationQueue.removeFirst();
     }
 
-    public int countRecursiveInlining(ResolvedJavaMethod method)
+    public int countRecursiveInlining(ResolvedJavaMethod __method)
     {
-        int count = 0;
-        for (CallsiteHolder callsiteHolder : graphQueue)
+        int __count = 0;
+        for (CallsiteHolder __callsiteHolder : graphQueue)
         {
-            if (method.equals(callsiteHolder.method()))
+            if (__method.equals(__callsiteHolder.method()))
             {
-                count++;
+                __count++;
             }
         }
-        return count;
+        return __count;
     }
 
     public int inliningDepth()
@@ -615,11 +624,11 @@ public final class InliningData
         return invocationQueue.size() - 1;
     }
 
-    private boolean contains(StructuredGraph graph)
+    private boolean contains(StructuredGraph __graph)
     {
-        for (CallsiteHolder info : graphQueue)
+        for (CallsiteHolder __info : graphQueue)
         {
-            if (info.graph() == graph)
+            if (__info.graph() == __graph)
             {
                 return true;
             }
@@ -662,40 +671,40 @@ public final class InliningData
      */
     public boolean moveForward()
     {
-        final MethodInvocation currentInvocation = currentInvocation();
+        final MethodInvocation __currentInvocation = currentInvocation();
 
-        final boolean backtrack = (!currentInvocation.isRoot() && !inliningPolicy.isWorthInlining(context.getReplacements(), currentInvocation, inliningDepth(), false).shouldInline);
-        if (backtrack)
+        final boolean __backtrack = (!__currentInvocation.isRoot() && !inliningPolicy.isWorthInlining(context.getReplacements(), __currentInvocation, inliningDepth(), false).shouldInline);
+        if (__backtrack)
         {
-            int remainingGraphs = currentInvocation.totalGraphs() - currentInvocation.processedGraphs();
-            popGraphs(remainingGraphs);
+            int __remainingGraphs = __currentInvocation.totalGraphs() - __currentInvocation.processedGraphs();
+            popGraphs(__remainingGraphs);
             popInvocation();
             return false;
         }
 
-        final boolean delve = currentGraph().hasRemainingInvokes() && inliningPolicy.continueInlining(currentGraph().graph());
-        if (delve)
+        final boolean __delve = currentGraph().hasRemainingInvokes() && inliningPolicy.continueInlining(currentGraph().graph());
+        if (__delve)
         {
             processNextInvoke();
             return false;
         }
 
         popGraph();
-        if (currentInvocation.isRoot())
+        if (__currentInvocation.isRoot())
         {
             return false;
         }
 
         // try to inline
-        currentInvocation.incrementProcessedGraphs();
-        if (currentInvocation.processedGraphs() == currentInvocation.totalGraphs())
+        __currentInvocation.incrementProcessedGraphs();
+        if (__currentInvocation.processedGraphs() == __currentInvocation.totalGraphs())
         {
             /*
              * "all of currentInvocation's graphs processed" amounts to
              * "all concrete methods that come into question already had the callees they contain analyzed for inlining"
              */
             popInvocation();
-            if (tryToInline(currentInvocation, inliningDepth() + 1))
+            if (tryToInline(__currentInvocation, inliningDepth() + 1))
             {
                 // report real progress only if we inline into the root graph
                 return currentGraph().graph() == rootGraph;
@@ -721,17 +730,17 @@ public final class InliningData
         {
             return true;
         }
-        final int remainingGraphs = currentInvocation().totalGraphs() - currentInvocation().processedGraphs();
-        final Iterator<CallsiteHolder> iter = graphQueue.iterator();
-        for (int i = (remainingGraphs - 1); i >= 0; i--)
+        final int __remainingGraphs = currentInvocation().totalGraphs() - currentInvocation().processedGraphs();
+        final Iterator<CallsiteHolder> __iter = graphQueue.iterator();
+        for (int __i = (__remainingGraphs - 1); __i >= 0; __i--)
         {
-            if (!iter.hasNext())
+            if (!__iter.hasNext())
             {
                 return false;
             }
-            CallsiteHolder queuedTargetCH = iter.next();
-            Inlineable targetIE = currentInvocation().callee().inlineableElementAt(i);
-            InlineableGraph targetIG = (InlineableGraph) targetIE;
+            CallsiteHolder __queuedTargetCH = __iter.next();
+            Inlineable __targetIE = currentInvocation().callee().inlineableElementAt(__i);
+            InlineableGraph __targetIG = (InlineableGraph) __targetIE;
         }
         return true;
     }

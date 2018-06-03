@@ -6,21 +6,22 @@ import giraaff.nodes.FixedNode;
 // @class LoopFragmentInsideFrom
 public final class LoopFragmentInsideFrom extends LoopFragmentInside
 {
+    // @field
     private final FixedNode point;
 
     // @cons
-    public LoopFragmentInsideFrom(LoopEx loop, FixedNode point)
+    public LoopFragmentInsideFrom(LoopEx __loop, FixedNode __point)
     {
-        super(loop);
-        this.point = point;
+        super(__loop);
+        this.point = __point;
     }
 
     // duplicates lazily
     // @cons
-    public LoopFragmentInsideFrom(LoopFragmentInsideFrom original)
+    public LoopFragmentInsideFrom(LoopFragmentInsideFrom __original)
     {
-        super(original);
-        this.point = original.point();
+        super(__original);
+        this.point = __original.point();
     }
 
     public FixedNode point()

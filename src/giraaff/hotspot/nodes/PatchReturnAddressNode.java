@@ -15,21 +15,24 @@ import giraaff.word.Word;
 // @class PatchReturnAddressNode
 public final class PatchReturnAddressNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<PatchReturnAddressNode> TYPE = NodeClass.create(PatchReturnAddressNode.class);
 
-    @Input ValueNode address;
+    @Input
+    // @field
+    ValueNode address;
 
     // @cons
-    public PatchReturnAddressNode(ValueNode address)
+    public PatchReturnAddressNode(ValueNode __address)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = address;
+        this.address = __address;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        ((HotSpotNodeLIRBuilder) gen).emitPatchReturnAddress(address);
+        ((HotSpotNodeLIRBuilder) __gen).emitPatchReturnAddress(address);
     }
 
     @NodeIntrinsic

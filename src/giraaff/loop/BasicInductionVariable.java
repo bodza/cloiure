@@ -19,19 +19,23 @@ import giraaff.util.GraalError;
 // @class BasicInductionVariable
 public final class BasicInductionVariable extends InductionVariable
 {
+    // @field
     private final ValuePhiNode phi;
+    // @field
     private final ValueNode init;
+    // @field
     private ValueNode rawStride;
+    // @field
     private BinaryArithmeticNode<?> op;
 
     // @cons
-    public BasicInductionVariable(LoopEx loop, ValuePhiNode phi, ValueNode init, ValueNode rawStride, BinaryArithmeticNode<?> op)
+    public BasicInductionVariable(LoopEx __loop, ValuePhiNode __phi, ValueNode __init, ValueNode __rawStride, BinaryArithmeticNode<?> __op)
     {
-        super(loop);
-        this.phi = phi;
-        this.init = init;
-        this.rawStride = rawStride;
-        this.op = op;
+        super(__loop);
+        this.phi = __phi;
+        this.init = __init;
+        this.rawStride = __rawStride;
+        this.op = __op;
     }
 
     @Override
@@ -45,37 +49,37 @@ public final class BasicInductionVariable extends InductionVariable
         return op;
     }
 
-    public void setOP(BinaryArithmeticNode<?> newOp)
+    public void setOP(BinaryArithmeticNode<?> __newOp)
     {
-        rawStride = newOp.getY();
-        op = newOp;
+        rawStride = __newOp.getY();
+        op = __newOp;
     }
 
     @Override
     public Direction direction()
     {
-        Stamp stamp = rawStride.stamp(NodeView.DEFAULT);
-        if (stamp instanceof IntegerStamp)
+        Stamp __stamp = rawStride.stamp(NodeView.DEFAULT);
+        if (__stamp instanceof IntegerStamp)
         {
-            IntegerStamp integerStamp = (IntegerStamp) stamp;
-            Direction dir = null;
-            if (integerStamp.isStrictlyPositive())
+            IntegerStamp __integerStamp = (IntegerStamp) __stamp;
+            Direction __dir = null;
+            if (__integerStamp.isStrictlyPositive())
             {
-                dir = Direction.Up;
+                __dir = Direction.Up;
             }
-            else if (integerStamp.isStrictlyNegative())
+            else if (__integerStamp.isStrictlyNegative())
             {
-                dir = Direction.Down;
+                __dir = Direction.Down;
             }
-            if (dir != null)
+            if (__dir != null)
             {
                 if (op instanceof AddNode)
                 {
-                    return dir;
+                    return __dir;
                 }
                 else
                 {
-                    return dir.opposite();
+                    return __dir.opposite();
                 }
             }
         }
@@ -141,35 +145,35 @@ public final class BasicInductionVariable extends InductionVariable
     }
 
     @Override
-    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp stamp)
+    public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __stamp)
     {
-        Stamp fromStamp = phi.stamp(NodeView.DEFAULT);
-        StructuredGraph graph = graph();
-        ValueNode stride = strideNode();
-        ValueNode initNode = this.initNode();
-        if (!fromStamp.isCompatible(stamp))
+        Stamp __fromStamp = phi.stamp(NodeView.DEFAULT);
+        StructuredGraph __graph = graph();
+        ValueNode __stride = strideNode();
+        ValueNode __initNode = this.initNode();
+        if (!__fromStamp.isCompatible(__stamp))
         {
-            stride = IntegerConvertNode.convert(stride, stamp, graph(), NodeView.DEFAULT);
-            initNode = IntegerConvertNode.convert(initNode, stamp, graph(), NodeView.DEFAULT);
+            __stride = IntegerConvertNode.convert(__stride, __stamp, graph(), NodeView.DEFAULT);
+            __initNode = IntegerConvertNode.convert(__initNode, __stamp, graph(), NodeView.DEFAULT);
         }
-        ValueNode maxTripCount = loop.counted().maxTripCountNode(assumePositiveTripCount);
-        if (!maxTripCount.stamp(NodeView.DEFAULT).isCompatible(stamp))
+        ValueNode __maxTripCount = loop.counted().maxTripCountNode(__assumePositiveTripCount);
+        if (!__maxTripCount.stamp(NodeView.DEFAULT).isCompatible(__stamp))
         {
-            maxTripCount = IntegerConvertNode.convert(maxTripCount, stamp, graph(), NodeView.DEFAULT);
+            __maxTripCount = IntegerConvertNode.convert(__maxTripCount, __stamp, graph(), NodeView.DEFAULT);
         }
-        return MathUtil.add(graph, MathUtil.mul(graph, stride, MathUtil.sub(graph, maxTripCount, ConstantNode.forIntegerStamp(stamp, 1, graph))), initNode);
+        return MathUtil.add(__graph, MathUtil.mul(__graph, __stride, MathUtil.sub(__graph, __maxTripCount, ConstantNode.forIntegerStamp(__stamp, 1, __graph))), __initNode);
     }
 
     @Override
     public ValueNode exitValueNode()
     {
-        Stamp stamp = phi.stamp(NodeView.DEFAULT);
-        ValueNode maxTripCount = loop.counted().maxTripCountNode();
-        if (!maxTripCount.stamp(NodeView.DEFAULT).isCompatible(stamp))
+        Stamp __stamp = phi.stamp(NodeView.DEFAULT);
+        ValueNode __maxTripCount = loop.counted().maxTripCountNode();
+        if (!__maxTripCount.stamp(NodeView.DEFAULT).isCompatible(__stamp))
         {
-            maxTripCount = IntegerConvertNode.convert(maxTripCount, stamp, graph(), NodeView.DEFAULT);
+            __maxTripCount = IntegerConvertNode.convert(__maxTripCount, __stamp, graph(), NodeView.DEFAULT);
         }
-        return MathUtil.add(graph(), MathUtil.mul(graph(), strideNode(), maxTripCount), initNode());
+        return MathUtil.add(graph(), MathUtil.mul(graph(), strideNode(), __maxTripCount), initNode());
     }
 
     @Override
@@ -181,12 +185,12 @@ public final class BasicInductionVariable extends InductionVariable
     @Override
     public long constantExtremum()
     {
-        UnsignedLong tripCount = loop.counted().constantMaxTripCount();
-        if (tripCount.isLessThan(1))
+        UnsignedLong __tripCount = loop.counted().constantMaxTripCount();
+        if (__tripCount.isLessThan(1))
         {
             return constantInit();
         }
-        return tripCount.minus(1).wrappingTimes(constantStride()).wrappingPlus(constantInit()).asLong();
+        return __tripCount.minus(1).wrappingTimes(constantStride()).wrappingPlus(constantInit()).asLong();
     }
 
     @Override

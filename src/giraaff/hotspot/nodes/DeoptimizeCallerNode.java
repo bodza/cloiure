@@ -16,23 +16,26 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class DeoptimizeCallerNode
 public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<DeoptimizeCallerNode> TYPE = NodeClass.create(DeoptimizeCallerNode.class);
 
+    // @field
     protected final DeoptimizationAction action;
+    // @field
     protected final DeoptimizationReason reason;
 
     // @cons
-    public DeoptimizeCallerNode(DeoptimizationAction action, DeoptimizationReason reason)
+    public DeoptimizeCallerNode(DeoptimizationAction __action, DeoptimizationReason __reason)
     {
         super(TYPE, StampFactory.forVoid());
-        this.action = action;
-        this.reason = reason;
+        this.action = __action;
+        this.reason = __reason;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitDeoptimizeCaller(action, reason);
+        ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitDeoptimizeCaller(action, reason);
     }
 
     @NodeIntrinsic

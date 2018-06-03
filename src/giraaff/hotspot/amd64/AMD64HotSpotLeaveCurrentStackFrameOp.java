@@ -22,39 +22,41 @@ import giraaff.lir.framemap.FrameMap;
 // @class AMD64HotSpotLeaveCurrentStackFrameOp
 final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotLeaveCurrentStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveCurrentStackFrameOp.class);
 
+    // @field
     private final SaveRegistersOp saveRegisterOp;
 
     // @cons
-    AMD64HotSpotLeaveCurrentStackFrameOp(SaveRegistersOp saveRegisterOp)
+    AMD64HotSpotLeaveCurrentStackFrameOp(SaveRegistersOp __saveRegisterOp)
     {
         super(TYPE);
-        this.saveRegisterOp = saveRegisterOp;
+        this.saveRegisterOp = __saveRegisterOp;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        FrameMap frameMap = crb.frameMap;
-        RegisterConfig registerConfig = frameMap.getRegisterConfig();
-        RegisterSaveLayout registerSaveLayout = saveRegisterOp.getMap(frameMap);
-        Register stackPointer = registerConfig.getFrameRegister();
+        FrameMap __frameMap = __crb.frameMap;
+        RegisterConfig __registerConfig = __frameMap.getRegisterConfig();
+        RegisterSaveLayout __registerSaveLayout = saveRegisterOp.getMap(__frameMap);
+        Register __stackPointer = __registerConfig.getFrameRegister();
 
         // Restore integer result register.
-        final int stackSlotSize = frameMap.getTarget().wordSize;
-        Register integerResultRegister = registerConfig.getReturnRegister(JavaKind.Long);
-        masm.movptr(integerResultRegister, new AMD64Address(stackPointer, registerSaveLayout.registerToSlot(integerResultRegister) * stackSlotSize));
-        masm.movptr(AMD64.rdx, new AMD64Address(stackPointer, registerSaveLayout.registerToSlot(AMD64.rdx) * stackSlotSize));
+        final int __stackSlotSize = __frameMap.getTarget().wordSize;
+        Register __integerResultRegister = __registerConfig.getReturnRegister(JavaKind.Long);
+        __masm.movptr(__integerResultRegister, new AMD64Address(__stackPointer, __registerSaveLayout.registerToSlot(__integerResultRegister) * __stackSlotSize));
+        __masm.movptr(AMD64.rdx, new AMD64Address(__stackPointer, __registerSaveLayout.registerToSlot(AMD64.rdx) * __stackSlotSize));
 
         // Restore float result register.
-        Register floatResultRegister = registerConfig.getReturnRegister(JavaKind.Double);
-        masm.movdbl(floatResultRegister, new AMD64Address(stackPointer, registerSaveLayout.registerToSlot(floatResultRegister) * stackSlotSize));
+        Register __floatResultRegister = __registerConfig.getReturnRegister(JavaKind.Double);
+        __masm.movdbl(__floatResultRegister, new AMD64Address(__stackPointer, __registerSaveLayout.registerToSlot(__floatResultRegister) * __stackSlotSize));
 
         // All of the register save area will be popped of the stack. Only the return address remains.
-        leaveFrameAndRestoreRbp(crb, masm);
+        leaveFrameAndRestoreRbp(__crb, __masm);
 
         // Remove return address.
-        masm.addq(stackPointer, crb.target.arch.getReturnAddressSize());
+        __masm.addq(__stackPointer, __crb.target.arch.getReturnAddressSize());
     }
 }

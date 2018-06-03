@@ -20,56 +20,56 @@ import giraaff.lir.ssa.SSAUtil;
 public final class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetimeAnalysisPhase
 {
     // @cons
-    SSALinearScanLifetimeAnalysisPhase(LinearScan linearScan)
+    SSALinearScanLifetimeAnalysisPhase(LinearScan __linearScan)
     {
-        super(linearScan);
+        super(__linearScan);
     }
 
     @Override
-    protected void addRegisterHint(final LIRInstruction op, final Value targetValue, OperandMode mode, EnumSet<OperandFlag> flags, final boolean hintAtDef)
+    protected void addRegisterHint(final LIRInstruction __op, final Value __targetValue, OperandMode __mode, EnumSet<OperandFlag> __flags, final boolean __hintAtDef)
     {
-        super.addRegisterHint(op, targetValue, mode, flags, hintAtDef);
+        super.addRegisterHint(__op, __targetValue, __mode, __flags, __hintAtDef);
 
-        if (hintAtDef && op instanceof LabelOp)
+        if (__hintAtDef && __op instanceof LabelOp)
         {
-            LabelOp label = (LabelOp) op;
+            LabelOp __label = (LabelOp) __op;
 
-            Interval to = allocator.getOrCreateInterval((AllocatableValue) targetValue);
+            Interval __to = allocator.getOrCreateInterval((AllocatableValue) __targetValue);
 
-            SSAUtil.forEachPhiRegisterHint(allocator.getLIR(), allocator.blockForId(label.id()), label, targetValue, mode, (ValueConsumer) (registerHint, valueMode, valueFlags) ->
+            SSAUtil.forEachPhiRegisterHint(allocator.getLIR(), allocator.blockForId(__label.id()), __label, __targetValue, __mode, (ValueConsumer) (__registerHint, __valueMode, __valueFlags) ->
             {
-                if (LinearScan.isVariableOrRegister(registerHint))
+                if (LinearScan.isVariableOrRegister(__registerHint))
                 {
-                    Interval from = allocator.getOrCreateInterval((AllocatableValue) registerHint);
+                    Interval __from = allocator.getOrCreateInterval((AllocatableValue) __registerHint);
 
-                    setHint(op, to, from);
-                    setHint(op, from, to);
+                    setHint(__op, __to, __from);
+                    setHint(__op, __from, __to);
                 }
             });
         }
     }
 
-    public static void setHint(final LIRInstruction op, Interval target, Interval source)
+    public static void setHint(final LIRInstruction __op, Interval __target, Interval __source)
     {
-        Interval currentHint = target.locationHint(false);
-        if (currentHint == null || currentHint.from() > target.from())
+        Interval __currentHint = __target.locationHint(false);
+        if (__currentHint == null || __currentHint.from() > __target.from())
         {
             // Update hint if there was none or if the hint interval starts after the hinted interval.
-            target.setLocationHint(source);
+            __target.setLocationHint(__source);
         }
     }
 
     @Override
-    protected RegisterPriority registerPriorityOfOutputOperand(LIRInstruction op)
+    protected RegisterPriority registerPriorityOfOutputOperand(LIRInstruction __op)
     {
-        if (op instanceof LabelOp)
+        if (__op instanceof LabelOp)
         {
-            LabelOp label = (LabelOp) op;
-            if (label.isPhiIn())
+            LabelOp __label = (LabelOp) __op;
+            if (__label.isPhiIn())
             {
                 return RegisterPriority.None;
             }
         }
-        return super.registerPriorityOfOutputOperand(op);
+        return super.registerPriorityOfOutputOperand(__op);
     }
 }

@@ -19,7 +19,7 @@ public final class InferStamps
      * the canonicalizer. For example, word type rewriting must run before the first run of the
      * canonicalizer because many nodes are not prepared to see the word type during canonicalization.
      */
-    public static void inferStamps(StructuredGraph graph)
+    public static void inferStamps(StructuredGraph __graph)
     {
         /*
          * We want to make the stamps more precise. For cyclic phi functions, this means we have to
@@ -27,42 +27,42 @@ public final class InferStamps
          * cycle. We therefore set the stamp to an illegal stamp, which is automatically ignored
          * when the phi function performs the "meet" operator on its input stamps.
          */
-        for (Node n : graph.getNodes())
+        for (Node __n : __graph.getNodes())
         {
-            if (n instanceof ValuePhiNode)
+            if (__n instanceof ValuePhiNode)
             {
-                ValueNode node = (ValueNode) n;
-                if (node.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
+                ValueNode __node = (ValueNode) __n;
+                if (__node.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
                 {
-                    node.setStamp(node.stamp(NodeView.DEFAULT).empty());
+                    __node.setStamp(__node.stamp(NodeView.DEFAULT).empty());
                 }
             }
         }
 
-        boolean stampChanged;
+        boolean __stampChanged;
         // The algorithm is not guaranteed to reach a stable state.
-        int z = 0;
+        int __z = 0;
         do
         {
-            stampChanged = false;
+            __stampChanged = false;
             /*
              * We could use GraphOrder.forwardGraph() to process the nodes in a defined order and
              * propagate long def-use chains in fewer iterations. However, measurements showed that
              * we have few iterations anyway, and the overhead of computing the order is much higher
              * than the benefit.
              */
-            for (Node n : graph.getNodes())
+            for (Node __n : __graph.getNodes())
             {
-                if (n instanceof ValueNode)
+                if (__n instanceof ValueNode)
                 {
-                    ValueNode node = (ValueNode) n;
-                    if (node.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
+                    ValueNode __node = (ValueNode) __n;
+                    if (__node.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
                     {
-                        stampChanged |= node.inferStamp();
+                        __stampChanged |= __node.inferStamp();
                     }
                 }
             }
-            ++z;
-        } while (stampChanged && z < 10000);
+            ++__z;
+        } while (__stampChanged && __z < 10000);
     }
 }

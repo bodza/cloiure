@@ -16,23 +16,24 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class VirtualizableInvokeMacroNode
 public final class VirtualizableInvokeMacroNode extends MacroStateSplitNode implements Virtualizable
 {
+    // @def
     public static final NodeClass<VirtualizableInvokeMacroNode> TYPE = NodeClass.create(VirtualizableInvokeMacroNode.class);
 
     // @cons
-    public VirtualizableInvokeMacroNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    public VirtualizableInvokeMacroNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
-        super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);
+        super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        for (ValueNode arg : arguments)
+        for (ValueNode __arg : arguments)
         {
-            ValueNode alias = tool.getAlias(arg);
-            if (alias instanceof VirtualObjectNode)
+            ValueNode __alias = __tool.getAlias(__arg);
+            if (__alias instanceof VirtualObjectNode)
             {
-                tool.delete();
+                __tool.delete();
             }
         }
     }

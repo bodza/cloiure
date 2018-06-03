@@ -11,22 +11,27 @@ import giraaff.lir.framemap.FrameMapBuilder;
 // @class LIRGenerationResult
 public class LIRGenerationResult
 {
+    // @field
     private final LIR lir;
+    // @field
     private final FrameMapBuilder frameMapBuilder;
+    // @field
     private FrameMap frameMap;
+    // @field
     private final CallingConvention callingConvention;
     /**
      * Records whether the code being generated makes at least one foreign call.
      */
+    // @field
     private boolean hasForeignCall;
 
     // @cons
-    public LIRGenerationResult(LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention)
+    public LIRGenerationResult(LIR __lir, FrameMapBuilder __frameMapBuilder, CallingConvention __callingConvention)
     {
         super();
-        this.lir = lir;
-        this.frameMapBuilder = frameMapBuilder;
-        this.callingConvention = callingConvention;
+        this.lir = __lir;
+        this.frameMapBuilder = __frameMapBuilder;
+        this.callingConvention = __callingConvention;
     }
 
     /**
@@ -87,8 +92,8 @@ public class LIRGenerationResult
         return hasForeignCall;
     }
 
-    public final void setForeignCall(boolean hasForeignCall)
+    public final void setForeignCall(boolean __hasForeignCall)
     {
-        this.hasForeignCall = hasForeignCall;
+        this.hasForeignCall = __hasForeignCall;
     }
 }

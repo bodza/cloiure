@@ -13,6 +13,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class SafepointNode
 public final class SafepointNode extends DeoptimizingFixedWithNextNode implements Lowerable, LIRLowerable
 {
+    // @def
     public static final NodeClass<SafepointNode> TYPE = NodeClass.create(SafepointNode.class);
 
     // @cons
@@ -22,15 +23,15 @@ public final class SafepointNode extends DeoptimizingFixedWithNextNode implement
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.visitSafepointNode(this);
+        __gen.visitSafepointNode(this);
     }
 
     @Override

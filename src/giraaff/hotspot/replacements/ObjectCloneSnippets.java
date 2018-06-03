@@ -16,6 +16,7 @@ import giraaff.util.GraalError;
 // @class ObjectCloneSnippets
 public final class ObjectCloneSnippets implements Snippets
 {
+    // @def
     public static final EnumMap<JavaKind, Method> arrayCloneMethods = new EnumMap<>(JavaKind.class);
 
     static
@@ -31,88 +32,88 @@ public final class ObjectCloneSnippets implements Snippets
         arrayCloneMethods.put(JavaKind.Object, getCloneMethod("objectArrayClone", Object[].class));
     }
 
-    private static Method getCloneMethod(String name, Class<?> param)
+    private static Method getCloneMethod(String __name, Class<?> __param)
     {
         try
         {
-            return ObjectCloneSnippets.class.getDeclaredMethod(name, param);
+            return ObjectCloneSnippets.class.getDeclaredMethod(__name, __param);
         }
-        catch (SecurityException | NoSuchMethodException e)
+        catch (SecurityException | NoSuchMethodException __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
     }
 
     @Snippet
-    public static boolean[] booleanArrayClone(boolean[] src)
+    public static boolean[] booleanArrayClone(boolean[] __src)
     {
-        boolean[] result = (boolean[]) NewArrayNode.newUninitializedArray(Boolean.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Boolean);
-        return result;
+        boolean[] __result = (boolean[]) NewArrayNode.newUninitializedArray(Boolean.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Boolean);
+        return __result;
     }
 
     @Snippet
-    public static byte[] byteArrayClone(byte[] src)
+    public static byte[] byteArrayClone(byte[] __src)
     {
-        byte[] result = (byte[]) NewArrayNode.newUninitializedArray(Byte.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Byte);
-        return result;
+        byte[] __result = (byte[]) NewArrayNode.newUninitializedArray(Byte.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Byte);
+        return __result;
     }
 
     @Snippet
-    public static short[] shortArrayClone(short[] src)
+    public static short[] shortArrayClone(short[] __src)
     {
-        short[] result = (short[]) NewArrayNode.newUninitializedArray(Short.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Short);
-        return result;
+        short[] __result = (short[]) NewArrayNode.newUninitializedArray(Short.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Short);
+        return __result;
     }
 
     @Snippet
-    public static char[] charArrayClone(char[] src)
+    public static char[] charArrayClone(char[] __src)
     {
-        char[] result = (char[]) NewArrayNode.newUninitializedArray(Character.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Char);
-        return result;
+        char[] __result = (char[]) NewArrayNode.newUninitializedArray(Character.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Char);
+        return __result;
     }
 
     @Snippet
-    public static int[] intArrayClone(int[] src)
+    public static int[] intArrayClone(int[] __src)
     {
-        int[] result = (int[]) NewArrayNode.newUninitializedArray(Integer.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Int);
-        return result;
+        int[] __result = (int[]) NewArrayNode.newUninitializedArray(Integer.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Int);
+        return __result;
     }
 
     @Snippet
-    public static float[] floatArrayClone(float[] src)
+    public static float[] floatArrayClone(float[] __src)
     {
-        float[] result = (float[]) NewArrayNode.newUninitializedArray(Float.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Float);
-        return result;
+        float[] __result = (float[]) NewArrayNode.newUninitializedArray(Float.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Float);
+        return __result;
     }
 
     @Snippet
-    public static long[] longArrayClone(long[] src)
+    public static long[] longArrayClone(long[] __src)
     {
-        long[] result = (long[]) NewArrayNode.newUninitializedArray(Long.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Long);
-        return result;
+        long[] __result = (long[]) NewArrayNode.newUninitializedArray(Long.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Long);
+        return __result;
     }
 
     @Snippet
-    public static double[] doubleArrayClone(double[] src)
+    public static double[] doubleArrayClone(double[] __src)
     {
-        double[] result = (double[]) NewArrayNode.newUninitializedArray(Double.TYPE, src.length);
-        ArrayCopyCallNode.disjointArraycopy(src, 0, result, 0, src.length, JavaKind.Double);
-        return result;
+        double[] __result = (double[]) NewArrayNode.newUninitializedArray(Double.TYPE, __src.length);
+        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Double);
+        return __result;
     }
 
     @Snippet
-    public static Object[] objectArrayClone(Object[] src)
+    public static Object[] objectArrayClone(Object[] __src)
     {
         // since this snippet is lowered early, the array must be initialized
-        Object[] result = (Object[]) DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(src.getClass().getComponentType()), src.length, JavaKind.Object);
-        ArrayCopyCallNode.disjointUninitializedArraycopy(src, 0, result, 0, src.length, JavaKind.Object);
-        return result;
+        Object[] __result = (Object[]) DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(__src.getClass().getComponentType()), __src.length, JavaKind.Object);
+        ArrayCopyCallNode.disjointUninitializedArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Object);
+        return __result;
     }
 }

@@ -23,66 +23,77 @@ public enum AMD64Arithmetic
     // @class AMD64Arithmetic.FPDivRemOp
     public static final class FPDivRemOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<FPDivRemOp> TYPE = LIRInstructionClass.create(FPDivRemOp.class);
 
-        @Opcode private final AMD64Arithmetic opcode;
-        @Def protected AllocatableValue result;
-        @Use protected AllocatableValue x;
-        @Use protected AllocatableValue y;
-        @Temp protected AllocatableValue raxTemp;
+        @Opcode
+        // @field
+        private final AMD64Arithmetic opcode;
+        @Def
+        // @field
+        protected AllocatableValue result;
+        @Use
+        // @field
+        protected AllocatableValue x;
+        @Use
+        // @field
+        protected AllocatableValue y;
+        @Temp
+        // @field
+        protected AllocatableValue raxTemp;
 
         // @cons
-        public FPDivRemOp(AMD64Arithmetic opcode, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+        public FPDivRemOp(AMD64Arithmetic __opcode, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
         {
             super(TYPE);
-            this.opcode = opcode;
-            this.result = result;
+            this.opcode = __opcode;
+            this.result = __result;
             this.raxTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.DWORD));
-            this.x = x;
-            this.y = y;
+            this.x = __x;
+            this.y = __y;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            AMD64Address tmp = new AMD64Address(AMD64.rsp);
-            masm.subq(AMD64.rsp, 8);
+            AMD64Address __tmp = new AMD64Address(AMD64.rsp);
+            __masm.subq(AMD64.rsp, 8);
             if (opcode == FREM)
             {
-                masm.movflt(tmp, ValueUtil.asRegister(y));
-                masm.flds(tmp);
-                masm.movflt(tmp, ValueUtil.asRegister(x));
-                masm.flds(tmp);
+                __masm.movflt(__tmp, ValueUtil.asRegister(y));
+                __masm.flds(__tmp);
+                __masm.movflt(__tmp, ValueUtil.asRegister(x));
+                __masm.flds(__tmp);
             }
             else
             {
-                masm.movdbl(tmp, ValueUtil.asRegister(y));
-                masm.fldd(tmp);
-                masm.movdbl(tmp, ValueUtil.asRegister(x));
-                masm.fldd(tmp);
+                __masm.movdbl(__tmp, ValueUtil.asRegister(y));
+                __masm.fldd(__tmp);
+                __masm.movdbl(__tmp, ValueUtil.asRegister(x));
+                __masm.fldd(__tmp);
             }
 
-            Label label = new Label();
-            masm.bind(label);
-            masm.fprem();
-            masm.fwait();
-            masm.fnstswAX();
-            masm.testl(AMD64.rax, 0x400);
-            masm.jcc(ConditionFlag.NotZero, label);
-            masm.fxch(1);
-            masm.fpop();
+            Label __label = new Label();
+            __masm.bind(__label);
+            __masm.fprem();
+            __masm.fwait();
+            __masm.fnstswAX();
+            __masm.testl(AMD64.rax, 0x400);
+            __masm.jcc(ConditionFlag.NotZero, __label);
+            __masm.fxch(1);
+            __masm.fpop();
 
             if (opcode == FREM)
             {
-                masm.fstps(tmp);
-                masm.movflt(ValueUtil.asRegister(result), tmp);
+                __masm.fstps(__tmp);
+                __masm.movflt(ValueUtil.asRegister(result), __tmp);
             }
             else
             {
-                masm.fstpd(tmp);
-                masm.movdbl(ValueUtil.asRegister(result), tmp);
+                __masm.fstpd(__tmp);
+                __masm.movdbl(ValueUtil.asRegister(result), __tmp);
             }
-            masm.addq(AMD64.rsp, 8);
+            __masm.addq(AMD64.rsp, 8);
         }
     }
 }

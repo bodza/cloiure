@@ -14,48 +14,49 @@ import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 // @class VerifyingMoveFactory
 public final class VerifyingMoveFactory implements MoveFactory
 {
+    // @field
     private final MoveFactory inner;
 
     // @cons
-    public VerifyingMoveFactory(MoveFactory inner)
+    public VerifyingMoveFactory(MoveFactory __inner)
     {
         super();
-        this.inner = inner;
+        this.inner = __inner;
     }
 
     @Override
-    public boolean canInlineConstant(Constant c)
+    public boolean canInlineConstant(Constant __c)
     {
-        return inner.canInlineConstant(c);
+        return inner.canInlineConstant(__c);
     }
 
     @Override
-    public boolean allowConstantToStackMove(Constant constant)
+    public boolean allowConstantToStackMove(Constant __constant)
     {
-        return inner.allowConstantToStackMove(constant);
+        return inner.allowConstantToStackMove(__constant);
     }
 
     @Override
-    public LIRInstruction createMove(AllocatableValue result, Value input)
+    public LIRInstruction createMove(AllocatableValue __result, Value __input)
     {
-        return inner.createMove(result, input);
+        return inner.createMove(__result, __input);
     }
 
     @Override
-    public LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input)
+    public LIRInstruction createStackMove(AllocatableValue __result, AllocatableValue __input)
     {
-        return inner.createStackMove(result, input);
+        return inner.createStackMove(__result, __input);
     }
 
     @Override
-    public LIRInstruction createLoad(AllocatableValue result, Constant input)
+    public LIRInstruction createLoad(AllocatableValue __result, Constant __input)
     {
-        return inner.createLoad(result, input);
+        return inner.createLoad(__result, __input);
     }
 
     @Override
-    public LIRInstruction createStackLoad(AllocatableValue result, Constant input)
+    public LIRInstruction createStackLoad(AllocatableValue __result, Constant __input)
     {
-        return inner.createStackLoad(result, input);
+        return inner.createStackLoad(__result, __input);
     }
 }

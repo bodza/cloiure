@@ -28,17 +28,18 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 // @class LinearScanAssignLocationsPhase
 public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
 {
+    // @field
     protected final LinearScan allocator;
 
     // @cons
-    public LinearScanAssignLocationsPhase(LinearScan allocator)
+    public LinearScanAssignLocationsPhase(LinearScan __allocator)
     {
         super();
-        this.allocator = allocator;
+        this.allocator = __allocator;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
     {
         assignLocations();
     }
@@ -51,48 +52,48 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
      * @param mode the usage mode for {@code operand} by the instruction
      * @return the location assigned for the operand
      */
-    protected Value colorLirOperand(LIRInstruction op, Variable operand, OperandMode mode)
+    protected Value colorLirOperand(LIRInstruction __op, Variable __operand, OperandMode __mode)
     {
-        int opId = op.id();
-        Interval interval = allocator.intervalFor(operand);
+        int __opId = __op.id();
+        Interval __interval = allocator.intervalFor(__operand);
 
-        if (opId != -1)
+        if (__opId != -1)
         {
             // Operands are not changed when an interval is split during allocation, so search the right interval here.
-            interval = allocator.splitChildAtOpId(interval, opId, mode);
+            __interval = allocator.splitChildAtOpId(__interval, __opId, __mode);
         }
 
-        if (ValueUtil.isIllegal(interval.location()) && interval.canMaterialize())
+        if (ValueUtil.isIllegal(__interval.location()) && __interval.canMaterialize())
         {
-            return new ConstantValue(interval.kind(), interval.getMaterializedValue());
+            return new ConstantValue(__interval.kind(), __interval.getMaterializedValue());
         }
-        return interval.location();
+        return __interval.location();
     }
 
-    private void assignLocations(ArrayList<LIRInstruction> instructions)
+    private void assignLocations(ArrayList<LIRInstruction> __instructions)
     {
-        int numInst = instructions.size();
-        boolean hasDead = false;
+        int __numInst = __instructions.size();
+        boolean __hasDead = false;
 
-        for (int j = 0; j < numInst; j++)
+        for (int __j = 0; __j < __numInst; __j++)
         {
-            final LIRInstruction op = instructions.get(j);
-            if (op == null)
+            final LIRInstruction __op = __instructions.get(__j);
+            if (__op == null)
             {
                 // this can happen when spill-moves are removed in eliminateSpillMoves
-                hasDead = true;
+                __hasDead = true;
             }
-            else if (assignLocations(op))
+            else if (assignLocations(__op))
             {
-                instructions.set(j, null);
-                hasDead = true;
+                __instructions.set(__j, null);
+                __hasDead = true;
             }
         }
 
-        if (hasDead)
+        if (__hasDead)
         {
             // Remove null values from the list.
-            instructions.removeAll(Collections.singleton(null));
+            __instructions.removeAll(Collections.singleton(null));
         }
     }
 
@@ -100,13 +101,13 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
     private final InstructionValueProcedure assignProc = new InstructionValueProcedure()
     {
         @Override
-        public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        public Value doValue(LIRInstruction __instruction, Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
         {
-            if (LIRValueUtil.isVariable(value))
+            if (LIRValueUtil.isVariable(__value))
             {
-                return colorLirOperand(instruction, (Variable) value, mode);
+                return colorLirOperand(__instruction, (Variable) __value, __mode);
             }
-            return value;
+            return __value;
         }
     };
 
@@ -116,13 +117,13 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
      * @param op The {@link LIRInstruction} that should be colored.
      * @return {@code true} if the instruction should be deleted.
      */
-    protected boolean assignLocations(LIRInstruction op)
+    protected boolean assignLocations(LIRInstruction __op)
     {
         // remove useless moves
-        if (MoveOp.isMoveOp(op))
+        if (MoveOp.isMoveOp(__op))
         {
-            AllocatableValue result = MoveOp.asMoveOp(op).getResult();
-            if (LIRValueUtil.isVariable(result) && allocator.isMaterialized(result, op.id(), OperandMode.DEF))
+            AllocatableValue __result = MoveOp.asMoveOp(__op).getResult();
+            if (LIRValueUtil.isVariable(__result) && allocator.isMaterialized(__result, __op.id(), OperandMode.DEF))
             {
                 /*
                  * This happens if a materializable interval is originally not spilled but then
@@ -133,16 +134,16 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
             }
         }
 
-        op.forEachInput(assignProc);
-        op.forEachAlive(assignProc);
-        op.forEachTemp(assignProc);
-        op.forEachOutput(assignProc);
+        __op.forEachInput(assignProc);
+        __op.forEachAlive(assignProc);
+        __op.forEachTemp(assignProc);
+        __op.forEachOutput(assignProc);
 
         // remove useless moves
-        if (ValueMoveOp.isValueMoveOp(op))
+        if (ValueMoveOp.isValueMoveOp(__op))
         {
-            ValueMoveOp move = ValueMoveOp.asValueMoveOp(op);
-            if (move.getInput().equals(move.getResult()))
+            ValueMoveOp __move = ValueMoveOp.asValueMoveOp(__op);
+            if (__move.getInput().equals(__move.getResult()))
             {
                 return true;
             }
@@ -152,9 +153,9 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
 
     private void assignLocations()
     {
-        for (AbstractBlockBase<?> block : allocator.sortedBlocks())
+        for (AbstractBlockBase<?> __block : allocator.sortedBlocks())
         {
-            assignLocations(allocator.getLIR().getLIRforBlock(block));
+            assignLocations(allocator.getLIR().getLIRforBlock(__block));
         }
     }
 }

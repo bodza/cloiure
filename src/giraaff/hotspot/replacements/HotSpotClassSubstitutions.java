@@ -24,84 +24,84 @@ public final class HotSpotClassSubstitutions
     }
 
     @MethodSubstitution(isStatic = false)
-    public static int getModifiers(final Class<?> thisObj)
+    public static int getModifiers(final Class<?> __thisObj)
     {
-        KlassPointer klass = ClassGetHubNode.readClass(thisObj);
-        if (klass.isNull())
+        KlassPointer __klass = ClassGetHubNode.readClass(__thisObj);
+        if (__klass.isNull())
         {
             // Class for primitive type
             return Modifier.ABSTRACT | Modifier.FINAL | Modifier.PUBLIC;
         }
         else
         {
-            return klass.readInt(HotSpotRuntime.klassModifierFlagsOffset, HotSpotReplacementsUtil.KLASS_MODIFIER_FLAGS_LOCATION);
+            return __klass.readInt(HotSpotRuntime.klassModifierFlagsOffset, HotSpotReplacementsUtil.KLASS_MODIFIER_FLAGS_LOCATION);
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    public static boolean isInterface(final Class<?> thisObj)
+    public static boolean isInterface(final Class<?> __thisObj)
     {
-        KlassPointer klass = ClassGetHubNode.readClass(thisObj);
-        if (klass.isNull())
+        KlassPointer __klass = ClassGetHubNode.readClass(__thisObj);
+        if (__klass.isNull())
         {
             // Class for primitive type
             return false;
         }
         else
         {
-            int accessFlags = klass.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
-            return (accessFlags & Modifier.INTERFACE) != 0;
+            int __accessFlags = __klass.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
+            return (__accessFlags & Modifier.INTERFACE) != 0;
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    public static boolean isArray(final Class<?> thisObj)
+    public static boolean isArray(final Class<?> __thisObj)
     {
-        KlassPointer klass = ClassGetHubNode.readClass(thisObj);
-        if (klass.isNull())
+        KlassPointer __klass = ClassGetHubNode.readClass(__thisObj);
+        if (__klass.isNull())
         {
             // Class for primitive type
             return false;
         }
         else
         {
-            KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
-            return HotSpotReplacementsUtil.klassIsArray(klassNonNull);
+            KlassPointer __klassNonNull = ClassGetHubNode.piCastNonNull(__klass, SnippetAnchorNode.anchor());
+            return HotSpotReplacementsUtil.klassIsArray(__klassNonNull);
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    public static boolean isPrimitive(final Class<?> thisObj)
+    public static boolean isPrimitive(final Class<?> __thisObj)
     {
-        KlassPointer klass = ClassGetHubNode.readClass(thisObj);
-        return klass.isNull();
+        KlassPointer __klass = ClassGetHubNode.readClass(__thisObj);
+        return __klass.isNull();
     }
 
     @MethodSubstitution(isStatic = false)
-    public static Class<?> getSuperclass(final Class<?> thisObj)
+    public static Class<?> getSuperclass(final Class<?> __thisObj)
     {
-        KlassPointer klass = ClassGetHubNode.readClass(thisObj);
-        if (!klass.isNull())
+        KlassPointer __klass = ClassGetHubNode.readClass(__thisObj);
+        if (!__klass.isNull())
         {
-            KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
-            int accessFlags = klassNonNull.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
-            if ((accessFlags & Modifier.INTERFACE) == 0)
+            KlassPointer __klassNonNull = ClassGetHubNode.piCastNonNull(__klass, SnippetAnchorNode.anchor());
+            int __accessFlags = __klassNonNull.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
+            if ((__accessFlags & Modifier.INTERFACE) == 0)
             {
-                if (HotSpotReplacementsUtil.klassIsArray(klassNonNull))
+                if (HotSpotReplacementsUtil.klassIsArray(__klassNonNull))
                 {
                     return Object.class;
                 }
                 else
                 {
-                    KlassPointer superKlass = klassNonNull.readKlassPointer(HotSpotRuntime.klassSuperKlassOffset, HotSpotReplacementsUtil.KLASS_SUPER_KLASS_LOCATION);
-                    if (superKlass.isNull())
+                    KlassPointer __superKlass = __klassNonNull.readKlassPointer(HotSpotRuntime.klassSuperKlassOffset, HotSpotReplacementsUtil.KLASS_SUPER_KLASS_LOCATION);
+                    if (__superKlass.isNull())
                     {
                         return null;
                     }
                     else
                     {
-                        KlassPointer superKlassNonNull = ClassGetHubNode.piCastNonNull(superKlass, SnippetAnchorNode.anchor());
-                        return HubGetClassNode.readClass(superKlassNonNull);
+                        KlassPointer __superKlassNonNull = ClassGetHubNode.piCastNonNull(__superKlass, SnippetAnchorNode.anchor());
+                        return HubGetClassNode.readClass(__superKlassNonNull);
                     }
                 }
             }
@@ -114,15 +114,15 @@ public final class HotSpotClassSubstitutions
     }
 
     @MethodSubstitution(isStatic = false)
-    public static Class<?> getComponentType(final Class<?> thisObj)
+    public static Class<?> getComponentType(final Class<?> __thisObj)
     {
-        KlassPointer klass = ClassGetHubNode.readClass(thisObj);
-        if (!klass.isNull())
+        KlassPointer __klass = ClassGetHubNode.readClass(__thisObj);
+        if (!__klass.isNull())
         {
-            KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
-            if (HotSpotReplacementsUtil.klassIsArray(klassNonNull))
+            KlassPointer __klassNonNull = ClassGetHubNode.piCastNonNull(__klass, SnippetAnchorNode.anchor());
+            if (HotSpotReplacementsUtil.klassIsArray(__klassNonNull))
             {
-                return PiNode.asNonNullClass(klassNonNull.readObject(HotSpotRuntime.arrayKlassComponentMirrorOffset, HotSpotReplacementsUtil.ARRAY_KLASS_COMPONENT_MIRROR));
+                return PiNode.asNonNullClass(__klassNonNull.readObject(HotSpotRuntime.arrayKlassComponentMirrorOffset, HotSpotReplacementsUtil.ARRAY_KLASS_COMPONENT_MIRROR));
             }
         }
         else

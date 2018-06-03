@@ -8,21 +8,23 @@ import java.util.Iterator;
 // @class GraphNodeIterator
 final class GraphNodeIterator implements Iterator<Node>
 {
+    // @field
     private final Graph graph;
+    // @field
     private int index;
 
     // @cons
-    GraphNodeIterator(Graph graph)
+    GraphNodeIterator(Graph __graph)
     {
-        this(graph, 0);
+        this(__graph, 0);
     }
 
     // @cons
-    GraphNodeIterator(Graph graph, int index)
+    GraphNodeIterator(Graph __graph, int __index)
     {
         super();
-        this.graph = graph;
-        this.index = index - 1;
+        this.graph = __graph;
+        this.index = __index - 1;
         forward();
     }
 

@@ -12,15 +12,17 @@ import giraaff.replacements.nodes.BasicArrayCopyNode;
 // @class ArrayCopyWithSlowPathNode
 public final class ArrayCopyWithSlowPathNode extends BasicArrayCopyNode
 {
+    // @def
     public static final NodeClass<ArrayCopyWithSlowPathNode> TYPE = NodeClass.create(ArrayCopyWithSlowPathNode.class);
 
+    // @field
     private final SnippetTemplate.SnippetInfo snippet;
 
     // @cons
-    public ArrayCopyWithSlowPathNode(ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, SnippetTemplate.SnippetInfo snippet, JavaKind elementKind)
+    public ArrayCopyWithSlowPathNode(ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, SnippetTemplate.SnippetInfo __snippet, JavaKind __elementKind)
     {
-        super(TYPE, src, srcPos, dest, destPos, length, elementKind, BytecodeFrame.INVALID_FRAMESTATE_BCI);
-        this.snippet = snippet;
+        super(TYPE, __src, __srcPos, __dest, __destPos, __length, __elementKind, BytecodeFrame.INVALID_FRAMESTATE_BCI);
+        this.snippet = __snippet;
     }
 
     @NodeIntrinsic
@@ -31,8 +33,8 @@ public final class ArrayCopyWithSlowPathNode extends BasicArrayCopyNode
         return snippet;
     }
 
-    public void setBci(int bci)
+    public void setBci(int __bci)
     {
-        this.bci = bci;
+        this.bci = __bci;
     }
 }

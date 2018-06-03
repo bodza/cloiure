@@ -11,15 +11,15 @@ import jdk.vm.ci.code.TargetDescription;
 public final class AMD64InstructionAttr
 {
     // @cons
-    AMD64InstructionAttr(int inVectorLen, boolean inRexVexW, boolean inLegacyMode, boolean inNoRegMask, boolean inUsesVl, TargetDescription target)
+    AMD64InstructionAttr(int __inVectorLen, boolean __inRexVexW, boolean __inLegacyMode, boolean __inNoRegMask, boolean __inUsesVl, TargetDescription __target)
     {
         super();
-        avxVectorLen = inVectorLen;
-        rexVexW = inRexVexW;
-        this.target = target;
-        legacyMode = (!supports(CPUFeature.AVX512F)) ? true : inLegacyMode;
-        noRegMask = inNoRegMask;
-        usesVl = inUsesVl;
+        avxVectorLen = __inVectorLen;
+        rexVexW = __inRexVexW;
+        this.target = __target;
+        legacyMode = (!supports(CPUFeature.AVX512F)) ? true : __inLegacyMode;
+        noRegMask = __inNoRegMask;
+        usesVl = __inUsesVl;
         rexVexWReverted = false;
         tupleType = 0;
         inputSizeInBits = 0;
@@ -29,18 +29,31 @@ public final class AMD64InstructionAttr
         isExtendedContext = false;
     }
 
+    // @field
     private TargetDescription target;
+    // @field
     private int avxVectorLen;
+    // @field
     private boolean rexVexW;
+    // @field
     private boolean rexVexWReverted;
+    // @field
     private boolean legacyMode;
+    // @field
     private boolean noRegMask;
+    // @field
     private boolean usesVl;
+    // @field
     private int tupleType;
+    // @field
     private int inputSizeInBits;
+    // @field
     private boolean isEvexInstruction;
+    // @field
     private int evexEncoding;
+    // @field
     private boolean isClearContext;
+    // @field
     private boolean isExtendedContext;
 
     public int getVectorLen()
@@ -106,9 +119,9 @@ public final class AMD64InstructionAttr
     /**
      * Set the vector length of a given instruction.
      */
-    public void setVectorLen(int vectorLen)
+    public void setVectorLen(int __vectorLen)
     {
-        avxVectorLen = vectorLen;
+        avxVectorLen = __vectorLen;
     }
 
     /**
@@ -122,9 +135,9 @@ public final class AMD64InstructionAttr
     /**
      * Alter the current encoding width.
      */
-    public void setRexVexW(boolean state)
+    public void setRexVexW(boolean __state)
     {
-        rexVexW = state;
+        rexVexW = __state;
     }
 
     /**
@@ -146,9 +159,9 @@ public final class AMD64InstructionAttr
     /**
      * Set the current encoding attributes to be used in address calculations for EVEX.
      */
-    public void setEvexEncoding(int value)
+    public void setEvexEncoding(int __value)
     {
-        evexEncoding = value;
+        evexEncoding = __value;
     }
 
     /**
@@ -162,17 +175,17 @@ public final class AMD64InstructionAttr
     /**
      * Set the address attributes for configuring displacement calculations in EVEX.
      */
-    public void setAddressAttributes(int inTupleType, int inInputSizeInBits)
+    public void setAddressAttributes(int __inTupleType, int __inInputSizeInBits)
     {
         if (supports(CPUFeature.AVX512F))
         {
-            tupleType = inTupleType;
-            inputSizeInBits = inInputSizeInBits;
+            tupleType = __inTupleType;
+            inputSizeInBits = __inInputSizeInBits;
         }
     }
 
-    private boolean supports(CPUFeature feature)
+    private boolean supports(CPUFeature __feature)
     {
-        return ((AMD64) target.arch).getFeatures().contains(feature);
+        return ((AMD64) target.arch).getFeatures().contains(__feature);
     }
 }

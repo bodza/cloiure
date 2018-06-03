@@ -14,18 +14,18 @@ import giraaff.phases.Phase;
 public final class LoopSafepointInsertionPhase extends Phase
 {
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
         if (GraalOptions.genLoopSafepoints)
         {
-            for (LoopBeginNode loopBeginNode : graph.getNodes(LoopBeginNode.TYPE))
+            for (LoopBeginNode __loopBeginNode : __graph.getNodes(LoopBeginNode.TYPE))
             {
-                for (LoopEndNode loopEndNode : loopBeginNode.loopEnds())
+                for (LoopEndNode __loopEndNode : __loopBeginNode.loopEnds())
                 {
-                    if (loopEndNode.canSafepoint())
+                    if (__loopEndNode.canSafepoint())
                     {
-                        SafepointNode safepointNode = graph.add(new SafepointNode());
-                        graph.addBeforeFixed(loopEndNode, safepointNode);
+                        SafepointNode __safepointNode = __graph.add(new SafepointNode());
+                        __graph.addBeforeFixed(__loopEndNode, __safepointNode);
                     }
                 }
             }

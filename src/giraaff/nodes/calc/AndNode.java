@@ -23,93 +23,94 @@ import giraaff.nodes.util.GraphUtil;
 // @class AndNode
 public final class AndNode extends BinaryArithmeticNode<And> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {
+    // @def
     public static final NodeClass<AndNode> TYPE = NodeClass.create(AndNode.class);
 
     // @cons
-    public AndNode(ValueNode x, ValueNode y)
+    public AndNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, ArithmeticOpTable::getAnd, x, y);
+        super(TYPE, ArithmeticOpTable::getAnd, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<And> op = ArithmeticOpTable.forStamp(x.stamp(view)).getAnd();
-        Stamp stamp = op.foldStamp(x.stamp(view), y.stamp(view));
-        ConstantNode tryConstantFold = tryConstantFold(op, x, y, stamp, view);
-        if (tryConstantFold != null)
+        BinaryOp<And> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getAnd();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
+        ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
+        if (__tryConstantFold != null)
         {
-            return tryConstantFold;
+            return __tryConstantFold;
         }
-        return canonical(null, op, stamp, x, y, view);
+        return canonical(null, __op, __stamp, __x, __y, __view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        NodeView view = NodeView.from(tool);
-        return canonical(this, getOp(forX, forY), stamp(view), forX, forY, view);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, getOp(__forX, __forY), stamp(__view), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(AndNode self, BinaryOp<And> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    private static ValueNode canonical(AndNode __self, BinaryOp<And> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY))
+        if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {
-            return forX;
+            return __forX;
         }
-        if (forX.isConstant() && !forY.isConstant())
+        if (__forX.isConstant() && !__forY.isConstant())
         {
-            return new AndNode(forY, forX);
+            return new AndNode(__forY, __forX);
         }
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            Constant c = forY.asConstant();
-            if (op.isNeutral(c))
+            Constant __c = __forY.asConstant();
+            if (__op.isNeutral(__c))
             {
-                return forX;
+                return __forX;
             }
 
-            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger())
+            if (__c instanceof PrimitiveConstant && ((PrimitiveConstant) __c).getJavaKind().isNumericInteger())
             {
-                long rawY = ((PrimitiveConstant) c).asLong();
-                long mask = CodeUtil.mask(PrimitiveStamp.getBits(stamp));
-                if ((rawY & mask) == 0)
+                long __rawY = ((PrimitiveConstant) __c).asLong();
+                long __mask = CodeUtil.mask(PrimitiveStamp.getBits(__stamp));
+                if ((__rawY & __mask) == 0)
                 {
-                    return ConstantNode.forIntegerStamp(stamp, 0);
+                    return ConstantNode.forIntegerStamp(__stamp, 0);
                 }
-                if (forX instanceof SignExtendNode)
+                if (__forX instanceof SignExtendNode)
                 {
-                    SignExtendNode ext = (SignExtendNode) forX;
-                    if (rawY == ((1L << ext.getInputBits()) - 1))
+                    SignExtendNode __ext = (SignExtendNode) __forX;
+                    if (__rawY == ((1L << __ext.getInputBits()) - 1))
                     {
-                        return new ZeroExtendNode(ext.getValue(), ext.getResultBits());
+                        return new ZeroExtendNode(__ext.getValue(), __ext.getResultBits());
                     }
                 }
-                IntegerStamp xStamp = (IntegerStamp) forX.stamp(view);
-                if (((xStamp.upMask() | xStamp.downMask()) & ~rawY) == 0)
+                IntegerStamp __xStamp = (IntegerStamp) __forX.stamp(__view);
+                if (((__xStamp.upMask() | __xStamp.downMask()) & ~__rawY) == 0)
                 {
                     // No bits are set which are outside the mask, so the mask will have no effect.
-                    return forX;
+                    return __forX;
                 }
             }
 
-            return reassociate(self != null ? self : (AndNode) new AndNode(forX, forY).maybeCommuteInputs(), ValueNode.isConstantPredicate(), forX, forY, view);
+            return reassociate(__self != null ? __self : (AndNode) new AndNode(__forX, __forY).maybeCommuteInputs(), ValueNode.isConstantPredicate(), __forX, __forY, __view);
         }
-        if (forX instanceof NotNode && forY instanceof NotNode)
+        if (__forX instanceof NotNode && __forY instanceof NotNode)
         {
-            return new NotNode(OrNode.create(((NotNode) forX).getValue(), ((NotNode) forY).getValue(), view));
+            return new NotNode(OrNode.create(((NotNode) __forX).getValue(), ((NotNode) __forY).getValue(), __view));
         }
-        return self != null ? self : new AndNode(forX, forY).maybeCommuteInputs();
+        return __self != null ? __self : new AndNode(__forX, __forY).maybeCommuteInputs();
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitAnd(nodeValueMap.operand(getX()), nodeValueMap.operand(getY())));
+        __nodeValueMap.setResult(this, __gen.emitAnd(__nodeValueMap.operand(getX()), __nodeValueMap.operand(getY())));
     }
 }

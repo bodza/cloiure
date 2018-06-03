@@ -55,19 +55,25 @@ import giraaff.util.GraalError;
 // @class LoopEx
 public final class LoopEx
 {
+    // @field
     private final Loop<Block> loop;
+    // @field
     private LoopFragmentInside inside;
+    // @field
     private LoopFragmentWhole whole;
+    // @field
     private CountedLoopInfo counted;
+    // @field
     private LoopsData data;
+    // @field
     private EconomicMap<Node, InductionVariable> ivs;
 
     // @cons
-    LoopEx(Loop<Block> loop, LoopsData data)
+    LoopEx(Loop<Block> __loop, LoopsData __data)
     {
         super();
-        this.loop = loop;
-        this.data = data;
+        this.loop = __loop;
+        this.data = __data;
     }
 
     public Loop<Block> loop()
@@ -100,22 +106,22 @@ public final class LoopEx
     }
 
     @SuppressWarnings("unused")
-    public LoopFragmentInsideFrom insideFrom(FixedNode point)
+    public LoopFragmentInsideFrom insideFrom(FixedNode __point)
     {
         // TODO
         return null;
     }
 
     @SuppressWarnings("unused")
-    public LoopFragmentInsideBefore insideBefore(FixedNode point)
+    public LoopFragmentInsideBefore insideBefore(FixedNode __point)
     {
         // TODO
         return null;
     }
 
-    public boolean isOutsideLoop(Node n)
+    public boolean isOutsideLoop(Node __n)
     {
-        return !whole().contains(n);
+        return !whole().contains(__n);
     }
 
     public LoopBeginNode loopBegin()
@@ -161,6 +167,7 @@ public final class LoopEx
     // @closure
     private final class InvariantPredicate implements NodePredicate
     {
+        // @field
         private final Graph.Mark mark;
 
         // @cons
@@ -171,121 +178,121 @@ public final class LoopEx
         }
 
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
-            if (LoopEx.this.loopBegin().graph().isNew(mark, n))
+            if (LoopEx.this.loopBegin().graph().isNew(mark, __n))
             {
                 // Newly created nodes are unknown.
                 return false;
             }
-            return LoopEx.this.isOutsideLoop(n);
+            return LoopEx.this.isOutsideLoop(__n);
         }
     }
 
     public boolean reassociateInvariants()
     {
-        int count = 0;
-        StructuredGraph graph = loopBegin().graph();
-        InvariantPredicate invariant = new InvariantPredicate();
-        for (BinaryArithmeticNode<?> binary : whole().nodes().filter(BinaryArithmeticNode.class))
+        int __count = 0;
+        StructuredGraph __graph = loopBegin().graph();
+        InvariantPredicate __invariant = new InvariantPredicate();
+        for (BinaryArithmeticNode<?> __binary : whole().nodes().filter(BinaryArithmeticNode.class))
         {
-            if (!binary.isAssociative())
+            if (!__binary.isAssociative())
             {
                 continue;
             }
-            ValueNode result = BinaryArithmeticNode.reassociate(binary, invariant, binary.getX(), binary.getY(), NodeView.DEFAULT);
-            if (result != binary)
+            ValueNode __result = BinaryArithmeticNode.reassociate(__binary, __invariant, __binary.getX(), __binary.getY(), NodeView.DEFAULT);
+            if (__result != __binary)
             {
-                if (!result.isAlive())
+                if (!__result.isAlive())
                 {
-                    result = graph.addOrUniqueWithInputs(result);
+                    __result = __graph.addOrUniqueWithInputs(__result);
                 }
-                binary.replaceAtUsages(result);
-                GraphUtil.killWithUnusedFloatingInputs(binary);
-                count++;
+                __binary.replaceAtUsages(__result);
+                GraphUtil.killWithUnusedFloatingInputs(__binary);
+                __count++;
             }
         }
-        return count != 0;
+        return __count != 0;
     }
 
     public boolean detectCounted()
     {
-        LoopBeginNode loopBegin = loopBegin();
-        FixedNode next = loopBegin.next();
-        while (next instanceof FixedGuardNode || next instanceof ValueAnchorNode)
+        LoopBeginNode __loopBegin = loopBegin();
+        FixedNode __next = __loopBegin.next();
+        while (__next instanceof FixedGuardNode || __next instanceof ValueAnchorNode)
         {
-            next = ((FixedWithNextNode) next).next();
+            __next = ((FixedWithNextNode) __next).next();
         }
-        if (next instanceof IfNode)
+        if (__next instanceof IfNode)
         {
-            IfNode ifNode = (IfNode) next;
-            boolean negated = false;
-            if (!loopBegin.isLoopExit(ifNode.falseSuccessor()))
+            IfNode __ifNode = (IfNode) __next;
+            boolean __negated = false;
+            if (!__loopBegin.isLoopExit(__ifNode.falseSuccessor()))
             {
-                if (!loopBegin.isLoopExit(ifNode.trueSuccessor()))
+                if (!__loopBegin.isLoopExit(__ifNode.trueSuccessor()))
                 {
                     return false;
                 }
-                negated = true;
+                __negated = true;
             }
-            LogicNode ifTest = ifNode.condition();
-            if (!(ifTest instanceof IntegerLessThanNode) && !(ifTest instanceof IntegerEqualsNode))
+            LogicNode __ifTest = __ifNode.condition();
+            if (!(__ifTest instanceof IntegerLessThanNode) && !(__ifTest instanceof IntegerEqualsNode))
             {
                 return false;
             }
-            CompareNode lessThan = (CompareNode) ifTest;
-            Condition condition = null;
-            InductionVariable iv = null;
-            ValueNode limit = null;
-            if (isOutsideLoop(lessThan.getX()))
+            CompareNode __lessThan = (CompareNode) __ifTest;
+            Condition __condition = null;
+            InductionVariable __iv = null;
+            ValueNode __limit = null;
+            if (isOutsideLoop(__lessThan.getX()))
             {
-                iv = getInductionVariables().get(lessThan.getY());
-                if (iv != null)
+                __iv = getInductionVariables().get(__lessThan.getY());
+                if (__iv != null)
                 {
-                    condition = lessThan.condition().asCondition().mirror();
-                    limit = lessThan.getX();
+                    __condition = __lessThan.condition().asCondition().mirror();
+                    __limit = __lessThan.getX();
                 }
             }
-            else if (isOutsideLoop(lessThan.getY()))
+            else if (isOutsideLoop(__lessThan.getY()))
             {
-                iv = getInductionVariables().get(lessThan.getX());
-                if (iv != null)
+                __iv = getInductionVariables().get(__lessThan.getX());
+                if (__iv != null)
                 {
-                    condition = lessThan.condition().asCondition();
-                    limit = lessThan.getY();
+                    __condition = __lessThan.condition().asCondition();
+                    __limit = __lessThan.getY();
                 }
             }
-            if (condition == null)
+            if (__condition == null)
             {
                 return false;
             }
-            if (negated)
+            if (__negated)
             {
-                condition = condition.negate();
+                __condition = __condition.negate();
             }
-            boolean oneOff = false;
-            switch (condition)
+            boolean __oneOff = false;
+            switch (__condition)
             {
                 case EQ:
                     return false;
                 case NE:
                 {
-                    if (!iv.isConstantStride() || Math.abs(iv.constantStride()) != 1)
+                    if (!__iv.isConstantStride() || Math.abs(__iv.constantStride()) != 1)
                     {
                         return false;
                     }
-                    IntegerStamp initStamp = (IntegerStamp) iv.initNode().stamp(NodeView.DEFAULT);
-                    IntegerStamp limitStamp = (IntegerStamp) limit.stamp(NodeView.DEFAULT);
-                    if (iv.direction() == Direction.Up)
+                    IntegerStamp __initStamp = (IntegerStamp) __iv.initNode().stamp(NodeView.DEFAULT);
+                    IntegerStamp __limitStamp = (IntegerStamp) __limit.stamp(NodeView.DEFAULT);
+                    if (__iv.direction() == Direction.Up)
                     {
-                        if (initStamp.upperBound() > limitStamp.lowerBound())
+                        if (__initStamp.upperBound() > __limitStamp.lowerBound())
                         {
                             return false;
                         }
                     }
-                    else if (iv.direction() == Direction.Down)
+                    else if (__iv.direction() == Direction.Down)
                     {
-                        if (initStamp.lowerBound() < limitStamp.upperBound())
+                        if (__initStamp.lowerBound() < __limitStamp.upperBound())
                         {
                             return false;
                         }
@@ -297,27 +304,27 @@ public final class LoopEx
                     break;
                 }
                 case LE:
-                    oneOff = true;
-                    if (iv.direction() != Direction.Up)
+                    __oneOff = true;
+                    if (__iv.direction() != Direction.Up)
                     {
                         return false;
                     }
                     break;
                 case LT:
-                    if (iv.direction() != Direction.Up)
+                    if (__iv.direction() != Direction.Up)
                     {
                         return false;
                     }
                     break;
                 case GE:
-                    oneOff = true;
-                    if (iv.direction() != Direction.Down)
+                    __oneOff = true;
+                    if (__iv.direction() != Direction.Down)
                     {
                         return false;
                     }
                     break;
                 case GT:
-                    if (iv.direction() != Direction.Down)
+                    if (__iv.direction() != Direction.Down)
                     {
                         return false;
                     }
@@ -325,7 +332,7 @@ public final class LoopEx
                 default:
                     throw GraalError.shouldNotReachHere();
             }
-            counted = new CountedLoopInfo(this, iv, ifNode, limit, oneOff, negated ? ifNode.falseSuccessor() : ifNode.trueSuccessor());
+            counted = new CountedLoopInfo(this, __iv, __ifNode, __limit, __oneOff, __negated ? __ifNode.falseSuccessor() : __ifNode.trueSuccessor());
             return true;
         }
         return false;
@@ -336,34 +343,34 @@ public final class LoopEx
         return data;
     }
 
-    public void nodesInLoopBranch(NodeBitMap branchNodes, AbstractBeginNode branch)
+    public void nodesInLoopBranch(NodeBitMap __branchNodes, AbstractBeginNode __branch)
     {
-        EconomicSet<AbstractBeginNode> blocks = EconomicSet.create();
-        Collection<AbstractBeginNode> exits = new LinkedList<>();
-        Queue<Block> work = new LinkedList<>();
-        ControlFlowGraph cfg = loopsData().getCFG();
-        work.add(cfg.blockFor(branch));
-        while (!work.isEmpty())
+        EconomicSet<AbstractBeginNode> __blocks = EconomicSet.create();
+        Collection<AbstractBeginNode> __exits = new LinkedList<>();
+        Queue<Block> __work = new LinkedList<>();
+        ControlFlowGraph __cfg = loopsData().getCFG();
+        __work.add(__cfg.blockFor(__branch));
+        while (!__work.isEmpty())
         {
-            Block b = work.remove();
-            if (loop().getExits().contains(b))
+            Block __b = __work.remove();
+            if (loop().getExits().contains(__b))
             {
-                exits.add(b.getBeginNode());
+                __exits.add(__b.getBeginNode());
             }
-            else if (blocks.add(b.getBeginNode()))
+            else if (__blocks.add(__b.getBeginNode()))
             {
-                Block d = b.getDominatedSibling();
-                while (d != null)
+                Block __d = __b.getDominatedSibling();
+                while (__d != null)
                 {
-                    if (loop.getBlocks().contains(d))
+                    if (loop.getBlocks().contains(__d))
                     {
-                        work.add(d);
+                        __work.add(__d);
                     }
-                    d = d.getDominatedSibling();
+                    __d = __d.getDominatedSibling();
                 }
             }
         }
-        LoopFragment.computeNodes(branchNodes, branch.graph(), blocks, exits);
+        LoopFragment.computeNodes(__branchNodes, __branch.graph(), __blocks, __exits);
     }
 
     public EconomicMap<Node, InductionVariable> getInductionVariables()
@@ -381,121 +388,121 @@ public final class LoopEx
      *
      * @return a map from node to induction variable
      */
-    private static EconomicMap<Node, InductionVariable> findInductionVariables(LoopEx loop)
+    private static EconomicMap<Node, InductionVariable> findInductionVariables(LoopEx __loop)
     {
-        EconomicMap<Node, InductionVariable> ivs = EconomicMap.create(Equivalence.IDENTITY);
+        EconomicMap<Node, InductionVariable> __ivs = EconomicMap.create(Equivalence.IDENTITY);
 
-        Queue<InductionVariable> scanQueue = new LinkedList<>();
-        LoopBeginNode loopBegin = loop.loopBegin();
-        AbstractEndNode forwardEnd = loopBegin.forwardEnd();
-        for (PhiNode phi : loopBegin.valuePhis())
+        Queue<InductionVariable> __scanQueue = new LinkedList<>();
+        LoopBeginNode __loopBegin = __loop.loopBegin();
+        AbstractEndNode __forwardEnd = __loopBegin.forwardEnd();
+        for (PhiNode __phi : __loopBegin.valuePhis())
         {
-            ValueNode backValue = phi.singleBackValueOrThis();
-            if (backValue == phi)
+            ValueNode __backValue = __phi.singleBackValueOrThis();
+            if (__backValue == __phi)
             {
                 continue;
             }
-            ValueNode stride = addSub(loop, backValue, phi);
-            if (stride != null)
+            ValueNode __stride = addSub(__loop, __backValue, __phi);
+            if (__stride != null)
             {
-                BasicInductionVariable biv = new BasicInductionVariable(loop, (ValuePhiNode) phi, phi.valueAt(forwardEnd), stride, (BinaryArithmeticNode<?>) backValue);
-                ivs.put(phi, biv);
-                scanQueue.add(biv);
+                BasicInductionVariable __biv = new BasicInductionVariable(__loop, (ValuePhiNode) __phi, __phi.valueAt(__forwardEnd), __stride, (BinaryArithmeticNode<?>) __backValue);
+                __ivs.put(__phi, __biv);
+                __scanQueue.add(__biv);
             }
         }
 
-        while (!scanQueue.isEmpty())
+        while (!__scanQueue.isEmpty())
         {
-            InductionVariable baseIv = scanQueue.remove();
-            ValueNode baseIvNode = baseIv.valueNode();
-            for (ValueNode op : baseIvNode.usages().filter(ValueNode.class))
+            InductionVariable __baseIv = __scanQueue.remove();
+            ValueNode __baseIvNode = __baseIv.valueNode();
+            for (ValueNode __op : __baseIvNode.usages().filter(ValueNode.class))
             {
-                if (loop.isOutsideLoop(op))
+                if (__loop.isOutsideLoop(__op))
                 {
                     continue;
                 }
-                if (op.usages().count() == 1 && op.usages().first() == baseIvNode)
+                if (__op.usages().count() == 1 && __op.usages().first() == __baseIvNode)
                 {
                     // This is just the base induction variable increment with no other uses so don't bother reporting it.
                     continue;
                 }
-                InductionVariable iv = null;
-                ValueNode offset = addSub(loop, op, baseIvNode);
-                ValueNode scale;
-                if (offset != null)
+                InductionVariable __iv = null;
+                ValueNode __offset = addSub(__loop, __op, __baseIvNode);
+                ValueNode __scale;
+                if (__offset != null)
                 {
-                    iv = new DerivedOffsetInductionVariable(loop, baseIv, offset, (BinaryArithmeticNode<?>) op);
+                    __iv = new DerivedOffsetInductionVariable(__loop, __baseIv, __offset, (BinaryArithmeticNode<?>) __op);
                 }
-                else if (op instanceof NegateNode)
+                else if (__op instanceof NegateNode)
                 {
-                    iv = new DerivedScaledInductionVariable(loop, baseIv, (NegateNode) op);
+                    __iv = new DerivedScaledInductionVariable(__loop, __baseIv, (NegateNode) __op);
                 }
-                else if ((scale = mul(loop, op, baseIvNode)) != null)
+                else if ((__scale = mul(__loop, __op, __baseIvNode)) != null)
                 {
-                    iv = new DerivedScaledInductionVariable(loop, baseIv, scale, op);
+                    __iv = new DerivedScaledInductionVariable(__loop, __baseIv, __scale, __op);
                 }
                 else
                 {
-                    boolean isValidConvert = op instanceof PiNode || op instanceof SignExtendNode;
-                    if (!isValidConvert && op instanceof ZeroExtendNode)
+                    boolean __isValidConvert = __op instanceof PiNode || __op instanceof SignExtendNode;
+                    if (!__isValidConvert && __op instanceof ZeroExtendNode)
                     {
-                        ZeroExtendNode zeroExtendNode = (ZeroExtendNode) op;
-                        isValidConvert = zeroExtendNode.isInputAlwaysPositive() || ((IntegerStamp) zeroExtendNode.stamp(NodeView.DEFAULT)).isPositive();
+                        ZeroExtendNode __zeroExtendNode = (ZeroExtendNode) __op;
+                        __isValidConvert = __zeroExtendNode.isInputAlwaysPositive() || ((IntegerStamp) __zeroExtendNode.stamp(NodeView.DEFAULT)).isPositive();
                     }
 
-                    if (isValidConvert)
+                    if (__isValidConvert)
                     {
-                        iv = new DerivedConvertedInductionVariable(loop, baseIv, op.stamp(NodeView.DEFAULT), op);
+                        __iv = new DerivedConvertedInductionVariable(__loop, __baseIv, __op.stamp(NodeView.DEFAULT), __op);
                     }
                 }
 
-                if (iv != null)
+                if (__iv != null)
                 {
-                    ivs.put(op, iv);
-                    scanQueue.offer(iv);
+                    __ivs.put(__op, __iv);
+                    __scanQueue.offer(__iv);
                 }
             }
         }
-        return ivs;
+        return __ivs;
     }
 
-    private static ValueNode addSub(LoopEx loop, ValueNode op, ValueNode base)
+    private static ValueNode addSub(LoopEx __loop, ValueNode __op, ValueNode __base)
     {
-        if (op.stamp(NodeView.DEFAULT) instanceof IntegerStamp && (op instanceof AddNode || op instanceof SubNode))
+        if (__op.stamp(NodeView.DEFAULT) instanceof IntegerStamp && (__op instanceof AddNode || __op instanceof SubNode))
         {
-            BinaryArithmeticNode<?> aritOp = (BinaryArithmeticNode<?>) op;
-            if (aritOp.getX() == base && loop.isOutsideLoop(aritOp.getY()))
+            BinaryArithmeticNode<?> __aritOp = (BinaryArithmeticNode<?>) __op;
+            if (__aritOp.getX() == __base && __loop.isOutsideLoop(__aritOp.getY()))
             {
-                return aritOp.getY();
+                return __aritOp.getY();
             }
-            else if (aritOp.getY() == base && loop.isOutsideLoop(aritOp.getX()))
+            else if (__aritOp.getY() == __base && __loop.isOutsideLoop(__aritOp.getX()))
             {
-                return aritOp.getX();
+                return __aritOp.getX();
             }
         }
         return null;
     }
 
-    private static ValueNode mul(LoopEx loop, ValueNode op, ValueNode base)
+    private static ValueNode mul(LoopEx __loop, ValueNode __op, ValueNode __base)
     {
-        if (op instanceof MulNode)
+        if (__op instanceof MulNode)
         {
-            MulNode mul = (MulNode) op;
-            if (mul.getX() == base && loop.isOutsideLoop(mul.getY()))
+            MulNode __mul = (MulNode) __op;
+            if (__mul.getX() == __base && __loop.isOutsideLoop(__mul.getY()))
             {
-                return mul.getY();
+                return __mul.getY();
             }
-            else if (mul.getY() == base && loop.isOutsideLoop(mul.getX()))
+            else if (__mul.getY() == __base && __loop.isOutsideLoop(__mul.getX()))
             {
-                return mul.getX();
+                return __mul.getX();
             }
         }
-        if (op instanceof LeftShiftNode)
+        if (__op instanceof LeftShiftNode)
         {
-            LeftShiftNode shift = (LeftShiftNode) op;
-            if (shift.getX() == base && shift.getY().isConstant())
+            LeftShiftNode __shift = (LeftShiftNode) __op;
+            if (__shift.getX() == __base && __shift.getY().isConstant())
             {
-                return ConstantNode.forIntegerStamp(base.stamp(NodeView.DEFAULT), 1 << shift.getY().asJavaConstant().asInt(), base.graph());
+                return ConstantNode.forIntegerStamp(__base.stamp(NodeView.DEFAULT), 1 << __shift.getY().asJavaConstant().asInt(), __base.graph());
             }
         }
         return null;
@@ -508,9 +515,9 @@ public final class LoopEx
     {
         if (ivs != null)
         {
-            for (InductionVariable iv : ivs.getValues())
+            for (InductionVariable __iv : ivs.getValues())
             {
-                iv.deleteUnusedNodes();
+                __iv.deleteUnusedNodes();
             }
         }
     }
@@ -520,16 +527,16 @@ public final class LoopEx
      */
     public boolean canDuplicateLoop()
     {
-        for (Node node : inside().nodes())
+        for (Node __node : inside().nodes())
         {
-            if (node instanceof ControlFlowAnchored)
+            if (__node instanceof ControlFlowAnchored)
             {
                 return false;
             }
-            if (node instanceof FrameState)
+            if (__node instanceof FrameState)
             {
-                FrameState frameState = (FrameState) node;
-                if (frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI || frameState.bci == BytecodeFrame.UNWIND_BCI)
+                FrameState __frameState = (FrameState) __node;
+                if (__frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI || __frameState.bci == BytecodeFrame.UNWIND_BCI)
                 {
                     return false;
                 }

@@ -18,25 +18,30 @@ import giraaff.core.phases.HighTier;
 // @class CompilationTask
 public final class CompilationTask
 {
+    // @field
     private final HotSpotGraalCompiler compiler;
+    // @field
     private final HotSpotCompilationRequest request;
+    // @field
     private final boolean useProfilingInfo;
     /**
      * Specifies whether the compilation result is installed as the
      * {@linkplain HotSpotNmethod#isDefault() default} nmethod for the compiled method.
      */
+    // @field
     private final boolean installAsDefault;
 
+    // @field
     private HotSpotInstalledCode installedCode;
 
     // @cons
-    public CompilationTask(HotSpotGraalCompiler compiler, HotSpotCompilationRequest request, boolean useProfilingInfo, boolean installAsDefault)
+    public CompilationTask(HotSpotGraalCompiler __compiler, HotSpotCompilationRequest __request, boolean __useProfilingInfo, boolean __installAsDefault)
     {
         super();
-        this.compiler = compiler;
-        this.request = request;
-        this.useProfilingInfo = useProfilingInfo;
-        this.installAsDefault = installAsDefault;
+        this.compiler = __compiler;
+        this.request = __request;
+        this.useProfilingInfo = __useProfilingInfo;
+        this.installAsDefault = __installAsDefault;
     }
 
     public HotSpotResolvedJavaMethod getMethod()
@@ -66,14 +71,14 @@ public final class CompilationTask
 
     public HotSpotCompilationRequestResult runCompilation()
     {
-        HotSpotResolvedJavaMethod method = getMethod();
+        HotSpotResolvedJavaMethod __method = getMethod();
 
         if (installAsDefault)
         {
             // If there is already compiled code for this method on our level we simply return.
             // JVMCI compiles are always at the highest compile level, even in non-tiered mode,
             // so we only need to check for that value.
-            if (method.hasCodeAtLevel(getEntryBCI(), HotSpotRuntime.compilationLevelFullOptimization))
+            if (__method.hasCodeAtLevel(getEntryBCI(), HotSpotRuntime.compilationLevelFullOptimization))
             {
                 return HotSpotCompilationRequestResult.failure("Already compiled", false);
             }
@@ -81,27 +86,27 @@ public final class CompilationTask
 
         try
         {
-            CompilationResult result = compiler.compile(method, getEntryBCI(), useProfilingInfo);
-            if (result != null)
+            CompilationResult __result = compiler.compile(__method, getEntryBCI(), useProfilingInfo);
+            if (__result != null)
             {
-                HotSpotBackend backend = compiler.getGraalRuntime().getBackend();
-                installedCode = (HotSpotInstalledCode) backend.createInstalledCode(method, request, result, method.getSpeculationLog(), null, installAsDefault);
-                return HotSpotCompilationRequestResult.success(result.getBytecodeSize() - method.getCodeSize());
+                HotSpotBackend __backend = compiler.getGraalRuntime().getBackend();
+                installedCode = (HotSpotInstalledCode) __backend.createInstalledCode(__method, request, __result, __method.getSpeculationLog(), null, installAsDefault);
+                return HotSpotCompilationRequestResult.success(__result.getBytecodeSize() - __method.getCodeSize());
             }
             return null;
         }
-        catch (Throwable t)
+        catch (Throwable __t)
         {
-            if (t instanceof BailoutException)
+            if (__t instanceof BailoutException)
             {
-                BailoutException bailout = (BailoutException) t;
+                BailoutException __bailout = (BailoutException) __t;
                 /*
                  * Handling of permanent bailouts: Permanent bailouts that can happen for example
                  * due to unsupported unstructured control flow in the bytecodes of a method must
                  * not be retried. Hotspot compile broker will ensure that no recompilation at the
                  * given tier will happen if retry is false.
                  */
-                return HotSpotCompilationRequestResult.failure(bailout.getMessage(), !bailout.isPermanent());
+                return HotSpotCompilationRequestResult.failure(__bailout.getMessage(), !__bailout.isPermanent());
             }
 
             /*
@@ -109,7 +114,7 @@ public final class CompilationTask
              * method. Report the result of toString instead of getMessage to ensure that the
              * exception type is included in the output in case there's no detail mesage.
              */
-            return HotSpotCompilationRequestResult.failure(t.toString(), false);
+            return HotSpotCompilationRequestResult.failure(__t.toString(), false);
         }
     }
 }

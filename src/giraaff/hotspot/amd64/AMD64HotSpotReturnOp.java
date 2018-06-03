@@ -18,42 +18,48 @@ import giraaff.lir.gen.DiagnosticLIRGeneratorTool.ZapStackArgumentSpaceBeforeIns
 // @class AMD64HotSpotReturnOp
 final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implements ZapStackArgumentSpaceBeforeInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotReturnOp> TYPE = LIRInstructionClass.create(AMD64HotSpotReturnOp.class);
 
-    @Use({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value value;
+    @Use({OperandFlag.REG, OperandFlag.ILLEGAL})
+    // @field
+    protected Value value;
+    // @field
     private final boolean isStub;
+    // @field
     private final Register thread;
+    // @field
     private final Register scratchForSafepointOnReturn;
 
     // @cons
-    AMD64HotSpotReturnOp(Value value, boolean isStub, Register thread, Register scratchForSafepointOnReturn)
+    AMD64HotSpotReturnOp(Value __value, boolean __isStub, Register __thread, Register __scratchForSafepointOnReturn)
     {
         super(TYPE);
-        this.value = value;
-        this.isStub = isStub;
-        this.thread = thread;
-        this.scratchForSafepointOnReturn = scratchForSafepointOnReturn;
+        this.value = __value;
+        this.isStub = __isStub;
+        this.thread = __thread;
+        this.scratchForSafepointOnReturn = __scratchForSafepointOnReturn;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        leaveFrameAndRestoreRbp(crb, masm);
+        leaveFrameAndRestoreRbp(__crb, __masm);
         if (!isStub)
         {
             // Every non-stub compile method must have a poll before the return.
-            AMD64HotSpotSafepointOp.emitCode(crb, masm, true, null, thread, scratchForSafepointOnReturn);
+            AMD64HotSpotSafepointOp.emitCode(__crb, __masm, true, null, thread, scratchForSafepointOnReturn);
 
             /*
              * We potentially return to the interpreter, and that's an AVX-SSE transition. The only
              * live value at this point should be the return value in either rax, or in xmm0 with
              * the upper half of the register unused, so we don't destroy any value here.
              */
-            if (masm.supports(CPUFeature.AVX))
+            if (__masm.supports(CPUFeature.AVX))
             {
-                masm.vzeroupper();
+                __masm.vzeroupper();
             }
         }
-        masm.ret(0);
+        __masm.ret(0);
     }
 }

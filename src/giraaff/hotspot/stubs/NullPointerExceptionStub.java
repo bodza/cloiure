@@ -15,21 +15,21 @@ import giraaff.util.GraalError;
 public final class NullPointerExceptionStub extends CreateExceptionStub
 {
     // @cons
-    public NullPointerExceptionStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public NullPointerExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super("createNullPointerException", providers, linkage);
+        super("createNullPointerException", __providers, __linkage);
     }
 
     @Override
-    protected Object getConstantParameterValue(int index, String name)
+    protected Object getConstantParameterValue(int __index, String __name)
     {
-        GraalError.guarantee(index == 0, "unknown parameter %s at index %d", name, index);
+        GraalError.guarantee(__index == 0, "unknown parameter %s at index %d", __name, __index);
         return providers.getRegisters().getThreadRegister();
     }
 
     @Snippet
-    private static Object createNullPointerException(@ConstantParameter Register threadRegister)
+    private static Object createNullPointerException(@ConstantParameter Register __threadRegister)
     {
-        return createException(threadRegister, NullPointerException.class);
+        return createException(__threadRegister, NullPointerException.class);
     }
 }

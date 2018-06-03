@@ -23,25 +23,29 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class MemoryMapNode
 public final class MemoryMapNode extends FloatingNode implements MemoryMap, MemoryNode, LIRLowerable
 {
+    // @def
     public static final NodeClass<MemoryMapNode> TYPE = NodeClass.create(MemoryMapNode.class);
 
+    // @field
     protected final List<LocationIdentity> locationIdentities;
-    @Input(InputType.Memory) NodeInputList<ValueNode> nodes;
+    @Input(InputType.Memory)
+    // @field
+    NodeInputList<ValueNode> nodes;
 
     // @cons
-    public MemoryMapNode(EconomicMap<LocationIdentity, MemoryNode> mmap)
+    public MemoryMapNode(EconomicMap<LocationIdentity, MemoryNode> __mmap)
     {
         super(TYPE, StampFactory.forVoid());
-        int size = mmap.size();
-        locationIdentities = new ArrayList<>(size);
-        nodes = new NodeInputList<>(this, size);
-        int index = 0;
-        MapCursor<LocationIdentity, MemoryNode> cursor = mmap.getEntries();
-        while (cursor.advance())
+        int __size = __mmap.size();
+        locationIdentities = new ArrayList<>(__size);
+        nodes = new NodeInputList<>(this, __size);
+        int __index = 0;
+        MapCursor<LocationIdentity, MemoryNode> __cursor = __mmap.getEntries();
+        while (__cursor.advance())
         {
-            locationIdentities.add(cursor.getKey());
-            nodes.initialize(index, (ValueNode) cursor.getValue());
-            index++;
+            locationIdentities.add(__cursor.getKey());
+            nodes.initialize(__index, (ValueNode) __cursor.getValue());
+            __index++;
         }
     }
 
@@ -62,20 +66,20 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
     }
 
     @Override
-    public MemoryNode getLastLocationAccess(LocationIdentity locationIdentity)
+    public MemoryNode getLastLocationAccess(LocationIdentity __locationIdentity)
     {
-        if (locationIdentity.isImmutable())
+        if (__locationIdentity.isImmutable())
         {
             return null;
         }
         else
         {
-            int index = locationIdentities.indexOf(locationIdentity);
-            if (index == -1)
+            int __index = locationIdentities.indexOf(__locationIdentity);
+            if (__index == -1)
             {
-                index = locationIdentities.indexOf(LocationIdentity.any());
+                __index = locationIdentities.indexOf(LocationIdentity.any());
             }
-            return (MemoryNode) nodes.get(index);
+            return (MemoryNode) nodes.get(__index);
         }
     }
 
@@ -87,16 +91,16 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
 
     public EconomicMap<LocationIdentity, MemoryNode> toMap()
     {
-        EconomicMap<LocationIdentity, MemoryNode> res = EconomicMap.create(Equivalence.DEFAULT, locationIdentities.size());
-        for (int i = 0; i < nodes.size(); i++)
+        EconomicMap<LocationIdentity, MemoryNode> __res = EconomicMap.create(Equivalence.DEFAULT, locationIdentities.size());
+        for (int __i = 0; __i < nodes.size(); __i++)
         {
-            res.put(locationIdentities.get(i), (MemoryNode) nodes.get(i));
+            __res.put(locationIdentities.get(__i), (MemoryNode) nodes.get(__i));
         }
-        return res;
+        return __res;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nothing to do...
     }

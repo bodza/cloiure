@@ -22,20 +22,26 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AtomicReadAndAddNode
 public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<AtomicReadAndAddNode> TYPE = NodeClass.create(AtomicReadAndAddNode.class);
 
-    @Input(InputType.Association) AddressNode address;
-    @Input ValueNode delta;
+    @Input(InputType.Association)
+    // @field
+    AddressNode address;
+    @Input
+    // @field
+    ValueNode delta;
 
+    // @field
     protected final LocationIdentity locationIdentity;
 
     // @cons
-    public AtomicReadAndAddNode(AddressNode address, ValueNode delta, LocationIdentity locationIdentity)
+    public AtomicReadAndAddNode(AddressNode __address, ValueNode __delta, LocationIdentity __locationIdentity)
     {
-        super(TYPE, StampFactory.forKind(delta.getStackKind()));
-        this.address = address;
-        this.delta = delta;
-        this.locationIdentity = locationIdentity;
+        super(TYPE, StampFactory.forKind(__delta.getStackKind()));
+        this.address = __address;
+        this.delta = __delta;
+        this.locationIdentity = __locationIdentity;
     }
 
     public ValueNode delta()
@@ -50,9 +56,9 @@ public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint impleme
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result = gen.getLIRGeneratorTool().emitAtomicReadAndAdd(gen.operand(address), gen.operand(delta));
-        gen.setResult(this, result);
+        Value __result = __gen.getLIRGeneratorTool().emitAtomicReadAndAdd(__gen.operand(address), __gen.operand(delta));
+        __gen.setResult(this, __result);
     }
 }

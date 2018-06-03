@@ -23,13 +23,14 @@ import giraaff.nodes.spi.LoweringTool;
 // @class IntegerAddExactNode
 public final class IntegerAddExactNode extends AddNode implements IntegerExactArithmeticNode
 {
+    // @def
     public static final NodeClass<IntegerAddExactNode> TYPE = NodeClass.create(IntegerAddExactNode.class);
 
     // @cons
-    public IntegerAddExactNode(ValueNode x, ValueNode y)
+    public IntegerAddExactNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, x, y);
-        setStamp(x.stamp(NodeView.DEFAULT).unrestricted());
+        super(TYPE, __x, __y);
+        setStamp(__x.stamp(NodeView.DEFAULT).unrestricted());
     }
 
     @Override
@@ -44,110 +45,110 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     }
 
     @Override
-    public Stamp foldStamp(Stamp stampX, Stamp stampY)
+    public Stamp foldStamp(Stamp __stampX, Stamp __stampY)
     {
-        IntegerStamp a = (IntegerStamp) stampX;
-        IntegerStamp b = (IntegerStamp) stampY;
+        IntegerStamp __a = (IntegerStamp) __stampX;
+        IntegerStamp __b = (IntegerStamp) __stampY;
 
-        int bits = a.getBits();
+        int __bits = __a.getBits();
 
-        long defaultMask = CodeUtil.mask(bits);
-        long variableBits = (a.downMask() ^ a.upMask()) | (b.downMask() ^ b.upMask());
-        long variableBitsWithCarry = variableBits | (IntegerStamp.carryBits(a.downMask(), b.downMask()) ^ IntegerStamp.carryBits(a.upMask(), b.upMask()));
-        long newDownMask = (a.downMask() + b.downMask()) & ~variableBitsWithCarry;
-        long newUpMask = (a.downMask() + b.downMask()) | variableBitsWithCarry;
+        long __defaultMask = CodeUtil.mask(__bits);
+        long __variableBits = (__a.downMask() ^ __a.upMask()) | (__b.downMask() ^ __b.upMask());
+        long __variableBitsWithCarry = __variableBits | (IntegerStamp.carryBits(__a.downMask(), __b.downMask()) ^ IntegerStamp.carryBits(__a.upMask(), __b.upMask()));
+        long __newDownMask = (__a.downMask() + __b.downMask()) & ~__variableBitsWithCarry;
+        long __newUpMask = (__a.downMask() + __b.downMask()) | __variableBitsWithCarry;
 
-        newDownMask &= defaultMask;
-        newUpMask &= defaultMask;
+        __newDownMask &= __defaultMask;
+        __newUpMask &= __defaultMask;
 
-        long newLowerBound;
-        long newUpperBound;
-        boolean lowerOverflowsPositively = IntegerStamp.addOverflowsPositively(a.lowerBound(), b.lowerBound(), bits);
-        boolean upperOverflowsPositively = IntegerStamp.addOverflowsPositively(a.upperBound(), b.upperBound(), bits);
-        boolean lowerOverflowsNegatively = IntegerStamp.addOverflowsNegatively(a.lowerBound(), b.lowerBound(), bits);
-        boolean upperOverflowsNegatively = IntegerStamp.addOverflowsNegatively(a.upperBound(), b.upperBound(), bits);
-        if (lowerOverflowsPositively)
+        long __newLowerBound;
+        long __newUpperBound;
+        boolean __lowerOverflowsPositively = IntegerStamp.addOverflowsPositively(__a.lowerBound(), __b.lowerBound(), __bits);
+        boolean __upperOverflowsPositively = IntegerStamp.addOverflowsPositively(__a.upperBound(), __b.upperBound(), __bits);
+        boolean __lowerOverflowsNegatively = IntegerStamp.addOverflowsNegatively(__a.lowerBound(), __b.lowerBound(), __bits);
+        boolean __upperOverflowsNegatively = IntegerStamp.addOverflowsNegatively(__a.upperBound(), __b.upperBound(), __bits);
+        if (__lowerOverflowsPositively)
         {
-            newLowerBound = CodeUtil.maxValue(bits);
+            __newLowerBound = CodeUtil.maxValue(__bits);
         }
-        else if (lowerOverflowsNegatively)
+        else if (__lowerOverflowsNegatively)
         {
-            newLowerBound = CodeUtil.minValue(bits);
-        }
-        else
-        {
-            newLowerBound = CodeUtil.signExtend((a.lowerBound() + b.lowerBound()) & defaultMask, bits);
-        }
-
-        if (upperOverflowsPositively)
-        {
-            newUpperBound = CodeUtil.maxValue(bits);
-        }
-        else if (upperOverflowsNegatively)
-        {
-            newUpperBound = CodeUtil.minValue(bits);
+            __newLowerBound = CodeUtil.minValue(__bits);
         }
         else
         {
-            newUpperBound = CodeUtil.signExtend((a.upperBound() + b.upperBound()) & defaultMask, bits);
+            __newLowerBound = CodeUtil.signExtend((__a.lowerBound() + __b.lowerBound()) & __defaultMask, __bits);
         }
 
-        IntegerStamp limit = StampFactory.forInteger(bits, newLowerBound, newUpperBound);
-        newUpMask &= limit.upMask();
-        newUpperBound = CodeUtil.signExtend(newUpperBound & newUpMask, bits);
-        newDownMask |= limit.downMask();
-        newLowerBound |= newDownMask;
-        return IntegerStamp.create(bits, newLowerBound, newUpperBound, newDownMask, newUpMask);
+        if (__upperOverflowsPositively)
+        {
+            __newUpperBound = CodeUtil.maxValue(__bits);
+        }
+        else if (__upperOverflowsNegatively)
+        {
+            __newUpperBound = CodeUtil.minValue(__bits);
+        }
+        else
+        {
+            __newUpperBound = CodeUtil.signExtend((__a.upperBound() + __b.upperBound()) & __defaultMask, __bits);
+        }
+
+        IntegerStamp __limit = StampFactory.forInteger(__bits, __newLowerBound, __newUpperBound);
+        __newUpMask &= __limit.upMask();
+        __newUpperBound = CodeUtil.signExtend(__newUpperBound & __newUpMask, __bits);
+        __newDownMask |= __limit.downMask();
+        __newLowerBound |= __newDownMask;
+        return IntegerStamp.create(__bits, __newLowerBound, __newUpperBound, __newDownMask, __newUpMask);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        if (forX.isConstant() && !forY.isConstant())
+        if (__forX.isConstant() && !__forY.isConstant())
         {
-            return new IntegerAddExactNode(forY, forX).canonical(tool);
+            return new IntegerAddExactNode(__forY, __forX).canonical(__tool);
         }
-        if (forX.isConstant())
+        if (__forX.isConstant())
         {
-            ConstantNode constantNode = canonicalXconstant(forX, forY);
-            if (constantNode != null)
+            ConstantNode __constantNode = canonicalXconstant(__forX, __forY);
+            if (__constantNode != null)
             {
-                return constantNode;
+                return __constantNode;
             }
         }
-        else if (forY.isConstant())
+        else if (__forY.isConstant())
         {
-            long c = forY.asJavaConstant().asLong();
-            if (c == 0)
+            long __c = __forY.asJavaConstant().asLong();
+            if (__c == 0)
             {
-                return forX;
+                return __forX;
             }
         }
-        if (!IntegerStamp.addCanOverflow((IntegerStamp) forX.stamp(NodeView.DEFAULT), (IntegerStamp) forY.stamp(NodeView.DEFAULT)))
+        if (!IntegerStamp.addCanOverflow((IntegerStamp) __forX.stamp(NodeView.DEFAULT), (IntegerStamp) __forY.stamp(NodeView.DEFAULT)))
         {
-            return new AddNode(forX, forY).canonical(tool);
+            return new AddNode(__forX, __forY).canonical(__tool);
         }
         return this;
     }
 
-    private static ConstantNode canonicalXconstant(ValueNode forX, ValueNode forY)
+    private static ConstantNode canonicalXconstant(ValueNode __forX, ValueNode __forY)
     {
-        JavaConstant xConst = forX.asJavaConstant();
-        JavaConstant yConst = forY.asJavaConstant();
-        if (xConst != null && yConst != null)
+        JavaConstant __xConst = __forX.asJavaConstant();
+        JavaConstant __yConst = __forY.asJavaConstant();
+        if (__xConst != null && __yConst != null)
         {
             try
             {
-                if (xConst.getJavaKind() == JavaKind.Int)
+                if (__xConst.getJavaKind() == JavaKind.Int)
                 {
-                    return ConstantNode.forInt(Math.addExact(xConst.asInt(), yConst.asInt()));
+                    return ConstantNode.forInt(Math.addExact(__xConst.asInt(), __yConst.asInt()));
                 }
                 else
                 {
-                    return ConstantNode.forLong(Math.addExact(xConst.asLong(), yConst.asLong()));
+                    return ConstantNode.forLong(Math.addExact(__xConst.asLong(), __yConst.asLong()));
                 }
             }
-            catch (ArithmeticException ex)
+            catch (ArithmeticException __ex)
             {
                 // The operation will result in an overflow exception, so do not canonicalize.
             }
@@ -156,14 +157,14 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     }
 
     @Override
-    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode next, AbstractBeginNode deopt)
+    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode __next, AbstractBeginNode __deopt)
     {
-        return graph().add(new IntegerAddExactSplitNode(stamp(NodeView.DEFAULT), getX(), getY(), next, deopt));
+        return graph().add(new IntegerAddExactSplitNode(stamp(NodeView.DEFAULT), getX(), getY(), __next, __deopt));
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        IntegerExactArithmeticSplitNode.lower(tool, this);
+        IntegerExactArithmeticSplitNode.lower(__tool, this);
     }
 }

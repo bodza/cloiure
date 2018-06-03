@@ -12,7 +12,9 @@ import giraaff.lir.gen.LIRGenerationResult;
 // @class LIRPhaseSuite
 public class LIRPhaseSuite<C> extends LIRPhase<C>
 {
+    // @field
     private List<LIRPhase<C>> phases;
+    // @field
     private boolean immutable;
 
     // @cons
@@ -33,25 +35,25 @@ public class LIRPhaseSuite<C> extends LIRPhase<C>
     /**
      * Add a new phase at the beginning of this suite.
      */
-    public final void prependPhase(LIRPhase<C> phase)
+    public final void prependPhase(LIRPhase<C> __phase)
     {
-        phases.add(0, phase);
+        phases.add(0, __phase);
     }
 
     /**
      * Add a new phase at the end of this suite.
      */
-    public final void appendPhase(LIRPhase<C> phase)
+    public final void appendPhase(LIRPhase<C> __phase)
     {
-        phases.add(phase);
+        phases.add(__phase);
     }
 
-    public final ListIterator<LIRPhase<C>> findPhase(Class<? extends LIRPhase<C>> phaseClass)
+    public final ListIterator<LIRPhase<C>> findPhase(Class<? extends LIRPhase<C>> __phaseClass)
     {
-        ListIterator<LIRPhase<C>> it = phases.listIterator();
-        if (findNextPhase(it, phaseClass))
+        ListIterator<LIRPhase<C>> __it = phases.listIterator();
+        if (findNextPhase(__it, __phaseClass))
         {
-            return it;
+            return __it;
         }
         else
         {
@@ -59,26 +61,26 @@ public class LIRPhaseSuite<C> extends LIRPhase<C>
         }
     }
 
-    public final <T extends LIRPhase<C>> T findPhaseInstance(Class<T> phaseClass)
+    public final <T extends LIRPhase<C>> T findPhaseInstance(Class<T> __phaseClass)
     {
-        ListIterator<LIRPhase<C>> it = phases.listIterator();
-        while (it.hasNext())
+        ListIterator<LIRPhase<C>> __it = phases.listIterator();
+        while (__it.hasNext())
         {
-            LIRPhase<C> phase = it.next();
-            if (phaseClass.isInstance(phase))
+            LIRPhase<C> __phase = __it.next();
+            if (__phaseClass.isInstance(__phase))
             {
-                return phaseClass.cast(phase);
+                return __phaseClass.cast(__phase);
             }
         }
         return null;
     }
 
-    public static <C> boolean findNextPhase(ListIterator<LIRPhase<C>> it, Class<? extends LIRPhase<C>> phaseClass)
+    public static <C> boolean findNextPhase(ListIterator<LIRPhase<C>> __it, Class<? extends LIRPhase<C>> __phaseClass)
     {
-        while (it.hasNext())
+        while (__it.hasNext())
         {
-            LIRPhase<C> phase = it.next();
-            if (phaseClass.isInstance(phase))
+            LIRPhase<C> __phase = __it.next();
+            if (__phaseClass.isInstance(__phase))
             {
                 return true;
             }
@@ -87,19 +89,19 @@ public class LIRPhaseSuite<C> extends LIRPhase<C>
     }
 
     @Override
-    protected final void run(TargetDescription target, LIRGenerationResult lirGenRes, C context)
+    protected final void run(TargetDescription __target, LIRGenerationResult __lirGenRes, C __context)
     {
-        for (LIRPhase<C> phase : phases)
+        for (LIRPhase<C> __phase : phases)
         {
-            phase.apply(target, lirGenRes, context);
+            __phase.apply(__target, __lirGenRes, __context);
         }
     }
 
     public LIRPhaseSuite<C> copy()
     {
-        LIRPhaseSuite<C> suite = new LIRPhaseSuite<>();
-        suite.phases.addAll(phases);
-        return suite;
+        LIRPhaseSuite<C> __suite = new LIRPhaseSuite<>();
+        __suite.phases.addAll(phases);
+        return __suite;
     }
 
     public boolean isImmutable()

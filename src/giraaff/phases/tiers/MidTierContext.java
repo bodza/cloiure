@@ -9,17 +9,20 @@ import giraaff.phases.util.Providers;
 // @class MidTierContext
 public final class MidTierContext extends PhaseContext
 {
+    // @field
     private final TargetProvider target;
+    // @field
     private final OptimisticOptimizations optimisticOpts;
+    // @field
     private final ProfilingInfo profilingInfo;
 
     // @cons
-    public MidTierContext(Providers copyFrom, TargetProvider target, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo)
+    public MidTierContext(Providers __copyFrom, TargetProvider __target, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo)
     {
-        super(copyFrom);
-        this.target = target;
-        this.optimisticOpts = optimisticOpts;
-        this.profilingInfo = profilingInfo;
+        super(__copyFrom);
+        this.target = __target;
+        this.optimisticOpts = __optimisticOpts;
+        this.profilingInfo = __profilingInfo;
     }
 
     public TargetDescription getTarget()

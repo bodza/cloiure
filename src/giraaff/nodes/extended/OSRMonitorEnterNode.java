@@ -12,28 +12,29 @@ import giraaff.nodes.spi.VirtualizerTool;
 // @class OSRMonitorEnterNode
 public final class OSRMonitorEnterNode extends MonitorEnterNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<OSRMonitorEnterNode> TYPE = NodeClass.create(OSRMonitorEnterNode.class);
 
     // @cons
-    public OSRMonitorEnterNode(ValueNode object, MonitorIdNode monitorId)
+    public OSRMonitorEnterNode(ValueNode __object, MonitorIdNode __monitorId)
     {
-        super(TYPE, object, monitorId);
+        super(TYPE, __object, __monitorId);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
         // OSR Entry cannot be virtualized
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nothing to do
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         /*
          * Nothing to do for OSR compilations with locks the monitor enter operation already

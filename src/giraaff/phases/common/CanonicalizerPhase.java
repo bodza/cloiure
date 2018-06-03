@@ -36,23 +36,28 @@ import giraaff.util.GraalError;
 // @class CanonicalizerPhase
 public final class CanonicalizerPhase extends BasePhase<PhaseContext>
 {
+    // @def
     private static final int MAX_ITERATION_PER_NODE = 10;
 
+    // @field
     private boolean globalValueNumber = true;
+    // @field
     private boolean canonicalizeReads = true;
+    // @field
     private boolean simplify = true;
+    // @field
     private final CustomCanonicalizer customCanonicalizer;
 
     // @class CanonicalizerPhase.CustomCanonicalizer
     public abstract static class CustomCanonicalizer
     {
-        public Node canonicalize(Node node)
+        public Node canonicalize(Node __node)
         {
-            return node;
+            return __node;
         }
 
         @SuppressWarnings("unused")
-        public void simplify(Node node, SimplifierTool tool)
+        public void simplify(Node __node, SimplifierTool __tool)
         {
         }
     }
@@ -64,10 +69,10 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
     }
 
     // @cons
-    public CanonicalizerPhase(CustomCanonicalizer customCanonicalizer)
+    public CanonicalizerPhase(CustomCanonicalizer __customCanonicalizer)
     {
         super();
-        this.customCanonicalizer = customCanonicalizer;
+        this.customCanonicalizer = __customCanonicalizer;
     }
 
     public void disableGVN()
@@ -86,32 +91,32 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context)
+    protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        new Instance(context).run(graph);
+        new Instance(__context).run(__graph);
     }
 
     /**
      * @param newNodesMark only the {@linkplain Graph#getNewNodes(Mark) new nodes} specified by this
      *            mark are processed
      */
-    public void applyIncremental(StructuredGraph graph, PhaseContext context, Mark newNodesMark)
+    public void applyIncremental(StructuredGraph __graph, PhaseContext __context, Mark __newNodesMark)
     {
-        new Instance(context, newNodesMark).apply(graph);
+        new Instance(__context, __newNodesMark).apply(__graph);
     }
 
     /**
      * @param workingSet the initial working set of nodes on which the canonicalizer works, should
      *            be an auto-grow node bitmap
      */
-    public void applyIncremental(StructuredGraph graph, PhaseContext context, Iterable<? extends Node> workingSet)
+    public void applyIncremental(StructuredGraph __graph, PhaseContext __context, Iterable<? extends Node> __workingSet)
     {
-        new Instance(context, workingSet).apply(graph);
+        new Instance(__context, __workingSet).apply(__graph);
     }
 
-    public void applyIncremental(StructuredGraph graph, PhaseContext context, Iterable<? extends Node> workingSet, Mark newNodesMark)
+    public void applyIncremental(StructuredGraph __graph, PhaseContext __context, Iterable<? extends Node> __workingSet, Mark __newNodesMark)
     {
-        new Instance(context, workingSet, newNodesMark).apply(graph);
+        new Instance(__context, __workingSet, __newNodesMark).apply(__graph);
     }
 
     public NodeView getNodeView()
@@ -123,98 +128,103 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
     // @closure
     private final class Instance extends Phase
     {
+        // @field
         private final Mark newNodesMark;
+        // @field
         private final PhaseContext context;
+        // @field
         private final Iterable<? extends Node> initWorkingSet;
 
+        // @field
         private NodeWorkList workList;
+        // @field
         private Tool tool;
 
         // @cons
-        private Instance(PhaseContext context)
+        private Instance(PhaseContext __context)
         {
-            this(context, null, null);
+            this(__context, null, null);
         }
 
         // @cons
-        private Instance(PhaseContext context, Iterable<? extends Node> workingSet)
+        private Instance(PhaseContext __context, Iterable<? extends Node> __workingSet)
         {
-            this(context, workingSet, null);
+            this(__context, __workingSet, null);
         }
 
         // @cons
-        private Instance(PhaseContext context, Mark newNodesMark)
+        private Instance(PhaseContext __context, Mark __newNodesMark)
         {
-            this(context, null, newNodesMark);
+            this(__context, null, __newNodesMark);
         }
 
         // @cons
-        private Instance(PhaseContext context, Iterable<? extends Node> workingSet, Mark newNodesMark)
+        private Instance(PhaseContext __context, Iterable<? extends Node> __workingSet, Mark __newNodesMark)
         {
             super();
-            this.newNodesMark = newNodesMark;
-            this.context = context;
-            this.initWorkingSet = workingSet;
+            this.newNodesMark = __newNodesMark;
+            this.context = __context;
+            this.initWorkingSet = __workingSet;
         }
 
         @Override
-        protected void run(StructuredGraph graph)
+        protected void run(StructuredGraph __graph)
         {
-            boolean wholeGraph = newNodesMark == null || newNodesMark.isStart();
+            boolean __wholeGraph = newNodesMark == null || newNodesMark.isStart();
             if (initWorkingSet == null)
             {
-                this.workList = graph.createIterativeNodeWorkList(wholeGraph, MAX_ITERATION_PER_NODE);
+                this.workList = __graph.createIterativeNodeWorkList(__wholeGraph, MAX_ITERATION_PER_NODE);
             }
             else
             {
-                this.workList = graph.createIterativeNodeWorkList(false, MAX_ITERATION_PER_NODE);
+                this.workList = __graph.createIterativeNodeWorkList(false, MAX_ITERATION_PER_NODE);
                 this.workList.addAll(initWorkingSet);
             }
-            if (!wholeGraph)
+            if (!__wholeGraph)
             {
-                this.workList.addAll(graph.getNewNodes(newNodesMark));
+                this.workList.addAll(__graph.getNewNodes(newNodesMark));
             }
-            tool = new Tool(graph.getAssumptions());
-            processWorkSet(graph);
+            tool = new Tool(__graph.getAssumptions());
+            processWorkSet(__graph);
         }
 
         @SuppressWarnings("try")
-        private void processWorkSet(StructuredGraph graph)
+        private void processWorkSet(StructuredGraph __graph)
         {
             // @closure
             NodeEventListener listener = new NodeEventListener()
             {
                 @Override
-                public void nodeAdded(Node node)
+                public void nodeAdded(Node __node)
                 {
-                    CanonicalizerPhase.Instance.this.workList.add(node);
+                    CanonicalizerPhase.Instance.this.workList.add(__node);
                 }
 
                 @Override
-                public void inputChanged(Node node)
+                public void inputChanged(Node __node)
                 {
-                    CanonicalizerPhase.Instance.this.workList.add(node);
-                    if (node instanceof IndirectCanonicalization)
+                    CanonicalizerPhase.Instance.this.workList.add(__node);
+                    if (__node instanceof IndirectCanonicalization)
                     {
-                        for (Node usage : node.usages())
+                        for (Node __usage : __node.usages())
                         {
-                            CanonicalizerPhase.Instance.this.workList.add(usage);
+                            CanonicalizerPhase.Instance.this.workList.add(__usage);
                         }
                     }
                 }
 
                 @Override
-                public void usagesDroppedToZero(Node node)
+                public void usagesDroppedToZero(Node __node)
                 {
-                    CanonicalizerPhase.Instance.this.workList.add(node);
+                    CanonicalizerPhase.Instance.this.workList.add(__node);
                 }
             };
 
-            try (NodeEventScope nes = graph.trackNodeEvents(listener))
+            try (NodeEventScope __nes = __graph.trackNodeEvents(listener))
             {
-                for (Node n : this.workList)
+                for (Node __n : this.workList)
                 {
-                    boolean changed = processNode(n);
+                    boolean __changed = processNode(__n);
                 }
             }
         }
@@ -222,108 +232,108 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         /**
          * @return true if the graph was changed.
          */
-        private boolean processNode(Node node)
+        private boolean processNode(Node __node)
         {
-            if (!node.isAlive())
+            if (!__node.isAlive())
             {
                 return false;
             }
-            if (GraphUtil.tryKillUnused(node))
+            if (GraphUtil.tryKillUnused(__node))
             {
                 return true;
             }
-            NodeClass<?> nodeClass = node.getNodeClass();
-            StructuredGraph graph = (StructuredGraph) node.graph();
-            if (tryCanonicalize(node, nodeClass))
+            NodeClass<?> __nodeClass = __node.getNodeClass();
+            StructuredGraph __graph = (StructuredGraph) __node.graph();
+            if (tryCanonicalize(__node, __nodeClass))
             {
                 return true;
             }
-            if (CanonicalizerPhase.this.globalValueNumber && tryGlobalValueNumbering(node, nodeClass))
+            if (CanonicalizerPhase.this.globalValueNumber && tryGlobalValueNumbering(__node, __nodeClass))
             {
                 return true;
             }
-            if (node instanceof ValueNode)
+            if (__node instanceof ValueNode)
             {
-                ValueNode valueNode = (ValueNode) node;
-                boolean improvedStamp = tryInferStamp(valueNode);
-                Constant constant = valueNode.stamp(NodeView.DEFAULT).asConstant();
-                if (constant != null && !(node instanceof ConstantNode))
+                ValueNode __valueNode = (ValueNode) __node;
+                boolean __improvedStamp = tryInferStamp(__valueNode);
+                Constant __constant = __valueNode.stamp(NodeView.DEFAULT).asConstant();
+                if (__constant != null && !(__node instanceof ConstantNode))
                 {
-                    ConstantNode stampConstant = ConstantNode.forConstant(valueNode.stamp(NodeView.DEFAULT), constant, this.context.getMetaAccess(), graph);
-                    valueNode.replaceAtUsages(InputType.Value, stampConstant);
-                    GraphUtil.tryKillUnused(valueNode);
+                    ConstantNode __stampConstant = ConstantNode.forConstant(__valueNode.stamp(NodeView.DEFAULT), __constant, this.context.getMetaAccess(), __graph);
+                    __valueNode.replaceAtUsages(InputType.Value, __stampConstant);
+                    GraphUtil.tryKillUnused(__valueNode);
                     return true;
                 }
-                else if (improvedStamp)
+                else if (__improvedStamp)
                 {
                     // the improved stamp may enable additional canonicalization
-                    if (tryCanonicalize(valueNode, nodeClass))
+                    if (tryCanonicalize(__valueNode, __nodeClass))
                     {
                         return true;
                     }
-                    valueNode.usages().forEach(this.workList::add);
+                    __valueNode.usages().forEach(this.workList::add);
                 }
             }
             return false;
         }
 
-        public boolean tryGlobalValueNumbering(Node node, NodeClass<?> nodeClass)
+        public boolean tryGlobalValueNumbering(Node __node, NodeClass<?> __nodeClass)
         {
-            if (nodeClass.valueNumberable())
+            if (__nodeClass.valueNumberable())
             {
-                Node newNode = node.graph().findDuplicate(node);
-                if (newNode != null)
+                Node __newNode = __node.graph().findDuplicate(__node);
+                if (__newNode != null)
                 {
-                    node.replaceAtUsagesAndDelete(newNode);
+                    __node.replaceAtUsagesAndDelete(__newNode);
                     return true;
                 }
             }
             return false;
         }
 
-        public boolean tryCanonicalize(final Node node, NodeClass<?> nodeClass)
+        public boolean tryCanonicalize(final Node __node, NodeClass<?> __nodeClass)
         {
             if (CanonicalizerPhase.this.customCanonicalizer != null)
             {
-                Node canonical = CanonicalizerPhase.this.customCanonicalizer.canonicalize(node);
-                if (performReplacement(node, canonical))
+                Node __canonical = CanonicalizerPhase.this.customCanonicalizer.canonicalize(__node);
+                if (performReplacement(__node, __canonical))
                 {
                     return true;
                 }
                 else
                 {
-                    CanonicalizerPhase.this.customCanonicalizer.simplify(node, tool);
-                    if (node.isDeleted())
+                    CanonicalizerPhase.this.customCanonicalizer.simplify(__node, tool);
+                    if (__node.isDeleted())
                     {
                         return true;
                     }
                 }
             }
-            if (nodeClass.isCanonicalizable())
+            if (__nodeClass.isCanonicalizable())
             {
-                Node canonical;
+                Node __canonical;
                 try
                 {
-                    canonical = ((Canonicalizable) node).canonical(tool);
-                    if (canonical == node && nodeClass.isCommutative())
+                    __canonical = ((Canonicalizable) __node).canonical(tool);
+                    if (__canonical == __node && __nodeClass.isCommutative())
                     {
-                        canonical = ((BinaryCommutative<?>) node).maybeCommuteInputs();
+                        __canonical = ((BinaryCommutative<?>) __node).maybeCommuteInputs();
                     }
                 }
-                catch (Throwable t)
+                catch (Throwable __t)
                 {
-                    throw new GraalError(t);
+                    throw new GraalError(__t);
                 }
-                if (performReplacement(node, canonical))
+                if (performReplacement(__node, __canonical))
                 {
                     return true;
                 }
             }
 
-            if (nodeClass.isSimplifiable() && CanonicalizerPhase.this.simplify)
+            if (__nodeClass.isSimplifiable() && CanonicalizerPhase.this.simplify)
             {
-                node.simplify(tool);
-                return node.isDeleted();
+                __node.simplify(tool);
+                return __node.isDeleted();
             }
             return false;
         }
@@ -343,63 +353,63 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         //                                     --------------------------------------------
         //   X: must not happen (checked with assertions)
 
-        private boolean performReplacement(final Node node, Node newCanonical)
+        private boolean performReplacement(final Node __node, Node __newCanonical)
         {
-            if (newCanonical == node)
+            if (__newCanonical == __node)
             {
                 return false;
             }
             else
             {
-                Node canonical = newCanonical;
-                StructuredGraph graph = (StructuredGraph) node.graph();
-                if (canonical != null && !canonical.isAlive())
+                Node __canonical = __newCanonical;
+                StructuredGraph __graph = (StructuredGraph) __node.graph();
+                if (__canonical != null && !__canonical.isAlive())
                 {
-                    canonical = graph.addOrUniqueWithInputs(canonical);
+                    __canonical = __graph.addOrUniqueWithInputs(__canonical);
                 }
-                if (node instanceof FloatingNode)
+                if (__node instanceof FloatingNode)
                 {
-                    node.replaceAtUsages(canonical);
-                    GraphUtil.killWithUnusedFloatingInputs(node, true);
+                    __node.replaceAtUsages(__canonical);
+                    GraphUtil.killWithUnusedFloatingInputs(__node, true);
                 }
                 else
                 {
-                    FixedNode fixed = (FixedNode) node;
-                    if (canonical instanceof ControlSinkNode)
+                    FixedNode __fixed = (FixedNode) __node;
+                    if (__canonical instanceof ControlSinkNode)
                     {
                         // case 7
-                        fixed.replaceAtPredecessor(canonical);
-                        GraphUtil.killCFG(fixed);
+                        __fixed.replaceAtPredecessor(__canonical);
+                        GraphUtil.killCFG(__fixed);
                         return true;
                     }
                     else
                     {
-                        FixedWithNextNode fixedWithNext = (FixedWithNextNode) fixed;
+                        FixedWithNextNode __fixedWithNext = (FixedWithNextNode) __fixed;
                         // when removing a fixed node, new canonicalization opportunities for its successor may arise
-                        tool.addToWorkList(fixedWithNext.next());
-                        if (canonical == null)
+                        tool.addToWorkList(__fixedWithNext.next());
+                        if (__canonical == null)
                         {
                             // case 3
-                            node.replaceAtUsages(null);
-                            GraphUtil.removeFixedWithUnusedInputs(fixedWithNext);
+                            __node.replaceAtUsages(null);
+                            GraphUtil.removeFixedWithUnusedInputs(__fixedWithNext);
                         }
-                        else if (canonical instanceof FloatingNode)
+                        else if (__canonical instanceof FloatingNode)
                         {
                             // case 4
-                            graph.replaceFixedWithFloating(fixedWithNext, (FloatingNode) canonical);
+                            __graph.replaceFixedWithFloating(__fixedWithNext, (FloatingNode) __canonical);
                         }
                         else
                         {
-                            if (canonical.predecessor() == null)
+                            if (__canonical.predecessor() == null)
                             {
                                 // case 5
-                                graph.replaceFixedWithFixed(fixedWithNext, (FixedWithNextNode) canonical);
+                                __graph.replaceFixedWithFixed(__fixedWithNext, (FixedWithNextNode) __canonical);
                             }
                             else
                             {
                                 // case 6
-                                node.replaceAtUsages(canonical);
-                                GraphUtil.removeFixedWithUnusedInputs(fixedWithNext);
+                                __node.replaceAtUsages(__canonical);
+                                GraphUtil.removeFixedWithUnusedInputs(__fixedWithNext);
                             }
                         }
                     }
@@ -414,15 +424,15 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
          * this method also checks if the stamp now describes a constant integer value, in which
          * case the node is replaced with a constant.
          */
-        private boolean tryInferStamp(ValueNode node)
+        private boolean tryInferStamp(ValueNode __node)
         {
-            if (node.isAlive())
+            if (__node.isAlive())
             {
-                if (node.inferStamp())
+                if (__node.inferStamp())
                 {
-                    for (Node usage : node.usages())
+                    for (Node __usage : __node.usages())
                     {
-                        this.workList.add(usage);
+                        this.workList.add(__usage);
                     }
                     return true;
                 }
@@ -434,23 +444,25 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
         // @closure
         private final class Tool implements SimplifierTool, NodeView
         {
+            // @field
             private final Assumptions assumptions;
+            // @field
             private NodeView nodeView;
 
             // @cons
-            Tool(Assumptions assumptions)
+            Tool(Assumptions __assumptions)
             {
                 super();
-                this.assumptions = assumptions;
+                this.assumptions = __assumptions;
                 this.nodeView = getNodeView();
             }
 
             @Override
-            public void deleteBranch(Node branch)
+            public void deleteBranch(Node __branch)
             {
-                FixedNode fixedBranch = (FixedNode) branch;
-                fixedBranch.predecessor().replaceFirstSuccessor(fixedBranch, null);
-                GraphUtil.killCFG(fixedBranch);
+                FixedNode __fixedBranch = (FixedNode) __branch;
+                __fixedBranch.predecessor().replaceFirstSuccessor(__fixedBranch, null);
+                GraphUtil.killCFG(__fixedBranch);
             }
 
             @Override
@@ -472,21 +484,21 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             }
 
             @Override
-            public void addToWorkList(Node node)
+            public void addToWorkList(Node __node)
             {
-                CanonicalizerPhase.Instance.this.workList.add(node);
+                CanonicalizerPhase.Instance.this.workList.add(__node);
             }
 
             @Override
-            public void addToWorkList(Iterable<? extends Node> nodes)
+            public void addToWorkList(Iterable<? extends Node> __nodes)
             {
-                CanonicalizerPhase.Instance.this.workList.addAll(nodes);
+                CanonicalizerPhase.Instance.this.workList.addAll(__nodes);
             }
 
             @Override
-            public void removeIfUnused(Node node)
+            public void removeIfUnused(Node __node)
             {
-                GraphUtil.tryKillUnused(node);
+                GraphUtil.tryKillUnused(__node);
             }
 
             @Override
@@ -514,9 +526,9 @@ public final class CanonicalizerPhase extends BasePhase<PhaseContext>
             }
 
             @Override
-            public Stamp stamp(ValueNode node)
+            public Stamp stamp(ValueNode __node)
             {
-                return nodeView.stamp(node);
+                return nodeView.stamp(__node);
             }
         }
     }

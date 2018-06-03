@@ -11,13 +11,14 @@ import jdk.vm.ci.meta.ValueKind;
 // @class ConstantValue
 public final class ConstantValue extends Value
 {
+    // @field
     private final Constant constant;
 
     // @cons
-    public ConstantValue(ValueKind<?> kind, Constant constant)
+    public ConstantValue(ValueKind<?> __kind, Constant __constant)
     {
-        super(kind);
-        this.constant = constant;
+        super(__kind);
+        this.constant = __constant;
     }
 
     public Constant getConstant()
@@ -36,12 +37,12 @@ public final class ConstantValue extends Value
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (obj instanceof ConstantValue)
+        if (__obj instanceof ConstantValue)
         {
-            ConstantValue other = (ConstantValue) obj;
-            return super.equals(other) && this.constant.equals(other.constant);
+            ConstantValue __other = (ConstantValue) __obj;
+            return super.equals(__other) && this.constant.equals(__other.constant);
         }
         return false;
     }

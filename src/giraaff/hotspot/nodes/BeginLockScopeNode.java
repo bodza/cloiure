@@ -27,22 +27,24 @@ import giraaff.word.WordTypes;
 // @class BeginLockScopeNode
 public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<BeginLockScopeNode> TYPE = NodeClass.create(BeginLockScopeNode.class);
 
+    // @field
     protected int lockDepth;
 
     // @cons
-    public BeginLockScopeNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth)
+    public BeginLockScopeNode(@InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
     {
-        super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
-        this.lockDepth = lockDepth;
+        super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
+        this.lockDepth = __lockDepth;
     }
 
     // @cons
-    public BeginLockScopeNode(JavaKind kind, int lockDepth)
+    public BeginLockScopeNode(JavaKind __kind, int __lockDepth)
     {
-        super(TYPE, StampFactory.forKind(kind));
-        this.lockDepth = lockDepth;
+        super(TYPE, StampFactory.forKind(__kind));
+        this.lockDepth = __lockDepth;
     }
 
     @Override
@@ -58,12 +60,12 @@ public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implement
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        HotSpotLIRGenerator hsGen = (HotSpotLIRGenerator) gen.getLIRGeneratorTool();
-        VirtualStackSlot slot = hsGen.getLockSlot(lockDepth);
-        Value result = gen.getLIRGeneratorTool().emitAddress(slot);
-        gen.setResult(this, result);
+        HotSpotLIRGenerator __hsGen = (HotSpotLIRGenerator) __gen.getLIRGeneratorTool();
+        VirtualStackSlot __slot = __hsGen.getLockSlot(lockDepth);
+        Value __result = __gen.getLIRGeneratorTool().emitAddress(__slot);
+        __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic

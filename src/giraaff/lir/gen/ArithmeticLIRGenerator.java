@@ -13,6 +13,7 @@ import giraaff.lir.Variable;
 // @class ArithmeticLIRGenerator
 public abstract class ArithmeticLIRGenerator implements ArithmeticLIRGeneratorTool
 {
+    // @field
     LIRGenerator lirGen;
 
     public LIRGenerator getLIRGen()
@@ -27,76 +28,76 @@ public abstract class ArithmeticLIRGenerator implements ArithmeticLIRGeneratorTo
     protected abstract Variable emitSub(LIRKind resultKind, Value a, Value b, boolean setFlags);
 
     @Override
-    public final Variable emitAdd(Value aVal, Value bVal, boolean setFlags)
+    public final Variable emitAdd(Value __aVal, Value __bVal, boolean __setFlags)
     {
-        return emitAddOrSub(aVal, bVal, setFlags, true);
+        return emitAddOrSub(__aVal, __bVal, __setFlags, true);
     }
 
     @Override
-    public final Variable emitSub(Value aVal, Value bVal, boolean setFlags)
+    public final Variable emitSub(Value __aVal, Value __bVal, boolean __setFlags)
     {
-        return emitAddOrSub(aVal, bVal, setFlags, false);
+        return emitAddOrSub(__aVal, __bVal, __setFlags, false);
     }
 
-    private Variable emitAddOrSub(Value aVal, Value bVal, boolean setFlags, boolean isAdd)
+    private Variable emitAddOrSub(Value __aVal, Value __bVal, boolean __setFlags, boolean __isAdd)
     {
-        LIRKind resultKind;
-        Value a = aVal;
-        Value b = bVal;
+        LIRKind __resultKind;
+        Value __a = __aVal;
+        Value __b = __bVal;
 
-        if (isNumericInteger(a.getPlatformKind()))
+        if (isNumericInteger(__a.getPlatformKind()))
         {
-            LIRKind aKind = a.getValueKind(LIRKind.class);
-            LIRKind bKind = b.getValueKind(LIRKind.class);
+            LIRKind __aKind = __a.getValueKind(LIRKind.class);
+            LIRKind __bKind = __b.getValueKind(LIRKind.class);
 
-            if (aKind.isUnknownReference())
+            if (__aKind.isUnknownReference())
             {
-                resultKind = aKind;
+                __resultKind = __aKind;
             }
-            else if (bKind.isUnknownReference())
+            else if (__bKind.isUnknownReference())
             {
-                resultKind = bKind;
+                __resultKind = __bKind;
             }
-            else if (aKind.isValue() && bKind.isValue())
+            else if (__aKind.isValue() && __bKind.isValue())
             {
-                resultKind = aKind;
+                __resultKind = __aKind;
             }
-            else if (aKind.isValue())
+            else if (__aKind.isValue())
             {
-                if (bKind.isDerivedReference())
+                if (__bKind.isDerivedReference())
                 {
-                    resultKind = bKind;
+                    __resultKind = __bKind;
                 }
                 else
                 {
-                    AllocatableValue allocatable = getLIRGen().asAllocatable(b);
-                    resultKind = bKind.makeDerivedReference(allocatable);
-                    b = allocatable;
+                    AllocatableValue __allocatable = getLIRGen().asAllocatable(__b);
+                    __resultKind = __bKind.makeDerivedReference(__allocatable);
+                    __b = __allocatable;
                 }
             }
-            else if (bKind.isValue())
+            else if (__bKind.isValue())
             {
-                if (aKind.isDerivedReference())
+                if (__aKind.isDerivedReference())
                 {
-                    resultKind = aKind;
+                    __resultKind = __aKind;
                 }
                 else
                 {
-                    AllocatableValue allocatable = getLIRGen().asAllocatable(a);
-                    resultKind = aKind.makeDerivedReference(allocatable);
-                    a = allocatable;
+                    AllocatableValue __allocatable = getLIRGen().asAllocatable(__a);
+                    __resultKind = __aKind.makeDerivedReference(__allocatable);
+                    __a = __allocatable;
                 }
             }
             else
             {
-                resultKind = aKind.makeUnknownReference();
+                __resultKind = __aKind.makeUnknownReference();
             }
         }
         else
         {
-            resultKind = LIRKind.combine(a, b);
+            __resultKind = LIRKind.combine(__a, __b);
         }
 
-        return isAdd ? emitAdd(resultKind, a, b, setFlags) : emitSub(resultKind, a, b, setFlags);
+        return __isAdd ? emitAdd(__resultKind, __a, __b, __setFlags) : emitSub(__resultKind, __a, __b, __setFlags);
     }
 }

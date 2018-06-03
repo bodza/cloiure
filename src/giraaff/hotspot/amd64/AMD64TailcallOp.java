@@ -18,27 +18,32 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64TailcallOp
 public final class AMD64TailcallOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64TailcallOp> TYPE = LIRInstructionClass.create(AMD64TailcallOp.class);
 
-    @Use protected Value target;
-    @Alive protected Value[] parameters;
+    @Use
+    // @field
+    protected Value target;
+    @Alive
+    // @field
+    protected Value[] parameters;
 
     // @cons
-    public AMD64TailcallOp(Value[] parameters, Value target)
+    public AMD64TailcallOp(Value[] __parameters, Value __target)
     {
         super(TYPE);
-        this.target = target;
-        this.parameters = parameters;
+        this.target = __target;
+        this.parameters = __parameters;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         // destroy the current frame (now the return address is the top of stack)
-        masm.leave();
+        __masm.leave();
 
         // jump to the target method
-        masm.jmp(ValueUtil.asRegister(target));
-        masm.ensureUniquePC();
+        __masm.jmp(ValueUtil.asRegister(target));
+        __masm.ensureUniquePC();
     }
 }

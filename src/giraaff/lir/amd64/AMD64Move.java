@@ -36,21 +36,23 @@ public final class AMD64Move
     // @class AMD64Move.AbstractMoveOp
     private abstract static class AbstractMoveOp extends AMD64LIRInstruction implements ValueMoveOp
     {
+        // @def
         public static final LIRInstructionClass<AbstractMoveOp> TYPE = LIRInstructionClass.create(AbstractMoveOp.class);
 
+        // @field
         private AMD64Kind moveKind;
 
         // @cons
-        protected AbstractMoveOp(LIRInstructionClass<? extends AbstractMoveOp> c, AMD64Kind moveKind)
+        protected AbstractMoveOp(LIRInstructionClass<? extends AbstractMoveOp> __c, AMD64Kind __moveKind)
         {
-            super(c);
-            this.moveKind = moveKind;
+            super(__c);
+            this.moveKind = __moveKind;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            move(moveKind, crb, masm, getResult(), getInput());
+            move(moveKind, __crb, __masm, getResult(), getInput());
         }
     }
 
@@ -58,17 +60,22 @@ public final class AMD64Move
     // @class AMD64Move.MoveToRegOp
     public static final class MoveToRegOp extends AbstractMoveOp
     {
+        // @def
         public static final LIRInstructionClass<MoveToRegOp> TYPE = LIRInstructionClass.create(MoveToRegOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
-        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue input;
+        @Def({OperandFlag.REG, OperandFlag.HINT})
+        // @field
+        protected AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        protected AllocatableValue input;
 
         // @cons
-        public MoveToRegOp(AMD64Kind moveKind, AllocatableValue result, AllocatableValue input)
+        public MoveToRegOp(AMD64Kind __moveKind, AllocatableValue __result, AllocatableValue __input)
         {
-            super(TYPE, moveKind);
-            this.result = result;
-            this.input = input;
+            super(TYPE, __moveKind);
+            this.result = __result;
+            this.input = __input;
         }
 
         @Override
@@ -88,17 +95,22 @@ public final class AMD64Move
     // @class AMD64Move.MoveFromRegOp
     public static final class MoveFromRegOp extends AbstractMoveOp
     {
+        // @def
         public static final LIRInstructionClass<MoveFromRegOp> TYPE = LIRInstructionClass.create(MoveFromRegOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue result;
-        @Use({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue input;
+        @Def({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        protected AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.HINT})
+        // @field
+        protected AllocatableValue input;
 
         // @cons
-        public MoveFromRegOp(AMD64Kind moveKind, AllocatableValue result, AllocatableValue input)
+        public MoveFromRegOp(AMD64Kind __moveKind, AllocatableValue __result, AllocatableValue __input)
         {
-            super(TYPE, moveKind);
-            this.result = result;
-            this.input = input;
+            super(TYPE, __moveKind);
+            this.result = __result;
+            this.input = __input;
         }
 
         @Override
@@ -118,29 +130,33 @@ public final class AMD64Move
     // @class AMD64Move.MoveFromConstOp
     public static final class MoveFromConstOp extends AMD64LIRInstruction implements LoadConstantOp
     {
+        // @def
         public static final LIRInstructionClass<MoveFromConstOp> TYPE = LIRInstructionClass.create(MoveFromConstOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        protected AllocatableValue result;
+        // @field
         private final JavaConstant input;
 
         // @cons
-        public MoveFromConstOp(AllocatableValue result, JavaConstant input)
+        public MoveFromConstOp(AllocatableValue __result, JavaConstant __input)
         {
             super(TYPE);
-            this.result = result;
-            this.input = input;
+            this.result = __result;
+            this.input = __input;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
             if (ValueUtil.isRegister(result))
             {
-                const2reg(crb, masm, ValueUtil.asRegister(result), input);
+                const2reg(__crb, __masm, ValueUtil.asRegister(result), input);
             }
             else
             {
-                const2stack(crb, masm, result, input);
+                const2stack(__crb, __masm, result, input);
             }
         }
 
@@ -161,22 +177,30 @@ public final class AMD64Move
     // @class AMD64Move.AMD64StackMove
     public static final class AMD64StackMove extends AMD64LIRInstruction implements ValueMoveOp
     {
+        // @def
         public static final LIRInstructionClass<AMD64StackMove> TYPE = LIRInstructionClass.create(AMD64StackMove.class);
 
-        @Def({OperandFlag.STACK}) protected AllocatableValue result;
-        @Use({OperandFlag.STACK, OperandFlag.HINT}) protected AllocatableValue input;
-        @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) private AllocatableValue backupSlot;
+        @Def({OperandFlag.STACK})
+        // @field
+        protected AllocatableValue result;
+        @Use({OperandFlag.STACK, OperandFlag.HINT})
+        // @field
+        protected AllocatableValue input;
+        @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
+        // @field
+        private AllocatableValue backupSlot;
 
+        // @field
         private Register scratch;
 
         // @cons
-        public AMD64StackMove(AllocatableValue result, AllocatableValue input, Register scratch, AllocatableValue backupSlot)
+        public AMD64StackMove(AllocatableValue __result, AllocatableValue __input, Register __scratch, AllocatableValue __backupSlot)
         {
             super(TYPE);
-            this.result = result;
-            this.input = input;
-            this.backupSlot = backupSlot;
-            this.scratch = scratch;
+            this.result = __result;
+            this.input = __input;
+            this.backupSlot = __backupSlot;
+            this.scratch = __scratch;
         }
 
         @Override
@@ -202,22 +226,22 @@ public final class AMD64Move
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            AMD64Kind backupKind = (AMD64Kind) backupSlot.getPlatformKind();
-            if (backupKind.isXMM())
+            AMD64Kind __backupKind = (AMD64Kind) backupSlot.getPlatformKind();
+            if (__backupKind.isXMM())
             {
                 // graal doesn't use vector values, so it's safe to backup using DOUBLE
-                backupKind = AMD64Kind.DOUBLE;
+                __backupKind = AMD64Kind.DOUBLE;
             }
 
             // backup scratch register
-            reg2stack(backupKind, crb, masm, backupSlot, scratch);
+            reg2stack(__backupKind, __crb, __masm, backupSlot, scratch);
             // move stack slot
-            stack2reg((AMD64Kind) getInput().getPlatformKind(), crb, masm, scratch, getInput());
-            reg2stack((AMD64Kind) getResult().getPlatformKind(), crb, masm, getResult(), scratch);
+            stack2reg((AMD64Kind) getInput().getPlatformKind(), __crb, __masm, scratch, getInput());
+            reg2stack((AMD64Kind) getResult().getPlatformKind(), __crb, __masm, getResult(), scratch);
             // restore scratch register
-            stack2reg(backupKind, crb, masm, scratch, backupSlot);
+            stack2reg(__backupKind, __crb, __masm, scratch, backupSlot);
         }
     }
 
@@ -225,46 +249,54 @@ public final class AMD64Move
     // @class AMD64Move.AMD64MultiStackMove
     public static final class AMD64MultiStackMove extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<AMD64MultiStackMove> TYPE = LIRInstructionClass.create(AMD64MultiStackMove.class);
 
-        @Def({OperandFlag.STACK}) protected AllocatableValue[] results;
-        @Use({OperandFlag.STACK}) protected Value[] inputs;
-        @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) private AllocatableValue backupSlot;
+        @Def({OperandFlag.STACK})
+        // @field
+        protected AllocatableValue[] results;
+        @Use({OperandFlag.STACK})
+        // @field
+        protected Value[] inputs;
+        @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
+        // @field
+        private AllocatableValue backupSlot;
 
+        // @field
         private Register scratch;
 
         // @cons
-        public AMD64MultiStackMove(AllocatableValue[] results, Value[] inputs, Register scratch, AllocatableValue backupSlot)
+        public AMD64MultiStackMove(AllocatableValue[] __results, Value[] __inputs, Register __scratch, AllocatableValue __backupSlot)
         {
             super(TYPE);
-            this.results = results;
-            this.inputs = inputs;
-            this.backupSlot = backupSlot;
-            this.scratch = scratch;
+            this.results = __results;
+            this.inputs = __inputs;
+            this.backupSlot = __backupSlot;
+            this.scratch = __scratch;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            AMD64Kind backupKind = (AMD64Kind) backupSlot.getPlatformKind();
-            if (backupKind.isXMM())
+            AMD64Kind __backupKind = (AMD64Kind) backupSlot.getPlatformKind();
+            if (__backupKind.isXMM())
             {
                 // graal doesn't use vector values, so it's safe to backup using DOUBLE
-                backupKind = AMD64Kind.DOUBLE;
+                __backupKind = AMD64Kind.DOUBLE;
             }
 
             // backup scratch register
-            move(backupKind, crb, masm, backupSlot, scratch.asValue(backupSlot.getValueKind()));
-            for (int i = 0; i < results.length; i++)
+            move(__backupKind, __crb, __masm, backupSlot, scratch.asValue(backupSlot.getValueKind()));
+            for (int __i = 0; __i < results.length; __i++)
             {
-                Value input = inputs[i];
-                AllocatableValue result = results[i];
+                Value __input = inputs[__i];
+                AllocatableValue __result = results[__i];
                 // move stack slot
-                move((AMD64Kind) input.getPlatformKind(), crb, masm, scratch.asValue(input.getValueKind()), input);
-                move((AMD64Kind) result.getPlatformKind(), crb, masm, result, scratch.asValue(result.getValueKind()));
+                move((AMD64Kind) __input.getPlatformKind(), __crb, __masm, scratch.asValue(__input.getValueKind()), __input);
+                move((AMD64Kind) __result.getPlatformKind(), __crb, __masm, __result, scratch.asValue(__result.getValueKind()));
             }
             // restore scratch register
-            move(backupKind, crb, masm, scratch.asValue(backupSlot.getValueKind()), backupSlot);
+            move(__backupKind, __crb, __masm, scratch.asValue(backupSlot.getValueKind()), backupSlot);
         }
     }
 
@@ -272,19 +304,25 @@ public final class AMD64Move
     // @class AMD64Move.AMD64PushPopStackMove
     public static final class AMD64PushPopStackMove extends AMD64LIRInstruction implements ValueMoveOp
     {
+        // @def
         public static final LIRInstructionClass<AMD64PushPopStackMove> TYPE = LIRInstructionClass.create(AMD64PushPopStackMove.class);
 
-        @Def({OperandFlag.STACK}) protected AllocatableValue result;
-        @Use({OperandFlag.STACK, OperandFlag.HINT}) protected AllocatableValue input;
+        @Def({OperandFlag.STACK})
+        // @field
+        protected AllocatableValue result;
+        @Use({OperandFlag.STACK, OperandFlag.HINT})
+        // @field
+        protected AllocatableValue input;
+        // @field
         private final OperandSize size;
 
         // @cons
-        public AMD64PushPopStackMove(OperandSize size, AllocatableValue result, AllocatableValue input)
+        public AMD64PushPopStackMove(OperandSize __size, AllocatableValue __result, AllocatableValue __input)
         {
             super(TYPE);
-            this.result = result;
-            this.input = input;
-            this.size = size;
+            this.result = __result;
+            this.input = __input;
+            this.size = __size;
         }
 
         @Override
@@ -300,41 +338,47 @@ public final class AMD64Move
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            AMD64MOp.PUSH.emit(masm, size, (AMD64Address) crb.asAddress(input));
-            AMD64MOp.POP.emit(masm, size, (AMD64Address) crb.asAddress(result));
+            AMD64MOp.PUSH.emit(__masm, size, (AMD64Address) __crb.asAddress(input));
+            AMD64MOp.POP.emit(__masm, size, (AMD64Address) __crb.asAddress(result));
         }
     }
 
     // @class AMD64Move.LeaOp
     public static final class LeaOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<LeaOp> TYPE = LIRInstructionClass.create(LeaOp.class);
 
-        @Def({OperandFlag.REG}) protected AllocatableValue result;
-        @Use({OperandFlag.COMPOSITE, OperandFlag.UNINITIALIZED}) protected AMD64AddressValue address;
+        @Def({OperandFlag.REG})
+        // @field
+        protected AllocatableValue result;
+        @Use({OperandFlag.COMPOSITE, OperandFlag.UNINITIALIZED})
+        // @field
+        protected AMD64AddressValue address;
+        // @field
         private final OperandSize size;
 
         // @cons
-        public LeaOp(AllocatableValue result, AMD64AddressValue address, OperandSize size)
+        public LeaOp(AllocatableValue __result, AMD64AddressValue __address, OperandSize __size)
         {
             super(TYPE);
-            this.result = result;
-            this.address = address;
-            this.size = size;
+            this.result = __result;
+            this.address = __address;
+            this.size = __size;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
             if (size == OperandSize.QWORD)
             {
-                masm.leaq(ValueUtil.asRegister(result, AMD64Kind.QWORD), address.toAddress());
+                __masm.leaq(ValueUtil.asRegister(result, AMD64Kind.QWORD), address.toAddress());
             }
             else
             {
-                masm.lead(ValueUtil.asRegister(result, AMD64Kind.DWORD), address.toAddress());
+                __masm.lead(ValueUtil.asRegister(result, AMD64Kind.DWORD), address.toAddress());
             }
         }
     }
@@ -342,91 +386,106 @@ public final class AMD64Move
     // @class AMD64Move.LeaDataOp
     public static final class LeaDataOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<LeaDataOp> TYPE = LIRInstructionClass.create(LeaDataOp.class);
 
-        @Def({OperandFlag.REG}) protected AllocatableValue result;
+        @Def({OperandFlag.REG})
+        // @field
+        protected AllocatableValue result;
+        // @field
         private final DataPointerConstant data;
 
         // @cons
-        public LeaDataOp(AllocatableValue result, DataPointerConstant data)
+        public LeaDataOp(AllocatableValue __result, DataPointerConstant __data)
         {
             super(TYPE);
-            this.result = result;
-            this.data = data;
+            this.result = __result;
+            this.data = __data;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            masm.leaq(ValueUtil.asRegister(result), (AMD64Address) crb.recordDataReferenceInCode(data));
+            __masm.leaq(ValueUtil.asRegister(result), (AMD64Address) __crb.recordDataReferenceInCode(data));
         }
     }
 
     // @class AMD64Move.StackLeaOp
     public static final class StackLeaOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<StackLeaOp> TYPE = LIRInstructionClass.create(StackLeaOp.class);
 
-        @Def({OperandFlag.REG}) protected AllocatableValue result;
-        @Use({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) protected AllocatableValue slot;
+        @Def({OperandFlag.REG})
+        // @field
+        protected AllocatableValue result;
+        @Use({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
+        // @field
+        protected AllocatableValue slot;
 
         // @cons
-        public StackLeaOp(AllocatableValue result, AllocatableValue slot)
+        public StackLeaOp(AllocatableValue __result, AllocatableValue __slot)
         {
             super(TYPE);
-            this.result = result;
-            this.slot = slot;
+            this.result = __result;
+            this.slot = __slot;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            masm.leaq(ValueUtil.asRegister(result, AMD64Kind.QWORD), (AMD64Address) crb.asAddress(slot));
+            __masm.leaq(ValueUtil.asRegister(result, AMD64Kind.QWORD), (AMD64Address) __crb.asAddress(slot));
         }
     }
 
     // @class AMD64Move.MembarOp
     public static final class MembarOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<MembarOp> TYPE = LIRInstructionClass.create(MembarOp.class);
 
+        // @field
         private final int barriers;
 
         // @cons
-        public MembarOp(final int barriers)
+        public MembarOp(final int __barriers)
         {
             super(TYPE);
-            this.barriers = barriers;
+            this.barriers = __barriers;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            masm.membar(barriers);
+            __masm.membar(barriers);
         }
     }
 
     // @class AMD64Move.NullCheckOp
     public static final class NullCheckOp extends AMD64LIRInstruction implements NullCheck
     {
+        // @def
         public static final LIRInstructionClass<NullCheckOp> TYPE = LIRInstructionClass.create(NullCheckOp.class);
 
-        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
+        @Use({OperandFlag.COMPOSITE})
+        // @field
+        protected AMD64AddressValue address;
         // @State
+        // @field
         protected LIRFrameState state;
 
         // @cons
-        public NullCheckOp(AMD64AddressValue address, LIRFrameState state)
+        public NullCheckOp(AMD64AddressValue __address, LIRFrameState __state)
         {
             super(TYPE);
-            this.address = address;
-            this.state = state;
+            this.address = __address;
+            this.state = __state;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            masm.nullCheck(address.toAddress());
+            __masm.nullCheck(address.toAddress());
         }
 
         @Override
@@ -446,40 +505,50 @@ public final class AMD64Move
     // @class AMD64Move.CompareAndSwapOp
     public static final class CompareAndSwapOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<CompareAndSwapOp> TYPE = LIRInstructionClass.create(CompareAndSwapOp.class);
 
+        // @field
         private final AMD64Kind accessKind;
 
-        @Def protected AllocatableValue result;
-        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
-        @Use protected AllocatableValue cmpValue;
-        @Use protected AllocatableValue newValue;
+        @Def
+        // @field
+        protected AllocatableValue result;
+        @Use({OperandFlag.COMPOSITE})
+        // @field
+        protected AMD64AddressValue address;
+        @Use
+        // @field
+        protected AllocatableValue cmpValue;
+        @Use
+        // @field
+        protected AllocatableValue newValue;
 
         // @cons
-        public CompareAndSwapOp(AMD64Kind accessKind, AllocatableValue result, AMD64AddressValue address, AllocatableValue cmpValue, AllocatableValue newValue)
+        public CompareAndSwapOp(AMD64Kind __accessKind, AllocatableValue __result, AMD64AddressValue __address, AllocatableValue __cmpValue, AllocatableValue __newValue)
         {
             super(TYPE);
-            this.accessKind = accessKind;
-            this.result = result;
-            this.address = address;
-            this.cmpValue = cmpValue;
-            this.newValue = newValue;
+            this.accessKind = __accessKind;
+            this.result = __result;
+            this.address = __address;
+            this.cmpValue = __cmpValue;
+            this.newValue = __newValue;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            if (crb.target.isMP)
+            if (__crb.target.isMP)
             {
-                masm.lock();
+                __masm.lock();
             }
             switch (accessKind)
             {
                 case DWORD:
-                    masm.cmpxchgl(ValueUtil.asRegister(newValue), address.toAddress());
+                    __masm.cmpxchgl(ValueUtil.asRegister(newValue), address.toAddress());
                     break;
                 case QWORD:
-                    masm.cmpxchgq(ValueUtil.asRegister(newValue), address.toAddress());
+                    __masm.cmpxchgq(ValueUtil.asRegister(newValue), address.toAddress());
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -491,39 +560,47 @@ public final class AMD64Move
     // @class AMD64Move.AtomicReadAndAddOp
     public static final class AtomicReadAndAddOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<AtomicReadAndAddOp> TYPE = LIRInstructionClass.create(AtomicReadAndAddOp.class);
 
+        // @field
         private final AMD64Kind accessKind;
 
-        @Def protected AllocatableValue result;
-        @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
-        @Use protected AllocatableValue delta;
+        @Def
+        // @field
+        protected AllocatableValue result;
+        @Alive({OperandFlag.COMPOSITE})
+        // @field
+        protected AMD64AddressValue address;
+        @Use
+        // @field
+        protected AllocatableValue delta;
 
         // @cons
-        public AtomicReadAndAddOp(AMD64Kind accessKind, AllocatableValue result, AMD64AddressValue address, AllocatableValue delta)
+        public AtomicReadAndAddOp(AMD64Kind __accessKind, AllocatableValue __result, AMD64AddressValue __address, AllocatableValue __delta)
         {
             super(TYPE);
-            this.accessKind = accessKind;
-            this.result = result;
-            this.address = address;
-            this.delta = delta;
+            this.accessKind = __accessKind;
+            this.result = __result;
+            this.address = __address;
+            this.delta = __delta;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            move(accessKind, crb, masm, result, delta);
-            if (crb.target.isMP)
+            move(accessKind, __crb, __masm, result, delta);
+            if (__crb.target.isMP)
             {
-                masm.lock();
+                __masm.lock();
             }
             switch (accessKind)
             {
                 case DWORD:
-                    masm.xaddl(address.toAddress(), ValueUtil.asRegister(result));
+                    __masm.xaddl(address.toAddress(), ValueUtil.asRegister(result));
                     break;
                 case QWORD:
-                    masm.xaddq(address.toAddress(), ValueUtil.asRegister(result));
+                    __masm.xaddq(address.toAddress(), ValueUtil.asRegister(result));
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -535,35 +612,43 @@ public final class AMD64Move
     // @class AMD64Move.AtomicReadAndWriteOp
     public static final class AtomicReadAndWriteOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<AtomicReadAndWriteOp> TYPE = LIRInstructionClass.create(AtomicReadAndWriteOp.class);
 
+        // @field
         private final AMD64Kind accessKind;
 
-        @Def protected AllocatableValue result;
-        @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
-        @Use protected AllocatableValue newValue;
+        @Def
+        // @field
+        protected AllocatableValue result;
+        @Alive({OperandFlag.COMPOSITE})
+        // @field
+        protected AMD64AddressValue address;
+        @Use
+        // @field
+        protected AllocatableValue newValue;
 
         // @cons
-        public AtomicReadAndWriteOp(AMD64Kind accessKind, AllocatableValue result, AMD64AddressValue address, AllocatableValue newValue)
+        public AtomicReadAndWriteOp(AMD64Kind __accessKind, AllocatableValue __result, AMD64AddressValue __address, AllocatableValue __newValue)
         {
             super(TYPE);
-            this.accessKind = accessKind;
-            this.result = result;
-            this.address = address;
-            this.newValue = newValue;
+            this.accessKind = __accessKind;
+            this.result = __result;
+            this.address = __address;
+            this.newValue = __newValue;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            move(accessKind, crb, masm, result, newValue);
+            move(accessKind, __crb, __masm, result, newValue);
             switch (accessKind)
             {
                 case DWORD:
-                    masm.xchgl(ValueUtil.asRegister(result), address.toAddress());
+                    __masm.xchgl(ValueUtil.asRegister(result), address.toAddress());
                     break;
                 case QWORD:
-                    masm.xchgq(ValueUtil.asRegister(result), address.toAddress());
+                    __masm.xchgq(ValueUtil.asRegister(result), address.toAddress());
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -571,48 +656,48 @@ public final class AMD64Move
         }
     }
 
-    public static void move(CompilationResultBuilder crb, AMD64MacroAssembler masm, Value result, Value input)
+    public static void move(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Value __result, Value __input)
     {
-        move((AMD64Kind) result.getPlatformKind(), crb, masm, result, input);
+        move((AMD64Kind) __result.getPlatformKind(), __crb, __masm, __result, __input);
     }
 
-    public static void move(AMD64Kind moveKind, CompilationResultBuilder crb, AMD64MacroAssembler masm, Value result, Value input)
+    public static void move(AMD64Kind __moveKind, CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Value __result, Value __input)
     {
-        if (ValueUtil.isRegister(input))
+        if (ValueUtil.isRegister(__input))
         {
-            if (ValueUtil.isRegister(result))
+            if (ValueUtil.isRegister(__result))
             {
-                reg2reg(moveKind, masm, result, input);
+                reg2reg(__moveKind, __masm, __result, __input);
             }
-            else if (ValueUtil.isStackSlot(result))
+            else if (ValueUtil.isStackSlot(__result))
             {
-                reg2stack(moveKind, crb, masm, result, ValueUtil.asRegister(input));
+                reg2stack(__moveKind, __crb, __masm, __result, ValueUtil.asRegister(__input));
             }
             else
             {
                 throw GraalError.shouldNotReachHere();
             }
         }
-        else if (ValueUtil.isStackSlot(input))
+        else if (ValueUtil.isStackSlot(__input))
         {
-            if (ValueUtil.isRegister(result))
+            if (ValueUtil.isRegister(__result))
             {
-                stack2reg(moveKind, crb, masm, ValueUtil.asRegister(result), input);
+                stack2reg(__moveKind, __crb, __masm, ValueUtil.asRegister(__result), __input);
             }
             else
             {
                 throw GraalError.shouldNotReachHere();
             }
         }
-        else if (LIRValueUtil.isJavaConstant(input))
+        else if (LIRValueUtil.isJavaConstant(__input))
         {
-            if (ValueUtil.isRegister(result))
+            if (ValueUtil.isRegister(__result))
             {
-                const2reg(crb, masm, ValueUtil.asRegister(result), LIRValueUtil.asJavaConstant(input));
+                const2reg(__crb, __masm, ValueUtil.asRegister(__result), LIRValueUtil.asJavaConstant(__input));
             }
-            else if (ValueUtil.isStackSlot(result))
+            else if (ValueUtil.isStackSlot(__result))
             {
-                const2stack(crb, masm, result, LIRValueUtil.asJavaConstant(input));
+                const2stack(__crb, __masm, __result, LIRValueUtil.asJavaConstant(__input));
             }
             else
             {
@@ -625,90 +710,90 @@ public final class AMD64Move
         }
     }
 
-    private static void reg2reg(AMD64Kind kind, AMD64MacroAssembler masm, Value result, Value input)
+    private static void reg2reg(AMD64Kind __kind, AMD64MacroAssembler __masm, Value __result, Value __input)
     {
-        if (ValueUtil.asRegister(input).equals(ValueUtil.asRegister(result)))
+        if (ValueUtil.asRegister(__input).equals(ValueUtil.asRegister(__result)))
         {
             return;
         }
-        switch (kind)
+        switch (__kind)
         {
             case BYTE:
             case WORD:
             case DWORD:
-                masm.movl(ValueUtil.asRegister(result), ValueUtil.asRegister(input));
+                __masm.movl(ValueUtil.asRegister(__result), ValueUtil.asRegister(__input));
                 break;
             case QWORD:
-                masm.movq(ValueUtil.asRegister(result), ValueUtil.asRegister(input));
+                __masm.movq(ValueUtil.asRegister(__result), ValueUtil.asRegister(__input));
                 break;
             case SINGLE:
-                masm.movflt(ValueUtil.asRegister(result, AMD64Kind.SINGLE), ValueUtil.asRegister(input, AMD64Kind.SINGLE));
+                __masm.movflt(ValueUtil.asRegister(__result, AMD64Kind.SINGLE), ValueUtil.asRegister(__input, AMD64Kind.SINGLE));
                 break;
             case DOUBLE:
-                masm.movdbl(ValueUtil.asRegister(result, AMD64Kind.DOUBLE), ValueUtil.asRegister(input, AMD64Kind.DOUBLE));
+                __masm.movdbl(ValueUtil.asRegister(__result, AMD64Kind.DOUBLE), ValueUtil.asRegister(__input, AMD64Kind.DOUBLE));
                 break;
             default:
-                throw GraalError.shouldNotReachHere("kind=" + kind);
+                throw GraalError.shouldNotReachHere("kind=" + __kind);
         }
     }
 
-    public static void reg2stack(AMD64Kind kind, CompilationResultBuilder crb, AMD64MacroAssembler masm, Value result, Register input)
+    public static void reg2stack(AMD64Kind __kind, CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Value __result, Register __input)
     {
-        AMD64Address dest = (AMD64Address) crb.asAddress(result);
-        switch (kind)
+        AMD64Address __dest = (AMD64Address) __crb.asAddress(__result);
+        switch (__kind)
         {
             case BYTE:
-                masm.movb(dest, input);
+                __masm.movb(__dest, __input);
                 break;
             case WORD:
-                masm.movw(dest, input);
+                __masm.movw(__dest, __input);
                 break;
             case DWORD:
-                masm.movl(dest, input);
+                __masm.movl(__dest, __input);
                 break;
             case QWORD:
-                masm.movq(dest, input);
+                __masm.movq(__dest, __input);
                 break;
             case SINGLE:
-                masm.movflt(dest, input);
+                __masm.movflt(__dest, __input);
                 break;
             case DOUBLE:
-                masm.movsd(dest, input);
+                __masm.movsd(__dest, __input);
                 break;
             default:
                 throw GraalError.shouldNotReachHere();
         }
     }
 
-    public static void stack2reg(AMD64Kind kind, CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, Value input)
+    public static void stack2reg(AMD64Kind __kind, CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Register __result, Value __input)
     {
-        AMD64Address src = (AMD64Address) crb.asAddress(input);
-        switch (kind)
+        AMD64Address __src = (AMD64Address) __crb.asAddress(__input);
+        switch (__kind)
         {
             case BYTE:
-                masm.movsbl(result, src);
+                __masm.movsbl(__result, __src);
                 break;
             case WORD:
-                masm.movswl(result, src);
+                __masm.movswl(__result, __src);
                 break;
             case DWORD:
-                masm.movl(result, src);
+                __masm.movl(__result, __src);
                 break;
             case QWORD:
-                masm.movq(result, src);
+                __masm.movq(__result, __src);
                 break;
             case SINGLE:
-                masm.movflt(result, src);
+                __masm.movflt(__result, __src);
                 break;
             case DOUBLE:
-                masm.movdbl(result, src);
+                __masm.movdbl(__result, __src);
                 break;
             default:
                 throw GraalError.shouldNotReachHere();
         }
     }
 
-    public static void const2reg(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, JavaConstant input)
+    public static void const2reg(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Register __result, JavaConstant __input)
     {
         /*
          * Note: we use the kind of the input operand (and not the kind of the result operand),
@@ -716,69 +801,69 @@ public final class AMD64Move
          * a long register when unsafe casts occurred (e.g. for a write barrier where arithmetic
          * operations are then performed on the pointer).
          */
-        switch (input.getJavaKind().getStackKind())
+        switch (__input.getJavaKind().getStackKind())
         {
             case Int:
                 // Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 // in which case the XOR will modify the condition flags and interfere with the Jcc.
-                masm.movl(result, input.asInt());
+                __masm.movl(__result, __input.asInt());
 
                 break;
             case Long:
                 // Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 // in which case the XOR will modify the condition flags and interfere with the Jcc.
-                if (input.asLong() == (int) input.asLong())
+                if (__input.asLong() == (int) __input.asLong())
                 {
                     // sign extended to long
-                    masm.movslq(result, (int) input.asLong());
+                    __masm.movslq(__result, (int) __input.asLong());
                 }
-                else if ((input.asLong() & 0xFFFFFFFFL) == input.asLong())
+                else if ((__input.asLong() & 0xFFFFFFFFL) == __input.asLong())
                 {
                     // zero extended to long
-                    masm.movl(result, (int) input.asLong());
+                    __masm.movl(__result, (int) __input.asLong());
                 }
                 else
                 {
-                    masm.movq(result, input.asLong());
+                    __masm.movq(__result, __input.asLong());
                 }
                 break;
             case Float:
                 // This is *not* the same as 'constant == 0.0f' in the case where constant is -0.0f
-                if (Float.floatToRawIntBits(input.asFloat()) == Float.floatToRawIntBits(0.0f))
+                if (Float.floatToRawIntBits(__input.asFloat()) == Float.floatToRawIntBits(0.0f))
                 {
-                    masm.xorps(result, result);
+                    __masm.xorps(__result, __result);
                 }
                 else
                 {
-                    masm.movflt(result, (AMD64Address) crb.asFloatConstRef(input));
+                    __masm.movflt(__result, (AMD64Address) __crb.asFloatConstRef(__input));
                 }
                 break;
             case Double:
                 // This is *not* the same as 'constant == 0.0d' in the case where constant is -0.0d
-                if (Double.doubleToRawLongBits(input.asDouble()) == Double.doubleToRawLongBits(0.0d))
+                if (Double.doubleToRawLongBits(__input.asDouble()) == Double.doubleToRawLongBits(0.0d))
                 {
-                    masm.xorpd(result, result);
+                    __masm.xorpd(__result, __result);
                 }
                 else
                 {
-                    masm.movdbl(result, (AMD64Address) crb.asDoubleConstRef(input));
+                    __masm.movdbl(__result, (AMD64Address) __crb.asDoubleConstRef(__input));
                 }
                 break;
             case Object:
                 // Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 // in which case the XOR will modify the condition flags and interfere with the Jcc.
-                if (input.isNull())
+                if (__input.isNull())
                 {
-                    masm.movq(result, 0x0L);
+                    __masm.movq(__result, 0x0L);
                 }
-                else if (crb.target.inlineObjects)
+                else if (__crb.target.inlineObjects)
                 {
-                    crb.recordInlineDataInCode(input);
-                    masm.movq(result, 0xDEADDEADDEADDEADL);
+                    __crb.recordInlineDataInCode(__input);
+                    __masm.movq(__result, 0xDEADDEADDEADDEADL);
                 }
                 else
                 {
-                    masm.movq(result, (AMD64Address) crb.recordDataReferenceInCode(input, 0));
+                    __masm.movq(__result, (AMD64Address) __crb.recordDataReferenceInCode(__input, 0));
                 }
                 break;
             default:
@@ -786,9 +871,9 @@ public final class AMD64Move
         }
     }
 
-    public static boolean canMoveConst2Stack(JavaConstant input)
+    public static boolean canMoveConst2Stack(JavaConstant __input)
     {
-        switch (input.getJavaKind().getStackKind())
+        switch (__input.getJavaKind().getStackKind())
         {
             case Int:
                 break;
@@ -799,7 +884,7 @@ public final class AMD64Move
             case Double:
                 break;
             case Object:
-                if (input.isNull())
+                if (__input.isNull())
                 {
                     return true;
                 }
@@ -813,28 +898,28 @@ public final class AMD64Move
         return true;
     }
 
-    public static void const2stack(CompilationResultBuilder crb, AMD64MacroAssembler masm, Value result, JavaConstant input)
+    public static void const2stack(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Value __result, JavaConstant __input)
     {
-        AMD64Address dest = (AMD64Address) crb.asAddress(result);
-        final long imm;
-        switch (input.getJavaKind().getStackKind())
+        AMD64Address __dest = (AMD64Address) __crb.asAddress(__result);
+        final long __imm;
+        switch (__input.getJavaKind().getStackKind())
         {
             case Int:
-                imm = input.asInt();
+                __imm = __input.asInt();
                 break;
             case Long:
-                imm = input.asLong();
+                __imm = __input.asLong();
                 break;
             case Float:
-                imm = Float.floatToRawIntBits(input.asFloat());
+                __imm = Float.floatToRawIntBits(__input.asFloat());
                 break;
             case Double:
-                imm = Double.doubleToRawLongBits(input.asDouble());
+                __imm = Double.doubleToRawLongBits(__input.asDouble());
                 break;
             case Object:
-                if (input.isNull())
+                if (__input.isNull())
                 {
-                    imm = 0;
+                    __imm = 0;
                 }
                 else
                 {
@@ -845,53 +930,62 @@ public final class AMD64Move
                 throw GraalError.shouldNotReachHere();
         }
 
-        switch ((AMD64Kind) result.getPlatformKind())
+        switch ((AMD64Kind) __result.getPlatformKind())
         {
             case BYTE:
-                AMD64MIOp.MOVB.emit(masm, OperandSize.BYTE, dest, (int) imm);
+                AMD64MIOp.MOVB.emit(__masm, OperandSize.BYTE, __dest, (int) __imm);
                 break;
             case WORD:
-                AMD64MIOp.MOV.emit(masm, OperandSize.WORD, dest, (int) imm);
+                AMD64MIOp.MOV.emit(__masm, OperandSize.WORD, __dest, (int) __imm);
                 break;
             case DWORD:
             case SINGLE:
-                masm.movl(dest, (int) imm);
+                __masm.movl(__dest, (int) __imm);
                 break;
             case QWORD:
             case DOUBLE:
-                masm.movlong(dest, imm);
+                __masm.movlong(__dest, __imm);
                 break;
             default:
-                throw GraalError.shouldNotReachHere("Unknown result Kind: " + result.getPlatformKind());
+                throw GraalError.shouldNotReachHere("Unknown result Kind: " + __result.getPlatformKind());
         }
     }
 
     // @class AMD64Move.PointerCompressionOp
     public abstract static class PointerCompressionOp extends AMD64LIRInstruction
     {
+        // @field
         protected final LIRKindTool lirKindTool;
+        // @field
         protected final CompressEncoding encoding;
+        // @field
         protected final boolean nonNull;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT}) private AllocatableValue result;
-        @Use({OperandFlag.REG, OperandFlag.CONST}) private Value input;
-        @Alive({OperandFlag.REG, OperandFlag.ILLEGAL, OperandFlag.UNINITIALIZED}) private AllocatableValue baseRegister;
+        @Def({OperandFlag.REG, OperandFlag.HINT})
+        // @field
+        private AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.CONST})
+        // @field
+        private Value input;
+        @Alive({OperandFlag.REG, OperandFlag.ILLEGAL, OperandFlag.UNINITIALIZED})
+        // @field
+        private AllocatableValue baseRegister;
 
         // @cons
-        protected PointerCompressionOp(LIRInstructionClass<? extends PointerCompressionOp> type, AllocatableValue result, Value input, AllocatableValue baseRegister, CompressEncoding encoding, boolean nonNull, LIRKindTool lirKindTool)
+        protected PointerCompressionOp(LIRInstructionClass<? extends PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
-            super(type);
-            this.result = result;
-            this.input = input;
-            this.baseRegister = baseRegister;
-            this.encoding = encoding;
-            this.nonNull = nonNull;
-            this.lirKindTool = lirKindTool;
+            super(__type);
+            this.result = __result;
+            this.input = __input;
+            this.baseRegister = __baseRegister;
+            this.encoding = __encoding;
+            this.nonNull = __nonNull;
+            this.lirKindTool = __lirKindTool;
         }
 
-        public static boolean hasBase(CompressEncoding encoding)
+        public static boolean hasBase(CompressEncoding __encoding)
         {
-            return encoding.hasBase();
+            return __encoding.hasBase();
         }
 
         public final Value getInput()
@@ -914,50 +1008,51 @@ public final class AMD64Move
             return encoding.getShift();
         }
 
-        protected final void move(LIRKind kind, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        protected final void move(LIRKind __kind, CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            AMD64Move.move((AMD64Kind) kind.getPlatformKind(), crb, masm, result, input);
+            AMD64Move.move((AMD64Kind) __kind.getPlatformKind(), __crb, __masm, result, input);
         }
     }
 
     // @class AMD64Move.CompressPointerOp
     public static final class CompressPointerOp extends PointerCompressionOp
     {
+        // @def
         public static final LIRInstructionClass<CompressPointerOp> TYPE = LIRInstructionClass.create(CompressPointerOp.class);
 
         // @cons
-        public CompressPointerOp(AllocatableValue result, Value input, AllocatableValue baseRegister, CompressEncoding encoding, boolean nonNull, LIRKindTool lirKindTool)
+        public CompressPointerOp(AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
-            this(TYPE, result, input, baseRegister, encoding, nonNull, lirKindTool);
+            this(TYPE, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
 
         // @cons
-        protected CompressPointerOp(LIRInstructionClass<? extends PointerCompressionOp> type, AllocatableValue result, Value input, AllocatableValue baseRegister, CompressEncoding encoding, boolean nonNull, LIRKindTool lirKindTool)
+        protected CompressPointerOp(LIRInstructionClass<? extends PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
-            super(type, result, input, baseRegister, encoding, nonNull, lirKindTool);
+            super(__type, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            move(lirKindTool.getObjectKind(), crb, masm);
+            move(lirKindTool.getObjectKind(), __crb, __masm);
 
-            Register resReg = ValueUtil.asRegister(getResult());
+            Register __resReg = ValueUtil.asRegister(getResult());
             if (hasBase(encoding))
             {
-                Register baseReg = getBaseRegister();
+                Register __baseReg = getBaseRegister();
                 if (!nonNull)
                 {
-                    masm.testq(resReg, resReg);
-                    masm.cmovq(ConditionFlag.Equal, resReg, baseReg);
+                    __masm.testq(__resReg, __resReg);
+                    __masm.cmovq(ConditionFlag.Equal, __resReg, __baseReg);
                 }
-                masm.subq(resReg, baseReg);
+                __masm.subq(__resReg, __baseReg);
             }
 
-            int shift = getShift();
-            if (shift != 0)
+            int __shift = getShift();
+            if (__shift != 0)
             {
-                masm.shrq(resReg, shift);
+                __masm.shrq(__resReg, __shift);
             }
         }
     }
@@ -965,52 +1060,53 @@ public final class AMD64Move
     // @class AMD64Move.UncompressPointerOp
     public static final class UncompressPointerOp extends PointerCompressionOp
     {
+        // @def
         public static final LIRInstructionClass<UncompressPointerOp> TYPE = LIRInstructionClass.create(UncompressPointerOp.class);
 
         // @cons
-        public UncompressPointerOp(AllocatableValue result, Value input, AllocatableValue baseRegister, CompressEncoding encoding, boolean nonNull, LIRKindTool lirKindTool)
+        public UncompressPointerOp(AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
-            this(TYPE, result, input, baseRegister, encoding, nonNull, lirKindTool);
+            this(TYPE, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
 
         // @cons
-        protected UncompressPointerOp(LIRInstructionClass<? extends PointerCompressionOp> type, AllocatableValue result, Value input, AllocatableValue baseRegister, CompressEncoding encoding, boolean nonNull, LIRKindTool lirKindTool)
+        protected UncompressPointerOp(LIRInstructionClass<? extends PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
-            super(type, result, input, baseRegister, encoding, nonNull, lirKindTool);
+            super(__type, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            move(lirKindTool.getNarrowOopKind(), crb, masm);
-            emitUncompressCode(masm, ValueUtil.asRegister(getResult()), getShift(), hasBase(encoding) ? getBaseRegister() : null, nonNull);
+            move(lirKindTool.getNarrowOopKind(), __crb, __masm);
+            emitUncompressCode(__masm, ValueUtil.asRegister(getResult()), getShift(), hasBase(encoding) ? getBaseRegister() : null, nonNull);
         }
 
-        public static void emitUncompressCode(AMD64MacroAssembler masm, Register resReg, int shift, Register baseReg, boolean nonNull)
+        public static void emitUncompressCode(AMD64MacroAssembler __masm, Register __resReg, int __shift, Register __baseReg, boolean __nonNull)
         {
-            if (shift != 0)
+            if (__shift != 0)
             {
-                masm.shlq(resReg, shift);
+                __masm.shlq(__resReg, __shift);
             }
 
-            if (baseReg != null)
+            if (__baseReg != null)
             {
-                if (nonNull)
+                if (__nonNull)
                 {
-                    masm.addq(resReg, baseReg);
+                    __masm.addq(__resReg, __baseReg);
                     return;
                 }
 
-                if (shift == 0)
+                if (__shift == 0)
                 {
                     // if encoding.shift != 0, the flags are already set by the shlq
-                    masm.testq(resReg, resReg);
+                    __masm.testq(__resReg, __resReg);
                 }
 
-                Label done = new Label();
-                masm.jccb(ConditionFlag.Equal, done);
-                masm.addq(resReg, baseReg);
-                masm.bind(done);
+                Label __done = new Label();
+                __masm.jccb(ConditionFlag.Equal, __done);
+                __masm.addq(__resReg, __baseReg);
+                __masm.bind(__done);
             }
         }
     }

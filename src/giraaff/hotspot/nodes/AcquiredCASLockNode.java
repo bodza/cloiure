@@ -14,15 +14,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AcquiredCASLockNode
 public final class AcquiredCASLockNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<AcquiredCASLockNode> TYPE = NodeClass.create(AcquiredCASLockNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
 
     // @cons
-    public AcquiredCASLockNode(ValueNode object)
+    public AcquiredCASLockNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = object;
+        this.object = __object;
     }
 
     public ValueNode object()
@@ -31,7 +34,7 @@ public final class AcquiredCASLockNode extends FixedWithNextNode implements LIRL
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // this is just a marker node, so it generates nothing
     }

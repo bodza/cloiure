@@ -23,26 +23,38 @@ import giraaff.nodes.spi.LoweringTool;
 // @class GenericArrayCopyCallNode
 public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<GenericArrayCopyCallNode> TYPE = NodeClass.create(GenericArrayCopyCallNode.class);
 
-    @Input ValueNode src;
-    @Input ValueNode srcPos;
-    @Input ValueNode dest;
-    @Input ValueNode destPos;
-    @Input ValueNode length;
+    @Input
+    // @field
+    ValueNode src;
+    @Input
+    // @field
+    ValueNode srcPos;
+    @Input
+    // @field
+    ValueNode dest;
+    @Input
+    // @field
+    ValueNode destPos;
+    @Input
+    // @field
+    ValueNode length;
 
+    // @field
     protected final HotSpotGraalRuntime runtime;
 
     // @cons
-    protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length)
+    protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.src = src;
-        this.srcPos = srcPos;
-        this.dest = dest;
-        this.destPos = destPos;
-        this.length = length;
-        this.runtime = runtime;
+        this.src = __src;
+        this.srcPos = __srcPos;
+        this.dest = __dest;
+        this.destPos = __destPos;
+        this.length = __length;
+        this.runtime = __runtime;
     }
 
     public ValueNode getSource()
@@ -71,33 +83,33 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         if (graph().getGuardsStage().areFrameStatesAtDeopts())
         {
-            StructuredGraph graph = graph();
-            ValueNode srcAddr = objectAddress(getSource());
-            ValueNode destAddr = objectAddress(getDestination());
-            ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), HotSpotBackend.GENERIC_ARRAYCOPY, srcAddr, srcPos, destAddr, destPos, length));
-            call.setStateAfter(stateAfter());
-            graph.replaceFixedWithFixed(this, call);
+            StructuredGraph __graph = graph();
+            ValueNode __srcAddr = objectAddress(getSource());
+            ValueNode __destAddr = objectAddress(getDestination());
+            ForeignCallNode __call = __graph.add(new ForeignCallNode(runtime.getBackend().getForeignCalls(), HotSpotBackend.GENERIC_ARRAYCOPY, __srcAddr, srcPos, __destAddr, destPos, length));
+            __call.setStateAfter(stateAfter());
+            __graph.replaceFixedWithFixed(this, __call);
         }
     }
 
-    private ValueNode objectAddress(ValueNode obj)
+    private ValueNode objectAddress(ValueNode __obj)
     {
-        GetObjectAddressNode result = graph().add(new GetObjectAddressNode(obj));
-        graph().addBeforeFixed(this, result);
-        return result;
+        GetObjectAddressNode __result = graph().add(new GetObjectAddressNode(__obj));
+        graph().addBeforeFixed(this, __result);
+        return __result;
     }
 
-    private ValueNode wordValue(ValueNode value)
+    private ValueNode wordValue(ValueNode __value)
     {
-        if (value.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind)
+        if (__value.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind)
         {
-            return IntegerConvertNode.convert(value, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
+            return IntegerConvertNode.convert(__value, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
         }
-        return value;
+        return __value;
     }
 
     @Override

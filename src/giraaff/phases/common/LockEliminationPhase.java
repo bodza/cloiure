@@ -14,30 +14,30 @@ import giraaff.phases.Phase;
 public final class LockEliminationPhase extends Phase
 {
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        for (MonitorExitNode monitorExitNode : graph.getNodes(MonitorExitNode.TYPE))
+        for (MonitorExitNode __monitorExitNode : __graph.getNodes(MonitorExitNode.TYPE))
         {
-            FixedNode next = monitorExitNode.next();
-            if ((next instanceof MonitorEnterNode || next instanceof RawMonitorEnterNode))
+            FixedNode __next = __monitorExitNode.next();
+            if ((__next instanceof MonitorEnterNode || __next instanceof RawMonitorEnterNode))
             {
                 // should never happen, osr monitor enters are always direct successors of the graph
                 // start
-                AccessMonitorNode monitorEnterNode = (AccessMonitorNode) next;
-                if (GraphUtil.unproxify(monitorEnterNode.object()) == GraphUtil.unproxify(monitorExitNode.object()))
+                AccessMonitorNode __monitorEnterNode = (AccessMonitorNode) __next;
+                if (GraphUtil.unproxify(__monitorEnterNode.object()) == GraphUtil.unproxify(__monitorExitNode.object()))
                 {
                     /*
                      * We've coarsened the lock so use the same monitor id for the whole region,
                      * otherwise the monitor operations appear to be unrelated.
                      */
-                    MonitorIdNode enterId = monitorEnterNode.getMonitorId();
-                    MonitorIdNode exitId = monitorExitNode.getMonitorId();
-                    if (enterId != exitId)
+                    MonitorIdNode __enterId = __monitorEnterNode.getMonitorId();
+                    MonitorIdNode __exitId = __monitorExitNode.getMonitorId();
+                    if (__enterId != __exitId)
                     {
-                        enterId.replaceAndDelete(exitId);
+                        __enterId.replaceAndDelete(__exitId);
                     }
-                    GraphUtil.removeFixedWithUnusedInputs(monitorEnterNode);
-                    GraphUtil.removeFixedWithUnusedInputs(monitorExitNode);
+                    GraphUtil.removeFixedWithUnusedInputs(__monitorEnterNode);
+                    GraphUtil.removeFixedWithUnusedInputs(__monitorExitNode);
                 }
             }
         }

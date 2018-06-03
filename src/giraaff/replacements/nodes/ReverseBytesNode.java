@@ -20,26 +20,27 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class ReverseBytesNode
 public final class ReverseBytesNode extends UnaryNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<ReverseBytesNode> TYPE = NodeClass.create(ReverseBytesNode.class);
 
     // @cons
-    public ReverseBytesNode(ValueNode value)
+    public ReverseBytesNode(ValueNode __value)
     {
-        super(TYPE, StampFactory.forKind(value.getStackKind()), value);
+        super(TYPE, StampFactory.forKind(__value.getStackKind()), __value);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        IntegerStamp valueStamp = (IntegerStamp) newStamp;
+        IntegerStamp __valueStamp = (IntegerStamp) __newStamp;
         if (getStackKind() == JavaKind.Int)
         {
-            long mask = CodeUtil.mask(JavaKind.Int.getBitCount());
-            return IntegerStamp.stampForMask(valueStamp.getBits(), Integer.reverse((int) valueStamp.downMask()) & mask, Integer.reverse((int) valueStamp.upMask()) & mask);
+            long __mask = CodeUtil.mask(JavaKind.Int.getBitCount());
+            return IntegerStamp.stampForMask(__valueStamp.getBits(), Integer.reverse((int) __valueStamp.downMask()) & __mask, Integer.reverse((int) __valueStamp.upMask()) & __mask);
         }
         else if (getStackKind() == JavaKind.Long)
         {
-            return IntegerStamp.stampForMask(valueStamp.getBits(), Long.reverse(valueStamp.downMask()), Long.reverse(valueStamp.upMask()));
+            return IntegerStamp.stampForMask(__valueStamp.getBits(), Long.reverse(__valueStamp.downMask()), Long.reverse(__valueStamp.upMask()));
         }
         else
         {
@@ -48,21 +49,21 @@ public final class ReverseBytesNode extends UnaryNode implements LIRLowerable
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        if (forValue.isConstant())
+        if (__forValue.isConstant())
         {
-            JavaConstant c = forValue.asJavaConstant();
-            long reversed = getStackKind() == JavaKind.Int ? Integer.reverseBytes(c.asInt()) : Long.reverseBytes(c.asLong());
-            return ConstantNode.forIntegerKind(getStackKind(), reversed);
+            JavaConstant __c = __forValue.asJavaConstant();
+            long __reversed = getStackKind() == JavaKind.Int ? Integer.reverseBytes(__c.asInt()) : Long.reverseBytes(__c.asLong());
+            return ConstantNode.forIntegerKind(getStackKind(), __reversed);
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result = gen.getLIRGeneratorTool().emitByteSwap(gen.operand(getValue()));
-        gen.setResult(this, result);
+        Value __result = __gen.getLIRGeneratorTool().emitByteSwap(__gen.operand(getValue()));
+        __gen.setResult(this, __result);
     }
 }

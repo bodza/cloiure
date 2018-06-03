@@ -15,26 +15,29 @@ import giraaff.nodes.spi.Proxy;
 // @class GuardProxyNode
 public final class GuardProxyNode extends ProxyNode implements GuardingNode, Proxy, LIRLowerable, Canonicalizable
 {
+    // @def
     public static final NodeClass<GuardProxyNode> TYPE = NodeClass.create(GuardProxyNode.class);
 
-    @OptionalInput(InputType.Guard) GuardingNode value;
+    @OptionalInput(InputType.Guard)
+    // @field
+    GuardingNode value;
 
     // @cons
-    public GuardProxyNode(GuardingNode value, LoopExitNode proxyPoint)
+    public GuardProxyNode(GuardingNode __value, LoopExitNode __proxyPoint)
     {
-        super(TYPE, StampFactory.forVoid(), proxyPoint);
-        this.value = value;
+        super(TYPE, StampFactory.forVoid(), __proxyPoint);
+        this.value = __value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
     }
 
-    public void setValue(GuardingNode newValue)
+    public void setValue(GuardingNode __newValue)
     {
-        this.updateUsages(value.asNode(), newValue.asNode());
-        this.value = newValue;
+        this.updateUsages(value.asNode(), __newValue.asNode());
+        this.value = __newValue;
     }
 
     @Override
@@ -50,7 +53,7 @@ public final class GuardProxyNode extends ProxyNode implements GuardingNode, Pro
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (value == null)
         {

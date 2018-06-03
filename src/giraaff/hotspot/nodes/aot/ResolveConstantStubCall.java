@@ -27,29 +27,36 @@ import giraaff.nodes.util.GraphUtil;
 // @class ResolveConstantStubCall
 public final class ResolveConstantStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
+    // @def
     public static final NodeClass<ResolveConstantStubCall> TYPE = NodeClass.create(ResolveConstantStubCall.class);
 
-    @OptionalInput protected ValueNode value;
-    @Input protected ValueNode string;
+    @OptionalInput
+    // @field
+    protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode string;
+    // @field
     protected Constant constant;
+    // @field
     protected HotSpotConstantLoadAction action;
 
     // @cons
-    public ResolveConstantStubCall(ValueNode value, ValueNode string)
+    public ResolveConstantStubCall(ValueNode __value, ValueNode __string)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT));
-        this.value = value;
-        this.string = string;
+        super(TYPE, __value.stamp(NodeView.DEFAULT));
+        this.value = __value;
+        this.string = __string;
         this.action = HotSpotConstantLoadAction.RESOLVE;
     }
 
     // @cons
-    public ResolveConstantStubCall(ValueNode value, ValueNode string, HotSpotConstantLoadAction action)
+    public ResolveConstantStubCall(ValueNode __value, ValueNode __string, HotSpotConstantLoadAction __action)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT));
-        this.value = value;
-        this.string = string;
-        this.action = action;
+        super(TYPE, __value.stamp(NodeView.DEFAULT));
+        this.value = __value;
+        this.string = __string;
+        this.action = __action;
     }
 
     @NodeIntrinsic
@@ -62,7 +69,7 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
     public static native KlassPointer resolveKlass(KlassPointer value, Object symbol, @ConstantNodeParameter HotSpotConstantLoadAction action);
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (value != null)
         {
@@ -72,30 +79,30 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value stringValue = gen.operand(string);
-        LIRFrameState fs = gen.state(this);
-        Value result;
+        Value __stringValue = __gen.operand(string);
+        LIRFrameState __fs = __gen.state(this);
+        Value __result;
         if (constant instanceof HotSpotObjectConstant)
         {
-            result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitObjectConstantRetrieval(constant, stringValue, fs);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitObjectConstantRetrieval(constant, __stringValue, __fs);
         }
         else if (constant instanceof HotSpotMetaspaceConstant)
         {
             if (action == HotSpotConstantLoadAction.RESOLVE)
             {
-                result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitMetaspaceConstantRetrieval(constant, stringValue, fs);
+                __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitMetaspaceConstantRetrieval(constant, __stringValue, __fs);
             }
             else
             {
-                result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, stringValue, fs);
+                __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, __stringValue, __fs);
             }
         }
         else
         {
             throw new BailoutException("unsupported constant type: " + constant);
         }
-        gen.setResult(this, result);
+        __gen.setResult(this, __result);
     }
 }

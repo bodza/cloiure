@@ -14,5 +14,6 @@ public final class ForeignCallDescriptors
     /**
      * @see RegisterFinalizerNode
      */
+    // @def
     public static final ForeignCallDescriptor REGISTER_FINALIZER = new ForeignCallDescriptor("registerFinalizer", void.class, Object.class);
 }

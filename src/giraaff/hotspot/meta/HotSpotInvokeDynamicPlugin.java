@@ -24,60 +24,64 @@ import giraaff.util.GraalError;
 // @class HotSpotInvokeDynamicPlugin
 public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
 {
+    // @def
     private static final Class<? extends ConstantPool> hscp;
+    // @def
     private static final MethodHandle isResolvedDynamicInvokeMH;
 
     static
     {
-        MethodHandle m = null;
-        Class<? extends ConstantPool> c = null;
+        MethodHandle __m = null;
+        Class<? extends ConstantPool> __c = null;
         try
         {
-            c = Class.forName("jdk.vm.ci.hotspot.HotSpotConstantPool").asSubclass(ConstantPool.class);
-            m = MethodHandles.lookup().findVirtual(c, "isResolvedDynamicInvoke", MethodType.methodType(boolean.class, int.class, int.class));
+            __c = Class.forName("jdk.vm.ci.hotspot.HotSpotConstantPool").asSubclass(ConstantPool.class);
+            __m = MethodHandles.lookup().findVirtual(__c, "isResolvedDynamicInvoke", MethodType.methodType(boolean.class, int.class, int.class));
         }
-        catch (Exception e)
+        catch (Exception __e)
         {
         }
-        isResolvedDynamicInvokeMH = m;
-        hscp = c;
+        isResolvedDynamicInvokeMH = __m;
+        hscp = __c;
     }
 
-    private static boolean isResolvedDynamicInvoke(ConstantPool constantPool, int index, int opcode)
+    private static boolean isResolvedDynamicInvoke(ConstantPool __constantPool, int __index, int __opcode)
     {
         if (isResolvedDynamicInvokeMH != null)
         {
-            if (!hscp.isInstance(constantPool))
+            if (!hscp.isInstance(__constantPool))
             {
                 return false;
             }
             try
             {
-                return (boolean) isResolvedDynamicInvokeMH.invoke(constantPool, index, opcode);
+                return (boolean) isResolvedDynamicInvokeMH.invoke(__constantPool, __index, __opcode);
             }
-            catch (Throwable t)
+            catch (Throwable __t)
             {
-                throw GraalError.shouldNotReachHere(t);
+                throw GraalError.shouldNotReachHere(__t);
             }
         }
         throw GraalError.shouldNotReachHere("isResolvedDynamicInvokeMH not set");
     }
 
+    // @field
     private final DynamicTypeStore dynoStore;
+    // @field
     private final boolean treatAppendixAsConstant;
 
     // @cons
-    public HotSpotInvokeDynamicPlugin(DynamicTypeStore dynoStore, boolean treatAppendixAsConstant)
+    public HotSpotInvokeDynamicPlugin(DynamicTypeStore __dynoStore, boolean __treatAppendixAsConstant)
     {
         super();
-        this.dynoStore = dynoStore;
-        this.treatAppendixAsConstant = treatAppendixAsConstant;
+        this.dynoStore = __dynoStore;
+        this.treatAppendixAsConstant = __treatAppendixAsConstant;
     }
 
     // @cons
-    public HotSpotInvokeDynamicPlugin(DynamicTypeStore dynoStore)
+    public HotSpotInvokeDynamicPlugin(DynamicTypeStore __dynoStore)
     {
-        this(dynoStore, true);
+        this(__dynoStore, true);
     }
 
     // @cons
@@ -88,22 +92,22 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
 
     // invokehandle support
     @Override
-    public boolean isResolvedDynamicInvoke(GraphBuilderContext builder, int index, int opcode)
+    public boolean isResolvedDynamicInvoke(GraphBuilderContext __builder, int __index, int __opcode)
     {
-        ConstantPool constantPool = builder.getCode().getConstantPool();
+        ConstantPool __constantPool = __builder.getCode().getConstantPool();
         if (isResolvedDynamicInvokeMH == null)
         {
             // For older JVMCI, when HotSpotInvokeDynamicPlugin is being used for testing,
             // return true, so that we can continue along the plugin path.
             return true;
         }
-        return isResolvedDynamicInvoke(constantPool, index, opcode);
+        return isResolvedDynamicInvoke(__constantPool, __index, __opcode);
     }
 
     @Override
-    public boolean supportsDynamicInvoke(GraphBuilderContext builder, int index, int opcode)
+    public boolean supportsDynamicInvoke(GraphBuilderContext __builder, int __index, int __opcode)
     {
-        return opcode == Bytecodes.INVOKEDYNAMIC || isResolvedDynamicInvokeMH != null;
+        return __opcode == Bytecodes.INVOKEDYNAMIC || isResolvedDynamicInvokeMH != null;
     }
 
     public DynamicTypeStore getDynamicTypeStore()
@@ -112,38 +116,38 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
     }
 
     @Override
-    public void recordDynamicMethod(GraphBuilderContext builder, int index, int opcode, ResolvedJavaMethod target)
+    public void recordDynamicMethod(GraphBuilderContext __builder, int __index, int __opcode, ResolvedJavaMethod __target)
     {
-        HotSpotResolvedJavaMethod method = (HotSpotResolvedJavaMethod) builder.getMethod();
-        HotSpotResolvedObjectType methodHolder = method.getDeclaringClass();
+        HotSpotResolvedJavaMethod __method = (HotSpotResolvedJavaMethod) __builder.getMethod();
+        HotSpotResolvedObjectType __methodHolder = __method.getDeclaringClass();
 
-        HotSpotResolvedJavaMethod adapter = (HotSpotResolvedJavaMethod) target;
+        HotSpotResolvedJavaMethod __adapter = (HotSpotResolvedJavaMethod) __target;
         if (dynoStore != null)
         {
-            dynoStore.recordAdapter(opcode, methodHolder, index, adapter);
+            dynoStore.recordAdapter(__opcode, __methodHolder, __index, __adapter);
         }
     }
 
     @Override
-    public ValueNode genAppendixNode(GraphBuilderContext builder, int index, int opcode, JavaConstant appendixConstant, FrameState frameState)
+    public ValueNode genAppendixNode(GraphBuilderContext __builder, int __index, int __opcode, JavaConstant __appendixConstant, FrameState __frameState)
     {
-        JavaConstant appendix = appendixConstant;
-        HotSpotResolvedJavaMethod method = (HotSpotResolvedJavaMethod) builder.getMethod();
-        HotSpotResolvedObjectType methodHolder = method.getDeclaringClass();
+        JavaConstant __appendix = __appendixConstant;
+        HotSpotResolvedJavaMethod __method = (HotSpotResolvedJavaMethod) __builder.getMethod();
+        HotSpotResolvedObjectType __methodHolder = __method.getDeclaringClass();
 
         if (dynoStore != null)
         {
-            appendix = dynoStore.recordAppendix(opcode, methodHolder, index, appendix);
+            __appendix = dynoStore.recordAppendix(__opcode, __methodHolder, __index, __appendix);
         }
 
-        ConstantNode appendixNode = ConstantNode.forConstant(appendix, builder.getMetaAccess(), builder.getGraph());
+        ConstantNode __appendixNode = ConstantNode.forConstant(__appendix, __builder.getMetaAccess(), __builder.getGraph());
 
-        Stamp appendixStamp = appendixNode.stamp(NodeView.DEFAULT);
-        Stamp resolveStamp = treatAppendixAsConstant ? appendixStamp : appendixStamp.unrestricted();
-        ResolveDynamicConstantNode resolveNode = new ResolveDynamicConstantNode(resolveStamp, appendixNode);
-        ResolveDynamicConstantNode added = builder.append(resolveNode);
-        added.setStateBefore(frameState);
-        return resolveNode;
+        Stamp __appendixStamp = __appendixNode.stamp(NodeView.DEFAULT);
+        Stamp __resolveStamp = treatAppendixAsConstant ? __appendixStamp : __appendixStamp.unrestricted();
+        ResolveDynamicConstantNode __resolveNode = new ResolveDynamicConstantNode(__resolveStamp, __appendixNode);
+        ResolveDynamicConstantNode __added = __builder.append(__resolveNode);
+        __added.setStateBefore(__frameState);
+        return __resolveNode;
     }
 
     // @iface HotSpotInvokeDynamicPlugin.DynamicTypeStore

@@ -23,6 +23,7 @@ import giraaff.util.GraalError;
 // @class CompressionNode
 public abstract class CompressionNode extends UnaryNode implements ConvertNode, LIRLowerable
 {
+    // @def
     public static final NodeClass<CompressionNode> TYPE = NodeClass.create(CompressionNode.class);
 
     // @enum CompressionNode.CompressionOp
@@ -32,21 +33,23 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
         Uncompress
     }
 
+    // @field
     protected final CompressionOp op;
+    // @field
     protected final CompressEncoding encoding;
 
     // @cons
-    public CompressionNode(NodeClass<? extends UnaryNode> c, CompressionOp op, ValueNode input, Stamp stamp, CompressEncoding encoding)
+    public CompressionNode(NodeClass<? extends UnaryNode> __c, CompressionOp __op, ValueNode __input, Stamp __stamp, CompressEncoding __encoding)
     {
-        super(c, stamp, input);
-        this.op = op;
-        this.encoding = encoding;
+        super(__c, __stamp, __input);
+        this.op = __op;
+        this.encoding = __encoding;
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        return mkStamp(newStamp);
+        return mkStamp(__newStamp);
     }
 
     protected abstract Constant compress(Constant c);
@@ -54,28 +57,28 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     protected abstract Constant uncompress(Constant c);
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant convert(Constant __c, ConstantReflectionProvider __constantReflection)
     {
         switch (op)
         {
             case Compress:
-                return compress(c);
+                return compress(__c);
             case Uncompress:
-                return uncompress(c);
+                return uncompress(__c);
             default:
                 throw GraalError.shouldNotReachHere();
         }
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
         switch (op)
         {
             case Compress:
-                return uncompress(c);
+                return uncompress(__c);
             case Uncompress:
-                return compress(c);
+                return compress(__c);
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -100,53 +103,53 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        if (forValue.isConstant())
+        if (__forValue.isConstant())
         {
-            ConstantNode constant = (ConstantNode) forValue;
-            return ConstantNode.forConstant(stamp(NodeView.DEFAULT), convert(constant.getValue(), tool.getConstantReflection()), constant.getStableDimension(), constant.isDefaultStable(), tool.getMetaAccess());
+            ConstantNode __constant = (ConstantNode) __forValue;
+            return ConstantNode.forConstant(stamp(NodeView.DEFAULT), convert(__constant.getValue(), __tool.getConstantReflection()), __constant.getStableDimension(), __constant.isDefaultStable(), __tool.getMetaAccess());
         }
-        else if (forValue instanceof CompressionNode)
+        else if (__forValue instanceof CompressionNode)
         {
-            CompressionNode other = (CompressionNode) forValue;
-            if (op != other.op && encoding.equals(other.encoding))
+            CompressionNode __other = (CompressionNode) __forValue;
+            if (op != __other.op && encoding.equals(__other.encoding))
             {
-                return other.getValue();
+                return __other.getValue();
             }
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        boolean nonNull;
+        boolean __nonNull;
         if (value.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp)
         {
-            nonNull = StampTool.isPointerNonNull(value.stamp(NodeView.DEFAULT));
+            __nonNull = StampTool.isPointerNonNull(value.stamp(NodeView.DEFAULT));
         }
         else
         {
             // metaspace pointers are never null
-            nonNull = true;
+            __nonNull = true;
         }
 
-        LIRGeneratorTool tool = gen.getLIRGeneratorTool();
-        Value result;
+        LIRGeneratorTool __tool = __gen.getLIRGeneratorTool();
+        Value __result;
         switch (op)
         {
             case Compress:
-                result = tool.emitCompress(gen.operand(value), encoding, nonNull);
+                __result = __tool.emitCompress(__gen.operand(value), encoding, __nonNull);
                 break;
             case Uncompress:
-                result = tool.emitUncompress(gen.operand(value), encoding, nonNull);
+                __result = __tool.emitUncompress(__gen.operand(value), encoding, __nonNull);
                 break;
             default:
                 throw GraalError.shouldNotReachHere();
         }
 
-        gen.setResult(this, result);
+        __gen.setResult(this, __result);
     }
 
     @Override

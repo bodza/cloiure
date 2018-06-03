@@ -16,35 +16,41 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class DeoptimizeNode
 public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowerable, LIRLowerable, StaticDeoptimizingNode
 {
+    // @def
     public static final int DEFAULT_DEBUG_ID = 0;
 
+    // @def
     public static final NodeClass<DeoptimizeNode> TYPE = NodeClass.create(DeoptimizeNode.class);
 
+    // @field
     protected DeoptimizationAction action;
+    // @field
     protected DeoptimizationReason reason;
+    // @field
     protected int debugId;
+    // @field
     protected final JavaConstant speculation;
 
     // @cons
-    public DeoptimizeNode(DeoptimizationAction action, DeoptimizationReason reason)
+    public DeoptimizeNode(DeoptimizationAction __action, DeoptimizationReason __reason)
     {
-        this(action, reason, DEFAULT_DEBUG_ID, JavaConstant.NULL_POINTER, null);
+        this(__action, __reason, DEFAULT_DEBUG_ID, JavaConstant.NULL_POINTER, null);
     }
 
     // @cons
-    public DeoptimizeNode(DeoptimizationAction action, DeoptimizationReason reason, JavaConstant speculation)
+    public DeoptimizeNode(DeoptimizationAction __action, DeoptimizationReason __reason, JavaConstant __speculation)
     {
-        this(action, reason, DEFAULT_DEBUG_ID, speculation, null);
+        this(__action, __reason, DEFAULT_DEBUG_ID, __speculation, null);
     }
 
     // @cons
-    public DeoptimizeNode(DeoptimizationAction action, DeoptimizationReason reason, int debugId, JavaConstant speculation, FrameState stateBefore)
+    public DeoptimizeNode(DeoptimizationAction __action, DeoptimizationReason __reason, int __debugId, JavaConstant __speculation, FrameState __stateBefore)
     {
-        super(TYPE, stateBefore);
-        this.action = action;
-        this.reason = reason;
-        this.debugId = debugId;
-        this.speculation = speculation;
+        super(TYPE, __stateBefore);
+        this.action = __action;
+        this.reason = __reason;
+        this.debugId = __debugId;
+        this.speculation = __speculation;
     }
 
     @Override
@@ -54,9 +60,9 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
     }
 
     @Override
-    public void setAction(DeoptimizationAction action)
+    public void setAction(DeoptimizationAction __action)
     {
-        this.action = action;
+        this.action = __action;
     }
 
     @Override
@@ -66,15 +72,15 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
     }
 
     @Override
-    public void setReason(DeoptimizationReason reason)
+    public void setReason(DeoptimizationReason __reason)
     {
-        this.reason = reason;
+        this.reason = __reason;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @SuppressWarnings("deprecation")
@@ -83,30 +89,30 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
         return debugId;
     }
 
-    public void setDebugId(int debugId)
+    public void setDebugId(int __debugId)
     {
-        this.debugId = debugId;
+        this.debugId = __debugId;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRGeneratorTool tool = gen.getLIRGeneratorTool();
-        Value actionAndReason = tool.emitJavaConstant(tool.getMetaAccess().encodeDeoptActionAndReason(action, reason, getDebugId()));
-        Value speculationValue = tool.emitJavaConstant(speculation);
-        gen.getLIRGeneratorTool().emitDeoptimize(actionAndReason, speculationValue, gen.state(this));
+        LIRGeneratorTool __tool = __gen.getLIRGeneratorTool();
+        Value __actionAndReason = __tool.emitJavaConstant(__tool.getMetaAccess().encodeDeoptActionAndReason(action, reason, getDebugId()));
+        Value __speculationValue = __tool.emitJavaConstant(speculation);
+        __gen.getLIRGeneratorTool().emitDeoptimize(__actionAndReason, __speculationValue, __gen.state(this));
     }
 
     @Override
-    public ValueNode getActionAndReason(MetaAccessProvider metaAccess)
+    public ValueNode getActionAndReason(MetaAccessProvider __metaAccess)
     {
-        return ConstantNode.forConstant(metaAccess.encodeDeoptActionAndReason(action, reason, getDebugId()), metaAccess, graph());
+        return ConstantNode.forConstant(__metaAccess.encodeDeoptActionAndReason(action, reason, getDebugId()), __metaAccess, graph());
     }
 
     @Override
-    public ValueNode getSpeculation(MetaAccessProvider metaAccess)
+    public ValueNode getSpeculation(MetaAccessProvider __metaAccess)
     {
-        return ConstantNode.forConstant(speculation, metaAccess, graph());
+        return ConstantNode.forConstant(speculation, __metaAccess, graph());
     }
 
     @Override

@@ -36,58 +36,59 @@ public final class CRC32Substitutions
      * Removed in 9.
      */
     @MethodSubstitution(optional = true)
-    static int update(int crc, int b)
+    static int update(int __crc, int __b)
     {
-        final Pointer crcTableRawAddress = WordFactory.pointer(GraalHotSpotVMConfigNode.crcTableAddress());
+        final Pointer __crcTableRawAddress = WordFactory.pointer(GraalHotSpotVMConfigNode.crcTableAddress());
 
-        int c = ~crc;
-        int index = (b ^ c) & 0xFF;
-        int offset = index << 2;
-        int result = crcTableRawAddress.readInt(offset);
-        result = result ^ (c >>> 8);
-        return ~result;
+        int __c = ~__crc;
+        int __index = (__b ^ __c) & 0xFF;
+        int __offset = __index << 2;
+        int __result = __crcTableRawAddress.readInt(__offset);
+        __result = __result ^ (__c >>> 8);
+        return ~__result;
     }
 
     /**
      * Removed in 9.
      */
     @MethodSubstitution(optional = true)
-    static int updateBytes(int crc, byte[] buf, int off, int len)
+    static int updateBytes(int __crc, byte[] __buf, int __off, int __len)
     {
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + off));
-        return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
+        Word __bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__buf, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + __off));
+        return updateBytesCRC32(UPDATE_BYTES_CRC32, __crc, __bufAddr, __len);
     }
 
     /**
      * @since 9
      */
     @MethodSubstitution(optional = true)
-    static int updateBytes0(int crc, byte[] buf, int off, int len)
+    static int updateBytes0(int __crc, byte[] __buf, int __off, int __len)
     {
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + off));
-        return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
+        Word __bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__buf, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + __off));
+        return updateBytesCRC32(UPDATE_BYTES_CRC32, __crc, __bufAddr, __len);
     }
 
     /**
      * Removed in 9.
      */
     @MethodSubstitution(optional = true)
-    static int updateByteBuffer(int crc, long addr, int off, int len)
+    static int updateByteBuffer(int __crc, long __addr, int __off, int __len)
     {
-        WordBase bufAddr = WordFactory.unsigned(addr).add(off);
-        return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
+        WordBase __bufAddr = WordFactory.unsigned(__addr).add(__off);
+        return updateBytesCRC32(UPDATE_BYTES_CRC32, __crc, __bufAddr, __len);
     }
 
     /**
      * @since 9
      */
     @MethodSubstitution(optional = true)
-    static int updateByteBuffer0(int crc, long addr, int off, int len)
+    static int updateByteBuffer0(int __crc, long __addr, int __off, int __len)
     {
-        WordBase bufAddr = WordFactory.unsigned(addr).add(off);
-        return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
+        WordBase __bufAddr = WordFactory.unsigned(__addr).add(__off);
+        return updateBytesCRC32(UPDATE_BYTES_CRC32, __crc, __bufAddr, __len);
     }
 
+    // @def
     public static final ForeignCallDescriptor UPDATE_BYTES_CRC32 = new ForeignCallDescriptor("updateBytesCRC32", int.class, int.class, WordBase.class, int.class);
 
     @NodeIntrinsic(ForeignCallNode.class)

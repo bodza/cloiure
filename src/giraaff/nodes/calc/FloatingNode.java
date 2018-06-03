@@ -8,12 +8,13 @@ import giraaff.nodes.ValueNode;
 // @class FloatingNode
 public abstract class FloatingNode extends ValueNode implements ValueNumberable
 {
+    // @def
     public static final NodeClass<FloatingNode> TYPE = NodeClass.create(FloatingNode.class);
 
     // @cons
-    public FloatingNode(NodeClass<? extends FloatingNode> c, Stamp stamp)
+    public FloatingNode(NodeClass<? extends FloatingNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     @Override

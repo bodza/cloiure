@@ -32,57 +32,58 @@ public final class AddressLoweringByUsePhase extends Phase
         public abstract AddressNode lower(AddressNode address);
     }
 
+    // @field
     private final AddressLoweringByUse lowering;
 
     // @cons
-    public AddressLoweringByUsePhase(AddressLoweringByUse lowering)
+    public AddressLoweringByUsePhase(AddressLoweringByUse __lowering)
     {
         super();
-        this.lowering = lowering;
+        this.lowering = __lowering;
     }
 
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
         // first replace address nodes hanging off known usages
-        for (Node node : graph.getNodes())
+        for (Node __node : __graph.getNodes())
         {
-            AddressNode address;
-            AddressNode lowered;
-            if (node instanceof ReadNode)
+            AddressNode __address;
+            AddressNode __lowered;
+            if (__node instanceof ReadNode)
             {
-                ReadNode readNode = (ReadNode) node;
-                Stamp stamp = readNode.stamp(NodeView.DEFAULT);
-                address = readNode.getAddress();
-                lowered = lowering.lower(readNode, stamp, address);
+                ReadNode __readNode = (ReadNode) __node;
+                Stamp __stamp = __readNode.stamp(NodeView.DEFAULT);
+                __address = __readNode.getAddress();
+                __lowered = lowering.lower(__readNode, __stamp, __address);
             }
-            else if (node instanceof JavaReadNode)
+            else if (__node instanceof JavaReadNode)
             {
-                JavaReadNode javaReadNode = (JavaReadNode) node;
-                Stamp stamp = javaReadNode.stamp(NodeView.DEFAULT);
-                address = javaReadNode.getAddress();
-                lowered = lowering.lower(javaReadNode, stamp, address);
+                JavaReadNode __javaReadNode = (JavaReadNode) __node;
+                Stamp __stamp = __javaReadNode.stamp(NodeView.DEFAULT);
+                __address = __javaReadNode.getAddress();
+                __lowered = lowering.lower(__javaReadNode, __stamp, __address);
             }
-            else if (node instanceof FloatingReadNode)
+            else if (__node instanceof FloatingReadNode)
             {
-                FloatingReadNode floatingReadNode = (FloatingReadNode) node;
-                Stamp stamp = floatingReadNode.stamp(NodeView.DEFAULT);
-                address = floatingReadNode.getAddress();
-                lowered = lowering.lower(floatingReadNode, stamp, address);
+                FloatingReadNode __floatingReadNode = (FloatingReadNode) __node;
+                Stamp __stamp = __floatingReadNode.stamp(NodeView.DEFAULT);
+                __address = __floatingReadNode.getAddress();
+                __lowered = lowering.lower(__floatingReadNode, __stamp, __address);
             }
-            else if (node instanceof AbstractWriteNode)
+            else if (__node instanceof AbstractWriteNode)
             {
-                AbstractWriteNode abstractWriteNode = (AbstractWriteNode) node;
-                Stamp stamp = abstractWriteNode.value().stamp(NodeView.DEFAULT);
-                address = abstractWriteNode.getAddress();
-                lowered = lowering.lower(abstractWriteNode, stamp, address);
+                AbstractWriteNode __abstractWriteNode = (AbstractWriteNode) __node;
+                Stamp __stamp = __abstractWriteNode.value().stamp(NodeView.DEFAULT);
+                __address = __abstractWriteNode.getAddress();
+                __lowered = lowering.lower(__abstractWriteNode, __stamp, __address);
             }
-            else if (node instanceof PrefetchAllocateNode)
+            else if (__node instanceof PrefetchAllocateNode)
             {
-                PrefetchAllocateNode prefetchAllocateNode = (PrefetchAllocateNode) node;
-                Stamp stamp = StampFactory.forKind(JavaKind.Object);
-                address = (AddressNode) prefetchAllocateNode.inputs().first();
-                lowered = lowering.lower(prefetchAllocateNode, stamp, address);
+                PrefetchAllocateNode __prefetchAllocateNode = (PrefetchAllocateNode) __node;
+                Stamp __stamp = StampFactory.forKind(JavaKind.Object);
+                __address = (AddressNode) __prefetchAllocateNode.inputs().first();
+                __lowered = lowering.lower(__prefetchAllocateNode, __stamp, __address);
             }
             else
             {
@@ -90,35 +91,35 @@ public final class AddressLoweringByUsePhase extends Phase
             }
             // the lowered address may already be a replacement
             // in which case we want to use it not delete it!
-            if (lowered != address)
+            if (__lowered != __address)
             {
                 // replace original with lowered at this usage only
                 // n.b. lowered is added unique so repeat lowerings will elide
-                node.replaceFirstInput(address, lowered);
+                __node.replaceFirstInput(__address, __lowered);
                 // if that was the last reference we can kill the old (dead) node
-                if (address.hasNoUsages())
+                if (__address.hasNoUsages())
                 {
-                    GraphUtil.killWithUnusedFloatingInputs(address);
+                    GraphUtil.killWithUnusedFloatingInputs(__address);
                 }
             }
         }
 
         // now replace any remaining unlowered address nodes
-        for (Node node : graph.getNodes())
+        for (Node __node : __graph.getNodes())
         {
-            AddressNode lowered;
-            if (node instanceof OffsetAddressNode)
+            AddressNode __lowered;
+            if (__node instanceof OffsetAddressNode)
             {
-                AddressNode address = (AddressNode) node;
-                lowered = lowering.lower(address);
+                AddressNode __address = (AddressNode) __node;
+                __lowered = lowering.lower(__address);
             }
             else
             {
                 continue;
             }
             // will always be a new AddresNode
-            node.replaceAtUsages(lowered);
-            GraphUtil.killWithUnusedFloatingInputs(node);
+            __node.replaceAtUsages(__lowered);
+            GraphUtil.killWithUnusedFloatingInputs(__node);
         }
     }
 }

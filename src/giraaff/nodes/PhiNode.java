@@ -20,15 +20,18 @@ import giraaff.nodes.calc.FloatingNode;
 // @class PhiNode
 public abstract class PhiNode extends FloatingNode implements Canonicalizable
 {
+    // @def
     public static final NodeClass<PhiNode> TYPE = NodeClass.create(PhiNode.class);
 
-    @Input(InputType.Association) protected AbstractMergeNode merge;
+    @Input(InputType.Association)
+    // @field
+    protected AbstractMergeNode merge;
 
     // @cons
-    protected PhiNode(NodeClass<? extends PhiNode> c, Stamp stamp, AbstractMergeNode merge)
+    protected PhiNode(NodeClass<? extends PhiNode> __c, Stamp __stamp, AbstractMergeNode __merge)
     {
-        super(c, stamp);
-        this.merge = merge;
+        super(__c, __stamp);
+        this.merge = __merge;
     }
 
     public abstract NodeInputList<ValueNode> values();
@@ -38,10 +41,10 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
         return merge;
     }
 
-    public void setMerge(AbstractMergeNode x)
+    public void setMerge(AbstractMergeNode __x)
     {
-        updateUsages(merge, x);
-        merge = x;
+        updateUsages(merge, __x);
+        merge = __x;
     }
 
     /**
@@ -50,9 +53,9 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
      * @param i the index of the predecessor
      * @return the instruction that produced the value in the i'th predecessor
      */
-    public ValueNode valueAt(int i)
+    public ValueNode valueAt(int __i)
     {
-        return values().get(i);
+        return values().get(__i);
     }
 
     /**
@@ -61,28 +64,28 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
      * @param i the index at which to set the value
      * @param x the new phi input value for the given location
      */
-    public void initializeValueAt(int i, ValueNode x)
+    public void initializeValueAt(int __i, ValueNode __x)
     {
-        while (values().size() <= i)
+        while (values().size() <= __i)
         {
             values().add(null);
         }
-        values().set(i, x);
+        values().set(__i, __x);
     }
 
-    public void setValueAt(int i, ValueNode x)
+    public void setValueAt(int __i, ValueNode __x)
     {
-        values().set(i, x);
+        values().set(__i, __x);
     }
 
-    public void setValueAt(AbstractEndNode end, ValueNode x)
+    public void setValueAt(AbstractEndNode __end, ValueNode __x)
     {
-        setValueAt(merge().phiPredecessorIndex(end), x);
+        setValueAt(merge().phiPredecessorIndex(__end), __x);
     }
 
-    public ValueNode valueAt(AbstractEndNode pred)
+    public ValueNode valueAt(AbstractEndNode __pred)
     {
-        return valueAt(merge().phiPredecessorIndex(pred));
+        return valueAt(merge().phiPredecessorIndex(__pred));
     }
 
     /**
@@ -100,14 +103,14 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
         values().clear();
     }
 
-    public void addInput(ValueNode x)
+    public void addInput(ValueNode __x)
     {
-        values().add(x);
+        values().add(__x);
     }
 
-    public void removeInput(int index)
+    public void removeInput(int __index)
     {
-        values().remove(index);
+        values().remove(__index);
     }
 
     public NodeIterable<ValueNode> backValues()
@@ -121,20 +124,20 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
      */
     public ValueNode singleValueOrThis()
     {
-        ValueNode singleValue = valueAt(0);
-        int count = valueCount();
-        for (int i = 1; i < count; ++i)
+        ValueNode __singleValue = valueAt(0);
+        int __count = valueCount();
+        for (int __i = 1; __i < __count; ++__i)
         {
-            ValueNode value = valueAt(i);
-            if (value != this)
+            ValueNode __value = valueAt(__i);
+            if (__value != this)
             {
-                if (value != singleValue)
+                if (__value != __singleValue)
                 {
                     return this;
                 }
             }
         }
-        return singleValue;
+        return __singleValue;
     }
 
     /**
@@ -144,53 +147,53 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
      */
     public ValueNode singleBackValueOrThis()
     {
-        int valueCount = valueCount();
+        int __valueCount = valueCount();
         // Skip first value, assume second value as single value.
-        ValueNode singleValue = valueAt(1);
-        for (int i = 2; i < valueCount; ++i)
+        ValueNode __singleValue = valueAt(1);
+        for (int __i = 2; __i < __valueCount; ++__i)
         {
-            ValueNode value = valueAt(i);
-            if (value != singleValue)
+            ValueNode __value = valueAt(__i);
+            if (__value != __singleValue)
             {
                 return this;
             }
         }
-        return singleValue;
+        return __singleValue;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool)
+    public ValueNode canonical(CanonicalizerTool __tool)
     {
         if (isLoopPhi())
         {
-            int valueCount = valueCount();
-            int i;
-            for (i = 1; i < valueCount; ++i)
+            int __valueCount = valueCount();
+            int __i;
+            for (__i = 1; __i < __valueCount; ++__i)
             {
-                ValueNode value = valueAt(i);
-                if (value != this)
+                ValueNode __value = valueAt(__i);
+                if (__value != this)
                 {
                     break;
                 }
             }
 
             // All back edges are self-references => return forward edge input value.
-            if (i == valueCount)
+            if (__i == __valueCount)
             {
                 return firstValue();
             }
 
-            boolean onlySelfUsage = true;
-            for (Node n : this.usages())
+            boolean __onlySelfUsage = true;
+            for (Node __n : this.usages())
             {
-                if (n != this)
+                if (__n != this)
                 {
-                    onlySelfUsage = false;
+                    __onlySelfUsage = false;
                     break;
                 }
             }
 
-            if (onlySelfUsage)
+            if (__onlySelfUsage)
             {
                 return null;
             }

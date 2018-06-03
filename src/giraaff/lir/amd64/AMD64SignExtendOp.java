@@ -15,24 +15,32 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64SignExtendOp
 public final class AMD64SignExtendOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64SignExtendOp> TYPE = LIRInstructionClass.create(AMD64SignExtendOp.class);
 
+    // @field
     private final OperandSize size;
 
-    @Def({OperandFlag.REG}) protected AllocatableValue highResult;
-    @Def({OperandFlag.REG}) protected AllocatableValue lowResult;
+    @Def({OperandFlag.REG})
+    // @field
+    protected AllocatableValue highResult;
+    @Def({OperandFlag.REG})
+    // @field
+    protected AllocatableValue lowResult;
 
-    @Use({OperandFlag.REG}) protected AllocatableValue input;
+    @Use({OperandFlag.REG})
+    // @field
+    protected AllocatableValue input;
 
     // @cons
-    public AMD64SignExtendOp(OperandSize size, LIRKind resultKind, AllocatableValue input)
+    public AMD64SignExtendOp(OperandSize __size, LIRKind __resultKind, AllocatableValue __input)
     {
         super(TYPE);
-        this.size = size;
+        this.size = __size;
 
-        this.highResult = AMD64.rdx.asValue(resultKind);
-        this.lowResult = AMD64.rax.asValue(resultKind);
-        this.input = input;
+        this.highResult = AMD64.rdx.asValue(__resultKind);
+        this.lowResult = AMD64.rax.asValue(__resultKind);
+        this.input = __input;
     }
 
     public AllocatableValue getHighResult()
@@ -46,15 +54,15 @@ public final class AMD64SignExtendOp extends AMD64LIRInstruction
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         if (size == OperandSize.DWORD)
         {
-            masm.cdql();
+            __masm.cdql();
         }
         else
         {
-            masm.cdqq();
+            __masm.cdqq();
         }
     }
 }

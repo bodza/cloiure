@@ -12,28 +12,33 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class FloatingAccessNode
 public abstract class FloatingAccessNode extends FloatingGuardedNode implements Access, MemoryAccess
 {
+    // @def
     public static final NodeClass<FloatingAccessNode> TYPE = NodeClass.create(FloatingAccessNode.class);
 
-    @Input(InputType.Association) AddressNode address;
+    @Input(InputType.Association)
+    // @field
+    AddressNode address;
+    // @field
     protected final LocationIdentity location;
 
+    // @field
     protected BarrierType barrierType;
 
     // @cons
-    protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp)
+    protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp)
     {
-        super(c, stamp);
-        this.address = address;
-        this.location = location;
+        super(__c, __stamp);
+        this.address = __address;
+        this.location = __location;
     }
 
     // @cons
-    protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType)
+    protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
     {
-        super(c, stamp, guard);
-        this.address = address;
-        this.location = location;
-        this.barrierType = barrierType;
+        super(__c, __stamp, __guard);
+        this.address = __address;
+        this.location = __location;
+        this.barrierType = __barrierType;
     }
 
     @Override
@@ -43,10 +48,10 @@ public abstract class FloatingAccessNode extends FloatingGuardedNode implements 
     }
 
     @Override
-    public void setAddress(AddressNode address)
+    public void setAddress(AddressNode __address)
     {
-        updateUsages(this.address, address);
-        this.address = address;
+        updateUsages(this.address, __address);
+        this.address = __address;
     }
 
     @Override

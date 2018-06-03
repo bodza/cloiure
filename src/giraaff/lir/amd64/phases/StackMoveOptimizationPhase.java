@@ -31,42 +31,49 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 public final class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
     {
-        LIR lir = lirGenRes.getLIR();
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        LIR __lir = __lirGenRes.getLIR();
+        for (AbstractBlockBase<?> __block : __lir.getControlFlowGraph().getBlocks())
         {
-            ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-            new Closure().process(instructions);
+            ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
+            new Closure().process(__instructions);
         }
     }
 
     // @class StackMoveOptimizationPhase.Closure
     private static class Closure
     {
+        // @def
         private static final int NONE = -1;
 
+        // @field
         private int begin = NONE;
+        // @field
         private Register reg = null;
+        // @field
         private List<AllocatableValue> dst;
+        // @field
         private List<Value> src;
+        // @field
         private AllocatableValue slot;
+        // @field
         private boolean removed = false;
 
-        public void process(List<LIRInstruction> instructions)
+        public void process(List<LIRInstruction> __instructions)
         {
-            for (int i = 0; i < instructions.size(); i++)
+            for (int __i = 0; __i < __instructions.size(); __i++)
             {
-                LIRInstruction inst = instructions.get(i);
+                LIRInstruction __inst = __instructions.get(__i);
 
-                if (isStackMove(inst))
+                if (isStackMove(__inst))
                 {
-                    AMD64StackMove move = asStackMove(inst);
+                    AMD64StackMove __move = asStackMove(__inst);
 
-                    if (reg != null && !reg.equals(move.getScratchRegister()))
+                    if (reg != null && !reg.equals(__move.getScratchRegister()))
                     {
                         // end of trace & start of new
-                        replaceStackMoves(instructions);
+                        replaceStackMoves(__instructions);
                     }
 
                     // lazy initialize
@@ -76,40 +83,40 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
                         src = new ArrayList<>();
                     }
 
-                    dst.add(move.getResult());
-                    src.add(move.getInput());
+                    dst.add(__move.getResult());
+                    src.add(__move.getInput());
 
                     if (begin == NONE)
                     {
                         // trace begin
-                        begin = i;
-                        reg = move.getScratchRegister();
-                        slot = move.getBackupSlot();
+                        begin = __i;
+                        reg = __move.getScratchRegister();
+                        slot = __move.getBackupSlot();
                     }
                 }
                 else if (begin != NONE)
                 {
                     // end of trace
-                    replaceStackMoves(instructions);
+                    replaceStackMoves(__instructions);
                 }
             }
             // remove instructions
             if (removed)
             {
-                instructions.removeAll(Collections.singleton(null));
+                __instructions.removeAll(Collections.singleton(null));
             }
         }
 
-        private void replaceStackMoves(List<LIRInstruction> instructions)
+        private void replaceStackMoves(List<LIRInstruction> __instructions)
         {
-            int size = dst.size();
-            if (size > 1)
+            int __size = dst.size();
+            if (__size > 1)
             {
-                AMD64MultiStackMove multiMove = new AMD64MultiStackMove(dst.toArray(new AllocatableValue[size]), src.toArray(new AllocatableValue[size]), reg, slot);
+                AMD64MultiStackMove __multiMove = new AMD64MultiStackMove(dst.toArray(new AllocatableValue[__size]), src.toArray(new AllocatableValue[__size]), reg, slot);
                 // replace first instruction
-                instructions.set(begin, multiMove);
+                __instructions.set(begin, __multiMove);
                 // and null out others
-                Collections.fill(instructions.subList(begin + 1, begin + size), null);
+                Collections.fill(__instructions.subList(begin + 1, begin + __size), null);
                 // removed
                 removed = true;
             }
@@ -122,13 +129,13 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
         }
     }
 
-    private static AMD64StackMove asStackMove(LIRInstruction inst)
+    private static AMD64StackMove asStackMove(LIRInstruction __inst)
     {
-        return (AMD64StackMove) inst;
+        return (AMD64StackMove) __inst;
     }
 
-    private static boolean isStackMove(LIRInstruction inst)
+    private static boolean isStackMove(LIRInstruction __inst)
     {
-        return inst instanceof AMD64StackMove;
+        return __inst instanceof AMD64StackMove;
     }
 }

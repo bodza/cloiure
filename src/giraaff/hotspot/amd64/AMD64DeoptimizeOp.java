@@ -14,21 +14,23 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64DeoptimizeOp
 final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements BlockEndOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64DeoptimizeOp> TYPE = LIRInstructionClass.create(AMD64DeoptimizeOp.class);
 
     // @State
+    // @field
     private LIRFrameState state;
 
     // @cons
-    AMD64DeoptimizeOp(LIRFrameState state)
+    AMD64DeoptimizeOp(LIRFrameState __state)
     {
         super(TYPE);
-        this.state = state;
+        this.state = __state;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        AMD64Call.directCall(crb, masm, crb.foreignCalls.lookupForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER), null, false, state);
+        AMD64Call.directCall(__crb, __masm, __crb.foreignCalls.lookupForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER), null, false, state);
     }
 }

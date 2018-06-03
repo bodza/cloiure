@@ -25,45 +25,46 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class BitScanReverseNode
 public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<BitScanReverseNode> TYPE = NodeClass.create(BitScanReverseNode.class);
 
     // @cons
-    public BitScanReverseNode(ValueNode value)
+    public BitScanReverseNode(ValueNode __value)
     {
-        super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) value.stamp(NodeView.DEFAULT)).getBits()), value);
+        super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) __value.stamp(NodeView.DEFAULT)).getBits()), __value);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        IntegerStamp valueStamp = (IntegerStamp) newStamp;
-        int min;
-        int max;
-        long mask = CodeUtil.mask(valueStamp.getBits());
-        int lastAlwaysSetBit = scan(valueStamp.downMask() & mask);
-        if (lastAlwaysSetBit == -1)
+        IntegerStamp __valueStamp = (IntegerStamp) __newStamp;
+        int __min;
+        int __max;
+        long __mask = CodeUtil.mask(__valueStamp.getBits());
+        int __lastAlwaysSetBit = scan(__valueStamp.downMask() & __mask);
+        if (__lastAlwaysSetBit == -1)
         {
-            int firstMaybeSetBit = BitScanForwardNode.scan(valueStamp.upMask() & mask);
-            min = firstMaybeSetBit;
+            int __firstMaybeSetBit = BitScanForwardNode.scan(__valueStamp.upMask() & __mask);
+            __min = __firstMaybeSetBit;
         }
         else
         {
-            min = lastAlwaysSetBit;
+            __min = __lastAlwaysSetBit;
         }
-        int lastMaybeSetBit = scan(valueStamp.upMask() & mask);
-        max = lastMaybeSetBit;
-        return StampFactory.forInteger(JavaKind.Int, min, max);
+        int __lastMaybeSetBit = scan(__valueStamp.upMask() & __mask);
+        __max = __lastMaybeSetBit;
+        return StampFactory.forInteger(JavaKind.Int, __min, __max);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        if (forValue.isConstant())
+        if (__forValue.isConstant())
         {
-            JavaConstant c = forValue.asJavaConstant();
-            if (c.asLong() != 0)
+            JavaConstant __c = __forValue.asJavaConstant();
+            if (__c.asLong() != 0)
             {
-                return ConstantNode.forInt(forValue.getStackKind() == JavaKind.Int ? scan(c.asInt()) : scan(c.asLong()));
+                return ConstantNode.forInt(__forValue.getStackKind() == JavaKind.Int ? scan(__c.asInt()) : scan(__c.asLong()));
             }
         }
         return this;
@@ -74,9 +75,9 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
      *
      * @return index of first set bit or -1 if {@code v} == 0.
      */
-    public static int scan(long v)
+    public static int scan(long __v)
     {
-        return 63 - Long.numberOfLeadingZeros(v);
+        return 63 - Long.numberOfLeadingZeros(__v);
     }
 
     /**
@@ -84,9 +85,9 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
      *
      * @return index of first set bit or -1 if {@code v} == 0.
      */
-    public static int scan(int v)
+    public static int scan(int __v)
     {
-        return 31 - Integer.numberOfLeadingZeros(v);
+        return 31 - Integer.numberOfLeadingZeros(__v);
     }
 
     /**
@@ -106,8 +107,8 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
     public static native int unsafeScan(long v);
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        builder.setResult(this, gen.emitBitScanReverse(builder.operand(getValue())));
+        __builder.setResult(this, __gen.emitBitScanReverse(__builder.operand(getValue())));
     }
 }

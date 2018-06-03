@@ -7,21 +7,24 @@ import giraaff.nodeinfo.InputType;
 // @class DeoptimizingFixedWithNextNode
 public abstract class DeoptimizingFixedWithNextNode extends FixedWithNextNode implements DeoptimizingNode.DeoptBefore
 {
+    // @def
     public static final NodeClass<DeoptimizingFixedWithNextNode> TYPE = NodeClass.create(DeoptimizingFixedWithNextNode.class);
 
-    @OptionalInput(InputType.State) protected FrameState stateBefore;
+    @OptionalInput(InputType.State)
+    // @field
+    protected FrameState stateBefore;
 
     // @cons
-    protected DeoptimizingFixedWithNextNode(NodeClass<? extends DeoptimizingFixedWithNextNode> c, Stamp stamp)
+    protected DeoptimizingFixedWithNextNode(NodeClass<? extends DeoptimizingFixedWithNextNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     // @cons
-    protected DeoptimizingFixedWithNextNode(NodeClass<? extends DeoptimizingFixedWithNextNode> c, Stamp stamp, FrameState stateBefore)
+    protected DeoptimizingFixedWithNextNode(NodeClass<? extends DeoptimizingFixedWithNextNode> __c, Stamp __stamp, FrameState __stateBefore)
     {
-        super(c, stamp);
-        this.stateBefore = stateBefore;
+        super(__c, __stamp);
+        this.stateBefore = __stateBefore;
     }
 
     @Override
@@ -31,9 +34,9 @@ public abstract class DeoptimizingFixedWithNextNode extends FixedWithNextNode im
     }
 
     @Override
-    public void setStateBefore(FrameState f)
+    public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, f);
-        stateBefore = f;
+        updateUsages(stateBefore, __f);
+        stateBefore = __f;
     }
 }

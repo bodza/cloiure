@@ -21,44 +21,46 @@ import giraaff.util.GraalError;
 // @class FloatLessThanNode
 public final class FloatLessThanNode extends CompareNode
 {
+    // @def
     public static final NodeClass<FloatLessThanNode> TYPE = NodeClass.create(FloatLessThanNode.class);
 
+    // @def
     private static final FloatLessThanOp OP = new FloatLessThanOp();
 
     // @cons
-    public FloatLessThanNode(ValueNode x, ValueNode y, boolean unorderedIsTrue)
+    public FloatLessThanNode(ValueNode __x, ValueNode __y, boolean __unorderedIsTrue)
     {
-        super(TYPE, CanonicalCondition.LT, unorderedIsTrue, x, y);
+        super(TYPE, CanonicalCondition.LT, __unorderedIsTrue, __x, __y);
     }
 
-    public static LogicNode create(ValueNode x, ValueNode y, boolean unorderedIsTrue, NodeView view)
+    public static LogicNode create(ValueNode __x, ValueNode __y, boolean __unorderedIsTrue, NodeView __view)
     {
-        LogicNode result = CompareNode.tryConstantFoldPrimitive(CanonicalCondition.LT, x, y, unorderedIsTrue, view);
-        if (result != null)
+        LogicNode __result = CompareNode.tryConstantFoldPrimitive(CanonicalCondition.LT, __x, __y, __unorderedIsTrue, __view);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
-        return new FloatLessThanNode(x, y, unorderedIsTrue);
+        return new FloatLessThanNode(__x, __y, __unorderedIsTrue);
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, boolean unorderedIsTrue, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, ValueNode __x, ValueNode __y, boolean __unorderedIsTrue, NodeView __view)
     {
-        LogicNode result = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, CanonicalCondition.LT, unorderedIsTrue, x, y, view);
-        if (result != null)
+        LogicNode __result = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, CanonicalCondition.LT, __unorderedIsTrue, __x, __y, __view);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
-        return create(x, y, unorderedIsTrue, view);
+        return create(__x, __y, __unorderedIsTrue, __view);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.LT, unorderedIsTrue, forX, forY, view);
-        if (value != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.LT, unorderedIsTrue, __forX, __forY, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
         return this;
     }
@@ -67,14 +69,14 @@ public final class FloatLessThanNode extends CompareNode
     public static final class FloatLessThanOp extends CompareOp
     {
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __forX, ValueNode __forY, NodeView __view)
         {
-            LogicNode result = super.canonical(constantReflection, metaAccess, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
-            if (result != null)
+            LogicNode __result = super.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __unorderedIsTrue, __forX, __forY, __view);
+            if (__result != null)
             {
-                return result;
+                return __result;
             }
-            if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY) && !unorderedIsTrue)
+            if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY) && !__unorderedIsTrue)
             {
                 return LogicConstantNode.contradiction();
             }
@@ -82,34 +84,34 @@ public final class FloatLessThanNode extends CompareNode
         }
 
         @Override
-        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
         {
-            if (newX.stamp(NodeView.DEFAULT) instanceof FloatStamp && newY.stamp(NodeView.DEFAULT) instanceof FloatStamp)
+            if (__newX.stamp(NodeView.DEFAULT) instanceof FloatStamp && __newY.stamp(NodeView.DEFAULT) instanceof FloatStamp)
             {
-                return new FloatLessThanNode(newX, newY, unorderedIsTrue);
+                return new FloatLessThanNode(__newX, __newY, __unorderedIsTrue);
             }
-            else if (newX.stamp(NodeView.DEFAULT) instanceof IntegerStamp && newY.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
+            else if (__newX.stamp(NodeView.DEFAULT) instanceof IntegerStamp && __newY.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
             {
-                return new IntegerLessThanNode(newX, newY);
+                return new IntegerLessThanNode(__newX, __newY);
             }
             throw GraalError.shouldNotReachHere();
         }
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForX(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
         return null;
     }
 
     @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForY(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
         return null;
     }
 
     @Override
-    public TriState tryFold(Stamp xStampGeneric, Stamp yStampGeneric)
+    public TriState tryFold(Stamp __xStampGeneric, Stamp __yStampGeneric)
     {
         return TriState.UNKNOWN;
     }

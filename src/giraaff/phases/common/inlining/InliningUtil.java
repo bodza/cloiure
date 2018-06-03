@@ -80,48 +80,48 @@ public final class InliningUtil extends ValueMergeUtil
         super();
     }
 
-    public static void replaceInvokeCallTarget(Invoke invoke, StructuredGraph graph, InvokeKind invokeKind, ResolvedJavaMethod targetMethod)
+    public static void replaceInvokeCallTarget(Invoke __invoke, StructuredGraph __graph, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod)
     {
-        MethodCallTargetNode oldCallTarget = (MethodCallTargetNode) invoke.callTarget();
-        MethodCallTargetNode newCallTarget = graph.add(new MethodCallTargetNode(invokeKind, targetMethod, oldCallTarget.arguments().toArray(new ValueNode[0]), oldCallTarget.returnStamp(), oldCallTarget.getProfile()));
-        invoke.asNode().replaceFirstInput(oldCallTarget, newCallTarget);
+        MethodCallTargetNode __oldCallTarget = (MethodCallTargetNode) __invoke.callTarget();
+        MethodCallTargetNode __newCallTarget = __graph.add(new MethodCallTargetNode(__invokeKind, __targetMethod, __oldCallTarget.arguments().toArray(new ValueNode[0]), __oldCallTarget.returnStamp(), __oldCallTarget.getProfile()));
+        __invoke.asNode().replaceFirstInput(__oldCallTarget, __newCallTarget);
     }
 
-    public static PiNode createAnchoredReceiver(StructuredGraph graph, GuardingNode anchor, ResolvedJavaType commonType, ValueNode receiver, boolean exact)
+    public static PiNode createAnchoredReceiver(StructuredGraph __graph, GuardingNode __anchor, ResolvedJavaType __commonType, ValueNode __receiver, boolean __exact)
     {
-        return createAnchoredReceiver(graph, anchor, receiver, exact ? StampFactory.objectNonNull(TypeReference.createExactTrusted(commonType)) : StampFactory.objectNonNull(TypeReference.createTrusted(graph.getAssumptions(), commonType)));
+        return createAnchoredReceiver(__graph, __anchor, __receiver, __exact ? StampFactory.objectNonNull(TypeReference.createExactTrusted(__commonType)) : StampFactory.objectNonNull(TypeReference.createTrusted(__graph.getAssumptions(), __commonType)));
     }
 
-    private static PiNode createAnchoredReceiver(StructuredGraph graph, GuardingNode anchor, ValueNode receiver, Stamp stamp)
+    private static PiNode createAnchoredReceiver(StructuredGraph __graph, GuardingNode __anchor, ValueNode __receiver, Stamp __stamp)
     {
         // to avoid that floating reads on receiver fields float above the type check
-        return graph.unique(new PiNode(receiver, stamp, (ValueNode) anchor));
+        return __graph.unique(new PiNode(__receiver, __stamp, (ValueNode) __anchor));
     }
 
     /**
      * @return null iff the check succeeds, otherwise a (non-null) descriptive message.
      */
-    public static String checkInvokeConditions(Invoke invoke)
+    public static String checkInvokeConditions(Invoke __invoke)
     {
-        if (invoke.predecessor() == null || !invoke.asNode().isAlive())
+        if (__invoke.predecessor() == null || !__invoke.asNode().isAlive())
         {
             return "the invoke is dead code";
         }
-        if (!(invoke.callTarget() instanceof MethodCallTargetNode))
+        if (!(__invoke.callTarget() instanceof MethodCallTargetNode))
         {
             return "the invoke has already been lowered, or has been created as a low-level node";
         }
-        MethodCallTargetNode callTarget = (MethodCallTargetNode) invoke.callTarget();
-        if (callTarget.targetMethod() == null)
+        MethodCallTargetNode __callTarget = (MethodCallTargetNode) __invoke.callTarget();
+        if (__callTarget.targetMethod() == null)
         {
             return "target method is null";
         }
-        if (!invoke.useForInlining())
+        if (!__invoke.useForInlining())
         {
             return "the invoke is marked to be not used for inlining";
         }
-        ValueNode receiver = callTarget.receiver();
-        if (receiver != null && receiver.isConstant() && receiver.isNullConstant())
+        ValueNode __receiver = __callTarget.receiver();
+        if (__receiver != null && __receiver.isConstant() && __receiver.isNullConstant())
         {
             return "receiver is null";
         }
@@ -138,9 +138,9 @@ public final class InliningUtil extends ValueMergeUtil
      *            false if no such check is required
      * @param inlineeMethod the actual method being inlined. Maybe be null for snippets.
      */
-    public static UnmodifiableEconomicMap<Node, Node> inline(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod)
+    public static UnmodifiableEconomicMap<Node, Node> inline(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod)
     {
-        return inline(invoke, inlineGraph, receiverNullCheck, inlineeMethod, "reason not specified", "phase not specified");
+        return inline(__invoke, __inlineGraph, __receiverNullCheck, __inlineeMethod, "reason not specified", "phase not specified");
     }
 
     /**
@@ -155,135 +155,135 @@ public final class InliningUtil extends ValueMergeUtil
      * @param reason the reason for inlining, used in tracing
      * @param phase the phase that invoked inlining
      */
-    public static UnmodifiableEconomicMap<Node, Node> inline(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod, String reason, String phase)
+    public static UnmodifiableEconomicMap<Node, Node> inline(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod, String __reason, String __phase)
     {
-        FixedNode invokeNode = invoke.asNode();
-        StructuredGraph graph = invokeNode.graph();
-        final NodeInputList<ValueNode> parameters = invoke.callTarget().arguments();
+        FixedNode __invokeNode = __invoke.asNode();
+        StructuredGraph __graph = __invokeNode.graph();
+        final NodeInputList<ValueNode> __parameters = __invoke.callTarget().arguments();
 
-        if (receiverNullCheck && !((MethodCallTargetNode) invoke.callTarget()).isStatic())
+        if (__receiverNullCheck && !((MethodCallTargetNode) __invoke.callTarget()).isStatic())
         {
-            nonNullReceiver(invoke);
+            nonNullReceiver(__invoke);
         }
 
-        ArrayList<Node> nodes = new ArrayList<>(inlineGraph.getNodes().count());
-        ArrayList<ReturnNode> returnNodes = new ArrayList<>(4);
-        ArrayList<Invoke> partialIntrinsicExits = new ArrayList<>();
-        UnwindNode unwindNode = null;
-        final StartNode entryPointNode = inlineGraph.start();
-        FixedNode firstCFGNode = entryPointNode.next();
-        if (firstCFGNode == null)
+        ArrayList<Node> __nodes = new ArrayList<>(__inlineGraph.getNodes().count());
+        ArrayList<ReturnNode> __returnNodes = new ArrayList<>(4);
+        ArrayList<Invoke> __partialIntrinsicExits = new ArrayList<>();
+        UnwindNode __unwindNode = null;
+        final StartNode __entryPointNode = __inlineGraph.start();
+        FixedNode __firstCFGNode = __entryPointNode.next();
+        if (__firstCFGNode == null)
         {
-            throw new IllegalStateException("Inlined graph is in invalid state: " + inlineGraph);
+            throw new IllegalStateException("Inlined graph is in invalid state: " + __inlineGraph);
         }
-        for (Node node : inlineGraph.getNodes())
+        for (Node __node : __inlineGraph.getNodes())
         {
-            if (node == entryPointNode || (node == entryPointNode.stateAfter() && node.usages().count() == 1) || node instanceof ParameterNode)
+            if (__node == __entryPointNode || (__node == __entryPointNode.stateAfter() && __node.usages().count() == 1) || __node instanceof ParameterNode)
             {
                 // Do nothing.
             }
             else
             {
-                nodes.add(node);
-                if (node instanceof ReturnNode)
+                __nodes.add(__node);
+                if (__node instanceof ReturnNode)
                 {
-                    returnNodes.add((ReturnNode) node);
+                    __returnNodes.add((ReturnNode) __node);
                 }
-                else if (node instanceof Invoke)
+                else if (__node instanceof Invoke)
                 {
-                    Invoke invokeInInlineGraph = (Invoke) node;
-                    if (invokeInInlineGraph.bci() == BytecodeFrame.UNKNOWN_BCI)
+                    Invoke __invokeInInlineGraph = (Invoke) __node;
+                    if (__invokeInInlineGraph.bci() == BytecodeFrame.UNKNOWN_BCI)
                     {
-                        ResolvedJavaMethod target1 = inlineeMethod;
-                        ResolvedJavaMethod target2 = invokeInInlineGraph.callTarget().targetMethod();
-                        partialIntrinsicExits.add(invokeInInlineGraph);
+                        ResolvedJavaMethod __target1 = __inlineeMethod;
+                        ResolvedJavaMethod __target2 = __invokeInInlineGraph.callTarget().targetMethod();
+                        __partialIntrinsicExits.add(__invokeInInlineGraph);
                     }
                 }
-                else if (node instanceof UnwindNode)
+                else if (__node instanceof UnwindNode)
                 {
-                    unwindNode = (UnwindNode) node;
+                    __unwindNode = (UnwindNode) __node;
                 }
             }
         }
 
-        final AbstractBeginNode prevBegin = AbstractBeginNode.prevBegin(invokeNode);
+        final AbstractBeginNode __prevBegin = AbstractBeginNode.prevBegin(__invokeNode);
         // @closure
         DuplicationReplacement localReplacement = new DuplicationReplacement()
         {
             @Override
-            public Node replacement(Node node)
+            public Node replacement(Node __node)
             {
-                if (node instanceof ParameterNode)
+                if (__node instanceof ParameterNode)
                 {
-                    return parameters.get(((ParameterNode) node).index());
+                    return __parameters.get(((ParameterNode) __node).index());
                 }
-                else if (node == entryPointNode)
+                else if (__node == __entryPointNode)
                 {
-                    return prevBegin;
+                    return __prevBegin;
                 }
-                return node;
+                return __node;
             }
         };
 
-        Mark mark = graph.getMark();
+        Mark __mark = __graph.getMark();
         // Instead, attach the inlining log of the child graph to the current inlining log.
-        EconomicMap<Node, Node> duplicates = graph.addDuplicates(nodes, inlineGraph, inlineGraph.getNodeCount(), localReplacement);
+        EconomicMap<Node, Node> __duplicates = __graph.addDuplicates(__nodes, __inlineGraph, __inlineGraph.getNodeCount(), localReplacement);
 
-        FrameState stateAfter = invoke.stateAfter();
+        FrameState __stateAfter = __invoke.stateAfter();
 
-        FrameState stateAtExceptionEdge = null;
-        if (invoke instanceof InvokeWithExceptionNode)
+        FrameState __stateAtExceptionEdge = null;
+        if (__invoke instanceof InvokeWithExceptionNode)
         {
-            InvokeWithExceptionNode invokeWithException = ((InvokeWithExceptionNode) invoke);
-            if (unwindNode != null)
+            InvokeWithExceptionNode __invokeWithException = ((InvokeWithExceptionNode) __invoke);
+            if (__unwindNode != null)
             {
-                ExceptionObjectNode obj = (ExceptionObjectNode) invokeWithException.exceptionEdge();
-                stateAtExceptionEdge = obj.stateAfter();
+                ExceptionObjectNode __obj = (ExceptionObjectNode) __invokeWithException.exceptionEdge();
+                __stateAtExceptionEdge = __obj.stateAfter();
             }
         }
 
-        if (stateAfter != null)
+        if (__stateAfter != null)
         {
-            processFrameStates(invoke, inlineGraph, duplicates, stateAtExceptionEdge, returnNodes.size() > 1);
-            int callerLockDepth = stateAfter.nestedLockDepth();
-            if (callerLockDepth != 0)
+            processFrameStates(__invoke, __inlineGraph, __duplicates, __stateAtExceptionEdge, __returnNodes.size() > 1);
+            int __callerLockDepth = __stateAfter.nestedLockDepth();
+            if (__callerLockDepth != 0)
             {
-                for (MonitorIdNode original : inlineGraph.getNodes(MonitorIdNode.TYPE))
+                for (MonitorIdNode __original : __inlineGraph.getNodes(MonitorIdNode.TYPE))
                 {
-                    MonitorIdNode monitor = (MonitorIdNode) duplicates.get(original);
-                    processMonitorId(invoke.stateAfter(), monitor);
+                    MonitorIdNode __monitor = (MonitorIdNode) __duplicates.get(__original);
+                    processMonitorId(__invoke.stateAfter(), __monitor);
                 }
             }
         }
 
-        firstCFGNode = (FixedNode) duplicates.get(firstCFGNode);
-        for (int i = 0; i < returnNodes.size(); i++)
+        __firstCFGNode = (FixedNode) __duplicates.get(__firstCFGNode);
+        for (int __i = 0; __i < __returnNodes.size(); __i++)
         {
-            returnNodes.set(i, (ReturnNode) duplicates.get(returnNodes.get(i)));
+            __returnNodes.set(__i, (ReturnNode) __duplicates.get(__returnNodes.get(__i)));
         }
-        for (Invoke exit : partialIntrinsicExits)
+        for (Invoke __exit : __partialIntrinsicExits)
         {
             // A partial intrinsic exit must be replaced with a call to the intrinsified method.
-            Invoke dup = (Invoke) duplicates.get(exit.asNode());
-            if (dup instanceof InvokeNode)
+            Invoke __dup = (Invoke) __duplicates.get(__exit.asNode());
+            if (__dup instanceof InvokeNode)
             {
-                InvokeNode repl = graph.add(new InvokeNode(invoke.callTarget(), invoke.bci()));
-                dup.intrinsify(repl.asNode());
+                InvokeNode __repl = __graph.add(new InvokeNode(__invoke.callTarget(), __invoke.bci()));
+                __dup.intrinsify(__repl.asNode());
             }
             else
             {
-                ((InvokeWithExceptionNode) dup).replaceWithNewBci(invoke.bci());
+                ((InvokeWithExceptionNode) __dup).replaceWithNewBci(__invoke.bci());
             }
         }
-        if (unwindNode != null)
+        if (__unwindNode != null)
         {
-            unwindNode = (UnwindNode) duplicates.get(unwindNode);
+            __unwindNode = (UnwindNode) __duplicates.get(__unwindNode);
         }
 
-        finishInlining(invoke, graph, firstCFGNode, returnNodes, unwindNode, inlineGraph.getAssumptions(), inlineGraph);
-        GraphUtil.killCFG(invokeNode);
+        finishInlining(__invoke, __graph, __firstCFGNode, __returnNodes, __unwindNode, __inlineGraph.getAssumptions(), __inlineGraph);
+        GraphUtil.killCFG(__invokeNode);
 
-        return duplicates;
+        return __duplicates;
     }
 
     /**
@@ -293,244 +293,244 @@ public final class InliningUtil extends ValueMergeUtil
      *
      * @return the set of nodes to canonicalize
      */
-    public static EconomicSet<Node> inlineForCanonicalization(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod, String reason, String phase)
+    public static EconomicSet<Node> inlineForCanonicalization(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod, String __reason, String __phase)
     {
-        return inlineForCanonicalization(invoke, inlineGraph, receiverNullCheck, inlineeMethod, null, reason, phase);
+        return inlineForCanonicalization(__invoke, __inlineGraph, __receiverNullCheck, __inlineeMethod, null, __reason, __phase);
     }
 
     @SuppressWarnings("try")
-    public static EconomicSet<Node> inlineForCanonicalization(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicatesConsumer, String reason, String phase)
+    public static EconomicSet<Node> inlineForCanonicalization(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod, Consumer<UnmodifiableEconomicMap<Node, Node>> __duplicatesConsumer, String __reason, String __phase)
     {
-        HashSetNodeEventListener listener = new HashSetNodeEventListener();
+        HashSetNodeEventListener __listener = new HashSetNodeEventListener();
         /*
          * This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
          * only nodes which were modified into the process of inlining the graph into the current graph.
          */
-        try (NodeEventScope nes = invoke.asNode().graph().trackNodeEvents(listener))
+        try (NodeEventScope __nes = __invoke.asNode().graph().trackNodeEvents(__listener))
         {
-            UnmodifiableEconomicMap<Node, Node> duplicates = InliningUtil.inline(invoke, inlineGraph, receiverNullCheck, inlineeMethod, reason, phase);
-            if (duplicatesConsumer != null)
+            UnmodifiableEconomicMap<Node, Node> __duplicates = InliningUtil.inline(__invoke, __inlineGraph, __receiverNullCheck, __inlineeMethod, __reason, __phase);
+            if (__duplicatesConsumer != null)
             {
-                duplicatesConsumer.accept(duplicates);
+                __duplicatesConsumer.accept(__duplicates);
             }
         }
-        return listener.getNodes();
+        return __listener.getNodes();
     }
 
-    private static ValueNode finishInlining(Invoke invoke, StructuredGraph graph, FixedNode firstNode, List<ReturnNode> returnNodes, UnwindNode unwindNode, Assumptions inlinedAssumptions, StructuredGraph inlineGraph)
+    private static ValueNode finishInlining(Invoke __invoke, StructuredGraph __graph, FixedNode __firstNode, List<ReturnNode> __returnNodes, UnwindNode __unwindNode, Assumptions __inlinedAssumptions, StructuredGraph __inlineGraph)
     {
-        FixedNode invokeNode = invoke.asNode();
-        FrameState stateAfter = invoke.stateAfter();
+        FixedNode __invokeNode = __invoke.asNode();
+        FrameState __stateAfter = __invoke.stateAfter();
 
-        invokeNode.replaceAtPredecessor(firstNode);
+        __invokeNode.replaceAtPredecessor(__firstNode);
 
-        if (invoke instanceof InvokeWithExceptionNode)
+        if (__invoke instanceof InvokeWithExceptionNode)
         {
-            InvokeWithExceptionNode invokeWithException = ((InvokeWithExceptionNode) invoke);
-            if (unwindNode != null && unwindNode.isAlive())
+            InvokeWithExceptionNode __invokeWithException = ((InvokeWithExceptionNode) __invoke);
+            if (__unwindNode != null && __unwindNode.isAlive())
             {
-                ExceptionObjectNode obj = (ExceptionObjectNode) invokeWithException.exceptionEdge();
-                obj.replaceAtUsages(unwindNode.exception());
-                Node n = obj.next();
-                obj.setNext(null);
-                unwindNode.replaceAndDelete(n);
+                ExceptionObjectNode __obj = (ExceptionObjectNode) __invokeWithException.exceptionEdge();
+                __obj.replaceAtUsages(__unwindNode.exception());
+                Node __n = __obj.next();
+                __obj.setNext(null);
+                __unwindNode.replaceAndDelete(__n);
 
-                obj.replaceAtPredecessor(null);
-                obj.safeDelete();
+                __obj.replaceAtPredecessor(null);
+                __obj.safeDelete();
             }
             else
             {
-                invokeWithException.killExceptionEdge();
+                __invokeWithException.killExceptionEdge();
             }
 
             // get rid of memory kill
-            AbstractBeginNode begin = invokeWithException.next();
-            if (begin instanceof KillingBeginNode)
+            AbstractBeginNode __begin = __invokeWithException.next();
+            if (__begin instanceof KillingBeginNode)
             {
-                AbstractBeginNode newBegin = new BeginNode();
-                graph.addAfterFixed(begin, graph.add(newBegin));
-                begin.replaceAtUsages(newBegin);
-                graph.removeFixed(begin);
+                AbstractBeginNode __newBegin = new BeginNode();
+                __graph.addAfterFixed(__begin, __graph.add(__newBegin));
+                __begin.replaceAtUsages(__newBegin);
+                __graph.removeFixed(__begin);
             }
         }
         else
         {
-            if (unwindNode != null && unwindNode.isAlive())
+            if (__unwindNode != null && __unwindNode.isAlive())
             {
-                DeoptimizeNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
-                unwindNode.replaceAndDelete(deoptimizeNode);
+                DeoptimizeNode __deoptimizeNode = addDeoptimizeNode(__graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
+                __unwindNode.replaceAndDelete(__deoptimizeNode);
             }
         }
 
-        ValueNode returnValue;
-        if (!returnNodes.isEmpty())
+        ValueNode __returnValue;
+        if (!__returnNodes.isEmpty())
         {
-            FixedNode n = invoke.next();
-            invoke.setNext(null);
-            if (returnNodes.size() == 1)
+            FixedNode __n = __invoke.next();
+            __invoke.setNext(null);
+            if (__returnNodes.size() == 1)
             {
-                ReturnNode returnNode = returnNodes.get(0);
-                returnValue = returnNode.result();
-                invokeNode.replaceAtUsages(returnValue);
-                returnNode.replaceAndDelete(n);
+                ReturnNode __returnNode = __returnNodes.get(0);
+                __returnValue = __returnNode.result();
+                __invokeNode.replaceAtUsages(__returnValue);
+                __returnNode.replaceAndDelete(__n);
             }
             else
             {
-                MergeNode merge = graph.add(new MergeNode());
-                merge.setStateAfter(stateAfter);
-                returnValue = mergeReturns(merge, returnNodes);
-                invokeNode.replaceAtUsages(returnValue);
-                if (merge.isPhiAtMerge(returnValue))
+                MergeNode __merge = __graph.add(new MergeNode());
+                __merge.setStateAfter(__stateAfter);
+                __returnValue = mergeReturns(__merge, __returnNodes);
+                __invokeNode.replaceAtUsages(__returnValue);
+                if (__merge.isPhiAtMerge(__returnValue))
                 {
-                    fixFrameStates(graph, merge, (PhiNode) returnValue);
+                    fixFrameStates(__graph, __merge, (PhiNode) __returnValue);
                 }
-                merge.setNext(n);
+                __merge.setNext(__n);
             }
         }
         else
         {
-            returnValue = null;
-            invokeNode.replaceAtUsages(null);
-            GraphUtil.killCFG(invoke.next());
+            __returnValue = null;
+            __invokeNode.replaceAtUsages(null);
+            GraphUtil.killCFG(__invoke.next());
         }
 
         // copy assumptions from inlinee to caller
-        Assumptions assumptions = graph.getAssumptions();
-        if (assumptions != null)
+        Assumptions __assumptions = __graph.getAssumptions();
+        if (__assumptions != null)
         {
-            if (inlinedAssumptions != null)
+            if (__inlinedAssumptions != null)
             {
-                assumptions.record(inlinedAssumptions);
+                __assumptions.record(__inlinedAssumptions);
             }
         }
 
         // copy inlined methods from inlinee to caller
-        graph.updateMethods(inlineGraph);
+        __graph.updateMethods(__inlineGraph);
 
-        if (inlineGraph.hasUnsafeAccess())
+        if (__inlineGraph.hasUnsafeAccess())
         {
-            graph.markUnsafeAccess();
+            __graph.markUnsafeAccess();
         }
 
-        return returnValue;
+        return __returnValue;
     }
 
-    private static void fixFrameStates(StructuredGraph graph, MergeNode originalMerge, PhiNode returnPhi)
+    private static void fixFrameStates(StructuredGraph __graph, MergeNode __originalMerge, PhiNode __returnPhi)
     {
         // It is possible that some of the frame states that came from AFTER_BCI reference a Phi node
         // that was created to merge multiple returns. This can create cycles (see GR-3949 and GR-3957).
         // To detect this, we follow the control paths starting from the merge node,
         // split the Phi node inputs at merges and assign the proper input to each frame state.
-        NodeMap<Node> seen = new NodeMap<>(graph);
-        ArrayDeque<Node> workList = new ArrayDeque<>();
-        ArrayDeque<ValueNode> valueList = new ArrayDeque<>();
-        workList.push(originalMerge);
-        valueList.push(returnPhi);
-        while (!workList.isEmpty())
+        NodeMap<Node> __seen = new NodeMap<>(__graph);
+        ArrayDeque<Node> __workList = new ArrayDeque<>();
+        ArrayDeque<ValueNode> __valueList = new ArrayDeque<>();
+        __workList.push(__originalMerge);
+        __valueList.push(__returnPhi);
+        while (!__workList.isEmpty())
         {
-            Node current = workList.pop();
-            ValueNode currentValue = valueList.pop();
-            if (seen.containsKey(current))
+            Node __current = __workList.pop();
+            ValueNode __currentValue = __valueList.pop();
+            if (__seen.containsKey(__current))
             {
                 continue;
             }
-            seen.put(current, current);
-            if (current instanceof StateSplit && current != originalMerge)
+            __seen.put(__current, __current);
+            if (__current instanceof StateSplit && __current != __originalMerge)
             {
-                StateSplit stateSplit = (StateSplit) current;
-                FrameState state = stateSplit.stateAfter();
-                if (state != null && state.values().contains(returnPhi))
+                StateSplit __stateSplit = (StateSplit) __current;
+                FrameState __state = __stateSplit.stateAfter();
+                if (__state != null && __state.values().contains(__returnPhi))
                 {
-                    int index = 0;
-                    FrameState duplicate = state.duplicate();
-                    for (ValueNode value : state.values())
+                    int __index = 0;
+                    FrameState __duplicate = __state.duplicate();
+                    for (ValueNode __value : __state.values())
                     {
-                        if (value == returnPhi)
+                        if (__value == __returnPhi)
                         {
-                            duplicate.values().set(index, currentValue);
+                            __duplicate.values().set(__index, __currentValue);
                         }
-                        index++;
+                        __index++;
                     }
-                    stateSplit.setStateAfter(duplicate);
-                    GraphUtil.tryKillUnused(state);
+                    __stateSplit.setStateAfter(__duplicate);
+                    GraphUtil.tryKillUnused(__state);
                 }
             }
-            if (current instanceof AbstractMergeNode)
+            if (__current instanceof AbstractMergeNode)
             {
-                AbstractMergeNode currentMerge = (AbstractMergeNode) current;
-                for (EndNode pred : currentMerge.cfgPredecessors())
+                AbstractMergeNode __currentMerge = (AbstractMergeNode) __current;
+                for (EndNode __pred : __currentMerge.cfgPredecessors())
                 {
-                    ValueNode newValue = currentValue;
-                    if (currentMerge.isPhiAtMerge(currentValue))
+                    ValueNode __newValue = __currentValue;
+                    if (__currentMerge.isPhiAtMerge(__currentValue))
                     {
-                        PhiNode currentPhi = (PhiNode) currentValue;
-                        newValue = currentPhi.valueAt(pred);
+                        PhiNode __currentPhi = (PhiNode) __currentValue;
+                        __newValue = __currentPhi.valueAt(__pred);
                     }
-                    workList.push(pred);
-                    valueList.push(newValue);
+                    __workList.push(__pred);
+                    __valueList.push(__newValue);
                 }
             }
-            else if (current.predecessor() != null)
+            else if (__current.predecessor() != null)
             {
-                workList.push(current.predecessor());
-                valueList.push(currentValue);
+                __workList.push(__current.predecessor());
+                __valueList.push(__currentValue);
             }
         }
     }
 
-    public static void processMonitorId(FrameState stateAfter, MonitorIdNode monitorIdNode)
+    public static void processMonitorId(FrameState __stateAfter, MonitorIdNode __monitorIdNode)
     {
-        if (stateAfter != null)
+        if (__stateAfter != null)
         {
-            int callerLockDepth = stateAfter.nestedLockDepth();
-            monitorIdNode.setLockDepth(monitorIdNode.getLockDepth() + callerLockDepth);
+            int __callerLockDepth = __stateAfter.nestedLockDepth();
+            __monitorIdNode.setLockDepth(__monitorIdNode.getLockDepth() + __callerLockDepth);
         }
     }
 
-    protected static void processFrameStates(Invoke invoke, StructuredGraph inlineGraph, EconomicMap<Node, Node> duplicates, FrameState stateAtExceptionEdge, boolean alwaysDuplicateStateAfter)
+    protected static void processFrameStates(Invoke __invoke, StructuredGraph __inlineGraph, EconomicMap<Node, Node> __duplicates, FrameState __stateAtExceptionEdge, boolean __alwaysDuplicateStateAfter)
     {
-        FrameState stateAtReturn = invoke.stateAfter();
-        FrameState outerFrameState = null;
-        JavaKind invokeReturnKind = invoke.asNode().getStackKind();
-        EconomicMap<Node, Node> replacements = EconomicMap.create();
-        for (FrameState original : inlineGraph.getNodes(FrameState.TYPE))
+        FrameState __stateAtReturn = __invoke.stateAfter();
+        FrameState __outerFrameState = null;
+        JavaKind __invokeReturnKind = __invoke.asNode().getStackKind();
+        EconomicMap<Node, Node> __replacements = EconomicMap.create();
+        for (FrameState __original : __inlineGraph.getNodes(FrameState.TYPE))
         {
-            FrameState frameState = (FrameState) duplicates.get(original);
-            if (frameState != null && frameState.isAlive())
+            FrameState __frameState = (FrameState) __duplicates.get(__original);
+            if (__frameState != null && __frameState.isAlive())
             {
-                if (outerFrameState == null)
+                if (__outerFrameState == null)
                 {
-                    outerFrameState = stateAtReturn.duplicateModifiedDuringCall(invoke.bci(), invokeReturnKind);
+                    __outerFrameState = __stateAtReturn.duplicateModifiedDuringCall(__invoke.bci(), __invokeReturnKind);
                 }
-                processFrameState(frameState, invoke, replacements, inlineGraph.method(), stateAtExceptionEdge, outerFrameState, alwaysDuplicateStateAfter, invoke.callTarget().targetMethod(), invoke.callTarget().arguments());
+                processFrameState(__frameState, __invoke, __replacements, __inlineGraph.method(), __stateAtExceptionEdge, __outerFrameState, __alwaysDuplicateStateAfter, __invoke.callTarget().targetMethod(), __invoke.callTarget().arguments());
             }
         }
         // If processing the frame states replaced any nodes, update the duplicates map.
-        duplicates.replaceAll((key, value) -> replacements.containsKey(value) ? replacements.get(value) : value);
+        __duplicates.replaceAll((__key, __value) -> __replacements.containsKey(__value) ? __replacements.get(__value) : __value);
     }
 
-    public static FrameState processFrameState(FrameState frameState, Invoke invoke, EconomicMap<Node, Node> replacements, ResolvedJavaMethod inlinedMethod, FrameState stateAtExceptionEdge, FrameState outerFrameState, boolean alwaysDuplicateStateAfter, ResolvedJavaMethod invokeTargetMethod, List<ValueNode> invokeArgsList)
+    public static FrameState processFrameState(FrameState __frameState, Invoke __invoke, EconomicMap<Node, Node> __replacements, ResolvedJavaMethod __inlinedMethod, FrameState __stateAtExceptionEdge, FrameState __outerFrameState, boolean __alwaysDuplicateStateAfter, ResolvedJavaMethod __invokeTargetMethod, List<ValueNode> __invokeArgsList)
     {
-        final FrameState stateAtReturn = invoke.stateAfter();
-        JavaKind invokeReturnKind = invoke.asNode().getStackKind();
+        final FrameState __stateAtReturn = __invoke.stateAfter();
+        JavaKind __invokeReturnKind = __invoke.asNode().getStackKind();
 
-        if (frameState.bci == BytecodeFrame.AFTER_BCI)
+        if (__frameState.bci == BytecodeFrame.AFTER_BCI)
         {
-            return handleAfterBciFrameState(frameState, invoke, alwaysDuplicateStateAfter);
+            return handleAfterBciFrameState(__frameState, __invoke, __alwaysDuplicateStateAfter);
         }
-        else if (stateAtExceptionEdge != null && isStateAfterException(frameState))
+        else if (__stateAtExceptionEdge != null && isStateAfterException(__frameState))
         {
             // pop exception object from invoke's stateAfter and replace with this frameState's
             // exception object (top of stack)
-            FrameState stateAfterException = stateAtExceptionEdge;
-            if (frameState.stackSize() > 0 && stateAtExceptionEdge.stackAt(0) != frameState.stackAt(0))
+            FrameState __stateAfterException = __stateAtExceptionEdge;
+            if (__frameState.stackSize() > 0 && __stateAtExceptionEdge.stackAt(0) != __frameState.stackAt(0))
             {
-                stateAfterException = stateAtExceptionEdge.duplicateModified(JavaKind.Object, JavaKind.Object, frameState.stackAt(0));
+                __stateAfterException = __stateAtExceptionEdge.duplicateModified(JavaKind.Object, JavaKind.Object, __frameState.stackAt(0));
             }
-            frameState.replaceAndDelete(stateAfterException);
-            return stateAfterException;
+            __frameState.replaceAndDelete(__stateAfterException);
+            return __stateAfterException;
         }
-        else if ((frameState.bci == BytecodeFrame.UNWIND_BCI && frameState.graph().getGuardsStage() == GuardsStage.FLOATING_GUARDS) || frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
+        else if ((__frameState.bci == BytecodeFrame.UNWIND_BCI && __frameState.graph().getGuardsStage() == GuardsStage.FLOATING_GUARDS) || __frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
         {
             /*
              * This path converts the frame states relevant for exception unwinding to deoptimization.
@@ -539,240 +539,241 @@ public final class InliningUtil extends ValueMergeUtil
              * (e.g. AOT compilation for native image generation). There is currently no global flag in StructuredGraph
              * to distinguish such modes, but the GuardsStage during inlining indicates the mode in which Graal operates.
              */
-            handleMissingAfterExceptionFrameState(frameState, invoke, replacements, alwaysDuplicateStateAfter);
-            return frameState;
+            handleMissingAfterExceptionFrameState(__frameState, __invoke, __replacements, __alwaysDuplicateStateAfter);
+            return __frameState;
         }
-        else if (frameState.bci == BytecodeFrame.BEFORE_BCI)
+        else if (__frameState.bci == BytecodeFrame.BEFORE_BCI)
         {
             // This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
-            ValueNode[] invokeArgs = invokeArgsList.isEmpty() ? NO_ARGS : invokeArgsList.toArray(new ValueNode[invokeArgsList.size()]);
-            FrameState stateBeforeCall = stateAtReturn.duplicateModifiedBeforeCall(invoke.bci(), invokeReturnKind, invokeTargetMethod.getSignature().toParameterKinds(!invokeTargetMethod.isStatic()), invokeArgs);
-            frameState.replaceAndDelete(stateBeforeCall);
-            return stateBeforeCall;
+            ValueNode[] __invokeArgs = __invokeArgsList.isEmpty() ? NO_ARGS : __invokeArgsList.toArray(new ValueNode[__invokeArgsList.size()]);
+            FrameState __stateBeforeCall = __stateAtReturn.duplicateModifiedBeforeCall(__invoke.bci(), __invokeReturnKind, __invokeTargetMethod.getSignature().toParameterKinds(!__invokeTargetMethod.isStatic()), __invokeArgs);
+            __frameState.replaceAndDelete(__stateBeforeCall);
+            return __stateBeforeCall;
         }
         else
         {
             // only handle the outermost frame states
-            if (frameState.outerFrameState() == null)
+            if (__frameState.outerFrameState() == null)
             {
-                frameState.setOuterFrameState(outerFrameState);
+                __frameState.setOuterFrameState(__outerFrameState);
             }
-            return frameState;
+            return __frameState;
         }
     }
 
-    private static FrameState handleAfterBciFrameState(FrameState frameState, Invoke invoke, boolean alwaysDuplicateStateAfter)
+    private static FrameState handleAfterBciFrameState(FrameState __frameState, Invoke __invoke, boolean __alwaysDuplicateStateAfter)
     {
-        FrameState stateAtReturn = invoke.stateAfter();
-        JavaKind invokeReturnKind = invoke.asNode().getStackKind();
-        FrameState stateAfterReturn = stateAtReturn;
-        if (frameState.getCode() == null)
+        FrameState __stateAtReturn = __invoke.stateAfter();
+        JavaKind __invokeReturnKind = __invoke.asNode().getStackKind();
+        FrameState __stateAfterReturn = __stateAtReturn;
+        if (__frameState.getCode() == null)
         {
             // this is a frame state for a side effect within an intrinsic that was parsed for post-parse intrinsification
-            for (Node usage : frameState.usages())
+            for (Node __usage : __frameState.usages())
             {
-                if (usage instanceof ForeignCallNode)
+                if (__usage instanceof ForeignCallNode)
                 {
                     // a foreign call inside an intrinsic needs to have the BCI of the invoke being intrinsified
-                    ForeignCallNode foreign = (ForeignCallNode) usage;
-                    foreign.setBci(invoke.bci());
+                    ForeignCallNode __foreign = (ForeignCallNode) __usage;
+                    __foreign.setBci(__invoke.bci());
                 }
             }
         }
 
         // pop return kind from invoke's stateAfter and replace with this frameState's return value (top of stack)
-        if (frameState.stackSize() > 0 && (alwaysDuplicateStateAfter || stateAfterReturn.stackAt(0) != frameState.stackAt(0)))
+        if (__frameState.stackSize() > 0 && (__alwaysDuplicateStateAfter || __stateAfterReturn.stackAt(0) != __frameState.stackAt(0)))
         {
             // a non-void return value
-            stateAfterReturn = stateAtReturn.duplicateModified(invokeReturnKind, invokeReturnKind, frameState.stackAt(0));
+            __stateAfterReturn = __stateAtReturn.duplicateModified(__invokeReturnKind, __invokeReturnKind, __frameState.stackAt(0));
         }
         else
         {
             // a void return value
-            stateAfterReturn = stateAtReturn.duplicate();
+            __stateAfterReturn = __stateAtReturn.duplicate();
         }
 
         // return value does no longer need to be limited by the monitor exit
-        for (MonitorExitNode n : frameState.usages().filter(MonitorExitNode.class))
+        for (MonitorExitNode __n : __frameState.usages().filter(MonitorExitNode.class))
         {
-            n.clearEscapedReturnValue();
+            __n.clearEscapedReturnValue();
         }
 
-        frameState.replaceAndDelete(stateAfterReturn);
-        return stateAfterReturn;
+        __frameState.replaceAndDelete(__stateAfterReturn);
+        return __stateAfterReturn;
     }
 
+    // @def
     private static final ValueNode[] NO_ARGS = {};
 
-    private static boolean isStateAfterException(FrameState frameState)
+    private static boolean isStateAfterException(FrameState __frameState)
     {
-        return frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI || (frameState.bci == BytecodeFrame.UNWIND_BCI && !frameState.getMethod().isSynchronized());
+        return __frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI || (__frameState.bci == BytecodeFrame.UNWIND_BCI && !__frameState.getMethod().isSynchronized());
     }
 
-    public static FrameState handleMissingAfterExceptionFrameState(FrameState nonReplaceableFrameState, Invoke invoke, EconomicMap<Node, Node> replacements, boolean alwaysDuplicateStateAfter)
+    public static FrameState handleMissingAfterExceptionFrameState(FrameState __nonReplaceableFrameState, Invoke __invoke, EconomicMap<Node, Node> __replacements, boolean __alwaysDuplicateStateAfter)
     {
-        StructuredGraph graph = nonReplaceableFrameState.graph();
-        NodeWorkList workList = graph.createNodeWorkList();
-        workList.add(nonReplaceableFrameState);
-        for (Node node : workList)
+        StructuredGraph __graph = __nonReplaceableFrameState.graph();
+        NodeWorkList __workList = __graph.createNodeWorkList();
+        __workList.add(__nonReplaceableFrameState);
+        for (Node __node : __workList)
         {
-            FrameState fs = (FrameState) node;
-            for (Node usage : fs.usages().snapshot())
+            FrameState __fs = (FrameState) __node;
+            for (Node __usage : __fs.usages().snapshot())
             {
-                if (!usage.isAlive())
+                if (!__usage.isAlive())
                 {
                     continue;
                 }
-                if (usage instanceof FrameState)
+                if (__usage instanceof FrameState)
                 {
-                    workList.add(usage);
+                    __workList.add(__usage);
                 }
                 else
                 {
-                    StateSplit stateSplit = (StateSplit) usage;
-                    FixedNode fixedStateSplit = stateSplit.asNode();
-                    if (fixedStateSplit instanceof AbstractMergeNode)
+                    StateSplit __stateSplit = (StateSplit) __usage;
+                    FixedNode __fixedStateSplit = __stateSplit.asNode();
+                    if (__fixedStateSplit instanceof AbstractMergeNode)
                     {
-                        AbstractMergeNode merge = (AbstractMergeNode) fixedStateSplit;
-                        while (merge.isAlive())
+                        AbstractMergeNode __merge = (AbstractMergeNode) __fixedStateSplit;
+                        while (__merge.isAlive())
                         {
-                            AbstractEndNode end = merge.forwardEnds().first();
-                            DeoptimizeNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
-                            end.replaceAtPredecessor(deoptimizeNode);
-                            GraphUtil.killCFG(end);
+                            AbstractEndNode __end = __merge.forwardEnds().first();
+                            DeoptimizeNode __deoptimizeNode = addDeoptimizeNode(__graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
+                            __end.replaceAtPredecessor(__deoptimizeNode);
+                            GraphUtil.killCFG(__end);
                         }
                     }
-                    else if (fixedStateSplit instanceof ExceptionObjectNode)
+                    else if (__fixedStateSplit instanceof ExceptionObjectNode)
                     {
                         // The target invoke does not have an exception edge. This means that the bytecode parser made the wrong
                         // assumption of making an InvokeWithExceptionNode for the partial intrinsic exit. We therefore replace the
                         // InvokeWithExceptionNode with a normal InvokeNode -- the deoptimization occurs when the invoke throws.
-                        InvokeWithExceptionNode oldInvoke = (InvokeWithExceptionNode) fixedStateSplit.predecessor();
-                        FrameState oldFrameState = oldInvoke.stateAfter();
-                        InvokeNode newInvoke = oldInvoke.replaceWithInvoke();
-                        newInvoke.setStateAfter(oldFrameState.duplicate());
-                        if (replacements != null)
+                        InvokeWithExceptionNode __oldInvoke = (InvokeWithExceptionNode) __fixedStateSplit.predecessor();
+                        FrameState __oldFrameState = __oldInvoke.stateAfter();
+                        InvokeNode __newInvoke = __oldInvoke.replaceWithInvoke();
+                        __newInvoke.setStateAfter(__oldFrameState.duplicate());
+                        if (__replacements != null)
                         {
-                            replacements.put(oldInvoke, newInvoke);
+                            __replacements.put(__oldInvoke, __newInvoke);
                         }
-                        handleAfterBciFrameState(newInvoke.stateAfter(), invoke, alwaysDuplicateStateAfter);
+                        handleAfterBciFrameState(__newInvoke.stateAfter(), __invoke, __alwaysDuplicateStateAfter);
                     }
                     else
                     {
-                        FixedNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
-                        if (fixedStateSplit instanceof AbstractBeginNode)
+                        FixedNode __deoptimizeNode = addDeoptimizeNode(__graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
+                        if (__fixedStateSplit instanceof AbstractBeginNode)
                         {
-                            deoptimizeNode = BeginNode.begin(deoptimizeNode);
+                            __deoptimizeNode = BeginNode.begin(__deoptimizeNode);
                         }
-                        fixedStateSplit.replaceAtPredecessor(deoptimizeNode);
-                        GraphUtil.killCFG(fixedStateSplit);
+                        __fixedStateSplit.replaceAtPredecessor(__deoptimizeNode);
+                        GraphUtil.killCFG(__fixedStateSplit);
                     }
                 }
             }
         }
-        return nonReplaceableFrameState;
+        return __nonReplaceableFrameState;
     }
 
-    private static DeoptimizeNode addDeoptimizeNode(StructuredGraph graph, DeoptimizationAction action, DeoptimizationReason reason)
+    private static DeoptimizeNode addDeoptimizeNode(StructuredGraph __graph, DeoptimizationAction __action, DeoptimizationReason __reason)
     {
-        GraalError.guarantee(graph.getGuardsStage() == GuardsStage.FLOATING_GUARDS, "Cannot introduce speculative deoptimization when Graal is used with fixed guards");
-        return graph.add(new DeoptimizeNode(action, reason));
+        GraalError.guarantee(__graph.getGuardsStage() == GuardsStage.FLOATING_GUARDS, "Cannot introduce speculative deoptimization when Graal is used with fixed guards");
+        return __graph.add(new DeoptimizeNode(__action, __reason));
     }
 
     /**
      * Gets the receiver for an invoke, adding a guard if necessary to ensure it is non-null, and
      * ensuring that the resulting type is compatible with the method being invoked.
      */
-    public static ValueNode nonNullReceiver(Invoke invoke)
+    public static ValueNode nonNullReceiver(Invoke __invoke)
     {
-        MethodCallTargetNode callTarget = (MethodCallTargetNode) invoke.callTarget();
-        StructuredGraph graph = callTarget.graph();
-        ValueNode oldReceiver = callTarget.arguments().get(0);
-        ValueNode newReceiver = oldReceiver;
-        if (newReceiver.getStackKind() == JavaKind.Object)
+        MethodCallTargetNode __callTarget = (MethodCallTargetNode) __invoke.callTarget();
+        StructuredGraph __graph = __callTarget.graph();
+        ValueNode __oldReceiver = __callTarget.arguments().get(0);
+        ValueNode __newReceiver = __oldReceiver;
+        if (__newReceiver.getStackKind() == JavaKind.Object)
         {
-            if (invoke.getInvokeKind() == InvokeKind.Special)
+            if (__invoke.getInvokeKind() == InvokeKind.Special)
             {
-                Stamp paramStamp = newReceiver.stamp(NodeView.DEFAULT);
-                Stamp stamp = paramStamp.join(StampFactory.object(TypeReference.create(graph.getAssumptions(), callTarget.targetMethod().getDeclaringClass())));
-                if (!stamp.equals(paramStamp))
+                Stamp __paramStamp = __newReceiver.stamp(NodeView.DEFAULT);
+                Stamp __stamp = __paramStamp.join(StampFactory.object(TypeReference.create(__graph.getAssumptions(), __callTarget.targetMethod().getDeclaringClass())));
+                if (!__stamp.equals(__paramStamp))
                 {
                     // The verifier and previous optimizations guarantee unconditionally that the
                     // receiver is at least of the type of the method holder for a special invoke.
-                    newReceiver = graph.unique(new PiNode(newReceiver, stamp));
+                    __newReceiver = __graph.unique(new PiNode(__newReceiver, __stamp));
                 }
             }
 
-            if (!StampTool.isPointerNonNull(newReceiver))
+            if (!StampTool.isPointerNonNull(__newReceiver))
             {
-                LogicNode condition = graph.unique(IsNullNode.create(newReceiver));
-                FixedGuardNode fixedGuard = graph.add(new FixedGuardNode(condition, DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, true));
-                PiNode nonNullReceiver = graph.unique(new PiNode(newReceiver, StampFactory.objectNonNull(), fixedGuard));
-                graph.addBeforeFixed(invoke.asNode(), fixedGuard);
-                newReceiver = nonNullReceiver;
+                LogicNode __condition = __graph.unique(IsNullNode.create(__newReceiver));
+                FixedGuardNode __fixedGuard = __graph.add(new FixedGuardNode(__condition, DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, true));
+                PiNode __nonNullReceiver = __graph.unique(new PiNode(__newReceiver, StampFactory.objectNonNull(), __fixedGuard));
+                __graph.addBeforeFixed(__invoke.asNode(), __fixedGuard);
+                __newReceiver = __nonNullReceiver;
             }
         }
 
-        if (newReceiver != oldReceiver)
+        if (__newReceiver != __oldReceiver)
         {
-            callTarget.replaceFirstInput(oldReceiver, newReceiver);
+            __callTarget.replaceFirstInput(__oldReceiver, __newReceiver);
         }
-        return newReceiver;
+        return __newReceiver;
     }
 
-    public static boolean canIntrinsify(Replacements replacements, ResolvedJavaMethod target, int invokeBci)
+    public static boolean canIntrinsify(Replacements __replacements, ResolvedJavaMethod __target, int __invokeBci)
     {
-        return replacements.hasSubstitution(target, invokeBci);
+        return __replacements.hasSubstitution(__target, __invokeBci);
     }
 
-    public static StructuredGraph getIntrinsicGraph(Replacements replacements, ResolvedJavaMethod target, int invokeBci)
+    public static StructuredGraph getIntrinsicGraph(Replacements __replacements, ResolvedJavaMethod __target, int __invokeBci)
     {
-        return replacements.getSubstitution(target, invokeBci);
+        return __replacements.getSubstitution(__target, __invokeBci);
     }
 
-    public static FixedWithNextNode inlineMacroNode(Invoke invoke, ResolvedJavaMethod concrete, Class<? extends FixedWithNextNode> macroNodeClass)
+    public static FixedWithNextNode inlineMacroNode(Invoke __invoke, ResolvedJavaMethod __concrete, Class<? extends FixedWithNextNode> __macroNodeClass)
     {
-        StructuredGraph graph = invoke.asNode().graph();
-        if (!concrete.equals(((MethodCallTargetNode) invoke.callTarget()).targetMethod()))
+        StructuredGraph __graph = __invoke.asNode().graph();
+        if (!__concrete.equals(((MethodCallTargetNode) __invoke.callTarget()).targetMethod()))
         {
-            InliningUtil.replaceInvokeCallTarget(invoke, graph, InvokeKind.Special, concrete);
+            InliningUtil.replaceInvokeCallTarget(__invoke, __graph, InvokeKind.Special, __concrete);
         }
 
-        FixedWithNextNode macroNode = createMacroNodeInstance(macroNodeClass, invoke);
+        FixedWithNextNode __macroNode = createMacroNodeInstance(__macroNodeClass, __invoke);
 
-        CallTargetNode callTarget = invoke.callTarget();
-        if (invoke instanceof InvokeNode)
+        CallTargetNode __callTarget = __invoke.callTarget();
+        if (__invoke instanceof InvokeNode)
         {
-            graph.replaceFixedWithFixed((InvokeNode) invoke, graph.add(macroNode));
+            __graph.replaceFixedWithFixed((InvokeNode) __invoke, __graph.add(__macroNode));
         }
         else
         {
-            InvokeWithExceptionNode invokeWithException = (InvokeWithExceptionNode) invoke;
-            invokeWithException.killExceptionEdge();
-            graph.replaceSplitWithFixed(invokeWithException, graph.add(macroNode), invokeWithException.next());
+            InvokeWithExceptionNode __invokeWithException = (InvokeWithExceptionNode) __invoke;
+            __invokeWithException.killExceptionEdge();
+            __graph.replaceSplitWithFixed(__invokeWithException, __graph.add(__macroNode), __invokeWithException.next());
         }
-        GraphUtil.killWithUnusedFloatingInputs(callTarget);
-        return macroNode;
+        GraphUtil.killWithUnusedFloatingInputs(__callTarget);
+        return __macroNode;
     }
 
-    private static FixedWithNextNode createMacroNodeInstance(Class<? extends FixedWithNextNode> macroNodeClass, Invoke invoke)
+    private static FixedWithNextNode createMacroNodeInstance(Class<? extends FixedWithNextNode> __macroNodeClass, Invoke __invoke)
     {
         try
         {
-            Constructor<?> cons = macroNodeClass.getDeclaredConstructor(Invoke.class);
-            return (FixedWithNextNode) cons.newInstance(invoke);
+            Constructor<?> __cons = __macroNodeClass.getDeclaredConstructor(Invoke.class);
+            return (FixedWithNextNode) __cons.newInstance(__invoke);
         }
-        catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e)
+        catch (ReflectiveOperationException | IllegalArgumentException | SecurityException __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
     }
 
     /**
      * This method exclude InstrumentationNode from inlining heuristics.
      */
-    public static int getNodeCount(StructuredGraph graph)
+    public static int getNodeCount(StructuredGraph __graph)
     {
-        return graph.getNodeCount();
+        return __graph.getNodeCount();
     }
 }

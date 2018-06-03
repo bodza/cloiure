@@ -27,19 +27,19 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
     }
 
     // @cons
-    private MethodCountersPointerStamp(boolean nonNull, boolean alwaysNull)
+    private MethodCountersPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
-        super(nonNull, alwaysNull);
+        super(__nonNull, __alwaysNull);
     }
 
     @Override
-    protected AbstractPointerStamp copyWith(boolean newNonNull, boolean newAlwaysNull)
+    protected AbstractPointerStamp copyWith(boolean __newNonNull, boolean __newAlwaysNull)
     {
-        if (newNonNull)
+        if (__newNonNull)
         {
             return METHOD_COUNTERS_NON_NULL;
         }
-        else if (newAlwaysNull)
+        else if (__newAlwaysNull)
         {
             return METHOD_COUNTERS_ALWAYS_NULL;
         }
@@ -50,19 +50,19 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
     }
 
     @Override
-    public boolean isCompatible(Stamp otherStamp)
+    public boolean isCompatible(Stamp __otherStamp)
     {
-        if (this == otherStamp)
+        if (this == __otherStamp)
         {
             return true;
         }
-        return otherStamp instanceof MethodCountersPointerStamp;
+        return __otherStamp instanceof MethodCountersPointerStamp;
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta)
+    public Stamp constant(Constant __c, MetaAccessProvider __meta)
     {
-        if (JavaConstant.NULL_POINTER.equals(c))
+        if (JavaConstant.NULL_POINTER.equals(__c))
         {
             return METHOD_COUNTERS_ALWAYS_NULL;
         }
@@ -73,7 +73,7 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
         return null;
     }

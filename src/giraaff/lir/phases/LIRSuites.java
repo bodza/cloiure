@@ -14,24 +14,28 @@ import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizati
 // @class LIRSuites
 public final class LIRSuites
 {
+    // @field
     private final LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage;
+    // @field
     private final LIRPhaseSuite<AllocationContext> allocStage;
+    // @field
     private final LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage;
+    // @field
     private boolean immutable;
 
     // @cons
-    public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage, LIRPhaseSuite<AllocationContext> allocStage, LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage)
+    public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationContext> __preAllocOptStage, LIRPhaseSuite<AllocationContext> __allocStage, LIRPhaseSuite<PostAllocationOptimizationContext> __postAllocStage)
     {
         super();
-        this.preAllocOptStage = preAllocOptStage;
-        this.allocStage = allocStage;
-        this.postAllocStage = postAllocStage;
+        this.preAllocOptStage = __preAllocOptStage;
+        this.allocStage = __allocStage;
+        this.postAllocStage = __postAllocStage;
     }
 
     // @cons
-    public LIRSuites(LIRSuites other)
+    public LIRSuites(LIRSuites __other)
     {
-        this(other.getPreAllocationOptimizationStage().copy(), other.getAllocationStage().copy(), other.getPostAllocationOptimizationStage().copy());
+        this(__other.getPreAllocationOptimizationStage().copy(), __other.getAllocationStage().copy(), __other.getPostAllocationOptimizationStage().copy());
     }
 
     /**

@@ -46,189 +46,195 @@ public final class ResolveConstantSnippets implements Snippets
     }
 
     @Snippet
-    public static Object resolveObjectConstant(Object constant)
+    public static Object resolveObjectConstant(Object __constant)
     {
-        Object result = LoadConstantIndirectlyNode.loadObject(constant);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result == null))
+        Object __result = LoadConstantIndirectlyNode.loadObject(__constant);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __result == null))
         {
-            result = ResolveConstantStubCall.resolveObject(constant, EncodedSymbolNode.encode(constant));
+            __result = ResolveConstantStubCall.resolveObject(__constant, EncodedSymbolNode.encode(__constant));
         }
-        return result;
+        return __result;
     }
 
     @Snippet
-    public static Object resolveDynamicConstant(Object constant)
+    public static Object resolveDynamicConstant(Object __constant)
     {
-        Object result = LoadConstantIndirectlyNode.loadObject(constant);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result == null))
+        Object __result = LoadConstantIndirectlyNode.loadObject(__constant);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __result == null))
         {
-            result = ResolveDynamicStubCall.resolveInvoke(constant);
+            __result = ResolveDynamicStubCall.resolveInvoke(__constant);
         }
-        return result;
+        return __result;
     }
 
     @Snippet
-    public static KlassPointer resolveKlassConstant(KlassPointer constant)
+    public static KlassPointer resolveKlassConstant(KlassPointer __constant)
     {
-        KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        KlassPointer __result = LoadConstantIndirectlyNode.loadKlass(__constant);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __result.isNull()))
         {
-            result = ResolveConstantStubCall.resolveKlass(constant, EncodedSymbolNode.encode(constant));
+            __result = ResolveConstantStubCall.resolveKlass(__constant, EncodedSymbolNode.encode(__constant));
         }
-        return result;
+        return __result;
     }
 
     @Snippet
-    public static MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer method, KlassPointer klassHint)
+    public static MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer __method, KlassPointer __klassHint)
     {
-        MethodCountersPointer result = LoadMethodCountersIndirectlyNode.loadMethodCounters(method);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        MethodCountersPointer __result = LoadMethodCountersIndirectlyNode.loadMethodCounters(__method);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __result.isNull()))
         {
-            result = ResolveMethodAndLoadCountersStubCall.resolveMethodAndLoadCounters(method, klassHint, EncodedSymbolNode.encode(method));
+            __result = ResolveMethodAndLoadCountersStubCall.resolveMethodAndLoadCounters(__method, __klassHint, EncodedSymbolNode.encode(__method));
         }
-        return result;
+        return __result;
     }
 
     @Snippet
-    public static KlassPointer initializeKlass(KlassPointer constant)
+    public static KlassPointer initializeKlass(KlassPointer __constant)
     {
-        KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant, HotSpotConstantLoadAction.INITIALIZE);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        KlassPointer __result = LoadConstantIndirectlyNode.loadKlass(__constant, HotSpotConstantLoadAction.INITIALIZE);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __result.isNull()))
         {
-            result = InitializeKlassStubCall.initializeKlass(constant, EncodedSymbolNode.encode(constant));
+            __result = InitializeKlassStubCall.initializeKlass(__constant, EncodedSymbolNode.encode(__constant));
         }
-        return result;
+        return __result;
     }
 
     @Snippet
-    public static KlassPointer pureInitializeKlass(KlassPointer constant)
+    public static KlassPointer pureInitializeKlass(KlassPointer __constant)
     {
-        KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant, HotSpotConstantLoadAction.INITIALIZE);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        KlassPointer __result = LoadConstantIndirectlyNode.loadKlass(__constant, HotSpotConstantLoadAction.INITIALIZE);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __result.isNull()))
         {
-            result = ResolveConstantStubCall.resolveKlass(constant, EncodedSymbolNode.encode(constant), HotSpotConstantLoadAction.INITIALIZE);
+            __result = ResolveConstantStubCall.resolveKlass(__constant, EncodedSymbolNode.encode(__constant), HotSpotConstantLoadAction.INITIALIZE);
         }
-        return result;
+        return __result;
     }
 
     // @class ResolveConstantSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final SnippetInfo resolveObjectConstant = snippet(ResolveConstantSnippets.class, "resolveObjectConstant");
+        // @field
         private final SnippetInfo resolveDynamicConstant = snippet(ResolveConstantSnippets.class, "resolveDynamicConstant");
+        // @field
         private final SnippetInfo resolveKlassConstant = snippet(ResolveConstantSnippets.class, "resolveKlassConstant");
+        // @field
         private final SnippetInfo resolveMethodAndLoadCounters = snippet(ResolveConstantSnippets.class, "resolveMethodAndLoadCounters");
+        // @field
         private final SnippetInfo initializeKlass = snippet(ResolveConstantSnippets.class, "initializeKlass");
+        // @field
         private final SnippetInfo pureInitializeKlass = snippet(ResolveConstantSnippets.class, "pureInitializeKlass");
 
         // @cons
-        public Templates(HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders __providers, TargetDescription __target)
         {
-            super(providers, providers.getSnippetReflection(), target);
+            super(__providers, __providers.getSnippetReflection(), __target);
         }
 
-        public void lower(ResolveDynamicConstantNode resolveConstantNode, LoweringTool tool)
+        public void lower(ResolveDynamicConstantNode __resolveConstantNode, LoweringTool __tool)
         {
-            StructuredGraph graph = resolveConstantNode.graph();
+            StructuredGraph __graph = __resolveConstantNode.graph();
 
-            ValueNode value = resolveConstantNode.value();
-            SnippetInfo snippet = resolveDynamicConstant;
+            ValueNode __value = __resolveConstantNode.value();
+            SnippetInfo __snippet = resolveDynamicConstant;
 
-            Arguments args = new Arguments(snippet, graph.getGuardsStage(), tool.getLoweringStage());
-            args.add("constant", value);
+            Arguments __args = new Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            __args.add("constant", __value);
 
-            SnippetTemplate template = template(resolveConstantNode, args);
-            template.instantiate(providers.getMetaAccess(), resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, args);
+            SnippetTemplate __template = template(__resolveConstantNode, __args);
+            __template.instantiate(providers.getMetaAccess(), __resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, __args);
 
-            if (!resolveConstantNode.isDeleted())
+            if (!__resolveConstantNode.isDeleted())
             {
-                GraphUtil.killWithUnusedFloatingInputs(resolveConstantNode);
+                GraphUtil.killWithUnusedFloatingInputs(__resolveConstantNode);
             }
         }
 
-        public void lower(ResolveConstantNode resolveConstantNode, LoweringTool tool)
+        public void lower(ResolveConstantNode __resolveConstantNode, LoweringTool __tool)
         {
-            StructuredGraph graph = resolveConstantNode.graph();
+            StructuredGraph __graph = __resolveConstantNode.graph();
 
-            ValueNode value = resolveConstantNode.value();
-            Constant constant = value.asConstant();
-            SnippetInfo snippet = null;
+            ValueNode __value = __resolveConstantNode.value();
+            Constant __constant = __value.asConstant();
+            SnippetInfo __snippet = null;
 
-            if (constant instanceof HotSpotMetaspaceConstant)
+            if (__constant instanceof HotSpotMetaspaceConstant)
             {
-                HotSpotMetaspaceConstant hotspotMetaspaceConstant = (HotSpotMetaspaceConstant) constant;
-                if (hotspotMetaspaceConstant.asResolvedJavaType() != null)
+                HotSpotMetaspaceConstant __hotspotMetaspaceConstant = (HotSpotMetaspaceConstant) __constant;
+                if (__hotspotMetaspaceConstant.asResolvedJavaType() != null)
                 {
-                    if (resolveConstantNode.action() == HotSpotConstantLoadAction.RESOLVE)
+                    if (__resolveConstantNode.action() == HotSpotConstantLoadAction.RESOLVE)
                     {
-                        snippet = resolveKlassConstant;
+                        __snippet = resolveKlassConstant;
                     }
                     else
                     {
-                        snippet = pureInitializeKlass;
+                        __snippet = pureInitializeKlass;
                     }
                 }
             }
-            else if (constant instanceof HotSpotObjectConstant)
+            else if (__constant instanceof HotSpotObjectConstant)
             {
-                snippet = resolveObjectConstant;
-                HotSpotObjectConstant hotspotObjectConstant = (HotSpotObjectConstant) constant;
+                __snippet = resolveObjectConstant;
+                HotSpotObjectConstant __hotspotObjectConstant = (HotSpotObjectConstant) __constant;
             }
-            if (snippet == null)
+            if (__snippet == null)
             {
-                throw new GraalError("Unsupported constant type: " + constant);
+                throw new GraalError("Unsupported constant type: " + __constant);
             }
 
-            Arguments args = new Arguments(snippet, graph.getGuardsStage(), tool.getLoweringStage());
-            args.add("constant", value);
+            Arguments __args = new Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            __args.add("constant", __value);
 
-            SnippetTemplate template = template(resolveConstantNode, args);
-            template.instantiate(providers.getMetaAccess(), resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, args);
+            SnippetTemplate __template = template(__resolveConstantNode, __args);
+            __template.instantiate(providers.getMetaAccess(), __resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, __args);
 
-            if (!resolveConstantNode.isDeleted())
+            if (!__resolveConstantNode.isDeleted())
             {
-                GraphUtil.killWithUnusedFloatingInputs(resolveConstantNode);
+                GraphUtil.killWithUnusedFloatingInputs(__resolveConstantNode);
             }
         }
 
-        public void lower(InitializeKlassNode initializeKlassNode, LoweringTool tool)
+        public void lower(InitializeKlassNode __initializeKlassNode, LoweringTool __tool)
         {
-            StructuredGraph graph = initializeKlassNode.graph();
+            StructuredGraph __graph = __initializeKlassNode.graph();
 
-            ValueNode value = initializeKlassNode.value();
-            Constant constant = value.asConstant();
+            ValueNode __value = __initializeKlassNode.value();
+            Constant __constant = __value.asConstant();
 
-            if (constant instanceof HotSpotMetaspaceConstant)
+            if (__constant instanceof HotSpotMetaspaceConstant)
             {
-                Arguments args = new Arguments(initializeKlass, graph.getGuardsStage(), tool.getLoweringStage());
-                args.add("constant", value);
+                Arguments __args = new Arguments(initializeKlass, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args.add("constant", __value);
 
-                SnippetTemplate template = template(initializeKlassNode, args);
-                template.instantiate(providers.getMetaAccess(), initializeKlassNode, SnippetTemplate.DEFAULT_REPLACER, args);
-                if (!initializeKlassNode.isDeleted())
+                SnippetTemplate __template = template(__initializeKlassNode, __args);
+                __template.instantiate(providers.getMetaAccess(), __initializeKlassNode, SnippetTemplate.DEFAULT_REPLACER, __args);
+                if (!__initializeKlassNode.isDeleted())
                 {
-                    GraphUtil.killWithUnusedFloatingInputs(initializeKlassNode);
+                    GraphUtil.killWithUnusedFloatingInputs(__initializeKlassNode);
                 }
             }
             else
             {
-                throw new GraalError("Unsupported constant type: " + constant);
+                throw new GraalError("Unsupported constant type: " + __constant);
             }
         }
 
-        public void lower(ResolveMethodAndLoadCountersNode resolveMethodAndLoadCountersNode, LoweringTool tool)
+        public void lower(ResolveMethodAndLoadCountersNode __resolveMethodAndLoadCountersNode, LoweringTool __tool)
         {
-            StructuredGraph graph = resolveMethodAndLoadCountersNode.graph();
-            ConstantNode method = ConstantNode.forConstant(MethodPointerStamp.methodNonNull(), resolveMethodAndLoadCountersNode.getMethod().getEncoding(), tool.getMetaAccess(), graph);
-            Arguments args = new Arguments(resolveMethodAndLoadCounters, graph.getGuardsStage(), tool.getLoweringStage());
-            args.add("method", method);
-            args.add("klassHint", resolveMethodAndLoadCountersNode.getHub());
-            SnippetTemplate template = template(resolveMethodAndLoadCountersNode, args);
-            template.instantiate(providers.getMetaAccess(), resolveMethodAndLoadCountersNode, SnippetTemplate.DEFAULT_REPLACER, args);
+            StructuredGraph __graph = __resolveMethodAndLoadCountersNode.graph();
+            ConstantNode __method = ConstantNode.forConstant(MethodPointerStamp.methodNonNull(), __resolveMethodAndLoadCountersNode.getMethod().getEncoding(), __tool.getMetaAccess(), __graph);
+            Arguments __args = new Arguments(resolveMethodAndLoadCounters, __graph.getGuardsStage(), __tool.getLoweringStage());
+            __args.add("method", __method);
+            __args.add("klassHint", __resolveMethodAndLoadCountersNode.getHub());
+            SnippetTemplate __template = template(__resolveMethodAndLoadCountersNode, __args);
+            __template.instantiate(providers.getMetaAccess(), __resolveMethodAndLoadCountersNode, SnippetTemplate.DEFAULT_REPLACER, __args);
 
-            if (!resolveMethodAndLoadCountersNode.isDeleted())
+            if (!__resolveMethodAndLoadCountersNode.isDeleted())
             {
-                GraphUtil.killWithUnusedFloatingInputs(resolveMethodAndLoadCountersNode);
+                GraphUtil.killWithUnusedFloatingInputs(__resolveMethodAndLoadCountersNode);
             }
         }
     }

@@ -12,21 +12,23 @@ import giraaff.nodes.spi.VirtualizerTool;
 // @class VirtualBoxingNode
 public final class VirtualBoxingNode extends VirtualInstanceNode
 {
+    // @def
     public static final NodeClass<VirtualBoxingNode> TYPE = NodeClass.create(VirtualBoxingNode.class);
 
+    // @field
     protected final JavaKind boxingKind;
 
     // @cons
-    public VirtualBoxingNode(ResolvedJavaType type, JavaKind boxingKind)
+    public VirtualBoxingNode(ResolvedJavaType __type, JavaKind __boxingKind)
     {
-        this(TYPE, type, boxingKind);
+        this(TYPE, __type, __boxingKind);
     }
 
     // @cons
-    public VirtualBoxingNode(NodeClass<? extends VirtualBoxingNode> c, ResolvedJavaType type, JavaKind boxingKind)
+    public VirtualBoxingNode(NodeClass<? extends VirtualBoxingNode> __c, ResolvedJavaType __type, JavaKind __boxingKind)
     {
-        super(c, type, false);
-        this.boxingKind = boxingKind;
+        super(__c, __type, false);
+        this.boxingKind = __boxingKind;
     }
 
     public JavaKind getBoxingKind()
@@ -41,13 +43,13 @@ public final class VirtualBoxingNode extends VirtualInstanceNode
     }
 
     @Override
-    public ValueNode getMaterializedRepresentation(FixedNode fixed, ValueNode[] entries, LockState locks)
+    public ValueNode getMaterializedRepresentation(FixedNode __fixed, ValueNode[] __entries, LockState __locks)
     {
-        return new BoxNode(entries[0], type(), boxingKind);
+        return new BoxNode(__entries[0], type(), boxingKind);
     }
 
-    public ValueNode getBoxedValue(VirtualizerTool tool)
+    public ValueNode getBoxedValue(VirtualizerTool __tool)
     {
-        return tool.getEntry(this, 0);
+        return __tool.getEntry(this, 0);
     }
 }

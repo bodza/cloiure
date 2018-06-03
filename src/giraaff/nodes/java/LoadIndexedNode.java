@@ -30,6 +30,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class LoadIndexedNode
 public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable, Canonicalizable
 {
+    // @def
     public static final NodeClass<LoadIndexedNode> TYPE = NodeClass.create(LoadIndexedNode.class);
 
     /**
@@ -40,52 +41,52 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
      * @param elementKind the element type
      */
     // @cons
-    public LoadIndexedNode(Assumptions assumptions, ValueNode array, ValueNode index, JavaKind elementKind)
+    public LoadIndexedNode(Assumptions __assumptions, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
-        this(TYPE, createStamp(assumptions, array, elementKind), array, index, elementKind);
+        this(TYPE, createStamp(__assumptions, __array, __elementKind), __array, __index, __elementKind);
     }
 
-    public static ValueNode create(Assumptions assumptions, ValueNode array, ValueNode index, JavaKind elementKind, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
+    public static ValueNode create(Assumptions __assumptions, ValueNode __array, ValueNode __index, JavaKind __elementKind, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection)
     {
-        ValueNode constant = tryConstantFold(array, index, metaAccess, constantReflection);
-        if (constant != null)
+        ValueNode __constant = tryConstantFold(__array, __index, __metaAccess, __constantReflection);
+        if (__constant != null)
         {
-            return constant;
+            return __constant;
         }
-        return new LoadIndexedNode(assumptions, array, index, elementKind);
+        return new LoadIndexedNode(__assumptions, __array, __index, __elementKind);
     }
 
     // @cons
-    protected LoadIndexedNode(NodeClass<? extends LoadIndexedNode> c, Stamp stamp, ValueNode array, ValueNode index, JavaKind elementKind)
+    protected LoadIndexedNode(NodeClass<? extends LoadIndexedNode> __c, Stamp __stamp, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
-        super(c, stamp, array, index, elementKind);
+        super(__c, __stamp, __array, __index, __elementKind);
     }
 
-    private static Stamp createStamp(Assumptions assumptions, ValueNode array, JavaKind kind)
+    private static Stamp createStamp(Assumptions __assumptions, ValueNode __array, JavaKind __kind)
     {
-        ResolvedJavaType type = StampTool.typeOrNull(array);
-        if (kind == JavaKind.Object && type != null && type.isArray())
+        ResolvedJavaType __type = StampTool.typeOrNull(__array);
+        if (__kind == JavaKind.Object && __type != null && __type.isArray())
         {
-            return StampFactory.object(TypeReference.createTrusted(assumptions, type.getComponentType()));
+            return StampFactory.object(TypeReference.createTrusted(__assumptions, __type.getComponentType()));
         }
         else
         {
-            JavaKind preciseKind = determinePreciseArrayElementType(array, kind);
-            return StampFactory.forKind(preciseKind);
+            JavaKind __preciseKind = determinePreciseArrayElementType(__array, __kind);
+            return StampFactory.forKind(__preciseKind);
         }
     }
 
-    private static JavaKind determinePreciseArrayElementType(ValueNode array, JavaKind kind)
+    private static JavaKind determinePreciseArrayElementType(ValueNode __array, JavaKind __kind)
     {
-        if (kind == JavaKind.Byte)
+        if (__kind == JavaKind.Byte)
         {
-            ResolvedJavaType javaType = ((ObjectStamp) array.stamp(NodeView.DEFAULT)).type();
-            if (javaType != null && javaType.isArray() && javaType.getComponentType() != null && javaType.getComponentType().getJavaKind() == JavaKind.Boolean)
+            ResolvedJavaType __javaType = ((ObjectStamp) __array.stamp(NodeView.DEFAULT)).type();
+            if (__javaType != null && __javaType.isArray() && __javaType.getComponentType() != null && __javaType.getComponentType().getJavaKind() == JavaKind.Boolean)
             {
                 return JavaKind.Boolean;
             }
         }
-        return kind;
+        return __kind;
     }
 
     @Override
@@ -95,51 +96,51 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(array());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(array());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualArrayNode virtual = (VirtualArrayNode) alias;
-            ValueNode indexValue = tool.getAlias(index());
-            int idx = indexValue.isConstant() ? indexValue.asJavaConstant().asInt() : -1;
-            if (idx >= 0 && idx < virtual.entryCount())
+            VirtualArrayNode __virtual = (VirtualArrayNode) __alias;
+            ValueNode __indexValue = __tool.getAlias(index());
+            int __idx = __indexValue.isConstant() ? __indexValue.asJavaConstant().asInt() : -1;
+            if (__idx >= 0 && __idx < __virtual.entryCount())
             {
-                ValueNode entry = tool.getEntry(virtual, idx);
-                if (stamp.isCompatible(entry.stamp(NodeView.DEFAULT)))
+                ValueNode __entry = __tool.getEntry(__virtual, __idx);
+                if (stamp.isCompatible(__entry.stamp(NodeView.DEFAULT)))
                 {
-                    tool.replaceWith(entry);
+                    __tool.replaceWith(__entry);
                 }
             }
         }
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        ValueNode constant = tryConstantFold(array(), index(), tool.getMetaAccess(), tool.getConstantReflection());
-        if (constant != null)
+        ValueNode __constant = tryConstantFold(array(), index(), __tool.getMetaAccess(), __tool.getConstantReflection());
+        if (__constant != null)
         {
-            return constant;
+            return __constant;
         }
         return this;
     }
 
-    private static ValueNode tryConstantFold(ValueNode array, ValueNode index, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
+    private static ValueNode tryConstantFold(ValueNode __array, ValueNode __index, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection)
     {
-        if (array.isConstant() && !array.isNullConstant() && index.isConstant())
+        if (__array.isConstant() && !__array.isNullConstant() && __index.isConstant())
         {
-            JavaConstant arrayConstant = array.asJavaConstant();
-            if (arrayConstant != null)
+            JavaConstant __arrayConstant = __array.asJavaConstant();
+            if (__arrayConstant != null)
             {
-                int stableDimension = ((ConstantNode) array).getStableDimension();
-                if (stableDimension > 0)
+                int __stableDimension = ((ConstantNode) __array).getStableDimension();
+                if (__stableDimension > 0)
                 {
-                    JavaConstant constant = constantReflection.readArrayElement(arrayConstant, index.asJavaConstant().asInt());
-                    boolean isDefaultStable = ((ConstantNode) array).isDefaultStable();
-                    if (constant != null && (isDefaultStable || !constant.isDefaultForKind()))
+                    JavaConstant __constant = __constantReflection.readArrayElement(__arrayConstant, __index.asJavaConstant().asInt());
+                    boolean __isDefaultStable = ((ConstantNode) __array).isDefaultStable();
+                    if (__constant != null && (__isDefaultStable || !__constant.isDefaultForKind()))
                     {
-                        return ConstantNode.forConstant(constant, stableDimension - 1, isDefaultStable, metaAccess);
+                        return ConstantNode.forConstant(__constant, __stableDimension - 1, __isDefaultStable, __metaAccess);
                     }
                 }
             }

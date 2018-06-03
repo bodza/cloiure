@@ -6,11 +6,12 @@ import giraaff.graph.NodeClass;
 // @class ControlSinkNode
 public abstract class ControlSinkNode extends FixedNode
 {
+    // @def
     public static final NodeClass<ControlSinkNode> TYPE = NodeClass.create(ControlSinkNode.class);
 
     // @cons
-    protected ControlSinkNode(NodeClass<? extends ControlSinkNode> c, Stamp stamp)
+    protected ControlSinkNode(NodeClass<? extends ControlSinkNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 }

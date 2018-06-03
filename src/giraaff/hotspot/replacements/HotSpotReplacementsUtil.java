@@ -57,38 +57,38 @@ public final class HotSpotReplacementsUtil
     abstract static class HotSpotOptimizingLocationIdentity extends NamedLocationIdentity implements CanonicalizableLocation
     {
         // @cons
-        HotSpotOptimizingLocationIdentity(String name)
+        HotSpotOptimizingLocationIdentity(String __name)
         {
-            super(name, true);
+            super(__name, true);
         }
 
         @Override
         public abstract ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool);
 
-        protected ValueNode findReadHub(ValueNode object)
+        protected ValueNode findReadHub(ValueNode __object)
         {
-            ValueNode base = object;
-            if (base instanceof CompressionNode)
+            ValueNode __base = __object;
+            if (__base instanceof CompressionNode)
             {
-                base = ((CompressionNode) base).getValue();
+                __base = ((CompressionNode) __base).getValue();
             }
-            if (base instanceof Access)
+            if (__base instanceof Access)
             {
-                Access access = (Access) base;
-                if (access.getLocationIdentity().equals(HUB_LOCATION) || access.getLocationIdentity().equals(COMPRESSED_HUB_LOCATION))
+                Access __access = (Access) __base;
+                if (__access.getLocationIdentity().equals(HUB_LOCATION) || __access.getLocationIdentity().equals(COMPRESSED_HUB_LOCATION))
                 {
-                    AddressNode address = access.getAddress();
-                    if (address instanceof OffsetAddressNode)
+                    AddressNode __address = __access.getAddress();
+                    if (__address instanceof OffsetAddressNode)
                     {
-                        OffsetAddressNode offset = (OffsetAddressNode) address;
-                        return offset.getBase();
+                        OffsetAddressNode __offset = (OffsetAddressNode) __address;
+                        return __offset.getBase();
                     }
                 }
             }
-            else if (base instanceof LoadHubNode)
+            else if (__base instanceof LoadHubNode)
             {
-                LoadHubNode loadhub = (LoadHubNode) base;
-                return loadhub.getValue();
+                LoadHubNode __loadhub = (LoadHubNode) __base;
+                return __loadhub.getValue();
             }
             return null;
         }
@@ -98,79 +98,87 @@ public final class HotSpotReplacementsUtil
          *
          * @return an earlier read or the original {@code read}
          */
-        protected static ValueNode foldIndirection(ValueNode read, ValueNode object, LocationIdentity otherLocation)
+        protected static ValueNode foldIndirection(ValueNode __read, ValueNode __object, LocationIdentity __otherLocation)
         {
-            if (object instanceof Access)
+            if (__object instanceof Access)
             {
-                Access access = (Access) object;
-                if (access.getLocationIdentity().equals(otherLocation))
+                Access __access = (Access) __object;
+                if (__access.getLocationIdentity().equals(__otherLocation))
                 {
-                    AddressNode address = access.getAddress();
-                    if (address instanceof OffsetAddressNode)
+                    AddressNode __address = __access.getAddress();
+                    if (__address instanceof OffsetAddressNode)
                     {
-                        OffsetAddressNode offset = (OffsetAddressNode) address;
-                        return offset.getBase();
+                        OffsetAddressNode __offset = (OffsetAddressNode) __address;
+                        return __offset.getBase();
                     }
                 }
             }
-            return read;
+            return __read;
         }
     }
 
+    // @def
     public static final LocationIdentity EXCEPTION_OOP_LOCATION = NamedLocationIdentity.mutable("ExceptionOop");
+    // @def
     public static final LocationIdentity EXCEPTION_PC_LOCATION = NamedLocationIdentity.mutable("ExceptionPc");
+    // @def
     public static final LocationIdentity TLAB_TOP_LOCATION = NamedLocationIdentity.mutable("TlabTop");
+    // @def
     public static final LocationIdentity TLAB_END_LOCATION = NamedLocationIdentity.mutable("TlabEnd");
+    // @def
     public static final LocationIdentity TLAB_START_LOCATION = NamedLocationIdentity.mutable("TlabStart");
+    // @def
     public static final LocationIdentity PENDING_EXCEPTION_LOCATION = NamedLocationIdentity.mutable("PendingException");
+    // @def
     public static final LocationIdentity PENDING_DEOPTIMIZATION_LOCATION = NamedLocationIdentity.mutable("PendingDeoptimization");
+    // @def
     public static final LocationIdentity OBJECT_RESULT_LOCATION = NamedLocationIdentity.mutable("ObjectResult");
 
-    public static final Object readExceptionOop(Word thread)
+    public static final Object readExceptionOop(Word __thread)
     {
-        return thread.readObject(HotSpotRuntime.threadExceptionOopOffset, EXCEPTION_OOP_LOCATION);
+        return __thread.readObject(HotSpotRuntime.threadExceptionOopOffset, EXCEPTION_OOP_LOCATION);
     }
 
-    public static final Word readExceptionPc(Word thread)
+    public static final Word readExceptionPc(Word __thread)
     {
-        return thread.readWord(HotSpotRuntime.threadExceptionPcOffset, EXCEPTION_PC_LOCATION);
+        return __thread.readWord(HotSpotRuntime.threadExceptionPcOffset, EXCEPTION_PC_LOCATION);
     }
 
-    public static final void writeExceptionOop(Word thread, Object value)
+    public static final void writeExceptionOop(Word __thread, Object __value)
     {
-        thread.writeObject(HotSpotRuntime.threadExceptionOopOffset, value, EXCEPTION_OOP_LOCATION);
+        __thread.writeObject(HotSpotRuntime.threadExceptionOopOffset, __value, EXCEPTION_OOP_LOCATION);
     }
 
-    public static final void writeExceptionPc(Word thread, Word value)
+    public static final void writeExceptionPc(Word __thread, Word __value)
     {
-        thread.writeWord(HotSpotRuntime.threadExceptionPcOffset, value, EXCEPTION_PC_LOCATION);
+        __thread.writeWord(HotSpotRuntime.threadExceptionPcOffset, __value, EXCEPTION_PC_LOCATION);
     }
 
-    public static final Word readTlabTop(Word thread)
+    public static final Word readTlabTop(Word __thread)
     {
-        return thread.readWord(HotSpotRuntime.threadTlabTopOffset, TLAB_TOP_LOCATION);
+        return __thread.readWord(HotSpotRuntime.threadTlabTopOffset, TLAB_TOP_LOCATION);
     }
 
-    public static final Word readTlabEnd(Word thread)
+    public static final Word readTlabEnd(Word __thread)
     {
-        return thread.readWord(HotSpotRuntime.threadTlabEndOffset, TLAB_END_LOCATION);
+        return __thread.readWord(HotSpotRuntime.threadTlabEndOffset, TLAB_END_LOCATION);
     }
 
-    public static final Word readTlabStart(Word thread)
+    public static final Word readTlabStart(Word __thread)
     {
-        return thread.readWord(HotSpotRuntime.threadTlabStartOffset, TLAB_START_LOCATION);
+        return __thread.readWord(HotSpotRuntime.threadTlabStartOffset, TLAB_START_LOCATION);
     }
 
-    public static final void writeTlabTop(Word thread, Word top)
+    public static final void writeTlabTop(Word __thread, Word __top)
     {
-        thread.writeWord(HotSpotRuntime.threadTlabTopOffset, top, TLAB_TOP_LOCATION);
+        __thread.writeWord(HotSpotRuntime.threadTlabTopOffset, __top, TLAB_TOP_LOCATION);
     }
 
-    public static final void initializeTlab(Word thread, Word start, Word end)
+    public static final void initializeTlab(Word __thread, Word __start, Word __end)
     {
-        thread.writeWord(HotSpotRuntime.threadTlabStartOffset, start, TLAB_START_LOCATION);
-        thread.writeWord(HotSpotRuntime.threadTlabTopOffset, start, TLAB_TOP_LOCATION);
-        thread.writeWord(HotSpotRuntime.threadTlabEndOffset, end, TLAB_END_LOCATION);
+        __thread.writeWord(HotSpotRuntime.threadTlabStartOffset, __start, TLAB_START_LOCATION);
+        __thread.writeWord(HotSpotRuntime.threadTlabTopOffset, __start, TLAB_TOP_LOCATION);
+        __thread.writeWord(HotSpotRuntime.threadTlabEndOffset, __end, TLAB_END_LOCATION);
     }
 
     /**
@@ -178,11 +186,11 @@ public final class HotSpotReplacementsUtil
      *
      * @return the pending exception, or null if there was none
      */
-    public static final Object clearPendingException(Word thread)
+    public static final Object clearPendingException(Word __thread)
     {
-        Object result = thread.readObject(HotSpotRuntime.pendingExceptionOffset, PENDING_EXCEPTION_LOCATION);
-        thread.writeObject(HotSpotRuntime.pendingExceptionOffset, null, PENDING_EXCEPTION_LOCATION);
-        return result;
+        Object __result = __thread.readObject(HotSpotRuntime.pendingExceptionOffset, PENDING_EXCEPTION_LOCATION);
+        __thread.writeObject(HotSpotRuntime.pendingExceptionOffset, null, PENDING_EXCEPTION_LOCATION);
+        return __result;
     }
 
     /**
@@ -190,17 +198,17 @@ public final class HotSpotReplacementsUtil
      *
      * @return {@code true} if there was a pending deoptimization
      */
-    public static final int readPendingDeoptimization(Word thread)
+    public static final int readPendingDeoptimization(Word __thread)
     {
-        return thread.readInt(HotSpotRuntime.pendingDeoptimizationOffset, PENDING_DEOPTIMIZATION_LOCATION);
+        return __thread.readInt(HotSpotRuntime.pendingDeoptimizationOffset, PENDING_DEOPTIMIZATION_LOCATION);
     }
 
     /**
      * Writes the pending deoptimization value for the given thread.
      */
-    public static final void writePendingDeoptimization(Word thread, int value)
+    public static final void writePendingDeoptimization(Word __thread, int __value)
     {
-        thread.writeInt(HotSpotRuntime.pendingDeoptimizationOffset, value, PENDING_DEOPTIMIZATION_LOCATION);
+        __thread.writeInt(HotSpotRuntime.pendingDeoptimizationOffset, __value, PENDING_DEOPTIMIZATION_LOCATION);
     }
 
     /**
@@ -208,19 +216,21 @@ public final class HotSpotReplacementsUtil
      *
      * @return the object that was in the thread local
      */
-    public static final Object getAndClearObjectResult(Word thread)
+    public static final Object getAndClearObjectResult(Word __thread)
     {
-        Object result = thread.readObject(HotSpotRuntime.objectResultOffset, OBJECT_RESULT_LOCATION);
-        thread.writeObject(HotSpotRuntime.objectResultOffset, null, OBJECT_RESULT_LOCATION);
-        return result;
+        Object __result = __thread.readObject(HotSpotRuntime.objectResultOffset, OBJECT_RESULT_LOCATION);
+        __thread.writeObject(HotSpotRuntime.objectResultOffset, null, OBJECT_RESULT_LOCATION);
+        return __result;
     }
 
     /*
      * As far as Java code is concerned this can be considered immutable: it is set just after the
      * JavaThread is created, before it is published. After that, it is never changed.
      */
+    // @def
     public static final LocationIdentity JAVA_THREAD_THREAD_OBJECT_LOCATION = NamedLocationIdentity.immutable("JavaThread::_threadObj");
 
+    // @def
     public static final LocationIdentity JAVA_THREAD_OSTHREAD_LOCATION = NamedLocationIdentity.mutable("JavaThread::_osthread");
 
     // @Fold
@@ -241,31 +251,33 @@ public final class HotSpotReplacementsUtil
         return UnsafeAccess.UNSAFE.pageSize();
     }
 
+    // @def
     public static final LocationIdentity PROTOTYPE_MARK_WORD_LOCATION = NamedLocationIdentity.mutable("PrototypeMarkWord");
 
+    // @def
     public static final LocationIdentity KLASS_ACCESS_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_access_flags");
 
     // @closure
     public static final LocationIdentity KLASS_LAYOUT_HELPER_LOCATION = new HotSpotOptimizingLocationIdentity("Klass::_layout_helper")
     {
         @Override
-        public ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool)
+        public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
         {
-            ValueNode javaObject = findReadHub(object);
-            if (javaObject != null)
+            ValueNode __javaObject = findReadHub(__object);
+            if (__javaObject != null)
             {
-                if (javaObject.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
+                if (__javaObject.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
                 {
-                    ObjectStamp stamp = (ObjectStamp) javaObject.stamp(NodeView.DEFAULT);
-                    HotSpotResolvedObjectType type = (HotSpotResolvedObjectType) stamp.javaType(tool.getMetaAccess());
-                    if (type.isArray() && !type.getComponentType().isPrimitive())
+                    ObjectStamp __stamp = (ObjectStamp) __javaObject.stamp(NodeView.DEFAULT);
+                    HotSpotResolvedObjectType __type = (HotSpotResolvedObjectType) __stamp.javaType(__tool.getMetaAccess());
+                    if (__type.isArray() && !__type.getComponentType().isPrimitive())
                     {
-                        int layout = type.layoutHelper();
-                        return ConstantNode.forInt(layout);
+                        int __layout = __type.layoutHelper();
+                        return ConstantNode.forInt(__layout);
                     }
                 }
             }
-            return read;
+            return __read;
         }
     };
 
@@ -280,37 +292,41 @@ public final class HotSpotReplacementsUtil
      * @param klassNonNull the class to be checked
      * @return true if klassNonNull is an array, false otherwise
      */
-    public static final boolean klassIsArray(KlassPointer klassNonNull)
+    public static final boolean klassIsArray(KlassPointer __klassNonNull)
     {
         /*
          * The less-than check only works if both values are ints. We use local variables to make
          * sure these are still ints and haven't changed.
          */
-        final int layoutHelper = readLayoutHelper(klassNonNull);
-        final int layoutHelperNeutralValue = HotSpotRuntime.klassLayoutHelperNeutralValue;
-        return (layoutHelper < layoutHelperNeutralValue);
+        final int __layoutHelper = readLayoutHelper(__klassNonNull);
+        final int __layoutHelperNeutralValue = HotSpotRuntime.klassLayoutHelperNeutralValue;
+        return (__layoutHelper < __layoutHelperNeutralValue);
     }
 
+    // @def
     public static final LocationIdentity ARRAY_KLASS_COMPONENT_MIRROR = NamedLocationIdentity.immutable("ArrayKlass::_component_mirror");
 
+    // @def
     public static final LocationIdentity KLASS_SUPER_KLASS_LOCATION = NamedLocationIdentity.immutable("Klass::_super");
 
+    // @def
     public static final LocationIdentity MARK_WORD_LOCATION = NamedLocationIdentity.mutable("MarkWord");
 
+    // @def
     public static final LocationIdentity HUB_WRITE_LOCATION = NamedLocationIdentity.mutable("Hub:write");
 
     // @closure
     public static final LocationIdentity HUB_LOCATION = new HotSpotOptimizingLocationIdentity("Hub")
     {
         @Override
-        public ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool)
+        public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
         {
-            TypeReference constantType = StampTool.typeReferenceOrNull(object);
-            if (constantType != null && constantType.isExact())
+            TypeReference __constantType = StampTool.typeReferenceOrNull(__object);
+            if (__constantType != null && __constantType.isExact())
             {
-                return ConstantNode.forConstant(read.stamp(NodeView.DEFAULT), tool.getConstantReflection().asObjectHub(constantType.getType()), tool.getMetaAccess());
+                return ConstantNode.forConstant(__read.stamp(NodeView.DEFAULT), __tool.getConstantReflection().asObjectHub(__constantType.getType()), __tool.getMetaAccess());
             }
-            return read;
+            return __read;
         }
     };
 
@@ -318,38 +334,38 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity COMPRESSED_HUB_LOCATION = new HotSpotOptimizingLocationIdentity("CompressedHub")
     {
         @Override
-        public ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool)
+        public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
         {
-            TypeReference constantType = StampTool.typeReferenceOrNull(object);
-            if (constantType != null && constantType.isExact())
+            TypeReference __constantType = StampTool.typeReferenceOrNull(__object);
+            if (__constantType != null && __constantType.isExact())
             {
-                return ConstantNode.forConstant(read.stamp(NodeView.DEFAULT), ((HotSpotMetaspaceConstant) tool.getConstantReflection().asObjectHub(constantType.getType())).compress(), tool.getMetaAccess());
+                return ConstantNode.forConstant(__read.stamp(NodeView.DEFAULT), ((HotSpotMetaspaceConstant) __tool.getConstantReflection().asObjectHub(__constantType.getType())).compress(), __tool.getMetaAccess());
             }
-            return read;
+            return __read;
         }
     };
 
-    public static final void initializeObjectHeader(Word memory, Word markWord, KlassPointer hub)
+    public static final void initializeObjectHeader(Word __memory, Word __markWord, KlassPointer __hub)
     {
-        memory.writeWord(HotSpotRuntime.markOffset, markWord, MARK_WORD_LOCATION);
-        StoreHubNode.write(memory, hub);
+        __memory.writeWord(HotSpotRuntime.markOffset, __markWord, MARK_WORD_LOCATION);
+        StoreHubNode.write(__memory, __hub);
     }
 
     // @Fold
-    public static final int arrayBaseOffset(JavaKind elementKind)
+    public static final int arrayBaseOffset(JavaKind __elementKind)
     {
-        return HotSpotRuntime.getArrayBaseOffset(elementKind);
+        return HotSpotRuntime.getArrayBaseOffset(__elementKind);
     }
 
     // @Fold
-    public static final int arrayIndexScale(JavaKind elementKind)
+    public static final int arrayIndexScale(JavaKind __elementKind)
     {
-        return HotSpotRuntime.getArrayIndexScale(elementKind);
+        return HotSpotRuntime.getArrayIndexScale(__elementKind);
     }
 
-    public static final Word arrayStart(int[] a)
+    public static final Word arrayStart(int[] __a)
     {
-        return WordFactory.unsigned(ComputeObjectAddressNode.get(a, HotSpotRuntime.getArrayBaseOffset(JavaKind.Int)));
+        return WordFactory.unsigned(ComputeObjectAddressNode.get(__a, HotSpotRuntime.getArrayBaseOffset(JavaKind.Int)));
     }
 
     /**
@@ -363,12 +379,12 @@ public final class HotSpotReplacementsUtil
      *
      * @return the size of the memory chunk
      */
-    public static final int arrayAllocationSize(int length, int headerSize, int log2ElementSize)
+    public static final int arrayAllocationSize(int __length, int __headerSize, int __log2ElementSize)
     {
-        int alignment = HotSpotRuntime.objectAlignment;
-        int size = (length << log2ElementSize) + headerSize + (alignment - 1);
-        int mask = ~(alignment - 1);
-        return size & mask;
+        int __alignment = HotSpotRuntime.objectAlignment;
+        int __size = (__length << __log2ElementSize) + __headerSize + (__alignment - 1);
+        int __mask = ~(__alignment - 1);
+        return __size & __mask;
     }
 
     public static final int instanceHeaderSize()
@@ -376,36 +392,44 @@ public final class HotSpotReplacementsUtil
         return HotSpotRuntime.useCompressedClassPointers ? (2 * wordSize()) - 4 : 2 * wordSize();
     }
 
+    // @def
     public static final LocationIdentity KLASS_SUPER_CHECK_OFFSET_LOCATION = NamedLocationIdentity.immutable("Klass::_super_check_offset");
+    // @def
     public static final LocationIdentity SECONDARY_SUPER_CACHE_LOCATION = NamedLocationIdentity.mutable("SecondarySuperCache");
+    // @def
     public static final LocationIdentity SECONDARY_SUPERS_LOCATION = NamedLocationIdentity.immutable("SecondarySupers");
+    // @def
     public static final LocationIdentity DISPLACED_MARK_WORD_LOCATION = NamedLocationIdentity.mutable("DisplacedMarkWord");
+    // @def
     public static final LocationIdentity OBJECT_MONITOR_OWNER_LOCATION = NamedLocationIdentity.mutable("ObjectMonitor::_owner");
+    // @def
     public static final LocationIdentity OBJECT_MONITOR_RECURSION_LOCATION = NamedLocationIdentity.mutable("ObjectMonitor::_recursions");
+    // @def
     public static final LocationIdentity OBJECT_MONITOR_CXQ_LOCATION = NamedLocationIdentity.mutable("ObjectMonitor::_cxq");
+    // @def
     public static final LocationIdentity OBJECT_MONITOR_ENTRY_LIST_LOCATION = NamedLocationIdentity.mutable("ObjectMonitor::_EntryList");
 
     /**
      * Loads the hub of an object (without null checking it first).
      */
-    public static final KlassPointer loadHub(Object object)
+    public static final KlassPointer loadHub(Object __object)
     {
-        return loadHubIntrinsic(object);
+        return loadHubIntrinsic(__object);
     }
 
-    public static final Word loadWordFromObject(Object object, int offset)
+    public static final Word loadWordFromObject(Object __object, int __offset)
     {
-        return loadWordFromObjectIntrinsic(object, offset, LocationIdentity.any(), getWordKind());
+        return loadWordFromObjectIntrinsic(__object, __offset, LocationIdentity.any(), getWordKind());
     }
 
-    public static final Word loadWordFromObject(Object object, int offset, LocationIdentity identity)
+    public static final Word loadWordFromObject(Object __object, int __offset, LocationIdentity __identity)
     {
-        return loadWordFromObjectIntrinsic(object, offset, identity, getWordKind());
+        return loadWordFromObjectIntrinsic(__object, __offset, __identity, getWordKind());
     }
 
-    public static final KlassPointer loadKlassFromObject(Object object, int offset, LocationIdentity identity)
+    public static final KlassPointer loadKlassFromObject(Object __object, int __offset, LocationIdentity __identity)
     {
-        return loadKlassFromObjectIntrinsic(object, offset, identity, getWordKind());
+        return loadKlassFromObjectIntrinsic(__object, __offset, __identity, getWordKind());
     }
 
     /**
@@ -414,9 +438,9 @@ public final class HotSpotReplacementsUtil
      * @param register a register which must not be available to the register allocator
      * @return the value of {@code register} as a word
      */
-    public static final Word registerAsWord(@ConstantNodeParameter Register register)
+    public static final Word registerAsWord(@ConstantNodeParameter Register __register)
     {
-        return registerAsWord(register, true, false);
+        return registerAsWord(__register, true, false);
     }
 
     @NodeIntrinsic(value = ReadRegisterNode.class)
@@ -440,31 +464,33 @@ public final class HotSpotReplacementsUtil
         return CodeUtil.log2(wordSize());
     }
 
+    // @def
     public static final LocationIdentity CLASS_STATE_LOCATION = NamedLocationIdentity.mutable("ClassState");
 
     /**
      * @param hub the hub of an InstanceKlass
      * @return true is the InstanceKlass represented by hub is fully initialized
      */
-    public static final boolean isInstanceKlassFullyInitialized(KlassPointer hub)
+    public static final boolean isInstanceKlassFullyInitialized(KlassPointer __hub)
     {
-        return readInstanceKlassState(hub) == HotSpotRuntime.instanceKlassStateFullyInitialized;
+        return readInstanceKlassState(__hub) == HotSpotRuntime.instanceKlassStateFullyInitialized;
     }
 
-    private static final byte readInstanceKlassState(KlassPointer hub)
+    private static final byte readInstanceKlassState(KlassPointer __hub)
     {
-        return hub.readByte(HotSpotRuntime.instanceKlassInitStateOffset, CLASS_STATE_LOCATION);
+        return __hub.readByte(HotSpotRuntime.instanceKlassInitStateOffset, CLASS_STATE_LOCATION);
     }
 
+    // @def
     public static final LocationIdentity KLASS_MODIFIER_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_modifier_flags");
 
     // @closure
     public static final LocationIdentity CLASS_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("Class._klass")
     {
         @Override
-        public ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool)
+        public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
         {
-            return foldIndirection(read, object, CLASS_MIRROR_LOCATION);
+            return foldIndirection(__read, __object, CLASS_MIRROR_LOCATION);
         }
     };
 
@@ -472,21 +498,31 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity CLASS_ARRAY_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("Class._array_klass")
     {
         @Override
-        public ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool)
+        public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
         {
-            return foldIndirection(read, object, ARRAY_KLASS_COMPONENT_MIRROR);
+            return foldIndirection(__read, __object, ARRAY_KLASS_COMPONENT_MIRROR);
         }
     };
 
+    // @def
     public static final LocationIdentity CLASS_MIRROR_LOCATION = NamedLocationIdentity.immutable("Klass::_java_mirror");
+    // @def
     public static final LocationIdentity CLASS_MIRROR_HANDLE_LOCATION = NamedLocationIdentity.immutable("Klass::_java_mirror handle");
+    // @def
     public static final LocationIdentity HEAP_TOP_LOCATION = NamedLocationIdentity.mutable("HeapTop");
+    // @def
     public static final LocationIdentity HEAP_END_LOCATION = NamedLocationIdentity.mutable("HeapEnd");
+    // @def
     public static final LocationIdentity TLAB_SIZE_LOCATION = NamedLocationIdentity.mutable("TlabSize");
+    // @def
     public static final LocationIdentity TLAB_THREAD_ALLOCATED_BYTES_LOCATION = NamedLocationIdentity.mutable("TlabThreadAllocatedBytes");
+    // @def
     public static final LocationIdentity TLAB_REFILL_WASTE_LIMIT_LOCATION = NamedLocationIdentity.mutable("RefillWasteLimit");
+    // @def
     public static final LocationIdentity TLAB_NOF_REFILLS_LOCATION = NamedLocationIdentity.mutable("TlabNOfRefills");
+    // @def
     public static final LocationIdentity TLAB_FAST_REFILL_WASTE_LOCATION = NamedLocationIdentity.mutable("TlabFastRefillWaste");
+    // @def
     public static final LocationIdentity TLAB_SLOW_ALLOCATIONS_LOCATION = NamedLocationIdentity.mutable("TlabSlowAllocations");
 
     @NodeIntrinsic(ForeignCallNode.class)
@@ -499,9 +535,9 @@ public final class HotSpotReplacementsUtil
         {
             return UnsafeAccess.UNSAFE.objectFieldOffset(java.lang.ref.Reference.class.getDeclaredField("referent"));
         }
-        catch (Exception e)
+        catch (Exception __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
     }
 
@@ -509,32 +545,35 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("ObjArrayKlass::_element_klass")
     {
         @Override
-        public ValueNode canonicalizeRead(ValueNode read, AddressNode location, ValueNode object, CanonicalizerTool tool)
+        public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
         {
-            ValueNode javaObject = findReadHub(object);
-            if (javaObject != null)
+            ValueNode __javaObject = findReadHub(__object);
+            if (__javaObject != null)
             {
-                ResolvedJavaType type = StampTool.typeOrNull(javaObject);
-                if (type != null && type.isArray())
+                ResolvedJavaType __type = StampTool.typeOrNull(__javaObject);
+                if (__type != null && __type.isArray())
                 {
-                    ResolvedJavaType element = type.getComponentType();
-                    if (element != null && !element.isPrimitive() && !element.getElementalType().isInterface())
+                    ResolvedJavaType __element = __type.getComponentType();
+                    if (__element != null && !__element.isPrimitive() && !__element.getElementalType().isInterface())
                     {
-                        Assumptions assumptions = object.graph().getAssumptions();
-                        AssumptionResult<ResolvedJavaType> leafType = element.findLeafConcreteSubtype();
-                        if (leafType != null && leafType.canRecordTo(assumptions))
+                        Assumptions __assumptions = __object.graph().getAssumptions();
+                        AssumptionResult<ResolvedJavaType> __leafType = __element.findLeafConcreteSubtype();
+                        if (__leafType != null && __leafType.canRecordTo(__assumptions))
                         {
-                            leafType.recordTo(assumptions);
-                            return ConstantNode.forConstant(read.stamp(NodeView.DEFAULT), tool.getConstantReflection().asObjectHub(leafType.getResult()), tool.getMetaAccess());
+                            __leafType.recordTo(__assumptions);
+                            return ConstantNode.forConstant(__read.stamp(NodeView.DEFAULT), __tool.getConstantReflection().asObjectHub(__leafType.getResult()), __tool.getMetaAccess());
                         }
                     }
                 }
             }
-            return read;
+            return __read;
         }
     };
 
+    // @def
     public static final LocationIdentity PRIMARY_SUPERS_LOCATION = NamedLocationIdentity.immutable("PrimarySupers");
+    // @def
     public static final LocationIdentity METASPACE_ARRAY_LENGTH_LOCATION = NamedLocationIdentity.immutable("MetaspaceArrayLength");
+    // @def
     public static final LocationIdentity SECONDARY_SUPERS_ELEMENT_LOCATION = NamedLocationIdentity.immutable("SecondarySupersElement");
 }

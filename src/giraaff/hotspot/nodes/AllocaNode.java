@@ -21,11 +21,13 @@ import giraaff.word.WordTypes;
 // @class AllocaNode
 public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<AllocaNode> TYPE = NodeClass.create(AllocaNode.class);
 
     /**
      * The number of slots in block.
      */
+    // @field
     protected final int slots;
 
     /**
@@ -33,28 +35,29 @@ public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
      * initialized before any safepoint in the method otherwise the garbage collector will see
      * garbage values when processing these slots.
      */
+    // @field
     protected final BitSet objects;
 
     // @cons
-    public AllocaNode(@InjectedNodeParameter WordTypes wordTypes, int slots)
+    public AllocaNode(@InjectedNodeParameter WordTypes __wordTypes, int __slots)
     {
-        this(slots, wordTypes.getWordKind(), new BitSet());
+        this(__slots, __wordTypes.getWordKind(), new BitSet());
     }
 
     // @cons
-    public AllocaNode(int slots, JavaKind wordKind, BitSet objects)
+    public AllocaNode(int __slots, JavaKind __wordKind, BitSet __objects)
     {
-        super(TYPE, StampFactory.forKind(wordKind));
-        this.slots = slots;
-        this.objects = objects;
+        super(TYPE, StampFactory.forKind(__wordKind));
+        this.slots = __slots;
+        this.objects = __objects;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        VirtualStackSlot array = gen.getLIRGeneratorTool().getResult().getFrameMapBuilder().allocateStackSlots(slots, objects, null);
-        Value result = gen.getLIRGeneratorTool().emitAddress(array);
-        gen.setResult(this, result);
+        VirtualStackSlot __array = __gen.getLIRGeneratorTool().getResult().getFrameMapBuilder().allocateStackSlots(slots, objects, null);
+        Value __result = __gen.getLIRGeneratorTool().emitAddress(__array);
+        __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic

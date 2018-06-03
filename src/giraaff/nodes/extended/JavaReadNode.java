@@ -22,23 +22,26 @@ import giraaff.nodes.spi.LoweringTool;
 // @class JavaReadNode
 public final class JavaReadNode extends FixedAccessNode implements Lowerable, GuardingNode, Canonicalizable
 {
+    // @def
     public static final NodeClass<JavaReadNode> TYPE = NodeClass.create(JavaReadNode.class);
 
+    // @field
     protected final JavaKind readKind;
+    // @field
     protected final boolean compressible;
 
     // @cons
-    public JavaReadNode(JavaKind readKind, AddressNode address, LocationIdentity location, BarrierType barrierType, boolean compressible)
+    public JavaReadNode(JavaKind __readKind, AddressNode __address, LocationIdentity __location, BarrierType __barrierType, boolean __compressible)
     {
-        super(TYPE, address, location, StampFactory.forKind(readKind), barrierType);
-        this.readKind = readKind;
-        this.compressible = compressible;
+        super(TYPE, __address, __location, StampFactory.forKind(__readKind), __barrierType);
+        this.readKind = __readKind;
+        this.compressible = __compressible;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
@@ -58,8 +61,8 @@ public final class JavaReadNode extends FixedAccessNode implements Lowerable, Gu
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        return ReadNode.canonicalizeRead(this, getAddress(), getLocationIdentity(), tool);
+        return ReadNode.canonicalizeRead(this, getAddress(), getLocationIdentity(), __tool);
     }
 }

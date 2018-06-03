@@ -28,57 +28,57 @@ public final class HighTier extends PhaseSuite<HighTierContext>
     public HighTier()
     {
         super();
-        CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        appendPhase(canonicalizer);
+        CanonicalizerPhase __canonicalizer = new CanonicalizerPhase();
+        appendPhase(__canonicalizer);
 
         if (GraalOptions.inline)
         {
-            appendPhase(new InliningPhase(canonicalizer));
+            appendPhase(new InliningPhase(__canonicalizer));
             appendPhase(new DeadCodeEliminationPhase(Optionality.Optional));
         }
 
         if (GraalOptions.optConvertDeoptsToGuards)
         {
-            appendPhase(new IncrementalCanonicalizerPhase<>(canonicalizer, new ConvertDeoptimizeToGuardPhase()));
+            appendPhase(new IncrementalCanonicalizerPhase<>(__canonicalizer, new ConvertDeoptimizeToGuardPhase()));
         }
 
         if (GraalOptions.conditionalElimination)
         {
-            appendPhase(new IterativeConditionalEliminationPhase(canonicalizer, false));
+            appendPhase(new IterativeConditionalEliminationPhase(__canonicalizer, false));
         }
 
-        LoopPolicies loopPolicies = createLoopPolicies();
+        LoopPolicies __loopPolicies = createLoopPolicies();
         if (GraalOptions.fullUnroll)
         {
-            appendPhase(new LoopFullUnrollPhase(canonicalizer, loopPolicies));
+            appendPhase(new LoopFullUnrollPhase(__canonicalizer, __loopPolicies));
         }
 
         if (GraalOptions.optLoopTransform)
         {
             if (GraalOptions.loopPeeling)
             {
-                appendPhase(new LoopPeelingPhase(loopPolicies));
+                appendPhase(new LoopPeelingPhase(__loopPolicies));
             }
             if (GraalOptions.loopUnswitch)
             {
-                appendPhase(new LoopUnswitchingPhase(loopPolicies));
+                appendPhase(new LoopUnswitchingPhase(__loopPolicies));
             }
         }
 
-        appendPhase(canonicalizer);
+        appendPhase(__canonicalizer);
 
         if (GraalOptions.partialEscapeAnalysis)
         {
-            appendPhase(new PartialEscapePhase(true, canonicalizer));
+            appendPhase(new PartialEscapePhase(true, __canonicalizer));
         }
 
         if (GraalOptions.optReadElimination)
         {
-            appendPhase(new EarlyReadEliminationPhase(canonicalizer));
+            appendPhase(new EarlyReadEliminationPhase(__canonicalizer));
         }
 
         appendPhase(new RemoveValueProxyPhase());
-        appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.HIGH_TIER));
+        appendPhase(new LoweringPhase(__canonicalizer, LoweringTool.StandardLoweringStage.HIGH_TIER));
     }
 
     public LoopPolicies createLoopPolicies()

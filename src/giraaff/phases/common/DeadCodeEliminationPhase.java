@@ -32,41 +32,42 @@ public final class DeadCodeEliminationPhase extends Phase
      * {@linkplain Optionality#Required non-optional} or {@link GraalOptions#reduceDCE} is false.
      */
     // @cons
-    public DeadCodeEliminationPhase(Optionality optionality)
+    public DeadCodeEliminationPhase(Optionality __optionality)
     {
         super();
-        this.optional = optionality == Optionality.Optional;
+        this.optional = __optionality == Optionality.Optional;
     }
 
+    // @field
     private final boolean optional;
 
     @Override
-    public void run(StructuredGraph graph)
+    public void run(StructuredGraph __graph)
     {
         if (optional && GraalOptions.reduceDCE)
         {
             return;
         }
 
-        NodeFlood flood = graph.createNodeFlood();
-        int totalNodeCount = graph.getNodeCount();
-        flood.add(graph.start());
-        iterateSuccessorsAndInputs(flood);
-        boolean changed = false;
-        for (GuardNode guard : graph.getNodes(GuardNode.TYPE))
+        NodeFlood __flood = __graph.createNodeFlood();
+        int __totalNodeCount = __graph.getNodeCount();
+        __flood.add(__graph.start());
+        iterateSuccessorsAndInputs(__flood);
+        boolean __changed = false;
+        for (GuardNode __guard : __graph.getNodes(GuardNode.TYPE))
         {
-            if (flood.isMarked(guard.getAnchor().asNode()))
+            if (__flood.isMarked(__guard.getAnchor().asNode()))
             {
-                flood.add(guard);
-                changed = true;
+                __flood.add(__guard);
+                __changed = true;
             }
         }
-        if (changed)
+        if (__changed)
         {
-            iterateSuccessorsAndInputs(flood);
+            iterateSuccessorsAndInputs(__flood);
         }
-        int totalMarkedCount = flood.getTotalMarkedCount();
-        if (totalNodeCount == totalMarkedCount)
+        int __totalMarkedCount = __flood.getTotalMarkedCount();
+        if (__totalNodeCount == __totalMarkedCount)
         {
             // All nodes are live => nothing more to do.
             return;
@@ -76,59 +77,59 @@ public final class DeadCodeEliminationPhase extends Phase
             // Some nodes are not marked alive and therefore dead => proceed.
         }
 
-        deleteNodes(flood, graph);
+        deleteNodes(__flood, __graph);
     }
 
-    private static void iterateSuccessorsAndInputs(NodeFlood flood)
+    private static void iterateSuccessorsAndInputs(NodeFlood __flood)
     {
         // @closure
         Node.EdgeVisitor consumer = new Node.EdgeVisitor()
         {
             @Override
-            public Node apply(Node n, Node succOrInput)
+            public Node apply(Node __n, Node __succOrInput)
             {
-                flood.add(succOrInput);
-                return succOrInput;
+                __flood.add(__succOrInput);
+                return __succOrInput;
             }
         };
 
-        for (Node current : flood)
+        for (Node __current : __flood)
         {
-            if (current instanceof AbstractEndNode)
+            if (__current instanceof AbstractEndNode)
             {
-                AbstractEndNode end = (AbstractEndNode) current;
-                flood.add(end.merge());
+                AbstractEndNode __end = (AbstractEndNode) __current;
+                __flood.add(__end.merge());
             }
             else
             {
-                current.applySuccessors(consumer);
-                current.applyInputs(consumer);
+                __current.applySuccessors(consumer);
+                __current.applyInputs(consumer);
             }
         }
     }
 
-    private static void deleteNodes(NodeFlood flood, StructuredGraph graph)
+    private static void deleteNodes(NodeFlood __flood, StructuredGraph __graph)
     {
         // @closure
         Node.EdgeVisitor consumer = new Node.EdgeVisitor()
         {
             @Override
-            public Node apply(Node n, Node input)
+            public Node apply(Node __n, Node __input)
             {
-                if (input.isAlive() && flood.isMarked(input))
+                if (__input.isAlive() && __flood.isMarked(__input))
                 {
-                    input.removeUsage(n);
+                    __input.removeUsage(__n);
                 }
-                return input;
+                return __input;
             }
         };
 
-        for (Node node : graph.getNodes())
+        for (Node __node : __graph.getNodes())
         {
-            if (!flood.isMarked(node))
+            if (!__flood.isMarked(__node))
             {
-                node.markDeleted();
-                node.applyInputs(consumer);
+                __node.markDeleted();
+                __node.applyInputs(consumer);
             }
         }
     }

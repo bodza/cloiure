@@ -18,37 +18,37 @@ public final class ConstantFoldUtil
         super();
     }
 
-    public static ConstantNode tryConstantFold(ConstantFieldProvider fieldProvider, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, ResolvedJavaField field, JavaConstant receiver)
+    public static ConstantNode tryConstantFold(ConstantFieldProvider __fieldProvider, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, ResolvedJavaField __field, JavaConstant __receiver)
     {
-        if (!field.isStatic())
+        if (!__field.isStatic())
         {
-            if (receiver == null || receiver.isNull())
+            if (__receiver == null || __receiver.isNull())
             {
                 return null;
             }
         }
 
         // @closure
-        return fieldProvider.readConstantField(field, new ConstantFieldTool<ConstantNode>()
+        return __fieldProvider.readConstantField(__field, new ConstantFieldTool<ConstantNode>()
         {
             @Override
             public JavaConstant readValue()
             {
-                return constantReflection.readFieldValue(field, receiver);
+                return __constantReflection.readFieldValue(__field, __receiver);
             }
 
             @Override
             public JavaConstant getReceiver()
             {
-                return receiver;
+                return __receiver;
             }
 
             @Override
-            public ConstantNode foldConstant(JavaConstant ret)
+            public ConstantNode foldConstant(JavaConstant __ret)
             {
-                if (ret != null)
+                if (__ret != null)
                 {
-                    return ConstantNode.forConstant(ret, metaAccess);
+                    return ConstantNode.forConstant(__ret, __metaAccess);
                 }
                 else
                 {
@@ -57,11 +57,11 @@ public final class ConstantFoldUtil
             }
 
             @Override
-            public ConstantNode foldStableArray(JavaConstant ret, int stableDimensions, boolean isDefaultStable)
+            public ConstantNode foldStableArray(JavaConstant __ret, int __stableDimensions, boolean __isDefaultStable)
             {
-                if (ret != null)
+                if (__ret != null)
                 {
-                    return ConstantNode.forConstant(ret, stableDimensions, isDefaultStable, metaAccess);
+                    return ConstantNode.forConstant(__ret, __stableDimensions, __isDefaultStable, __metaAccess);
                 }
                 else
                 {

@@ -6,9 +6,13 @@ package giraaff.bytecode;
 // @class BytecodeTableSwitch
 public final class BytecodeTableSwitch extends BytecodeSwitch
 {
+    // @def
     private static final int OFFSET_TO_LOW_KEY = 4;
+    // @def
     private static final int OFFSET_TO_HIGH_KEY = 8;
+    // @def
     private static final int OFFSET_TO_FIRST_JUMP_OFFSET = 12;
+    // @def
     private static final int JUMP_OFFSET_SIZE = 4;
 
     /**
@@ -18,9 +22,9 @@ public final class BytecodeTableSwitch extends BytecodeSwitch
      * @param bci the index in the stream of the switch instruction
      */
     // @cons
-    public BytecodeTableSwitch(BytecodeStream stream, int bci)
+    public BytecodeTableSwitch(BytecodeStream __stream, int __bci)
     {
-        super(stream, bci);
+        super(__stream, __bci);
     }
 
     /**
@@ -44,15 +48,15 @@ public final class BytecodeTableSwitch extends BytecodeSwitch
     }
 
     @Override
-    public int keyAt(int i)
+    public int keyAt(int __i)
     {
-        return lowKey() + i;
+        return lowKey() + __i;
     }
 
     @Override
-    public int offsetAt(int i)
+    public int offsetAt(int __i)
     {
-        return stream.readInt(alignedBci + OFFSET_TO_FIRST_JUMP_OFFSET + JUMP_OFFSET_SIZE * i);
+        return stream.readInt(alignedBci + OFFSET_TO_FIRST_JUMP_OFFSET + JUMP_OFFSET_SIZE * __i);
     }
 
     @Override

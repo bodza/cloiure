@@ -39,40 +39,62 @@ import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Sqrt;
 // @class ArithmeticOpTable
 public final class ArithmeticOpTable
 {
+    // @field
     private final UnaryOp<Neg> neg;
+    // @field
     private final BinaryOp<Add> add;
+    // @field
     private final BinaryOp<Sub> sub;
 
+    // @field
     private final BinaryOp<Mul> mul;
+    // @field
     private final BinaryOp<MulHigh> mulHigh;
+    // @field
     private final BinaryOp<UMulHigh> umulHigh;
+    // @field
     private final BinaryOp<Div> div;
+    // @field
     private final BinaryOp<Rem> rem;
 
+    // @field
     private final UnaryOp<Not> not;
+    // @field
     private final BinaryOp<And> and;
+    // @field
     private final BinaryOp<Or> or;
+    // @field
     private final BinaryOp<Xor> xor;
 
+    // @field
     private final ShiftOp<Shl> shl;
+    // @field
     private final ShiftOp<Shr> shr;
+    // @field
     private final ShiftOp<UShr> ushr;
 
+    // @field
     private final UnaryOp<Abs> abs;
+    // @field
     private final UnaryOp<Sqrt> sqrt;
 
+    // @field
     private final IntegerConvertOp<ZeroExtend> zeroExtend;
+    // @field
     private final IntegerConvertOp<SignExtend> signExtend;
+    // @field
     private final IntegerConvertOp<Narrow> narrow;
 
+    // @field
     private final FloatConvertOp[] floatConvert;
+    // @field
     private final int hash;
 
-    public static ArithmeticOpTable forStamp(Stamp s)
+    public static ArithmeticOpTable forStamp(Stamp __s)
     {
-        if (s instanceof ArithmeticStamp)
+        if (__s instanceof ArithmeticStamp)
         {
-            return ((ArithmeticStamp) s).getOps();
+            return ((ArithmeticStamp) __s).getOps();
         }
         else
         {
@@ -100,6 +122,7 @@ public final class ArithmeticOpTable
         return new IntegerConvertOp<?>[] { zeroExtend, signExtend, narrow };
     }
 
+    // @def
     public static final ArithmeticOpTable EMPTY = new ArithmeticOpTable(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
     // @iface ArithmeticOpTable.ArithmeticOpWrapper
@@ -116,15 +139,15 @@ public final class ArithmeticOpTable
         FloatConvertOp wrapFloatConvertOp(FloatConvertOp op);
     }
 
-    private static <T> T wrapIfNonNull(Function<T, T> wrapper, T obj)
+    private static <T> T wrapIfNonNull(Function<T, T> __wrapper, T __obj)
     {
-        if (obj == null)
+        if (__obj == null)
         {
             return null;
         }
         else
         {
-            return wrapper.apply(obj);
+            return __wrapper.apply(__obj);
         }
     }
 
@@ -134,82 +157,82 @@ public final class ArithmeticOpTable
      *
      * @return the array provided by {@code arrayGenerator}.
      */
-    private static <T, R> R[] filterAndMapToArray(T[] inputs, Predicate<? super T> predicate, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator)
+    private static <T, R> R[] filterAndMapToArray(T[] __inputs, Predicate<? super T> __predicate, Function<? super T, ? extends R> __mapper, IntFunction<R[]> __arrayGenerator)
     {
-        List<R> resultList = new ArrayList<>();
-        for (T t : inputs)
+        List<R> __resultList = new ArrayList<>();
+        for (T __t : __inputs)
         {
-            if (predicate.test(t))
+            if (__predicate.test(__t))
             {
-                resultList.add(mapper.apply(t));
+                __resultList.add(__mapper.apply(__t));
             }
         }
-        return resultList.toArray(arrayGenerator.apply(resultList.size()));
+        return __resultList.toArray(__arrayGenerator.apply(__resultList.size()));
     }
 
-    public static ArithmeticOpTable wrap(ArithmeticOpWrapper wrapper, ArithmeticOpTable inner)
+    public static ArithmeticOpTable wrap(ArithmeticOpWrapper __wrapper, ArithmeticOpTable __inner)
     {
-        UnaryOp<Neg> neg = wrapIfNonNull(wrapper::wrapUnaryOp, inner.getNeg());
-        BinaryOp<Add> add = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getAdd());
-        BinaryOp<Sub> sub = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getSub());
+        UnaryOp<Neg> __neg = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getNeg());
+        BinaryOp<Add> __add = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getAdd());
+        BinaryOp<Sub> __sub = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getSub());
 
-        BinaryOp<Mul> mul = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getMul());
-        BinaryOp<MulHigh> mulHigh = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getMulHigh());
-        BinaryOp<UMulHigh> umulHigh = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getUMulHigh());
-        BinaryOp<Div> div = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getDiv());
-        BinaryOp<Rem> rem = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getRem());
+        BinaryOp<Mul> __mul = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getMul());
+        BinaryOp<MulHigh> __mulHigh = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getMulHigh());
+        BinaryOp<UMulHigh> __umulHigh = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getUMulHigh());
+        BinaryOp<Div> __div = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getDiv());
+        BinaryOp<Rem> __rem = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getRem());
 
-        UnaryOp<Not> not = wrapIfNonNull(wrapper::wrapUnaryOp, inner.getNot());
-        BinaryOp<And> and = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getAnd());
-        BinaryOp<Or> or = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getOr());
-        BinaryOp<Xor> xor = wrapIfNonNull(wrapper::wrapBinaryOp, inner.getXor());
+        UnaryOp<Not> __not = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getNot());
+        BinaryOp<And> __and = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getAnd());
+        BinaryOp<Or> __or = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getOr());
+        BinaryOp<Xor> __xor = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getXor());
 
-        ShiftOp<Shl> shl = wrapIfNonNull(wrapper::wrapShiftOp, inner.getShl());
-        ShiftOp<Shr> shr = wrapIfNonNull(wrapper::wrapShiftOp, inner.getShr());
-        ShiftOp<UShr> ushr = wrapIfNonNull(wrapper::wrapShiftOp, inner.getUShr());
+        ShiftOp<Shl> __shl = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getShl());
+        ShiftOp<Shr> __shr = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getShr());
+        ShiftOp<UShr> __ushr = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getUShr());
 
-        UnaryOp<Abs> abs = wrapIfNonNull(wrapper::wrapUnaryOp, inner.getAbs());
-        UnaryOp<Sqrt> sqrt = wrapIfNonNull(wrapper::wrapUnaryOp, inner.getSqrt());
+        UnaryOp<Abs> __abs = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getAbs());
+        UnaryOp<Sqrt> __sqrt = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getSqrt());
 
-        IntegerConvertOp<ZeroExtend> zeroExtend = wrapIfNonNull(wrapper::wrapIntegerConvertOp, inner.getZeroExtend());
-        IntegerConvertOp<SignExtend> signExtend = wrapIfNonNull(wrapper::wrapIntegerConvertOp, inner.getSignExtend());
-        IntegerConvertOp<Narrow> narrow = wrapIfNonNull(wrapper::wrapIntegerConvertOp, inner.getNarrow());
+        IntegerConvertOp<ZeroExtend> __zeroExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getZeroExtend());
+        IntegerConvertOp<SignExtend> __signExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getSignExtend());
+        IntegerConvertOp<Narrow> __narrow = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getNarrow());
 
-        FloatConvertOp[] floatConvert = filterAndMapToArray(inner.floatConvert, Objects::nonNull, wrapper::wrapFloatConvertOp, FloatConvertOp[]::new);
-        return new ArithmeticOpTable(neg, add, sub, mul, mulHigh, umulHigh, div, rem, not, and, or, xor, shl, shr, ushr, abs, sqrt, zeroExtend, signExtend, narrow, floatConvert);
+        FloatConvertOp[] __floatConvert = filterAndMapToArray(__inner.floatConvert, Objects::nonNull, __wrapper::wrapFloatConvertOp, FloatConvertOp[]::new);
+        return new ArithmeticOpTable(__neg, __add, __sub, __mul, __mulHigh, __umulHigh, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __sqrt, __zeroExtend, __signExtend, __narrow, __floatConvert);
     }
 
     // @cons
-    protected ArithmeticOpTable(UnaryOp<Neg> neg, BinaryOp<Add> add, BinaryOp<Sub> sub, BinaryOp<Mul> mul, BinaryOp<MulHigh> mulHigh, BinaryOp<UMulHigh> umulHigh, BinaryOp<Div> div, BinaryOp<Rem> rem, UnaryOp<Not> not, BinaryOp<And> and, BinaryOp<Or> or, BinaryOp<Xor> xor, ShiftOp<Shl> shl, ShiftOp<Shr> shr, ShiftOp<UShr> ushr, UnaryOp<Abs> abs, UnaryOp<Sqrt> sqrt, IntegerConvertOp<ZeroExtend> zeroExtend, IntegerConvertOp<SignExtend> signExtend, IntegerConvertOp<Narrow> narrow, FloatConvertOp... floatConvert)
+    protected ArithmeticOpTable(UnaryOp<Neg> __neg, BinaryOp<Add> __add, BinaryOp<Sub> __sub, BinaryOp<Mul> __mul, BinaryOp<MulHigh> __mulHigh, BinaryOp<UMulHigh> __umulHigh, BinaryOp<Div> __div, BinaryOp<Rem> __rem, UnaryOp<Not> __not, BinaryOp<And> __and, BinaryOp<Or> __or, BinaryOp<Xor> __xor, ShiftOp<Shl> __shl, ShiftOp<Shr> __shr, ShiftOp<UShr> __ushr, UnaryOp<Abs> __abs, UnaryOp<Sqrt> __sqrt, IntegerConvertOp<ZeroExtend> __zeroExtend, IntegerConvertOp<SignExtend> __signExtend, IntegerConvertOp<Narrow> __narrow, FloatConvertOp... __floatConvert)
     {
         super();
-        this.neg = neg;
-        this.add = add;
-        this.sub = sub;
-        this.mul = mul;
-        this.mulHigh = mulHigh;
-        this.umulHigh = umulHigh;
-        this.div = div;
-        this.rem = rem;
-        this.not = not;
-        this.and = and;
-        this.or = or;
-        this.xor = xor;
-        this.shl = shl;
-        this.shr = shr;
-        this.ushr = ushr;
-        this.abs = abs;
-        this.sqrt = sqrt;
-        this.zeroExtend = zeroExtend;
-        this.signExtend = signExtend;
-        this.narrow = narrow;
+        this.neg = __neg;
+        this.add = __add;
+        this.sub = __sub;
+        this.mul = __mul;
+        this.mulHigh = __mulHigh;
+        this.umulHigh = __umulHigh;
+        this.div = __div;
+        this.rem = __rem;
+        this.not = __not;
+        this.and = __and;
+        this.or = __or;
+        this.xor = __xor;
+        this.shl = __shl;
+        this.shr = __shr;
+        this.ushr = __ushr;
+        this.abs = __abs;
+        this.sqrt = __sqrt;
+        this.zeroExtend = __zeroExtend;
+        this.signExtend = __signExtend;
+        this.narrow = __narrow;
         this.floatConvert = new FloatConvertOp[FloatConvert.values().length];
-        for (FloatConvertOp op : floatConvert)
+        for (FloatConvertOp __op : __floatConvert)
         {
-            this.floatConvert[op.getFloatConvert().ordinal()] = op;
+            this.floatConvert[__op.getFloatConvert().ordinal()] = __op;
         }
 
-        this.hash = Objects.hash(neg, add, sub, mul, div, rem, not, and, or, xor, shl, shr, ushr, abs, sqrt, zeroExtend, signExtend, narrow);
+        this.hash = Objects.hash(__neg, __add, __sub, __mul, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __sqrt, __zeroExtend, __signExtend, __narrow);
     }
 
     @Override
@@ -381,54 +404,54 @@ public final class ArithmeticOpTable
     /**
      * Describes integer/float/double conversions.
      */
-    public FloatConvertOp getFloatConvert(FloatConvert op)
+    public FloatConvertOp getFloatConvert(FloatConvert __op)
     {
-        return floatConvert[op.ordinal()];
+        return floatConvert[__op.ordinal()];
     }
 
-    private boolean opsEquals(ArithmeticOpTable that)
+    private boolean opsEquals(ArithmeticOpTable __that)
     {
-        return Objects.equals(neg, that.neg) &&
-               Objects.equals(add, that.add) &&
-               Objects.equals(sub, that.sub) &&
-               Objects.equals(mul, that.mul) &&
-               Objects.equals(mulHigh, that.mulHigh) &&
-               Objects.equals(umulHigh, that.umulHigh) &&
-               Objects.equals(div, that.div) &&
-               Objects.equals(rem, that.rem) &&
-               Objects.equals(not, that.not) &&
-               Objects.equals(and, that.and) &&
-               Objects.equals(or, that.or) &&
-               Objects.equals(xor, that.xor) &&
-               Objects.equals(shl, that.shl) &&
-               Objects.equals(shr, that.shr) &&
-               Objects.equals(ushr, that.ushr) &&
-               Objects.equals(abs, that.abs) &&
-               Objects.equals(sqrt, that.sqrt) &&
-               Objects.equals(zeroExtend, that.zeroExtend) &&
-               Objects.equals(signExtend, that.signExtend) &&
-               Objects.equals(narrow, that.narrow);
+        return Objects.equals(neg, __that.neg) &&
+               Objects.equals(add, __that.add) &&
+               Objects.equals(sub, __that.sub) &&
+               Objects.equals(mul, __that.mul) &&
+               Objects.equals(mulHigh, __that.mulHigh) &&
+               Objects.equals(umulHigh, __that.umulHigh) &&
+               Objects.equals(div, __that.div) &&
+               Objects.equals(rem, __that.rem) &&
+               Objects.equals(not, __that.not) &&
+               Objects.equals(and, __that.and) &&
+               Objects.equals(or, __that.or) &&
+               Objects.equals(xor, __that.xor) &&
+               Objects.equals(shl, __that.shl) &&
+               Objects.equals(shr, __that.shr) &&
+               Objects.equals(ushr, __that.ushr) &&
+               Objects.equals(abs, __that.abs) &&
+               Objects.equals(sqrt, __that.sqrt) &&
+               Objects.equals(zeroExtend, __that.zeroExtend) &&
+               Objects.equals(signExtend, __that.signExtend) &&
+               Objects.equals(narrow, __that.narrow);
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj == null)
+        if (__obj == null)
         {
             return false;
         }
-        if (getClass() != obj.getClass())
+        if (getClass() != __obj.getClass())
         {
             return false;
         }
-        ArithmeticOpTable that = (ArithmeticOpTable) obj;
-        if (opsEquals(that))
+        ArithmeticOpTable __that = (ArithmeticOpTable) __obj;
+        if (opsEquals(__that))
         {
-            if (Arrays.equals(this.floatConvert, that.floatConvert))
+            if (Arrays.equals(this.floatConvert, __that.floatConvert))
             {
                 return true;
             }
@@ -439,13 +462,14 @@ public final class ArithmeticOpTable
     // @class ArithmeticOpTable.Op
     public abstract static class Op
     {
+        // @field
         private final String operator;
 
         // @cons
-        protected Op(String operator)
+        protected Op(String __operator)
         {
             super();
-            this.operator = operator;
+            this.operator = __operator;
         }
 
         @Override
@@ -455,22 +479,22 @@ public final class ArithmeticOpTable
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (this == obj)
+            if (this == __obj)
             {
                 return true;
             }
-            if (obj == null)
+            if (__obj == null)
             {
                 return false;
             }
-            if (getClass() != obj.getClass())
+            if (getClass() != __obj.getClass())
             {
                 return false;
             }
-            Op that = (Op) obj;
-            if (operator.equals(that.operator))
+            Op __that = (Op) __obj;
+            if (operator.equals(__that.operator))
             {
                 return true;
             }
@@ -525,9 +549,9 @@ public final class ArithmeticOpTable
         }
 
         // @cons
-        protected UnaryOp(String operation)
+        protected UnaryOp(String __operation)
         {
-            super(operation);
+            super(__operation);
         }
 
         /**
@@ -556,9 +580,9 @@ public final class ArithmeticOpTable
         public abstract static class Add extends BinaryOp<Add>
         {
             // @cons
-            protected Add(boolean associative, boolean commutative)
+            protected Add(boolean __associative, boolean __commutative)
             {
-                super("+", associative, commutative);
+                super("+", __associative, __commutative);
             }
         }
 
@@ -566,9 +590,9 @@ public final class ArithmeticOpTable
         public abstract static class Sub extends BinaryOp<Sub>
         {
             // @cons
-            protected Sub(boolean associative, boolean commutative)
+            protected Sub(boolean __associative, boolean __commutative)
             {
-                super("-", associative, commutative);
+                super("-", __associative, __commutative);
             }
         }
 
@@ -576,9 +600,9 @@ public final class ArithmeticOpTable
         public abstract static class Mul extends BinaryOp<Mul>
         {
             // @cons
-            protected Mul(boolean associative, boolean commutative)
+            protected Mul(boolean __associative, boolean __commutative)
             {
-                super("*", associative, commutative);
+                super("*", __associative, __commutative);
             }
         }
 
@@ -586,9 +610,9 @@ public final class ArithmeticOpTable
         public abstract static class MulHigh extends BinaryOp<MulHigh>
         {
             // @cons
-            protected MulHigh(boolean associative, boolean commutative)
+            protected MulHigh(boolean __associative, boolean __commutative)
             {
-                super("*H", associative, commutative);
+                super("*H", __associative, __commutative);
             }
         }
 
@@ -596,9 +620,9 @@ public final class ArithmeticOpTable
         public abstract static class UMulHigh extends BinaryOp<UMulHigh>
         {
             // @cons
-            protected UMulHigh(boolean associative, boolean commutative)
+            protected UMulHigh(boolean __associative, boolean __commutative)
             {
-                super("|*H|", associative, commutative);
+                super("|*H|", __associative, __commutative);
             }
         }
 
@@ -606,9 +630,9 @@ public final class ArithmeticOpTable
         public abstract static class Div extends BinaryOp<Div>
         {
             // @cons
-            protected Div(boolean associative, boolean commutative)
+            protected Div(boolean __associative, boolean __commutative)
             {
-                super("/", associative, commutative);
+                super("/", __associative, __commutative);
             }
         }
 
@@ -616,9 +640,9 @@ public final class ArithmeticOpTable
         public abstract static class Rem extends BinaryOp<Rem>
         {
             // @cons
-            protected Rem(boolean associative, boolean commutative)
+            protected Rem(boolean __associative, boolean __commutative)
             {
-                super("%", associative, commutative);
+                super("%", __associative, __commutative);
             }
         }
 
@@ -626,9 +650,9 @@ public final class ArithmeticOpTable
         public abstract static class And extends BinaryOp<And>
         {
             // @cons
-            protected And(boolean associative, boolean commutative)
+            protected And(boolean __associative, boolean __commutative)
             {
-                super("&", associative, commutative);
+                super("&", __associative, __commutative);
             }
         }
 
@@ -636,9 +660,9 @@ public final class ArithmeticOpTable
         public abstract static class Or extends BinaryOp<Or>
         {
             // @cons
-            protected Or(boolean associative, boolean commutative)
+            protected Or(boolean __associative, boolean __commutative)
             {
-                super("|", associative, commutative);
+                super("|", __associative, __commutative);
             }
         }
 
@@ -646,21 +670,23 @@ public final class ArithmeticOpTable
         public abstract static class Xor extends BinaryOp<Xor>
         {
             // @cons
-            protected Xor(boolean associative, boolean commutative)
+            protected Xor(boolean __associative, boolean __commutative)
             {
-                super("^", associative, commutative);
+                super("^", __associative, __commutative);
             }
         }
 
+        // @field
         private final boolean associative;
+        // @field
         private final boolean commutative;
 
         // @cons
-        protected BinaryOp(String operation, boolean associative, boolean commutative)
+        protected BinaryOp(String __operation, boolean __associative, boolean __commutative)
         {
-            super(operation);
-            this.associative = associative;
-            this.commutative = commutative;
+            super(__operation);
+            this.associative = __associative;
+            this.commutative = __commutative;
         }
 
         /**
@@ -703,7 +729,7 @@ public final class ArithmeticOpTable
          * @param n the {@link Constant} that should be tested
          * @return true iff for all {@code a}: {@code a . n == a}
          */
-        public boolean isNeutral(Constant n)
+        public boolean isNeutral(Constant __n)
         {
             return false;
         }
@@ -717,7 +743,7 @@ public final class ArithmeticOpTable
          * @return a unique {@code z} such that {@code z == a . a} for each {@code a} in
          *         {@code stamp} if it exists, otherwise {@code null}
          */
-        public Constant getZero(Stamp stamp)
+        public Constant getZero(Stamp __stamp)
         {
             return null;
         }
@@ -730,34 +756,34 @@ public final class ArithmeticOpTable
         @Override
         public int hashCode()
         {
-            final int prime = 31;
-            int result = super.hashCode();
-            result = prime * result + (associative ? 1231 : 1237);
-            result = prime * result + (commutative ? 1231 : 1237);
-            return result;
+            final int __prime = 31;
+            int __result = super.hashCode();
+            __result = __prime * __result + (associative ? 1231 : 1237);
+            __result = __prime * __result + (commutative ? 1231 : 1237);
+            return __result;
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (this == obj)
+            if (this == __obj)
             {
                 return true;
             }
-            if (!super.equals(obj))
+            if (!super.equals(__obj))
             {
                 return false;
             }
-            if (getClass() != obj.getClass())
+            if (getClass() != __obj.getClass())
             {
                 return false;
             }
-            BinaryOp<?> that = (BinaryOp<?>) obj;
-            if (associative != that.associative)
+            BinaryOp<?> __that = (BinaryOp<?>) __obj;
+            if (associative != __that.associative)
             {
                 return false;
             }
-            if (commutative != that.commutative)
+            if (commutative != __that.commutative)
             {
                 return false;
             }
@@ -803,9 +829,9 @@ public final class ArithmeticOpTable
         }
 
         // @cons
-        protected ShiftOp(String operation)
+        protected ShiftOp(String __operation)
         {
-            super(operation);
+            super(__operation);
         }
 
         /**
@@ -827,13 +853,14 @@ public final class ArithmeticOpTable
     // @class ArithmeticOpTable.FloatConvertOp
     public abstract static class FloatConvertOp extends UnaryOp<FloatConvertOp>
     {
+        // @field
         private final FloatConvert op;
 
         // @cons
-        protected FloatConvertOp(FloatConvert op)
+        protected FloatConvertOp(FloatConvert __op)
         {
-            super(op.name());
-            this.op = op;
+            super(__op.name());
+            this.op = __op;
         }
 
         public FloatConvert getFloatConvert()
@@ -850,27 +877,27 @@ public final class ArithmeticOpTable
         @Override
         public int hashCode()
         {
-            final int prime = 31;
-            return prime * super.hashCode() + op.hashCode();
+            final int __prime = 31;
+            return __prime * super.hashCode() + op.hashCode();
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (this == obj)
+            if (this == __obj)
             {
                 return true;
             }
-            if (!super.equals(obj))
+            if (!super.equals(__obj))
             {
                 return false;
             }
-            if (getClass() != obj.getClass())
+            if (getClass() != __obj.getClass())
             {
                 return false;
             }
-            FloatConvertOp that = (FloatConvertOp) obj;
-            if (op != that.op)
+            FloatConvertOp __that = (FloatConvertOp) __obj;
+            if (op != __that.op)
             {
                 return false;
             }
@@ -911,16 +938,16 @@ public final class ArithmeticOpTable
             }
 
             @Override
-            public Stamp invertStamp(int inputBits, int resultBits, Stamp outStamp)
+            public Stamp invertStamp(int __inputBits, int __resultBits, Stamp __outStamp)
             {
                 return null;
             }
         }
 
         // @cons
-        protected IntegerConvertOp(String op)
+        protected IntegerConvertOp(String __op)
         {
-            super(op);
+            super(__op);
         }
 
         public abstract Constant foldConstant(int inputBits, int resultBits, Constant value);

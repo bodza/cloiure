@@ -20,25 +20,28 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class GetObjectAddressNode
 public final class GetObjectAddressNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<GetObjectAddressNode> TYPE = NodeClass.create(GetObjectAddressNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
 
     // @cons
-    public GetObjectAddressNode(ValueNode obj)
+    public GetObjectAddressNode(ValueNode __obj)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Long));
-        this.object = obj;
+        this.object = __obj;
     }
 
     @NodeIntrinsic
     public static native long get(Object array);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        AllocatableValue obj = gen.getLIRGeneratorTool().newVariable(LIRKind.unknownReference(gen.getLIRGeneratorTool().target().arch.getWordKind()));
-        gen.getLIRGeneratorTool().emitMove(obj, gen.operand(object));
-        gen.setResult(this, obj);
+        AllocatableValue __obj = __gen.getLIRGeneratorTool().newVariable(LIRKind.unknownReference(__gen.getLIRGeneratorTool().target().arch.getWordKind()));
+        __gen.getLIRGeneratorTool().emitMove(__obj, __gen.operand(object));
+        __gen.setResult(this, __obj);
     }
 }

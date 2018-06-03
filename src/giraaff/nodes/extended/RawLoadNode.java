@@ -35,21 +35,22 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class RawLoadNode
 public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtualizable, Canonicalizable
 {
+    // @def
     public static final NodeClass<RawLoadNode> TYPE = NodeClass.create(RawLoadNode.class);
 
     /**
      * This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
      */
     // @cons
-    public RawLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity)
+    public RawLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
-        this(object, offset, accessKind, locationIdentity, false);
+        this(__object, __offset, __accessKind, __locationIdentity, false);
     }
 
     // @cons
-    public RawLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, boolean forceAnyLocation)
+    public RawLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __forceAnyLocation)
     {
-        super(TYPE, StampFactory.forKind(accessKind.getStackKind()), object, offset, accessKind, locationIdentity, forceAnyLocation);
+        super(TYPE, StampFactory.forKind(__accessKind.getStackKind()), __object, __offset, __accessKind, __locationIdentity, __forceAnyLocation);
     }
 
     /**
@@ -57,54 +58,54 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
      * {@link giraaff.graph.Node.NodeIntrinsic} annotated method.
      */
     // @cons
-    public RawLoadNode(@InjectedNodeParameter Stamp stamp, ValueNode object, ValueNode offset, LocationIdentity locationIdentity, JavaKind accessKind)
+    public RawLoadNode(@InjectedNodeParameter Stamp __stamp, ValueNode __object, ValueNode __offset, LocationIdentity __locationIdentity, JavaKind __accessKind)
     {
-        super(TYPE, stamp, object, offset, accessKind, locationIdentity, false);
+        super(TYPE, __stamp, __object, __offset, __accessKind, __locationIdentity, false);
     }
 
     // @cons
-    protected RawLoadNode(NodeClass<? extends RawLoadNode> c, ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity)
+    protected RawLoadNode(NodeClass<? extends RawLoadNode> __c, ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
-        super(c, StampFactory.forKind(accessKind.getStackKind()), object, offset, accessKind, locationIdentity, false);
+        super(__c, StampFactory.forKind(__accessKind.getStackKind()), __object, __offset, __accessKind, __locationIdentity, false);
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            ValueNode offsetValue = tool.getAlias(offset());
-            if (offsetValue.isConstant())
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            ValueNode __offsetValue = __tool.getAlias(offset());
+            if (__offsetValue.isConstant())
             {
-                long off = offsetValue.asJavaConstant().asLong();
-                int entryIndex = virtual.entryIndexForOffset(tool.getArrayOffsetProvider(), off, accessKind());
+                long __off = __offsetValue.asJavaConstant().asLong();
+                int __entryIndex = __virtual.entryIndexForOffset(__tool.getArrayOffsetProvider(), __off, accessKind());
 
-                if (entryIndex != -1)
+                if (__entryIndex != -1)
                 {
-                    ValueNode entry = tool.getEntry(virtual, entryIndex);
-                    JavaKind entryKind = virtual.entryKind(entryIndex);
-                    if (entry.getStackKind() == getStackKind() || entryKind == accessKind())
+                    ValueNode __entry = __tool.getEntry(__virtual, __entryIndex);
+                    JavaKind __entryKind = __virtual.entryKind(__entryIndex);
+                    if (__entry.getStackKind() == getStackKind() || __entryKind == accessKind())
                     {
-                        if (!(entry.stamp(NodeView.DEFAULT).isCompatible(stamp(NodeView.DEFAULT))))
+                        if (!(__entry.stamp(NodeView.DEFAULT).isCompatible(stamp(NodeView.DEFAULT))))
                         {
-                            if (entry.stamp(NodeView.DEFAULT) instanceof PrimitiveStamp && stamp instanceof PrimitiveStamp)
+                            if (__entry.stamp(NodeView.DEFAULT) instanceof PrimitiveStamp && stamp instanceof PrimitiveStamp)
                             {
-                                PrimitiveStamp p1 = (PrimitiveStamp) stamp;
-                                PrimitiveStamp p2 = (PrimitiveStamp) entry.stamp(NodeView.DEFAULT);
-                                int width1 = p1.getBits();
-                                int width2 = p2.getBits();
-                                if (width1 == width2)
+                                PrimitiveStamp __p1 = (PrimitiveStamp) stamp;
+                                PrimitiveStamp __p2 = (PrimitiveStamp) __entry.stamp(NodeView.DEFAULT);
+                                int __width1 = __p1.getBits();
+                                int __width2 = __p2.getBits();
+                                if (__width1 == __width2)
                                 {
-                                    Node replacement = ReinterpretNode.create(p2, entry, NodeView.DEFAULT);
-                                    tool.replaceWith((ValueNode) replacement);
+                                    Node __replacement = ReinterpretNode.create(__p2, __entry, NodeView.DEFAULT);
+                                    __tool.replaceWith((ValueNode) __replacement);
                                     return;
                                 }
                                 else
@@ -119,7 +120,7 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
                                 return;
                             }
                         }
-                        tool.replaceWith(entry);
+                        __tool.replaceWith(__entry);
                     }
                 }
             }
@@ -127,49 +128,49 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (!isAnyLocationForced() && getLocationIdentity().isAny())
         {
-            ValueNode targetObject = object();
-            if (offset().isConstant() && targetObject.isConstant() && !targetObject.isNullConstant())
+            ValueNode __targetObject = object();
+            if (offset().isConstant() && __targetObject.isConstant() && !__targetObject.isNullConstant())
             {
-                ConstantNode objectConstant = (ConstantNode) targetObject;
-                ResolvedJavaType type = StampTool.typeOrNull(objectConstant);
-                if (type != null && type.isArray())
+                ConstantNode __objectConstant = (ConstantNode) __targetObject;
+                ResolvedJavaType __type = StampTool.typeOrNull(__objectConstant);
+                if (__type != null && __type.isArray())
                 {
-                    JavaConstant arrayConstant = objectConstant.asJavaConstant();
-                    if (arrayConstant != null)
+                    JavaConstant __arrayConstant = __objectConstant.asJavaConstant();
+                    if (__arrayConstant != null)
                     {
-                        int stableDimension = objectConstant.getStableDimension();
-                        if (stableDimension > 0)
+                        int __stableDimension = __objectConstant.getStableDimension();
+                        if (__stableDimension > 0)
                         {
-                            NodeView view = NodeView.from(tool);
-                            long constantOffset = offset().asJavaConstant().asLong();
-                            Constant constant = stamp(view).readConstant(tool.getConstantReflection().getMemoryAccessProvider(), arrayConstant, constantOffset);
-                            boolean isDefaultStable = objectConstant.isDefaultStable();
-                            if (constant != null && (isDefaultStable || !constant.isDefaultForKind()))
+                            NodeView __view = NodeView.from(__tool);
+                            long __constantOffset = offset().asJavaConstant().asLong();
+                            Constant __constant = stamp(__view).readConstant(__tool.getConstantReflection().getMemoryAccessProvider(), __arrayConstant, __constantOffset);
+                            boolean __isDefaultStable = __objectConstant.isDefaultStable();
+                            if (__constant != null && (__isDefaultStable || !__constant.isDefaultForKind()))
                             {
-                                return ConstantNode.forConstant(stamp(view), constant, stableDimension - 1, isDefaultStable, tool.getMetaAccess());
+                                return ConstantNode.forConstant(stamp(__view), __constant, __stableDimension - 1, __isDefaultStable, __tool.getMetaAccess());
                             }
                         }
                     }
                 }
             }
         }
-        return super.canonical(tool);
+        return super.canonical(__tool);
     }
 
     @Override
-    protected ValueNode cloneAsFieldAccess(Assumptions assumptions, ResolvedJavaField field)
+    protected ValueNode cloneAsFieldAccess(Assumptions __assumptions, ResolvedJavaField __field)
     {
-        return LoadFieldNode.create(assumptions, object(), field);
+        return LoadFieldNode.create(__assumptions, object(), __field);
     }
 
     @Override
-    protected ValueNode cloneAsArrayAccess(ValueNode location, LocationIdentity identity)
+    protected ValueNode cloneAsArrayAccess(ValueNode __location, LocationIdentity __identity)
     {
-        return new RawLoadNode(object(), location, accessKind(), identity);
+        return new RawLoadNode(object(), __location, accessKind(), __identity);
     }
 
     @NodeIntrinsic

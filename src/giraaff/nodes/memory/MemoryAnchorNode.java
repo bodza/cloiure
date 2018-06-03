@@ -14,6 +14,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class MemoryAnchorNode
 public final class MemoryAnchorNode extends FixedWithNextNode implements LIRLowerable, MemoryNode, Canonicalizable
 {
+    // @def
     public static final NodeClass<MemoryAnchorNode> TYPE = NodeClass.create(MemoryAnchorNode.class);
 
     // @cons
@@ -23,15 +24,15 @@ public final class MemoryAnchorNode extends FixedWithNextNode implements LIRLowe
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // Nothing to emit, since this node is used for structural purposes only.
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        return tool.allUsagesAvailable() && hasNoUsages() ? null : this;
+        return __tool.allUsagesAvailable() && hasNoUsages() ? null : this;
     }
 
     @NodeIntrinsic

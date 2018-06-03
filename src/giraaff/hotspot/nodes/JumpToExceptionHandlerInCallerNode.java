@@ -17,25 +17,32 @@ import giraaff.word.Word;
 // @class JumpToExceptionHandlerInCallerNode
 public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<JumpToExceptionHandlerInCallerNode> TYPE = NodeClass.create(JumpToExceptionHandlerInCallerNode.class);
 
-    @Input ValueNode handlerInCallerPc;
-    @Input ValueNode exception;
-    @Input ValueNode exceptionPc;
+    @Input
+    // @field
+    ValueNode handlerInCallerPc;
+    @Input
+    // @field
+    ValueNode exception;
+    @Input
+    // @field
+    ValueNode exceptionPc;
 
     // @cons
-    public JumpToExceptionHandlerInCallerNode(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc)
+    public JumpToExceptionHandlerInCallerNode(ValueNode __handlerInCallerPc, ValueNode __exception, ValueNode __exceptionPc)
     {
         super(TYPE, StampFactory.forVoid());
-        this.handlerInCallerPc = handlerInCallerPc;
-        this.exception = exception;
-        this.exceptionPc = exceptionPc;
+        this.handlerInCallerPc = __handlerInCallerPc;
+        this.exception = __exception;
+        this.exceptionPc = __exceptionPc;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        ((HotSpotNodeLIRBuilder) gen).emitJumpToExceptionHandlerInCaller(handlerInCallerPc, exception, exceptionPc);
+        ((HotSpotNodeLIRBuilder) __gen).emitJumpToExceptionHandlerInCaller(handlerInCallerPc, exception, exceptionPc);
     }
 
     @NodeIntrinsic

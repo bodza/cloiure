@@ -7,11 +7,12 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class G1ArrayRangePreWriteBarrier
 public final class G1ArrayRangePreWriteBarrier extends ArrayRangeWriteBarrier
 {
+    // @def
     public static final NodeClass<G1ArrayRangePreWriteBarrier> TYPE = NodeClass.create(G1ArrayRangePreWriteBarrier.class);
 
     // @cons
-    public G1ArrayRangePreWriteBarrier(AddressNode address, ValueNode length, int elementStride)
+    public G1ArrayRangePreWriteBarrier(AddressNode __address, ValueNode __length, int __elementStride)
     {
-        super(TYPE, address, length, elementStride);
+        super(TYPE, __address, __length, __elementStride);
     }
 }

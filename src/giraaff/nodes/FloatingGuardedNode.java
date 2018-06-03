@@ -10,21 +10,24 @@ import giraaff.nodes.extended.GuardingNode;
 // @class FloatingGuardedNode
 public abstract class FloatingGuardedNode extends FloatingNode implements GuardedNode
 {
+    // @def
     public static final NodeClass<FloatingGuardedNode> TYPE = NodeClass.create(FloatingGuardedNode.class);
 
-    @OptionalInput(InputType.Guard) protected GuardingNode guard;
+    @OptionalInput(InputType.Guard)
+    // @field
+    protected GuardingNode guard;
 
     // @cons
-    protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> c, Stamp stamp)
+    protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     // @cons
-    protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> c, Stamp stamp, GuardingNode guard)
+    protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> __c, Stamp __stamp, GuardingNode __guard)
     {
-        super(c, stamp);
-        this.guard = guard;
+        super(__c, __stamp);
+        this.guard = __guard;
     }
 
     @Override
@@ -34,9 +37,9 @@ public abstract class FloatingGuardedNode extends FloatingNode implements Guarde
     }
 
     @Override
-    public void setGuard(GuardingNode guard)
+    public void setGuard(GuardingNode __guard)
     {
-        updateUsagesInterface(this.guard, guard);
-        this.guard = guard;
+        updateUsagesInterface(this.guard, __guard);
+        this.guard = __guard;
     }
 }

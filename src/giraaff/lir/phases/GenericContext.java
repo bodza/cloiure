@@ -9,6 +9,7 @@ import java.util.ListIterator;
 // @class GenericContext
 public class GenericContext
 {
+    // @field
     private ArrayList<Object> context;
 
     // @cons
@@ -18,25 +19,25 @@ public class GenericContext
         context = null;
     }
 
-    public <T> void contextAdd(T obj)
+    public <T> void contextAdd(T __obj)
     {
         if (context == null)
         {
             context = new ArrayList<>();
         }
-        context.add(obj);
+        context.add(__obj);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T contextLookup(Class<T> clazz)
+    public <T> T contextLookup(Class<T> __clazz)
     {
         if (context != null)
         {
-            for (Object e : context)
+            for (Object __e : context)
             {
-                if (clazz.isInstance(e))
+                if (__clazz.isInstance(__e))
                 {
-                    return (T) e;
+                    return (T) __e;
                 }
             }
         }
@@ -44,23 +45,23 @@ public class GenericContext
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T contextRemove(Class<T> clazz)
+    public <T> T contextRemove(Class<T> __clazz)
     {
         if (context != null)
         {
-            ListIterator<Object> it = context.listIterator();
-            while (it.hasNext())
+            ListIterator<Object> __it = context.listIterator();
+            while (__it.hasNext())
             {
-                Object e = it.next();
-                if (clazz.isInstance(e))
+                Object __e = __it.next();
+                if (__clazz.isInstance(__e))
                 {
                     // remove entry
-                    it.remove();
+                    __it.remove();
                     if (context.isEmpty())
                     {
                         context = null;
                     }
-                    return (T) e;
+                    return (T) __e;
                 }
             }
         }

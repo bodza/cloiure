@@ -8,13 +8,14 @@ import org.graalvm.word.LocationIdentity;
 // @class FieldLocationIdentity
 public final class FieldLocationIdentity extends LocationIdentity implements FormatWithToString
 {
+    // @field
     private final ResolvedJavaField inner;
 
     // @cons
-    public FieldLocationIdentity(ResolvedJavaField inner)
+    public FieldLocationIdentity(ResolvedJavaField __inner)
     {
         super();
-        this.inner = inner;
+        this.inner = __inner;
     }
 
     @Override
@@ -24,16 +25,16 @@ public final class FieldLocationIdentity extends LocationIdentity implements For
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj instanceof FieldLocationIdentity)
+        if (__obj instanceof FieldLocationIdentity)
         {
-            FieldLocationIdentity fieldLocationIdentity = (FieldLocationIdentity) obj;
-            return inner.equals(fieldLocationIdentity.inner);
+            FieldLocationIdentity __fieldLocationIdentity = (FieldLocationIdentity) __obj;
+            return inner.equals(__fieldLocationIdentity.inner);
         }
         return false;
     }

@@ -24,78 +24,80 @@ import giraaff.util.GraalError;
 // @class AMD64RoundNode
 public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<AMD64RoundNode> TYPE = NodeClass.create(AMD64RoundNode.class);
 
+    // @field
     private final RoundingMode mode;
 
     // @cons
-    public AMD64RoundNode(ValueNode value, RoundingMode mode)
+    public AMD64RoundNode(ValueNode __value, RoundingMode __mode)
     {
-        super(TYPE, roundStamp((FloatStamp) value.stamp(NodeView.DEFAULT), mode), value);
-        this.mode = mode;
+        super(TYPE, roundStamp((FloatStamp) __value.stamp(NodeView.DEFAULT), __mode), __value);
+        this.mode = __mode;
     }
 
-    private static double round(RoundingMode mode, double input)
+    private static double round(RoundingMode __mode, double __input)
     {
-        switch (mode)
+        switch (__mode)
         {
             case DOWN:
-                return Math.floor(input);
+                return Math.floor(__input);
             case NEAREST:
-                return Math.rint(input);
+                return Math.rint(__input);
             case UP:
-                return Math.ceil(input);
+                return Math.ceil(__input);
             case TRUNCATE:
-                return (long) input;
+                return (long) __input;
             default:
-                throw GraalError.unimplemented("unimplemented RoundingMode " + mode);
+                throw GraalError.unimplemented("unimplemented RoundingMode " + __mode);
         }
     }
 
-    private static FloatStamp roundStamp(FloatStamp stamp, RoundingMode mode)
+    private static FloatStamp roundStamp(FloatStamp __stamp, RoundingMode __mode)
     {
-        double min = stamp.lowerBound();
-        min = Math.min(min, round(mode, min));
+        double __min = __stamp.lowerBound();
+        __min = Math.min(__min, round(__mode, __min));
 
-        double max = stamp.upperBound();
-        max = Math.max(max, round(mode, max));
+        double __max = __stamp.upperBound();
+        __max = Math.max(__max, round(__mode, __max));
 
-        return new FloatStamp(stamp.getBits(), min, max, stamp.isNonNaN());
+        return new FloatStamp(__stamp.getBits(), __min, __max, __stamp.isNonNaN());
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        return roundStamp((FloatStamp) newStamp, mode);
+        return roundStamp((FloatStamp) __newStamp, mode);
     }
 
-    public ValueNode tryFold(ValueNode input)
+    public ValueNode tryFold(ValueNode __input)
     {
-        if (input.isConstant())
+        if (__input.isConstant())
         {
-            JavaConstant c = input.asJavaConstant();
-            if (c.getJavaKind() == JavaKind.Double)
+            JavaConstant __c = __input.asJavaConstant();
+            if (__c.getJavaKind() == JavaKind.Double)
             {
-                return ConstantNode.forDouble(round(mode, c.asDouble()));
+                return ConstantNode.forDouble(round(mode, __c.asDouble()));
             }
-            else if (c.getJavaKind() == JavaKind.Float)
+            else if (__c.getJavaKind() == JavaKind.Float)
             {
-                return ConstantNode.forFloat((float) round(mode, c.asFloat()));
+                return ConstantNode.forFloat((float) round(mode, __c.asFloat()));
             }
         }
         return null;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode folded = tryFold(forValue);
-        return folded != null ? folded : this;
+        ValueNode __folded = tryFold(__forValue);
+        return __folded != null ? __folded : this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) gen).emitRound(builder.operand(getValue()), mode));
+        __builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) __gen).emitRound(__builder.operand(getValue()), mode));
     }
 }

@@ -7,13 +7,14 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 // @class ClassTypeSequence
 final class ClassTypeSequence implements JavaType, CharSequence
 {
+    // @field
     private final Class<?> clazz;
 
     // @cons
-    ClassTypeSequence(Class<?> clazz)
+    ClassTypeSequence(Class<?> __clazz)
     {
         super();
-        this.clazz = clazz;
+        this.clazz = __clazz;
     }
 
     @Override
@@ -29,16 +30,16 @@ final class ClassTypeSequence implements JavaType, CharSequence
     }
 
     @Override
-    public String toJavaName(boolean qualified)
+    public String toJavaName(boolean __qualified)
     {
-        if (qualified)
+        if (__qualified)
         {
             return clazz.getName();
         }
         else
         {
-            int lastDot = clazz.getName().lastIndexOf('.');
-            return clazz.getName().substring(lastDot + 1);
+            int __lastDot = clazz.getName().lastIndexOf('.');
+            return clazz.getName().substring(__lastDot + 1);
         }
     }
 
@@ -61,7 +62,7 @@ final class ClassTypeSequence implements JavaType, CharSequence
     }
 
     @Override
-    public ResolvedJavaType resolve(ResolvedJavaType accessingClass)
+    public ResolvedJavaType resolve(ResolvedJavaType __accessingClass)
     {
         throw new UnsupportedOperationException();
     }
@@ -73,14 +74,14 @@ final class ClassTypeSequence implements JavaType, CharSequence
     }
 
     @Override
-    public char charAt(int index)
+    public char charAt(int __index)
     {
-        return clazz.getName().charAt(index);
+        return clazz.getName().charAt(__index);
     }
 
     @Override
-    public CharSequence subSequence(int start, int end)
+    public CharSequence subSequence(int __start, int __end)
     {
-        return clazz.getName().subSequence(start, end);
+        return clazz.getName().subSequence(__start, __end);
     }
 }

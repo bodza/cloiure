@@ -22,9 +22,9 @@ import giraaff.word.Word;
 // @class StubUtil
 public final class StubUtil
 {
-    public static ForeignCallDescriptor newDescriptor(Class<?> stubClass, String name, Class<?> resultType, Class<?>... argumentTypes)
+    public static ForeignCallDescriptor newDescriptor(Class<?> __stubClass, String __name, Class<?> __resultType, Class<?>... __argumentTypes)
     {
-        return new ForeignCallDescriptor(name, resultType, argumentTypes);
+        return new ForeignCallDescriptor(__name, __resultType, __argumentTypes);
     }
 
     /**
@@ -32,31 +32,31 @@ public final class StubUtil
      * {@code stubClass} and returns a {@link ForeignCallDescriptor} based on its signature and the
      * value of {@code hasSideEffect}.
      */
-    private static ForeignCallDescriptor descriptorFor(Class<?> stubClass, String name)
+    private static ForeignCallDescriptor descriptorFor(Class<?> __stubClass, String __name)
     {
-        Method found = null;
-        for (Method method : stubClass.getDeclaredMethods())
+        Method __found = null;
+        for (Method __method : __stubClass.getDeclaredMethods())
         {
-            if (Modifier.isStatic(method.getModifiers()) && method.getAnnotation(NodeIntrinsic.class) != null && method.getName().equals(name))
+            if (Modifier.isStatic(__method.getModifiers()) && __method.getAnnotation(NodeIntrinsic.class) != null && __method.getName().equals(__name))
             {
-                if (method.getAnnotation(NodeIntrinsic.class).value().equals(StubForeignCallNode.class))
+                if (__method.getAnnotation(NodeIntrinsic.class).value().equals(StubForeignCallNode.class))
                 {
-                    found = method;
+                    __found = __method;
                 }
             }
         }
-        List<Class<?>> paramList = Arrays.asList(found.getParameterTypes());
-        Class<?>[] cCallTypes = paramList.subList(1, paramList.size()).toArray(new Class<?>[paramList.size() - 1]);
-        return new ForeignCallDescriptor(name, found.getReturnType(), cCallTypes);
+        List<Class<?>> __paramList = Arrays.asList(__found.getParameterTypes());
+        Class<?>[] __cCallTypes = __paramList.subList(1, __paramList.size()).toArray(new Class<?>[__paramList.size() - 1]);
+        return new ForeignCallDescriptor(__name, __found.getReturnType(), __cCallTypes);
     }
 
-    public static void handlePendingException(Word thread, boolean isObjectResult)
+    public static void handlePendingException(Word __thread, boolean __isObjectResult)
     {
-        if (HotSpotReplacementsUtil.clearPendingException(thread) != null)
+        if (HotSpotReplacementsUtil.clearPendingException(__thread) != null)
         {
-            if (isObjectResult)
+            if (__isObjectResult)
             {
-                HotSpotReplacementsUtil.getAndClearObjectResult(thread);
+                HotSpotReplacementsUtil.getAndClearObjectResult(__thread);
             }
             DeoptimizeCallerNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }

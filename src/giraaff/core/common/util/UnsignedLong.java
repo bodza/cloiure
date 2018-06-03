@@ -3,13 +3,14 @@ package giraaff.core.common.util;
 // @class UnsignedLong
 public final class UnsignedLong
 {
+    // @field
     private final long value;
 
     // @cons
-    public UnsignedLong(long value)
+    public UnsignedLong(long __value)
     {
         super();
-        this.value = value;
+        this.value = __value;
     }
 
     public long asLong()
@@ -17,71 +18,71 @@ public final class UnsignedLong
         return value;
     }
 
-    public boolean equals(long unsignedValue)
+    public boolean equals(long __unsignedValue)
     {
-        return value == unsignedValue;
+        return value == __unsignedValue;
     }
 
-    public boolean isLessThan(long unsignedValue)
+    public boolean isLessThan(long __unsignedValue)
     {
-        return Long.compareUnsigned(value, unsignedValue) < 0;
+        return Long.compareUnsigned(value, __unsignedValue) < 0;
     }
 
-    public boolean isLessOrEqualTo(long unsignedValue)
+    public boolean isLessOrEqualTo(long __unsignedValue)
     {
-        return Long.compareUnsigned(value, unsignedValue) <= 0;
+        return Long.compareUnsigned(value, __unsignedValue) <= 0;
     }
 
-    public UnsignedLong times(long unsignedValue)
+    public UnsignedLong times(long __unsignedValue)
     {
-        if (unsignedValue != 0 && Long.compareUnsigned(value, Long.divideUnsigned(0xffff_ffff_ffff_ffffL, unsignedValue)) > 0)
+        if (__unsignedValue != 0 && Long.compareUnsigned(value, Long.divideUnsigned(0xffff_ffff_ffff_ffffL, __unsignedValue)) > 0)
         {
             throw new ArithmeticException();
         }
-        return new UnsignedLong(value * unsignedValue);
+        return new UnsignedLong(value * __unsignedValue);
     }
 
-    public UnsignedLong minus(long unsignedValue)
+    public UnsignedLong minus(long __unsignedValue)
     {
-        if (Long.compareUnsigned(value, unsignedValue) < 0)
+        if (Long.compareUnsigned(value, __unsignedValue) < 0)
         {
             throw new ArithmeticException();
         }
-        return new UnsignedLong(value - unsignedValue);
+        return new UnsignedLong(value - __unsignedValue);
     }
 
-    public UnsignedLong plus(long unsignedValue)
+    public UnsignedLong plus(long __unsignedValue)
     {
-        if (Long.compareUnsigned(0xffff_ffff_ffff_ffffL - unsignedValue, value) < 0)
+        if (Long.compareUnsigned(0xffff_ffff_ffff_ffffL - __unsignedValue, value) < 0)
         {
             throw new ArithmeticException();
         }
-        return new UnsignedLong(value + unsignedValue);
+        return new UnsignedLong(value + __unsignedValue);
     }
 
-    public UnsignedLong wrappingPlus(long unsignedValue)
+    public UnsignedLong wrappingPlus(long __unsignedValue)
     {
-        return new UnsignedLong(value + unsignedValue);
+        return new UnsignedLong(value + __unsignedValue);
     }
 
-    public UnsignedLong wrappingTimes(long unsignedValue)
+    public UnsignedLong wrappingTimes(long __unsignedValue)
     {
-        return new UnsignedLong(value * unsignedValue);
+        return new UnsignedLong(value * __unsignedValue);
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(Object __o)
     {
-        if (this == o)
+        if (this == __o)
         {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
+        if (__o == null || getClass() != __o.getClass())
         {
             return false;
         }
-        UnsignedLong that = (UnsignedLong) o;
-        return value == that.value;
+        UnsignedLong __that = (UnsignedLong) __o;
+        return value == __that.value;
     }
 
     @Override

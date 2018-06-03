@@ -47,26 +47,31 @@ public final class LIRKind extends ValueKind<LIRKind>
      * The location of object references in the value. If the value is a vector type, each bit
      * represents one component of the vector.
      */
+    // @field
     private final int referenceMask;
 
     /**
      * Mask with 1-bits indicating which references in {@link #referenceMask} are compressed.
      */
+    // @field
     private final int referenceCompressionMask;
 
+    // @field
     private AllocatableValue derivedReferenceBase;
 
+    // @def
     private static final int UNKNOWN_REFERENCE = -1;
 
+    // @def
     public static final LIRKind Illegal = unknownReference(ValueKind.Illegal.getPlatformKind());
 
     // @cons
-    private LIRKind(PlatformKind platformKind, int referenceMask, int referenceCompressionMask, AllocatableValue derivedReferenceBase)
+    private LIRKind(PlatformKind __platformKind, int __referenceMask, int __referenceCompressionMask, AllocatableValue __derivedReferenceBase)
     {
-        super(platformKind);
-        this.referenceMask = referenceMask;
-        this.referenceCompressionMask = referenceCompressionMask;
-        this.derivedReferenceBase = derivedReferenceBase;
+        super(__platformKind);
+        this.referenceMask = __referenceMask;
+        this.referenceCompressionMask = __referenceCompressionMask;
+        this.derivedReferenceBase = __derivedReferenceBase;
     }
 
     /**
@@ -74,54 +79,54 @@ public final class LIRKind extends ValueKind<LIRKind>
      * be only used when it's guaranteed that the value is not even indirectly derived from a
      * reference. Otherwise, {@link #combine(Value...)} should be used instead.
      */
-    public static LIRKind value(PlatformKind platformKind)
+    public static LIRKind value(PlatformKind __platformKind)
     {
-        return new LIRKind(platformKind, 0, 0, null);
+        return new LIRKind(__platformKind, 0, 0, null);
     }
 
     /**
      * Create a {@link LIRKind} of type {@code platformKind} that contains a single, tracked,
      * uncompressed oop reference.
      */
-    public static LIRKind reference(PlatformKind platformKind)
+    public static LIRKind reference(PlatformKind __platformKind)
     {
-        return derivedReference(platformKind, null, false);
+        return derivedReference(__platformKind, null, false);
     }
 
     /**
      * Create a {@link LIRKind} of type {@code platformKind} that contains a single, tracked,
      * compressed oop reference.
      */
-    public static LIRKind compressedReference(PlatformKind platformKind)
+    public static LIRKind compressedReference(PlatformKind __platformKind)
     {
-        return derivedReference(platformKind, null, true);
+        return derivedReference(__platformKind, null, true);
     }
 
     /**
      * Create the correct {@link LIRKind} for a given {@link Architecture} and {@link JavaKind}.
      */
-    public static LIRKind fromJavaKind(Architecture arch, JavaKind javaKind)
+    public static LIRKind fromJavaKind(Architecture __arch, JavaKind __javaKind)
     {
-        PlatformKind platformKind = arch.getPlatformKind(javaKind);
-        if (javaKind.isObject())
+        PlatformKind __platformKind = __arch.getPlatformKind(__javaKind);
+        if (__javaKind.isObject())
         {
-            return LIRKind.reference(platformKind);
+            return LIRKind.reference(__platformKind);
         }
         else
         {
-            return LIRKind.value(platformKind);
+            return LIRKind.value(__platformKind);
         }
     }
 
     /**
      * Create a {@link LIRKind} of type {@code platformKind} that contains a derived reference.
      */
-    public static LIRKind derivedReference(PlatformKind platformKind, AllocatableValue base, boolean compressed)
+    public static LIRKind derivedReference(PlatformKind __platformKind, AllocatableValue __base, boolean __compressed)
     {
-        int length = platformKind.getVectorLength();
-        int referenceMask = (1 << length) - 1;
-        int referenceCompressionMask = (compressed ? referenceMask : 0);
-        return new LIRKind(platformKind, referenceMask, referenceCompressionMask, base);
+        int __length = __platformKind.getVectorLength();
+        int __referenceMask = (1 << __length) - 1;
+        int __referenceCompressionMask = (__compressed ? __referenceMask : 0);
+        return new LIRKind(__platformKind, __referenceMask, __referenceCompressionMask, __base);
     }
 
     /**
@@ -130,9 +135,9 @@ public final class LIRKind extends ValueKind<LIRKind>
      * safepoints. In most cases, this should not be called directly. {@link #combine} should be
      * used instead to automatically propagate this information.
      */
-    public static LIRKind unknownReference(PlatformKind platformKind)
+    public static LIRKind unknownReference(PlatformKind __platformKind)
     {
-        return new LIRKind(platformKind, UNKNOWN_REFERENCE, UNKNOWN_REFERENCE, null);
+        return new LIRKind(__platformKind, UNKNOWN_REFERENCE, UNKNOWN_REFERENCE, null);
     }
 
     /**
@@ -140,9 +145,9 @@ public final class LIRKind extends ValueKind<LIRKind>
      *
      * @param base An {@link AllocatableValue} containing the base pointer of the derived reference.
      */
-    public LIRKind makeDerivedReference(AllocatableValue base)
+    public LIRKind makeDerivedReference(AllocatableValue __base)
     {
-        if (Value.ILLEGAL.equals(base))
+        if (Value.ILLEGAL.equals(__base))
         {
             return makeUnknownReference();
         }
@@ -150,11 +155,11 @@ public final class LIRKind extends ValueKind<LIRKind>
         {
             if (isValue())
             {
-                return derivedReference(getPlatformKind(), base, false);
+                return derivedReference(getPlatformKind(), __base, false);
             }
             else
             {
-                return new LIRKind(getPlatformKind(), referenceMask, referenceCompressionMask, base);
+                return new LIRKind(getPlatformKind(), referenceMask, referenceCompressionMask, __base);
             }
         }
     }
@@ -166,23 +171,23 @@ public final class LIRKind extends ValueKind<LIRKind>
      * This method should be used to construct the result {@link LIRKind} of any operation that
      * modifies values (e.g. arithmetics).
      */
-    public static LIRKind combine(Value... inputs)
+    public static LIRKind combine(Value... __inputs)
     {
-        for (Value input : inputs)
+        for (Value __input : __inputs)
         {
-            LIRKind kind = input.getValueKind(LIRKind.class);
-            if (kind.isUnknownReference())
+            LIRKind __kind = __input.getValueKind(LIRKind.class);
+            if (__kind.isUnknownReference())
             {
-                return kind;
+                return __kind;
             }
-            else if (!kind.isValue())
+            else if (!__kind.isValue())
             {
-                return kind.makeUnknownReference();
+                return __kind.makeUnknownReference();
             }
         }
 
         // all inputs are values, just return one of them
-        return inputs[0].getValueKind(LIRKind.class);
+        return __inputs[0].getValueKind(LIRKind.class);
     }
 
     /**
@@ -190,28 +195,28 @@ public final class LIRKind extends ValueKind<LIRKind>
      * derived reference. For values it returns {@code null}, and for unknown references it returns
      * {@link Value#ILLEGAL}.
      */
-    public static AllocatableValue derivedBaseFromValue(AllocatableValue value)
+    public static AllocatableValue derivedBaseFromValue(AllocatableValue __value)
     {
-        ValueKind<?> valueKind = value.getValueKind();
-        if (valueKind instanceof LIRKind)
+        ValueKind<?> __valueKind = __value.getValueKind();
+        if (__valueKind instanceof LIRKind)
         {
-            LIRKind kind = value.getValueKind(LIRKind.class);
-            if (kind.isValue())
+            LIRKind __kind = __value.getValueKind(LIRKind.class);
+            if (__kind.isValue())
             {
                 return null;
             }
-            else if (kind.isDerivedReference())
+            else if (__kind.isDerivedReference())
             {
-                return kind.getDerivedReferenceBase();
+                return __kind.getDerivedReferenceBase();
             }
-            else if (kind.isUnknownReference())
+            else if (__kind.isUnknownReference())
             {
                 return Value.ILLEGAL;
             }
             else
             {
                 // kind is a reference
-                return value;
+                return __value;
             }
         }
         else
@@ -225,23 +230,23 @@ public final class LIRKind extends ValueKind<LIRKind>
      * are set, it creates a derived reference using it as the base. If both are set, the result is
      * an unknown reference.
      */
-    public static LIRKind combineDerived(LIRKind kind, AllocatableValue base1, AllocatableValue base2)
+    public static LIRKind combineDerived(LIRKind __kind, AllocatableValue __base1, AllocatableValue __base2)
     {
-        if (base1 == null && base2 == null)
+        if (__base1 == null && __base2 == null)
         {
-            return kind;
+            return __kind;
         }
-        else if (base1 == null)
+        else if (__base1 == null)
         {
-            return kind.makeDerivedReference(base2);
+            return __kind.makeDerivedReference(__base2);
         }
-        else if (base2 == null)
+        else if (__base2 == null)
         {
-            return kind.makeDerivedReference(base1);
+            return __kind.makeDerivedReference(__base1);
         }
         else
         {
-            return kind.makeUnknownReference();
+            return __kind.makeUnknownReference();
         }
     }
 
@@ -252,49 +257,49 @@ public final class LIRKind extends ValueKind<LIRKind>
      *
      * The correctness of the {@link PlatformKind} is not verified.
      */
-    public static LIRKind mergeReferenceInformation(LIRKind mergeKind, LIRKind inputKind)
+    public static LIRKind mergeReferenceInformation(LIRKind __mergeKind, LIRKind __inputKind)
     {
-        if (mergeKind.isUnknownReference())
+        if (__mergeKind.isUnknownReference())
         {
             // mergeKind is an unknown reference: the result should be also an unknown reference
-            return mergeKind;
+            return __mergeKind;
         }
 
-        if (mergeKind.isValue())
+        if (__mergeKind.isValue())
         {
             // mergeKind is a value
-            if (!inputKind.isValue())
+            if (!__inputKind.isValue())
             {
                 // inputs consists of values and references: make the result an unknown reference
-                return mergeKind.makeUnknownReference();
+                return __mergeKind.makeUnknownReference();
             }
-            return mergeKind;
+            return __mergeKind;
         }
         // mergeKind is a reference
-        if (mergeKind.referenceMask != inputKind.referenceMask || mergeKind.referenceCompressionMask != inputKind.referenceCompressionMask)
+        if (__mergeKind.referenceMask != __inputKind.referenceMask || __mergeKind.referenceCompressionMask != __inputKind.referenceCompressionMask)
         {
             // reference masks do not match: the result can only be an unknown reference
-            return mergeKind.makeUnknownReference();
+            return __mergeKind.makeUnknownReference();
         }
 
         // both are references
-        if (mergeKind.isDerivedReference())
+        if (__mergeKind.isDerivedReference())
         {
-            if (inputKind.isDerivedReference() && mergeKind.getDerivedReferenceBase().equals(inputKind.getDerivedReferenceBase()))
+            if (__inputKind.isDerivedReference() && __mergeKind.getDerivedReferenceBase().equals(__inputKind.getDerivedReferenceBase()))
             {
                 // same reference base: they must be equal
-                return mergeKind;
+                return __mergeKind;
             }
             // base pointers differ: make the result an unknown reference
-            return mergeKind.makeUnknownReference();
+            return __mergeKind.makeUnknownReference();
         }
-        if (inputKind.isDerivedReference())
+        if (__inputKind.isDerivedReference())
         {
             // mergeKind is not derived, but inputKind is: make the result an unknown reference
-            return mergeKind.makeUnknownReference();
+            return __mergeKind.makeUnknownReference();
         }
         // both are not derived references: they must be equal
-        return mergeKind;
+        return __mergeKind;
     }
 
     /**
@@ -303,29 +308,29 @@ public final class LIRKind extends ValueKind<LIRKind>
      * the new elements are marked as untracked values.
      */
     @Override
-    public LIRKind changeType(PlatformKind newPlatformKind)
+    public LIRKind changeType(PlatformKind __newPlatformKind)
     {
-        if (newPlatformKind == getPlatformKind())
+        if (__newPlatformKind == getPlatformKind())
         {
             return this;
         }
         else if (isUnknownReference())
         {
-            return unknownReference(newPlatformKind);
+            return unknownReference(__newPlatformKind);
         }
         else if (referenceMask == 0)
         {
             // value type
-            return LIRKind.value(newPlatformKind);
+            return LIRKind.value(__newPlatformKind);
         }
         else
         {
             // reference type
-            int newLength = Math.min(32, newPlatformKind.getVectorLength());
-            int lengthMask = 0xFFFFFFFF >>> (32 - newLength);
-            int newReferenceMask = referenceMask & lengthMask;
-            int newReferenceCompressionMask = referenceCompressionMask & lengthMask;
-            return new LIRKind(newPlatformKind, newReferenceMask, newReferenceCompressionMask, derivedReferenceBase);
+            int __newLength = Math.min(32, __newPlatformKind.getVectorLength());
+            int __lengthMask = 0xFFFFFFFF >>> (32 - __newLength);
+            int __newReferenceMask = referenceMask & __lengthMask;
+            int __newReferenceCompressionMask = referenceCompressionMask & __lengthMask;
+            return new LIRKind(__newPlatformKind, __newReferenceMask, __newReferenceCompressionMask, derivedReferenceBase);
         }
     }
 
@@ -333,33 +338,33 @@ public final class LIRKind extends ValueKind<LIRKind>
      * Create a new {@link LIRKind} with a new {@linkplain #getPlatformKind platform kind}. If the
      * new kind is longer than this, the reference positions are repeated to fill the vector.
      */
-    public LIRKind repeat(PlatformKind newPlatformKind)
+    public LIRKind repeat(PlatformKind __newPlatformKind)
     {
         if (isUnknownReference())
         {
-            return unknownReference(newPlatformKind);
+            return unknownReference(__newPlatformKind);
         }
         else if (referenceMask == 0)
         {
             // value type
-            return LIRKind.value(newPlatformKind);
+            return LIRKind.value(__newPlatformKind);
         }
         else
         {
             // reference type
-            int oldLength = getPlatformKind().getVectorLength();
-            int newLength = newPlatformKind.getVectorLength();
+            int __oldLength = getPlatformKind().getVectorLength();
+            int __newLength = __newPlatformKind.getVectorLength();
 
             // repeat reference mask to fill new kind
-            int newReferenceMask = 0;
-            int newReferenceCompressionMask = 0;
-            for (int i = 0; i < newLength; i += getPlatformKind().getVectorLength())
+            int __newReferenceMask = 0;
+            int __newReferenceCompressionMask = 0;
+            for (int __i = 0; __i < __newLength; __i += getPlatformKind().getVectorLength())
             {
-                newReferenceMask |= referenceMask << i;
-                newReferenceCompressionMask |= referenceCompressionMask << i;
+                __newReferenceMask |= referenceMask << __i;
+                __newReferenceCompressionMask |= referenceCompressionMask << __i;
             }
 
-            return new LIRKind(newPlatformKind, newReferenceMask, newReferenceCompressionMask, derivedReferenceBase);
+            return new LIRKind(__newPlatformKind, __newReferenceMask, __newReferenceCompressionMask, derivedReferenceBase);
         }
     }
 
@@ -391,9 +396,9 @@ public final class LIRKind extends ValueKind<LIRKind>
     /**
      * Change the base value of a derived reference. This must be called on derived references only.
      */
-    public void setDerivedReferenceBase(AllocatableValue derivedReferenceBase)
+    public void setDerivedReferenceBase(AllocatableValue __derivedReferenceBase)
     {
-        this.derivedReferenceBase = derivedReferenceBase;
+        this.derivedReferenceBase = __derivedReferenceBase;
     }
 
     /**
@@ -405,11 +410,11 @@ public final class LIRKind extends ValueKind<LIRKind>
         return referenceMask == UNKNOWN_REFERENCE;
     }
 
-    public static boolean isUnknownReference(ValueKind<?> kind)
+    public static boolean isUnknownReference(ValueKind<?> __kind)
     {
-        if (kind instanceof LIRKind)
+        if (__kind instanceof LIRKind)
         {
-            return ((LIRKind) kind).isUnknownReference();
+            return ((LIRKind) __kind).isUnknownReference();
         }
         else
         {
@@ -417,9 +422,9 @@ public final class LIRKind extends ValueKind<LIRKind>
         }
     }
 
-    public static boolean isUnknownReference(Value value)
+    public static boolean isUnknownReference(Value __value)
     {
-        return isUnknownReference(value.getValueKind());
+        return isUnknownReference(__value.getValueKind());
     }
 
     public int getReferenceCount()
@@ -432,9 +437,9 @@ public final class LIRKind extends ValueKind<LIRKind>
      *
      * @param idx The index into the vector if this is a vector kind. Must be 0 if this is a scalar kind.
      */
-    public boolean isReference(int idx)
+    public boolean isReference(int __idx)
     {
-        return !isUnknownReference() && (referenceMask & 1 << idx) != 0;
+        return !isUnknownReference() && (referenceMask & 1 << __idx) != 0;
     }
 
     /**
@@ -442,9 +447,9 @@ public final class LIRKind extends ValueKind<LIRKind>
      *
      * @param idx The index into the vector if this is a vector kind. Must be 0 if this is a scalar kind.
      */
-    public boolean isCompressedReference(int idx)
+    public boolean isCompressedReference(int __idx)
     {
-        return !isUnknownReference() && (referenceCompressionMask & (1 << idx)) != 0;
+        return !isUnknownReference() && (referenceCompressionMask & (1 << __idx)) != 0;
     }
 
     /**
@@ -455,11 +460,11 @@ public final class LIRKind extends ValueKind<LIRKind>
         return referenceMask == 0;
     }
 
-    public static boolean isValue(ValueKind<?> kind)
+    public static boolean isValue(ValueKind<?> __kind)
     {
-        if (kind instanceof LIRKind)
+        if (__kind instanceof LIRKind)
         {
-            return ((LIRKind) kind).isValue();
+            return ((LIRKind) __kind).isValue();
         }
         else
         {
@@ -467,72 +472,72 @@ public final class LIRKind extends ValueKind<LIRKind>
         }
     }
 
-    public static boolean isValue(Value value)
+    public static boolean isValue(Value __value)
     {
-        return isValue(value.getValueKind());
+        return isValue(__value.getValueKind());
     }
 
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getPlatformKind() == null) ? 0 : getPlatformKind().hashCode());
-        result = prime * result + ((getDerivedReferenceBase() == null) ? 0 : getDerivedReferenceBase().hashCode());
-        result = prime * result + referenceMask;
-        result = prime * result + referenceCompressionMask;
-        return result;
+        final int __prime = 31;
+        int __result = 1;
+        __result = __prime * __result + ((getPlatformKind() == null) ? 0 : getPlatformKind().hashCode());
+        __result = __prime * __result + ((getDerivedReferenceBase() == null) ? 0 : getDerivedReferenceBase().hashCode());
+        __result = __prime * __result + referenceMask;
+        __result = __prime * __result + referenceCompressionMask;
+        return __result;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (!(obj instanceof LIRKind))
+        if (!(__obj instanceof LIRKind))
         {
             return false;
         }
 
-        LIRKind other = (LIRKind) obj;
-        if (getPlatformKind() != other.getPlatformKind() || referenceMask != other.referenceMask || referenceCompressionMask != other.referenceCompressionMask)
+        LIRKind __other = (LIRKind) __obj;
+        if (getPlatformKind() != __other.getPlatformKind() || referenceMask != __other.referenceMask || referenceCompressionMask != __other.referenceCompressionMask)
         {
             return false;
         }
         if (isDerivedReference())
         {
-            if (!other.isDerivedReference())
+            if (!__other.isDerivedReference())
             {
                 return false;
             }
-            return getDerivedReferenceBase().equals(other.getDerivedReferenceBase());
+            return getDerivedReferenceBase().equals(__other.getDerivedReferenceBase());
         }
         // 'this' is not a derived reference
-        if (other.isDerivedReference())
+        if (__other.isDerivedReference())
         {
             return false;
         }
         return true;
     }
 
-    public static boolean verifyMoveKinds(ValueKind<?> dst, ValueKind<?> src, RegisterAllocationConfig config)
+    public static boolean verifyMoveKinds(ValueKind<?> __dst, ValueKind<?> __src, RegisterAllocationConfig __config)
     {
-        if (src.equals(dst))
+        if (__src.equals(__dst))
         {
             return true;
         }
-        if (isUnknownReference(dst) || isValue(dst) && isValue(src))
+        if (isUnknownReference(__dst) || isValue(__dst) && isValue(__src))
         {
-            PlatformKind srcPlatformKind = src.getPlatformKind();
-            PlatformKind dstPlatformKind = dst.getPlatformKind();
-            if (srcPlatformKind.equals(dstPlatformKind))
+            PlatformKind __srcPlatformKind = __src.getPlatformKind();
+            PlatformKind __dstPlatformKind = __dst.getPlatformKind();
+            if (__srcPlatformKind.equals(__dstPlatformKind))
             {
                 return true;
             }
             // if the register category matches it should be fine, although the kind is different
-            return config.getRegisterCategory(srcPlatformKind).equals(config.getRegisterCategory(dstPlatformKind));
+            return __config.getRegisterCategory(__srcPlatformKind).equals(__config.getRegisterCategory(__dstPlatformKind));
         }
         // reference information mismatch
         return false;

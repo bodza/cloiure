@@ -27,12 +27,13 @@ import giraaff.nodeinfo.InputType;
 // @class ExceptionObjectNode
 public final class ExceptionObjectNode extends BeginStateSplitNode implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<ExceptionObjectNode> TYPE = NodeClass.create(ExceptionObjectNode.class);
 
     // @cons
-    public ExceptionObjectNode(MetaAccessProvider metaAccess)
+    public ExceptionObjectNode(MetaAccessProvider __metaAccess)
     {
-        super(TYPE, StampFactory.objectNonNull(TypeReference.createTrustedWithoutAssumptions(metaAccess.lookupJavaType(Throwable.class))));
+        super(TYPE, StampFactory.objectNonNull(TypeReference.createTrustedWithoutAssumptions(__metaAccess.lookupJavaType(Throwable.class))));
     }
 
     @Override
@@ -52,7 +53,7 @@ public final class ExceptionObjectNode extends BeginStateSplitNode implements Lo
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         if (graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
         {
@@ -60,16 +61,16 @@ public final class ExceptionObjectNode extends BeginStateSplitNode implements Lo
              * Now the lowering to BeginNode+LoadExceptionNode can be performed, since no more
              * deopts can float in between the begin node and the load exception node.
              */
-            LocationIdentity locationsKilledByInvoke = ((InvokeWithExceptionNode) predecessor()).getLocationIdentity();
-            AbstractBeginNode entry = graph().add(KillingBeginNode.create(locationsKilledByInvoke));
-            LoadExceptionObjectNode loadException = graph().add(new LoadExceptionObjectNode(stamp(NodeView.DEFAULT)));
+            LocationIdentity __locationsKilledByInvoke = ((InvokeWithExceptionNode) predecessor()).getLocationIdentity();
+            AbstractBeginNode __entry = graph().add(KillingBeginNode.create(__locationsKilledByInvoke));
+            LoadExceptionObjectNode __loadException = graph().add(new LoadExceptionObjectNode(stamp(NodeView.DEFAULT)));
 
-            loadException.setStateAfter(stateAfter());
-            replaceAtUsages(InputType.Value, loadException);
-            graph().replaceFixedWithFixed(this, entry);
-            entry.graph().addAfterFixed(entry, loadException);
+            __loadException.setStateAfter(stateAfter());
+            replaceAtUsages(InputType.Value, __loadException);
+            graph().replaceFixedWithFixed(this, __entry);
+            __entry.graph().addAfterFixed(__entry, __loadException);
 
-            loadException.lower(tool);
+            __loadException.lower(__tool);
         }
     }
 }

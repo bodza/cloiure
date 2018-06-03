@@ -21,11 +21,18 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class AbstractCompareAndSwapNode
 public abstract class AbstractCompareAndSwapNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<AbstractCompareAndSwapNode> TYPE = NodeClass.create(AbstractCompareAndSwapNode.class);
 
-    @Input ValueNode expectedValue;
-    @Input ValueNode newValue;
-    @OptionalInput(InputType.State) FrameState stateAfter;
+    @Input
+    // @field
+    ValueNode expectedValue;
+    @Input
+    // @field
+    ValueNode newValue;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateAfter;
 
     @Override
     public FrameState stateAfter()
@@ -34,10 +41,10 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -57,11 +64,11 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
     }
 
     // @cons
-    public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> c, AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue, BarrierType barrierType, Stamp stamp)
+    public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue, BarrierType __barrierType, Stamp __stamp)
     {
-        super(c, address, location, stamp, barrierType);
-        this.expectedValue = expectedValue;
-        this.newValue = newValue;
+        super(__c, __address, __location, __stamp, __barrierType);
+        this.expectedValue = __expectedValue;
+        this.newValue = __newValue;
     }
 
     @Override

@@ -8,13 +8,16 @@ import java.util.ArrayList;
 // @class Label
 public final class Label
 {
+    // @field
     private int position = -1;
+    // @field
     private int blockId = -1;
 
     /**
      * References to instructions that jump to this unresolved label. These instructions need to be
      * patched when the label is bound using the {@link #patchInstructions(Assembler)} method.
      */
+    // @field
     private ArrayList<Integer> patchPositions = null;
 
     /**
@@ -34,10 +37,10 @@ public final class Label
     }
 
     // @cons
-    public Label(int id)
+    public Label(int __id)
     {
         super();
-        blockId = id;
+        blockId = __id;
     }
 
     public int getBlockId()
@@ -50,9 +53,9 @@ public final class Label
      *
      * @param pos the position
      */
-    protected void bind(int pos)
+    protected void bind(int __pos)
     {
-        this.position = pos;
+        this.position = __pos;
     }
 
     public boolean isBound()
@@ -60,24 +63,24 @@ public final class Label
         return position >= 0;
     }
 
-    public void addPatchAt(int branchLocation)
+    public void addPatchAt(int __branchLocation)
     {
         if (patchPositions == null)
         {
             patchPositions = new ArrayList<>(2);
         }
-        patchPositions.add(branchLocation);
+        patchPositions.add(__branchLocation);
     }
 
-    protected void patchInstructions(Assembler masm)
+    protected void patchInstructions(Assembler __masm)
     {
         if (patchPositions != null)
         {
-            int target = position;
-            for (int i = 0; i < patchPositions.size(); ++i)
+            int __target = position;
+            for (int __i = 0; __i < patchPositions.size(); ++__i)
             {
-                int pos = patchPositions.get(i);
-                masm.patchJumpTarget(pos, target);
+                int __pos = patchPositions.get(__i);
+                __masm.patchJumpTarget(__pos, __target);
             }
         }
     }

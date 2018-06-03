@@ -43,10 +43,14 @@ public class EffectList implements Iterable<EffectList.Effect>
         void apply(StructuredGraph graph);
     }
 
+    // @def
     private static final Effect[] EMPTY_ARRAY = new Effect[0];
+    // @def
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
+    // @field
     private Effect[] effects = EMPTY_ARRAY;
+    // @field
     private int size;
 
     // @cons
@@ -55,43 +59,43 @@ public class EffectList implements Iterable<EffectList.Effect>
         super();
     }
 
-    private void enlarge(int elements)
+    private void enlarge(int __elements)
     {
-        int length = effects.length;
-        if (size + elements > length)
+        int __length = effects.length;
+        if (size + __elements > __length)
         {
-            while (size + elements > length)
+            while (size + __elements > __length)
             {
-                length = Math.max(length * 2, 4);
+                __length = Math.max(__length * 2, 4);
             }
-            effects = Arrays.copyOf(effects, length);
+            effects = Arrays.copyOf(effects, __length);
         }
     }
 
-    public void add(String name, SimpleEffect effect)
+    public void add(String __name, SimpleEffect __effect)
     {
-        add(name, (Effect) effect);
+        add(__name, (Effect) __effect);
     }
 
-    public void add(String name, Effect effect)
+    public void add(String __name, Effect __effect)
     {
         enlarge(1);
-        effects[size++] = effect;
+        effects[size++] = __effect;
     }
 
-    public void addAll(EffectList list)
+    public void addAll(EffectList __list)
     {
-        enlarge(list.size);
-        System.arraycopy(list.effects, 0, effects, size, list.size);
-        size += list.size;
+        enlarge(__list.size);
+        System.arraycopy(__list.effects, 0, effects, size, __list.size);
+        size += __list.size;
     }
 
-    public void insertAll(EffectList list, int position)
+    public void insertAll(EffectList __list, int __position)
     {
-        enlarge(list.size);
-        System.arraycopy(effects, position, effects, position + list.size, size - position);
-        System.arraycopy(list.effects, 0, effects, position, list.size);
-        size += list.size;
+        enlarge(__list.size);
+        System.arraycopy(effects, __position, effects, __position + __list.size, size - __position);
+        System.arraycopy(__list.effects, 0, effects, __position, __list.size);
+        size += __list.size;
     }
 
     public int checkpoint()
@@ -104,9 +108,9 @@ public class EffectList implements Iterable<EffectList.Effect>
         return size;
     }
 
-    public void backtrack(int checkpoint)
+    public void backtrack(int __checkpoint)
     {
-        size = checkpoint;
+        size = __checkpoint;
     }
 
     @Override
@@ -115,7 +119,9 @@ public class EffectList implements Iterable<EffectList.Effect>
         // @closure
         return new Iterator<Effect>()
         {
+            // @field
             int index;
+            // @field
             final int listSize = EffectList.this.size;
 
             @Override
@@ -138,13 +144,13 @@ public class EffectList implements Iterable<EffectList.Effect>
         };
     }
 
-    public Effect get(int index)
+    public Effect get(int __index)
     {
-        if (index >= size)
+        if (__index >= size)
         {
             throw new IndexOutOfBoundsException();
         }
-        return effects[index];
+        return effects[__index];
     }
 
     public void clear()
@@ -157,31 +163,31 @@ public class EffectList implements Iterable<EffectList.Effect>
         return size == 0;
     }
 
-    public void apply(StructuredGraph graph, ArrayList<Node> obsoleteNodes, boolean cfgKills)
+    public void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes, boolean __cfgKills)
     {
-        boolean message = false;
-        for (int i = 0; i < size(); i++)
+        boolean __message = false;
+        for (int __i = 0; __i < size(); __i++)
         {
-            Effect effect = effects[i];
-            if (effect.isCfgKill() == cfgKills)
+            Effect __effect = effects[__i];
+            if (__effect.isCfgKill() == __cfgKills)
             {
-                if (!message)
+                if (!__message)
                 {
-                    message = true;
+                    __message = true;
                 }
                 try
                 {
-                    effect.apply(graph, obsoleteNodes);
+                    __effect.apply(__graph, __obsoleteNodes);
                 }
-                catch (Throwable t)
+                catch (Throwable __t)
                 {
-                    throw new GraalError(t);
+                    throw new GraalError(__t);
                 }
             }
         }
     }
 
-    private String getName(int i)
+    private String getName(int __i)
     {
         return "";
     }

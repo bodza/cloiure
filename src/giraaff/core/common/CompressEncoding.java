@@ -6,15 +6,17 @@ package giraaff.core.common;
 // @class CompressEncoding
 public final class CompressEncoding
 {
+    // @field
     private final long base;
+    // @field
     private final int shift;
 
     // @cons
-    public CompressEncoding(long base, int shift)
+    public CompressEncoding(long __base, int __shift)
     {
         super();
-        this.base = base;
-        this.shift = shift;
+        this.base = __base;
+        this.shift = __shift;
     }
 
     public boolean hasBase()
@@ -40,20 +42,20 @@ public final class CompressEncoding
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (base ^ (base >>> 32));
-        result = prime * result + shift;
-        return result;
+        final int __prime = 31;
+        int __result = 1;
+        __result = __prime * __result + (int) (base ^ (base >>> 32));
+        __result = __prime * __result + shift;
+        return __result;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (obj instanceof CompressEncoding)
+        if (__obj instanceof CompressEncoding)
         {
-            CompressEncoding other = (CompressEncoding) obj;
-            return base == other.base && shift == other.shift;
+            CompressEncoding __other = (CompressEncoding) __obj;
+            return base == __other.base && shift == __other.shift;
         }
         return false;
     }

@@ -44,23 +44,27 @@ import giraaff.phases.util.Providers;
 // @class Backend
 public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKind>
 {
+    // @field
     private final Providers providers;
+    // @field
     private final ArrayList<CodeInstallationTaskFactory> codeInstallationTaskFactories;
 
+    // @def
     public static final ForeignCallDescriptor ARITHMETIC_FREM = new ForeignCallDescriptor("arithmeticFrem", float.class, float.class, float.class);
+    // @def
     public static final ForeignCallDescriptor ARITHMETIC_DREM = new ForeignCallDescriptor("arithmeticDrem", double.class, double.class, double.class);
 
     // @cons
-    protected Backend(Providers providers)
+    protected Backend(Providers __providers)
     {
         super();
-        this.providers = providers;
+        this.providers = __providers;
         this.codeInstallationTaskFactories = new ArrayList<>();
     }
 
-    public synchronized void addCodeInstallationTask(CodeInstallationTaskFactory factory)
+    public synchronized void addCodeInstallationTask(CodeInstallationTaskFactory __factory)
     {
-        this.codeInstallationTaskFactories.add(factory);
+        this.codeInstallationTaskFactories.add(__factory);
     }
 
     public Providers getProviders()
@@ -97,9 +101,9 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     }
 
     @Override
-    public LIRKind getValueKind(JavaKind javaKind)
+    public LIRKind getValueKind(JavaKind __javaKind)
     {
-        return LIRKind.fromJavaKind(getTarget().arch, javaKind);
+        return LIRKind.fromJavaKind(getTarget().arch, __javaKind);
     }
 
     /**
@@ -140,9 +144,9 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     /**
      * @see #createInstalledCode(ResolvedJavaMethod, CompilationRequest, CompilationResult, SpeculationLog, InstalledCode, boolean)
      */
-    public InstalledCode createInstalledCode(ResolvedJavaMethod method, CompilationResult compilationResult, SpeculationLog speculationLog, InstalledCode predefinedInstalledCode, boolean isDefault)
+    public InstalledCode createInstalledCode(ResolvedJavaMethod __method, CompilationResult __compilationResult, SpeculationLog __speculationLog, InstalledCode __predefinedInstalledCode, boolean __isDefault)
     {
-        return createInstalledCode(method, null, compilationResult, speculationLog, predefinedInstalledCode, isDefault);
+        return createInstalledCode(__method, null, __compilationResult, __speculationLog, __predefinedInstalledCode, __isDefault);
     }
 
     /**
@@ -163,64 +167,64 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
      * @return a reference to the compiled and ready-to-run installed code
      * @throws BailoutException if the code installation failed
      */
-    public InstalledCode createInstalledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult, SpeculationLog speculationLog, InstalledCode predefinedInstalledCode, boolean isDefault)
+    public InstalledCode createInstalledCode(ResolvedJavaMethod __method, CompilationRequest __compilationRequest, CompilationResult __compilationResult, SpeculationLog __speculationLog, InstalledCode __predefinedInstalledCode, boolean __isDefault)
     {
-        CodeInstallationTask[] tasks;
+        CodeInstallationTask[] __tasks;
         synchronized (this)
         {
-            tasks = new CodeInstallationTask[codeInstallationTaskFactories.size()];
-            for (int i = 0; i < codeInstallationTaskFactories.size(); i++)
+            __tasks = new CodeInstallationTask[codeInstallationTaskFactories.size()];
+            for (int __i = 0; __i < codeInstallationTaskFactories.size(); __i++)
             {
-                tasks[i] = codeInstallationTaskFactories.get(i).create();
+                __tasks[__i] = codeInstallationTaskFactories.get(__i).create();
             }
         }
-        InstalledCode installedCode;
+        InstalledCode __installedCode;
         try
         {
-            preCodeInstallationTasks(tasks, compilationResult, predefinedInstalledCode);
-            CompiledCode compiledCode = createCompiledCode(method, compilationRequest, compilationResult);
-            installedCode = getProviders().getCodeCache().installCode(method, compiledCode, predefinedInstalledCode, GraphSpeculationLog.unwrap(speculationLog), isDefault);
+            preCodeInstallationTasks(__tasks, __compilationResult, __predefinedInstalledCode);
+            CompiledCode __compiledCode = createCompiledCode(__method, __compilationRequest, __compilationResult);
+            __installedCode = getProviders().getCodeCache().installCode(__method, __compiledCode, __predefinedInstalledCode, GraphSpeculationLog.unwrap(__speculationLog), __isDefault);
         }
-        catch (Throwable t)
+        catch (Throwable __t)
         {
-            failCodeInstallationTasks(tasks, t);
-            throw t;
+            failCodeInstallationTasks(__tasks, __t);
+            throw __t;
         }
 
-        postCodeInstallationTasks(tasks, installedCode);
+        postCodeInstallationTasks(__tasks, __installedCode);
 
-        return installedCode;
+        return __installedCode;
     }
 
-    private static void failCodeInstallationTasks(CodeInstallationTask[] tasks, Throwable t)
+    private static void failCodeInstallationTasks(CodeInstallationTask[] __tasks, Throwable __t)
     {
-        for (CodeInstallationTask task : tasks)
+        for (CodeInstallationTask __task : __tasks)
         {
-            task.installFailed(t);
+            __task.installFailed(__t);
         }
     }
 
-    private static void preCodeInstallationTasks(CodeInstallationTask[] tasks, CompilationResult compilationResult, InstalledCode predefinedInstalledCode)
+    private static void preCodeInstallationTasks(CodeInstallationTask[] __tasks, CompilationResult __compilationResult, InstalledCode __predefinedInstalledCode)
     {
-        for (CodeInstallationTask task : tasks)
+        for (CodeInstallationTask __task : __tasks)
         {
-            task.preProcess(compilationResult, predefinedInstalledCode);
+            __task.preProcess(__compilationResult, __predefinedInstalledCode);
         }
     }
 
-    private static void postCodeInstallationTasks(CodeInstallationTask[] tasks, InstalledCode installedCode)
+    private static void postCodeInstallationTasks(CodeInstallationTask[] __tasks, InstalledCode __installedCode)
     {
         try
         {
-            for (CodeInstallationTask task : tasks)
+            for (CodeInstallationTask __task : __tasks)
             {
-                task.postProcess(installedCode);
+                __task.postProcess(__installedCode);
             }
         }
-        catch (Throwable t)
+        catch (Throwable __t)
         {
-            installedCode.invalidate();
-            throw t;
+            __installedCode.invalidate();
+            throw __t;
         }
     }
 
@@ -234,9 +238,9 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
      * @return a reference to the compiled and ready-to-run installed code
      * @throws BailoutException if the code installation failed
      */
-    public InstalledCode addInstalledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult)
+    public InstalledCode addInstalledCode(ResolvedJavaMethod __method, CompilationRequest __compilationRequest, CompilationResult __compilationResult)
     {
-        return createInstalledCode(method, compilationRequest, compilationResult, null, null, false);
+        return createInstalledCode(__method, __compilationRequest, __compilationResult, null, null, false);
     }
 
     /**
@@ -249,9 +253,9 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
      * @return a reference to the compiled and ready-to-run installed code
      * @throws BailoutException if the code installation failed
      */
-    public InstalledCode createDefaultInstalledCode(ResolvedJavaMethod method, CompilationResult compilationResult)
+    public InstalledCode createDefaultInstalledCode(ResolvedJavaMethod __method, CompilationResult __compilationResult)
     {
-        return createInstalledCode(method, compilationResult, null, null, true);
+        return createInstalledCode(__method, __compilationResult, null, null, true);
     }
 
     /**
@@ -282,7 +286,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
          * @param predefinedInstalledCode a pre-allocated {@link InstalledCode} object that will be
          *            used as a reference to the installed code. May be {@code null}.
          */
-        public void preProcess(CompilationResult compilationResult, InstalledCode predefinedInstalledCode)
+        public void preProcess(CompilationResult __compilationResult, InstalledCode __predefinedInstalledCode)
         {
         }
 
@@ -291,7 +295,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
          *
          * @param installedCode a reference to the installed code
          */
-        public void postProcess(InstalledCode installedCode)
+        public void postProcess(InstalledCode __installedCode)
         {
         }
 
@@ -300,7 +304,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
          *
          * @param cause the cause of the installation failure
          */
-        public void installFailed(Throwable cause)
+        public void installFailed(Throwable __cause)
         {
         }
     }

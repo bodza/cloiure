@@ -21,160 +21,161 @@ import giraaff.nodes.util.GraphUtil;
 // @class SubNode
 public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArithmeticNode
 {
+    // @def
     public static final NodeClass<SubNode> TYPE = NodeClass.create(SubNode.class);
 
     // @cons
-    public SubNode(ValueNode x, ValueNode y)
+    public SubNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected SubNode(NodeClass<? extends SubNode> c, ValueNode x, ValueNode y)
+    protected SubNode(NodeClass<? extends SubNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, ArithmeticOpTable::getSub, x, y);
+        super(__c, ArithmeticOpTable::getSub, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Sub> op = ArithmeticOpTable.forStamp(x.stamp(view)).getSub();
-        Stamp stamp = op.foldStamp(x.stamp(view), y.stamp(view));
-        ConstantNode tryConstantFold = tryConstantFold(op, x, y, stamp, view);
-        if (tryConstantFold != null)
+        BinaryOp<Sub> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getSub();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
+        ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
+        if (__tryConstantFold != null)
         {
-            return tryConstantFold;
+            return __tryConstantFold;
         }
-        return canonical(null, op, stamp, x, y, view);
+        return canonical(null, __op, __stamp, __x, __y, __view);
     }
 
-    private static ValueNode canonical(SubNode subNode, BinaryOp<Sub> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    private static ValueNode canonical(SubNode __subNode, BinaryOp<Sub> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        SubNode self = subNode;
-        if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY))
+        SubNode __self = __subNode;
+        if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {
-            Constant zero = op.getZero(forX.stamp(view));
-            if (zero != null)
+            Constant __zero = __op.getZero(__forX.stamp(__view));
+            if (__zero != null)
             {
-                return ConstantNode.forPrimitive(stamp, zero);
+                return ConstantNode.forPrimitive(__stamp, __zero);
             }
         }
-        boolean associative = op.isAssociative();
-        if (associative)
+        boolean __associative = __op.isAssociative();
+        if (__associative)
         {
-            if (forX instanceof AddNode)
+            if (__forX instanceof AddNode)
             {
-                AddNode x = (AddNode) forX;
-                if (x.getY() == forY)
+                AddNode __x = (AddNode) __forX;
+                if (__x.getY() == __forY)
                 {
                     // (a + b) - b
-                    return x.getX();
+                    return __x.getX();
                 }
-                if (x.getX() == forY)
+                if (__x.getX() == __forY)
                 {
                     // (a + b) - a
-                    return x.getY();
+                    return __x.getY();
                 }
             }
-            else if (forX instanceof SubNode)
+            else if (__forX instanceof SubNode)
             {
-                SubNode x = (SubNode) forX;
-                if (x.getX() == forY)
+                SubNode __x = (SubNode) __forX;
+                if (__x.getX() == __forY)
                 {
                     // (a - b) - a
-                    return NegateNode.create(x.getY(), view);
+                    return NegateNode.create(__x.getY(), __view);
                 }
             }
-            if (forY instanceof AddNode)
+            if (__forY instanceof AddNode)
             {
-                AddNode y = (AddNode) forY;
-                if (y.getX() == forX)
+                AddNode __y = (AddNode) __forY;
+                if (__y.getX() == __forX)
                 {
                     // a - (a + b)
-                    return NegateNode.create(y.getY(), view);
+                    return NegateNode.create(__y.getY(), __view);
                 }
-                if (y.getY() == forX)
+                if (__y.getY() == __forX)
                 {
                     // b - (a + b)
-                    return NegateNode.create(y.getX(), view);
+                    return NegateNode.create(__y.getX(), __view);
                 }
             }
-            else if (forY instanceof SubNode)
+            else if (__forY instanceof SubNode)
             {
-                SubNode y = (SubNode) forY;
-                if (y.getX() == forX)
+                SubNode __y = (SubNode) __forY;
+                if (__y.getX() == __forX)
                 {
                     // a - (a - b)
-                    return y.getY();
+                    return __y.getY();
                 }
             }
         }
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            Constant c = forY.asConstant();
-            if (op.isNeutral(c))
+            Constant __c = __forY.asConstant();
+            if (__op.isNeutral(__c))
             {
-                return forX;
+                return __forX;
             }
-            if (associative && self != null)
+            if (__associative && __self != null)
             {
-                ValueNode reassociated = reassociate(self, ValueNode.isConstantPredicate(), forX, forY, view);
-                if (reassociated != self)
+                ValueNode __reassociated = reassociate(__self, ValueNode.isConstantPredicate(), __forX, __forY, __view);
+                if (__reassociated != __self)
                 {
-                    return reassociated;
+                    return __reassociated;
                 }
             }
-            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger())
+            if (__c instanceof PrimitiveConstant && ((PrimitiveConstant) __c).getJavaKind().isNumericInteger())
             {
-                long i = ((PrimitiveConstant) c).asLong();
-                if (i < 0 || ((IntegerStamp) StampFactory.forKind(forY.getStackKind())).contains(-i))
+                long __i = ((PrimitiveConstant) __c).asLong();
+                if (__i < 0 || ((IntegerStamp) StampFactory.forKind(__forY.getStackKind())).contains(-__i))
                 {
                     // Adding a negative is more friendly to the backend since adds are
                     // commutative, so prefer add when it fits.
-                    return BinaryArithmeticNode.add(forX, ConstantNode.forIntegerStamp(stamp, -i), view);
+                    return BinaryArithmeticNode.add(__forX, ConstantNode.forIntegerStamp(__stamp, -__i), __view);
                 }
             }
         }
-        else if (forX.isConstant())
+        else if (__forX.isConstant())
         {
-            Constant c = forX.asConstant();
-            if (ArithmeticOpTable.forStamp(stamp).getAdd().isNeutral(c))
+            Constant __c = __forX.asConstant();
+            if (ArithmeticOpTable.forStamp(__stamp).getAdd().isNeutral(__c))
             {
                 /*
                  * Note that for floating point numbers, + and - have different neutral elements.
                  * We have to test for the neutral element of +, because we are doing this
                  * transformation: 0 - x == (-x) + 0 == -x.
                  */
-                return NegateNode.create(forY, view);
+                return NegateNode.create(__forY, __view);
             }
-            if (associative && self != null)
+            if (__associative && __self != null)
             {
-                return reassociate(self, ValueNode.isConstantPredicate(), forX, forY, view);
+                return reassociate(__self, ValueNode.isConstantPredicate(), __forX, __forY, __view);
             }
         }
-        if (forY instanceof NegateNode)
+        if (__forY instanceof NegateNode)
         {
-            return BinaryArithmeticNode.add(forX, ((NegateNode) forY).getValue(), view);
+            return BinaryArithmeticNode.add(__forX, ((NegateNode) __forY).getValue(), __view);
         }
-        return self != null ? self : new SubNode(forX, forY);
+        return __self != null ? __self : new SubNode(__forX, __forY);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        BinaryOp<Sub> op = getOp(forX, forY);
-        return canonical(this, op, stamp, forX, forY, view);
+        BinaryOp<Sub> __op = getOp(__forX, __forY);
+        return canonical(this, __op, stamp, __forX, __forY, __view);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitSub(nodeValueMap.operand(getX()), nodeValueMap.operand(getY()), false));
+        __nodeValueMap.setResult(this, __gen.emitSub(__nodeValueMap.operand(getX()), __nodeValueMap.operand(getY()), false));
     }
 }

@@ -10,13 +10,14 @@ import jdk.vm.ci.meta.SerializableConstant;
 // @class ArithmeticStamp
 public abstract class ArithmeticStamp extends Stamp
 {
+    // @field
     private final ArithmeticOpTable ops;
 
     // @cons
-    protected ArithmeticStamp(ArithmeticOpTable ops)
+    protected ArithmeticStamp(ArithmeticOpTable __ops)
     {
         super();
-        this.ops = ops;
+        this.ops = __ops;
     }
 
     public ArithmeticOpTable getOps()
@@ -27,11 +28,11 @@ public abstract class ArithmeticStamp extends Stamp
     public abstract SerializableConstant deserialize(ByteBuffer buffer);
 
     @Override
-    public Stamp improveWith(Stamp other)
+    public Stamp improveWith(Stamp __other)
     {
-        if (this.isCompatible(other))
+        if (this.isCompatible(__other))
         {
-            return this.join(other);
+            return this.join(__other);
         }
         // Cannot improve, because stamps are not compatible.
         return this;
@@ -40,18 +41,18 @@ public abstract class ArithmeticStamp extends Stamp
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        return prime * 1 + ops.hashCode();
+        final int __prime = 31;
+        return __prime * 1 + ops.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (!(obj instanceof ArithmeticStamp))
+        if (!(__obj instanceof ArithmeticStamp))
         {
             return false;
         }

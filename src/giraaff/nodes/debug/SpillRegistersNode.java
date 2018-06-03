@@ -10,8 +10,10 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class SpillRegistersNode
 public final class SpillRegistersNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<SpillRegistersNode> TYPE = NodeClass.create(SpillRegistersNode.class);
 
+    // @field
     protected Object unique;
 
     // @cons
@@ -23,8 +25,8 @@ public final class SpillRegistersNode extends FixedWithNextNode implements LIRLo
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().append(new StandardOp.SpillRegistersOp());
+        __gen.getLIRGeneratorTool().append(new StandardOp.SpillRegistersOp());
     }
 }

@@ -15,20 +15,23 @@ import jdk.vm.ci.code.TargetDescription;
 // @class Assembler
 public abstract class Assembler
 {
+    // @field
     public final TargetDescription target;
+    // @field
     private List<LabelHint> jumpDisplacementHints;
 
     /**
      * Backing code buffer.
      */
+    // @field
     private final CodeBuffer codeBuffer;
 
     // @cons
-    public Assembler(TargetDescription target)
+    public Assembler(TargetDescription __target)
     {
         super();
-        this.target = target;
-        this.codeBuffer = new CodeBuffer(target.arch.getByteOrder());
+        this.target = __target;
+        this.codeBuffer = new CodeBuffer(__target.arch.getByteOrder());
     }
 
     /**
@@ -41,59 +44,59 @@ public abstract class Assembler
         return codeBuffer.position();
     }
 
-    public final void emitByte(int x)
+    public final void emitByte(int __x)
     {
-        codeBuffer.emitByte(x);
+        codeBuffer.emitByte(__x);
     }
 
-    public final void emitShort(int x)
+    public final void emitShort(int __x)
     {
-        codeBuffer.emitShort(x);
+        codeBuffer.emitShort(__x);
     }
 
-    public final void emitInt(int x)
+    public final void emitInt(int __x)
     {
-        codeBuffer.emitInt(x);
+        codeBuffer.emitInt(__x);
     }
 
-    public final void emitLong(long x)
+    public final void emitLong(long __x)
     {
-        codeBuffer.emitLong(x);
+        codeBuffer.emitLong(__x);
     }
 
-    public final void emitByte(int b, int pos)
+    public final void emitByte(int __b, int __pos)
     {
-        codeBuffer.emitByte(b, pos);
+        codeBuffer.emitByte(__b, __pos);
     }
 
-    public final void emitShort(int b, int pos)
+    public final void emitShort(int __b, int __pos)
     {
-        codeBuffer.emitShort(b, pos);
+        codeBuffer.emitShort(__b, __pos);
     }
 
-    public final void emitInt(int b, int pos)
+    public final void emitInt(int __b, int __pos)
     {
-        codeBuffer.emitInt(b, pos);
+        codeBuffer.emitInt(__b, __pos);
     }
 
-    public final void emitLong(long b, int pos)
+    public final void emitLong(long __b, int __pos)
     {
-        codeBuffer.emitLong(b, pos);
+        codeBuffer.emitLong(__b, __pos);
     }
 
-    public final int getByte(int pos)
+    public final int getByte(int __pos)
     {
-        return codeBuffer.getByte(pos);
+        return codeBuffer.getByte(__pos);
     }
 
-    public final int getShort(int pos)
+    public final int getShort(int __pos)
     {
-        return codeBuffer.getShort(pos);
+        return codeBuffer.getShort(__pos);
     }
 
-    public final int getInt(int pos)
+    public final int getInt(int __pos)
     {
-        return codeBuffer.getInt(pos);
+        return codeBuffer.getInt(__pos);
     }
 
     /**
@@ -103,15 +106,15 @@ public abstract class Assembler
      *            including) {@code position()} is returned
      * @return the data in this buffer or a trimmed copy if {@code trimmedCopy} is {@code true}
      */
-    public byte[] close(boolean trimmedCopy)
+    public byte[] close(boolean __trimmedCopy)
     {
-        return codeBuffer.close(trimmedCopy);
+        return codeBuffer.close(__trimmedCopy);
     }
 
-    public void bind(Label l)
+    public void bind(Label __l)
     {
-        l.bind(position());
-        l.patchInstructions(this);
+        __l.bind(position());
+        __l.patchInstructions(this);
     }
 
     public abstract void align(int modulus);
@@ -120,6 +123,7 @@ public abstract class Assembler
 
     protected abstract void patchJumpTarget(int branch, int jumpTarget);
 
+    // @field
     private Map<Label, String> nameMap;
 
     /**
@@ -129,28 +133,28 @@ public abstract class Assembler
      * @param id a label identifier that is unique with the scope of this assembler
      * @return a label name in the form of "L123"
      */
-    protected String createLabelName(Label l, int id)
+    protected String createLabelName(Label __l, int __id)
     {
-        return "L" + id;
+        return "L" + __id;
     }
 
     /**
      * Gets a name for a label, creating it if it does not yet exist. By default, the returned name
      * is only unique with the scope of this assembler.
      */
-    public String nameOf(Label l)
+    public String nameOf(Label __l)
     {
         if (nameMap == null)
         {
             nameMap = new HashMap<>();
         }
-        String name = nameMap.get(l);
-        if (name == null)
+        String __name = nameMap.get(__l);
+        if (__name == null)
         {
-            name = createLabelName(l, nameMap.size());
-            nameMap.put(l, name);
+            __name = createLabelName(__l, nameMap.size());
+            nameMap.put(__l, __name);
         }
-        return name;
+        return __name;
     }
 
     /**
@@ -184,36 +188,39 @@ public abstract class Assembler
         {
             return;
         }
-        for (LabelHint request : this.jumpDisplacementHints)
+        for (LabelHint __request : this.jumpDisplacementHints)
         {
-            request.capture();
+            __request.capture();
         }
     }
 
-    public LabelHint requestLabelHint(Label label)
+    public LabelHint requestLabelHint(Label __label)
     {
         if (jumpDisplacementHints == null)
         {
             jumpDisplacementHints = new ArrayList<>();
         }
-        LabelHint hint = new LabelHint(label, position());
-        this.jumpDisplacementHints.add(hint);
-        return hint;
+        LabelHint __hint = new LabelHint(__label, position());
+        this.jumpDisplacementHints.add(__hint);
+        return __hint;
     }
 
     // @class Assembler.LabelHint
     public static final class LabelHint
     {
+        // @field
         private Label label;
+        // @field
         private int forPosition;
+        // @field
         private int capturedTarget = -1;
 
         // @cons
-        protected LabelHint(Label label, int lastPosition)
+        protected LabelHint(Label __label, int __lastPosition)
         {
             super();
-            this.label = label;
-            this.forPosition = lastPosition;
+            this.label = __label;
+            this.forPosition = __lastPosition;
         }
 
         protected void capture()

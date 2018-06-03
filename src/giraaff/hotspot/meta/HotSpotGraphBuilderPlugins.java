@@ -94,64 +94,64 @@ public final class HotSpotGraphBuilderPlugins
     /**
      * Creates a {@link Plugins} object that should be used when running on HotSpot.
      */
-    public static Plugins create(CompilerConfiguration compilerConfiguration, HotSpotWordTypes wordTypes, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, SnippetReflectionProvider snippetReflection, ForeignCallsProvider foreignCalls, LoweringProvider lowerer, StampProvider stampProvider, ReplacementsImpl replacements)
+    public static Plugins create(CompilerConfiguration __compilerConfiguration, HotSpotWordTypes __wordTypes, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, SnippetReflectionProvider __snippetReflection, ForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, StampProvider __stampProvider, ReplacementsImpl __replacements)
     {
-        InvocationPlugins invocationPlugins = new HotSpotInvocationPlugins();
+        InvocationPlugins __invocationPlugins = new HotSpotInvocationPlugins();
 
-        Plugins plugins = new Plugins(invocationPlugins);
-        HotSpotWordOperationPlugin wordOperationPlugin = new HotSpotWordOperationPlugin(snippetReflection, wordTypes);
-        HotSpotNodePlugin nodePlugin = new HotSpotNodePlugin(wordOperationPlugin);
+        Plugins __plugins = new Plugins(__invocationPlugins);
+        HotSpotWordOperationPlugin __wordOperationPlugin = new HotSpotWordOperationPlugin(__snippetReflection, __wordTypes);
+        HotSpotNodePlugin __nodePlugin = new HotSpotNodePlugin(__wordOperationPlugin);
 
-        plugins.appendTypePlugin(nodePlugin);
-        plugins.appendNodePlugin(nodePlugin);
-        plugins.appendNodePlugin(new MethodHandlePlugin(constantReflection.getMethodHandleAccess(), true));
-        plugins.appendInlineInvokePlugin(replacements);
+        __plugins.appendTypePlugin(__nodePlugin);
+        __plugins.appendNodePlugin(__nodePlugin);
+        __plugins.appendNodePlugin(new MethodHandlePlugin(__constantReflection.getMethodHandleAccess(), true));
+        __plugins.appendInlineInvokePlugin(__replacements);
         if (GraalOptions.inlineDuringParsing)
         {
-            plugins.appendInlineInvokePlugin(new InlineDuringParsingPlugin());
+            __plugins.appendInlineInvokePlugin(new InlineDuringParsingPlugin());
         }
 
-        invocationPlugins.defer(new Runnable()
+        __invocationPlugins.defer(new Runnable()
         {
             @Override
             public void run()
             {
-                BytecodeProvider replacementBytecodeProvider = replacements.getDefaultReplacementBytecodeProvider();
-                registerObjectPlugins(invocationPlugins, replacementBytecodeProvider);
-                registerClassPlugins(plugins, replacementBytecodeProvider);
-                registerSystemPlugins(invocationPlugins, foreignCalls);
-                registerThreadPlugins(invocationPlugins, metaAccess, wordTypes, replacementBytecodeProvider);
-                registerCallSitePlugins(invocationPlugins);
-                registerReflectionPlugins(invocationPlugins, replacementBytecodeProvider);
-                registerConstantPoolPlugins(invocationPlugins, wordTypes, replacementBytecodeProvider);
-                registerAESPlugins(invocationPlugins, replacementBytecodeProvider);
-                registerCRC32Plugins(invocationPlugins, replacementBytecodeProvider);
-                registerCRC32CPlugins(invocationPlugins, replacementBytecodeProvider);
-                registerBigIntegerPlugins(invocationPlugins, replacementBytecodeProvider);
-                registerSHAPlugins(invocationPlugins, replacementBytecodeProvider);
-                registerUnsafePlugins(invocationPlugins, replacementBytecodeProvider);
-                StandardGraphBuilderPlugins.registerInvocationPlugins(metaAccess, snippetReflection, invocationPlugins, replacementBytecodeProvider, true);
-                registerArrayPlugins(invocationPlugins, replacementBytecodeProvider);
+                BytecodeProvider __replacementBytecodeProvider = __replacements.getDefaultReplacementBytecodeProvider();
+                registerObjectPlugins(__invocationPlugins, __replacementBytecodeProvider);
+                registerClassPlugins(__plugins, __replacementBytecodeProvider);
+                registerSystemPlugins(__invocationPlugins, __foreignCalls);
+                registerThreadPlugins(__invocationPlugins, __metaAccess, __wordTypes, __replacementBytecodeProvider);
+                registerCallSitePlugins(__invocationPlugins);
+                registerReflectionPlugins(__invocationPlugins, __replacementBytecodeProvider);
+                registerConstantPoolPlugins(__invocationPlugins, __wordTypes, __replacementBytecodeProvider);
+                registerAESPlugins(__invocationPlugins, __replacementBytecodeProvider);
+                registerCRC32Plugins(__invocationPlugins, __replacementBytecodeProvider);
+                registerCRC32CPlugins(__invocationPlugins, __replacementBytecodeProvider);
+                registerBigIntegerPlugins(__invocationPlugins, __replacementBytecodeProvider);
+                registerSHAPlugins(__invocationPlugins, __replacementBytecodeProvider);
+                registerUnsafePlugins(__invocationPlugins, __replacementBytecodeProvider);
+                StandardGraphBuilderPlugins.registerInvocationPlugins(__metaAccess, __snippetReflection, __invocationPlugins, __replacementBytecodeProvider, true);
+                registerArrayPlugins(__invocationPlugins, __replacementBytecodeProvider);
             }
         });
-        return plugins;
+        return __plugins;
     }
 
-    private static void registerObjectPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerObjectPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
-        Registration r = new Registration(plugins, Object.class, bytecodeProvider);
+        Registration __r = new Registration(__plugins, Object.class, __bytecodeProvider);
         // FIXME: clone() requires speculation and requires a fix in here (to check that b.getAssumptions() != null),
         // and in ReplacementImpl.getSubstitution() where there is an instantiation of IntrinsicGraphBuilder using
         // a constructor that sets AllowAssumptions to YES automatically. The former has to inherit the assumptions
         // settings from the root compile instead.
         // @closure
-        r.register1("clone", Receiver.class, new InvocationPlugin()
+        __r.register1("clone", Receiver.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver)
             {
-                ValueNode object = receiver.get();
-                b.addPush(JavaKind.Object, new ObjectCloneNode(b.getInvokeKind(), targetMethod, b.bci(), b.getInvokeReturnStamp(b.getAssumptions()), object));
+                ValueNode __object = __receiver.get();
+                __b.addPush(JavaKind.Object, new ObjectCloneNode(__b.getInvokeKind(), __targetMethod, __b.bci(), __b.getInvokeReturnStamp(__b.getAssumptions()), __object));
                 return true;
             }
 
@@ -161,39 +161,39 @@ public final class HotSpotGraphBuilderPlugins
                 return true;
             }
         });
-        r.registerMethodSubstitution(ObjectSubstitutions.class, "hashCode", Receiver.class);
+        __r.registerMethodSubstitution(ObjectSubstitutions.class, "hashCode", Receiver.class);
     }
 
-    private static void registerClassPlugins(Plugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerClassPlugins(Plugins __plugins, BytecodeProvider __bytecodeProvider)
     {
-        Registration r = new Registration(plugins.getInvocationPlugins(), Class.class, bytecodeProvider);
+        Registration __r = new Registration(__plugins.getInvocationPlugins(), Class.class, __bytecodeProvider);
 
-        r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getModifiers", Receiver.class);
-        r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isInterface", Receiver.class);
-        r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isArray", Receiver.class);
-        r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isPrimitive", Receiver.class);
-        r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getSuperclass", Receiver.class);
+        __r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getModifiers", Receiver.class);
+        __r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isInterface", Receiver.class);
+        __r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isArray", Receiver.class);
+        __r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "isPrimitive", Receiver.class);
+        __r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getSuperclass", Receiver.class);
         if (HotSpotRuntime.arrayKlassComponentMirrorOffset != Integer.MAX_VALUE)
         {
-            r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getComponentType", Receiver.class);
+            __r.registerMethodSubstitution(HotSpotClassSubstitutions.class, "getComponentType", Receiver.class);
         }
 
         // @closure
-        r.register2("cast", Receiver.class, Object.class, new InvocationPlugin()
+        __r.register2("cast", Receiver.class, Object.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode object)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __object)
             {
-                ValueNode javaClass = receiver.get();
-                LogicNode condition = b.append(InstanceOfDynamicNode.create(b.getAssumptions(), b.getConstantReflection(), javaClass, object, true));
-                if (condition.isTautology())
+                ValueNode __javaClass = __receiver.get();
+                LogicNode __condition = __b.append(InstanceOfDynamicNode.create(__b.getAssumptions(), __b.getConstantReflection(), __javaClass, __object, true));
+                if (__condition.isTautology())
                 {
-                    b.addPush(JavaKind.Object, object);
+                    __b.addPush(JavaKind.Object, __object);
                 }
                 else
                 {
-                    FixedGuardNode fixedGuard = b.add(new FixedGuardNode(condition, DeoptimizationReason.ClassCastException, DeoptimizationAction.InvalidateReprofile, false));
-                    b.addPush(JavaKind.Object, DynamicPiNode.create(b.getAssumptions(), b.getConstantReflection(), object, fixedGuard, javaClass));
+                    FixedGuardNode __fixedGuard = __b.add(new FixedGuardNode(__condition, DeoptimizationReason.ClassCastException, DeoptimizationAction.InvalidateReprofile, false));
+                    __b.addPush(JavaKind.Object, DynamicPiNode.create(__b.getAssumptions(), __b.getConstantReflection(), __object, __fixedGuard, __javaClass));
                 }
                 return true;
             }
@@ -206,23 +206,23 @@ public final class HotSpotGraphBuilderPlugins
         });
     }
 
-    private static void registerCallSitePlugins(InvocationPlugins plugins)
+    private static void registerCallSitePlugins(InvocationPlugins __plugins)
     {
         // @closure
         InvocationPlugin plugin = new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver)
             {
-                ValueNode callSite = receiver.get();
-                ValueNode folded = CallSiteTargetNode.tryFold(GraphUtil.originalValue(callSite), b.getMetaAccess(), b.getAssumptions());
-                if (folded != null)
+                ValueNode __callSite = __receiver.get();
+                ValueNode __folded = CallSiteTargetNode.tryFold(GraphUtil.originalValue(__callSite), __b.getMetaAccess(), __b.getAssumptions());
+                if (__folded != null)
                 {
-                    b.addPush(JavaKind.Object, folded);
+                    __b.addPush(JavaKind.Object, __folded);
                 }
                 else
                 {
-                    b.addPush(JavaKind.Object, new CallSiteTargetNode(b.getInvokeKind(), targetMethod, b.bci(), b.getInvokeReturnStamp(b.getAssumptions()), callSite));
+                    __b.addPush(JavaKind.Object, new CallSiteTargetNode(__b.getInvokeKind(), __targetMethod, __b.bci(), __b.getInvokeReturnStamp(__b.getAssumptions()), __callSite));
                 }
                 return true;
             }
@@ -233,21 +233,21 @@ public final class HotSpotGraphBuilderPlugins
                 return true;
             }
         };
-        plugins.register(plugin, ConstantCallSite.class, "getTarget", Receiver.class);
-        plugins.register(plugin, MutableCallSite.class, "getTarget", Receiver.class);
-        plugins.register(plugin, VolatileCallSite.class, "getTarget", Receiver.class);
+        __plugins.register(plugin, ConstantCallSite.class, "getTarget", Receiver.class);
+        __plugins.register(plugin, MutableCallSite.class, "getTarget", Receiver.class);
+        __plugins.register(plugin, VolatileCallSite.class, "getTarget", Receiver.class);
     }
 
-    private static void registerReflectionPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerReflectionPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
-        Registration r = new Registration(plugins, reflectionClass, bytecodeProvider);
+        Registration __r = new Registration(__plugins, reflectionClass, __bytecodeProvider);
         // @closure
-        r.register0("getCallerClass", new InvocationPlugin()
+        __r.register0("getCallerClass", new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver)
             {
-                b.addPush(JavaKind.Object, new ReflectionGetCallerClassNode(b.getInvokeKind(), targetMethod, b.bci(), b.getInvokeReturnStamp(b.getAssumptions())));
+                __b.addPush(JavaKind.Object, new ReflectionGetCallerClassNode(__b.getInvokeKind(), __targetMethod, __b.bci(), __b.getInvokeReturnStamp(__b.getAssumptions())));
                 return true;
             }
 
@@ -257,16 +257,18 @@ public final class HotSpotGraphBuilderPlugins
                 return true;
             }
         });
-        r.registerMethodSubstitution(ReflectionSubstitutions.class, "getClassAccessFlags", Class.class);
+        __r.registerMethodSubstitution(ReflectionSubstitutions.class, "getClassAccessFlags", Class.class);
     }
 
-    private static void registerUnsafePlugins(InvocationPlugins plugins, BytecodeProvider replacementBytecodeProvider)
+    private static void registerUnsafePlugins(InvocationPlugins __plugins, BytecodeProvider __replacementBytecodeProvider)
     {
-        Registration r = new Registration(plugins, "jdk.internal.misc.Unsafe", replacementBytecodeProvider);
-        r.registerMethodSubstitution(HotSpotUnsafeSubstitutions.class, HotSpotUnsafeSubstitutions.copyMemoryName, "copyMemory", Receiver.class, Object.class, long.class, Object.class, long.class, long.class);
+        Registration __r = new Registration(__plugins, "jdk.internal.misc.Unsafe", __replacementBytecodeProvider);
+        __r.registerMethodSubstitution(HotSpotUnsafeSubstitutions.class, HotSpotUnsafeSubstitutions.copyMemoryName, "copyMemory", Receiver.class, Object.class, long.class, Object.class, long.class, long.class);
     }
 
+    // @def
     private static final LocationIdentity INSTANCE_KLASS_CONSTANTS = NamedLocationIdentity.immutable("InstanceKlass::_constants");
+    // @def
     private static final LocationIdentity CONSTANT_POOL_LENGTH = NamedLocationIdentity.immutable("ConstantPool::_length");
 
     /**
@@ -277,15 +279,15 @@ public final class HotSpotGraphBuilderPlugins
      * @return a node representing the metaspace {@code ConstantPool} pointer associated with
      *         {@code constantPoolOop}
      */
-    private static ValueNode getMetaspaceConstantPool(GraphBuilderContext b, ValueNode constantPoolOop, WordTypes wordTypes)
+    private static ValueNode getMetaspaceConstantPool(GraphBuilderContext __b, ValueNode __constantPoolOop, WordTypes __wordTypes)
     {
         // ConstantPool.constantPoolOop is in fact the holder class.
-        ValueNode value = b.nullCheckedValue(constantPoolOop, DeoptimizationAction.None);
-        ValueNode klass = b.add(ClassGetHubNode.create(value, b.getMetaAccess(), b.getConstantReflection(), false));
+        ValueNode __value = __b.nullCheckedValue(__constantPoolOop, DeoptimizationAction.None);
+        ValueNode __klass = __b.add(ClassGetHubNode.create(__value, __b.getMetaAccess(), __b.getConstantReflection(), false));
 
-        boolean notCompressible = false;
-        AddressNode constantsAddress = b.add(new OffsetAddressNode(klass, b.add(ConstantNode.forLong(HotSpotRuntime.instanceKlassConstantsOffset))));
-        return WordOperationPlugin.readOp(b, wordTypes.getWordKind(), constantsAddress, INSTANCE_KLASS_CONSTANTS, BarrierType.NONE, notCompressible);
+        boolean __notCompressible = false;
+        AddressNode __constantsAddress = __b.add(new OffsetAddressNode(__klass, __b.add(ConstantNode.forLong(HotSpotRuntime.instanceKlassConstantsOffset))));
+        return WordOperationPlugin.readOp(__b, __wordTypes.getWordKind(), __constantsAddress, INSTANCE_KLASS_CONSTANTS, BarrierType.NONE, __notCompressible);
     }
 
     /**
@@ -293,88 +295,88 @@ public final class HotSpotGraphBuilderPlugins
      *
      * @param constantPoolOop value of the {@code constantPoolOop} field in a ConstantPool value
      */
-    private static boolean readMetaspaceConstantPoolElement(GraphBuilderContext b, ValueNode constantPoolOop, ValueNode index, JavaKind elementKind, WordTypes wordTypes)
+    private static boolean readMetaspaceConstantPoolElement(GraphBuilderContext __b, ValueNode __constantPoolOop, ValueNode __index, JavaKind __elementKind, WordTypes __wordTypes)
     {
-        ValueNode constants = getMetaspaceConstantPool(b, constantPoolOop, wordTypes);
-        int shift = CodeUtil.log2(wordTypes.getWordKind().getByteCount());
-        ValueNode scaledIndex = b.add(new LeftShiftNode(IntegerConvertNode.convert(index, StampFactory.forKind(JavaKind.Long), NodeView.DEFAULT), b.add(ConstantNode.forInt(shift))));
-        ValueNode offset = b.add(new AddNode(scaledIndex, b.add(ConstantNode.forLong(HotSpotRuntime.constantPoolSize))));
-        AddressNode elementAddress = b.add(new OffsetAddressNode(constants, offset));
-        boolean notCompressible = false;
-        ValueNode elementValue = WordOperationPlugin.readOp(b, elementKind, elementAddress, NamedLocationIdentity.getArrayLocation(elementKind), BarrierType.NONE, notCompressible);
-        b.addPush(elementKind, elementValue);
+        ValueNode __constants = getMetaspaceConstantPool(__b, __constantPoolOop, __wordTypes);
+        int __shift = CodeUtil.log2(__wordTypes.getWordKind().getByteCount());
+        ValueNode __scaledIndex = __b.add(new LeftShiftNode(IntegerConvertNode.convert(__index, StampFactory.forKind(JavaKind.Long), NodeView.DEFAULT), __b.add(ConstantNode.forInt(__shift))));
+        ValueNode __offset = __b.add(new AddNode(__scaledIndex, __b.add(ConstantNode.forLong(HotSpotRuntime.constantPoolSize))));
+        AddressNode __elementAddress = __b.add(new OffsetAddressNode(__constants, __offset));
+        boolean __notCompressible = false;
+        ValueNode __elementValue = WordOperationPlugin.readOp(__b, __elementKind, __elementAddress, NamedLocationIdentity.getArrayLocation(__elementKind), BarrierType.NONE, __notCompressible);
+        __b.addPush(__elementKind, __elementValue);
         return true;
     }
 
-    private static void registerConstantPoolPlugins(InvocationPlugins plugins, WordTypes wordTypes, BytecodeProvider bytecodeProvider)
+    private static void registerConstantPoolPlugins(InvocationPlugins __plugins, WordTypes __wordTypes, BytecodeProvider __bytecodeProvider)
     {
-        Registration r = new Registration(plugins, constantPoolClass, bytecodeProvider);
+        Registration __r = new Registration(__plugins, constantPoolClass, __bytecodeProvider);
 
         // @closure
-        r.register2("getSize0", Receiver.class, Object.class, new InvocationPlugin()
+        __r.register2("getSize0", Receiver.class, Object.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode constantPoolOop)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __constantPoolOop)
             {
-                boolean notCompressible = false;
-                ValueNode constants = getMetaspaceConstantPool(b, constantPoolOop, wordTypes);
-                AddressNode lengthAddress = b.add(new OffsetAddressNode(constants, b.add(ConstantNode.forLong(HotSpotRuntime.constantPoolLengthOffset))));
-                ValueNode length = WordOperationPlugin.readOp(b, JavaKind.Int, lengthAddress, CONSTANT_POOL_LENGTH, BarrierType.NONE, notCompressible);
-                b.addPush(JavaKind.Int, length);
+                boolean __notCompressible = false;
+                ValueNode __constants = getMetaspaceConstantPool(__b, __constantPoolOop, __wordTypes);
+                AddressNode __lengthAddress = __b.add(new OffsetAddressNode(__constants, __b.add(ConstantNode.forLong(HotSpotRuntime.constantPoolLengthOffset))));
+                ValueNode __length = WordOperationPlugin.readOp(__b, JavaKind.Int, __lengthAddress, CONSTANT_POOL_LENGTH, BarrierType.NONE, __notCompressible);
+                __b.addPush(JavaKind.Int, __length);
                 return true;
             }
         });
 
         // @closure
-        r.register3("getIntAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
+        __r.register3("getIntAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode constantPoolOop, ValueNode index)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __constantPoolOop, ValueNode __index)
             {
-                return readMetaspaceConstantPoolElement(b, constantPoolOop, index, JavaKind.Int, wordTypes);
+                return readMetaspaceConstantPoolElement(__b, __constantPoolOop, __index, JavaKind.Int, __wordTypes);
             }
         });
         // @closure
-        r.register3("getLongAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
+        __r.register3("getLongAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode constantPoolOop, ValueNode index)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __constantPoolOop, ValueNode __index)
             {
-                return readMetaspaceConstantPoolElement(b, constantPoolOop, index, JavaKind.Long, wordTypes);
+                return readMetaspaceConstantPoolElement(__b, __constantPoolOop, __index, JavaKind.Long, __wordTypes);
             }
         });
         // @closure
-        r.register3("getFloatAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
+        __r.register3("getFloatAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode constantPoolOop, ValueNode index)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __constantPoolOop, ValueNode __index)
             {
-                return readMetaspaceConstantPoolElement(b, constantPoolOop, index, JavaKind.Float, wordTypes);
+                return readMetaspaceConstantPoolElement(__b, __constantPoolOop, __index, JavaKind.Float, __wordTypes);
             }
         });
         // @closure
-        r.register3("getDoubleAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
+        __r.register3("getDoubleAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode constantPoolOop, ValueNode index)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __constantPoolOop, ValueNode __index)
             {
-                return readMetaspaceConstantPoolElement(b, constantPoolOop, index, JavaKind.Double, wordTypes);
+                return readMetaspaceConstantPoolElement(__b, __constantPoolOop, __index, JavaKind.Double, __wordTypes);
             }
         });
     }
 
-    private static void registerSystemPlugins(InvocationPlugins plugins, ForeignCallsProvider foreignCalls)
+    private static void registerSystemPlugins(InvocationPlugins __plugins, ForeignCallsProvider __foreignCalls)
     {
-        Registration r = new Registration(plugins, System.class);
-        r.register0("currentTimeMillis", new ForeignCallPlugin(foreignCalls, HotSpotHostForeignCallsProvider.JAVA_TIME_MILLIS));
-        r.register0("nanoTime", new ForeignCallPlugin(foreignCalls, HotSpotHostForeignCallsProvider.JAVA_TIME_NANOS));
+        Registration __r = new Registration(__plugins, System.class);
+        __r.register0("currentTimeMillis", new ForeignCallPlugin(__foreignCalls, HotSpotHostForeignCallsProvider.JAVA_TIME_MILLIS));
+        __r.register0("nanoTime", new ForeignCallPlugin(__foreignCalls, HotSpotHostForeignCallsProvider.JAVA_TIME_NANOS));
         // @closure
-        r.register1("identityHashCode", Object.class, new InvocationPlugin()
+        __r.register1("identityHashCode", Object.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode object)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __object)
             {
-                b.addPush(JavaKind.Int, new IdentityHashCodeNode(object));
+                __b.addPush(JavaKind.Int, new IdentityHashCodeNode(__object));
                 return true;
             }
 
@@ -385,12 +387,12 @@ public final class HotSpotGraphBuilderPlugins
             }
         });
         // @closure
-        r.register5("arraycopy", Object.class, int.class, Object.class, int.class, int.class, new InvocationPlugin()
+        __r.register5("arraycopy", Object.class, int.class, Object.class, int.class, int.class, new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode src, ValueNode srcPos, ValueNode dst, ValueNode dstPos, ValueNode length)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __src, ValueNode __srcPos, ValueNode __dst, ValueNode __dstPos, ValueNode __length)
             {
-                b.add(new ArrayCopyNode(b.bci(), src, srcPos, dst, dstPos, length));
+                __b.add(new ArrayCopyNode(__b.bci(), __src, __srcPos, __dst, __dstPos, __length));
                 return true;
             }
 
@@ -402,113 +404,119 @@ public final class HotSpotGraphBuilderPlugins
         });
     }
 
-    private static void registerArrayPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerArrayPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
-        Registration r = new Registration(plugins, Array.class, bytecodeProvider);
-        r.setAllowOverwrite(true);
-        r.registerMethodSubstitution(HotSpotArraySubstitutions.class, "newInstance", Class.class, int.class);
+        Registration __r = new Registration(__plugins, Array.class, __bytecodeProvider);
+        __r.setAllowOverwrite(true);
+        __r.registerMethodSubstitution(HotSpotArraySubstitutions.class, "newInstance", Class.class, int.class);
     }
 
-    private static void registerThreadPlugins(InvocationPlugins plugins, MetaAccessProvider metaAccess, WordTypes wordTypes, BytecodeProvider bytecodeProvider)
+    private static void registerThreadPlugins(InvocationPlugins __plugins, MetaAccessProvider __metaAccess, WordTypes __wordTypes, BytecodeProvider __bytecodeProvider)
     {
-        Registration r = new Registration(plugins, Thread.class, bytecodeProvider);
+        Registration __r = new Registration(__plugins, Thread.class, __bytecodeProvider);
         // @closure
-        r.register0("currentThread", new InvocationPlugin()
+        __r.register0("currentThread", new InvocationPlugin()
         {
             @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
+            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver)
             {
-                CurrentJavaThreadNode thread = b.add(new CurrentJavaThreadNode(wordTypes.getWordKind()));
-                ValueNode offset = b.add(ConstantNode.forLong(HotSpotRuntime.threadObjectOffset));
-                AddressNode address = b.add(new OffsetAddressNode(thread, offset));
+                CurrentJavaThreadNode __thread = __b.add(new CurrentJavaThreadNode(__wordTypes.getWordKind()));
+                ValueNode __offset = __b.add(ConstantNode.forLong(HotSpotRuntime.threadObjectOffset));
+                AddressNode __address = __b.add(new OffsetAddressNode(__thread, __offset));
                 // JavaThread::_threadObj is never compressed
-                ObjectStamp stamp = StampFactory.objectNonNull(TypeReference.create(b.getAssumptions(), metaAccess.lookupJavaType(Thread.class)));
-                b.addPush(JavaKind.Object, new ReadNode(address, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION, stamp, BarrierType.NONE));
+                ObjectStamp __stamp = StampFactory.objectNonNull(TypeReference.create(__b.getAssumptions(), __metaAccess.lookupJavaType(Thread.class)));
+                __b.addPush(JavaKind.Object, new ReadNode(__address, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION, __stamp, BarrierType.NONE));
                 return true;
             }
         });
 
-        r.registerMethodSubstitution(ThreadSubstitutions.class, "isInterrupted", Receiver.class, boolean.class);
+        __r.registerMethodSubstitution(ThreadSubstitutions.class, "isInterrupted", Receiver.class, boolean.class);
     }
 
+    // @def
     public static final String cbcEncryptName = "implEncrypt";
+    // @def
     public static final String cbcDecryptName = "implDecrypt";
+    // @def
     public static final String aesEncryptName = "implEncryptBlock";
+    // @def
     public static final String aesDecryptName = "implDecryptBlock";
 
+    // @def
     public static final String reflectionClass = "jdk.internal.reflect.Reflection";
+    // @def
     public static final String constantPoolClass = "jdk.internal.reflect.ConstantPool";
 
-    private static void registerAESPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerAESPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
         if (HotSpotRuntime.useAESIntrinsics)
         {
-            Registration r = new Registration(plugins, "com.sun.crypto.provider.CipherBlockChaining", bytecodeProvider);
-            r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcEncryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
-            r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcDecryptName, cbcDecryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
-            r = new Registration(plugins, "com.sun.crypto.provider.AESCrypt", bytecodeProvider);
-            r.registerMethodSubstitution(AESCryptSubstitutions.class, aesEncryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
-            r.registerMethodSubstitution(AESCryptSubstitutions.class, aesDecryptName, aesDecryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
+            Registration __r = new Registration(__plugins, "com.sun.crypto.provider.CipherBlockChaining", __bytecodeProvider);
+            __r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcEncryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
+            __r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcDecryptName, cbcDecryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
+            __r = new Registration(__plugins, "com.sun.crypto.provider.AESCrypt", __bytecodeProvider);
+            __r.registerMethodSubstitution(AESCryptSubstitutions.class, aesEncryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
+            __r.registerMethodSubstitution(AESCryptSubstitutions.class, aesDecryptName, aesDecryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
         }
     }
 
-    private static void registerSHAPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerSHAPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
         if (HotSpotRuntime.useSHA256Intrinsics)
         {
-            Registration r = new Registration(plugins, "sun.security.provider.SHA2", bytecodeProvider);
-            r.registerMethodSubstitution(SHA2Substitutions.class, SHA2Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
+            Registration __r = new Registration(__plugins, "sun.security.provider.SHA2", __bytecodeProvider);
+            __r.registerMethodSubstitution(SHA2Substitutions.class, SHA2Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
         }
         if (HotSpotRuntime.useSHA512Intrinsics)
         {
-            Registration r = new Registration(plugins, "sun.security.provider.SHA5", bytecodeProvider);
-            r.registerMethodSubstitution(SHA5Substitutions.class, SHA5Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
+            Registration __r = new Registration(__plugins, "sun.security.provider.SHA5", __bytecodeProvider);
+            __r.registerMethodSubstitution(SHA5Substitutions.class, SHA5Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
         }
     }
 
-    private static void registerBigIntegerPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerBigIntegerPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
-        Registration r = new Registration(plugins, BigInteger.class, bytecodeProvider);
+        Registration __r = new Registration(__plugins, BigInteger.class, __bytecodeProvider);
         if (HotSpotRuntime.useMulAddIntrinsic)
         {
-            r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMulAdd", int[].class, int[].class, int.class, int.class, int.class);
+            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMulAdd", int[].class, int[].class, int.class, int.class, int.class);
         }
         if (HotSpotRuntime.useMultiplyToLenIntrinsic)
         {
-            r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMultiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class, int[].class);
+            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMultiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class, int[].class);
         }
         if (HotSpotRuntime.useSquareToLenIntrinsic)
         {
-            r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implSquareToLen", int[].class, int.class, int[].class, int.class);
+            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implSquareToLen", int[].class, int.class, int[].class, int.class);
         }
         if (HotSpotRuntime.useMontgomeryMultiplyIntrinsic)
         {
-            r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomeryMultiply", int[].class, int[].class, int[].class, int.class, long.class, int[].class);
+            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomeryMultiply", int[].class, int[].class, int[].class, int.class, long.class, int[].class);
         }
         if (HotSpotRuntime.useMontgomerySquareIntrinsic)
         {
-            r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomerySquare", int[].class, int[].class, int.class, long.class, int[].class);
+            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomerySquare", int[].class, int[].class, int.class, long.class, int[].class);
         }
     }
 
-    private static void registerCRC32Plugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerCRC32Plugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
         if (HotSpotRuntime.useCRC32Intrinsics)
         {
-            Registration r = new Registration(plugins, CRC32.class, bytecodeProvider);
-            r.registerMethodSubstitution(CRC32Substitutions.class, "update", int.class, int.class);
-            r.registerMethodSubstitution(CRC32Substitutions.class, "updateBytes0", int.class, byte[].class, int.class, int.class);
-            r.registerMethodSubstitution(CRC32Substitutions.class, "updateByteBuffer0", int.class, long.class, int.class, int.class);
+            Registration __r = new Registration(__plugins, CRC32.class, __bytecodeProvider);
+            __r.registerMethodSubstitution(CRC32Substitutions.class, "update", int.class, int.class);
+            __r.registerMethodSubstitution(CRC32Substitutions.class, "updateBytes0", int.class, byte[].class, int.class, int.class);
+            __r.registerMethodSubstitution(CRC32Substitutions.class, "updateByteBuffer0", int.class, long.class, int.class, int.class);
         }
     }
 
-    private static void registerCRC32CPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
+    private static void registerCRC32CPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
     {
         if (HotSpotRuntime.useCRC32CIntrinsics)
         {
-            Registration r = new Registration(plugins, "java.util.zip.CRC32C", bytecodeProvider);
-            r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateBytes", int.class, byte[].class, int.class, int.class);
-            r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateDirectByteBuffer", int.class, long.class, int.class, int.class);
+            Registration __r = new Registration(__plugins, "java.util.zip.CRC32C", __bytecodeProvider);
+            __r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateBytes", int.class, byte[].class, int.class, int.class);
+            __r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateDirectByteBuffer", int.class, long.class, int.class, int.class);
         }
     }
 }

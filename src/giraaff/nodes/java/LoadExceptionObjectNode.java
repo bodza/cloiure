@@ -9,17 +9,18 @@ import giraaff.nodes.spi.LoweringTool;
 // @class LoadExceptionObjectNode
 public final class LoadExceptionObjectNode extends AbstractStateSplit implements Lowerable
 {
+    // @def
     public static final NodeClass<LoadExceptionObjectNode> TYPE = NodeClass.create(LoadExceptionObjectNode.class);
 
     // @cons
-    public LoadExceptionObjectNode(Stamp stamp)
+    public LoadExceptionObjectNode(Stamp __stamp)
     {
-        super(TYPE, stamp);
+        super(TYPE, __stamp);
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 }

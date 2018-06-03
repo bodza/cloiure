@@ -10,21 +10,24 @@ import giraaff.graph.NodeClass;
 // @class IndirectCallTargetNode
 public class IndirectCallTargetNode extends LoweredCallTargetNode
 {
+    // @def
     public static final NodeClass<IndirectCallTargetNode> TYPE = NodeClass.create(IndirectCallTargetNode.class);
 
-    @Input protected ValueNode computedAddress;
+    @Input
+    // @field
+    protected ValueNode computedAddress;
 
     // @cons
-    public IndirectCallTargetNode(ValueNode computedAddress, ValueNode[] arguments, StampPair returnStamp, JavaType[] signature, ResolvedJavaMethod target, CallingConvention.Type callType, InvokeKind invokeKind)
+    public IndirectCallTargetNode(ValueNode __computedAddress, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, InvokeKind __invokeKind)
     {
-        this(TYPE, computedAddress, arguments, returnStamp, signature, target, callType, invokeKind);
+        this(TYPE, __computedAddress, __arguments, __returnStamp, __signature, __target, __callType, __invokeKind);
     }
 
     // @cons
-    protected IndirectCallTargetNode(NodeClass<? extends IndirectCallTargetNode> c, ValueNode computedAddress, ValueNode[] arguments, StampPair returnStamp, JavaType[] signature, ResolvedJavaMethod target, CallingConvention.Type callType, InvokeKind invokeKind)
+    protected IndirectCallTargetNode(NodeClass<? extends IndirectCallTargetNode> __c, ValueNode __computedAddress, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, InvokeKind __invokeKind)
     {
-        super(c, arguments, returnStamp, signature, target, callType, invokeKind);
-        this.computedAddress = computedAddress;
+        super(__c, __arguments, __returnStamp, __signature, __target, __callType, __invokeKind);
+        this.computedAddress = __computedAddress;
     }
 
     public ValueNode computedAddress()

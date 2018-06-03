@@ -11,9 +11,9 @@ public class GraalError extends Error
         throw new GraalError("unimplemented");
     }
 
-    public static RuntimeException unimplemented(String msg)
+    public static RuntimeException unimplemented(String __msg)
     {
-        throw new GraalError("unimplemented: %s", msg);
+        throw new GraalError("unimplemented: %s", __msg);
     }
 
     public static RuntimeException shouldNotReachHere()
@@ -21,14 +21,14 @@ public class GraalError extends Error
         throw new GraalError("should not reach here");
     }
 
-    public static RuntimeException shouldNotReachHere(String msg)
+    public static RuntimeException shouldNotReachHere(String __msg)
     {
-        throw new GraalError("should not reach here: %s", msg);
+        throw new GraalError("should not reach here: %s", __msg);
     }
 
-    public static RuntimeException shouldNotReachHere(Throwable cause)
+    public static RuntimeException shouldNotReachHere(Throwable __cause)
     {
-        throw new GraalError(cause);
+        throw new GraalError(__cause);
     }
 
     /**
@@ -40,11 +40,11 @@ public class GraalError extends Error
      * @param condition the condition to check
      * @param msg the message that will be associated with the error
      */
-    public static void guarantee(boolean condition, String msg)
+    public static void guarantee(boolean __condition, String __msg)
     {
-        if (!condition)
+        if (!__condition)
         {
-            throw new GraalError("failed guarantee: " + msg);
+            throw new GraalError("failed guarantee: " + __msg);
         }
     }
 
@@ -58,11 +58,11 @@ public class GraalError extends Error
      * @param msg the message that will be associated with the error, in {@link String#format(String, Object...)} syntax
      * @param arg argument to the format string in {@code msg}
      */
-    public static void guarantee(boolean condition, String msg, Object arg)
+    public static void guarantee(boolean __condition, String __msg, Object __arg)
     {
-        if (!condition)
+        if (!__condition)
         {
-            throw new GraalError("failed guarantee: " + msg, arg);
+            throw new GraalError("failed guarantee: " + __msg, __arg);
         }
     }
 
@@ -77,11 +77,11 @@ public class GraalError extends Error
      * @param arg1 argument to the format string in {@code msg}
      * @param arg2 argument to the format string in {@code msg}
      */
-    public static void guarantee(boolean condition, String msg, Object arg1, Object arg2)
+    public static void guarantee(boolean __condition, String __msg, Object __arg1, Object __arg2)
     {
-        if (!condition)
+        if (!__condition)
         {
-            throw new GraalError("failed guarantee: " + msg, arg1, arg2);
+            throw new GraalError("failed guarantee: " + __msg, __arg1, __arg2);
         }
     }
 
@@ -97,11 +97,11 @@ public class GraalError extends Error
      * @param arg2 argument to the format string in {@code msg}
      * @param arg3 argument to the format string in {@code msg}
      */
-    public static void guarantee(boolean condition, String msg, Object arg1, Object arg2, Object arg3)
+    public static void guarantee(boolean __condition, String __msg, Object __arg1, Object __arg2, Object __arg3)
     {
-        if (!condition)
+        if (!__condition)
         {
-            throw new GraalError("failed guarantee: " + msg, arg1, arg2, arg3);
+            throw new GraalError("failed guarantee: " + __msg, __arg1, __arg2, __arg3);
         }
     }
 
@@ -112,11 +112,11 @@ public class GraalError extends Error
      * wrapping the Object[] inside of another Object[].
      */
     @Deprecated
-    public static void guarantee(boolean condition, String msg, Object... args)
+    public static void guarantee(boolean __condition, String __msg, Object... __args)
     {
-        if (!condition)
+        if (!__condition)
         {
-            throw new GraalError("failed guarantee: " + msg, args);
+            throw new GraalError("failed guarantee: " + __msg, __args);
         }
     }
 
@@ -126,9 +126,9 @@ public class GraalError extends Error
      * @param msg the message that will be associated with the error
      */
     // @cons
-    public GraalError(String msg)
+    public GraalError(String __msg)
     {
-        super(msg);
+        super(__msg);
     }
 
     /**
@@ -139,9 +139,9 @@ public class GraalError extends Error
      * @param args parameters to String.format
      */
     // @cons
-    public GraalError(String msg, Object... args)
+    public GraalError(String __msg, Object... __args)
     {
-        super(String.format(msg, args));
+        super(String.format(__msg, __args));
     }
 
     /**
@@ -150,8 +150,8 @@ public class GraalError extends Error
      * @param cause the original exception that contains additional information on this error
      */
     // @cons
-    public GraalError(Throwable cause)
+    public GraalError(Throwable __cause)
     {
-        super(cause);
+        super(__cause);
     }
 }

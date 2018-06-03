@@ -17,17 +17,17 @@ import giraaff.hotspot.word.KlassPointer;
 public final class ReflectionSubstitutions
 {
     @MethodSubstitution
-    public static int getClassAccessFlags(Class<?> aClass)
+    public static int getClassAccessFlags(Class<?> __aClass)
     {
-        KlassPointer klass = ClassGetHubNode.readClass(GraalDirectives.guardingNonNull(aClass));
-        if (klass.isNull())
+        KlassPointer __klass = ClassGetHubNode.readClass(GraalDirectives.guardingNonNull(__aClass));
+        if (__klass.isNull())
         {
             // Class for primitive type
             return Modifier.ABSTRACT | Modifier.FINAL | Modifier.PUBLIC;
         }
         else
         {
-            return klass.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION) & HotSpotRuntime.jvmAccWrittenFlags;
+            return __klass.readInt(HotSpotRuntime.klassAccessFlagsOffset, HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION) & HotSpotRuntime.jvmAccWrittenFlags;
         }
     }
 }

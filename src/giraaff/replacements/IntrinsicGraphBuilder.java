@@ -42,84 +42,95 @@ import giraaff.util.GraalError;
 // @class IntrinsicGraphBuilder
 public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
 {
+    // @field
     protected final MetaAccessProvider metaAccess;
+    // @field
     protected final ConstantReflectionProvider constantReflection;
+    // @field
     protected final ConstantFieldProvider constantFieldProvider;
+    // @field
     protected final StampProvider stampProvider;
+    // @field
     protected final StructuredGraph graph;
+    // @field
     protected final Bytecode code;
+    // @field
     protected final ResolvedJavaMethod method;
+    // @field
     protected final int invokeBci;
+    // @field
     protected FixedWithNextNode lastInstr;
+    // @field
     protected ValueNode[] arguments;
+    // @field
     protected ValueNode returnValue;
 
     // @cons
-    public IntrinsicGraphBuilder(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci)
+    public IntrinsicGraphBuilder(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, StampProvider __stampProvider, Bytecode __code, int __invokeBci)
     {
-        this(metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci, AllowAssumptions.YES);
+        this(__metaAccess, __constantReflection, __constantFieldProvider, __stampProvider, __code, __invokeBci, AllowAssumptions.YES);
     }
 
     // @cons
-    protected IntrinsicGraphBuilder(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions)
+    protected IntrinsicGraphBuilder(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, StampProvider __stampProvider, Bytecode __code, int __invokeBci, AllowAssumptions __allowAssumptions)
     {
         super();
-        this.metaAccess = metaAccess;
-        this.constantReflection = constantReflection;
-        this.constantFieldProvider = constantFieldProvider;
-        this.stampProvider = stampProvider;
-        this.code = code;
-        this.method = code.getMethod();
-        this.graph = new StructuredGraph.Builder(allowAssumptions).method(method).build();
-        this.invokeBci = invokeBci;
+        this.metaAccess = __metaAccess;
+        this.constantReflection = __constantReflection;
+        this.constantFieldProvider = __constantFieldProvider;
+        this.stampProvider = __stampProvider;
+        this.code = __code;
+        this.method = __code.getMethod();
+        this.graph = new StructuredGraph.Builder(__allowAssumptions).method(method).build();
+        this.invokeBci = __invokeBci;
         this.lastInstr = graph.start();
 
-        Signature sig = method.getSignature();
-        int max = sig.getParameterCount(false);
-        this.arguments = new ValueNode[max + (method.isStatic() ? 0 : 1)];
+        Signature __sig = method.getSignature();
+        int __max = __sig.getParameterCount(false);
+        this.arguments = new ValueNode[__max + (method.isStatic() ? 0 : 1)];
 
-        int javaIndex = 0;
-        int index = 0;
+        int __javaIndex = 0;
+        int __index = 0;
         if (!method.isStatic())
         {
             // add the receiver
-            Stamp receiverStamp = StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(method.getDeclaringClass()));
-            ValueNode receiver = graph.addWithoutUnique(new ParameterNode(javaIndex, StampPair.createSingle(receiverStamp)));
-            arguments[index] = receiver;
-            javaIndex = 1;
-            index = 1;
+            Stamp __receiverStamp = StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(method.getDeclaringClass()));
+            ValueNode __receiver = graph.addWithoutUnique(new ParameterNode(__javaIndex, StampPair.createSingle(__receiverStamp)));
+            arguments[__index] = __receiver;
+            __javaIndex = 1;
+            __index = 1;
         }
-        ResolvedJavaType accessingClass = method.getDeclaringClass();
-        for (int i = 0; i < max; i++)
+        ResolvedJavaType __accessingClass = method.getDeclaringClass();
+        for (int __i = 0; __i < __max; __i++)
         {
-            JavaType type = sig.getParameterType(i, accessingClass).resolve(accessingClass);
-            JavaKind kind = type.getJavaKind();
-            Stamp stamp;
-            if (kind == JavaKind.Object && type instanceof ResolvedJavaType)
+            JavaType __type = __sig.getParameterType(__i, __accessingClass).resolve(__accessingClass);
+            JavaKind __kind = __type.getJavaKind();
+            Stamp __stamp;
+            if (__kind == JavaKind.Object && __type instanceof ResolvedJavaType)
             {
-                stamp = StampFactory.object(TypeReference.createWithoutAssumptions((ResolvedJavaType) type));
+                __stamp = StampFactory.object(TypeReference.createWithoutAssumptions((ResolvedJavaType) __type));
             }
             else
             {
-                stamp = StampFactory.forKind(kind);
+                __stamp = StampFactory.forKind(__kind);
             }
-            ValueNode param = graph.addWithoutUnique(new ParameterNode(index, StampPair.createSingle(stamp)));
-            arguments[index] = param;
-            javaIndex += kind.getSlotCount();
-            index++;
+            ValueNode __param = graph.addWithoutUnique(new ParameterNode(__index, StampPair.createSingle(__stamp)));
+            arguments[__index] = __param;
+            __javaIndex += __kind.getSlotCount();
+            __index++;
         }
     }
 
-    private <T extends ValueNode> void updateLastInstruction(T v)
+    private <T extends ValueNode> void updateLastInstruction(T __v)
     {
-        if (v instanceof FixedNode)
+        if (__v instanceof FixedNode)
         {
-            FixedNode fixedNode = (FixedNode) v;
-            lastInstr.setNext(fixedNode);
-            if (fixedNode instanceof FixedWithNextNode)
+            FixedNode __fixedNode = (FixedNode) __v;
+            lastInstr.setNext(__fixedNode);
+            if (__fixedNode instanceof FixedWithNextNode)
             {
-                FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) fixedNode;
-                lastInstr = fixedWithNextNode;
+                FixedWithNextNode __fixedWithNextNode = (FixedWithNextNode) __fixedNode;
+                lastInstr = __fixedWithNextNode;
             }
             else
             {
@@ -129,34 +140,34 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     }
 
     @Override
-    public <T extends ValueNode> T append(T v)
+    public <T extends ValueNode> T append(T __v)
     {
-        if (v.graph() != null)
+        if (__v.graph() != null)
         {
-            return v;
+            return __v;
         }
-        T added = graph.addOrUniqueWithInputs(v);
-        if (added == v)
+        T __added = graph.addOrUniqueWithInputs(__v);
+        if (__added == __v)
         {
-            updateLastInstruction(v);
+            updateLastInstruction(__v);
         }
-        return added;
+        return __added;
     }
 
     @Override
-    public void push(JavaKind kind, ValueNode value)
+    public void push(JavaKind __kind, ValueNode __value)
     {
-        returnValue = value;
+        returnValue = __value;
     }
 
     @Override
-    public void handleReplacedInvoke(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] args, boolean forceInlineEverything)
+    public void handleReplacedInvoke(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, boolean __forceInlineEverything)
     {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public void handleReplacedInvoke(CallTargetNode callTarget, JavaKind resultType)
+    public void handleReplacedInvoke(CallTargetNode __callTarget, JavaKind __resultType)
     {
         throw GraalError.shouldNotReachHere();
     }
@@ -192,10 +203,10 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     }
 
     @Override
-    public void setStateAfter(StateSplit sideEffect)
+    public void setStateAfter(StateSplit __sideEffect)
     {
-        FrameState stateAfter = getGraph().add(new FrameState(BytecodeFrame.BEFORE_BCI));
-        sideEffect.setStateAfter(stateAfter);
+        FrameState __stateAfter = getGraph().add(new FrameState(BytecodeFrame.BEFORE_BCI));
+        __sideEffect.setStateAfter(__stateAfter);
     }
 
     @Override
@@ -253,21 +264,21 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     }
 
     @Override
-    public BailoutException bailout(String msg)
+    public BailoutException bailout(String __msg)
     {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public ValueNode get(boolean performNullCheck)
+    public ValueNode get(boolean __performNullCheck)
     {
         return arguments[0];
     }
 
-    public StructuredGraph buildGraph(InvocationPlugin plugin)
+    public StructuredGraph buildGraph(InvocationPlugin __plugin)
     {
-        Receiver receiver = method.isStatic() ? null : this;
-        if (plugin.execute(this, method, receiver, arguments))
+        Receiver __receiver = method.isStatic() ? null : this;
+        if (__plugin.execute(this, method, __receiver, arguments))
         {
             append(new ReturnNode(returnValue));
             return graph;
@@ -276,7 +287,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     }
 
     @Override
-    public boolean intrinsify(BytecodeProvider bytecodeProvider, ResolvedJavaMethod targetMethod, ResolvedJavaMethod substitute, InvocationPlugin.Receiver receiver, ValueNode[] args)
+    public boolean intrinsify(BytecodeProvider __bytecodeProvider, ResolvedJavaMethod __targetMethod, ResolvedJavaMethod __substitute, InvocationPlugin.Receiver __receiver, ValueNode[] __args)
     {
         throw GraalError.shouldNotReachHere();
     }

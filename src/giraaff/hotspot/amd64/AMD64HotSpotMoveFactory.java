@@ -16,81 +16,81 @@ import giraaff.lir.amd64.AMD64LIRInstruction;
 public final class AMD64HotSpotMoveFactory extends AMD64MoveFactory
 {
     // @cons
-    public AMD64HotSpotMoveFactory(BackupSlotProvider backupSlotProvider)
+    public AMD64HotSpotMoveFactory(BackupSlotProvider __backupSlotProvider)
     {
-        super(backupSlotProvider);
+        super(__backupSlotProvider);
     }
 
     @Override
-    public boolean canInlineConstant(Constant c)
+    public boolean canInlineConstant(Constant __c)
     {
-        if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(c))
+        if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__c))
         {
             return true;
         }
-        else if (c instanceof HotSpotObjectConstant)
+        else if (__c instanceof HotSpotObjectConstant)
         {
-            return ((HotSpotObjectConstant) c).isCompressed();
+            return ((HotSpotObjectConstant) __c).isCompressed();
         }
-        else if (c instanceof HotSpotMetaspaceConstant)
+        else if (__c instanceof HotSpotMetaspaceConstant)
         {
-            return ((HotSpotMetaspaceConstant) c).isCompressed();
+            return ((HotSpotMetaspaceConstant) __c).isCompressed();
         }
         else
         {
-            return super.canInlineConstant(c);
+            return super.canInlineConstant(__c);
         }
     }
 
     @Override
-    public boolean allowConstantToStackMove(Constant value)
+    public boolean allowConstantToStackMove(Constant __value)
     {
-        if (value instanceof HotSpotConstant)
+        if (__value instanceof HotSpotConstant)
         {
-            return ((HotSpotConstant) value).isCompressed();
+            return ((HotSpotConstant) __value).isCompressed();
         }
-        return super.allowConstantToStackMove(value);
+        return super.allowConstantToStackMove(__value);
     }
 
     @Override
-    public AMD64LIRInstruction createLoad(AllocatableValue dst, Constant src)
+    public AMD64LIRInstruction createLoad(AllocatableValue __dst, Constant __src)
     {
-        if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(src))
+        if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__src))
         {
-            return super.createLoad(dst, JavaConstant.INT_0);
+            return super.createLoad(__dst, JavaConstant.INT_0);
         }
-        else if (src instanceof HotSpotObjectConstant)
+        else if (__src instanceof HotSpotObjectConstant)
         {
-            return new AMD64HotSpotMove.HotSpotLoadObjectConstantOp(dst, (HotSpotObjectConstant) src);
+            return new AMD64HotSpotMove.HotSpotLoadObjectConstantOp(__dst, (HotSpotObjectConstant) __src);
         }
-        else if (src instanceof HotSpotMetaspaceConstant)
+        else if (__src instanceof HotSpotMetaspaceConstant)
         {
-            return new AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp(dst, (HotSpotMetaspaceConstant) src);
+            return new AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp(__dst, (HotSpotMetaspaceConstant) __src);
         }
         else
         {
-            return super.createLoad(dst, src);
+            return super.createLoad(__dst, __src);
         }
     }
 
     @Override
-    public LIRInstruction createStackLoad(AllocatableValue dst, Constant src)
+    public LIRInstruction createStackLoad(AllocatableValue __dst, Constant __src)
     {
-        if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(src))
+        if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__src))
         {
-            return super.createStackLoad(dst, JavaConstant.INT_0);
+            return super.createStackLoad(__dst, JavaConstant.INT_0);
         }
-        else if (src instanceof HotSpotObjectConstant)
+        else if (__src instanceof HotSpotObjectConstant)
         {
-            return new AMD64HotSpotMove.HotSpotLoadObjectConstantOp(dst, (HotSpotObjectConstant) src);
+            return new AMD64HotSpotMove.HotSpotLoadObjectConstantOp(__dst, (HotSpotObjectConstant) __src);
         }
-        else if (src instanceof HotSpotMetaspaceConstant)
+        else if (__src instanceof HotSpotMetaspaceConstant)
         {
-            return new AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp(dst, (HotSpotMetaspaceConstant) src);
+            return new AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp(__dst, (HotSpotMetaspaceConstant) __src);
         }
         else
         {
-            return super.createStackLoad(dst, src);
+            return super.createStackLoad(__dst, __src);
         }
     }
 }

@@ -17,16 +17,21 @@ import giraaff.nodes.spi.VirtualizerTool;
 // @class AllocatedObjectNode
 public final class AllocatedObjectNode extends FloatingNode implements Virtualizable, ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<AllocatedObjectNode> TYPE = NodeClass.create(AllocatedObjectNode.class);
 
-    @Input VirtualObjectNode virtualObject;
-    @Input(InputType.Extension) CommitAllocationNode commit;
+    @Input
+    // @field
+    VirtualObjectNode virtualObject;
+    @Input(InputType.Extension)
+    // @field
+    CommitAllocationNode commit;
 
     // @cons
-    public AllocatedObjectNode(VirtualObjectNode virtualObject)
+    public AllocatedObjectNode(VirtualObjectNode __virtualObject)
     {
-        super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(virtualObject.type())));
-        this.virtualObject = virtualObject;
+        super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(__virtualObject.type())));
+        this.virtualObject = __virtualObject;
     }
 
     public VirtualObjectNode getVirtualObject()
@@ -39,16 +44,16 @@ public final class AllocatedObjectNode extends FloatingNode implements Virtualiz
         return commit;
     }
 
-    public void setCommit(CommitAllocationNode x)
+    public void setCommit(CommitAllocationNode __x)
     {
-        updateUsages(commit, x);
-        commit = x;
+        updateUsages(commit, __x);
+        commit = __x;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        tool.replaceWithVirtual(getVirtualObject());
+        __tool.replaceWithVirtual(getVirtualObject());
     }
 
     @Override

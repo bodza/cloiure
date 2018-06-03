@@ -61,21 +61,24 @@ import giraaff.word.Word.Operation;
 // @class WordOperationPlugin
 public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvokePlugin
 {
+    // @field
     protected final WordTypes wordTypes;
+    // @field
     protected final JavaKind wordKind;
+    // @field
     protected final SnippetReflectionProvider snippetReflection;
 
     // @cons
-    public WordOperationPlugin(SnippetReflectionProvider snippetReflection, WordTypes wordTypes)
+    public WordOperationPlugin(SnippetReflectionProvider __snippetReflection, WordTypes __wordTypes)
     {
         super();
-        this.snippetReflection = snippetReflection;
-        this.wordTypes = wordTypes;
-        this.wordKind = wordTypes.getWordKind();
+        this.snippetReflection = __snippetReflection;
+        this.wordTypes = __wordTypes;
+        this.wordKind = __wordTypes.getWordKind();
     }
 
     @Override
-    public boolean canChangeStackKind(GraphBuilderContext b)
+    public boolean canChangeStackKind(GraphBuilderContext __b)
     {
         return true;
     }
@@ -88,36 +91,36 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
      *         processed by this method)
      */
     @Override
-    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    public boolean handleInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        if (!wordTypes.isWordOperation(method))
+        if (!wordTypes.isWordOperation(__method))
         {
             return false;
         }
-        processWordOperation(b, args, wordTypes.getWordOperation(method, b.getMethod().getDeclaringClass()));
+        processWordOperation(__b, __args, wordTypes.getWordOperation(__method, __b.getMethod().getDeclaringClass()));
         return true;
     }
 
     @Override
-    public StampPair interceptType(GraphBuilderTool b, JavaType declaredType, boolean nonNull)
+    public StampPair interceptType(GraphBuilderTool __b, JavaType __declaredType, boolean __nonNull)
     {
-        Stamp wordStamp = null;
-        if (declaredType instanceof ResolvedJavaType)
+        Stamp __wordStamp = null;
+        if (__declaredType instanceof ResolvedJavaType)
         {
-            ResolvedJavaType resolved = (ResolvedJavaType) declaredType;
-            if (wordTypes.isWord(resolved))
+            ResolvedJavaType __resolved = (ResolvedJavaType) __declaredType;
+            if (wordTypes.isWord(__resolved))
             {
-                wordStamp = wordTypes.getWordStamp(resolved);
+                __wordStamp = wordTypes.getWordStamp(__resolved);
             }
-            else if (resolved.isArray() && wordTypes.isWord(resolved.getElementalType()))
+            else if (__resolved.isArray() && wordTypes.isWord(__resolved.getElementalType()))
             {
-                TypeReference trusted = TypeReference.createTrustedWithoutAssumptions(resolved);
-                wordStamp = StampFactory.object(trusted, nonNull);
+                TypeReference __trusted = TypeReference.createTrustedWithoutAssumptions(__resolved);
+                __wordStamp = StampFactory.object(__trusted, __nonNull);
             }
         }
-        if (wordStamp != null)
+        if (__wordStamp != null)
         {
-            return StampPair.createSingle(wordStamp);
+            return StampPair.createSingle(__wordStamp);
         }
         else
         {
@@ -126,69 +129,69 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     }
 
     @Override
-    public void notifyNotInlined(GraphBuilderContext b, ResolvedJavaMethod method, Invoke invoke)
+    public void notifyNotInlined(GraphBuilderContext __b, ResolvedJavaMethod __method, Invoke __invoke)
     {
-        if (wordTypes.isWord(invoke.asNode()))
+        if (wordTypes.isWord(__invoke.asNode()))
         {
-            invoke.asNode().setStamp(wordTypes.getWordStamp(StampTool.typeOrNull(invoke.asNode())));
+            __invoke.asNode().setStamp(wordTypes.getWordStamp(StampTool.typeOrNull(__invoke.asNode())));
         }
     }
 
     @Override
-    public boolean handleLoadField(GraphBuilderContext b, ValueNode receiver, ResolvedJavaField field)
+    public boolean handleLoadField(GraphBuilderContext __b, ValueNode __receiver, ResolvedJavaField __field)
     {
-        StampPair wordStamp = interceptType(b, field.getType(), false);
-        if (wordStamp != null)
+        StampPair __wordStamp = interceptType(__b, __field.getType(), false);
+        if (__wordStamp != null)
         {
-            LoadFieldNode loadFieldNode = LoadFieldNode.createOverrideStamp(wordStamp, receiver, field);
-            b.addPush(field.getJavaKind(), loadFieldNode);
+            LoadFieldNode __loadFieldNode = LoadFieldNode.createOverrideStamp(__wordStamp, __receiver, __field);
+            __b.addPush(__field.getJavaKind(), __loadFieldNode);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField staticField)
+    public boolean handleLoadStaticField(GraphBuilderContext __b, ResolvedJavaField __staticField)
     {
-        return handleLoadField(b, null, staticField);
+        return handleLoadField(__b, null, __staticField);
     }
 
     @Override
-    public boolean handleLoadIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind)
+    public boolean handleLoadIndexed(GraphBuilderContext __b, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
-        ResolvedJavaType arrayType = StampTool.typeOrNull(array);
+        ResolvedJavaType __arrayType = StampTool.typeOrNull(__array);
         /*
          * There are cases where the array does not have a known type yet, i.e., the type is null.
          * In that case we assume it is not a word type.
          */
-        if (arrayType != null && wordTypes.isWord(arrayType.getComponentType()))
+        if (__arrayType != null && wordTypes.isWord(__arrayType.getComponentType()))
         {
-            b.addPush(elementKind, createLoadIndexedNode(array, index));
+            __b.addPush(__elementKind, createLoadIndexedNode(__array, __index));
             return true;
         }
         return false;
     }
 
-    protected LoadIndexedNode createLoadIndexedNode(ValueNode array, ValueNode index)
+    protected LoadIndexedNode createLoadIndexedNode(ValueNode __array, ValueNode __index)
     {
-        return new LoadIndexedNode(null, array, index, wordKind);
+        return new LoadIndexedNode(null, __array, __index, wordKind);
     }
 
     @Override
-    public boolean handleStoreField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field, ValueNode value)
+    public boolean handleStoreField(GraphBuilderContext __b, ValueNode __object, ResolvedJavaField __field, ValueNode __value)
     {
-        if (field.getJavaKind() == JavaKind.Object)
+        if (__field.getJavaKind() == JavaKind.Object)
         {
-            boolean isWordField = wordTypes.isWord(field.getType());
-            boolean isWordValue = value.getStackKind() == wordKind;
+            boolean __isWordField = wordTypes.isWord(__field.getType());
+            boolean __isWordValue = __value.getStackKind() == wordKind;
 
-            if (isWordField && !isWordValue)
+            if (__isWordField && !__isWordValue)
             {
-                throw b.bailout("cannot store a non-word value into a word field: " + field.format("%H.%n"));
+                throw __b.bailout("cannot store a non-word value into a word field: " + __field.format("%H.%n"));
             }
-            else if (!isWordField && isWordValue)
+            else if (!__isWordField && __isWordValue)
             {
-                throw b.bailout("cannot store a word value into a non-word field: " + field.format("%H.%n"));
+                throw __b.bailout("cannot store a word value into a non-word field: " + __field.format("%H.%n"));
             }
         }
 
@@ -197,146 +200,148 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     }
 
     @Override
-    public boolean handleStoreStaticField(GraphBuilderContext b, ResolvedJavaField field, ValueNode value)
+    public boolean handleStoreStaticField(GraphBuilderContext __b, ResolvedJavaField __field, ValueNode __value)
     {
-        return handleStoreField(b, null, field, value);
+        return handleStoreField(__b, null, __field, __value);
     }
 
     @Override
-    public boolean handleStoreIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value)
+    public boolean handleStoreIndexed(GraphBuilderContext __b, ValueNode __array, ValueNode __index, JavaKind __elementKind, ValueNode __value)
     {
-        ResolvedJavaType arrayType = StampTool.typeOrNull(array);
-        if (arrayType != null && wordTypes.isWord(arrayType.getComponentType()))
+        ResolvedJavaType __arrayType = StampTool.typeOrNull(__array);
+        if (__arrayType != null && wordTypes.isWord(__arrayType.getComponentType()))
         {
-            if (value.getStackKind() != wordKind)
+            if (__value.getStackKind() != wordKind)
             {
-                throw b.bailout("cannot store a non-word value into a word array: " + arrayType.toJavaName(true));
+                throw __b.bailout("cannot store a non-word value into a word array: " + __arrayType.toJavaName(true));
             }
-            b.add(createStoreIndexedNode(array, index, value));
+            __b.add(createStoreIndexedNode(__array, __index, __value));
             return true;
         }
-        if (elementKind == JavaKind.Object && value.getStackKind() == wordKind)
+        if (__elementKind == JavaKind.Object && __value.getStackKind() == wordKind)
         {
-            throw b.bailout("cannot store a word value into a non-word array: " + arrayType.toJavaName(true));
+            throw __b.bailout("cannot store a word value into a non-word array: " + __arrayType.toJavaName(true));
         }
         return false;
     }
 
-    protected StoreIndexedNode createStoreIndexedNode(ValueNode array, ValueNode index, ValueNode value)
+    protected StoreIndexedNode createStoreIndexedNode(ValueNode __array, ValueNode __index, ValueNode __value)
     {
-        return new StoreIndexedNode(array, index, wordKind, value);
+        return new StoreIndexedNode(__array, __index, wordKind, __value);
     }
 
     @Override
-    public boolean handleCheckCast(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    public boolean handleCheckCast(GraphBuilderContext __b, ValueNode __object, ResolvedJavaType __type, JavaTypeProfile __profile)
     {
-        if (!wordTypes.isWord(type))
+        if (!wordTypes.isWord(__type))
         {
-            if (object.getStackKind() != JavaKind.Object)
+            if (__object.getStackKind() != JavaKind.Object)
             {
-                throw b.bailout("cannot cast a word value to a non-word type: " + type.toJavaName(true));
+                throw __b.bailout("cannot cast a word value to a non-word type: " + __type.toJavaName(true));
             }
             return false;
         }
 
-        if (object.getStackKind() != wordKind)
+        if (__object.getStackKind() != wordKind)
         {
-            throw b.bailout("cannot cast a non-word value to a word type: " + type.toJavaName(true));
+            throw __b.bailout("cannot cast a non-word value to a word type: " + __type.toJavaName(true));
         }
-        b.push(JavaKind.Object, object);
+        __b.push(JavaKind.Object, __object);
         return true;
     }
 
     @Override
-    public boolean handleInstanceOf(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    public boolean handleInstanceOf(GraphBuilderContext __b, ValueNode __object, ResolvedJavaType __type, JavaTypeProfile __profile)
     {
-        if (wordTypes.isWord(type))
+        if (wordTypes.isWord(__type))
         {
-            throw b.bailout("cannot use instanceof for word a type: " + type.toJavaName(true));
+            throw __b.bailout("cannot use instanceof for word a type: " + __type.toJavaName(true));
         }
-        else if (object.getStackKind() != JavaKind.Object)
+        else if (__object.getStackKind() != JavaKind.Object)
         {
-            throw b.bailout("cannot use instanceof on a word value: " + type.toJavaName(true));
+            throw __b.bailout("cannot use instanceof on a word value: " + __type.toJavaName(true));
         }
         return false;
     }
 
-    protected void processWordOperation(GraphBuilderContext b, ValueNode[] args, ResolvedJavaMethod wordMethod)
+    protected void processWordOperation(GraphBuilderContext __b, ValueNode[] __args, ResolvedJavaMethod __wordMethod)
     {
-        JavaKind returnKind = wordMethod.getSignature().getReturnKind();
-        WordFactoryOperation factoryOperation = BridgeMethodUtils.getAnnotation(WordFactoryOperation.class, wordMethod);
-        if (factoryOperation != null)
+        JavaKind __returnKind = __wordMethod.getSignature().getReturnKind();
+        WordFactoryOperation __factoryOperation = BridgeMethodUtils.getAnnotation(WordFactoryOperation.class, __wordMethod);
+        if (__factoryOperation != null)
         {
-            switch (factoryOperation.opcode())
+            switch (__factoryOperation.opcode())
             {
                 case ZERO:
-                    b.addPush(returnKind, ConstantNode.forIntegerKind(wordKind, 0L));
+                    __b.addPush(__returnKind, ConstantNode.forIntegerKind(wordKind, 0L));
                     return;
 
                 case FROM_UNSIGNED:
-                    b.push(returnKind, fromUnsigned(b, args[0]));
+                    __b.push(__returnKind, fromUnsigned(__b, __args[0]));
                     return;
 
                 case FROM_SIGNED:
-                    b.push(returnKind, fromSigned(b, args[0]));
+                    __b.push(__returnKind, fromSigned(__b, __args[0]));
                     return;
             }
         }
 
-        Word.Operation operation = BridgeMethodUtils.getAnnotation(Word.Operation.class, wordMethod);
-        if (operation == null)
+        Word.Operation __operation = BridgeMethodUtils.getAnnotation(Word.Operation.class, __wordMethod);
+        if (__operation == null)
         {
-            throw b.bailout("cannot call method on a word value: " + wordMethod.format("%H.%n(%p)"));
+            throw __b.bailout("cannot call method on a word value: " + __wordMethod.format("%H.%n(%p)"));
         }
-        switch (operation.opcode())
+        switch (__operation.opcode())
         {
             case NODE_CLASS:
-                ValueNode left = args[0];
-                ValueNode right = operation.rightOperandIsInt() ? toUnsigned(b, args[1], JavaKind.Int) : fromSigned(b, args[1]);
+            {
+                ValueNode __left = __args[0];
+                ValueNode __right = __operation.rightOperandIsInt() ? toUnsigned(__b, __args[1], JavaKind.Int) : fromSigned(__b, __args[1]);
 
-                b.addPush(returnKind, createBinaryNodeInstance(operation.node(), left, right));
+                __b.addPush(__returnKind, createBinaryNodeInstance(__operation.node(), __left, __right));
                 break;
+            }
 
             case COMPARISON:
-                b.push(returnKind, comparisonOp(b, operation.condition(), args[0], fromSigned(b, args[1])));
+                __b.push(__returnKind, comparisonOp(__b, __operation.condition(), __args[0], fromSigned(__b, __args[1])));
                 break;
 
             case IS_NULL:
-                b.push(returnKind, comparisonOp(b, Condition.EQ, args[0], ConstantNode.forIntegerKind(wordKind, 0L)));
+                __b.push(__returnKind, comparisonOp(__b, Condition.EQ, __args[0], ConstantNode.forIntegerKind(wordKind, 0L)));
                 break;
 
             case IS_NON_NULL:
-                b.push(returnKind, comparisonOp(b, Condition.NE, args[0], ConstantNode.forIntegerKind(wordKind, 0L)));
+                __b.push(__returnKind, comparisonOp(__b, Condition.NE, __args[0], ConstantNode.forIntegerKind(wordKind, 0L)));
                 break;
 
             case NOT:
-                b.addPush(returnKind, new XorNode(args[0], b.add(ConstantNode.forIntegerKind(wordKind, -1))));
+                __b.addPush(__returnKind, new XorNode(__args[0], __b.add(ConstantNode.forIntegerKind(wordKind, -1))));
                 break;
 
             case READ_POINTER:
             case READ_OBJECT:
             case READ_BARRIERED:
             {
-                JavaKind readKind = wordTypes.asKind(wordMethod.getSignature().getReturnType(wordMethod.getDeclaringClass()));
-                AddressNode address = makeAddress(b, args[0], args[1]);
-                LocationIdentity location;
-                if (args.length == 2)
+                JavaKind __readKind = wordTypes.asKind(__wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass()));
+                AddressNode __address = makeAddress(__b, __args[0], __args[1]);
+                LocationIdentity __location;
+                if (__args.length == 2)
                 {
-                    location = LocationIdentity.any();
+                    __location = LocationIdentity.any();
                 }
                 else
                 {
-                    location = snippetReflection.asObject(LocationIdentity.class, args[2].asJavaConstant());
+                    __location = snippetReflection.asObject(LocationIdentity.class, __args[2].asJavaConstant());
                 }
-                b.push(returnKind, readOp(b, readKind, address, location, operation.opcode()));
+                __b.push(__returnKind, readOp(__b, __readKind, __address, __location, __operation.opcode()));
                 break;
             }
             case READ_HEAP:
             {
-                JavaKind readKind = wordTypes.asKind(wordMethod.getSignature().getReturnType(wordMethod.getDeclaringClass()));
-                AddressNode address = makeAddress(b, args[0], args[1]);
-                BarrierType barrierType = snippetReflection.asObject(BarrierType.class, args[2].asJavaConstant());
-                b.push(returnKind, readOp(b, readKind, address, LocationIdentity.any(), barrierType, true));
+                JavaKind __readKind = wordTypes.asKind(__wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass()));
+                AddressNode __address = makeAddress(__b, __args[0], __args[1]);
+                BarrierType __barrierType = snippetReflection.asObject(BarrierType.class, __args[2].asJavaConstant());
+                __b.push(__returnKind, readOp(__b, __readKind, __address, LocationIdentity.any(), __barrierType, true));
                 break;
             }
             case WRITE_POINTER:
@@ -344,59 +349,72 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             case WRITE_BARRIERED:
             case INITIALIZE:
             {
-                JavaKind writeKind = wordTypes.asKind(wordMethod.getSignature().getParameterType(wordMethod.isStatic() ? 2 : 1, wordMethod.getDeclaringClass()));
-                AddressNode address = makeAddress(b, args[0], args[1]);
-                LocationIdentity location;
-                if (args.length == 3)
+                JavaKind __writeKind = wordTypes.asKind(__wordMethod.getSignature().getParameterType(__wordMethod.isStatic() ? 2 : 1, __wordMethod.getDeclaringClass()));
+                AddressNode __address = makeAddress(__b, __args[0], __args[1]);
+                LocationIdentity __location;
+                if (__args.length == 3)
                 {
-                    location = LocationIdentity.any();
+                    __location = LocationIdentity.any();
                 }
                 else
                 {
-                    location = snippetReflection.asObject(LocationIdentity.class, args[3].asJavaConstant());
+                    __location = snippetReflection.asObject(LocationIdentity.class, __args[3].asJavaConstant());
                 }
-                writeOp(b, writeKind, address, location, args[2], operation.opcode());
+                writeOp(__b, __writeKind, __address, __location, __args[2], __operation.opcode());
                 break;
             }
 
             case TO_RAW_VALUE:
-                b.push(returnKind, toUnsigned(b, args[0], JavaKind.Long));
+                __b.push(__returnKind, toUnsigned(__b, __args[0], JavaKind.Long));
                 break;
 
             case OBJECT_TO_TRACKED:
-                WordCastNode objectToTracked = b.add(WordCastNode.objectToTrackedPointer(args[0], wordKind));
-                b.push(returnKind, objectToTracked);
+            {
+                WordCastNode __objectToTracked = __b.add(WordCastNode.objectToTrackedPointer(__args[0], wordKind));
+                __b.push(__returnKind, __objectToTracked);
                 break;
+            }
 
             case OBJECT_TO_UNTRACKED:
-                WordCastNode objectToUntracked = b.add(WordCastNode.objectToUntrackedPointer(args[0], wordKind));
-                b.push(returnKind, objectToUntracked);
+            {
+                WordCastNode __objectToUntracked = __b.add(WordCastNode.objectToUntrackedPointer(__args[0], wordKind));
+                __b.push(__returnKind, __objectToUntracked);
                 break;
+            }
 
             case FROM_ADDRESS:
-                WordCastNode addressToWord = b.add(WordCastNode.addressToWord(args[0], wordKind));
-                b.push(returnKind, addressToWord);
+            {
+                WordCastNode __addressToWord = __b.add(WordCastNode.addressToWord(__args[0], wordKind));
+                __b.push(__returnKind, __addressToWord);
                 break;
+            }
 
             case TO_OBJECT:
-                WordCastNode wordToObject = b.add(WordCastNode.wordToObject(args[0], wordKind));
-                b.push(returnKind, wordToObject);
+            {
+                WordCastNode __wordToObject = __b.add(WordCastNode.wordToObject(__args[0], wordKind));
+                __b.push(__returnKind, __wordToObject);
                 break;
+            }
 
             case TO_OBJECT_NON_NULL:
-                WordCastNode wordToObjectNonNull = b.add(WordCastNode.wordToObjectNonNull(args[0], wordKind));
-                b.push(returnKind, wordToObjectNonNull);
+            {
+                WordCastNode __wordToObjectNonNull = __b.add(WordCastNode.wordToObjectNonNull(__args[0], wordKind));
+                __b.push(__returnKind, __wordToObjectNonNull);
                 break;
+            }
 
             case CAS_POINTER:
-                AddressNode address = makeAddress(b, args[0], args[1]);
-                JavaKind valueKind = wordTypes.asKind(wordMethod.getSignature().getParameterType(1, wordMethod.getDeclaringClass()));
-                LocationIdentity location = snippetReflection.asObject(LocationIdentity.class, args[4].asJavaConstant());
-                JavaType returnType = wordMethod.getSignature().getReturnType(wordMethod.getDeclaringClass());
-                b.addPush(returnKind, casOp(valueKind, wordTypes.asKind(returnType), address, location, args[2], args[3]));
+            {
+                AddressNode __address = makeAddress(__b, __args[0], __args[1]);
+                JavaKind __valueKind = wordTypes.asKind(__wordMethod.getSignature().getParameterType(1, __wordMethod.getDeclaringClass()));
+                LocationIdentity __location = snippetReflection.asObject(LocationIdentity.class, __args[4].asJavaConstant());
+                JavaType __returnType = __wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass());
+                __b.addPush(__returnKind, casOp(__valueKind, wordTypes.asKind(__returnType), __address, __location, __args[2], __args[3]));
                 break;
+            }
+
             default:
-                throw new GraalError("Unknown opcode: %s", operation.opcode());
+                throw new GraalError("Unknown opcode: %s", __operation.opcode());
         }
     }
 
@@ -405,128 +423,128 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
      * method is called for all {@link Word} operations which are annotated with @Operation(node =
      * ...) and encapsulates the reflective allocation of the node.
      */
-    private static ValueNode createBinaryNodeInstance(Class<? extends ValueNode> nodeClass, ValueNode left, ValueNode right)
+    private static ValueNode createBinaryNodeInstance(Class<? extends ValueNode> __nodeClass, ValueNode __left, ValueNode __right)
     {
         try
         {
-            Constructor<?> cons = nodeClass.getDeclaredConstructor(ValueNode.class, ValueNode.class);
-            return (ValueNode) cons.newInstance(left, right);
+            Constructor<?> __cons = __nodeClass.getDeclaredConstructor(ValueNode.class, ValueNode.class);
+            return (ValueNode) __cons.newInstance(__left, __right);
         }
-        catch (Throwable t)
+        catch (Throwable __t)
         {
-            throw new GraalError(t);
+            throw new GraalError(__t);
         }
     }
 
-    private ValueNode comparisonOp(GraphBuilderContext graph, Condition condition, ValueNode left, ValueNode right)
+    private ValueNode comparisonOp(GraphBuilderContext __graph, Condition __condition, ValueNode __left, ValueNode __right)
     {
-        CanonicalizedCondition canonical = condition.canonicalize();
+        CanonicalizedCondition __canonical = __condition.canonicalize();
 
-        ValueNode a = canonical.mustMirror() ? right : left;
-        ValueNode b = canonical.mustMirror() ? left : right;
+        ValueNode __a = __canonical.mustMirror() ? __right : __left;
+        ValueNode __b = __canonical.mustMirror() ? __left : __right;
 
-        CompareNode comparison;
-        if (canonical.getCanonicalCondition() == CanonicalCondition.EQ)
+        CompareNode __comparison;
+        if (__canonical.getCanonicalCondition() == CanonicalCondition.EQ)
         {
-            comparison = new IntegerEqualsNode(a, b);
+            __comparison = new IntegerEqualsNode(__a, __b);
         }
-        else if (canonical.getCanonicalCondition() == CanonicalCondition.BT)
+        else if (__canonical.getCanonicalCondition() == CanonicalCondition.BT)
         {
-            comparison = new IntegerBelowNode(a, b);
+            __comparison = new IntegerBelowNode(__a, __b);
         }
         else
         {
-            comparison = new IntegerLessThanNode(a, b);
+            __comparison = new IntegerLessThanNode(__a, __b);
         }
 
-        ConstantNode trueValue = graph.add(ConstantNode.forInt(1));
-        ConstantNode falseValue = graph.add(ConstantNode.forInt(0));
+        ConstantNode __trueValue = __graph.add(ConstantNode.forInt(1));
+        ConstantNode __falseValue = __graph.add(ConstantNode.forInt(0));
 
-        if (canonical.mustNegate())
+        if (__canonical.mustNegate())
         {
-            ConstantNode temp = trueValue;
-            trueValue = falseValue;
-            falseValue = temp;
+            ConstantNode __temp = __trueValue;
+            __trueValue = __falseValue;
+            __falseValue = __temp;
         }
-        return graph.add(new ConditionalNode(graph.add(comparison), trueValue, falseValue));
+        return __graph.add(new ConditionalNode(__graph.add(__comparison), __trueValue, __falseValue));
     }
 
-    protected ValueNode readOp(GraphBuilderContext b, JavaKind readKind, AddressNode address, LocationIdentity location, Opcode op)
+    protected ValueNode readOp(GraphBuilderContext __b, JavaKind __readKind, AddressNode __address, LocationIdentity __location, Opcode __op)
     {
-        final BarrierType barrier = (op == Opcode.READ_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
-        final boolean compressible = (op == Opcode.READ_OBJECT || op == Opcode.READ_BARRIERED);
+        final BarrierType __barrier = (__op == Opcode.READ_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
+        final boolean __compressible = (__op == Opcode.READ_OBJECT || __op == Opcode.READ_BARRIERED);
 
-        return readOp(b, readKind, address, location, barrier, compressible);
+        return readOp(__b, __readKind, __address, __location, __barrier, __compressible);
     }
 
-    public static ValueNode readOp(GraphBuilderContext b, JavaKind readKind, AddressNode address, LocationIdentity location, BarrierType barrierType, boolean compressible)
+    public static ValueNode readOp(GraphBuilderContext __b, JavaKind __readKind, AddressNode __address, LocationIdentity __location, BarrierType __barrierType, boolean __compressible)
     {
         /*
          * A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float above
          * an explicit zero check on its base address or any other test that ensures the read is safe.
          */
-        return b.add(new JavaReadNode(readKind, address, location, barrierType, compressible));
+        return __b.add(new JavaReadNode(__readKind, __address, __location, __barrierType, __compressible));
     }
 
-    protected void writeOp(GraphBuilderContext b, JavaKind writeKind, AddressNode address, LocationIdentity location, ValueNode value, Opcode op)
+    protected void writeOp(GraphBuilderContext __b, JavaKind __writeKind, AddressNode __address, LocationIdentity __location, ValueNode __value, Opcode __op)
     {
-        final BarrierType barrier = (op == Opcode.WRITE_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
-        final boolean compressible = (op == Opcode.WRITE_OBJECT || op == Opcode.WRITE_BARRIERED);
-        b.add(new JavaWriteNode(writeKind, address, location, value, barrier, compressible));
+        final BarrierType __barrier = (__op == Opcode.WRITE_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
+        final boolean __compressible = (__op == Opcode.WRITE_OBJECT || __op == Opcode.WRITE_BARRIERED);
+        __b.add(new JavaWriteNode(__writeKind, __address, __location, __value, __barrier, __compressible));
     }
 
-    protected AbstractCompareAndSwapNode casOp(JavaKind writeKind, JavaKind returnKind, AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue)
+    protected AbstractCompareAndSwapNode casOp(JavaKind __writeKind, JavaKind __returnKind, AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue)
     {
-        if (returnKind == JavaKind.Boolean)
+        if (__returnKind == JavaKind.Boolean)
         {
-            return new LogicCompareAndSwapNode(address, expectedValue, newValue, location);
+            return new LogicCompareAndSwapNode(__address, __expectedValue, __newValue, __location);
         }
         else
         {
-            return new ValueCompareAndSwapNode(address, expectedValue, newValue, location);
+            return new ValueCompareAndSwapNode(__address, __expectedValue, __newValue, __location);
         }
     }
 
-    public AddressNode makeAddress(GraphBuilderContext b, ValueNode base, ValueNode offset)
+    public AddressNode makeAddress(GraphBuilderContext __b, ValueNode __base, ValueNode __offset)
     {
-        return b.add(new OffsetAddressNode(base, fromSigned(b, offset)));
+        return __b.add(new OffsetAddressNode(__base, fromSigned(__b, __offset)));
     }
 
-    public ValueNode fromUnsigned(GraphBuilderContext b, ValueNode value)
+    public ValueNode fromUnsigned(GraphBuilderContext __b, ValueNode __value)
     {
-        return convert(b, value, wordKind, true);
+        return convert(__b, __value, wordKind, true);
     }
 
-    public ValueNode fromSigned(GraphBuilderContext b, ValueNode value)
+    public ValueNode fromSigned(GraphBuilderContext __b, ValueNode __value)
     {
-        return convert(b, value, wordKind, false);
+        return convert(__b, __value, wordKind, false);
     }
 
-    public ValueNode toUnsigned(GraphBuilderContext b, ValueNode value, JavaKind toKind)
+    public ValueNode toUnsigned(GraphBuilderContext __b, ValueNode __value, JavaKind __toKind)
     {
-        return convert(b, value, toKind, true);
+        return convert(__b, __value, __toKind, true);
     }
 
-    public ValueNode convert(GraphBuilderContext b, ValueNode value, JavaKind toKind, boolean unsigned)
+    public ValueNode convert(GraphBuilderContext __b, ValueNode __value, JavaKind __toKind, boolean __unsigned)
     {
-        if (value.getStackKind() == toKind)
+        if (__value.getStackKind() == __toKind)
         {
-            return value;
+            return __value;
         }
 
-        if (toKind == JavaKind.Int)
+        if (__toKind == JavaKind.Int)
         {
-            return b.add(new NarrowNode(value, 32));
+            return __b.add(new NarrowNode(__value, 32));
         }
         else
         {
-            if (unsigned)
+            if (__unsigned)
             {
-                return b.add(new ZeroExtendNode(value, 64));
+                return __b.add(new ZeroExtendNode(__value, 64));
             }
             else
             {
-                return b.add(new SignExtendNode(value, 64));
+                return __b.add(new SignExtendNode(__value, 64));
             }
         }
     }

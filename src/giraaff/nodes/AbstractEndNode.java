@@ -11,18 +11,19 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AbstractEndNode
 public abstract class AbstractEndNode extends FixedNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<AbstractEndNode> TYPE = NodeClass.create(AbstractEndNode.class);
 
     // @cons
-    protected AbstractEndNode(NodeClass<? extends AbstractEndNode> c)
+    protected AbstractEndNode(NodeClass<? extends AbstractEndNode> __c)
     {
-        super(c, StampFactory.forVoid());
+        super(__c, StampFactory.forVoid());
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.visitEndNode(this);
+        __gen.visitEndNode(this);
     }
 
     public AbstractMergeNode merge()
@@ -33,10 +34,10 @@ public abstract class AbstractEndNode extends FixedNode implements LIRLowerable
     @Override
     public Iterable<? extends Node> cfgSuccessors()
     {
-        AbstractMergeNode merge = merge();
-        if (merge != null)
+        AbstractMergeNode __merge = merge();
+        if (__merge != null)
         {
-            return Collections.singletonList(merge);
+            return Collections.singletonList(__merge);
         }
         return Collections.emptyList();
     }

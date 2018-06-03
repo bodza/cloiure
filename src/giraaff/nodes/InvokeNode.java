@@ -26,33 +26,43 @@ import giraaff.nodeinfo.InputType;
 // @class InvokeNode
 public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke, LIRLowerable, MemoryCheckpoint.Single, UncheckedInterfaceProvider
 {
+    // @def
     public static final NodeClass<InvokeNode> TYPE = NodeClass.create(InvokeNode.class);
 
-    @OptionalInput ValueNode classInit;
-    @Input(InputType.Extension) CallTargetNode callTarget;
-    @OptionalInput(InputType.State) FrameState stateDuring;
+    @OptionalInput
+    // @field
+    ValueNode classInit;
+    @Input(InputType.Extension)
+    // @field
+    CallTargetNode callTarget;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateDuring;
+    // @field
     protected final int bci;
+    // @field
     protected boolean polymorphic;
+    // @field
     protected boolean useForInlining;
 
     // @cons
-    public InvokeNode(CallTargetNode callTarget, int bci)
+    public InvokeNode(CallTargetNode __callTarget, int __bci)
     {
-        this(callTarget, bci, callTarget.returnStamp().getTrustedStamp());
+        this(__callTarget, __bci, __callTarget.returnStamp().getTrustedStamp());
     }
 
     // @cons
-    public InvokeNode(CallTargetNode callTarget, int bci, Stamp stamp)
+    public InvokeNode(CallTargetNode __callTarget, int __bci, Stamp __stamp)
     {
-        super(TYPE, stamp);
-        this.callTarget = callTarget;
-        this.bci = bci;
+        super(TYPE, __stamp);
+        this.callTarget = __callTarget;
+        this.bci = __bci;
         this.polymorphic = false;
         this.useForInlining = true;
     }
 
     @Override
-    protected void afterClone(Node other)
+    protected void afterClone(Node __other)
     {
     }
 
@@ -68,10 +78,10 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
         return callTarget;
     }
 
-    void setCallTarget(CallTargetNode callTarget)
+    void setCallTarget(CallTargetNode __callTarget)
     {
-        updateUsages(this.callTarget, callTarget);
-        this.callTarget = callTarget;
+        updateUsages(this.callTarget, __callTarget);
+        this.callTarget = __callTarget;
     }
 
     @Override
@@ -81,9 +91,9 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     }
 
     @Override
-    public void setPolymorphic(boolean value)
+    public void setPolymorphic(boolean __value)
     {
-        this.polymorphic = value;
+        this.polymorphic = __value;
     }
 
     @Override
@@ -93,15 +103,15 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     }
 
     @Override
-    public void setUseForInlining(boolean value)
+    public void setUseForInlining(boolean __value)
     {
-        this.useForInlining = value;
+        this.useForInlining = __value;
     }
 
     @Override
-    public boolean isAllowedUsageType(InputType type)
+    public boolean isAllowedUsageType(InputType __type)
     {
-        if (!super.isAllowedUsageType(type))
+        if (!super.isAllowedUsageType(__type))
         {
             if (getStackKind() != JavaKind.Void)
             {
@@ -122,15 +132,15 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.emitInvoke(this);
+        __gen.emitInvoke(this);
     }
 
     @Override
@@ -140,39 +150,39 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     }
 
     @Override
-    public void intrinsify(Node node)
+    public void intrinsify(Node __node)
     {
-        CallTargetNode call = callTarget;
-        FrameState currentStateAfter = stateAfter();
-        if (node instanceof StateSplit)
+        CallTargetNode __call = callTarget;
+        FrameState __currentStateAfter = stateAfter();
+        if (__node instanceof StateSplit)
         {
-            StateSplit stateSplit = (StateSplit) node;
-            stateSplit.setStateAfter(currentStateAfter);
+            StateSplit __stateSplit = (StateSplit) __node;
+            __stateSplit.setStateAfter(__currentStateAfter);
         }
-        if (node instanceof ForeignCallNode)
+        if (__node instanceof ForeignCallNode)
         {
-            ForeignCallNode foreign = (ForeignCallNode) node;
-            foreign.setBci(bci());
+            ForeignCallNode __foreign = (ForeignCallNode) __node;
+            __foreign.setBci(bci());
         }
-        if (node instanceof FixedWithNextNode)
+        if (__node instanceof FixedWithNextNode)
         {
-            graph().replaceFixedWithFixed(this, (FixedWithNextNode) node);
+            graph().replaceFixedWithFixed(this, (FixedWithNextNode) __node);
         }
-        else if (node instanceof ControlSinkNode)
+        else if (__node instanceof ControlSinkNode)
         {
-            this.replaceAtPredecessor(node);
+            this.replaceAtPredecessor(__node);
             this.replaceAtUsages(null);
             GraphUtil.killCFG(this);
             return;
         }
         else
         {
-            graph().replaceFixed(this, node);
+            graph().replaceFixed(this, __node);
         }
-        GraphUtil.killWithUnusedFloatingInputs(call);
-        if (currentStateAfter.hasNoUsages())
+        GraphUtil.killWithUnusedFloatingInputs(__call);
+        if (__currentStateAfter.hasNoUsages())
         {
-            GraphUtil.killWithUnusedFloatingInputs(currentStateAfter);
+            GraphUtil.killWithUnusedFloatingInputs(__currentStateAfter);
         }
     }
 
@@ -189,10 +199,10 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     }
 
     @Override
-    public void setStateDuring(FrameState stateDuring)
+    public void setStateDuring(FrameState __stateDuring)
     {
-        updateUsages(this.stateDuring, stateDuring);
-        this.stateDuring = stateDuring;
+        updateUsages(this.stateDuring, __stateDuring);
+        this.stateDuring = __stateDuring;
     }
 
     @Override
@@ -202,10 +212,10 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     }
 
     @Override
-    public void setClassInit(ValueNode classInit)
+    public void setClassInit(ValueNode __classInit)
     {
-        this.classInit = classInit;
-        updateUsages(null, classInit);
+        this.classInit = __classInit;
+        updateUsages(null, __classInit);
     }
 
     @Override

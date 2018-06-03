@@ -32,28 +32,31 @@ import giraaff.nodes.spi.LoweringTool;
 // @class KlassLayoutHelperNode
 public final class KlassLayoutHelperNode extends FloatingNode implements Canonicalizable, Lowerable
 {
+    // @def
     public static final NodeClass<KlassLayoutHelperNode> TYPE = NodeClass.create(KlassLayoutHelperNode.class);
 
-    @Input protected ValueNode klass;
+    @Input
+    // @field
+    protected ValueNode klass;
 
     // @cons
-    public KlassLayoutHelperNode(ValueNode klass)
+    public KlassLayoutHelperNode(ValueNode __klass)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.klass = klass;
+        this.klass = __klass;
     }
 
-    public static ValueNode create(ValueNode klass, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess)
+    public static ValueNode create(ValueNode __klass, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess)
     {
-        Stamp stamp = StampFactory.forKind(JavaKind.Int);
-        return canonical(null, klass, stamp, constantReflection, metaAccess);
+        Stamp __stamp = StampFactory.forKind(JavaKind.Int);
+        return canonical(null, __klass, __stamp, __constantReflection, __metaAccess);
     }
 
     @SuppressWarnings("unused")
-    public static boolean intrinsify(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode klass)
+    public static boolean intrinsify(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode __klass)
     {
-        ValueNode valueNode = create(klass, b.getConstantReflection(), b.getMetaAccess());
-        b.push(JavaKind.Int, b.append(valueNode));
+        ValueNode __valueNode = create(__klass, __b.getConstantReflection(), __b.getMetaAccess());
+        __b.push(JavaKind.Int, __b.append(__valueNode));
         return true;
     }
 
@@ -62,20 +65,20 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
     {
         if (klass instanceof LoadHubNode)
         {
-            LoadHubNode hub = (LoadHubNode) klass;
-            Stamp hubStamp = hub.getValue().stamp(NodeView.DEFAULT);
-            if (hubStamp instanceof ObjectStamp)
+            LoadHubNode __hub = (LoadHubNode) klass;
+            Stamp __hubStamp = __hub.getValue().stamp(NodeView.DEFAULT);
+            if (__hubStamp instanceof ObjectStamp)
             {
-                ObjectStamp objectStamp = (ObjectStamp) hubStamp;
-                ResolvedJavaType type = objectStamp.type();
-                if (type != null && !type.isJavaLangObject())
+                ObjectStamp __objectStamp = (ObjectStamp) __hubStamp;
+                ResolvedJavaType __type = __objectStamp.type();
+                if (__type != null && !__type.isJavaLangObject())
                 {
-                    if (!type.isArray() && !type.isInterface())
+                    if (!__type.isArray() && !__type.isInterface())
                     {
                         // Definitely some form of instance type.
                         return updateStamp(StampFactory.forInteger(JavaKind.Int, HotSpotRuntime.klassLayoutHelperNeutralValue, Integer.MAX_VALUE));
                     }
-                    if (type.isArray())
+                    if (__type.isArray())
                     {
                         return updateStamp(StampFactory.forInteger(JavaKind.Int, Integer.MIN_VALUE, HotSpotRuntime.klassLayoutHelperNeutralValue - 1));
                     }
@@ -86,56 +89,56 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             return null;
         }
         else
         {
-            return canonical(this, klass, stamp(NodeView.DEFAULT), tool.getConstantReflection(), tool.getMetaAccess());
+            return canonical(this, klass, stamp(NodeView.DEFAULT), __tool.getConstantReflection(), __tool.getMetaAccess());
         }
     }
 
-    private static ValueNode canonical(KlassLayoutHelperNode klassLayoutHelperNode, ValueNode klass, Stamp stamp, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess)
+    private static ValueNode canonical(KlassLayoutHelperNode __klassLayoutHelperNode, ValueNode __klass, Stamp __stamp, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess)
     {
-        KlassLayoutHelperNode self = klassLayoutHelperNode;
-        if (klass.isConstant())
+        KlassLayoutHelperNode __self = __klassLayoutHelperNode;
+        if (__klass.isConstant())
         {
-            if (!klass.asConstant().isDefaultForKind())
+            if (!__klass.asConstant().isDefaultForKind())
             {
-                Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), klass.asConstant(), HotSpotRuntime.klassLayoutHelperOffset);
-                return ConstantNode.forConstant(stamp, constant, metaAccess);
+                Constant __constant = __stamp.readConstant(__constantReflection.getMemoryAccessProvider(), __klass.asConstant(), HotSpotRuntime.klassLayoutHelperOffset);
+                return ConstantNode.forConstant(__stamp, __constant, __metaAccess);
             }
         }
-        if (klass instanceof LoadHubNode)
+        if (__klass instanceof LoadHubNode)
         {
-            LoadHubNode hub = (LoadHubNode) klass;
-            Stamp hubStamp = hub.getValue().stamp(NodeView.DEFAULT);
-            if (hubStamp instanceof ObjectStamp)
+            LoadHubNode __hub = (LoadHubNode) __klass;
+            Stamp __hubStamp = __hub.getValue().stamp(NodeView.DEFAULT);
+            if (__hubStamp instanceof ObjectStamp)
             {
-                ObjectStamp ostamp = (ObjectStamp) hubStamp;
-                HotSpotResolvedObjectType type = (HotSpotResolvedObjectType) ostamp.type();
-                if (type != null && type.isArray() && !type.getComponentType().isPrimitive())
+                ObjectStamp __ostamp = (ObjectStamp) __hubStamp;
+                HotSpotResolvedObjectType __type = (HotSpotResolvedObjectType) __ostamp.type();
+                if (__type != null && __type.isArray() && !__type.getComponentType().isPrimitive())
                 {
                     // The layout for all object arrays is the same.
-                    Constant constant = stamp.readConstant(constantReflection.getMemoryAccessProvider(), type.klass(), HotSpotRuntime.klassLayoutHelperOffset);
-                    return ConstantNode.forConstant(stamp, constant, metaAccess);
+                    Constant __constant = __stamp.readConstant(__constantReflection.getMemoryAccessProvider(), __type.klass(), HotSpotRuntime.klassLayoutHelperOffset);
+                    return ConstantNode.forConstant(__stamp, __constant, __metaAccess);
                 }
             }
         }
-        if (self == null)
+        if (__self == null)
         {
-            self = new KlassLayoutHelperNode(klass);
+            __self = new KlassLayoutHelperNode(__klass);
         }
-        return self;
+        return __self;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public ValueNode getHub()

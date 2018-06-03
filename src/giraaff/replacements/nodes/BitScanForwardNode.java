@@ -25,55 +25,56 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class BitScanForwardNode
 public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<BitScanForwardNode> TYPE = NodeClass.create(BitScanForwardNode.class);
 
     // @cons
-    public BitScanForwardNode(ValueNode value)
+    public BitScanForwardNode(ValueNode __value)
     {
-        super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) value.stamp(NodeView.DEFAULT)).getBits()), value);
+        super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) __value.stamp(NodeView.DEFAULT)).getBits()), __value);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        IntegerStamp valueStamp = (IntegerStamp) newStamp;
-        int min;
-        int max;
-        long mask = CodeUtil.mask(valueStamp.getBits());
-        int firstAlwaysSetBit = scan(valueStamp.downMask() & mask);
-        int firstMaybeSetBit = scan(valueStamp.upMask() & mask);
-        if (firstAlwaysSetBit == -1)
+        IntegerStamp __valueStamp = (IntegerStamp) __newStamp;
+        int __min;
+        int __max;
+        long __mask = CodeUtil.mask(__valueStamp.getBits());
+        int __firstAlwaysSetBit = scan(__valueStamp.downMask() & __mask);
+        int __firstMaybeSetBit = scan(__valueStamp.upMask() & __mask);
+        if (__firstAlwaysSetBit == -1)
         {
-            int lastMaybeSetBit = BitScanReverseNode.scan(valueStamp.upMask() & mask);
-            min = firstMaybeSetBit;
-            max = lastMaybeSetBit;
+            int __lastMaybeSetBit = BitScanReverseNode.scan(__valueStamp.upMask() & __mask);
+            __min = __firstMaybeSetBit;
+            __max = __lastMaybeSetBit;
         }
         else
         {
-            min = firstMaybeSetBit;
-            max = firstAlwaysSetBit;
+            __min = __firstMaybeSetBit;
+            __max = __firstAlwaysSetBit;
         }
-        return StampFactory.forInteger(JavaKind.Int, min, max);
+        return StampFactory.forInteger(JavaKind.Int, __min, __max);
     }
 
-    public static ValueNode tryFold(ValueNode value)
+    public static ValueNode tryFold(ValueNode __value)
     {
-        if (value.isConstant())
+        if (__value.isConstant())
         {
-            JavaConstant c = value.asJavaConstant();
-            if (c.asLong() != 0)
+            JavaConstant __c = __value.asJavaConstant();
+            if (__c.asLong() != 0)
             {
-                return ConstantNode.forInt(value.getStackKind() == JavaKind.Int ? scan(c.asInt()) : scan(c.asLong()));
+                return ConstantNode.forInt(__value.getStackKind() == JavaKind.Int ? scan(__c.asInt()) : scan(__c.asLong()));
             }
         }
         return null;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode folded = tryFold(forValue);
-        return folded != null ? folded : this;
+        ValueNode __folded = tryFold(__forValue);
+        return __folded != null ? __folded : this;
     }
 
     /**
@@ -81,13 +82,13 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
      *
      * @return number of trailing zeros or -1 if {@code v} == 0.
      */
-    public static int scan(long v)
+    public static int scan(long __v)
     {
-        if (v == 0)
+        if (__v == 0)
         {
             return -1;
         }
-        return Long.numberOfTrailingZeros(v);
+        return Long.numberOfTrailingZeros(__v);
     }
 
     /**
@@ -95,9 +96,9 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
      *
      * @return number of trailing zeros or -1 if {@code v} == 0.
      */
-    public static int scan(int v)
+    public static int scan(int __v)
     {
-        return scan(0xffffffffL & v);
+        return scan(0xffffffffL & __v);
     }
 
     /**
@@ -117,8 +118,8 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     public static native int unsafeScan(int v);
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        builder.setResult(this, gen.emitBitScanForward(builder.operand(getValue())));
+        __builder.setResult(this, __gen.emitBitScanForward(__builder.operand(getValue())));
     }
 }

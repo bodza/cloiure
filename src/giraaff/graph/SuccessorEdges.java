@@ -9,14 +9,14 @@ import giraaff.graph.NodeClass.EdgeInfo;
 public final class SuccessorEdges extends Edges
 {
     // @cons
-    public SuccessorEdges(int directCount, ArrayList<EdgeInfo> edges)
+    public SuccessorEdges(int __directCount, ArrayList<EdgeInfo> __edges)
     {
-        super(Type.Successors, directCount, edges);
+        super(Type.Successors, __directCount, __edges);
     }
 
     @Override
-    public void update(Node node, Node oldValue, Node newValue)
+    public void update(Node __node, Node __oldValue, Node __newValue)
     {
-        node.updatePredecessor(oldValue, newValue);
+        __node.updatePredecessor(__oldValue, __newValue);
     }
 }

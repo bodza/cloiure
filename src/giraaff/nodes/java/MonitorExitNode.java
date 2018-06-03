@@ -21,19 +21,22 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class MonitorExitNode
 public final class MonitorExitNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<MonitorExitNode> TYPE = NodeClass.create(MonitorExitNode.class);
 
     /**
      * Non-null for the monitor exit introduced due to a synchronized root method and null in all
      * other cases.
      */
-    @OptionalInput ValueNode escapedReturnValue;
+    @OptionalInput
+    // @field
+    ValueNode escapedReturnValue;
 
     // @cons
-    public MonitorExitNode(ValueNode object, MonitorIdNode monitorId, ValueNode escapedReturnValue)
+    public MonitorExitNode(ValueNode __object, MonitorIdNode __monitorId, ValueNode __escapedReturnValue)
     {
-        super(TYPE, object, monitorId);
-        this.escapedReturnValue = escapedReturnValue;
+        super(TYPE, __object, __monitorId);
+        this.escapedReturnValue = __escapedReturnValue;
     }
 
     /**
@@ -52,22 +55,22 @@ public final class MonitorExitNode extends AccessMonitorNode implements Virtuali
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            if (virtual.hasIdentity())
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            if (__virtual.hasIdentity())
             {
-                MonitorIdNode removedLock = tool.removeLock(virtual);
-                tool.delete();
+                MonitorIdNode __removedLock = __tool.removeLock(__virtual);
+                __tool.delete();
             }
         }
     }

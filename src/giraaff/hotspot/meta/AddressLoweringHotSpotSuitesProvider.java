@@ -17,27 +17,28 @@ import giraaff.phases.tiers.SuitesCreator;
 // @class AddressLoweringHotSpotSuitesProvider
 public final class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesProvider
 {
+    // @field
     private final Phase addressLowering;
 
     // @cons
-    public AddressLoweringHotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntime runtime, Phase addressLowering)
+    public AddressLoweringHotSpotSuitesProvider(SuitesCreator __defaultSuitesCreator, HotSpotGraalRuntime __runtime, Phase __addressLowering)
     {
-        super(defaultSuitesCreator, runtime);
-        this.addressLowering = addressLowering;
+        super(__defaultSuitesCreator, __runtime);
+        this.addressLowering = __addressLowering;
     }
 
     @Override
     public Suites createSuites()
     {
-        Suites suites = super.createSuites();
+        Suites __suites = super.createSuites();
 
-        ListIterator<BasePhase<? super LowTierContext>> findPhase = suites.getLowTier().findPhase(FixReadsPhase.class);
-        if (findPhase == null)
+        ListIterator<BasePhase<? super LowTierContext>> __findPhase = __suites.getLowTier().findPhase(FixReadsPhase.class);
+        if (__findPhase == null)
         {
-            findPhase = suites.getLowTier().findPhase(ExpandLogicPhase.class);
+            __findPhase = __suites.getLowTier().findPhase(ExpandLogicPhase.class);
         }
-        findPhase.add(addressLowering);
+        __findPhase.add(addressLowering);
 
-        return suites;
+        return __suites;
     }
 }

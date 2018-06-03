@@ -19,32 +19,36 @@ import giraaff.nodes.extended.GuardingNode;
 // @class DynamicPiNode
 public final class DynamicPiNode extends PiNode
 {
+    // @def
     public static final NodeClass<DynamicPiNode> TYPE = NodeClass.create(DynamicPiNode.class);
 
-    @Input ValueNode typeMirror;
+    @Input
+    // @field
+    ValueNode typeMirror;
+    // @field
     private final boolean exact;
 
     // @cons
-    protected DynamicPiNode(ValueNode object, GuardingNode guard, ValueNode typeMirror, boolean exact)
+    protected DynamicPiNode(ValueNode __object, GuardingNode __guard, ValueNode __typeMirror, boolean __exact)
     {
-        super(TYPE, object, StampFactory.object(), guard);
-        this.typeMirror = typeMirror;
-        this.exact = exact;
+        super(TYPE, __object, StampFactory.object(), __guard);
+        this.typeMirror = __typeMirror;
+        this.exact = __exact;
     }
 
-    public static ValueNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode object, GuardingNode guard, ValueNode typeMirror, boolean exact)
+    public static ValueNode create(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __object, GuardingNode __guard, ValueNode __typeMirror, boolean __exact)
     {
-        ValueNode synonym = findSynonym(assumptions, constantReflection, object, guard, typeMirror, exact);
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__assumptions, __constantReflection, __object, __guard, __typeMirror, __exact);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return new DynamicPiNode(object, guard, typeMirror, exact);
+        return new DynamicPiNode(__object, __guard, __typeMirror, __exact);
     }
 
-    public static ValueNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode object, GuardingNode guard, ValueNode typeMirror)
+    public static ValueNode create(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __object, GuardingNode __guard, ValueNode __typeMirror)
     {
-        return create(assumptions, constantReflection, object, guard, typeMirror, false);
+        return create(__assumptions, __constantReflection, __object, __guard, __typeMirror, false);
     }
 
     public boolean isExact()
@@ -52,25 +56,25 @@ public final class DynamicPiNode extends PiNode
         return exact;
     }
 
-    private static ValueNode findSynonym(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode object, GuardingNode guard, ValueNode typeMirror, boolean exact)
+    private static ValueNode findSynonym(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __object, GuardingNode __guard, ValueNode __typeMirror, boolean __exact)
     {
-        if (typeMirror.isConstant())
+        if (__typeMirror.isConstant())
         {
-            ResolvedJavaType t = constantReflection.asJavaType(typeMirror.asConstant());
-            if (t != null)
+            ResolvedJavaType __t = __constantReflection.asJavaType(__typeMirror.asConstant());
+            if (__t != null)
             {
-                Stamp staticPiStamp;
-                if (t.isPrimitive())
+                Stamp __staticPiStamp;
+                if (__t.isPrimitive())
                 {
-                    staticPiStamp = StampFactory.alwaysNull();
+                    __staticPiStamp = StampFactory.alwaysNull();
                 }
                 else
                 {
-                    TypeReference type = exact ? TypeReference.createExactTrusted(t) : TypeReference.createTrusted(assumptions, t);
-                    staticPiStamp = StampFactory.object(type);
+                    TypeReference __type = __exact ? TypeReference.createExactTrusted(__t) : TypeReference.createTrusted(__assumptions, __t);
+                    __staticPiStamp = StampFactory.object(__type);
                 }
 
-                return PiNode.create(object, staticPiStamp, (ValueNode) guard);
+                return PiNode.create(__object, __staticPiStamp, (ValueNode) __guard);
             }
         }
 
@@ -78,12 +82,12 @@ public final class DynamicPiNode extends PiNode
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        ValueNode synonym = findSynonym(tool.getAssumptions(), tool.getConstantReflection(), object, guard, typeMirror, exact);
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__tool.getAssumptions(), __tool.getConstantReflection(), object, guard, typeMirror, exact);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         return this;
     }

@@ -11,15 +11,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class NullCheckNode
 public final class NullCheckNode extends DeoptimizingFixedWithNextNode implements LIRLowerable, GuardingNode
 {
+    // @def
     public static final NodeClass<NullCheckNode> TYPE = NodeClass.create(NullCheckNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
 
     // @cons
-    public NullCheckNode(ValueNode object)
+    public NullCheckNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = object;
+        this.object = __object;
     }
 
     public ValueNode getObject()
@@ -28,9 +31,9 @@ public final class NullCheckNode extends DeoptimizingFixedWithNextNode implement
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().emitNullCheck(gen.operand(object), gen.state(this));
+        __gen.getLIRGeneratorTool().emitNullCheck(__gen.operand(object), __gen.state(this));
     }
 
     @Override

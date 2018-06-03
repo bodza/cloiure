@@ -8,19 +8,25 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class ObjectWriteBarrier
 public abstract class ObjectWriteBarrier extends WriteBarrier
 {
+    // @def
     public static final NodeClass<ObjectWriteBarrier> TYPE = NodeClass.create(ObjectWriteBarrier.class);
 
-    @Input(InputType.Association) protected AddressNode address;
-    @OptionalInput protected ValueNode value;
+    @Input(InputType.Association)
+    // @field
+    protected AddressNode address;
+    @OptionalInput
+    // @field
+    protected ValueNode value;
+    // @field
     protected final boolean precise;
 
     // @cons
-    protected ObjectWriteBarrier(NodeClass<? extends ObjectWriteBarrier> c, AddressNode address, ValueNode value, boolean precise)
+    protected ObjectWriteBarrier(NodeClass<? extends ObjectWriteBarrier> __c, AddressNode __address, ValueNode __value, boolean __precise)
     {
-        super(c);
-        this.address = address;
-        this.value = value;
-        this.precise = precise;
+        super(__c);
+        this.address = __address;
+        this.value = __value;
+        this.precise = __precise;
     }
 
     public ValueNode getValue()

@@ -50,182 +50,182 @@ import giraaff.phases.tiers.PhaseContext;
 public final class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
 {
     @Override
-    protected void run(final StructuredGraph graph, PhaseContext context)
+    protected void run(final StructuredGraph __graph, PhaseContext __context)
     {
-        for (DeoptimizeNode d : graph.getNodes(DeoptimizeNode.TYPE))
+        for (DeoptimizeNode __d : __graph.getNodes(DeoptimizeNode.TYPE))
         {
-            if (d.getAction() == DeoptimizationAction.None)
+            if (__d.getAction() == DeoptimizationAction.None)
             {
                 continue;
             }
-            propagateFixed(d, d, context != null ? context.getLowerer() : null);
+            propagateFixed(__d, __d, __context != null ? __context.getLowerer() : null);
         }
 
-        if (context != null)
+        if (__context != null)
         {
-            for (FixedGuardNode fixedGuard : graph.getNodes(FixedGuardNode.TYPE))
+            for (FixedGuardNode __fixedGuard : __graph.getNodes(FixedGuardNode.TYPE))
             {
-                trySplitFixedGuard(fixedGuard, context);
+                trySplitFixedGuard(__fixedGuard, __context);
             }
         }
 
-        new DeadCodeEliminationPhase(Optionality.Optional).apply(graph);
+        new DeadCodeEliminationPhase(Optionality.Optional).apply(__graph);
     }
 
-    private void trySplitFixedGuard(FixedGuardNode fixedGuard, PhaseContext context)
+    private void trySplitFixedGuard(FixedGuardNode __fixedGuard, PhaseContext __context)
     {
-        LogicNode condition = fixedGuard.condition();
-        if (condition instanceof CompareNode)
+        LogicNode __condition = __fixedGuard.condition();
+        if (__condition instanceof CompareNode)
         {
-            CompareNode compare = (CompareNode) condition;
-            ValueNode x = compare.getX();
-            ValuePhiNode xPhi = (x instanceof ValuePhiNode) ? (ValuePhiNode) x : null;
-            if (x instanceof ConstantNode || xPhi != null)
+            CompareNode __compare = (CompareNode) __condition;
+            ValueNode __x = __compare.getX();
+            ValuePhiNode __xPhi = (__x instanceof ValuePhiNode) ? (ValuePhiNode) __x : null;
+            if (__x instanceof ConstantNode || __xPhi != null)
             {
-                ValueNode y = compare.getY();
-                ValuePhiNode yPhi = (y instanceof ValuePhiNode) ? (ValuePhiNode) y : null;
-                if (y instanceof ConstantNode || yPhi != null)
+                ValueNode __y = __compare.getY();
+                ValuePhiNode __yPhi = (__y instanceof ValuePhiNode) ? (ValuePhiNode) __y : null;
+                if (__y instanceof ConstantNode || __yPhi != null)
                 {
-                    processFixedGuardAndPhis(fixedGuard, context, compare, x, xPhi, y, yPhi);
+                    processFixedGuardAndPhis(__fixedGuard, __context, __compare, __x, __xPhi, __y, __yPhi);
                 }
             }
         }
     }
 
-    private void processFixedGuardAndPhis(FixedGuardNode fixedGuard, PhaseContext context, CompareNode compare, ValueNode x, ValuePhiNode xPhi, ValueNode y, ValuePhiNode yPhi)
+    private void processFixedGuardAndPhis(FixedGuardNode __fixedGuard, PhaseContext __context, CompareNode __compare, ValueNode __x, ValuePhiNode __xPhi, ValueNode __y, ValuePhiNode __yPhi)
     {
-        AbstractBeginNode pred = AbstractBeginNode.prevBegin(fixedGuard);
-        if (pred instanceof AbstractMergeNode)
+        AbstractBeginNode __pred = AbstractBeginNode.prevBegin(__fixedGuard);
+        if (__pred instanceof AbstractMergeNode)
         {
-            AbstractMergeNode merge = (AbstractMergeNode) pred;
-            if (xPhi != null && xPhi.merge() != merge)
+            AbstractMergeNode __merge = (AbstractMergeNode) __pred;
+            if (__xPhi != null && __xPhi.merge() != __merge)
             {
                 return;
             }
-            if (yPhi != null && yPhi.merge() != merge)
+            if (__yPhi != null && __yPhi.merge() != __merge)
             {
                 return;
             }
 
-            processFixedGuardAndMerge(fixedGuard, context, compare, x, xPhi, y, yPhi, merge);
+            processFixedGuardAndMerge(__fixedGuard, __context, __compare, __x, __xPhi, __y, __yPhi, __merge);
         }
     }
 
-    private void processFixedGuardAndMerge(FixedGuardNode fixedGuard, PhaseContext context, CompareNode compare, ValueNode x, ValuePhiNode xPhi, ValueNode y, ValuePhiNode yPhi, AbstractMergeNode merge)
+    private void processFixedGuardAndMerge(FixedGuardNode __fixedGuard, PhaseContext __context, CompareNode __compare, ValueNode __x, ValuePhiNode __xPhi, ValueNode __y, ValuePhiNode __yPhi, AbstractMergeNode __merge)
     {
-        List<EndNode> mergePredecessors = merge.cfgPredecessors().snapshot();
-        for (int i = 0; i < mergePredecessors.size(); ++i)
+        List<EndNode> __mergePredecessors = __merge.cfgPredecessors().snapshot();
+        for (int __i = 0; __i < __mergePredecessors.size(); ++__i)
         {
-            AbstractEndNode mergePredecessor = mergePredecessors.get(i);
-            if (!mergePredecessor.isAlive())
+            AbstractEndNode __mergePredecessor = __mergePredecessors.get(__i);
+            if (!__mergePredecessor.isAlive())
             {
                 break;
             }
-            Constant xs;
-            if (xPhi == null)
+            Constant __xs;
+            if (__xPhi == null)
             {
-                xs = x.asConstant();
+                __xs = __x.asConstant();
             }
             else
             {
-                xs = xPhi.valueAt(mergePredecessor).asConstant();
+                __xs = __xPhi.valueAt(__mergePredecessor).asConstant();
             }
-            Constant ys;
-            if (yPhi == null)
+            Constant __ys;
+            if (__yPhi == null)
             {
-                ys = y.asConstant();
+                __ys = __y.asConstant();
             }
             else
             {
-                ys = yPhi.valueAt(mergePredecessor).asConstant();
+                __ys = __yPhi.valueAt(__mergePredecessor).asConstant();
             }
-            if (xs != null && ys != null && compare.condition().foldCondition(xs, ys, context.getConstantReflection(), compare.unorderedIsTrue()) == fixedGuard.isNegated())
+            if (__xs != null && __ys != null && __compare.condition().foldCondition(__xs, __ys, __context.getConstantReflection(), __compare.unorderedIsTrue()) == __fixedGuard.isNegated())
             {
-                propagateFixed(mergePredecessor, fixedGuard, context.getLowerer());
+                propagateFixed(__mergePredecessor, __fixedGuard, __context.getLowerer());
             }
         }
     }
 
-    private void propagateFixed(FixedNode from, StaticDeoptimizingNode deopt, LoweringProvider loweringProvider)
+    private void propagateFixed(FixedNode __from, StaticDeoptimizingNode __deopt, LoweringProvider __loweringProvider)
     {
-        Node current = from;
-        while (current != null)
+        Node __current = __from;
+        while (__current != null)
         {
-            if (GraalOptions.guardPriorities && current instanceof FixedGuardNode)
+            if (GraalOptions.guardPriorities && __current instanceof FixedGuardNode)
             {
-                FixedGuardNode otherGuard = (FixedGuardNode) current;
-                if (otherGuard.computePriority().isHigherPriorityThan(deopt.computePriority()))
+                FixedGuardNode __otherGuard = (FixedGuardNode) __current;
+                if (__otherGuard.computePriority().isHigherPriorityThan(__deopt.computePriority()))
                 {
-                    moveAsDeoptAfter(otherGuard, deopt);
+                    moveAsDeoptAfter(__otherGuard, __deopt);
                     return;
                 }
             }
-            else if (current instanceof AbstractBeginNode)
+            else if (__current instanceof AbstractBeginNode)
             {
-                if (current instanceof AbstractMergeNode)
+                if (__current instanceof AbstractMergeNode)
                 {
-                    AbstractMergeNode mergeNode = (AbstractMergeNode) current;
-                    FixedNode next = mergeNode.next();
-                    while (mergeNode.isAlive())
+                    AbstractMergeNode __mergeNode = (AbstractMergeNode) __current;
+                    FixedNode __next = __mergeNode.next();
+                    while (__mergeNode.isAlive())
                     {
-                        AbstractEndNode end = mergeNode.forwardEnds().first();
-                        propagateFixed(end, deopt, loweringProvider);
+                        AbstractEndNode __end = __mergeNode.forwardEnds().first();
+                        propagateFixed(__end, __deopt, __loweringProvider);
                     }
-                    propagateFixed(next, deopt, loweringProvider);
+                    propagateFixed(__next, __deopt, __loweringProvider);
                     return;
                 }
-                else if (current.predecessor() instanceof IfNode)
+                else if (__current.predecessor() instanceof IfNode)
                 {
-                    IfNode ifNode = (IfNode) current.predecessor();
+                    IfNode __ifNode = (IfNode) __current.predecessor();
                     // prioritize the source position of the IfNode
-                    StructuredGraph graph = ifNode.graph();
-                    LogicNode conditionNode = ifNode.condition();
-                    boolean negateGuardCondition = current == ifNode.trueSuccessor();
-                    FixedGuardNode guard = graph.add(new FixedGuardNode(conditionNode, deopt.getReason(), deopt.getAction(), deopt.getSpeculation(), negateGuardCondition));
+                    StructuredGraph __graph = __ifNode.graph();
+                    LogicNode __conditionNode = __ifNode.condition();
+                    boolean __negateGuardCondition = __current == __ifNode.trueSuccessor();
+                    FixedGuardNode __guard = __graph.add(new FixedGuardNode(__conditionNode, __deopt.getReason(), __deopt.getAction(), __deopt.getSpeculation(), __negateGuardCondition));
 
-                    FixedWithNextNode pred = (FixedWithNextNode) ifNode.predecessor();
-                    AbstractBeginNode survivingSuccessor;
-                    if (negateGuardCondition)
+                    FixedWithNextNode __pred = (FixedWithNextNode) __ifNode.predecessor();
+                    AbstractBeginNode __survivingSuccessor;
+                    if (__negateGuardCondition)
                     {
-                        survivingSuccessor = ifNode.falseSuccessor();
+                        __survivingSuccessor = __ifNode.falseSuccessor();
                     }
                     else
                     {
-                        survivingSuccessor = ifNode.trueSuccessor();
+                        __survivingSuccessor = __ifNode.trueSuccessor();
                     }
-                    graph.removeSplitPropagate(ifNode, survivingSuccessor);
+                    __graph.removeSplitPropagate(__ifNode, __survivingSuccessor);
 
-                    Node newGuard = guard;
-                    if (survivingSuccessor instanceof LoopExitNode)
+                    Node __newGuard = __guard;
+                    if (__survivingSuccessor instanceof LoopExitNode)
                     {
-                        newGuard = ProxyNode.forGuard(guard, (LoopExitNode) survivingSuccessor, graph);
+                        __newGuard = ProxyNode.forGuard(__guard, (LoopExitNode) __survivingSuccessor, __graph);
                     }
-                    survivingSuccessor.replaceAtUsages(InputType.Guard, newGuard);
+                    __survivingSuccessor.replaceAtUsages(InputType.Guard, __newGuard);
 
-                    FixedNode next = pred.next();
-                    pred.setNext(guard);
-                    guard.setNext(next);
-                    SimplifierTool simplifierTool = GraphUtil.getDefaultSimplifier(null, null, null, false, graph.getAssumptions(), loweringProvider);
-                    survivingSuccessor.simplify(simplifierTool);
+                    FixedNode __next = __pred.next();
+                    __pred.setNext(__guard);
+                    __guard.setNext(__next);
+                    SimplifierTool __simplifierTool = GraphUtil.getDefaultSimplifier(null, null, null, false, __graph.getAssumptions(), __loweringProvider);
+                    __survivingSuccessor.simplify(__simplifierTool);
                     return;
                 }
-                else if (current.predecessor() == null || current.predecessor() instanceof ControlSplitNode)
+                else if (__current.predecessor() == null || __current.predecessor() instanceof ControlSplitNode)
                 {
-                    moveAsDeoptAfter((AbstractBeginNode) current, deopt);
+                    moveAsDeoptAfter((AbstractBeginNode) __current, __deopt);
                     return;
                 }
             }
-            current = current.predecessor();
+            __current = __current.predecessor();
         }
     }
 
-    private static void moveAsDeoptAfter(FixedWithNextNode node, StaticDeoptimizingNode deopt)
+    private static void moveAsDeoptAfter(FixedWithNextNode __node, StaticDeoptimizingNode __deopt)
     {
-        FixedNode next = node.next();
-        if (next != deopt.asNode())
+        FixedNode __next = __node.next();
+        if (__next != __deopt.asNode())
         {
-            node.setNext(node.graph().add(new DeoptimizeNode(deopt.getAction(), deopt.getReason(), deopt.getSpeculation())));
-            GraphUtil.killCFG(next);
+            __node.setNext(__node.graph().add(new DeoptimizeNode(__deopt.getAction(), __deopt.getReason(), __deopt.getSpeculation())));
+            GraphUtil.killCFG(__next);
         }
     }
 }

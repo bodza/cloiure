@@ -24,117 +24,120 @@ import giraaff.nodes.LoopEndNode;
 // @class StatelessPostOrderNodeIterator
 public abstract class StatelessPostOrderNodeIterator
 {
+    // @field
     private final NodeBitMap visitedEnds;
+    // @field
     private final Deque<AbstractBeginNode> nodeQueue;
+    // @field
     private final FixedNode start;
 
     // @cons
-    public StatelessPostOrderNodeIterator(FixedNode start)
+    public StatelessPostOrderNodeIterator(FixedNode __start)
     {
         super();
-        visitedEnds = start.graph().createNodeBitMap();
+        visitedEnds = __start.graph().createNodeBitMap();
         nodeQueue = new ArrayDeque<>();
-        this.start = start;
+        this.start = __start;
     }
 
     public void apply()
     {
-        FixedNode current = start;
+        FixedNode __current = start;
 
         do
         {
-            if (current instanceof LoopBeginNode)
+            if (__current instanceof LoopBeginNode)
             {
-                loopBegin((LoopBeginNode) current);
-                current = ((LoopBeginNode) current).next();
+                loopBegin((LoopBeginNode) __current);
+                __current = ((LoopBeginNode) __current).next();
             }
-            else if (current instanceof LoopEndNode)
+            else if (__current instanceof LoopEndNode)
             {
-                loopEnd((LoopEndNode) current);
-                visitedEnds.mark(current);
-                current = nodeQueue.pollFirst();
+                loopEnd((LoopEndNode) __current);
+                visitedEnds.mark(__current);
+                __current = nodeQueue.pollFirst();
             }
-            else if (current instanceof AbstractMergeNode)
+            else if (__current instanceof AbstractMergeNode)
             {
-                merge((AbstractMergeNode) current);
-                current = ((AbstractMergeNode) current).next();
+                merge((AbstractMergeNode) __current);
+                __current = ((AbstractMergeNode) __current).next();
             }
-            else if (current instanceof FixedWithNextNode)
+            else if (__current instanceof FixedWithNextNode)
             {
-                node(current);
-                current = ((FixedWithNextNode) current).next();
+                node(__current);
+                __current = ((FixedWithNextNode) __current).next();
             }
-            else if (current instanceof EndNode)
+            else if (__current instanceof EndNode)
             {
-                end((EndNode) current);
-                queueMerge((EndNode) current);
-                current = nodeQueue.pollFirst();
+                end((EndNode) __current);
+                queueMerge((EndNode) __current);
+                __current = nodeQueue.pollFirst();
             }
-            else if (current instanceof ControlSinkNode)
+            else if (__current instanceof ControlSinkNode)
             {
-                node(current);
-                current = nodeQueue.pollFirst();
+                node(__current);
+                __current = nodeQueue.pollFirst();
             }
-            else if (current instanceof ControlSplitNode)
+            else if (__current instanceof ControlSplitNode)
             {
-                controlSplit((ControlSplitNode) current);
-                for (Node node : current.successors())
+                controlSplit((ControlSplitNode) __current);
+                for (Node __node : __current.successors())
                 {
-                    nodeQueue.addFirst((AbstractBeginNode) node);
+                    nodeQueue.addFirst((AbstractBeginNode) __node);
                 }
-                current = nodeQueue.pollFirst();
+                __current = nodeQueue.pollFirst();
             }
-        } while (current != null);
+        } while (__current != null);
         finished();
     }
 
-    private void queueMerge(EndNode end)
+    private void queueMerge(EndNode __end)
     {
-        visitedEnds.mark(end);
-        AbstractMergeNode merge = end.merge();
-        boolean endsVisited = true;
-        for (int i = 0; i < merge.forwardEndCount(); i++)
+        visitedEnds.mark(__end);
+        AbstractMergeNode __merge = __end.merge();
+        boolean __endsVisited = true;
+        for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
         {
-            if (!visitedEnds.isMarked(merge.forwardEndAt(i)))
+            if (!visitedEnds.isMarked(__merge.forwardEndAt(__i)))
             {
-                endsVisited = false;
+                __endsVisited = false;
                 break;
             }
         }
-        if (endsVisited)
+        if (__endsVisited)
         {
-            nodeQueue.add(merge);
+            nodeQueue.add(__merge);
         }
     }
 
-    protected void node(@SuppressWarnings("unused") FixedNode node)
+    protected void node(@SuppressWarnings("unused") FixedNode __node)
     {
         // empty default implementation
     }
 
-    protected void end(EndNode endNode)
+    protected void end(EndNode __endNode)
     {
-        node(endNode);
+        node(__endNode);
     }
 
-    protected void merge(AbstractMergeNode merge)
+    protected void merge(AbstractMergeNode __merge)
     {
-        node(merge);
+        node(__merge);
     }
 
-    protected void loopBegin(LoopBeginNode loopBegin)
+    protected void loopBegin(LoopBeginNode __loopBegin)
     {
-        node(loopBegin);
+        node(__loopBegin);
     }
 
-    protected void loopEnd(LoopEndNode loopEnd)
+    protected void loopEnd(LoopEndNode __loopEnd)
     {
-        node(loopEnd);
+        node(__loopEnd);
     }
 
-    protected void controlSplit(ControlSplitNode controlSplit)
+    protected void controlSplit(ControlSplitNode __controlSplit)
     {
-        node(controlSplit);
+        node(__controlSplit);
     }
 
     protected void finished()

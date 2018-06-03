@@ -18,39 +18,41 @@ import giraaff.nodes.ValueNode;
 // @class IntegerBelowNode
 public final class IntegerBelowNode extends IntegerLowerThanNode
 {
+    // @def
     public static final NodeClass<IntegerBelowNode> TYPE = NodeClass.create(IntegerBelowNode.class);
 
+    // @def
     private static final BelowOp OP = new BelowOp();
 
     // @cons
-    public IntegerBelowNode(ValueNode x, ValueNode y)
+    public IntegerBelowNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, x, y, OP);
+        super(TYPE, __x, __y, OP);
     }
 
-    public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        return OP.create(x, y, view);
+        return OP.create(__x, __y, __view);
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode value = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, OP.getCondition(), false, x, y, view);
-        if (value != null)
+        LogicNode __value = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, OP.getCondition(), false, __x, __y, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
-        return create(x, y, view);
+        return create(__x, __y, __view);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), OP.getCondition(), false, forX, forY, view);
-        if (value != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), OP.getCondition(), false, __forX, __forY, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
         return this;
     }
@@ -59,63 +61,63 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
     public static final class BelowOp extends LowerOp
     {
         @Override
-        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
         {
-            return new IntegerBelowNode(newX, newY);
+            return new IntegerBelowNode(__newX, __newY);
         }
 
         @Override
-        protected long upperBound(IntegerStamp stamp)
+        protected long upperBound(IntegerStamp __stamp)
         {
-            return stamp.unsignedUpperBound();
+            return __stamp.unsignedUpperBound();
         }
 
         @Override
-        protected long lowerBound(IntegerStamp stamp)
+        protected long lowerBound(IntegerStamp __stamp)
         {
-            return stamp.unsignedLowerBound();
+            return __stamp.unsignedLowerBound();
         }
 
         @Override
-        protected int compare(long a, long b)
+        protected int compare(long __a, long __b)
         {
-            return Long.compareUnsigned(a, b);
+            return Long.compareUnsigned(__a, __b);
         }
 
         @Override
-        protected long min(long a, long b)
+        protected long min(long __a, long __b)
         {
-            return NumUtil.minUnsigned(a, b);
+            return NumUtil.minUnsigned(__a, __b);
         }
 
         @Override
-        protected long max(long a, long b)
+        protected long max(long __a, long __b)
         {
-            return NumUtil.maxUnsigned(a, b);
+            return NumUtil.maxUnsigned(__a, __b);
         }
 
         @Override
-        protected long cast(long a, int bits)
+        protected long cast(long __a, int __bits)
         {
-            return CodeUtil.zeroExtend(a, bits);
+            return CodeUtil.zeroExtend(__a, __bits);
         }
 
         @Override
-        protected long minValue(int bits)
+        protected long minValue(int __bits)
         {
             return 0;
         }
 
         @Override
-        protected long maxValue(int bits)
+        protected long maxValue(int __bits)
         {
-            return NumUtil.maxValueUnsigned(bits);
+            return NumUtil.maxValueUnsigned(__bits);
         }
 
         @Override
-        protected IntegerStamp forInteger(int bits, long min, long max)
+        protected IntegerStamp forInteger(int __bits, long __min, long __max)
         {
-            return StampFactory.forUnsignedInteger(bits, min, max);
+            return StampFactory.forUnsignedInteger(__bits, __min, __max);
         }
 
         @Override
@@ -125,9 +127,9 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
         }
 
         @Override
-        protected IntegerLowerThanNode createNode(ValueNode x, ValueNode y)
+        protected IntegerLowerThanNode createNode(ValueNode __x, ValueNode __y)
         {
-            return new IntegerBelowNode(x, y);
+            return new IntegerBelowNode(__x, __y);
         }
     }
 }

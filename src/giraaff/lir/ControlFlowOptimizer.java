@@ -18,22 +18,23 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
      * Performs control flow optimizations on the given LIR graph.
      */
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
     {
-        LIR lir = lirGenRes.getLIR();
-        new Optimizer(lir).deleteEmptyBlocks(lir.codeEmittingOrder());
+        LIR __lir = __lirGenRes.getLIR();
+        new Optimizer(__lir).deleteEmptyBlocks(__lir.codeEmittingOrder());
     }
 
     // @class ControlFlowOptimizer.Optimizer
     private static final class Optimizer
     {
+        // @field
         private final LIR lir;
 
         // @cons
-        private Optimizer(LIR lir)
+        private Optimizer(LIR __lir)
         {
             super();
-            this.lir = lir;
+            this.lir = __lir;
         }
 
         /**
@@ -43,46 +44,46 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
          * @param block the block checked for deletion
          * @return whether the block can be deleted
          */
-        private boolean canDeleteBlock(AbstractBlockBase<?> block)
+        private boolean canDeleteBlock(AbstractBlockBase<?> __block)
         {
-            if (block == null || block.getSuccessorCount() != 1 || block.getPredecessorCount() == 0 || block.getSuccessors()[0] == block)
+            if (__block == null || __block.getSuccessorCount() != 1 || __block.getPredecessorCount() == 0 || __block.getSuccessors()[0] == __block)
             {
                 return false;
             }
 
-            ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
+            ArrayList<LIRInstruction> __instructions = lir.getLIRforBlock(__block);
 
             // Block must have exactly one successor.
-            return instructions.size() == 2 && !block.isExceptionEntry();
+            return __instructions.size() == 2 && !__block.isExceptionEntry();
         }
 
-        private void alignBlock(AbstractBlockBase<?> block)
+        private void alignBlock(AbstractBlockBase<?> __block)
         {
-            if (!block.isAligned())
+            if (!__block.isAligned())
             {
-                block.setAlign(true);
-                ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-                StandardOp.LabelOp label = (StandardOp.LabelOp) instructions.get(0);
-                instructions.set(0, new StandardOp.LabelOp(label.getLabel(), true));
+                __block.setAlign(true);
+                ArrayList<LIRInstruction> __instructions = lir.getLIRforBlock(__block);
+                StandardOp.LabelOp __label = (StandardOp.LabelOp) __instructions.get(0);
+                __instructions.set(0, new StandardOp.LabelOp(__label.getLabel(), true));
             }
         }
 
-        private void deleteEmptyBlocks(AbstractBlockBase<?>[] blocks)
+        private void deleteEmptyBlocks(AbstractBlockBase<?>[] __blocks)
         {
-            for (int i = 0; i < blocks.length; i++)
+            for (int __i = 0; __i < __blocks.length; __i++)
             {
-                AbstractBlockBase<?> block = blocks[i];
-                if (canDeleteBlock(block))
+                AbstractBlockBase<?> __block = __blocks[__i];
+                if (canDeleteBlock(__block))
                 {
-                    block.delete();
+                    __block.delete();
                     // adjust successor and predecessor lists
-                    AbstractBlockBase<?> other = block.getSuccessors()[0];
-                    if (block.isAligned())
+                    AbstractBlockBase<?> __other = __block.getSuccessors()[0];
+                    if (__block.isAligned())
                     {
-                        alignBlock(other);
+                        alignBlock(__other);
                     }
 
-                    blocks[i] = null;
+                    __blocks[__i] = null;
                 }
             }
         }

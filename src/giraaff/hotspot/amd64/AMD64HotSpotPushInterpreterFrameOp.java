@@ -21,47 +21,56 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotPushInterpreterFrameOp
 final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotPushInterpreterFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPushInterpreterFrameOp.class);
 
-    @Alive(OperandFlag.REG) AllocatableValue frameSize;
-    @Alive(OperandFlag.REG) AllocatableValue framePc;
-    @Alive(OperandFlag.REG) AllocatableValue senderSp;
-    @Alive(OperandFlag.REG) AllocatableValue initialInfo;
+    @Alive(OperandFlag.REG)
+    // @field
+    AllocatableValue frameSize;
+    @Alive(OperandFlag.REG)
+    // @field
+    AllocatableValue framePc;
+    @Alive(OperandFlag.REG)
+    // @field
+    AllocatableValue senderSp;
+    @Alive(OperandFlag.REG)
+    // @field
+    AllocatableValue initialInfo;
 
     // @cons
-    AMD64HotSpotPushInterpreterFrameOp(AllocatableValue frameSize, AllocatableValue framePc, AllocatableValue senderSp, AllocatableValue initialInfo)
+    AMD64HotSpotPushInterpreterFrameOp(AllocatableValue __frameSize, AllocatableValue __framePc, AllocatableValue __senderSp, AllocatableValue __initialInfo)
     {
         super(TYPE);
-        this.frameSize = frameSize;
-        this.framePc = framePc;
-        this.senderSp = senderSp;
-        this.initialInfo = initialInfo;
+        this.frameSize = __frameSize;
+        this.framePc = __framePc;
+        this.senderSp = __senderSp;
+        this.initialInfo = __initialInfo;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        final Register frameSizeRegister = ValueUtil.asRegister(frameSize);
-        final Register framePcRegister = ValueUtil.asRegister(framePc);
-        final Register senderSpRegister = ValueUtil.asRegister(senderSp);
-        final Register initialInfoRegister = ValueUtil.asRegister(initialInfo);
-        final int wordSize = 8;
+        final Register __frameSizeRegister = ValueUtil.asRegister(frameSize);
+        final Register __framePcRegister = ValueUtil.asRegister(framePc);
+        final Register __senderSpRegister = ValueUtil.asRegister(senderSp);
+        final Register __initialInfoRegister = ValueUtil.asRegister(initialInfo);
+        final int __wordSize = 8;
 
         // we'll push PC and BP by hand
-        masm.subq(frameSizeRegister, 2 * wordSize);
+        __masm.subq(__frameSizeRegister, 2 * __wordSize);
 
         // push return address
-        masm.push(framePcRegister);
+        __masm.push(__framePcRegister);
 
         // prolog
-        masm.push(initialInfoRegister);
-        masm.movq(initialInfoRegister, AMD64.rsp);
-        masm.subq(AMD64.rsp, frameSizeRegister);
+        __masm.push(__initialInfoRegister);
+        __masm.movq(__initialInfoRegister, AMD64.rsp);
+        __masm.subq(AMD64.rsp, __frameSizeRegister);
 
         // this value is corrected by layout_activation_impl
-        masm.movptr(new AMD64Address(initialInfoRegister, HotSpotRuntime.frameInterpreterFrameLastSpOffset * wordSize), 0);
+        __masm.movptr(new AMD64Address(__initialInfoRegister, HotSpotRuntime.frameInterpreterFrameLastSpOffset * __wordSize), 0);
 
         // make the frame walkable
-        masm.movq(new AMD64Address(initialInfoRegister, HotSpotRuntime.frameInterpreterFrameSenderSpOffset * wordSize), senderSpRegister);
+        __masm.movq(new AMD64Address(__initialInfoRegister, HotSpotRuntime.frameInterpreterFrameSenderSpOffset * __wordSize), __senderSpRegister);
     }
 }

@@ -17,95 +17,96 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class LeftShiftNode
 public final class LeftShiftNode extends ShiftNode<Shl>
 {
+    // @def
     public static final NodeClass<LeftShiftNode> TYPE = NodeClass.create(LeftShiftNode.class);
 
     // @cons
-    public LeftShiftNode(ValueNode x, ValueNode y)
+    public LeftShiftNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, ArithmeticOpTable::getShl, x, y);
+        super(TYPE, ArithmeticOpTable::getShl, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        ArithmeticOpTable.ShiftOp<Shl> op = ArithmeticOpTable.forStamp(x.stamp(view)).getShl();
-        Stamp stamp = op.foldStamp(x.stamp(view), (IntegerStamp) y.stamp(view));
-        ValueNode value = ShiftNode.canonical(op, stamp, x, y, view);
-        if (value != null)
+        ArithmeticOpTable.ShiftOp<Shl> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getShl();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), (IntegerStamp) __y.stamp(__view));
+        ValueNode __value = ShiftNode.canonical(__op, __stamp, __x, __y, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
 
-        return canonical(null, op, stamp, x, y);
+        return canonical(null, __op, __stamp, __x, __y);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        return canonical(this, getArithmeticOp(), stamp(NodeView.DEFAULT), forX, forY);
+        return canonical(this, getArithmeticOp(), stamp(NodeView.DEFAULT), __forX, __forY);
     }
 
-    private static ValueNode canonical(LeftShiftNode leftShiftNode, ArithmeticOpTable.ShiftOp<Shl> op, Stamp stamp, ValueNode forX, ValueNode forY)
+    private static ValueNode canonical(LeftShiftNode __leftShiftNode, ArithmeticOpTable.ShiftOp<Shl> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY)
     {
-        LeftShiftNode self = leftShiftNode;
-        if (forY.isConstant())
+        LeftShiftNode __self = __leftShiftNode;
+        if (__forY.isConstant())
         {
-            int amount = forY.asJavaConstant().asInt();
-            int originalAmount = amount;
-            int mask = op.getShiftAmountMask(stamp);
-            amount &= mask;
-            if (amount == 0)
+            int __amount = __forY.asJavaConstant().asInt();
+            int __originalAmount = __amount;
+            int __mask = __op.getShiftAmountMask(__stamp);
+            __amount &= __mask;
+            if (__amount == 0)
             {
-                return forX;
+                return __forX;
             }
-            if (forX instanceof ShiftNode)
+            if (__forX instanceof ShiftNode)
             {
-                ShiftNode<?> other = (ShiftNode<?>) forX;
-                if (other.getY().isConstant())
+                ShiftNode<?> __other = (ShiftNode<?>) __forX;
+                if (__other.getY().isConstant())
                 {
-                    int otherAmount = other.getY().asJavaConstant().asInt() & mask;
-                    if (other instanceof LeftShiftNode)
+                    int __otherAmount = __other.getY().asJavaConstant().asInt() & __mask;
+                    if (__other instanceof LeftShiftNode)
                     {
-                        int total = amount + otherAmount;
-                        if (total != (total & mask))
+                        int __total = __amount + __otherAmount;
+                        if (__total != (__total & __mask))
                         {
-                            return ConstantNode.forIntegerKind(stamp.getStackKind(), 0);
+                            return ConstantNode.forIntegerKind(__stamp.getStackKind(), 0);
                         }
-                        return new LeftShiftNode(other.getX(), ConstantNode.forInt(total));
+                        return new LeftShiftNode(__other.getX(), ConstantNode.forInt(__total));
                     }
-                    else if ((other instanceof RightShiftNode || other instanceof UnsignedRightShiftNode) && otherAmount == amount)
+                    else if ((__other instanceof RightShiftNode || __other instanceof UnsignedRightShiftNode) && __otherAmount == __amount)
                     {
-                        if (stamp.getStackKind() == JavaKind.Long)
+                        if (__stamp.getStackKind() == JavaKind.Long)
                         {
-                            return new AndNode(other.getX(), ConstantNode.forLong(-1L << amount));
+                            return new AndNode(__other.getX(), ConstantNode.forLong(-1L << __amount));
                         }
                         else
                         {
-                            return new AndNode(other.getX(), ConstantNode.forInt(-1 << amount));
+                            return new AndNode(__other.getX(), ConstantNode.forInt(-1 << __amount));
                         }
                     }
                 }
             }
-            if (originalAmount != amount)
+            if (__originalAmount != __amount)
             {
-                return new LeftShiftNode(forX, ConstantNode.forInt(amount));
+                return new LeftShiftNode(__forX, ConstantNode.forInt(__amount));
             }
         }
-        if (self == null)
+        if (__self == null)
         {
-            self = new LeftShiftNode(forX, forY);
+            __self = new LeftShiftNode(__forX, __forY);
         }
-        return self;
+        return __self;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitShl(nodeValueMap.operand(getX()), nodeValueMap.operand(getY())));
+        __nodeValueMap.setResult(this, __gen.emitShl(__nodeValueMap.operand(getX()), __nodeValueMap.operand(getY())));
     }
 }

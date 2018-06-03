@@ -16,30 +16,34 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class WriteRegisterNode
 public final class WriteRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<WriteRegisterNode> TYPE = NodeClass.create(WriteRegisterNode.class);
 
     /**
      * The fixed register to access.
      */
+    // @field
     protected final Register register;
 
     /**
      * The new value assigned to the register.
      */
-    @Input ValueNode value;
+    @Input
+    // @field
+    ValueNode value;
 
     // @cons
-    public WriteRegisterNode(Register register, ValueNode value)
+    public WriteRegisterNode(Register __register, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.register = register;
-        this.value = value;
+        this.register = __register;
+        this.value = __value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value val = gen.operand(value);
-        gen.getLIRGeneratorTool().emitMove(register.asValue(val.getValueKind()), val);
+        Value __val = __gen.operand(value);
+        __gen.getLIRGeneratorTool().emitMove(register.asValue(__val.getValueKind()), __val);
     }
 }

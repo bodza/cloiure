@@ -33,15 +33,17 @@ public final class ReentrantNodeIterator
     // @class ReentrantNodeIterator.LoopInfo
     public static final class LoopInfo<StateT>
     {
+        // @field
         public final EconomicMap<LoopEndNode, StateT> endStates;
+        // @field
         public final EconomicMap<LoopExitNode, StateT> exitStates;
 
         // @cons
-        public LoopInfo(int endCount, int exitCount)
+        public LoopInfo(int __endCount, int __exitCount)
         {
             super();
-            endStates = EconomicMap.create(Equivalence.IDENTITY, endCount);
-            exitStates = EconomicMap.create(Equivalence.IDENTITY, exitCount);
+            endStates = EconomicMap.create(Equivalence.IDENTITY, __endCount);
+            exitStates = EconomicMap.create(Equivalence.IDENTITY, __exitCount);
         }
     }
 
@@ -59,144 +61,144 @@ public final class ReentrantNodeIterator
         /**
          * Determine whether iteration should continue in the current state.
          */
-        protected boolean continueIteration(StateT currentState)
+        protected boolean continueIteration(StateT __currentState)
         {
             return true;
         }
     }
 
-    public static <StateT> LoopInfo<StateT> processLoop(NodeIteratorClosure<StateT> closure, LoopBeginNode loop, StateT initialState)
+    public static <StateT> LoopInfo<StateT> processLoop(NodeIteratorClosure<StateT> __closure, LoopBeginNode __loop, StateT __initialState)
     {
-        EconomicMap<FixedNode, StateT> blockEndStates = apply(closure, loop, initialState, loop);
+        EconomicMap<FixedNode, StateT> __blockEndStates = apply(__closure, __loop, __initialState, __loop);
 
-        LoopInfo<StateT> info = new LoopInfo<>(loop.loopEnds().count(), loop.loopExits().count());
-        for (LoopEndNode end : loop.loopEnds())
+        LoopInfo<StateT> __info = new LoopInfo<>(__loop.loopEnds().count(), __loop.loopExits().count());
+        for (LoopEndNode __end : __loop.loopEnds())
         {
-            if (blockEndStates.containsKey(end))
+            if (__blockEndStates.containsKey(__end))
             {
-                info.endStates.put(end, blockEndStates.get(end));
+                __info.endStates.put(__end, __blockEndStates.get(__end));
             }
         }
-        for (LoopExitNode exit : loop.loopExits())
+        for (LoopExitNode __exit : __loop.loopExits())
         {
-            if (blockEndStates.containsKey(exit))
+            if (__blockEndStates.containsKey(__exit))
             {
-                info.exitStates.put(exit, blockEndStates.get(exit));
+                __info.exitStates.put(__exit, __blockEndStates.get(__exit));
             }
         }
-        return info;
+        return __info;
     }
 
-    public static <StateT> void apply(NodeIteratorClosure<StateT> closure, FixedNode start, StateT initialState)
+    public static <StateT> void apply(NodeIteratorClosure<StateT> __closure, FixedNode __start, StateT __initialState)
     {
-        apply(closure, start, initialState, null);
+        apply(__closure, __start, __initialState, null);
     }
 
-    private static <StateT> EconomicMap<FixedNode, StateT> apply(NodeIteratorClosure<StateT> closure, FixedNode start, StateT initialState, LoopBeginNode boundary)
+    private static <StateT> EconomicMap<FixedNode, StateT> apply(NodeIteratorClosure<StateT> __closure, FixedNode __start, StateT __initialState, LoopBeginNode __boundary)
     {
-        Deque<AbstractBeginNode> nodeQueue = new ArrayDeque<>();
-        EconomicMap<FixedNode, StateT> blockEndStates = EconomicMap.create(Equivalence.IDENTITY);
+        Deque<AbstractBeginNode> __nodeQueue = new ArrayDeque<>();
+        EconomicMap<FixedNode, StateT> __blockEndStates = EconomicMap.create(Equivalence.IDENTITY);
 
-        StateT state = initialState;
-        FixedNode current = start;
+        StateT __state = __initialState;
+        FixedNode __current = __start;
         do
         {
-            while (current instanceof FixedWithNextNode)
+            while (__current instanceof FixedWithNextNode)
             {
-                if (boundary != null && current instanceof LoopExitNode && ((LoopExitNode) current).loopBegin() == boundary)
+                if (__boundary != null && __current instanceof LoopExitNode && ((LoopExitNode) __current).loopBegin() == __boundary)
                 {
-                    blockEndStates.put(current, state);
-                    current = null;
+                    __blockEndStates.put(__current, __state);
+                    __current = null;
                 }
                 else
                 {
-                    FixedNode next = ((FixedWithNextNode) current).next();
-                    state = closure.processNode(current, state);
-                    current = closure.continueIteration(state) ? next : null;
+                    FixedNode __next = ((FixedWithNextNode) __current).next();
+                    __state = __closure.processNode(__current, __state);
+                    __current = __closure.continueIteration(__state) ? __next : null;
                 }
             }
 
-            if (current != null)
+            if (__current != null)
             {
-                state = closure.processNode(current, state);
+                __state = __closure.processNode(__current, __state);
 
-                if (closure.continueIteration(state))
+                if (__closure.continueIteration(__state))
                 {
-                    Iterator<Node> successors = current.successors().iterator();
-                    if (!successors.hasNext())
+                    Iterator<Node> __successors = __current.successors().iterator();
+                    if (!__successors.hasNext())
                     {
-                        if (current instanceof LoopEndNode)
+                        if (__current instanceof LoopEndNode)
                         {
-                            blockEndStates.put(current, state);
+                            __blockEndStates.put(__current, __state);
                         }
-                        else if (current instanceof EndNode)
+                        else if (__current instanceof EndNode)
                         {
                             // add the end node and see if the merge is ready for processing
-                            AbstractMergeNode merge = ((EndNode) current).merge();
-                            if (merge instanceof LoopBeginNode)
+                            AbstractMergeNode __merge = ((EndNode) __current).merge();
+                            if (__merge instanceof LoopBeginNode)
                             {
-                                EconomicMap<LoopExitNode, StateT> loopExitState = closure.processLoop((LoopBeginNode) merge, state);
-                                MapCursor<LoopExitNode, StateT> entry = loopExitState.getEntries();
-                                while (entry.advance())
+                                EconomicMap<LoopExitNode, StateT> __loopExitState = __closure.processLoop((LoopBeginNode) __merge, __state);
+                                MapCursor<LoopExitNode, StateT> __entry = __loopExitState.getEntries();
+                                while (__entry.advance())
                                 {
-                                    blockEndStates.put(entry.getKey(), entry.getValue());
-                                    nodeQueue.add(entry.getKey());
+                                    __blockEndStates.put(__entry.getKey(), __entry.getValue());
+                                    __nodeQueue.add(__entry.getKey());
                                 }
                             }
                             else
                             {
-                                boolean endsVisited = true;
-                                for (AbstractEndNode forwardEnd : merge.forwardEnds())
+                                boolean __endsVisited = true;
+                                for (AbstractEndNode __forwardEnd : __merge.forwardEnds())
                                 {
-                                    if (forwardEnd != current && !blockEndStates.containsKey(forwardEnd))
+                                    if (__forwardEnd != __current && !__blockEndStates.containsKey(__forwardEnd))
                                     {
-                                        endsVisited = false;
+                                        __endsVisited = false;
                                         break;
                                     }
                                 }
-                                if (endsVisited)
+                                if (__endsVisited)
                                 {
-                                    ArrayList<StateT> states = new ArrayList<>(merge.forwardEndCount());
-                                    for (int i = 0; i < merge.forwardEndCount(); i++)
+                                    ArrayList<StateT> __states = new ArrayList<>(__merge.forwardEndCount());
+                                    for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
                                     {
-                                        AbstractEndNode forwardEnd = merge.forwardEndAt(i);
-                                        StateT other = forwardEnd == current ? state : blockEndStates.removeKey(forwardEnd);
-                                        states.add(other);
+                                        AbstractEndNode __forwardEnd = __merge.forwardEndAt(__i);
+                                        StateT __other = __forwardEnd == __current ? __state : __blockEndStates.removeKey(__forwardEnd);
+                                        __states.add(__other);
                                     }
-                                    state = closure.merge(merge, states);
-                                    current = closure.continueIteration(state) ? merge : null;
+                                    __state = __closure.merge(__merge, __states);
+                                    __current = __closure.continueIteration(__state) ? __merge : null;
                                     continue;
                                 }
                                 else
                                 {
-                                    blockEndStates.put(current, state);
+                                    __blockEndStates.put(__current, __state);
                                 }
                             }
                         }
                     }
                     else
                     {
-                        FixedNode firstSuccessor = (FixedNode) successors.next();
-                        if (!successors.hasNext())
+                        FixedNode __firstSuccessor = (FixedNode) __successors.next();
+                        if (!__successors.hasNext())
                         {
-                            current = firstSuccessor;
+                            __current = __firstSuccessor;
                             continue;
                         }
                         else
                         {
                             do
                             {
-                                AbstractBeginNode successor = (AbstractBeginNode) successors.next();
-                                StateT successorState = closure.afterSplit(successor, state);
-                                if (closure.continueIteration(successorState))
+                                AbstractBeginNode __successor = (AbstractBeginNode) __successors.next();
+                                StateT __successorState = __closure.afterSplit(__successor, __state);
+                                if (__closure.continueIteration(__successorState))
                                 {
-                                    blockEndStates.put(successor, successorState);
-                                    nodeQueue.add(successor);
+                                    __blockEndStates.put(__successor, __successorState);
+                                    __nodeQueue.add(__successor);
                                 }
-                            } while (successors.hasNext());
+                            } while (__successors.hasNext());
 
-                            state = closure.afterSplit((AbstractBeginNode) firstSuccessor, state);
-                            current = closure.continueIteration(state) ? firstSuccessor : null;
+                            __state = __closure.afterSplit((AbstractBeginNode) __firstSuccessor, __state);
+                            __current = __closure.continueIteration(__state) ? __firstSuccessor : null;
                             continue;
                         }
                     }
@@ -204,14 +206,14 @@ public final class ReentrantNodeIterator
             }
 
             // get next queued block
-            if (nodeQueue.isEmpty())
+            if (__nodeQueue.isEmpty())
             {
-                return blockEndStates;
+                return __blockEndStates;
             }
             else
             {
-                current = nodeQueue.removeFirst();
-                state = blockEndStates.removeKey(current);
+                __current = __nodeQueue.removeFirst();
+                __state = __blockEndStates.removeKey(__current);
             }
         } while (true);
     }

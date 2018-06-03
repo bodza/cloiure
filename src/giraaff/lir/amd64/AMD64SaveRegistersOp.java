@@ -24,21 +24,26 @@ import giraaff.lir.framemap.FrameMap;
 // @class AMD64SaveRegistersOp
 public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64SaveRegistersOp> TYPE = LIRInstructionClass.create(AMD64SaveRegistersOp.class);
 
     /**
      * The registers (potentially) saved by this operation.
      */
+    // @field
     protected final Register[] savedRegisters;
 
     /**
      * The slots to which the registers are saved.
      */
-    @Def(OperandFlag.STACK) protected final AllocatableValue[] slots;
+    @Def(OperandFlag.STACK)
+    // @field
+    protected final AllocatableValue[] slots;
 
     /**
      * Specifies if {@link #remove(EconomicSet)} should have an effect.
      */
+    // @field
     protected final boolean supportsRemove;
 
     /**
@@ -47,33 +52,33 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
      * @param supportsRemove determines if registers can be {@linkplain #remove(EconomicSet) pruned}
      */
     // @cons
-    public AMD64SaveRegistersOp(Register[] savedRegisters, AllocatableValue[] savedRegisterLocations, boolean supportsRemove)
+    public AMD64SaveRegistersOp(Register[] __savedRegisters, AllocatableValue[] __savedRegisterLocations, boolean __supportsRemove)
     {
-        this(TYPE, savedRegisters, savedRegisterLocations, supportsRemove);
+        this(TYPE, __savedRegisters, __savedRegisterLocations, __supportsRemove);
     }
 
     // @cons
-    public AMD64SaveRegistersOp(LIRInstructionClass<? extends AMD64SaveRegistersOp> c, Register[] savedRegisters, AllocatableValue[] savedRegisterLocations, boolean supportsRemove)
+    public AMD64SaveRegistersOp(LIRInstructionClass<? extends AMD64SaveRegistersOp> __c, Register[] __savedRegisters, AllocatableValue[] __savedRegisterLocations, boolean __supportsRemove)
     {
-        super(c);
-        this.savedRegisters = savedRegisters;
-        this.slots = savedRegisterLocations;
-        this.supportsRemove = supportsRemove;
+        super(__c);
+        this.savedRegisters = __savedRegisters;
+        this.slots = __savedRegisterLocations;
+        this.supportsRemove = __supportsRemove;
     }
 
-    protected void saveRegister(CompilationResultBuilder crb, AMD64MacroAssembler masm, StackSlot result, Register input)
+    protected void saveRegister(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, StackSlot __result, Register __input)
     {
-        AMD64Move.reg2stack((AMD64Kind) result.getPlatformKind(), crb, masm, result, input);
+        AMD64Move.reg2stack((AMD64Kind) __result.getPlatformKind(), __crb, __masm, __result, __input);
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        for (int i = 0; i < savedRegisters.length; i++)
+        for (int __i = 0; __i < savedRegisters.length; __i++)
         {
-            if (savedRegisters[i] != null)
+            if (savedRegisters[__i] != null)
             {
-                saveRegister(crb, masm, ValueUtil.asStackSlot(slots[i]), savedRegisters[i]);
+                saveRegister(__crb, __masm, ValueUtil.asStackSlot(slots[__i]), savedRegisters[__i]);
             }
         }
     }
@@ -90,60 +95,60 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
     }
 
     @Override
-    public int remove(EconomicSet<Register> doNotSave)
+    public int remove(EconomicSet<Register> __doNotSave)
     {
         if (!supportsRemove)
         {
             throw new UnsupportedOperationException();
         }
-        return prune(doNotSave, savedRegisters);
+        return prune(__doNotSave, savedRegisters);
     }
 
-    static int prune(EconomicSet<Register> toRemove, Register[] registers)
+    static int prune(EconomicSet<Register> __toRemove, Register[] __registers)
     {
-        int pruned = 0;
-        for (int i = 0; i < registers.length; i++)
+        int __pruned = 0;
+        for (int __i = 0; __i < __registers.length; __i++)
         {
-            if (registers[i] != null)
+            if (__registers[__i] != null)
             {
-                if (toRemove.contains(registers[i]))
+                if (__toRemove.contains(__registers[__i]))
                 {
-                    registers[i] = null;
-                    pruned++;
+                    __registers[__i] = null;
+                    __pruned++;
                 }
             }
         }
-        return pruned;
+        return __pruned;
     }
 
     @Override
-    public RegisterSaveLayout getMap(FrameMap frameMap)
+    public RegisterSaveLayout getMap(FrameMap __frameMap)
     {
-        int total = 0;
-        for (int i = 0; i < savedRegisters.length; i++)
+        int __total = 0;
+        for (int __i = 0; __i < savedRegisters.length; __i++)
         {
-            if (savedRegisters[i] != null)
+            if (savedRegisters[__i] != null)
             {
-                total++;
+                __total++;
             }
         }
-        Register[] keys = new Register[total];
-        int[] values = new int[total];
-        if (total != 0)
+        Register[] __keys = new Register[__total];
+        int[] __values = new int[__total];
+        if (__total != 0)
         {
-            int mapIndex = 0;
-            for (int i = 0; i < savedRegisters.length; i++)
+            int __mapIndex = 0;
+            for (int __i = 0; __i < savedRegisters.length; __i++)
             {
-                if (savedRegisters[i] != null)
+                if (savedRegisters[__i] != null)
                 {
-                    keys[mapIndex] = savedRegisters[i];
-                    StackSlot slot = ValueUtil.asStackSlot(slots[i]);
-                    values[mapIndex] = indexForStackSlot(frameMap, slot);
-                    mapIndex++;
+                    __keys[__mapIndex] = savedRegisters[__i];
+                    StackSlot __slot = ValueUtil.asStackSlot(slots[__i]);
+                    __values[__mapIndex] = indexForStackSlot(__frameMap, __slot);
+                    __mapIndex++;
                 }
             }
         }
-        return new RegisterSaveLayout(keys, values);
+        return new RegisterSaveLayout(__keys, __values);
     }
 
     /**
@@ -153,8 +158,8 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
      * @param slot a stack slot
      * @return the index of the stack slot
      */
-    private static int indexForStackSlot(FrameMap frameMap, StackSlot slot)
+    private static int indexForStackSlot(FrameMap __frameMap, StackSlot __slot)
     {
-        return frameMap.offsetForStackSlot(slot) / frameMap.getTarget().wordSize;
+        return __frameMap.offsetForStackSlot(__slot) / __frameMap.getTarget().wordSize;
     }
 }

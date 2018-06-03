@@ -27,15 +27,21 @@ import giraaff.util.GraalError;
 // @class LoadMethodNode
 public final class LoadMethodNode extends FixedWithNextNode implements Lowerable, Canonicalizable
 {
+    // @def
     public static final NodeClass<LoadMethodNode> TYPE = NodeClass.create(LoadMethodNode.class);
 
-    @Input ValueNode hub;
+    @Input
+    // @field
+    ValueNode hub;
+    // @field
     protected final ResolvedJavaMethod method;
+    // @field
     protected final ResolvedJavaType receiverType;
 
     /**
      * The caller or context type used to perform access checks when resolving {@link #method}.
      */
+    // @field
     protected final ResolvedJavaType callerType;
 
     public ValueNode getHub()
@@ -44,51 +50,51 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
     }
 
     // @cons
-    public LoadMethodNode(@InjectedNodeParameter Stamp stamp, ResolvedJavaMethod method, ResolvedJavaType receiverType, ResolvedJavaType callerType, ValueNode hub)
+    public LoadMethodNode(@InjectedNodeParameter Stamp __stamp, ResolvedJavaMethod __method, ResolvedJavaType __receiverType, ResolvedJavaType __callerType, ValueNode __hub)
     {
-        super(TYPE, stamp);
-        this.receiverType = receiverType;
-        this.callerType = callerType;
-        this.hub = hub;
-        this.method = method;
-        if (!method.isInVirtualMethodTable(receiverType))
+        super(TYPE, __stamp);
+        this.receiverType = __receiverType;
+        this.callerType = __callerType;
+        this.hub = __hub;
+        this.method = __method;
+        if (!__method.isInVirtualMethodTable(__receiverType))
         {
-            throw new GraalError("%s does not have a vtable entry in type %s", method, receiverType);
+            throw new GraalError("%s does not have a vtable entry in type %s", __method, __receiverType);
         }
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (hub instanceof LoadHubNode)
         {
-            ValueNode object = ((LoadHubNode) hub).getValue();
-            TypeReference type = StampTool.typeReferenceOrNull(object);
-            if (type != null)
+            ValueNode __object = ((LoadHubNode) hub).getValue();
+            TypeReference __type = StampTool.typeReferenceOrNull(__object);
+            if (__type != null)
             {
-                if (type.isExact())
+                if (__type.isExact())
                 {
-                    return resolveExactMethod(tool, type.getType());
+                    return resolveExactMethod(__tool, __type.getType());
                 }
-                Assumptions assumptions = graph().getAssumptions();
-                AssumptionResult<ResolvedJavaMethod> resolvedMethod = type.getType().findUniqueConcreteMethod(method);
-                if (resolvedMethod != null && resolvedMethod.canRecordTo(assumptions) && !type.getType().isInterface() && method.getDeclaringClass().isAssignableFrom(type.getType()))
+                Assumptions __assumptions = graph().getAssumptions();
+                AssumptionResult<ResolvedJavaMethod> __resolvedMethod = __type.getType().findUniqueConcreteMethod(method);
+                if (__resolvedMethod != null && __resolvedMethod.canRecordTo(__assumptions) && !__type.getType().isInterface() && method.getDeclaringClass().isAssignableFrom(__type.getType()))
                 {
-                    NodeView view = NodeView.from(tool);
-                    resolvedMethod.recordTo(assumptions);
-                    return ConstantNode.forConstant(stamp(view), resolvedMethod.getResult().getEncoding(), tool.getMetaAccess());
+                    NodeView __view = NodeView.from(__tool);
+                    __resolvedMethod.recordTo(__assumptions);
+                    return ConstantNode.forConstant(stamp(__view), __resolvedMethod.getResult().getEncoding(), __tool.getMetaAccess());
                 }
             }
         }
         if (hub.isConstant())
         {
-            return resolveExactMethod(tool, tool.getConstantReflection().asJavaType(hub.asConstant()));
+            return resolveExactMethod(__tool, __tool.getConstantReflection().asJavaType(hub.asConstant()));
         }
 
         return this;
@@ -100,10 +106,10 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
      * @param type the exact type of object being loaded from
      * @return the method which would be invoked for {@code type} or null if it doesn't implement the method
      */
-    private Node resolveExactMethod(CanonicalizerTool tool, ResolvedJavaType type)
+    private Node resolveExactMethod(CanonicalizerTool __tool, ResolvedJavaType __type)
     {
-        ResolvedJavaMethod newMethod = type.resolveConcreteMethod(method, callerType);
-        if (newMethod == null)
+        ResolvedJavaMethod __newMethod = __type.resolveConcreteMethod(method, callerType);
+        if (__newMethod == null)
         {
             /*
              * This really represent a misuse of LoadMethod since we're loading from a class which
@@ -113,7 +119,7 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
         }
         else
         {
-            return ConstantNode.forConstant(stamp(NodeView.DEFAULT), newMethod.getEncoding(), tool.getMetaAccess());
+            return ConstantNode.forConstant(stamp(NodeView.DEFAULT), __newMethod.getEncoding(), __tool.getMetaAccess());
         }
     }
 

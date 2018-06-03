@@ -26,40 +26,42 @@ import giraaff.nodes.util.GraphUtil;
 // @class PointerEqualsNode
 public class PointerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
+    // @def
     public static final NodeClass<PointerEqualsNode> TYPE = NodeClass.create(PointerEqualsNode.class);
 
+    // @def
     private static final PointerEqualsOp OP = new PointerEqualsOp();
 
     // @cons
-    public PointerEqualsNode(ValueNode x, ValueNode y)
+    public PointerEqualsNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
-    public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode result = findSynonym(x, y, view);
-        if (result != null)
+        LogicNode __result = findSynonym(__x, __y, __view);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
-        return new PointerEqualsNode(x, y);
+        return new PointerEqualsNode(__x, __y);
     }
 
     // @cons
-    protected PointerEqualsNode(NodeClass<? extends PointerEqualsNode> c, ValueNode x, ValueNode y)
+    protected PointerEqualsNode(NodeClass<? extends PointerEqualsNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, CanonicalCondition.EQ, false, x, y);
+        super(__c, CanonicalCondition.EQ, false, __x, __y);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
-        if (value != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, false, __forX, __forY, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
         return this;
     }
@@ -72,24 +74,24 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
          * could select a certain method and if so, returns {@code true} if the answer is guaranteed
          * to be false. Otherwise, returns {@code false}.
          */
-        private static boolean isAlwaysFailingVirtualDispatchTest(CanonicalCondition condition, ValueNode forX, ValueNode forY)
+        private static boolean isAlwaysFailingVirtualDispatchTest(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY)
         {
-            if (forY.isConstant())
+            if (__forY.isConstant())
             {
-                if (forX instanceof LoadMethodNode && condition == CanonicalCondition.EQ)
+                if (__forX instanceof LoadMethodNode && __condition == CanonicalCondition.EQ)
                 {
-                    LoadMethodNode lm = ((LoadMethodNode) forX);
-                    if (lm.getMethod().getEncoding().equals(forY.asConstant()))
+                    LoadMethodNode __lm = ((LoadMethodNode) __forX);
+                    if (__lm.getMethod().getEncoding().equals(__forY.asConstant()))
                     {
-                        if (lm.getHub() instanceof LoadHubNode)
+                        if (__lm.getHub() instanceof LoadHubNode)
                         {
-                            ValueNode object = ((LoadHubNode) lm.getHub()).getValue();
-                            ResolvedJavaType type = StampTool.typeOrNull(object);
-                            ResolvedJavaType declaringClass = lm.getMethod().getDeclaringClass();
-                            if (type != null && !type.equals(declaringClass) && declaringClass.isAssignableFrom(type))
+                            ValueNode __object = ((LoadHubNode) __lm.getHub()).getValue();
+                            ResolvedJavaType __type = StampTool.typeOrNull(__object);
+                            ResolvedJavaType __declaringClass = __lm.getMethod().getDeclaringClass();
+                            if (__type != null && !__type.equals(__declaringClass) && __declaringClass.isAssignableFrom(__type))
                             {
-                                ResolvedJavaMethod override = type.resolveMethod(lm.getMethod(), lm.getCallerType());
-                                if (override != null && !override.equals(lm.getMethod()))
+                                ResolvedJavaMethod __override = __type.resolveMethod(__lm.getMethod(), __lm.getCallerType());
+                                if (__override != null && !__override.equals(__lm.getMethod()))
                                 {
                                     return true;
                                 }
@@ -102,44 +104,44 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
         }
 
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __forX, ValueNode __forY, NodeView __view)
         {
-            LogicNode result = findSynonym(forX, forY, view);
-            if (result != null)
+            LogicNode __result = findSynonym(__forX, __forY, __view);
+            if (__result != null)
             {
-                return result;
+                return __result;
             }
-            if (isAlwaysFailingVirtualDispatchTest(condition, forX, forY))
+            if (isAlwaysFailingVirtualDispatchTest(__condition, __forX, __forY))
             {
                 return LogicConstantNode.contradiction();
             }
-            return super.canonical(constantReflection, metaAccess, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
+            return super.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __unorderedIsTrue, __forX, __forY, __view);
         }
 
         @Override
-        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
         {
-            return new PointerEqualsNode(newX, newY);
+            return new PointerEqualsNode(__newX, __newY);
         }
     }
 
-    public static LogicNode findSynonym(ValueNode forX, ValueNode forY, NodeView view)
+    public static LogicNode findSynonym(ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY))
+        if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {
             return LogicConstantNode.tautology();
         }
-        else if (forX.stamp(view).alwaysDistinct(forY.stamp(view)))
+        else if (__forX.stamp(__view).alwaysDistinct(__forY.stamp(__view)))
         {
             return LogicConstantNode.contradiction();
         }
-        else if (((AbstractPointerStamp) forX.stamp(view)).alwaysNull())
+        else if (((AbstractPointerStamp) __forX.stamp(__view)).alwaysNull())
         {
-            return IsNullNode.create(forY);
+            return IsNullNode.create(__forY);
         }
-        else if (((AbstractPointerStamp) forY.stamp(view)).alwaysNull())
+        else if (((AbstractPointerStamp) __forY.stamp(__view)).alwaysNull())
         {
-            return IsNullNode.create(forX);
+            return IsNullNode.create(__forX);
         }
         else
         {
@@ -148,45 +150,45 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForX(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
-        if (!negated)
+        if (!__negated)
         {
-            Stamp newStamp = xStamp.join(yStamp);
-            if (!newStamp.equals(xStamp))
+            Stamp __newStamp = __xStamp.join(__yStamp);
+            if (!__newStamp.equals(__xStamp))
             {
-                return newStamp;
+                return __newStamp;
             }
         }
         return null;
     }
 
     @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForY(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
-        if (!negated)
+        if (!__negated)
         {
-            Stamp newStamp = yStamp.join(xStamp);
-            if (!newStamp.equals(yStamp))
+            Stamp __newStamp = __yStamp.join(__xStamp);
+            if (!__newStamp.equals(__yStamp))
             {
-                return newStamp;
+                return __newStamp;
             }
         }
         return null;
     }
 
     @Override
-    public TriState tryFold(Stamp xStampGeneric, Stamp yStampGeneric)
+    public TriState tryFold(Stamp __xStampGeneric, Stamp __yStampGeneric)
     {
-        if (xStampGeneric instanceof ObjectStamp && yStampGeneric instanceof ObjectStamp)
+        if (__xStampGeneric instanceof ObjectStamp && __yStampGeneric instanceof ObjectStamp)
         {
-            ObjectStamp xStamp = (ObjectStamp) xStampGeneric;
-            ObjectStamp yStamp = (ObjectStamp) yStampGeneric;
-            if (xStamp.alwaysDistinct(yStamp))
+            ObjectStamp __xStamp = (ObjectStamp) __xStampGeneric;
+            ObjectStamp __yStamp = (ObjectStamp) __yStampGeneric;
+            if (__xStamp.alwaysDistinct(__yStamp))
             {
                 return TriState.FALSE;
             }
-            else if (xStamp.neverDistinct(yStamp))
+            else if (__xStamp.neverDistinct(__yStamp))
             {
                 return TriState.TRUE;
             }

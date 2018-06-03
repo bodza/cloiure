@@ -20,23 +20,31 @@ import giraaff.nodes.type.StampTool;
 // @class UnsafeAccessNode
 public abstract class UnsafeAccessNode extends FixedWithNextNode implements Canonicalizable
 {
+    // @def
     public static final NodeClass<UnsafeAccessNode> TYPE = NodeClass.create(UnsafeAccessNode.class);
 
-    @Input ValueNode object;
-    @Input ValueNode offset;
+    @Input
+    // @field
+    ValueNode object;
+    @Input
+    // @field
+    ValueNode offset;
+    // @field
     protected final JavaKind accessKind;
+    // @field
     protected final LocationIdentity locationIdentity;
+    // @field
     protected final boolean forceAnyLocation;
 
     // @cons
-    protected UnsafeAccessNode(NodeClass<? extends UnsafeAccessNode> c, Stamp stamp, ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, boolean forceAnyLocation)
+    protected UnsafeAccessNode(NodeClass<? extends UnsafeAccessNode> __c, Stamp __stamp, ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __forceAnyLocation)
     {
-        super(c, stamp);
-        this.forceAnyLocation = forceAnyLocation;
-        this.object = object;
-        this.offset = offset;
-        this.accessKind = accessKind;
-        this.locationIdentity = locationIdentity;
+        super(__c, __stamp);
+        this.forceAnyLocation = __forceAnyLocation;
+        this.object = __object;
+        this.offset = __offset;
+        this.accessKind = __accessKind;
+        this.locationIdentity = __locationIdentity;
     }
 
     public LocationIdentity getLocationIdentity()
@@ -65,34 +73,34 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (!isAnyLocationForced() && getLocationIdentity().isAny())
         {
             if (offset().isConstant())
             {
-                long constantOffset = offset().asJavaConstant().asLong();
+                long __constantOffset = offset().asJavaConstant().asLong();
 
                 // Try to canonicalize to a field access.
-                ResolvedJavaType receiverType = StampTool.typeOrNull(object());
-                if (receiverType != null)
+                ResolvedJavaType __receiverType = StampTool.typeOrNull(object());
+                if (__receiverType != null)
                 {
-                    ResolvedJavaField field = receiverType.findInstanceFieldWithOffset(constantOffset, accessKind());
+                    ResolvedJavaField __field = __receiverType.findInstanceFieldWithOffset(__constantOffset, accessKind());
                     // No need for checking that the receiver is non-null. The field access includes
                     // the null check and if a field is found, the offset is so small that this is
                     // never a valid access of an arbitrary address.
-                    if (field != null && field.getJavaKind() == this.accessKind())
+                    if (__field != null && __field.getJavaKind() == this.accessKind())
                     {
-                        return cloneAsFieldAccess(graph().getAssumptions(), field);
+                        return cloneAsFieldAccess(graph().getAssumptions(), __field);
                     }
                 }
             }
-            ResolvedJavaType receiverType = StampTool.typeOrNull(object());
+            ResolvedJavaType __receiverType = StampTool.typeOrNull(object());
             // Try to build a better location identity.
-            if (receiverType != null && receiverType.isArray())
+            if (__receiverType != null && __receiverType.isArray())
             {
-                LocationIdentity identity = NamedLocationIdentity.getArrayLocation(receiverType.getComponentType().getJavaKind());
-                return cloneAsArrayAccess(offset(), identity);
+                LocationIdentity __identity = NamedLocationIdentity.getArrayLocation(__receiverType.getComponentType().getJavaKind());
+                return cloneAsArrayAccess(offset(), __identity);
             }
         }
 

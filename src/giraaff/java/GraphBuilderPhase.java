@@ -20,19 +20,20 @@ import giraaff.phases.tiers.HighTierContext;
 // @class GraphBuilderPhase
 public final class GraphBuilderPhase extends BasePhase<HighTierContext>
 {
+    // @field
     private final GraphBuilderConfiguration graphBuilderConfig;
 
     // @cons
-    public GraphBuilderPhase(GraphBuilderConfiguration config)
+    public GraphBuilderPhase(GraphBuilderConfiguration __config)
     {
         super();
-        this.graphBuilderConfig = config;
+        this.graphBuilderConfig = __config;
     }
 
     @Override
-    protected void run(StructuredGraph graph, HighTierContext context)
+    protected void run(StructuredGraph __graph, HighTierContext __context)
     {
-        new Instance(context.getMetaAccess(), context.getStampProvider(), context.getConstantReflection(), context.getConstantFieldProvider(), graphBuilderConfig, context.getOptimisticOptimizations(), null).run(graph);
+        new Instance(__context.getMetaAccess(), __context.getStampProvider(), __context.getConstantReflection(), __context.getConstantFieldProvider(), graphBuilderConfig, __context.getOptimisticOptimizations(), null).run(__graph);
     }
 
     public GraphBuilderConfiguration getGraphBuilderConfig()
@@ -43,37 +44,44 @@ public final class GraphBuilderPhase extends BasePhase<HighTierContext>
     // @class GraphBuilderPhase.Instance
     public static final class Instance extends Phase
     {
+        // @field
         protected final MetaAccessProvider metaAccess;
+        // @field
         protected final StampProvider stampProvider;
+        // @field
         protected final ConstantReflectionProvider constantReflection;
+        // @field
         protected final ConstantFieldProvider constantFieldProvider;
+        // @field
         protected final GraphBuilderConfiguration graphBuilderConfig;
+        // @field
         protected final OptimisticOptimizations optimisticOpts;
+        // @field
         private final IntrinsicContext initialIntrinsicContext;
 
         // @cons
-        public Instance(MetaAccessProvider metaAccess, StampProvider stampProvider, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, GraphBuilderConfiguration graphBuilderConfig, OptimisticOptimizations optimisticOpts, IntrinsicContext initialIntrinsicContext)
+        public Instance(MetaAccessProvider __metaAccess, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, GraphBuilderConfiguration __graphBuilderConfig, OptimisticOptimizations __optimisticOpts, IntrinsicContext __initialIntrinsicContext)
         {
             super();
-            this.graphBuilderConfig = graphBuilderConfig;
-            this.optimisticOpts = optimisticOpts;
-            this.metaAccess = metaAccess;
-            this.stampProvider = stampProvider;
-            this.constantReflection = constantReflection;
-            this.constantFieldProvider = constantFieldProvider;
-            this.initialIntrinsicContext = initialIntrinsicContext;
+            this.graphBuilderConfig = __graphBuilderConfig;
+            this.optimisticOpts = __optimisticOpts;
+            this.metaAccess = __metaAccess;
+            this.stampProvider = __stampProvider;
+            this.constantReflection = __constantReflection;
+            this.constantFieldProvider = __constantFieldProvider;
+            this.initialIntrinsicContext = __initialIntrinsicContext;
         }
 
         @Override
-        protected void run(StructuredGraph graph)
+        protected void run(StructuredGraph __graph)
         {
-            createBytecodeParser(graph, null, graph.method(), graph.getEntryBCI(), initialIntrinsicContext).buildRootMethod();
+            createBytecodeParser(__graph, null, __graph.method(), __graph.getEntryBCI(), initialIntrinsicContext).buildRootMethod();
         }
 
         // Hook for subclasses of Instance to provide a subclass of BytecodeParser.
-        protected BytecodeParser createBytecodeParser(StructuredGraph graph, BytecodeParser parent, ResolvedJavaMethod method, int entryBCI, IntrinsicContext intrinsicContext)
+        protected BytecodeParser createBytecodeParser(StructuredGraph __graph, BytecodeParser __parent, ResolvedJavaMethod __method, int __entryBCI, IntrinsicContext __intrinsicContext)
         {
-            return new BytecodeParser(this, graph, parent, method, entryBCI, intrinsicContext);
+            return new BytecodeParser(this, __graph, __parent, __method, __entryBCI, __intrinsicContext);
         }
     }
 }

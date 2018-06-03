@@ -53,21 +53,22 @@ import giraaff.virtual.phases.ea.PEReadEliminationBlockState.ReadCacheEntry;
 // @class PEReadEliminationClosure
 public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadEliminationBlockState>
 {
+    // @def
     private static final EnumMap<JavaKind, LocationIdentity> UNBOX_LOCATIONS;
 
     static
     {
         UNBOX_LOCATIONS = new EnumMap<>(JavaKind.class);
-        for (JavaKind kind : JavaKind.values())
+        for (JavaKind __kind : JavaKind.values())
         {
-            UNBOX_LOCATIONS.put(kind, NamedLocationIdentity.immutable("PEA unbox " + kind.getJavaName()));
+            UNBOX_LOCATIONS.put(__kind, NamedLocationIdentity.immutable("PEA unbox " + __kind.getJavaName()));
         }
     }
 
     // @cons
-    public PEReadEliminationClosure(ScheduleResult schedule, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, LoweringProvider loweringProvider)
+    public PEReadEliminationClosure(ScheduleResult __schedule, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, LoweringProvider __loweringProvider)
     {
-        super(schedule, metaAccess, constantReflection, constantFieldProvider, loweringProvider);
+        super(__schedule, __metaAccess, __constantReflection, __constantFieldProvider, __loweringProvider);
     }
 
     @Override
@@ -77,105 +78,105 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     }
 
     @Override
-    protected boolean processNode(Node node, PEReadEliminationBlockState state, GraphEffectList effects, FixedWithNextNode lastFixedNode)
+    protected boolean processNode(Node __node, PEReadEliminationBlockState __state, GraphEffectList __effects, FixedWithNextNode __lastFixedNode)
     {
-        if (super.processNode(node, state, effects, lastFixedNode))
+        if (super.processNode(__node, __state, __effects, __lastFixedNode))
         {
             return true;
         }
 
-        if (node instanceof LoadFieldNode)
+        if (__node instanceof LoadFieldNode)
         {
-            return processLoadField((LoadFieldNode) node, state, effects);
+            return processLoadField((LoadFieldNode) __node, __state, __effects);
         }
-        else if (node instanceof StoreFieldNode)
+        else if (__node instanceof StoreFieldNode)
         {
-            return processStoreField((StoreFieldNode) node, state, effects);
+            return processStoreField((StoreFieldNode) __node, __state, __effects);
         }
-        else if (node instanceof LoadIndexedNode)
+        else if (__node instanceof LoadIndexedNode)
         {
-            return processLoadIndexed((LoadIndexedNode) node, state, effects);
+            return processLoadIndexed((LoadIndexedNode) __node, __state, __effects);
         }
-        else if (node instanceof StoreIndexedNode)
+        else if (__node instanceof StoreIndexedNode)
         {
-            return processStoreIndexed((StoreIndexedNode) node, state, effects);
+            return processStoreIndexed((StoreIndexedNode) __node, __state, __effects);
         }
-        else if (node instanceof ArrayLengthNode)
+        else if (__node instanceof ArrayLengthNode)
         {
-            return processArrayLength((ArrayLengthNode) node, state, effects);
+            return processArrayLength((ArrayLengthNode) __node, __state, __effects);
         }
-        else if (node instanceof UnboxNode)
+        else if (__node instanceof UnboxNode)
         {
-            return processUnbox((UnboxNode) node, state, effects);
+            return processUnbox((UnboxNode) __node, __state, __effects);
         }
-        else if (node instanceof RawLoadNode)
+        else if (__node instanceof RawLoadNode)
         {
-            return processUnsafeLoad((RawLoadNode) node, state, effects);
+            return processUnsafeLoad((RawLoadNode) __node, __state, __effects);
         }
-        else if (node instanceof RawStoreNode)
+        else if (__node instanceof RawStoreNode)
         {
-            return processUnsafeStore((RawStoreNode) node, state, effects);
+            return processUnsafeStore((RawStoreNode) __node, __state, __effects);
         }
-        else if (node instanceof MemoryCheckpoint.Single)
+        else if (__node instanceof MemoryCheckpoint.Single)
         {
-            LocationIdentity identity = ((MemoryCheckpoint.Single) node).getLocationIdentity();
-            processIdentity(state, identity);
+            LocationIdentity __identity = ((MemoryCheckpoint.Single) __node).getLocationIdentity();
+            processIdentity(__state, __identity);
         }
-        else if (node instanceof MemoryCheckpoint.Multi)
+        else if (__node instanceof MemoryCheckpoint.Multi)
         {
-            for (LocationIdentity identity : ((MemoryCheckpoint.Multi) node).getLocationIdentities())
+            for (LocationIdentity __identity : ((MemoryCheckpoint.Multi) __node).getLocationIdentities())
             {
-                processIdentity(state, identity);
+                processIdentity(__state, __identity);
             }
         }
 
         return false;
     }
 
-    private boolean processStore(FixedNode store, ValueNode object, LocationIdentity identity, int index, JavaKind accessKind, boolean overflowAccess, ValueNode value, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processStore(FixedNode __store, ValueNode __object, LocationIdentity __identity, int __index, JavaKind __accessKind, boolean __overflowAccess, ValueNode __value, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        ValueNode unproxiedObject = GraphUtil.unproxify(object);
-        ValueNode cachedValue = state.getReadCache(object, identity, index, accessKind, this);
+        ValueNode __unproxiedObject = GraphUtil.unproxify(__object);
+        ValueNode __cachedValue = __state.getReadCache(__object, __identity, __index, __accessKind, this);
 
-        ValueNode finalValue = getScalarAlias(value);
-        boolean result = false;
-        if (GraphUtil.unproxify(finalValue) == GraphUtil.unproxify(cachedValue))
+        ValueNode __finalValue = getScalarAlias(__value);
+        boolean __result = false;
+        if (GraphUtil.unproxify(__finalValue) == GraphUtil.unproxify(__cachedValue))
         {
-            effects.deleteNode(store);
-            result = true;
+            __effects.deleteNode(__store);
+            __result = true;
         }
-        state.killReadCache(identity, index);
-        state.addReadCache(unproxiedObject, identity, index, accessKind, overflowAccess, finalValue, this);
-        return result;
+        __state.killReadCache(__identity, __index);
+        __state.addReadCache(__unproxiedObject, __identity, __index, __accessKind, __overflowAccess, __finalValue, this);
+        return __result;
     }
 
-    private boolean processLoad(FixedNode load, ValueNode object, LocationIdentity identity, int index, JavaKind kind, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processLoad(FixedNode __load, ValueNode __object, LocationIdentity __identity, int __index, JavaKind __kind, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        ValueNode unproxiedObject = GraphUtil.unproxify(object);
-        ValueNode cachedValue = state.getReadCache(unproxiedObject, identity, index, kind, this);
-        if (cachedValue != null)
+        ValueNode __unproxiedObject = GraphUtil.unproxify(__object);
+        ValueNode __cachedValue = __state.getReadCache(__unproxiedObject, __identity, __index, __kind, this);
+        if (__cachedValue != null)
         {
             // perform the read elimination
-            effects.replaceAtUsages(load, cachedValue, load);
-            addScalarAlias(load, cachedValue);
+            __effects.replaceAtUsages(__load, __cachedValue, __load);
+            addScalarAlias(__load, __cachedValue);
             return true;
         }
         else
         {
-            state.addReadCache(unproxiedObject, identity, index, kind, false, load, this);
+            __state.addReadCache(__unproxiedObject, __identity, __index, __kind, false, __load, this);
             return false;
         }
     }
 
-    private static boolean isOverflowAccess(JavaKind accessKind, JavaKind declaredKind)
+    private static boolean isOverflowAccess(JavaKind __accessKind, JavaKind __declaredKind)
     {
-        if (accessKind == declaredKind)
+        if (__accessKind == __declaredKind)
         {
             return false;
         }
-        if (accessKind == JavaKind.Object)
+        if (__accessKind == JavaKind.Object)
         {
-            switch (declaredKind)
+            switch (__declaredKind)
             {
                 case Object:
                 case Double:
@@ -185,97 +186,97 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                     return true;
             }
         }
-        return declaredKind.isPrimitive() ? accessKind.getBitCount() > declaredKind.getBitCount() : true;
+        return __declaredKind.isPrimitive() ? __accessKind.getBitCount() > __declaredKind.getBitCount() : true;
     }
 
-    private boolean processUnsafeLoad(RawLoadNode load, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processUnsafeLoad(RawLoadNode __load, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        if (load.offset().isConstant())
+        if (__load.offset().isConstant())
         {
-            ResolvedJavaType type = StampTool.typeOrNull(load.object());
-            if (type != null && type.isArray())
+            ResolvedJavaType __type = StampTool.typeOrNull(__load.object());
+            if (__type != null && __type.isArray())
             {
-                JavaKind accessKind = load.accessKind();
-                JavaKind componentKind = type.getComponentType().getJavaKind();
-                long offset = load.offset().asJavaConstant().asLong();
-                int index = VirtualArrayNode.entryIndexForOffset(tool.getArrayOffsetProvider(), offset, accessKind, type.getComponentType(), Integer.MAX_VALUE);
-                ValueNode object = GraphUtil.unproxify(load.object());
-                LocationIdentity location = NamedLocationIdentity.getArrayLocation(componentKind);
-                ValueNode cachedValue = state.getReadCache(object, location, index, accessKind, this);
-                if (cachedValue != null)
+                JavaKind __accessKind = __load.accessKind();
+                JavaKind __componentKind = __type.getComponentType().getJavaKind();
+                long __offset = __load.offset().asJavaConstant().asLong();
+                int __index = VirtualArrayNode.entryIndexForOffset(tool.getArrayOffsetProvider(), __offset, __accessKind, __type.getComponentType(), Integer.MAX_VALUE);
+                ValueNode __object = GraphUtil.unproxify(__load.object());
+                LocationIdentity __location = NamedLocationIdentity.getArrayLocation(__componentKind);
+                ValueNode __cachedValue = __state.getReadCache(__object, __location, __index, __accessKind, this);
+                if (__cachedValue != null)
                 {
-                    effects.replaceAtUsages(load, cachedValue, load);
-                    addScalarAlias(load, cachedValue);
+                    __effects.replaceAtUsages(__load, __cachedValue, __load);
+                    addScalarAlias(__load, __cachedValue);
                     return true;
                 }
                 else
                 {
-                    state.addReadCache(object, location, index, accessKind, isOverflowAccess(accessKind, componentKind), load, this);
+                    __state.addReadCache(__object, __location, __index, __accessKind, isOverflowAccess(__accessKind, __componentKind), __load, this);
                 }
             }
         }
         return false;
     }
 
-    private boolean processUnsafeStore(RawStoreNode store, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processUnsafeStore(RawStoreNode __store, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        ResolvedJavaType type = StampTool.typeOrNull(store.object());
-        if (type != null && type.isArray())
+        ResolvedJavaType __type = StampTool.typeOrNull(__store.object());
+        if (__type != null && __type.isArray())
         {
-            JavaKind accessKind = store.accessKind();
-            JavaKind componentKind = type.getComponentType().getJavaKind();
-            LocationIdentity location = NamedLocationIdentity.getArrayLocation(componentKind);
-            if (store.offset().isConstant())
+            JavaKind __accessKind = __store.accessKind();
+            JavaKind __componentKind = __type.getComponentType().getJavaKind();
+            LocationIdentity __location = NamedLocationIdentity.getArrayLocation(__componentKind);
+            if (__store.offset().isConstant())
             {
-                long offset = store.offset().asJavaConstant().asLong();
-                boolean overflowAccess = isOverflowAccess(accessKind, componentKind);
-                int index = overflowAccess ? -1 : VirtualArrayNode.entryIndexForOffset(tool.getArrayOffsetProvider(), offset, accessKind, type.getComponentType(), Integer.MAX_VALUE);
-                return processStore(store, store.object(), location, index, accessKind, overflowAccess, store.value(), state, effects);
+                long __offset = __store.offset().asJavaConstant().asLong();
+                boolean __overflowAccess = isOverflowAccess(__accessKind, __componentKind);
+                int __index = __overflowAccess ? -1 : VirtualArrayNode.entryIndexForOffset(tool.getArrayOffsetProvider(), __offset, __accessKind, __type.getComponentType(), Integer.MAX_VALUE);
+                return processStore(__store, __store.object(), __location, __index, __accessKind, __overflowAccess, __store.value(), __state, __effects);
             }
             else
             {
-                processIdentity(state, location);
+                processIdentity(__state, __location);
             }
         }
         else
         {
-            state.killReadCache();
+            __state.killReadCache();
         }
         return false;
     }
 
-    private boolean processArrayLength(ArrayLengthNode length, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processArrayLength(ArrayLengthNode __length, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        return processLoad(length, length.array(), NamedLocationIdentity.ARRAY_LENGTH_LOCATION, -1, JavaKind.Int, state, effects);
+        return processLoad(__length, __length.array(), NamedLocationIdentity.ARRAY_LENGTH_LOCATION, -1, JavaKind.Int, __state, __effects);
     }
 
-    private boolean processStoreField(StoreFieldNode store, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processStoreField(StoreFieldNode __store, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        if (store.isVolatile())
+        if (__store.isVolatile())
         {
-            state.killReadCache();
+            __state.killReadCache();
             return false;
         }
-        JavaKind kind = store.field().getJavaKind();
-        return processStore(store, store.object(), new FieldLocationIdentity(store.field()), -1, kind, false, store.value(), state, effects);
+        JavaKind __kind = __store.field().getJavaKind();
+        return processStore(__store, __store.object(), new FieldLocationIdentity(__store.field()), -1, __kind, false, __store.value(), __state, __effects);
     }
 
-    private boolean processLoadField(LoadFieldNode load, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processLoadField(LoadFieldNode __load, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        if (load.isVolatile())
+        if (__load.isVolatile())
         {
-            state.killReadCache();
+            __state.killReadCache();
             return false;
         }
-        return processLoad(load, load.object(), new FieldLocationIdentity(load.field()), -1, load.field().getJavaKind(), state, effects);
+        return processLoad(__load, __load.object(), new FieldLocationIdentity(__load.field()), -1, __load.field().getJavaKind(), __state, __effects);
     }
 
-    private static JavaKind getElementKindFromStamp(ValueNode array)
+    private static JavaKind getElementKindFromStamp(ValueNode __array)
     {
-        ResolvedJavaType type = StampTool.typeOrNull(array);
-        if (type != null && type.isArray())
+        ResolvedJavaType __type = StampTool.typeOrNull(__array);
+        if (__type != null && __type.isArray())
         {
-            return type.getComponentType().getJavaKind();
+            return __type.getComponentType().getJavaKind();
         }
         else
         {
@@ -284,115 +285,115 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
         }
     }
 
-    private boolean processStoreIndexed(StoreIndexedNode store, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processStoreIndexed(StoreIndexedNode __store, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        int index = store.index().isConstant() ? ((JavaConstant) store.index().asConstant()).asInt() : -1;
+        int __index = __store.index().isConstant() ? ((JavaConstant) __store.index().asConstant()).asInt() : -1;
         // BASTORE (with elementKind being Byte) can be used to store values in boolean arrays.
-        JavaKind elementKind = store.elementKind();
-        if (elementKind == JavaKind.Byte)
+        JavaKind __elementKind = __store.elementKind();
+        if (__elementKind == JavaKind.Byte)
         {
-            elementKind = getElementKindFromStamp(store.array());
-            if (elementKind == JavaKind.Illegal)
+            __elementKind = getElementKindFromStamp(__store.array());
+            if (__elementKind == JavaKind.Illegal)
             {
                 // Could not determine the actual access kind from stamp. Hence kill both.
-                state.killReadCache(NamedLocationIdentity.getArrayLocation(JavaKind.Boolean), index);
-                state.killReadCache(NamedLocationIdentity.getArrayLocation(JavaKind.Byte), index);
+                __state.killReadCache(NamedLocationIdentity.getArrayLocation(JavaKind.Boolean), __index);
+                __state.killReadCache(NamedLocationIdentity.getArrayLocation(JavaKind.Byte), __index);
                 return false;
             }
         }
-        LocationIdentity arrayLocation = NamedLocationIdentity.getArrayLocation(elementKind);
-        if (index != -1)
+        LocationIdentity __arrayLocation = NamedLocationIdentity.getArrayLocation(__elementKind);
+        if (__index != -1)
         {
-            return processStore(store, store.array(), arrayLocation, index, elementKind, false, store.value(), state, effects);
+            return processStore(__store, __store.array(), __arrayLocation, __index, __elementKind, false, __store.value(), __state, __effects);
         }
         else
         {
-            state.killReadCache(arrayLocation, -1);
+            __state.killReadCache(__arrayLocation, -1);
         }
         return false;
     }
 
-    private boolean processLoadIndexed(LoadIndexedNode load, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processLoadIndexed(LoadIndexedNode __load, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        if (load.index().isConstant())
+        if (__load.index().isConstant())
         {
-            int index = ((JavaConstant) load.index().asConstant()).asInt();
+            int __index = ((JavaConstant) __load.index().asConstant()).asInt();
             // BALOAD (with elementKind being Byte) can be used to retrieve values from boolean arrays.
-            JavaKind elementKind = load.elementKind();
-            if (elementKind == JavaKind.Byte)
+            JavaKind __elementKind = __load.elementKind();
+            if (__elementKind == JavaKind.Byte)
             {
-                elementKind = getElementKindFromStamp(load.array());
-                if (elementKind == JavaKind.Illegal)
+                __elementKind = getElementKindFromStamp(__load.array());
+                if (__elementKind == JavaKind.Illegal)
                 {
                     return false;
                 }
             }
-            LocationIdentity arrayLocation = NamedLocationIdentity.getArrayLocation(elementKind);
-            return processLoad(load, load.array(), arrayLocation, index, elementKind, state, effects);
+            LocationIdentity __arrayLocation = NamedLocationIdentity.getArrayLocation(__elementKind);
+            return processLoad(__load, __load.array(), __arrayLocation, __index, __elementKind, __state, __effects);
         }
         return false;
     }
 
-    private boolean processUnbox(UnboxNode unbox, PEReadEliminationBlockState state, GraphEffectList effects)
+    private boolean processUnbox(UnboxNode __unbox, PEReadEliminationBlockState __state, GraphEffectList __effects)
     {
-        return processLoad(unbox, unbox.getValue(), UNBOX_LOCATIONS.get(unbox.getBoxingKind()), -1, unbox.getBoxingKind(), state, effects);
+        return processLoad(__unbox, __unbox.getValue(), UNBOX_LOCATIONS.get(__unbox.getBoxingKind()), -1, __unbox.getBoxingKind(), __state, __effects);
     }
 
-    private static void processIdentity(PEReadEliminationBlockState state, LocationIdentity identity)
+    private static void processIdentity(PEReadEliminationBlockState __state, LocationIdentity __identity)
     {
-        if (identity.isAny())
+        if (__identity.isAny())
         {
-            state.killReadCache();
+            __state.killReadCache();
         }
         else
         {
-            state.killReadCache(identity, -1);
+            __state.killReadCache(__identity, -1);
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void processInitialLoopState(Loop<Block> loop, PEReadEliminationBlockState initialState)
+    protected void processInitialLoopState(Loop<Block> __loop, PEReadEliminationBlockState __initialState)
     {
-        super.processInitialLoopState(loop, initialState);
+        super.processInitialLoopState(__loop, __initialState);
 
-        if (!initialState.getReadCache().isEmpty())
+        if (!__initialState.getReadCache().isEmpty())
         {
-            EconomicMap<ValueNode, Pair<ValueNode, Object>> firstValueSet = null;
-            for (PhiNode phi : ((LoopBeginNode) loop.getHeader().getBeginNode()).phis())
+            EconomicMap<ValueNode, Pair<ValueNode, Object>> __firstValueSet = null;
+            for (PhiNode __phi : ((LoopBeginNode) __loop.getHeader().getBeginNode()).phis())
             {
-                ValueNode firstValue = phi.valueAt(0);
-                if (firstValue != null && phi.getStackKind().isObject())
+                ValueNode __firstValue = __phi.valueAt(0);
+                if (__firstValue != null && __phi.getStackKind().isObject())
                 {
-                    ValueNode unproxified = GraphUtil.unproxify(firstValue);
-                    if (firstValueSet == null)
+                    ValueNode __unproxified = GraphUtil.unproxify(__firstValue);
+                    if (__firstValueSet == null)
                     {
-                        firstValueSet = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
+                        __firstValueSet = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
                     }
-                    Pair<ValueNode, Object> pair = Pair.create(unproxified, firstValueSet.get(unproxified));
-                    firstValueSet.put(unproxified, pair);
+                    Pair<ValueNode, Object> __pair = Pair.create(__unproxified, __firstValueSet.get(__unproxified));
+                    __firstValueSet.put(__unproxified, __pair);
                 }
             }
 
-            if (firstValueSet != null)
+            if (__firstValueSet != null)
             {
-                ReadCacheEntry[] entries = new ReadCacheEntry[initialState.getReadCache().size()];
-                int z = 0;
-                for (ReadCacheEntry entry : initialState.getReadCache().getKeys())
+                ReadCacheEntry[] __entries = new ReadCacheEntry[__initialState.getReadCache().size()];
+                int __z = 0;
+                for (ReadCacheEntry __entry : __initialState.getReadCache().getKeys())
                 {
-                    entries[z++] = entry;
+                    __entries[__z++] = __entry;
                 }
 
-                for (ReadCacheEntry entry : entries)
+                for (ReadCacheEntry __entry : __entries)
                 {
-                    ValueNode object = entry.object;
-                    if (object != null)
+                    ValueNode __object = __entry.object;
+                    if (__object != null)
                     {
-                        Pair<ValueNode, Object> pair = firstValueSet.get(object);
-                        while (pair != null)
+                        Pair<ValueNode, Object> __pair = __firstValueSet.get(__object);
+                        while (__pair != null)
                         {
-                            initialState.addReadCache(pair.getLeft(), entry.identity, entry.index, entry.kind, entry.overflowAccess, initialState.getReadCache().get(entry), this);
-                            pair = (Pair<ValueNode, Object>) pair.getRight();
+                            __initialState.addReadCache(__pair.getLeft(), __entry.identity, __entry.index, __entry.kind, __entry.overflowAccess, __initialState.getReadCache().get(__entry), this);
+                            __pair = (Pair<ValueNode, Object>) __pair.getRight();
                         }
                     }
                 }
@@ -401,23 +402,23 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     }
 
     @Override
-    protected void processLoopExit(LoopExitNode exitNode, PEReadEliminationBlockState initialState, PEReadEliminationBlockState exitState, GraphEffectList effects)
+    protected void processLoopExit(LoopExitNode __exitNode, PEReadEliminationBlockState __initialState, PEReadEliminationBlockState __exitState, GraphEffectList __effects)
     {
-        super.processLoopExit(exitNode, initialState, exitState, effects);
+        super.processLoopExit(__exitNode, __initialState, __exitState, __effects);
 
-        if (exitNode.graph().hasValueProxies())
+        if (__exitNode.graph().hasValueProxies())
         {
-            MapCursor<ReadCacheEntry, ValueNode> entry = exitState.getReadCache().getEntries();
-            while (entry.advance())
+            MapCursor<ReadCacheEntry, ValueNode> __entry = __exitState.getReadCache().getEntries();
+            while (__entry.advance())
             {
-                if (initialState.getReadCache().get(entry.getKey()) != entry.getValue())
+                if (__initialState.getReadCache().get(__entry.getKey()) != __entry.getValue())
                 {
-                    ValueNode value = exitState.getReadCache(entry.getKey().object, entry.getKey().identity, entry.getKey().index, entry.getKey().kind, this);
-                    if (!(value instanceof ProxyNode) || ((ProxyNode) value).proxyPoint() != exitNode)
+                    ValueNode __value = __exitState.getReadCache(__entry.getKey().object, __entry.getKey().identity, __entry.getKey().index, __entry.getKey().kind, this);
+                    if (!(__value instanceof ProxyNode) || ((ProxyNode) __value).proxyPoint() != __exitNode)
                     {
-                        ProxyNode proxy = new ValueProxyNode(value, exitNode);
-                        effects.addFloatingNode(proxy, "readCacheProxy");
-                        exitState.getReadCache().put(entry.getKey(), proxy);
+                        ProxyNode __proxy = new ValueProxyNode(__value, __exitNode);
+                        __effects.addFloatingNode(__proxy, "readCacheProxy");
+                        __exitState.getReadCache().put(__entry.getKey(), __proxy);
                     }
                 }
             }
@@ -425,15 +426,15 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     }
 
     @Override
-    protected PEReadEliminationBlockState cloneState(PEReadEliminationBlockState other)
+    protected PEReadEliminationBlockState cloneState(PEReadEliminationBlockState __other)
     {
-        return new PEReadEliminationBlockState(other);
+        return new PEReadEliminationBlockState(__other);
     }
 
     @Override
-    protected MergeProcessor createMergeProcessor(Block merge)
+    protected MergeProcessor createMergeProcessor(Block __merge)
     {
-        return new ReadEliminationMergeProcessor(merge);
+        return new ReadEliminationMergeProcessor(__merge);
     }
 
     // @class PEReadEliminationClosure.ReadEliminationMergeProcessor
@@ -441,165 +442,165 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     private final class ReadEliminationMergeProcessor extends MergeProcessor
     {
         // @cons
-        ReadEliminationMergeProcessor(Block mergeBlock)
+        ReadEliminationMergeProcessor(Block __mergeBlock)
         {
-            super(mergeBlock);
+            super(__mergeBlock);
         }
 
         @Override
-        protected void merge(List<PEReadEliminationBlockState> states)
+        protected void merge(List<PEReadEliminationBlockState> __states)
         {
-            super.merge(states);
+            super.merge(__states);
 
-            mergeReadCache(states);
+            mergeReadCache(__states);
         }
 
-        private void mergeReadCache(List<PEReadEliminationBlockState> states)
+        private void mergeReadCache(List<PEReadEliminationBlockState> __states)
         {
-            MapCursor<ReadCacheEntry, ValueNode> cursor = states.get(0).readCache.getEntries();
-            while (cursor.advance())
+            MapCursor<ReadCacheEntry, ValueNode> __cursor = __states.get(0).readCache.getEntries();
+            while (__cursor.advance())
             {
-                ReadCacheEntry key = cursor.getKey();
-                ValueNode value = cursor.getValue();
-                boolean phi = false;
-                for (int i = 1; i < states.size(); i++)
+                ReadCacheEntry __key = __cursor.getKey();
+                ValueNode __value = __cursor.getValue();
+                boolean __phi = false;
+                for (int __i = 1; __i < __states.size(); __i++)
                 {
-                    ValueNode otherValue = states.get(i).readCache.get(key);
+                    ValueNode __otherValue = __states.get(__i).readCache.get(__key);
                     // e.g. unsafe loads / stores with different access kinds have different stamps
                     // although location, object and offset are the same, in this case we cannot
                     // create a phi nor can we set a common value
-                    if (otherValue == null || !value.stamp(NodeView.DEFAULT).isCompatible(otherValue.stamp(NodeView.DEFAULT)))
+                    if (__otherValue == null || !__value.stamp(NodeView.DEFAULT).isCompatible(__otherValue.stamp(NodeView.DEFAULT)))
                     {
-                        value = null;
-                        phi = false;
+                        __value = null;
+                        __phi = false;
                         break;
                     }
-                    if (!phi && otherValue != value)
+                    if (!__phi && __otherValue != __value)
                     {
-                        phi = true;
+                        __phi = true;
                     }
                 }
-                if (phi)
+                if (__phi)
                 {
-                    PhiNode phiNode = getPhi(key, value.stamp(NodeView.DEFAULT).unrestricted());
-                    mergeEffects.addFloatingNode(phiNode, "mergeReadCache");
-                    for (int i = 0; i < states.size(); i++)
+                    PhiNode __phiNode = getPhi(__key, __value.stamp(NodeView.DEFAULT).unrestricted());
+                    mergeEffects.addFloatingNode(__phiNode, "mergeReadCache");
+                    for (int __i = 0; __i < __states.size(); __i++)
                     {
-                        ValueNode v = states.get(i).getReadCache(key.object, key.identity, key.index, key.kind, PEReadEliminationClosure.this);
-                        setPhiInput(phiNode, i, v);
+                        ValueNode __v = __states.get(__i).getReadCache(__key.object, __key.identity, __key.index, __key.kind, PEReadEliminationClosure.this);
+                        setPhiInput(__phiNode, __i, __v);
                     }
-                    newState.readCache.put(key, phiNode);
+                    newState.readCache.put(__key, __phiNode);
                 }
-                else if (value != null)
+                else if (__value != null)
                 {
-                    newState.readCache.put(key, value);
+                    newState.readCache.put(__key, __value);
                 }
             }
             // For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-            for (PhiNode phi : getPhis())
+            for (PhiNode __phi : getPhis())
             {
-                if (phi.getStackKind() == JavaKind.Object)
+                if (__phi.getStackKind() == JavaKind.Object)
                 {
-                    for (ReadCacheEntry entry : states.get(0).readCache.getKeys())
+                    for (ReadCacheEntry __entry : __states.get(0).readCache.getKeys())
                     {
-                        if (entry.object == getPhiValueAt(phi, 0))
+                        if (__entry.object == getPhiValueAt(__phi, 0))
                         {
-                            mergeReadCachePhi(phi, entry.identity, entry.index, entry.kind, entry.overflowAccess, states);
+                            mergeReadCachePhi(__phi, __entry.identity, __entry.index, __entry.kind, __entry.overflowAccess, __states);
                         }
                     }
                 }
             }
         }
 
-        private void mergeReadCachePhi(PhiNode phi, LocationIdentity identity, int index, JavaKind kind, boolean overflowAccess, List<PEReadEliminationBlockState> states)
+        private void mergeReadCachePhi(PhiNode __phi, LocationIdentity __identity, int __index, JavaKind __kind, boolean __overflowAccess, List<PEReadEliminationBlockState> __states)
         {
-            ValueNode[] values = new ValueNode[states.size()];
-            values[0] = states.get(0).getReadCache(getPhiValueAt(phi, 0), identity, index, kind, PEReadEliminationClosure.this);
-            if (values[0] != null)
+            ValueNode[] __values = new ValueNode[__states.size()];
+            __values[0] = __states.get(0).getReadCache(getPhiValueAt(__phi, 0), __identity, __index, __kind, PEReadEliminationClosure.this);
+            if (__values[0] != null)
             {
-                for (int i = 1; i < states.size(); i++)
+                for (int __i = 1; __i < __states.size(); __i++)
                 {
-                    ValueNode value = states.get(i).getReadCache(getPhiValueAt(phi, i), identity, index, kind, PEReadEliminationClosure.this);
+                    ValueNode __value = __states.get(__i).getReadCache(getPhiValueAt(__phi, __i), __identity, __index, __kind, PEReadEliminationClosure.this);
                     // e.g. unsafe loads/stores with same identity, but different access kinds, see mergeReadCache(states)
-                    if (value == null || !values[i - 1].stamp(NodeView.DEFAULT).isCompatible(value.stamp(NodeView.DEFAULT)))
+                    if (__value == null || !__values[__i - 1].stamp(NodeView.DEFAULT).isCompatible(__value.stamp(NodeView.DEFAULT)))
                     {
                         return;
                     }
-                    values[i] = value;
+                    __values[__i] = __value;
                 }
 
-                PhiNode phiNode = getPhi(new ReadCacheEntry(identity, phi, index, kind, overflowAccess), values[0].stamp(NodeView.DEFAULT).unrestricted());
-                mergeEffects.addFloatingNode(phiNode, "mergeReadCachePhi");
-                for (int i = 0; i < values.length; i++)
+                PhiNode __phiNode = getPhi(new ReadCacheEntry(__identity, __phi, __index, __kind, __overflowAccess), __values[0].stamp(NodeView.DEFAULT).unrestricted());
+                mergeEffects.addFloatingNode(__phiNode, "mergeReadCachePhi");
+                for (int __i = 0; __i < __values.length; __i++)
                 {
-                    setPhiInput(phiNode, i, values[i]);
+                    setPhiInput(__phiNode, __i, __values[__i]);
                 }
-                newState.readCache.put(new ReadCacheEntry(identity, phi, index, kind, overflowAccess), phiNode);
+                newState.readCache.put(new ReadCacheEntry(__identity, __phi, __index, __kind, __overflowAccess), __phiNode);
             }
         }
     }
 
     @Override
-    protected void processKilledLoopLocations(Loop<Block> loop, PEReadEliminationBlockState initialState, PEReadEliminationBlockState mergedStates)
+    protected void processKilledLoopLocations(Loop<Block> __loop, PEReadEliminationBlockState __initialState, PEReadEliminationBlockState __mergedStates)
     {
-        if (initialState.readCache.size() > 0)
+        if (__initialState.readCache.size() > 0)
         {
-            LoopKillCache loopKilledLocations = loopLocationKillCache.get(loop);
+            LoopKillCache __loopKilledLocations = loopLocationKillCache.get(__loop);
             // we have fully processed this loop the first time, remember to cache it the next time it is visited
-            if (loopKilledLocations == null)
+            if (__loopKilledLocations == null)
             {
-                loopKilledLocations = new LoopKillCache(1/* 1.visit */);
-                loopLocationKillCache.put(loop, loopKilledLocations);
+                __loopKilledLocations = new LoopKillCache(1/* 1.visit */);
+                loopLocationKillCache.put(__loop, __loopKilledLocations);
             }
             else
             {
-                if (loopKilledLocations.visits() > GraalOptions.readEliminationMaxLoopVisits)
+                if (__loopKilledLocations.visits() > GraalOptions.readEliminationMaxLoopVisits)
                 {
                     // we have processed the loop too many times: kill all locations, so
                     // the inner loop will never be processed more than once again on visit
-                    loopKilledLocations.setKillsAll();
+                    __loopKilledLocations.setKillsAll();
                 }
                 else
                 {
                     // we have fully processed this loop >1 times, update the killed locations
-                    EconomicSet<LocationIdentity> forwardEndLiveLocations = EconomicSet.create(Equivalence.DEFAULT);
-                    for (ReadCacheEntry entry : initialState.readCache.getKeys())
+                    EconomicSet<LocationIdentity> __forwardEndLiveLocations = EconomicSet.create(Equivalence.DEFAULT);
+                    for (ReadCacheEntry __entry : __initialState.readCache.getKeys())
                     {
-                        forwardEndLiveLocations.add(entry.identity);
+                        __forwardEndLiveLocations.add(__entry.identity);
                     }
-                    for (ReadCacheEntry entry : mergedStates.readCache.getKeys())
+                    for (ReadCacheEntry __entry : __mergedStates.readCache.getKeys())
                     {
-                        forwardEndLiveLocations.remove(entry.identity);
+                        __forwardEndLiveLocations.remove(__entry.identity);
                     }
                     // every location that is alive before the loop but not after is killed by the loop
-                    for (LocationIdentity location : forwardEndLiveLocations)
+                    for (LocationIdentity __location : __forwardEndLiveLocations)
                     {
-                        loopKilledLocations.rememberLoopKilledLocation(location);
+                        __loopKilledLocations.rememberLoopKilledLocation(__location);
                     }
                 }
                 // remember the loop visit
-                loopKilledLocations.visited();
+                __loopKilledLocations.visited();
             }
         }
     }
 
     @Override
-    protected PEReadEliminationBlockState stripKilledLoopLocations(Loop<Block> loop, PEReadEliminationBlockState originalInitialState)
+    protected PEReadEliminationBlockState stripKilledLoopLocations(Loop<Block> __loop, PEReadEliminationBlockState __originalInitialState)
     {
-        PEReadEliminationBlockState initialState = super.stripKilledLoopLocations(loop, originalInitialState);
-        LoopKillCache loopKilledLocations = loopLocationKillCache.get(loop);
-        if (loopKilledLocations != null && loopKilledLocations.loopKillsLocations())
+        PEReadEliminationBlockState __initialState = super.stripKilledLoopLocations(__loop, __originalInitialState);
+        LoopKillCache __loopKilledLocations = loopLocationKillCache.get(__loop);
+        if (__loopKilledLocations != null && __loopKilledLocations.loopKillsLocations())
         {
-            Iterator<ReadCacheEntry> it = initialState.readCache.getKeys().iterator();
-            while (it.hasNext())
+            Iterator<ReadCacheEntry> __it = __initialState.readCache.getKeys().iterator();
+            while (__it.hasNext())
             {
-                ReadCacheEntry entry = it.next();
-                if (loopKilledLocations.containsLocation(entry.identity))
+                ReadCacheEntry __entry = __it.next();
+                if (__loopKilledLocations.containsLocation(__entry.identity))
                 {
-                    it.remove();
+                    __it.remove();
                 }
             }
         }
-        return initialState;
+        return __initialState;
     }
 }

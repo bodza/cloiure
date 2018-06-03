@@ -50,48 +50,48 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 public final class AMD64HotSpotBackend extends HotSpotHostBackend
 {
     // @cons
-    public AMD64HotSpotBackend(HotSpotGraalRuntime runtime, HotSpotProviders providers)
+    public AMD64HotSpotBackend(HotSpotGraalRuntime __runtime, HotSpotProviders __providers)
     {
-        super(runtime, providers);
+        super(__runtime, __providers);
     }
 
     @Override
-    public FrameMapBuilder newFrameMapBuilder(RegisterConfig registerConfig)
+    public FrameMapBuilder newFrameMapBuilder(RegisterConfig __registerConfig)
     {
-        RegisterConfig registerConfigNonNull = registerConfig == null ? getCodeCache().getRegisterConfig() : registerConfig;
-        return new AMD64FrameMapBuilder(newFrameMap(registerConfigNonNull), getCodeCache(), registerConfigNonNull);
+        RegisterConfig __registerConfigNonNull = __registerConfig == null ? getCodeCache().getRegisterConfig() : __registerConfig;
+        return new AMD64FrameMapBuilder(newFrameMap(__registerConfigNonNull), getCodeCache(), __registerConfigNonNull);
     }
 
     @Override
-    public FrameMap newFrameMap(RegisterConfig registerConfig)
+    public FrameMap newFrameMap(RegisterConfig __registerConfig)
     {
-        return new AMD64FrameMap(getCodeCache(), registerConfig);
+        return new AMD64FrameMap(getCodeCache(), __registerConfig);
     }
 
     @Override
-    public LIRGeneratorTool newLIRGenerator(LIRGenerationResult lirGenRes)
+    public LIRGeneratorTool newLIRGenerator(LIRGenerationResult __lirGenRes)
     {
-        return new AMD64HotSpotLIRGenerator(getProviders(), lirGenRes);
+        return new AMD64HotSpotLIRGenerator(getProviders(), __lirGenRes);
     }
 
     @Override
-    public LIRGenerationResult newLIRGenerationResult(LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub)
+    public LIRGenerationResult newLIRGenerationResult(LIR __lir, FrameMapBuilder __frameMapBuilder, StructuredGraph __graph, Object __stub)
     {
-        return new HotSpotLIRGenerationResult(lir, frameMapBuilder, makeCallingConvention(graph, (Stub) stub), stub);
+        return new HotSpotLIRGenerationResult(__lir, __frameMapBuilder, makeCallingConvention(__graph, (Stub) __stub), __stub);
     }
 
     @Override
-    public NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool lirGen)
+    public NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __lirGen)
     {
-        return new AMD64HotSpotNodeLIRBuilder(graph, lirGen);
+        return new AMD64HotSpotNodeLIRBuilder(__graph, __lirGen);
     }
 
     @Override
-    protected void bangStackWithOffset(CompilationResultBuilder crb, int bangOffset)
+    protected void bangStackWithOffset(CompilationResultBuilder __crb, int __bangOffset)
     {
-        AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
-        int pos = asm.position();
-        asm.movl(new AMD64Address(AMD64.rsp, -bangOffset), AMD64.rax);
+        AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
+        int __pos = __asm.position();
+        __asm.movl(new AMD64Address(AMD64.rsp, -__bangOffset), AMD64.rax);
     }
 
     /**
@@ -100,6 +100,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
      * instruction emitted at an nmethod's verified entry point must be at least this length to
      * ensure mt-safe patching.
      */
+    // @def
     public static final int PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE = 5;
 
     /**
@@ -109,15 +110,17 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
     // @closure
     final class HotSpotFrameContext implements FrameContext
     {
+        // @field
         final boolean isStub;
+        // @field
         final boolean omitFrame;
 
         // @cons
-        HotSpotFrameContext(boolean isStub, boolean omitFrame)
+        HotSpotFrameContext(boolean __isStub, boolean __omitFrame)
         {
             super();
-            this.isStub = isStub;
-            this.omitFrame = omitFrame;
+            this.isStub = __isStub;
+            this.omitFrame = __omitFrame;
         }
 
         @Override
@@ -127,65 +130,65 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         }
 
         @Override
-        public void enter(CompilationResultBuilder crb)
+        public void enter(CompilationResultBuilder __crb)
         {
-            FrameMap frameMap = crb.frameMap;
-            int frameSize = frameMap.frameSize();
-            AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
+            FrameMap __frameMap = __crb.frameMap;
+            int __frameSize = __frameMap.frameSize();
+            AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
             if (omitFrame)
             {
                 if (!isStub)
                 {
-                    asm.nop(PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE);
+                    __asm.nop(PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE);
                 }
             }
             else
             {
-                int verifiedEntryPosition = asm.position();
+                int __verifiedEntryPosition = __asm.position();
                 if (!isStub)
                 {
-                    AMD64HotSpotBackend.this.emitStackOverflowCheck(crb);
+                    AMD64HotSpotBackend.this.emitStackOverflowCheck(__crb);
                 }
-                if (!isStub && asm.position() == verifiedEntryPosition)
+                if (!isStub && __asm.position() == __verifiedEntryPosition)
                 {
-                    asm.subqWide(AMD64.rsp, frameSize);
+                    __asm.subqWide(AMD64.rsp, __frameSize);
                 }
                 else
                 {
-                    asm.decrementq(AMD64.rsp, frameSize);
+                    __asm.decrementq(AMD64.rsp, __frameSize);
                 }
                 if (GraalOptions.zapStackOnMethodEntry)
                 {
-                    final int intSize = 4;
-                    for (int i = 0; i < frameSize / intSize; ++i)
+                    final int __intSize = 4;
+                    for (int __i = 0; __i < __frameSize / __intSize; ++__i)
                     {
-                        asm.movl(new AMD64Address(AMD64.rsp, i * intSize), 0xC1C1C1C1);
+                        __asm.movl(new AMD64Address(AMD64.rsp, __i * __intSize), 0xC1C1C1C1);
                     }
                 }
             }
         }
 
         @Override
-        public void leave(CompilationResultBuilder crb)
+        public void leave(CompilationResultBuilder __crb)
         {
             if (!omitFrame)
             {
-                AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
+                AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
 
-                int frameSize = crb.frameMap.frameSize();
-                asm.incrementq(AMD64.rsp, frameSize);
+                int __frameSize = __crb.frameMap.frameSize();
+                __asm.incrementq(AMD64.rsp, __frameSize);
             }
         }
     }
 
     @Override
-    protected Assembler createAssembler(FrameMap frameMap)
+    protected Assembler createAssembler(FrameMap __frameMap)
     {
         return new AMD64MacroAssembler(getTarget());
     }
 
     @Override
-    public CompilationResultBuilder newCompilationResultBuilder(LIRGenerationResult lirGenRen, FrameMap frameMap, CompilationResult compilationResult, CompilationResultBuilderFactory factory)
+    public CompilationResultBuilder newCompilationResultBuilder(LIRGenerationResult __lirGenRen, FrameMap __frameMap, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory)
     {
         // Omit the frame if the method:
         // - has no spill slots or other slots allocated during register allocation
@@ -193,42 +196,42 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         // - has no incoming arguments passed on the stack
         // - has no deoptimization points
         // - makes no foreign calls (which require an aligned stack)
-        HotSpotLIRGenerationResult gen = (HotSpotLIRGenerationResult) lirGenRen;
-        LIR lir = gen.getLIR();
-        boolean omitFrame = GraalOptions.canOmitFrame && !frameMap.frameNeedsAllocating() && !lir.hasArgInCallerFrame() && !gen.hasForeignCall();
+        HotSpotLIRGenerationResult __gen = (HotSpotLIRGenerationResult) __lirGenRen;
+        LIR __lir = __gen.getLIR();
+        boolean __omitFrame = GraalOptions.canOmitFrame && !__frameMap.frameNeedsAllocating() && !__lir.hasArgInCallerFrame() && !__gen.hasForeignCall();
 
-        Stub stub = gen.getStub();
-        Assembler masm = createAssembler(frameMap);
-        HotSpotFrameContext frameContext = new HotSpotFrameContext(stub != null, omitFrame);
-        DataBuilder dataBuilder = new HotSpotDataBuilder(getCodeCache().getTarget());
-        CompilationResultBuilder crb = factory.createBuilder(getCodeCache(), getForeignCalls(), frameMap, masm, dataBuilder, frameContext, compilationResult);
-        crb.setTotalFrameSize(frameMap.totalFrameSize());
+        Stub __stub = __gen.getStub();
+        Assembler __masm = createAssembler(__frameMap);
+        HotSpotFrameContext __frameContext = new HotSpotFrameContext(__stub != null, __omitFrame);
+        DataBuilder __dataBuilder = new HotSpotDataBuilder(getCodeCache().getTarget());
+        CompilationResultBuilder __crb = __factory.createBuilder(getCodeCache(), getForeignCalls(), __frameMap, __masm, __dataBuilder, __frameContext, __compilationResult);
+        __crb.setTotalFrameSize(__frameMap.totalFrameSize());
 
-        if (stub != null)
+        if (__stub != null)
         {
-            EconomicSet<Register> destroyedCallerRegisters = gatherDestroyedCallerRegisters(lir);
-            updateStub(stub, destroyedCallerRegisters, gen.getCalleeSaveInfo(), frameMap);
+            EconomicSet<Register> __destroyedCallerRegisters = gatherDestroyedCallerRegisters(__lir);
+            updateStub(__stub, __destroyedCallerRegisters, __gen.getCalleeSaveInfo(), __frameMap);
         }
 
-        return crb;
+        return __crb;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, LIR lir, ResolvedJavaMethod installedCodeOwner)
+    public void emitCode(CompilationResultBuilder __crb, LIR __lir, ResolvedJavaMethod __installedCodeOwner)
     {
-        AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
-        FrameMap frameMap = crb.frameMap;
-        RegisterConfig regConfig = frameMap.getRegisterConfig();
-        Label verifiedEntry = new Label();
+        AMD64MacroAssembler __asm = (AMD64MacroAssembler) __crb.asm;
+        FrameMap __frameMap = __crb.frameMap;
+        RegisterConfig __regConfig = __frameMap.getRegisterConfig();
+        Label __verifiedEntry = new Label();
 
         // emit the prefix
-        emitCodePrefix(installedCodeOwner, crb, asm, regConfig, verifiedEntry);
+        emitCodePrefix(__installedCodeOwner, __crb, __asm, __regConfig, __verifiedEntry);
 
         // emit code for the LIR
-        emitCodeBody(installedCodeOwner, crb, lir);
+        emitCodeBody(__installedCodeOwner, __crb, __lir);
 
         // emit the suffix
-        emitCodeSuffix(installedCodeOwner, crb, asm, frameMap);
+        emitCodeSuffix(__installedCodeOwner, __crb, __asm, __frameMap);
     }
 
     /**
@@ -236,39 +239,39 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
      *
      * @param installedCodeOwner see {@link Backend#emitCode}
      */
-    public void emitCodePrefix(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, AMD64MacroAssembler asm, RegisterConfig regConfig, Label verifiedEntry)
+    public void emitCodePrefix(ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilder __crb, AMD64MacroAssembler __asm, RegisterConfig __regConfig, Label __verifiedEntry)
     {
-        HotSpotProviders providers = getProviders();
-        if (installedCodeOwner != null && !installedCodeOwner.isStatic())
+        HotSpotProviders __providers = getProviders();
+        if (__installedCodeOwner != null && !__installedCodeOwner.isStatic())
         {
-            crb.recordMark(HotSpotRuntime.unverifiedEntryMark);
-            CallingConvention cc = regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[] { providers.getMetaAccess().lookupJavaType(Object.class) }, this);
-            Register inlineCacheKlass = AMD64.rax; // see definition of IC_Klass in c1_LIRAssembler_x86.cpp
-            Register receiver = ValueUtil.asRegister(cc.getArgument(0));
-            AMD64Address src = new AMD64Address(receiver, HotSpotRuntime.hubOffset);
+            __crb.recordMark(HotSpotRuntime.unverifiedEntryMark);
+            CallingConvention __cc = __regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[] { __providers.getMetaAccess().lookupJavaType(Object.class) }, this);
+            Register __inlineCacheKlass = AMD64.rax; // see definition of IC_Klass in c1_LIRAssembler_x86.cpp
+            Register __receiver = ValueUtil.asRegister(__cc.getArgument(0));
+            AMD64Address __src = new AMD64Address(__receiver, HotSpotRuntime.hubOffset);
 
             if (HotSpotRuntime.useCompressedClassPointers)
             {
-                Register register = AMD64.r10;
-                AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src);
+                Register __register = AMD64.r10;
+                AMD64HotSpotMove.decodeKlassPointer(__crb, __asm, __register, __providers.getRegisters().getHeapBaseRegister(), __src);
                 if (HotSpotRuntime.narrowKlassBase != 0)
                 {
                     // the heap base register was destroyed above, so restore it
-                    asm.movq(providers.getRegisters().getHeapBaseRegister(), HotSpotRuntime.narrowOopBase);
+                    __asm.movq(__providers.getRegisters().getHeapBaseRegister(), HotSpotRuntime.narrowOopBase);
                 }
-                asm.cmpq(inlineCacheKlass, register);
+                __asm.cmpq(__inlineCacheKlass, __register);
             }
             else
             {
-                asm.cmpq(inlineCacheKlass, src);
+                __asm.cmpq(__inlineCacheKlass, __src);
             }
-            AMD64Call.directConditionalJmp(crb, asm, getForeignCalls().lookupForeignCall(IC_MISS_HANDLER), ConditionFlag.NotEqual);
+            AMD64Call.directConditionalJmp(__crb, __asm, getForeignCalls().lookupForeignCall(IC_MISS_HANDLER), ConditionFlag.NotEqual);
         }
 
-        asm.align(HotSpotRuntime.codeEntryAlignment);
-        crb.recordMark(HotSpotRuntime.osrEntryMark);
-        asm.bind(verifiedEntry);
-        crb.recordMark(HotSpotRuntime.verifiedEntryMark);
+        __asm.align(HotSpotRuntime.codeEntryAlignment);
+        __crb.recordMark(HotSpotRuntime.osrEntryMark);
+        __asm.bind(__verifiedEntry);
+        __crb.recordMark(HotSpotRuntime.verifiedEntryMark);
     }
 
     /**
@@ -276,25 +279,25 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
      *
      * @param installedCodeOwner see {@link Backend#emitCode}
      */
-    public void emitCodeBody(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, LIR lir)
+    public void emitCodeBody(ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilder __crb, LIR __lir)
     {
-        crb.emit(lir);
+        __crb.emit(__lir);
     }
 
     /**
      * @param installedCodeOwner see {@link Backend#emitCode}
      */
-    public void emitCodeSuffix(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, AMD64MacroAssembler asm, FrameMap frameMap)
+    public void emitCodeSuffix(ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilder __crb, AMD64MacroAssembler __asm, FrameMap __frameMap)
     {
-        HotSpotProviders providers = getProviders();
-        HotSpotFrameContext frameContext = (HotSpotFrameContext) crb.frameContext;
-        if (!frameContext.isStub)
+        HotSpotProviders __providers = getProviders();
+        HotSpotFrameContext __frameContext = (HotSpotFrameContext) __crb.frameContext;
+        if (!__frameContext.isStub)
         {
-            HotSpotForeignCallsProvider foreignCalls = providers.getForeignCalls();
-            crb.recordMark(HotSpotRuntime.exceptionHandlerEntryMark);
-            AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(EXCEPTION_HANDLER), null, false, null);
-            crb.recordMark(HotSpotRuntime.deoptHandlerEntryMark);
-            AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(DEOPTIMIZATION_HANDLER), null, false, null);
+            HotSpotForeignCallsProvider __foreignCalls = __providers.getForeignCalls();
+            __crb.recordMark(HotSpotRuntime.exceptionHandlerEntryMark);
+            AMD64Call.directCall(__crb, __asm, __foreignCalls.lookupForeignCall(EXCEPTION_HANDLER), null, false, null);
+            __crb.recordMark(HotSpotRuntime.deoptHandlerEntryMark);
+            AMD64Call.directCall(__crb, __asm, __foreignCalls.lookupForeignCall(DEOPTIMIZATION_HANDLER), null, false, null);
         }
         else
         {
@@ -304,15 +307,15 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
     }
 
     @Override
-    public RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig registerConfig)
+    public RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig __registerConfig)
     {
-        RegisterConfig registerConfigNonNull = (registerConfig != null) ? registerConfig : getCodeCache().getRegisterConfig();
-        return new AMD64HotSpotRegisterAllocationConfig(registerConfigNonNull);
+        RegisterConfig __registerConfigNonNull = (__registerConfig != null) ? __registerConfig : getCodeCache().getRegisterConfig();
+        return new AMD64HotSpotRegisterAllocationConfig(__registerConfigNonNull);
     }
 
     @Override
-    public EconomicSet<Register> translateToCallerRegisters(EconomicSet<Register> calleeRegisters)
+    public EconomicSet<Register> translateToCallerRegisters(EconomicSet<Register> __calleeRegisters)
     {
-        return calleeRegisters;
+        return __calleeRegisters;
     }
 }

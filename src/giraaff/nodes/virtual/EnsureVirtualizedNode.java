@@ -23,64 +23,68 @@ import giraaff.nodes.util.GraphUtil;
 // @class EnsureVirtualizedNode
 public final class EnsureVirtualizedNode extends FixedWithNextNode implements Virtualizable, Lowerable
 {
+    // @def
     public static final NodeClass<EnsureVirtualizedNode> TYPE = NodeClass.create(EnsureVirtualizedNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
+    // @field
     private final boolean localOnly;
 
     // @cons
-    public EnsureVirtualizedNode(ValueNode object, boolean localOnly)
+    public EnsureVirtualizedNode(ValueNode __object, boolean __localOnly)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = object;
-        this.localOnly = localOnly;
+        this.object = __object;
+        this.localOnly = __localOnly;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object);
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object);
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            if (virtual instanceof VirtualBoxingNode)
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            if (__virtual instanceof VirtualBoxingNode)
             {
-                throw new BailoutException("ensureVirtual is not valid for boxing objects: %s", virtual.type().getName());
+                throw new BailoutException("ensureVirtual is not valid for boxing objects: %s", __virtual.type().getName());
             }
             if (!localOnly)
             {
-                tool.setEnsureVirtualized(virtual, true);
+                __tool.setEnsureVirtualized(__virtual, true);
             }
-            tool.delete();
+            __tool.delete();
         }
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         ensureVirtualFailure(this, object.stamp(NodeView.DEFAULT));
     }
 
-    public static void ensureVirtualFailure(Node location, Stamp stamp)
+    public static void ensureVirtualFailure(Node __location, Stamp __stamp)
     {
-        String additionalReason = "";
-        if (location instanceof FixedWithNextNode && !(location instanceof EnsureVirtualizedNode))
+        String __additionalReason = "";
+        if (__location instanceof FixedWithNextNode && !(__location instanceof EnsureVirtualizedNode))
         {
-            FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) location;
-            FixedNode next = fixedWithNextNode.next();
-            if (next instanceof StoreFieldNode)
+            FixedWithNextNode __fixedWithNextNode = (FixedWithNextNode) __location;
+            FixedNode __next = __fixedWithNextNode.next();
+            if (__next instanceof StoreFieldNode)
             {
-                additionalReason = " (must not store virtual object into a field)";
+                __additionalReason = " (must not store virtual object into a field)";
             }
-            else if (next instanceof Invoke)
+            else if (__next instanceof Invoke)
             {
-                additionalReason = " (must not pass virtual object into an invoke that cannot be inlined)";
+                __additionalReason = " (must not pass virtual object into an invoke that cannot be inlined)";
             }
             else
             {
-                additionalReason = " (must not let virtual object escape at node " + next + ")";
+                __additionalReason = " (must not let virtual object escape at node " + __next + ")";
             }
         }
-        throw new BailoutException("instance of type %s should not be materialized%s", StampTool.typeOrNull(stamp).getName(), additionalReason);
+        throw new BailoutException("instance of type %s should not be materialized%s", StampTool.typeOrNull(__stamp).getName(), __additionalReason);
     }
 }

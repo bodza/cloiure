@@ -23,7 +23,9 @@ import giraaff.util.GraalError;
 // @class ClassfileConstantPool
 final class ClassfileConstantPool implements ConstantPool
 {
+    // @field
     final ClassfileConstant[] entries;
+    // @field
     final ClassfileBytecodeProvider context;
 
     // @class ClassfileConstantPool.Bytecodes
@@ -34,7 +36,7 @@ final class ClassfileConstantPool implements ConstantPool
         {
             super();
         }
-    
+
         public static final int
             GETSTATIC       = 178, // 0xB2
             PUTSTATIC       = 179, // 0xB3
@@ -48,74 +50,74 @@ final class ClassfileConstantPool implements ConstantPool
     }
 
     // @cons
-    ClassfileConstantPool(DataInputStream stream, ClassfileBytecodeProvider context) throws IOException
+    ClassfileConstantPool(DataInputStream __stream, ClassfileBytecodeProvider __context) throws IOException
     {
         super();
-        this.context = context;
-        byte tag;
+        this.context = __context;
+        byte __tag;
 
-        int count = stream.readUnsignedShort();
-        entries = new ClassfileConstant[count];
+        int __count = __stream.readUnsignedShort();
+        entries = new ClassfileConstant[__count];
 
-        int i = 1;
-        while (i < count)
+        int __i = 1;
+        while (__i < __count)
         {
-            entries[i] = readConstant(stream);
-            tag = entries[i].tag;
+            entries[__i] = readConstant(__stream);
+            __tag = entries[__i].tag;
 
-            if ((tag == ClassfileConstant.CONSTANT_Double) || (tag == ClassfileConstant.CONSTANT_Long))
+            if ((__tag == ClassfileConstant.CONSTANT_Double) || (__tag == ClassfileConstant.CONSTANT_Long))
             {
-                i += 2;
+                __i += 2;
             }
             else
             {
-                i += 1;
+                __i += 1;
             }
         }
     }
 
-    static final ClassfileConstant readConstant(DataInputStream stream) throws IOException
+    static final ClassfileConstant readConstant(DataInputStream __stream) throws IOException
     {
-        byte tag = stream.readByte();
+        byte __tag = __stream.readByte();
 
-        switch (tag)
+        switch (__tag)
         {
             case ClassfileConstant.CONSTANT_Class:
-                return new ClassfileConstant.ClassRef(stream);
+                return new ClassfileConstant.ClassRef(__stream);
             case ClassfileConstant.CONSTANT_Fieldref:
-                return new ClassfileConstant.FieldRef(stream);
+                return new ClassfileConstant.FieldRef(__stream);
             case ClassfileConstant.CONSTANT_Methodref:
-                return new ClassfileConstant.MethodRef(stream);
+                return new ClassfileConstant.MethodRef(__stream);
             case ClassfileConstant.CONSTANT_InterfaceMethodref:
-                return new ClassfileConstant.InterfaceMethodRef(stream);
+                return new ClassfileConstant.InterfaceMethodRef(__stream);
             case ClassfileConstant.CONSTANT_String:
-                return new ClassfileConstant.StringRef(stream);
+                return new ClassfileConstant.StringRef(__stream);
             case ClassfileConstant.CONSTANT_Integer:
-                return new ClassfileConstant.Primitive(tag, JavaConstant.forInt(stream.readInt()));
+                return new ClassfileConstant.Primitive(__tag, JavaConstant.forInt(__stream.readInt()));
             case ClassfileConstant.CONSTANT_Float:
-                return new ClassfileConstant.Primitive(tag, JavaConstant.forFloat(stream.readFloat()));
+                return new ClassfileConstant.Primitive(__tag, JavaConstant.forFloat(__stream.readFloat()));
             case ClassfileConstant.CONSTANT_Long:
-                return new ClassfileConstant.Primitive(tag, JavaConstant.forLong(stream.readLong()));
+                return new ClassfileConstant.Primitive(__tag, JavaConstant.forLong(__stream.readLong()));
             case ClassfileConstant.CONSTANT_Double:
-                return new ClassfileConstant.Primitive(tag, JavaConstant.forDouble(stream.readDouble()));
+                return new ClassfileConstant.Primitive(__tag, JavaConstant.forDouble(__stream.readDouble()));
             case ClassfileConstant.CONSTANT_NameAndType:
-                return new ClassfileConstant.NameAndType(stream);
+                return new ClassfileConstant.NameAndType(__stream);
             case ClassfileConstant.CONSTANT_Utf8:
-                return new ClassfileConstant.Utf8(stream.readUTF());
+                return new ClassfileConstant.Utf8(__stream.readUTF());
             case ClassfileConstant.CONSTANT_MethodHandle:
-                Classfile.skipFully(stream, 3); // reference_kind, reference_index
-                return new ClassfileConstant.Unsupported(tag, "CONSTANT_MethodHandle_info");
+                Classfile.skipFully(__stream, 3); // reference_kind, reference_index
+                return new ClassfileConstant.Unsupported(__tag, "CONSTANT_MethodHandle_info");
             case ClassfileConstant.CONSTANT_MethodType:
-                Classfile.skipFully(stream, 2); // descriptor_index
-                return new ClassfileConstant.Unsupported(tag, "CONSTANT_MethodType_info");
+                Classfile.skipFully(__stream, 2); // descriptor_index
+                return new ClassfileConstant.Unsupported(__tag, "CONSTANT_MethodType_info");
             case ClassfileConstant.CONSTANT_Dynamic:
-                Classfile.skipFully(stream, 4); // bootstrap_method_attr_index, name_and_type_index
-                return new ClassfileConstant.Unsupported(tag, "CONSTANT_Dynamic_info");
+                Classfile.skipFully(__stream, 4); // bootstrap_method_attr_index, name_and_type_index
+                return new ClassfileConstant.Unsupported(__tag, "CONSTANT_Dynamic_info");
             case ClassfileConstant.CONSTANT_InvokeDynamic:
-                Classfile.skipFully(stream, 4); // bootstrap_method_attr_index, name_and_type_index
-                return new ClassfileConstant.Unsupported(tag, "CONSTANT_InvokeDynamic_info");
+                Classfile.skipFully(__stream, 4); // bootstrap_method_attr_index, name_and_type_index
+                return new ClassfileConstant.Unsupported(__tag, "CONSTANT_InvokeDynamic_info");
             default:
-                throw new GraalError("Invalid constant pool tag: " + tag);
+                throw new GraalError("Invalid constant pool tag: " + __tag);
         }
     }
 
@@ -125,80 +127,79 @@ final class ClassfileConstantPool implements ConstantPool
         return entries.length;
     }
 
-    <T extends ClassfileConstant> T get(Class<T> c, int index)
+    <T extends ClassfileConstant> T get(Class<T> __c, int __index)
     {
-        return c.cast(entries[index]);
+        return __c.cast(entries[__index]);
     }
 
     @Override
-    public void loadReferencedType(int index, int opcode)
+    public void loadReferencedType(int __index, int __opcode)
     {
-        if (opcode == Bytecodes.INVOKEDYNAMIC)
+        if (__opcode == Bytecodes.INVOKEDYNAMIC)
         {
             throw new GraalError("INVOKEDYNAMIC not supported by " + ClassfileBytecodeProvider.class.getSimpleName());
         }
-        entries[index].loadReferencedType(this, index, opcode);
+        entries[__index].loadReferencedType(this, __index, __opcode);
     }
 
     @Override
-    public JavaField lookupField(int index, ResolvedJavaMethod method, int opcode)
+    public JavaField lookupField(int __index, ResolvedJavaMethod __method, int __opcode)
     {
-        return get(FieldRef.class, index).resolve(this, opcode);
+        return get(FieldRef.class, __index).resolve(this, __opcode);
     }
 
     @Override
-    public JavaMethod lookupMethod(int index, int opcode)
+    public JavaMethod lookupMethod(int __index, int __opcode)
     {
-        if (opcode == Bytecodes.INVOKEDYNAMIC)
+        if (__opcode == Bytecodes.INVOKEDYNAMIC)
         {
             throw new GraalError("INVOKEDYNAMIC not supported by" + ClassfileBytecodeProvider.class.getSimpleName());
         }
-        return get(ExecutableRef.class, index).resolve(this, opcode);
+        return get(ExecutableRef.class, __index).resolve(this, __opcode);
     }
 
     @Override
-    public JavaType lookupType(int index, int opcode)
+    public JavaType lookupType(int __index, int __opcode)
     {
-        return get(ClassRef.class, index).resolve(this);
+        return get(ClassRef.class, __index).resolve(this);
     }
 
     @Override
-    public String lookupUtf8(int index)
+    public String lookupUtf8(int __index)
     {
-        return ((Utf8) entries[index]).value;
+        return ((Utf8) entries[__index]).value;
     }
 
     @Override
-    public Signature lookupSignature(int index)
+    public Signature lookupSignature(int __index)
     {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public Object lookupConstant(int index)
+    public Object lookupConstant(int __index)
     {
-        ClassfileConstant c = entries[index];
-        if (c instanceof Primitive)
+        ClassfileConstant __c = entries[__index];
+        if (__c instanceof Primitive)
         {
-            Primitive p = (Primitive) c;
-            return p.value;
+            Primitive __p = (Primitive) __c;
+            return __p.value;
         }
-        switch (c.tag)
+        switch (__c.tag)
         {
             case ClassfileConstant.CONSTANT_Class:
-                final int opcode = -1;
-                return lookupType(index, opcode);
+                return lookupType(__index, -1);
             case ClassfileConstant.CONSTANT_String:
-                return ((ClassfileConstant.StringRef) c).getValue(this);
+                return ((ClassfileConstant.StringRef) __c).getValue(this);
             default:
-                throw new GraalError("Unexpected constant pool tag %s", c.tag);
+                throw new GraalError("Unexpected constant pool tag %s", __c.tag);
         }
     }
 
     @Override
-    public JavaConstant lookupAppendix(int index, int opcode)
+    public JavaConstant lookupAppendix(int __index, int __opcode)
     {
-        if (opcode == Bytecodes.INVOKEVIRTUAL)
+        if (__opcode == Bytecodes.INVOKEVIRTUAL)
         {
             return null;
         }

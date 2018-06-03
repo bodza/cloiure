@@ -38,21 +38,21 @@ public interface TypeReader
      */
     default long getSV()
     {
-        long result = 0;
-        int shift = 0;
-        long b;
+        long __result = 0;
+        int __shift = 0;
+        long __b;
         do
         {
-            b = getU1();
-            result |= (b & 0x7f) << shift;
-            shift += 7;
-        } while ((b & 0x80) != 0);
+            __b = getU1();
+            __result |= (__b & 0x7f) << __shift;
+            __shift += 7;
+        } while ((__b & 0x80) != 0);
 
-        if ((b & 0x40) != 0 && shift < 64)
+        if ((__b & 0x40) != 0 && __shift < 64)
         {
-            result |= -1L << shift;
+            __result |= -1L << __shift;
         }
-        return result;
+        return __result;
     }
 
     /**
@@ -69,17 +69,17 @@ public interface TypeReader
      */
     default long getUV()
     {
-        long result = 0;
-        int shift = 0;
-        long b;
+        long __result = 0;
+        int __shift = 0;
+        long __b;
         do
         {
-            b = getU1();
-            result |= (b & 0x7f) << shift;
-            shift += 7;
-        } while ((b & 0x80) != 0);
+            __b = getU1();
+            __result |= (__b & 0x7f) << __shift;
+            __shift += 7;
+        } while ((__b & 0x80) != 0);
 
-        return result;
+        return __result;
     }
 
     /**

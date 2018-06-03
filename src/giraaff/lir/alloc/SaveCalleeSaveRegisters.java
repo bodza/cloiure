@@ -25,67 +25,67 @@ import giraaff.lir.util.RegisterMap;
 public final class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PreAllocationOptimizationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PreAllocationOptimizationContext __context)
     {
-        RegisterArray calleeSaveRegisters = lirGenRes.getRegisterConfig().getCalleeSaveRegisters();
-        if (calleeSaveRegisters == null || calleeSaveRegisters.size() == 0)
+        RegisterArray __calleeSaveRegisters = __lirGenRes.getRegisterConfig().getCalleeSaveRegisters();
+        if (__calleeSaveRegisters == null || __calleeSaveRegisters.size() == 0)
         {
             return;
         }
-        LIR lir = lirGenRes.getLIR();
-        RegisterMap<Variable> savedRegisters = saveAtEntry(lir, context.lirGen, lirGenRes, calleeSaveRegisters, target.arch);
+        LIR __lir = __lirGenRes.getLIR();
+        RegisterMap<Variable> __savedRegisters = saveAtEntry(__lir, __context.lirGen, __lirGenRes, __calleeSaveRegisters, __target.arch);
 
-        for (AbstractBlockBase<?> block : lir.codeEmittingOrder())
+        for (AbstractBlockBase<?> __block : __lir.codeEmittingOrder())
         {
-            if (block == null)
+            if (__block == null)
             {
                 continue;
             }
-            if (block.getSuccessorCount() == 0)
+            if (__block.getSuccessorCount() == 0)
             {
-                restoreAtExit(lir, context.lirGen.getSpillMoveFactory(), lirGenRes, savedRegisters, block);
+                restoreAtExit(__lir, __context.lirGen.getSpillMoveFactory(), __lirGenRes, __savedRegisters, __block);
             }
         }
     }
 
-    private static RegisterMap<Variable> saveAtEntry(LIR lir, LIRGeneratorTool lirGen, LIRGenerationResult lirGenRes, RegisterArray calleeSaveRegisters, Architecture arch)
+    private static RegisterMap<Variable> saveAtEntry(LIR __lir, LIRGeneratorTool __lirGen, LIRGenerationResult __lirGenRes, RegisterArray __calleeSaveRegisters, Architecture __arch)
     {
-        AbstractBlockBase<?> startBlock = lir.getControlFlowGraph().getStartBlock();
-        ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(startBlock);
-        int insertionIndex = 1;
-        LIRInsertionBuffer buffer = new LIRInsertionBuffer();
-        buffer.init(instructions);
-        StandardOp.LabelOp entry = (StandardOp.LabelOp) instructions.get(insertionIndex - 1);
-        RegisterValue[] savedRegisterValues = new RegisterValue[calleeSaveRegisters.size()];
-        int savedRegisterValueIndex = 0;
-        RegisterMap<Variable> saveMap = new RegisterMap<>(arch);
-        for (Register register : calleeSaveRegisters)
+        AbstractBlockBase<?> __startBlock = __lir.getControlFlowGraph().getStartBlock();
+        ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__startBlock);
+        int __insertionIndex = 1;
+        LIRInsertionBuffer __buffer = new LIRInsertionBuffer();
+        __buffer.init(__instructions);
+        StandardOp.LabelOp __entry = (StandardOp.LabelOp) __instructions.get(__insertionIndex - 1);
+        RegisterValue[] __savedRegisterValues = new RegisterValue[__calleeSaveRegisters.size()];
+        int __savedRegisterValueIndex = 0;
+        RegisterMap<Variable> __saveMap = new RegisterMap<>(__arch);
+        for (Register __register : __calleeSaveRegisters)
         {
-            PlatformKind registerPlatformKind = arch.getLargestStorableKind(register.getRegisterCategory());
-            LIRKind lirKind = LIRKind.value(registerPlatformKind);
-            RegisterValue registerValue = register.asValue(lirKind);
-            Variable saveVariable = lirGen.newVariable(lirKind);
-            LIRInstruction save = lirGen.getSpillMoveFactory().createMove(saveVariable, registerValue);
-            buffer.append(insertionIndex, save);
-            saveMap.put(register, saveVariable);
-            savedRegisterValues[savedRegisterValueIndex++] = registerValue;
+            PlatformKind __registerPlatformKind = __arch.getLargestStorableKind(__register.getRegisterCategory());
+            LIRKind __lirKind = LIRKind.value(__registerPlatformKind);
+            RegisterValue __registerValue = __register.asValue(__lirKind);
+            Variable __saveVariable = __lirGen.newVariable(__lirKind);
+            LIRInstruction __save = __lirGen.getSpillMoveFactory().createMove(__saveVariable, __registerValue);
+            __buffer.append(__insertionIndex, __save);
+            __saveMap.put(__register, __saveVariable);
+            __savedRegisterValues[__savedRegisterValueIndex++] = __registerValue;
         }
-        entry.addIncomingValues(savedRegisterValues);
-        buffer.finish();
-        return saveMap;
+        __entry.addIncomingValues(__savedRegisterValues);
+        __buffer.finish();
+        return __saveMap;
     }
 
-    private static void restoreAtExit(LIR lir, LIRGeneratorTool.MoveFactory moveFactory, LIRGenerationResult lirGenRes, RegisterMap<Variable> calleeSaveRegisters, AbstractBlockBase<?> block)
+    private static void restoreAtExit(LIR __lir, LIRGeneratorTool.MoveFactory __moveFactory, LIRGenerationResult __lirGenRes, RegisterMap<Variable> __calleeSaveRegisters, AbstractBlockBase<?> __block)
     {
-        ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-        int insertionIndex = instructions.size() - 1;
-        LIRInsertionBuffer buffer = new LIRInsertionBuffer();
-        buffer.init(instructions);
-        calleeSaveRegisters.forEach((Register register, Variable saved) ->
+        ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
+        int __insertionIndex = __instructions.size() - 1;
+        LIRInsertionBuffer __buffer = new LIRInsertionBuffer();
+        __buffer.init(__instructions);
+        __calleeSaveRegisters.forEach((Register __register, Variable __saved) ->
         {
-            LIRInstruction restore = moveFactory.createMove(register.asValue(saved.getValueKind()), saved);
-            buffer.append(insertionIndex, restore);
+            LIRInstruction __restore = __moveFactory.createMove(__register.asValue(__saved.getValueKind()), __saved);
+            __buffer.append(__insertionIndex, __restore);
         });
-        buffer.finish();
+        __buffer.finish();
     }
 }

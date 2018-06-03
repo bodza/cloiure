@@ -29,42 +29,47 @@ import giraaff.util.GraalError;
 // @class ResolvedMethodHandleCallTargetNode
 public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNode implements Lowerable
 {
+    // @def
     public static final NodeClass<ResolvedMethodHandleCallTargetNode> TYPE = NodeClass.create(ResolvedMethodHandleCallTargetNode.class);
 
     /**
      * Creates a call target for an invocation on a direct target derived by resolving a constant
      * {@link MethodHandle}.
      */
-    public static MethodCallTargetNode create(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, ResolvedJavaMethod originalTargetMethod, ValueNode[] originalArguments, StampPair originalReturnStamp)
+    public static MethodCallTargetNode create(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, ResolvedJavaMethod __originalTargetMethod, ValueNode[] __originalArguments, StampPair __originalReturnStamp)
     {
-        return new ResolvedMethodHandleCallTargetNode(invokeKind, targetMethod, arguments, returnStamp, originalTargetMethod, originalArguments, originalReturnStamp);
+        return new ResolvedMethodHandleCallTargetNode(__invokeKind, __targetMethod, __arguments, __returnStamp, __originalTargetMethod, __originalArguments, __originalReturnStamp);
     }
 
+    // @field
     protected final ResolvedJavaMethod originalTargetMethod;
+    // @field
     protected final StampPair originalReturnStamp;
-    @Input NodeInputList<ValueNode> originalArguments;
+    @Input
+    // @field
+    NodeInputList<ValueNode> originalArguments;
 
     // @cons
-    protected ResolvedMethodHandleCallTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, ResolvedJavaMethod originalTargetMethod, ValueNode[] originalArguments, StampPair originalReturnStamp)
+    protected ResolvedMethodHandleCallTargetNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, ResolvedJavaMethod __originalTargetMethod, ValueNode[] __originalArguments, StampPair __originalReturnStamp)
     {
-        super(TYPE, invokeKind, targetMethod, arguments, returnStamp, null);
-        this.originalTargetMethod = originalTargetMethod;
-        this.originalReturnStamp = originalReturnStamp;
-        this.originalArguments = new NodeInputList<>(this, originalArguments);
+        super(TYPE, __invokeKind, __targetMethod, __arguments, __returnStamp, null);
+        this.originalTargetMethod = __originalTargetMethod;
+        this.originalReturnStamp = __originalReturnStamp;
+        this.originalArguments = new NodeInputList<>(this, __originalArguments);
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        InvokeKind replacementInvokeKind = originalTargetMethod.isStatic() ? InvokeKind.Static : InvokeKind.Special;
-        MethodCallTargetNode replacement = graph().add(new MethodCallTargetNode(replacementInvokeKind, originalTargetMethod, originalArguments.toArray(new ValueNode[originalArguments.size()]), originalReturnStamp, null));
+        InvokeKind __replacementInvokeKind = originalTargetMethod.isStatic() ? InvokeKind.Static : InvokeKind.Special;
+        MethodCallTargetNode __replacement = graph().add(new MethodCallTargetNode(__replacementInvokeKind, originalTargetMethod, originalArguments.toArray(new ValueNode[originalArguments.size()]), originalReturnStamp, null));
 
         // Replace myself...
-        this.replaceAndDelete(replacement);
+        this.replaceAndDelete(__replacement);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         throw GraalError.shouldNotReachHere("should have replaced itself");
     }

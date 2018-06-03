@@ -14,33 +14,35 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class FloatableAccessNode
 public abstract class FloatableAccessNode extends FixedAccessNode
 {
+    // @def
     public static final NodeClass<FloatableAccessNode> TYPE = NodeClass.create(FloatableAccessNode.class);
 
     // @cons
-    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp)
+    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp)
     {
-        super(c, address, location, stamp);
+        super(__c, __address, __location, __stamp);
     }
 
     // @cons
-    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType)
+    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
     {
-        super(c, address, location, stamp, guard, barrierType, false, null);
+        super(__c, __address, __location, __stamp, __guard, __barrierType, false, null);
     }
 
     // @cons
-    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck, FrameState stateBefore)
+    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
     {
-        super(c, address, location, stamp, guard, barrierType, nullCheck, stateBefore);
+        super(__c, __address, __location, __stamp, __guard, __barrierType, __nullCheck, __stateBefore);
     }
 
     public abstract FloatingAccessNode asFloatingNode(MemoryNode lastLocationAccess);
 
+    // @field
     protected boolean forceFixed;
 
-    public void setForceFixed(boolean flag)
+    public void setForceFixed(boolean __flag)
     {
-        this.forceFixed = flag;
+        this.forceFixed = __flag;
     }
 
     /**

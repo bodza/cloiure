@@ -25,16 +25,21 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class LoweredAtomicReadAndWriteNode
 public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<LoweredAtomicReadAndWriteNode> TYPE = NodeClass.create(LoweredAtomicReadAndWriteNode.class);
 
-    @Input ValueNode newValue;
-    @OptionalInput(InputType.State) FrameState stateAfter;
+    @Input
+    // @field
+    ValueNode newValue;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateAfter;
 
     // @cons
-    public LoweredAtomicReadAndWriteNode(AddressNode address, LocationIdentity location, ValueNode newValue, BarrierType barrierType)
+    public LoweredAtomicReadAndWriteNode(AddressNode __address, LocationIdentity __location, ValueNode __newValue, BarrierType __barrierType)
     {
-        super(TYPE, address, location, newValue.stamp(NodeView.DEFAULT).unrestricted(), barrierType);
-        this.newValue = newValue;
+        super(TYPE, __address, __location, __newValue.stamp(NodeView.DEFAULT).unrestricted(), __barrierType);
+        this.newValue = __newValue;
     }
 
     @Override
@@ -44,10 +49,10 @@ public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode impleme
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -57,10 +62,10 @@ public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode impleme
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result = gen.getLIRGeneratorTool().emitAtomicReadAndWrite(gen.operand(getAddress()), gen.operand(getNewValue()));
-        gen.setResult(this, result);
+        Value __result = __gen.getLIRGeneratorTool().emitAtomicReadAndWrite(__gen.operand(getAddress()), __gen.operand(getNewValue()));
+        __gen.setResult(this, __result);
     }
 
     @Override

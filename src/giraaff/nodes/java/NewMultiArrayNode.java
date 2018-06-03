@@ -19,14 +19,18 @@ import giraaff.nodes.spi.LoweringTool;
 // @class NewMultiArrayNode
 public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements Lowerable, ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<NewMultiArrayNode> TYPE = NodeClass.create(NewMultiArrayNode.class);
 
-    @Input protected NodeInputList<ValueNode> dimensions;
+    @Input
+    // @field
+    protected NodeInputList<ValueNode> dimensions;
+    // @field
     protected final ResolvedJavaType type;
 
-    public ValueNode dimension(int index)
+    public ValueNode dimension(int __index)
     {
-        return dimensions.get(index);
+        return dimensions.get(__index);
     }
 
     public int dimensionCount()
@@ -40,23 +44,23 @@ public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode imple
     }
 
     // @cons
-    public NewMultiArrayNode(ResolvedJavaType type, ValueNode[] dimensions)
+    public NewMultiArrayNode(ResolvedJavaType __type, ValueNode[] __dimensions)
     {
-        this(TYPE, type, dimensions);
+        this(TYPE, __type, __dimensions);
     }
 
     // @cons
-    protected NewMultiArrayNode(NodeClass<? extends NewMultiArrayNode> c, ResolvedJavaType type, ValueNode[] dimensions)
+    protected NewMultiArrayNode(NodeClass<? extends NewMultiArrayNode> __c, ResolvedJavaType __type, ValueNode[] __dimensions)
     {
-        super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)));
-        this.type = type;
-        this.dimensions = new NodeInputList<>(this, dimensions);
+        super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)));
+        this.type = __type;
+        this.dimensions = new NodeInputList<>(this, __dimensions);
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public ResolvedJavaType type()

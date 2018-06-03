@@ -9,42 +9,43 @@ import giraaff.nodes.calc.FloatingNode;
 // @class LogicNode
 public abstract class LogicNode extends FloatingNode implements IndirectCanonicalization
 {
+    // @def
     public static final NodeClass<LogicNode> TYPE = NodeClass.create(LogicNode.class);
 
     // @cons
-    public LogicNode(NodeClass<? extends LogicNode> c)
+    public LogicNode(NodeClass<? extends LogicNode> __c)
     {
-        super(c, StampFactory.forVoid());
+        super(__c, StampFactory.forVoid());
     }
 
-    public static LogicNode and(LogicNode a, LogicNode b, double shortCircuitProbability)
+    public static LogicNode and(LogicNode __a, LogicNode __b, double __shortCircuitProbability)
     {
-        return and(a, false, b, false, shortCircuitProbability);
+        return and(__a, false, __b, false, __shortCircuitProbability);
     }
 
-    public static LogicNode and(LogicNode a, boolean negateA, LogicNode b, boolean negateB, double shortCircuitProbability)
+    public static LogicNode and(LogicNode __a, boolean __negateA, LogicNode __b, boolean __negateB, double __shortCircuitProbability)
     {
-        StructuredGraph graph = a.graph();
-        ShortCircuitOrNode notAorNotB = graph.unique(new ShortCircuitOrNode(a, !negateA, b, !negateB, shortCircuitProbability));
-        return graph.unique(new LogicNegationNode(notAorNotB));
+        StructuredGraph __graph = __a.graph();
+        ShortCircuitOrNode __notAorNotB = __graph.unique(new ShortCircuitOrNode(__a, !__negateA, __b, !__negateB, __shortCircuitProbability));
+        return __graph.unique(new LogicNegationNode(__notAorNotB));
     }
 
-    public static LogicNode or(LogicNode a, LogicNode b, double shortCircuitProbability)
+    public static LogicNode or(LogicNode __a, LogicNode __b, double __shortCircuitProbability)
     {
-        return or(a, false, b, false, shortCircuitProbability);
+        return or(__a, false, __b, false, __shortCircuitProbability);
     }
 
-    public static LogicNode or(LogicNode a, boolean negateA, LogicNode b, boolean negateB, double shortCircuitProbability)
+    public static LogicNode or(LogicNode __a, boolean __negateA, LogicNode __b, boolean __negateB, double __shortCircuitProbability)
     {
-        return a.graph().unique(new ShortCircuitOrNode(a, negateA, b, negateB, shortCircuitProbability));
+        return __a.graph().unique(new ShortCircuitOrNode(__a, __negateA, __b, __negateB, __shortCircuitProbability));
     }
 
     public final boolean isTautology()
     {
         if (this instanceof LogicConstantNode)
         {
-            LogicConstantNode logicConstantNode = (LogicConstantNode) this;
-            return logicConstantNode.getValue();
+            LogicConstantNode __logicConstantNode = (LogicConstantNode) this;
+            return __logicConstantNode.getValue();
         }
 
         return false;
@@ -54,8 +55,8 @@ public abstract class LogicNode extends FloatingNode implements IndirectCanonica
     {
         if (this instanceof LogicConstantNode)
         {
-            LogicConstantNode logicConstantNode = (LogicConstantNode) this;
-            return !logicConstantNode.getValue();
+            LogicConstantNode __logicConstantNode = (LogicConstantNode) this;
+            return !__logicConstantNode.getValue();
         }
 
         return false;

@@ -15,44 +15,44 @@ import giraaff.hotspot.HotSpotRuntime;
 public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
 {
     // @cons
-    public HotSpotConstantFieldProvider(MetaAccessProvider metaAccess)
+    public HotSpotConstantFieldProvider(MetaAccessProvider __metaAccess)
     {
-        super(metaAccess);
+        super(__metaAccess);
     }
 
     @Override
-    protected boolean isStableField(ResolvedJavaField field, ConstantFieldTool<?> tool)
+    protected boolean isStableField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
     {
         if (!HotSpotRuntime.foldStableValues)
         {
             return false;
         }
-        if (field.isStatic() && !isStaticFieldConstant(field))
+        if (__field.isStatic() && !isStaticFieldConstant(__field))
         {
             return false;
         }
 
-        if (((HotSpotResolvedJavaField) field).isStable())
+        if (((HotSpotResolvedJavaField) __field).isStable())
         {
             return true;
         }
-        return super.isStableField(field, tool);
+        return super.isStableField(__field, __tool);
     }
 
     @Override
-    protected boolean isFinalField(ResolvedJavaField field, ConstantFieldTool<?> tool)
+    protected boolean isFinalField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
     {
-        if (field.isStatic() && !isStaticFieldConstant(field))
+        if (__field.isStatic() && !isStaticFieldConstant(__field))
         {
             return false;
         }
 
-        return super.isFinalField(field, tool);
+        return super.isFinalField(__field, __tool);
     }
 
-    protected boolean isStaticFieldConstant(ResolvedJavaField field)
+    protected boolean isStaticFieldConstant(ResolvedJavaField __field)
     {
-        ResolvedJavaType declaringClass = field.getDeclaringClass();
-        return declaringClass.isInitialized() && !declaringClass.getName().equals("Ljava/lang/System;");
+        ResolvedJavaType __declaringClass = __field.getDeclaringClass();
+        return __declaringClass.isInitialized() && !__declaringClass.getName().equals("Ljava/lang/System;");
     }
 }

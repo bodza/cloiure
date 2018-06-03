@@ -18,12 +18,12 @@ import giraaff.nodes.java.ArrayLengthNode;
 public final class ArraySubstitutions
 {
     @MethodSubstitution
-    public static int getLength(Object array)
+    public static int getLength(Object __array)
     {
-        if (!array.getClass().isArray())
+        if (!__array.getClass().isArray())
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
-        return ArrayLengthNode.arrayLength(array);
+        return ArrayLengthNode.arrayLength(__array);
     }
 }

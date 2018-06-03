@@ -7,21 +7,23 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class G1PostWriteBarrier
 public final class G1PostWriteBarrier extends ObjectWriteBarrier
 {
+    // @def
     public static final NodeClass<G1PostWriteBarrier> TYPE = NodeClass.create(G1PostWriteBarrier.class);
 
+    // @field
     protected final boolean alwaysNull;
 
     // @cons
-    public G1PostWriteBarrier(AddressNode address, ValueNode value, boolean precise, boolean alwaysNull)
+    public G1PostWriteBarrier(AddressNode __address, ValueNode __value, boolean __precise, boolean __alwaysNull)
     {
-        this(TYPE, address, value, precise, alwaysNull);
+        this(TYPE, __address, __value, __precise, __alwaysNull);
     }
 
     // @cons
-    protected G1PostWriteBarrier(NodeClass<? extends G1PostWriteBarrier> c, AddressNode address, ValueNode value, boolean precise, boolean alwaysNull)
+    protected G1PostWriteBarrier(NodeClass<? extends G1PostWriteBarrier> __c, AddressNode __address, ValueNode __value, boolean __precise, boolean __alwaysNull)
     {
-        super(c, address, value, precise);
-        this.alwaysNull = alwaysNull;
+        super(__c, __address, __value, __precise);
+        this.alwaysNull = __alwaysNull;
     }
 
     public boolean alwaysNull()

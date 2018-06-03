@@ -8,6 +8,7 @@ import org.graalvm.collections.Equivalence;
 // @class GenericValueMap
 public final class GenericValueMap<T> extends ValueMap<Value, T>
 {
+    // @field
     private final EconomicMap<Value, T> data;
 
     // @cons
@@ -18,20 +19,20 @@ public final class GenericValueMap<T> extends ValueMap<Value, T>
     }
 
     @Override
-    public T get(Value value)
+    public T get(Value __value)
     {
-        return data.get(value);
+        return data.get(__value);
     }
 
     @Override
-    public void remove(Value value)
+    public void remove(Value __value)
     {
-        data.removeKey(value);
+        data.removeKey(__value);
     }
 
     @Override
-    public void put(Value value, T object)
+    public void put(Value __value, T __object)
     {
-        data.put(value, object);
+        data.put(__value, __object);
     }
 }

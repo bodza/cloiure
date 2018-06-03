@@ -12,6 +12,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class RandomSeedNode
 public final class RandomSeedNode extends FloatingNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<RandomSeedNode> TYPE = NodeClass.create(RandomSeedNode.class);
 
     // @cons
@@ -21,9 +22,9 @@ public final class RandomSeedNode extends FloatingNode implements LIRLowerable
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitRandomSeed();
-        gen.setResult(this, result);
+        Value __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitRandomSeed();
+        __gen.setResult(this, __result);
     }
 }

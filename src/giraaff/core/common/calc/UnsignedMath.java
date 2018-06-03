@@ -16,64 +16,64 @@ public final class UnsignedMath
     /**
      * Unsigned comparison aboveThan for two numbers.
      */
-    public static boolean aboveThan(int a, int b)
+    public static boolean aboveThan(int __a, int __b)
     {
-        return Integer.compareUnsigned(a, b) > 0;
+        return Integer.compareUnsigned(__a, __b) > 0;
     }
 
     /**
      * Unsigned comparison aboveOrEqual for two numbers.
      */
-    public static boolean aboveOrEqual(int a, int b)
+    public static boolean aboveOrEqual(int __a, int __b)
     {
-        return Integer.compareUnsigned(a, b) >= 0;
+        return Integer.compareUnsigned(__a, __b) >= 0;
     }
 
     /**
      * Unsigned comparison belowThan for two numbers.
      */
-    public static boolean belowThan(int a, int b)
+    public static boolean belowThan(int __a, int __b)
     {
-        return Integer.compareUnsigned(a, b) < 0;
+        return Integer.compareUnsigned(__a, __b) < 0;
     }
 
     /**
      * Unsigned comparison belowOrEqual for two numbers.
      */
-    public static boolean belowOrEqual(int a, int b)
+    public static boolean belowOrEqual(int __a, int __b)
     {
-        return Integer.compareUnsigned(a, b) <= 0;
+        return Integer.compareUnsigned(__a, __b) <= 0;
     }
 
     /**
      * Unsigned comparison aboveThan for two numbers.
      */
-    public static boolean aboveThan(long a, long b)
+    public static boolean aboveThan(long __a, long __b)
     {
-        return Long.compareUnsigned(a, b) > 0;
+        return Long.compareUnsigned(__a, __b) > 0;
     }
 
     /**
      * Unsigned comparison aboveOrEqual for two numbers.
      */
-    public static boolean aboveOrEqual(long a, long b)
+    public static boolean aboveOrEqual(long __a, long __b)
     {
-        return Long.compareUnsigned(a, b) >= 0;
+        return Long.compareUnsigned(__a, __b) >= 0;
     }
 
     /**
      * Unsigned comparison belowThan for two numbers.
      */
-    public static boolean belowThan(long a, long b)
+    public static boolean belowThan(long __a, long __b)
     {
-        return Long.compareUnsigned(a, b) < 0;
+        return Long.compareUnsigned(__a, __b) < 0;
     }
 
     /**
      * Unsigned comparison belowOrEqual for two numbers.
      */
-    public static boolean belowOrEqual(long a, long b)
+    public static boolean belowOrEqual(long __a, long __b)
     {
-        return Long.compareUnsigned(a, b) <= 0;
+        return Long.compareUnsigned(__a, __b) <= 0;
     }
 }

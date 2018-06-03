@@ -11,7 +11,9 @@ import giraaff.core.common.GraalOptions;
 // @class OptimisticOptimizations
 public final class OptimisticOptimizations
 {
+    // @def
     public static final OptimisticOptimizations ALL = new OptimisticOptimizations(EnumSet.allOf(Optimization.class));
+    // @def
     public static final OptimisticOptimizations NONE = new OptimisticOptimizations(EnumSet.noneOf(Optimization.class));
 
     // @enum OptimisticOptimizations.Optimization
@@ -25,55 +27,56 @@ public final class OptimisticOptimizations
         UseLoopLimitChecks
     }
 
+    // @field
     private final Set<Optimization> enabledOpts;
 
     // @cons
-    public OptimisticOptimizations(ProfilingInfo info)
+    public OptimisticOptimizations(ProfilingInfo __info)
     {
         super();
         this.enabledOpts = EnumSet.noneOf(Optimization.class);
 
         enabledOpts.add(Optimization.UseExceptionProbabilityForOperations);
-        addOptimization(info, DeoptimizationReason.UnreachedCode, Optimization.RemoveNeverExecutedCode);
-        addOptimization(info, DeoptimizationReason.TypeCheckedInliningViolated, Optimization.UseTypeCheckedInlining);
-        addOptimization(info, DeoptimizationReason.OptimizedTypeCheckViolated, Optimization.UseTypeCheckHints);
-        addOptimization(info, DeoptimizationReason.NotCompiledExceptionHandler, Optimization.UseExceptionProbability);
-        addOptimization(info, DeoptimizationReason.LoopLimitCheck, Optimization.UseLoopLimitChecks);
+        addOptimization(__info, DeoptimizationReason.UnreachedCode, Optimization.RemoveNeverExecutedCode);
+        addOptimization(__info, DeoptimizationReason.TypeCheckedInliningViolated, Optimization.UseTypeCheckedInlining);
+        addOptimization(__info, DeoptimizationReason.OptimizedTypeCheckViolated, Optimization.UseTypeCheckHints);
+        addOptimization(__info, DeoptimizationReason.NotCompiledExceptionHandler, Optimization.UseExceptionProbability);
+        addOptimization(__info, DeoptimizationReason.LoopLimitCheck, Optimization.UseLoopLimitChecks);
     }
 
-    private void addOptimization(ProfilingInfo info, DeoptimizationReason deoptReason, Optimization optimization)
+    private void addOptimization(ProfilingInfo __info, DeoptimizationReason __deoptReason, Optimization __optimization)
     {
-        if (checkDeoptimizations(info, deoptReason))
+        if (checkDeoptimizations(__info, __deoptReason))
         {
-            enabledOpts.add(optimization);
+            enabledOpts.add(__optimization);
         }
     }
 
-    public OptimisticOptimizations remove(Optimization... optimizations)
+    public OptimisticOptimizations remove(Optimization... __optimizations)
     {
-        Set<Optimization> newOptimizations = EnumSet.copyOf(enabledOpts);
-        for (Optimization o : optimizations)
+        Set<Optimization> __newOptimizations = EnumSet.copyOf(enabledOpts);
+        for (Optimization __o : __optimizations)
         {
-            newOptimizations.remove(o);
+            __newOptimizations.remove(__o);
         }
-        return new OptimisticOptimizations(newOptimizations);
+        return new OptimisticOptimizations(__newOptimizations);
     }
 
-    public OptimisticOptimizations add(Optimization... optimizations)
+    public OptimisticOptimizations add(Optimization... __optimizations)
     {
-        Set<Optimization> newOptimizations = EnumSet.copyOf(enabledOpts);
-        for (Optimization o : optimizations)
+        Set<Optimization> __newOptimizations = EnumSet.copyOf(enabledOpts);
+        for (Optimization __o : __optimizations)
         {
-            newOptimizations.add(o);
+            __newOptimizations.add(__o);
         }
-        return new OptimisticOptimizations(newOptimizations);
+        return new OptimisticOptimizations(__newOptimizations);
     }
 
     // @cons
-    private OptimisticOptimizations(Set<Optimization> enabledOpts)
+    private OptimisticOptimizations(Set<Optimization> __enabledOpts)
     {
         super();
-        this.enabledOpts = enabledOpts;
+        this.enabledOpts = __enabledOpts;
     }
 
     public boolean removeNeverExecutedCode()
@@ -121,11 +124,11 @@ public final class OptimisticOptimizations
         return GraalOptions.useLoopLimitChecks && enabledOpts.contains(Optimization.UseLoopLimitChecks);
     }
 
-    public boolean lessOptimisticThan(OptimisticOptimizations other)
+    public boolean lessOptimisticThan(OptimisticOptimizations __other)
     {
-        for (Optimization opt : Optimization.values())
+        for (Optimization __opt : Optimization.values())
         {
-            if (!enabledOpts.contains(opt) && other.enabledOpts.contains(opt))
+            if (!enabledOpts.contains(__opt) && __other.enabledOpts.contains(__opt))
             {
                 return true;
             }
@@ -133,8 +136,8 @@ public final class OptimisticOptimizations
         return false;
     }
 
-    private static boolean checkDeoptimizations(ProfilingInfo profilingInfo, DeoptimizationReason reason)
+    private static boolean checkDeoptimizations(ProfilingInfo __profilingInfo, DeoptimizationReason __reason)
     {
-        return profilingInfo.getDeoptimizationCount(reason) < GraalOptions.deoptsToDisableOptimisticOptimization;
+        return __profilingInfo.getDeoptimizationCount(__reason) < GraalOptions.deoptsToDisableOptimisticOptimization;
     }
 }

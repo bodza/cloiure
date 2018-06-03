@@ -5,7 +5,9 @@ import java.util.Collection;
 // @iface AbstractControlFlowGraph
 public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
 {
+    // @field
     int BLOCK_ID_INITIAL = -1;
+    // @field
     int BLOCK_ID_VISITED = -2;
 
     /**
@@ -23,28 +25,28 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
     /**
      * True if block {@code a} is dominated by block {@code b}.
      */
-    static boolean isDominatedBy(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    static boolean isDominatedBy(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
-        int domNumberA = a.getDominatorNumber();
-        int domNumberB = b.getDominatorNumber();
-        return domNumberA >= domNumberB && domNumberA <= b.getMaxChildDominatorNumber();
+        int __domNumberA = __a.getDominatorNumber();
+        int __domNumberB = __b.getDominatorNumber();
+        return __domNumberA >= __domNumberB && __domNumberA <= __b.getMaxChildDominatorNumber();
     }
 
     /**
      * True if block {@code a} dominates block {@code b} and {@code a} is not identical block to
      * {@code b}.
      */
-    static boolean strictlyDominates(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    static boolean strictlyDominates(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
-        return a != b && dominates(a, b);
+        return __a != __b && dominates(__a, __b);
     }
 
     /**
      * True if block {@code a} dominates block {@code b}.
      */
-    static boolean dominates(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    static boolean dominates(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
-        return isDominatedBy(b, a);
+        return isDominatedBy(__b, __a);
     }
 
     /**
@@ -54,61 +56,61 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
      *
      * @see #getBlocks()
      */
-    static AbstractBlockBase<?> commonDominator(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    static AbstractBlockBase<?> commonDominator(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
-        if (a == null)
+        if (__a == null)
         {
-            return b;
+            return __b;
         }
-        else if (b == null)
+        else if (__b == null)
         {
-            return a;
+            return __a;
         }
-        else if (a == b)
+        else if (__a == __b)
         {
-            return a;
+            return __a;
         }
         else
         {
-            int aDomDepth = a.getDominatorDepth();
-            int bDomDepth = b.getDominatorDepth();
-            AbstractBlockBase<?> aTemp;
-            AbstractBlockBase<?> bTemp;
-            if (aDomDepth > bDomDepth)
+            int __aDomDepth = __a.getDominatorDepth();
+            int __bDomDepth = __b.getDominatorDepth();
+            AbstractBlockBase<?> __aTemp;
+            AbstractBlockBase<?> __bTemp;
+            if (__aDomDepth > __bDomDepth)
             {
-                aTemp = a;
-                bTemp = b;
+                __aTemp = __a;
+                __bTemp = __b;
             }
             else
             {
-                aTemp = b;
-                bTemp = a;
+                __aTemp = __b;
+                __bTemp = __a;
             }
-            return commonDominatorHelper(aTemp, bTemp);
+            return commonDominatorHelper(__aTemp, __bTemp);
         }
     }
 
-    static AbstractBlockBase<?> commonDominatorHelper(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    static AbstractBlockBase<?> commonDominatorHelper(AbstractBlockBase<?> __a, AbstractBlockBase<?> __b)
     {
-        int domNumberA = a.getDominatorNumber();
-        AbstractBlockBase<?> result = b;
-        while (domNumberA < result.getDominatorNumber())
+        int __domNumberA = __a.getDominatorNumber();
+        AbstractBlockBase<?> __result = __b;
+        while (__domNumberA < __result.getDominatorNumber())
         {
-            result = result.getDominator();
+            __result = __result.getDominator();
         }
-        while (domNumberA > result.getMaxChildDominatorNumber())
+        while (__domNumberA > __result.getMaxChildDominatorNumber())
         {
-            result = result.getDominator();
+            __result = __result.getDominator();
         }
-        return result;
+        return __result;
     }
 
     /**
      * @see AbstractControlFlowGraph#commonDominator(AbstractBlockBase, AbstractBlockBase)
      */
     @SuppressWarnings("unchecked")
-    static <T extends AbstractBlockBase<T>> T commonDominatorTyped(T a, T b)
+    static <T extends AbstractBlockBase<T>> T commonDominatorTyped(T __a, T __b)
     {
-        return (T) commonDominator(a, b);
+        return (T) commonDominator(__a, __b);
     }
 }

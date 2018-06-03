@@ -31,66 +31,67 @@ import giraaff.replacements.nodes.BasicObjectCloneNode;
 // @class ObjectCloneNode
 public final class ObjectCloneNode extends BasicObjectCloneNode implements VirtualizableAllocation, ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<ObjectCloneNode> TYPE = NodeClass.create(ObjectCloneNode.class);
 
     // @cons
-    public ObjectCloneNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode receiver)
+    public ObjectCloneNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode __receiver)
     {
-        super(TYPE, invokeKind, targetMethod, bci, returnStamp, receiver);
+        super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __receiver);
     }
 
     @Override
-    protected Stamp computeStamp(ValueNode object)
+    protected Stamp computeStamp(ValueNode __object)
     {
-        if (getConcreteType(object.stamp(NodeView.DEFAULT)) != null)
+        if (getConcreteType(__object.stamp(NodeView.DEFAULT)) != null)
         {
-            return AbstractPointerStamp.pointerNonNull(object.stamp(NodeView.DEFAULT));
+            return AbstractPointerStamp.pointerNonNull(__object.stamp(NodeView.DEFAULT));
         }
         /*
          * If this call can't be intrinsified don't report a non-null stamp, otherwise the stamp
          * would change when this is lowered back to an invoke and we might lose a null check.
          */
-        return AbstractPointerStamp.pointerMaybeNull(object.stamp(NodeView.DEFAULT));
+        return AbstractPointerStamp.pointerMaybeNull(__object.stamp(NodeView.DEFAULT));
     }
 
     @Override
-    protected StructuredGraph getLoweredSnippetGraph(LoweringTool tool)
+    protected StructuredGraph getLoweredSnippetGraph(LoweringTool __tool)
     {
-        ResolvedJavaType type = StampTool.typeOrNull(getObject());
-        if (type != null)
+        ResolvedJavaType __type = StampTool.typeOrNull(getObject());
+        if (__type != null)
         {
-            if (type.isArray())
+            if (__type.isArray())
             {
-                Method method = ObjectCloneSnippets.arrayCloneMethods.get(type.getComponentType().getJavaKind());
-                if (method != null)
+                Method __method = ObjectCloneSnippets.arrayCloneMethods.get(__type.getComponentType().getJavaKind());
+                if (__method != null)
                 {
-                    final ResolvedJavaMethod snippetMethod = tool.getMetaAccess().lookupJavaMethod(method);
-                    final Replacements replacements = tool.getReplacements();
-                    StructuredGraph snippetGraph = replacements.getSnippet(snippetMethod, null);
+                    final ResolvedJavaMethod __snippetMethod = __tool.getMetaAccess().lookupJavaMethod(__method);
+                    final Replacements __replacements = __tool.getReplacements();
+                    StructuredGraph __snippetGraph = __replacements.getSnippet(__snippetMethod, null);
 
-                    return lowerReplacement((StructuredGraph) snippetGraph.copy(), tool);
+                    return lowerReplacement((StructuredGraph) __snippetGraph.copy(), __tool);
                 }
             }
             else
             {
-                Assumptions assumptions = graph().getAssumptions();
-                type = getConcreteType(getObject().stamp(NodeView.DEFAULT));
-                if (type != null)
+                Assumptions __assumptions = graph().getAssumptions();
+                __type = getConcreteType(getObject().stamp(NodeView.DEFAULT));
+                if (__type != null)
                 {
-                    StructuredGraph newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(assumptions)).build();
-                    ParameterNode param = newGraph.addWithoutUnique(new ParameterNode(0, StampPair.createSingle(getObject().stamp(NodeView.DEFAULT))));
-                    NewInstanceNode newInstance = newGraph.add(new NewInstanceNode(type, true));
-                    newGraph.addAfterFixed(newGraph.start(), newInstance);
-                    ReturnNode returnNode = newGraph.add(new ReturnNode(newInstance));
-                    newGraph.addAfterFixed(newInstance, returnNode);
+                    StructuredGraph __newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(__assumptions)).build();
+                    ParameterNode __param = __newGraph.addWithoutUnique(new ParameterNode(0, StampPair.createSingle(getObject().stamp(NodeView.DEFAULT))));
+                    NewInstanceNode __newInstance = __newGraph.add(new NewInstanceNode(__type, true));
+                    __newGraph.addAfterFixed(__newGraph.start(), __newInstance);
+                    ReturnNode __returnNode = __newGraph.add(new ReturnNode(__newInstance));
+                    __newGraph.addAfterFixed(__newInstance, __returnNode);
 
-                    for (ResolvedJavaField field : type.getInstanceFields(true))
+                    for (ResolvedJavaField __field : __type.getInstanceFields(true))
                     {
-                        LoadFieldNode load = newGraph.add(LoadFieldNode.create(newGraph.getAssumptions(), param, field));
-                        newGraph.addBeforeFixed(returnNode, load);
-                        newGraph.addBeforeFixed(returnNode, newGraph.add(new StoreFieldNode(newInstance, field, load)));
+                        LoadFieldNode __load = __newGraph.add(LoadFieldNode.create(__newGraph.getAssumptions(), __param, __field));
+                        __newGraph.addBeforeFixed(__returnNode, __load);
+                        __newGraph.addBeforeFixed(__returnNode, __newGraph.add(new StoreFieldNode(__newInstance, __field, __load)));
                     }
-                    return lowerReplacement(newGraph, tool);
+                    return lowerReplacement(__newGraph, __tool);
                 }
             }
         }

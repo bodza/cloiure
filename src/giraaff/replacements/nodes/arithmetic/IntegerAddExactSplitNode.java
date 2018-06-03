@@ -15,31 +15,32 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class IntegerAddExactSplitNode
 public final class IntegerAddExactSplitNode extends IntegerExactArithmeticSplitNode
 {
+    // @def
     public static final NodeClass<IntegerAddExactSplitNode> TYPE = NodeClass.create(IntegerAddExactSplitNode.class);
 
     // @cons
-    public IntegerAddExactSplitNode(Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor)
+    public IntegerAddExactSplitNode(Stamp __stamp, ValueNode __x, ValueNode __y, AbstractBeginNode __next, AbstractBeginNode __overflowSuccessor)
     {
-        super(TYPE, stamp, x, y, next, overflowSuccessor);
+        super(TYPE, __stamp, __x, __y, __next, __overflowSuccessor);
     }
 
     @Override
-    protected Value generateArithmetic(NodeLIRBuilderTool gen)
+    protected Value generateArithmetic(NodeLIRBuilderTool __gen)
     {
-        return gen.getLIRGeneratorTool().getArithmetic().emitAdd(gen.operand(getX()), gen.operand(getY()), true);
+        return __gen.getLIRGeneratorTool().getArithmetic().emitAdd(__gen.operand(getX()), __gen.operand(getY()), true);
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
-        NodeView view = NodeView.from(tool);
-        if (!IntegerStamp.addCanOverflow((IntegerStamp) x.stamp(view), (IntegerStamp) y.stamp(view)))
+        NodeView __view = NodeView.from(__tool);
+        if (!IntegerStamp.addCanOverflow((IntegerStamp) x.stamp(__view), (IntegerStamp) y.stamp(__view)))
         {
-            tool.deleteBranch(overflowSuccessor);
-            tool.addToWorkList(next);
-            AddNode replacement = graph().unique(new AddNode(x, y));
-            graph().replaceSplitWithFloating(this, replacement, next);
-            tool.addToWorkList(replacement);
+            __tool.deleteBranch(overflowSuccessor);
+            __tool.addToWorkList(next);
+            AddNode __replacement = graph().unique(new AddNode(x, y));
+            graph().replaceSplitWithFloating(this, __replacement, next);
+            __tool.addToWorkList(__replacement);
         }
     }
 }

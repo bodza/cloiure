@@ -12,10 +12,15 @@ import giraaff.nodes.ValueNode;
 // @class BinaryNode
 public abstract class BinaryNode extends FloatingNode implements Canonicalizable.Binary<ValueNode>
 {
+    // @def
     public static final NodeClass<BinaryNode> TYPE = NodeClass.create(BinaryNode.class);
 
-    @Input protected ValueNode x;
-    @Input protected ValueNode y;
+    @Input
+    // @field
+    protected ValueNode x;
+    @Input
+    // @field
+    protected ValueNode y;
 
     @Override
     public ValueNode getX()
@@ -29,16 +34,16 @@ public abstract class BinaryNode extends FloatingNode implements Canonicalizable
         return y;
     }
 
-    public void setX(ValueNode x)
+    public void setX(ValueNode __x)
     {
-        updateUsages(this.x, x);
-        this.x = x;
+        updateUsages(this.x, __x);
+        this.x = __x;
     }
 
-    public void setY(ValueNode y)
+    public void setY(ValueNode __y)
     {
-        updateUsages(this.y, y);
-        this.y = y;
+        updateUsages(this.y, __y);
+        this.y = __y;
     }
 
     /**
@@ -49,11 +54,11 @@ public abstract class BinaryNode extends FloatingNode implements Canonicalizable
      * @param y the second input instruction
      */
     // @cons
-    protected BinaryNode(NodeClass<? extends BinaryNode> c, Stamp stamp, ValueNode x, ValueNode y)
+    protected BinaryNode(NodeClass<? extends BinaryNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y)
     {
-        super(c, stamp);
-        this.x = x;
-        this.y = y;
+        super(__c, __stamp);
+        this.x = __x;
+        this.y = __y;
     }
 
     @Override

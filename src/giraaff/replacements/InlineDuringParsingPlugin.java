@@ -16,49 +16,51 @@ public final class InlineDuringParsingPlugin implements InlineInvokePlugin
      * Budget which when exceeded reduces the effective value of
      * {@link GraalOptions#inlineDuringParsingMaxDepth} to {@link #maxDepthAfterBudgetExceeded}.
      */
+    // @def
     private static final int nodeBudget = 2000;
+    // @def
     private static final int maxDepthAfterBudgetExceeded = 3;
 
     @Override
-    public InlineInfo shouldInlineInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    public InlineInfo shouldInlineInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        if (method.hasBytecodes() && method.getDeclaringClass().isLinked() && method.canBeInlined())
+        if (__method.hasBytecodes() && __method.getDeclaringClass().isLinked() && __method.canBeInlined())
         {
             // test force inlining first
-            if (method.shouldBeInlined())
+            if (__method.shouldBeInlined())
             {
-                return InlineInfo.createStandardInlineInfo(method);
+                return InlineInfo.createStandardInlineInfo(__method);
             }
 
-            if (!method.isSynchronized() && checkSize(method, args, b.getGraph()) && checkInliningDepth(b))
+            if (!__method.isSynchronized() && checkSize(__method, __args, __b.getGraph()) && checkInliningDepth(__b))
             {
-                return InlineInfo.createStandardInlineInfo(method);
+                return InlineInfo.createStandardInlineInfo(__method);
             }
         }
         return null;
     }
 
-    private static boolean checkInliningDepth(GraphBuilderContext b)
+    private static boolean checkInliningDepth(GraphBuilderContext __b)
     {
-        int nodeCount = b.getGraph().getNodeCount();
-        int maxDepth = GraalOptions.inlineDuringParsingMaxDepth;
-        if (nodeCount > nodeBudget && maxDepthAfterBudgetExceeded < maxDepth)
+        int __nodeCount = __b.getGraph().getNodeCount();
+        int __maxDepth = GraalOptions.inlineDuringParsingMaxDepth;
+        if (__nodeCount > nodeBudget && maxDepthAfterBudgetExceeded < __maxDepth)
         {
-            maxDepth = maxDepthAfterBudgetExceeded;
+            __maxDepth = maxDepthAfterBudgetExceeded;
         }
-        return b.getDepth() < maxDepth;
+        return __b.getDepth() < __maxDepth;
     }
 
-    private static boolean checkSize(ResolvedJavaMethod method, ValueNode[] args, StructuredGraph graph)
+    private static boolean checkSize(ResolvedJavaMethod __method, ValueNode[] __args, StructuredGraph __graph)
     {
-        int bonus = 1;
-        for (ValueNode v : args)
+        int __bonus = 1;
+        for (ValueNode __v : __args)
         {
-            if (v.isConstant())
+            if (__v.isConstant())
             {
-                bonus++;
+                __bonus++;
             }
         }
-        return method.getCode().length <= GraalOptions.trivialInliningSize * bonus;
+        return __method.getCode().length <= GraalOptions.trivialInliningSize * __bonus;
     }
 }

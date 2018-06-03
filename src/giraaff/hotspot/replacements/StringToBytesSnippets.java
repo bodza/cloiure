@@ -27,6 +27,7 @@ import giraaff.util.UnsafeAccess;
 // @class StringToBytesSnippets
 public final class StringToBytesSnippets implements Snippets
 {
+    // @def
     public static final LocationIdentity CSTRING_LOCATION = NamedLocationIdentity.immutable("CString location");
 
     // @Fold
@@ -36,37 +37,38 @@ public final class StringToBytesSnippets implements Snippets
     }
 
     @Snippet
-    public static byte[] transform(@ConstantParameter String compilationTimeString)
+    public static byte[] transform(@ConstantParameter String __compilationTimeString)
     {
-        int i = compilationTimeString.length();
-        byte[] array = (byte[]) NewArrayNode.newUninitializedArray(byte.class, i);
-        Word cArray = CStringConstant.cstring(compilationTimeString);
-        while (i-- > 0)
+        int __i = __compilationTimeString.length();
+        byte[] __array = (byte[]) NewArrayNode.newUninitializedArray(byte.class, __i);
+        Word __cArray = CStringConstant.cstring(__compilationTimeString);
+        while (__i-- > 0)
         {
             // array[i] = cArray.readByte(i);
-            UnsafeAccess.UNSAFE.putByte(array, arrayBaseOffset() + i, cArray.readByte(i, CSTRING_LOCATION));
+            UnsafeAccess.UNSAFE.putByte(__array, arrayBaseOffset() + __i, __cArray.readByte(__i, CSTRING_LOCATION));
         }
-        return array;
+        return __array;
     }
 
     // @class StringToBytesSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final SnippetInfo create;
 
         // @cons
-        public Templates(HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders __providers, TargetDescription __target)
         {
-            super(providers, providers.getSnippetReflection(), target);
+            super(__providers, __providers.getSnippetReflection(), __target);
             create = snippet(StringToBytesSnippets.class, "transform", NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
         }
 
-        public void lower(StringToBytesNode stringToBytesNode, LoweringTool tool)
+        public void lower(StringToBytesNode __stringToBytesNode, LoweringTool __tool)
         {
-            Arguments args = new Arguments(create, stringToBytesNode.graph().getGuardsStage(), tool.getLoweringStage());
-            args.addConst("compilationTimeString", stringToBytesNode.getValue());
-            SnippetTemplate template = template(stringToBytesNode, args);
-            template.instantiate(providers.getMetaAccess(), stringToBytesNode, SnippetTemplate.DEFAULT_REPLACER, args);
+            Arguments __args = new Arguments(create, __stringToBytesNode.graph().getGuardsStage(), __tool.getLoweringStage());
+            __args.addConst("compilationTimeString", __stringToBytesNode.getValue());
+            SnippetTemplate __template = template(__stringToBytesNode, __args);
+            __template.instantiate(providers.getMetaAccess(), __stringToBytesNode, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

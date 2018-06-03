@@ -17,52 +17,53 @@ import giraaff.nodes.spi.StampInverter;
 // @class NotNode
 public final class NotNode extends UnaryArithmeticNode<Not> implements ArithmeticLIRLowerable, NarrowableArithmeticNode, StampInverter
 {
+    // @def
     public static final NodeClass<NotNode> TYPE = NodeClass.create(NotNode.class);
 
     // @cons
-    protected NotNode(ValueNode x)
+    protected NotNode(ValueNode __x)
     {
-        super(TYPE, ArithmeticOpTable::getNot, x);
+        super(TYPE, ArithmeticOpTable::getNot, __x);
     }
 
-    public static ValueNode create(ValueNode x)
+    public static ValueNode create(ValueNode __x)
     {
-        return canonicalize(null, x);
-    }
-
-    @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
-    {
-        ValueNode ret = super.canonical(tool, forValue);
-        if (ret != this)
-        {
-            return ret;
-        }
-        return canonicalize(this, forValue);
-    }
-
-    private static ValueNode canonicalize(NotNode node, ValueNode x)
-    {
-        if (x instanceof NotNode)
-        {
-            return ((NotNode) x).getValue();
-        }
-        if (node != null)
-        {
-            return node;
-        }
-        return new NotNode(x);
+        return canonicalize(null, __x);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        nodeValueMap.setResult(this, gen.emitNot(nodeValueMap.operand(getValue())));
+        ValueNode __ret = super.canonical(__tool, __forValue);
+        if (__ret != this)
+        {
+            return __ret;
+        }
+        return canonicalize(this, __forValue);
+    }
+
+    private static ValueNode canonicalize(NotNode __node, ValueNode __x)
+    {
+        if (__x instanceof NotNode)
+        {
+            return ((NotNode) __x).getValue();
+        }
+        if (__node != null)
+        {
+            return __node;
+        }
+        return new NotNode(__x);
     }
 
     @Override
-    public Stamp invertStamp(Stamp outStamp)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        return getArithmeticOp().foldStamp(outStamp);
+        __nodeValueMap.setResult(this, __gen.emitNot(__nodeValueMap.operand(getValue())));
+    }
+
+    @Override
+    public Stamp invertStamp(Stamp __outStamp)
+    {
+        return getArithmeticOp().foldStamp(__outStamp);
     }
 }

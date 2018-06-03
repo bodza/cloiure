@@ -13,7 +13,9 @@ import giraaff.nodes.StructuredGraph;
 // @class PhaseSuite
 public class PhaseSuite<C> extends BasePhase<C>
 {
+    // @field
     private List<BasePhase<? super C>> phases;
+    // @field
     private boolean immutable;
 
     // @cons
@@ -40,31 +42,31 @@ public class PhaseSuite<C> extends BasePhase<C>
     /**
      * Add a new phase at the beginning of this suite.
      */
-    public final void prependPhase(BasePhase<? super C> phase)
+    public final void prependPhase(BasePhase<? super C> __phase)
     {
-        phases.add(0, phase);
+        phases.add(0, __phase);
     }
 
     /**
      * Add a new phase at the end of this suite.
      */
-    public final void appendPhase(BasePhase<? super C> phase)
+    public final void appendPhase(BasePhase<? super C> __phase)
     {
-        phases.add(phase);
+        phases.add(__phase);
     }
 
     /**
      * Inserts a phase before the last phase in the suite. If the suite contains no phases the new
      * phase will be inserted as the first phase.
      */
-    public final void addBeforeLast(BasePhase<? super C> phase)
+    public final void addBeforeLast(BasePhase<? super C> __phase)
     {
-        ListIterator<BasePhase<? super C>> last = findLastPhase();
-        if (last.hasPrevious())
+        ListIterator<BasePhase<? super C>> __last = findLastPhase();
+        if (__last.hasPrevious())
         {
-            last.previous();
+            __last.previous();
         }
-        last.add(phase);
+        __last.add(__phase);
     }
 
     /**
@@ -73,12 +75,12 @@ public class PhaseSuite<C> extends BasePhase<C>
      */
     private ListIterator<BasePhase<? super C>> findLastPhase()
     {
-        ListIterator<BasePhase<? super C>> it = phases.listIterator();
-        while (it.hasNext())
+        ListIterator<BasePhase<? super C>> __it = phases.listIterator();
+        while (__it.hasNext())
         {
-            it.next();
+            __it.next();
         }
-        return it;
+        return __it;
     }
 
     /**
@@ -97,9 +99,9 @@ public class PhaseSuite<C> extends BasePhase<C>
      *
      * @param phaseClass the type of phase to look for.
      */
-    public final ListIterator<BasePhase<? super C>> findPhase(Class<? extends BasePhase<? super C>> phaseClass)
+    public final ListIterator<BasePhase<? super C>> findPhase(Class<? extends BasePhase<? super C>> __phaseClass)
     {
-        return findPhase(phaseClass, false);
+        return findPhase(__phaseClass, false);
     }
 
     /**
@@ -113,12 +115,12 @@ public class PhaseSuite<C> extends BasePhase<C>
      * @param phaseClass the type of phase to look for
      * @param recursive whether to recursively look into phase suites.
      */
-    public final ListIterator<BasePhase<? super C>> findPhase(Class<? extends BasePhase<? super C>> phaseClass, boolean recursive)
+    public final ListIterator<BasePhase<? super C>> findPhase(Class<? extends BasePhase<? super C>> __phaseClass, boolean __recursive)
     {
-        ListIterator<BasePhase<? super C>> it = phases.listIterator();
-        if (findNextPhase(it, phaseClass, recursive))
+        ListIterator<BasePhase<? super C>> __it = phases.listIterator();
+        if (findNextPhase(__it, __phaseClass, __recursive))
         {
-            return it;
+            return __it;
         }
         else
         {
@@ -126,25 +128,25 @@ public class PhaseSuite<C> extends BasePhase<C>
         }
     }
 
-    public static <C> boolean findNextPhase(ListIterator<BasePhase<? super C>> it, Class<? extends BasePhase<? super C>> phaseClass)
+    public static <C> boolean findNextPhase(ListIterator<BasePhase<? super C>> __it, Class<? extends BasePhase<? super C>> __phaseClass)
     {
-        return findNextPhase(it, phaseClass, false);
+        return findNextPhase(__it, __phaseClass, false);
     }
 
     @SuppressWarnings("unchecked")
-    public static <C> boolean findNextPhase(ListIterator<BasePhase<? super C>> it, Class<? extends BasePhase<? super C>> phaseClass, boolean recursive)
+    public static <C> boolean findNextPhase(ListIterator<BasePhase<? super C>> __it, Class<? extends BasePhase<? super C>> __phaseClass, boolean __recursive)
     {
-        while (it.hasNext())
+        while (__it.hasNext())
         {
-            BasePhase<? super C> phase = it.next();
-            if (phaseClass.isInstance(phase))
+            BasePhase<? super C> __phase = __it.next();
+            if (__phaseClass.isInstance(__phase))
             {
                 return true;
             }
-            else if (recursive && phase instanceof PhaseSuite)
+            else if (__recursive && __phase instanceof PhaseSuite)
             {
-                PhaseSuite<C> suite = (PhaseSuite<C>) phase;
-                if (suite.findPhase(phaseClass, true) != null)
+                PhaseSuite<C> __suite = (PhaseSuite<C>) __phase;
+                if (__suite.findPhase(__phaseClass, true) != null)
                 {
                     return true;
                 }
@@ -157,25 +159,25 @@ public class PhaseSuite<C> extends BasePhase<C>
      * Removes the first instance of the given phase class, looking recursively into inner phase suites.
      */
     @SuppressWarnings("unchecked")
-    public boolean removePhase(Class<? extends BasePhase<? super C>> phaseClass)
+    public boolean removePhase(Class<? extends BasePhase<? super C>> __phaseClass)
     {
-        ListIterator<BasePhase<? super C>> it = phases.listIterator();
-        while (it.hasNext())
+        ListIterator<BasePhase<? super C>> __it = phases.listIterator();
+        while (__it.hasNext())
         {
-            BasePhase<? super C> phase = it.next();
-            if (phaseClass.isInstance(phase))
+            BasePhase<? super C> __phase = __it.next();
+            if (__phaseClass.isInstance(__phase))
             {
-                it.remove();
+                __it.remove();
                 return true;
             }
-            else if (phase instanceof PhaseSuite)
+            else if (__phase instanceof PhaseSuite)
             {
-                PhaseSuite<C> innerSuite = (PhaseSuite<C>) phase;
-                if (innerSuite.removePhase(phaseClass))
+                PhaseSuite<C> __innerSuite = (PhaseSuite<C>) __phase;
+                if (__innerSuite.removePhase(__phaseClass))
                 {
-                    if (innerSuite.phases.isEmpty())
+                    if (__innerSuite.phases.isEmpty())
                     {
-                        it.remove();
+                        __it.remove();
                     }
                     return true;
                 }
@@ -188,25 +190,25 @@ public class PhaseSuite<C> extends BasePhase<C>
      * Removes the first instance of the given phase class, looking recursively into inner phase suites.
      */
     @SuppressWarnings("unchecked")
-    public boolean replacePhase(Class<? extends BasePhase<? super C>> phaseClass, BasePhase<? super C> newPhase)
+    public boolean replacePhase(Class<? extends BasePhase<? super C>> __phaseClass, BasePhase<? super C> __newPhase)
     {
-        ListIterator<BasePhase<? super C>> it = phases.listIterator();
-        while (it.hasNext())
+        ListIterator<BasePhase<? super C>> __it = phases.listIterator();
+        while (__it.hasNext())
         {
-            BasePhase<? super C> phase = it.next();
-            if (phaseClass.isInstance(phase))
+            BasePhase<? super C> __phase = __it.next();
+            if (__phaseClass.isInstance(__phase))
             {
-                it.set(newPhase);
+                __it.set(__newPhase);
                 return true;
             }
-            else if (phase instanceof PhaseSuite)
+            else if (__phase instanceof PhaseSuite)
             {
-                PhaseSuite<C> innerSuite = (PhaseSuite<C>) phase;
-                if (innerSuite.removePhase(phaseClass))
+                PhaseSuite<C> __innerSuite = (PhaseSuite<C>) __phase;
+                if (__innerSuite.removePhase(__phaseClass))
                 {
-                    if (innerSuite.phases.isEmpty())
+                    if (__innerSuite.phases.isEmpty())
                     {
-                        it.set(newPhase);
+                        __it.set(__newPhase);
                     }
                     return true;
                 }
@@ -216,18 +218,18 @@ public class PhaseSuite<C> extends BasePhase<C>
     }
 
     @Override
-    protected void run(StructuredGraph graph, C context)
+    protected void run(StructuredGraph __graph, C __context)
     {
-        for (BasePhase<? super C> phase : phases)
+        for (BasePhase<? super C> __phase : phases)
         {
-            phase.apply(graph, context);
+            __phase.apply(__graph, __context);
         }
     }
 
     public PhaseSuite<C> copy()
     {
-        PhaseSuite<C> suite = new PhaseSuite<>();
-        suite.phases.addAll(phases);
-        return suite;
+        PhaseSuite<C> __suite = new PhaseSuite<>();
+        __suite.phases.addAll(phases);
+        return __suite;
     }
 }

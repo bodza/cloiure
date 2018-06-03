@@ -8,33 +8,33 @@ import giraaff.graph.Edges.Type;
 public final class NodeSuccessorList<T extends Node> extends NodeList<T>
 {
     // @cons
-    public NodeSuccessorList(Node self, int initialSize)
+    public NodeSuccessorList(Node __self, int __initialSize)
     {
-        super(self, initialSize);
+        super(__self, __initialSize);
     }
 
     // @cons
-    protected NodeSuccessorList(Node self)
+    protected NodeSuccessorList(Node __self)
     {
-        super(self);
+        super(__self);
     }
 
     // @cons
-    public NodeSuccessorList(Node self, T[] elements)
+    public NodeSuccessorList(Node __self, T[] __elements)
     {
-        super(self, elements);
+        super(__self, __elements);
     }
 
     // @cons
-    public NodeSuccessorList(Node self, List<? extends T> elements)
+    public NodeSuccessorList(Node __self, List<? extends T> __elements)
     {
-        super(self, elements);
+        super(__self, __elements);
     }
 
     @Override
-    protected void update(T oldNode, T newNode)
+    protected void update(T __oldNode, T __newNode)
     {
-        self.updatePredecessor(oldNode, newNode);
+        self.updatePredecessor(__oldNode, __newNode);
     }
 
     @Override

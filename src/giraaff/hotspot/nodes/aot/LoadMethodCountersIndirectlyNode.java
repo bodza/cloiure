@@ -23,21 +23,25 @@ import giraaff.nodes.util.GraphUtil;
 // @class LoadMethodCountersIndirectlyNode
 public final class LoadMethodCountersIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
+    // @def
     public static final NodeClass<LoadMethodCountersIndirectlyNode> TYPE = NodeClass.create(LoadMethodCountersIndirectlyNode.class);
 
-    @OptionalInput protected ValueNode value;
+    @OptionalInput
+    // @field
+    protected ValueNode value;
+    // @field
     protected Constant constant;
 
     // @cons
-    public LoadMethodCountersIndirectlyNode(ValueNode value)
+    public LoadMethodCountersIndirectlyNode(ValueNode __value)
     {
         super(TYPE, MethodCountersPointerStamp.methodCounters());
-        this.value = value;
+        this.value = __value;
         this.constant = null;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (value != null)
         {
@@ -47,18 +51,18 @@ public final class LoadMethodCountersIndirectlyNode extends FloatingNode impleme
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result;
+        Value __result;
         if (constant instanceof HotSpotMetaspaceConstant)
         {
-            result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, HotSpotConstantLoadAction.LOAD_COUNTERS);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, HotSpotConstantLoadAction.LOAD_COUNTERS);
         }
         else
         {
             throw new BailoutException("unsupported constant type: " + constant);
         }
-        gen.setResult(this, result);
+        __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic

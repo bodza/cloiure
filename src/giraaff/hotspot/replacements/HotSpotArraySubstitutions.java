@@ -23,13 +23,13 @@ public final class HotSpotArraySubstitutions
     }
 
     @MethodSubstitution
-    public static Object newInstance(Class<?> componentType, int length)
+    public static Object newInstance(Class<?> __componentType, int __length)
     {
-        if (componentType == null || HotSpotReplacementsUtil.loadKlassFromObject(componentType, HotSpotRuntime.arrayKlassOffset, HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION).isNull())
+        if (__componentType == null || HotSpotReplacementsUtil.loadKlassFromObject(__componentType, HotSpotRuntime.arrayKlassOffset, HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION).isNull())
         {
             // exit the intrinsic here for the case where the array class does not exist
-            return newInstance(componentType, length);
+            return newInstance(__componentType, __length);
         }
-        return DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(componentType), length);
+        return DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(__componentType), __length);
     }
 }

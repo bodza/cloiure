@@ -11,8 +11,8 @@ import giraaff.lir.VirtualStackSlot;
 public final class SimpleVirtualStackSlot extends VirtualStackSlot
 {
     // @cons
-    public SimpleVirtualStackSlot(int id, ValueKind<?> kind)
+    public SimpleVirtualStackSlot(int __id, ValueKind<?> __kind)
     {
-        super(id, kind);
+        super(__id, __kind);
     }
 }

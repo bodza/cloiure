@@ -17,31 +17,32 @@ import giraaff.replacements.amd64.AMD64ConvertSnippets;
 // @class AMD64HotSpotLoweringProvider
 public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
 {
+    // @field
     private AMD64ConvertSnippets.Templates convertSnippets;
 
     // @cons
-    public AMD64HotSpotLoweringProvider(HotSpotGraalRuntime runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
+    public AMD64HotSpotLoweringProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, ForeignCallsProvider __foreignCalls, HotSpotRegistersProvider __registers, HotSpotConstantReflectionProvider __constantReflection, TargetDescription __target)
     {
-        super(runtime, metaAccess, foreignCalls, registers, constantReflection, target);
+        super(__runtime, __metaAccess, __foreignCalls, __registers, __constantReflection, __target);
     }
 
     @Override
-    public void initialize(HotSpotProviders providers)
+    public void initialize(HotSpotProviders __providers)
     {
-        convertSnippets = new AMD64ConvertSnippets.Templates(providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
-        super.initialize(providers);
+        convertSnippets = new AMD64ConvertSnippets.Templates(__providers, __providers.getSnippetReflection(), __providers.getCodeCache().getTarget());
+        super.initialize(__providers);
     }
 
     @Override
-    public void lower(Node n, LoweringTool tool)
+    public void lower(Node __n, LoweringTool __tool)
     {
-        if (n instanceof FloatConvertNode)
+        if (__n instanceof FloatConvertNode)
         {
-            convertSnippets.lower((FloatConvertNode) n, tool);
+            convertSnippets.lower((FloatConvertNode) __n, __tool);
         }
         else
         {
-            super.lower(n, tool);
+            super.lower(__n, __tool);
         }
     }
 

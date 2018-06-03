@@ -32,30 +32,42 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class VirtualizerToolImpl
 final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
 {
+    // @field
     private final MetaAccessProvider metaAccess;
+    // @field
     private final ConstantReflectionProvider constantReflection;
+    // @field
     private final ConstantFieldProvider constantFieldProvider;
+    // @field
     private final PartialEscapeClosure<?> closure;
+    // @field
     private final Assumptions assumptions;
+    // @field
     private final LoweringProvider loweringProvider;
+    // @field
     private ConstantNode illegalConstant;
 
     // @cons
-    VirtualizerToolImpl(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, PartialEscapeClosure<?> closure, Assumptions assumptions, LoweringProvider loweringProvider)
+    VirtualizerToolImpl(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, PartialEscapeClosure<?> __closure, Assumptions __assumptions, LoweringProvider __loweringProvider)
     {
         super();
-        this.metaAccess = metaAccess;
-        this.constantReflection = constantReflection;
-        this.constantFieldProvider = constantFieldProvider;
-        this.closure = closure;
-        this.assumptions = assumptions;
-        this.loweringProvider = loweringProvider;
+        this.metaAccess = __metaAccess;
+        this.constantReflection = __constantReflection;
+        this.constantFieldProvider = __constantFieldProvider;
+        this.closure = __closure;
+        this.assumptions = __assumptions;
+        this.loweringProvider = __loweringProvider;
     }
 
+    // @field
     private boolean deleted;
+    // @field
     private PartialEscapeBlockState<?> state;
+    // @field
     private ValueNode current;
+    // @field
     private FixedNode position;
+    // @field
     private GraphEffectList effects;
 
     @Override
@@ -82,13 +94,13 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
         return loweringProvider;
     }
 
-    public void reset(PartialEscapeBlockState<?> newState, ValueNode newCurrent, FixedNode newPosition, GraphEffectList newEffects)
+    public void reset(PartialEscapeBlockState<?> __newState, ValueNode __newCurrent, FixedNode __newPosition, GraphEffectList __newEffects)
     {
         deleted = false;
-        state = newState;
-        current = newCurrent;
-        position = newPosition;
-        effects = newEffects;
+        state = __newState;
+        current = __newCurrent;
+        position = __newPosition;
+        effects = __newEffects;
     }
 
     public boolean isDeleted()
@@ -97,37 +109,37 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     }
 
     @Override
-    public ValueNode getAlias(ValueNode value)
+    public ValueNode getAlias(ValueNode __value)
     {
-        return closure.getAliasAndResolve(state, value);
+        return closure.getAliasAndResolve(state, __value);
     }
 
     @Override
-    public ValueNode getEntry(VirtualObjectNode virtualObject, int index)
+    public ValueNode getEntry(VirtualObjectNode __virtualObject, int __index)
     {
-        return state.getObjectState(virtualObject).getEntry(index);
+        return state.getObjectState(__virtualObject).getEntry(__index);
     }
 
     @Override
-    public boolean setVirtualEntry(VirtualObjectNode virtual, int index, ValueNode value, JavaKind theAccessKind, long offset)
+    public boolean setVirtualEntry(VirtualObjectNode __virtual, int __index, ValueNode __value, JavaKind __theAccessKind, long __offset)
     {
-        ObjectState obj = state.getObjectState(virtual);
-        ValueNode newValue;
-        JavaKind entryKind = virtual.entryKind(index);
-        JavaKind accessKind = theAccessKind != null ? theAccessKind : entryKind;
-        if (value == null)
+        ObjectState __obj = state.getObjectState(__virtual);
+        ValueNode __newValue;
+        JavaKind __entryKind = __virtual.entryKind(__index);
+        JavaKind __accessKind = __theAccessKind != null ? __theAccessKind : __entryKind;
+        if (__value == null)
         {
-            newValue = null;
+            __newValue = null;
         }
         else
         {
-            newValue = closure.getAliasAndResolve(state, value);
+            __newValue = closure.getAliasAndResolve(state, __value);
         }
-        ValueNode oldValue = getEntry(virtual, index);
-        boolean canVirtualize = entryKind == accessKind || (entryKind == accessKind.getStackKind() && virtual instanceof VirtualInstanceNode);
-        if (!canVirtualize)
+        ValueNode __oldValue = getEntry(__virtual, __index);
+        boolean __canVirtualize = __entryKind == __accessKind || (__entryKind == __accessKind.getStackKind() && __virtual instanceof VirtualInstanceNode);
+        if (!__canVirtualize)
         {
-            if (entryKind == JavaKind.Long && oldValue.getStackKind() == newValue.getStackKind() && oldValue.getStackKind().isPrimitive())
+            if (__entryKind == JavaKind.Long && __oldValue.getStackKind() == __newValue.getStackKind() && __oldValue.getStackKind().isPrimitive())
             {
                 /*
                  * Special case: If the entryKind is long, allow arbitrary kinds as long as a value
@@ -135,44 +147,44 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
                  * initialized the entry with a value of a different kind. One example where this
                  * happens is the Truffle NewFrameNode.
                  */
-                canVirtualize = true;
+                __canVirtualize = true;
             }
-            else if (entryKind == JavaKind.Int && (accessKind == JavaKind.Long || accessKind == JavaKind.Double) && offset % 8 == 0)
+            else if (__entryKind == JavaKind.Int && (__accessKind == JavaKind.Long || __accessKind == JavaKind.Double) && __offset % 8 == 0)
             {
                 // Special case: Allow storing a single long or double value into two consecutive int slots.
-                int nextIndex = virtual.entryIndexForOffset(getArrayOffsetProvider(), offset + 4, JavaKind.Int);
-                if (nextIndex != -1)
+                int __nextIndex = __virtual.entryIndexForOffset(getArrayOffsetProvider(), __offset + 4, JavaKind.Int);
+                if (__nextIndex != -1)
                 {
-                    canVirtualize = true;
+                    __canVirtualize = true;
                 }
             }
         }
 
-        if (canVirtualize)
+        if (__canVirtualize)
         {
-            state.setEntry(virtual.getObjectId(), index, newValue);
-            if (entryKind == JavaKind.Int)
+            state.setEntry(__virtual.getObjectId(), __index, __newValue);
+            if (__entryKind == JavaKind.Int)
             {
-                if (accessKind.needsTwoSlots())
+                if (__accessKind.needsTwoSlots())
                 {
                     // storing double word value two int slots
-                    state.setEntry(virtual.getObjectId(), index + 1, getIllegalConstant());
+                    state.setEntry(__virtual.getObjectId(), __index + 1, getIllegalConstant());
                 }
-                else if (oldValue.getStackKind() == JavaKind.Double || oldValue.getStackKind() == JavaKind.Long)
+                else if (__oldValue.getStackKind() == JavaKind.Double || __oldValue.getStackKind() == JavaKind.Long)
                 {
                     // splitting double word constant by storing over it with an int
-                    ValueNode secondHalf = UnpackEndianHalfNode.create(oldValue, false, NodeView.DEFAULT);
-                    addNode(secondHalf);
-                    state.setEntry(virtual.getObjectId(), index + 1, secondHalf);
+                    ValueNode __secondHalf = UnpackEndianHalfNode.create(__oldValue, false, NodeView.DEFAULT);
+                    addNode(__secondHalf);
+                    state.setEntry(__virtual.getObjectId(), __index + 1, __secondHalf);
                 }
             }
-            if (oldValue.isConstant() && oldValue.asConstant().equals(JavaConstant.forIllegal()))
+            if (__oldValue.isConstant() && __oldValue.asConstant().equals(JavaConstant.forIllegal()))
             {
                 // storing into second half of double, so replace previous value
-                ValueNode previous = getEntry(virtual, index - 1);
-                ValueNode firstHalf = UnpackEndianHalfNode.create(previous, true, NodeView.DEFAULT);
-                addNode(firstHalf);
-                state.setEntry(virtual.getObjectId(), index - 1, firstHalf);
+                ValueNode __previous = getEntry(__virtual, __index - 1);
+                ValueNode __firstHalf = UnpackEndianHalfNode.create(__previous, true, NodeView.DEFAULT);
+                addNode(__firstHalf);
+                state.setEntry(__virtual.getObjectId(), __index - 1, __firstHalf);
             }
             return true;
         }
@@ -191,31 +203,31 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     }
 
     @Override
-    public void setEnsureVirtualized(VirtualObjectNode virtualObject, boolean ensureVirtualized)
+    public void setEnsureVirtualized(VirtualObjectNode __virtualObject, boolean __ensureVirtualized)
     {
-        int id = virtualObject.getObjectId();
-        state.setEnsureVirtualized(id, ensureVirtualized);
+        int __id = __virtualObject.getObjectId();
+        state.setEnsureVirtualized(__id, __ensureVirtualized);
     }
 
     @Override
-    public boolean getEnsureVirtualized(VirtualObjectNode virtualObject)
+    public boolean getEnsureVirtualized(VirtualObjectNode __virtualObject)
     {
-        return state.getObjectState(virtualObject).getEnsureVirtualized();
+        return state.getObjectState(__virtualObject).getEnsureVirtualized();
     }
 
     @Override
-    public void replaceWithVirtual(VirtualObjectNode virtual)
+    public void replaceWithVirtual(VirtualObjectNode __virtual)
     {
-        closure.addVirtualAlias(virtual, current);
+        closure.addVirtualAlias(__virtual, current);
         effects.deleteNode(current);
         deleted = true;
     }
 
     @Override
-    public void replaceWithValue(ValueNode replacement)
+    public void replaceWithValue(ValueNode __replacement)
     {
-        effects.replaceAtUsages(current, closure.getScalarAlias(replacement), position);
-        closure.addScalarAlias(current, replacement);
+        effects.replaceAtUsages(current, closure.getScalarAlias(__replacement), position);
+        closure.addScalarAlias(current, __replacement);
         deleted = true;
     }
 
@@ -227,45 +239,45 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     }
 
     @Override
-    public void replaceFirstInput(Node oldInput, Node replacement)
+    public void replaceFirstInput(Node __oldInput, Node __replacement)
     {
-        effects.replaceFirstInput(current, oldInput, replacement);
+        effects.replaceFirstInput(current, __oldInput, __replacement);
     }
 
     @Override
-    public void addNode(ValueNode node)
+    public void addNode(ValueNode __node)
     {
-        if (node instanceof FloatingNode)
+        if (__node instanceof FloatingNode)
         {
-            effects.addFloatingNode(node, "VirtualizerTool");
+            effects.addFloatingNode(__node, "VirtualizerTool");
         }
         else
         {
-            effects.addFixedNodeBefore((FixedWithNextNode) node, position);
+            effects.addFixedNodeBefore((FixedWithNextNode) __node, position);
         }
     }
 
     @Override
-    public void createVirtualObject(VirtualObjectNode virtualObject, ValueNode[] entryState, List<MonitorIdNode> locks, boolean ensureVirtualized)
+    public void createVirtualObject(VirtualObjectNode __virtualObject, ValueNode[] __entryState, List<MonitorIdNode> __locks, boolean __ensureVirtualized)
     {
-        if (!virtualObject.isAlive())
+        if (!__virtualObject.isAlive())
         {
-            effects.addFloatingNode(virtualObject, "newVirtualObject");
+            effects.addFloatingNode(__virtualObject, "newVirtualObject");
         }
-        for (int i = 0; i < entryState.length; i++)
+        for (int __i = 0; __i < __entryState.length; __i++)
         {
-            ValueNode entry = entryState[i];
-            entryState[i] = entry instanceof VirtualObjectNode ? entry : closure.getAliasAndResolve(state, entry);
+            ValueNode __entry = __entryState[__i];
+            __entryState[__i] = __entry instanceof VirtualObjectNode ? __entry : closure.getAliasAndResolve(state, __entry);
         }
-        int id = virtualObject.getObjectId();
-        if (id == -1)
+        int __id = __virtualObject.getObjectId();
+        if (__id == -1)
         {
-            id = closure.virtualObjects.size();
-            closure.virtualObjects.add(virtualObject);
-            virtualObject.setObjectId(id);
+            __id = closure.virtualObjects.size();
+            closure.virtualObjects.add(__virtualObject);
+            __virtualObject.setObjectId(__id);
         }
-        state.addObject(id, new ObjectState(entryState, locks, ensureVirtualized));
-        closure.addVirtualAlias(virtualObject, virtualObject);
+        state.addObject(__id, new ObjectState(__entryState, __locks, __ensureVirtualized));
+        closure.addVirtualAlias(__virtualObject, __virtualObject);
         effects.addVirtualizationDelta(1);
     }
 
@@ -276,36 +288,36 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     }
 
     @Override
-    public void replaceWith(ValueNode node)
+    public void replaceWith(ValueNode __node)
     {
-        if (node instanceof VirtualObjectNode)
+        if (__node instanceof VirtualObjectNode)
         {
-            replaceWithVirtual((VirtualObjectNode) node);
+            replaceWithVirtual((VirtualObjectNode) __node);
         }
         else
         {
-            replaceWithValue(node);
+            replaceWithValue(__node);
         }
     }
 
     @Override
-    public boolean ensureMaterialized(VirtualObjectNode virtualObject)
+    public boolean ensureMaterialized(VirtualObjectNode __virtualObject)
     {
-        return closure.ensureMaterialized(state, virtualObject.getObjectId(), position, effects);
+        return closure.ensureMaterialized(state, __virtualObject.getObjectId(), position, effects);
     }
 
     @Override
-    public void addLock(VirtualObjectNode virtualObject, MonitorIdNode monitorId)
+    public void addLock(VirtualObjectNode __virtualObject, MonitorIdNode __monitorId)
     {
-        int id = virtualObject.getObjectId();
-        state.addLock(id, monitorId);
+        int __id = __virtualObject.getObjectId();
+        state.addLock(__id, __monitorId);
     }
 
     @Override
-    public MonitorIdNode removeLock(VirtualObjectNode virtualObject)
+    public MonitorIdNode removeLock(VirtualObjectNode __virtualObject)
     {
-        int id = virtualObject.getObjectId();
-        return state.removeLock(id);
+        int __id = __virtualObject.getObjectId();
+        return state.removeLock(__id);
     }
 
     @Override

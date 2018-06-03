@@ -18,14 +18,22 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class FixedAccessNode
 public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode implements Access, IterableNodeType
 {
+    // @def
     public static final NodeClass<FixedAccessNode> TYPE = NodeClass.create(FixedAccessNode.class);
 
-    @OptionalInput(InputType.Guard) protected GuardingNode guard;
+    @OptionalInput(InputType.Guard)
+    // @field
+    protected GuardingNode guard;
 
-    @Input(InputType.Association) AddressNode address;
+    @Input(InputType.Association)
+    // @field
+    AddressNode address;
+    // @field
     protected final LocationIdentity location;
 
+    // @field
     protected boolean nullCheck;
+    // @field
     protected BarrierType barrierType;
 
     @Override
@@ -35,10 +43,10 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     }
 
     @Override
-    public void setAddress(AddressNode address)
+    public void setAddress(AddressNode __address)
     {
-        updateUsages(this.address, address);
-        this.address = address;
+        updateUsages(this.address, __address);
+        this.address = __address;
     }
 
     @Override
@@ -52,32 +60,32 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
         return nullCheck;
     }
 
-    public void setNullCheck(boolean check)
+    public void setNullCheck(boolean __check)
     {
-        this.nullCheck = check;
+        this.nullCheck = __check;
     }
 
     // @cons
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp)
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp)
     {
-        this(c, address, location, stamp, BarrierType.NONE);
+        this(__c, __address, __location, __stamp, BarrierType.NONE);
     }
 
     // @cons
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, BarrierType barrierType)
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, BarrierType __barrierType)
     {
-        this(c, address, location, stamp, null, barrierType, false, null);
+        this(__c, __address, __location, __stamp, null, __barrierType, false, null);
     }
 
     // @cons
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck, FrameState stateBefore)
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
     {
-        super(c, stamp, stateBefore);
-        this.address = address;
-        this.location = location;
-        this.guard = guard;
-        this.barrierType = barrierType;
-        this.nullCheck = nullCheck;
+        super(__c, __stamp, __stateBefore);
+        this.address = __address;
+        this.location = __location;
+        this.guard = __guard;
+        this.barrierType = __barrierType;
+        this.nullCheck = __nullCheck;
     }
 
     @Override
@@ -93,10 +101,10 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     }
 
     @Override
-    public void setGuard(GuardingNode guard)
+    public void setGuard(GuardingNode __guard)
     {
-        updateUsagesInterface(this.guard, guard);
-        this.guard = guard;
+        updateUsagesInterface(this.guard, __guard);
+        this.guard = __guard;
     }
 
     @Override

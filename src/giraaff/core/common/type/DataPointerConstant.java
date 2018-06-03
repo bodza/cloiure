@@ -9,13 +9,14 @@ import jdk.vm.ci.meta.SerializableConstant;
 // @class DataPointerConstant
 public abstract class DataPointerConstant implements SerializableConstant
 {
+    // @field
     private final int alignment;
 
     // @cons
-    protected DataPointerConstant(int alignment)
+    protected DataPointerConstant(int __alignment)
     {
         super();
-        this.alignment = alignment;
+        this.alignment = __alignment;
     }
 
     /**

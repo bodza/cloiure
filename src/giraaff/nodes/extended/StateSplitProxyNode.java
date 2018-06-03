@@ -18,25 +18,29 @@ import giraaff.nodes.ValueNode;
 // @class StateSplitProxyNode
 public final class StateSplitProxyNode extends FixedValueAnchorNode implements Canonicalizable, StateSplit
 {
+    // @def
     public static final NodeClass<StateSplitProxyNode> TYPE = NodeClass.create(StateSplitProxyNode.class);
 
-    @OptionalInput(InputType.State) FrameState stateAfter;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateAfter;
     /**
      * Disallows elimination of this node until after the FrameState has been consumed.
      */
+    // @field
     private final boolean delayElimination;
 
     // @cons
-    public StateSplitProxyNode(ValueNode object)
+    public StateSplitProxyNode(ValueNode __object)
     {
-        this(object, false);
+        this(__object, false);
     }
 
     // @cons
-    public StateSplitProxyNode(ValueNode object, boolean delayElimination)
+    public StateSplitProxyNode(ValueNode __object, boolean __delayElimination)
     {
-        super(TYPE, object);
-        this.delayElimination = delayElimination;
+        super(TYPE, __object);
+        this.delayElimination = __delayElimination;
     }
 
     @Override
@@ -46,10 +50,10 @@ public final class StateSplitProxyNode extends FixedValueAnchorNode implements C
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -59,7 +63,7 @@ public final class StateSplitProxyNode extends FixedValueAnchorNode implements C
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (object.isConstant() && !delayElimination || stateAfter == null)
         {

@@ -18,17 +18,20 @@ import java.util.Arrays;
 // @class ForeignCallDescriptor
 public final class ForeignCallDescriptor
 {
+    // @field
     private final String name;
+    // @field
     private final Class<?> resultType;
+    // @field
     private final Class<?>[] argumentTypes;
 
     // @cons
-    public ForeignCallDescriptor(String name, Class<?> resultType, Class<?>... argumentTypes)
+    public ForeignCallDescriptor(String __name, Class<?> __resultType, Class<?>... __argumentTypes)
     {
         super();
-        this.name = name;
-        this.resultType = resultType;
-        this.argumentTypes = argumentTypes;
+        this.name = __name;
+        this.resultType = __resultType;
+        this.argumentTypes = __argumentTypes;
     }
 
     /**
@@ -62,12 +65,12 @@ public final class ForeignCallDescriptor
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (obj instanceof ForeignCallDescriptor)
+        if (__obj instanceof ForeignCallDescriptor)
         {
-            ForeignCallDescriptor other = (ForeignCallDescriptor) obj;
-            return other.name.equals(name) && other.resultType.equals(resultType) && Arrays.equals(other.argumentTypes, argumentTypes);
+            ForeignCallDescriptor __other = (ForeignCallDescriptor) __obj;
+            return __other.name.equals(name) && __other.resultType.equals(resultType) && Arrays.equals(__other.argumentTypes, argumentTypes);
         }
         return false;
     }

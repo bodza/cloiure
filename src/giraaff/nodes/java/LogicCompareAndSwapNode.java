@@ -23,30 +23,31 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class LogicCompareAndSwapNode
 public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode
 {
+    // @def
     public static final NodeClass<LogicCompareAndSwapNode> TYPE = NodeClass.create(LogicCompareAndSwapNode.class);
 
     // @cons
-    public LogicCompareAndSwapNode(ValueNode address, ValueNode expectedValue, ValueNode newValue, LocationIdentity location)
+    public LogicCompareAndSwapNode(ValueNode __address, ValueNode __expectedValue, ValueNode __newValue, LocationIdentity __location)
     {
-        this((AddressNode) address, location, expectedValue, newValue, BarrierType.NONE);
+        this((AddressNode) __address, __location, __expectedValue, __newValue, BarrierType.NONE);
     }
 
     // @cons
-    public LogicCompareAndSwapNode(AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue, BarrierType barrierType)
+    public LogicCompareAndSwapNode(AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue, BarrierType __barrierType)
     {
-        super(TYPE, address, location, expectedValue, newValue, barrierType, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
+        super(TYPE, __address, __location, __expectedValue, __newValue, __barrierType, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRGeneratorTool tool = gen.getLIRGeneratorTool();
+        LIRGeneratorTool __tool = __gen.getLIRGeneratorTool();
 
-        LIRKind resultKind = tool.getLIRKind(stamp(NodeView.DEFAULT));
-        Value trueResult = tool.emitConstant(resultKind, JavaConstant.TRUE);
-        Value falseResult = tool.emitConstant(resultKind, JavaConstant.FALSE);
-        Value result = tool.emitLogicCompareAndSwap(gen.operand(getAddress()), gen.operand(getExpectedValue()), gen.operand(getNewValue()), trueResult, falseResult);
+        LIRKind __resultKind = __tool.getLIRKind(stamp(NodeView.DEFAULT));
+        Value __trueResult = __tool.emitConstant(__resultKind, JavaConstant.TRUE);
+        Value __falseResult = __tool.emitConstant(__resultKind, JavaConstant.FALSE);
+        Value __result = __tool.emitLogicCompareAndSwap(__gen.operand(getAddress()), __gen.operand(getExpectedValue()), __gen.operand(getNewValue()), __trueResult, __falseResult);
 
-        gen.setResult(this, result);
+        __gen.setResult(this, __result);
     }
 }

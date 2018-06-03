@@ -20,15 +20,17 @@ import giraaff.nodes.spi.LoweringTool;
 // @class StringToBytesNode
 public final class StringToBytesNode extends FixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<StringToBytesNode> TYPE = NodeClass.create(StringToBytesNode.class);
 
+    // @field
     private final String value;
 
     // @cons
-    public StringToBytesNode(String value, Stamp stamp)
+    public StringToBytesNode(String __value, Stamp __stamp)
     {
-        super(TYPE, stamp);
-        this.value = value;
+        super(TYPE, __stamp);
+        this.value = __value;
     }
 
     public String getValue()
@@ -37,9 +39,9 @@ public final class StringToBytesNode extends FixedWithNextNode implements Lowera
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override

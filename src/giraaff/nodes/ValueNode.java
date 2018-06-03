@@ -19,29 +19,31 @@ import giraaff.nodes.spi.NodeValueMap;
 // @class ValueNode
 public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeInterface
 {
+    // @def
     public static final NodeClass<ValueNode> TYPE = NodeClass.create(ValueNode.class);
 
     /**
      * The kind of this value. This is {@link JavaKind#Void} for instructions that produce no value.
      * This kind is guaranteed to be a {@linkplain JavaKind#getStackKind() stack kind}.
      */
+    // @field
     protected Stamp stamp;
 
     // @cons
-    public ValueNode(NodeClass<? extends ValueNode> c, Stamp stamp)
+    public ValueNode(NodeClass<? extends ValueNode> __c, Stamp __stamp)
     {
-        super(c);
-        this.stamp = stamp;
+        super(__c);
+        this.stamp = __stamp;
     }
 
-    public final Stamp stamp(NodeView view)
+    public final Stamp stamp(NodeView __view)
     {
-        return view.stamp(this);
+        return __view.stamp(this);
     }
 
-    public final void setStamp(Stamp stamp)
+    public final void setStamp(Stamp __stamp)
     {
-        this.stamp = stamp;
+        this.stamp = __stamp;
     }
 
     @Override
@@ -57,15 +59,15 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
      *
      * @return true if the stamp has changed, false otherwise.
      */
-    protected final boolean updateStamp(Stamp newStamp)
+    protected final boolean updateStamp(Stamp __newStamp)
     {
-        if (newStamp == null || newStamp.equals(stamp))
+        if (__newStamp == null || __newStamp.equals(stamp))
         {
             return false;
         }
         else
         {
-            stamp = newStamp;
+            stamp = __newStamp;
             return true;
         }
     }
@@ -101,9 +103,9 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
     private static final NodePredicate IS_CONSTANT = new NodePredicate()
     {
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
-            return n instanceof ConstantNode;
+            return __n instanceof ConstantNode;
         }
     };
 
@@ -119,8 +121,8 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
      */
     public final boolean isNullConstant()
     {
-        JavaConstant value = asJavaConstant();
-        return value != null && value.isNull();
+        JavaConstant __value = asJavaConstant();
+        return __value != null && __value.isNull();
     }
 
     /**
@@ -147,10 +149,10 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
 
     public final JavaConstant asJavaConstant()
     {
-        Constant value = asConstant();
-        if (value instanceof JavaConstant)
+        Constant __value = asConstant();
+        if (__value instanceof JavaConstant)
         {
-            return (JavaConstant) value;
+            return (JavaConstant) __value;
         }
         else
         {
@@ -165,15 +167,15 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
     }
 
     @Override
-    public boolean isAllowedUsageType(InputType type)
+    public boolean isAllowedUsageType(InputType __type)
     {
-        if (getStackKind() != JavaKind.Void && type == InputType.Value)
+        if (getStackKind() != JavaKind.Void && __type == InputType.Value)
         {
             return true;
         }
         else
         {
-            return super.isAllowedUsageType(type);
+            return super.isAllowedUsageType(__type);
         }
     }
 
@@ -183,11 +185,11 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
      * @param node node which is ignored when searching for usages
      * @return true if this node has other usages, false otherwise
      */
-    public boolean hasUsagesOtherThan(ValueNode node, NodeValueMap nodeValueMap)
+    public boolean hasUsagesOtherThan(ValueNode __node, NodeValueMap __nodeValueMap)
     {
-        for (Node usage : usages())
+        for (Node __usage : usages())
         {
-            if (usage != node && usage instanceof ValueNode && nodeValueMap.hasOperand(usage))
+            if (__usage != __node && __usage instanceof ValueNode && __nodeValueMap.hasOperand(__usage))
             {
                 return true;
             }
@@ -196,16 +198,16 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
     }
 
     @Override
-    protected void replaceAtUsages(Node other, Predicate<Node> filter, Node toBeDeleted)
+    protected void replaceAtUsages(Node __other, Predicate<Node> __filter, Node __toBeDeleted)
     {
-        super.replaceAtUsages(other, filter, toBeDeleted);
+        super.replaceAtUsages(__other, __filter, __toBeDeleted);
     }
 
-    private boolean checkReplaceAtUsagesInvariants(Node other)
+    private boolean checkReplaceAtUsagesInvariants(Node __other)
     {
-        if (this.hasUsages() && !this.stamp(NodeView.DEFAULT).isEmpty() && !(other instanceof PhiNode) && other != null)
+        if (this.hasUsages() && !this.stamp(NodeView.DEFAULT).isEmpty() && !(__other instanceof PhiNode) && __other != null)
         {
-            boolean morePrecise = ((ValueNode) other).stamp(NodeView.DEFAULT).join(stamp(NodeView.DEFAULT)).equals(((ValueNode) other).stamp(NodeView.DEFAULT));
+            boolean __morePrecise = ((ValueNode) __other).stamp(NodeView.DEFAULT).join(stamp(NodeView.DEFAULT)).equals(((ValueNode) __other).stamp(NodeView.DEFAULT));
         }
         return true;
     }

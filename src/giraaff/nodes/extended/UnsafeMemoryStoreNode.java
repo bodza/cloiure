@@ -18,21 +18,28 @@ import giraaff.nodes.spi.LoweringTool;
 // @class UnsafeMemoryStoreNode
 public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<UnsafeMemoryStoreNode> TYPE = NodeClass.create(UnsafeMemoryStoreNode.class);
 
-    @Input protected ValueNode value;
-    @Input protected ValueNode address;
+    @Input
+    // @field
+    protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode address;
+    // @field
     protected final JavaKind kind;
+    // @field
     protected final LocationIdentity locationIdentity;
 
     // @cons
-    public UnsafeMemoryStoreNode(ValueNode address, ValueNode value, JavaKind kind, LocationIdentity locationIdentity)
+    public UnsafeMemoryStoreNode(ValueNode __address, ValueNode __value, JavaKind __kind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = address;
-        this.value = value;
-        this.kind = kind;
-        this.locationIdentity = locationIdentity;
+        this.address = __address;
+        this.value = __value;
+        this.kind = __kind;
+        this.locationIdentity = __locationIdentity;
     }
 
     public ValueNode getValue()
@@ -51,9 +58,9 @@ public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements L
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override

@@ -12,11 +12,12 @@ import giraaff.graph.NodeClass;
 public abstract class VirtualState extends Node
 {
     // @cons
-    protected VirtualState(NodeClass<? extends VirtualState> c)
+    protected VirtualState(NodeClass<? extends VirtualState> __c)
     {
-        super(c);
+        super(__c);
     }
 
+    // @def
     public static final NodeClass<VirtualState> TYPE = NodeClass.create(VirtualState.class);
 
     // @class VirtualState.NodeClosure

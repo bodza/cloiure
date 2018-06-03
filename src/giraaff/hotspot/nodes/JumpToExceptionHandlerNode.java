@@ -17,21 +17,24 @@ import giraaff.word.Word;
 // @class JumpToExceptionHandlerNode
 public final class JumpToExceptionHandlerNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<JumpToExceptionHandlerNode> TYPE = NodeClass.create(JumpToExceptionHandlerNode.class);
 
-    @Input ValueNode address;
+    @Input
+    // @field
+    ValueNode address;
 
     // @cons
-    public JumpToExceptionHandlerNode(ValueNode address)
+    public JumpToExceptionHandlerNode(ValueNode __address)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = address;
+        this.address = __address;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        ((HotSpotNodeLIRBuilder) gen).emitJumpToExceptionHandler(address);
+        ((HotSpotNodeLIRBuilder) __gen).emitJumpToExceptionHandler(address);
     }
 
     @NodeIntrinsic

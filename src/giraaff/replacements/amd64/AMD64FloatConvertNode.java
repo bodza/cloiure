@@ -19,27 +19,29 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AMD64FloatConvertNode
 public final class AMD64FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<AMD64FloatConvertNode> TYPE = NodeClass.create(AMD64FloatConvertNode.class);
 
+    // @field
     protected final FloatConvert op;
 
     // @cons
-    public AMD64FloatConvertNode(FloatConvert op, ValueNode value)
+    public AMD64FloatConvertNode(FloatConvert __op, ValueNode __value)
     {
-        super(TYPE, table -> table.getFloatConvert(op), value);
-        this.op = op;
+        super(TYPE, __table -> __table.getFloatConvert(__op), __value);
+        this.op = __op;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
         // nothing to do
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitFloatConvert(op, nodeValueMap.operand(getValue())));
+        __nodeValueMap.setResult(this, __gen.emitFloatConvert(op, __nodeValueMap.operand(getValue())));
     }
 }

@@ -16,15 +16,18 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class FinalFieldBarrierNode
 public final class FinalFieldBarrierNode extends FixedWithNextNode implements Virtualizable, Lowerable
 {
+    // @def
     public static final NodeClass<FinalFieldBarrierNode> TYPE = NodeClass.create(FinalFieldBarrierNode.class);
 
-    @OptionalInput private ValueNode value;
+    @OptionalInput
+    // @field
+    private ValueNode value;
 
     // @cons
-    public FinalFieldBarrierNode(ValueNode value)
+    public FinalFieldBarrierNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = value;
+        this.value = __value;
     }
 
     public ValueNode getValue()
@@ -33,16 +36,16 @@ public final class FinalFieldBarrierNode extends FixedWithNextNode implements Vi
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        if (value != null && tool.getAlias(value) instanceof VirtualObjectNode)
+        if (value != null && __tool.getAlias(value) instanceof VirtualObjectNode)
         {
-            tool.delete();
+            __tool.delete();
         }
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
         graph().replaceFixedWithFixed(this, graph().add(new MembarNode(MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_STORE)));
     }

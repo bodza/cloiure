@@ -30,42 +30,46 @@ public final class AMD64HotSpotMove
     // @class AMD64HotSpotMove.HotSpotLoadObjectConstantOp
     public static final class HotSpotLoadObjectConstantOp extends AMD64LIRInstruction implements LoadConstantOp
     {
+        // @def
         public static final LIRInstructionClass<HotSpotLoadObjectConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadObjectConstantOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        private AllocatableValue result;
+        // @field
         private final HotSpotObjectConstant input;
 
         // @cons
-        public HotSpotLoadObjectConstantOp(AllocatableValue result, HotSpotObjectConstant input)
+        public HotSpotLoadObjectConstantOp(AllocatableValue __result, HotSpotObjectConstant __input)
         {
             super(TYPE);
-            this.result = result;
-            this.input = input;
+            this.result = __result;
+            this.input = __input;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            boolean compressed = input.isCompressed();
-            if (crb.target.inlineObjects)
+            boolean __compressed = input.isCompressed();
+            if (__crb.target.inlineObjects)
             {
-                crb.recordInlineDataInCode(input);
+                __crb.recordInlineDataInCode(input);
                 if (ValueUtil.isRegister(result))
                 {
-                    if (compressed)
+                    if (__compressed)
                     {
-                        masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
+                        __masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
                     }
                     else
                     {
-                        masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
+                        __masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
                     }
                 }
                 else
                 {
-                    if (compressed)
+                    if (__compressed)
                     {
-                        masm.movl((AMD64Address) crb.asAddress(result), 0xDEADDEAD);
+                        __masm.movl((AMD64Address) __crb.asAddress(result), 0xDEADDEAD);
                     }
                     else
                     {
@@ -77,14 +81,14 @@ public final class AMD64HotSpotMove
             {
                 if (ValueUtil.isRegister(result))
                 {
-                    AMD64Address address = (AMD64Address) crb.recordDataReferenceInCode(input, compressed ? 4 : 8);
-                    if (compressed)
+                    AMD64Address __address = (AMD64Address) __crb.recordDataReferenceInCode(input, __compressed ? 4 : 8);
+                    if (__compressed)
                     {
-                        masm.movl(ValueUtil.asRegister(result), address);
+                        __masm.movl(ValueUtil.asRegister(result), __address);
                     }
                     else
                     {
-                        masm.movq(ValueUtil.asRegister(result), address);
+                        __masm.movq(ValueUtil.asRegister(result), __address);
                     }
                 }
                 else
@@ -110,64 +114,71 @@ public final class AMD64HotSpotMove
     // @class AMD64HotSpotMove.BaseMove
     public static final class BaseMove extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<BaseMove> TYPE = LIRInstructionClass.create(BaseMove.class);
 
-        @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.HINT})
+        // @field
+        protected AllocatableValue result;
 
         // @cons
-        public BaseMove(AllocatableValue result)
+        public BaseMove(AllocatableValue __result)
         {
             super(TYPE);
-            this.result = result;
+            this.result = __result;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            masm.movq(ValueUtil.asRegister(result), masm.getPlaceholder(-1));
-            crb.recordMark(HotSpotRuntime.narrowKlassBaseAddressMark);
+            __masm.movq(ValueUtil.asRegister(result), __masm.getPlaceholder(-1));
+            __crb.recordMark(HotSpotRuntime.narrowKlassBaseAddressMark);
         }
     }
 
     // @class AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp
     public static final class HotSpotLoadMetaspaceConstantOp extends AMD64LIRInstruction implements LoadConstantOp
     {
+        // @def
         public static final LIRInstructionClass<HotSpotLoadMetaspaceConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadMetaspaceConstantOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        private AllocatableValue result;
+        // @field
         private final HotSpotMetaspaceConstant input;
 
         // @cons
-        public HotSpotLoadMetaspaceConstantOp(AllocatableValue result, HotSpotMetaspaceConstant input)
+        public HotSpotLoadMetaspaceConstantOp(AllocatableValue __result, HotSpotMetaspaceConstant __input)
         {
             super(TYPE);
-            this.result = result;
-            this.input = input;
+            this.result = __result;
+            this.input = __input;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            boolean compressed = input.isCompressed();
+            boolean __compressed = input.isCompressed();
             if (ValueUtil.isRegister(result))
             {
-                if (compressed)
+                if (__compressed)
                 {
-                    crb.recordInlineDataInCode(input);
-                    masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
+                    __crb.recordInlineDataInCode(input);
+                    __masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
                 }
                 else
                 {
-                    crb.recordInlineDataInCode(input);
-                    masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
+                    __crb.recordInlineDataInCode(input);
+                    __masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
                 }
             }
             else
             {
-                if (compressed)
+                if (__compressed)
                 {
-                    crb.recordInlineDataInCode(input);
-                    masm.movl((AMD64Address) crb.asAddress(result), 0xDEADDEAD);
+                    __crb.recordInlineDataInCode(input);
+                    __masm.movl((AMD64Address) __crb.asAddress(result), 0xDEADDEAD);
                 }
                 else
                 {
@@ -189,18 +200,18 @@ public final class AMD64HotSpotMove
         }
     }
 
-    public static void decodeKlassPointer(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register register, Register scratch, AMD64Address address)
+    public static void decodeKlassPointer(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Register __register, Register __scratch, AMD64Address __address)
     {
-        CompressEncoding encoding = HotSpotRuntime.klassEncoding;
-        masm.movl(register, address);
-        if (encoding.getShift() != 0)
+        CompressEncoding __encoding = HotSpotRuntime.klassEncoding;
+        __masm.movl(__register, __address);
+        if (__encoding.getShift() != 0)
         {
-            masm.shlq(register, encoding.getShift());
+            __masm.shlq(__register, __encoding.getShift());
         }
-        if (encoding.hasBase())
+        if (__encoding.hasBase())
         {
-            masm.movq(scratch, encoding.getBase());
-            masm.addq(register, scratch);
+            __masm.movq(__scratch, __encoding.getBase());
+            __masm.addq(__register, __scratch);
         }
     }
 }

@@ -10,14 +10,15 @@ import java.util.Arrays;
 // @class CodeBuffer
 final class CodeBuffer
 {
+    // @field
     protected ByteBuffer data;
 
     // @cons
-    CodeBuffer(ByteOrder order)
+    CodeBuffer(ByteOrder __order)
     {
         super();
         data = ByteBuffer.allocate(AsmOptions.InitialCodeBufferSize);
-        data.order(order);
+        data.order(__order);
     }
 
     public int position()
@@ -25,9 +26,9 @@ final class CodeBuffer
         return data.position();
     }
 
-    public void setPosition(int position)
+    public void setPosition(int __position)
     {
-        data.position(position);
+        data.position(__position);
     }
 
     /**
@@ -38,26 +39,26 @@ final class CodeBuffer
      *            not including) {@code position()} is returned
      * @return the data in this buffer or a trimmed copy if {@code trimmedCopy} is {@code true}
      */
-    public byte[] close(boolean trimmedCopy)
+    public byte[] close(boolean __trimmedCopy)
     {
-        byte[] result = data.array();
-        if (trimmedCopy)
+        byte[] __result = data.array();
+        if (__trimmedCopy)
         {
             // Make a copy even if result.length == data.position(),
             // since the API for trimmedCopy states a copy is always made.
-            result = Arrays.copyOf(result, data.position());
+            __result = Arrays.copyOf(__result, data.position());
         }
         data = null;
-        return result;
+        return __result;
     }
 
-    public byte[] copyData(int start, int end)
+    public byte[] copyData(int __start, int __end)
     {
         if (data == null)
         {
             return null;
         }
-        return Arrays.copyOfRange(data.array(), start, end);
+        return Arrays.copyOfRange(data.array(), __start, __end);
     }
 
     /**
@@ -67,100 +68,100 @@ final class CodeBuffer
      * @param off starting position in {@code dst}
      * @param len number of bytes to copy
      */
-    public void copyInto(byte[] dst, int off, int len)
+    public void copyInto(byte[] __dst, int __off, int __len)
     {
-        System.arraycopy(data.array(), 0, dst, off, len);
+        System.arraycopy(data.array(), 0, __dst, __off, __len);
     }
 
-    protected void ensureSize(int length)
+    protected void ensureSize(int __length)
     {
-        if (length >= data.limit())
+        if (__length >= data.limit())
         {
-            byte[] newBuf = Arrays.copyOf(data.array(), length * 4);
-            ByteBuffer newData = ByteBuffer.wrap(newBuf);
-            newData.order(data.order());
-            newData.position(data.position());
-            data = newData;
+            byte[] __newBuf = Arrays.copyOf(data.array(), __length * 4);
+            ByteBuffer __newData = ByteBuffer.wrap(__newBuf);
+            __newData.order(data.order());
+            __newData.position(data.position());
+            data = __newData;
         }
     }
 
-    public void emitBytes(byte[] arr, int off, int len)
+    public void emitBytes(byte[] __arr, int __off, int __len)
     {
-        ensureSize(data.position() + len);
-        data.put(arr, off, len);
+        ensureSize(data.position() + __len);
+        data.put(__arr, __off, __len);
     }
 
-    public void emitByte(int b)
+    public void emitByte(int __b)
     {
         ensureSize(data.position() + 1);
-        data.put((byte) (b & 0xFF));
+        data.put((byte) (__b & 0xFF));
     }
 
-    public void emitShort(int b)
+    public void emitShort(int __b)
     {
         ensureSize(data.position() + 2);
-        data.putShort((short) b);
+        data.putShort((short) __b);
     }
 
-    public void emitInt(int b)
+    public void emitInt(int __b)
     {
         ensureSize(data.position() + 4);
-        data.putInt(b);
+        data.putInt(__b);
     }
 
-    public void emitLong(long b)
+    public void emitLong(long __b)
     {
         ensureSize(data.position() + 8);
-        data.putLong(b);
+        data.putLong(__b);
     }
 
-    public void emitBytes(byte[] arr, int pos)
+    public void emitBytes(byte[] __arr, int __pos)
     {
-        final int len = arr.length;
-        ensureSize(pos + len);
+        final int __len = __arr.length;
+        ensureSize(__pos + __len);
         // Write directly into the underlying array so as to not change the ByteBuffer's position.
-        System.arraycopy(arr, 0, data.array(), pos, len);
+        System.arraycopy(__arr, 0, data.array(), __pos, __len);
     }
 
-    public void emitByte(int b, int pos)
+    public void emitByte(int __b, int __pos)
     {
-        ensureSize(pos + 1);
-        data.put(pos, (byte) (b & 0xFF));
+        ensureSize(__pos + 1);
+        data.put(__pos, (byte) (__b & 0xFF));
     }
 
-    public void emitShort(int b, int pos)
+    public void emitShort(int __b, int __pos)
     {
-        ensureSize(pos + 2);
-        data.putShort(pos, (short) b).position();
+        ensureSize(__pos + 2);
+        data.putShort(__pos, (short) __b).position();
     }
 
-    public void emitInt(int b, int pos)
+    public void emitInt(int __b, int __pos)
     {
-        ensureSize(pos + 4);
-        data.putInt(pos, b).position();
+        ensureSize(__pos + 4);
+        data.putInt(__pos, __b).position();
     }
 
-    public void emitLong(long b, int pos)
+    public void emitLong(long __b, int __pos)
     {
-        ensureSize(pos + 8);
-        data.putLong(pos, b).position();
+        ensureSize(__pos + 8);
+        data.putLong(__pos, __b).position();
     }
 
-    public int getByte(int pos)
+    public int getByte(int __pos)
     {
-        int b = data.get(pos);
-        return b & 0xff;
+        int __b = data.get(__pos);
+        return __b & 0xff;
     }
 
-    public int getShort(int pos)
+    public int getShort(int __pos)
     {
-        short s = data.getShort(pos);
-        return s & 0xffff;
+        short __s = data.getShort(__pos);
+        return __s & 0xffff;
     }
 
-    public int getInt(int pos)
+    public int getInt(int __pos)
     {
-        return data.getInt(pos);
+        return data.getInt(__pos);
     }
 
     public void reset()

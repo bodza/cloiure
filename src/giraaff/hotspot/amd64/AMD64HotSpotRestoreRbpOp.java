@@ -14,6 +14,7 @@ public interface AMD64HotSpotRestoreRbpOp
      * initial LIR generation is finished. Until then, we use a placeholder variable so that LIR
      * verification is successful.
      */
+    // @field
     Variable PLACEHOLDER = new Variable(LIRKind.value(AMD64Kind.QWORD), Integer.MAX_VALUE);
 
     void setSavedRbp(AllocatableValue value);

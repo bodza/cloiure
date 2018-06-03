@@ -17,25 +17,29 @@ import giraaff.nodes.ValueNode;
 // @class MemoryPhiNode
 public final class MemoryPhiNode extends PhiNode implements MemoryNode
 {
+    // @def
     public static final NodeClass<MemoryPhiNode> TYPE = NodeClass.create(MemoryPhiNode.class);
 
-    @Input(InputType.Memory) NodeInputList<ValueNode> values;
+    @Input(InputType.Memory)
+    // @field
+    NodeInputList<ValueNode> values;
+    // @field
     protected final LocationIdentity locationIdentity;
 
     // @cons
-    public MemoryPhiNode(AbstractMergeNode merge, LocationIdentity locationIdentity)
+    public MemoryPhiNode(AbstractMergeNode __merge, LocationIdentity __locationIdentity)
     {
-        super(TYPE, StampFactory.forVoid(), merge);
-        this.locationIdentity = locationIdentity;
+        super(TYPE, StampFactory.forVoid(), __merge);
+        this.locationIdentity = __locationIdentity;
         this.values = new NodeInputList<>(this);
     }
 
     // @cons
-    public MemoryPhiNode(AbstractMergeNode merge, LocationIdentity locationIdentity, ValueNode[] values)
+    public MemoryPhiNode(AbstractMergeNode __merge, LocationIdentity __locationIdentity, ValueNode[] __values)
     {
-        super(TYPE, StampFactory.forVoid(), merge);
-        this.locationIdentity = locationIdentity;
-        this.values = new NodeInputList<>(this, values);
+        super(TYPE, StampFactory.forVoid(), __merge);
+        this.locationIdentity = __locationIdentity;
+        this.values = new NodeInputList<>(this, __values);
     }
 
     public LocationIdentity getLocationIdentity()

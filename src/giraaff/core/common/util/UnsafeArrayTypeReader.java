@@ -17,88 +17,90 @@ import giraaff.util.UnsafeAccess;
 // @class UnsafeArrayTypeReader
 public abstract class UnsafeArrayTypeReader implements TypeReader
 {
-    public static int getS1(byte[] data, long byteIndex)
+    public static int getS1(byte[] __data, long __byteIndex)
     {
-        return UnsafeAccess.UNSAFE.getByte(data, readOffset(data, byteIndex, Byte.BYTES));
+        return UnsafeAccess.UNSAFE.getByte(__data, readOffset(__data, __byteIndex, Byte.BYTES));
     }
 
-    public static int getU1(byte[] data, long byteIndex)
+    public static int getU1(byte[] __data, long __byteIndex)
     {
-        return UnsafeAccess.UNSAFE.getByte(data, readOffset(data, byteIndex, Byte.BYTES)) & 0xFF;
+        return UnsafeAccess.UNSAFE.getByte(__data, readOffset(__data, __byteIndex, Byte.BYTES)) & 0xFF;
     }
 
-    public static int getS2(byte[] data, long byteIndex, boolean supportsUnalignedMemoryAccess)
+    public static int getS2(byte[] __data, long __byteIndex, boolean __supportsUnalignedMemoryAccess)
     {
-        if (supportsUnalignedMemoryAccess)
+        if (__supportsUnalignedMemoryAccess)
         {
-            return UnalignedUnsafeArrayTypeReader.getS2(data, byteIndex);
+            return UnalignedUnsafeArrayTypeReader.getS2(__data, __byteIndex);
         }
         else
         {
-            return AlignedUnsafeArrayTypeReader.getS2(data, byteIndex);
+            return AlignedUnsafeArrayTypeReader.getS2(__data, __byteIndex);
         }
     }
 
-    public static int getU2(byte[] data, long byteIndex, boolean supportsUnalignedMemoryAccess)
+    public static int getU2(byte[] __data, long __byteIndex, boolean __supportsUnalignedMemoryAccess)
     {
-        return getS2(data, byteIndex, supportsUnalignedMemoryAccess) & 0xFFFF;
+        return getS2(__data, __byteIndex, __supportsUnalignedMemoryAccess) & 0xFFFF;
     }
 
-    public static int getS4(byte[] data, long byteIndex, boolean supportsUnalignedMemoryAccess)
+    public static int getS4(byte[] __data, long __byteIndex, boolean __supportsUnalignedMemoryAccess)
     {
-        if (supportsUnalignedMemoryAccess)
+        if (__supportsUnalignedMemoryAccess)
         {
-            return UnalignedUnsafeArrayTypeReader.getS4(data, byteIndex);
+            return UnalignedUnsafeArrayTypeReader.getS4(__data, __byteIndex);
         }
         else
         {
-            return AlignedUnsafeArrayTypeReader.getS4(data, byteIndex);
+            return AlignedUnsafeArrayTypeReader.getS4(__data, __byteIndex);
         }
     }
 
-    public static long getU4(byte[] data, long byteIndex, boolean supportsUnalignedMemoryAccess)
+    public static long getU4(byte[] __data, long __byteIndex, boolean __supportsUnalignedMemoryAccess)
     {
-        return getS4(data, byteIndex, supportsUnalignedMemoryAccess) & 0xFFFFFFFFL;
+        return getS4(__data, __byteIndex, __supportsUnalignedMemoryAccess) & 0xFFFFFFFFL;
     }
 
-    public static long getS8(byte[] data, long byteIndex, boolean supportsUnalignedMemoryAccess)
+    public static long getS8(byte[] __data, long __byteIndex, boolean __supportsUnalignedMemoryAccess)
     {
-        if (supportsUnalignedMemoryAccess)
+        if (__supportsUnalignedMemoryAccess)
         {
-            return UnalignedUnsafeArrayTypeReader.getS8(data, byteIndex);
+            return UnalignedUnsafeArrayTypeReader.getS8(__data, __byteIndex);
         }
         else
         {
-            return AlignedUnsafeArrayTypeReader.getS8(data, byteIndex);
+            return AlignedUnsafeArrayTypeReader.getS8(__data, __byteIndex);
         }
     }
 
-    protected static long readOffset(byte[] data, long byteIndex, int numBytes)
+    protected static long readOffset(byte[] __data, long __byteIndex, int __numBytes)
     {
-        return byteIndex + UnsafeAccess.UNSAFE.ARRAY_BYTE_BASE_OFFSET;
+        return __byteIndex + UnsafeAccess.UNSAFE.ARRAY_BYTE_BASE_OFFSET;
     }
 
-    public static UnsafeArrayTypeReader create(byte[] data, long byteIndex, boolean supportsUnalignedMemoryAccess)
+    public static UnsafeArrayTypeReader create(byte[] __data, long __byteIndex, boolean __supportsUnalignedMemoryAccess)
     {
-        if (supportsUnalignedMemoryAccess)
+        if (__supportsUnalignedMemoryAccess)
         {
-            return new UnalignedUnsafeArrayTypeReader(data, byteIndex);
+            return new UnalignedUnsafeArrayTypeReader(__data, __byteIndex);
         }
         else
         {
-            return new AlignedUnsafeArrayTypeReader(data, byteIndex);
+            return new AlignedUnsafeArrayTypeReader(__data, __byteIndex);
         }
     }
 
+    // @field
     protected final byte[] data;
+    // @field
     protected long byteIndex;
 
     // @cons
-    protected UnsafeArrayTypeReader(byte[] data, long byteIndex)
+    protected UnsafeArrayTypeReader(byte[] __data, long __byteIndex)
     {
         super();
-        this.data = data;
-        this.byteIndex = byteIndex;
+        this.data = __data;
+        this.byteIndex = __byteIndex;
     }
 
     @Override
@@ -108,25 +110,25 @@ public abstract class UnsafeArrayTypeReader implements TypeReader
     }
 
     @Override
-    public void setByteIndex(long byteIndex)
+    public void setByteIndex(long __byteIndex)
     {
-        this.byteIndex = byteIndex;
+        this.byteIndex = __byteIndex;
     }
 
     @Override
     public final int getS1()
     {
-        int result = getS1(data, byteIndex);
+        int __result = getS1(data, byteIndex);
         byteIndex += Byte.BYTES;
-        return result;
+        return __result;
     }
 
     @Override
     public final int getU1()
     {
-        int result = getU1(data, byteIndex);
+        int __result = getU1(data, byteIndex);
         byteIndex += Byte.BYTES;
-        return result;
+        return __result;
     }
 
     @Override
@@ -145,111 +147,111 @@ public abstract class UnsafeArrayTypeReader implements TypeReader
 // @class UnalignedUnsafeArrayTypeReader
 final class UnalignedUnsafeArrayTypeReader extends UnsafeArrayTypeReader
 {
-    protected static int getS2(byte[] data, long byteIndex)
+    protected static int getS2(byte[] __data, long __byteIndex)
     {
-        return UnsafeAccess.UNSAFE.getShort(data, readOffset(data, byteIndex, Short.BYTES));
+        return UnsafeAccess.UNSAFE.getShort(__data, readOffset(__data, __byteIndex, Short.BYTES));
     }
 
-    protected static int getS4(byte[] data, long byteIndex)
+    protected static int getS4(byte[] __data, long __byteIndex)
     {
-        return UnsafeAccess.UNSAFE.getInt(data, readOffset(data, byteIndex, Integer.BYTES));
+        return UnsafeAccess.UNSAFE.getInt(__data, readOffset(__data, __byteIndex, Integer.BYTES));
     }
 
-    protected static long getS8(byte[] data, long byteIndex)
+    protected static long getS8(byte[] __data, long __byteIndex)
     {
-        return UnsafeAccess.UNSAFE.getLong(data, readOffset(data, byteIndex, Long.BYTES));
+        return UnsafeAccess.UNSAFE.getLong(__data, readOffset(__data, __byteIndex, Long.BYTES));
     }
 
     // @cons
-    protected UnalignedUnsafeArrayTypeReader(byte[] data, long byteIndex)
+    protected UnalignedUnsafeArrayTypeReader(byte[] __data, long __byteIndex)
     {
-        super(data, byteIndex);
+        super(__data, __byteIndex);
     }
 
     @Override
     public int getS2()
     {
-        int result = getS2(data, byteIndex);
+        int __result = getS2(data, byteIndex);
         byteIndex += Short.BYTES;
-        return result;
+        return __result;
     }
 
     @Override
     public int getS4()
     {
-        int result = getS4(data, byteIndex);
+        int __result = getS4(data, byteIndex);
         byteIndex += Integer.BYTES;
-        return result;
+        return __result;
     }
 
     @Override
     public long getS8()
     {
-        long result = getS8(data, byteIndex);
+        long __result = getS8(data, byteIndex);
         byteIndex += Long.BYTES;
-        return result;
+        return __result;
     }
 }
 
 // @class AlignedUnsafeArrayTypeReader
 final class AlignedUnsafeArrayTypeReader extends UnsafeArrayTypeReader
 {
-    protected static int getS2(byte[] data, long byteIndex)
+    protected static int getS2(byte[] __data, long __byteIndex)
     {
-        long offset = readOffset(data, byteIndex, Short.BYTES);
-        return ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF) << 0) |
-                (UnsafeAccess.UNSAFE.getByte(data, offset + 1) << 8);
+        long __offset = readOffset(__data, __byteIndex, Short.BYTES);
+        return ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 0) & 0xFF) << 0) |
+                (UnsafeAccess.UNSAFE.getByte(__data, __offset + 1) << 8);
     }
 
-    protected static int getS4(byte[] data, long byteIndex)
+    protected static int getS4(byte[] __data, long __byteIndex)
     {
-        long offset = readOffset(data, byteIndex, Integer.BYTES);
-        return ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF) << 0) |
-               ((UnsafeAccess.UNSAFE.getByte(data, offset + 1) & 0xFF) << 8) |
-               ((UnsafeAccess.UNSAFE.getByte(data, offset + 2) & 0xFF) << 16) |
-                (UnsafeAccess.UNSAFE.getByte(data, offset + 3) << 24);
+        long __offset = readOffset(__data, __byteIndex, Integer.BYTES);
+        return ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 0) & 0xFF) << 0) |
+               ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 1) & 0xFF) << 8) |
+               ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 2) & 0xFF) << 16) |
+                (UnsafeAccess.UNSAFE.getByte(__data, __offset + 3) << 24);
     }
 
-    protected static long getS8(byte[] data, long byteIndex)
+    protected static long getS8(byte[] __data, long __byteIndex)
     {
-        long offset = readOffset(data, byteIndex, Long.BYTES);
-        return ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF)) << 0) |
-               ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 1) & 0xFF)) << 8) |
-               ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 2) & 0xFF)) << 16) |
-               ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 3) & 0xFF)) << 24) |
-               ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 4) & 0xFF)) << 32) |
-               ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 5) & 0xFF)) << 40) |
-               ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 6) & 0xFF)) << 48) |
-                ((long) (UnsafeAccess.UNSAFE.getByte(data, offset + 7)) << 56);
+        long __offset = readOffset(__data, __byteIndex, Long.BYTES);
+        return ((long) ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 0) & 0xFF)) << 0) |
+               ((long) ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 1) & 0xFF)) << 8) |
+               ((long) ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 2) & 0xFF)) << 16) |
+               ((long) ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 3) & 0xFF)) << 24) |
+               ((long) ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 4) & 0xFF)) << 32) |
+               ((long) ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 5) & 0xFF)) << 40) |
+               ((long) ((UnsafeAccess.UNSAFE.getByte(__data, __offset + 6) & 0xFF)) << 48) |
+                ((long) (UnsafeAccess.UNSAFE.getByte(__data, __offset + 7)) << 56);
     }
 
     // @cons
-    protected AlignedUnsafeArrayTypeReader(byte[] data, long byteIndex)
+    protected AlignedUnsafeArrayTypeReader(byte[] __data, long __byteIndex)
     {
-        super(data, byteIndex);
+        super(__data, __byteIndex);
     }
 
     @Override
     public int getS2()
     {
-        int result = getS2(data, byteIndex);
+        int __result = getS2(data, byteIndex);
         byteIndex += Short.BYTES;
-        return result;
+        return __result;
     }
 
     @Override
     public int getS4()
     {
-        int result = getS4(data, byteIndex);
+        int __result = getS4(data, byteIndex);
         byteIndex += Integer.BYTES;
-        return result;
+        return __result;
     }
 
     @Override
     public long getS8()
     {
-        long result = getS8(data, byteIndex);
+        long __result = getS8(data, byteIndex);
         byteIndex += Long.BYTES;
-        return result;
+        return __result;
     }
 }

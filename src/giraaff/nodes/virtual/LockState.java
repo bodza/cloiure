@@ -13,33 +13,35 @@ import giraaff.nodes.java.MonitorIdNode;
 // @class LockState
 public final class LockState
 {
+    // @field
     public final MonitorIdNode monitorId;
+    // @field
     public final LockState next;
 
     // @cons
-    public LockState(MonitorIdNode monitorId, LockState next)
+    public LockState(MonitorIdNode __monitorId, LockState __next)
     {
         super();
-        this.monitorId = monitorId;
-        this.next = next;
+        this.monitorId = __monitorId;
+        this.next = __next;
     }
 
-    public static List<MonitorIdNode> asList(LockState state)
+    public static List<MonitorIdNode> asList(LockState __state)
     {
-        if (state == null)
+        if (__state == null)
         {
             return Collections.emptyList();
         }
         else
         {
-            ArrayList<MonitorIdNode> result = new ArrayList<>();
-            LockState a = state;
+            ArrayList<MonitorIdNode> __result = new ArrayList<>();
+            LockState __a = __state;
             do
             {
-                result.add(a.monitorId);
-                a = a.next;
-            } while (a != null);
-            return result;
+                __result.add(__a.monitorId);
+                __a = __a.next;
+            } while (__a != null);
+            return __result;
         }
     }
 }

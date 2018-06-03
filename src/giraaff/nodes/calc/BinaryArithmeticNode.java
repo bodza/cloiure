@@ -26,26 +26,29 @@ import giraaff.util.GraalError;
 // @class BinaryArithmeticNode
 public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, Canonicalizable.Binary<ValueNode>
 {
-    @SuppressWarnings("rawtypes") public static final NodeClass<BinaryArithmeticNode> TYPE = NodeClass.create(BinaryArithmeticNode.class);
+    @SuppressWarnings("rawtypes")
+    // @def
+    public static final NodeClass<BinaryArithmeticNode> TYPE = NodeClass.create(BinaryArithmeticNode.class);
 
     // @iface BinaryArithmeticNode.SerializableBinaryFunction
     protected interface SerializableBinaryFunction<T> extends Function<ArithmeticOpTable, BinaryOp<T>>
     {
     }
 
+    // @field
     protected final SerializableBinaryFunction<OP> getOp;
 
     // @cons
-    protected BinaryArithmeticNode(NodeClass<? extends BinaryArithmeticNode<OP>> c, SerializableBinaryFunction<OP> getOp, ValueNode x, ValueNode y)
+    protected BinaryArithmeticNode(NodeClass<? extends BinaryArithmeticNode<OP>> __c, SerializableBinaryFunction<OP> __getOp, ValueNode __x, ValueNode __y)
     {
-        super(c, getOp.apply(ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT))).foldStamp(x.stamp(NodeView.DEFAULT), y.stamp(NodeView.DEFAULT)), x, y);
-        this.getOp = getOp;
+        super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT))).foldStamp(__x.stamp(NodeView.DEFAULT), __y.stamp(NodeView.DEFAULT)), __x, __y);
+        this.getOp = __getOp;
     }
 
-    protected final BinaryOp<OP> getOp(ValueNode forX, ValueNode forY)
+    protected final BinaryOp<OP> getOp(ValueNode __forX, ValueNode __forY)
     {
-        ArithmeticOpTable table = ArithmeticOpTable.forStamp(forX.stamp(NodeView.DEFAULT));
-        return getOp.apply(table);
+        ArithmeticOpTable __table = ArithmeticOpTable.forStamp(__forX.stamp(NodeView.DEFAULT));
+        return getOp.apply(__table);
     }
 
     @Override
@@ -60,65 +63,65 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode result = tryConstantFold(getOp(forX, forY), forX, forY, stamp(view), view);
-        if (result != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __result = tryConstantFold(getOp(__forX, __forY), __forX, __forY, stamp(__view), __view);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
         return this;
     }
 
     @SuppressWarnings("unused")
-    public static <OP> ConstantNode tryConstantFold(BinaryOp<OP> op, ValueNode forX, ValueNode forY, Stamp stamp, NodeView view)
+    public static <OP> ConstantNode tryConstantFold(BinaryOp<OP> __op, ValueNode __forX, ValueNode __forY, Stamp __stamp, NodeView __view)
     {
-        if (forX.isConstant() && forY.isConstant())
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            Constant ret = op.foldConstant(forX.asConstant(), forY.asConstant());
-            if (ret != null)
+            Constant __ret = __op.foldConstant(__forX.asConstant(), __forY.asConstant());
+            if (__ret != null)
             {
-                return ConstantNode.forPrimitive(stamp, ret);
+                return ConstantNode.forPrimitive(__stamp, __ret);
             }
         }
         return null;
     }
 
     @Override
-    public Stamp foldStamp(Stamp stampX, Stamp stampY)
+    public Stamp foldStamp(Stamp __stampX, Stamp __stampY)
     {
-        return getArithmeticOp().foldStamp(stampX, stampY);
+        return getArithmeticOp().foldStamp(__stampX, __stampY);
     }
 
-    public static ValueNode add(StructuredGraph graph, ValueNode v1, ValueNode v2, NodeView view)
+    public static ValueNode add(StructuredGraph __graph, ValueNode __v1, ValueNode __v2, NodeView __view)
     {
-        return graph.addOrUniqueWithInputs(AddNode.create(v1, v2, view));
+        return __graph.addOrUniqueWithInputs(AddNode.create(__v1, __v2, __view));
     }
 
-    public static ValueNode add(ValueNode v1, ValueNode v2, NodeView view)
+    public static ValueNode add(ValueNode __v1, ValueNode __v2, NodeView __view)
     {
-        return AddNode.create(v1, v2, view);
+        return AddNode.create(__v1, __v2, __view);
     }
 
-    public static ValueNode mul(StructuredGraph graph, ValueNode v1, ValueNode v2, NodeView view)
+    public static ValueNode mul(StructuredGraph __graph, ValueNode __v1, ValueNode __v2, NodeView __view)
     {
-        return graph.addOrUniqueWithInputs(MulNode.create(v1, v2, view));
+        return __graph.addOrUniqueWithInputs(MulNode.create(__v1, __v2, __view));
     }
 
-    public static ValueNode mul(ValueNode v1, ValueNode v2, NodeView view)
+    public static ValueNode mul(ValueNode __v1, ValueNode __v2, NodeView __view)
     {
-        return MulNode.create(v1, v2, view);
+        return MulNode.create(__v1, __v2, __view);
     }
 
-    public static ValueNode sub(StructuredGraph graph, ValueNode v1, ValueNode v2, NodeView view)
+    public static ValueNode sub(StructuredGraph __graph, ValueNode __v1, ValueNode __v2, NodeView __view)
     {
-        return graph.addOrUniqueWithInputs(SubNode.create(v1, v2, view));
+        return __graph.addOrUniqueWithInputs(SubNode.create(__v1, __v2, __view));
     }
 
-    public static ValueNode sub(ValueNode v1, ValueNode v2, NodeView view)
+    public static ValueNode sub(ValueNode __v1, ValueNode __v2, NodeView __view)
     {
-        return SubNode.create(v1, v2, view);
+        return SubNode.create(__v1, __v2, __view);
     }
 
     // @enum BinaryArithmeticNode.ReassociateMatch
@@ -127,42 +130,42 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
         x,
         y;
 
-        public ValueNode getValue(BinaryNode binary)
+        public ValueNode getValue(BinaryNode __binary)
         {
             switch (this)
             {
                 case x:
-                    return binary.getX();
+                    return __binary.getX();
                 case y:
-                    return binary.getY();
+                    return __binary.getY();
                 default:
                     throw GraalError.shouldNotReachHere();
             }
         }
 
-        public ValueNode getOtherValue(BinaryNode binary)
+        public ValueNode getOtherValue(BinaryNode __binary)
         {
             switch (this)
             {
                 case x:
-                    return binary.getY();
+                    return __binary.getY();
                 case y:
-                    return binary.getX();
+                    return __binary.getX();
                 default:
                     throw GraalError.shouldNotReachHere();
             }
         }
     }
 
-    private static ReassociateMatch findReassociate(BinaryNode binary, NodePredicate criterion)
+    private static ReassociateMatch findReassociate(BinaryNode __binary, NodePredicate __criterion)
     {
-        boolean resultX = criterion.apply(binary.getX());
-        boolean resultY = criterion.apply(binary.getY());
-        if (resultX && !resultY)
+        boolean __resultX = __criterion.apply(__binary.getX());
+        boolean __resultY = __criterion.apply(__binary.getY());
+        if (__resultX && !__resultY)
         {
             return ReassociateMatch.x;
         }
-        if (!resultX && resultY)
+        if (!__resultX && __resultY)
         {
             return ReassociateMatch.y;
         }
@@ -189,101 +192,101 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
      * This method accepts only {@linkplain BinaryOp#isAssociative() associative} operations such as
      * +, -, *, &amp;, | and ^.
      */
-    public static ValueNode reassociate(BinaryArithmeticNode<?> node, NodePredicate criterion, ValueNode forX, ValueNode forY, NodeView view)
+    public static ValueNode reassociate(BinaryArithmeticNode<?> __node, NodePredicate __criterion, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        ReassociateMatch match1 = findReassociate(node, criterion);
-        if (match1 == null)
+        ReassociateMatch __match1 = findReassociate(__node, __criterion);
+        if (__match1 == null)
         {
-            return node;
+            return __node;
         }
-        ValueNode otherValue = match1.getOtherValue(node);
-        boolean addSub = false;
-        boolean subAdd = false;
-        if (otherValue.getClass() != node.getClass())
+        ValueNode __otherValue = __match1.getOtherValue(__node);
+        boolean __addSub = false;
+        boolean __subAdd = false;
+        if (__otherValue.getClass() != __node.getClass())
         {
-            if (node instanceof AddNode && otherValue instanceof SubNode)
+            if (__node instanceof AddNode && __otherValue instanceof SubNode)
             {
-                addSub = true;
+                __addSub = true;
             }
-            else if (node instanceof SubNode && otherValue instanceof AddNode)
+            else if (__node instanceof SubNode && __otherValue instanceof AddNode)
             {
-                subAdd = true;
-            }
-            else
-            {
-                return node;
-            }
-        }
-        BinaryNode other = (BinaryNode) otherValue;
-        ReassociateMatch match2 = findReassociate(other, criterion);
-        if (match2 == null)
-        {
-            return node;
-        }
-        boolean invertA = false;
-        boolean aSub = false;
-        boolean invertM1 = false;
-        boolean invertM2 = false;
-        if (addSub)
-        {
-            invertM2 = match2 == ReassociateMatch.y;
-            invertA = !invertM2;
-        }
-        else if (subAdd)
-        {
-            invertA = invertM2 = match1 == ReassociateMatch.x;
-            invertM1 = !invertM2;
-        }
-        else if (node instanceof SubNode && other instanceof SubNode)
-        {
-            invertA = match1 == ReassociateMatch.x ^ match2 == ReassociateMatch.x;
-            aSub = match1 == ReassociateMatch.y && match2 == ReassociateMatch.y;
-            invertM1 = match1 == ReassociateMatch.y && match2 == ReassociateMatch.x;
-            invertM2 = match1 == ReassociateMatch.x && match2 == ReassociateMatch.x;
-        }
-        ValueNode m1 = match1.getValue(node);
-        ValueNode m2 = match2.getValue(other);
-        ValueNode a = match2.getOtherValue(other);
-        if (node instanceof AddNode || node instanceof SubNode)
-        {
-            ValueNode associated;
-            if (invertM1)
-            {
-                associated = BinaryArithmeticNode.sub(m2, m1, view);
-            }
-            else if (invertM2)
-            {
-                associated = BinaryArithmeticNode.sub(m1, m2, view);
+                __subAdd = true;
             }
             else
             {
-                associated = BinaryArithmeticNode.add(m1, m2, view);
+                return __node;
             }
-            if (invertA)
+        }
+        BinaryNode __other = (BinaryNode) __otherValue;
+        ReassociateMatch __match2 = findReassociate(__other, __criterion);
+        if (__match2 == null)
+        {
+            return __node;
+        }
+        boolean __invertA = false;
+        boolean __aSub = false;
+        boolean __invertM1 = false;
+        boolean __invertM2 = false;
+        if (__addSub)
+        {
+            __invertM2 = __match2 == ReassociateMatch.y;
+            __invertA = !__invertM2;
+        }
+        else if (__subAdd)
+        {
+            __invertA = __invertM2 = __match1 == ReassociateMatch.x;
+            __invertM1 = !__invertM2;
+        }
+        else if (__node instanceof SubNode && __other instanceof SubNode)
+        {
+            __invertA = __match1 == ReassociateMatch.x ^ __match2 == ReassociateMatch.x;
+            __aSub = __match1 == ReassociateMatch.y && __match2 == ReassociateMatch.y;
+            __invertM1 = __match1 == ReassociateMatch.y && __match2 == ReassociateMatch.x;
+            __invertM2 = __match1 == ReassociateMatch.x && __match2 == ReassociateMatch.x;
+        }
+        ValueNode __m1 = __match1.getValue(__node);
+        ValueNode __m2 = __match2.getValue(__other);
+        ValueNode __a = __match2.getOtherValue(__other);
+        if (__node instanceof AddNode || __node instanceof SubNode)
+        {
+            ValueNode __associated;
+            if (__invertM1)
             {
-                return BinaryArithmeticNode.sub(associated, a, view);
+                __associated = BinaryArithmeticNode.sub(__m2, __m1, __view);
             }
-            if (aSub)
+            else if (__invertM2)
             {
-                return BinaryArithmeticNode.sub(a, associated, view);
+                __associated = BinaryArithmeticNode.sub(__m1, __m2, __view);
             }
-            return BinaryArithmeticNode.add(a, associated, view);
+            else
+            {
+                __associated = BinaryArithmeticNode.add(__m1, __m2, __view);
+            }
+            if (__invertA)
+            {
+                return BinaryArithmeticNode.sub(__associated, __a, __view);
+            }
+            if (__aSub)
+            {
+                return BinaryArithmeticNode.sub(__a, __associated, __view);
+            }
+            return BinaryArithmeticNode.add(__a, __associated, __view);
         }
-        else if (node instanceof MulNode)
+        else if (__node instanceof MulNode)
         {
-            return BinaryArithmeticNode.mul(a, AddNode.mul(m1, m2, view), view);
+            return BinaryArithmeticNode.mul(__a, AddNode.mul(__m1, __m2, __view), __view);
         }
-        else if (node instanceof AndNode)
+        else if (__node instanceof AndNode)
         {
-            return new AndNode(a, new AndNode(m1, m2));
+            return new AndNode(__a, new AndNode(__m1, __m2));
         }
-        else if (node instanceof OrNode)
+        else if (__node instanceof OrNode)
         {
-            return new OrNode(a, new OrNode(m1, m2));
+            return new OrNode(__a, new OrNode(__m1, __m2));
         }
-        else if (node instanceof XorNode)
+        else if (__node instanceof XorNode)
         {
-            return new XorNode(a, new XorNode(m1, m2));
+            return new XorNode(__a, new XorNode(__m1, __m2));
         }
         else
         {
@@ -304,16 +307,16 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     {
         if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId()))
         {
-            ValueNode tmp = x;
+            ValueNode __tmp = x;
             x = y;
-            y = tmp;
+            y = __tmp;
             if (graph() != null)
             {
                 // see if this node already exists
-                BinaryNode duplicate = graph().findDuplicate(this);
-                if (duplicate != null)
+                BinaryNode __duplicate = graph().findDuplicate(this);
+                if (__duplicate != null)
                 {
-                    return duplicate;
+                    return __duplicate;
                 }
             }
         }
@@ -327,14 +330,14 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
      *
      * @return true if inputs should be swapped, false otherwise
      */
-    protected boolean shouldSwapInputs(NodeValueMap nodeValueMap)
+    protected boolean shouldSwapInputs(NodeValueMap __nodeValueMap)
     {
-        final boolean xHasOtherUsages = getX().hasUsagesOtherThan(this, nodeValueMap);
-        final boolean yHasOtherUsages = getY().hasUsagesOtherThan(this, nodeValueMap);
+        final boolean __xHasOtherUsages = getX().hasUsagesOtherThan(this, __nodeValueMap);
+        final boolean __yHasOtherUsages = getY().hasUsagesOtherThan(this, __nodeValueMap);
 
-        if (!getY().isConstant() && !yHasOtherUsages)
+        if (!getY().isConstant() && !__yHasOtherUsages)
         {
-            if (xHasOtherUsages == yHasOtherUsages)
+            if (__xHasOtherUsages == __yHasOtherUsages)
             {
                 return getY() instanceof ValuePhiNode && getY().inputs().contains(this);
             }

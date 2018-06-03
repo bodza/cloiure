@@ -18,57 +18,57 @@ import giraaff.lir.ssa.SSAUtil.PhiValueVisitor;
 final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowPhase
 {
     // @cons
-    SSALinearScanResolveDataFlowPhase(LinearScan allocator)
+    SSALinearScanResolveDataFlowPhase(LinearScan __allocator)
     {
-        super(allocator);
+        super(__allocator);
     }
 
     @Override
-    protected void resolveCollectMappings(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock, AbstractBlockBase<?> midBlock, MoveResolver moveResolver)
+    protected void resolveCollectMappings(AbstractBlockBase<?> __fromBlock, AbstractBlockBase<?> __toBlock, AbstractBlockBase<?> __midBlock, MoveResolver __moveResolver)
     {
-        super.resolveCollectMappings(fromBlock, toBlock, midBlock, moveResolver);
+        super.resolveCollectMappings(__fromBlock, __toBlock, __midBlock, __moveResolver);
 
-        if (toBlock.getPredecessorCount() > 1)
+        if (__toBlock.getPredecessorCount() > 1)
         {
-            int toBlockFirstInstructionId = allocator.getFirstLirInstructionId(toBlock);
-            int fromBlockLastInstructionId = allocator.getLastLirInstructionId(fromBlock) + 1;
+            int __toBlockFirstInstructionId = allocator.getFirstLirInstructionId(__toBlock);
+            int __fromBlockLastInstructionId = allocator.getLastLirInstructionId(__fromBlock) + 1;
 
-            AbstractBlockBase<?> phiOutBlock = midBlock != null ? midBlock : fromBlock;
-            ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(phiOutBlock);
-            int phiOutIdx = SSAUtil.phiOutIndex(allocator.getLIR(), phiOutBlock);
-            int phiOutId = midBlock != null ? fromBlockLastInstructionId : instructions.get(phiOutIdx).id();
+            AbstractBlockBase<?> __phiOutBlock = __midBlock != null ? __midBlock : __fromBlock;
+            ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__phiOutBlock);
+            int __phiOutIdx = SSAUtil.phiOutIndex(allocator.getLIR(), __phiOutBlock);
+            int __phiOutId = __midBlock != null ? __fromBlockLastInstructionId : __instructions.get(__phiOutIdx).id();
 
             // @closure
             PhiValueVisitor visitor = new PhiValueVisitor()
             {
                 @Override
-                public void visit(Value phiIn, Value phiOut)
+                public void visit(Value __phiIn, Value __phiOut)
                 {
-                    Interval toInterval = allocator.splitChildAtOpId(allocator.intervalFor(phiIn), toBlockFirstInstructionId, LIRInstruction.OperandMode.DEF);
-                    if (LIRValueUtil.isConstantValue(phiOut))
+                    Interval __toInterval = allocator.splitChildAtOpId(allocator.intervalFor(__phiIn), __toBlockFirstInstructionId, LIRInstruction.OperandMode.DEF);
+                    if (LIRValueUtil.isConstantValue(__phiOut))
                     {
-                        moveResolver.addMapping(LIRValueUtil.asConstant(phiOut), toInterval);
+                        __moveResolver.addMapping(LIRValueUtil.asConstant(__phiOut), __toInterval);
                     }
                     else
                     {
-                        Interval fromInterval = allocator.splitChildAtOpId(allocator.intervalFor(phiOut), phiOutId, LIRInstruction.OperandMode.DEF);
-                        if (fromInterval != toInterval && !fromInterval.location().equals(toInterval.location()))
+                        Interval __fromInterval = allocator.splitChildAtOpId(allocator.intervalFor(__phiOut), __phiOutId, LIRInstruction.OperandMode.DEF);
+                        if (__fromInterval != __toInterval && !__fromInterval.location().equals(__toInterval.location()))
                         {
-                            if (!(LIRValueUtil.isStackSlotValue(toInterval.location()) && LIRValueUtil.isStackSlotValue(fromInterval.location())))
+                            if (!(LIRValueUtil.isStackSlotValue(__toInterval.location()) && LIRValueUtil.isStackSlotValue(__fromInterval.location())))
                             {
-                                moveResolver.addMapping(fromInterval, toInterval);
+                                __moveResolver.addMapping(__fromInterval, __toInterval);
                             }
                             else
                             {
-                                moveResolver.addMapping(fromInterval, toInterval);
+                                __moveResolver.addMapping(__fromInterval, __toInterval);
                             }
                         }
                     }
                 }
             };
 
-            SSAUtil.forEachPhiValuePair(allocator.getLIR(), toBlock, phiOutBlock, visitor);
-            SSAUtil.removePhiOut(allocator.getLIR(), phiOutBlock);
+            SSAUtil.forEachPhiValuePair(allocator.getLIR(), __toBlock, __phiOutBlock, visitor);
+            SSAUtil.removePhiOut(allocator.getLIR(), __phiOutBlock);
         }
     }
 }

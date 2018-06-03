@@ -29,88 +29,91 @@ import giraaff.nodes.java.MethodCallTargetNode;
 // @class InliningIterator
 public final class InliningIterator
 {
+    // @field
     private final StartNode start;
+    // @field
     private final Deque<FixedNode> nodeQueue;
+    // @field
     private final NodeBitMap queuedNodes;
 
     // @cons
-    public InliningIterator(StructuredGraph graph)
+    public InliningIterator(StructuredGraph __graph)
     {
         super();
-        this.start = graph.start();
+        this.start = __graph.start();
         this.nodeQueue = new ArrayDeque<>();
-        this.queuedNodes = graph.createNodeBitMap();
+        this.queuedNodes = __graph.createNodeBitMap();
     }
 
     public LinkedList<Invoke> apply()
     {
-        LinkedList<Invoke> invokes = new LinkedList<>();
-        FixedNode current;
+        LinkedList<Invoke> __invokes = new LinkedList<>();
+        FixedNode __current;
         forcedQueue(start);
 
-        while ((current = nextQueuedNode()) != null)
+        while ((__current = nextQueuedNode()) != null)
         {
-            if (current instanceof Invoke && ((Invoke) current).callTarget() instanceof MethodCallTargetNode)
+            if (__current instanceof Invoke && ((Invoke) __current).callTarget() instanceof MethodCallTargetNode)
             {
-                if (current != start)
+                if (__current != start)
                 {
-                    invokes.addLast((Invoke) current);
+                    __invokes.addLast((Invoke) __current);
                 }
-                queueSuccessors(current);
+                queueSuccessors(__current);
             }
-            else if (current instanceof LoopBeginNode)
+            else if (__current instanceof LoopBeginNode)
             {
-                queueSuccessors(current);
+                queueSuccessors(__current);
             }
-            else if (current instanceof LoopEndNode)
-            {
-                // nothing to do
-            }
-            else if (current instanceof AbstractMergeNode)
-            {
-                queueSuccessors(current);
-            }
-            else if (current instanceof FixedWithNextNode)
-            {
-                queueSuccessors(current);
-            }
-            else if (current instanceof EndNode)
-            {
-                queueMerge((EndNode) current);
-            }
-            else if (current instanceof ControlSinkNode)
+            else if (__current instanceof LoopEndNode)
             {
                 // nothing to do
             }
-            else if (current instanceof ControlSplitNode)
+            else if (__current instanceof AbstractMergeNode)
             {
-                queueSuccessors(current);
+                queueSuccessors(__current);
+            }
+            else if (__current instanceof FixedWithNextNode)
+            {
+                queueSuccessors(__current);
+            }
+            else if (__current instanceof EndNode)
+            {
+                queueMerge((EndNode) __current);
+            }
+            else if (__current instanceof ControlSinkNode)
+            {
+                // nothing to do
+            }
+            else if (__current instanceof ControlSplitNode)
+            {
+                queueSuccessors(__current);
             }
         }
 
-        return invokes;
+        return __invokes;
     }
 
-    private void queueSuccessors(FixedNode x)
+    private void queueSuccessors(FixedNode __x)
     {
-        for (Node node : x.successors())
+        for (Node __node : __x.successors())
         {
-            queue(node);
+            queue(__node);
         }
     }
 
-    private void queue(Node node)
+    private void queue(Node __node)
     {
-        if (node != null && !queuedNodes.isMarked(node))
+        if (__node != null && !queuedNodes.isMarked(__node))
         {
-            forcedQueue(node);
+            forcedQueue(__node);
         }
     }
 
-    private void forcedQueue(Node node)
+    private void forcedQueue(Node __node)
     {
-        queuedNodes.mark(node);
-        nodeQueue.addFirst((FixedNode) node);
+        queuedNodes.mark(__node);
+        nodeQueue.addFirst((FixedNode) __node);
     }
 
     private FixedNode nextQueuedNode()
@@ -123,21 +126,21 @@ public final class InliningIterator
         return nodeQueue.removeFirst();
     }
 
-    private void queueMerge(AbstractEndNode end)
+    private void queueMerge(AbstractEndNode __end)
     {
-        AbstractMergeNode merge = end.merge();
-        if (!queuedNodes.isMarked(merge) && visitedAllEnds(merge))
+        AbstractMergeNode __merge = __end.merge();
+        if (!queuedNodes.isMarked(__merge) && visitedAllEnds(__merge))
         {
-            queuedNodes.mark(merge);
-            nodeQueue.add(merge);
+            queuedNodes.mark(__merge);
+            nodeQueue.add(__merge);
         }
     }
 
-    private boolean visitedAllEnds(AbstractMergeNode merge)
+    private boolean visitedAllEnds(AbstractMergeNode __merge)
     {
-        for (int i = 0; i < merge.forwardEndCount(); i++)
+        for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
         {
-            if (!queuedNodes.isMarked(merge.forwardEndAt(i)))
+            if (!queuedNodes.isMarked(__merge.forwardEndAt(__i)))
             {
                 return false;
             }
@@ -145,15 +148,15 @@ public final class InliningIterator
         return true;
     }
 
-    private static int count(Iterable<Invoke> invokes)
+    private static int count(Iterable<Invoke> __invokes)
     {
-        int count = 0;
-        Iterator<Invoke> iterator = invokes.iterator();
-        while (iterator.hasNext())
+        int __count = 0;
+        Iterator<Invoke> __iterator = __invokes.iterator();
+        while (__iterator.hasNext())
         {
-            iterator.next();
-            count++;
+            __iterator.next();
+            __count++;
         }
-        return count;
+        return __count;
     }
 }

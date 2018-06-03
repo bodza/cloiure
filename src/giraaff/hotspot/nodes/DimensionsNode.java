@@ -21,27 +21,29 @@ import giraaff.word.WordTypes;
 // @class DimensionsNode
 public final class DimensionsNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<DimensionsNode> TYPE = NodeClass.create(DimensionsNode.class);
 
+    // @field
     protected final int rank;
 
     // @cons
-    public DimensionsNode(@InjectedNodeParameter WordTypes wordTypes, int rank)
+    public DimensionsNode(@InjectedNodeParameter WordTypes __wordTypes, int __rank)
     {
-        super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
-        this.rank = rank;
+        super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
+        this.rank = __rank;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRGeneratorTool lirGen = gen.getLIRGeneratorTool();
-        int size = rank * 4;
-        int wordSize = lirGen.target().wordSize;
-        int slots = NumUtil.roundUp(size, wordSize) / wordSize;
-        VirtualStackSlot array = lirGen.getResult().getFrameMapBuilder().allocateStackSlots(slots, new BitSet(0), null);
-        Value result = lirGen.emitAddress(array);
-        gen.setResult(this, result);
+        LIRGeneratorTool __lirGen = __gen.getLIRGeneratorTool();
+        int __size = rank * 4;
+        int __wordSize = __lirGen.target().wordSize;
+        int __slots = NumUtil.roundUp(__size, __wordSize) / __wordSize;
+        VirtualStackSlot __array = __lirGen.getResult().getFrameMapBuilder().allocateStackSlots(__slots, new BitSet(0), null);
+        Value __result = __lirGen.emitAddress(__array);
+        __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic

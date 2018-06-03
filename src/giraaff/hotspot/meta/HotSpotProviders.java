@@ -20,21 +20,26 @@ import giraaff.phases.util.Providers;
 // @class HotSpotProviders
 public final class HotSpotProviders extends Providers
 {
+    // @field
     private final SuitesProvider suites;
+    // @field
     private final HotSpotRegistersProvider registers;
+    // @field
     private final SnippetReflectionProvider snippetReflection;
+    // @field
     private final HotSpotWordTypes wordTypes;
+    // @field
     private final Plugins graphBuilderPlugins;
 
     // @cons
-    public HotSpotProviders(MetaAccessProvider metaAccess, HotSpotCodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantField, HotSpotForeignCallsProvider foreignCalls, LoweringProvider lowerer, Replacements replacements, SuitesProvider suites, HotSpotRegistersProvider registers, SnippetReflectionProvider snippetReflection, HotSpotWordTypes wordTypes, Plugins graphBuilderPlugins)
+    public HotSpotProviders(MetaAccessProvider __metaAccess, HotSpotCodeCacheProvider __codeCache, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantField, HotSpotForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, Replacements __replacements, SuitesProvider __suites, HotSpotRegistersProvider __registers, SnippetReflectionProvider __snippetReflection, HotSpotWordTypes __wordTypes, Plugins __graphBuilderPlugins)
     {
-        super(metaAccess, codeCache, constantReflection, constantField, foreignCalls, lowerer, replacements, new HotSpotStampProvider());
-        this.suites = suites;
-        this.registers = registers;
-        this.snippetReflection = snippetReflection;
-        this.wordTypes = wordTypes;
-        this.graphBuilderPlugins = graphBuilderPlugins;
+        super(__metaAccess, __codeCache, __constantReflection, __constantField, __foreignCalls, __lowerer, __replacements, new HotSpotStampProvider());
+        this.suites = __suites;
+        this.registers = __registers;
+        this.snippetReflection = __snippetReflection;
+        this.wordTypes = __wordTypes;
+        this.graphBuilderPlugins = __graphBuilderPlugins;
     }
 
     @Override

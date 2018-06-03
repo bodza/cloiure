@@ -17,60 +17,61 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class FloatDivNode
 public final class FloatDivNode extends BinaryArithmeticNode<Div>
 {
+    // @def
     public static final NodeClass<FloatDivNode> TYPE = NodeClass.create(FloatDivNode.class);
 
     // @cons
-    public FloatDivNode(ValueNode x, ValueNode y)
+    public FloatDivNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected FloatDivNode(NodeClass<? extends FloatDivNode> c, ValueNode x, ValueNode y)
+    protected FloatDivNode(NodeClass<? extends FloatDivNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, ArithmeticOpTable::getDiv, x, y);
+        super(__c, ArithmeticOpTable::getDiv, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Div> op = ArithmeticOpTable.forStamp(x.stamp(view)).getDiv();
-        Stamp stamp = op.foldStamp(x.stamp(view), y.stamp(view));
-        ConstantNode tryConstantFold = tryConstantFold(op, x, y, stamp, view);
-        if (tryConstantFold != null)
+        BinaryOp<Div> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getDiv();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
+        ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
+        if (__tryConstantFold != null)
         {
-            return tryConstantFold;
+            return __tryConstantFold;
         }
-        return canonical(null, op, x, y);
+        return canonical(null, __op, __x, __y);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        return canonical(this, getOp(forX, forY), forX, forY);
+        return canonical(this, getOp(__forX, __forY), __forX, __forY);
     }
 
-    private static ValueNode canonical(FloatDivNode self, BinaryOp<Div> op, ValueNode forX, ValueNode forY)
+    private static ValueNode canonical(FloatDivNode __self, BinaryOp<Div> __op, ValueNode __forX, ValueNode __forY)
     {
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            Constant c = forY.asConstant();
-            if (op.isNeutral(c))
+            Constant __c = __forY.asConstant();
+            if (__op.isNeutral(__c))
             {
-                return forX;
+                return __forX;
             }
         }
-        return self != null ? self : new FloatDivNode(forX, forY);
+        return __self != null ? __self : new FloatDivNode(__forX, __forY);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitDiv(nodeValueMap.operand(getX()), nodeValueMap.operand(getY()), null));
+        __nodeValueMap.setResult(this, __gen.emitDiv(__nodeValueMap.operand(getX()), __nodeValueMap.operand(getY()), null));
     }
 }

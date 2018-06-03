@@ -27,9 +27,9 @@ import giraaff.word.Word;
 public final class UnwindExceptionToCallerStub extends SnippetStub
 {
     // @cons
-    public UnwindExceptionToCallerStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public UnwindExceptionToCallerStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super("unwindExceptionToCaller", providers, linkage);
+        super("unwindExceptionToCaller", __providers, __linkage);
     }
 
     /**
@@ -43,26 +43,27 @@ public final class UnwindExceptionToCallerStub extends SnippetStub
     }
 
     @Override
-    protected Object getConstantParameterValue(int index, String name)
+    protected Object getConstantParameterValue(int __index, String __name)
     {
-        if (index == 2)
+        if (__index == 2)
         {
             return providers.getRegisters().getThreadRegister();
         }
-        throw GraalError.shouldNotReachHere("unknown parameter " + name + " at index " + index);
+        throw GraalError.shouldNotReachHere("unknown parameter " + __name + " at __index " + __index);
     }
 
     @Snippet
-    private static void unwindExceptionToCaller(Object exception, Word returnAddress, @ConstantParameter Register threadRegister)
+    private static void unwindExceptionToCaller(Object __exception, Word __returnAddress, @ConstantParameter Register __threadRegister)
     {
-        Pointer exceptionOop = Word.objectToTrackedPointer(exception);
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
+        Pointer __exceptionOop = Word.objectToTrackedPointer(__exception);
+        Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
 
-        Word handlerInCallerPc = exceptionHandlerForReturnAddress(EXCEPTION_HANDLER_FOR_RETURN_ADDRESS, thread, returnAddress);
+        Word __handlerInCallerPc = exceptionHandlerForReturnAddress(EXCEPTION_HANDLER_FOR_RETURN_ADDRESS, __thread, __returnAddress);
 
-        JumpToExceptionHandlerInCallerNode.jumpToExceptionHandlerInCaller(handlerInCallerPc, exception, returnAddress);
+        JumpToExceptionHandlerInCallerNode.jumpToExceptionHandlerInCaller(__handlerInCallerPc, __exception, __returnAddress);
     }
 
+    // @def
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_RETURN_ADDRESS = StubUtil.newDescriptor(UnwindExceptionToCallerStub.class, "exceptionHandlerForReturnAddress", Word.class, Word.class, Word.class);
 
     @NodeIntrinsic(value = StubForeignCallNode.class)

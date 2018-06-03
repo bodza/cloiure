@@ -20,25 +20,27 @@ import giraaff.nodes.spi.LoweringTool;
 // @class UnpackEndianHalfNode
 public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
 {
+    // @def
     public static final NodeClass<UnpackEndianHalfNode> TYPE = NodeClass.create(UnpackEndianHalfNode.class);
 
+    // @field
     private final boolean firstHalf;
 
     // @cons
-    protected UnpackEndianHalfNode(ValueNode value, boolean firstHalf)
+    protected UnpackEndianHalfNode(ValueNode __value, boolean __firstHalf)
     {
-        super(TYPE, StampFactory.forKind(JavaKind.Int), value);
-        this.firstHalf = firstHalf;
+        super(TYPE, StampFactory.forKind(JavaKind.Int), __value);
+        this.firstHalf = __firstHalf;
     }
 
     @SuppressWarnings("unused")
-    public static ValueNode create(ValueNode value, boolean firstHalf, NodeView view)
+    public static ValueNode create(ValueNode __value, boolean __firstHalf, NodeView __view)
     {
-        if (value.isConstant() && value.asConstant().isDefaultForKind())
+        if (__value.isConstant() && __value.asConstant().isDefaultForKind())
         {
             return ConstantNode.defaultForKind(JavaKind.Int);
         }
-        return new UnpackEndianHalfNode(value, firstHalf);
+        return new UnpackEndianHalfNode(__value, __firstHalf);
     }
 
     public boolean isFirstHalf()
@@ -47,9 +49,9 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forValue)
+    public Node canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        if (forValue.isConstant() && forValue.asConstant().isDefaultForKind())
+        if (__forValue.isConstant() && __forValue.asConstant().isDefaultForKind())
         {
             return ConstantNode.defaultForKind(stamp.getStackKind());
         }
@@ -57,23 +59,23 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
-    public void lower(ByteOrder byteOrder)
+    public void lower(ByteOrder __byteOrder)
     {
-        ValueNode result = value;
+        ValueNode __result = value;
         if (value.getStackKind() == JavaKind.Double)
         {
-            result = graph().unique(new ReinterpretNode(JavaKind.Long, value));
+            __result = graph().unique(new ReinterpretNode(JavaKind.Long, value));
         }
-        if ((byteOrder == ByteOrder.BIG_ENDIAN) == firstHalf)
+        if ((__byteOrder == ByteOrder.BIG_ENDIAN) == firstHalf)
         {
-            result = graph().unique(new UnsignedRightShiftNode(result, ConstantNode.forInt(32, graph())));
+            __result = graph().unique(new UnsignedRightShiftNode(__result, ConstantNode.forInt(32, graph())));
         }
-        result = IntegerConvertNode.convert(result, StampFactory.forKind(JavaKind.Int), graph(), NodeView.DEFAULT);
-        replaceAtUsagesAndDelete(result);
+        __result = IntegerConvertNode.convert(__result, StampFactory.forKind(JavaKind.Int), graph(), NodeView.DEFAULT);
+        replaceAtUsagesAndDelete(__result);
     }
 }

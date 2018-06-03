@@ -29,52 +29,54 @@ import giraaff.util.GraalError;
 // @class ObjectEqualsNode
 public final class ObjectEqualsNode extends PointerEqualsNode implements Virtualizable
 {
+    // @def
     public static final NodeClass<ObjectEqualsNode> TYPE = NodeClass.create(ObjectEqualsNode.class);
 
+    // @def
     private static final ObjectEqualsOp OP = new ObjectEqualsOp();
 
     // @cons
-    public ObjectEqualsNode(ValueNode x, ValueNode y)
+    public ObjectEqualsNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, x, y);
+        super(TYPE, __x, __y);
     }
 
-    public static LogicNode create(ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view)
+    public static LogicNode create(ValueNode __x, ValueNode __y, ConstantReflectionProvider __constantReflection, NodeView __view)
     {
-        LogicNode result = CompareNode.tryConstantFold(CanonicalCondition.EQ, x, y, constantReflection, false);
-        if (result != null)
+        LogicNode __result = CompareNode.tryConstantFold(CanonicalCondition.EQ, __x, __y, __constantReflection, false);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
         else
         {
-            result = findSynonym(x, y, view);
-            if (result != null)
+            __result = findSynonym(__x, __y, __view);
+            if (__result != null)
             {
-                return result;
+                return __result;
             }
-            return new ObjectEqualsNode(x, y);
+            return new ObjectEqualsNode(__x, __y);
         }
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode result = OP.canonical(constantReflection, metaAccess, null, CanonicalCondition.EQ, false, x, y, view);
-        if (result != null)
+        LogicNode __result = OP.canonical(__constantReflection, __metaAccess, null, CanonicalCondition.EQ, false, __x, __y, __view);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
-        return create(x, y, constantReflection, view);
+        return create(__x, __y, __constantReflection, __view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.EQ, false, forX, forY, view);
-        if (value != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, false, __forX, __forY, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
         return this;
     }
@@ -83,85 +85,85 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     public static final class ObjectEqualsOp extends PointerEqualsOp
     {
         @Override
-        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)
+        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, Constant __constant, ValueNode __nonConstant, boolean __mirrored, boolean __unorderedIsTrue, NodeView __view)
         {
-            ResolvedJavaType type = constantReflection.asJavaType(constant);
-            if (type != null && nonConstant instanceof GetClassNode)
+            ResolvedJavaType __type = __constantReflection.asJavaType(__constant);
+            if (__type != null && __nonConstant instanceof GetClassNode)
             {
-                GetClassNode getClassNode = (GetClassNode) nonConstant;
-                ValueNode object = getClassNode.getObject();
-                if (!type.isPrimitive() && (type.isConcrete() || type.isArray()))
+                GetClassNode __getClassNode = (GetClassNode) __nonConstant;
+                ValueNode __object = __getClassNode.getObject();
+                if (!__type.isPrimitive() && (__type.isConcrete() || __type.isArray()))
                 {
-                    return InstanceOfNode.create(TypeReference.createExactTrusted(type), object);
+                    return InstanceOfNode.create(TypeReference.createExactTrusted(__type), __object);
                 }
                 return LogicConstantNode.forBoolean(false);
             }
-            return super.canonicalizeSymmetricConstant(constantReflection, metaAccess, smallestCompareWidth, condition, constant, nonConstant, mirrored, unorderedIsTrue, view);
+            return super.canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __constant, __nonConstant, __mirrored, __unorderedIsTrue, __view);
         }
 
         @Override
-        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
         {
-            if (newX.stamp(view) instanceof ObjectStamp && newY.stamp(view) instanceof ObjectStamp)
+            if (__newX.stamp(__view) instanceof ObjectStamp && __newY.stamp(__view) instanceof ObjectStamp)
             {
-                return new ObjectEqualsNode(newX, newY);
+                return new ObjectEqualsNode(__newX, __newY);
             }
-            else if (newX.stamp(view) instanceof AbstractPointerStamp && newY.stamp(view) instanceof AbstractPointerStamp)
+            else if (__newX.stamp(__view) instanceof AbstractPointerStamp && __newY.stamp(__view) instanceof AbstractPointerStamp)
             {
-                return new PointerEqualsNode(newX, newY);
+                return new PointerEqualsNode(__newX, __newY);
             }
             throw GraalError.shouldNotReachHere();
         }
     }
 
-    private void virtualizeNonVirtualComparison(VirtualObjectNode virtual, ValueNode other, VirtualizerTool tool)
+    private void virtualizeNonVirtualComparison(VirtualObjectNode __virtual, ValueNode __other, VirtualizerTool __tool)
     {
-        if (virtual instanceof VirtualBoxingNode && other.isConstant())
+        if (__virtual instanceof VirtualBoxingNode && __other.isConstant())
         {
-            VirtualBoxingNode virtualBoxingNode = (VirtualBoxingNode) virtual;
-            if (virtualBoxingNode.getBoxingKind() == JavaKind.Boolean)
+            VirtualBoxingNode __virtualBoxingNode = (VirtualBoxingNode) __virtual;
+            if (__virtualBoxingNode.getBoxingKind() == JavaKind.Boolean)
             {
-                JavaConstant otherUnboxed = tool.getConstantReflectionProvider().unboxPrimitive(other.asJavaConstant());
-                if (otherUnboxed != null && otherUnboxed.getJavaKind() == JavaKind.Boolean)
+                JavaConstant __otherUnboxed = __tool.getConstantReflectionProvider().unboxPrimitive(__other.asJavaConstant());
+                if (__otherUnboxed != null && __otherUnboxed.getJavaKind() == JavaKind.Boolean)
                 {
-                    int expectedValue = otherUnboxed.asBoolean() ? 1 : 0;
-                    IntegerEqualsNode equals = new IntegerEqualsNode(virtualBoxingNode.getBoxedValue(tool), ConstantNode.forInt(expectedValue, graph()));
-                    tool.addNode(equals);
-                    tool.replaceWithValue(equals);
+                    int __expectedValue = __otherUnboxed.asBoolean() ? 1 : 0;
+                    IntegerEqualsNode __equals = new IntegerEqualsNode(__virtualBoxingNode.getBoxedValue(__tool), ConstantNode.forInt(__expectedValue, graph()));
+                    __tool.addNode(__equals);
+                    __tool.replaceWithValue(__equals);
                 }
                 else
                 {
-                    tool.replaceWithValue(LogicConstantNode.contradiction(graph()));
+                    __tool.replaceWithValue(LogicConstantNode.contradiction(graph()));
                 }
             }
         }
-        if (virtual.hasIdentity())
+        if (__virtual.hasIdentity())
         {
             // one of them is virtual: they can never be the same objects
-            tool.replaceWithValue(LogicConstantNode.contradiction(graph()));
+            __tool.replaceWithValue(LogicConstantNode.contradiction(graph()));
         }
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode xAlias = tool.getAlias(getX());
-        ValueNode yAlias = tool.getAlias(getY());
+        ValueNode __xAlias = __tool.getAlias(getX());
+        ValueNode __yAlias = __tool.getAlias(getY());
 
-        VirtualObjectNode xVirtual = xAlias instanceof VirtualObjectNode ? (VirtualObjectNode) xAlias : null;
-        VirtualObjectNode yVirtual = yAlias instanceof VirtualObjectNode ? (VirtualObjectNode) yAlias : null;
+        VirtualObjectNode __xVirtual = __xAlias instanceof VirtualObjectNode ? (VirtualObjectNode) __xAlias : null;
+        VirtualObjectNode __yVirtual = __yAlias instanceof VirtualObjectNode ? (VirtualObjectNode) __yAlias : null;
 
-        if (xVirtual != null && yVirtual == null)
+        if (__xVirtual != null && __yVirtual == null)
         {
-            virtualizeNonVirtualComparison(xVirtual, yAlias, tool);
+            virtualizeNonVirtualComparison(__xVirtual, __yAlias, __tool);
         }
-        else if (xVirtual == null && yVirtual != null)
+        else if (__xVirtual == null && __yVirtual != null)
         {
-            virtualizeNonVirtualComparison(yVirtual, xAlias, tool);
+            virtualizeNonVirtualComparison(__yVirtual, __xAlias, __tool);
         }
-        else if (xVirtual != null && yVirtual != null)
+        else if (__xVirtual != null && __yVirtual != null)
         {
-            if (xVirtual.hasIdentity() ^ yVirtual.hasIdentity())
+            if (__xVirtual.hasIdentity() ^ __yVirtual.hasIdentity())
             {
                 /*
                  * One of the two objects has identity, the other doesn't. In code, this looks like
@@ -170,27 +172,27 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
                  * In other words: an object created via valueOf can never be equal to one created
                  * by new in the same compilation unit.
                  */
-                tool.replaceWithValue(LogicConstantNode.contradiction(graph()));
+                __tool.replaceWithValue(LogicConstantNode.contradiction(graph()));
             }
-            else if (!xVirtual.hasIdentity() && !yVirtual.hasIdentity())
+            else if (!__xVirtual.hasIdentity() && !__yVirtual.hasIdentity())
             {
-                ResolvedJavaType type = xVirtual.type();
-                if (type.equals(yVirtual.type()))
+                ResolvedJavaType __type = __xVirtual.type();
+                if (__type.equals(__yVirtual.type()))
                 {
-                    MetaAccessProvider metaAccess = tool.getMetaAccessProvider();
-                    if (type.equals(metaAccess.lookupJavaType(Integer.class)) || type.equals(metaAccess.lookupJavaType(Long.class)))
+                    MetaAccessProvider __metaAccess = __tool.getMetaAccessProvider();
+                    if (__type.equals(__metaAccess.lookupJavaType(Integer.class)) || __type.equals(__metaAccess.lookupJavaType(Long.class)))
                     {
                         // both are virtual without identity: check contents
-                        IntegerEqualsNode equals = new IntegerEqualsNode(tool.getEntry(xVirtual, 0), tool.getEntry(yVirtual, 0));
-                        tool.addNode(equals);
-                        tool.replaceWithValue(equals);
+                        IntegerEqualsNode __equals = new IntegerEqualsNode(__tool.getEntry(__xVirtual, 0), __tool.getEntry(__yVirtual, 0));
+                        __tool.addNode(__equals);
+                        __tool.replaceWithValue(__equals);
                     }
                 }
             }
             else
             {
                 // both are virtual with identity: check if they refer to the same object
-                tool.replaceWithValue(LogicConstantNode.forBoolean(xVirtual == yVirtual, graph()));
+                __tool.replaceWithValue(LogicConstantNode.forBoolean(__xVirtual == __yVirtual, graph()));
             }
         }
     }

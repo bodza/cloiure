@@ -16,23 +16,24 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class SignedDivNode
 public final class SignedDivNode extends IntegerDivRemNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<SignedDivNode> TYPE = NodeClass.create(SignedDivNode.class);
 
     // @cons
-    protected SignedDivNode(ValueNode x, ValueNode y)
+    protected SignedDivNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected SignedDivNode(NodeClass<? extends SignedDivNode> c, ValueNode x, ValueNode y)
+    protected SignedDivNode(NodeClass<? extends SignedDivNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, IntegerStamp.OPS.getDiv().foldStamp(x.stamp(NodeView.DEFAULT), y.stamp(NodeView.DEFAULT)), Op.DIV, Type.SIGNED, x, y);
+        super(__c, IntegerStamp.OPS.getDiv().foldStamp(__x.stamp(NodeView.DEFAULT), __y.stamp(NodeView.DEFAULT)), Op.DIV, Type.SIGNED, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        return canonical(null, x, y, view);
+        return canonical(null, __x, __y, __view);
     }
 
     @Override
@@ -42,101 +43,101 @@ public final class SignedDivNode extends IntegerDivRemNode implements LIRLowerab
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        return canonical(this, forX, forY, view);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, __forX, __forY, __view);
     }
 
-    public static ValueNode canonical(SignedDivNode self, ValueNode forX, ValueNode forY, NodeView view)
+    public static ValueNode canonical(SignedDivNode __self, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        Stamp predictedStamp = IntegerStamp.OPS.getDiv().foldStamp(forX.stamp(NodeView.DEFAULT), forY.stamp(NodeView.DEFAULT));
-        Stamp stamp = self != null ? self.stamp(view) : predictedStamp;
-        if (forX.isConstant() && forY.isConstant())
+        Stamp __predictedStamp = IntegerStamp.OPS.getDiv().foldStamp(__forX.stamp(NodeView.DEFAULT), __forY.stamp(NodeView.DEFAULT));
+        Stamp __stamp = __self != null ? __self.stamp(__view) : __predictedStamp;
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            long y = forY.asJavaConstant().asLong();
-            if (y == 0)
+            long __y = __forY.asJavaConstant().asLong();
+            if (__y == 0)
             {
-                return self != null ? self : new SignedDivNode(forX, forY); // this will trap, can
+                return __self != null ? __self : new SignedDivNode(__forX, __forY); // this will trap, can
                                                                             // not canonicalize
             }
-            return ConstantNode.forIntegerStamp(stamp, forX.asJavaConstant().asLong() / y);
+            return ConstantNode.forIntegerStamp(__stamp, __forX.asJavaConstant().asLong() / __y);
         }
-        else if (forY.isConstant())
+        else if (__forY.isConstant())
         {
-            long c = forY.asJavaConstant().asLong();
-            ValueNode v = canonical(forX, c, view);
-            if (v != null)
+            long __c = __forY.asJavaConstant().asLong();
+            ValueNode __v = canonical(__forX, __c, __view);
+            if (__v != null)
             {
-                return v;
+                return __v;
             }
         }
 
         // Convert the expression ((a - a % b) / b) into (a / b).
-        if (forX instanceof SubNode)
+        if (__forX instanceof SubNode)
         {
-            SubNode integerSubNode = (SubNode) forX;
-            if (integerSubNode.getY() instanceof SignedRemNode)
+            SubNode __integerSubNode = (SubNode) __forX;
+            if (__integerSubNode.getY() instanceof SignedRemNode)
             {
-                SignedRemNode integerRemNode = (SignedRemNode) integerSubNode.getY();
-                if (integerSubNode.stamp(view).isCompatible(stamp) && integerRemNode.stamp(view).isCompatible(stamp) && integerSubNode.getX() == integerRemNode.getX() && forY == integerRemNode.getY())
+                SignedRemNode __integerRemNode = (SignedRemNode) __integerSubNode.getY();
+                if (__integerSubNode.stamp(__view).isCompatible(__stamp) && __integerRemNode.stamp(__view).isCompatible(__stamp) && __integerSubNode.getX() == __integerRemNode.getX() && __forY == __integerRemNode.getY())
                 {
-                    SignedDivNode sd = new SignedDivNode(integerSubNode.getX(), forY);
-                    sd.stateBefore = self != null ? self.stateBefore : null;
-                    return sd;
+                    SignedDivNode __sd = new SignedDivNode(__integerSubNode.getX(), __forY);
+                    __sd.stateBefore = __self != null ? __self.stateBefore : null;
+                    return __sd;
                 }
             }
         }
 
-        if (self != null && self.next() instanceof SignedDivNode)
+        if (__self != null && __self.next() instanceof SignedDivNode)
         {
-            NodeClass<?> nodeClass = self.getNodeClass();
-            if (self.next().getClass() == self.getClass() && nodeClass.equalInputs(self, self.next()) && self.valueEquals(self.next()))
+            NodeClass<?> __nodeClass = __self.getNodeClass();
+            if (__self.next().getClass() == __self.getClass() && __nodeClass.equalInputs(__self, __self.next()) && __self.valueEquals(__self.next()))
             {
-                return self.next();
+                return __self.next();
             }
         }
 
-        return self != null ? self : new SignedDivNode(forX, forY);
+        return __self != null ? __self : new SignedDivNode(__forX, __forY);
     }
 
-    public static ValueNode canonical(ValueNode forX, long c, NodeView view)
+    public static ValueNode canonical(ValueNode __forX, long __c, NodeView __view)
     {
-        if (c == 1)
+        if (__c == 1)
         {
-            return forX;
+            return __forX;
         }
-        if (c == -1)
+        if (__c == -1)
         {
-            return NegateNode.create(forX, view);
+            return NegateNode.create(__forX, __view);
         }
-        long abs = Math.abs(c);
-        if (CodeUtil.isPowerOf2(abs) && forX.stamp(view) instanceof IntegerStamp)
+        long __abs = Math.abs(__c);
+        if (CodeUtil.isPowerOf2(__abs) && __forX.stamp(__view) instanceof IntegerStamp)
         {
-            ValueNode dividend = forX;
-            IntegerStamp stampX = (IntegerStamp) forX.stamp(view);
-            int log2 = CodeUtil.log2(abs);
+            ValueNode __dividend = __forX;
+            IntegerStamp __stampX = (IntegerStamp) __forX.stamp(__view);
+            int __log2 = CodeUtil.log2(__abs);
             // no rounding if dividend is positive or if its low bits are always 0
-            if (stampX.canBeNegative() || (stampX.upMask() & (abs - 1)) != 0)
+            if (__stampX.canBeNegative() || (__stampX.upMask() & (__abs - 1)) != 0)
             {
-                int bits = PrimitiveStamp.getBits(forX.stamp(view));
-                RightShiftNode sign = new RightShiftNode(forX, ConstantNode.forInt(bits - 1));
-                UnsignedRightShiftNode round = new UnsignedRightShiftNode(sign, ConstantNode.forInt(bits - log2));
-                dividend = BinaryArithmeticNode.add(dividend, round, view);
+                int __bits = PrimitiveStamp.getBits(__forX.stamp(__view));
+                RightShiftNode __sign = new RightShiftNode(__forX, ConstantNode.forInt(__bits - 1));
+                UnsignedRightShiftNode __round = new UnsignedRightShiftNode(__sign, ConstantNode.forInt(__bits - __log2));
+                __dividend = BinaryArithmeticNode.add(__dividend, __round, __view);
             }
-            RightShiftNode shift = new RightShiftNode(dividend, ConstantNode.forInt(log2));
-            if (c < 0)
+            RightShiftNode __shift = new RightShiftNode(__dividend, ConstantNode.forInt(__log2));
+            if (__c < 0)
             {
-                return NegateNode.create(shift, view);
+                return NegateNode.create(__shift, __view);
             }
-            return shift;
+            return __shift;
         }
         return null;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, gen.getLIRGeneratorTool().getArithmetic().emitDiv(gen.operand(getX()), gen.operand(getY()), gen.state(this)));
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitDiv(__gen.operand(getX()), __gen.operand(getY()), __gen.state(this)));
     }
 }

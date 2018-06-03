@@ -5,15 +5,17 @@ import jdk.vm.ci.code.BailoutException;
 // @class JsrScope
 public final class JsrScope
 {
+    // @def
     public static final JsrScope EMPTY_SCOPE = new JsrScope();
 
+    // @field
     private final long scope;
 
     // @cons
-    private JsrScope(long scope)
+    private JsrScope(long __scope)
     {
         super();
-        this.scope = scope;
+        this.scope = __scope;
     }
 
     // @cons
@@ -28,13 +30,13 @@ public final class JsrScope
         return (int) (scope & 0xffff);
     }
 
-    public JsrScope push(int jsrReturnBci)
+    public JsrScope push(int __jsrReturnBci)
     {
         if ((scope & 0xffff000000000000L) != 0)
         {
             throw new BailoutException("only 4 jsr nesting levels are supported");
         }
-        return new JsrScope((scope << 16) | jsrReturnBci);
+        return new JsrScope((scope << 16) | __jsrReturnBci);
     }
 
     public boolean isEmpty()
@@ -42,9 +44,9 @@ public final class JsrScope
         return scope == 0;
     }
 
-    public boolean isPrefixOf(JsrScope other)
+    public boolean isPrefixOf(JsrScope __other)
     {
-        return (scope & other.scope) == scope;
+        return (scope & __other.scope) == scope;
     }
 
     public JsrScope pop()
@@ -59,12 +61,12 @@ public final class JsrScope
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        return obj != null && getClass() == obj.getClass() && scope == ((JsrScope) obj).scope;
+        return __obj != null && getClass() == __obj.getClass() && scope == ((JsrScope) __obj).scope;
     }
 }

@@ -62,16 +62,27 @@ public final class GraalCompiler
     // @class GraalCompiler.Request
     public static final class Request
     {
+        // @field
         public final StructuredGraph graph;
+        // @field
         public final ResolvedJavaMethod installedCodeOwner;
+        // @field
         public final Providers providers;
+        // @field
         public final Backend backend;
+        // @field
         public final PhaseSuite<HighTierContext> graphBuilderSuite;
+        // @field
         public final OptimisticOptimizations optimisticOpts;
+        // @field
         public final ProfilingInfo profilingInfo;
+        // @field
         public final Suites suites;
+        // @field
         public final LIRSuites lirSuites;
+        // @field
         public final CompilationResult compilationResult;
+        // @field
         public final CompilationResultBuilderFactory factory;
 
         /**
@@ -79,20 +90,20 @@ public final class GraalCompiler
          * @param installedCodeOwner the method the compiled code will be associated with once installed. This argument can be null.
          */
         // @cons
-        public Request(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, CompilationResult compilationResult, CompilationResultBuilderFactory factory)
+        public Request(StructuredGraph __graph, ResolvedJavaMethod __installedCodeOwner, Providers __providers, Backend __backend, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites, LIRSuites __lirSuites, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory)
         {
             super();
-            this.graph = graph;
-            this.installedCodeOwner = installedCodeOwner;
-            this.providers = providers;
-            this.backend = backend;
-            this.graphBuilderSuite = graphBuilderSuite;
-            this.optimisticOpts = optimisticOpts;
-            this.profilingInfo = profilingInfo;
-            this.suites = suites;
-            this.lirSuites = lirSuites;
-            this.compilationResult = compilationResult;
-            this.factory = factory;
+            this.graph = __graph;
+            this.installedCodeOwner = __installedCodeOwner;
+            this.providers = __providers;
+            this.backend = __backend;
+            this.graphBuilderSuite = __graphBuilderSuite;
+            this.optimisticOpts = __optimisticOpts;
+            this.profilingInfo = __profilingInfo;
+            this.suites = __suites;
+            this.lirSuites = __lirSuites;
+            this.compilationResult = __compilationResult;
+            this.factory = __factory;
         }
     }
 
@@ -104,9 +115,9 @@ public final class GraalCompiler
      *            installed. This argument can be null.
      * @return the result of the compilation
      */
-    public static CompilationResult compileGraph(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, CompilationResult compilationResult, CompilationResultBuilderFactory factory)
+    public static CompilationResult compileGraph(StructuredGraph __graph, ResolvedJavaMethod __installedCodeOwner, Providers __providers, Backend __backend, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites, LIRSuites __lirSuites, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory)
     {
-        return compile(new Request(graph, installedCodeOwner, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, suites, lirSuites, compilationResult, factory));
+        return compile(new Request(__graph, __installedCodeOwner, __providers, __backend, __graphBuilderSuite, __optimisticOpts, __profilingInfo, __suites, __lirSuites, __compilationResult, __factory));
     }
 
     /**
@@ -114,106 +125,106 @@ public final class GraalCompiler
      *
      * @return the result of the compilation
      */
-    public static CompilationResult compile(Request r)
+    public static CompilationResult compile(Request __r)
     {
-        emitFrontEnd(r.providers, r.backend, r.graph, r.graphBuilderSuite, r.optimisticOpts, r.profilingInfo, r.suites);
-        emitBackEnd(r.graph, null, r.installedCodeOwner, r.backend, r.compilationResult, r.factory, null, r.lirSuites);
-        return r.compilationResult;
+        emitFrontEnd(__r.providers, __r.backend, __r.graph, __r.graphBuilderSuite, __r.optimisticOpts, __r.profilingInfo, __r.suites);
+        emitBackEnd(__r.graph, null, __r.installedCodeOwner, __r.backend, __r.compilationResult, __r.factory, null, __r.lirSuites);
+        return __r.compilationResult;
     }
 
     /**
      * Builds the graph, optimizes it.
      */
-    public static void emitFrontEnd(Providers providers, TargetProvider target, StructuredGraph graph, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites)
+    public static void emitFrontEnd(Providers __providers, TargetProvider __target, StructuredGraph __graph, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites)
     {
-        HighTierContext highTierContext = new HighTierContext(providers, graphBuilderSuite, optimisticOpts);
-        if (graph.start().next() == null)
+        HighTierContext __highTierContext = new HighTierContext(__providers, __graphBuilderSuite, __optimisticOpts);
+        if (__graph.start().next() == null)
         {
-            graphBuilderSuite.apply(graph, highTierContext);
-            new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Optional).apply(graph);
+            __graphBuilderSuite.apply(__graph, __highTierContext);
+            new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Optional).apply(__graph);
         }
 
-        suites.getHighTier().apply(graph, highTierContext);
-        graph.maybeCompress();
+        __suites.getHighTier().apply(__graph, __highTierContext);
+        __graph.maybeCompress();
 
-        MidTierContext midTierContext = new MidTierContext(providers, target, optimisticOpts, profilingInfo);
-        suites.getMidTier().apply(graph, midTierContext);
-        graph.maybeCompress();
+        MidTierContext __midTierContext = new MidTierContext(__providers, __target, __optimisticOpts, __profilingInfo);
+        __suites.getMidTier().apply(__graph, __midTierContext);
+        __graph.maybeCompress();
 
-        LowTierContext lowTierContext = new LowTierContext(providers, target);
-        suites.getLowTier().apply(graph, lowTierContext);
+        LowTierContext __lowTierContext = new LowTierContext(__providers, __target);
+        __suites.getLowTier().apply(__graph, __lowTierContext);
     }
 
-    public static void emitBackEnd(StructuredGraph graph, Object stub, ResolvedJavaMethod installedCodeOwner, Backend backend, CompilationResult compilationResult, CompilationResultBuilderFactory factory, RegisterConfig registerConfig, LIRSuites lirSuites)
+    public static void emitBackEnd(StructuredGraph __graph, Object __stub, ResolvedJavaMethod __installedCodeOwner, Backend __backend, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory, RegisterConfig __registerConfig, LIRSuites __lirSuites)
     {
-        LIRGenerationResult lirGen = emitLIR(backend, graph, stub, registerConfig, lirSuites);
-        compilationResult.setHasUnsafeAccess(graph.hasUnsafeAccess());
-        emitCode(backend, graph.getAssumptions(), graph.method(), graph.getMethods(), graph.getFields(), (graph.method() != null) ? graph.getBytecodeSize() : 0, lirGen, compilationResult, installedCodeOwner, factory);
+        LIRGenerationResult __lirGen = emitLIR(__backend, __graph, __stub, __registerConfig, __lirSuites);
+        __compilationResult.setHasUnsafeAccess(__graph.hasUnsafeAccess());
+        emitCode(__backend, __graph.getAssumptions(), __graph.method(), __graph.getMethods(), __graph.getFields(), (__graph.method() != null) ? __graph.getBytecodeSize() : 0, __lirGen, __compilationResult, __installedCodeOwner, __factory);
     }
 
-    public static LIRGenerationResult emitLIR(Backend backend, StructuredGraph graph, Object stub, RegisterConfig registerConfig, LIRSuites lirSuites)
+    public static LIRGenerationResult emitLIR(Backend __backend, StructuredGraph __graph, Object __stub, RegisterConfig __registerConfig, LIRSuites __lirSuites)
     {
         try
         {
-            return emitLIR0(backend, graph, stub, registerConfig, lirSuites);
+            return emitLIR0(__backend, __graph, __stub, __registerConfig, __lirSuites);
         }
-        catch (/*OutOfRegistersException*/ BailoutException e)
+        catch (/*OutOfRegistersException*/ BailoutException __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
     }
 
-    private static LIRGenerationResult emitLIR0(Backend backend, StructuredGraph graph, Object stub, RegisterConfig registerConfig, LIRSuites lirSuites)
+    private static LIRGenerationResult emitLIR0(Backend __backend, StructuredGraph __graph, Object __stub, RegisterConfig __registerConfig, LIRSuites __lirSuites)
     {
-        ScheduleResult schedule = graph.getLastSchedule();
-        Block[] blocks = schedule.getCFG().getBlocks();
-        Block startBlock = schedule.getCFG().getStartBlock();
+        ScheduleResult __schedule = __graph.getLastSchedule();
+        Block[] __blocks = __schedule.getCFG().getBlocks();
+        Block __startBlock = __schedule.getCFG().getStartBlock();
 
-        AbstractBlockBase<?>[] codeEmittingOrder = ComputeBlockOrder.computeCodeEmittingOrder(blocks.length, startBlock);
-        AbstractBlockBase<?>[] linearScanOrder = ComputeBlockOrder.computeLinearScanOrder(blocks.length, startBlock);
-        LIR lir = new LIR(schedule.getCFG(), linearScanOrder, codeEmittingOrder);
+        AbstractBlockBase<?>[] __codeEmittingOrder = ComputeBlockOrder.computeCodeEmittingOrder(__blocks.length, __startBlock);
+        AbstractBlockBase<?>[] __linearScanOrder = ComputeBlockOrder.computeLinearScanOrder(__blocks.length, __startBlock);
+        LIR __lir = new LIR(__schedule.getCFG(), __linearScanOrder, __codeEmittingOrder);
 
-        FrameMapBuilder frameMapBuilder = backend.newFrameMapBuilder(registerConfig);
-        LIRGenerationResult lirGenRes = backend.newLIRGenerationResult(lir, frameMapBuilder, graph, stub);
-        LIRGeneratorTool lirGen = backend.newLIRGenerator(lirGenRes);
-        NodeLIRBuilderTool nodeLirGen = backend.newNodeLIRBuilder(graph, lirGen);
+        FrameMapBuilder __frameMapBuilder = __backend.newFrameMapBuilder(__registerConfig);
+        LIRGenerationResult __lirGenRes = __backend.newLIRGenerationResult(__lir, __frameMapBuilder, __graph, __stub);
+        LIRGeneratorTool __lirGen = __backend.newLIRGenerator(__lirGenRes);
+        NodeLIRBuilderTool __nodeLirGen = __backend.newNodeLIRBuilder(__graph, __lirGen);
 
         // LIR generation
-        LIRGenerationContext context = new LIRGenerationContext(lirGen, nodeLirGen, graph, schedule);
-        new LIRGenerationPhase().apply(backend.getTarget(), lirGenRes, context);
+        LIRGenerationContext __context = new LIRGenerationContext(__lirGen, __nodeLirGen, __graph, __schedule);
+        new LIRGenerationPhase().apply(__backend.getTarget(), __lirGenRes, __context);
 
-        return emitLowLevel(backend.getTarget(), lirGenRes, lirGen, lirSuites, backend.newRegisterAllocationConfig(registerConfig));
+        return emitLowLevel(__backend.getTarget(), __lirGenRes, __lirGen, __lirSuites, __backend.newRegisterAllocationConfig(__registerConfig));
     }
 
-    public static LIRGenerationResult emitLowLevel(TargetDescription target, LIRGenerationResult lirGenRes, LIRGeneratorTool lirGen, LIRSuites lirSuites, RegisterAllocationConfig registerAllocationConfig)
+    public static LIRGenerationResult emitLowLevel(TargetDescription __target, LIRGenerationResult __lirGenRes, LIRGeneratorTool __lirGen, LIRSuites __lirSuites, RegisterAllocationConfig __registerAllocationConfig)
     {
-        PreAllocationOptimizationContext preAllocOptContext = new PreAllocationOptimizationContext(lirGen);
-        lirSuites.getPreAllocationOptimizationStage().apply(target, lirGenRes, preAllocOptContext);
+        PreAllocationOptimizationContext __preAllocOptContext = new PreAllocationOptimizationContext(__lirGen);
+        __lirSuites.getPreAllocationOptimizationStage().apply(__target, __lirGenRes, __preAllocOptContext);
 
-        AllocationContext allocContext = new AllocationContext(lirGen.getSpillMoveFactory(), registerAllocationConfig);
-        lirSuites.getAllocationStage().apply(target, lirGenRes, allocContext);
+        AllocationContext __allocContext = new AllocationContext(__lirGen.getSpillMoveFactory(), __registerAllocationConfig);
+        __lirSuites.getAllocationStage().apply(__target, __lirGenRes, __allocContext);
 
-        PostAllocationOptimizationContext postAllocOptContext = new PostAllocationOptimizationContext(lirGen);
-        lirSuites.getPostAllocationOptimizationStage().apply(target, lirGenRes, postAllocOptContext);
+        PostAllocationOptimizationContext __postAllocOptContext = new PostAllocationOptimizationContext(__lirGen);
+        __lirSuites.getPostAllocationOptimizationStage().apply(__target, __lirGenRes, __postAllocOptContext);
 
-        return lirGenRes;
+        return __lirGenRes;
     }
 
-    public static void emitCode(Backend backend, Assumptions assumptions, ResolvedJavaMethod rootMethod, Collection<ResolvedJavaMethod> inlinedMethods, EconomicSet<ResolvedJavaField> accessedFields, int bytecodeSize, LIRGenerationResult lirGenRes, CompilationResult compilationResult, ResolvedJavaMethod installedCodeOwner, CompilationResultBuilderFactory factory)
+    public static void emitCode(Backend __backend, Assumptions __assumptions, ResolvedJavaMethod __rootMethod, Collection<ResolvedJavaMethod> __inlinedMethods, EconomicSet<ResolvedJavaField> __accessedFields, int __bytecodeSize, LIRGenerationResult __lirGenRes, CompilationResult __compilationResult, ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilderFactory __factory)
     {
-        FrameMap frameMap = lirGenRes.getFrameMap();
-        CompilationResultBuilder crb = backend.newCompilationResultBuilder(lirGenRes, frameMap, compilationResult, factory);
-        backend.emitCode(crb, lirGenRes.getLIR(), installedCodeOwner);
-        if (assumptions != null && !assumptions.isEmpty())
+        FrameMap __frameMap = __lirGenRes.getFrameMap();
+        CompilationResultBuilder __crb = __backend.newCompilationResultBuilder(__lirGenRes, __frameMap, __compilationResult, __factory);
+        __backend.emitCode(__crb, __lirGenRes.getLIR(), __installedCodeOwner);
+        if (__assumptions != null && !__assumptions.isEmpty())
         {
-            compilationResult.setAssumptions(assumptions.toArray());
+            __compilationResult.setAssumptions(__assumptions.toArray());
         }
-        if (rootMethod != null)
+        if (__rootMethod != null)
         {
-            compilationResult.setMethods(rootMethod, inlinedMethods);
-            compilationResult.setFields(accessedFields);
-            compilationResult.setBytecodeSize(bytecodeSize);
+            __compilationResult.setMethods(__rootMethod, __inlinedMethods);
+            __compilationResult.setFields(__accessedFields);
+            __compilationResult.setBytecodeSize(__bytecodeSize);
         }
-        crb.finish();
+        __crb.finish();
     }
 }

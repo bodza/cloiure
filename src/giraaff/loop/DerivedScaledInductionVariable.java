@@ -13,23 +13,25 @@ import giraaff.nodes.util.GraphUtil;
 // @class DerivedScaledInductionVariable
 public final class DerivedScaledInductionVariable extends DerivedInductionVariable
 {
+    // @field
     private final ValueNode scale;
+    // @field
     private final ValueNode value;
 
     // @cons
-    public DerivedScaledInductionVariable(LoopEx loop, InductionVariable base, ValueNode scale, ValueNode value)
+    public DerivedScaledInductionVariable(LoopEx __loop, InductionVariable __base, ValueNode __scale, ValueNode __value)
     {
-        super(loop, base);
-        this.scale = scale;
-        this.value = value;
+        super(__loop, __base);
+        this.scale = __scale;
+        this.value = __value;
     }
 
     // @cons
-    public DerivedScaledInductionVariable(LoopEx loop, InductionVariable base, NegateNode value)
+    public DerivedScaledInductionVariable(LoopEx __loop, InductionVariable __base, NegateNode __value)
     {
-        super(loop, base);
-        this.scale = ConstantNode.forIntegerStamp(value.stamp(NodeView.DEFAULT), -1, value.graph());
-        this.value = value;
+        super(__loop, __base);
+        this.scale = ConstantNode.forIntegerStamp(__value.stamp(NodeView.DEFAULT), -1, __value.graph());
+        this.value = __value;
     }
 
     public ValueNode getScale()
@@ -46,15 +48,15 @@ public final class DerivedScaledInductionVariable extends DerivedInductionVariab
     @Override
     public Direction direction()
     {
-        Stamp stamp = scale.stamp(NodeView.DEFAULT);
-        if (stamp instanceof IntegerStamp)
+        Stamp __stamp = scale.stamp(NodeView.DEFAULT);
+        if (__stamp instanceof IntegerStamp)
         {
-            IntegerStamp integerStamp = (IntegerStamp) stamp;
-            if (integerStamp.isStrictlyPositive())
+            IntegerStamp __integerStamp = (IntegerStamp) __stamp;
+            if (__integerStamp.isStrictlyPositive())
             {
                 return base.direction();
             }
-            else if (integerStamp.isStrictlyNegative())
+            else if (__integerStamp.isStrictlyNegative())
             {
                 return base.direction().opposite();
             }
@@ -99,9 +101,9 @@ public final class DerivedScaledInductionVariable extends DerivedInductionVariab
     }
 
     @Override
-    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp stamp)
+    public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __stamp)
     {
-        return MathUtil.mul(graph(), base.extremumNode(assumePositiveTripCount, stamp), IntegerConvertNode.convert(scale, stamp, graph(), NodeView.DEFAULT));
+        return MathUtil.mul(graph(), base.extremumNode(__assumePositiveTripCount, __stamp), IntegerConvertNode.convert(scale, __stamp, graph(), NodeView.DEFAULT));
     }
 
     @Override

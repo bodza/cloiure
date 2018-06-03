@@ -25,41 +25,47 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin
          * Denotes a call site that must not be inlined and should be implemented by a node that
          * does not speculate on the call not raising an exception.
          */
+        // @def
         public static final InlineInfo DO_NOT_INLINE_WITH_EXCEPTION = new InlineInfo(null, null, null);
 
         /**
          * Denotes a call site must not be inlined and can be implemented by a node that speculates
          * the call will not throw an exception.
          */
+        // @def
         public static final InlineInfo DO_NOT_INLINE_NO_EXCEPTION = new InlineInfo(null, null, null);
 
         /**
          * Denotes a call site must not be inlined and the execution should be transferred to
          * interpreter in case of an exception.
          */
+        // @def
         public static final InlineInfo DO_NOT_INLINE_DEOPTIMIZE_ON_EXCEPTION = new InlineInfo(null, null, null);
 
+        // @field
         private final ResolvedJavaMethod methodToInline;
+        // @field
         private final ResolvedJavaMethod originalMethod;
+        // @field
         private final BytecodeProvider intrinsicBytecodeProvider;
 
-        public static InlineInfo createStandardInlineInfo(ResolvedJavaMethod methodToInline)
+        public static InlineInfo createStandardInlineInfo(ResolvedJavaMethod __methodToInline)
         {
-            return new InlineInfo(methodToInline, null, null);
+            return new InlineInfo(__methodToInline, null, null);
         }
 
-        public static InlineInfo createIntrinsicInlineInfo(ResolvedJavaMethod methodToInline, ResolvedJavaMethod originalMethod, BytecodeProvider intrinsicBytecodeProvider)
+        public static InlineInfo createIntrinsicInlineInfo(ResolvedJavaMethod __methodToInline, ResolvedJavaMethod __originalMethod, BytecodeProvider __intrinsicBytecodeProvider)
         {
-            return new InlineInfo(methodToInline, originalMethod, intrinsicBytecodeProvider);
+            return new InlineInfo(__methodToInline, __originalMethod, __intrinsicBytecodeProvider);
         }
 
         // @cons
-        private InlineInfo(ResolvedJavaMethod methodToInline, ResolvedJavaMethod originalMethod, BytecodeProvider intrinsicBytecodeProvider)
+        private InlineInfo(ResolvedJavaMethod __methodToInline, ResolvedJavaMethod __originalMethod, BytecodeProvider __intrinsicBytecodeProvider)
         {
             super();
-            this.methodToInline = methodToInline;
-            this.originalMethod = originalMethod;
-            this.intrinsicBytecodeProvider = intrinsicBytecodeProvider;
+            this.methodToInline = __methodToInline;
+            this.originalMethod = __originalMethod;
+            this.intrinsicBytecodeProvider = __intrinsicBytecodeProvider;
         }
 
         /**

@@ -14,21 +14,24 @@ import giraaff.nodes.spi.LoweringTool;
 // @class InitializeKlassNode
 public final class InitializeKlassNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<InitializeKlassNode> TYPE = NodeClass.create(InitializeKlassNode.class);
 
-    @Input ValueNode value;
+    @Input
+    // @field
+    ValueNode value;
 
     // @cons
-    public InitializeKlassNode(ValueNode value)
+    public InitializeKlassNode(ValueNode __value)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT));
-        this.value = value;
+        super(TYPE, __value.stamp(NodeView.DEFAULT));
+        this.value = __value;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public ValueNode value()

@@ -17,10 +17,10 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 // @class UnsafeCopyNode
 public final class UnsafeCopyNode
 {
-    public static boolean intrinsify(GraphBuilderContext b, @SuppressWarnings("unused") ResolvedJavaMethod targetMethod, ValueNode sourceObject, ValueNode sourceOffset, ValueNode destinationObject, ValueNode destinationOffset, JavaKind accessKind, LocationIdentity locationIdentity)
+    public static boolean intrinsify(GraphBuilderContext __b, @SuppressWarnings("unused") ResolvedJavaMethod __targetMethod, ValueNode __sourceObject, ValueNode __sourceOffset, ValueNode __destinationObject, ValueNode __destinationOffset, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
-        RawLoadNode value = b.add(new RawLoadNode(sourceObject, sourceOffset, accessKind, locationIdentity));
-        b.add(new RawStoreNode(destinationObject, destinationOffset, value, accessKind, locationIdentity));
+        RawLoadNode __value = __b.add(new RawLoadNode(__sourceObject, __sourceOffset, __accessKind, __locationIdentity));
+        __b.add(new RawStoreNode(__destinationObject, __destinationOffset, __value, __accessKind, __locationIdentity));
         return true;
     }
 

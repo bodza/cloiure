@@ -10,17 +10,20 @@ import giraaff.graph.NodeClass;
 // @class LoweredCallTargetNode
 public abstract class LoweredCallTargetNode extends CallTargetNode
 {
+    // @def
     public static final NodeClass<LoweredCallTargetNode> TYPE = NodeClass.create(LoweredCallTargetNode.class);
 
+    // @field
     protected final JavaType[] signature;
+    // @field
     protected final CallingConvention.Type callType;
 
     // @cons
-    protected LoweredCallTargetNode(NodeClass<? extends LoweredCallTargetNode> c, ValueNode[] arguments, StampPair returnStamp, JavaType[] signature, ResolvedJavaMethod target, CallingConvention.Type callType, InvokeKind invokeKind)
+    protected LoweredCallTargetNode(NodeClass<? extends LoweredCallTargetNode> __c, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, InvokeKind __invokeKind)
     {
-        super(c, arguments, target, invokeKind, returnStamp);
-        this.signature = signature;
-        this.callType = callType;
+        super(__c, __arguments, __target, __invokeKind, __returnStamp);
+        this.signature = __signature;
+        this.callType = __callType;
     }
 
     public JavaType[] signature()

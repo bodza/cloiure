@@ -11,14 +11,15 @@ import giraaff.phases.tiers.Suites;
 // @class DefaultSuitesCreator
 public class DefaultSuitesCreator extends SuitesProviderBase
 {
+    // @field
     private final CompilerConfiguration compilerConfiguration;
 
     // @cons
-    public DefaultSuitesCreator(CompilerConfiguration compilerConfiguration, Plugins plugins)
+    public DefaultSuitesCreator(CompilerConfiguration __compilerConfiguration, Plugins __plugins)
     {
         super();
-        this.defaultGraphBuilderSuite = createGraphBuilderSuite(plugins);
-        this.compilerConfiguration = compilerConfiguration;
+        this.defaultGraphBuilderSuite = createGraphBuilderSuite(__plugins);
+        this.compilerConfiguration = __compilerConfiguration;
     }
 
     @Override
@@ -27,11 +28,11 @@ public class DefaultSuitesCreator extends SuitesProviderBase
         return Suites.createSuites(compilerConfiguration);
     }
 
-    protected PhaseSuite<HighTierContext> createGraphBuilderSuite(Plugins plugins)
+    protected PhaseSuite<HighTierContext> createGraphBuilderSuite(Plugins __plugins)
     {
-        PhaseSuite<HighTierContext> suite = new PhaseSuite<>();
-        suite.appendPhase(new GraphBuilderPhase(GraphBuilderConfiguration.getDefault(plugins)));
-        return suite;
+        PhaseSuite<HighTierContext> __suite = new PhaseSuite<>();
+        __suite.appendPhase(new GraphBuilderPhase(GraphBuilderConfiguration.getDefault(__plugins)));
+        return __suite;
     }
 
     @Override

@@ -11,37 +11,40 @@ public final class Position
     /**
      * The edges in which this position lies.
      */
+    // @field
     private final Edges edges;
 
     /**
      * Index of the {@link Node} or {@link NodeList} field denoted by this position.
      */
+    // @field
     private final int index;
 
     /**
      * Index within a {@link NodeList} if {@link #index} denotes a {@link NodeList} field otherwise
      * {@link Node#NOT_ITERABLE}.
      */
+    // @field
     private final int subIndex;
 
     // @cons
-    public Position(Edges edges, int index, int subIndex)
+    public Position(Edges __edges, int __index, int __subIndex)
     {
         super();
-        this.edges = edges;
-        this.index = index;
-        this.subIndex = subIndex;
+        this.edges = __edges;
+        this.index = __index;
+        this.subIndex = __subIndex;
     }
 
-    public Node get(Node node)
+    public Node get(Node __node)
     {
         if (index < edges.getDirectCount())
         {
-            return Edges.getNode(node, edges.getOffsets(), index);
+            return Edges.getNode(__node, edges.getOffsets(), index);
         }
         else
         {
-            return Edges.getNodeList(node, edges.getOffsets(), index).get(subIndex);
+            return Edges.getNodeList(__node, edges.getOffsets(), index).get(subIndex);
         }
     }
 
@@ -60,66 +63,66 @@ public final class Position
         return ((InputEdges) edges).isOptional(index);
     }
 
-    public void set(Node node, Node value)
+    public void set(Node __node, Node __value)
     {
         if (index < edges.getDirectCount())
         {
-            edges.setNode(node, index, value);
+            edges.setNode(__node, index, __value);
         }
         else
         {
-            Edges.getNodeList(node, edges.getOffsets(), index).set(subIndex, value);
+            Edges.getNodeList(__node, edges.getOffsets(), index).set(subIndex, __value);
         }
     }
 
-    public void initialize(Node node, Node value)
+    public void initialize(Node __node, Node __value)
     {
         if (index < edges.getDirectCount())
         {
-            edges.initializeNode(node, index, value);
+            edges.initializeNode(__node, index, __value);
         }
         else
         {
-            Edges.getNodeList(node, edges.getOffsets(), index).initialize(subIndex, value);
+            Edges.getNodeList(__node, edges.getOffsets(), index).initialize(subIndex, __value);
         }
     }
 
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + index;
-        result = prime * result + edges.hashCode();
-        result = prime * result + subIndex;
-        return result;
+        final int __prime = 31;
+        int __result = 1;
+        __result = __prime * __result + index;
+        __result = __prime * __result + edges.hashCode();
+        __result = __prime * __result + subIndex;
+        return __result;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj == null)
+        if (__obj == null)
         {
             return false;
         }
-        if (getClass() != obj.getClass())
+        if (getClass() != __obj.getClass())
         {
             return false;
         }
-        Position other = (Position) obj;
-        if (index != other.index)
+        Position __other = (Position) __obj;
+        if (index != __other.index)
         {
             return false;
         }
-        if (edges != other.edges)
+        if (edges != __other.edges)
         {
             return false;
         }
-        if (subIndex != other.subIndex)
+        if (subIndex != __other.subIndex)
         {
             return false;
         }

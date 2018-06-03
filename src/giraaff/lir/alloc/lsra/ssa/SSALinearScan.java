@@ -17,9 +17,9 @@ import giraaff.lir.ssa.SSAUtil;
 public final class SSALinearScan extends LinearScan
 {
     // @cons
-    public SSALinearScan(TargetDescription target, LIRGenerationResult res, MoveFactory spillMoveFactory, RegisterAllocationConfig regAllocConfig, AbstractBlockBase<?>[] sortedBlocks, boolean neverSpillConstants)
+    public SSALinearScan(TargetDescription __target, LIRGenerationResult __res, MoveFactory __spillMoveFactory, RegisterAllocationConfig __regAllocConfig, AbstractBlockBase<?>[] __sortedBlocks, boolean __neverSpillConstants)
     {
-        super(target, res, spillMoveFactory, regAllocConfig, sortedBlocks, neverSpillConstants);
+        super(__target, __res, __spillMoveFactory, __regAllocConfig, __sortedBlocks, __neverSpillConstants);
     }
 
     @Override
@@ -50,11 +50,11 @@ public final class SSALinearScan extends LinearScan
     protected void beforeSpillMoveElimination()
     {
         // PHIs where the Out and In value matches (ie. there is no resolution move) are falsely detected as errors.
-        for (AbstractBlockBase<?> toBlock : sortedBlocks())
+        for (AbstractBlockBase<?> __toBlock : sortedBlocks())
         {
-            if (toBlock.getPredecessorCount() > 1)
+            if (__toBlock.getPredecessorCount() > 1)
             {
-                SSAUtil.removePhiIn(getLIR(), toBlock);
+                SSAUtil.removePhiIn(getLIR(), __toBlock);
             }
         }
     }

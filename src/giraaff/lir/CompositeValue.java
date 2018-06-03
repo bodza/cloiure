@@ -28,9 +28,9 @@ public abstract class CompositeValue extends Value
     }
 
     // @cons
-    public CompositeValue(ValueKind<?> kind)
+    public CompositeValue(ValueKind<?> __kind)
     {
-        super(kind);
+        super(__kind);
     }
 
     /**
@@ -46,23 +46,23 @@ public abstract class CompositeValue extends Value
      *
      * @return the original {@code values} array or a copy if values changed
      */
-    protected Value[] visitValueArray(LIRInstruction inst, Value[] values, OperandMode mode, InstructionValueProcedure proc, EnumSet<OperandFlag> flags)
+    protected Value[] visitValueArray(LIRInstruction __inst, Value[] __values, OperandMode __mode, InstructionValueProcedure __proc, EnumSet<OperandFlag> __flags)
     {
-        Value[] newValues = null;
-        for (int i = 0; i < values.length; i++)
+        Value[] __newValues = null;
+        for (int __i = 0; __i < __values.length; __i++)
         {
-            Value value = values[i];
-            Value newValue = proc.doValue(inst, value, mode, flags);
-            if (!value.identityEquals(newValue))
+            Value __value = __values[__i];
+            Value __newValue = __proc.doValue(__inst, __value, __mode, __flags);
+            if (!__value.identityEquals(__newValue))
             {
-                if (newValues == null)
+                if (__newValues == null)
                 {
-                    newValues = values.clone();
+                    __newValues = __values.clone();
                 }
-                newValues[i] = value;
+                __newValues[__i] = __value;
             }
         }
-        return newValues != null ? newValues : values;
+        return __newValues != null ? __newValues : __values;
     }
 
     protected abstract void visitEachComponent(LIRInstruction inst, OperandMode mode, InstructionValueConsumer proc);
@@ -74,12 +74,12 @@ public abstract class CompositeValue extends Value
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (obj instanceof CompositeValue)
+        if (__obj instanceof CompositeValue)
         {
-            CompositeValue other = (CompositeValue) obj;
-            return super.equals(other);
+            CompositeValue __other = (CompositeValue) __obj;
+            return super.equals(__other);
         }
         return false;
     }

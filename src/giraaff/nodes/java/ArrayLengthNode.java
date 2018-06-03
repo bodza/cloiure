@@ -25,9 +25,12 @@ import giraaff.nodes.virtual.VirtualArrayNode;
 // @class ArrayLengthNode
 public final class ArrayLengthNode extends FixedWithNextNode implements Canonicalizable.Unary<ValueNode>, Lowerable, Virtualizable
 {
+    // @def
     public static final NodeClass<ArrayLengthNode> TYPE = NodeClass.create(ArrayLengthNode.class);
 
-    @Input ValueNode array;
+    @Input
+    // @field
+    ValueNode array;
 
     public ValueNode array()
     {
@@ -41,35 +44,35 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
     }
 
     // @cons
-    public ArrayLengthNode(ValueNode array)
+    public ArrayLengthNode(ValueNode __array)
     {
         super(TYPE, StampFactory.positiveInt());
-        this.array = array;
+        this.array = __array;
     }
 
-    public static ValueNode create(ValueNode forValue, ConstantReflectionProvider constantReflection)
+    public static ValueNode create(ValueNode __forValue, ConstantReflectionProvider __constantReflection)
     {
-        if (forValue instanceof NewArrayNode)
+        if (__forValue instanceof NewArrayNode)
         {
-            NewArrayNode newArray = (NewArrayNode) forValue;
-            return newArray.length();
+            NewArrayNode __newArray = (NewArrayNode) __forValue;
+            return __newArray.length();
         }
 
-        ValueNode length = readArrayLengthConstant(forValue, constantReflection);
-        if (length != null)
+        ValueNode __length = readArrayLengthConstant(__forValue, __constantReflection);
+        if (__length != null)
         {
-            return length;
+            return __length;
         }
-        return new ArrayLengthNode(forValue);
+        return new ArrayLengthNode(__forValue);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode length = readArrayLength(forValue, tool.getConstantReflection());
-        if (length != null)
+        ValueNode __length = readArrayLength(__forValue, __tool.getConstantReflection());
+        if (__length != null)
         {
-            return length;
+            return __length;
         }
         return this;
     }
@@ -81,26 +84,26 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
      * @param value a value needing proxies
      * @return proxies wrapping {@code value}
      */
-    private static ValueNode reproxyValue(ValueNode originalValue, ValueNode value)
+    private static ValueNode reproxyValue(ValueNode __originalValue, ValueNode __value)
     {
-        if (value.isConstant())
+        if (__value.isConstant())
         {
             // no proxy needed
-            return value;
+            return __value;
         }
-        if (originalValue instanceof ValueProxyNode)
+        if (__originalValue instanceof ValueProxyNode)
         {
-            ValueProxyNode proxy = (ValueProxyNode) originalValue;
-            return new ValueProxyNode(reproxyValue(proxy.getOriginalNode(), value), proxy.proxyPoint());
+            ValueProxyNode __proxy = (ValueProxyNode) __originalValue;
+            return new ValueProxyNode(reproxyValue(__proxy.getOriginalNode(), __value), __proxy.proxyPoint());
         }
-        else if (originalValue instanceof ValueProxy)
+        else if (__originalValue instanceof ValueProxy)
         {
-            ValueProxy proxy = (ValueProxy) originalValue;
-            return reproxyValue(proxy.getOriginalNode(), value);
+            ValueProxy __proxy = (ValueProxy) __originalValue;
+            return reproxyValue(__proxy.getOriginalNode(), __value);
         }
         else
         {
-            return value;
+            return __value;
         }
     }
 
@@ -109,29 +112,29 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
      *
      * @return a node representing the length of {@code array} or null if it is not available
      */
-    public static ValueNode readArrayLength(ValueNode originalArray, ConstantReflectionProvider constantReflection)
+    public static ValueNode readArrayLength(ValueNode __originalArray, ConstantReflectionProvider __constantReflection)
     {
-        ValueNode length = GraphUtil.arrayLength(originalArray);
-        if (length != null)
+        ValueNode __length = GraphUtil.arrayLength(__originalArray);
+        if (__length != null)
         {
             // ensure that any proxies on the original value end up on the length value
-            return reproxyValue(originalArray, length);
+            return reproxyValue(__originalArray, __length);
         }
-        return readArrayLengthConstant(originalArray, constantReflection);
+        return readArrayLengthConstant(__originalArray, __constantReflection);
     }
 
-    private static ValueNode readArrayLengthConstant(ValueNode originalArray, ConstantReflectionProvider constantReflection)
+    private static ValueNode readArrayLengthConstant(ValueNode __originalArray, ConstantReflectionProvider __constantReflection)
     {
-        ValueNode array = GraphUtil.unproxify(originalArray);
-        if (constantReflection != null && array.isConstant() && !array.isNullConstant())
+        ValueNode __array = GraphUtil.unproxify(__originalArray);
+        if (__constantReflection != null && __array.isConstant() && !__array.isNullConstant())
         {
-            JavaConstant constantValue = array.asJavaConstant();
-            if (constantValue != null && constantValue.isNonNull())
+            JavaConstant __constantValue = __array.asJavaConstant();
+            if (__constantValue != null && __constantValue.isNonNull())
             {
-                Integer constantLength = constantReflection.readArrayLength(constantValue);
-                if (constantLength != null)
+                Integer __constantLength = __constantReflection.readArrayLength(__constantValue);
+                if (__constantLength != null)
                 {
-                    return ConstantNode.forInt(constantLength);
+                    return ConstantNode.forInt(__constantLength);
                 }
             }
         }
@@ -139,22 +142,22 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @NodeIntrinsic
     public static native int arrayLength(Object array);
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(array());
-        if (alias instanceof VirtualArrayNode)
+        ValueNode __alias = __tool.getAlias(array());
+        if (__alias instanceof VirtualArrayNode)
         {
-            VirtualArrayNode virtualArray = (VirtualArrayNode) alias;
-            tool.replaceWithValue(ConstantNode.forInt(virtualArray.entryCount(), graph()));
+            VirtualArrayNode __virtualArray = (VirtualArrayNode) __alias;
+            __tool.replaceWithValue(ConstantNode.forInt(__virtualArray.entryCount(), graph()));
         }
     }
 }

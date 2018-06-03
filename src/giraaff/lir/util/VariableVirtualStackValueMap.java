@@ -8,94 +8,96 @@ import giraaff.util.GraalError;
 // @class VariableVirtualStackValueMap
 public final class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K, T>
 {
+    // @field
     private final Object[] variables;
+    // @field
     private final Object[] slots;
 
     // @cons
-    public VariableVirtualStackValueMap(int initialVariableCapacity, int initialStackSlotCapacity)
+    public VariableVirtualStackValueMap(int __initialVariableCapacity, int __initialStackSlotCapacity)
     {
         super();
-        variables = new Object[initialVariableCapacity];
-        slots = new Object[initialStackSlotCapacity];
+        variables = new Object[__initialVariableCapacity];
+        slots = new Object[__initialStackSlotCapacity];
     }
 
     @Override
-    public T get(K value)
+    public T get(K __value)
     {
-        if (LIRValueUtil.isVariable(value))
+        if (LIRValueUtil.isVariable(__value))
         {
-            return get(variables, LIRValueUtil.asVariable(value).index);
+            return get(variables, LIRValueUtil.asVariable(__value).index);
         }
-        if (LIRValueUtil.isVirtualStackSlot(value))
+        if (LIRValueUtil.isVirtualStackSlot(__value))
         {
-            return get(slots, LIRValueUtil.asVirtualStackSlot(value).getId());
+            return get(slots, LIRValueUtil.asVirtualStackSlot(__value).getId());
         }
-        throw GraalError.shouldNotReachHere("Unsupported Value: " + value);
+        throw GraalError.shouldNotReachHere("Unsupported Value: " + __value);
     }
 
     @Override
-    public void remove(K value)
+    public void remove(K __value)
     {
-        if (LIRValueUtil.isVariable(value))
+        if (LIRValueUtil.isVariable(__value))
         {
-            remove(variables, LIRValueUtil.asVariable(value).index);
+            remove(variables, LIRValueUtil.asVariable(__value).index);
         }
-        else if (LIRValueUtil.isVirtualStackSlot(value))
+        else if (LIRValueUtil.isVirtualStackSlot(__value))
         {
-            remove(slots, LIRValueUtil.asVirtualStackSlot(value).getId());
+            remove(slots, LIRValueUtil.asVirtualStackSlot(__value).getId());
         }
         else
         {
-            throw GraalError.shouldNotReachHere("Unsupported Value: " + value);
+            throw GraalError.shouldNotReachHere("Unsupported Value: " + __value);
         }
     }
 
     @Override
-    public void put(K value, T object)
+    public void put(K __value, T __object)
     {
-        if (LIRValueUtil.isVariable(value))
+        if (LIRValueUtil.isVariable(__value))
         {
-            put(variables, LIRValueUtil.asVariable(value).index, object);
+            put(variables, LIRValueUtil.asVariable(__value).index, __object);
         }
-        else if (LIRValueUtil.isVirtualStackSlot(value))
+        else if (LIRValueUtil.isVirtualStackSlot(__value))
         {
-            put(slots, LIRValueUtil.asVirtualStackSlot(value).getId(), object);
+            put(slots, LIRValueUtil.asVirtualStackSlot(__value).getId(), __object);
         }
         else
         {
-            throw GraalError.shouldNotReachHere("Unsupported Value: " + value);
+            throw GraalError.shouldNotReachHere("Unsupported Value: " + __value);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> T get(Object[] array, int index)
+    private static <T> T get(Object[] __array, int __index)
     {
-        if (index >= array.length)
+        if (__index >= __array.length)
         {
             return null;
         }
-        return (T) array[index];
+        return (T) __array[__index];
     }
 
-    private static void remove(Object[] array, int index)
+    private static void remove(Object[] __array, int __index)
     {
-        if (index >= array.length)
+        if (__index >= __array.length)
         {
             return;
         }
-        array[index] = null;
+        __array[__index] = null;
     }
 
-    private static <T> Object[] put(Object[] array, int index, T object)
+    private static <T> Object[] put(Object[] __array, int __index, T __object)
     {
-        if (index >= array.length)
+        if (__index >= __array.length)
         {
-            Object[] newArray = new Object[index + 1];
-            System.arraycopy(array, 0, newArray, 0, array.length);
-            newArray[index] = object;
-            return newArray;
+            Object[] __newArray = new Object[__index + 1];
+            System.arraycopy(__array, 0, __newArray, 0, __array.length);
+            __newArray[__index] = __object;
+            return __newArray;
         }
-        array[index] = object;
+        __array[__index] = __object;
         return null;
     }
 }

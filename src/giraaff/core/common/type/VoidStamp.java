@@ -41,49 +41,49 @@ public final class VoidStamp extends Stamp
     }
 
     @Override
-    public Stamp improveWith(Stamp other)
+    public Stamp improveWith(Stamp __other)
     {
         return this;
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool)
+    public LIRKind getLIRKind(LIRKindTool __tool)
     {
         throw GraalError.shouldNotReachHere("void stamp has no value");
     }
 
     @Override
-    public ResolvedJavaType javaType(MetaAccessProvider metaAccess)
+    public ResolvedJavaType javaType(MetaAccessProvider __metaAccess)
     {
-        return metaAccess.lookupJavaType(Void.TYPE);
+        return __metaAccess.lookupJavaType(Void.TYPE);
     }
 
     @Override
-    public boolean alwaysDistinct(Stamp other)
+    public boolean alwaysDistinct(Stamp __other)
     {
-        return this != other;
+        return this != __other;
     }
 
     @Override
-    public Stamp meet(Stamp other)
-    {
-        return this;
-    }
-
-    @Override
-    public Stamp join(Stamp other)
+    public Stamp meet(Stamp __other)
     {
         return this;
     }
 
     @Override
-    public boolean isCompatible(Stamp stamp)
+    public Stamp join(Stamp __other)
     {
-        return stamp instanceof VoidStamp;
+        return this;
     }
 
     @Override
-    public boolean isCompatible(Constant constant)
+    public boolean isCompatible(Stamp __stamp)
+    {
+        return __stamp instanceof VoidStamp;
+    }
+
+    @Override
+    public boolean isCompatible(Constant __constant)
     {
         return false;
     }
@@ -102,17 +102,18 @@ public final class VoidStamp extends Stamp
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
         throw GraalError.shouldNotReachHere("can't read values of void stamp");
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta)
+    public Stamp constant(Constant __c, MetaAccessProvider __meta)
     {
         throw GraalError.shouldNotReachHere("void stamp has no value");
     }
 
+    // @def
     private static final VoidStamp instance = new VoidStamp();
 
     static VoidStamp getInstance()

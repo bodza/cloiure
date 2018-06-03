@@ -15,9 +15,13 @@ import giraaff.nodes.spi.LoweringTool;
 // @class AccessIndexedNode
 public abstract class AccessIndexedNode extends AccessArrayNode implements Lowerable
 {
+    // @def
     public static final NodeClass<AccessIndexedNode> TYPE = NodeClass.create(AccessIndexedNode.class);
 
-    @Input protected ValueNode index;
+    @Input
+    // @field
+    protected ValueNode index;
+    // @field
     protected final JavaKind elementKind;
 
     public ValueNode index()
@@ -34,11 +38,11 @@ public abstract class AccessIndexedNode extends AccessArrayNode implements Lower
      * @param elementKind the kind of the elements of the array
      */
     // @cons
-    protected AccessIndexedNode(NodeClass<? extends AccessIndexedNode> c, Stamp stamp, ValueNode array, ValueNode index, JavaKind elementKind)
+    protected AccessIndexedNode(NodeClass<? extends AccessIndexedNode> __c, Stamp __stamp, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
-        super(c, stamp, array);
-        this.index = index;
-        this.elementKind = elementKind;
+        super(__c, __stamp, __array);
+        this.index = __index;
+        this.elementKind = __elementKind;
     }
 
     /**
@@ -52,8 +56,8 @@ public abstract class AccessIndexedNode extends AccessArrayNode implements Lower
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 }

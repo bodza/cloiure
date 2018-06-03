@@ -18,95 +18,107 @@ import giraaff.util.GraalError;
 // @class LIRInstructionClass
 public final class LIRInstructionClass<T> extends LIRIntrospection<T>
 {
-    public static <T extends LIRInstruction> LIRInstructionClass<T> create(Class<T> c)
+    public static <T extends LIRInstruction> LIRInstructionClass<T> create(Class<T> __c)
     {
-        return new LIRInstructionClass<>(c);
+        return new LIRInstructionClass<>(__c);
     }
 
+    // @def
     private static final Class<LIRInstruction> INSTRUCTION_CLASS = LIRInstruction.class;
 
+    // @field
     private final Values uses;
+    // @field
     private final Values alives;
+    // @field
     private final Values temps;
+    // @field
     private final Values defs;
 
+    // @field
     private final boolean isMoveOp;
+    // @field
     private final boolean isValueMoveOp;
+    // @field
     private final boolean isLoadConstantOp;
 
+    // @field
     private String opcodeConstant;
+    // @field
     private int opcodeIndex;
 
     // @cons
-    private LIRInstructionClass(Class<T> clazz)
+    private LIRInstructionClass(Class<T> __clazz)
     {
-        this(clazz, new FieldsScanner.DefaultCalcOffset());
+        this(__clazz, new FieldsScanner.DefaultCalcOffset());
     }
 
     // @cons
-    public LIRInstructionClass(Class<T> clazz, FieldsScanner.CalcOffset calcOffset)
+    public LIRInstructionClass(Class<T> __clazz, FieldsScanner.CalcOffset __calcOffset)
     {
-        super(clazz);
+        super(__clazz);
 
-        LIRInstructionFieldsScanner ifs = new LIRInstructionFieldsScanner(calcOffset);
-        ifs.scan(clazz);
+        LIRInstructionFieldsScanner __ifs = new LIRInstructionFieldsScanner(__calcOffset);
+        __ifs.scan(__clazz);
 
-        uses = new Values(ifs.valueAnnotations.get(LIRInstruction.Use.class));
-        alives = new Values(ifs.valueAnnotations.get(LIRInstruction.Alive.class));
-        temps = new Values(ifs.valueAnnotations.get(LIRInstruction.Temp.class));
-        defs = new Values(ifs.valueAnnotations.get(LIRInstruction.Def.class));
+        uses = new Values(__ifs.valueAnnotations.get(LIRInstruction.Use.class));
+        alives = new Values(__ifs.valueAnnotations.get(LIRInstruction.Alive.class));
+        temps = new Values(__ifs.valueAnnotations.get(LIRInstruction.Temp.class));
+        defs = new Values(__ifs.valueAnnotations.get(LIRInstruction.Def.class));
 
-        data = new Fields(ifs.data);
+        data = new Fields(__ifs.data);
 
-        opcodeConstant = ifs.opcodeConstant;
-        if (ifs.opcodeField == null)
+        opcodeConstant = __ifs.opcodeConstant;
+        if (__ifs.opcodeField == null)
         {
             opcodeIndex = -1;
         }
         else
         {
-            opcodeIndex = ifs.data.indexOf(ifs.opcodeField);
+            opcodeIndex = __ifs.data.indexOf(__ifs.opcodeField);
         }
 
-        isMoveOp = MoveOp.class.isAssignableFrom(clazz);
-        isValueMoveOp = ValueMoveOp.class.isAssignableFrom(clazz);
-        isLoadConstantOp = LoadConstantOp.class.isAssignableFrom(clazz);
+        isMoveOp = MoveOp.class.isAssignableFrom(__clazz);
+        isValueMoveOp = ValueMoveOp.class.isAssignableFrom(__clazz);
+        isLoadConstantOp = LoadConstantOp.class.isAssignableFrom(__clazz);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> LIRInstructionClass<T> get(Class<T> clazz)
+    public static <T> LIRInstructionClass<T> get(Class<T> __clazz)
     {
         try
         {
-            Field field = clazz.getDeclaredField("TYPE");
-            field.setAccessible(true);
-            LIRInstructionClass<T> result = (LIRInstructionClass<T>) field.get(null);
-            if (result == null)
+            Field __field = __clazz.getDeclaredField("TYPE");
+            __field.setAccessible(true);
+            LIRInstructionClass<T> __result = (LIRInstructionClass<T>) __field.get(null);
+            if (__result == null)
             {
-                throw GraalError.shouldNotReachHere("TYPE field not initialized for class " + clazz.getTypeName());
+                throw GraalError.shouldNotReachHere("TYPE field not initialized for class " + __clazz.getTypeName());
             }
-            return result;
+            return __result;
         }
-        catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e)
+        catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException __e)
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException(__e);
         }
     }
 
     // @class LIRInstructionClass.LIRInstructionFieldsScanner
     private static final class LIRInstructionFieldsScanner extends LIRFieldsScanner
     {
+        // @field
         private String opcodeConstant;
 
         /**
          * Field (if any) annotated by {@link Opcode}.
          */
+        // @field
         private FieldsScanner.FieldInfo opcodeField;
 
         // @cons
-        LIRInstructionFieldsScanner(FieldsScanner.CalcOffset calc)
+        LIRInstructionFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
-            super(calc);
+            super(__calc);
 
             valueAnnotations.put(LIRInstruction.Use.class, new OperandModeAnnotation());
             valueAnnotations.put(LIRInstruction.Alive.class, new OperandModeAnnotation());
@@ -115,49 +127,49 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         }
 
         @Override
-        protected EnumSet<OperandFlag> getFlags(Field field)
+        protected EnumSet<OperandFlag> getFlags(Field __field)
         {
-            EnumSet<OperandFlag> result = EnumSet.noneOf(OperandFlag.class);
+            EnumSet<OperandFlag> __result = EnumSet.noneOf(OperandFlag.class);
             // Unfortunately, annotations cannot have class hierarchies or implement interfaces,
             // so we have to duplicate the code for every operand mode.
             // Unfortunately, annotations cannot have an EnumSet property, so we have to convert
             // from arrays to EnumSet manually.
-            if (field.isAnnotationPresent(LIRInstruction.Use.class))
+            if (__field.isAnnotationPresent(LIRInstruction.Use.class))
             {
-                result.addAll(Arrays.asList(field.getAnnotation(LIRInstruction.Use.class).value()));
+                __result.addAll(Arrays.asList(__field.getAnnotation(LIRInstruction.Use.class).value()));
             }
-            else if (field.isAnnotationPresent(LIRInstruction.Alive.class))
+            else if (__field.isAnnotationPresent(LIRInstruction.Alive.class))
             {
-                result.addAll(Arrays.asList(field.getAnnotation(LIRInstruction.Alive.class).value()));
+                __result.addAll(Arrays.asList(__field.getAnnotation(LIRInstruction.Alive.class).value()));
             }
-            else if (field.isAnnotationPresent(LIRInstruction.Temp.class))
+            else if (__field.isAnnotationPresent(LIRInstruction.Temp.class))
             {
-                result.addAll(Arrays.asList(field.getAnnotation(LIRInstruction.Temp.class).value()));
+                __result.addAll(Arrays.asList(__field.getAnnotation(LIRInstruction.Temp.class).value()));
             }
-            else if (field.isAnnotationPresent(LIRInstruction.Def.class))
+            else if (__field.isAnnotationPresent(LIRInstruction.Def.class))
             {
-                result.addAll(Arrays.asList(field.getAnnotation(LIRInstruction.Def.class).value()));
+                __result.addAll(Arrays.asList(__field.getAnnotation(LIRInstruction.Def.class).value()));
             }
             else
             {
                 GraalError.shouldNotReachHere();
             }
-            return result;
+            return __result;
         }
 
-        public void scan(Class<?> clazz)
+        public void scan(Class<?> __clazz)
         {
-            if (clazz.getAnnotation(Opcode.class) != null)
+            if (__clazz.getAnnotation(Opcode.class) != null)
             {
                 opcodeConstant = null;
             }
             opcodeField = null;
 
-            super.scan(clazz, LIRInstruction.class, false);
+            super.scan(__clazz, LIRInstruction.class, false);
 
             if (opcodeConstant == null && opcodeField == null)
             {
-                opcodeConstant = clazz.getSimpleName();
+                opcodeConstant = __clazz.getSimpleName();
                 if (opcodeConstant.endsWith("Op"))
                 {
                     opcodeConstant = opcodeConstant.substring(0, opcodeConstant.length() - 2);
@@ -166,11 +178,11 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         }
 
         @Override
-        protected void scanField(Field field, long offset)
+        protected void scanField(Field __field, long __offset)
         {
-            super.scanField(field, offset);
+            super.scanField(__field, __offset);
 
-            if (field.getAnnotation(Opcode.class) != null)
+            if (__field.getAnnotation(Opcode.class) != null)
             {
                 opcodeField = data.get(data.size() - 1);
             }
@@ -183,9 +195,9 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         return new Fields[] { data, uses, alives, temps, defs };
     }
 
-    Values getValues(OperandMode mode)
+    Values getValues(OperandMode __mode)
     {
-        switch (mode)
+        switch (__mode)
         {
             case USE:
                 return uses;
@@ -196,17 +208,17 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
             case DEF:
                 return defs;
             default:
-                throw GraalError.shouldNotReachHere("unknown OperandMode: " + mode);
+                throw GraalError.shouldNotReachHere("unknown OperandMode: " + __mode);
         }
     }
 
-    final String getOpcode(LIRInstruction obj)
+    final String getOpcode(LIRInstruction __obj)
     {
         if (opcodeConstant != null)
         {
             return opcodeConstant;
         }
-        return String.valueOf(data.getObject(obj, opcodeIndex));
+        return String.valueOf(data.getObject(__obj, opcodeIndex));
     }
 
     final boolean hasOperands()
@@ -214,83 +226,83 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         return uses.getCount() > 0 || alives.getCount() > 0 || temps.getCount() > 0 || defs.getCount() > 0;
     }
 
-    final void forEachUse(LIRInstruction obj, InstructionValueProcedure proc)
+    final void forEachUse(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(obj, uses, OperandMode.USE, proc);
+        forEach(__obj, uses, OperandMode.USE, __proc);
     }
 
-    final void forEachAlive(LIRInstruction obj, InstructionValueProcedure proc)
+    final void forEachAlive(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(obj, alives, OperandMode.ALIVE, proc);
+        forEach(__obj, alives, OperandMode.ALIVE, __proc);
     }
 
-    final void forEachTemp(LIRInstruction obj, InstructionValueProcedure proc)
+    final void forEachTemp(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(obj, temps, OperandMode.TEMP, proc);
+        forEach(__obj, temps, OperandMode.TEMP, __proc);
     }
 
-    final void forEachDef(LIRInstruction obj, InstructionValueProcedure proc)
+    final void forEachDef(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(obj, defs, OperandMode.DEF, proc);
+        forEach(__obj, defs, OperandMode.DEF, __proc);
     }
 
-    final void visitEachUse(LIRInstruction obj, InstructionValueConsumer proc)
+    final void visitEachUse(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(obj, uses, OperandMode.USE, proc);
+        visitEach(__obj, uses, OperandMode.USE, __proc);
     }
 
-    final void visitEachAlive(LIRInstruction obj, InstructionValueConsumer proc)
+    final void visitEachAlive(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(obj, alives, OperandMode.ALIVE, proc);
+        visitEach(__obj, alives, OperandMode.ALIVE, __proc);
     }
 
-    final void visitEachTemp(LIRInstruction obj, InstructionValueConsumer proc)
+    final void visitEachTemp(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(obj, temps, OperandMode.TEMP, proc);
+        visitEach(__obj, temps, OperandMode.TEMP, __proc);
     }
 
-    final void visitEachDef(LIRInstruction obj, InstructionValueConsumer proc)
+    final void visitEachDef(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(obj, defs, OperandMode.DEF, proc);
+        visitEach(__obj, defs, OperandMode.DEF, __proc);
     }
 
-    final Value forEachRegisterHint(LIRInstruction obj, OperandMode mode, InstructionValueProcedure proc)
+    final Value forEachRegisterHint(LIRInstruction __obj, OperandMode __mode, InstructionValueProcedure __proc)
     {
-        Values hints;
-        if (mode == OperandMode.USE)
+        Values __hints;
+        if (__mode == OperandMode.USE)
         {
-            hints = defs;
+            __hints = defs;
         }
-        else if (mode == OperandMode.DEF)
+        else if (__mode == OperandMode.DEF)
         {
-            hints = uses;
+            __hints = uses;
         }
         else
         {
             return null;
         }
 
-        for (int i = 0; i < hints.getCount(); i++)
+        for (int __i = 0; __i < __hints.getCount(); __i++)
         {
-            if (i < hints.getDirectCount())
+            if (__i < __hints.getDirectCount())
             {
-                Value hintValue = hints.getValue(obj, i);
-                Value result = proc.doValue(obj, hintValue, null, null);
-                if (result != null)
+                Value __hintValue = __hints.getValue(__obj, __i);
+                Value __result = __proc.doValue(__obj, __hintValue, null, null);
+                if (__result != null)
                 {
-                    return result;
+                    return __result;
                 }
             }
             else
             {
-                Value[] hintValues = hints.getValueArray(obj, i);
-                for (int j = 0; j < hintValues.length; j++)
+                Value[] __hintValues = __hints.getValueArray(__obj, __i);
+                for (int __j = 0; __j < __hintValues.length; __j++)
                 {
-                    Value hintValue = hintValues[j];
-                    Value result = proc.doValue(obj, hintValue, null, null);
-                    if (result != null)
+                    Value __hintValue = __hintValues[__j];
+                    Value __result = __proc.doValue(__obj, __hintValue, null, null);
+                    if (__result != null)
                     {
-                        return result;
+                        return __result;
                     }
                 }
             }

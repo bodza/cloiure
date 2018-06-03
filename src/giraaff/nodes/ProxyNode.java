@@ -14,15 +14,18 @@ import giraaff.nodes.extended.GuardingNode;
 // @class ProxyNode
 public abstract class ProxyNode extends FloatingNode implements ValueNumberable
 {
+    // @def
     public static final NodeClass<ProxyNode> TYPE = NodeClass.create(ProxyNode.class);
 
-    @Input(InputType.Association) LoopExitNode loopExit;
+    @Input(InputType.Association)
+    // @field
+    LoopExitNode loopExit;
 
     // @cons
-    protected ProxyNode(NodeClass<? extends ProxyNode> c, Stamp stamp, LoopExitNode proxyPoint)
+    protected ProxyNode(NodeClass<? extends ProxyNode> __c, Stamp __stamp, LoopExitNode __proxyPoint)
     {
-        super(c, stamp);
-        this.loopExit = proxyPoint;
+        super(__c, __stamp);
+        this.loopExit = __proxyPoint;
     }
 
     public abstract ValueNode value();
@@ -32,13 +35,13 @@ public abstract class ProxyNode extends FloatingNode implements ValueNumberable
         return loopExit;
     }
 
-    public static ValueProxyNode forValue(ValueNode value, LoopExitNode exit, StructuredGraph graph)
+    public static ValueProxyNode forValue(ValueNode __value, LoopExitNode __exit, StructuredGraph __graph)
     {
-        return graph.unique(new ValueProxyNode(value, exit));
+        return __graph.unique(new ValueProxyNode(__value, __exit));
     }
 
-    public static GuardProxyNode forGuard(GuardingNode value, LoopExitNode exit, StructuredGraph graph)
+    public static GuardProxyNode forGuard(GuardingNode __value, LoopExitNode __exit, StructuredGraph __graph)
     {
-        return graph.unique(new GuardProxyNode(value, exit));
+        return __graph.unique(new GuardProxyNode(__value, __exit));
     }
 }

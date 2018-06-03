@@ -12,53 +12,54 @@ import giraaff.phases.tiers.PhaseContext;
 // @class LoopPartialUnrollPhase
 public final class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
 {
+    // @field
     private final CanonicalizerPhase canonicalizer;
 
     // @cons
-    public LoopPartialUnrollPhase(LoopPolicies policies, CanonicalizerPhase canonicalizer)
+    public LoopPartialUnrollPhase(LoopPolicies __policies, CanonicalizerPhase __canonicalizer)
     {
-        super(policies);
-        this.canonicalizer = canonicalizer;
+        super(__policies);
+        this.canonicalizer = __canonicalizer;
     }
 
     @Override
     @SuppressWarnings("try")
-    protected void run(StructuredGraph graph, PhaseContext context)
+    protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        if (graph.hasLoops())
+        if (__graph.hasLoops())
         {
-            HashSetNodeEventListener listener = new HashSetNodeEventListener();
-            boolean changed = true;
-            while (changed)
+            HashSetNodeEventListener __listener = new HashSetNodeEventListener();
+            boolean __changed = true;
+            while (__changed)
             {
-                changed = false;
-                try (Graph.NodeEventScope nes = graph.trackNodeEvents(listener))
+                __changed = false;
+                try (Graph.NodeEventScope __nes = __graph.trackNodeEvents(__listener))
                 {
-                    LoopsData dataCounted = new LoopsData(graph);
-                    dataCounted.detectedCountedLoops();
-                    for (LoopEx loop : dataCounted.countedLoops())
+                    LoopsData __dataCounted = new LoopsData(__graph);
+                    __dataCounted.detectedCountedLoops();
+                    for (LoopEx __loop : __dataCounted.countedLoops())
                     {
-                        if (LoopTransformations.isUnrollableLoop(loop) && getPolicies().shouldPartiallyUnroll(loop))
+                        if (LoopTransformations.isUnrollableLoop(__loop) && getPolicies().shouldPartiallyUnroll(__loop))
                         {
-                            if (loop.loopBegin().isSimpleLoop())
+                            if (__loop.loopBegin().isSimpleLoop())
                             {
                                 // First perform the pre/post transformation and do the partial unroll
                                 // when we come around again.
-                                LoopTransformations.insertPrePostLoops(loop);
+                                LoopTransformations.insertPrePostLoops(__loop);
                             }
                             else
                             {
-                                LoopTransformations.partialUnroll(loop);
+                                LoopTransformations.partialUnroll(__loop);
                             }
-                            changed = true;
+                            __changed = true;
                         }
                     }
-                    dataCounted.deleteUnusedNodes();
+                    __dataCounted.deleteUnusedNodes();
 
-                    if (!listener.getNodes().isEmpty())
+                    if (!__listener.getNodes().isEmpty())
                     {
-                        canonicalizer.applyIncremental(graph, context, listener.getNodes());
-                        listener.getNodes().clear();
+                        canonicalizer.applyIncremental(__graph, __context, __listener.getNodes());
+                        __listener.getNodes().clear();
                     }
                 }
             }

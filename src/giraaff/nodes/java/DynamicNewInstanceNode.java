@@ -16,27 +16,32 @@ import giraaff.nodes.ValueNode;
 // @class DynamicNewInstanceNode
 public final class DynamicNewInstanceNode extends AbstractNewObjectNode implements Canonicalizable
 {
+    // @def
     public static final NodeClass<DynamicNewInstanceNode> TYPE = NodeClass.create(DynamicNewInstanceNode.class);
 
-    @Input ValueNode clazz;
+    @Input
+    // @field
+    ValueNode clazz;
 
     /**
      * Class pointer to class.class needs to be exposed earlier than this node is lowered so that it
      * can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
      */
-    @OptionalInput ValueNode classClass;
+    @OptionalInput
+    // @field
+    ValueNode classClass;
 
     // @cons
-    public DynamicNewInstanceNode(ValueNode clazz, boolean fillContents)
+    public DynamicNewInstanceNode(ValueNode __clazz, boolean __fillContents)
     {
-        this(TYPE, clazz, fillContents, null);
+        this(TYPE, __clazz, __fillContents, null);
     }
 
     // @cons
-    protected DynamicNewInstanceNode(NodeClass<? extends DynamicNewInstanceNode> c, ValueNode clazz, boolean fillContents, FrameState stateBefore)
+    protected DynamicNewInstanceNode(NodeClass<? extends DynamicNewInstanceNode> __c, ValueNode __clazz, boolean __fillContents, FrameState __stateBefore)
     {
-        super(c, StampFactory.objectNonNull(), fillContents, stateBefore);
-        this.clazz = clazz;
+        super(__c, StampFactory.objectNonNull(), __fillContents, __stateBefore);
+        this.clazz = __clazz;
     }
 
     public ValueNode getInstanceType()
@@ -45,14 +50,14 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (clazz.isConstant())
         {
-            ResolvedJavaType type = tool.getConstantReflection().asJavaType(clazz.asConstant());
-            if (type != null && type.isInitialized() && !throwsInstantiationException(type, tool.getMetaAccess()))
+            ResolvedJavaType __type = __tool.getConstantReflection().asJavaType(clazz.asConstant());
+            if (__type != null && __type.isInitialized() && !throwsInstantiationException(__type, __tool.getMetaAccess()))
             {
-                return createNewInstanceNode(type);
+                return createNewInstanceNode(__type);
             }
         }
         return this;
@@ -61,19 +66,19 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
     /**
      * Hook for subclasses to instantiate a subclass of {@link NewInstanceNode}.
      */
-    protected NewInstanceNode createNewInstanceNode(ResolvedJavaType type)
+    protected NewInstanceNode createNewInstanceNode(ResolvedJavaType __type)
     {
-        return new NewInstanceNode(type, fillContents(), stateBefore());
+        return new NewInstanceNode(__type, fillContents(), stateBefore());
     }
 
-    public static boolean throwsInstantiationException(Class<?> type, Class<?> classClass)
+    public static boolean throwsInstantiationException(Class<?> __type, Class<?> __classClass)
     {
-        return type.isPrimitive() || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) || type == classClass;
+        return __type.isPrimitive() || __type.isArray() || __type.isInterface() || Modifier.isAbstract(__type.getModifiers()) || __type == __classClass;
     }
 
-    public static boolean throwsInstantiationException(ResolvedJavaType type, MetaAccessProvider metaAccess)
+    public static boolean throwsInstantiationException(ResolvedJavaType __type, MetaAccessProvider __metaAccess)
     {
-        return type.isPrimitive() || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) || type.equals(metaAccess.lookupJavaType(Class.class));
+        return __type.isPrimitive() || __type.isArray() || __type.isInterface() || Modifier.isAbstract(__type.getModifiers()) || __type.equals(__metaAccess.lookupJavaType(Class.class));
     }
 
     public ValueNode getClassClass()
@@ -81,9 +86,9 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
         return classClass;
     }
 
-    public void setClassClass(ValueNode newClassClass)
+    public void setClassClass(ValueNode __newClassClass)
     {
-        updateUsages(classClass, newClassClass);
-        classClass = newClassClass;
+        updateUsages(classClass, __newClassClass);
+        classClass = __newClassClass;
     }
 }

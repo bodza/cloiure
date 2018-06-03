@@ -16,8 +16,11 @@ import giraaff.nodes.graphbuilderconf.ParameterPlugin;
 // @class ConstantBindingParameterPlugin
 public final class ConstantBindingParameterPlugin implements ParameterPlugin
 {
+    // @field
     private final Object[] constantArgs;
+    // @field
     private final MetaAccessProvider metaAccess;
+    // @field
     private final SnippetReflectionProvider snippetReflection;
 
     /**
@@ -26,43 +29,43 @@ public final class ConstantBindingParameterPlugin implements ParameterPlugin
      * {@link ConstantNode} is created if it isn't already a {@link ConstantNode}).
      */
     // @cons
-    public ConstantBindingParameterPlugin(Object[] constantArgs, MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection)
+    public ConstantBindingParameterPlugin(Object[] __constantArgs, MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection)
     {
         super();
-        this.constantArgs = constantArgs;
-        this.metaAccess = metaAccess;
-        this.snippetReflection = snippetReflection;
+        this.constantArgs = __constantArgs;
+        this.metaAccess = __metaAccess;
+        this.snippetReflection = __snippetReflection;
     }
 
     @Override
-    public FloatingNode interceptParameter(GraphBuilderTool b, int index, StampPair stamp)
+    public FloatingNode interceptParameter(GraphBuilderTool __b, int __index, StampPair __stamp)
     {
-        Object arg = constantArgs[index];
-        if (arg != null)
+        Object __arg = constantArgs[__index];
+        if (__arg != null)
         {
-            ConstantNode constantNode;
-            if (arg instanceof ConstantNode)
+            ConstantNode __constantNode;
+            if (__arg instanceof ConstantNode)
             {
-                ConstantNode otherCon = (ConstantNode) arg;
-                if (otherCon.graph() != b.getGraph())
+                ConstantNode __otherCon = (ConstantNode) __arg;
+                if (__otherCon.graph() != __b.getGraph())
                 {
                     // This is a node from another graph, so copy over extra state into a new ConstantNode.
-                    constantNode = ConstantNode.forConstant(stamp.getTrustedStamp(), otherCon.getValue(), otherCon.getStableDimension(), otherCon.isDefaultStable(), metaAccess);
+                    __constantNode = ConstantNode.forConstant(__stamp.getTrustedStamp(), __otherCon.getValue(), __otherCon.getStableDimension(), __otherCon.isDefaultStable(), metaAccess);
                 }
                 else
                 {
-                    constantNode = otherCon;
+                    __constantNode = __otherCon;
                 }
             }
-            else if (arg instanceof Constant)
+            else if (__arg instanceof Constant)
             {
-                constantNode = ConstantNode.forConstant(stamp.getTrustedStamp(), (Constant) arg, metaAccess);
+                __constantNode = ConstantNode.forConstant(__stamp.getTrustedStamp(), (Constant) __arg, metaAccess);
             }
             else
             {
-                constantNode = ConstantNode.forConstant(snippetReflection.forBoxed(stamp.getTrustedStamp().getStackKind(), arg), metaAccess);
+                __constantNode = ConstantNode.forConstant(snippetReflection.forBoxed(__stamp.getTrustedStamp().getStackKind(), __arg), metaAccess);
             }
-            return constantNode;
+            return __constantNode;
         }
         return null;
     }

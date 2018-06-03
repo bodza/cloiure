@@ -24,82 +24,82 @@ public final class MathUtil
         super();
     }
 
-    private static boolean isConstantOne(ValueNode v1)
+    private static boolean isConstantOne(ValueNode __v1)
     {
-        return v1.isConstant() && v1.stamp(NodeView.DEFAULT) instanceof IntegerStamp && v1.asJavaConstant().asLong() == 1;
+        return __v1.isConstant() && __v1.stamp(NodeView.DEFAULT) instanceof IntegerStamp && __v1.asJavaConstant().asLong() == 1;
     }
 
-    private static boolean isConstantZero(ValueNode v1)
+    private static boolean isConstantZero(ValueNode __v1)
     {
-        return v1.isConstant() && v1.stamp(NodeView.DEFAULT) instanceof IntegerStamp && v1.asJavaConstant().asLong() == 0;
+        return __v1.isConstant() && __v1.stamp(NodeView.DEFAULT) instanceof IntegerStamp && __v1.asJavaConstant().asLong() == 0;
     }
 
-    public static ValueNode add(StructuredGraph graph, ValueNode v1, ValueNode v2)
+    public static ValueNode add(StructuredGraph __graph, ValueNode __v1, ValueNode __v2)
     {
-        if (isConstantZero(v1))
+        if (isConstantZero(__v1))
         {
-            return v2;
+            return __v2;
         }
-        if (isConstantZero(v2))
+        if (isConstantZero(__v2))
         {
-            return v1;
+            return __v1;
         }
-        return BinaryArithmeticNode.add(graph, v1, v2, NodeView.DEFAULT);
+        return BinaryArithmeticNode.add(__graph, __v1, __v2, NodeView.DEFAULT);
     }
 
-    public static ValueNode mul(StructuredGraph graph, ValueNode v1, ValueNode v2)
+    public static ValueNode mul(StructuredGraph __graph, ValueNode __v1, ValueNode __v2)
     {
-        if (isConstantOne(v1))
+        if (isConstantOne(__v1))
         {
-            return v2;
+            return __v2;
         }
-        if (isConstantOne(v2))
+        if (isConstantOne(__v2))
         {
-            return v1;
+            return __v1;
         }
-        return BinaryArithmeticNode.mul(graph, v1, v2, NodeView.DEFAULT);
+        return BinaryArithmeticNode.mul(__graph, __v1, __v2, NodeView.DEFAULT);
     }
 
-    public static ValueNode sub(StructuredGraph graph, ValueNode v1, ValueNode v2)
+    public static ValueNode sub(StructuredGraph __graph, ValueNode __v1, ValueNode __v2)
     {
-        if (isConstantZero(v2))
+        if (isConstantZero(__v2))
         {
-            return v1;
+            return __v1;
         }
-        return BinaryArithmeticNode.sub(graph, v1, v2, NodeView.DEFAULT);
+        return BinaryArithmeticNode.sub(__graph, __v1, __v2, NodeView.DEFAULT);
     }
 
-    public static ValueNode divBefore(StructuredGraph graph, FixedNode before, ValueNode dividend, ValueNode divisor)
+    public static ValueNode divBefore(StructuredGraph __graph, FixedNode __before, ValueNode __dividend, ValueNode __divisor)
     {
-        return fixedDivBefore(graph, before, dividend, divisor, (dend, sor) -> SignedDivNode.create(dend, sor, NodeView.DEFAULT));
+        return fixedDivBefore(__graph, __before, __dividend, __divisor, (__dend, __sor) -> SignedDivNode.create(__dend, __sor, NodeView.DEFAULT));
     }
 
-    public static ValueNode unsignedDivBefore(StructuredGraph graph, FixedNode before, ValueNode dividend, ValueNode divisor)
+    public static ValueNode unsignedDivBefore(StructuredGraph __graph, FixedNode __before, ValueNode __dividend, ValueNode __divisor)
     {
-        return fixedDivBefore(graph, before, dividend, divisor, (dend, sor) -> UnsignedDivNode.create(dend, sor, NodeView.DEFAULT));
+        return fixedDivBefore(__graph, __before, __dividend, __divisor, (__dend, __sor) -> UnsignedDivNode.create(__dend, __sor, NodeView.DEFAULT));
     }
 
-    private static ValueNode fixedDivBefore(StructuredGraph graph, FixedNode before, ValueNode dividend, ValueNode divisor, BiFunction<ValueNode, ValueNode, ValueNode> createDiv)
+    private static ValueNode fixedDivBefore(StructuredGraph __graph, FixedNode __before, ValueNode __dividend, ValueNode __divisor, BiFunction<ValueNode, ValueNode, ValueNode> __createDiv)
     {
-        if (isConstantOne(divisor))
+        if (isConstantOne(__divisor))
         {
-            return dividend;
+            return __dividend;
         }
-        ValueNode div = graph.addOrUniqueWithInputs(createDiv.apply(dividend, divisor));
-        if (div instanceof FixedBinaryNode)
+        ValueNode __div = __graph.addOrUniqueWithInputs(__createDiv.apply(__dividend, __divisor));
+        if (__div instanceof FixedBinaryNode)
         {
-            FixedBinaryNode fixedDiv = (FixedBinaryNode) div;
-            if (before.predecessor() instanceof FixedBinaryNode)
+            FixedBinaryNode __fixedDiv = (FixedBinaryNode) __div;
+            if (__before.predecessor() instanceof FixedBinaryNode)
             {
-                FixedBinaryNode binaryPredecessor = (FixedBinaryNode) before.predecessor();
-                if (fixedDiv.dataFlowEquals(binaryPredecessor))
+                FixedBinaryNode __binaryPredecessor = (FixedBinaryNode) __before.predecessor();
+                if (__fixedDiv.dataFlowEquals(__binaryPredecessor))
                 {
-                    fixedDiv.safeDelete();
-                    return binaryPredecessor;
+                    __fixedDiv.safeDelete();
+                    return __binaryPredecessor;
                 }
             }
-            graph.addBeforeFixed(before, fixedDiv);
+            __graph.addBeforeFixed(__before, __fixedDiv);
         }
-        return div;
+        return __div;
     }
 }

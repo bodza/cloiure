@@ -6,30 +6,37 @@ import java.util.List;
 // @class Loop
 public abstract class Loop<T extends AbstractBlockBase<T>>
 {
+    // @field
     private final Loop<T> parent;
+    // @field
     private final List<Loop<T>> children;
 
+    // @field
     private final int depth;
+    // @field
     private final int index;
+    // @field
     private final T header;
+    // @field
     private final List<T> blocks;
+    // @field
     private final List<T> exits;
 
     // @cons
-    protected Loop(Loop<T> parent, int index, T header)
+    protected Loop(Loop<T> __parent, int __index, T __header)
     {
         super();
-        this.parent = parent;
-        if (parent != null)
+        this.parent = __parent;
+        if (__parent != null)
         {
-            this.depth = parent.getDepth() + 1;
+            this.depth = __parent.getDepth() + 1;
         }
         else
         {
             this.depth = 1;
         }
-        this.index = index;
-        this.header = header;
+        this.index = __index;
+        this.header = __header;
         this.blocks = new ArrayList<>();
         this.children = new ArrayList<>();
         this.exits = new ArrayList<>();
@@ -72,9 +79,9 @@ public abstract class Loop<T extends AbstractBlockBase<T>>
         return exits;
     }
 
-    public void addExit(T t)
+    public void addExit(T __t)
     {
-        exits.add(t);
+        exits.add(__t);
     }
 
     /**
@@ -84,16 +91,16 @@ public abstract class Loop<T extends AbstractBlockBase<T>>
      * @param parentLoop The loop which might be a transitive parent loop of child loop.
      * @return {@code true} if parentLoop is a (transitive) parent loop of childLoop, {@code false} otherwise
      */
-    public static <T extends AbstractBlockBase<T>> boolean transitiveParentLoop(Loop<T> childLoop, Loop<T> parentLoop)
+    public static <T extends AbstractBlockBase<T>> boolean transitiveParentLoop(Loop<T> __childLoop, Loop<T> __parentLoop)
     {
-        Loop<T> curr = childLoop;
-        while (curr != null)
+        Loop<T> __curr = __childLoop;
+        while (__curr != null)
         {
-            if (curr == parentLoop)
+            if (__curr == __parentLoop)
             {
                 return true;
             }
-            curr = curr.getParent();
+            __curr = __curr.getParent();
         }
         return false;
     }

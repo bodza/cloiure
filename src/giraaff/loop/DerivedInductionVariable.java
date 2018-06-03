@@ -8,13 +8,14 @@ import giraaff.nodes.StructuredGraph;
 // @class DerivedInductionVariable
 public abstract class DerivedInductionVariable extends InductionVariable
 {
+    // @field
     protected final InductionVariable base;
 
     // @cons
-    public DerivedInductionVariable(LoopEx loop, InductionVariable base)
+    public DerivedInductionVariable(LoopEx __loop, InductionVariable __base)
     {
-        super(loop);
-        this.base = base;
+        super(__loop);
+        this.base = __base;
     }
 
     @Override

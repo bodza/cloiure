@@ -9,7 +9,9 @@ import org.graalvm.word.LocationIdentity;
 // @class LocationSet
 public final class LocationSet
 {
+    // @field
     private LocationIdentity firstLocation;
+    // @field
     private List<LocationIdentity> list;
 
     // @cons
@@ -20,13 +22,13 @@ public final class LocationSet
     }
 
     // @cons
-    public LocationSet(LocationSet other)
+    public LocationSet(LocationSet __other)
     {
         super();
-        this.firstLocation = other.firstLocation;
-        if (other.list != null && other.list.size() > 0)
+        this.firstLocation = __other.firstLocation;
+        if (__other.list != null && __other.list.size() > 0)
         {
-            list = new ArrayList<>(other.list);
+            list = new ArrayList<>(__other.list);
         }
     }
 
@@ -48,18 +50,18 @@ public final class LocationSet
         return firstLocation != null && firstLocation.isAny();
     }
 
-    public void add(LocationIdentity location)
+    public void add(LocationIdentity __location)
     {
         if (this.isAny())
         {
             return;
         }
-        else if (location.isAny())
+        else if (__location.isAny())
         {
-            firstLocation = location;
+            firstLocation = __location;
             list = null;
         }
-        else if (location.isImmutable())
+        else if (__location.isImmutable())
         {
             return;
         }
@@ -67,60 +69,60 @@ public final class LocationSet
         {
             if (firstLocation == null)
             {
-                firstLocation = location;
+                firstLocation = __location;
             }
-            else if (location.equals(firstLocation))
+            else if (__location.equals(firstLocation))
             {
                 return;
             }
             else
             {
                 initList();
-                for (int i = 0; i < list.size(); ++i)
+                for (int __i = 0; __i < list.size(); ++__i)
                 {
-                    LocationIdentity value = list.get(i);
-                    if (location.equals(value))
+                    LocationIdentity __value = list.get(__i);
+                    if (__location.equals(__value))
                     {
                         return;
                     }
                 }
-                list.add(location);
+                list.add(__location);
             }
         }
     }
 
-    public void addAll(LocationSet other)
+    public void addAll(LocationSet __other)
     {
-        if (other.firstLocation != null)
+        if (__other.firstLocation != null)
         {
-            add(other.firstLocation);
+            add(__other.firstLocation);
         }
-        List<LocationIdentity> otherList = other.list;
-        if (otherList != null)
+        List<LocationIdentity> __otherList = __other.list;
+        if (__otherList != null)
         {
-            for (LocationIdentity l : otherList)
+            for (LocationIdentity __l : __otherList)
             {
-                add(l);
+                add(__l);
             }
         }
     }
 
-    public boolean contains(LocationIdentity locationIdentity)
+    public boolean contains(LocationIdentity __locationIdentity)
     {
         if (LocationIdentity.any().equals(firstLocation))
         {
             return true;
         }
-        if (locationIdentity.equals(firstLocation))
+        if (__locationIdentity.equals(firstLocation))
         {
             return true;
         }
         if (list != null)
         {
-            for (int i = 0; i < list.size(); ++i)
+            for (int __i = 0; __i < list.size(); ++__i)
             {
-                LocationIdentity value = list.get(i);
-                if (locationIdentity.equals(value))
+                LocationIdentity __value = list.get(__i);
+                if (__locationIdentity.equals(__value))
                 {
                     return true;
                 }

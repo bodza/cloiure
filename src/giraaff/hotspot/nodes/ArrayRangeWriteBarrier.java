@@ -9,20 +9,26 @@ import giraaff.nodes.spi.Lowerable;
 // @class ArrayRangeWriteBarrier
 public abstract class ArrayRangeWriteBarrier extends WriteBarrier implements Lowerable
 {
+    // @def
     public static final NodeClass<ArrayRangeWriteBarrier> TYPE = NodeClass.create(ArrayRangeWriteBarrier.class);
 
-    @Input(InputType.Association) AddressNode address;
-    @Input ValueNode length;
+    @Input(InputType.Association)
+    // @field
+    AddressNode address;
+    @Input
+    // @field
+    ValueNode length;
 
+    // @field
     private final int elementStride;
 
     // @cons
-    protected ArrayRangeWriteBarrier(NodeClass<? extends ArrayRangeWriteBarrier> c, AddressNode address, ValueNode length, int elementStride)
+    protected ArrayRangeWriteBarrier(NodeClass<? extends ArrayRangeWriteBarrier> __c, AddressNode __address, ValueNode __length, int __elementStride)
     {
-        super(c);
-        this.address = address;
-        this.length = length;
-        this.elementStride = elementStride;
+        super(__c);
+        this.address = __address;
+        this.length = __length;
+        this.elementStride = __elementStride;
     }
 
     public AddressNode getAddress()

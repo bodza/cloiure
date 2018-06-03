@@ -21,23 +21,26 @@ import giraaff.nodes.spi.LoweringTool;
 // @class JavaWriteNode
 public final class JavaWriteNode extends AbstractWriteNode implements Lowerable, StateSplit, MemoryAccess, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<JavaWriteNode> TYPE = NodeClass.create(JavaWriteNode.class);
 
+    // @field
     protected final JavaKind writeKind;
+    // @field
     protected final boolean compressible;
 
     // @cons
-    public JavaWriteNode(JavaKind writeKind, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType, boolean compressible)
+    public JavaWriteNode(JavaKind __writeKind, AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType, boolean __compressible)
     {
-        super(TYPE, address, location, value, barrierType);
-        this.writeKind = writeKind;
-        this.compressible = compressible;
+        super(TYPE, __address, __location, __value, __barrierType);
+        this.writeKind = __writeKind;
+        this.compressible = __compressible;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override

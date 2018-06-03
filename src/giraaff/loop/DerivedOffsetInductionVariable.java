@@ -14,15 +14,17 @@ import giraaff.util.GraalError;
 // @class DerivedOffsetInductionVariable
 public final class DerivedOffsetInductionVariable extends DerivedInductionVariable
 {
+    // @field
     private final ValueNode offset;
+    // @field
     private final BinaryArithmeticNode<?> value;
 
     // @cons
-    public DerivedOffsetInductionVariable(LoopEx loop, InductionVariable base, ValueNode offset, BinaryArithmeticNode<?> value)
+    public DerivedOffsetInductionVariable(LoopEx __loop, InductionVariable __base, ValueNode __offset, BinaryArithmeticNode<?> __value)
     {
-        super(loop, base);
-        this.offset = offset;
-        this.value = value;
+        super(__loop, __base);
+        this.offset = __offset;
+        this.value = __value;
     }
 
     public ValueNode getOffset()
@@ -87,9 +89,9 @@ public final class DerivedOffsetInductionVariable extends DerivedInductionVariab
     }
 
     @Override
-    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp stamp)
+    public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __stamp)
     {
-        return op(base.extremumNode(assumePositiveTripCount, stamp), IntegerConvertNode.convert(offset, stamp, graph(), NodeView.DEFAULT));
+        return op(base.extremumNode(__assumePositiveTripCount, __stamp), IntegerConvertNode.convert(offset, __stamp, graph(), NodeView.DEFAULT));
     }
 
     @Override
@@ -110,41 +112,41 @@ public final class DerivedOffsetInductionVariable extends DerivedInductionVariab
         return op(base.constantExtremum(), offset.asJavaConstant().asLong());
     }
 
-    private long op(long b, long o)
+    private long op(long __b, long __o)
     {
         if (value instanceof AddNode)
         {
-            return b + o;
+            return __b + __o;
         }
         if (value instanceof SubNode)
         {
             if (base.valueNode() == value.getX())
             {
-                return b - o;
+                return __b - __o;
             }
             else
             {
-                return o - b;
+                return __o - __b;
             }
         }
         throw GraalError.shouldNotReachHere();
     }
 
-    private ValueNode op(ValueNode b, ValueNode o)
+    private ValueNode op(ValueNode __b, ValueNode __o)
     {
         if (value instanceof AddNode)
         {
-            return MathUtil.add(graph(), b, o);
+            return MathUtil.add(graph(), __b, __o);
         }
         if (value instanceof SubNode)
         {
             if (base.valueNode() == value.getX())
             {
-                return MathUtil.sub(graph(), b, o);
+                return MathUtil.sub(graph(), __b, __o);
             }
             else
             {
-                return MathUtil.sub(graph(), o, b);
+                return MathUtil.sub(graph(), __o, __b);
             }
         }
         throw GraalError.shouldNotReachHere();

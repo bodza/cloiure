@@ -18,10 +18,15 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64ReadTimestampCounter
 public final class AMD64ReadTimestampCounter extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64ReadTimestampCounter> TYPE = LIRInstructionClass.create(AMD64ReadTimestampCounter.class);
 
-    @Def({OperandFlag.REG}) protected AllocatableValue highResult;
-    @Def({OperandFlag.REG}) protected AllocatableValue lowResult;
+    @Def({OperandFlag.REG})
+    // @field
+    protected AllocatableValue highResult;
+    @Def({OperandFlag.REG})
+    // @field
+    protected AllocatableValue lowResult;
 
     // @cons
     public AMD64ReadTimestampCounter()
@@ -43,8 +48,8 @@ public final class AMD64ReadTimestampCounter extends AMD64LIRInstruction
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        masm.rdtsc();
+        __masm.rdtsc();
     }
 }

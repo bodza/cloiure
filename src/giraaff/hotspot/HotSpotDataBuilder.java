@@ -20,59 +20,60 @@ import giraaff.util.GraalError;
 // @class HotSpotDataBuilder
 public final class HotSpotDataBuilder extends DataBuilder
 {
+    // @field
     private final TargetDescription target;
 
     // @cons
-    public HotSpotDataBuilder(TargetDescription target)
+    public HotSpotDataBuilder(TargetDescription __target)
     {
         super();
-        this.target = target;
+        this.target = __target;
     }
 
     @Override
-    public Data createDataItem(Constant constant)
+    public Data createDataItem(Constant __constant)
     {
-        if (JavaConstant.isNull(constant))
+        if (JavaConstant.isNull(__constant))
         {
-            int size = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(constant) ? 4 : target.wordSize;
-            return ZeroData.create(size, size);
+            int __size = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__constant) ? 4 : target.wordSize;
+            return ZeroData.create(__size, __size);
         }
-        else if (constant instanceof VMConstant)
+        else if (__constant instanceof VMConstant)
         {
-            VMConstant vmConstant = (VMConstant) constant;
-            if (!(constant instanceof HotSpotConstant))
+            VMConstant __vmConstant = (VMConstant) __constant;
+            if (!(__constant instanceof HotSpotConstant))
             {
-                throw new GraalError(String.valueOf(constant));
+                throw new GraalError(String.valueOf(__constant));
             }
 
-            HotSpotConstant c = (HotSpotConstant) vmConstant;
-            int size = c.isCompressed() ? 4 : target.wordSize;
+            HotSpotConstant __c = (HotSpotConstant) __vmConstant;
+            int __size = __c.isCompressed() ? 4 : target.wordSize;
             // @closure
-            return new Data(size, size)
+            return new Data(__size, __size)
             {
                 @Override
-                protected void emit(ByteBuffer buffer, Patches patches)
+                protected void emit(ByteBuffer __buffer, Patches __patches)
                 {
-                    int position = buffer.position();
+                    int __position = __buffer.position();
                     if (getSize() == Integer.BYTES)
                     {
-                        buffer.putInt(0xDEADDEAD);
+                        __buffer.putInt(0xDEADDEAD);
                     }
                     else
                     {
-                        buffer.putLong(0xDEADDEADDEADDEADL);
+                        __buffer.putLong(0xDEADDEADDEADDEADL);
                     }
-                    patches.registerPatch(position, vmConstant);
+                    __patches.registerPatch(__position, __vmConstant);
                 }
             };
         }
-        else if (constant instanceof SerializableConstant)
+        else if (__constant instanceof SerializableConstant)
         {
-            return new SerializableData((SerializableConstant) constant);
+            return new SerializableData((SerializableConstant) __constant);
         }
         else
         {
-            throw new GraalError(String.valueOf(constant));
+            throw new GraalError(String.valueOf(__constant));
         }
     }
 }

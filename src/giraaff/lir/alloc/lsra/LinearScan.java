@@ -49,6 +49,7 @@ public class LinearScan
          * block. The bit index of an operand is its {@linkplain LinearScan#operandNumber(Value)
          * operand number}.
          */
+        // @field
         public BitSet liveIn;
 
         /**
@@ -57,6 +58,7 @@ public class LinearScan
          * to this block. The bit index of an operand is its
          * {@linkplain LinearScan#operandNumber(Value) operand number}.
          */
+        // @field
         public BitSet liveOut;
 
         /**
@@ -64,57 +66,74 @@ public class LinearScan
          * these are the values that are live upon entry to the block. The bit index of an operand
          * is its {@linkplain LinearScan#operandNumber(Value) operand number}.
          */
+        // @field
         public BitSet liveGen;
 
         /**
          * Bit map specifying which operands are defined/overwritten in this block. The bit index of
          * an operand is its {@linkplain LinearScan#operandNumber(Value) operand number}.
          */
+        // @field
         public BitSet liveKill;
     }
 
+    // @def
     public static final int DOMINATOR_SPILL_MOVE_ID = -2;
+    // @def
     private static final int SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT = 1;
 
+    // @field
     private final LIR ir;
+    // @field
     private final FrameMapBuilder frameMapBuilder;
+    // @field
     private final RegisterAttributes[] registerAttributes;
+    // @field
     private final RegisterArray registers;
+    // @field
     private final RegisterAllocationConfig regAllocConfig;
+    // @field
     private final MoveFactory moveFactory;
 
+    // @field
     private final BlockMap<BlockData> blockData;
 
     /**
      * List of blocks in linear-scan order. This is only correct as long as the CFG does not change.
      */
+    // @field
     private final AbstractBlockBase<?>[] sortedBlocks;
 
     /**
      * @see #intervals()
      */
+    // @field
     private Interval[] intervals;
 
     /**
      * The number of valid entries in {@link #intervals}.
      */
+    // @field
     private int intervalsSize;
 
     /**
      * The index of the first entry in {@link #intervals} for a
      * {@linkplain #createDerivedInterval(Interval) derived interval}.
      */
+    // @field
     private int firstDerivedIntervalIndex = -1;
 
     /**
      * Intervals sorted by {@link Interval#from()}.
      */
+    // @field
     private Interval[] sortedIntervals;
 
     /**
      * Map from an instruction {@linkplain LIRInstruction#id id} to the instruction. Entries should
      * be retrieved with {@link #instructionForId(int)} as the id is not simply an index into this array.
      */
+    // @field
     private LIRInstruction[] opIdToInstructionMap;
 
     /**
@@ -122,42 +141,49 @@ public class LinearScan
      * {@linkplain AbstractBlockBase block} containing the instruction. Entries should be retrieved
      * with {@link #blockForId(int)} as the id is not simply an index into this array.
      */
+    // @field
     private AbstractBlockBase<?>[] opIdToBlockMap;
 
     /**
      * The {@linkplain #operandNumber(Value) number} of the first variable operand allocated.
      */
+    // @field
     private final int firstVariableNumber;
     /**
      * Number of variables.
      */
+    // @field
     private int numVariables;
+    // @field
     private final boolean neverSpillConstants;
 
     /**
      * Sentinel interval to denote the end of an interval list.
      */
+    // @field
     protected final Interval intervalEndMarker;
+    // @field
     public final Range rangeEndMarker;
+    // @field
     private final LIRGenerationResult res;
 
     // @cons
-    protected LinearScan(TargetDescription target, LIRGenerationResult res, MoveFactory spillMoveFactory, RegisterAllocationConfig regAllocConfig, AbstractBlockBase<?>[] sortedBlocks, boolean neverSpillConstants)
+    protected LinearScan(TargetDescription __target, LIRGenerationResult __res, MoveFactory __spillMoveFactory, RegisterAllocationConfig __regAllocConfig, AbstractBlockBase<?>[] __sortedBlocks, boolean __neverSpillConstants)
     {
         super();
-        this.ir = res.getLIR();
-        this.res = res;
-        this.moveFactory = spillMoveFactory;
-        this.frameMapBuilder = res.getFrameMapBuilder();
-        this.sortedBlocks = sortedBlocks;
-        this.registerAttributes = regAllocConfig.getRegisterConfig().getAttributesMap();
-        this.regAllocConfig = regAllocConfig;
+        this.ir = __res.getLIR();
+        this.res = __res;
+        this.moveFactory = __spillMoveFactory;
+        this.frameMapBuilder = __res.getFrameMapBuilder();
+        this.sortedBlocks = __sortedBlocks;
+        this.registerAttributes = __regAllocConfig.getRegisterConfig().getAttributesMap();
+        this.regAllocConfig = __regAllocConfig;
 
-        this.registers = target.arch.getRegisters();
+        this.registers = __target.arch.getRegisters();
         this.firstVariableNumber = getRegisters().size();
         this.numVariables = ir.numVariables();
         this.blockData = new BlockMap<>(ir.getControlFlowGraph());
-        this.neverSpillConstants = neverSpillConstants;
+        this.neverSpillConstants = __neverSpillConstants;
         this.rangeEndMarker = new Range(Integer.MAX_VALUE, Integer.MAX_VALUE, null);
         this.intervalEndMarker = new Interval(Value.ILLEGAL, Interval.END_MARKER_OPERAND_NUMBER, null, rangeEndMarker);
         this.intervalEndMarker.next = intervalEndMarker;
@@ -173,15 +199,15 @@ public class LinearScan
         return intervalEndMarker;
     }
 
-    public int getFirstLirInstructionId(AbstractBlockBase<?> block)
+    public int getFirstLirInstructionId(AbstractBlockBase<?> __block)
     {
-        return ir.getLIRforBlock(block).get(0).id();
+        return ir.getLIRforBlock(__block).get(0).id();
     }
 
-    public int getLastLirInstructionId(AbstractBlockBase<?> block)
+    public int getLastLirInstructionId(AbstractBlockBase<?> __block)
     {
-        ArrayList<LIRInstruction> instructions = ir.getLIRforBlock(block);
-        return instructions.get(instructions.size() - 1).id();
+        ArrayList<LIRInstruction> __instructions = ir.getLIRforBlock(__block);
+        return __instructions.get(__instructions.size() - 1).id();
     }
 
     public MoveFactory getSpillMoveFactory()
@@ -194,9 +220,9 @@ public class LinearScan
         return new MoveResolver(this);
     }
 
-    public static boolean isVariableOrRegister(Value value)
+    public static boolean isVariableOrRegister(Value __value)
     {
-        return LIRValueUtil.isVariable(value) || ValueUtil.isRegister(value);
+        return LIRValueUtil.isVariable(__value) || ValueUtil.isRegister(__value);
     }
 
     /**
@@ -204,13 +230,13 @@ public class LinearScan
      * the {@linkplain Variable variables} and {@linkplain RegisterValue registers} being processed
      * by this allocator.
      */
-    int operandNumber(Value operand)
+    int operandNumber(Value __operand)
     {
-        if (ValueUtil.isRegister(operand))
+        if (ValueUtil.isRegister(__operand))
         {
-            return ValueUtil.asRegister(operand).number;
+            return ValueUtil.asRegister(__operand).number;
         }
-        return firstVariableNumber + ((Variable) operand).index;
+        return firstVariableNumber + ((Variable) __operand).index;
     }
 
     /**
@@ -229,23 +255,23 @@ public class LinearScan
         return firstVariableNumber - 1;
     }
 
-    public BlockData getBlockData(AbstractBlockBase<?> block)
+    public BlockData getBlockData(AbstractBlockBase<?> __block)
     {
-        return blockData.get(block);
+        return blockData.get(__block);
     }
 
-    void initBlockData(AbstractBlockBase<?> block)
+    void initBlockData(AbstractBlockBase<?> __block)
     {
-        blockData.put(block, new BlockData());
+        blockData.put(__block, new BlockData());
     }
 
     // @closure
     static final IntervalPredicate IS_PRECOLORED_INTERVAL = new IntervalPredicate()
     {
         @Override
-        public boolean apply(Interval i)
+        public boolean apply(Interval __i)
         {
-            return ValueUtil.isRegister(i.operand);
+            return ValueUtil.isRegister(__i.operand);
         }
     };
 
@@ -253,9 +279,9 @@ public class LinearScan
     static final IntervalPredicate IS_VARIABLE_INTERVAL = new IntervalPredicate()
     {
         @Override
-        public boolean apply(Interval i)
+        public boolean apply(Interval __i)
         {
-            return LIRValueUtil.isVariable(i.operand);
+            return LIRValueUtil.isVariable(__i.operand);
         }
     };
 
@@ -263,39 +289,39 @@ public class LinearScan
     static final IntervalPredicate IS_STACK_INTERVAL = new IntervalPredicate()
     {
         @Override
-        public boolean apply(Interval i)
+        public boolean apply(Interval __i)
         {
-            return !ValueUtil.isRegister(i.operand);
+            return !ValueUtil.isRegister(__i.operand);
         }
     };
 
     /**
      * Gets an object describing the attributes of a given register according to this register configuration.
      */
-    public RegisterAttributes attributes(Register reg)
+    public RegisterAttributes attributes(Register __reg)
     {
-        return registerAttributes[reg.number];
+        return registerAttributes[__reg.number];
     }
 
-    void assignSpillSlot(Interval interval)
+    void assignSpillSlot(Interval __interval)
     {
         /*
          * Assign the canonical spill slot of the parent (if a part of the interval is already
          * spilled) or allocate a new spill slot.
          */
-        if (interval.canMaterialize())
+        if (__interval.canMaterialize())
         {
-            interval.assignLocation(Value.ILLEGAL);
+            __interval.assignLocation(Value.ILLEGAL);
         }
-        else if (interval.spillSlot() != null)
+        else if (__interval.spillSlot() != null)
         {
-            interval.assignLocation(interval.spillSlot());
+            __interval.assignLocation(__interval.spillSlot());
         }
         else
         {
-            VirtualStackSlot slot = frameMapBuilder.allocateSpillSlot(interval.kind());
-            interval.setSpillSlot(slot);
-            interval.assignLocation(slot);
+            VirtualStackSlot __slot = frameMapBuilder.allocateSpillSlot(__interval.kind());
+            __interval.setSpillSlot(__slot);
+            __interval.assignLocation(__slot);
         }
     }
 
@@ -319,12 +345,12 @@ public class LinearScan
      * @param operand the operand for the interval
      * @return the created interval
      */
-    Interval createInterval(AllocatableValue operand)
+    Interval createInterval(AllocatableValue __operand)
     {
-        int operandNumber = operandNumber(operand);
-        Interval interval = new Interval(operand, operandNumber, intervalEndMarker, rangeEndMarker);
-        intervals[operandNumber] = interval;
-        return interval;
+        int __operandNumber = operandNumber(__operand);
+        Interval __interval = new Interval(__operand, __operandNumber, intervalEndMarker, rangeEndMarker);
+        intervals[__operandNumber] = __interval;
+        return __interval;
     }
 
     /**
@@ -333,7 +359,7 @@ public class LinearScan
      * @param source an interval being split of spilled
      * @return a new interval derived from {@code source}
      */
-    Interval createDerivedInterval(Interval source)
+    Interval createDerivedInterval(Interval __source)
     {
         if (firstDerivedIntervalIndex == -1)
         {
@@ -345,9 +371,9 @@ public class LinearScan
         }
         intervalsSize++;
         // note: these variables are not managed and must therefore never be inserted into the LIR
-        Variable variable = new Variable(source.kind(), numVariables++);
+        Variable __variable = new Variable(__source.kind(), numVariables++);
 
-        return createInterval(variable);
+        return createInterval(__variable);
     }
 
     // access to block list (sorted in linear scan order)
@@ -356,9 +382,9 @@ public class LinearScan
         return sortedBlocks.length;
     }
 
-    public AbstractBlockBase<?> blockAt(int index)
+    public AbstractBlockBase<?> blockAt(int __index)
     {
-        return sortedBlocks[index];
+        return sortedBlocks[__index];
     }
 
     /**
@@ -376,40 +402,40 @@ public class LinearScan
         return ir.getControlFlowGraph().getLoops().size();
     }
 
-    Interval intervalFor(int operandNumber)
+    Interval intervalFor(int __operandNumber)
     {
-        return intervals[operandNumber];
+        return intervals[__operandNumber];
     }
 
-    public Interval intervalFor(Value operand)
+    public Interval intervalFor(Value __operand)
     {
-        int operandNumber = operandNumber(operand);
-        return intervals[operandNumber];
+        int __operandNumber = operandNumber(__operand);
+        return intervals[__operandNumber];
     }
 
-    public Interval getOrCreateInterval(AllocatableValue operand)
+    public Interval getOrCreateInterval(AllocatableValue __operand)
     {
-        Interval ret = intervalFor(operand);
-        if (ret == null)
+        Interval __ret = intervalFor(__operand);
+        if (__ret == null)
         {
-            return createInterval(operand);
+            return createInterval(__operand);
         }
         else
         {
-            return ret;
+            return __ret;
         }
     }
 
-    void initOpIdMaps(int numInstructions)
+    void initOpIdMaps(int __numInstructions)
     {
-        opIdToInstructionMap = new LIRInstruction[numInstructions];
-        opIdToBlockMap = new AbstractBlockBase<?>[numInstructions];
+        opIdToInstructionMap = new LIRInstruction[__numInstructions];
+        opIdToBlockMap = new AbstractBlockBase<?>[__numInstructions];
     }
 
-    void putOpIdMaps(int index, LIRInstruction op, AbstractBlockBase<?> block)
+    void putOpIdMaps(int __index, LIRInstruction __op, AbstractBlockBase<?> __block)
     {
-        opIdToInstructionMap[index] = op;
-        opIdToBlockMap[index] = block;
+        opIdToInstructionMap[__index] = __op;
+        opIdToBlockMap[__index] = __block;
     }
 
     /**
@@ -425,9 +451,9 @@ public class LinearScan
      * instructions in a method have an index one greater than their linear-scan order predecessor
      * with the first instruction having an index of 0.
      */
-    private static int opIdToIndex(int opId)
+    private static int opIdToIndex(int __opId)
     {
-        return opId >> 1;
+        return __opId >> 1;
     }
 
     /**
@@ -436,9 +462,9 @@ public class LinearScan
      * @param opId an instruction {@linkplain LIRInstruction#id id}
      * @return the instruction whose {@linkplain LIRInstruction#id} {@code == id}
      */
-    public LIRInstruction instructionForId(int opId)
+    public LIRInstruction instructionForId(int __opId)
     {
-        return opIdToInstructionMap[opIdToIndex(opId)];
+        return opIdToInstructionMap[opIdToIndex(__opId)];
     }
 
     /**
@@ -447,19 +473,19 @@ public class LinearScan
      * @param opId an instruction {@linkplain LIRInstruction#id id}
      * @return the block containing the instruction denoted by {@code opId}
      */
-    public AbstractBlockBase<?> blockForId(int opId)
+    public AbstractBlockBase<?> blockForId(int __opId)
     {
-        return opIdToBlockMap[opIdToIndex(opId)];
+        return opIdToBlockMap[opIdToIndex(__opId)];
     }
 
-    boolean isBlockBegin(int opId)
+    boolean isBlockBegin(int __opId)
     {
-        return opId == 0 || blockForId(opId) != blockForId(opId - 1);
+        return __opId == 0 || blockForId(__opId) != blockForId(__opId - 1);
     }
 
-    boolean coversBlockBegin(int opId1, int opId2)
+    boolean coversBlockBegin(int __opId1, int __opId2)
     {
-        return blockForId(opId1) != blockForId(opId2);
+        return blockForId(__opId1) != blockForId(__opId2);
     }
 
     /**
@@ -468,9 +494,9 @@ public class LinearScan
      * @param opId an instruction {@linkplain LIRInstruction#id id}
      * @return {@code true} if the instruction denoted by {@code id} destroys all caller saved registers.
      */
-    boolean hasCall(int opId)
+    boolean hasCall(int __opId)
     {
-        return instructionForId(opId).destroysCallerSavedRegisters();
+        return instructionForId(__opId).destroysCallerSavedRegisters();
     }
 
     // @class LinearScan.IntervalPredicate
@@ -479,122 +505,122 @@ public class LinearScan
         abstract boolean apply(Interval i);
     }
 
-    public boolean isProcessed(Value operand)
+    public boolean isProcessed(Value __operand)
     {
-        return !ValueUtil.isRegister(operand) || attributes(ValueUtil.asRegister(operand)).isAllocatable();
+        return !ValueUtil.isRegister(__operand) || attributes(ValueUtil.asRegister(__operand)).isAllocatable();
     }
 
     // * Phase 5: actual register allocation
 
-    private static boolean isSorted(Interval[] intervals)
+    private static boolean isSorted(Interval[] __intervals)
     {
-        int from = -1;
-        for (Interval interval : intervals)
+        int __from = -1;
+        for (Interval __interval : __intervals)
         {
-            from = interval.from();
+            __from = __interval.from();
         }
         return true;
     }
 
-    static Interval addToList(Interval first, Interval prev, Interval interval)
+    static Interval addToList(Interval __first, Interval __prev, Interval __interval)
     {
-        Interval newFirst = first;
-        if (prev != null)
+        Interval __newFirst = __first;
+        if (__prev != null)
         {
-            prev.next = interval;
+            __prev.next = __interval;
         }
         else
         {
-            newFirst = interval;
+            __newFirst = __interval;
         }
-        return newFirst;
+        return __newFirst;
     }
 
-    Pair<Interval, Interval> createUnhandledLists(IntervalPredicate isList1, IntervalPredicate isList2)
+    Pair<Interval, Interval> createUnhandledLists(IntervalPredicate __isList1, IntervalPredicate __isList2)
     {
-        Interval list1 = intervalEndMarker;
-        Interval list2 = intervalEndMarker;
+        Interval __list1 = intervalEndMarker;
+        Interval __list2 = intervalEndMarker;
 
-        Interval list1Prev = null;
-        Interval list2Prev = null;
-        Interval v;
+        Interval __list1Prev = null;
+        Interval __list2Prev = null;
+        Interval __v;
 
-        int n = sortedIntervals.length;
-        for (int i = 0; i < n; i++)
+        int __n = sortedIntervals.length;
+        for (int __i = 0; __i < __n; __i++)
         {
-            v = sortedIntervals[i];
-            if (v == null)
+            __v = sortedIntervals[__i];
+            if (__v == null)
             {
                 continue;
             }
 
-            if (isList1.apply(v))
+            if (__isList1.apply(__v))
             {
-                list1 = addToList(list1, list1Prev, v);
-                list1Prev = v;
+                __list1 = addToList(__list1, __list1Prev, __v);
+                __list1Prev = __v;
             }
-            else if (isList2 == null || isList2.apply(v))
+            else if (__isList2 == null || __isList2.apply(__v))
             {
-                list2 = addToList(list2, list2Prev, v);
-                list2Prev = v;
+                __list2 = addToList(__list2, __list2Prev, __v);
+                __list2Prev = __v;
             }
         }
 
-        if (list1Prev != null)
+        if (__list1Prev != null)
         {
-            list1Prev.next = intervalEndMarker;
+            __list1Prev.next = intervalEndMarker;
         }
-        if (list2Prev != null)
+        if (__list2Prev != null)
         {
-            list2Prev.next = intervalEndMarker;
+            __list2Prev.next = intervalEndMarker;
         }
 
-        return Pair.create(list1, list2);
+        return Pair.create(__list1, __list2);
     }
 
     protected void sortIntervalsBeforeAllocation()
     {
-        int sortedLen = 0;
-        for (Interval interval : intervals)
+        int __sortedLen = 0;
+        for (Interval __interval : intervals)
         {
-            if (interval != null)
+            if (__interval != null)
             {
-                sortedLen++;
+                __sortedLen++;
             }
         }
 
-        Interval[] sortedList = new Interval[sortedLen];
-        int sortedIdx = 0;
-        int sortedFromMax = -1;
+        Interval[] __sortedList = new Interval[__sortedLen];
+        int __sortedIdx = 0;
+        int __sortedFromMax = -1;
 
         // special sorting algorithm: the original interval-list is almost sorted,
         // only some intervals are swapped. So this is much faster than a complete QuickSort
-        for (Interval interval : intervals)
+        for (Interval __interval : intervals)
         {
-            if (interval != null)
+            if (__interval != null)
             {
-                int from = interval.from();
+                int __from = __interval.from();
 
-                if (sortedFromMax <= from)
+                if (__sortedFromMax <= __from)
                 {
-                    sortedList[sortedIdx++] = interval;
-                    sortedFromMax = interval.from();
+                    __sortedList[__sortedIdx++] = __interval;
+                    __sortedFromMax = __interval.from();
                 }
                 else
                 {
                     // the assumption that the intervals are already sorted failed,
                     // so this interval must be sorted in manually
-                    int j;
-                    for (j = sortedIdx - 1; j >= 0 && from < sortedList[j].from(); j--)
+                    int __j;
+                    for (__j = __sortedIdx - 1; __j >= 0 && __from < __sortedList[__j].from(); __j--)
                     {
-                        sortedList[j + 1] = sortedList[j];
+                        __sortedList[__j + 1] = __sortedList[__j];
                     }
-                    sortedList[j + 1] = interval;
-                    sortedIdx++;
+                    __sortedList[__j + 1] = __interval;
+                    __sortedIdx++;
                 }
             }
         }
-        sortedIntervals = sortedList;
+        sortedIntervals = __sortedList;
     }
 
     void sortIntervalsAfterAllocation()
@@ -605,91 +631,91 @@ public class LinearScan
             return;
         }
 
-        Interval[] oldList = sortedIntervals;
-        Interval[] newList = Arrays.copyOfRange(intervals, firstDerivedIntervalIndex, intervalsSize);
-        int oldLen = oldList.length;
-        int newLen = newList.length;
+        Interval[] __oldList = sortedIntervals;
+        Interval[] __newList = Arrays.copyOfRange(intervals, firstDerivedIntervalIndex, intervalsSize);
+        int __oldLen = __oldList.length;
+        int __newLen = __newList.length;
 
         // conventional sort-algorithm for new intervals
-        Arrays.sort(newList, (Interval a, Interval b) -> a.from() - b.from());
+        Arrays.sort(__newList, (Interval __a, Interval __b) -> __a.from() - __b.from());
 
         // merge old and new list (both already sorted) into one combined list
-        Interval[] combinedList = new Interval[oldLen + newLen];
-        int oldIdx = 0;
-        int newIdx = 0;
+        Interval[] __combinedList = new Interval[__oldLen + __newLen];
+        int __oldIdx = 0;
+        int __newIdx = 0;
 
-        while (oldIdx + newIdx < combinedList.length)
+        while (__oldIdx + __newIdx < __combinedList.length)
         {
-            if (newIdx >= newLen || (oldIdx < oldLen && oldList[oldIdx].from() <= newList[newIdx].from()))
+            if (__newIdx >= __newLen || (__oldIdx < __oldLen && __oldList[__oldIdx].from() <= __newList[__newIdx].from()))
             {
-                combinedList[oldIdx + newIdx] = oldList[oldIdx];
-                oldIdx++;
+                __combinedList[__oldIdx + __newIdx] = __oldList[__oldIdx];
+                __oldIdx++;
             }
             else
             {
-                combinedList[oldIdx + newIdx] = newList[newIdx];
-                newIdx++;
+                __combinedList[__oldIdx + __newIdx] = __newList[__newIdx];
+                __newIdx++;
             }
         }
 
-        sortedIntervals = combinedList;
+        sortedIntervals = __combinedList;
     }
 
     // wrapper for Interval.splitChildAtOpId that performs a bailout in product mode
     // instead of returning null
-    public Interval splitChildAtOpId(Interval interval, int opId, LIRInstruction.OperandMode mode)
+    public Interval splitChildAtOpId(Interval __interval, int __opId, LIRInstruction.OperandMode __mode)
     {
-        Interval result = interval.getSplitChildAtOpId(opId, mode, this);
+        Interval __result = __interval.getSplitChildAtOpId(__opId, __mode, this);
 
-        if (result != null)
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
         throw new GraalError("linear scan: interval is null");
     }
 
-    static AllocatableValue canonicalSpillOpr(Interval interval)
+    static AllocatableValue canonicalSpillOpr(Interval __interval)
     {
-        return interval.spillSlot();
+        return __interval.spillSlot();
     }
 
-    boolean isMaterialized(AllocatableValue operand, int opId, OperandMode mode)
+    boolean isMaterialized(AllocatableValue __operand, int __opId, OperandMode __mode)
     {
-        Interval interval = intervalFor(operand);
+        Interval __interval = intervalFor(__operand);
 
-        if (opId != -1)
+        if (__opId != -1)
         {
             // Operands are not changed when an interval is split during allocation, so search the right interval here.
-            interval = splitChildAtOpId(interval, opId, mode);
+            __interval = splitChildAtOpId(__interval, __opId, __mode);
         }
 
-        return ValueUtil.isIllegal(interval.location()) && interval.canMaterialize();
+        return ValueUtil.isIllegal(__interval.location()) && __interval.canMaterialize();
     }
 
-    boolean isCallerSave(Value operand)
+    boolean isCallerSave(Value __operand)
     {
-        return attributes(ValueUtil.asRegister(operand)).isCallerSave();
+        return attributes(ValueUtil.asRegister(__operand)).isCallerSave();
     }
 
-    protected void allocate(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    protected void allocate(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
     {
-        createLifetimeAnalysisPhase().apply(target, lirGenRes, context);
+        createLifetimeAnalysisPhase().apply(__target, __lirGenRes, __context);
 
         sortIntervalsBeforeAllocation();
 
-        createRegisterAllocationPhase().apply(target, lirGenRes, context);
+        createRegisterAllocationPhase().apply(__target, __lirGenRes, __context);
 
         if (GraalOptions.lirOptLSRAOptimizeSpillPosition)
         {
-            createOptimizeSpillPositionPhase().apply(target, lirGenRes, context);
+            createOptimizeSpillPositionPhase().apply(__target, __lirGenRes, __context);
         }
-        createResolveDataFlowPhase().apply(target, lirGenRes, context);
+        createResolveDataFlowPhase().apply(__target, __lirGenRes, __context);
 
         sortIntervalsAfterAllocation();
 
         beforeSpillMoveElimination();
-        createSpillMoveEliminationPhase().apply(target, lirGenRes, context);
-        createAssignLocationsPhase().apply(target, lirGenRes, context);
+        createSpillMoveEliminationPhase().apply(__target, __lirGenRes, __context);
+        createAssignLocationsPhase().apply(__target, __lirGenRes, __context);
     }
 
     protected void beforeSpillMoveElimination()

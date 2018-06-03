@@ -23,15 +23,18 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class GuardedValueNode
 public final class GuardedValueNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, Canonicalizable, ValueProxy
 {
+    // @def
     public static final NodeClass<GuardedValueNode> TYPE = NodeClass.create(GuardedValueNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
 
     // @cons
-    public GuardedValueNode(ValueNode object, GuardingNode guard)
+    public GuardedValueNode(ValueNode __object, GuardingNode __guard)
     {
-        super(TYPE, object.stamp(NodeView.DEFAULT), guard);
-        this.object = object;
+        super(TYPE, __object.stamp(NodeView.DEFAULT), __guard);
+        this.object = __object;
     }
 
     public ValueNode object()
@@ -40,11 +43,11 @@ public final class GuardedValueNode extends FloatingGuardedNode implements LIRLo
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         if (object.getStackKind() != JavaKind.Void && object.getStackKind() != JavaKind.Illegal)
         {
-            gen.setResult(this, gen.operand(object));
+            __gen.setResult(this, __gen.operand(object));
         }
     }
 
@@ -55,17 +58,17 @@ public final class GuardedValueNode extends FloatingGuardedNode implements LIRLo
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            tool.replaceWithVirtual((VirtualObjectNode) alias);
+            __tool.replaceWithVirtual((VirtualObjectNode) __alias);
         }
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (getGuard() == null)
         {

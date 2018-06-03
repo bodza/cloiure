@@ -20,36 +20,37 @@ import giraaff.word.Word;
 public final class UnsafeLoadSnippets implements Snippets
 {
     @Snippet
-    public static Object lowerUnsafeLoad(Object object, long offset)
+    public static Object lowerUnsafeLoad(Object __object, long __offset)
     {
-        Object fixedObject = FixedValueAnchorNode.getObject(object);
-        if (object instanceof java.lang.ref.Reference && HotSpotReplacementsUtil.referentOffset() == offset)
+        Object __fixedObject = FixedValueAnchorNode.getObject(__object);
+        if (__object instanceof java.lang.ref.Reference && HotSpotReplacementsUtil.referentOffset() == __offset)
         {
-            return Word.objectToTrackedPointer(fixedObject).readObject((int) offset, BarrierType.PRECISE);
+            return Word.objectToTrackedPointer(__fixedObject).readObject((int) __offset, BarrierType.PRECISE);
         }
         else
         {
-            return Word.objectToTrackedPointer(fixedObject).readObject((int) offset, BarrierType.NONE);
+            return Word.objectToTrackedPointer(__fixedObject).readObject((int) __offset, BarrierType.NONE);
         }
     }
 
     // @class UnsafeLoadSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final SnippetInfo unsafeLoad = snippet(UnsafeLoadSnippets.class, "lowerUnsafeLoad");
 
         // @cons
-        public Templates(HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders __providers, TargetDescription __target)
         {
-            super(providers, providers.getSnippetReflection(), target);
+            super(__providers, __providers.getSnippetReflection(), __target);
         }
 
-        public void lower(RawLoadNode load, LoweringTool tool)
+        public void lower(RawLoadNode __load, LoweringTool __tool)
         {
-            Arguments args = new Arguments(unsafeLoad, load.graph().getGuardsStage(), tool.getLoweringStage());
-            args.add("object", load.object());
-            args.add("offset", load.offset());
-            template(load, args).instantiate(providers.getMetaAccess(), load, SnippetTemplate.DEFAULT_REPLACER, args);
+            Arguments __args = new Arguments(unsafeLoad, __load.graph().getGuardsStage(), __tool.getLoweringStage());
+            __args.add("object", __load.object());
+            __args.add("offset", __load.offset());
+            template(__load, __args).instantiate(providers.getMetaAccess(), __load, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 }

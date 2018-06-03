@@ -3,9 +3,12 @@ package giraaff.graph;
 // @class NodeStack
 public final class NodeStack
 {
+    // @def
     private static final int DEFAULT_INITIAL_SIZE = 8;
 
+    // @field
     protected Node[] values;
+    // @field
     public int tos;
 
     // @cons
@@ -15,10 +18,10 @@ public final class NodeStack
     }
 
     // @cons
-    public NodeStack(int initialSize)
+    public NodeStack(int __initialSize)
     {
         super();
-        values = new Node[initialSize];
+        values = new Node[__initialSize];
     }
 
     public int size()
@@ -26,28 +29,28 @@ public final class NodeStack
         return tos;
     }
 
-    public void push(Node n)
+    public void push(Node __n)
     {
-        int newIndex = tos++;
-        int valuesLength = values.length;
-        if (newIndex >= valuesLength)
+        int __newIndex = tos++;
+        int __valuesLength = values.length;
+        if (__newIndex >= __valuesLength)
         {
             grow();
         }
-        values[newIndex] = n;
+        values[__newIndex] = __n;
     }
 
     private void grow()
     {
-        int valuesLength = values.length;
-        Node[] newValues = new Node[valuesLength << 1];
-        System.arraycopy(values, 0, newValues, 0, valuesLength);
-        values = newValues;
+        int __valuesLength = values.length;
+        Node[] __newValues = new Node[__valuesLength << 1];
+        System.arraycopy(values, 0, __newValues, 0, __valuesLength);
+        values = __newValues;
     }
 
-    public Node get(int index)
+    public Node get(int __index)
     {
-        return values[index];
+        return values[__index];
     }
 
     public Node pop()

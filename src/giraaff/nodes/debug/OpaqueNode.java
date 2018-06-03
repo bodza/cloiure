@@ -10,15 +10,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class OpaqueNode
 public final class OpaqueNode extends FloatingNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<OpaqueNode> TYPE = NodeClass.create(OpaqueNode.class);
 
-    @Input protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode value;
 
     // @cons
-    public OpaqueNode(ValueNode value)
+    public OpaqueNode(ValueNode __value)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT).unrestricted());
-        this.value = value;
+        super(TYPE, __value.stamp(NodeView.DEFAULT).unrestricted());
+        this.value = __value;
     }
 
     public ValueNode getValue()
@@ -27,8 +30,8 @@ public final class OpaqueNode extends FloatingNode implements LIRLowerable
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, gen.operand(value));
+        __gen.setResult(this, __gen.operand(value));
     }
 }

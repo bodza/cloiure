@@ -22,27 +22,29 @@ import giraaff.nodes.virtual.VirtualInstanceNode;
 // @class NewInstanceNode
 public final class NewInstanceNode extends AbstractNewObjectNode implements VirtualizableAllocation
 {
+    // @def
     public static final NodeClass<NewInstanceNode> TYPE = NodeClass.create(NewInstanceNode.class);
 
+    // @field
     protected final ResolvedJavaType instanceClass;
 
     // @cons
-    public NewInstanceNode(ResolvedJavaType type, boolean fillContents)
+    public NewInstanceNode(ResolvedJavaType __type, boolean __fillContents)
     {
-        this(TYPE, type, fillContents, null);
+        this(TYPE, __type, __fillContents, null);
     }
 
     // @cons
-    public NewInstanceNode(ResolvedJavaType type, boolean fillContents, FrameState stateBefore)
+    public NewInstanceNode(ResolvedJavaType __type, boolean __fillContents, FrameState __stateBefore)
     {
-        this(TYPE, type, fillContents, stateBefore);
+        this(TYPE, __type, __fillContents, __stateBefore);
     }
 
     // @cons
-    protected NewInstanceNode(NodeClass<? extends NewInstanceNode> c, ResolvedJavaType type, boolean fillContents, FrameState stateBefore)
+    protected NewInstanceNode(NodeClass<? extends NewInstanceNode> __c, ResolvedJavaType __type, boolean __fillContents, FrameState __stateBefore)
     {
-        super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)), fillContents, stateBefore);
-        this.instanceClass = type;
+        super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)), __fillContents, __stateBefore);
+        this.instanceClass = __type;
     }
 
     /**
@@ -56,34 +58,34 @@ public final class NewInstanceNode extends AbstractNewObjectNode implements Virt
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
         /*
          * Reference objects can escape into their ReferenceQueue at any safepoint, therefore
          * they're excluded from escape analysis.
          */
-        if (!tool.getMetaAccessProvider().lookupJavaType(Reference.class).isAssignableFrom(instanceClass))
+        if (!__tool.getMetaAccessProvider().lookupJavaType(Reference.class).isAssignableFrom(instanceClass))
         {
-            VirtualInstanceNode virtualObject = createVirtualInstanceNode(true);
-            ResolvedJavaField[] fields = virtualObject.getFields();
-            ValueNode[] state = new ValueNode[fields.length];
-            for (int i = 0; i < state.length; i++)
+            VirtualInstanceNode __virtualObject = createVirtualInstanceNode(true);
+            ResolvedJavaField[] __fields = __virtualObject.getFields();
+            ValueNode[] __state = new ValueNode[__fields.length];
+            for (int __i = 0; __i < __state.length; __i++)
             {
-                state[i] = defaultFieldValue(fields[i]);
+                __state[__i] = defaultFieldValue(__fields[__i]);
             }
-            tool.createVirtualObject(virtualObject, state, Collections.<MonitorIdNode> emptyList(), false);
-            tool.replaceWithVirtual(virtualObject);
+            __tool.createVirtualObject(__virtualObject, __state, Collections.<MonitorIdNode> emptyList(), false);
+            __tool.replaceWithVirtual(__virtualObject);
         }
     }
 
-    protected VirtualInstanceNode createVirtualInstanceNode(boolean hasIdentity)
+    protected VirtualInstanceNode createVirtualInstanceNode(boolean __hasIdentity)
     {
-        return new VirtualInstanceNode(instanceClass(), hasIdentity);
+        return new VirtualInstanceNode(instanceClass(), __hasIdentity);
     }
 
     // Factored out in a separate method so that subclasses can override it.
-    protected ConstantNode defaultFieldValue(ResolvedJavaField field)
+    protected ConstantNode defaultFieldValue(ResolvedJavaField __field)
     {
-        return ConstantNode.defaultForKind(field.getType().getJavaKind(), graph());
+        return ConstantNode.defaultForKind(__field.getType().getJavaKind(), graph());
     }
 }

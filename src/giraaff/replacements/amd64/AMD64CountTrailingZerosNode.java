@@ -23,53 +23,54 @@ import giraaff.nodes.type.StampTool;
 // @class AMD64CountTrailingZerosNode
 public final class AMD64CountTrailingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<AMD64CountTrailingZerosNode> TYPE = NodeClass.create(AMD64CountTrailingZerosNode.class);
 
     // @cons
-    public AMD64CountTrailingZerosNode(ValueNode value)
+    public AMD64CountTrailingZerosNode(ValueNode __value)
     {
-        super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
+        super(TYPE, computeStamp(__value.stamp(NodeView.DEFAULT), __value), __value);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        return computeStamp(newStamp, getValue());
+        return computeStamp(__newStamp, getValue());
     }
 
-    static Stamp computeStamp(Stamp newStamp, ValueNode value)
+    static Stamp computeStamp(Stamp __newStamp, ValueNode __value)
     {
-        IntegerStamp valueStamp = (IntegerStamp) newStamp;
-        return StampTool.stampForTrailingZeros(valueStamp);
+        IntegerStamp __valueStamp = (IntegerStamp) __newStamp;
+        return StampTool.stampForTrailingZeros(__valueStamp);
     }
 
-    public static ValueNode tryFold(ValueNode value)
+    public static ValueNode tryFold(ValueNode __value)
     {
-        if (value.isConstant())
+        if (__value.isConstant())
         {
-            JavaConstant c = value.asJavaConstant();
-            if (value.getStackKind() == JavaKind.Int)
+            JavaConstant __c = __value.asJavaConstant();
+            if (__value.getStackKind() == JavaKind.Int)
             {
-                return ConstantNode.forInt(Integer.numberOfTrailingZeros(c.asInt()));
+                return ConstantNode.forInt(Integer.numberOfTrailingZeros(__c.asInt()));
             }
             else
             {
-                return ConstantNode.forInt(Long.numberOfTrailingZeros(c.asLong()));
+                return ConstantNode.forInt(Long.numberOfTrailingZeros(__c.asLong()));
             }
         }
         return null;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode folded = tryFold(forValue);
-        return folded != null ? folded : this;
+        ValueNode __folded = tryFold(__forValue);
+        return __folded != null ? __folded : this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) gen).emitCountTrailingZeros(builder.operand(getValue())));
+        __builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) __gen).emitCountTrailingZeros(__builder.operand(getValue())));
     }
 }

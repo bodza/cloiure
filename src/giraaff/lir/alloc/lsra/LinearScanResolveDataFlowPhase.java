@@ -19,61 +19,62 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 // @class LinearScanResolveDataFlowPhase
 public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
 {
+    // @field
     protected final LinearScan allocator;
 
     // @cons
-    protected LinearScanResolveDataFlowPhase(LinearScan allocator)
+    protected LinearScanResolveDataFlowPhase(LinearScan __allocator)
     {
         super();
-        this.allocator = allocator;
+        this.allocator = __allocator;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
     {
         resolveDataFlow();
     }
 
-    protected void resolveCollectMappings(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock, AbstractBlockBase<?> midBlock, MoveResolver moveResolver)
+    protected void resolveCollectMappings(AbstractBlockBase<?> __fromBlock, AbstractBlockBase<?> __toBlock, AbstractBlockBase<?> __midBlock, MoveResolver __moveResolver)
     {
-        int toBlockFirstInstructionId = allocator.getFirstLirInstructionId(toBlock);
-        int fromBlockLastInstructionId = allocator.getLastLirInstructionId(fromBlock) + 1;
-        int numOperands = allocator.operandSize();
-        BitSet liveAtEdge = allocator.getBlockData(toBlock).liveIn;
+        int __toBlockFirstInstructionId = allocator.getFirstLirInstructionId(__toBlock);
+        int __fromBlockLastInstructionId = allocator.getLastLirInstructionId(__fromBlock) + 1;
+        int __numOperands = allocator.operandSize();
+        BitSet __liveAtEdge = allocator.getBlockData(__toBlock).liveIn;
 
         // visit all variables for which the liveAtEdge bit is set
-        for (int operandNum = liveAtEdge.nextSetBit(0); operandNum >= 0; operandNum = liveAtEdge.nextSetBit(operandNum + 1))
+        for (int __operandNum = __liveAtEdge.nextSetBit(0); __operandNum >= 0; __operandNum = __liveAtEdge.nextSetBit(__operandNum + 1))
         {
-            Interval fromInterval = allocator.splitChildAtOpId(allocator.intervalFor(operandNum), fromBlockLastInstructionId, LIRInstruction.OperandMode.DEF);
-            Interval toInterval = allocator.splitChildAtOpId(allocator.intervalFor(operandNum), toBlockFirstInstructionId, LIRInstruction.OperandMode.DEF);
+            Interval __fromInterval = allocator.splitChildAtOpId(allocator.intervalFor(__operandNum), __fromBlockLastInstructionId, LIRInstruction.OperandMode.DEF);
+            Interval __toInterval = allocator.splitChildAtOpId(allocator.intervalFor(__operandNum), __toBlockFirstInstructionId, LIRInstruction.OperandMode.DEF);
 
-            if (fromInterval != toInterval && !fromInterval.location().equals(toInterval.location()))
+            if (__fromInterval != __toInterval && !__fromInterval.location().equals(__toInterval.location()))
             {
                 // need to insert move instruction
-                moveResolver.addMapping(fromInterval, toInterval);
+                __moveResolver.addMapping(__fromInterval, __toInterval);
             }
         }
     }
 
-    void resolveFindInsertPos(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock, MoveResolver moveResolver)
+    void resolveFindInsertPos(AbstractBlockBase<?> __fromBlock, AbstractBlockBase<?> __toBlock, MoveResolver __moveResolver)
     {
-        if (fromBlock.getSuccessorCount() <= 1)
+        if (__fromBlock.getSuccessorCount() <= 1)
         {
-            ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(fromBlock);
-            LIRInstruction instr = instructions.get(instructions.size() - 1);
-            if (instr instanceof StandardOp.JumpOp)
+            ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__fromBlock);
+            LIRInstruction __instr = __instructions.get(__instructions.size() - 1);
+            if (__instr instanceof StandardOp.JumpOp)
             {
                 // insert moves before branch
-                moveResolver.setInsertPosition(instructions, instructions.size() - 1);
+                __moveResolver.setInsertPosition(__instructions, __instructions.size() - 1);
             }
             else
             {
-                moveResolver.setInsertPosition(instructions, instructions.size());
+                __moveResolver.setInsertPosition(__instructions, __instructions.size());
             }
         }
         else
         {
-            moveResolver.setInsertPosition(allocator.getLIR().getLIRforBlock(toBlock), 1);
+            __moveResolver.setInsertPosition(allocator.getLIR().getLIRforBlock(__toBlock), 1);
         }
     }
 
@@ -83,40 +84,40 @@ public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
      */
     protected void resolveDataFlow()
     {
-        MoveResolver moveResolver = allocator.createMoveResolver();
-        BitSet blockCompleted = new BitSet(allocator.blockCount());
+        MoveResolver __moveResolver = allocator.createMoveResolver();
+        BitSet __blockCompleted = new BitSet(allocator.blockCount());
 
-        optimizeEmptyBlocks(moveResolver, blockCompleted);
+        optimizeEmptyBlocks(__moveResolver, __blockCompleted);
 
-        resolveDataFlow0(moveResolver, blockCompleted);
+        resolveDataFlow0(__moveResolver, __blockCompleted);
     }
 
-    protected void optimizeEmptyBlocks(MoveResolver moveResolver, BitSet blockCompleted)
+    protected void optimizeEmptyBlocks(MoveResolver __moveResolver, BitSet __blockCompleted)
     {
-        for (AbstractBlockBase<?> block : allocator.sortedBlocks())
+        for (AbstractBlockBase<?> __block : allocator.sortedBlocks())
         {
             // check if block has only one predecessor and only one successor
-            if (block.getPredecessorCount() == 1 && block.getSuccessorCount() == 1)
+            if (__block.getPredecessorCount() == 1 && __block.getSuccessorCount() == 1)
             {
-                ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(block);
+                ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__block);
 
                 // check if block is empty (only label and branch)
-                if (instructions.size() == 2)
+                if (__instructions.size() == 2)
                 {
-                    AbstractBlockBase<?> pred = block.getPredecessors()[0];
-                    AbstractBlockBase<?> sux = block.getSuccessors()[0];
+                    AbstractBlockBase<?> __pred = __block.getPredecessors()[0];
+                    AbstractBlockBase<?> __sux = __block.getSuccessors()[0];
 
                     // prevent optimization of two consecutive blocks
-                    if (!blockCompleted.get(pred.getLinearScanNumber()) && !blockCompleted.get(sux.getLinearScanNumber()))
+                    if (!__blockCompleted.get(__pred.getLinearScanNumber()) && !__blockCompleted.get(__sux.getLinearScanNumber()))
                     {
-                        blockCompleted.set(block.getLinearScanNumber());
+                        __blockCompleted.set(__block.getLinearScanNumber());
 
                         // Directly resolve between pred and sux (without looking at the empty block between).
-                        resolveCollectMappings(pred, sux, block, moveResolver);
-                        if (moveResolver.hasMappings())
+                        resolveCollectMappings(__pred, __sux, __block, __moveResolver);
+                        if (__moveResolver.hasMappings())
                         {
-                            moveResolver.setInsertPosition(instructions, 1);
-                            moveResolver.resolveAndAppendMoves();
+                            __moveResolver.setInsertPosition(__instructions, 1);
+                            __moveResolver.resolveAndAppendMoves();
                         }
                     }
                 }
@@ -124,29 +125,29 @@ public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
         }
     }
 
-    protected void resolveDataFlow0(MoveResolver moveResolver, BitSet blockCompleted)
+    protected void resolveDataFlow0(MoveResolver __moveResolver, BitSet __blockCompleted)
     {
-        BitSet alreadyResolved = new BitSet(allocator.blockCount());
-        for (AbstractBlockBase<?> fromBlock : allocator.sortedBlocks())
+        BitSet __alreadyResolved = new BitSet(allocator.blockCount());
+        for (AbstractBlockBase<?> __fromBlock : allocator.sortedBlocks())
         {
-            if (!blockCompleted.get(fromBlock.getLinearScanNumber()))
+            if (!__blockCompleted.get(__fromBlock.getLinearScanNumber()))
             {
-                alreadyResolved.clear();
-                alreadyResolved.or(blockCompleted);
+                __alreadyResolved.clear();
+                __alreadyResolved.or(__blockCompleted);
 
-                for (AbstractBlockBase<?> toBlock : fromBlock.getSuccessors())
+                for (AbstractBlockBase<?> __toBlock : __fromBlock.getSuccessors())
                 {
                     // Check for duplicate edges between the same blocks (can happen with switch blocks).
-                    if (!alreadyResolved.get(toBlock.getLinearScanNumber()))
+                    if (!__alreadyResolved.get(__toBlock.getLinearScanNumber()))
                     {
-                        alreadyResolved.set(toBlock.getLinearScanNumber());
+                        __alreadyResolved.set(__toBlock.getLinearScanNumber());
 
                         // collect all intervals that have been split between fromBlock and toBlock
-                        resolveCollectMappings(fromBlock, toBlock, null, moveResolver);
-                        if (moveResolver.hasMappings())
+                        resolveCollectMappings(__fromBlock, __toBlock, null, __moveResolver);
+                        if (__moveResolver.hasMappings())
                         {
-                            resolveFindInsertPos(fromBlock, toBlock, moveResolver);
-                            moveResolver.resolveAndAppendMoves();
+                            resolveFindInsertPos(__fromBlock, __toBlock, __moveResolver);
+                            __moveResolver.resolveAndAppendMoves();
                         }
                     }
                 }

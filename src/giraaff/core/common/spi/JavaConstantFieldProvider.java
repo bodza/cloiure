@@ -16,120 +16,120 @@ import giraaff.util.GraalError;
 public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
     // @cons
-    protected JavaConstantFieldProvider(MetaAccessProvider metaAccess)
+    protected JavaConstantFieldProvider(MetaAccessProvider __metaAccess)
     {
         super();
         try
         {
-            this.stringValueField = metaAccess.lookupJavaField(String.class.getDeclaredField("value"));
-            this.stringHashField = metaAccess.lookupJavaField(String.class.getDeclaredField("hash"));
+            this.stringValueField = __metaAccess.lookupJavaField(String.class.getDeclaredField("value"));
+            this.stringHashField = __metaAccess.lookupJavaField(String.class.getDeclaredField("hash"));
         }
-        catch (NoSuchFieldException | SecurityException e)
+        catch (NoSuchFieldException | SecurityException __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
     }
 
     @Override
-    public <T> T readConstantField(ResolvedJavaField field, ConstantFieldTool<T> tool)
+    public <T> T readConstantField(ResolvedJavaField __field, ConstantFieldTool<T> __tool)
     {
-        if (isStableField(field, tool))
+        if (isStableField(__field, __tool))
         {
-            JavaConstant value = tool.readValue();
-            if (value != null && isStableFieldValueConstant(field, value, tool))
+            JavaConstant __value = __tool.readValue();
+            if (__value != null && isStableFieldValueConstant(__field, __value, __tool))
             {
-                return foldStableArray(value, field, tool);
+                return foldStableArray(__value, __field, __tool);
             }
         }
-        if (isFinalField(field, tool))
+        if (isFinalField(__field, __tool))
         {
-            JavaConstant value = tool.readValue();
-            if (value != null && isFinalFieldValueConstant(field, value, tool))
+            JavaConstant __value = __tool.readValue();
+            if (__value != null && isFinalFieldValueConstant(__field, __value, __tool))
             {
-                return tool.foldConstant(value);
+                return __tool.foldConstant(__value);
             }
         }
         return null;
     }
 
-    protected <T> T foldStableArray(JavaConstant value, ResolvedJavaField field, ConstantFieldTool<T> tool)
+    protected <T> T foldStableArray(JavaConstant __value, ResolvedJavaField __field, ConstantFieldTool<T> __tool)
     {
-        return tool.foldStableArray(value, getArrayDimension(field.getType()), isDefaultStableField(field, tool));
+        return __tool.foldStableArray(__value, getArrayDimension(__field.getType()), isDefaultStableField(__field, __tool));
     }
 
-    private static int getArrayDimension(JavaType type)
+    private static int getArrayDimension(JavaType __type)
     {
-        int dimensions = 0;
-        JavaType componentType = type;
-        while ((componentType = componentType.getComponentType()) != null)
+        int __dimensions = 0;
+        JavaType __componentType = __type;
+        while ((__componentType = __componentType.getComponentType()) != null)
         {
-            dimensions++;
+            __dimensions++;
         }
-        return dimensions;
+        return __dimensions;
     }
 
-    private static boolean isArray(ResolvedJavaField field)
+    private static boolean isArray(ResolvedJavaField __field)
     {
-        JavaType fieldType = field.getType();
-        return fieldType instanceof ResolvedJavaType && ((ResolvedJavaType) fieldType).isArray();
+        JavaType __fieldType = __field.getType();
+        return __fieldType instanceof ResolvedJavaType && ((ResolvedJavaType) __fieldType).isArray();
     }
 
     @SuppressWarnings("unused")
-    protected boolean isStableFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
+    protected boolean isStableFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldTool<?> __tool)
     {
-        return !value.isDefaultForKind();
+        return !__value.isDefaultForKind();
     }
 
     @SuppressWarnings("unused")
-    protected boolean isFinalFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
+    protected boolean isFinalFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldTool<?> __tool)
     {
-        return !value.isDefaultForKind() || GraalOptions.trustFinalDefaultFields;
+        return !__value.isDefaultForKind() || GraalOptions.trustFinalDefaultFields;
     }
 
     @SuppressWarnings("unused")
-    protected boolean isStableField(ResolvedJavaField field, ConstantFieldTool<?> tool)
+    protected boolean isStableField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
     {
-        if (isSyntheticEnumSwitchMap(field))
+        if (isSyntheticEnumSwitchMap(__field))
         {
             return true;
         }
-        if (isWellKnownImplicitStableField(field))
+        if (isWellKnownImplicitStableField(__field))
         {
             return true;
         }
-        if (field.equals(stringHashField))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    protected boolean isDefaultStableField(ResolvedJavaField field, ConstantFieldTool<?> tool)
-    {
-        if (isSyntheticEnumSwitchMap(field))
+        if (__field.equals(stringHashField))
         {
             return true;
         }
         return false;
     }
 
-    @SuppressWarnings("unused")
-    protected boolean isFinalField(ResolvedJavaField field, ConstantFieldTool<?> tool)
+    protected boolean isDefaultStableField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
     {
-        return field.isFinal();
+        if (isSyntheticEnumSwitchMap(__field))
+        {
+            return true;
+        }
+        return false;
     }
 
-    protected boolean isSyntheticEnumSwitchMap(ResolvedJavaField field)
+    @SuppressWarnings("unused")
+    protected boolean isFinalField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
     {
-        if (field.isSynthetic() && field.isStatic() && isArray(field))
+        return __field.isFinal();
+    }
+
+    protected boolean isSyntheticEnumSwitchMap(ResolvedJavaField __field)
+    {
+        if (__field.isSynthetic() && __field.isStatic() && isArray(__field))
         {
-            String name = field.getName();
-            if (field.isFinal() && name.equals("$VALUES") || name.equals("ENUM$VALUES"))
+            String __name = __field.getName();
+            if (__field.isFinal() && __name.equals("$VALUES") || __name.equals("ENUM$VALUES"))
             {
                 // generated int[] field for EnumClass::values()
                 return true;
             }
-            else if (name.startsWith("$SwitchMap$") || name.startsWith("$SWITCH_TABLE$"))
+            else if (__name.startsWith("$SwitchMap$") || __name.startsWith("$SWITCH_TABLE$"))
             {
                 // javac and ecj generate a static field in an inner class for a switch on an enum
                 // named $SwitchMap$p$k$g$EnumClass and $SWITCH_TABLE$p$k$g$EnumClass, respectively
@@ -139,11 +139,13 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
         return false;
     }
 
+    // @field
     private final ResolvedJavaField stringValueField;
+    // @field
     private final ResolvedJavaField stringHashField;
 
-    protected boolean isWellKnownImplicitStableField(ResolvedJavaField field)
+    protected boolean isWellKnownImplicitStableField(ResolvedJavaField __field)
     {
-        return field.equals(stringValueField);
+        return __field.equals(stringValueField);
     }
 }

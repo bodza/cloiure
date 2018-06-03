@@ -15,48 +15,48 @@ import giraaff.phases.tiers.MidTierContext;
 public final class LoopSafepointEliminationPhase extends BasePhase<MidTierContext>
 {
     @Override
-    protected void run(StructuredGraph graph, MidTierContext context)
+    protected void run(StructuredGraph __graph, MidTierContext __context)
     {
-        LoopsData loops = new LoopsData(graph);
-        if (context.getOptimisticOptimizations().useLoopLimitChecks() && graph.getGuardsStage().allowsFloatingGuards())
+        LoopsData __loops = new LoopsData(__graph);
+        if (__context.getOptimisticOptimizations().useLoopLimitChecks() && __graph.getGuardsStage().allowsFloatingGuards())
         {
-            loops.detectedCountedLoops();
-            for (LoopEx loop : loops.countedLoops())
+            __loops.detectedCountedLoops();
+            for (LoopEx __loop : __loops.countedLoops())
             {
-                if (loop.loop().getChildren().isEmpty() && loop.counted().getStamp().getBits() <= 32)
+                if (__loop.loop().getChildren().isEmpty() && __loop.counted().getStamp().getBits() <= 32)
                 {
-                    boolean hasSafepoint = false;
-                    for (LoopEndNode loopEnd : loop.loopBegin().loopEnds())
+                    boolean __hasSafepoint = false;
+                    for (LoopEndNode __loopEnd : __loop.loopBegin().loopEnds())
                     {
-                        hasSafepoint |= loopEnd.canSafepoint();
+                        __hasSafepoint |= __loopEnd.canSafepoint();
                     }
-                    if (hasSafepoint)
+                    if (__hasSafepoint)
                     {
-                        loop.counted().createOverFlowGuard();
-                        loop.loopBegin().disableSafepoint();
+                        __loop.counted().createOverFlowGuard();
+                        __loop.loopBegin().disableSafepoint();
                     }
                 }
             }
         }
-        for (LoopEx loop : loops.loops())
+        for (LoopEx __loop : __loops.loops())
         {
-            for (LoopEndNode loopEnd : loop.loopBegin().loopEnds())
+            for (LoopEndNode __loopEnd : __loop.loopBegin().loopEnds())
             {
-                Block b = loops.getCFG().blockFor(loopEnd);
-                blocks: while (b != loop.loop().getHeader())
+                Block __b = __loops.getCFG().blockFor(__loopEnd);
+                blocks: while (__b != __loop.loop().getHeader())
                 {
-                    for (FixedNode node : b.getNodes())
+                    for (FixedNode __node : __b.getNodes())
                     {
-                        if (node instanceof Invoke || (node instanceof ForeignCallNode && ((ForeignCallNode) node).isGuaranteedSafepoint()))
+                        if (__node instanceof Invoke || (__node instanceof ForeignCallNode && ((ForeignCallNode) __node).isGuaranteedSafepoint()))
                         {
-                            loopEnd.disableSafepoint();
+                            __loopEnd.disableSafepoint();
                             break blocks;
                         }
                     }
-                    b = b.getDominator();
+                    __b = __b.getDominator();
                 }
             }
         }
-        loops.deleteUnusedNodes();
+        __loops.deleteUnusedNodes();
     }
 }

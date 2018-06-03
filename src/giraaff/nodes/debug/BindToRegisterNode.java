@@ -11,20 +11,23 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class BindToRegisterNode
 public final class BindToRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<BindToRegisterNode> TYPE = NodeClass.create(BindToRegisterNode.class);
 
-    @Input ValueNode value;
+    @Input
+    // @field
+    ValueNode value;
 
     // @cons
-    public BindToRegisterNode(ValueNode value)
+    public BindToRegisterNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = value;
+        this.value = __value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().append(new StandardOp.BindToRegisterOp(gen.getLIRGeneratorTool().asAllocatable(gen.operand(value))));
+        __gen.getLIRGeneratorTool().append(new StandardOp.BindToRegisterOp(__gen.getLIRGeneratorTool().asAllocatable(__gen.operand(value))));
     }
 }

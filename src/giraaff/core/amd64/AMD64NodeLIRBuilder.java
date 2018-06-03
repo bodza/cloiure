@@ -24,81 +24,81 @@ import giraaff.util.GraalError;
 public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {
     // @cons
-    public AMD64NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
+    public AMD64NodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __gen)
     {
-        super(graph, gen);
+        super(__graph, __gen);
     }
 
     @Override
-    protected void emitIndirectCall(IndirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState)
+    protected void emitIndirectCall(IndirectCallTargetNode __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __callState)
     {
-        Value targetAddressSrc = operand(callTarget.computedAddress());
-        AllocatableValue targetAddress = AMD64.rax.asValue(targetAddressSrc.getValueKind());
-        gen.emitMove(targetAddress, targetAddressSrc);
-        append(new AMD64Call.IndirectCallOp(callTarget.targetMethod(), result, parameters, temps, targetAddress, callState));
+        Value __targetAddressSrc = operand(__callTarget.computedAddress());
+        AllocatableValue __targetAddress = AMD64.rax.asValue(__targetAddressSrc.getValueKind());
+        gen.emitMove(__targetAddress, __targetAddressSrc);
+        append(new AMD64Call.IndirectCallOp(__callTarget.targetMethod(), __result, __parameters, __temps, __targetAddress, __callState));
     }
 
     @Override
-    protected boolean peephole(ValueNode valueNode)
+    protected boolean peephole(ValueNode __valueNode)
     {
-        if (valueNode instanceof IntegerDivRemNode)
+        if (__valueNode instanceof IntegerDivRemNode)
         {
-            AMD64ArithmeticLIRGenerator arithmeticGen = (AMD64ArithmeticLIRGenerator) gen.getArithmetic();
-            IntegerDivRemNode divRem = (IntegerDivRemNode) valueNode;
-            FixedNode node = divRem.next();
+            AMD64ArithmeticLIRGenerator __arithmeticGen = (AMD64ArithmeticLIRGenerator) gen.getArithmetic();
+            IntegerDivRemNode __divRem = (IntegerDivRemNode) __valueNode;
+            FixedNode __node = __divRem.next();
             while (true)
             {
-                if (node instanceof IfNode)
+                if (__node instanceof IfNode)
                 {
-                    IfNode ifNode = (IfNode) node;
-                    double probability = ifNode.getTrueSuccessorProbability();
-                    if (probability == 1.0)
+                    IfNode __ifNode = (IfNode) __node;
+                    double __probability = __ifNode.getTrueSuccessorProbability();
+                    if (__probability == 1.0)
                     {
-                        node = ifNode.trueSuccessor();
+                        __node = __ifNode.trueSuccessor();
                     }
-                    else if (probability == 0.0)
+                    else if (__probability == 0.0)
                     {
-                        node = ifNode.falseSuccessor();
+                        __node = __ifNode.falseSuccessor();
                     }
                     else
                     {
                         break;
                     }
                 }
-                else if (!(node instanceof FixedWithNextNode))
+                else if (!(__node instanceof FixedWithNextNode))
                 {
                     break;
                 }
 
-                FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) node;
-                if (fixedWithNextNode instanceof IntegerDivRemNode)
+                FixedWithNextNode __fixedWithNextNode = (FixedWithNextNode) __node;
+                if (__fixedWithNextNode instanceof IntegerDivRemNode)
                 {
-                    IntegerDivRemNode otherDivRem = (IntegerDivRemNode) fixedWithNextNode;
-                    if (divRem.getOp() != otherDivRem.getOp() && divRem.getType() == otherDivRem.getType())
+                    IntegerDivRemNode __otherDivRem = (IntegerDivRemNode) __fixedWithNextNode;
+                    if (__divRem.getOp() != __otherDivRem.getOp() && __divRem.getType() == __otherDivRem.getType())
                     {
-                        if (otherDivRem.getX() == divRem.getX() && otherDivRem.getY() == divRem.getY() && !hasOperand(otherDivRem))
+                        if (__otherDivRem.getX() == __divRem.getX() && __otherDivRem.getY() == __divRem.getY() && !hasOperand(__otherDivRem))
                         {
-                            Value[] results;
-                            switch (divRem.getType())
+                            Value[] __results;
+                            switch (__divRem.getType())
                             {
                                 case SIGNED:
-                                    results = arithmeticGen.emitSignedDivRem(operand(divRem.getX()), operand(divRem.getY()), state((DeoptimizingNode) valueNode));
+                                    __results = __arithmeticGen.emitSignedDivRem(operand(__divRem.getX()), operand(__divRem.getY()), state((DeoptimizingNode) __valueNode));
                                     break;
                                 case UNSIGNED:
-                                    results = arithmeticGen.emitUnsignedDivRem(operand(divRem.getX()), operand(divRem.getY()), state((DeoptimizingNode) valueNode));
+                                    __results = __arithmeticGen.emitUnsignedDivRem(operand(__divRem.getX()), operand(__divRem.getY()), state((DeoptimizingNode) __valueNode));
                                     break;
                                 default:
                                     throw GraalError.shouldNotReachHere();
                             }
-                            switch (divRem.getOp())
+                            switch (__divRem.getOp())
                             {
                                 case DIV:
-                                    setResult(divRem, results[0]);
-                                    setResult(otherDivRem, results[1]);
+                                    setResult(__divRem, __results[0]);
+                                    setResult(__otherDivRem, __results[1]);
                                     break;
                                 case REM:
-                                    setResult(divRem, results[1]);
-                                    setResult(otherDivRem, results[0]);
+                                    setResult(__divRem, __results[1]);
+                                    setResult(__otherDivRem, __results[0]);
                                     break;
                                 default:
                                     throw GraalError.shouldNotReachHere();
@@ -107,7 +107,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
                         }
                     }
                 }
-                node = fixedWithNextNode.next();
+                __node = __fixedWithNextNode.next();
             }
         }
         return false;
@@ -120,21 +120,21 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
     }
 
     @Override
-    public void doBlockPrologue(Block block)
+    public void doBlockPrologue(Block __block)
     {
         if (GraalOptions.mitigateSpeculativeExecutionAttacks)
         {
-            boolean hasControlSplitPredecessor = false;
-            for (Block b : block.getPredecessors())
+            boolean __hasControlSplitPredecessor = false;
+            for (Block __b : __block.getPredecessors())
             {
-                if (b.getSuccessorCount() > 1)
+                if (__b.getSuccessorCount() > 1)
                 {
-                    hasControlSplitPredecessor = true;
+                    __hasControlSplitPredecessor = true;
                     break;
                 }
             }
-            boolean isStartBlock = block.getPredecessorCount() == 0;
-            if (hasControlSplitPredecessor || isStartBlock)
+            boolean __isStartBlock = __block.getPredecessorCount() == 0;
+            if (__hasControlSplitPredecessor || __isStartBlock)
             {
                 getLIRGeneratorTool().emitLFence();
             }

@@ -20,68 +20,72 @@ public final class HotSpotWordTypes extends WordTypes
     /**
      * Resolved type for {@link MetaspacePointer}.
      */
+    // @field
     private final ResolvedJavaType metaspacePointerType;
 
     /**
      * Resolved type for {@link KlassPointer}.
      */
+    // @field
     private final ResolvedJavaType klassPointerType;
 
     /**
      * Resolved type for {@link MethodPointer}.
      */
+    // @field
     private final ResolvedJavaType methodPointerType;
 
     /**
      * Resolved type for {@link MethodCountersPointer}.
      */
+    // @field
     private final ResolvedJavaType methodCountersPointerType;
 
     // @cons
-    public HotSpotWordTypes(MetaAccessProvider metaAccess, JavaKind wordKind)
+    public HotSpotWordTypes(MetaAccessProvider __metaAccess, JavaKind __wordKind)
     {
-        super(metaAccess, wordKind);
-        this.metaspacePointerType = metaAccess.lookupJavaType(MetaspacePointer.class);
-        this.klassPointerType = metaAccess.lookupJavaType(KlassPointer.class);
-        this.methodPointerType = metaAccess.lookupJavaType(MethodPointer.class);
-        this.methodCountersPointerType = metaAccess.lookupJavaType(MethodCountersPointer.class);
+        super(__metaAccess, __wordKind);
+        this.metaspacePointerType = __metaAccess.lookupJavaType(MetaspacePointer.class);
+        this.klassPointerType = __metaAccess.lookupJavaType(KlassPointer.class);
+        this.methodPointerType = __metaAccess.lookupJavaType(MethodPointer.class);
+        this.methodCountersPointerType = __metaAccess.lookupJavaType(MethodCountersPointer.class);
     }
 
     @Override
-    public boolean isWord(JavaType type)
+    public boolean isWord(JavaType __type)
     {
-        if (type instanceof ResolvedJavaType && metaspacePointerType.isAssignableFrom((ResolvedJavaType) type))
+        if (__type instanceof ResolvedJavaType && metaspacePointerType.isAssignableFrom((ResolvedJavaType) __type))
         {
             return true;
         }
-        return super.isWord(type);
+        return super.isWord(__type);
     }
 
     @Override
-    public JavaKind asKind(JavaType type)
+    public JavaKind asKind(JavaType __type)
     {
-        if (klassPointerType.equals(type) || methodPointerType.equals(type))
+        if (klassPointerType.equals(__type) || methodPointerType.equals(__type))
         {
             return getWordKind();
         }
-        return super.asKind(type);
+        return super.asKind(__type);
     }
 
     @Override
-    public Stamp getWordStamp(ResolvedJavaType type)
+    public Stamp getWordStamp(ResolvedJavaType __type)
     {
-        if (type.equals(klassPointerType))
+        if (__type.equals(klassPointerType))
         {
             return KlassPointerStamp.klass();
         }
-        else if (type.equals(methodPointerType))
+        else if (__type.equals(methodPointerType))
         {
             return MethodPointerStamp.method();
         }
-        else if (type.equals(methodCountersPointerType))
+        else if (__type.equals(methodCountersPointerType))
         {
             return MethodCountersPointerStamp.methodCounters();
         }
-        return super.getWordStamp(type);
+        return super.getWordStamp(__type);
     }
 }

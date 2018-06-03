@@ -9,17 +9,22 @@ import giraaff.nodes.ValueNode;
 // @class FixedBinaryNode
 public abstract class FixedBinaryNode extends DeoptimizingFixedWithNextNode implements Canonicalizable.Binary<ValueNode>
 {
+    // @def
     public static final NodeClass<FixedBinaryNode> TYPE = NodeClass.create(FixedBinaryNode.class);
 
-    @Input protected ValueNode x;
-    @Input protected ValueNode y;
+    @Input
+    // @field
+    protected ValueNode x;
+    @Input
+    // @field
+    protected ValueNode y;
 
     // @cons
-    public FixedBinaryNode(NodeClass<? extends FixedBinaryNode> c, Stamp stamp, ValueNode x, ValueNode y)
+    public FixedBinaryNode(NodeClass<? extends FixedBinaryNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y)
     {
-        super(c, stamp);
-        this.x = x;
-        this.y = y;
+        super(__c, __stamp);
+        this.x = __x;
+        this.y = __y;
     }
 
     @Override

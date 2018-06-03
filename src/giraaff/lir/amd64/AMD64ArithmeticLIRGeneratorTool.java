@@ -24,11 +24,12 @@ public interface AMD64ArithmeticLIRGeneratorTool extends ArithmeticLIRGeneratorT
         UP(2),
         TRUNCATE(3);
 
+        // @field
         public final int encoding;
 
-        RoundingMode(int encoding)
+        RoundingMode(int __encoding)
         {
-            this.encoding = encoding;
+            this.encoding = __encoding;
         }
     }
 

@@ -34,86 +34,94 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class ForeignCallNode
 public final class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowerable, DeoptimizingNode.DeoptDuring, MemoryCheckpoint.Multi
 {
+    // @def
     public static final NodeClass<ForeignCallNode> TYPE = NodeClass.create(ForeignCallNode.class);
 
-    @Input protected NodeInputList<ValueNode> arguments;
-    @OptionalInput(InputType.State) protected FrameState stateDuring;
+    @Input
+    // @field
+    protected NodeInputList<ValueNode> arguments;
+    @OptionalInput(InputType.State)
+    // @field
+    protected FrameState stateDuring;
+    // @field
     protected final ForeignCallsProvider foreignCalls;
 
+    // @field
     protected final ForeignCallDescriptor descriptor;
+    // @field
     protected int bci = BytecodeFrame.UNKNOWN_BCI;
 
-    public static boolean intrinsify(GraphBuilderContext b, ResolvedJavaMethod targetMethod, @InjectedNodeParameter Stamp returnStamp, @InjectedNodeParameter ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, ValueNode... arguments)
+    public static boolean intrinsify(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, @InjectedNodeParameter Stamp __returnStamp, @InjectedNodeParameter ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
-        ForeignCallNode node = new ForeignCallNode(foreignCalls, descriptor, arguments);
-        node.setStamp(returnStamp);
+        ForeignCallNode __node = new ForeignCallNode(__foreignCalls, __descriptor, __arguments);
+        __node.setStamp(__returnStamp);
 
         /*
          * Need to update the BCI of a ForeignCallNode so that it gets the stateDuring in the case that the
          * foreign call can deoptimize. As with all deoptimization, we need a state in a non-intrinsic method.
          */
-        GraphBuilderContext nonIntrinsicAncestor = b.getNonIntrinsicAncestor();
-        if (nonIntrinsicAncestor != null)
+        GraphBuilderContext __nonIntrinsicAncestor = __b.getNonIntrinsicAncestor();
+        if (__nonIntrinsicAncestor != null)
         {
-            node.setBci(nonIntrinsicAncestor.bci());
+            __node.setBci(__nonIntrinsicAncestor.bci());
         }
 
-        JavaKind returnKind = targetMethod.getSignature().getReturnKind();
-        if (returnKind == JavaKind.Void)
+        JavaKind __returnKind = __targetMethod.getSignature().getReturnKind();
+        if (__returnKind == JavaKind.Void)
         {
-            b.add(node);
+            __b.add(__node);
         }
         else
         {
-            b.addPush(returnKind, node);
+            __b.addPush(__returnKind, __node);
         }
 
         return true;
     }
 
-    static boolean verifyDescriptor(GraphBuilderContext b, ResolvedJavaMethod targetMethod, ForeignCallDescriptor descriptor)
+    static boolean verifyDescriptor(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, ForeignCallDescriptor __descriptor)
     {
-        int parameters = 1;
-        for (Class<?> arg : descriptor.getArgumentTypes())
+        int __parameters = 1;
+        for (Class<?> __arg : __descriptor.getArgumentTypes())
         {
-            ResolvedJavaType res = b.getMetaAccess().lookupJavaType(arg);
-            ResolvedJavaType parameterType = (ResolvedJavaType) targetMethod.getSignature().getParameterType(parameters, targetMethod.getDeclaringClass());
-            parameters++;
+            ResolvedJavaType __res = __b.getMetaAccess().lookupJavaType(__arg);
+            ResolvedJavaType __parameterType = (ResolvedJavaType) __targetMethod.getSignature().getParameterType(__parameters, __targetMethod.getDeclaringClass());
+            __parameters++;
         }
         return true;
     }
 
     // @cons
-    public ForeignCallNode(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, ValueNode... arguments)
+    public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
-        this(TYPE, foreignCalls, descriptor, arguments);
+        this(TYPE, __foreignCalls, __descriptor, __arguments);
     }
 
     // @cons
-    public ForeignCallNode(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, Stamp stamp, List<ValueNode> arguments)
+    public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, Stamp __stamp, List<ValueNode> __arguments)
     {
-        super(TYPE, stamp);
-        this.arguments = new NodeInputList<>(this, arguments);
-        this.descriptor = descriptor;
-        this.foreignCalls = foreignCalls;
+        super(TYPE, __stamp);
+        this.arguments = new NodeInputList<>(this, __arguments);
+        this.descriptor = __descriptor;
+        this.foreignCalls = __foreignCalls;
     }
 
     // @cons
-    public ForeignCallNode(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, Stamp stamp)
+    public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, Stamp __stamp)
     {
-        super(TYPE, stamp);
+        super(TYPE, __stamp);
         this.arguments = new NodeInputList<>(this);
-        this.descriptor = descriptor;
-        this.foreignCalls = foreignCalls;
+        this.descriptor = __descriptor;
+        this.foreignCalls = __foreignCalls;
     }
 
     // @cons
-    protected ForeignCallNode(NodeClass<? extends ForeignCallNode> c, ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, ValueNode... arguments)
+    protected ForeignCallNode(NodeClass<? extends ForeignCallNode> __c, ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
-        super(c, StampFactory.forKind(JavaKind.fromJavaClass(descriptor.getResultType())));
-        this.arguments = new NodeInputList<>(this, arguments);
-        this.descriptor = descriptor;
-        this.foreignCalls = foreignCalls;
+        super(__c, StampFactory.forKind(JavaKind.fromJavaClass(__descriptor.getResultType())));
+        this.arguments = new NodeInputList<>(this, __arguments);
+        this.descriptor = __descriptor;
+        this.foreignCalls = __foreignCalls;
     }
 
     @Override
@@ -133,32 +141,32 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
         return foreignCalls.getKilledLocations(descriptor);
     }
 
-    protected Value[] operands(NodeLIRBuilderTool gen)
+    protected Value[] operands(NodeLIRBuilderTool __gen)
     {
-        Value[] operands = new Value[arguments.size()];
-        for (int i = 0; i < operands.length; i++)
+        Value[] __operands = new Value[arguments.size()];
+        for (int __i = 0; __i < __operands.length; __i++)
         {
-            operands[i] = gen.operand(arguments.get(i));
+            __operands[__i] = __gen.operand(arguments.get(__i));
         }
-        return operands;
+        return __operands;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        ForeignCallLinkage linkage = gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(descriptor);
-        Value[] operands = operands(gen);
-        Value result = gen.getLIRGeneratorTool().emitForeignCall(linkage, gen.state(this), operands);
-        if (result != null)
+        ForeignCallLinkage __linkage = __gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(descriptor);
+        Value[] __operands = operands(__gen);
+        Value __result = __gen.getLIRGeneratorTool().emitForeignCall(__linkage, __gen.state(this), __operands);
+        if (__result != null)
         {
-            gen.setResult(this, result);
+            __gen.setResult(this, __result);
         }
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        super.setStateAfter(x);
+        super.setStateAfter(__x);
     }
 
     @Override
@@ -168,10 +176,10 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
     }
 
     @Override
-    public void setStateDuring(FrameState stateDuring)
+    public void setStateDuring(FrameState __stateDuring)
     {
-        updateUsages(this.stateDuring, stateDuring);
-        this.stateDuring = stateDuring;
+        updateUsages(this.stateDuring, __stateDuring);
+        this.stateDuring = __stateDuring;
     }
 
     public int getBci()
@@ -182,25 +190,25 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
     /**
      * Set the {@code bci} of the invoke bytecode for use when converting a stateAfter into a stateDuring.
      */
-    public void setBci(int bci)
+    public void setBci(int __bci)
     {
-        this.bci = bci;
+        this.bci = __bci;
     }
 
     @Override
-    public void computeStateDuring(FrameState currentStateAfter)
+    public void computeStateDuring(FrameState __currentStateAfter)
     {
-        FrameState newStateDuring;
-        if ((currentStateAfter.stackSize() > 0 && currentStateAfter.stackAt(currentStateAfter.stackSize() - 1) == this) || (currentStateAfter.stackSize() > 1 && currentStateAfter.stackAt(currentStateAfter.stackSize() - 2) == this))
+        FrameState __newStateDuring;
+        if ((__currentStateAfter.stackSize() > 0 && __currentStateAfter.stackAt(__currentStateAfter.stackSize() - 1) == this) || (__currentStateAfter.stackSize() > 1 && __currentStateAfter.stackAt(__currentStateAfter.stackSize() - 2) == this))
         {
             // The result of this call is on the top of stack, so roll back to the previous bci.
-            newStateDuring = currentStateAfter.duplicateModifiedDuringCall(bci, this.getStackKind());
+            __newStateDuring = __currentStateAfter.duplicateModifiedDuringCall(bci, this.getStackKind());
         }
         else
         {
-            newStateDuring = currentStateAfter;
+            __newStateDuring = __currentStateAfter;
         }
-        setStateDuring(newStateDuring);
+        setStateDuring(__newStateDuring);
     }
 
     @Override

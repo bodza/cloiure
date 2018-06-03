@@ -8,11 +8,12 @@ import giraaff.nodes.AbstractLocalNode;
 // @class OSRLocalNode
 public final class OSRLocalNode extends AbstractLocalNode implements IterableNodeType
 {
+    // @def
     public static final NodeClass<OSRLocalNode> TYPE = NodeClass.create(OSRLocalNode.class);
 
     // @cons
-    public OSRLocalNode(int index, Stamp stamp)
+    public OSRLocalNode(int __index, Stamp __stamp)
     {
-        super(TYPE, index, stamp);
+        super(TYPE, __index, __stamp);
     }
 }

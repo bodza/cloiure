@@ -17,19 +17,24 @@ import giraaff.nodes.spi.LoweringTool;
 // @class UnsafeMemoryLoadNode
 public final class UnsafeMemoryLoadNode extends FixedWithNextNode implements Lowerable
 {
+    // @def
     public static final NodeClass<UnsafeMemoryLoadNode> TYPE = NodeClass.create(UnsafeMemoryLoadNode.class);
 
-    @Input protected ValueNode address;
+    @Input
+    // @field
+    protected ValueNode address;
+    // @field
     protected final JavaKind kind;
+    // @field
     protected final LocationIdentity locationIdentity;
 
     // @cons
-    public UnsafeMemoryLoadNode(ValueNode address, JavaKind kind, LocationIdentity locationIdentity)
+    public UnsafeMemoryLoadNode(ValueNode __address, JavaKind __kind, LocationIdentity __locationIdentity)
     {
-        super(TYPE, StampFactory.forKind(kind.getStackKind()));
-        this.address = address;
-        this.kind = kind;
-        this.locationIdentity = locationIdentity;
+        super(TYPE, StampFactory.forKind(__kind.getStackKind()));
+        this.address = __address;
+        this.kind = __kind;
+        this.locationIdentity = __locationIdentity;
     }
 
     public ValueNode getAddress()
@@ -43,9 +48,9 @@ public final class UnsafeMemoryLoadNode extends FixedWithNextNode implements Low
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public LocationIdentity getLocationIdentity()

@@ -26,28 +26,32 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64IndirectCallOp
 final class AMD64IndirectCallOp extends IndirectCallOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64IndirectCallOp> TYPE = LIRInstructionClass.create(AMD64IndirectCallOp.class);
 
     /**
      * Vtable stubs expect the metaspace Method in RBX.
      */
+    // @def
     public static final Register METHOD = AMD64.rbx;
 
-    @Use({OperandFlag.REG}) protected Value metaspaceMethod;
+    @Use({OperandFlag.REG})
+    // @field
+    protected Value metaspaceMethod;
 
     // @cons
-    AMD64IndirectCallOp(ResolvedJavaMethod targetMethod, Value result, Value[] parameters, Value[] temps, Value metaspaceMethod, Value targetAddress, LIRFrameState state)
+    AMD64IndirectCallOp(ResolvedJavaMethod __targetMethod, Value __result, Value[] __parameters, Value[] __temps, Value __metaspaceMethod, Value __targetAddress, LIRFrameState __state)
     {
-        super(TYPE, targetMethod, result, parameters, temps, targetAddress, state);
-        this.metaspaceMethod = metaspaceMethod;
+        super(TYPE, __targetMethod, __result, __parameters, __temps, __targetAddress, __state);
+        this.metaspaceMethod = __metaspaceMethod;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        crb.recordMark(HotSpotRuntime.inlineInvokeMark);
-        Register callReg = ValueUtil.asRegister(targetAddress);
-        int pcOffset = AMD64Call.indirectCall(crb, masm, callReg, callTarget, state);
-        crb.recordInlineInvokeCallOp(pcOffset);
+        __crb.recordMark(HotSpotRuntime.inlineInvokeMark);
+        Register __callReg = ValueUtil.asRegister(targetAddress);
+        int __pcOffset = AMD64Call.indirectCall(__crb, __masm, __callReg, callTarget, state);
+        __crb.recordInlineInvokeCallOp(__pcOffset);
     }
 }

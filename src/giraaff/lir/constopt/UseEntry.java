@@ -12,17 +12,20 @@ import giraaff.lir.ValueProcedure;
 // @class UseEntry
 final class UseEntry
 {
+    // @field
     private final AbstractBlockBase<?> block;
+    // @field
     private final LIRInstruction instruction;
+    // @field
     private final Value value;
 
     // @cons
-    UseEntry(AbstractBlockBase<?> block, LIRInstruction instruction, Value value)
+    UseEntry(AbstractBlockBase<?> __block, LIRInstruction __instruction, Value __value)
     {
         super();
-        this.block = block;
-        this.instruction = instruction;
-        this.value = value;
+        this.block = __block;
+        this.instruction = __instruction;
+        this.value = __value;
     }
 
     public LIRInstruction getInstruction()
@@ -35,19 +38,19 @@ final class UseEntry
         return block;
     }
 
-    public void setValue(Value newValue)
+    public void setValue(Value __newValue)
     {
-        replaceValue(instruction, value, newValue);
+        replaceValue(instruction, value, __newValue);
     }
 
-    private static void replaceValue(LIRInstruction op, Value oldValue, Value newValue)
+    private static void replaceValue(LIRInstruction __op, Value __oldValue, Value __newValue)
     {
-        ValueProcedure proc = (value, mode, flags) -> value.identityEquals(oldValue) ? newValue : value;
+        ValueProcedure __proc = (__value, __mode, __flags) -> __value.identityEquals(__oldValue) ? __newValue : __value;
 
-        op.forEachAlive(proc);
-        op.forEachInput(proc);
-        op.forEachOutput(proc);
-        op.forEachTemp(proc);
+        __op.forEachAlive(__proc);
+        __op.forEachInput(__proc);
+        __op.forEachOutput(__proc);
+        __op.forEachTemp(__proc);
     }
 
     public Value getValue()

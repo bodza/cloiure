@@ -10,37 +10,38 @@ import giraaff.phases.tiers.PhaseContext;
 // @class LoopFullUnrollPhase
 public final class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
 {
+    // @field
     private final CanonicalizerPhase canonicalizer;
 
     // @cons
-    public LoopFullUnrollPhase(CanonicalizerPhase canonicalizer, LoopPolicies policies)
+    public LoopFullUnrollPhase(CanonicalizerPhase __canonicalizer, LoopPolicies __policies)
     {
-        super(policies);
-        this.canonicalizer = canonicalizer;
+        super(__policies);
+        this.canonicalizer = __canonicalizer;
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context)
+    protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        if (graph.hasLoops())
+        if (__graph.hasLoops())
         {
-            boolean peeled;
+            boolean __peeled;
             do
             {
-                peeled = false;
-                final LoopsData dataCounted = new LoopsData(graph);
-                dataCounted.detectedCountedLoops();
-                for (LoopEx loop : dataCounted.countedLoops())
+                __peeled = false;
+                final LoopsData __dataCounted = new LoopsData(__graph);
+                __dataCounted.detectedCountedLoops();
+                for (LoopEx __loop : __dataCounted.countedLoops())
                 {
-                    if (getPolicies().shouldFullUnroll(loop))
+                    if (getPolicies().shouldFullUnroll(__loop))
                     {
-                        LoopTransformations.fullUnroll(loop, context, canonicalizer);
-                        peeled = true;
+                        LoopTransformations.fullUnroll(__loop, __context, canonicalizer);
+                        __peeled = true;
                         break;
                     }
                 }
-                dataCounted.deleteUnusedNodes();
-            } while (peeled);
+                __dataCounted.deleteUnusedNodes();
+            } while (__peeled);
         }
     }
 }

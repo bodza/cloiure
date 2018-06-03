@@ -22,61 +22,63 @@ import giraaff.util.GraalError;
 // @class FloatEqualsNode
 public final class FloatEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
+    // @def
     public static final NodeClass<FloatEqualsNode> TYPE = NodeClass.create(FloatEqualsNode.class);
 
+    // @def
     private static final FloatEqualsOp OP = new FloatEqualsOp();
 
     // @cons
-    public FloatEqualsNode(ValueNode x, ValueNode y)
+    public FloatEqualsNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, CanonicalCondition.EQ, false, x, y);
+        super(TYPE, CanonicalCondition.EQ, false, __x, __y);
     }
 
-    public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode result = CompareNode.tryConstantFoldPrimitive(CanonicalCondition.EQ, x, y, false, view);
-        if (result != null)
+        LogicNode __result = CompareNode.tryConstantFoldPrimitive(CanonicalCondition.EQ, __x, __y, false, __view);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
         else
         {
-            return new FloatEqualsNode(x, y).maybeCommuteInputs();
+            return new FloatEqualsNode(__x, __y).maybeCommuteInputs();
         }
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode value = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, CanonicalCondition.EQ, false, x, y, view);
-        if (value != null)
+        LogicNode __value = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, CanonicalCondition.EQ, false, __x, __y, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
-        return create(x, y, view);
+        return create(__x, __y, __view);
     }
 
     @Override
     public boolean isIdentityComparison()
     {
-        FloatStamp xStamp = (FloatStamp) x.stamp(NodeView.DEFAULT);
-        FloatStamp yStamp = (FloatStamp) y.stamp(NodeView.DEFAULT);
+        FloatStamp __xStamp = (FloatStamp) x.stamp(NodeView.DEFAULT);
+        FloatStamp __yStamp = (FloatStamp) y.stamp(NodeView.DEFAULT);
         /*
          * If both stamps have at most one 0.0 and it's the same 0.0 then this is an identity
          * comparison. FloatStamp isn't careful about tracking the presence of -0.0 so assume that
          * anything that includes 0.0 might include -0.0. So if either one is non-zero then it's an
          * identity comparison.
          */
-        return (!xStamp.contains(0.0) || !yStamp.contains(0.0));
+        return (!__xStamp.contains(0.0) || !__yStamp.contains(0.0));
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), CanonicalCondition.EQ, unorderedIsTrue, forX, forY, view);
-        if (value != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, unorderedIsTrue, __forX, __forY, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
         return this;
     }
@@ -85,24 +87,24 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
     public static final class FloatEqualsOp extends CompareOp
     {
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __forX, ValueNode __forY, NodeView __view)
         {
-            LogicNode result = super.canonical(constantReflection, metaAccess, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
-            if (result != null)
+            LogicNode __result = super.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __unorderedIsTrue, __forX, __forY, __view);
+            if (__result != null)
             {
-                return result;
+                return __result;
             }
-            Stamp xStampGeneric = forX.stamp(view);
-            Stamp yStampGeneric = forY.stamp(view);
-            if (xStampGeneric instanceof FloatStamp && yStampGeneric instanceof FloatStamp)
+            Stamp __xStampGeneric = __forX.stamp(__view);
+            Stamp __yStampGeneric = __forY.stamp(__view);
+            if (__xStampGeneric instanceof FloatStamp && __yStampGeneric instanceof FloatStamp)
             {
-                FloatStamp xStamp = (FloatStamp) xStampGeneric;
-                FloatStamp yStamp = (FloatStamp) yStampGeneric;
-                if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY) && xStamp.isNonNaN() && yStamp.isNonNaN())
+                FloatStamp __xStamp = (FloatStamp) __xStampGeneric;
+                FloatStamp __yStamp = (FloatStamp) __yStampGeneric;
+                if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY) && __xStamp.isNonNaN() && __yStamp.isNonNaN())
                 {
                     return LogicConstantNode.tautology();
                 }
-                else if (xStamp.alwaysDistinct(yStamp))
+                else if (__xStamp.alwaysDistinct(__yStamp))
                 {
                     return LogicConstantNode.contradiction();
                 }
@@ -111,52 +113,52 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
         }
 
         @Override
-        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
         {
-            if (newX.stamp(view) instanceof FloatStamp && newY.stamp(view) instanceof FloatStamp)
+            if (__newX.stamp(__view) instanceof FloatStamp && __newY.stamp(__view) instanceof FloatStamp)
             {
-                return new FloatEqualsNode(newX, newY);
+                return new FloatEqualsNode(__newX, __newY);
             }
-            else if (newX.stamp(view) instanceof IntegerStamp && newY.stamp(view) instanceof IntegerStamp)
+            else if (__newX.stamp(__view) instanceof IntegerStamp && __newY.stamp(__view) instanceof IntegerStamp)
             {
-                return new IntegerEqualsNode(newX, newY);
+                return new IntegerEqualsNode(__newX, __newY);
             }
             throw GraalError.shouldNotReachHere();
         }
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForX(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
-        if (!negated)
+        if (!__negated)
         {
-            return xStamp.join(yStamp);
+            return __xStamp.join(__yStamp);
         }
         return null;
     }
 
     @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForY(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
-        if (!negated)
+        if (!__negated)
         {
-            return xStamp.join(yStamp);
+            return __xStamp.join(__yStamp);
         }
         return null;
     }
 
     @Override
-    public TriState tryFold(Stamp xStampGeneric, Stamp yStampGeneric)
+    public TriState tryFold(Stamp __xStampGeneric, Stamp __yStampGeneric)
     {
-        if (xStampGeneric instanceof FloatStamp && yStampGeneric instanceof FloatStamp)
+        if (__xStampGeneric instanceof FloatStamp && __yStampGeneric instanceof FloatStamp)
         {
-            FloatStamp xStamp = (FloatStamp) xStampGeneric;
-            FloatStamp yStamp = (FloatStamp) yStampGeneric;
-            if (xStamp.alwaysDistinct(yStamp))
+            FloatStamp __xStamp = (FloatStamp) __xStampGeneric;
+            FloatStamp __yStamp = (FloatStamp) __yStampGeneric;
+            if (__xStamp.alwaysDistinct(__yStamp))
             {
                 return TriState.FALSE;
             }
-            else if (xStamp.neverDistinct(yStamp))
+            else if (__xStamp.neverDistinct(__yStamp))
             {
                 return TriState.TRUE;
             }

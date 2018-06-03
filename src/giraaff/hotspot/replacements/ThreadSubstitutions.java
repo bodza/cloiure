@@ -24,23 +24,24 @@ public final class ThreadSubstitutions
      * hidden in 9.
      */
     @MethodSubstitution(isStatic = false, optional = true)
-    public static boolean isInterrupted(final Thread thisObject, boolean clearInterrupted)
+    public static boolean isInterrupted(final Thread __thisObject, boolean __clearInterrupted)
     {
-        Word javaThread = CurrentJavaThreadNode.get();
-        Object thread = javaThread.readObject(HotSpotRuntime.threadObjectOffset, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION);
-        if (thisObject == thread)
+        Word __javaThread = CurrentJavaThreadNode.get();
+        Object __thread = __javaThread.readObject(HotSpotRuntime.threadObjectOffset, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION);
+        if (__thisObject == __thread)
         {
-            Word osThread = javaThread.readWord(HotSpotRuntime.osThreadOffset, HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION);
-            boolean interrupted = osThread.readInt(HotSpotRuntime.osThreadInterruptedOffset, LocationIdentity.any()) != 0;
-            if (!interrupted || !clearInterrupted)
+            Word __osThread = __javaThread.readWord(HotSpotRuntime.osThreadOffset, HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION);
+            boolean __interrupted = __osThread.readInt(HotSpotRuntime.osThreadInterruptedOffset, LocationIdentity.any()) != 0;
+            if (!__interrupted || !__clearInterrupted)
             {
-                return interrupted;
+                return __interrupted;
             }
         }
 
-        return threadIsInterruptedStub(THREAD_IS_INTERRUPTED, thisObject, clearInterrupted);
+        return threadIsInterruptedStub(THREAD_IS_INTERRUPTED, __thisObject, __clearInterrupted);
     }
 
+    // @def
     public static final ForeignCallDescriptor THREAD_IS_INTERRUPTED = new ForeignCallDescriptor("thread_is_interrupted", boolean.class, Thread.class, boolean.class);
 
     @NodeIntrinsic(ForeignCallNode.class)

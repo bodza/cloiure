@@ -11,12 +11,13 @@ import giraaff.graph.NodeClass;
 // @class ControlSplitNode
 public abstract class ControlSplitNode extends FixedNode implements IterableNodeType
 {
+    // @def
     public static final NodeClass<ControlSplitNode> TYPE = NodeClass.create(ControlSplitNode.class);
 
     // @cons
-    protected ControlSplitNode(NodeClass<? extends ControlSplitNode> c, Stamp stamp)
+    protected ControlSplitNode(NodeClass<? extends ControlSplitNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     public abstract double probability(AbstractBeginNode successor);

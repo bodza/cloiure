@@ -20,15 +20,18 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class RawMonitorEnterNode
 public final class RawMonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<RawMonitorEnterNode> TYPE = NodeClass.create(RawMonitorEnterNode.class);
 
-    @Input ValueNode hub;
+    @Input
+    // @field
+    ValueNode hub;
 
     // @cons
-    public RawMonitorEnterNode(ValueNode object, ValueNode hub, MonitorIdNode monitorId)
+    public RawMonitorEnterNode(ValueNode __object, ValueNode __hub, MonitorIdNode __monitorId)
     {
-        super(TYPE, object, monitorId);
-        this.hub = hub;
+        super(TYPE, __object, __monitorId);
+        this.hub = __hub;
     }
 
     @Override
@@ -38,22 +41,22 @@ public final class RawMonitorEnterNode extends AccessMonitorNode implements Virt
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            if (virtual.hasIdentity())
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            if (__virtual.hasIdentity())
             {
-                tool.addLock(virtual, getMonitorId());
-                tool.delete();
+                __tool.addLock(__virtual, getMonitorId());
+                __tool.delete();
             }
         }
     }

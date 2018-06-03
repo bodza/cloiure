@@ -11,21 +11,25 @@ import giraaff.util.GraalError;
 // @class AMD64HotSpotLoadConfigValueOp
 public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotLoadConfigValueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLoadConfigValueOp.class);
 
-    @Def({OperandFlag.REG}) protected AllocatableValue result;
+    @Def({OperandFlag.REG})
+    // @field
+    protected AllocatableValue result;
+    // @field
     private final int markId;
 
     // @cons
-    public AMD64HotSpotLoadConfigValueOp(int markId, AllocatableValue result)
+    public AMD64HotSpotLoadConfigValueOp(int __markId, AllocatableValue __result)
     {
         super(TYPE);
-        this.result = result;
-        this.markId = markId;
+        this.result = __result;
+        this.markId = __markId;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         throw GraalError.unimplemented();
     }

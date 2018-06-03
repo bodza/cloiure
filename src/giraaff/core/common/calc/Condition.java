@@ -63,27 +63,31 @@ public enum Condition
      */
     BT("|<|");
 
+    // @field
     public final String operator;
 
-    Condition(String operator)
+    Condition(String __operator)
     {
-        this.operator = operator;
+        this.operator = __operator;
     }
 
     // @class Condition.CanonicalizedCondition
     public static final class CanonicalizedCondition
     {
+        // @field
         private final CanonicalCondition canonicalCondition;
+        // @field
         private final boolean mirror;
+        // @field
         private final boolean negate;
 
         // @cons
-        private CanonicalizedCondition(CanonicalCondition canonicalCondition, boolean mirror, boolean negate)
+        private CanonicalizedCondition(CanonicalCondition __canonicalCondition, boolean __mirror, boolean __negate)
         {
             super();
-            this.canonicalCondition = canonicalCondition;
-            this.mirror = mirror;
-            this.negate = negate;
+            this.canonicalCondition = __canonicalCondition;
+            this.mirror = __mirror;
+            this.negate = __negate;
         }
 
         public CanonicalCondition getCanonicalCondition()
@@ -104,29 +108,29 @@ public enum Condition
 
     public CanonicalizedCondition canonicalize()
     {
-        CanonicalCondition canonicalCondition;
+        CanonicalCondition __canonicalCondition;
         switch (this)
         {
             case EQ:
             case NE:
-                canonicalCondition = CanonicalCondition.EQ;
+                __canonicalCondition = CanonicalCondition.EQ;
                 break;
             case LT:
             case LE:
             case GT:
             case GE:
-                canonicalCondition = CanonicalCondition.LT;
+                __canonicalCondition = CanonicalCondition.LT;
                 break;
             case BT:
             case BE:
             case AT:
             case AE:
-                canonicalCondition = CanonicalCondition.BT;
+                __canonicalCondition = CanonicalCondition.BT;
                 break;
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        return new CanonicalizedCondition(canonicalCondition, canonicalMirror(), canonicalNegate());
+        return new CanonicalizedCondition(__canonicalCondition, canonicalMirror(), canonicalNegate());
     }
 
     /**
@@ -260,32 +264,32 @@ public enum Condition
         throw GraalError.shouldNotReachHere();
     }
 
-    public boolean implies(Condition other)
+    public boolean implies(Condition __other)
     {
-        if (other == this)
+        if (__other == this)
         {
             return true;
         }
         switch (this)
         {
             case EQ:
-                return other == LE || other == GE || other == BE || other == AE;
+                return __other == LE || __other == GE || __other == BE || __other == AE;
             case NE:
                 return false;
             case LT:
-                return other == LE || other == NE;
+                return __other == LE || __other == NE;
             case LE:
                 return false;
             case GT:
-                return other == GE || other == NE;
+                return __other == GE || __other == NE;
             case GE:
                 return false;
             case BT:
-                return other == BE || other == NE;
+                return __other == BE || __other == NE;
             case BE:
                 return false;
             case AT:
-                return other == AE || other == NE;
+                return __other == AE || __other == NE;
             case AE:
                 return false;
         }
@@ -353,9 +357,9 @@ public enum Condition
      * @return {@link Boolean#TRUE} if the comparison is known to be true, {@link Boolean#FALSE} if
      *         the comparison is known to be false
      */
-    public boolean foldCondition(JavaConstant lt, JavaConstant rt, ConstantReflectionProvider constantReflection)
+    public boolean foldCondition(JavaConstant __lt, JavaConstant __rt, ConstantReflectionProvider __constantReflection)
     {
-        return foldCondition(lt, rt, constantReflection, false);
+        return foldCondition(__lt, __rt, __constantReflection, false);
     }
 
     /**
@@ -367,27 +371,27 @@ public enum Condition
      * @param unorderedIsTrue true if an undecided float comparison should result in "true"
      * @return true if the comparison is known to be true, false if the comparison is known to be false
      */
-    public boolean foldCondition(Constant lt, Constant rt, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue)
+    public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
     {
-        if (lt instanceof PrimitiveConstant)
+        if (__lt instanceof PrimitiveConstant)
         {
-            PrimitiveConstant lp = (PrimitiveConstant) lt;
-            PrimitiveConstant rp = (PrimitiveConstant) rt;
-            return foldCondition(lp, rp, unorderedIsTrue);
+            PrimitiveConstant __lp = (PrimitiveConstant) __lt;
+            PrimitiveConstant __rp = (PrimitiveConstant) __rt;
+            return foldCondition(__lp, __rp, __unorderedIsTrue);
         }
         else
         {
-            Boolean equal = constantReflection.constantEquals(lt, rt);
-            if (equal == null)
+            Boolean __equal = __constantReflection.constantEquals(__lt, __rt);
+            if (__equal == null)
             {
-                throw new GraalError("could not fold %s %s %s", lt, this, rt);
+                throw new GraalError("could not fold %s %s %s", __lt, this, __rt);
             }
             switch (this)
             {
                 case EQ:
-                    return equal.booleanValue();
+                    return __equal.booleanValue();
                 case NE:
-                    return !equal.booleanValue();
+                    return !__equal.booleanValue();
                 default:
                     throw new GraalError("expected condition: %s", this);
             }
@@ -402,9 +406,9 @@ public enum Condition
      * @param unorderedIsTrue true if an undecided float comparison should result in "true"
      * @return true if the comparison is known to be true, false if the comparison is known to be false
      */
-    public boolean foldCondition(PrimitiveConstant lp, PrimitiveConstant rp, boolean unorderedIsTrue)
+    public boolean foldCondition(PrimitiveConstant __lp, PrimitiveConstant __rp, boolean __unorderedIsTrue)
     {
-        switch (lp.getJavaKind())
+        switch (__lp.getJavaKind())
         {
             case Boolean:
             case Byte:
@@ -412,131 +416,131 @@ public enum Condition
             case Short:
             case Int:
             {
-                int x = lp.asInt();
-                int y = rp.asInt();
+                int __x = __lp.asInt();
+                int __y = __rp.asInt();
                 switch (this)
                 {
                     case EQ:
-                        return x == y;
+                        return __x == __y;
                     case NE:
-                        return x != y;
+                        return __x != __y;
                     case LT:
-                        return x < y;
+                        return __x < __y;
                     case LE:
-                        return x <= y;
+                        return __x <= __y;
                     case GT:
-                        return x > y;
+                        return __x > __y;
                     case GE:
-                        return x >= y;
+                        return __x >= __y;
                     case AE:
-                        return UnsignedMath.aboveOrEqual(x, y);
+                        return UnsignedMath.aboveOrEqual(__x, __y);
                     case BE:
-                        return UnsignedMath.belowOrEqual(x, y);
+                        return UnsignedMath.belowOrEqual(__x, __y);
                     case AT:
-                        return UnsignedMath.aboveThan(x, y);
+                        return UnsignedMath.aboveThan(__x, __y);
                     case BT:
-                        return UnsignedMath.belowThan(x, y);
+                        return UnsignedMath.belowThan(__x, __y);
                     default:
                         throw new GraalError("expected condition: %s", this);
                 }
             }
             case Long:
             {
-                long x = lp.asLong();
-                long y = rp.asLong();
+                long __x = __lp.asLong();
+                long __y = __rp.asLong();
                 switch (this)
                 {
                     case EQ:
-                        return x == y;
+                        return __x == __y;
                     case NE:
-                        return x != y;
+                        return __x != __y;
                     case LT:
-                        return x < y;
+                        return __x < __y;
                     case LE:
-                        return x <= y;
+                        return __x <= __y;
                     case GT:
-                        return x > y;
+                        return __x > __y;
                     case GE:
-                        return x >= y;
+                        return __x >= __y;
                     case AE:
-                        return UnsignedMath.aboveOrEqual(x, y);
+                        return UnsignedMath.aboveOrEqual(__x, __y);
                     case BE:
-                        return UnsignedMath.belowOrEqual(x, y);
+                        return UnsignedMath.belowOrEqual(__x, __y);
                     case AT:
-                        return UnsignedMath.aboveThan(x, y);
+                        return UnsignedMath.aboveThan(__x, __y);
                     case BT:
-                        return UnsignedMath.belowThan(x, y);
+                        return UnsignedMath.belowThan(__x, __y);
                     default:
                         throw new GraalError("expected condition: %s", this);
                 }
             }
             case Float:
             {
-                float x = lp.asFloat();
-                float y = rp.asFloat();
-                if (Float.isNaN(x) || Float.isNaN(y))
+                float __x = __lp.asFloat();
+                float __y = __rp.asFloat();
+                if (Float.isNaN(__x) || Float.isNaN(__y))
                 {
-                    return unorderedIsTrue;
+                    return __unorderedIsTrue;
                 }
                 switch (this)
                 {
                     case EQ:
-                        return x == y;
+                        return __x == __y;
                     case NE:
-                        return x != y;
+                        return __x != __y;
                     case LT:
-                        return x < y;
+                        return __x < __y;
                     case LE:
-                        return x <= y;
+                        return __x <= __y;
                     case GT:
-                        return x > y;
+                        return __x > __y;
                     case GE:
-                        return x >= y;
+                        return __x >= __y;
                     default:
                         throw new GraalError("expected condition: %s", this);
                 }
             }
             case Double:
             {
-                double x = lp.asDouble();
-                double y = rp.asDouble();
-                if (Double.isNaN(x) || Double.isNaN(y))
+                double __x = __lp.asDouble();
+                double __y = __rp.asDouble();
+                if (Double.isNaN(__x) || Double.isNaN(__y))
                 {
-                    return unorderedIsTrue;
+                    return __unorderedIsTrue;
                 }
                 switch (this)
                 {
                     case EQ:
-                        return x == y;
+                        return __x == __y;
                     case NE:
-                        return x != y;
+                        return __x != __y;
                     case LT:
-                        return x < y;
+                        return __x < __y;
                     case LE:
-                        return x <= y;
+                        return __x <= __y;
                     case GT:
-                        return x > y;
+                        return __x > __y;
                     case GE:
-                        return x >= y;
+                        return __x >= __y;
                     default:
                         throw new GraalError("expected condition: %s", this);
                 }
             }
             default:
-                throw new GraalError("expected value kind %s while folding condition: %s", lp.getJavaKind(), this);
+                throw new GraalError("expected value kind %s while folding condition: %s", __lp.getJavaKind(), this);
         }
     }
 
-    public Condition join(Condition other)
+    public Condition join(Condition __other)
     {
-        if (other == this)
+        if (__other == this)
         {
             return this;
         }
         switch (this)
         {
             case EQ:
-                if (other == LE || other == GE || other == BE || other == AE)
+                if (__other == LE || __other == GE || __other == BE || __other == AE)
                 {
                     return EQ;
                 }
@@ -545,23 +549,23 @@ public enum Condition
                     return null;
                 }
             case NE:
-                if (other == LT || other == GT || other == BT || other == AT)
+                if (__other == LT || __other == GT || __other == BT || __other == AT)
                 {
-                    return other;
+                    return __other;
                 }
-                else if (other == LE)
+                else if (__other == LE)
                 {
                     return LT;
                 }
-                else if (other == GE)
+                else if (__other == GE)
                 {
                     return GT;
                 }
-                else if (other == BE)
+                else if (__other == BE)
                 {
                     return BT;
                 }
-                else if (other == AE)
+                else if (__other == AE)
                 {
                     return AT;
                 }
@@ -570,11 +574,11 @@ public enum Condition
                     return null;
                 }
             case LE:
-                if (other == GE || other == EQ)
+                if (__other == GE || __other == EQ)
                 {
                     return EQ;
                 }
-                else if (other == NE || other == LT)
+                else if (__other == NE || __other == LT)
                 {
                     return LT;
                 }
@@ -583,7 +587,7 @@ public enum Condition
                     return null;
                 }
             case LT:
-                if (other == NE || other == LE)
+                if (__other == NE || __other == LE)
                 {
                     return LT;
                 }
@@ -592,11 +596,11 @@ public enum Condition
                     return null;
                 }
             case GE:
-                if (other == LE || other == EQ)
+                if (__other == LE || __other == EQ)
                 {
                     return EQ;
                 }
-                else if (other == NE || other == GT)
+                else if (__other == NE || __other == GT)
                 {
                     return GT;
                 }
@@ -605,7 +609,7 @@ public enum Condition
                     return null;
                 }
             case GT:
-                if (other == NE || other == GE)
+                if (__other == NE || __other == GE)
                 {
                     return GT;
                 }
@@ -614,11 +618,11 @@ public enum Condition
                     return null;
                 }
             case BE:
-                if (other == AE || other == EQ)
+                if (__other == AE || __other == EQ)
                 {
                     return EQ;
                 }
-                else if (other == NE || other == BT)
+                else if (__other == NE || __other == BT)
                 {
                     return BT;
                 }
@@ -627,7 +631,7 @@ public enum Condition
                     return null;
                 }
             case BT:
-                if (other == NE || other == BE)
+                if (__other == NE || __other == BE)
                 {
                     return BT;
                 }
@@ -636,11 +640,11 @@ public enum Condition
                     return null;
                 }
             case AE:
-                if (other == BE || other == EQ)
+                if (__other == BE || __other == EQ)
                 {
                     return EQ;
                 }
-                else if (other == NE || other == AT)
+                else if (__other == NE || __other == AT)
                 {
                     return AT;
                 }
@@ -649,7 +653,7 @@ public enum Condition
                     return null;
                 }
             case AT:
-                if (other == NE || other == AE)
+                if (__other == NE || __other == AE)
                 {
                     return AT;
                 }
@@ -661,32 +665,32 @@ public enum Condition
         throw GraalError.shouldNotReachHere();
     }
 
-    public Condition meet(Condition other)
+    public Condition meet(Condition __other)
     {
-        if (other == this)
+        if (__other == this)
         {
             return this;
         }
         switch (this)
         {
             case EQ:
-                if (other == LE || other == GE || other == BE || other == AE)
+                if (__other == LE || __other == GE || __other == BE || __other == AE)
                 {
-                    return other;
+                    return __other;
                 }
-                else if (other == LT)
+                else if (__other == LT)
                 {
                     return LE;
                 }
-                else if (other == GT)
+                else if (__other == GT)
                 {
                     return GE;
                 }
-                else if (other == BT)
+                else if (__other == BT)
                 {
                     return BE;
                 }
-                else if (other == AT)
+                else if (__other == AT)
                 {
                     return AE;
                 }
@@ -695,7 +699,7 @@ public enum Condition
                     return null;
                 }
             case NE:
-                if (other == LT || other == GT || other == BT || other == AT)
+                if (__other == LT || __other == GT || __other == BT || __other == AT)
                 {
                     return NE;
                 }
@@ -704,7 +708,7 @@ public enum Condition
                     return null;
                 }
             case LE:
-                if (other == EQ || other == LT)
+                if (__other == EQ || __other == LT)
                 {
                     return LE;
                 }
@@ -713,11 +717,11 @@ public enum Condition
                     return null;
                 }
             case LT:
-                if (other == EQ || other == LE)
+                if (__other == EQ || __other == LE)
                 {
                     return LE;
                 }
-                else if (other == NE || other == GT)
+                else if (__other == NE || __other == GT)
                 {
                     return NE;
                 }
@@ -726,7 +730,7 @@ public enum Condition
                     return null;
                 }
             case GE:
-                if (other == EQ || other == GT)
+                if (__other == EQ || __other == GT)
                 {
                     return GE;
                 }
@@ -735,11 +739,11 @@ public enum Condition
                     return null;
                 }
             case GT:
-                if (other == EQ || other == GE)
+                if (__other == EQ || __other == GE)
                 {
                     return GE;
                 }
-                else if (other == NE || other == LT)
+                else if (__other == NE || __other == LT)
                 {
                     return NE;
                 }
@@ -748,7 +752,7 @@ public enum Condition
                     return null;
                 }
             case BE:
-                if (other == EQ || other == BT)
+                if (__other == EQ || __other == BT)
                 {
                     return BE;
                 }
@@ -757,11 +761,11 @@ public enum Condition
                     return null;
                 }
             case BT:
-                if (other == EQ || other == BE)
+                if (__other == EQ || __other == BE)
                 {
                     return BE;
                 }
-                else if (other == NE || other == AT)
+                else if (__other == NE || __other == AT)
                 {
                     return NE;
                 }
@@ -770,7 +774,7 @@ public enum Condition
                     return null;
                 }
             case AE:
-                if (other == EQ || other == AT)
+                if (__other == EQ || __other == AT)
                 {
                     return AE;
                 }
@@ -779,11 +783,11 @@ public enum Condition
                     return null;
                 }
             case AT:
-                if (other == EQ || other == AE)
+                if (__other == EQ || __other == AE)
                 {
                     return AE;
                 }
-                else if (other == NE || other == BT)
+                else if (__other == NE || __other == BT)
                 {
                     return NE;
                 }

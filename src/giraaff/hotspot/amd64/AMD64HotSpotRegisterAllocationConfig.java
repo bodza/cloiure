@@ -32,29 +32,29 @@ final class AMD64HotSpotRegisterAllocationConfig extends RegisterAllocationConfi
     };
 
     // @cons
-    AMD64HotSpotRegisterAllocationConfig(RegisterConfig registerConfig)
+    AMD64HotSpotRegisterAllocationConfig(RegisterConfig __registerConfig)
     {
-        super(registerConfig);
+        super(__registerConfig);
     }
 
     @Override
-    protected RegisterArray initAllocatable(RegisterArray registers)
+    protected RegisterArray initAllocatable(RegisterArray __registers)
     {
-        BitSet regMap = new BitSet(registerConfig.getAllocatableRegisters().size());
-        for (Register reg : registers)
+        BitSet __regMap = new BitSet(registerConfig.getAllocatableRegisters().size());
+        for (Register __reg : __registers)
         {
-            regMap.set(reg.number);
+            __regMap.set(__reg.number);
         }
 
-        ArrayList<Register> allocatableRegisters = new ArrayList<>(registers.size());
-        for (Register reg : registerAllocationOrder)
+        ArrayList<Register> __allocatableRegisters = new ArrayList<>(__registers.size());
+        for (Register __reg : registerAllocationOrder)
         {
-            if (regMap.get(reg.number))
+            if (__regMap.get(__reg.number))
             {
-                allocatableRegisters.add(reg);
+                __allocatableRegisters.add(__reg);
             }
         }
 
-        return super.initAllocatable(new RegisterArray(allocatableRegisters));
+        return super.initAllocatable(new RegisterArray(__allocatableRegisters));
     }
 }

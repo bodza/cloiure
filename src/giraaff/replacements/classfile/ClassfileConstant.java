@@ -14,64 +14,82 @@ import giraaff.util.GraalError;
 // @class ClassfileConstant
 abstract class ClassfileConstant
 {
+    // @def
     public static final byte CONSTANT_Utf8               = 1;
+    // @def
     public static final byte CONSTANT_Integer            = 3;
+    // @def
     public static final byte CONSTANT_Float              = 4;
+    // @def
     public static final byte CONSTANT_Long               = 5;
+    // @def
     public static final byte CONSTANT_Double             = 6;
+    // @def
     public static final byte CONSTANT_Class              = 7;
+    // @def
     public static final byte CONSTANT_Fieldref           = 9;
+    // @def
     public static final byte CONSTANT_String             = 8;
+    // @def
     public static final byte CONSTANT_Methodref          = 10;
+    // @def
     public static final byte CONSTANT_InterfaceMethodref = 11;
+    // @def
     public static final byte CONSTANT_NameAndType        = 12;
+    // @def
     public static final byte CONSTANT_MethodHandle       = 15;
+    // @def
     public static final byte CONSTANT_MethodType         = 16;
+    // @def
     public static final byte CONSTANT_Dynamic            = 17;
+    // @def
     public static final byte CONSTANT_InvokeDynamic      = 18;
 
+    // @field
     final byte tag;
 
     // @cons
-    ClassfileConstant(byte tag)
+    ClassfileConstant(byte __tag)
     {
         super();
-        this.tag = tag;
+        this.tag = __tag;
     }
 
     /**
      * Loads the type, if any, referenced at a specified entry.
      */
-    public void loadReferencedType(ClassfileConstantPool cp, int index, int opcode)
+    public void loadReferencedType(ClassfileConstantPool __cp, int __index, int __opcode)
     {
     }
 
     // @class ClassfileConstant.ClassRef
     static final class ClassRef extends ClassfileConstant
     {
+        // @field
         final int nameIndex;
+        // @field
         private ResolvedJavaType type;
 
         // @cons
-        ClassRef(DataInputStream stream) throws IOException
+        ClassRef(DataInputStream __stream) throws IOException
         {
             super(CONSTANT_Class);
-            this.nameIndex = stream.readUnsignedShort();
+            this.nameIndex = __stream.readUnsignedShort();
         }
 
         @Override
-        public void loadReferencedType(ClassfileConstantPool cp, int index, int opcode)
+        public void loadReferencedType(ClassfileConstantPool __cp, int __index, int __opcode)
         {
-            resolve(cp);
+            resolve(__cp);
         }
 
-        public ResolvedJavaType resolve(ClassfileConstantPool cp)
+        public ResolvedJavaType resolve(ClassfileConstantPool __cp)
         {
             if (type == null)
             {
-                String typeDescriptor = cp.get(Utf8.class, nameIndex).value;
-                ClassfileBytecodeProvider context = cp.context;
-                type = context.metaAccess.lookupJavaType(context.resolveToClass(typeDescriptor));
+                String __typeDescriptor = __cp.get(Utf8.class, nameIndex).value;
+                ClassfileBytecodeProvider __context = __cp.context;
+                type = __context.metaAccess.lookupJavaType(__context.resolveToClass(__typeDescriptor));
             }
             return type;
         }
@@ -80,70 +98,73 @@ abstract class ClassfileConstant
     // @class ClassfileConstant.MemberRef
     static class MemberRef extends ClassfileConstant
     {
+        // @field
         final int classIndex;
+        // @field
         final int nameAndTypeIndex;
 
         // @cons
-        MemberRef(byte tag, DataInputStream stream) throws IOException
+        MemberRef(byte __tag, DataInputStream __stream) throws IOException
         {
-            super(tag);
-            this.classIndex = stream.readUnsignedShort();
-            this.nameAndTypeIndex = stream.readUnsignedShort();
+            super(__tag);
+            this.classIndex = __stream.readUnsignedShort();
+            this.nameAndTypeIndex = __stream.readUnsignedShort();
         }
 
         @Override
-        public void loadReferencedType(ClassfileConstantPool cp, int index, int opcode)
+        public void loadReferencedType(ClassfileConstantPool __cp, int __index, int __opcode)
         {
-            cp.get(ClassRef.class, classIndex).loadReferencedType(cp, classIndex, opcode);
+            __cp.get(ClassRef.class, classIndex).loadReferencedType(__cp, classIndex, __opcode);
         }
     }
 
     // @class ClassfileConstant.ExecutableRef
     static class ExecutableRef extends MemberRef
     {
+        // @field
         private ResolvedJavaMethod method;
 
         // @cons
-        ExecutableRef(byte tag, DataInputStream stream) throws IOException
+        ExecutableRef(byte __tag, DataInputStream __stream) throws IOException
         {
-            super(tag, stream);
+            super(__tag, __stream);
         }
 
-        ResolvedJavaMethod resolve(ClassfileConstantPool cp, int opcode)
+        ResolvedJavaMethod resolve(ClassfileConstantPool __cp, int __opcode)
         {
             if (method == null)
             {
-                ResolvedJavaType cls = cp.get(ClassRef.class, classIndex).resolve(cp);
-                NameAndType nameAndType = cp.get(NameAndType.class, nameAndTypeIndex);
-                String name = nameAndType.getName(cp);
-                String type = nameAndType.getType(cp);
+                ResolvedJavaType __cls = __cp.get(ClassRef.class, classIndex).resolve(__cp);
+                NameAndType __nameAndType = __cp.get(NameAndType.class, nameAndTypeIndex);
+                String __name = __nameAndType.getName(__cp);
+                String __type = __nameAndType.getType(__cp);
 
-                if (opcode == Bytecodes.INVOKEINTERFACE)
+                if (__opcode == Bytecodes.INVOKEINTERFACE)
                 {
-                    method = resolveMethod(cp.context, cls, name, type, false);
+                    method = resolveMethod(__cp.context, __cls, __name, __type, false);
                     if (method == null)
                     {
-                        throw new NoSuchMethodError(cls.toJavaName() + "." + name + type);
+                        throw new NoSuchMethodError(__cls.toJavaName() + "." + __name + __type);
                     }
                     if (!method.isPublic() || !(method.getDeclaringClass().isInterface() || method.getDeclaringClass().isJavaLangObject()))
                     {
                         throw new IncompatibleClassChangeError("cannot invokeinterface " + method.format("%H.%n(%P)%R"));
                     }
                 }
-                else if (opcode == Bytecodes.INVOKEVIRTUAL || opcode == Bytecodes.INVOKESPECIAL)
+                else if (__opcode == Bytecodes.INVOKEVIRTUAL || __opcode == Bytecodes.INVOKESPECIAL)
                 {
-                    method = resolveMethod(cp.context, cls, name, type, false);
+                    method = resolveMethod(__cp.context, __cls, __name, __type, false);
                     if (method == null)
                     {
-                        throw new NoSuchMethodError(cls.toJavaName() + "." + name + type);
+                        throw new NoSuchMethodError(__cls.toJavaName() + "." + __name + __type);
                     }
                 }
                 else
                 {
-                    method = resolveMethod(cp.context, cls, name, type, true);
+                    method = resolveMethod(__cp.context, __cls, __name, __type, true);
                     if (method == null)
                     {
-                        throw new NoSuchMethodError(cls.toJavaName() + "." + name + type);
+                        throw new NoSuchMethodError(__cls.toJavaName() + "." + __name + __type);
                     }
                 }
             }
@@ -155,9 +176,9 @@ abstract class ClassfileConstant
     static final class MethodRef extends ExecutableRef
     {
         // @cons
-        MethodRef(DataInputStream stream) throws IOException
+        MethodRef(DataInputStream __stream) throws IOException
         {
-            super(CONSTANT_Methodref, stream);
+            super(CONSTANT_Methodref, __stream);
         }
     }
 
@@ -165,35 +186,36 @@ abstract class ClassfileConstant
     static final class InterfaceMethodRef extends ExecutableRef
     {
         // @cons
-        InterfaceMethodRef(DataInputStream stream) throws IOException
+        InterfaceMethodRef(DataInputStream __stream) throws IOException
         {
-            super(CONSTANT_InterfaceMethodref, stream);
+            super(CONSTANT_InterfaceMethodref, __stream);
         }
     }
 
     // @class ClassfileConstant.FieldRef
     static final class FieldRef extends MemberRef
     {
+        // @field
         private ResolvedJavaField field;
 
         // @cons
-        FieldRef(DataInputStream stream) throws IOException
+        FieldRef(DataInputStream __stream) throws IOException
         {
-            super(CONSTANT_Fieldref, stream);
+            super(CONSTANT_Fieldref, __stream);
         }
 
-        ResolvedJavaField resolve(ClassfileConstantPool cp, int opcode)
+        ResolvedJavaField resolve(ClassfileConstantPool __cp, int __opcode)
         {
             if (field == null)
             {
-                ResolvedJavaType cls = cp.get(ClassRef.class, classIndex).resolve(cp);
-                NameAndType nameAndType = cp.get(NameAndType.class, nameAndTypeIndex);
-                String name = nameAndType.getName(cp);
-                String type = nameAndType.getType(cp);
-                field = resolveField(cp.context, cls, name, type, opcode == Bytecodes.GETSTATIC || opcode == Bytecodes.PUTSTATIC);
+                ResolvedJavaType __cls = __cp.get(ClassRef.class, classIndex).resolve(__cp);
+                NameAndType __nameAndType = __cp.get(NameAndType.class, nameAndTypeIndex);
+                String __name = __nameAndType.getName(__cp);
+                String __type = __nameAndType.getType(__cp);
+                field = resolveField(__cp.context, __cls, __name, __type, __opcode == Bytecodes.GETSTATIC || __opcode == Bytecodes.PUTSTATIC);
                 if (field == null)
                 {
-                    throw new NoSuchFieldError(cls.toJavaName() + "." + name + " " + type);
+                    throw new NoSuchFieldError(__cls.toJavaName() + "." + __name + " " + __type);
                 }
             }
             return field;
@@ -203,34 +225,37 @@ abstract class ClassfileConstant
     // @class ClassfileConstant.Primitive
     static final class Primitive extends ClassfileConstant
     {
+        // @field
         final JavaConstant value;
 
         // @cons
-        Primitive(byte tag, JavaConstant value)
+        Primitive(byte __tag, JavaConstant __value)
         {
-            super(tag);
-            this.value = value;
+            super(__tag);
+            this.value = __value;
         }
     }
 
     // @class ClassfileConstant.StringRef
     static final class StringRef extends ClassfileConstant
     {
+        // @field
         final int stringIndex;
+        // @field
         JavaConstant value;
 
         // @cons
-        StringRef(DataInputStream stream) throws IOException
+        StringRef(DataInputStream __stream) throws IOException
         {
             super(ClassfileConstant.CONSTANT_String);
-            this.stringIndex = stream.readUnsignedShort();
+            this.stringIndex = __stream.readUnsignedShort();
         }
 
-        JavaConstant getValue(ClassfileConstantPool pool)
+        JavaConstant getValue(ClassfileConstantPool __pool)
         {
             if (value == null)
             {
-                value = pool.context.snippetReflection.forObject(pool.lookupUtf8(stringIndex));
+                value = __pool.context.snippetReflection.forObject(__pool.lookupUtf8(stringIndex));
             }
             return value;
         }
@@ -239,33 +264,37 @@ abstract class ClassfileConstant
     // @class ClassfileConstant.NameAndType
     static final class NameAndType extends ClassfileConstant
     {
+        // @field
         final int nameIndex;
+        // @field
         final int typeIndex;
+        // @field
         private String name;
+        // @field
         private String type;
 
         // @cons
-        NameAndType(DataInputStream stream) throws IOException
+        NameAndType(DataInputStream __stream) throws IOException
         {
             super(ClassfileConstant.CONSTANT_NameAndType);
-            this.nameIndex = stream.readUnsignedShort();
-            this.typeIndex = stream.readUnsignedShort();
+            this.nameIndex = __stream.readUnsignedShort();
+            this.typeIndex = __stream.readUnsignedShort();
         }
 
-        public String getName(ClassfileConstantPool cp)
+        public String getName(ClassfileConstantPool __cp)
         {
             if (name == null)
             {
-                name = cp.get(Utf8.class, nameIndex).value;
+                name = __cp.get(Utf8.class, nameIndex).value;
             }
             return name;
         }
 
-        public String getType(ClassfileConstantPool cp)
+        public String getType(ClassfileConstantPool __cp)
         {
             if (type == null)
             {
-                type = cp.get(Utf8.class, typeIndex).value;
+                type = __cp.get(Utf8.class, typeIndex).value;
             }
             return type;
         }
@@ -274,82 +303,84 @@ abstract class ClassfileConstant
     // @class ClassfileConstant.Utf8
     static final class Utf8 extends ClassfileConstant
     {
+        // @field
         final String value;
 
         // @cons
-        Utf8(String value)
+        Utf8(String __value)
         {
             super(CONSTANT_Utf8);
-            this.value = value;
+            this.value = __value;
         }
     }
 
     // @class ClassfileConstant.Unsupported
     static final class Unsupported extends ClassfileConstant
     {
+        // @field
         final String name;
 
         // @cons
-        Unsupported(byte tag, String name)
+        Unsupported(byte __tag, String __name)
         {
-            super(tag);
-            this.name = name;
+            super(__tag);
+            this.name = __name;
         }
 
         @Override
-        public void loadReferencedType(ClassfileConstantPool cp, int index, int opcode)
+        public void loadReferencedType(ClassfileConstantPool __cp, int __index, int __opcode)
         {
             throw new GraalError("Resolution of " + name + " constant pool entries not supported by " + ClassfileBytecodeProvider.class.getSimpleName());
         }
     }
 
-    static ResolvedJavaMethod resolveMethod(ClassfileBytecodeProvider context, ResolvedJavaType c, String name, String descriptor, boolean isStatic)
+    static ResolvedJavaMethod resolveMethod(ClassfileBytecodeProvider __context, ResolvedJavaType __c, String __name, String __descriptor, boolean __isStatic)
     {
-        ResolvedJavaMethod method = context.findMethod(c, name, descriptor, isStatic);
-        if (method != null)
+        ResolvedJavaMethod __method = __context.findMethod(__c, __name, __descriptor, __isStatic);
+        if (__method != null)
         {
-            return method;
+            return __method;
         }
-        if (!c.isJavaLangObject() && !c.isInterface())
+        if (!__c.isJavaLangObject() && !__c.isInterface())
         {
-            method = resolveMethod(context, c.getSuperclass(), name, descriptor, isStatic);
-            if (method != null)
+            __method = resolveMethod(__context, __c.getSuperclass(), __name, __descriptor, __isStatic);
+            if (__method != null)
             {
-                return method;
+                return __method;
             }
         }
-        for (ResolvedJavaType i : c.getInterfaces())
+        for (ResolvedJavaType __i : __c.getInterfaces())
         {
-            method = resolveMethod(context, i, name, descriptor, isStatic);
-            if (method != null)
+            __method = resolveMethod(__context, __i, __name, __descriptor, __isStatic);
+            if (__method != null)
             {
-                return method;
+                return __method;
             }
         }
         return null;
     }
 
-    static ResolvedJavaField resolveField(ClassfileBytecodeProvider context, ResolvedJavaType c, String name, String fieldType, boolean isStatic)
+    static ResolvedJavaField resolveField(ClassfileBytecodeProvider __context, ResolvedJavaType __c, String __name, String __fieldType, boolean __isStatic)
     {
-        ResolvedJavaField field = context.findField(c, name, fieldType, isStatic);
-        if (field != null)
+        ResolvedJavaField __field = __context.findField(__c, __name, __fieldType, __isStatic);
+        if (__field != null)
         {
-            return field;
+            return __field;
         }
-        if (!c.isJavaLangObject() && !c.isInterface())
+        if (!__c.isJavaLangObject() && !__c.isInterface())
         {
-            field = resolveField(context, c.getSuperclass(), name, fieldType, isStatic);
-            if (field != null)
+            __field = resolveField(__context, __c.getSuperclass(), __name, __fieldType, __isStatic);
+            if (__field != null)
             {
-                return field;
+                return __field;
             }
         }
-        for (ResolvedJavaType i : c.getInterfaces())
+        for (ResolvedJavaType __i : __c.getInterfaces())
         {
-            field = resolveField(context, i, name, fieldType, isStatic);
-            if (field != null)
+            __field = resolveField(__context, __i, __name, __fieldType, __isStatic);
+            if (__field != null)
             {
-                return field;
+                return __field;
             }
         }
         return null;

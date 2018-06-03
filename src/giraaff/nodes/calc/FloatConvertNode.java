@@ -24,35 +24,38 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class FloatConvertNode
 public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ConvertNode, Lowerable, ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<FloatConvertNode> TYPE = NodeClass.create(FloatConvertNode.class);
 
+    // @field
     protected final FloatConvert op;
 
+    // @def
     private static final EnumMap<FloatConvert, SerializableUnaryFunction<FloatConvertOp>> getOps;
     static
     {
         getOps = new EnumMap<>(FloatConvert.class);
-        for (FloatConvert op : FloatConvert.values())
+        for (FloatConvert __op : FloatConvert.values())
         {
-            getOps.put(op, table -> table.getFloatConvert(op));
+            getOps.put(__op, __table -> __table.getFloatConvert(__op));
         }
     }
 
     // @cons
-    public FloatConvertNode(FloatConvert op, ValueNode input)
+    public FloatConvertNode(FloatConvert __op, ValueNode __input)
     {
-        super(TYPE, getOps.get(op), input);
-        this.op = op;
+        super(TYPE, getOps.get(__op), __input);
+        this.op = __op;
     }
 
-    public static ValueNode create(FloatConvert op, ValueNode input, NodeView view)
+    public static ValueNode create(FloatConvert __op, ValueNode __input, NodeView __view)
     {
-        ValueNode synonym = findSynonym(input, ArithmeticOpTable.forStamp(input.stamp(view)).getFloatConvert(op));
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__input, ArithmeticOpTable.forStamp(__input.stamp(__view)).getFloatConvert(__op));
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return new FloatConvertNode(op, input);
+        return new FloatConvertNode(__op, __input);
     }
 
     public FloatConvert getFloatConvert()
@@ -61,16 +64,16 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
     }
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant convert(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        return getArithmeticOp().foldConstant(c);
+        return getArithmeticOp().foldConstant(__c);
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        FloatConvertOp reverse = ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)).getFloatConvert(op.reverse());
-        return reverse.foldConstant(c);
+        FloatConvertOp __reverse = ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)).getFloatConvert(op.reverse());
+        return __reverse.foldConstant(__c);
     }
 
     @Override
@@ -87,35 +90,35 @@ public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> 
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode ret = super.canonical(tool, forValue);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forValue);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        if (forValue instanceof FloatConvertNode)
+        if (__forValue instanceof FloatConvertNode)
         {
-            FloatConvertNode other = (FloatConvertNode) forValue;
-            if (other.isLossless() && other.op == this.op.reverse())
+            FloatConvertNode __other = (FloatConvertNode) __forValue;
+            if (__other.isLossless() && __other.op == this.op.reverse())
             {
-                return other.getValue();
+                return __other.getValue();
             }
         }
         return this;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitFloatConvert(getFloatConvert(), nodeValueMap.operand(getValue())));
+        __nodeValueMap.setResult(this, __gen.emitFloatConvert(getFloatConvert(), __nodeValueMap.operand(getValue())));
     }
 
     @Override

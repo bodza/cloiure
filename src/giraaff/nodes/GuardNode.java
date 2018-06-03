@@ -30,29 +30,36 @@ import giraaff.nodes.extended.GuardingNode;
 // @class GuardNode
 public final class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
 {
+    // @def
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);
 
-    @Input(InputType.Condition) protected LogicNode condition;
+    @Input(InputType.Condition)
+    // @field
+    protected LogicNode condition;
+    // @field
     protected DeoptimizationReason reason;
+    // @field
     protected DeoptimizationAction action;
+    // @field
     protected JavaConstant speculation;
+    // @field
     protected boolean negated;
 
     // @cons
-    public GuardNode(LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation)
+    public GuardNode(LogicNode __condition, AnchoringNode __anchor, DeoptimizationReason __reason, DeoptimizationAction __action, boolean __negated, JavaConstant __speculation)
     {
-        this(TYPE, condition, anchor, reason, action, negated, speculation);
+        this(TYPE, __condition, __anchor, __reason, __action, __negated, __speculation);
     }
 
     // @cons
-    protected GuardNode(NodeClass<? extends GuardNode> c, LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation)
+    protected GuardNode(NodeClass<? extends GuardNode> __c, LogicNode __condition, AnchoringNode __anchor, DeoptimizationReason __reason, DeoptimizationAction __action, boolean __negated, JavaConstant __speculation)
     {
-        super(c, StampFactory.forVoid(), anchor);
-        this.condition = condition;
-        this.reason = reason;
-        this.action = action;
-        this.negated = negated;
-        this.speculation = speculation;
+        super(__c, StampFactory.forVoid(), __anchor);
+        this.condition = __condition;
+        this.reason = __reason;
+        this.action = __action;
+        this.negated = __negated;
+        this.speculation = __speculation;
     }
 
     /**
@@ -65,11 +72,11 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
     }
 
     @Override
-    public void setCondition(LogicNode x, boolean negated)
+    public void setCondition(LogicNode __x, boolean __negated)
     {
-        updateUsages(condition, x);
-        condition = x;
-        this.negated = negated;
+        updateUsages(condition, __x);
+        condition = __x;
+        this.negated = __negated;
     }
 
     @Override
@@ -96,23 +103,23 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
         return speculation;
     }
 
-    public void setSpeculation(JavaConstant speculation)
+    public void setSpeculation(JavaConstant __speculation)
     {
-        this.speculation = speculation;
+        this.speculation = __speculation;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (getCondition() instanceof LogicNegationNode)
         {
-            LogicNegationNode negation = (LogicNegationNode) getCondition();
-            return new GuardNode(negation.getValue(), getAnchor(), reason, action, !negated, speculation);
+            LogicNegationNode __negation = (LogicNegationNode) getCondition();
+            return new GuardNode(__negation.getValue(), getAnchor(), reason, action, !negated, speculation);
         }
         if (getCondition() instanceof LogicConstantNode)
         {
-            LogicConstantNode c = (LogicConstantNode) getCondition();
-            if (c.getValue() != negated)
+            LogicConstantNode __c = (LogicConstantNode) getCondition();
+            if (__c.getValue() != negated)
             {
                 return null;
             }
@@ -131,14 +138,14 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
     }
 
     @Override
-    public void setAction(DeoptimizationAction invalidaterecompile)
+    public void setAction(DeoptimizationAction __invalidaterecompile)
     {
-        this.action = invalidaterecompile;
+        this.action = __invalidaterecompile;
     }
 
     @Override
-    public void setReason(DeoptimizationReason reason)
+    public void setReason(DeoptimizationReason __reason)
     {
-        this.reason = reason;
+        this.reason = __reason;
     }
 }

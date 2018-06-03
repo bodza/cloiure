@@ -12,13 +12,14 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 // @class ResolvedJavaMethodBytecode
 public final class ResolvedJavaMethodBytecode implements Bytecode
 {
+    // @field
     private final ResolvedJavaMethod method;
 
     // @cons
-    public ResolvedJavaMethodBytecode(ResolvedJavaMethod method)
+    public ResolvedJavaMethodBytecode(ResolvedJavaMethod __method)
     {
         super();
-        this.method = method;
+        this.method = __method;
     }
 
     @Override

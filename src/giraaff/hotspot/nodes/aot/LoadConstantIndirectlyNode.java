@@ -23,32 +23,37 @@ import giraaff.nodes.util.GraphUtil;
 // @class LoadConstantIndirectlyNode
 public final class LoadConstantIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
+    // @def
     public static final NodeClass<LoadConstantIndirectlyNode> TYPE = NodeClass.create(LoadConstantIndirectlyNode.class);
 
-    @OptionalInput protected ValueNode value;
+    @OptionalInput
+    // @field
+    protected ValueNode value;
+    // @field
     protected Constant constant;
+    // @field
     protected HotSpotConstantLoadAction action;
 
     // @cons
-    public LoadConstantIndirectlyNode(ValueNode value)
+    public LoadConstantIndirectlyNode(ValueNode __value)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT));
-        this.value = value;
+        super(TYPE, __value.stamp(NodeView.DEFAULT));
+        this.value = __value;
         this.constant = null;
         this.action = HotSpotConstantLoadAction.RESOLVE;
     }
 
     // @cons
-    public LoadConstantIndirectlyNode(ValueNode value, HotSpotConstantLoadAction action)
+    public LoadConstantIndirectlyNode(ValueNode __value, HotSpotConstantLoadAction __action)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT));
-        this.value = value;
+        super(TYPE, __value.stamp(NodeView.DEFAULT));
+        this.value = __value;
         this.constant = null;
-        this.action = action;
+        this.action = __action;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (value != null)
         {
@@ -58,22 +63,22 @@ public final class LoadConstantIndirectlyNode extends FloatingNode implements Ca
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result;
+        Value __result;
         if (constant instanceof HotSpotObjectConstant)
         {
-            result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadObjectAddress(constant);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadObjectAddress(constant);
         }
         else if (constant instanceof HotSpotMetaspaceConstant)
         {
-            result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, action);
+            __result = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, action);
         }
         else
         {
             throw new BailoutException("unsupported constant type: " + constant);
         }
-        gen.setResult(this, result);
+        __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic

@@ -34,24 +34,24 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
     {
-        LIR ir = lirGenRes.getLIR();
-        Optimizer optimizer = new Optimizer(ir);
+        LIR __ir = __lirGenRes.getLIR();
+        Optimizer __optimizer = new Optimizer(__ir);
 
-        AbstractBlockBase<?>[] blockList = ir.linearScanOrder();
+        AbstractBlockBase<?>[] __blockList = __ir.linearScanOrder();
         // ignore the first block in the list (index 0 is not processed)
-        for (int i = blockList.length - 1; i >= 1; i--)
+        for (int __i = __blockList.length - 1; __i >= 1; __i--)
         {
-            AbstractBlockBase<?> block = blockList[i];
+            AbstractBlockBase<?> __block = __blockList[__i];
 
-            if (block.getPredecessorCount() > 1)
+            if (__block.getPredecessorCount() > 1)
             {
-                optimizer.optimizeMovesAtBlockEnd(block);
+                __optimizer.optimizeMovesAtBlockEnd(__block);
             }
-            if (block.getSuccessorCount() == 2)
+            if (__block.getSuccessorCount() == 2)
             {
-                optimizer.optimizeMovesAtBlockBegin(block);
+                __optimizer.optimizeMovesAtBlockBegin(__block);
             }
         }
     }
@@ -59,14 +59,16 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
     // @class EdgeMoveOptimizer.Optimizer
     private static final class Optimizer
     {
+        // @field
         private final List<List<LIRInstruction>> edgeInstructionSeqences;
+        // @field
         private LIR ir;
 
         // @cons
-        Optimizer(LIR ir)
+        Optimizer(LIR __ir)
         {
             super();
-            this.ir = ir;
+            this.ir = __ir;
             edgeInstructionSeqences = new ArrayList<>(4);
         }
 
@@ -78,23 +80,23 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
          * @param op2 the second instruction to compare
          * @return {@code true} if {@code op1} and {@code op2} are the same by the above algorithm
          */
-        private static boolean same(LIRInstruction op1, LIRInstruction op2)
+        private static boolean same(LIRInstruction __op1, LIRInstruction __op2)
         {
-            if (ValueMoveOp.isValueMoveOp(op1) && ValueMoveOp.isValueMoveOp(op2))
+            if (ValueMoveOp.isValueMoveOp(__op1) && ValueMoveOp.isValueMoveOp(__op2))
             {
-                ValueMoveOp move1 = ValueMoveOp.asValueMoveOp(op1);
-                ValueMoveOp move2 = ValueMoveOp.asValueMoveOp(op2);
-                if (move1.getInput().equals(move2.getInput()) && move1.getResult().equals(move2.getResult()))
+                ValueMoveOp __move1 = ValueMoveOp.asValueMoveOp(__op1);
+                ValueMoveOp __move2 = ValueMoveOp.asValueMoveOp(__op2);
+                if (__move1.getInput().equals(__move2.getInput()) && __move1.getResult().equals(__move2.getResult()))
                 {
                     // these moves are exactly equal and can be optimized
                     return true;
                 }
             }
-            else if (LoadConstantOp.isLoadConstantOp(op1) && LoadConstantOp.isLoadConstantOp(op2))
+            else if (LoadConstantOp.isLoadConstantOp(__op1) && LoadConstantOp.isLoadConstantOp(__op2))
             {
-                LoadConstantOp move1 = LoadConstantOp.asLoadConstantOp(op1);
-                LoadConstantOp move2 = LoadConstantOp.asLoadConstantOp(op2);
-                if (move1.getConstant().equals(move2.getConstant()) && move1.getResult().equals(move2.getResult()))
+                LoadConstantOp __move1 = LoadConstantOp.asLoadConstantOp(__op1);
+                LoadConstantOp __move2 = LoadConstantOp.asLoadConstantOp(__op2);
+                if (__move1.getConstant().equals(__move2.getConstant()) && __move1.getResult().equals(__move2.getResult()))
                 {
                     // these moves are exactly equal and can be optimized
                     return true;
@@ -107,11 +109,11 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
          * Moves the longest {@linkplain #same common} subsequence at the end all predecessors of
          * {@code block} to the start of {@code block}.
          */
-        private void optimizeMovesAtBlockEnd(AbstractBlockBase<?> block)
+        private void optimizeMovesAtBlockEnd(AbstractBlockBase<?> __block)
         {
-            for (AbstractBlockBase<?> pred : block.getPredecessors())
+            for (AbstractBlockBase<?> __pred : __block.getPredecessors())
             {
-                if (pred == block)
+                if (__pred == __block)
                 {
                     // currently we can't handle this correctly.
                     return;
@@ -121,14 +123,14 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
             // clear all internal data structures
             edgeInstructionSeqences.clear();
 
-            int numPreds = block.getPredecessorCount();
+            int __numPreds = __block.getPredecessorCount();
 
             // setup a list with the LIR instructions of all predecessors
-            for (AbstractBlockBase<?> pred : block.getPredecessors())
+            for (AbstractBlockBase<?> __pred : __block.getPredecessors())
             {
-                ArrayList<LIRInstruction> predInstructions = ir.getLIRforBlock(pred);
+                ArrayList<LIRInstruction> __predInstructions = ir.getLIRforBlock(__pred);
 
-                if (pred.getSuccessorCount() != 1)
+                if (__pred.getSuccessorCount() != 1)
                 {
                     // this can happen with switch-statements where multiple edges are between
                     // the same blocks.
@@ -136,37 +138,37 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
                 }
 
                 // ignore the unconditional branch at the end of the block
-                List<LIRInstruction> seq = predInstructions.subList(0, predInstructions.size() - 1);
-                edgeInstructionSeqences.add(seq);
+                List<LIRInstruction> __seq = __predInstructions.subList(0, __predInstructions.size() - 1);
+                edgeInstructionSeqences.add(__seq);
             }
 
             // process lir-instructions while all predecessors end with the same instruction
             while (true)
             {
-                List<LIRInstruction> seq = edgeInstructionSeqences.get(0);
-                if (seq.isEmpty())
+                List<LIRInstruction> __seq = edgeInstructionSeqences.get(0);
+                if (__seq.isEmpty())
                 {
                     return;
                 }
 
-                LIRInstruction op = last(seq);
-                for (int i = 1; i < numPreds; ++i)
+                LIRInstruction __op = last(__seq);
+                for (int __i = 1; __i < __numPreds; ++__i)
                 {
-                    List<LIRInstruction> otherSeq = edgeInstructionSeqences.get(i);
-                    if (otherSeq.isEmpty() || !same(op, last(otherSeq)))
+                    List<LIRInstruction> __otherSeq = edgeInstructionSeqences.get(__i);
+                    if (__otherSeq.isEmpty() || !same(__op, last(__otherSeq)))
                     {
                         return;
                     }
                 }
 
                 // insert the instruction at the beginning of the current block
-                ir.getLIRforBlock(block).add(1, op);
+                ir.getLIRforBlock(__block).add(1, __op);
 
                 // delete the instruction at the end of all predecessors
-                for (int i = 0; i < numPreds; i++)
+                for (int __i = 0; __i < __numPreds; __i++)
                 {
-                    seq = edgeInstructionSeqences.get(i);
-                    removeLast(seq);
+                    __seq = edgeInstructionSeqences.get(__i);
+                    removeLast(__seq);
                 }
             }
         }
@@ -175,15 +177,15 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
          * Moves the longest {@linkplain #same common} subsequence at the start of all successors of
          * {@code block} to the end of {@code block} just prior to the branch instruction ending {@code block}.
          */
-        private void optimizeMovesAtBlockBegin(AbstractBlockBase<?> block)
+        private void optimizeMovesAtBlockBegin(AbstractBlockBase<?> __block)
         {
             edgeInstructionSeqences.clear();
-            int numSux = block.getSuccessorCount();
+            int __numSux = __block.getSuccessorCount();
 
-            ArrayList<LIRInstruction> instructions = ir.getLIRforBlock(block);
+            ArrayList<LIRInstruction> __instructions = ir.getLIRforBlock(__block);
 
-            LIRInstruction branch = instructions.get(instructions.size() - 1);
-            if (!(branch instanceof StandardOp.BranchOp) || branch.hasOperands())
+            LIRInstruction __branch = __instructions.get(__instructions.size() - 1);
+            if (!(__branch instanceof StandardOp.BranchOp) || __branch.hasOperands())
             {
                 // Only blocks that end with a conditional branch are optimized. In addition,
                 // a conditional branch with operands (including state) cannot be optimized.
@@ -195,38 +197,38 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 
             // Now it is guaranteed that the block ends with a conditional branch.
             // The instructions are inserted at the end of the block before the branch.
-            int insertIdx = instructions.size() - 1;
+            int __insertIdx = __instructions.size() - 1;
 
             // setup a list with the lir-instructions of all successors
-            for (AbstractBlockBase<?> sux : block.getSuccessors())
+            for (AbstractBlockBase<?> __sux : __block.getSuccessors())
             {
-                ArrayList<LIRInstruction> suxInstructions = ir.getLIRforBlock(sux);
+                ArrayList<LIRInstruction> __suxInstructions = ir.getLIRforBlock(__sux);
 
-                if (sux.getPredecessorCount() != 1)
+                if (__sux.getPredecessorCount() != 1)
                 {
                     // this can happen with switch-statements where multiple edges are between the same blocks
                     return;
                 }
 
                 // ignore the label at the beginning of the block
-                List<LIRInstruction> seq = suxInstructions.subList(1, suxInstructions.size());
-                edgeInstructionSeqences.add(seq);
+                List<LIRInstruction> __seq = __suxInstructions.subList(1, __suxInstructions.size());
+                edgeInstructionSeqences.add(__seq);
             }
 
             // process LIR instructions while all successors begin with the same instruction
             while (true)
             {
-                List<LIRInstruction> seq = edgeInstructionSeqences.get(0);
-                if (seq.isEmpty())
+                List<LIRInstruction> __seq = edgeInstructionSeqences.get(0);
+                if (__seq.isEmpty())
                 {
                     return;
                 }
 
-                LIRInstruction op = first(seq);
-                for (int i = 1; i < numSux; i++)
+                LIRInstruction __op = first(__seq);
+                for (int __i = 1; __i < __numSux; __i++)
                 {
-                    List<LIRInstruction> otherSeq = edgeInstructionSeqences.get(i);
-                    if (otherSeq.isEmpty() || !same(op, first(otherSeq)))
+                    List<LIRInstruction> __otherSeq = edgeInstructionSeqences.get(__i);
+                    if (__otherSeq.isEmpty() || !same(__op, first(__otherSeq)))
                     {
                         // these instructions are different and cannot be optimized .
                         // no further optimization possible
@@ -235,14 +237,14 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
                 }
 
                 // insert instruction at end of current block
-                ir.getLIRforBlock(block).add(insertIdx, op);
-                insertIdx++;
+                ir.getLIRforBlock(__block).add(__insertIdx, __op);
+                __insertIdx++;
 
                 // delete the instructions at the beginning of all successors
-                for (int i = 0; i < numSux; i++)
+                for (int __i = 0; __i < __numSux; __i++)
                 {
-                    seq = edgeInstructionSeqences.get(i);
-                    removeFirst(seq);
+                    __seq = edgeInstructionSeqences.get(__i);
+                    removeFirst(__seq);
                 }
             }
         }
@@ -250,33 +252,33 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
         /**
          * Gets the first element from a LIR instruction sequence.
          */
-        private static LIRInstruction first(List<LIRInstruction> seq)
+        private static LIRInstruction first(List<LIRInstruction> __seq)
         {
-            return seq.get(0);
+            return __seq.get(0);
         }
 
         /**
          * Gets the last element from a LIR instruction sequence.
          */
-        private static LIRInstruction last(List<LIRInstruction> seq)
+        private static LIRInstruction last(List<LIRInstruction> __seq)
         {
-            return seq.get(seq.size() - 1);
+            return __seq.get(__seq.size() - 1);
         }
 
         /**
          * Removes the first element from a LIR instruction sequence.
          */
-        private static void removeFirst(List<LIRInstruction> seq)
+        private static void removeFirst(List<LIRInstruction> __seq)
         {
-            seq.remove(0);
+            __seq.remove(0);
         }
 
         /**
          * Removes the last element from a LIR instruction sequence.
          */
-        private static void removeLast(List<LIRInstruction> seq)
+        private static void removeLast(List<LIRInstruction> __seq)
         {
-            seq.remove(seq.size() - 1);
+            __seq.remove(__seq.size() - 1);
         }
     }
 }

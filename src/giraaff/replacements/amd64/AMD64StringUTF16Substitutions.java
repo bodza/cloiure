@@ -18,9 +18,9 @@ public final class AMD64StringUTF16Substitutions
      * @param other is char[]
      */
     @MethodSubstitution
-    public static int compareTo(byte[] value, byte[] other)
+    public static int compareTo(byte[] __value, byte[] __other)
     {
-        return ArrayCompareToNode.compareTo(value, other, value.length, other.length, JavaKind.Char, JavaKind.Char);
+        return ArrayCompareToNode.compareTo(__value, __other, __value.length, __other.length, JavaKind.Char, JavaKind.Char);
     }
 
     /**
@@ -28,9 +28,9 @@ public final class AMD64StringUTF16Substitutions
      * @param other is byte[]
      */
     @MethodSubstitution
-    public static int compareToLatin1(byte[] value, byte[] other)
+    public static int compareToLatin1(byte[] __value, byte[] __other)
     {
         // Swapping array arguments because intrinsic expects order to be byte[]/char[] but kind arguments stay in original order.
-        return ArrayCompareToNode.compareTo(other, value, other.length, value.length, JavaKind.Char, JavaKind.Byte);
+        return ArrayCompareToNode.compareTo(__other, __value, __other.length, __value.length, JavaKind.Char, JavaKind.Byte);
     }
 }

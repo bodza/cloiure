@@ -14,15 +14,17 @@ import giraaff.lir.VirtualStackSlot;
 // @class VirtualStackSlotRange
 public final class VirtualStackSlotRange extends VirtualStackSlot
 {
+    // @field
     private final BitSet objects;
+    // @field
     private final int slots;
 
     // @cons
-    public VirtualStackSlotRange(int id, int slots, BitSet objects, LIRKind kind)
+    public VirtualStackSlotRange(int __id, int __slots, BitSet __objects, LIRKind __kind)
     {
-        super(id, kind);
-        this.slots = slots;
-        this.objects = (BitSet) objects.clone();
+        super(__id, __kind);
+        this.slots = __slots;
+        this.objects = (BitSet) __objects.clone();
     }
 
     public int getSlots()

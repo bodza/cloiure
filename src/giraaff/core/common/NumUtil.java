@@ -14,160 +14,160 @@ public final class NumUtil
         super();
     }
 
-    public static boolean isShiftCount(int x)
+    public static boolean isShiftCount(int __x)
     {
-        return 0 <= x && x < 32;
+        return 0 <= __x && __x < 32;
     }
 
     /**
      * Determines if a given {@code int} value is the range of unsigned byte values.
      */
-    public static boolean isUByte(int x)
+    public static boolean isUByte(int __x)
     {
-        return (x & 0xff) == x;
+        return (__x & 0xff) == __x;
     }
 
     /**
      * Determines if a given {@code int} value is the range of signed byte values.
      */
-    public static boolean isByte(int x)
+    public static boolean isByte(int __x)
     {
-        return (byte) x == x;
+        return (byte) __x == __x;
     }
 
     /**
      * Determines if a given {@code long} value is the range of unsigned byte values.
      */
-    public static boolean isUByte(long x)
+    public static boolean isUByte(long __x)
     {
-        return (x & 0xffL) == x;
+        return (__x & 0xffL) == __x;
     }
 
     /**
      * Determines if a given {@code long} value is the range of signed byte values.
      */
-    public static boolean isByte(long l)
+    public static boolean isByte(long __l)
     {
-        return (byte) l == l;
+        return (byte) __l == __l;
     }
 
     /**
      * Determines if a given {@code long} value is the range of unsigned int values.
      */
-    public static boolean isUInt(long x)
+    public static boolean isUInt(long __x)
     {
-        return (x & 0xffffffffL) == x;
+        return (__x & 0xffffffffL) == __x;
     }
 
     /**
      * Determines if a given {@code long} value is the range of signed int values.
      */
-    public static boolean isInt(long l)
+    public static boolean isInt(long __l)
     {
-        return (int) l == l;
+        return (int) __l == __l;
     }
 
     /**
      * Determines if a given {@code int} value is the range of signed short values.
      */
-    public static boolean isShort(int x)
+    public static boolean isShort(int __x)
     {
-        return (short) x == x;
+        return (short) __x == __x;
     }
 
     /**
      * Determines if a given {@code long} value is the range of signed short values.
      */
-    public static boolean isShort(long x)
+    public static boolean isShort(long __x)
     {
-        return (short) x == x;
+        return (short) __x == __x;
     }
 
-    public static boolean isUShort(int s)
+    public static boolean isUShort(int __s)
     {
-        return s == (s & 0xFFFF);
+        return __s == (__s & 0xFFFF);
     }
 
-    public static boolean isUShort(long s)
+    public static boolean isUShort(long __s)
     {
-        return s == (s & 0xFFFF);
+        return __s == (__s & 0xFFFF);
     }
 
-    public static boolean is32bit(long x)
+    public static boolean is32bit(long __x)
     {
-        return -0x80000000L <= x && x < 0x80000000L;
+        return -0x80000000L <= __x && __x < 0x80000000L;
     }
 
-    public static short safeToShort(int v)
+    public static short safeToShort(int __v)
     {
-        return (short) v;
+        return (short) __v;
     }
 
-    public static int roundUp(int number, int mod)
+    public static int roundUp(int __number, int __mod)
     {
-        return ((number + mod - 1) / mod) * mod;
+        return ((__number + __mod - 1) / __mod) * __mod;
     }
 
-    public static long roundUp(long number, long mod)
+    public static long roundUp(long __number, long __mod)
     {
-        return ((number + mod - 1L) / mod) * mod;
+        return ((__number + __mod - 1L) / __mod) * __mod;
     }
 
-    public static int roundDown(int number, int mod)
+    public static int roundDown(int __number, int __mod)
     {
-        return number / mod * mod;
+        return __number / __mod * __mod;
     }
 
-    public static long roundDown(long number, long mod)
+    public static long roundDown(long __number, long __mod)
     {
-        return number / mod * mod;
+        return __number / __mod * __mod;
     }
 
-    public static int log2Ceil(int val)
+    public static int log2Ceil(int __val)
     {
-        int x = 1;
-        int log2 = 0;
-        while (x < val)
+        int __x = 1;
+        int __log2 = 0;
+        while (__x < __val)
         {
-            log2++;
-            x *= 2;
+            __log2++;
+            __x *= 2;
         }
-        return log2;
+        return __log2;
     }
 
-    public static boolean isUnsignedNbit(int n, int value)
+    public static boolean isUnsignedNbit(int __n, int __value)
     {
-        return 32 - Integer.numberOfLeadingZeros(value) <= n;
+        return 32 - Integer.numberOfLeadingZeros(__value) <= __n;
     }
 
-    public static boolean isUnsignedNbit(int n, long value)
+    public static boolean isUnsignedNbit(int __n, long __value)
     {
-        return 64 - Long.numberOfLeadingZeros(value) <= n;
+        return 64 - Long.numberOfLeadingZeros(__value) <= __n;
     }
 
-    public static boolean isSignedNbit(int n, int value)
+    public static boolean isSignedNbit(int __n, int __value)
     {
-        int min = -(1 << (n - 1));
-        int max = (1 << (n - 1)) - 1;
-        return value >= min && value <= max;
+        int __min = -(1 << (__n - 1));
+        int __max = (1 << (__n - 1)) - 1;
+        return __value >= __min && __value <= __max;
     }
 
-    public static boolean isSignedNbit(int n, long value)
+    public static boolean isSignedNbit(int __n, long __value)
     {
-        long min = -(1L << (n - 1));
-        long max = (1L << (n - 1)) - 1;
-        return value >= min && value <= max;
+        long __min = -(1L << (__n - 1));
+        long __max = (1L << (__n - 1)) - 1;
+        return __value >= __min && __value <= __max;
     }
 
     /**
      * @param n Number of bits that should be set to 1. Must be between 0 and 32 (inclusive).
      * @return A number with n bits set to 1.
      */
-    public static int getNbitNumberInt(int n)
+    public static int getNbitNumberInt(int __n)
     {
-        if (n < 32)
+        if (__n < 32)
         {
-            return (1 << n) - 1;
+            return (1 << __n) - 1;
         }
         else
         {
@@ -179,11 +179,11 @@ public final class NumUtil
      * @param n Number of bits that should be set to 1. Must be between 0 and 64 (inclusive).
      * @return A number with n bits set to 1.
      */
-    public static long getNbitNumberLong(int n)
+    public static long getNbitNumberLong(int __n)
     {
-        if (n < 64)
+        if (__n < 64)
         {
-            return (1L << n) - 1;
+            return (1L << __n) - 1;
         }
         else
         {
@@ -194,47 +194,47 @@ public final class NumUtil
     /**
      * Get the minimum value representable in a {@code bits} bit signed integer.
      */
-    public static long minValue(int bits)
+    public static long minValue(int __bits)
     {
-        return CodeUtil.minValue(bits);
+        return CodeUtil.minValue(__bits);
     }
 
     /**
      * Get the maximum value representable in a {@code bits} bit signed integer.
      */
-    public static long maxValue(int bits)
+    public static long maxValue(int __bits)
     {
-        return CodeUtil.maxValue(bits);
+        return CodeUtil.maxValue(__bits);
     }
 
     /**
      * Get the maximum value representable in a {@code bits} bit unsigned integer.
      */
-    public static long maxValueUnsigned(int bits)
+    public static long maxValueUnsigned(int __bits)
     {
-        return getNbitNumberLong(bits);
+        return getNbitNumberLong(__bits);
     }
 
-    public static long maxUnsigned(long a, long b)
+    public static long maxUnsigned(long __a, long __b)
     {
-        if (Long.compareUnsigned(a, b) > 0)
+        if (Long.compareUnsigned(__a, __b) > 0)
         {
-            return b;
+            return __b;
         }
-        return a;
+        return __a;
     }
 
-    public static long minUnsigned(long a, long b)
+    public static long minUnsigned(long __a, long __b)
     {
-        if (Long.compareUnsigned(a, b) > 0)
+        if (Long.compareUnsigned(__a, __b) > 0)
         {
-            return a;
+            return __a;
         }
-        return b;
+        return __b;
     }
 
-    public static boolean sameSign(long a, long b)
+    public static boolean sameSign(long __a, long __b)
     {
-        return a < 0 == b < 0;
+        return __a < 0 == __b < 0;
     }
 }

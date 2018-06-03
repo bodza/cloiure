@@ -21,35 +21,38 @@ import giraaff.lir.framemap.FrameMap;
 // @class AMD64ZapRegistersOp
 public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64ZapRegistersOp> TYPE = LIRInstructionClass.create(AMD64ZapRegistersOp.class);
 
     /**
      * The registers that are zapped.
      */
+    // @field
     protected final Register[] zappedRegisters;
 
     /**
      * The garbage values that are written to the registers.
      */
+    // @field
     protected final JavaConstant[] zapValues;
 
     // @cons
-    public AMD64ZapRegistersOp(Register[] zappedRegisters, JavaConstant[] zapValues)
+    public AMD64ZapRegistersOp(Register[] __zappedRegisters, JavaConstant[] __zapValues)
     {
         super(TYPE);
-        this.zappedRegisters = zappedRegisters;
-        this.zapValues = zapValues;
+        this.zappedRegisters = __zappedRegisters;
+        this.zapValues = __zapValues;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        for (int i = 0; i < zappedRegisters.length; i++)
+        for (int __i = 0; __i < zappedRegisters.length; __i++)
         {
-            Register reg = zappedRegisters[i];
-            if (reg != null)
+            Register __reg = zappedRegisters[__i];
+            if (__reg != null)
             {
-                AMD64Move.const2reg(crb, masm, reg, zapValues[i]);
+                AMD64Move.const2reg(__crb, __masm, __reg, zapValues[__i]);
             }
         }
     }
@@ -61,13 +64,13 @@ public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements Sa
     }
 
     @Override
-    public int remove(EconomicSet<Register> doNotSave)
+    public int remove(EconomicSet<Register> __doNotSave)
     {
-        return AMD64SaveRegistersOp.prune(doNotSave, zappedRegisters);
+        return AMD64SaveRegistersOp.prune(__doNotSave, zappedRegisters);
     }
 
     @Override
-    public RegisterSaveLayout getMap(FrameMap frameMap)
+    public RegisterSaveLayout getMap(FrameMap __frameMap)
     {
         return new RegisterSaveLayout(new Register[0], new int[0]);
     }

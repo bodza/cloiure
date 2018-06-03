@@ -16,8 +16,8 @@ import giraaff.replacements.ReplacementsImpl;
 public final class HotSpotReplacementsImpl extends ReplacementsImpl
 {
     // @cons
-    public HotSpotReplacementsImpl(Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
+    public HotSpotReplacementsImpl(Providers __providers, SnippetReflectionProvider __snippetReflection, BytecodeProvider __bytecodeProvider, TargetDescription __target)
     {
-        super(providers, snippetReflection, bytecodeProvider, target);
+        super(__providers, __snippetReflection, __bytecodeProvider, __target);
     }
 }

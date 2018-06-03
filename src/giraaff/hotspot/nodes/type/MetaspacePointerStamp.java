@@ -14,15 +14,15 @@ import giraaff.util.GraalError;
 public abstract class MetaspacePointerStamp extends AbstractPointerStamp
 {
     // @cons
-    protected MetaspacePointerStamp(boolean nonNull, boolean alwaysNull)
+    protected MetaspacePointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
-        super(nonNull, alwaysNull);
+        super(__nonNull, __alwaysNull);
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool)
+    public LIRKind getLIRKind(LIRKindTool __tool)
     {
-        return tool.getWordKind();
+        return __tool.getWordKind();
     }
 
     @Override
@@ -33,9 +33,9 @@ public abstract class MetaspacePointerStamp extends AbstractPointerStamp
     }
 
     @Override
-    public boolean isCompatible(Constant constant)
+    public boolean isCompatible(Constant __constant)
     {
-        return constant.isDefaultForKind();
+        return __constant.isDefaultForKind();
     }
 
     @Override
@@ -45,13 +45,13 @@ public abstract class MetaspacePointerStamp extends AbstractPointerStamp
     }
 
     @Override
-    public Stamp join(Stamp other)
+    public Stamp join(Stamp __other)
     {
-        return defaultPointerJoin(other);
+        return defaultPointerJoin(__other);
     }
 
     @Override
-    public ResolvedJavaType javaType(MetaAccessProvider metaAccess)
+    public ResolvedJavaType javaType(MetaAccessProvider __metaAccess)
     {
         throw GraalError.shouldNotReachHere("metaspace pointer has no Java type");
     }

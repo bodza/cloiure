@@ -6,28 +6,29 @@ import java.util.Queue;
 // @class NodeWorkList
 public abstract class NodeWorkList implements Iterable<Node>
 {
+    // @field
     protected final Queue<Node> worklist = new ArrayDeque<>();
 
     // @cons
-    protected NodeWorkList(Graph graph, boolean fill)
+    protected NodeWorkList(Graph __graph, boolean __fill)
     {
         super();
-        if (fill)
+        if (__fill)
         {
-            for (Node node : graph.getNodes())
+            for (Node __node : __graph.getNodes())
             {
-                this.worklist.add(node);
+                this.worklist.add(__node);
             }
         }
     }
 
-    public void addAll(Iterable<? extends Node> nodes)
+    public void addAll(Iterable<? extends Node> __nodes)
     {
-        for (Node node : nodes)
+        for (Node __node : __nodes)
         {
-            if (node.isAlive())
+            if (__node.isAlive())
             {
-                this.add(node);
+                this.add(__node);
             }
         }
     }

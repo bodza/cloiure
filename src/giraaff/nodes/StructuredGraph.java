@@ -97,31 +97,34 @@ public final class StructuredGraph extends Graph
     {
         YES,
         NO;
-        public static AllowAssumptions ifTrue(boolean flag)
+        public static AllowAssumptions ifTrue(boolean __flag)
         {
-            return flag ? YES : NO;
+            return __flag ? YES : NO;
         }
 
-        public static AllowAssumptions ifNonNull(Assumptions assumptions)
+        public static AllowAssumptions ifNonNull(Assumptions __assumptions)
         {
-            return assumptions != null ? YES : NO;
+            return __assumptions != null ? YES : NO;
         }
     }
 
     // @class StructuredGraph.ScheduleResult
     public static final class ScheduleResult
     {
+        // @field
         private final ControlFlowGraph cfg;
+        // @field
         private final NodeMap<Block> nodeToBlockMap;
+        // @field
         private final BlockMap<List<Node>> blockToNodesMap;
 
         // @cons
-        public ScheduleResult(ControlFlowGraph cfg, NodeMap<Block> nodeToBlockMap, BlockMap<List<Node>> blockToNodesMap)
+        public ScheduleResult(ControlFlowGraph __cfg, NodeMap<Block> __nodeToBlockMap, BlockMap<List<Node>> __blockToNodesMap)
         {
             super();
-            this.cfg = cfg;
-            this.nodeToBlockMap = nodeToBlockMap;
-            this.blockToNodesMap = blockToNodesMap;
+            this.cfg = __cfg;
+            this.nodeToBlockMap = __nodeToBlockMap;
+            this.blockToNodesMap = __blockToNodesMap;
         }
 
         public ControlFlowGraph getCFG()
@@ -139,9 +142,9 @@ public final class StructuredGraph extends Graph
             return blockToNodesMap;
         }
 
-        public List<Node> nodesFor(Block block)
+        public List<Node> nodesFor(Block __block)
         {
-            return blockToNodesMap.get(block);
+            return blockToNodesMap.get(__block);
         }
     }
 
@@ -151,20 +154,25 @@ public final class StructuredGraph extends Graph
     // @class StructuredGraph.Builder
     public static final class Builder
     {
+        // @field
         private final Assumptions assumptions;
+        // @field
         private SpeculationLog speculationLog;
+        // @field
         private ResolvedJavaMethod rootMethod;
+        // @field
         private int entryBCI = JVMCICompiler.INVOCATION_ENTRY_BCI;
+        // @field
         private boolean useProfilingInfo = true;
 
         /**
          * Creates a builder for a graph.
          */
         // @cons
-        public Builder(AllowAssumptions allowAssumptions)
+        public Builder(AllowAssumptions __allowAssumptions)
         {
             super();
-            this.assumptions = allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
+            this.assumptions = __allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
         }
 
         /**
@@ -182,9 +190,9 @@ public final class StructuredGraph extends Graph
             return rootMethod;
         }
 
-        public Builder method(ResolvedJavaMethod method)
+        public Builder method(ResolvedJavaMethod __method)
         {
-            this.rootMethod = method;
+            this.rootMethod = __method;
             return this;
         }
 
@@ -193,9 +201,9 @@ public final class StructuredGraph extends Graph
             return speculationLog;
         }
 
-        public Builder speculationLog(SpeculationLog log)
+        public Builder speculationLog(SpeculationLog __log)
         {
-            this.speculationLog = log;
+            this.speculationLog = __log;
             return this;
         }
 
@@ -204,9 +212,9 @@ public final class StructuredGraph extends Graph
             return entryBCI;
         }
 
-        public Builder entryBCI(int bci)
+        public Builder entryBCI(int __bci)
         {
-            this.entryBCI = bci;
+            this.entryBCI = __bci;
             return this;
         }
 
@@ -215,9 +223,9 @@ public final class StructuredGraph extends Graph
             return useProfilingInfo;
         }
 
-        public Builder useProfilingInfo(boolean flag)
+        public Builder useProfilingInfo(boolean __flag)
         {
-            this.useProfilingInfo = flag;
+            this.useProfilingInfo = __flag;
             return this;
         }
 
@@ -227,38 +235,55 @@ public final class StructuredGraph extends Graph
         }
     }
 
+    // @def
     public static final long INVALID_GRAPH_ID = -1;
+    // @def
     private static final AtomicLong uniqueGraphIds = new AtomicLong();
 
+    // @field
     private StartNode start;
+    // @field
     private ResolvedJavaMethod rootMethod;
+    // @field
     private final long graphId;
+    // @field
     private final int entryBCI;
+    // @field
     private GuardsStage guardsStage = GuardsStage.FLOATING_GUARDS;
+    // @field
     private boolean isAfterFloatingReadPhase = false;
+    // @field
     private boolean isAfterFixedReadPhase = false;
+    // @field
     private boolean hasValueProxies = true;
+    // @field
     private boolean isAfterExpandLogic = false;
+    // @field
     private final boolean useProfilingInfo;
     /**
      * The assumptions made while constructing and transforming this graph.
      */
+    // @field
     private final Assumptions assumptions;
 
+    // @field
     private SpeculationLog speculationLog;
 
+    // @field
     private ScheduleResult lastSchedule;
 
     /**
      * Records the methods that were used while constructing this graph, one entry for each time a
      * specific method is used.
      */
+    // @field
     private final List<ResolvedJavaMethod> methods = new ArrayList<>();
 
     /**
      * Records the fields that were accessed while constructing this graph.
      */
 
+    // @field
     private EconomicSet<ResolvedJavaField> fields = null;
 
     // @enum StructuredGraph.UnsafeAccessState
@@ -269,35 +294,38 @@ public final class StructuredGraph extends Graph
         DISABLED
     }
 
+    // @field
     private UnsafeAccessState hasUnsafeAccess = UnsafeAccessState.NO_ACCESS;
 
+    // @def
     public static final boolean USE_PROFILING_INFO = true;
 
+    // @def
     public static final boolean NO_PROFILING_INFO = false;
 
     // @cons
-    private StructuredGraph(ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo)
+    private StructuredGraph(ResolvedJavaMethod __method, int __entryBCI, Assumptions __assumptions, SpeculationLog __speculationLog, boolean __useProfilingInfo)
     {
         super();
         this.setStart(add(new StartNode()));
-        this.rootMethod = method;
+        this.rootMethod = __method;
         this.graphId = uniqueGraphIds.incrementAndGet();
-        this.entryBCI = entryBCI;
-        this.assumptions = assumptions;
-        if (speculationLog != null && !(speculationLog instanceof GraphSpeculationLog))
+        this.entryBCI = __entryBCI;
+        this.assumptions = __assumptions;
+        if (__speculationLog != null && !(__speculationLog instanceof GraphSpeculationLog))
         {
-            this.speculationLog = new GraphSpeculationLog(speculationLog);
+            this.speculationLog = new GraphSpeculationLog(__speculationLog);
         }
         else
         {
-            this.speculationLog = speculationLog;
+            this.speculationLog = __speculationLog;
         }
-        this.useProfilingInfo = useProfilingInfo;
+        this.useProfilingInfo = __useProfilingInfo;
     }
 
-    public void setLastSchedule(ScheduleResult result)
+    public void setLastSchedule(ScheduleResult __result)
     {
-        lastSchedule = result;
+        lastSchedule = __result;
     }
 
     public ScheduleResult getLastSchedule()
@@ -324,23 +352,23 @@ public final class StructuredGraph extends Graph
 
     public Stamp getReturnStamp()
     {
-        Stamp returnStamp = null;
-        for (ReturnNode returnNode : getNodes(ReturnNode.TYPE))
+        Stamp __returnStamp = null;
+        for (ReturnNode __returnNode : getNodes(ReturnNode.TYPE))
         {
-            ValueNode result = returnNode.result();
-            if (result != null)
+            ValueNode __result = __returnNode.result();
+            if (__result != null)
             {
-                if (returnStamp == null)
+                if (__returnStamp == null)
                 {
-                    returnStamp = result.stamp(NodeView.DEFAULT);
+                    __returnStamp = __result.stamp(NodeView.DEFAULT);
                 }
                 else
                 {
-                    returnStamp = returnStamp.meet(result.stamp(NodeView.DEFAULT));
+                    __returnStamp = __returnStamp.meet(__result.stamp(NodeView.DEFAULT));
                 }
             }
         }
-        return returnStamp;
+        return __returnStamp;
     }
 
     public StartNode start()
@@ -373,9 +401,9 @@ public final class StructuredGraph extends Graph
         return graphId;
     }
 
-    public void setStart(StartNode start)
+    public void setStart(StartNode __start)
     {
-        this.start = start;
+        this.start = __start;
     }
 
     /**
@@ -384,26 +412,26 @@ public final class StructuredGraph extends Graph
     @Override
     public StructuredGraph copy()
     {
-        StructuredGraph copy = new StructuredGraph(method(), entryBCI, assumptions != null ? new Assumptions() : null, speculationLog, useProfilingInfo);
+        StructuredGraph __copy = new StructuredGraph(method(), entryBCI, assumptions != null ? new Assumptions() : null, speculationLog, useProfilingInfo);
         if (AllowAssumptions.ifNonNull(assumptions) == AllowAssumptions.YES && assumptions != null)
         {
-            copy.assumptions.record(assumptions);
+            __copy.assumptions.record(assumptions);
         }
-        copy.hasUnsafeAccess = hasUnsafeAccess;
-        copy.setGuardsStage(getGuardsStage());
-        copy.isAfterFloatingReadPhase = isAfterFloatingReadPhase;
-        copy.hasValueProxies = hasValueProxies;
-        copy.isAfterExpandLogic = isAfterExpandLogic;
-        return copy;
+        __copy.hasUnsafeAccess = hasUnsafeAccess;
+        __copy.setGuardsStage(getGuardsStage());
+        __copy.isAfterFloatingReadPhase = isAfterFloatingReadPhase;
+        __copy.hasValueProxies = hasValueProxies;
+        __copy.isAfterExpandLogic = isAfterExpandLogic;
+        return __copy;
     }
 
-    public ParameterNode getParameter(int index)
+    public ParameterNode getParameter(int __index)
     {
-        for (ParameterNode param : getNodes(ParameterNode.TYPE))
+        for (ParameterNode __param : getNodes(ParameterNode.TYPE))
         {
-            if (param.index() == index)
+            if (__param.index() == __index)
             {
-                return param;
+                return __param;
             }
         }
         return null;
@@ -411,10 +439,11 @@ public final class StructuredGraph extends Graph
 
     public Iterable<Invoke> getInvokes()
     {
-        final Iterator<MethodCallTargetNode> callTargets = getNodes(MethodCallTargetNode.TYPE).iterator();
+        final Iterator<MethodCallTargetNode> __callTargets = getNodes(MethodCallTargetNode.TYPE).iterator();
         // @closure
         return new Iterable<Invoke>()
         {
+            // @field
             private Invoke next;
 
             @Override
@@ -428,12 +457,12 @@ public final class StructuredGraph extends Graph
                     {
                         if (next == null)
                         {
-                            while (callTargets.hasNext())
+                            while (__callTargets.hasNext())
                             {
-                                Invoke i = callTargets.next().invoke();
-                                if (i != null)
+                                Invoke __i = __callTargets.next().invoke();
+                                if (__i != null)
                                 {
-                                    next = i;
+                                    next = __i;
                                     return true;
                                 }
                             }
@@ -480,181 +509,181 @@ public final class StructuredGraph extends Graph
      * @param node the node to be unlinked and removed
      */
     @SuppressWarnings("static-method")
-    public void removeFixed(FixedWithNextNode node)
+    public void removeFixed(FixedWithNextNode __node)
     {
-        if (node instanceof AbstractBeginNode)
+        if (__node instanceof AbstractBeginNode)
         {
-            ((AbstractBeginNode) node).prepareDelete();
+            ((AbstractBeginNode) __node).prepareDelete();
         }
-        GraphUtil.unlinkFixedNode(node);
-        node.safeDelete();
+        GraphUtil.unlinkFixedNode(__node);
+        __node.safeDelete();
     }
 
-    public void replaceFixed(FixedWithNextNode node, Node replacement)
+    public void replaceFixed(FixedWithNextNode __node, Node __replacement)
     {
-        if (replacement instanceof FixedWithNextNode)
+        if (__replacement instanceof FixedWithNextNode)
         {
-            replaceFixedWithFixed(node, (FixedWithNextNode) replacement);
+            replaceFixedWithFixed(__node, (FixedWithNextNode) __replacement);
         }
         else
         {
-            replaceFixedWithFloating(node, (FloatingNode) replacement);
+            replaceFixedWithFloating(__node, (FloatingNode) __replacement);
         }
     }
 
-    public void replaceFixedWithFixed(FixedWithNextNode node, FixedWithNextNode replacement)
+    public void replaceFixedWithFixed(FixedWithNextNode __node, FixedWithNextNode __replacement)
     {
-        FixedNode next = node.next();
-        node.setNext(null);
-        replacement.setNext(next);
-        node.replaceAndDelete(replacement);
-        if (node == start)
+        FixedNode __next = __node.next();
+        __node.setNext(null);
+        __replacement.setNext(__next);
+        __node.replaceAndDelete(__replacement);
+        if (__node == start)
         {
-            setStart((StartNode) replacement);
+            setStart((StartNode) __replacement);
         }
     }
 
     @SuppressWarnings("static-method")
-    public void replaceFixedWithFloating(FixedWithNextNode node, ValueNode replacement)
+    public void replaceFixedWithFloating(FixedWithNextNode __node, ValueNode __replacement)
     {
-        GraphUtil.unlinkFixedNode(node);
-        node.replaceAtUsagesAndDelete(replacement);
+        GraphUtil.unlinkFixedNode(__node);
+        __node.replaceAtUsagesAndDelete(__replacement);
     }
 
     @SuppressWarnings("static-method")
-    public void removeSplit(ControlSplitNode node, AbstractBeginNode survivingSuccessor)
+    public void removeSplit(ControlSplitNode __node, AbstractBeginNode __survivingSuccessor)
     {
-        node.clearSuccessors();
-        node.replaceAtPredecessor(survivingSuccessor);
-        node.safeDelete();
+        __node.clearSuccessors();
+        __node.replaceAtPredecessor(__survivingSuccessor);
+        __node.safeDelete();
     }
 
     @SuppressWarnings("static-method")
-    public void removeSplitPropagate(ControlSplitNode node, AbstractBeginNode survivingSuccessor)
+    public void removeSplitPropagate(ControlSplitNode __node, AbstractBeginNode __survivingSuccessor)
     {
-        List<Node> snapshot = node.successors().snapshot();
-        node.clearSuccessors();
-        node.replaceAtPredecessor(survivingSuccessor);
-        node.safeDelete();
-        for (Node successor : snapshot)
+        List<Node> __snapshot = __node.successors().snapshot();
+        __node.clearSuccessors();
+        __node.replaceAtPredecessor(__survivingSuccessor);
+        __node.safeDelete();
+        for (Node __successor : __snapshot)
         {
-            if (successor != null && successor.isAlive())
+            if (__successor != null && __successor.isAlive())
             {
-                if (successor != survivingSuccessor)
+                if (__successor != __survivingSuccessor)
                 {
-                    GraphUtil.killCFG((FixedNode) successor);
+                    GraphUtil.killCFG((FixedNode) __successor);
                 }
             }
         }
     }
 
-    public void replaceSplit(ControlSplitNode node, Node replacement, AbstractBeginNode survivingSuccessor)
+    public void replaceSplit(ControlSplitNode __node, Node __replacement, AbstractBeginNode __survivingSuccessor)
     {
-        if (replacement instanceof FixedWithNextNode)
+        if (__replacement instanceof FixedWithNextNode)
         {
-            replaceSplitWithFixed(node, (FixedWithNextNode) replacement, survivingSuccessor);
+            replaceSplitWithFixed(__node, (FixedWithNextNode) __replacement, __survivingSuccessor);
         }
         else
         {
-            replaceSplitWithFloating(node, (FloatingNode) replacement, survivingSuccessor);
+            replaceSplitWithFloating(__node, (FloatingNode) __replacement, __survivingSuccessor);
         }
     }
 
     @SuppressWarnings("static-method")
-    public void replaceSplitWithFixed(ControlSplitNode node, FixedWithNextNode replacement, AbstractBeginNode survivingSuccessor)
+    public void replaceSplitWithFixed(ControlSplitNode __node, FixedWithNextNode __replacement, AbstractBeginNode __survivingSuccessor)
     {
-        node.clearSuccessors();
-        replacement.setNext(survivingSuccessor);
-        node.replaceAndDelete(replacement);
+        __node.clearSuccessors();
+        __replacement.setNext(__survivingSuccessor);
+        __node.replaceAndDelete(__replacement);
     }
 
     @SuppressWarnings("static-method")
-    public void replaceSplitWithFloating(ControlSplitNode node, FloatingNode replacement, AbstractBeginNode survivingSuccessor)
+    public void replaceSplitWithFloating(ControlSplitNode __node, FloatingNode __replacement, AbstractBeginNode __survivingSuccessor)
     {
-        node.clearSuccessors();
-        node.replaceAtPredecessor(survivingSuccessor);
-        node.replaceAtUsagesAndDelete(replacement);
+        __node.clearSuccessors();
+        __node.replaceAtPredecessor(__survivingSuccessor);
+        __node.replaceAtUsagesAndDelete(__replacement);
     }
 
     @SuppressWarnings("static-method")
-    public void addAfterFixed(FixedWithNextNode node, FixedNode newNode)
+    public void addAfterFixed(FixedWithNextNode __node, FixedNode __newNode)
     {
-        FixedNode next = node.next();
-        node.setNext(newNode);
-        if (next != null)
+        FixedNode __next = __node.next();
+        __node.setNext(__newNode);
+        if (__next != null)
         {
-            FixedWithNextNode newFixedWithNext = (FixedWithNextNode) newNode;
-            newFixedWithNext.setNext(next);
+            FixedWithNextNode __newFixedWithNext = (FixedWithNextNode) __newNode;
+            __newFixedWithNext.setNext(__next);
         }
     }
 
     @SuppressWarnings("static-method")
-    public void addBeforeFixed(FixedNode node, FixedWithNextNode newNode)
+    public void addBeforeFixed(FixedNode __node, FixedWithNextNode __newNode)
     {
-        FixedWithNextNode pred = (FixedWithNextNode) node.predecessor();
-        pred.setNext(newNode);
-        newNode.setNext(node);
+        FixedWithNextNode __pred = (FixedWithNextNode) __node.predecessor();
+        __pred.setNext(__newNode);
+        __newNode.setNext(__node);
     }
 
-    public void reduceDegenerateLoopBegin(LoopBeginNode begin)
+    public void reduceDegenerateLoopBegin(LoopBeginNode __begin)
     {
-        if (begin.forwardEndCount() == 1) // bypass merge and remove
+        if (__begin.forwardEndCount() == 1) // bypass merge and remove
         {
-            reduceTrivialMerge(begin);
+            reduceTrivialMerge(__begin);
         }
         else // convert to merge
         {
-            AbstractMergeNode merge = this.add(new MergeNode());
-            for (EndNode end : begin.forwardEnds())
+            AbstractMergeNode __merge = this.add(new MergeNode());
+            for (EndNode __end : __begin.forwardEnds())
             {
-                merge.addForwardEnd(end);
+                __merge.addForwardEnd(__end);
             }
-            this.replaceFixedWithFixed(begin, merge);
+            this.replaceFixedWithFixed(__begin, __merge);
         }
     }
 
     @SuppressWarnings("static-method")
-    public void reduceTrivialMerge(AbstractMergeNode merge)
+    public void reduceTrivialMerge(AbstractMergeNode __merge)
     {
-        for (PhiNode phi : merge.phis().snapshot())
+        for (PhiNode __phi : __merge.phis().snapshot())
         {
-            ValueNode singleValue = phi.valueAt(0);
-            if (phi.hasUsages())
+            ValueNode __singleValue = __phi.valueAt(0);
+            if (__phi.hasUsages())
             {
-                phi.replaceAtUsagesAndDelete(singleValue);
+                __phi.replaceAtUsagesAndDelete(__singleValue);
             }
             else
             {
-                phi.safeDelete();
-                if (singleValue != null)
+                __phi.safeDelete();
+                if (__singleValue != null)
                 {
-                    GraphUtil.tryKillUnused(singleValue);
+                    GraphUtil.tryKillUnused(__singleValue);
                 }
             }
         }
         // remove loop exits
-        if (merge instanceof LoopBeginNode)
+        if (__merge instanceof LoopBeginNode)
         {
-            ((LoopBeginNode) merge).removeExits();
+            ((LoopBeginNode) __merge).removeExits();
         }
-        AbstractEndNode singleEnd = merge.forwardEndAt(0);
-        FixedNode sux = merge.next();
-        FrameState stateAfter = merge.stateAfter();
+        AbstractEndNode __singleEnd = __merge.forwardEndAt(0);
+        FixedNode __sux = __merge.next();
+        FrameState __stateAfter = __merge.stateAfter();
         // evacuateGuards
-        merge.prepareDelete((FixedNode) singleEnd.predecessor());
-        merge.safeDelete();
-        if (stateAfter != null)
+        __merge.prepareDelete((FixedNode) __singleEnd.predecessor());
+        __merge.safeDelete();
+        if (__stateAfter != null)
         {
-            GraphUtil.tryKillUnused(stateAfter);
+            GraphUtil.tryKillUnused(__stateAfter);
         }
-        if (sux == null)
+        if (__sux == null)
         {
-            singleEnd.replaceAtPredecessor(null);
-            singleEnd.safeDelete();
+            __singleEnd.replaceAtPredecessor(null);
+            __singleEnd.safeDelete();
         }
         else
         {
-            singleEnd.replaceAndDelete(sux);
+            __singleEnd.replaceAndDelete(__sux);
         }
     }
 
@@ -663,9 +692,9 @@ public final class StructuredGraph extends Graph
         return guardsStage;
     }
 
-    public void setGuardsStage(GuardsStage guardsStage)
+    public void setGuardsStage(GuardsStage __guardsStage)
     {
-        this.guardsStage = guardsStage;
+        this.guardsStage = __guardsStage;
     }
 
     public boolean isAfterFloatingReadPhase()
@@ -678,14 +707,14 @@ public final class StructuredGraph extends Graph
         return isAfterFixedReadPhase;
     }
 
-    public void setAfterFloatingReadPhase(boolean state)
+    public void setAfterFloatingReadPhase(boolean __state)
     {
-        isAfterFloatingReadPhase = state;
+        isAfterFloatingReadPhase = __state;
     }
 
-    public void setAfterFixReadPhase(boolean state)
+    public void setAfterFixReadPhase(boolean __state)
     {
-        isAfterFixedReadPhase = state;
+        isAfterFixedReadPhase = __state;
     }
 
     public boolean hasValueProxies()
@@ -693,9 +722,9 @@ public final class StructuredGraph extends Graph
         return hasValueProxies;
     }
 
-    public void setHasValueProxies(boolean state)
+    public void setHasValueProxies(boolean __state)
     {
-        hasValueProxies = state;
+        hasValueProxies = __state;
     }
 
     public boolean isAfterExpandLogic()
@@ -728,11 +757,11 @@ public final class StructuredGraph extends Graph
      * Gets the profiling info for a given method that is or will be part of this graph, taking into
      * account {@link #useProfilingInfo()}.
      */
-    public ProfilingInfo getProfilingInfo(ResolvedJavaMethod m)
+    public ProfilingInfo getProfilingInfo(ResolvedJavaMethod __m)
     {
-        if (useProfilingInfo && m != null)
+        if (useProfilingInfo && __m != null)
         {
-            return m.getProfilingInfo();
+            return __m.getProfilingInfo();
         }
         else
         {
@@ -761,18 +790,18 @@ public final class StructuredGraph extends Graph
     /**
      * Records that {@code method} was used to build this graph.
      */
-    public void recordMethod(ResolvedJavaMethod method)
+    public void recordMethod(ResolvedJavaMethod __method)
     {
-        methods.add(method);
+        methods.add(__method);
     }
 
     /**
      * Updates the {@linkplain #getMethods() methods} used to build this graph with the methods used
      * to build another graph.
      */
-    public void updateMethods(StructuredGraph other)
+    public void updateMethods(StructuredGraph __other)
     {
-        this.methods.addAll(other.methods);
+        this.methods.addAll(__other.methods);
     }
 
     /**
@@ -786,28 +815,28 @@ public final class StructuredGraph extends Graph
     /**
      * Records that {@code field} was accessed in this graph.
      */
-    public void recordField(ResolvedJavaField field)
+    public void recordField(ResolvedJavaField __field)
     {
         if (this.fields == null)
         {
             this.fields = EconomicSet.create(Equivalence.IDENTITY);
         }
-        fields.add(field);
+        fields.add(__field);
     }
 
     /**
      * Updates the {@linkplain #getFields() fields} of this graph with the accessed fields of
      * another graph.
      */
-    public void updateFields(StructuredGraph other)
+    public void updateFields(StructuredGraph __other)
     {
-        if (other.fields != null)
+        if (__other.fields != null)
         {
             if (this.fields == null)
             {
                 this.fields = EconomicSet.create(Equivalence.IDENTITY);
             }
-            this.fields.addAll(other.fields);
+            this.fields.addAll(__other.fields);
         }
     }
 
@@ -819,12 +848,12 @@ public final class StructuredGraph extends Graph
      */
     public int getBytecodeSize()
     {
-        int res = 0;
-        for (ResolvedJavaMethod e : methods)
+        int __res = 0;
+        for (ResolvedJavaMethod __e : methods)
         {
-            res += e.getCodeSize();
+            __res += __e.getCodeSize();
         }
-        return res;
+        return __res;
     }
 
     /**
@@ -866,18 +895,18 @@ public final class StructuredGraph extends Graph
 
     public void clearAllStateAfter()
     {
-        for (Node node : getNodes())
+        for (Node __node : getNodes())
         {
-            if (node instanceof StateSplit)
+            if (__node instanceof StateSplit)
             {
-                FrameState stateAfter = ((StateSplit) node).stateAfter();
-                if (stateAfter != null)
+                FrameState __stateAfter = ((StateSplit) __node).stateAfter();
+                if (__stateAfter != null)
                 {
-                    ((StateSplit) node).setStateAfter(null);
+                    ((StateSplit) __node).setStateAfter(null);
                     // 2 nodes referencing the same framestate
-                    if (stateAfter.isAlive())
+                    if (__stateAfter.isAlive())
                     {
-                        GraphUtil.killWithUnusedFloatingInputs(stateAfter);
+                        GraphUtil.killWithUnusedFloatingInputs(__stateAfter);
                     }
                 }
             }
@@ -886,9 +915,9 @@ public final class StructuredGraph extends Graph
 
     public boolean hasVirtualizableAllocation()
     {
-        for (Node n : getNodes())
+        for (Node __n : getNodes())
         {
-            if (n instanceof VirtualizableAllocation)
+            if (__n instanceof VirtualizableAllocation)
             {
                 return true;
             }
@@ -897,7 +926,7 @@ public final class StructuredGraph extends Graph
     }
 
     @Override
-    protected void afterRegister(Node node)
+    protected void afterRegister(Node __node)
     {
     }
 }

@@ -19,28 +19,28 @@ public abstract class LIRPhase<C>
         super();
     }
 
-    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, C context)
+    public final void apply(TargetDescription __target, LIRGenerationResult __lirGenRes, C __context)
     {
-        run(target, lirGenRes, context);
+        run(__target, __lirGenRes, __context);
     }
 
     protected abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, C context);
 
-    public static CharSequence createName(Class<?> clazz)
+    public static CharSequence createName(Class<?> __clazz)
     {
-        String className = clazz.getName();
-        String s = className.substring(className.lastIndexOf(".") + 1); // strip the package name
-        int innerClassPos = s.indexOf('$');
-        if (innerClassPos > 0)
+        String __className = __clazz.getName();
+        String __s = __className.substring(__className.lastIndexOf(".") + 1); // strip the package name
+        int __innerClassPos = __s.indexOf('$');
+        if (__innerClassPos > 0)
         {
             // Remove inner class name.
-            s = s.substring(0, innerClassPos);
+            __s = __s.substring(0, __innerClassPos);
         }
-        if (s.endsWith("Phase"))
+        if (__s.endsWith("Phase"))
         {
-            s = s.substring(0, s.length() - "Phase".length());
+            __s = __s.substring(0, __s.length() - "Phase".length());
         }
-        return s;
+        return __s;
     }
 
     protected CharSequence createName()

@@ -24,39 +24,40 @@ import giraaff.util.GraalError;
 // @class ReflectionGetCallerClassNode
 public final class ReflectionGetCallerClassNode extends MacroStateSplitNode implements Canonicalizable, Lowerable
 {
+    // @def
     public static final NodeClass<ReflectionGetCallerClassNode> TYPE = NodeClass.create(ReflectionGetCallerClassNode.class);
 
     // @cons
-    public ReflectionGetCallerClassNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    public ReflectionGetCallerClassNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
-        super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);
+        super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        ConstantNode callerClassNode = getCallerClassNode(tool.getMetaAccess(), tool.getConstantReflection());
-        if (callerClassNode != null)
+        ConstantNode __callerClassNode = getCallerClassNode(__tool.getMetaAccess(), __tool.getConstantReflection());
+        if (__callerClassNode != null)
         {
-            return callerClassNode;
+            return __callerClassNode;
         }
         return this;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        ConstantNode callerClassNode = getCallerClassNode(tool.getMetaAccess(), tool.getConstantReflection());
+        ConstantNode __callerClassNode = getCallerClassNode(__tool.getMetaAccess(), __tool.getConstantReflection());
 
-        if (callerClassNode != null)
+        if (__callerClassNode != null)
         {
-            graph().replaceFixedWithFloating(this, graph().addOrUniqueWithInputs(callerClassNode));
+            graph().replaceFixedWithFloating(this, graph().addOrUniqueWithInputs(__callerClassNode));
         }
         else
         {
-            InvokeNode invoke = createInvoke();
-            graph().replaceFixedWithFixed(this, invoke);
-            invoke.lower(tool);
+            InvokeNode __invoke = createInvoke();
+            graph().replaceFixedWithFixed(this, __invoke);
+            __invoke.lower(__tool);
         }
     }
 
@@ -65,34 +66,34 @@ public final class ReflectionGetCallerClassNode extends MacroStateSplitNode impl
      *
      * @return ConstantNode of the caller class, or null
      */
-    private ConstantNode getCallerClassNode(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
+    private ConstantNode getCallerClassNode(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection)
     {
         // Walk back up the frame states to find the caller at the required depth.
-        FrameState state = stateAfter();
+        FrameState __state = stateAfter();
 
         // cf. JVM_GetCallerClass
         // NOTE: Start the loop at depth 1 because the current frame state does not
         // include the Reflection.getCallerClass() frame.
-        for (int n = 1; state != null; state = state.outerFrameState(), n++)
+        for (int __n = 1; __state != null; __state = __state.outerFrameState(), __n++)
         {
-            HotSpotResolvedJavaMethod method = (HotSpotResolvedJavaMethod) state.getMethod();
-            switch (n)
+            HotSpotResolvedJavaMethod __method = (HotSpotResolvedJavaMethod) __state.getMethod();
+            switch (__n)
             {
                 case 0:
                     throw GraalError.shouldNotReachHere("current frame state does not include the Reflection.getCallerClass frame");
                 case 1:
                     // Frame 0 and 1 must be caller sensitive (see JVM_GetCallerClass).
-                    if (!method.isCallerSensitive())
+                    if (!__method.isCallerSensitive())
                     {
                         return null; // bail-out; let JVM_GetCallerClass do the work
                     }
                     break;
                 default:
-                    if (!method.ignoredBySecurityStackWalk())
+                    if (!__method.ignoredBySecurityStackWalk())
                     {
                         // We have reached the desired frame; return the holder class.
-                        HotSpotResolvedObjectType callerClass = method.getDeclaringClass();
-                        return ConstantNode.forConstant(constantReflection.asJavaClass(callerClass), metaAccess);
+                        HotSpotResolvedObjectType __callerClass = __method.getDeclaringClass();
+                        return ConstantNode.forConstant(__constantReflection.asJavaClass(__callerClass), __metaAccess);
                     }
                     break;
             }

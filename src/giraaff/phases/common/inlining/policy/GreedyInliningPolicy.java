@@ -14,49 +14,49 @@ import giraaff.phases.common.inlining.walker.MethodInvocation;
 public final class GreedyInliningPolicy extends AbstractInliningPolicy
 {
     // @cons
-    public GreedyInliningPolicy(Map<Invoke, Double> hints)
+    public GreedyInliningPolicy(Map<Invoke, Double> __hints)
     {
-        super(hints);
+        super(__hints);
     }
 
     @Override
-    public boolean continueInlining(StructuredGraph currentGraph)
+    public boolean continueInlining(StructuredGraph __currentGraph)
     {
-        return InliningUtil.getNodeCount(currentGraph) < GraalOptions.maximumDesiredSize;
+        return InliningUtil.getNodeCount(__currentGraph) < GraalOptions.maximumDesiredSize;
     }
 
     @Override
-    public Decision isWorthInlining(Replacements replacements, MethodInvocation invocation, int inliningDepth, boolean fullyProcessed)
+    public Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
     {
-        final InlineInfo info = invocation.callee();
-        final double probability = invocation.probability();
-        final double relevance = invocation.relevance();
+        final InlineInfo __info = __invocation.callee();
+        final double __probability = __invocation.probability();
+        final double __relevance = __invocation.relevance();
 
         if (GraalOptions.inlineEverything)
         {
             return InliningPolicy.Decision.YES;
         }
 
-        if (isIntrinsic(replacements, info))
+        if (isIntrinsic(__replacements, __info))
         {
             return InliningPolicy.Decision.YES;
         }
 
-        if (info.shouldInline())
+        if (__info.shouldInline())
         {
             return InliningPolicy.Decision.YES;
         }
 
-        double inliningBonus = getInliningBonus(info);
-        int nodes = info.determineNodeCount();
-        int lowLevelGraphSize = previousLowLevelGraphSize(info);
+        double __inliningBonus = getInliningBonus(__info);
+        int __nodes = __info.determineNodeCount();
+        int __lowLevelGraphSize = previousLowLevelGraphSize(__info);
 
-        if (GraalOptions.smallCompiledLowLevelGraphSize > 0 && lowLevelGraphSize > GraalOptions.smallCompiledLowLevelGraphSize * inliningBonus)
+        if (GraalOptions.smallCompiledLowLevelGraphSize > 0 && __lowLevelGraphSize > GraalOptions.smallCompiledLowLevelGraphSize * __inliningBonus)
         {
             return InliningPolicy.Decision.NO;
         }
 
-        if (nodes < GraalOptions.trivialInliningSize * inliningBonus)
+        if (__nodes < GraalOptions.trivialInliningSize * __inliningBonus)
         {
             return InliningPolicy.Decision.YES;
         }
@@ -67,14 +67,14 @@ public final class GreedyInliningPolicy extends AbstractInliningPolicy
          * to inline those methods but increases bootstrap time (maybe those methods are
          * also getting queued in the compilation queue concurrently)
          */
-        double invokes = determineInvokeProbability(info);
-        if (GraalOptions.limitInlinedInvokes > 0 && fullyProcessed && invokes > GraalOptions.limitInlinedInvokes * inliningBonus)
+        double __invokes = determineInvokeProbability(__info);
+        if (GraalOptions.limitInlinedInvokes > 0 && __fullyProcessed && __invokes > GraalOptions.limitInlinedInvokes * __inliningBonus)
         {
             return InliningPolicy.Decision.NO;
         }
 
-        double maximumNodes = computeMaximumSize(relevance, (int) (GraalOptions.maximumInliningSize * inliningBonus));
-        if (nodes <= maximumNodes)
+        double __maximumNodes = computeMaximumSize(__relevance, (int) (GraalOptions.maximumInliningSize * __inliningBonus));
+        if (__nodes <= __maximumNodes)
         {
             return InliningPolicy.Decision.YES;
         }

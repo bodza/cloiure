@@ -19,45 +19,51 @@ import giraaff.lir.framemap.FrameMapBuilder;
 // @class HotSpotLockStack
 public final class HotSpotLockStack extends LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<HotSpotLockStack> TYPE = LIRInstructionClass.create(HotSpotLockStack.class);
 
+    // @def
     private static final AllocatableValue[] EMPTY = new AllocatableValue[0];
 
-    @Def({OperandFlag.STACK}) private AllocatableValue[] locks;
+    @Def({OperandFlag.STACK})
+    // @field
+    private AllocatableValue[] locks;
+    // @field
     private final FrameMapBuilder frameMapBuilder;
+    // @field
     private final LIRKind slotKind;
 
     // @cons
-    public HotSpotLockStack(FrameMapBuilder frameMapBuilder, LIRKind slotKind)
+    public HotSpotLockStack(FrameMapBuilder __frameMapBuilder, LIRKind __slotKind)
     {
         super(TYPE);
-        this.frameMapBuilder = frameMapBuilder;
-        this.slotKind = slotKind;
+        this.frameMapBuilder = __frameMapBuilder;
+        this.slotKind = __slotKind;
         this.locks = EMPTY;
     }
 
     /**
      * Gets a stack slot for a lock at a given lock nesting depth, allocating it first if necessary.
      */
-    public VirtualStackSlot makeLockSlot(int lockDepth)
+    public VirtualStackSlot makeLockSlot(int __lockDepth)
     {
         if (locks == EMPTY)
         {
-            locks = new AllocatableValue[lockDepth + 1];
+            locks = new AllocatableValue[__lockDepth + 1];
         }
-        else if (locks.length < lockDepth + 1)
+        else if (locks.length < __lockDepth + 1)
         {
-            locks = Arrays.copyOf(locks, lockDepth + 1);
+            locks = Arrays.copyOf(locks, __lockDepth + 1);
         }
-        if (locks[lockDepth] == null)
+        if (locks[__lockDepth] == null)
         {
-            locks[lockDepth] = frameMapBuilder.allocateSpillSlot(slotKind);
+            locks[__lockDepth] = frameMapBuilder.allocateSpillSlot(slotKind);
         }
-        return (VirtualStackSlot) locks[lockDepth];
+        return (VirtualStackSlot) locks[__lockDepth];
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb)
+    public void emitCode(CompilationResultBuilder __crb)
     {
         // do nothing
     }

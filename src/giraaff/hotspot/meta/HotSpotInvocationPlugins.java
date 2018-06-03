@@ -22,22 +22,22 @@ final class HotSpotInvocationPlugins extends InvocationPlugins
     }
 
     @Override
-    public void register(InvocationPlugin plugin, Type declaringClass, String name, Type... argumentTypes)
+    public void register(InvocationPlugin __plugin, Type __declaringClass, String __name, Type... __argumentTypes)
     {
         if (!HotSpotRuntime.usePopCountInstruction)
         {
-            if (name.equals("bitCount"))
+            if (__name.equals("bitCount"))
             {
                 return;
             }
         }
-        super.register(plugin, declaringClass, name, argumentTypes);
+        super.register(__plugin, __declaringClass, __name, __argumentTypes);
     }
 
     @Override
-    public boolean canBeIntrinsified(ResolvedJavaType declaringClass)
+    public boolean canBeIntrinsified(ResolvedJavaType __declaringClass)
     {
-        if (declaringClass instanceof HotSpotResolvedJavaType)
+        if (__declaringClass instanceof HotSpotResolvedJavaType)
         {
             return true;
         }

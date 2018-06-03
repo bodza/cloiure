@@ -17,8 +17,11 @@ import giraaff.lir.StandardOp.JumpOp;
 // @class LabelRef
 public final class LabelRef
 {
+    // @field
     private final LIR lir;
+    // @field
     private final AbstractBlockBase<?> block;
+    // @field
     private final int suxIndex;
 
     /**
@@ -28,9 +31,9 @@ public final class LabelRef
      * @param suxIndex The index of the successor.
      * @return The newly created label reference.
      */
-    public static LabelRef forSuccessor(final LIR lir, final AbstractBlockBase<?> block, final int suxIndex)
+    public static LabelRef forSuccessor(final LIR __lir, final AbstractBlockBase<?> __block, final int __suxIndex)
     {
-        return new LabelRef(lir, block, suxIndex);
+        return new LabelRef(__lir, __block, __suxIndex);
     }
 
     /**
@@ -40,12 +43,12 @@ public final class LabelRef
      * @param suxIndex The index of the successor.
      */
     // @cons
-    private LabelRef(final LIR lir, final AbstractBlockBase<?> block, final int suxIndex)
+    private LabelRef(final LIR __lir, final AbstractBlockBase<?> __block, final int __suxIndex)
     {
         super();
-        this.lir = lir;
-        this.block = block;
-        this.suxIndex = suxIndex;
+        this.lir = __lir;
+        this.block = __block;
+        this.suxIndex = __suxIndex;
     }
 
     public AbstractBlockBase<?> getSourceBlock()

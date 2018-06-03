@@ -27,15 +27,18 @@ import giraaff.nodes.spi.LoweringTool;
 // @class HubGetClassNode
 public final class HubGetClassNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
+    // @def
     public static final NodeClass<HubGetClassNode> TYPE = NodeClass.create(HubGetClassNode.class);
 
-    @Input protected ValueNode hub;
+    @Input
+    // @field
+    protected ValueNode hub;
 
     // @cons
-    public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode hub)
+    public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider __metaAccess, ValueNode __hub)
     {
-        super(TYPE, StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(metaAccess.lookupJavaType(Class.class))));
-        this.hub = hub;
+        super(TYPE, StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(__metaAccess.lookupJavaType(Class.class))));
+        this.hub = __hub;
     }
 
     public ValueNode getHub()
@@ -44,21 +47,21 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             return null;
         }
         else
         {
-            MetaAccessProvider metaAccess = tool.getMetaAccess();
-            if (metaAccess != null && hub.isConstant())
+            MetaAccessProvider __metaAccess = __tool.getMetaAccess();
+            if (__metaAccess != null && hub.isConstant())
             {
-                ResolvedJavaType exactType = tool.getConstantReflection().asJavaType(hub.asConstant());
-                if (exactType != null)
+                ResolvedJavaType __exactType = __tool.getConstantReflection().asJavaType(hub.asConstant());
+                if (__exactType != null)
                 {
-                    return ConstantNode.forConstant(tool.getConstantReflection().asJavaClass(exactType), metaAccess);
+                    return ConstantNode.forConstant(__tool.getConstantReflection().asJavaClass(__exactType), __metaAccess);
                 }
             }
             return this;
@@ -66,9 +69,9 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @NodeIntrinsic
@@ -81,30 +84,30 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
     }
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant convert(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        if (JavaConstant.NULL_POINTER.equals(c))
+        if (JavaConstant.NULL_POINTER.equals(__c))
         {
-            return c;
+            return __c;
         }
-        return constantReflection.asJavaClass(constantReflection.asJavaType(c));
+        return __constantReflection.asJavaClass(__constantReflection.asJavaType(__c));
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        if (JavaConstant.NULL_POINTER.equals(c))
+        if (JavaConstant.NULL_POINTER.equals(__c))
         {
-            return c;
+            return __c;
         }
-        ResolvedJavaType type = constantReflection.asJavaType(c);
-        if (type.isPrimitive())
+        ResolvedJavaType __type = __constantReflection.asJavaType(__c);
+        if (__type.isPrimitive())
         {
             return JavaConstant.NULL_POINTER;
         }
         else
         {
-            return constantReflection.asObjectHub(type);
+            return __constantReflection.asObjectHub(__type);
         }
     }
 

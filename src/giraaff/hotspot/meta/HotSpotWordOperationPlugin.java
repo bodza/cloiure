@@ -41,98 +41,104 @@ import giraaff.word.WordTypes;
 final class HotSpotWordOperationPlugin extends WordOperationPlugin
 {
     // @cons
-    HotSpotWordOperationPlugin(SnippetReflectionProvider snippetReflection, WordTypes wordTypes)
+    HotSpotWordOperationPlugin(SnippetReflectionProvider __snippetReflection, WordTypes __wordTypes)
     {
-        super(snippetReflection, wordTypes);
+        super(__snippetReflection, __wordTypes);
     }
 
     @Override
-    protected LoadIndexedNode createLoadIndexedNode(ValueNode array, ValueNode index)
+    protected LoadIndexedNode createLoadIndexedNode(ValueNode __array, ValueNode __index)
     {
-        ResolvedJavaType arrayType = StampTool.typeOrNull(array);
-        Stamp componentStamp = wordTypes.getWordStamp(arrayType.getComponentType());
-        if (componentStamp instanceof MetaspacePointerStamp)
+        ResolvedJavaType __arrayType = StampTool.typeOrNull(__array);
+        Stamp __componentStamp = wordTypes.getWordStamp(__arrayType.getComponentType());
+        if (__componentStamp instanceof MetaspacePointerStamp)
         {
-            return new LoadIndexedPointerNode(componentStamp, array, index);
+            return new LoadIndexedPointerNode(__componentStamp, __array, __index);
         }
         else
         {
-            return super.createLoadIndexedNode(array, index);
+            return super.createLoadIndexedNode(__array, __index);
         }
     }
 
     @Override
-    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    public boolean handleInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        if (!wordTypes.isWordOperation(method))
+        if (!wordTypes.isWordOperation(__method))
         {
             return false;
         }
 
-        HotSpotOperation operation = BridgeMethodUtils.getAnnotation(HotSpotOperation.class, method);
-        if (operation == null)
+        HotSpotOperation __operation = BridgeMethodUtils.getAnnotation(HotSpotOperation.class, __method);
+        if (__operation == null)
         {
-            processWordOperation(b, args, wordTypes.getWordOperation(method, b.getMethod().getDeclaringClass()));
+            processWordOperation(__b, __args, wordTypes.getWordOperation(__method, __b.getMethod().getDeclaringClass()));
             return true;
         }
-        processHotSpotWordOperation(b, method, args, operation);
+        processHotSpotWordOperation(__b, __method, __args, __operation);
         return true;
     }
 
-    protected void processHotSpotWordOperation(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args, HotSpotOperation operation)
+    protected void processHotSpotWordOperation(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args, HotSpotOperation __operation)
     {
-        JavaKind returnKind = method.getSignature().getReturnKind();
-        switch (operation.opcode())
+        JavaKind __returnKind = __method.getSignature().getReturnKind();
+        switch (__operation.opcode())
         {
             case POINTER_EQ:
             case POINTER_NE:
-                HotspotOpcode opcode = operation.opcode();
-                ValueNode left = args[0];
-                ValueNode right = args[1];
+            {
+                HotspotOpcode __opcode = __operation.opcode();
+                ValueNode __left = __args[0];
+                ValueNode __right = __args[1];
 
-                PointerEqualsNode comparison = b.add(new PointerEqualsNode(left, right));
-                ValueNode eqValue = b.add(ConstantNode.forBoolean(opcode == HotspotOpcode.POINTER_EQ));
-                ValueNode neValue = b.add(ConstantNode.forBoolean(opcode == HotspotOpcode.POINTER_NE));
-                b.addPush(returnKind, ConditionalNode.create(comparison, eqValue, neValue, NodeView.DEFAULT));
+                PointerEqualsNode __comparison = __b.add(new PointerEqualsNode(__left, __right));
+                ValueNode __eqValue = __b.add(ConstantNode.forBoolean(__opcode == HotspotOpcode.POINTER_EQ));
+                ValueNode __neValue = __b.add(ConstantNode.forBoolean(__opcode == HotspotOpcode.POINTER_NE));
+                __b.addPush(__returnKind, ConditionalNode.create(__comparison, __eqValue, __neValue, NodeView.DEFAULT));
                 break;
+            }
 
             case IS_NULL:
-                ValueNode pointer = args[0];
+            {
+                ValueNode __pointer = __args[0];
 
-                LogicNode isNull = b.addWithInputs(IsNullNode.create(pointer));
-                b.addPush(returnKind, ConditionalNode.create(isNull, b.add(ConstantNode.forBoolean(true)), b.add(ConstantNode.forBoolean(false)), NodeView.DEFAULT));
+                LogicNode __isNull = __b.addWithInputs(IsNullNode.create(__pointer));
+                __b.addPush(__returnKind, ConditionalNode.create(__isNull, __b.add(ConstantNode.forBoolean(true)), __b.add(ConstantNode.forBoolean(false)), NodeView.DEFAULT));
                 break;
+            }
 
             case FROM_POINTER:
-                b.addPush(returnKind, new PointerCastNode(StampFactory.forKind(wordKind), args[0]));
+                __b.addPush(__returnKind, new PointerCastNode(StampFactory.forKind(wordKind), __args[0]));
                 break;
 
             case TO_KLASS_POINTER:
-                b.addPush(returnKind, new PointerCastNode(KlassPointerStamp.klass(), args[0]));
+                __b.addPush(__returnKind, new PointerCastNode(KlassPointerStamp.klass(), __args[0]));
                 break;
 
             case TO_METHOD_POINTER:
-                b.addPush(returnKind, new PointerCastNode(MethodPointerStamp.method(), args[0]));
+                __b.addPush(__returnKind, new PointerCastNode(MethodPointerStamp.method(), __args[0]));
                 break;
 
             case READ_KLASS_POINTER:
-                Stamp readStamp = KlassPointerStamp.klass();
-                AddressNode address = makeAddress(b, args[0], args[1]);
-                LocationIdentity location;
-                if (args.length == 2)
+            {
+                Stamp __readStamp = KlassPointerStamp.klass();
+                AddressNode __address = makeAddress(__b, __args[0], __args[1]);
+                LocationIdentity __location;
+                if (__args.length == 2)
                 {
-                    location = LocationIdentity.any();
+                    __location = LocationIdentity.any();
                 }
                 else
                 {
-                    location = snippetReflection.asObject(LocationIdentity.class, args[2].asJavaConstant());
+                    __location = snippetReflection.asObject(LocationIdentity.class, __args[2].asJavaConstant());
                 }
-                ReadNode read = b.add(new ReadNode(address, location, readStamp, BarrierType.NONE));
-                b.push(returnKind, read);
+                ReadNode __read = __b.add(new ReadNode(__address, __location, __readStamp, BarrierType.NONE));
+                __b.push(__returnKind, __read);
                 break;
+            }
 
             default:
-                throw GraalError.shouldNotReachHere("unknown operation: " + operation.opcode());
+                throw GraalError.shouldNotReachHere("unknown operation: " + __operation.opcode());
         }
     }
 }

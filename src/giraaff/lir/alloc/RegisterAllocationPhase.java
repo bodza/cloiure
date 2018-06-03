@@ -8,11 +8,12 @@ import giraaff.lir.phases.AllocationPhase;
 // @class RegisterAllocationPhase
 public abstract class RegisterAllocationPhase extends AllocationPhase
 {
+    // @field
     private boolean neverSpillConstants;
 
-    public void setNeverSpillConstants(boolean neverSpillConstants)
+    public void setNeverSpillConstants(boolean __neverSpillConstants)
     {
-        this.neverSpillConstants = neverSpillConstants;
+        this.neverSpillConstants = __neverSpillConstants;
     }
 
     public boolean getNeverSpillConstants()

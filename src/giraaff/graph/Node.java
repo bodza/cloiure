@@ -37,10 +37,14 @@ import giraaff.util.UnsafeAccess;
 // @class Node
 public abstract class Node implements Cloneable, NodeInterface
 {
+    // @def
     public static final NodeClass<?> TYPE = null;
 
+    // @def
     static final int DELETED_ID_START = -1000000000;
+    // @def
     static final int INITIAL_ID = -1;
+    // @def
     static final int ALIVE_ID_START = 0;
 
     /**
@@ -162,41 +166,54 @@ public abstract class Node implements Cloneable, NodeInterface
     {
     }
 
+    // @field
     private Graph graph;
+    // @field
     int id;
 
     // this next pointer is used in Graph to implement fast iteration over NodeClass types, it
     // therefore points to the next Node of the same type.
+    // @field
     Node typeCacheNext;
 
+    // @def
     static final int INLINE_USAGE_COUNT = 2;
+    // @def
     private static final Node[] NO_NODES = {};
 
     /**
      * Head of usage list. The elements of the usage list in order are {@link #usage0},
      * {@link #usage1} and {@link #extraUsages}. The first null entry terminates the list.
      */
+    // @field
     Node usage0;
+    // @field
     Node usage1;
+    // @field
     Node[] extraUsages;
+    // @field
     int extraUsagesCount;
 
+    // @field
     private Node predecessor;
+    // @field
     private NodeClass<? extends Node> nodeClass;
 
+    // @def
     public static final int NODE_LIST = -2;
+    // @def
     public static final int NOT_ITERABLE = -1;
 
     // @cons
-    public Node(NodeClass<? extends Node> c)
+    public Node(NodeClass<? extends Node> __c)
     {
         super();
-        init(c);
+        init(__c);
     }
 
-    final void init(NodeClass<? extends Node> c)
+    final void init(NodeClass<? extends Node> __c)
     {
-        this.nodeClass = c;
+        this.nodeClass = __c;
         id = INITIAL_ID;
         extraUsages = NO_NODES;
     }
@@ -253,9 +270,9 @@ public abstract class Node implements Cloneable, NodeInterface
      *
      * @param visitor the visitor to be applied to the inputs
      */
-    public void applyInputs(EdgeVisitor visitor)
+    public void applyInputs(EdgeVisitor __visitor)
     {
-        nodeClass.applyInputs(this, visitor);
+        nodeClass.applyInputs(this, __visitor);
     }
 
     /**
@@ -263,9 +280,9 @@ public abstract class Node implements Cloneable, NodeInterface
      *
      * @param visitor the visitor to be applied to the successors
      */
-    public void applySuccessors(EdgeVisitor visitor)
+    public void applySuccessors(EdgeVisitor __visitor)
     {
-        nodeClass.applySuccessors(this, visitor);
+        nodeClass.applySuccessors(this, __visitor);
     }
 
     /**
@@ -351,40 +368,40 @@ public abstract class Node implements Cloneable, NodeInterface
      *
      * @param node the node to add
      */
-    void addUsage(Node node)
+    void addUsage(Node __node)
     {
         if (usage0 == null)
         {
-            usage0 = node;
+            usage0 = __node;
         }
         else if (usage1 == null)
         {
-            usage1 = node;
+            usage1 = __node;
         }
         else
         {
-            int length = extraUsages.length;
-            if (length == 0)
+            int __length = extraUsages.length;
+            if (__length == 0)
             {
                 extraUsages = new Node[4];
             }
-            else if (extraUsagesCount == length)
+            else if (extraUsagesCount == __length)
             {
-                Node[] newExtraUsages = new Node[length * 2 + 1];
-                System.arraycopy(extraUsages, 0, newExtraUsages, 0, length);
-                extraUsages = newExtraUsages;
+                Node[] __newExtraUsages = new Node[__length * 2 + 1];
+                System.arraycopy(extraUsages, 0, __newExtraUsages, 0, __length);
+                extraUsages = __newExtraUsages;
             }
-            extraUsages[extraUsagesCount++] = node;
+            extraUsages[extraUsagesCount++] = __node;
         }
     }
 
-    private void movUsageFromEndTo(int destIndex)
+    private void movUsageFromEndTo(int __destIndex)
     {
-        if (destIndex >= INLINE_USAGE_COUNT)
+        if (__destIndex >= INLINE_USAGE_COUNT)
         {
-            movUsageFromEndToExtraUsages(destIndex - INLINE_USAGE_COUNT);
+            movUsageFromEndToExtraUsages(__destIndex - INLINE_USAGE_COUNT);
         }
-        else if (destIndex == 1)
+        else if (__destIndex == 1)
         {
             movUsageFromEndToIndexOne();
         }
@@ -394,11 +411,11 @@ public abstract class Node implements Cloneable, NodeInterface
         }
     }
 
-    private void movUsageFromEndToExtraUsages(int destExtraIndex)
+    private void movUsageFromEndToExtraUsages(int __destExtraIndex)
     {
         this.extraUsagesCount--;
-        Node n = extraUsages[extraUsagesCount];
-        extraUsages[destExtraIndex] = n;
+        Node __n = extraUsages[extraUsagesCount];
+        extraUsages[__destExtraIndex] = __n;
         extraUsages[extraUsagesCount] = null;
     }
 
@@ -441,26 +458,26 @@ public abstract class Node implements Cloneable, NodeInterface
      * @param node the node to remove
      * @return whether or not {@code usage} was in the usage list
      */
-    public boolean removeUsage(Node node)
+    public boolean removeUsage(Node __node)
     {
         // For large graphs, usage removal is critical for performance.
         // Furthermore, it is critical that this method maintains the invariant,
         // that the usage list has no null element preceding a non-null element.
-        if (usage0 == node)
+        if (usage0 == __node)
         {
             movUsageFromEndToIndexZero();
             return true;
         }
-        if (usage1 == node)
+        if (usage1 == __node)
         {
             movUsageFromEndToIndexOne();
             return true;
         }
-        for (int i = this.extraUsagesCount - 1; i >= 0; i--)
+        for (int __i = this.extraUsagesCount - 1; __i >= 0; __i--)
         {
-            if (extraUsages[i] == node)
+            if (extraUsages[__i] == __node)
             {
-                movUsageFromEndToExtraUsages(i);
+                movUsageFromEndToExtraUsages(__i);
                 return true;
             }
         }
@@ -506,29 +523,29 @@ public abstract class Node implements Cloneable, NodeInterface
      * {@code oldInput} to {@code newInput} by removing this node from {@code oldInput}'s usages and
      * adds this node to {@code newInput}'s usages.
      */
-    protected void updateUsages(Node oldInput, Node newInput)
+    protected void updateUsages(Node __oldInput, Node __newInput)
     {
-        if (oldInput != newInput)
+        if (__oldInput != __newInput)
         {
-            if (oldInput != null)
+            if (__oldInput != null)
             {
-                boolean result = removeThisFromUsages(oldInput);
+                boolean __result = removeThisFromUsages(__oldInput);
             }
             maybeNotifyInputChanged(this);
-            if (newInput != null)
+            if (__newInput != null)
             {
-                newInput.addUsage(this);
+                __newInput.addUsage(this);
             }
-            if (oldInput != null && oldInput.hasNoUsages())
+            if (__oldInput != null && __oldInput.hasNoUsages())
             {
-                maybeNotifyZeroUsages(oldInput);
+                maybeNotifyZeroUsages(__oldInput);
             }
         }
     }
 
-    protected void updateUsagesInterface(NodeInterface oldInput, NodeInterface newInput)
+    protected void updateUsagesInterface(NodeInterface __oldInput, NodeInterface __newInput)
     {
-        updateUsages(oldInput == null ? null : oldInput.asNode(), newInput == null ? null : newInput.asNode());
+        updateUsages(__oldInput == null ? null : __oldInput.asNode(), __newInput == null ? null : __newInput.asNode());
     }
 
     /**
@@ -536,85 +553,86 @@ public abstract class Node implements Cloneable, NodeInterface
      * oldSuccessor to newSuccessor: removes this node from oldSuccessor's predecessors and adds
      * this node to newSuccessor's predecessors.
      */
-    protected void updatePredecessor(Node oldSuccessor, Node newSuccessor)
+    protected void updatePredecessor(Node __oldSuccessor, Node __newSuccessor)
     {
-        if (oldSuccessor != newSuccessor)
+        if (__oldSuccessor != __newSuccessor)
         {
-            if (oldSuccessor != null)
+            if (__oldSuccessor != null)
             {
-                oldSuccessor.predecessor = null;
+                __oldSuccessor.predecessor = null;
             }
-            if (newSuccessor != null)
+            if (__newSuccessor != null)
             {
-                newSuccessor.predecessor = this;
+                __newSuccessor.predecessor = this;
             }
         }
     }
 
-    void initialize(Graph newGraph)
+    void initialize(Graph __newGraph)
     {
-        this.graph = newGraph;
-        newGraph.register(this);
-        NodeClass<? extends Node> nc = nodeClass;
-        nc.registerAtInputsAsUsage(this);
-        nc.registerAtSuccessorsAsPredecessor(this);
+        this.graph = __newGraph;
+        __newGraph.register(this);
+        NodeClass<? extends Node> __nc = nodeClass;
+        __nc.registerAtInputsAsUsage(this);
+        __nc.registerAtSuccessorsAsPredecessor(this);
     }
 
     /**
      * Information associated with this node. A single value is stored directly in the field.
      * Multiple values are stored by creating an Object[].
      */
+    // @field
     private Object annotation;
 
-    private <T> T getNodeInfo(Class<T> clazz)
+    private <T> T getNodeInfo(Class<T> __clazz)
     {
         if (annotation == null)
         {
             return null;
         }
-        if (clazz.isInstance(annotation))
+        if (__clazz.isInstance(annotation))
         {
-            return clazz.cast(annotation);
+            return __clazz.cast(annotation);
         }
         if (annotation.getClass() == Object[].class)
         {
-            Object[] annotations = (Object[]) annotation;
-            for (Object ann : annotations)
+            Object[] __annotations = (Object[]) annotation;
+            for (Object __ann : __annotations)
             {
-                if (clazz.isInstance(ann))
+                if (__clazz.isInstance(__ann))
                 {
-                    return clazz.cast(ann);
+                    return __clazz.cast(__ann);
                 }
             }
         }
         return null;
     }
 
-    private <T> void setNodeInfo(Class<T> clazz, T value)
+    private <T> void setNodeInfo(Class<T> __clazz, T __value)
     {
-        if (annotation == null || clazz.isInstance(annotation))
+        if (annotation == null || __clazz.isInstance(annotation))
         {
             // replace the current value
-            this.annotation = value;
+            this.annotation = __value;
         }
         else if (annotation.getClass() == Object[].class)
         {
-            Object[] annotations = (Object[]) annotation;
-            for (int i = 0; i < annotations.length; i++)
+            Object[] __annotations = (Object[]) annotation;
+            for (int __i = 0; __i < __annotations.length; __i++)
             {
-                if (clazz.isInstance(annotations[i]))
+                if (__clazz.isInstance(__annotations[__i]))
                 {
-                    annotations[i] = value;
+                    __annotations[__i] = __value;
                     return;
                 }
             }
-            Object[] newAnnotations = Arrays.copyOf(annotations, annotations.length + 1);
-            newAnnotations[annotations.length] = value;
-            this.annotation = newAnnotations;
+            Object[] __newAnnotations = Arrays.copyOf(__annotations, __annotations.length + 1);
+            __newAnnotations[__annotations.length] = __value;
+            this.annotation = __newAnnotations;
         }
         else
         {
-            this.annotation = new Object[] { this.annotation, value };
+            this.annotation = new Object[] { this.annotation, __value };
         }
     }
 
@@ -623,22 +641,22 @@ public abstract class Node implements Cloneable, NodeInterface
         return nodeClass;
     }
 
-    public boolean isAllowedUsageType(InputType type)
+    public boolean isAllowedUsageType(InputType __type)
     {
-        if (type == InputType.Value)
+        if (__type == InputType.Value)
         {
             return false;
         }
-        return getNodeClass().getAllowedUsageTypes().contains(type);
+        return getNodeClass().getAllowedUsageTypes().contains(__type);
     }
 
-    private boolean checkReplaceWith(Node other)
+    private boolean checkReplaceWith(Node __other)
     {
         if (graph != null && graph.isFrozen())
         {
             throw new GraalError("cannot modify frozen graph");
         }
-        if (other == this)
+        if (__other == this)
         {
             throw new GraalError("cannot replace a node with itself");
         }
@@ -646,216 +664,216 @@ public abstract class Node implements Cloneable, NodeInterface
         {
             throw new GraalError("cannot replace deleted node");
         }
-        if (other != null && other.isDeleted())
+        if (__other != null && __other.isDeleted())
         {
-            throw new GraalError("cannot replace with deleted node %s", other);
+            throw new GraalError("cannot replace with deleted node %s", __other);
         }
         return true;
     }
 
-    public final void replaceAtUsages(Node other)
+    public final void replaceAtUsages(Node __other)
     {
-        replaceAtAllUsages(other, (Node) null);
+        replaceAtAllUsages(__other, (Node) null);
     }
 
-    public final void replaceAtUsages(Node other, Predicate<Node> filter)
+    public final void replaceAtUsages(Node __other, Predicate<Node> __filter)
     {
-        replaceAtUsages(other, filter, null);
+        replaceAtUsages(__other, __filter, null);
     }
 
-    public final void replaceAtUsagesAndDelete(Node other)
+    public final void replaceAtUsagesAndDelete(Node __other)
     {
-        replaceAtUsages(other, null, this);
+        replaceAtUsages(__other, null, this);
         safeDelete();
     }
 
-    public final void replaceAtUsagesAndDelete(Node other, Predicate<Node> filter)
+    public final void replaceAtUsagesAndDelete(Node __other, Predicate<Node> __filter)
     {
-        replaceAtUsages(other, filter, this);
+        replaceAtUsages(__other, __filter, this);
         safeDelete();
     }
 
-    protected void replaceAtUsages(Node other, Predicate<Node> filter, Node toBeDeleted)
+    protected void replaceAtUsages(Node __other, Predicate<Node> __filter, Node __toBeDeleted)
     {
-        if (filter == null)
+        if (__filter == null)
         {
-            replaceAtAllUsages(other, toBeDeleted);
+            replaceAtAllUsages(__other, __toBeDeleted);
         }
         else
         {
-            replaceAtMatchingUsages(other, filter, toBeDeleted);
+            replaceAtMatchingUsages(__other, __filter, __toBeDeleted);
         }
     }
 
-    protected void replaceAtAllUsages(Node other, Node toBeDeleted)
+    protected void replaceAtAllUsages(Node __other, Node __toBeDeleted)
     {
-        checkReplaceWith(other);
+        checkReplaceWith(__other);
         if (usage0 == null)
         {
             return;
         }
-        replaceAtUsage(other, toBeDeleted, usage0);
+        replaceAtUsage(__other, __toBeDeleted, usage0);
         usage0 = null;
 
         if (usage1 == null)
         {
             return;
         }
-        replaceAtUsage(other, toBeDeleted, usage1);
+        replaceAtUsage(__other, __toBeDeleted, usage1);
         usage1 = null;
 
         if (extraUsagesCount <= 0)
         {
             return;
         }
-        for (int i = 0; i < extraUsagesCount; i++)
+        for (int __i = 0; __i < extraUsagesCount; __i++)
         {
-            Node usage = extraUsages[i];
-            replaceAtUsage(other, toBeDeleted, usage);
+            Node __usage = extraUsages[__i];
+            replaceAtUsage(__other, __toBeDeleted, __usage);
         }
         this.extraUsages = NO_NODES;
         this.extraUsagesCount = 0;
     }
 
-    private void replaceAtUsage(Node other, Node toBeDeleted, Node usage)
+    private void replaceAtUsage(Node __other, Node __toBeDeleted, Node __usage)
     {
-        boolean result = usage.getNodeClass().replaceFirstInput(usage, this, other);
+        boolean __result = __usage.getNodeClass().replaceFirstInput(__usage, this, __other);
         // Don't notify for nodes which are about to be deleted.
-        if (toBeDeleted == null || usage != toBeDeleted)
+        if (__toBeDeleted == null || __usage != __toBeDeleted)
         {
-            maybeNotifyInputChanged(usage);
+            maybeNotifyInputChanged(__usage);
         }
-        if (other != null)
+        if (__other != null)
         {
-            other.addUsage(usage);
+            __other.addUsage(__usage);
         }
     }
 
-    private void replaceAtMatchingUsages(Node other, Predicate<Node> filter, Node toBeDeleted)
+    private void replaceAtMatchingUsages(Node __other, Predicate<Node> __filter, Node __toBeDeleted)
     {
-        if (filter == null)
+        if (__filter == null)
         {
             throw new GraalError("filter cannot be null");
         }
-        checkReplaceWith(other);
-        int i = 0;
-        while (i < this.getUsageCount())
+        checkReplaceWith(__other);
+        int __i = 0;
+        while (__i < this.getUsageCount())
         {
-            Node usage = this.getUsageAt(i);
-            if (filter.test(usage))
+            Node __usage = this.getUsageAt(__i);
+            if (__filter.test(__usage))
             {
-                replaceAtUsage(other, toBeDeleted, usage);
-                this.movUsageFromEndTo(i);
+                replaceAtUsage(__other, __toBeDeleted, __usage);
+                this.movUsageFromEndTo(__i);
             }
             else
             {
-                ++i;
+                ++__i;
             }
         }
     }
 
-    public Node getUsageAt(int index)
+    public Node getUsageAt(int __index)
     {
-        if (index == 0)
+        if (__index == 0)
         {
             return this.usage0;
         }
-        else if (index == 1)
+        else if (__index == 1)
         {
             return this.usage1;
         }
         else
         {
-            return this.extraUsages[index - INLINE_USAGE_COUNT];
+            return this.extraUsages[__index - INLINE_USAGE_COUNT];
         }
     }
 
-    public void replaceAtMatchingUsages(Node other, NodePredicate usagePredicate)
+    public void replaceAtMatchingUsages(Node __other, NodePredicate __usagePredicate)
     {
-        checkReplaceWith(other);
-        replaceAtMatchingUsages(other, usagePredicate, null);
+        checkReplaceWith(__other);
+        replaceAtMatchingUsages(__other, __usagePredicate, null);
     }
 
-    public void replaceAtUsages(InputType type, Node other)
+    public void replaceAtUsages(InputType __type, Node __other)
     {
-        checkReplaceWith(other);
-        for (Node usage : usages().snapshot())
+        checkReplaceWith(__other);
+        for (Node __usage : usages().snapshot())
         {
-            for (Position pos : usage.inputPositions())
+            for (Position __pos : __usage.inputPositions())
             {
-                if (pos.getInputType() == type && pos.get(usage) == this)
+                if (__pos.getInputType() == __type && __pos.get(__usage) == this)
                 {
-                    pos.set(usage, other);
+                    __pos.set(__usage, __other);
                 }
             }
         }
     }
 
-    private void maybeNotifyInputChanged(Node node)
+    private void maybeNotifyInputChanged(Node __node)
     {
         if (graph != null)
         {
-            NodeEventListener listener = graph.nodeEventListener;
-            if (listener != null)
+            NodeEventListener __listener = graph.nodeEventListener;
+            if (__listener != null)
             {
-                listener.event(Graph.NodeEvent.INPUT_CHANGED, node);
+                __listener.event(Graph.NodeEvent.INPUT_CHANGED, __node);
             }
         }
     }
 
-    public void maybeNotifyZeroUsages(Node node)
+    public void maybeNotifyZeroUsages(Node __node)
     {
         if (graph != null)
         {
-            NodeEventListener listener = graph.nodeEventListener;
-            if (listener != null && node.isAlive())
+            NodeEventListener __listener = graph.nodeEventListener;
+            if (__listener != null && __node.isAlive())
             {
-                listener.event(Graph.NodeEvent.ZERO_USAGES, node);
+                __listener.event(Graph.NodeEvent.ZERO_USAGES, __node);
             }
         }
     }
 
-    public void replaceAtPredecessor(Node other)
+    public void replaceAtPredecessor(Node __other)
     {
-        checkReplaceWith(other);
+        checkReplaceWith(__other);
         if (predecessor != null)
         {
-            if (!predecessor.getNodeClass().replaceFirstSuccessor(predecessor, this, other))
+            if (!predecessor.getNodeClass().replaceFirstSuccessor(predecessor, this, __other))
             {
                 throw new GraalError("not found in successors, predecessor: %s", predecessor);
             }
-            predecessor.updatePredecessor(this, other);
+            predecessor.updatePredecessor(this, __other);
         }
     }
 
-    public void replaceAndDelete(Node other)
+    public void replaceAndDelete(Node __other)
     {
-        checkReplaceWith(other);
-        if (other == null)
+        checkReplaceWith(__other);
+        if (__other == null)
         {
             throw new GraalError("cannot replace with null");
         }
         if (this.hasUsages())
         {
-            replaceAtUsages(other);
+            replaceAtUsages(__other);
         }
-        replaceAtPredecessor(other);
+        replaceAtPredecessor(__other);
         this.safeDelete();
     }
 
-    public void replaceFirstSuccessor(Node oldSuccessor, Node newSuccessor)
+    public void replaceFirstSuccessor(Node __oldSuccessor, Node __newSuccessor)
     {
-        if (nodeClass.replaceFirstSuccessor(this, oldSuccessor, newSuccessor))
+        if (nodeClass.replaceFirstSuccessor(this, __oldSuccessor, __newSuccessor))
         {
-            updatePredecessor(oldSuccessor, newSuccessor);
+            updatePredecessor(__oldSuccessor, __newSuccessor);
         }
     }
 
-    public void replaceFirstInput(Node oldInput, Node newInput)
+    public void replaceFirstInput(Node __oldInput, Node __newInput)
     {
-        if (nodeClass.replaceFirstInput(this, oldInput, newInput))
+        if (nodeClass.replaceFirstInput(this, __oldInput, __newInput))
         {
-            updateUsages(oldInput, newInput);
+            updateUsages(__oldInput, __newInput);
         }
     }
 
@@ -864,9 +882,9 @@ public abstract class Node implements Cloneable, NodeInterface
         getNodeClass().unregisterAtInputsAsUsage(this);
     }
 
-    boolean removeThisFromUsages(Node n)
+    boolean removeThisFromUsages(Node __n)
     {
-        return n.removeUsage(this);
+        return __n.removeUsage(this);
     }
 
     public void clearSuccessors()
@@ -896,17 +914,17 @@ public abstract class Node implements Cloneable, NodeInterface
         return copyWithInputs(true);
     }
 
-    public final Node copyWithInputs(boolean insertIntoGraph)
+    public final Node copyWithInputs(boolean __insertIntoGraph)
     {
-        Node newNode = clone(insertIntoGraph ? graph : null, WithOnlyInputEdges);
-        if (insertIntoGraph)
+        Node __newNode = clone(__insertIntoGraph ? graph : null, WithOnlyInputEdges);
+        if (__insertIntoGraph)
         {
-            for (Node input : inputs())
+            for (Node __input : inputs())
             {
-                input.addUsage(newNode);
+                __input.addUsage(__newNode);
             }
         }
-        return newNode;
+        return __newNode;
     }
 
     /**
@@ -914,7 +932,7 @@ public abstract class Node implements Cloneable, NodeInterface
      * {@link Node} exists to obviate the need to cast a node before invoking
      * {@link Simplifiable#simplify(SimplifierTool)}.
      */
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
         throw new UnsupportedOperationException();
     }
@@ -925,22 +943,26 @@ public abstract class Node implements Cloneable, NodeInterface
      * @param type the type of edges to process
      * @param edgesToCopy if {@code type} is in this set, the edges are copied otherwise they are cleared
      */
-    private void copyOrClearEdgesForClone(Node newNode, Edges.Type type, EnumSet<Edges.Type> edgesToCopy)
+    private void copyOrClearEdgesForClone(Node __newNode, Edges.Type __type, EnumSet<Edges.Type> __edgesToCopy)
     {
-        if (edgesToCopy.contains(type))
+        if (__edgesToCopy.contains(__type))
         {
-            getNodeClass().getEdges(type).copy(this, newNode);
+            getNodeClass().getEdges(__type).copy(this, __newNode);
         }
         else
         {
             // the direct edges are already null
-            getNodeClass().getEdges(type).initializeLists(newNode, this);
+            getNodeClass().getEdges(__type).initializeLists(__newNode, this);
         }
     }
 
+    // @def
     public static final EnumSet<Edges.Type> WithNoEdges = EnumSet.noneOf(Edges.Type.class);
+    // @def
     public static final EnumSet<Edges.Type> WithAllEdges = EnumSet.allOf(Edges.Type.class);
+    // @def
     public static final EnumSet<Edges.Type> WithOnlyInputEdges = EnumSet.of(Type.Inputs);
+    // @def
     public static final EnumSet<Edges.Type> WithOnlySucessorEdges = EnumSet.of(Type.Successors);
 
     /**
@@ -953,53 +975,53 @@ public abstract class Node implements Cloneable, NodeInterface
      *            list for an edge list)
      * @return the copy of this node
      */
-    final Node clone(Graph into, EnumSet<Edges.Type> edgesToCopy)
+    final Node clone(Graph __into, EnumSet<Edges.Type> __edgesToCopy)
     {
-        final NodeClass<? extends Node> nodeClassTmp = getNodeClass();
-        boolean useIntoLeafNodeCache = false;
-        if (into != null)
+        final NodeClass<? extends Node> __nodeClassTmp = getNodeClass();
+        boolean __useIntoLeafNodeCache = false;
+        if (__into != null)
         {
-            if (nodeClassTmp.valueNumberable() && nodeClassTmp.isLeafNode())
+            if (__nodeClassTmp.valueNumberable() && __nodeClassTmp.isLeafNode())
             {
-                useIntoLeafNodeCache = true;
-                Node otherNode = into.findNodeInCache(this);
-                if (otherNode != null)
+                __useIntoLeafNodeCache = true;
+                Node __otherNode = __into.findNodeInCache(this);
+                if (__otherNode != null)
                 {
-                    return otherNode;
+                    return __otherNode;
                 }
             }
         }
 
-        Node newNode = null;
+        Node __newNode = null;
         try
         {
-            newNode = (Node) UnsafeAccess.UNSAFE.allocateInstance(getClass());
-            newNode.nodeClass = nodeClassTmp;
-            nodeClassTmp.getData().copy(this, newNode);
-            copyOrClearEdgesForClone(newNode, Type.Inputs, edgesToCopy);
-            copyOrClearEdgesForClone(newNode, Type.Successors, edgesToCopy);
+            __newNode = (Node) UnsafeAccess.UNSAFE.allocateInstance(getClass());
+            __newNode.nodeClass = __nodeClassTmp;
+            __nodeClassTmp.getData().copy(this, __newNode);
+            copyOrClearEdgesForClone(__newNode, Type.Inputs, __edgesToCopy);
+            copyOrClearEdgesForClone(__newNode, Type.Successors, __edgesToCopy);
         }
-        catch (Exception e)
+        catch (Exception __e)
         {
-            throw new GraalError(e);
+            throw new GraalError(__e);
         }
-        newNode.graph = into;
-        newNode.id = INITIAL_ID;
-        if (into != null)
+        __newNode.graph = __into;
+        __newNode.id = INITIAL_ID;
+        if (__into != null)
         {
-            into.register(newNode);
+            __into.register(__newNode);
         }
-        newNode.extraUsages = NO_NODES;
+        __newNode.extraUsages = NO_NODES;
 
-        if (into != null && useIntoLeafNodeCache)
+        if (__into != null && __useIntoLeafNodeCache)
         {
-            into.putNodeIntoCache(newNode);
+            __into.putNodeIntoCache(__newNode);
         }
-        newNode.afterClone(this);
-        return newNode;
+        __newNode.afterClone(this);
+        return __newNode;
     }
 
-    protected void afterClone(@SuppressWarnings("unused") Node other)
+    protected void afterClone(@SuppressWarnings("unused") Node __other)
     {
     }
 
@@ -1061,22 +1083,22 @@ public abstract class Node implements Cloneable, NodeInterface
      * @param other a node of exactly the same type as this node
      * @return true if the data fields of this object and {@code other} are equal
      */
-    public boolean valueEquals(Node other)
+    public boolean valueEquals(Node __other)
     {
-        return getNodeClass().dataEquals(this, other);
+        return getNodeClass().dataEquals(this, __other);
     }
 
     /**
      * Determines if this node is equal to the other node while ignoring differences in
      * {@linkplain Successor control-flow} edges.
      */
-    public boolean dataFlowEquals(Node other)
+    public boolean dataFlowEquals(Node __other)
     {
-        return this == other || nodeClass == other.getNodeClass() && this.valueEquals(other) && nodeClass.equalInputs(this, other);
+        return this == __other || nodeClass == __other.getNodeClass() && this.valueEquals(__other) && nodeClass.equalInputs(this, __other);
     }
 
-    public final void pushInputs(NodeStack stack)
+    public final void pushInputs(NodeStack __stack)
     {
-        getNodeClass().pushInputs(this, stack);
+        getNodeClass().pushInputs(this, __stack);
     }
 }

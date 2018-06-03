@@ -17,22 +17,25 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class MonitorIdNode
 public final class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
 {
+    // @def
     public static final NodeClass<MonitorIdNode> TYPE = NodeClass.create(MonitorIdNode.class);
 
+    // @field
     protected int lockDepth;
+    // @field
     protected boolean eliminated;
 
     // @cons
-    public MonitorIdNode(int lockDepth)
+    public MonitorIdNode(int __lockDepth)
     {
-        this(TYPE, lockDepth);
+        this(TYPE, __lockDepth);
     }
 
     // @cons
-    protected MonitorIdNode(NodeClass<? extends MonitorIdNode> c, int lockDepth)
+    protected MonitorIdNode(NodeClass<? extends MonitorIdNode> __c, int __lockDepth)
     {
-        super(c, StampFactory.forVoid());
-        this.lockDepth = lockDepth;
+        super(__c, StampFactory.forVoid());
+        this.lockDepth = __lockDepth;
     }
 
     public int getLockDepth()
@@ -40,9 +43,9 @@ public final class MonitorIdNode extends ValueNode implements IterableNodeType, 
         return lockDepth;
     }
 
-    public void setLockDepth(int lockDepth)
+    public void setLockDepth(int __lockDepth)
     {
-        this.lockDepth = lockDepth;
+        this.lockDepth = __lockDepth;
     }
 
     public boolean isEliminated()
@@ -56,7 +59,7 @@ public final class MonitorIdNode extends ValueNode implements IterableNodeType, 
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nothing to do
     }

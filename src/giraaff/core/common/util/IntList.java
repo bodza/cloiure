@@ -10,19 +10,22 @@ import java.util.Arrays;
 // @class IntList
 public final class IntList
 {
+    // @def
     private static final int[] EMPTY_INT_ARRAY = new int[0];
 
+    // @field
     private int[] array;
+    // @field
     private int size;
 
     /**
      * Creates an int list with a specified initial capacity.
      */
     // @cons
-    public IntList(int initialCapacity)
+    public IntList(int __initialCapacity)
     {
         super();
-        array = new int[initialCapacity];
+        array = new int[__initialCapacity];
     }
 
     /**
@@ -33,11 +36,11 @@ public final class IntList
      *            equal to {@code array.length}
      */
     // @cons
-    public IntList(int[] array, int initialSize)
+    public IntList(int[] __array, int __initialSize)
     {
         super();
-        this.array = array;
-        this.size = initialSize;
+        this.array = __array;
+        this.size = __initialSize;
     }
 
     /**
@@ -48,9 +51,9 @@ public final class IntList
      * @param length the number of values to copy from {@code other}
      * @return a new int list whose {@linkplain #size() size} and capacity is {@code length}
      */
-    public static IntList copy(IntList other, int startIndex, int length)
+    public static IntList copy(IntList __other, int __startIndex, int __length)
     {
-        return copy(other, startIndex, length, length);
+        return copy(__other, __startIndex, __length, __length);
     }
 
     /**
@@ -63,17 +66,17 @@ public final class IntList
      *            {@code length})
      * @return a new int list whose {@linkplain #size() size} is {@code length}
      */
-    public static IntList copy(IntList other, int startIndex, int length, int initialCapacity)
+    public static IntList copy(IntList __other, int __startIndex, int __length, int __initialCapacity)
     {
-        if (initialCapacity == 0)
+        if (__initialCapacity == 0)
         {
             return new IntList(EMPTY_INT_ARRAY, 0);
         }
         else
         {
-            int[] array = new int[initialCapacity];
-            System.arraycopy(other.array, startIndex, array, 0, length);
-            return new IntList(array, length);
+            int[] __array = new int[__initialCapacity];
+            System.arraycopy(__other.array, __startIndex, __array, 0, __length);
+            return new IntList(__array, __length);
         }
     }
 
@@ -87,14 +90,14 @@ public final class IntList
      *
      * @param value the value to append
      */
-    public void add(int value)
+    public void add(int __value)
     {
         if (size == array.length)
         {
-            int newSize = (size * 3) / 2 + 1;
-            array = Arrays.copyOf(array, newSize);
+            int __newSize = (size * 3) / 2 + 1;
+            array = Arrays.copyOf(array, __newSize);
         }
-        array[size++] = value;
+        array[size++] = __value;
     }
 
     /**
@@ -103,13 +106,13 @@ public final class IntList
      * @param index the index of the element to return
      * @throws IndexOutOfBoundsException if {@code index < 0 || index >= size()}
      */
-    public int get(int index)
+    public int get(int __index)
     {
-        if (index >= size)
+        if (__index >= size)
         {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new IndexOutOfBoundsException("Index: " + __index + ", Size: " + size);
         }
-        return array[index];
+        return array[__index];
     }
 
     /**
@@ -127,13 +130,13 @@ public final class IntList
      * @param value the new value of the element
      * @throws IndexOutOfBoundsException if {@code index < 0 || index >= size()}
      */
-    public void set(int index, int value)
+    public void set(int __index, int __value)
     {
-        if (index >= size)
+        if (__index >= size)
         {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new IndexOutOfBoundsException("Index: " + __index + ", Size: " + size);
         }
-        array[index] = value;
+        array[__index] = __value;
     }
 
     /**
@@ -145,15 +148,15 @@ public final class IntList
      *
      * @param newSize the new size of this int list
      */
-    public void setSize(int newSize)
+    public void setSize(int __newSize)
     {
-        if (newSize < size)
+        if (__newSize < size)
         {
-            size = newSize;
+            size = __newSize;
         }
-        else if (newSize > size)
+        else if (__newSize > size)
         {
-            array = Arrays.copyOf(array, newSize);
+            array = Arrays.copyOf(array, __newSize);
         }
     }
 }

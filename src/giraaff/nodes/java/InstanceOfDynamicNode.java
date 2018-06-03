@@ -26,32 +26,35 @@ import giraaff.nodes.spi.LoweringTool;
 // @class InstanceOfDynamicNode
 public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {
+    // @def
     public static final NodeClass<InstanceOfDynamicNode> TYPE = NodeClass.create(InstanceOfDynamicNode.class);
 
+    // @field
     private final boolean allowNull;
+    // @field
     private final boolean exact;
 
-    public static LogicNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode mirror, ValueNode object, boolean allowNull, boolean exact)
+    public static LogicNode create(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __mirror, ValueNode __object, boolean __allowNull, boolean __exact)
     {
-        LogicNode synonym = findSynonym(assumptions, constantReflection, mirror, object, allowNull, exact);
-        if (synonym != null)
+        LogicNode __synonym = findSynonym(__assumptions, __constantReflection, __mirror, __object, __allowNull, __exact);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return new InstanceOfDynamicNode(mirror, object, allowNull, exact);
+        return new InstanceOfDynamicNode(__mirror, __object, __allowNull, __exact);
     }
 
-    public static LogicNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode mirror, ValueNode object, boolean allowNull)
+    public static LogicNode create(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __mirror, ValueNode __object, boolean __allowNull)
     {
-        return create(assumptions, constantReflection, mirror, object, allowNull, false);
+        return create(__assumptions, __constantReflection, __mirror, __object, __allowNull, false);
     }
 
     // @cons
-    protected InstanceOfDynamicNode(ValueNode mirror, ValueNode object, boolean allowNull, boolean exact)
+    protected InstanceOfDynamicNode(ValueNode __mirror, ValueNode __object, boolean __allowNull, boolean __exact)
     {
-        super(TYPE, mirror, object);
-        this.allowNull = allowNull;
-        this.exact = exact;
+        super(TYPE, __mirror, __object);
+        this.allowNull = __allowNull;
+        this.exact = __exact;
     }
 
     public boolean isMirror()
@@ -65,23 +68,23 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
-    private static LogicNode findSynonym(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode forMirror, ValueNode forObject, boolean allowNull, boolean exact)
+    private static LogicNode findSynonym(Assumptions __assumptions, ConstantReflectionProvider __constantReflection, ValueNode __forMirror, ValueNode __forObject, boolean __allowNull, boolean __exact)
     {
-        if (forMirror.isConstant())
+        if (__forMirror.isConstant())
         {
-            ResolvedJavaType t = constantReflection.asJavaType(forMirror.asConstant());
-            if (t != null)
+            ResolvedJavaType __t = __constantReflection.asJavaType(__forMirror.asConstant());
+            if (__t != null)
             {
-                if (t.isPrimitive())
+                if (__t.isPrimitive())
                 {
-                    if (allowNull)
+                    if (__allowNull)
                     {
-                        return IsNullNode.create(forObject);
+                        return IsNullNode.create(__forObject);
                     }
                     else
                     {
@@ -90,14 +93,14 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
                 }
                 else
                 {
-                    TypeReference type = exact ? TypeReference.createExactTrusted(t) : TypeReference.createTrusted(assumptions, t);
-                    if (allowNull)
+                    TypeReference __type = __exact ? TypeReference.createExactTrusted(__t) : TypeReference.createTrusted(__assumptions, __t);
+                    if (__allowNull)
                     {
-                        return InstanceOfNode.createAllowNull(type, forObject, null, null);
+                        return InstanceOfNode.createAllowNull(__type, __forObject, null, null);
                     }
                     else
                     {
-                        return InstanceOfNode.create(type, forObject);
+                        return InstanceOfNode.create(__type, __forObject);
                     }
                 }
             }
@@ -116,20 +119,20 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
     }
 
     @Override
-    public LogicNode canonical(CanonicalizerTool tool, ValueNode forMirror, ValueNode forObject)
+    public LogicNode canonical(CanonicalizerTool __tool, ValueNode __forMirror, ValueNode __forObject)
     {
-        LogicNode result = findSynonym(tool.getAssumptions(), tool.getConstantReflection(), forMirror, forObject, allowNull, exact);
-        if (result != null)
+        LogicNode __result = findSynonym(__tool.getAssumptions(), __tool.getConstantReflection(), __forMirror, __forObject, allowNull, exact);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
         return this;
     }
 
-    public void setMirror(ValueNode newObject)
+    public void setMirror(ValueNode __newObject)
     {
-        this.updateUsages(x, newObject);
-        this.x = newObject;
+        this.updateUsages(x, __newObject);
+        this.x = __newObject;
     }
 
     public boolean allowsNull()
@@ -143,19 +146,19 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForX(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
         return null;
     }
 
     @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForY(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
         return null;
     }
 
     @Override
-    public TriState tryFold(Stamp xStamp, Stamp yStamp)
+    public TriState tryFold(Stamp __xStamp, Stamp __yStamp)
     {
         return TriState.UNKNOWN;
     }

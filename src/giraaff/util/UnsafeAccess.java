@@ -10,6 +10,7 @@ import sun.misc.Unsafe;
 // @class UnsafeAccess
 public final class UnsafeAccess
 {
+    // @def
     public static final Unsafe UNSAFE = initUnsafe();
 
     private static Unsafe initUnsafe()
@@ -19,18 +20,18 @@ public final class UnsafeAccess
             // Fast path when we are trusted.
             return Unsafe.getUnsafe();
         }
-        catch (SecurityException se)
+        catch (SecurityException __se)
         {
             // Slow path when we are not trusted.
             try
             {
-                Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
-                theUnsafe.setAccessible(true);
-                return (Unsafe) theUnsafe.get(Unsafe.class);
+                Field __theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+                __theUnsafe.setAccessible(true);
+                return (Unsafe) __theUnsafe.get(Unsafe.class);
             }
-            catch (Exception e)
+            catch (Exception __e)
             {
-                throw new RuntimeException("exception while trying to get Unsafe", e);
+                throw new RuntimeException("exception while trying to get Unsafe", __e);
             }
         }
     }

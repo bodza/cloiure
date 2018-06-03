@@ -22,6 +22,7 @@ public final class LIRInsertionBuffer
     /**
      * The lir list where ops of this buffer should be inserted later (null when uninitialized).
      */
+    // @field
     private List<LIRInstruction> lir;
 
     /**
@@ -29,12 +30,15 @@ public final class LIRInsertionBuffer
      * index into lir list where "count" ops should be inserted indexAndCount[i * 2 + 1]: the number
      * of ops to be inserted at index
      */
+    // @field
     private int[] indexAndCount;
+    // @field
     private int indexAndCountSize;
 
     /**
      * The LIROps to be inserted.
      */
+    // @field
     private final List<LIRInstruction> ops;
 
     // @cons
@@ -48,9 +52,9 @@ public final class LIRInsertionBuffer
     /**
      * Initialize this buffer. This method must be called before using {@link #append}.
      */
-    public void init(List<LIRInstruction> newLir)
+    public void init(List<LIRInstruction> __newLir)
     {
-        this.lir = newLir;
+        this.lir = __newLir;
     }
 
     public boolean initialized()
@@ -70,18 +74,18 @@ public final class LIRInsertionBuffer
      * index, e.g. once an instruction was appended with index 4, subsequent instructions can only
      * be appended with index 4 or higher.
      */
-    public void append(int index, LIRInstruction op)
+    public void append(int __index, LIRInstruction __op)
     {
-        int i = numberOfInsertionPoints() - 1;
-        if (i < 0 || indexAt(i) < index)
+        int __i = numberOfInsertionPoints() - 1;
+        if (__i < 0 || indexAt(__i) < __index)
         {
-            appendNew(index, 1);
+            appendNew(__index, 1);
         }
         else
         {
-            setCountAt(i, countAt(i) + 1);
+            setCountAt(__i, countAt(__i) + 1);
         }
-        ops.add(op);
+        ops.add(__op);
     }
 
     /**
@@ -92,31 +96,31 @@ public final class LIRInsertionBuffer
     {
         if (ops.size() > 0)
         {
-            int n = lir.size();
+            int __n = lir.size();
             // increase size of instructions list
-            for (int i = 0; i < ops.size(); i++)
+            for (int __i = 0; __i < ops.size(); __i++)
             {
                 lir.add(null);
             }
             // insert ops from buffer into instructions list
-            int opIndex = ops.size() - 1;
-            int ipIndex = numberOfInsertionPoints() - 1;
-            int fromIndex = n - 1;
-            int toIndex = lir.size() - 1;
-            while (ipIndex >= 0)
+            int __opIndex = ops.size() - 1;
+            int __ipIndex = numberOfInsertionPoints() - 1;
+            int __fromIndex = __n - 1;
+            int __toIndex = lir.size() - 1;
+            while (__ipIndex >= 0)
             {
-                int index = indexAt(ipIndex);
+                int __index = indexAt(__ipIndex);
                 // make room after insertion point
-                while (fromIndex >= index)
+                while (__fromIndex >= __index)
                 {
-                    lir.set(toIndex--, lir.get(fromIndex--));
+                    lir.set(__toIndex--, lir.get(__fromIndex--));
                 }
                 // insert ops from buffer
-                for (int i = countAt(ipIndex); i > 0; i--)
+                for (int __i = countAt(__ipIndex); __i > 0; __i--)
                 {
-                    lir.set(toIndex--, ops.get(opIndex--));
+                    lir.set(__toIndex--, ops.get(__opIndex--));
                 }
-                ipIndex--;
+                __ipIndex--;
             }
             indexAndCountSize = 0;
             ops.clear();
@@ -124,22 +128,22 @@ public final class LIRInsertionBuffer
         lir = null;
     }
 
-    private void appendNew(int index, int count)
+    private void appendNew(int __index, int __count)
     {
-        int oldSize = indexAndCountSize;
-        int newSize = oldSize + 2;
-        if (newSize > this.indexAndCount.length)
+        int __oldSize = indexAndCountSize;
+        int __newSize = __oldSize + 2;
+        if (__newSize > this.indexAndCount.length)
         {
-            indexAndCount = Arrays.copyOf(indexAndCount, newSize * 2);
+            indexAndCount = Arrays.copyOf(indexAndCount, __newSize * 2);
         }
-        indexAndCount[oldSize] = index;
-        indexAndCount[oldSize + 1] = count;
-        this.indexAndCountSize = newSize;
+        indexAndCount[__oldSize] = __index;
+        indexAndCount[__oldSize + 1] = __count;
+        this.indexAndCountSize = __newSize;
     }
 
-    private void setCountAt(int i, int value)
+    private void setCountAt(int __i, int __value)
     {
-        indexAndCount[(i << 1) + 1] = value;
+        indexAndCount[(__i << 1) + 1] = __value;
     }
 
     private int numberOfInsertionPoints()
@@ -147,13 +151,13 @@ public final class LIRInsertionBuffer
         return indexAndCountSize >> 1;
     }
 
-    private int indexAt(int i)
+    private int indexAt(int __i)
     {
-        return indexAndCount[(i << 1)];
+        return indexAndCount[(__i << 1)];
     }
 
-    private int countAt(int i)
+    private int countAt(int __i)
     {
-        return indexAndCount[(i << 1) + 1];
+        return indexAndCount[(__i << 1) + 1];
     }
 }

@@ -24,33 +24,40 @@ import giraaff.util.GraalError;
 // @class ClassfileBytecode
 public final class ClassfileBytecode implements Bytecode
 {
+    // @def
     private static final int EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES = 8;
 
+    // @field
     private final ResolvedJavaMethod method;
 
+    // @field
     private final ClassfileConstantPool constantPool;
 
+    // @field
     private byte[] code;
+    // @field
     private int maxLocals;
+    // @field
     private int maxStack;
 
+    // @field
     private byte[] exceptionTableBytes;
 
     // @cons
-    public ClassfileBytecode(ResolvedJavaMethod method, DataInputStream stream, ClassfileConstantPool constantPool) throws IOException
+    public ClassfileBytecode(ResolvedJavaMethod __method, DataInputStream __stream, ClassfileConstantPool __constantPool) throws IOException
     {
         super();
-        this.method = method;
-        this.constantPool = constantPool;
-        maxStack = stream.readUnsignedShort();
-        maxLocals = stream.readUnsignedShort();
-        int codeLength = stream.readInt();
-        code = new byte[codeLength];
-        stream.readFully(code);
-        int exceptionTableLength = stream.readUnsignedShort();
-        exceptionTableBytes = new byte[exceptionTableLength * EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES];
-        stream.readFully(exceptionTableBytes);
-        skipCodeAttributes(stream);
+        this.method = __method;
+        this.constantPool = __constantPool;
+        maxStack = __stream.readUnsignedShort();
+        maxLocals = __stream.readUnsignedShort();
+        int __codeLength = __stream.readInt();
+        code = new byte[__codeLength];
+        __stream.readFully(code);
+        int __exceptionTableLength = __stream.readUnsignedShort();
+        exceptionTableBytes = new byte[__exceptionTableLength * EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES];
+        __stream.readFully(exceptionTableBytes);
+        skipCodeAttributes(__stream);
     }
 
     @Override
@@ -59,13 +66,13 @@ public final class ClassfileBytecode implements Bytecode
         return constantPool.context;
     }
 
-    private void skipCodeAttributes(DataInputStream stream) throws IOException
+    private void skipCodeAttributes(DataInputStream __stream) throws IOException
     {
-        int count = stream.readUnsignedShort();
-        for (int i = 0; i < count; i++)
+        int __count = __stream.readUnsignedShort();
+        for (int __i = 0; __i < __count; __i++)
         {
-            stream.readUnsignedShort();
-            Classfile.skipFully(stream, stream.readInt());
+            __stream.readUnsignedShort();
+            Classfile.skipFully(__stream, __stream.readInt());
         }
     }
 
@@ -101,45 +108,45 @@ public final class ClassfileBytecode implements Bytecode
             return new ExceptionHandler[0];
         }
 
-        final int exceptionTableLength = exceptionTableBytes.length / EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES;
-        ExceptionHandler[] handlers = new ExceptionHandler[exceptionTableLength];
-        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(exceptionTableBytes));
+        final int __exceptionTableLength = exceptionTableBytes.length / EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES;
+        ExceptionHandler[] __handlers = new ExceptionHandler[__exceptionTableLength];
+        DataInputStream __stream = new DataInputStream(new ByteArrayInputStream(exceptionTableBytes));
 
-        for (int i = 0; i < exceptionTableLength; i++)
+        for (int __i = 0; __i < __exceptionTableLength; __i++)
         {
             try
             {
-                final int startPc = stream.readUnsignedShort();
-                final int endPc = stream.readUnsignedShort();
-                final int handlerPc = stream.readUnsignedShort();
-                int catchTypeIndex = stream.readUnsignedShort();
+                final int __startPc = __stream.readUnsignedShort();
+                final int __endPc = __stream.readUnsignedShort();
+                final int __handlerPc = __stream.readUnsignedShort();
+                int __catchTypeIndex = __stream.readUnsignedShort();
 
-                JavaType catchType;
-                if (catchTypeIndex == 0)
+                JavaType __catchType;
+                if (__catchTypeIndex == 0)
                 {
-                    catchType = null;
+                    __catchType = null;
                 }
                 else
                 {
-                    final int opcode = -1; // opcode is not used
-                    catchType = constantPool.lookupType(catchTypeIndex, opcode);
+                    final int __opcode = -1; // opcode is not used
+                    __catchType = constantPool.lookupType(__catchTypeIndex, __opcode);
 
                     // Check for Throwable which catches everything.
-                    if (catchType.toJavaName().equals("java.lang.Throwable"))
+                    if (__catchType.toJavaName().equals("java.lang.Throwable"))
                     {
-                        catchTypeIndex = 0;
-                        catchType = null;
+                        __catchTypeIndex = 0;
+                        __catchType = null;
                     }
                 }
-                handlers[i] = new ExceptionHandler(startPc, endPc, handlerPc, catchTypeIndex, catchType);
+                __handlers[__i] = new ExceptionHandler(__startPc, __endPc, __handlerPc, __catchTypeIndex, __catchType);
             }
-            catch (IOException e)
+            catch (IOException __e)
             {
-                throw new GraalError(e);
+                throw new GraalError(__e);
             }
         }
 
-        return handlers;
+        return __handlers;
     }
 
     @Override

@@ -17,6 +17,7 @@ import giraaff.nodes.LoopBeginNode;
 // @class ExplodeLoopNode
 public final class ExplodeLoopNode extends FixedWithNextNode
 {
+    // @def
     public static final NodeClass<ExplodeLoopNode> TYPE = NodeClass.create(ExplodeLoopNode.class);
 
     // @cons
@@ -27,24 +28,24 @@ public final class ExplodeLoopNode extends FixedWithNextNode
 
     public LoopBeginNode findLoopBegin()
     {
-        Node currentNext = next();
-        ArrayList<Node> succs = new ArrayList<>();
-        while (!(currentNext instanceof LoopBeginNode))
+        Node __currentNext = next();
+        ArrayList<Node> __succs = new ArrayList<>();
+        while (!(__currentNext instanceof LoopBeginNode))
         {
-            for (Node n : currentNext.cfgSuccessors())
+            for (Node __n : __currentNext.cfgSuccessors())
             {
-                succs.add(n);
+                __succs.add(__n);
             }
-            if (succs.size() == 1 && succs.get(0) != currentNext)
+            if (__succs.size() == 1 && __succs.get(0) != __currentNext)
             {
-                currentNext = succs.get(0);
+                __currentNext = __succs.get(0);
             }
             else
             {
                 return null;
             }
         }
-        return (LoopBeginNode) currentNext;
+        return (LoopBeginNode) __currentNext;
     }
 
     /**

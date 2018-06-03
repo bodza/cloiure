@@ -131,27 +131,27 @@ public final class MonitorSnippets implements Snippets
     }
 
     @Snippet
-    public static void monitorenter(Object object, KlassPointer hub, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter Register stackPointerRegister)
+    public static void monitorenter(Object __object, KlassPointer __hub, @ConstantParameter int __lockDepth, @ConstantParameter Register __threadRegister, @ConstantParameter Register __stackPointerRegister)
     {
         // load the mark word - this includes a null-check on object
-        final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotRuntime.markOffset);
+        final Word __mark = HotSpotReplacementsUtil.loadWordFromObject(__object, HotSpotRuntime.markOffset);
 
-        final Word lock = BeginLockScopeNode.beginLockScope(lockDepth);
+        final Word __lock = BeginLockScopeNode.beginLockScope(__lockDepth);
 
-        Pointer objectPointer = Word.objectToTrackedPointer(object);
+        Pointer __objectPointer = Word.objectToTrackedPointer(__object);
 
         if (HotSpotRuntime.useBiasedLocking)
         {
-            if (tryEnterBiased(object, hub, lock, mark, threadRegister))
+            if (tryEnterBiased(__object, __hub, __lock, __mark, __threadRegister))
             {
                 return;
             }
             // not biased, fall-through
         }
-        if (inlineFastLockSupported() && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, mark.and(HotSpotRuntime.monitorMask).notEqual(0)))
+        if (inlineFastLockSupported() && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, __mark.and(HotSpotRuntime.monitorMask).notEqual(0)))
         {
             // inflated case
-            if (tryEnterInflated(object, lock, mark, threadRegister))
+            if (tryEnterInflated(__object, __lock, __mark, __threadRegister))
             {
                 return;
             }
@@ -159,19 +159,19 @@ public final class MonitorSnippets implements Snippets
         else
         {
             // create the unlocked mark word pattern
-            Word unlockedMark = mark.or(HotSpotRuntime.unlockedMask);
+            Word __unlockedMark = __mark.or(HotSpotRuntime.unlockedMask);
 
             // copy this unlocked mark word into the lock slot on the stack
-            lock.writeWord(HotSpotRuntime.lockDisplacedMarkOffset, unlockedMark, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
+            __lock.writeWord(HotSpotRuntime.lockDisplacedMarkOffset, __unlockedMark, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
 
             // make sure previous store does not float below compareAndSwap
             MembarNode.memoryBarrier(MemoryBarriers.STORE_STORE);
 
             // Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
-            Word currentMark = objectPointer.compareAndSwapWord(HotSpotRuntime.markOffset, unlockedMark, lock, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, currentMark.equal(unlockedMark)))
+            Word __currentMark = __objectPointer.compareAndSwapWord(HotSpotRuntime.markOffset, __unlockedMark, __lock, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, __currentMark.equal(__unlockedMark)))
             {
-                AcquiredCASLockNode.mark(object);
+                AcquiredCASLockNode.mark(__object);
                 return;
             }
             else
@@ -191,63 +191,63 @@ public final class MonitorSnippets implements Snippets
                 //
                 // assuming both the stack pointer and page_size have their least
                 // significant 2 bits cleared and page_size is a power of 2
-                final Word alignedMask = WordFactory.unsigned(HotSpotReplacementsUtil.wordSize() - 1);
-                final Word stackPointer = HotSpotReplacementsUtil.registerAsWord(stackPointerRegister).add(HotSpotRuntime.stackBias);
-                if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, currentMark.subtract(stackPointer).and(alignedMask.subtract(HotSpotReplacementsUtil.pageSize())).equal(0)))
+                final Word __alignedMask = WordFactory.unsigned(HotSpotReplacementsUtil.wordSize() - 1);
+                final Word __stackPointer = HotSpotReplacementsUtil.registerAsWord(__stackPointerRegister).add(HotSpotRuntime.stackBias);
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, __currentMark.subtract(__stackPointer).and(__alignedMask.subtract(HotSpotReplacementsUtil.pageSize())).equal(0)))
                 {
                     // recursively locked => write 0 to the lock slot
-                    lock.writeWord(HotSpotRuntime.lockDisplacedMarkOffset, WordFactory.zero(), HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
+                    __lock.writeWord(HotSpotRuntime.lockDisplacedMarkOffset, WordFactory.zero(), HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
                     return;
                 }
             }
         }
         // slow-path runtime-call
-        monitorenterStubC(MONITORENTER, object, lock);
+        monitorenterStubC(MONITORENTER, __object, __lock);
     }
 
-    private static boolean tryEnterBiased(Object object, KlassPointer hub, Word lock, Word mark, Register threadRegister)
+    private static boolean tryEnterBiased(Object __object, KlassPointer __hub, Word __lock, Word __mark, Register __threadRegister)
     {
         // See whether the lock is currently biased toward our thread and whether the epoch is still valid.
         // Note that the runtime guarantees sufficient alignment of JavaThread pointers to allow age to be placed into low bits.
-        final Word biasableLockBits = mark.and(HotSpotRuntime.biasedLockMaskInPlace);
+        final Word __biasableLockBits = __mark.and(HotSpotRuntime.biasedLockMaskInPlace);
 
         // Check whether the bias pattern is present in the object's mark word and the bias owner and the epoch are both still current.
-        final Word prototypeMarkWord = hub.readWord(HotSpotRuntime.prototypeMarkWordOffset, HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
-        final Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        final Word tmp = prototypeMarkWord.or(thread).xor(mark).and(~HotSpotRuntime.ageMaskInPlace);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, tmp.equal(0)))
+        final Word __prototypeMarkWord = __hub.readWord(HotSpotRuntime.prototypeMarkWordOffset, HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
+        final Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+        final Word __tmp = __prototypeMarkWord.or(__thread).xor(__mark).and(~HotSpotRuntime.ageMaskInPlace);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, __tmp.equal(0)))
         {
             // object is already biased to current thread -> done
-            FastAcquireBiasedLockNode.mark(object);
+            FastAcquireBiasedLockNode.mark(__object);
             return true;
         }
 
         // now check to see whether biasing is enabled for this object
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, biasableLockBits.equal(WordFactory.unsigned(HotSpotRuntime.biasedLockPattern))))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, __biasableLockBits.equal(WordFactory.unsigned(HotSpotRuntime.biasedLockPattern))))
         {
-            Pointer objectPointer = Word.objectToTrackedPointer(object);
+            Pointer __objectPointer = Word.objectToTrackedPointer(__object);
             // At this point we know that the mark word has the bias pattern and that we are not the bias owner in the
             // current epoch. We need to figure out more details about the state of the mark word in order to know what
             // operations can be legally performed on the object's mark word.
 
             // If the low three bits in the xor result aren't clear, that means the prototype header is no longer biasable
             // and we have to revoke the bias on this object.
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, tmp.and(HotSpotRuntime.biasedLockMaskInPlace).equal(0)))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, __tmp.and(HotSpotRuntime.biasedLockMaskInPlace).equal(0)))
             {
                 // Biasing is still enabled for object's type. See whether the epoch of the current bias is still valid,
                 // meaning that the epoch bits of the mark word are equal to the epoch bits of the prototype mark word.
                 // (Note that the prototype mark word's epoch bits only change at a safepoint.) If not, attempt to rebias
                 // the object toward the current thread. Note that we must be absolutely sure that the current epoch is
                 // invalid in order to do this, because otherwise the manipulations it performs on the mark word are illegal.
-                if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, tmp.and(HotSpotRuntime.epochMaskInPlace).equal(0)))
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, __tmp.and(HotSpotRuntime.epochMaskInPlace).equal(0)))
                 {
                     // The epoch of the current bias is still valid but we know nothing about the owner, it might be
                     // set or it might be clear. Try to acquire the bias of the object using an atomic operation. If
                     // this fails we will go in to the runtime to revoke the object's bias. Note that we first construct
                     // the presumed unbiased header so we don't accidentally blow away another thread's valid bias.
-                    Word unbiasedMark = mark.and(HotSpotRuntime.biasedLockMaskInPlace | HotSpotRuntime.ageMaskInPlace | HotSpotRuntime.epochMaskInPlace);
-                    Word biasedMark = unbiasedMark.or(thread);
-                    if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotRuntime.markOffset, unbiasedMark, biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
+                    Word __unbiasedMark = __mark.and(HotSpotRuntime.biasedLockMaskInPlace | HotSpotRuntime.ageMaskInPlace | HotSpotRuntime.epochMaskInPlace);
+                    Word __biasedMark = __unbiasedMark.or(__thread);
+                    if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, __objectPointer.logicCompareAndSwapWord(HotSpotRuntime.markOffset, __unbiasedMark, __biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                     {
                         // object is now biased to current thread -> done
                         return true;
@@ -261,8 +261,8 @@ public final class MonitorSnippets implements Snippets
                     // actually invalid. Under these circumstances *only*, are we allowed to use the current mark word
                     // value as the comparison value when doing the CAS to acquire the bias in the current epoch. In
                     // other words, we allow transfer of the bias from one thread to another directly in this situation.
-                    Word biasedMark = prototypeMarkWord.or(thread);
-                    if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotRuntime.markOffset, mark, biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
+                    Word __biasedMark = __prototypeMarkWord.or(__thread);
+                    if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, __objectPointer.logicCompareAndSwapWord(HotSpotRuntime.markOffset, __mark, __biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                     {
                         // object is now biased to current thread -> done
                         return true;
@@ -271,7 +271,7 @@ public final class MonitorSnippets implements Snippets
                     // and we need to revoke that bias. The revocation will occur in the runtime in the slow case.
                 }
                 // slow-path runtime-call
-                monitorenterStubC(MONITORENTER, object, lock);
+                monitorenterStubC(MONITORENTER, __object, __lock);
                 return true;
             }
             else
@@ -281,7 +281,7 @@ public final class MonitorSnippets implements Snippets
                 // object to the prototype value and fall through to the CAS-based locking scheme. Note that if our
                 // CAS fails, it means that another thread raced us for the privilege of revoking the bias of this
                 // particular object, so it's okay to continue in the normal locking code.
-                Word result = objectPointer.compareAndSwapWord(HotSpotRuntime.markOffset, mark, prototypeMarkWord, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
+                Word __result = __objectPointer.compareAndSwapWord(HotSpotRuntime.markOffset, __mark, __prototypeMarkWord, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
                 // Fall through to the normal CAS-based lock, because no matter what the result of the above CAS,
                 // some thread must have succeeded in removing the bias bit from the object's header.
@@ -300,18 +300,18 @@ public final class MonitorSnippets implements Snippets
         return GraalOptions.simpleFastInflatedLocking && HotSpotRuntime.monitorMask >= 0 && HotSpotRuntime.objectMonitorOwnerOffset >= 0;
     }
 
-    private static boolean tryEnterInflated(Object object, Word lock, Word mark, Register threadRegister)
+    private static boolean tryEnterInflated(Object __object, Word __lock, Word __mark, Register __threadRegister)
     {
         // write non-zero value to lock slot
-        lock.writeWord(HotSpotRuntime.lockDisplacedMarkOffset, lock, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
+        __lock.writeWord(HotSpotRuntime.lockDisplacedMarkOffset, __lock, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
         // mark is a pointer to the ObjectMonitor + monitorMask
-        Word monitor = mark.subtract(HotSpotRuntime.monitorMask);
-        int ownerOffset = HotSpotRuntime.objectMonitorOwnerOffset;
-        Word owner = monitor.readWord(ownerOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_OWNER_LOCATION);
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, owner.equal(0)))
+        Word __monitor = __mark.subtract(HotSpotRuntime.monitorMask);
+        int __ownerOffset = HotSpotRuntime.objectMonitorOwnerOffset;
+        Word __owner = __monitor.readWord(__ownerOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_OWNER_LOCATION);
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, __owner.equal(0)))
         {
             // it appears unlocked (owner == 0)
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, monitor.logicCompareAndSwapWord(ownerOffset, owner, HotSpotReplacementsUtil.registerAsWord(threadRegister), HotSpotReplacementsUtil.OBJECT_MONITOR_OWNER_LOCATION)))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, __monitor.logicCompareAndSwapWord(__ownerOffset, __owner, HotSpotReplacementsUtil.registerAsWord(__threadRegister), HotSpotReplacementsUtil.OBJECT_MONITOR_OWNER_LOCATION)))
             {
                 // success
                 return true;
@@ -324,21 +324,21 @@ public final class MonitorSnippets implements Snippets
      * Calls straight out to the monitorenter stub.
      */
     @Snippet
-    public static void monitorenterStub(Object object, @ConstantParameter int lockDepth)
+    public static void monitorenterStub(Object __object, @ConstantParameter int __lockDepth)
     {
-        if (object == null)
+        if (__object == null)
         {
             DeoptimizeNode.deopt(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.NullCheckException);
         }
         // BeginLockScope nodes do not read from object, so a use of object cannot float about the null check above.
-        final Word lock = BeginLockScopeNode.beginLockScope(lockDepth);
-        monitorenterStubC(MONITORENTER, object, lock);
+        final Word __lock = BeginLockScopeNode.beginLockScope(__lockDepth);
+        monitorenterStubC(MONITORENTER, __object, __lock);
     }
 
     @Snippet
-    public static void monitorexit(Object object, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister)
+    public static void monitorexit(Object __object, @ConstantParameter int __lockDepth, @ConstantParameter Register __threadRegister)
     {
-        final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotRuntime.markOffset);
+        final Word __mark = HotSpotReplacementsUtil.loadWordFromObject(__object, HotSpotRuntime.markOffset);
         if (HotSpotRuntime.useBiasedLocking)
         {
             // Check for biased locking unlock case, which is a no-op.
@@ -346,38 +346,38 @@ public final class MonitorSnippets implements Snippets
             // First, the interpreter checks for IllegalMonitorStateException at a higher level.
             // Second, if the bias was revoked while we held the lock, the object could not be
             // rebiased toward another thread, so the bias bit would be clear.
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, mark.and(HotSpotRuntime.biasedLockMaskInPlace).equal(WordFactory.unsigned(HotSpotRuntime.biasedLockPattern))))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, __mark.and(HotSpotRuntime.biasedLockMaskInPlace).equal(WordFactory.unsigned(HotSpotRuntime.biasedLockPattern))))
             {
                 EndLockScopeNode.endLockScope();
                 return;
             }
         }
 
-        final Word lock = CurrentLockNode.currentLock(lockDepth);
+        final Word __lock = CurrentLockNode.currentLock(__lockDepth);
 
         // load displaced mark
-        final Word displacedMark = lock.readWord(HotSpotRuntime.lockDisplacedMarkOffset, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
+        final Word __displacedMark = __lock.readWord(HotSpotRuntime.lockDisplacedMarkOffset, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
 
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, displacedMark.equal(0)))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, __displacedMark.equal(0)))
         {
             // recursive locking => done
         }
         else
         {
-            if (!tryExitInflated(object, mark, lock, threadRegister))
+            if (!tryExitInflated(__object, __mark, __lock, __threadRegister))
             {
                 // Test if object's mark word is pointing to the displaced mark word, and if so,
                 // restore the displaced mark in the object - if the object's mark word is not
                 // pointing to the displaced mark word, do unlocking via runtime call.
-                Pointer objectPointer = Word.objectToTrackedPointer(object);
-                if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotRuntime.markOffset, lock, displacedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
+                Pointer __objectPointer = Word.objectToTrackedPointer(__object);
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, __objectPointer.logicCompareAndSwapWord(HotSpotRuntime.markOffset, __lock, __displacedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                 {
                     // ...
                 }
                 else
                 {
                     // the object's mark word was not pointing to the displaced header
-                    monitorexitStubC(MONITOREXIT, object, lock);
+                    monitorexitStubC(MONITOREXIT, __object, __lock);
                 }
             }
         }
@@ -394,39 +394,39 @@ public final class MonitorSnippets implements Snippets
             && HotSpotRuntime.objectMonitorRecursionsOffset >= 0;
     }
 
-    private static boolean tryExitInflated(Object object, Word mark, Word lock, Register threadRegister)
+    private static boolean tryExitInflated(Object __object, Word __mark, Word __lock, Register __threadRegister)
     {
         if (!inlineFastUnlockSupported())
         {
             return false;
         }
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, mark.and(HotSpotRuntime.monitorMask).notEqual(0)))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, __mark.and(HotSpotRuntime.monitorMask).notEqual(0)))
         {
             // inflated case
             // mark is a pointer to the ObjectMonitor + monitorMask
-            Word monitor = mark.subtract(HotSpotRuntime.monitorMask);
-            int ownerOffset = HotSpotRuntime.objectMonitorOwnerOffset;
-            Word owner = monitor.readWord(ownerOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_OWNER_LOCATION);
-            int recursionsOffset = HotSpotRuntime.objectMonitorRecursionsOffset;
-            Word recursions = monitor.readWord(recursionsOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_RECURSION_LOCATION);
-            Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, owner.xor(thread).or(recursions).equal(0)))
+            Word __monitor = __mark.subtract(HotSpotRuntime.monitorMask);
+            int __ownerOffset = HotSpotRuntime.objectMonitorOwnerOffset;
+            Word __owner = __monitor.readWord(__ownerOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_OWNER_LOCATION);
+            int __recursionsOffset = HotSpotRuntime.objectMonitorRecursionsOffset;
+            Word __recursions = __monitor.readWord(__recursionsOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_RECURSION_LOCATION);
+            Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, __owner.xor(__thread).or(__recursions).equal(0)))
             {
                 // owner == thread && recursions == 0
-                int cxqOffset = HotSpotRuntime.objectMonitorCxqOffset;
-                Word cxq = monitor.readWord(cxqOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_CXQ_LOCATION);
-                int entryListOffset = HotSpotRuntime.objectMonitorEntryListOffset;
-                Word entryList = monitor.readWord(entryListOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_ENTRY_LIST_LOCATION);
-                if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, cxq.or(entryList).equal(0)))
+                int __cxqOffset = HotSpotRuntime.objectMonitorCxqOffset;
+                Word __cxq = __monitor.readWord(__cxqOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_CXQ_LOCATION);
+                int __entryListOffset = HotSpotRuntime.objectMonitorEntryListOffset;
+                Word __entryList = __monitor.readWord(__entryListOffset, HotSpotReplacementsUtil.OBJECT_MONITOR_ENTRY_LIST_LOCATION);
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, __cxq.or(__entryList).equal(0)))
                 {
                     // cxq == 0 && entryList == 0
                     // nobody is waiting, success
                     MembarNode.memoryBarrier(MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_STORE);
-                    monitor.writeWord(ownerOffset, WordFactory.zero());
+                    __monitor.writeWord(__ownerOffset, WordFactory.zero());
                     return true;
                 }
             }
-            monitorexitStubC(MONITOREXIT, object, lock);
+            monitorexitStubC(MONITOREXIT, __object, __lock);
             return true;
         }
         return false;
@@ -436,76 +436,83 @@ public final class MonitorSnippets implements Snippets
      * Calls straight out to the monitorexit stub.
      */
     @Snippet
-    public static void monitorexitStub(Object object, @ConstantParameter int lockDepth)
+    public static void monitorexitStub(Object __object, @ConstantParameter int __lockDepth)
     {
-        final Word lock = CurrentLockNode.currentLock(lockDepth);
-        monitorexitStubC(MONITOREXIT, object, lock);
+        final Word __lock = CurrentLockNode.currentLock(__lockDepth);
+        monitorexitStubC(MONITOREXIT, __object, __lock);
         EndLockScopeNode.endLockScope();
     }
 
     // @class MonitorSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final SnippetInfo monitorenter = snippet(MonitorSnippets.class, "monitorenter");
+        // @field
         private final SnippetInfo monitorexit = snippet(MonitorSnippets.class, "monitorexit");
+        // @field
         private final SnippetInfo monitorenterStub = snippet(MonitorSnippets.class, "monitorenterStub");
+        // @field
         private final SnippetInfo monitorexitStub = snippet(MonitorSnippets.class, "monitorexitStub");
 
+        // @field
         private final boolean useFastLocking;
 
         // @cons
-        public Templates(HotSpotProviders providers, TargetDescription target, boolean useFastLocking)
+        public Templates(HotSpotProviders __providers, TargetDescription __target, boolean __useFastLocking)
         {
-            super(providers, providers.getSnippetReflection(), target);
-            this.useFastLocking = useFastLocking;
+            super(__providers, __providers.getSnippetReflection(), __target);
+            this.useFastLocking = __useFastLocking;
         }
 
-        public void lower(RawMonitorEnterNode monitorenterNode, HotSpotRegistersProvider registers, LoweringTool tool)
+        public void lower(RawMonitorEnterNode __monitorenterNode, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            StructuredGraph graph = monitorenterNode.graph();
+            StructuredGraph __graph = __monitorenterNode.graph();
 
-            Arguments args;
+            Arguments __args;
             if (useFastLocking)
             {
-                args = new Arguments(monitorenter, graph.getGuardsStage(), tool.getLoweringStage());
-                args.add("object", monitorenterNode.object());
-                args.add("hub", monitorenterNode.getHub());
-                args.addConst("lockDepth", monitorenterNode.getMonitorId().getLockDepth());
-                args.addConst("threadRegister", registers.getThreadRegister());
-                args.addConst("stackPointerRegister", registers.getStackPointerRegister());
+                __args = new Arguments(monitorenter, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args.add("object", __monitorenterNode.object());
+                __args.add("hub", __monitorenterNode.getHub());
+                __args.addConst("lockDepth", __monitorenterNode.getMonitorId().getLockDepth());
+                __args.addConst("threadRegister", __registers.getThreadRegister());
+                __args.addConst("stackPointerRegister", __registers.getStackPointerRegister());
             }
             else
             {
-                args = new Arguments(monitorenterStub, graph.getGuardsStage(), tool.getLoweringStage());
-                args.add("object", monitorenterNode.object());
-                args.addConst("lockDepth", monitorenterNode.getMonitorId().getLockDepth());
+                __args = new Arguments(monitorenterStub, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args.add("object", __monitorenterNode.object());
+                __args.addConst("lockDepth", __monitorenterNode.getMonitorId().getLockDepth());
             }
 
-            template(monitorenterNode, args).instantiate(providers.getMetaAccess(), monitorenterNode, SnippetTemplate.DEFAULT_REPLACER, args);
+            template(__monitorenterNode, __args).instantiate(providers.getMetaAccess(), __monitorenterNode, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
 
-        public void lower(MonitorExitNode monitorexitNode, HotSpotRegistersProvider registers, LoweringTool tool)
+        public void lower(MonitorExitNode __monitorexitNode, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            StructuredGraph graph = monitorexitNode.graph();
+            StructuredGraph __graph = __monitorexitNode.graph();
 
-            Arguments args;
+            Arguments __args;
             if (useFastLocking)
             {
-                args = new Arguments(monitorexit, graph.getGuardsStage(), tool.getLoweringStage());
+                __args = new Arguments(monitorexit, __graph.getGuardsStage(), __tool.getLoweringStage());
             }
             else
             {
-                args = new Arguments(monitorexitStub, graph.getGuardsStage(), tool.getLoweringStage());
+                __args = new Arguments(monitorexitStub, __graph.getGuardsStage(), __tool.getLoweringStage());
             }
-            args.add("object", monitorexitNode.object());
-            args.addConst("lockDepth", monitorexitNode.getMonitorId().getLockDepth());
-            args.addConst("threadRegister", registers.getThreadRegister());
+            __args.add("object", __monitorexitNode.object());
+            __args.addConst("lockDepth", __monitorexitNode.getMonitorId().getLockDepth());
+            __args.addConst("threadRegister", __registers.getThreadRegister());
 
-            template(monitorexitNode, args).instantiate(providers.getMetaAccess(), monitorexitNode, SnippetTemplate.DEFAULT_REPLACER, args);
+            template(__monitorexitNode, __args).instantiate(providers.getMetaAccess(), __monitorexitNode, SnippetTemplate.DEFAULT_REPLACER, __args);
         }
     }
 
+    // @def
     public static final ForeignCallDescriptor MONITORENTER = new ForeignCallDescriptor("monitorenter", void.class, Object.class, Word.class);
+    // @def
     public static final ForeignCallDescriptor MONITOREXIT = new ForeignCallDescriptor("monitorexit", void.class, Object.class, Word.class);
 
     @NodeIntrinsic(ForeignCallNode.class)

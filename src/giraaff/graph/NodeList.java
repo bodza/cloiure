@@ -12,38 +12,43 @@ import giraaff.graph.iterators.NodeIterable;
 // @class NodeList
 public abstract class NodeList<T extends Node> extends AbstractList<T> implements NodeIterable<T>, RandomAccess
 {
+    // @def
     protected static final Node[] EMPTY_NODE_ARRAY = new Node[0];
 
+    // @field
     protected final Node self;
+    // @field
     protected Node[] nodes;
+    // @field
     private int size;
+    // @field
     protected final int initialSize;
 
     // @cons
-    protected NodeList(Node self)
+    protected NodeList(Node __self)
     {
         super();
-        this.self = self;
+        this.self = __self;
         this.nodes = EMPTY_NODE_ARRAY;
         this.initialSize = 0;
     }
 
     // @cons
-    protected NodeList(Node self, int initialSize)
+    protected NodeList(Node __self, int __initialSize)
     {
         super();
-        this.self = self;
-        this.size = initialSize;
-        this.initialSize = initialSize;
-        this.nodes = new Node[initialSize];
+        this.self = __self;
+        this.size = __initialSize;
+        this.initialSize = __initialSize;
+        this.nodes = new Node[__initialSize];
     }
 
     // @cons
-    protected NodeList(Node self, T[] elements)
+    protected NodeList(Node __self, T[] __elements)
     {
         super();
-        this.self = self;
-        if (elements == null || elements.length == 0)
+        this.self = __self;
+        if (__elements == null || __elements.length == 0)
         {
             this.size = 0;
             this.nodes = EMPTY_NODE_ARRAY;
@@ -51,22 +56,22 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
         else
         {
-            this.size = elements.length;
-            this.initialSize = elements.length;
-            this.nodes = new Node[elements.length];
-            for (int i = 0; i < elements.length; i++)
+            this.size = __elements.length;
+            this.initialSize = __elements.length;
+            this.nodes = new Node[__elements.length];
+            for (int __i = 0; __i < __elements.length; __i++)
             {
-                this.nodes[i] = elements[i];
+                this.nodes[__i] = __elements[__i];
             }
         }
     }
 
     // @cons
-    protected NodeList(Node self, List<? extends T> elements)
+    protected NodeList(Node __self, List<? extends T> __elements)
     {
         super();
-        this.self = self;
-        if (elements == null || elements.isEmpty())
+        this.self = __self;
+        if (__elements == null || __elements.isEmpty())
         {
             this.size = 0;
             this.nodes = EMPTY_NODE_ARRAY;
@@ -74,22 +79,22 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
         else
         {
-            this.size = elements.size();
-            this.initialSize = elements.size();
-            this.nodes = new Node[elements.size()];
-            for (int i = 0; i < elements.size(); i++)
+            this.size = __elements.size();
+            this.initialSize = __elements.size();
+            this.nodes = new Node[__elements.size()];
+            for (int __i = 0; __i < __elements.size(); __i++)
             {
-                this.nodes[i] = elements.get(i);
+                this.nodes[__i] = __elements.get(__i);
             }
         }
     }
 
     // @cons
-    protected NodeList(Node self, Collection<? extends NodeInterface> elements)
+    protected NodeList(Node __self, Collection<? extends NodeInterface> __elements)
     {
         super();
-        this.self = self;
-        if (elements == null || elements.isEmpty())
+        this.self = __self;
+        if (__elements == null || __elements.isEmpty())
         {
             this.size = 0;
             this.nodes = EMPTY_NODE_ARRAY;
@@ -97,14 +102,14 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
         else
         {
-            this.size = elements.size();
-            this.initialSize = elements.size();
-            this.nodes = new Node[elements.size()];
-            int i = 0;
-            for (NodeInterface n : elements)
+            this.size = __elements.size();
+            this.initialSize = __elements.size();
+            this.nodes = new Node[__elements.size()];
+            int __i = 0;
+            for (NodeInterface __n : __elements)
             {
-                this.nodes[i] = n.asNode();
-                i++;
+                this.nodes[__i] = __n.asNode();
+                __i++;
             }
         }
     }
@@ -149,34 +154,34 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
 
     @SuppressWarnings("unchecked")
     @Override
-    public boolean add(Node node)
+    public boolean add(Node __node)
     {
         self.incModCount();
         incModCount();
-        int length = nodes.length;
-        if (length == 0)
+        int __length = nodes.length;
+        if (__length == 0)
         {
             nodes = new Node[2];
         }
-        else if (size == length)
+        else if (size == __length)
         {
-            Node[] newNodes = new Node[nodes.length * 2 + 1];
-            System.arraycopy(nodes, 0, newNodes, 0, length);
-            nodes = newNodes;
+            Node[] __newNodes = new Node[nodes.length * 2 + 1];
+            System.arraycopy(nodes, 0, __newNodes, 0, __length);
+            nodes = __newNodes;
         }
-        nodes[size++] = node;
-        update(null, (T) node);
+        nodes[size++] = __node;
+        update(null, (T) __node);
         return true;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T get(int index)
+    public T get(int __index)
     {
-        return (T) nodes[index];
+        return (T) nodes[__index];
     }
 
-    private boolean assertInRange(int index)
+    private boolean assertInRange(int __index)
     {
         return true;
     }
@@ -188,40 +193,40 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
 
     @Override
     @SuppressWarnings("unchecked")
-    public T set(int index, Node node)
+    public T set(int __index, Node __node)
     {
         incModCount();
-        T oldValue = (T) nodes[index];
-        update((T) nodes[index], (T) node);
-        nodes[index] = node;
-        return oldValue;
+        T __oldValue = (T) nodes[__index];
+        update((T) nodes[__index], (T) __node);
+        nodes[__index] = __node;
+        return __oldValue;
     }
 
-    public void initialize(int index, Node node)
+    public void initialize(int __index, Node __node)
     {
         incModCount();
-        nodes[index] = node;
+        nodes[__index] = __node;
     }
 
-    void copy(NodeList<? extends Node> other)
+    void copy(NodeList<? extends Node> __other)
     {
         self.incModCount();
         incModCount();
-        Node[] newNodes = new Node[other.size];
-        System.arraycopy(other.nodes, 0, newNodes, 0, newNodes.length);
-        nodes = newNodes;
-        size = other.size;
+        Node[] __newNodes = new Node[__other.size];
+        System.arraycopy(__other.nodes, 0, __newNodes, 0, __newNodes.length);
+        nodes = __newNodes;
+        size = __other.size;
     }
 
-    public boolean equals(NodeList<T> other)
+    public boolean equals(NodeList<T> __other)
     {
-        if (size != other.size)
+        if (size != __other.size)
         {
             return false;
         }
-        for (int i = 0; i < size; i++)
+        for (int __i = 0; __i < size; __i++)
         {
-            if (nodes[i] != other.nodes[i])
+            if (nodes[__i] != __other.nodes[__i])
             {
                 return false;
             }
@@ -235,9 +240,9 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     {
         self.incModCount();
         incModCount();
-        for (int i = 0; i < size; i++)
+        for (int __i = 0; __i < size; __i++)
         {
-            update((T) nodes[i], null);
+            update((T) nodes[__i], null);
         }
         clearWithoutUpdate();
     }
@@ -250,26 +255,26 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean remove(Object node)
+    public boolean remove(Object __node)
     {
         self.incModCount();
-        int i = 0;
+        int __i = 0;
         incModCount();
-        while (i < size && nodes[i] != node)
+        while (__i < size && nodes[__i] != __node)
         {
-            i++;
+            __i++;
         }
-        if (i < size)
+        if (__i < size)
         {
-            T oldValue = (T) nodes[i];
-            i++;
-            while (i < size)
+            T __oldValue = (T) nodes[__i];
+            __i++;
+            while (__i < size)
             {
-                nodes[i - 1] = nodes[i];
-                i++;
+                nodes[__i - 1] = nodes[__i];
+                __i++;
             }
             nodes[--size] = null;
-            update(oldValue, null);
+            update(__oldValue, null);
             return true;
         }
         else
@@ -280,29 +285,29 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
 
     @Override
     @SuppressWarnings("unchecked")
-    public T remove(int index)
+    public T remove(int __index)
     {
         self.incModCount();
-        T oldValue = (T) nodes[index];
-        int i = index + 1;
+        T __oldValue = (T) nodes[__index];
+        int __i = __index + 1;
         incModCount();
-        while (i < size)
+        while (__i < size)
         {
-            nodes[i - 1] = nodes[i];
-            i++;
+            nodes[__i - 1] = nodes[__i];
+            __i++;
         }
         nodes[--size] = null;
-        update(oldValue, null);
-        return oldValue;
+        update(__oldValue, null);
+        return __oldValue;
     }
 
-    boolean replaceFirst(Node node, Node other)
+    boolean replaceFirst(Node __node, Node __other)
     {
-        for (int i = 0; i < size; i++)
+        for (int __i = 0; __i < size; __i++)
         {
-            if (nodes[i] == node)
+            if (nodes[__i] == __node)
             {
-                nodes[i] = other;
+                nodes[__i] = __other;
                 return true;
             }
         }
@@ -316,11 +321,11 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     }
 
     @Override
-    public boolean contains(T other)
+    public boolean contains(T __other)
     {
-        for (int i = 0; i < size; i++)
+        for (int __i = 0; __i < size; __i++)
         {
-            if (nodes[i] == other)
+            if (nodes[__i] == __other)
             {
                 return true;
             }
@@ -336,42 +341,42 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     }
 
     @Override
-    public void snapshotTo(Collection<? super T> to)
+    public void snapshotTo(Collection<? super T> __to)
     {
-        for (int i = 0; i < size; i++)
+        for (int __i = 0; __i < size; __i++)
         {
-            to.add(get(i));
+            __to.add(get(__i));
         }
     }
 
     @SuppressWarnings("unchecked")
-    public void setAll(NodeList<T> values)
+    public void setAll(NodeList<T> __values)
     {
         self.incModCount();
         incModCount();
-        for (int i = 0; i < size(); i++)
+        for (int __i = 0; __i < size(); __i++)
         {
-            update((T) nodes[i], null);
+            update((T) nodes[__i], null);
         }
-        nodes = Arrays.copyOf(values.nodes, values.size());
-        size = values.size();
+        nodes = Arrays.copyOf(__values.nodes, __values.size());
+        size = __values.size();
 
-        for (int i = 0; i < size(); i++)
+        for (int __i = 0; __i < size(); __i++)
         {
-            update(null, (T) nodes[i]);
+            update(null, (T) nodes[__i]);
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <A> A[] toArray(A[] a)
+    public <A> A[] toArray(A[] __a)
     {
-        if (a.length >= size)
+        if (__a.length >= size)
         {
-            System.arraycopy(nodes, 0, a, 0, size);
-            return a;
+            System.arraycopy(nodes, 0, __a, 0, size);
+            return __a;
         }
-        return (A[]) Arrays.copyOf(nodes, size, a.getClass());
+        return (A[]) Arrays.copyOf(nodes, size, __a.getClass());
     }
 
     @Override
@@ -380,59 +385,59 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         return Arrays.copyOf(nodes, size);
     }
 
-    protected void replace(T node, T other)
+    protected void replace(T __node, T __other)
     {
         incModCount();
-        for (int i = 0; i < size(); i++)
+        for (int __i = 0; __i < size(); __i++)
         {
-            if (nodes[i] == node)
+            if (nodes[__i] == __node)
             {
-                nodes[i] = other;
-                update(node, other);
+                nodes[__i] = __other;
+                update(__node, __other);
             }
         }
     }
 
     @Override
-    public int indexOf(Object node)
+    public int indexOf(Object __node)
     {
-        for (int i = 0; i < size; i++)
+        for (int __i = 0; __i < size; __i++)
         {
-            if (nodes[i] == node)
+            if (nodes[__i] == __node)
             {
-                return i;
+                return __i;
             }
         }
         return -1;
     }
 
     @Override
-    public boolean contains(Object o)
+    public boolean contains(Object __o)
     {
-        return indexOf(o) != -1;
+        return indexOf(__o) != -1;
     }
 
     @Override
-    public boolean containsAll(Collection<?> c)
+    public boolean containsAll(Collection<?> __c)
     {
         throw new UnsupportedOperationException("not implemented");
     }
 
     @Override
-    public boolean addAll(Collection<? extends T> c)
+    public boolean addAll(Collection<? extends T> __c)
     {
-        for (T e : c)
+        for (T __e : __c)
         {
-            add(e);
+            add(__e);
         }
         return true;
     }
 
-    public boolean addAll(T[] c)
+    public boolean addAll(T[] __c)
     {
-        for (T e : c)
+        for (T __e : __c)
         {
-            add(e);
+            add(__e);
         }
         return true;
     }
@@ -447,29 +452,31 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         return null;
     }
 
-    public SubList<T> subList(int startIndex)
+    public SubList<T> subList(int __startIndex)
     {
-        return new SubList<>(this, startIndex);
+        return new SubList<>(this, __startIndex);
     }
 
     // @class NodeList.SubList
     public static final class SubList<R extends Node> extends AbstractList<R> implements NodeIterable<R>, RandomAccess
     {
+        // @field
         private final NodeList<R> list;
+        // @field
         private final int offset;
 
         // @cons
-        private SubList(NodeList<R> list, int offset)
+        private SubList(NodeList<R> __list, int __offset)
         {
             super();
-            this.list = list;
-            this.offset = offset;
+            this.list = __list;
+            this.offset = __offset;
         }
 
         @Override
-        public R get(int index)
+        public R get(int __index)
         {
-            return list.get(offset + index);
+            return list.get(offset + __index);
         }
 
         @Override
@@ -478,9 +485,9 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
             return list.size() - offset;
         }
 
-        public SubList<R> subList(int startIndex)
+        public SubList<R> subList(int __startIndex)
         {
-            return new SubList<>(this.list, startIndex + offset);
+            return new SubList<>(this.list, __startIndex + offset);
         }
 
         @Override
@@ -493,17 +500,20 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     // @class NodeList.NodeListIterator
     private static final class NodeListIterator<R extends Node> implements Iterator<R>
     {
+        // @field
         private final NodeList<R> list;
+        // @field
         private final int expectedModCount;
+        // @field
         private int index;
 
         // @cons
-        private NodeListIterator(NodeList<R> list, int startIndex)
+        private NodeListIterator(NodeList<R> __list, int __startIndex)
         {
             super();
-            this.list = list;
-            this.expectedModCount = list.modCount;
-            this.index = startIndex;
+            this.list = __list;
+            this.expectedModCount = __list.modCount;
+            this.index = __startIndex;
         }
 
         @Override

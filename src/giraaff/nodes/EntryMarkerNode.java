@@ -14,6 +14,7 @@ import giraaff.util.GraalError;
 // @class EntryMarkerNode
 public final class EntryMarkerNode extends BeginStateSplitNode implements IterableNodeType, LIRLowerable
 {
+    // @def
     public static final NodeClass<EntryMarkerNode> TYPE = NodeClass.create(EntryMarkerNode.class);
 
     // @cons
@@ -23,7 +24,7 @@ public final class EntryMarkerNode extends BeginStateSplitNode implements Iterab
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         throw new GraalError("OnStackReplacementNode should not survive");
     }

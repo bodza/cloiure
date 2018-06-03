@@ -19,25 +19,26 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class WriteNode
 public final class WriteNode extends AbstractWriteNode implements LIRLowerableAccess, Canonicalizable
 {
+    // @def
     public static final NodeClass<WriteNode> TYPE = NodeClass.create(WriteNode.class);
 
     // @cons
-    public WriteNode(AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType)
+    public WriteNode(AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType)
     {
-        super(TYPE, address, location, value, barrierType);
+        super(TYPE, __address, __location, __value, __barrierType);
     }
 
     // @cons
-    protected WriteNode(NodeClass<? extends WriteNode> c, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType)
+    protected WriteNode(NodeClass<? extends WriteNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType)
     {
-        super(c, address, location, value, barrierType);
+        super(__c, __address, __location, __value, __barrierType);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRKind writeKind = gen.getLIRGeneratorTool().getLIRKind(value().stamp(NodeView.DEFAULT));
-        gen.getLIRGeneratorTool().getArithmetic().emitStore(writeKind, gen.operand(address), gen.operand(value()), gen.state(this));
+        LIRKind __writeKind = __gen.getLIRGeneratorTool().getLIRKind(value().stamp(NodeView.DEFAULT));
+        __gen.getLIRGeneratorTool().getArithmetic().emitStore(__writeKind, __gen.operand(address), __gen.operand(value()), __gen.state(this));
     }
 
     @Override
@@ -53,15 +54,15 @@ public final class WriteNode extends AbstractWriteNode implements LIRLowerableAc
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.canonicalizeReads() && hasExactlyOneUsage() && next() instanceof WriteNode)
+        if (__tool.canonicalizeReads() && hasExactlyOneUsage() && next() instanceof WriteNode)
         {
-            WriteNode write = (WriteNode) next();
-            if (write.lastLocationAccess == this && write.getAddress() == getAddress() && getAccessStamp().isCompatible(write.getAccessStamp()))
+            WriteNode __write = (WriteNode) next();
+            if (__write.lastLocationAccess == this && __write.getAddress() == getAddress() && getAccessStamp().isCompatible(__write.getAccessStamp()))
             {
-                write.setLastLocationAccess(getLastLocationAccess());
-                return write;
+                __write.setLastLocationAccess(getLastLocationAccess());
+                return __write;
             }
         }
         return this;

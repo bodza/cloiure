@@ -20,10 +20,13 @@ import giraaff.word.Word;
 // @class SHA5Substitutions
 public final class SHA5Substitutions
 {
+    // @def
     static final long stateOffset;
 
+    // @def
     static final Class<?> shaClass;
 
+    // @def
     public static final String implCompressName = "implCompress0";
 
     static
@@ -32,23 +35,23 @@ public final class SHA5Substitutions
         {
             // Need to use the system class loader as com.sun.crypto.provider.AESCrypt is normally loaded
             // by the extension class loader, which is not delegated to by the JVMCI class loader.
-            ClassLoader cl = ClassLoader.getSystemClassLoader();
-            shaClass = Class.forName("sun.security.provider.SHA5", true, cl);
+            ClassLoader __cl = ClassLoader.getSystemClassLoader();
+            shaClass = Class.forName("sun.security.provider.SHA5", true, __cl);
             stateOffset = UnsafeAccess.UNSAFE.objectFieldOffset(shaClass.getDeclaredField("state"));
         }
-        catch (Exception ex)
+        catch (Exception __ex)
         {
-            throw new GraalError(ex);
+            throw new GraalError(__ex);
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    static void implCompress0(Object receiver, byte[] buf, int ofs)
+    static void implCompress0(Object __receiver, byte[] __buf, int __ofs)
     {
-        Object realReceiver = PiNode.piCastNonNull(receiver, shaClass);
-        Object state = RawLoadNode.load(realReceiver, stateOffset, JavaKind.Object, LocationIdentity.any());
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + ofs));
-        Word stateAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(state, HotSpotRuntime.getArrayBaseOffset(JavaKind.Int)));
-        HotSpotBackend.sha5ImplCompressStub(bufAddr, stateAddr);
+        Object __realReceiver = PiNode.piCastNonNull(__receiver, shaClass);
+        Object __state = RawLoadNode.load(__realReceiver, stateOffset, JavaKind.Object, LocationIdentity.any());
+        Word __bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__buf, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + __ofs));
+        Word __stateAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__state, HotSpotRuntime.getArrayBaseOffset(JavaKind.Int)));
+        HotSpotBackend.sha5ImplCompressStub(__bufAddr, __stateAddr);
     }
 }

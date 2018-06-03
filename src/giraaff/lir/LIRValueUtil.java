@@ -14,77 +14,77 @@ import jdk.vm.ci.meta.Value;
 // @class LIRValueUtil
 public final class LIRValueUtil
 {
-    public static boolean isVariable(Value value)
+    public static boolean isVariable(Value __value)
     {
-        return value instanceof Variable;
+        return __value instanceof Variable;
     }
 
-    public static Variable asVariable(Value value)
+    public static Variable asVariable(Value __value)
     {
-        return (Variable) value;
+        return (Variable) __value;
     }
 
-    public static boolean isConstantValue(Value value)
+    public static boolean isConstantValue(Value __value)
     {
-        return value instanceof ConstantValue;
+        return __value instanceof ConstantValue;
     }
 
-    public static ConstantValue asConstantValue(Value value)
+    public static ConstantValue asConstantValue(Value __value)
     {
-        return (ConstantValue) value;
+        return (ConstantValue) __value;
     }
 
-    public static Constant asConstant(Value value)
+    public static Constant asConstant(Value __value)
     {
-        return asConstantValue(value).getConstant();
+        return asConstantValue(__value).getConstant();
     }
 
-    public static boolean isJavaConstant(Value value)
+    public static boolean isJavaConstant(Value __value)
     {
-        return isConstantValue(value) && asConstantValue(value).isJavaConstant();
+        return isConstantValue(__value) && asConstantValue(__value).isJavaConstant();
     }
 
-    public static JavaConstant asJavaConstant(Value value)
+    public static JavaConstant asJavaConstant(Value __value)
     {
-        return asConstantValue(value).getJavaConstant();
+        return asConstantValue(__value).getJavaConstant();
     }
 
-    public static boolean isIntConstant(Value value, long expected)
+    public static boolean isIntConstant(Value __value, long __expected)
     {
-        if (isJavaConstant(value))
+        if (isJavaConstant(__value))
         {
-            JavaConstant javaConstant = asJavaConstant(value);
-            if (javaConstant != null && javaConstant.getJavaKind().isNumericInteger())
+            JavaConstant __javaConstant = asJavaConstant(__value);
+            if (__javaConstant != null && __javaConstant.getJavaKind().isNumericInteger())
             {
-                return javaConstant.asLong() == expected;
+                return __javaConstant.asLong() == __expected;
             }
         }
         return false;
     }
 
-    public static boolean isStackSlotValue(Value value)
+    public static boolean isStackSlotValue(Value __value)
     {
-        return value instanceof StackSlot || value instanceof VirtualStackSlot;
+        return __value instanceof StackSlot || __value instanceof VirtualStackSlot;
     }
 
-    public static boolean isVirtualStackSlot(Value value)
+    public static boolean isVirtualStackSlot(Value __value)
     {
-        return value instanceof VirtualStackSlot;
+        return __value instanceof VirtualStackSlot;
     }
 
-    public static VirtualStackSlot asVirtualStackSlot(Value value)
+    public static VirtualStackSlot asVirtualStackSlot(Value __value)
     {
-        return (VirtualStackSlot) value;
+        return (VirtualStackSlot) __value;
     }
 
-    public static boolean sameRegister(Value v1, Value v2)
+    public static boolean sameRegister(Value __v1, Value __v2)
     {
-        return ValueUtil.isRegister(v1) && ValueUtil.isRegister(v2) && ValueUtil.asRegister(v1).equals(ValueUtil.asRegister(v2));
+        return ValueUtil.isRegister(__v1) && ValueUtil.isRegister(__v2) && ValueUtil.asRegister(__v1).equals(ValueUtil.asRegister(__v2));
     }
 
-    public static boolean sameRegister(Value v1, Value v2, Value v3)
+    public static boolean sameRegister(Value __v1, Value __v2, Value __v3)
     {
-        return sameRegister(v1, v2) && sameRegister(v1, v3);
+        return sameRegister(__v1, __v2) && sameRegister(__v1, __v3);
     }
 
     /**
@@ -92,16 +92,16 @@ public final class LIRValueUtil
      * either {@link Register registers}, {@link Value values} or arrays of them. All values that
      * are not {@link RegisterValue registers} are ignored.
      */
-    public static boolean differentRegisters(Object... values)
+    public static boolean differentRegisters(Object... __values)
     {
-        List<Register> registers = collectRegisters(values, new ArrayList<Register>());
-        for (int i = 1; i < registers.size(); i++)
+        List<Register> __registers = collectRegisters(__values, new ArrayList<Register>());
+        for (int __i = 1; __i < __registers.size(); __i++)
         {
-            Register r1 = registers.get(i);
-            for (int j = 0; j < i; j++)
+            Register __r1 = __registers.get(__i);
+            for (int __j = 0; __j < __i; __j++)
             {
-                Register r2 = registers.get(j);
-                if (r1.equals(r2))
+                Register __r2 = __registers.get(__j);
+                if (__r1.equals(__r2))
                 {
                     return false;
                 }
@@ -110,31 +110,31 @@ public final class LIRValueUtil
         return true;
     }
 
-    private static List<Register> collectRegisters(Object[] values, List<Register> registers)
+    private static List<Register> collectRegisters(Object[] __values, List<Register> __registers)
     {
-        for (Object o : values)
+        for (Object __o : __values)
         {
-            if (o instanceof Register)
+            if (__o instanceof Register)
             {
-                registers.add((Register) o);
+                __registers.add((Register) __o);
             }
-            else if (o instanceof Value)
+            else if (__o instanceof Value)
             {
-                if (ValueUtil.isRegister((Value) o))
+                if (ValueUtil.isRegister((Value) __o))
                 {
-                    registers.add(ValueUtil.asRegister((Value) o));
+                    __registers.add(ValueUtil.asRegister((Value) __o));
                 }
             }
-            else if (o instanceof Object[])
+            else if (__o instanceof Object[])
             {
-                collectRegisters((Object[]) o, registers);
+                collectRegisters((Object[]) __o, __registers);
             }
             else
             {
-                throw new IllegalArgumentException("Not a Register or Value: " + o);
+                throw new IllegalArgumentException("Not a Register or Value: " + __o);
             }
         }
-        return registers;
+        return __registers;
     }
 
     /**
@@ -144,26 +144,26 @@ public final class LIRValueUtil
      * @param y a set of registers to subtract.
      * @return resulting set of registers (x - y).
      */
-    public static Value[] subtractRegisters(Value[] x, Value[] y)
+    public static Value[] subtractRegisters(Value[] __x, Value[] __y)
     {
-        ArrayList<Value> result = new ArrayList<>(x.length);
-        for (Value i : x)
+        ArrayList<Value> __result = new ArrayList<>(__x.length);
+        for (Value __i : __x)
         {
-            boolean append = true;
-            for (Value j : y)
+            boolean __append = true;
+            for (Value __j : __y)
             {
-                if (sameRegister(i, j))
+                if (sameRegister(__i, __j))
                 {
-                    append = false;
+                    __append = false;
                     break;
                 }
             }
-            if (append)
+            if (__append)
             {
-                result.add(i);
+                __result.add(__i);
             }
         }
-        Value[] resultArray = new Value[result.size()];
-        return result.toArray(resultArray);
+        Value[] __resultArray = new Value[__result.size()];
+        return __result.toArray(__resultArray);
     }
 }

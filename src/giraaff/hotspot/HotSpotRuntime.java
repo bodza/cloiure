@@ -19,8 +19,10 @@ public final class HotSpotRuntime
         super();
     }
 
+    // @def
     public static final HotSpotJVMCIRuntime JVMCI = HotSpotJVMCIRuntime.runtime();
 
+    // @def
     private static final HotSpotVMConfigAccess c = new HotSpotVMConfigAccess(JVMCI.getConfigStore());
 
     public static final boolean
@@ -74,8 +76,11 @@ public final class HotSpotRuntime
         oopEncoding   = new CompressEncoding(narrowOopBase, narrowOopShift),
         klassEncoding = new CompressEncoding(narrowKlassBase, narrowKlassShift);
 
+    // @def
     public static final boolean useStackBanging = c.getFlag("UseStackBanging", Boolean.class);
+    // @def
     public static final int stackShadowPages = c.getFlag("StackShadowPages", Integer.class);
+    // @def
     public static final int stackBias = c.getConstant("STACK_BIAS", Integer.class);
 
     public static final int
@@ -102,13 +107,17 @@ public final class HotSpotRuntime
         layoutHelperHeaderSizeShift      = c.getConstant("Klass::_lh_header_size_shift",       Integer.class),
         layoutHelperHeaderSizeMask       = c.getConstant("Klass::_lh_header_size_mask",        Integer.class);
 
+    // @def
     public static final int instanceKlassInitStateOffset = c.getFieldOffset("InstanceKlass::_init_state", Integer.class, "u1");
+    // @def
     public static final int instanceKlassConstantsOffset = c.getFieldOffset("InstanceKlass::_constants", Integer.class, "ConstantPool*");
+    // @def
     public static final int instanceKlassStateFullyInitialized = c.getConstant("InstanceKlass::fully_initialized", Integer.class);
 
     /**
      * The offset of the array length word in an array object's header.
      */
+    // @def
     public static final int arrayLengthOffset = useCompressedClassPointers ? hubOffset + narrowKlassSize : arrayOopDescSize;
 
     public static final int
@@ -117,6 +126,7 @@ public final class HotSpotRuntime
         arrayClassElementOffset         = c.getFieldOffset("ObjArrayKlass::_element_klass", Integer.class, "Klass*"),
         arrayKlassComponentMirrorOffset = c.getFieldOffset("ArrayKlass::_component_mirror", Integer.class, "oop", Integer.MAX_VALUE);
 
+    // @def
     public static final int jvmAccWrittenFlags = c.getConstant("JVM_ACC_WRITTEN_FLAGS", Integer.class);
 
     public static final int
@@ -198,31 +208,42 @@ public final class HotSpotRuntime
     /**
      * Mark word right shift to get identity hash code.
      */
+    // @def
     public static final int identityHashCodeShift = c.getConstant("markOopDesc::hash_shift", Integer.class);
 
     /**
      * Identity hash code value when uninitialized.
      */
+    // @def
     public static final int uninitializedIdentityHashCodeValue = c.getConstant("markOopDesc::no_hash", Integer.class);
 
+    // @def
     public static final int methodCompiledEntryOffset = c.getFieldOffset("Method::_from_compiled_entry", Integer.class, "address");
 
+    // @def
     public static final int compilationLevelFullOptimization = c.getConstant("CompLevel_full_optimization", Integer.class);
 
+    // @def
     public static final int constantPoolSize = c.getFieldValue("CompilerToVM::Data::sizeof_ConstantPool", Integer.class, "int");
+    // @def
     public static final int constantPoolLengthOffset = c.getFieldOffset("ConstantPool::_length", Integer.class, "int");
 
     /**
      * Bit pattern that represents a non-oop. Neither the high bits nor the low bits of this value
      * are allowed to look like (respectively) the high or low bits of a real oop.
      */
+    // @def
     public static final long nonOopBits = c.getFieldValue("CompilerToVM::Data::Universe_non_oop_bits", Long.class, "void*");
 
+    // @def
     public static final int logOfHeapRegionGrainBytes = c.getFieldValue("HeapRegion::LogOfHRGrainBytes", Integer.class, "int");
 
+    // @def
     public static final long cardTableAddress = c.getFieldValue("CompilerToVM::Data::cardtable_start_address", Long.class, "jbyte*");
+    // @def
     public static final int cardTableShift = c.getFieldValue("CompilerToVM::Data::cardtable_shift", Integer.class, "int");
 
+    // @def
     public static final long safepointPollingAddress = c.getFieldValue("os::_polling_page", Long.class, "address");
 
     // G1 Collector Related Values.
@@ -245,12 +266,14 @@ public final class HotSpotRuntime
         klassOffset      = c.getFieldValue("java_lang_Class::_klass_offset",       Integer.class, "int"),
         arrayKlassOffset = c.getFieldValue("java_lang_Class::_array_klass_offset", Integer.class, "int");
 
+    // @def
     public static final int lockDisplacedMarkOffset = c.getFieldOffset("BasicLock::_displaced_header", Integer.class, "markOop");
 
     public static final int
         threadPollingPageOffset    = c.getFieldOffset("Thread::_polling_page",    Integer.class, "address"),
         threadAllocatedBytesOffset = c.getFieldOffset("Thread::_allocated_bytes", Integer.class, "jlong");
 
+    // @def
     public static final int tlabRefillWasteIncrement = c.getFlag("TLABWasteIncrement", Integer.class);
 
     public static final int
@@ -265,10 +288,13 @@ public final class HotSpotRuntime
         threadTlabEndOffset   = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_end",          Integer.class, "HeapWord*"),
         threadTlabTopOffset   = threadTlabOffset + c.getFieldOffset("ThreadLocalAllocBuffer::_top",          Integer.class, "HeapWord*");
 
+    // @def
     public static final int tlabAlignmentReserve = c.getFieldValue("CompilerToVM::Data::ThreadLocalAllocBuffer_alignment_reserve", Integer.class, "size_t");
 
+    // @def
     public static final boolean tlabStats = c.getFlag("TLABStats", Boolean.class);
 
+    // @def
     public static final boolean inlineContiguousAllocationSupported = c.getFieldValue("CompilerToVM::Data::_supports_inline_contig_alloc", Boolean.class);
 
     public static final long
@@ -390,13 +416,13 @@ public final class HotSpotRuntime
         logOfHeapRegionGrainBytesMark           = c.getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES",         Integer.class),
         inlineContiguousAllocationSupportedMark = c.getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class);
 
-    public static final int getArrayBaseOffset(JavaKind kind)
+    public static final int getArrayBaseOffset(JavaKind __kind)
     {
-        return HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(kind);
+        return HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(__kind);
     }
 
-    public static final int getArrayIndexScale(JavaKind kind)
+    public static final int getArrayIndexScale(JavaKind __kind)
     {
-        return HotSpotJVMCIRuntimeProvider.getArrayIndexScale(kind);
+        return HotSpotJVMCIRuntimeProvider.getArrayIndexScale(__kind);
     }
 }

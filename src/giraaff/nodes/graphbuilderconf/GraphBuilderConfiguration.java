@@ -13,12 +13,19 @@ public final class GraphBuilderConfiguration
     // @class GraphBuilderConfiguration.Plugins
     public static final class Plugins
     {
+        // @field
         private final InvocationPlugins invocationPlugins;
+        // @field
         private NodePlugin[] nodePlugins;
+        // @field
         private ParameterPlugin[] parameterPlugins;
+        // @field
         private TypePlugin[] typePlugins;
+        // @field
         private InlineInvokePlugin[] inlineInvokePlugins;
+        // @field
         private LoopExplosionPlugin loopExplosionPlugin;
+        // @field
         private InvokeDynamicPlugin invokeDynamicPlugin;
 
         /**
@@ -27,16 +34,16 @@ public final class GraphBuilderConfiguration
          * {@linkplain #getInvocationPlugins() invocation plugins} in this object.
          */
         // @cons
-        public Plugins(Plugins copyFrom)
+        public Plugins(Plugins __copyFrom)
         {
             super();
-            this.invocationPlugins = new InvocationPlugins(copyFrom.invocationPlugins);
-            this.nodePlugins = copyFrom.nodePlugins;
-            this.parameterPlugins = copyFrom.parameterPlugins;
-            this.typePlugins = copyFrom.typePlugins;
-            this.inlineInvokePlugins = copyFrom.inlineInvokePlugins;
-            this.loopExplosionPlugin = copyFrom.loopExplosionPlugin;
-            this.invokeDynamicPlugin = copyFrom.invokeDynamicPlugin;
+            this.invocationPlugins = new InvocationPlugins(__copyFrom.invocationPlugins);
+            this.nodePlugins = __copyFrom.nodePlugins;
+            this.parameterPlugins = __copyFrom.parameterPlugins;
+            this.typePlugins = __copyFrom.typePlugins;
+            this.inlineInvokePlugins = __copyFrom.inlineInvokePlugins;
+            this.loopExplosionPlugin = __copyFrom.loopExplosionPlugin;
+            this.invokeDynamicPlugin = __copyFrom.invokeDynamicPlugin;
         }
 
         /**
@@ -46,10 +53,10 @@ public final class GraphBuilderConfiguration
          *            this object
          */
         // @cons
-        public Plugins(InvocationPlugins invocationPlugins)
+        public Plugins(InvocationPlugins __invocationPlugins)
         {
             super();
-            this.invocationPlugins = invocationPlugins;
+            this.invocationPlugins = __invocationPlugins;
             this.nodePlugins = new NodePlugin[0];
             this.parameterPlugins = new ParameterPlugin[0];
             this.typePlugins = new TypePlugin[0];
@@ -66,18 +73,18 @@ public final class GraphBuilderConfiguration
             return nodePlugins;
         }
 
-        public void appendNodePlugin(NodePlugin plugin)
+        public void appendNodePlugin(NodePlugin __plugin)
         {
             nodePlugins = Arrays.copyOf(nodePlugins, nodePlugins.length + 1);
-            nodePlugins[nodePlugins.length - 1] = plugin;
+            nodePlugins[nodePlugins.length - 1] = __plugin;
         }
 
-        public void prependNodePlugin(NodePlugin plugin)
+        public void prependNodePlugin(NodePlugin __plugin)
         {
-            NodePlugin[] newPlugins = new NodePlugin[nodePlugins.length + 1];
-            System.arraycopy(nodePlugins, 0, newPlugins, 1, nodePlugins.length);
-            newPlugins[0] = plugin;
-            nodePlugins = newPlugins;
+            NodePlugin[] __newPlugins = new NodePlugin[nodePlugins.length + 1];
+            System.arraycopy(nodePlugins, 0, __newPlugins, 1, nodePlugins.length);
+            __newPlugins[0] = __plugin;
+            nodePlugins = __newPlugins;
         }
 
         public void clearNodePlugin()
@@ -90,18 +97,18 @@ public final class GraphBuilderConfiguration
             return parameterPlugins;
         }
 
-        public void appendParameterPlugin(ParameterPlugin plugin)
+        public void appendParameterPlugin(ParameterPlugin __plugin)
         {
             parameterPlugins = Arrays.copyOf(parameterPlugins, parameterPlugins.length + 1);
-            parameterPlugins[parameterPlugins.length - 1] = plugin;
+            parameterPlugins[parameterPlugins.length - 1] = __plugin;
         }
 
-        public void prependParameterPlugin(ParameterPlugin plugin)
+        public void prependParameterPlugin(ParameterPlugin __plugin)
         {
-            ParameterPlugin[] newPlugins = new ParameterPlugin[parameterPlugins.length + 1];
-            System.arraycopy(parameterPlugins, 0, newPlugins, 1, parameterPlugins.length);
-            newPlugins[0] = plugin;
-            parameterPlugins = newPlugins;
+            ParameterPlugin[] __newPlugins = new ParameterPlugin[parameterPlugins.length + 1];
+            System.arraycopy(parameterPlugins, 0, __newPlugins, 1, parameterPlugins.length);
+            __newPlugins[0] = __plugin;
+            parameterPlugins = __newPlugins;
         }
 
         public TypePlugin[] getTypePlugins()
@@ -109,18 +116,18 @@ public final class GraphBuilderConfiguration
             return typePlugins;
         }
 
-        public void appendTypePlugin(TypePlugin plugin)
+        public void appendTypePlugin(TypePlugin __plugin)
         {
             typePlugins = Arrays.copyOf(typePlugins, typePlugins.length + 1);
-            typePlugins[typePlugins.length - 1] = plugin;
+            typePlugins[typePlugins.length - 1] = __plugin;
         }
 
-        public void prependTypePlugin(TypePlugin plugin)
+        public void prependTypePlugin(TypePlugin __plugin)
         {
-            TypePlugin[] newPlugins = new TypePlugin[typePlugins.length + 1];
-            System.arraycopy(typePlugins, 0, newPlugins, 1, typePlugins.length);
-            newPlugins[0] = plugin;
-            typePlugins = newPlugins;
+            TypePlugin[] __newPlugins = new TypePlugin[typePlugins.length + 1];
+            System.arraycopy(typePlugins, 0, __newPlugins, 1, typePlugins.length);
+            __newPlugins[0] = __plugin;
+            typePlugins = __newPlugins;
         }
 
         public void clearParameterPlugin()
@@ -133,18 +140,18 @@ public final class GraphBuilderConfiguration
             return inlineInvokePlugins;
         }
 
-        public void appendInlineInvokePlugin(InlineInvokePlugin plugin)
+        public void appendInlineInvokePlugin(InlineInvokePlugin __plugin)
         {
             inlineInvokePlugins = Arrays.copyOf(inlineInvokePlugins, inlineInvokePlugins.length + 1);
-            inlineInvokePlugins[inlineInvokePlugins.length - 1] = plugin;
+            inlineInvokePlugins[inlineInvokePlugins.length - 1] = __plugin;
         }
 
-        public void prependInlineInvokePlugin(InlineInvokePlugin plugin)
+        public void prependInlineInvokePlugin(InlineInvokePlugin __plugin)
         {
-            InlineInvokePlugin[] newPlugins = new InlineInvokePlugin[inlineInvokePlugins.length + 1];
-            System.arraycopy(inlineInvokePlugins, 0, newPlugins, 1, inlineInvokePlugins.length);
-            newPlugins[0] = plugin;
-            inlineInvokePlugins = newPlugins;
+            InlineInvokePlugin[] __newPlugins = new InlineInvokePlugin[inlineInvokePlugins.length + 1];
+            System.arraycopy(inlineInvokePlugins, 0, __newPlugins, 1, inlineInvokePlugins.length);
+            __newPlugins[0] = __plugin;
+            inlineInvokePlugins = __newPlugins;
         }
 
         public void clearInlineInvokePlugins()
@@ -157,9 +164,9 @@ public final class GraphBuilderConfiguration
             return loopExplosionPlugin;
         }
 
-        public void setLoopExplosionPlugin(LoopExplosionPlugin plugin)
+        public void setLoopExplosionPlugin(LoopExplosionPlugin __plugin)
         {
-            this.loopExplosionPlugin = plugin;
+            this.loopExplosionPlugin = __plugin;
         }
 
         public InvokeDynamicPlugin getInvokeDynamicPlugin()
@@ -167,31 +174,37 @@ public final class GraphBuilderConfiguration
             return invokeDynamicPlugin;
         }
 
-        public void setInvokeDynamicPlugin(InvokeDynamicPlugin plugin)
+        public void setInvokeDynamicPlugin(InvokeDynamicPlugin __plugin)
         {
-            this.invokeDynamicPlugin = plugin;
+            this.invokeDynamicPlugin = __plugin;
         }
 
-        public StampPair getOverridingStamp(GraphBuilderTool b, JavaType type, boolean nonNull)
+        public StampPair getOverridingStamp(GraphBuilderTool __b, JavaType __type, boolean __nonNull)
         {
-            for (TypePlugin plugin : getTypePlugins())
+            for (TypePlugin __plugin : getTypePlugins())
             {
-                StampPair stamp = plugin.interceptType(b, type, nonNull);
-                if (stamp != null)
+                StampPair __stamp = __plugin.interceptType(__b, __type, __nonNull);
+                if (__stamp != null)
                 {
-                    return stamp;
+                    return __stamp;
                 }
             }
             return null;
         }
     }
 
+    // @def
     private static final ResolvedJavaType[] EMPTY = new ResolvedJavaType[] {};
 
+    // @field
     private final boolean eagerResolving;
+    // @field
     private final boolean unresolvedIsError;
+    // @field
     private final BytecodeExceptionMode bytecodeExceptionMode;
+    // @field
     private final ResolvedJavaType[] skippedExceptionTypes;
+    // @field
     private final Plugins plugins;
 
     // @enum GraphBuilderConfiguration.BytecodeExceptionMode
@@ -216,14 +229,14 @@ public final class GraphBuilderConfiguration
     }
 
     // @cons
-    protected GraphBuilderConfiguration(boolean eagerResolving, boolean unresolvedIsError, BytecodeExceptionMode bytecodeExceptionMode, ResolvedJavaType[] skippedExceptionTypes, Plugins plugins)
+    protected GraphBuilderConfiguration(boolean __eagerResolving, boolean __unresolvedIsError, BytecodeExceptionMode __bytecodeExceptionMode, ResolvedJavaType[] __skippedExceptionTypes, Plugins __plugins)
     {
         super();
-        this.eagerResolving = eagerResolving;
-        this.unresolvedIsError = unresolvedIsError;
-        this.bytecodeExceptionMode = bytecodeExceptionMode;
-        this.skippedExceptionTypes = skippedExceptionTypes;
-        this.plugins = plugins;
+        this.eagerResolving = __eagerResolving;
+        this.unresolvedIsError = __unresolvedIsError;
+        this.bytecodeExceptionMode = __bytecodeExceptionMode;
+        this.skippedExceptionTypes = __skippedExceptionTypes;
+        this.plugins = __plugins;
     }
 
     /**
@@ -233,8 +246,8 @@ public final class GraphBuilderConfiguration
      */
     public GraphBuilderConfiguration copy()
     {
-        Plugins newPlugins = new Plugins(plugins);
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, newPlugins);
+        Plugins __newPlugins = new Plugins(plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, __newPlugins);
     }
 
     /**
@@ -243,24 +256,24 @@ public final class GraphBuilderConfiguration
      * valid. This allows us for example to process unresolved types/methods/fields even when
      * eagerly resolving elements.
      */
-    public GraphBuilderConfiguration withUnresolvedIsError(boolean newUnresolvedIsError)
+    public GraphBuilderConfiguration withUnresolvedIsError(boolean __newUnresolvedIsError)
     {
-        return new GraphBuilderConfiguration(eagerResolving, newUnresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, __newUnresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, plugins);
     }
 
-    public GraphBuilderConfiguration withEagerResolving(boolean newEagerResolving)
+    public GraphBuilderConfiguration withEagerResolving(boolean __newEagerResolving)
     {
-        return new GraphBuilderConfiguration(newEagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(__newEagerResolving, unresolvedIsError, bytecodeExceptionMode, skippedExceptionTypes, plugins);
     }
 
-    public GraphBuilderConfiguration withSkippedExceptionTypes(ResolvedJavaType[] newSkippedExceptionTypes)
+    public GraphBuilderConfiguration withSkippedExceptionTypes(ResolvedJavaType[] __newSkippedExceptionTypes)
     {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, newSkippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, __newSkippedExceptionTypes, plugins);
     }
 
-    public GraphBuilderConfiguration withBytecodeExceptionMode(BytecodeExceptionMode newBytecodeExceptionMode)
+    public GraphBuilderConfiguration withBytecodeExceptionMode(BytecodeExceptionMode __newBytecodeExceptionMode)
     {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, newBytecodeExceptionMode, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, __newBytecodeExceptionMode, skippedExceptionTypes, plugins);
     }
 
     public ResolvedJavaType[] getSkippedExceptionTypes()
@@ -278,14 +291,14 @@ public final class GraphBuilderConfiguration
         return bytecodeExceptionMode;
     }
 
-    public static GraphBuilderConfiguration getDefault(Plugins plugins)
+    public static GraphBuilderConfiguration getDefault(Plugins __plugins)
     {
-        return new GraphBuilderConfiguration(false, false, BytecodeExceptionMode.Profile, EMPTY, plugins);
+        return new GraphBuilderConfiguration(false, false, BytecodeExceptionMode.Profile, EMPTY, __plugins);
     }
 
-    public static GraphBuilderConfiguration getSnippetDefault(Plugins plugins)
+    public static GraphBuilderConfiguration getSnippetDefault(Plugins __plugins)
     {
-        return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, EMPTY, plugins);
+        return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, EMPTY, __plugins);
     }
 
     /**

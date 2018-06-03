@@ -19,30 +19,34 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64RestoreRegistersOp
 public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64RestoreRegistersOp> TYPE = LIRInstructionClass.create(AMD64RestoreRegistersOp.class);
 
     /**
      * The slots from which the registers are restored.
      */
-    @Use(OperandFlag.STACK) protected final AllocatableValue[] slots;
+    @Use(OperandFlag.STACK)
+    // @field
+    protected final AllocatableValue[] slots;
 
     /**
      * The operation that saved the registers restored by this operation.
      */
+    // @field
     private final AMD64SaveRegistersOp save;
 
     // @cons
-    public AMD64RestoreRegistersOp(AllocatableValue[] values, AMD64SaveRegistersOp save)
+    public AMD64RestoreRegistersOp(AllocatableValue[] __values, AMD64SaveRegistersOp __save)
     {
-        this(TYPE, values, save);
+        this(TYPE, __values, __save);
     }
 
     // @cons
-    protected AMD64RestoreRegistersOp(LIRInstructionClass<? extends AMD64RestoreRegistersOp> c, AllocatableValue[] values, AMD64SaveRegistersOp save)
+    protected AMD64RestoreRegistersOp(LIRInstructionClass<? extends AMD64RestoreRegistersOp> __c, AllocatableValue[] __values, AMD64SaveRegistersOp __save)
     {
-        super(c);
-        this.slots = values;
-        this.save = save;
+        super(__c);
+        this.slots = __values;
+        this.save = __save;
     }
 
     protected Register[] getSavedRegisters()
@@ -50,20 +54,20 @@ public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
         return save.savedRegisters;
     }
 
-    protected void restoreRegister(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, StackSlot input)
+    protected void restoreRegister(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Register __result, StackSlot __input)
     {
-        AMD64Move.stack2reg((AMD64Kind) input.getPlatformKind(), crb, masm, result, input);
+        AMD64Move.stack2reg((AMD64Kind) __input.getPlatformKind(), __crb, __masm, __result, __input);
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        Register[] savedRegisters = getSavedRegisters();
-        for (int i = 0; i < savedRegisters.length; i++)
+        Register[] __savedRegisters = getSavedRegisters();
+        for (int __i = 0; __i < __savedRegisters.length; __i++)
         {
-            if (savedRegisters[i] != null)
+            if (__savedRegisters[__i] != null)
             {
-                restoreRegister(crb, masm, savedRegisters[i], ValueUtil.asStackSlot(slots[i]));
+                restoreRegister(__crb, __masm, __savedRegisters[__i], ValueUtil.asStackSlot(slots[__i]));
             }
         }
     }

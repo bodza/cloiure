@@ -28,22 +28,28 @@ import giraaff.lir.VirtualStackSlot;
 // @class FixPointIntervalBuilder
 final class FixPointIntervalBuilder
 {
+    // @field
     private final LIR lir;
+    // @field
     private final StackInterval[] stackSlotMap;
+    // @field
     private final int maxOpId;
+    // @field
     private final BlockMap<BitSet> liveInMap;
+    // @field
     private final BlockMap<BitSet> liveOutMap;
+    // @field
     private final EconomicSet<LIRInstruction> usePos = EconomicSet.create(Equivalence.IDENTITY);
 
     // @cons
-    FixPointIntervalBuilder(LIR lir, StackInterval[] stackSlotMap, int maxOpId)
+    FixPointIntervalBuilder(LIR __lir, StackInterval[] __stackSlotMap, int __maxOpId)
     {
         super();
-        this.lir = lir;
-        this.stackSlotMap = stackSlotMap;
-        this.maxOpId = maxOpId;
-        this.liveInMap = new BlockMap<>(lir.getControlFlowGraph());
-        this.liveOutMap = new BlockMap<>(lir.getControlFlowGraph());
+        this.lir = __lir;
+        this.stackSlotMap = __stackSlotMap;
+        this.maxOpId = __maxOpId;
+        this.liveInMap = new BlockMap<>(__lir.getControlFlowGraph());
+        this.liveOutMap = new BlockMap<>(__lir.getControlFlowGraph());
     }
 
     /**
@@ -53,20 +59,20 @@ final class FixPointIntervalBuilder
      */
     EconomicSet<LIRInstruction> build()
     {
-        Deque<AbstractBlockBase<?>> worklist = new ArrayDeque<>();
-        AbstractBlockBase<?>[] blocks = this.lir.getControlFlowGraph().getBlocks();
-        for (int i = blocks.length - 1; i >= 0; i--)
+        Deque<AbstractBlockBase<?>> __worklist = new ArrayDeque<>();
+        AbstractBlockBase<?>[] __blocks = this.lir.getControlFlowGraph().getBlocks();
+        for (int __i = __blocks.length - 1; __i >= 0; __i--)
         {
-            worklist.add(blocks[i]);
+            __worklist.add(__blocks[__i]);
         }
-        for (AbstractBlockBase<?> block : this.lir.getControlFlowGraph().getBlocks())
+        for (AbstractBlockBase<?> __block : this.lir.getControlFlowGraph().getBlocks())
         {
-            this.liveInMap.put(block, new BitSet(this.stackSlotMap.length));
+            this.liveInMap.put(__block, new BitSet(this.stackSlotMap.length));
         }
-        while (!worklist.isEmpty())
+        while (!__worklist.isEmpty())
         {
-            AbstractBlockBase<?> block = worklist.poll();
-            processBlock(block, worklist);
+            AbstractBlockBase<?> __block = __worklist.poll();
+            processBlock(__block, __worklist);
         }
         return this.usePos;
     }
@@ -74,67 +80,67 @@ final class FixPointIntervalBuilder
     /**
      * Merge outSet with in-set of successors.
      */
-    private boolean updateOutBlock(AbstractBlockBase<?> block)
+    private boolean updateOutBlock(AbstractBlockBase<?> __block)
     {
-        BitSet union = new BitSet(this.stackSlotMap.length);
-        for (AbstractBlockBase<?> succ : block.getSuccessors())
+        BitSet __union = new BitSet(this.stackSlotMap.length);
+        for (AbstractBlockBase<?> __succ : __block.getSuccessors())
         {
-            union.or(this.liveInMap.get(succ));
+            __union.or(this.liveInMap.get(__succ));
         }
-        BitSet outSet = this.liveOutMap.get(block);
+        BitSet __outSet = this.liveOutMap.get(__block);
         // check if changed
-        if (outSet == null || !union.equals(outSet))
+        if (__outSet == null || !__union.equals(__outSet))
         {
-            this.liveOutMap.put(block, union);
+            this.liveOutMap.put(__block, __union);
             return true;
         }
         return false;
     }
 
-    private void processBlock(AbstractBlockBase<?> block, Deque<AbstractBlockBase<?>> worklist)
+    private void processBlock(AbstractBlockBase<?> __block, Deque<AbstractBlockBase<?>> __worklist)
     {
-        if (updateOutBlock(block))
+        if (updateOutBlock(__block))
         {
-            ArrayList<LIRInstruction> instructions = this.lir.getLIRforBlock(block);
+            ArrayList<LIRInstruction> __instructions = this.lir.getLIRforBlock(__block);
             // get out set and mark intervals
-            BitSet outSet = this.liveOutMap.get(block);
-            markOutInterval(outSet, getBlockEnd(instructions));
+            BitSet __outSet = this.liveOutMap.get(__block);
+            markOutInterval(__outSet, getBlockEnd(__instructions));
 
             // process instructions
-            BlockClosure closure = new BlockClosure((BitSet) outSet.clone());
-            for (int i = instructions.size() - 1; i >= 0; i--)
+            BlockClosure __closure = new BlockClosure((BitSet) __outSet.clone());
+            for (int __i = __instructions.size() - 1; __i >= 0; __i--)
             {
-                LIRInstruction inst = instructions.get(i);
-                closure.processInstructionBottomUp(inst);
+                LIRInstruction __inst = __instructions.get(__i);
+                __closure.processInstructionBottomUp(__inst);
             }
 
             // add predecessors to work list
-            for (AbstractBlockBase<?> b : block.getPredecessors())
+            for (AbstractBlockBase<?> __b : __block.getPredecessors())
             {
-                worklist.add(b);
+                __worklist.add(__b);
             }
             // set in set and mark intervals
-            BitSet inSet = closure.getCurrentSet();
-            this.liveInMap.put(block, inSet);
-            markInInterval(inSet, getBlockBegin(instructions));
+            BitSet __inSet = __closure.getCurrentSet();
+            this.liveInMap.put(__block, __inSet);
+            markInInterval(__inSet, getBlockBegin(__instructions));
         }
     }
 
-    private void markOutInterval(BitSet outSet, int blockEndOpId)
+    private void markOutInterval(BitSet __outSet, int __blockEndOpId)
     {
-        for (int i = outSet.nextSetBit(0); i >= 0; i = outSet.nextSetBit(i + 1))
+        for (int __i = __outSet.nextSetBit(0); __i >= 0; __i = __outSet.nextSetBit(__i + 1))
         {
-            StackInterval interval = getIntervalFromStackId(i);
-            interval.addTo(blockEndOpId);
+            StackInterval __interval = getIntervalFromStackId(__i);
+            __interval.addTo(__blockEndOpId);
         }
     }
 
-    private void markInInterval(BitSet inSet, int blockFirstOpId)
+    private void markInInterval(BitSet __inSet, int __blockFirstOpId)
     {
-        for (int i = inSet.nextSetBit(0); i >= 0; i = inSet.nextSetBit(i + 1))
+        for (int __i = __inSet.nextSetBit(0); __i >= 0; __i = __inSet.nextSetBit(__i + 1))
         {
-            StackInterval interval = getIntervalFromStackId(i);
-            interval.addFrom(blockFirstOpId);
+            StackInterval __interval = getIntervalFromStackId(__i);
+            __interval.addFrom(__blockFirstOpId);
         }
     }
 
@@ -142,13 +148,14 @@ final class FixPointIntervalBuilder
     // @closure
     private final class BlockClosure
     {
+        // @field
         private final BitSet currentSet;
 
         // @cons
-        private BlockClosure(BitSet set)
+        private BlockClosure(BitSet __set)
         {
             super();
-            currentSet = set;
+            currentSet = __set;
         }
 
         private BitSet getCurrentSet()
@@ -160,28 +167,28 @@ final class FixPointIntervalBuilder
          * Process all values of an instruction bottom-up, i.e. definitions before usages.
          * Values that start or end at the current operation are not included.
          */
-        private void processInstructionBottomUp(LIRInstruction op)
+        private void processInstructionBottomUp(LIRInstruction __op)
         {
-            op.visitEachTemp(defConsumer);
-            op.visitEachOutput(defConsumer);
+            __op.visitEachTemp(defConsumer);
+            __op.visitEachOutput(defConsumer);
 
-            op.visitEachAlive(useConsumer);
-            op.visitEachInput(useConsumer);
+            __op.visitEachAlive(useConsumer);
+            __op.visitEachInput(useConsumer);
         }
 
         // @closure
         InstructionValueConsumer useConsumer = new InstructionValueConsumer()
         {
             @Override
-            public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+            public void visitValue(LIRInstruction __inst, Value __operand, OperandMode __mode, EnumSet<OperandFlag> __flags)
             {
-                if (LIRValueUtil.isVirtualStackSlot(operand))
+                if (LIRValueUtil.isVirtualStackSlot(__operand))
                 {
-                    VirtualStackSlot vslot = LIRValueUtil.asVirtualStackSlot(operand);
-                    addUse(vslot, inst, flags);
-                    addRegisterHint(inst, vslot, mode, flags, false);
-                    FixPointIntervalBuilder.this.usePos.add(inst);
-                    currentSet.set(vslot.getId());
+                    VirtualStackSlot __vslot = LIRValueUtil.asVirtualStackSlot(__operand);
+                    addUse(__vslot, __inst, __flags);
+                    addRegisterHint(__inst, __vslot, __mode, __flags, false);
+                    FixPointIntervalBuilder.this.usePos.add(__inst);
+                    currentSet.set(__vslot.getId());
                 }
             }
         };
@@ -190,108 +197,108 @@ final class FixPointIntervalBuilder
         InstructionValueConsumer defConsumer = new InstructionValueConsumer()
         {
             @Override
-            public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+            public void visitValue(LIRInstruction __inst, Value __operand, OperandMode __mode, EnumSet<OperandFlag> __flags)
             {
-                if (LIRValueUtil.isVirtualStackSlot(operand))
+                if (LIRValueUtil.isVirtualStackSlot(__operand))
                 {
-                    VirtualStackSlot vslot = LIRValueUtil.asVirtualStackSlot(operand);
-                    addDef(vslot, inst);
-                    addRegisterHint(inst, vslot, mode, flags, true);
-                    FixPointIntervalBuilder.this.usePos.add(inst);
-                    currentSet.clear(vslot.getId());
+                    VirtualStackSlot __vslot = LIRValueUtil.asVirtualStackSlot(__operand);
+                    addDef(__vslot, __inst);
+                    addRegisterHint(__inst, __vslot, __mode, __flags, true);
+                    FixPointIntervalBuilder.this.usePos.add(__inst);
+                    currentSet.clear(__vslot.getId());
                 }
             }
         };
 
-        private void addUse(VirtualStackSlot stackSlot, LIRInstruction inst, EnumSet<OperandFlag> flags)
+        private void addUse(VirtualStackSlot __stackSlot, LIRInstruction __inst, EnumSet<OperandFlag> __flags)
         {
-            StackInterval interval = getOrCreateInterval(stackSlot);
-            if (flags.contains(OperandFlag.UNINITIALIZED))
+            StackInterval __interval = getOrCreateInterval(__stackSlot);
+            if (__flags.contains(OperandFlag.UNINITIALIZED))
             {
                 // Stack slot is marked uninitialized so we have to assume it is live all the time.
-                interval.addFrom(0);
-                interval.addTo(FixPointIntervalBuilder.this.maxOpId);
+                __interval.addFrom(0);
+                __interval.addTo(FixPointIntervalBuilder.this.maxOpId);
             }
             else
             {
-                interval.addTo(inst.id());
+                __interval.addTo(__inst.id());
             }
         }
 
-        private void addDef(VirtualStackSlot stackSlot, LIRInstruction inst)
+        private void addDef(VirtualStackSlot __stackSlot, LIRInstruction __inst)
         {
-            StackInterval interval = getOrCreateInterval(stackSlot);
-            interval.addFrom(inst.id());
+            StackInterval __interval = getOrCreateInterval(__stackSlot);
+            __interval.addFrom(__inst.id());
         }
 
-        void addRegisterHint(final LIRInstruction op, VirtualStackSlot targetValue, OperandMode mode, EnumSet<OperandFlag> flags, final boolean hintAtDef)
+        void addRegisterHint(final LIRInstruction __op, VirtualStackSlot __targetValue, OperandMode __mode, EnumSet<OperandFlag> __flags, final boolean __hintAtDef)
         {
-            if (flags.contains(OperandFlag.HINT))
+            if (__flags.contains(OperandFlag.HINT))
             {
                 // @closure
                 InstructionValueProcedure proc = new InstructionValueProcedure()
                 {
                     @Override
-                    public Value doValue(LIRInstruction instruction, Value registerHint, OperandMode vaueMode, EnumSet<OperandFlag> valueFlags)
+                    public Value doValue(LIRInstruction __instruction, Value __registerHint, OperandMode __vaueMode, EnumSet<OperandFlag> __valueFlags)
                     {
-                        if (LIRValueUtil.isVirtualStackSlot(registerHint))
+                        if (LIRValueUtil.isVirtualStackSlot(__registerHint))
                         {
-                            StackInterval from = getOrCreateInterval((VirtualStackSlot) registerHint);
-                            StackInterval to = getOrCreateInterval(targetValue);
+                            StackInterval __from = getOrCreateInterval((VirtualStackSlot) __registerHint);
+                            StackInterval __to = getOrCreateInterval(__targetValue);
 
                             // hints always point from def to use
-                            if (hintAtDef)
+                            if (__hintAtDef)
                             {
-                                to.setLocationHint(from);
+                                __to.setLocationHint(__from);
                             }
                             else
                             {
-                                from.setLocationHint(to);
+                                __from.setLocationHint(__to);
                             }
 
-                            return registerHint;
+                            return __registerHint;
                         }
                         return null;
                     }
                 };
-                op.forEachRegisterHint(targetValue, mode, proc);
+                __op.forEachRegisterHint(__targetValue, __mode, proc);
             }
         }
     }
 
-    private StackInterval get(VirtualStackSlot stackSlot)
+    private StackInterval get(VirtualStackSlot __stackSlot)
     {
-        return this.stackSlotMap[stackSlot.getId()];
+        return this.stackSlotMap[__stackSlot.getId()];
     }
 
-    private void put(VirtualStackSlot stackSlot, StackInterval interval)
+    private void put(VirtualStackSlot __stackSlot, StackInterval __interval)
     {
-        this.stackSlotMap[stackSlot.getId()] = interval;
+        this.stackSlotMap[__stackSlot.getId()] = __interval;
     }
 
-    private StackInterval getOrCreateInterval(VirtualStackSlot stackSlot)
+    private StackInterval getOrCreateInterval(VirtualStackSlot __stackSlot)
     {
-        StackInterval interval = get(stackSlot);
-        if (interval == null)
+        StackInterval __interval = get(__stackSlot);
+        if (__interval == null)
         {
-            interval = new StackInterval(stackSlot, stackSlot.getValueKind());
-            put(stackSlot, interval);
+            __interval = new StackInterval(__stackSlot, __stackSlot.getValueKind());
+            put(__stackSlot, __interval);
         }
-        return interval;
+        return __interval;
     }
 
-    private StackInterval getIntervalFromStackId(int id)
+    private StackInterval getIntervalFromStackId(int __id)
     {
-        return this.stackSlotMap[id];
+        return this.stackSlotMap[__id];
     }
 
-    private static int getBlockBegin(ArrayList<LIRInstruction> instructions)
+    private static int getBlockBegin(ArrayList<LIRInstruction> __instructions)
     {
-        return instructions.get(0).id();
+        return __instructions.get(0).id();
     }
 
-    private static int getBlockEnd(ArrayList<LIRInstruction> instructions)
+    private static int getBlockEnd(ArrayList<LIRInstruction> __instructions)
     {
-        return instructions.get(instructions.size() - 1).id() + 1;
+        return __instructions.get(__instructions.size() - 1).id() + 1;
     }
 }

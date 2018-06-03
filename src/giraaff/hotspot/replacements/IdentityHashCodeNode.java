@@ -20,15 +20,18 @@ import giraaff.nodes.spi.LoweringTool;
 // @class IdentityHashCodeNode
 public final class IdentityHashCodeNode extends FixedWithNextNode implements Canonicalizable, Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<IdentityHashCodeNode> TYPE = NodeClass.create(IdentityHashCodeNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
 
     // @cons
-    public IdentityHashCodeNode(ValueNode object)
+    public IdentityHashCodeNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forInteger(32));
-        this.object = object;
+        this.object = __object;
     }
 
     @Override
@@ -38,30 +41,30 @@ public final class IdentityHashCodeNode extends FixedWithNextNode implements Can
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (object.isConstant())
         {
-            JavaConstant c = (JavaConstant) object.asConstant();
-            JavaConstant identityHashCode;
-            if (c.isNull())
+            JavaConstant __c = (JavaConstant) object.asConstant();
+            JavaConstant __identityHashCode;
+            if (__c.isNull())
             {
-                identityHashCode = JavaConstant.forInt(0);
+                __identityHashCode = JavaConstant.forInt(0);
             }
             else
             {
-                identityHashCode = JavaConstant.forInt(((HotSpotObjectConstant) c).getIdentityHashCode());
+                __identityHashCode = JavaConstant.forInt(((HotSpotObjectConstant) __c).getIdentityHashCode());
             }
 
-            return new ConstantNode(identityHashCode, StampFactory.forConstant(identityHashCode));
+            return new ConstantNode(__identityHashCode, StampFactory.forConstant(__identityHashCode));
         }
         return this;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @NodeIntrinsic

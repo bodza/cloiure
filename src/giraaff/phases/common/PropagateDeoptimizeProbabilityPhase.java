@@ -22,75 +22,75 @@ import giraaff.phases.tiers.PhaseContext;
 public final class PropagateDeoptimizeProbabilityPhase extends BasePhase<PhaseContext>
 {
     @Override
-    protected void run(final StructuredGraph graph, PhaseContext context)
+    protected void run(final StructuredGraph __graph, PhaseContext __context)
     {
-        if (graph.hasNode(AbstractDeoptimizeNode.TYPE))
+        if (__graph.hasNode(AbstractDeoptimizeNode.TYPE))
         {
-            NodeStack stack = new NodeStack();
-            EconomicMap<ControlSplitNode, EconomicSet<AbstractBeginNode>> reachableSplits = EconomicMap.create();
+            NodeStack __stack = new NodeStack();
+            EconomicMap<ControlSplitNode, EconomicSet<AbstractBeginNode>> __reachableSplits = EconomicMap.create();
 
             // Mark all control flow nodes that are post-dominated by a deoptimization.
-            for (AbstractDeoptimizeNode d : graph.getNodes(AbstractDeoptimizeNode.TYPE))
+            for (AbstractDeoptimizeNode __d : __graph.getNodes(AbstractDeoptimizeNode.TYPE))
             {
-                stack.push(AbstractBeginNode.prevBegin(d));
-                while (!stack.isEmpty())
+                __stack.push(AbstractBeginNode.prevBegin(__d));
+                while (!__stack.isEmpty())
                 {
-                    AbstractBeginNode beginNode = (AbstractBeginNode) stack.pop();
-                    FixedNode fixedNode = (FixedNode) beginNode.predecessor();
+                    AbstractBeginNode __beginNode = (AbstractBeginNode) __stack.pop();
+                    FixedNode __fixedNode = (FixedNode) __beginNode.predecessor();
 
-                    if (fixedNode == null)
+                    if (__fixedNode == null)
                     {
                         // Can happen for start node.
                     }
-                    else if (fixedNode instanceof AbstractMergeNode)
+                    else if (__fixedNode instanceof AbstractMergeNode)
                     {
-                        AbstractMergeNode mergeNode = (AbstractMergeNode) fixedNode;
-                        for (AbstractEndNode end : mergeNode.forwardEnds())
+                        AbstractMergeNode __mergeNode = (AbstractMergeNode) __fixedNode;
+                        for (AbstractEndNode __end : __mergeNode.forwardEnds())
                         {
-                            AbstractBeginNode newBeginNode = AbstractBeginNode.prevBegin(end);
-                            stack.push(newBeginNode);
+                            AbstractBeginNode __newBeginNode = AbstractBeginNode.prevBegin(__end);
+                            __stack.push(__newBeginNode);
                         }
                     }
-                    else if (fixedNode instanceof ControlSplitNode)
+                    else if (__fixedNode instanceof ControlSplitNode)
                     {
-                        ControlSplitNode controlSplitNode = (ControlSplitNode) fixedNode;
-                        EconomicSet<AbstractBeginNode> reachableSuccessors = reachableSplits.get(controlSplitNode);
-                        if (reachableSuccessors == null)
+                        ControlSplitNode __controlSplitNode = (ControlSplitNode) __fixedNode;
+                        EconomicSet<AbstractBeginNode> __reachableSuccessors = __reachableSplits.get(__controlSplitNode);
+                        if (__reachableSuccessors == null)
                         {
-                            reachableSuccessors = EconomicSet.create();
-                            reachableSplits.put(controlSplitNode, reachableSuccessors);
+                            __reachableSuccessors = EconomicSet.create();
+                            __reachableSplits.put(__controlSplitNode, __reachableSuccessors);
                         }
 
-                        if (controlSplitNode.getSuccessorCount() == reachableSuccessors.size() - 1)
+                        if (__controlSplitNode.getSuccessorCount() == __reachableSuccessors.size() - 1)
                         {
                             // All successors of this split lead to deopt, propagate reachability further upwards.
-                            reachableSplits.removeKey(controlSplitNode);
-                            stack.push(AbstractBeginNode.prevBegin((FixedNode) controlSplitNode.predecessor()));
+                            __reachableSplits.removeKey(__controlSplitNode);
+                            __stack.push(AbstractBeginNode.prevBegin((FixedNode) __controlSplitNode.predecessor()));
                         }
                         else
                         {
-                            reachableSuccessors.add(beginNode);
+                            __reachableSuccessors.add(__beginNode);
                         }
                     }
                     else
                     {
-                        stack.push(AbstractBeginNode.prevBegin(fixedNode));
+                        __stack.push(AbstractBeginNode.prevBegin(__fixedNode));
                     }
                 }
             }
 
             // Make sure the probability on the path towards the deoptimization is 0.0.
-            MapCursor<ControlSplitNode, EconomicSet<AbstractBeginNode>> entries = reachableSplits.getEntries();
-            while (entries.advance())
+            MapCursor<ControlSplitNode, EconomicSet<AbstractBeginNode>> __entries = __reachableSplits.getEntries();
+            while (__entries.advance())
             {
-                ControlSplitNode controlSplitNode = entries.getKey();
-                EconomicSet<AbstractBeginNode> value = entries.getValue();
-                for (AbstractBeginNode begin : value)
+                ControlSplitNode __controlSplitNode = __entries.getKey();
+                EconomicSet<AbstractBeginNode> __value = __entries.getValue();
+                for (AbstractBeginNode __begin : __value)
                 {
-                    double probability = controlSplitNode.probability(begin);
-                    if (probability != 0.0)
+                    double __probability = __controlSplitNode.probability(__begin);
+                    if (__probability != 0.0)
                     {
-                        controlSplitNode.setProbability(begin, 0.0);
+                        __controlSplitNode.setProbability(__begin, 0.0);
                     }
                 }
             }

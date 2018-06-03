@@ -19,11 +19,18 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 // @class AccessMonitorNode
 public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint implements MemoryCheckpoint, DeoptimizingNode.DeoptBefore, DeoptimizingNode.DeoptAfter
 {
+    // @def
     public static final NodeClass<AccessMonitorNode> TYPE = NodeClass.create(AccessMonitorNode.class);
 
-    @OptionalInput(InputType.State) FrameState stateBefore;
-    @Input ValueNode object;
-    @Input(InputType.Association) MonitorIdNode monitorId;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateBefore;
+    @Input
+    // @field
+    ValueNode object;
+    @Input(InputType.Association)
+    // @field
+    MonitorIdNode monitorId;
 
     @Override
     public boolean canDeoptimize()
@@ -38,10 +45,10 @@ public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint impleme
     }
 
     @Override
-    public void setStateBefore(FrameState f)
+    public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, f);
-        stateBefore = f;
+        updateUsages(stateBefore, __f);
+        stateBefore = __f;
     }
 
     public ValueNode object()
@@ -49,10 +56,10 @@ public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint impleme
         return object;
     }
 
-    public void setObject(ValueNode lockedObject)
+    public void setObject(ValueNode __lockedObject)
     {
-        updateUsages(this.object, lockedObject);
-        this.object = lockedObject;
+        updateUsages(this.object, __lockedObject);
+        this.object = __lockedObject;
     }
 
     public MonitorIdNode getMonitorId()
@@ -66,10 +73,10 @@ public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint impleme
      * @param object the instruction producing the object
      */
     // @cons
-    protected AccessMonitorNode(NodeClass<? extends AccessMonitorNode> c, ValueNode object, MonitorIdNode monitorId)
+    protected AccessMonitorNode(NodeClass<? extends AccessMonitorNode> __c, ValueNode __object, MonitorIdNode __monitorId)
     {
-        super(c, StampFactory.forVoid());
-        this.object = object;
-        this.monitorId = monitorId;
+        super(__c, StampFactory.forVoid());
+        this.object = __object;
+        this.monitorId = __monitorId;
     }
 }

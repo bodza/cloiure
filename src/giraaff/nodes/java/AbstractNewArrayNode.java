@@ -12,9 +12,12 @@ import giraaff.nodes.spi.ArrayLengthProvider;
 // @class AbstractNewArrayNode
 public abstract class AbstractNewArrayNode extends AbstractNewObjectNode implements ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<AbstractNewArrayNode> TYPE = NodeClass.create(AbstractNewArrayNode.class);
 
-    @Input protected ValueNode length;
+    @Input
+    // @field
+    protected ValueNode length;
 
     @Override
     public ValueNode length()
@@ -23,16 +26,16 @@ public abstract class AbstractNewArrayNode extends AbstractNewObjectNode impleme
     }
 
     // @cons
-    protected AbstractNewArrayNode(NodeClass<? extends AbstractNewArrayNode> c, Stamp stamp, ValueNode length, boolean fillContents, FrameState stateBefore)
+    protected AbstractNewArrayNode(NodeClass<? extends AbstractNewArrayNode> __c, Stamp __stamp, ValueNode __length, boolean __fillContents, FrameState __stateBefore)
     {
-        super(c, stamp, fillContents, stateBefore);
-        this.length = length;
+        super(__c, __stamp, __fillContents, __stateBefore);
+        this.length = __length;
     }
 
     /**
      * The list of node which produce input for this instruction.
      */
-    public ValueNode dimension(int index)
+    public ValueNode dimension(int __index)
     {
         return length();
     }

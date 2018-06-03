@@ -19,96 +19,98 @@ import giraaff.replacements.nodes.MethodHandleNode;
 // @class MethodHandlePlugin
 public final class MethodHandlePlugin implements NodePlugin
 {
+    // @field
     private final MethodHandleAccessProvider methodHandleAccess;
+    // @field
     private final boolean safeForDeoptimization;
 
     // @cons
-    public MethodHandlePlugin(MethodHandleAccessProvider methodHandleAccess, boolean safeForDeoptimization)
+    public MethodHandlePlugin(MethodHandleAccessProvider __methodHandleAccess, boolean __safeForDeoptimization)
     {
         super();
-        this.methodHandleAccess = methodHandleAccess;
-        this.safeForDeoptimization = safeForDeoptimization;
+        this.methodHandleAccess = __methodHandleAccess;
+        this.safeForDeoptimization = __safeForDeoptimization;
     }
 
-    private static int countRecursiveInlining(GraphBuilderContext b, ResolvedJavaMethod method)
+    private static int countRecursiveInlining(GraphBuilderContext __b, ResolvedJavaMethod __method)
     {
-        int count = 0;
-        for (GraphBuilderContext c = b.getParent(); c != null; c = c.getParent())
+        int __count = 0;
+        for (GraphBuilderContext __c = __b.getParent(); __c != null; __c = __c.getParent())
         {
-            if (method.equals(c.getMethod()))
+            if (__method.equals(__c.getMethod()))
             {
-                count++;
+                __count++;
             }
         }
-        return count;
+        return __count;
     }
 
     @Override
-    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    public boolean handleInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
-        IntrinsicMethod intrinsicMethod = methodHandleAccess.lookupMethodHandleIntrinsic(method);
-        if (intrinsicMethod != null)
+        IntrinsicMethod __intrinsicMethod = methodHandleAccess.lookupMethodHandleIntrinsic(__method);
+        if (__intrinsicMethod != null)
         {
-            InvokeKind invokeKind = b.getInvokeKind();
-            if (invokeKind != InvokeKind.Static)
+            InvokeKind __invokeKind = __b.getInvokeKind();
+            if (__invokeKind != InvokeKind.Static)
             {
-                args[0] = b.nullCheckedValue(args[0]);
+                __args[0] = __b.nullCheckedValue(__args[0]);
             }
-            StampPair invokeReturnStamp = b.getInvokeReturnStamp(b.getAssumptions());
+            StampPair __invokeReturnStamp = __b.getInvokeReturnStamp(__b.getAssumptions());
             // @closure
-            MethodHandleNode.GraphAdder adder = new MethodHandleNode.GraphAdder(b.getGraph())
+            MethodHandleNode.GraphAdder adder = new MethodHandleNode.GraphAdder(__b.getGraph())
             {
                 @Override
-                public <T extends ValueNode> T add(T node)
+                public <T extends ValueNode> T add(T __node)
                 {
-                    return b.add(node);
+                    return __b.add(__node);
                 }
             };
-            InvokeNode invoke = MethodHandleNode.tryResolveTargetInvoke(adder, methodHandleAccess, intrinsicMethod, method, b.bci(), invokeReturnStamp, args);
-            if (invoke == null)
+            InvokeNode __invoke = MethodHandleNode.tryResolveTargetInvoke(adder, methodHandleAccess, __intrinsicMethod, __method, __b.bci(), __invokeReturnStamp, __args);
+            if (__invoke == null)
             {
-                MethodHandleNode methodHandleNode = new MethodHandleNode(intrinsicMethod, invokeKind, method, b.bci(), invokeReturnStamp, args);
-                if (invokeReturnStamp.getTrustedStamp().getStackKind() == JavaKind.Void)
+                MethodHandleNode __methodHandleNode = new MethodHandleNode(__intrinsicMethod, __invokeKind, __method, __b.bci(), __invokeReturnStamp, __args);
+                if (__invokeReturnStamp.getTrustedStamp().getStackKind() == JavaKind.Void)
                 {
-                    b.add(methodHandleNode);
+                    __b.add(__methodHandleNode);
                 }
                 else
                 {
-                    b.addPush(invokeReturnStamp.getTrustedStamp().getStackKind(), methodHandleNode);
+                    __b.addPush(__invokeReturnStamp.getTrustedStamp().getStackKind(), __methodHandleNode);
                 }
             }
             else
             {
-                CallTargetNode callTarget = invoke.callTarget();
-                NodeInputList<ValueNode> argumentsList = callTarget.arguments();
-                for (int i = 0; i < argumentsList.size(); ++i)
+                CallTargetNode __callTarget = __invoke.callTarget();
+                NodeInputList<ValueNode> __argumentsList = __callTarget.arguments();
+                for (int __i = 0; __i < __argumentsList.size(); ++__i)
                 {
-                    argumentsList.initialize(i, b.append(argumentsList.get(i)));
+                    __argumentsList.initialize(__i, __b.append(__argumentsList.get(__i)));
                 }
 
-                boolean inlineEverything = false;
+                boolean __inlineEverything = false;
                 if (safeForDeoptimization)
                 {
                     // If a MemberName suffix argument is dropped, the replaced call cannot
                     // deoptimized since the necessary frame state cannot be reconstructed.
                     // As such, it needs to recursively inline everything.
-                    inlineEverything = args.length != argumentsList.size();
+                    __inlineEverything = __args.length != __argumentsList.size();
                 }
-                ResolvedJavaMethod targetMethod = callTarget.targetMethod();
-                if (inlineEverything && !targetMethod.hasBytecodes())
+                ResolvedJavaMethod __targetMethod = __callTarget.targetMethod();
+                if (__inlineEverything && !__targetMethod.hasBytecodes())
                 {
                     // we need to force-inline but we can not, leave the invoke as-is
                     return false;
                 }
 
-                int recursionDepth = countRecursiveInlining(b, targetMethod);
-                int maxRecursionDepth = GraalOptions.maximumRecursiveInlining;
-                if (recursionDepth > maxRecursionDepth)
+                int __recursionDepth = countRecursiveInlining(__b, __targetMethod);
+                int __maxRecursionDepth = GraalOptions.maximumRecursiveInlining;
+                if (__recursionDepth > __maxRecursionDepth)
                 {
                     return false;
                 }
 
-                b.handleReplacedInvoke(invoke.getInvokeKind(), targetMethod, argumentsList.toArray(new ValueNode[argumentsList.size()]), inlineEverything);
+                __b.handleReplacedInvoke(__invoke.getInvokeKind(), __targetMethod, __argumentsList.toArray(new ValueNode[__argumentsList.size()]), __inlineEverything);
             }
             return true;
         }

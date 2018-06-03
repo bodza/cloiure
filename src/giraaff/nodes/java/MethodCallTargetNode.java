@@ -32,21 +32,23 @@ import giraaff.nodes.type.StampTool;
 // @class MethodCallTargetNode
 public class MethodCallTargetNode extends CallTargetNode implements IterableNodeType, Simplifiable
 {
+    // @def
     public static final NodeClass<MethodCallTargetNode> TYPE = NodeClass.create(MethodCallTargetNode.class);
 
+    // @field
     protected JavaTypeProfile profile;
 
     // @cons
-    public MethodCallTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, JavaTypeProfile profile)
+    public MethodCallTargetNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
     {
-        this(TYPE, invokeKind, targetMethod, arguments, returnStamp, profile);
+        this(TYPE, __invokeKind, __targetMethod, __arguments, __returnStamp, __profile);
     }
 
     // @cons
-    protected MethodCallTargetNode(NodeClass<? extends MethodCallTargetNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, JavaTypeProfile profile)
+    protected MethodCallTargetNode(NodeClass<? extends MethodCallTargetNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
     {
-        super(c, arguments, targetMethod, invokeKind, returnStamp);
-        this.profile = profile;
+        super(__c, __arguments, __targetMethod, __invokeKind, __returnStamp);
+        this.profile = __profile;
     }
 
     /**
@@ -80,52 +82,52 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
         return (Invoke) this.usages().first();
     }
 
-    public static ResolvedJavaMethod findSpecialCallTarget(InvokeKind invokeKind, ValueNode receiver, ResolvedJavaMethod targetMethod, ResolvedJavaType contextType)
+    public static ResolvedJavaMethod findSpecialCallTarget(InvokeKind __invokeKind, ValueNode __receiver, ResolvedJavaMethod __targetMethod, ResolvedJavaType __contextType)
     {
-        if (invokeKind.isDirect())
+        if (__invokeKind.isDirect())
         {
             return null;
         }
 
         // check for trivial cases (e.g. final methods, nonvirtual methods)
-        if (targetMethod.canBeStaticallyBound())
+        if (__targetMethod.canBeStaticallyBound())
         {
-            return targetMethod;
+            return __targetMethod;
         }
 
-        return devirtualizeCall(invokeKind, targetMethod, contextType, receiver.graph().getAssumptions(), receiver.stamp(NodeView.DEFAULT));
+        return devirtualizeCall(__invokeKind, __targetMethod, __contextType, __receiver.graph().getAssumptions(), __receiver.stamp(NodeView.DEFAULT));
     }
 
-    public static ResolvedJavaMethod devirtualizeCall(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ResolvedJavaType contextType, Assumptions assumptions, Stamp receiverStamp)
+    public static ResolvedJavaMethod devirtualizeCall(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ResolvedJavaType __contextType, Assumptions __assumptions, Stamp __receiverStamp)
     {
-        TypeReference type = StampTool.typeReferenceOrNull(receiverStamp);
-        if (type == null && invokeKind == InvokeKind.Virtual)
+        TypeReference __type = StampTool.typeReferenceOrNull(__receiverStamp);
+        if (__type == null && __invokeKind == InvokeKind.Virtual)
         {
             // For virtual calls, we are guaranteed to receive a correct receiver type.
-            type = TypeReference.createTrusted(assumptions, targetMethod.getDeclaringClass());
+            __type = TypeReference.createTrusted(__assumptions, __targetMethod.getDeclaringClass());
         }
 
-        if (type != null)
+        if (__type != null)
         {
             // either the holder class is exact, or the receiver object has an exact type, or it's an array type
-            ResolvedJavaMethod resolvedMethod = type.getType().resolveConcreteMethod(targetMethod, contextType);
-            if (resolvedMethod != null && (resolvedMethod.canBeStaticallyBound() || type.isExact() || type.getType().isArray()))
+            ResolvedJavaMethod __resolvedMethod = __type.getType().resolveConcreteMethod(__targetMethod, __contextType);
+            if (__resolvedMethod != null && (__resolvedMethod.canBeStaticallyBound() || __type.isExact() || __type.getType().isArray()))
             {
-                return resolvedMethod;
+                return __resolvedMethod;
             }
 
-            AssumptionResult<ResolvedJavaMethod> uniqueConcreteMethod = type.getType().findUniqueConcreteMethod(targetMethod);
-            if (uniqueConcreteMethod != null && uniqueConcreteMethod.canRecordTo(assumptions))
+            AssumptionResult<ResolvedJavaMethod> __uniqueConcreteMethod = __type.getType().findUniqueConcreteMethod(__targetMethod);
+            if (__uniqueConcreteMethod != null && __uniqueConcreteMethod.canRecordTo(__assumptions))
             {
-                uniqueConcreteMethod.recordTo(assumptions);
-                return uniqueConcreteMethod.getResult();
+                __uniqueConcreteMethod.recordTo(__assumptions);
+                return __uniqueConcreteMethod.getResult();
             }
         }
         return null;
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
         // attempt to devirtualize the call
         if (invoke().getContextMethod() == null)
@@ -133,65 +135,65 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
             // avoid invokes that have placeholder bcis: they do not have a valid contextType
             return;
         }
-        ResolvedJavaType contextType = (invoke().stateAfter() == null && invoke().stateDuring() == null) ? null : invoke().getContextType();
-        ResolvedJavaMethod specialCallTarget = findSpecialCallTarget(invokeKind, receiver(), targetMethod, contextType);
-        if (specialCallTarget != null)
+        ResolvedJavaType __contextType = (invoke().stateAfter() == null && invoke().stateDuring() == null) ? null : invoke().getContextType();
+        ResolvedJavaMethod __specialCallTarget = findSpecialCallTarget(invokeKind, receiver(), targetMethod, __contextType);
+        if (__specialCallTarget != null)
         {
-            this.setTargetMethod(specialCallTarget);
+            this.setTargetMethod(__specialCallTarget);
             setInvokeKind(InvokeKind.Special);
             return;
         }
 
-        Assumptions assumptions = graph().getAssumptions();
+        Assumptions __assumptions = graph().getAssumptions();
         /*
          * Even though we are not registering an assumption (see comment below), the optimization is
          * only valid when speculative optimizations are enabled.
          */
-        if (invokeKind().isIndirect() && invokeKind().isInterface() && assumptions != null)
+        if (invokeKind().isIndirect() && invokeKind().isInterface() && __assumptions != null)
         {
             // check if the type of the receiver can narrow the result
-            ValueNode receiver = receiver();
+            ValueNode __receiver = receiver();
 
             // try to turn a interface call into a virtual call
-            ResolvedJavaType declaredReceiverType = targetMethod().getDeclaringClass();
+            ResolvedJavaType __declaredReceiverType = targetMethod().getDeclaringClass();
 
             // We need to check the invoke kind to avoid recursive simplification for virtual interface methods calls.
-            if (declaredReceiverType.isInterface())
+            if (__declaredReceiverType.isInterface())
             {
-                ResolvedJavaType singleImplementor = declaredReceiverType.getSingleImplementor();
-                if (singleImplementor != null && !singleImplementor.equals(declaredReceiverType))
+                ResolvedJavaType __singleImplementor = __declaredReceiverType.getSingleImplementor();
+                if (__singleImplementor != null && !__singleImplementor.equals(__declaredReceiverType))
                 {
-                    TypeReference speculatedType = TypeReference.createTrusted(assumptions, singleImplementor);
-                    if (tryCheckCastSingleImplementor(receiver, speculatedType))
+                    TypeReference __speculatedType = TypeReference.createTrusted(__assumptions, __singleImplementor);
+                    if (tryCheckCastSingleImplementor(__receiver, __speculatedType))
                     {
                         return;
                     }
                 }
             }
 
-            if (receiver instanceof UncheckedInterfaceProvider)
+            if (__receiver instanceof UncheckedInterfaceProvider)
             {
-                UncheckedInterfaceProvider uncheckedInterfaceProvider = (UncheckedInterfaceProvider) receiver;
-                Stamp uncheckedStamp = uncheckedInterfaceProvider.uncheckedStamp();
-                if (uncheckedStamp != null)
+                UncheckedInterfaceProvider __uncheckedInterfaceProvider = (UncheckedInterfaceProvider) __receiver;
+                Stamp __uncheckedStamp = __uncheckedInterfaceProvider.uncheckedStamp();
+                if (__uncheckedStamp != null)
                 {
-                    TypeReference speculatedType = StampTool.typeReferenceOrNull(uncheckedStamp);
-                    if (speculatedType != null)
+                    TypeReference __speculatedType = StampTool.typeReferenceOrNull(__uncheckedStamp);
+                    if (__speculatedType != null)
                     {
-                        tryCheckCastSingleImplementor(receiver, speculatedType);
+                        tryCheckCastSingleImplementor(__receiver, __speculatedType);
                     }
                 }
             }
         }
     }
 
-    private boolean tryCheckCastSingleImplementor(ValueNode receiver, TypeReference speculatedType)
+    private boolean tryCheckCastSingleImplementor(ValueNode __receiver, TypeReference __speculatedType)
     {
-        ResolvedJavaType singleImplementor = speculatedType.getType();
-        if (singleImplementor != null)
+        ResolvedJavaType __singleImplementor = __speculatedType.getType();
+        if (__singleImplementor != null)
         {
-            ResolvedJavaMethod singleImplementorMethod = singleImplementor.resolveConcreteMethod(targetMethod(), invoke().getContextType());
-            if (singleImplementorMethod != null)
+            ResolvedJavaMethod __singleImplementorMethod = __singleImplementor.resolveConcreteMethod(targetMethod(), invoke().getContextType());
+            if (__singleImplementorMethod != null)
             {
                 /**
                  * We have an invoke on an interface with a single implementor. We can replace this
@@ -204,18 +206,18 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
                  * an assumption but as we need an instanceof check anyway we can verify both
                  * properties by checking of the receiver is an instance of the single implementor.
                  */
-                ValueAnchorNode anchor = new ValueAnchorNode(null);
-                if (anchor != null)
+                ValueAnchorNode __anchor = new ValueAnchorNode(null);
+                if (__anchor != null)
                 {
-                    graph().add(anchor);
-                    graph().addBeforeFixed(invoke().asNode(), anchor);
+                    graph().add(__anchor);
+                    graph().addBeforeFixed(invoke().asNode(), __anchor);
                 }
-                LogicNode condition = graph().addOrUniqueWithInputs(InstanceOfNode.create(speculatedType, receiver, getProfile(), anchor));
-                FixedGuardNode guard = graph().add(new FixedGuardNode(condition, DeoptimizationReason.OptimizedTypeCheckViolated, DeoptimizationAction.InvalidateRecompile, false));
-                graph().addBeforeFixed(invoke().asNode(), guard);
-                ValueNode valueNode = graph().addOrUnique(new PiNode(receiver, StampFactory.objectNonNull(speculatedType), guard));
-                arguments().set(0, valueNode);
-                if (speculatedType.isExact())
+                LogicNode __condition = graph().addOrUniqueWithInputs(InstanceOfNode.create(__speculatedType, __receiver, getProfile(), __anchor));
+                FixedGuardNode __guard = graph().add(new FixedGuardNode(__condition, DeoptimizationReason.OptimizedTypeCheckViolated, DeoptimizationAction.InvalidateRecompile, false));
+                graph().addBeforeFixed(invoke().asNode(), __guard);
+                ValueNode __valueNode = graph().addOrUnique(new PiNode(__receiver, StampFactory.objectNonNull(__speculatedType), __guard));
+                arguments().set(0, __valueNode);
+                if (__speculatedType.isExact())
                 {
                     setInvokeKind(InvokeKind.Special);
                 }
@@ -223,7 +225,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
                 {
                     setInvokeKind(InvokeKind.Virtual);
                 }
-                setTargetMethod(singleImplementorMethod);
+                setTargetMethod(__singleImplementorMethod);
                 return true;
             }
         }
@@ -245,13 +247,13 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
         return targetMethod().format("%h.%n");
     }
 
-    public static MethodCallTargetNode find(StructuredGraph graph, ResolvedJavaMethod method)
+    public static MethodCallTargetNode find(StructuredGraph __graph, ResolvedJavaMethod __method)
     {
-        for (MethodCallTargetNode target : graph.getNodes(MethodCallTargetNode.TYPE))
+        for (MethodCallTargetNode __target : __graph.getNodes(MethodCallTargetNode.TYPE))
         {
-            if (target.targetMethod().equals(method))
+            if (__target.targetMethod().equals(__method))
             {
-                return target;
+                return __target;
             }
         }
         return null;

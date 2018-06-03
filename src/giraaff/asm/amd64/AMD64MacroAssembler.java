@@ -16,328 +16,328 @@ import giraaff.core.common.NumUtil;
 public final class AMD64MacroAssembler extends AMD64Assembler
 {
     // @cons
-    public AMD64MacroAssembler(TargetDescription target)
+    public AMD64MacroAssembler(TargetDescription __target)
     {
-        super(target);
+        super(__target);
     }
 
-    public final void decrementq(Register reg, int value)
+    public final void decrementq(Register __reg, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            subq(reg, value);
+            subq(__reg, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            incrementq(reg, -value);
+            incrementq(__reg, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            decq(reg);
+            decq(__reg);
         }
         else
         {
-            subq(reg, value);
+            subq(__reg, __value);
         }
     }
 
-    public final void decrementq(AMD64Address dst, int value)
+    public final void decrementq(AMD64Address __dst, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            subq(dst, value);
+            subq(__dst, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            incrementq(dst, -value);
+            incrementq(__dst, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            decq(dst);
+            decq(__dst);
         }
         else
         {
-            subq(dst, value);
+            subq(__dst, __value);
         }
     }
 
-    public void incrementq(Register reg, int value)
+    public void incrementq(Register __reg, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            addq(reg, value);
+            addq(__reg, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            decrementq(reg, -value);
+            decrementq(__reg, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            incq(reg);
+            incq(__reg);
         }
         else
         {
-            addq(reg, value);
+            addq(__reg, __value);
         }
     }
 
-    public final void incrementq(AMD64Address dst, int value)
+    public final void incrementq(AMD64Address __dst, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            addq(dst, value);
+            addq(__dst, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            decrementq(dst, -value);
+            decrementq(__dst, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            incq(dst);
+            incq(__dst);
         }
         else
         {
-            addq(dst, value);
+            addq(__dst, __value);
         }
     }
 
-    public final void movptr(Register dst, AMD64Address src)
+    public final void movptr(Register __dst, AMD64Address __src)
     {
-        movq(dst, src);
+        movq(__dst, __src);
     }
 
-    public final void movptr(AMD64Address dst, Register src)
+    public final void movptr(AMD64Address __dst, Register __src)
     {
-        movq(dst, src);
+        movq(__dst, __src);
     }
 
-    public final void movptr(AMD64Address dst, int src)
+    public final void movptr(AMD64Address __dst, int __src)
     {
-        movslq(dst, src);
+        movslq(__dst, __src);
     }
 
-    public final void cmpptr(Register src1, Register src2)
+    public final void cmpptr(Register __src1, Register __src2)
     {
-        cmpq(src1, src2);
+        cmpq(__src1, __src2);
     }
 
-    public final void cmpptr(Register src1, AMD64Address src2)
+    public final void cmpptr(Register __src1, AMD64Address __src2)
     {
-        cmpq(src1, src2);
+        cmpq(__src1, __src2);
     }
 
-    public final void decrementl(Register reg)
+    public final void decrementl(Register __reg)
     {
-        decrementl(reg, 1);
+        decrementl(__reg, 1);
     }
 
-    public final void decrementl(Register reg, int value)
+    public final void decrementl(Register __reg, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            subl(reg, value);
+            subl(__reg, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            incrementl(reg, -value);
+            incrementl(__reg, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            decl(reg);
+            decl(__reg);
         }
         else
         {
-            subl(reg, value);
+            subl(__reg, __value);
         }
     }
 
-    public final void decrementl(AMD64Address dst, int value)
+    public final void decrementl(AMD64Address __dst, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            subl(dst, value);
+            subl(__dst, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            incrementl(dst, -value);
+            incrementl(__dst, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            decl(dst);
+            decl(__dst);
         }
         else
         {
-            subl(dst, value);
+            subl(__dst, __value);
         }
     }
 
-    public final void incrementl(Register reg, int value)
+    public final void incrementl(Register __reg, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            addl(reg, value);
+            addl(__reg, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            decrementl(reg, -value);
+            decrementl(__reg, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            incl(reg);
+            incl(__reg);
         }
         else
         {
-            addl(reg, value);
+            addl(__reg, __value);
         }
     }
 
-    public final void incrementl(AMD64Address dst, int value)
+    public final void incrementl(AMD64Address __dst, int __value)
     {
-        if (value == Integer.MIN_VALUE)
+        if (__value == Integer.MIN_VALUE)
         {
-            addl(dst, value);
+            addl(__dst, __value);
             return;
         }
-        if (value < 0)
+        if (__value < 0)
         {
-            decrementl(dst, -value);
+            decrementl(__dst, -__value);
             return;
         }
-        if (value == 0)
+        if (__value == 0)
         {
             return;
         }
-        if (value == 1 && AMD64AsmOptions.UseIncDec)
+        if (__value == 1 && AMD64AsmOptions.UseIncDec)
         {
-            incl(dst);
+            incl(__dst);
         }
         else
         {
-            addl(dst, value);
+            addl(__dst, __value);
         }
     }
 
-    public void movflt(Register dst, Register src)
+    public void movflt(Register __dst, Register __src)
     {
         if (AMD64AsmOptions.UseXmmRegToRegMoveAll)
         {
-            movaps(dst, src);
+            movaps(__dst, __src);
         }
         else
         {
-            movss(dst, src);
+            movss(__dst, __src);
         }
     }
 
-    public void movflt(Register dst, AMD64Address src)
+    public void movflt(Register __dst, AMD64Address __src)
     {
-        movss(dst, src);
+        movss(__dst, __src);
     }
 
-    public void movflt(AMD64Address dst, Register src)
+    public void movflt(AMD64Address __dst, Register __src)
     {
-        movss(dst, src);
+        movss(__dst, __src);
     }
 
-    public void movdbl(Register dst, Register src)
+    public void movdbl(Register __dst, Register __src)
     {
         if (AMD64AsmOptions.UseXmmRegToRegMoveAll)
         {
-            movapd(dst, src);
+            movapd(__dst, __src);
         }
         else
         {
-            movsd(dst, src);
+            movsd(__dst, __src);
         }
     }
 
-    public void movdbl(Register dst, AMD64Address src)
+    public void movdbl(Register __dst, AMD64Address __src)
     {
         if (AMD64AsmOptions.UseXmmLoadAndClearUpper)
         {
-            movsd(dst, src);
+            movsd(__dst, __src);
         }
         else
         {
-            movlpd(dst, src);
+            movlpd(__dst, __src);
         }
     }
 
-    public void movdbl(AMD64Address dst, Register src)
+    public void movdbl(AMD64Address __dst, Register __src)
     {
-        movsd(dst, src);
+        movsd(__dst, __src);
     }
 
     /**
      * Non-atomic write of a 64-bit constant to memory.
      * Do not use if the address might be a volatile field!
      */
-    public final void movlong(AMD64Address dst, long src)
+    public final void movlong(AMD64Address __dst, long __src)
     {
-        if (NumUtil.isInt(src))
+        if (NumUtil.isInt(__src))
         {
-            AMD64MIOp.MOV.emit(this, OperandSize.QWORD, dst, (int) src);
+            AMD64MIOp.MOV.emit(this, OperandSize.QWORD, __dst, (int) __src);
         }
         else
         {
-            AMD64Address high = new AMD64Address(dst.getBase(), dst.getIndex(), dst.getScale(), dst.getDisplacement() + 4);
-            movl(dst, (int) (src & 0xFFFFFFFF));
-            movl(high, (int) (src >> 32));
+            AMD64Address __high = new AMD64Address(__dst.getBase(), __dst.getIndex(), __dst.getScale(), __dst.getDisplacement() + 4);
+            movl(__dst, (int) (__src & 0xFFFFFFFF));
+            movl(__high, (int) (__src >> 32));
         }
     }
 
-    public final void setl(ConditionFlag cc, Register dst)
+    public final void setl(ConditionFlag __cc, Register __dst)
     {
-        setb(cc, dst);
-        movzbl(dst, dst);
+        setb(__cc, __dst);
+        movzbl(__dst, __dst);
     }
 
-    public final void setq(ConditionFlag cc, Register dst)
+    public final void setq(ConditionFlag __cc, Register __dst)
     {
-        setb(cc, dst);
-        movzbq(dst, dst);
+        setb(__cc, __dst);
+        movzbq(__dst, __dst);
     }
 
     public final void fpop()

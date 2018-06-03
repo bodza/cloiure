@@ -46,12 +46,14 @@ public final class ForeignCallStub extends Stub
     /**
      * The target of the call.
      */
+    // @field
     private final HotSpotForeignCallLinkage target;
 
     /**
      * Specifies if the JavaThread value for the current thread is to be prepended to the arguments
      * for the call to {@link #target}.
      */
+    // @field
     protected final boolean prependThread;
 
     /**
@@ -67,13 +69,13 @@ public final class ForeignCallStub extends Stub
      * @param killedLocations the memory locations killed by the stub call
      */
     // @cons
-    public ForeignCallStub(HotSpotProviders providers, long address, ForeignCallDescriptor descriptor, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    public ForeignCallStub(HotSpotProviders __providers, long __address, ForeignCallDescriptor __descriptor, boolean __prependThread, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
-        super(providers, HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, transition, reexecutable, killedLocations));
-        this.prependThread = prependThread;
-        Class<?>[] targetParameterTypes = createTargetParameters(descriptor);
-        ForeignCallDescriptor targetSig = new ForeignCallDescriptor(descriptor.getName() + ":C", descriptor.getResultType(), targetParameterTypes);
-        target = HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), targetSig, address, RegisterEffect.DESTROYS_REGISTERS, HotSpotCallingConventionType.NativeCall, HotSpotCallingConventionType.NativeCall, transition, reexecutable, killedLocations);
+        super(__providers, HotSpotForeignCallLinkageImpl.create(__providers.getMetaAccess(), __providers.getCodeCache(), __providers.getWordTypes(), __providers.getForeignCalls(), __descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, __transition, __reexecutable, __killedLocations));
+        this.prependThread = __prependThread;
+        Class<?>[] __targetParameterTypes = createTargetParameters(__descriptor);
+        ForeignCallDescriptor __targetSig = new ForeignCallDescriptor(__descriptor.getName() + ":C", __descriptor.getResultType(), __targetParameterTypes);
+        target = HotSpotForeignCallLinkageImpl.create(__providers.getMetaAccess(), __providers.getCodeCache(), __providers.getWordTypes(), __providers.getForeignCalls(), __targetSig, __address, RegisterEffect.DESTROYS_REGISTERS, HotSpotCallingConventionType.NativeCall, HotSpotCallingConventionType.NativeCall, __transition, __reexecutable, __killedLocations);
     }
 
     /**
@@ -84,17 +86,17 @@ public final class ForeignCallStub extends Stub
         return target;
     }
 
-    private Class<?>[] createTargetParameters(ForeignCallDescriptor descriptor)
+    private Class<?>[] createTargetParameters(ForeignCallDescriptor __descriptor)
     {
-        Class<?>[] parameters = descriptor.getArgumentTypes();
+        Class<?>[] __parameters = __descriptor.getArgumentTypes();
         if (prependThread)
         {
-            Class<?>[] newParameters = new Class<?>[parameters.length + 1];
-            System.arraycopy(parameters, 0, newParameters, 1, parameters.length);
-            newParameters[0] = Word.class;
-            return newParameters;
+            Class<?>[] __newParameters = new Class<?>[__parameters.length + 1];
+            System.arraycopy(__parameters, 0, __newParameters, 1, __parameters.length);
+            __newParameters[0] = Word.class;
+            return __newParameters;
         }
-        return parameters;
+        return __parameters;
     }
 
     @Override
@@ -149,63 +151,63 @@ public final class ForeignCallStub extends Stub
     @Override
     protected StructuredGraph getStubGraph()
     {
-        WordTypes wordTypes = providers.getWordTypes();
-        Class<?>[] args = linkage.getDescriptor().getArgumentTypes();
-        boolean isObjectResult = !LIRKind.isValue(linkage.getOutgoingCallingConvention().getReturn());
+        WordTypes __wordTypes = providers.getWordTypes();
+        Class<?>[] __args = linkage.getDescriptor().getArgumentTypes();
+        boolean __isObjectResult = !LIRKind.isValue(linkage.getOutgoingCallingConvention().getReturn());
 
         try
         {
-            ResolvedJavaMethod thisMethod = providers.getMetaAccess().lookupJavaMethod(ForeignCallStub.class.getDeclaredMethod("getStubGraph"));
-            GraphKit kit = new GraphKit(thisMethod, providers, wordTypes, providers.getGraphBuilderPlugins());
-            StructuredGraph graph = kit.getGraph();
-            ParameterNode[] params = createParameters(kit, args);
-            ReadRegisterNode thread = kit.append(new ReadRegisterNode(providers.getRegisters().getThreadRegister(), wordTypes.getWordKind(), true, false));
-            ValueNode result = createTargetCall(kit, params, thread);
-            kit.createInvoke(StubUtil.class, "handlePendingException", thread, ConstantNode.forBoolean(isObjectResult, graph));
-            if (isObjectResult)
+            ResolvedJavaMethod __thisMethod = providers.getMetaAccess().lookupJavaMethod(ForeignCallStub.class.getDeclaredMethod("getStubGraph"));
+            GraphKit __kit = new GraphKit(__thisMethod, providers, __wordTypes, providers.getGraphBuilderPlugins());
+            StructuredGraph __graph = __kit.getGraph();
+            ParameterNode[] __params = createParameters(__kit, __args);
+            ReadRegisterNode __thread = __kit.append(new ReadRegisterNode(providers.getRegisters().getThreadRegister(), __wordTypes.getWordKind(), true, false));
+            ValueNode __result = createTargetCall(__kit, __params, __thread);
+            __kit.createInvoke(StubUtil.class, "handlePendingException", __thread, ConstantNode.forBoolean(__isObjectResult, __graph));
+            if (__isObjectResult)
             {
-                result = kit.createInvoke(HotSpotReplacementsUtil.class, "getAndClearObjectResult", thread);
+                __result = __kit.createInvoke(HotSpotReplacementsUtil.class, "getAndClearObjectResult", __thread);
             }
-            kit.append(new ReturnNode(linkage.getDescriptor().getResultType() == void.class ? null : result));
+            __kit.append(new ReturnNode(linkage.getDescriptor().getResultType() == void.class ? null : __result));
 
-            kit.inlineInvokes("Foreign call stub.", "Backend");
-            new RemoveValueProxyPhase().apply(graph);
+            __kit.inlineInvokes("Foreign call stub.", "Backend");
+            new RemoveValueProxyPhase().apply(__graph);
 
-            return graph;
+            return __graph;
         }
-        catch (Exception e)
+        catch (Exception __e)
         {
-            throw GraalError.shouldNotReachHere(e);
+            throw GraalError.shouldNotReachHere(__e);
         }
     }
 
-    private ParameterNode[] createParameters(GraphKit kit, Class<?>[] args)
+    private ParameterNode[] createParameters(GraphKit __kit, Class<?>[] __args)
     {
-        ParameterNode[] params = new ParameterNode[args.length];
-        ResolvedJavaType accessingClass = providers.getMetaAccess().lookupJavaType(getClass());
-        for (int i = 0; i < args.length; i++)
+        ParameterNode[] __params = new ParameterNode[__args.length];
+        ResolvedJavaType __accessingClass = providers.getMetaAccess().lookupJavaType(getClass());
+        for (int __i = 0; __i < __args.length; __i++)
         {
-            ResolvedJavaType type = providers.getMetaAccess().lookupJavaType(args[i]).resolve(accessingClass);
-            StampPair stamp = StampFactory.forDeclaredType(kit.getGraph().getAssumptions(), type, false);
-            ParameterNode param = kit.unique(new ParameterNode(i, stamp));
-            params[i] = param;
+            ResolvedJavaType __type = providers.getMetaAccess().lookupJavaType(__args[__i]).resolve(__accessingClass);
+            StampPair __stamp = StampFactory.forDeclaredType(__kit.getGraph().getAssumptions(), __type, false);
+            ParameterNode __param = __kit.unique(new ParameterNode(__i, __stamp));
+            __params[__i] = __param;
         }
-        return params;
+        return __params;
     }
 
-    private StubForeignCallNode createTargetCall(GraphKit kit, ParameterNode[] params, ReadRegisterNode thread)
+    private StubForeignCallNode createTargetCall(GraphKit __kit, ParameterNode[] __params, ReadRegisterNode __thread)
     {
-        Stamp stamp = StampFactory.forKind(JavaKind.fromJavaClass(target.getDescriptor().getResultType()));
+        Stamp __stamp = StampFactory.forKind(JavaKind.fromJavaClass(target.getDescriptor().getResultType()));
         if (prependThread)
         {
-            ValueNode[] targetArguments = new ValueNode[1 + params.length];
-            targetArguments[0] = thread;
-            System.arraycopy(params, 0, targetArguments, 1, params.length);
-            return kit.append(new StubForeignCallNode(providers.getForeignCalls(), stamp, target.getDescriptor(), targetArguments));
+            ValueNode[] __targetArguments = new ValueNode[1 + __params.length];
+            __targetArguments[0] = __thread;
+            System.arraycopy(__params, 0, __targetArguments, 1, __params.length);
+            return __kit.append(new StubForeignCallNode(providers.getForeignCalls(), __stamp, target.getDescriptor(), __targetArguments));
         }
         else
         {
-            return kit.append(new StubForeignCallNode(providers.getForeignCalls(), stamp, target.getDescriptor(), params));
+            return __kit.append(new StubForeignCallNode(providers.getForeignCalls(), __stamp, target.getDescriptor(), __params));
         }
     }
 }

@@ -18,27 +18,29 @@ import org.graalvm.collections.EconomicMap;
 // @class GraphSpeculationLog
 public final class GraphSpeculationLog implements SpeculationLog
 {
+    // @field
     private final SpeculationLog log;
+    // @field
     private final EconomicMap<SpeculationReason, JavaConstant> speculations;
 
     // @cons
-    public GraphSpeculationLog(SpeculationLog log)
+    public GraphSpeculationLog(SpeculationLog __log)
     {
         super();
-        this.log = log;
+        this.log = __log;
         this.speculations = EconomicMap.create();
     }
 
     /**
      * Unwraps {@code log} if it is a {@link GraphSpeculationLog}.
      */
-    public static SpeculationLog unwrap(SpeculationLog log)
+    public static SpeculationLog unwrap(SpeculationLog __log)
     {
-        if (log instanceof GraphSpeculationLog)
+        if (__log instanceof GraphSpeculationLog)
         {
-            return ((GraphSpeculationLog) log).log;
+            return ((GraphSpeculationLog) __log).log;
         }
-        return log;
+        return __log;
     }
 
     /**
@@ -48,45 +50,45 @@ public final class GraphSpeculationLog implements SpeculationLog
      * equal} to {@code reason} will succeed.
      */
     @Override
-    public boolean maySpeculate(SpeculationReason reason)
+    public boolean maySpeculate(SpeculationReason __reason)
     {
-        JavaConstant speculation = speculations.get(reason);
-        if (speculation == null)
+        JavaConstant __speculation = speculations.get(__reason);
+        if (__speculation == null)
         {
-            if (log.maySpeculate(reason))
+            if (log.maySpeculate(__reason))
             {
                 try
                 {
-                    speculation = log.speculate(reason);
-                    speculations.put(reason, speculation);
+                    __speculation = log.speculate(__reason);
+                    speculations.put(__reason, __speculation);
                 }
-                catch (IllegalArgumentException e)
+                catch (IllegalArgumentException __e)
                 {
                     // the speculation was disabled by another thread in between the call to log.maySpeculate and log.speculate
-                    speculation = null;
+                    __speculation = null;
                 }
             }
         }
-        return speculation != null;
+        return __speculation != null;
     }
 
     @Override
-    public JavaConstant speculate(SpeculationReason reason)
+    public JavaConstant speculate(SpeculationReason __reason)
     {
-        if (maySpeculate(reason))
+        if (maySpeculate(__reason))
         {
-            return speculations.get(reason);
+            return speculations.get(__reason);
         }
-        throw new IllegalArgumentException("Cannot make speculation with reason " + reason + " as it is known to fail");
+        throw new IllegalArgumentException("Cannot make speculation with reason " + __reason + " as it is known to fail");
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (obj instanceof GraphSpeculationLog)
+        if (__obj instanceof GraphSpeculationLog)
         {
-            GraphSpeculationLog that = (GraphSpeculationLog) obj;
-            return this.log == that.log;
+            GraphSpeculationLog __that = (GraphSpeculationLog) __obj;
+            return this.log == __that.log;
         }
         return false;
     }

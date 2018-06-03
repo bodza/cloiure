@@ -8,15 +8,17 @@ import giraaff.nodes.calc.IntegerConvertNode;
 // @class DerivedConvertedInductionVariable
 public final class DerivedConvertedInductionVariable extends DerivedInductionVariable
 {
+    // @field
     private final Stamp stamp;
+    // @field
     private final ValueNode value;
 
     // @cons
-    public DerivedConvertedInductionVariable(LoopEx loop, InductionVariable base, Stamp stamp, ValueNode value)
+    public DerivedConvertedInductionVariable(LoopEx __loop, InductionVariable __base, Stamp __stamp, ValueNode __value)
     {
-        super(loop, base);
-        this.stamp = stamp;
-        this.value = value;
+        super(__loop, __base);
+        this.stamp = __stamp;
+        this.value = __value;
     }
 
     @Override
@@ -68,9 +70,9 @@ public final class DerivedConvertedInductionVariable extends DerivedInductionVar
     }
 
     @Override
-    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp s)
+    public ValueNode extremumNode(boolean __assumePositiveTripCount, Stamp __s)
     {
-        return base.extremumNode(assumePositiveTripCount, s);
+        return base.extremumNode(__assumePositiveTripCount, __s);
     }
 
     @Override

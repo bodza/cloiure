@@ -12,9 +12,9 @@ import giraaff.phases.common.inlining.walker.MethodInvocation;
 public class InlineEverythingPolicy implements InliningPolicy
 {
     @Override
-    public boolean continueInlining(StructuredGraph graph)
+    public boolean continueInlining(StructuredGraph __graph)
     {
-        if (InliningUtil.getNodeCount(graph) >= GraalOptions.maximumDesiredSize)
+        if (InliningUtil.getNodeCount(__graph) >= GraalOptions.maximumDesiredSize)
         {
             throw new BailoutException("Inline all calls failed. The resulting graph is too large.");
         }
@@ -22,7 +22,7 @@ public class InlineEverythingPolicy implements InliningPolicy
     }
 
     @Override
-    public Decision isWorthInlining(Replacements replacements, MethodInvocation invocation, int inliningDepth, boolean fullyProcessed)
+    public Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
     {
         return Decision.YES;
     }

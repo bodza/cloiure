@@ -24,40 +24,46 @@ public class WordTypes
     /**
      * Resolved type for {@link WordBase}.
      */
+    // @field
     private final ResolvedJavaType wordBaseType;
 
     /**
      * Resolved type for {@link Word}.
      */
+    // @field
     private final ResolvedJavaType wordImplType;
 
     /**
      * Resolved type for {@link WordFactory}.
      */
+    // @field
     private final ResolvedJavaType wordFactoryType;
 
     /**
      * Resolved type for {@link ObjectAccess}.
      */
+    // @field
     private final ResolvedJavaType objectAccessType;
 
     /**
      * Resolved type for {@link BarrieredAccess}.
      */
+    // @field
     private final ResolvedJavaType barrieredAccessType;
 
+    // @field
     private final JavaKind wordKind;
 
     // @cons
-    public WordTypes(MetaAccessProvider metaAccess, JavaKind wordKind)
+    public WordTypes(MetaAccessProvider __metaAccess, JavaKind __wordKind)
     {
         super();
-        this.wordKind = wordKind;
-        this.wordBaseType = metaAccess.lookupJavaType(WordBase.class);
-        this.wordImplType = metaAccess.lookupJavaType(Word.class);
-        this.wordFactoryType = metaAccess.lookupJavaType(WordFactory.class);
-        this.objectAccessType = metaAccess.lookupJavaType(ObjectAccess.class);
-        this.barrieredAccessType = metaAccess.lookupJavaType(BarrieredAccess.class);
+        this.wordKind = __wordKind;
+        this.wordBaseType = __metaAccess.lookupJavaType(WordBase.class);
+        this.wordImplType = __metaAccess.lookupJavaType(Word.class);
+        this.wordFactoryType = __metaAccess.lookupJavaType(WordFactory.class);
+        this.objectAccessType = __metaAccess.lookupJavaType(ObjectAccess.class);
+        this.barrieredAccessType = __metaAccess.lookupJavaType(BarrieredAccess.class);
 
         Word.ensureInitialized();
         this.wordImplType.initialize();
@@ -66,20 +72,20 @@ public class WordTypes
     /**
      * Determines if a given method denotes a word operation.
      */
-    public boolean isWordOperation(ResolvedJavaMethod targetMethod)
+    public boolean isWordOperation(ResolvedJavaMethod __targetMethod)
     {
-        final boolean isWordFactory = wordFactoryType.equals(targetMethod.getDeclaringClass());
-        if (isWordFactory)
+        final boolean __isWordFactory = wordFactoryType.equals(__targetMethod.getDeclaringClass());
+        if (__isWordFactory)
         {
             return true;
         }
-        final boolean isObjectAccess = objectAccessType.equals(targetMethod.getDeclaringClass());
-        final boolean isBarrieredAccess = barrieredAccessType.equals(targetMethod.getDeclaringClass());
-        if (isObjectAccess || isBarrieredAccess)
+        final boolean __isObjectAccess = objectAccessType.equals(__targetMethod.getDeclaringClass());
+        final boolean __isBarrieredAccess = barrieredAccessType.equals(__targetMethod.getDeclaringClass());
+        if (__isObjectAccess || __isBarrieredAccess)
         {
             return true;
         }
-        return isWord(targetMethod.getDeclaringClass());
+        return isWord(__targetMethod.getDeclaringClass());
     }
 
     /**
@@ -90,46 +96,46 @@ public class WordTypes
      *            {@code targetMethod} is invoked
      * @return the {@link Operation} method resolved for {@code targetMethod} if any
      */
-    public ResolvedJavaMethod getWordOperation(ResolvedJavaMethod targetMethod, ResolvedJavaType callingContextType)
+    public ResolvedJavaMethod getWordOperation(ResolvedJavaMethod __targetMethod, ResolvedJavaType __callingContextType)
     {
-        final boolean isWordBase = wordBaseType.isAssignableFrom(targetMethod.getDeclaringClass());
-        ResolvedJavaMethod wordMethod = targetMethod;
-        if (isWordBase && !targetMethod.isStatic())
+        final boolean __isWordBase = wordBaseType.isAssignableFrom(__targetMethod.getDeclaringClass());
+        ResolvedJavaMethod __wordMethod = __targetMethod;
+        if (__isWordBase && !__targetMethod.isStatic())
         {
-            wordMethod = wordImplType.resolveConcreteMethod(targetMethod, callingContextType);
+            __wordMethod = wordImplType.resolveConcreteMethod(__targetMethod, __callingContextType);
         }
-        return wordMethod;
+        return __wordMethod;
     }
 
     /**
      * Determines if a given node has a word type.
      */
-    public boolean isWord(ValueNode node)
+    public boolean isWord(ValueNode __node)
     {
-        return isWord(StampTool.typeOrNull(node));
+        return isWord(StampTool.typeOrNull(__node));
     }
 
     /**
      * Determines if a given type is a word type.
      */
-    public boolean isWord(JavaType type)
+    public boolean isWord(JavaType __type)
     {
-        return type instanceof ResolvedJavaType && wordBaseType.isAssignableFrom((ResolvedJavaType) type);
+        return __type instanceof ResolvedJavaType && wordBaseType.isAssignableFrom((ResolvedJavaType) __type);
     }
 
     /**
      * Gets the kind for a given type, returning the {@linkplain #getWordKind() word kind} if
      * {@code type} is a {@linkplain #isWord(JavaType) word type}.
      */
-    public JavaKind asKind(JavaType type)
+    public JavaKind asKind(JavaType __type)
     {
-        if (isWord(type))
+        if (isWord(__type))
         {
             return wordKind;
         }
         else
         {
-            return type.getJavaKind();
+            return __type.getJavaKind();
         }
     }
 
@@ -141,7 +147,7 @@ public class WordTypes
     /**
      * Gets the stamp for a given {@linkplain #isWord(JavaType) word type}.
      */
-    public Stamp getWordStamp(ResolvedJavaType type)
+    public Stamp getWordStamp(ResolvedJavaType __type)
     {
         return StampFactory.forKind(wordKind);
     }

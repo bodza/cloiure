@@ -8,9 +8,13 @@ package giraaff.bytecode;
 // @class BytecodeStream
 public final class BytecodeStream
 {
+    // @field
     private final byte[] code;
+    // @field
     private int opcode;
+    // @field
     private int curBCI;
+    // @field
     private int nextBCI;
 
     /**
@@ -19,10 +23,10 @@ public final class BytecodeStream
      * @param code the array of bytes that contains the bytecode
      */
     // @cons
-    public BytecodeStream(byte[] code)
+    public BytecodeStream(byte[] __code)
     {
         super();
-        this.code = code;
+        this.code = __code;
         setBCI(0);
     }
 
@@ -137,10 +141,10 @@ public final class BytecodeStream
      * @param bci the bytecode index
      * @return the integer value
      */
-    public int readInt(int bci)
+    public int readInt(int __bci)
     {
         // reads a 4-byte signed value
-        return Bytes.beS4(code, bci);
+        return Bytes.beS4(code, __bci);
     }
 
     /**
@@ -149,9 +153,9 @@ public final class BytecodeStream
      * @param bci the bytecode index
      * @return the byte
      */
-    public int readUByte(int bci)
+    public int readUByte(int __bci)
     {
-        return Bytes.beU1(code, bci);
+        return Bytes.beU1(code, __bci);
     }
 
     /**
@@ -205,13 +209,13 @@ public final class BytecodeStream
      *
      * @param bci the new bytecode index
      */
-    public void setBCI(int bci)
+    public void setBCI(int __bci)
     {
-        curBCI = bci;
+        curBCI = __bci;
         if (curBCI < code.length)
         {
-            opcode = Bytes.beU1(code, bci);
-            nextBCI = bci + lengthOf();
+            opcode = Bytes.beU1(code, __bci);
+            nextBCI = __bci + lengthOf();
         }
         else
         {
@@ -225,8 +229,8 @@ public final class BytecodeStream
      */
     private int lengthOf()
     {
-        int length = Bytecodes.lengthOf(opcode);
-        if (length == 0)
+        int __length = Bytecodes.lengthOf(opcode);
+        if (__length == 0)
         {
             switch (opcode)
             {
@@ -240,12 +244,12 @@ public final class BytecodeStream
                 }
                 case Bytecodes.WIDE:
                 {
-                    int opc = Bytes.beU1(code, curBCI + 1);
-                    if (opc == Bytecodes.RET)
+                    int __opc = Bytes.beU1(code, curBCI + 1);
+                    if (__opc == Bytecodes.RET)
                     {
                         return 4;
                     }
-                    else if (opc == Bytecodes.IINC)
+                    else if (__opc == Bytecodes.IINC)
                     {
                         return 6;
                     }
@@ -258,6 +262,6 @@ public final class BytecodeStream
                     throw new Error("unknown variable-length bytecode: " + opcode);
             }
         }
-        return length;
+        return __length;
     }
 }

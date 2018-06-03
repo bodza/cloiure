@@ -22,13 +22,16 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 // @class ShiftNode
 public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, NarrowableArithmeticNode
 {
-    @SuppressWarnings("rawtypes") public static final NodeClass<ShiftNode> TYPE = NodeClass.create(ShiftNode.class);
+    @SuppressWarnings("rawtypes")
+    // @def
+    public static final NodeClass<ShiftNode> TYPE = NodeClass.create(ShiftNode.class);
 
     // @iface ShiftNode.SerializableShiftFunction
     protected interface SerializableShiftFunction<T> extends Function<ArithmeticOpTable, ShiftOp<T>>
     {
     }
 
+    // @field
     protected final SerializableShiftFunction<OP> getOp;
 
     /**
@@ -38,15 +41,15 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
      * @param s the second input value
      */
     // @cons
-    protected ShiftNode(NodeClass<? extends ShiftNode<OP>> c, SerializableShiftFunction<OP> getOp, ValueNode x, ValueNode s)
+    protected ShiftNode(NodeClass<? extends ShiftNode<OP>> __c, SerializableShiftFunction<OP> __getOp, ValueNode __x, ValueNode __s)
     {
-        super(c, getOp.apply(ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT))).foldStamp(x.stamp(NodeView.DEFAULT), (IntegerStamp) s.stamp(NodeView.DEFAULT)), x, s);
-        this.getOp = getOp;
+        super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT))).foldStamp(__x.stamp(NodeView.DEFAULT), (IntegerStamp) __s.stamp(NodeView.DEFAULT)), __x, __s);
+        this.getOp = __getOp;
     }
 
-    protected final ShiftOp<OP> getOp(ValueNode forValue)
+    protected final ShiftOp<OP> getOp(ValueNode __forValue)
     {
-        return getOp.apply(ArithmeticOpTable.forStamp(forValue.stamp(NodeView.DEFAULT)));
+        return getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
@@ -56,30 +59,30 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     }
 
     @Override
-    public Stamp foldStamp(Stamp stampX, Stamp stampY)
+    public Stamp foldStamp(Stamp __stampX, Stamp __stampY)
     {
-        return getArithmeticOp().foldStamp(stampX, (IntegerStamp) stampY);
+        return getArithmeticOp().foldStamp(__stampX, (IntegerStamp) __stampY);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode valueNode = canonical(getOp(forX), stamp(NodeView.DEFAULT), forX, forY, view);
-        if (valueNode != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __valueNode = canonical(getOp(__forX), stamp(NodeView.DEFAULT), __forX, __forY, __view);
+        if (__valueNode != null)
         {
-            return valueNode;
+            return __valueNode;
         }
         return this;
     }
 
     @SuppressWarnings("unused")
-    public static <OP> ValueNode canonical(ShiftOp<OP> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    public static <OP> ValueNode canonical(ShiftOp<OP> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        if (forX.isConstant() && forY.isConstant())
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            JavaConstant amount = forY.asJavaConstant();
-            return ConstantNode.forPrimitive(stamp, op.foldConstant(forX.asConstant(), amount.asInt()));
+            JavaConstant __amount = __forY.asJavaConstant();
+            return ConstantNode.forPrimitive(__stamp, __op.foldConstant(__forX.asConstant(), __amount.asInt()));
         }
         return null;
     }
@@ -90,16 +93,16 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     }
 
     @Override
-    public boolean isNarrowable(int resultBits)
+    public boolean isNarrowable(int __resultBits)
     {
-        int narrowMask = resultBits - 1;
-        int wideMask = getShiftAmountMask();
+        int __narrowMask = __resultBits - 1;
+        int __wideMask = getShiftAmountMask();
 
         /*
          * Shifts are special because narrowing them also changes the implicit mask of the shift amount.
          * We can narrow only if (y & wideMask) == (y & narrowMask) for all possible values of y.
          */
-        IntegerStamp yStamp = (IntegerStamp) getY().stamp(NodeView.DEFAULT);
-        return (yStamp.upMask() & (wideMask & ~narrowMask)) == 0;
+        IntegerStamp __yStamp = (IntegerStamp) getY().stamp(NodeView.DEFAULT);
+        return (__yStamp.upMask() & (__wideMask & ~__narrowMask)) == 0;
     }
 }

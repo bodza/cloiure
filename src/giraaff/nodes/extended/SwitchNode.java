@@ -21,13 +21,20 @@ import giraaff.util.GraalError;
 // @class SwitchNode
 public abstract class SwitchNode extends ControlSplitNode
 {
+    // @def
     public static final NodeClass<SwitchNode> TYPE = NodeClass.create(SwitchNode.class);
 
-    @Successor protected NodeSuccessorList<AbstractBeginNode> successors;
-    @Input protected ValueNode value;
+    @Successor
+    // @field
+    protected NodeSuccessorList<AbstractBeginNode> successors;
+    @Input
+    // @field
+    protected ValueNode value;
 
     // do not change the contents of these arrays:
+    // @field
     protected final double[] keyProbabilities;
+    // @field
     protected final int[] keySuccessors;
 
     /**
@@ -37,21 +44,21 @@ public abstract class SwitchNode extends ControlSplitNode
      * @param successors the list of successors of this switch
      */
     // @cons
-    protected SwitchNode(NodeClass<? extends SwitchNode> c, ValueNode value, AbstractBeginNode[] successors, int[] keySuccessors, double[] keyProbabilities)
+    protected SwitchNode(NodeClass<? extends SwitchNode> __c, ValueNode __value, AbstractBeginNode[] __successors, int[] __keySuccessors, double[] __keyProbabilities)
     {
-        super(c, StampFactory.forVoid());
-        this.successors = new NodeSuccessorList<>(this, successors);
-        this.value = value;
-        this.keySuccessors = keySuccessors;
-        this.keyProbabilities = keyProbabilities;
+        super(__c, StampFactory.forVoid());
+        this.successors = new NodeSuccessorList<>(this, __successors);
+        this.value = __value;
+        this.keySuccessors = __keySuccessors;
+        this.keyProbabilities = __keyProbabilities;
     }
 
     private boolean assertProbabilities()
     {
-        double total = 0;
-        for (double d : keyProbabilities)
+        double __total = 0;
+        for (double __d : keyProbabilities)
         {
-            total += d;
+            __total += __d;
         }
         return true;
     }
@@ -63,53 +70,53 @@ public abstract class SwitchNode extends ControlSplitNode
     }
 
     @Override
-    public double probability(AbstractBeginNode successor)
+    public double probability(AbstractBeginNode __successor)
     {
-        double sum = 0;
-        for (int i = 0; i < keySuccessors.length; i++)
+        double __sum = 0;
+        for (int __i = 0; __i < keySuccessors.length; __i++)
         {
-            if (successors.get(keySuccessors[i]) == successor)
+            if (successors.get(keySuccessors[__i]) == __successor)
             {
-                sum += keyProbabilities[i];
+                __sum += keyProbabilities[__i];
             }
         }
-        return sum;
+        return __sum;
     }
 
     @Override
-    public boolean setProbability(AbstractBeginNode successor, double value)
+    public boolean setProbability(AbstractBeginNode __successor, double __value)
     {
-        double sum = 0;
-        double otherSum = 0;
-        for (int i = 0; i < keySuccessors.length; i++)
+        double __sum = 0;
+        double __otherSum = 0;
+        for (int __i = 0; __i < keySuccessors.length; __i++)
         {
-            if (successors.get(keySuccessors[i]) == successor)
+            if (successors.get(keySuccessors[__i]) == __successor)
             {
-                sum += keyProbabilities[i];
+                __sum += keyProbabilities[__i];
             }
             else
             {
-                otherSum += keyProbabilities[i];
+                __otherSum += keyProbabilities[__i];
             }
         }
 
-        if (otherSum == 0 || sum == 0)
+        if (__otherSum == 0 || __sum == 0)
         {
             // Cannot correctly adjust probabilities.
             return false;
         }
 
-        double delta = value - sum;
+        double __delta = __value - __sum;
 
-        for (int i = 0; i < keySuccessors.length; i++)
+        for (int __i = 0; __i < keySuccessors.length; __i++)
         {
-            if (successors.get(keySuccessors[i]) == successor)
+            if (successors.get(keySuccessors[__i]) == __successor)
             {
-                keyProbabilities[i] = Math.max(0.0, keyProbabilities[i] + (delta * keyProbabilities[i]) / sum);
+                keyProbabilities[__i] = Math.max(0.0, keyProbabilities[__i] + (__delta * keyProbabilities[__i]) / __sum);
             }
             else
             {
-                keyProbabilities[i] = Math.max(0.0, keyProbabilities[i] - (delta * keyProbabilities[i]) / otherSum);
+                keyProbabilities[__i] = Math.max(0.0, keyProbabilities[__i] - (__delta * keyProbabilities[__i]) / __otherSum);
             }
         }
         return true;
@@ -132,9 +139,9 @@ public abstract class SwitchNode extends ControlSplitNode
      */
     public abstract Constant keyAt(int i);
 
-    public boolean structureEquals(SwitchNode switchNode)
+    public boolean structureEquals(SwitchNode __switchNode)
     {
-        return Arrays.equals(keySuccessors, switchNode.keySuccessors) && equalKeys(switchNode);
+        return Arrays.equals(keySuccessors, __switchNode.keySuccessors) && equalKeys(__switchNode);
     }
 
     /**
@@ -145,25 +152,25 @@ public abstract class SwitchNode extends ControlSplitNode
     /**
      * Returns the index of the successor belonging to the key at the specified index.
      */
-    public int keySuccessorIndex(int i)
+    public int keySuccessorIndex(int __i)
     {
-        return keySuccessors[i];
+        return keySuccessors[__i];
     }
 
     /**
      * Returns the successor for the key at the given index.
      */
-    public AbstractBeginNode keySuccessor(int i)
+    public AbstractBeginNode keySuccessor(int __i)
     {
-        return successors.get(keySuccessors[i]);
+        return successors.get(keySuccessors[__i]);
     }
 
     /**
      * Returns the probability of the key at the given index.
      */
-    public double keyProbability(int i)
+    public double keyProbability(int __i)
     {
-        return keyProbabilities[i];
+        return keyProbabilities[__i];
     }
 
     /**
@@ -174,14 +181,14 @@ public abstract class SwitchNode extends ControlSplitNode
         return keySuccessors[keySuccessors.length - 1];
     }
 
-    public AbstractBeginNode blockSuccessor(int i)
+    public AbstractBeginNode blockSuccessor(int __i)
     {
-        return successors.get(i);
+        return successors.get(__i);
     }
 
-    public void setBlockSuccessor(int i, AbstractBeginNode s)
+    public void setBlockSuccessor(int __i, AbstractBeginNode __s)
     {
-        successors.set(i, s);
+        successors.set(__i, __s);
     }
 
     public int blockSuccessorCount()
@@ -214,18 +221,18 @@ public abstract class SwitchNode extends ControlSplitNode
      *
      * @param survivingEdge index of the edge in the {@link SwitchNode#successors} list
      */
-    protected void killOtherSuccessors(SimplifierTool tool, int survivingEdge)
+    protected void killOtherSuccessors(SimplifierTool __tool, int __survivingEdge)
     {
-        for (Node successor : successors())
+        for (Node __successor : successors())
         {
             // Deleting a branch change change the successors so reload the surviving successor each time.
-            if (successor != blockSuccessor(survivingEdge))
+            if (__successor != blockSuccessor(__survivingEdge))
             {
-                tool.deleteBranch(successor);
+                __tool.deleteBranch(__successor);
             }
         }
-        tool.addToWorkList(blockSuccessor(survivingEdge));
-        graph().removeSplit(this, blockSuccessor(survivingEdge));
+        __tool.addToWorkList(blockSuccessor(__survivingEdge));
+        graph().removeSplit(this, blockSuccessor(__survivingEdge));
     }
 
     public abstract Stamp getValueStampForSuccessor(AbstractBeginNode beginNode);

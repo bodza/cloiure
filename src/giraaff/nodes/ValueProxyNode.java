@@ -13,17 +13,21 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class ValueProxyNode
 public final class ValueProxyNode extends ProxyNode implements Canonicalizable, Virtualizable, ValueProxy
 {
+    // @def
     public static final NodeClass<ValueProxyNode> TYPE = NodeClass.create(ValueProxyNode.class);
 
-    @Input ValueNode value;
+    @Input
+    // @field
+    ValueNode value;
+    // @field
     private final boolean loopPhiProxy;
 
     // @cons
-    public ValueProxyNode(ValueNode value, LoopExitNode loopExit)
+    public ValueProxyNode(ValueNode __value, LoopExitNode __loopExit)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT), loopExit);
-        this.value = value;
-        loopPhiProxy = loopExit.loopBegin().isPhiAtMerge(value);
+        super(TYPE, __value.stamp(NodeView.DEFAULT), __loopExit);
+        this.value = __value;
+        loopPhiProxy = __loopExit.loopBegin().isPhiAtMerge(__value);
     }
 
     @Override
@@ -39,27 +43,27 @@ public final class ValueProxyNode extends ProxyNode implements Canonicalizable, 
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        ValueNode curValue = value;
-        if (curValue.isConstant())
+        ValueNode __curValue = value;
+        if (__curValue.isConstant())
         {
-            return curValue;
+            return __curValue;
         }
-        if (loopPhiProxy && !loopExit.loopBegin().isPhiAtMerge(curValue))
+        if (loopPhiProxy && !loopExit.loopBegin().isPhiAtMerge(__curValue))
         {
-            return curValue;
+            return __curValue;
         }
         return this;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(value);
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(value);
+        if (__alias instanceof VirtualObjectNode)
         {
-            tool.replaceWithVirtual((VirtualObjectNode) alias);
+            __tool.replaceWithVirtual((VirtualObjectNode) __alias);
         }
     }
 

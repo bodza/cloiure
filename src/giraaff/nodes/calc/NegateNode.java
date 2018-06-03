@@ -18,64 +18,65 @@ import giraaff.nodes.spi.StampInverter;
 // @class NegateNode
 public final class NegateNode extends UnaryArithmeticNode<Neg> implements NarrowableArithmeticNode, StampInverter
 {
+    // @def
     public static final NodeClass<NegateNode> TYPE = NodeClass.create(NegateNode.class);
 
     // @cons
-    public NegateNode(ValueNode value)
+    public NegateNode(ValueNode __value)
     {
-        super(TYPE, ArithmeticOpTable::getNeg, value);
+        super(TYPE, ArithmeticOpTable::getNeg, __value);
     }
 
-    public static ValueNode create(ValueNode value, NodeView view)
+    public static ValueNode create(ValueNode __value, NodeView __view)
     {
-        ValueNode synonym = findSynonym(value, view);
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__value, __view);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return new NegateNode(value);
+        return new NegateNode(__value);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode synonym = findSynonym(forValue, getOp(forValue));
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__forValue, getOp(__forValue));
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         return this;
     }
 
-    protected static ValueNode findSynonym(ValueNode forValue, NodeView view)
+    protected static ValueNode findSynonym(ValueNode __forValue, NodeView __view)
     {
-        ArithmeticOpTable.UnaryOp<Neg> negOp = ArithmeticOpTable.forStamp(forValue.stamp(view)).getNeg();
-        ValueNode synonym = UnaryArithmeticNode.findSynonym(forValue, negOp);
-        if (synonym != null)
+        ArithmeticOpTable.UnaryOp<Neg> __negOp = ArithmeticOpTable.forStamp(__forValue.stamp(__view)).getNeg();
+        ValueNode __synonym = UnaryArithmeticNode.findSynonym(__forValue, __negOp);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        if (forValue instanceof NegateNode)
+        if (__forValue instanceof NegateNode)
         {
-            return ((NegateNode) forValue).getValue();
+            return ((NegateNode) __forValue).getValue();
         }
-        if (forValue instanceof SubNode && !(forValue.stamp(view) instanceof FloatStamp))
+        if (__forValue instanceof SubNode && !(__forValue.stamp(__view) instanceof FloatStamp))
         {
-            SubNode sub = (SubNode) forValue;
-            return SubNode.create(sub.getY(), sub.getX(), view);
+            SubNode __sub = (SubNode) __forValue;
+            return SubNode.create(__sub.getY(), __sub.getX(), __view);
         }
         return null;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitNegate(nodeValueMap.operand(getValue())));
+        __nodeValueMap.setResult(this, __gen.emitNegate(__nodeValueMap.operand(getValue())));
     }
 
     @Override
-    public Stamp invertStamp(Stamp outStamp)
+    public Stamp invertStamp(Stamp __outStamp)
     {
-        return getArithmeticOp().foldStamp(outStamp);
+        return getArithmeticOp().foldStamp(__outStamp);
     }
 }

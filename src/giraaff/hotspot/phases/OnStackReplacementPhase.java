@@ -56,23 +56,23 @@ public final class OnStackReplacementPhase extends Phase
     }
 
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        if (graph.getEntryBCI() == JVMCICompiler.INVOCATION_ENTRY_BCI)
+        if (__graph.getEntryBCI() == JVMCICompiler.INVOCATION_ENTRY_BCI)
         {
             // This happens during inlining in a OSR method, because the same phase plan will be used.
             return;
         }
 
-        EntryMarkerNode osr;
-        int maxIterations = -1;
-        int iterations = 0;
+        EntryMarkerNode __osr;
+        int __maxIterations = -1;
+        int __iterations = 0;
 
-        final EntryMarkerNode originalOSRNode = getEntryMarker(graph);
-        final LoopBeginNode originalOSRLoop = osrLoop(originalOSRNode);
-        final boolean currentOSRWithLocks = osrWithLocks(originalOSRNode);
+        final EntryMarkerNode __originalOSRNode = getEntryMarker(__graph);
+        final LoopBeginNode __originalOSRLoop = osrLoop(__originalOSRNode);
+        final boolean __currentOSRWithLocks = osrWithLocks(__originalOSRNode);
 
-        if (originalOSRLoop == null)
+        if (__originalOSRLoop == null)
         {
             /*
              * OSR with Locks: We do not have an OSR loop for the original OSR bci. Therefore we
@@ -82,132 +82,132 @@ public final class OnStackReplacementPhase extends Phase
             throw new BailoutException("OSR compilation without OSR entry loop.");
         }
 
-        if (!GraalOptions.supportOSRWithLocks && currentOSRWithLocks)
+        if (!GraalOptions.supportOSRWithLocks && __currentOSRWithLocks)
         {
             throw new BailoutException("OSR with locks disabled.");
         }
 
         while (true)
         {
-            osr = getEntryMarker(graph);
-            LoopsData loops = new LoopsData(graph);
+            __osr = getEntryMarker(__graph);
+            LoopsData __loops = new LoopsData(__graph);
             // find the loop that contains the EntryMarker
-            Loop<Block> l = loops.getCFG().getNodeToBlock().get(osr).getLoop();
-            if (l == null)
+            Loop<Block> __l = __loops.getCFG().getNodeToBlock().get(__osr).getLoop();
+            if (__l == null)
             {
                 break;
             }
 
-            iterations++;
-            if (maxIterations == -1)
+            __iterations++;
+            if (__maxIterations == -1)
             {
-                maxIterations = l.getDepth();
+                __maxIterations = __l.getDepth();
             }
-            else if (iterations > maxIterations)
+            else if (__iterations > __maxIterations)
             {
                 throw GraalError.shouldNotReachHere();
             }
             // peel the outermost loop first
-            while (l.getParent() != null)
+            while (__l.getParent() != null)
             {
-                l = l.getParent();
+                __l = __l.getParent();
             }
 
-            LoopTransformations.peel(loops.loop(l));
-            osr.replaceAtUsages(InputType.Guard, AbstractBeginNode.prevBegin((FixedNode) osr.predecessor()));
-            for (Node usage : osr.usages().snapshot())
+            LoopTransformations.peel(__loops.loop(__l));
+            __osr.replaceAtUsages(InputType.Guard, AbstractBeginNode.prevBegin((FixedNode) __osr.predecessor()));
+            for (Node __usage : __osr.usages().snapshot())
             {
-                EntryProxyNode proxy = (EntryProxyNode) usage;
-                proxy.replaceAndDelete(proxy.value());
+                EntryProxyNode __proxy = (EntryProxyNode) __usage;
+                __proxy.replaceAndDelete(__proxy.value());
             }
-            GraphUtil.removeFixedWithUnusedInputs(osr);
+            GraphUtil.removeFixedWithUnusedInputs(__osr);
         }
 
-        StartNode start = graph.start();
-        FrameState osrState = osr.stateAfter();
-        osr.setStateAfter(null);
-        OSRStartNode osrStart = graph.add(new OSRStartNode());
-        FixedNode next = osr.next();
-        osr.setNext(null);
-        osrStart.setNext(next);
-        graph.setStart(osrStart);
-        osrStart.setStateAfter(osrState);
+        StartNode __start = __graph.start();
+        FrameState __osrState = __osr.stateAfter();
+        __osr.setStateAfter(null);
+        OSRStartNode __osrStart = __graph.add(new OSRStartNode());
+        FixedNode __next = __osr.next();
+        __osr.setNext(null);
+        __osrStart.setNext(__next);
+        __graph.setStart(__osrStart);
+        __osrStart.setStateAfter(__osrState);
 
-        final int localsSize = osrState.localsSize();
-        final int locksSize = osrState.locksSize();
+        final int __localsSize = __osrState.localsSize();
+        final int __locksSize = __osrState.locksSize();
 
-        for (int i = 0; i < localsSize + locksSize; i++)
+        for (int __i = 0; __i < __localsSize + __locksSize; __i++)
         {
-            ValueNode value = null;
-            if (i >= localsSize)
+            ValueNode __value = null;
+            if (__i >= __localsSize)
             {
-                value = osrState.lockAt(i - localsSize);
+                __value = __osrState.lockAt(__i - __localsSize);
             }
             else
             {
-                value = osrState.localAt(i);
+                __value = __osrState.localAt(__i);
             }
-            if (value instanceof EntryProxyNode)
+            if (__value instanceof EntryProxyNode)
             {
-                EntryProxyNode proxy = (EntryProxyNode) value;
+                EntryProxyNode __proxy = (EntryProxyNode) __value;
                 /*
                  * We need to drop the stamp since the types we see during OSR may be too
                  * precise (if a branch was not parsed for example). In cases when this is
                  * possible, we insert a guard and narrow the OSRLocal stamp at its usages.
                  */
-                Stamp narrowedStamp = proxy.value().stamp(NodeView.DEFAULT);
-                Stamp unrestrictedStamp = proxy.stamp(NodeView.DEFAULT).unrestricted();
-                ValueNode osrLocal;
-                if (i >= localsSize)
+                Stamp __narrowedStamp = __proxy.value().stamp(NodeView.DEFAULT);
+                Stamp __unrestrictedStamp = __proxy.stamp(NodeView.DEFAULT).unrestricted();
+                ValueNode __osrLocal;
+                if (__i >= __localsSize)
                 {
-                    osrLocal = graph.addOrUnique(new OSRLockNode(i - localsSize, unrestrictedStamp));
+                    __osrLocal = __graph.addOrUnique(new OSRLockNode(__i - __localsSize, __unrestrictedStamp));
                 }
                 else
                 {
-                    osrLocal = graph.addOrUnique(new OSRLocalNode(i, unrestrictedStamp));
+                    __osrLocal = __graph.addOrUnique(new OSRLocalNode(__i, __unrestrictedStamp));
                 }
                 // Speculate on the OSRLocal stamps that could be more precise.
-                OSRLocalSpeculationReason reason = new OSRLocalSpeculationReason(osrState.bci, narrowedStamp, i);
-                if (graph.getSpeculationLog().maySpeculate(reason) && osrLocal instanceof OSRLocalNode && value.getStackKind().equals(JavaKind.Object) && !narrowedStamp.isUnrestricted())
+                OSRLocalSpeculationReason __reason = new OSRLocalSpeculationReason(__osrState.bci, __narrowedStamp, __i);
+                if (__graph.getSpeculationLog().maySpeculate(__reason) && __osrLocal instanceof OSRLocalNode && __value.getStackKind().equals(JavaKind.Object) && !__narrowedStamp.isUnrestricted())
                 {
                     // Add guard.
-                    LogicNode check = graph.addOrUniqueWithInputs(InstanceOfNode.createHelper((ObjectStamp) narrowedStamp, osrLocal, null, null));
-                    JavaConstant constant = graph.getSpeculationLog().speculate(reason);
-                    FixedGuardNode guard = graph.add(new FixedGuardNode(check, DeoptimizationReason.OptimizedTypeCheckViolated, DeoptimizationAction.InvalidateRecompile, constant, false));
-                    graph.addAfterFixed(osrStart, guard);
+                    LogicNode __check = __graph.addOrUniqueWithInputs(InstanceOfNode.createHelper((ObjectStamp) __narrowedStamp, __osrLocal, null, null));
+                    JavaConstant __constant = __graph.getSpeculationLog().speculate(__reason);
+                    FixedGuardNode __guard = __graph.add(new FixedGuardNode(__check, DeoptimizationReason.OptimizedTypeCheckViolated, DeoptimizationAction.InvalidateRecompile, __constant, false));
+                    __graph.addAfterFixed(__osrStart, __guard);
 
                     // Replace with a more specific type at usages.
                     // We know that we are at the root, so we need to replace the proxy in the state.
-                    proxy.replaceAtMatchingUsages(osrLocal, n -> n == osrState);
-                    osrLocal = graph.addOrUnique(new PiNode(osrLocal, narrowedStamp, guard));
+                    __proxy.replaceAtMatchingUsages(__osrLocal, __n -> __n == __osrState);
+                    __osrLocal = __graph.addOrUnique(new PiNode(__osrLocal, __narrowedStamp, __guard));
                 }
-                proxy.replaceAndDelete(osrLocal);
+                __proxy.replaceAndDelete(__osrLocal);
             }
         }
 
-        osr.replaceAtUsages(InputType.Guard, osrStart);
-        GraphUtil.killCFG(start);
-        new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
+        __osr.replaceAtUsages(InputType.Guard, __osrStart);
+        GraphUtil.killCFG(__start);
+        new DeadCodeEliminationPhase(Optionality.Required).apply(__graph);
 
-        if (currentOSRWithLocks)
+        if (__currentOSRWithLocks)
         {
-            for (int i = osrState.monitorIdCount() - 1; i >= 0; --i)
+            for (int __i = __osrState.monitorIdCount() - 1; __i >= 0; --__i)
             {
-                MonitorIdNode id = osrState.monitorIdAt(i);
-                ValueNode lockedObject = osrState.lockAt(i);
-                OSRMonitorEnterNode osrMonitorEnter = graph.add(new OSRMonitorEnterNode(lockedObject, id));
-                for (Node usage : id.usages())
+                MonitorIdNode __id = __osrState.monitorIdAt(__i);
+                ValueNode __lockedObject = __osrState.lockAt(__i);
+                OSRMonitorEnterNode __osrMonitorEnter = __graph.add(new OSRMonitorEnterNode(__lockedObject, __id));
+                for (Node __usage : __id.usages())
                 {
-                    if (usage instanceof AccessMonitorNode)
+                    if (__usage instanceof AccessMonitorNode)
                     {
-                        AccessMonitorNode access = (AccessMonitorNode) usage;
-                        access.setObject(lockedObject);
+                        AccessMonitorNode __access = (AccessMonitorNode) __usage;
+                        __access.setObject(__lockedObject);
                     }
                 }
-                FixedNode oldNext = osrStart.next();
-                oldNext.replaceAtPredecessor(null);
-                osrMonitorEnter.setNext(oldNext);
-                osrStart.setNext(osrMonitorEnter);
+                FixedNode __oldNext = __osrStart.next();
+                __oldNext.replaceAtPredecessor(null);
+                __osrMonitorEnter.setNext(__oldNext);
+                __osrStart.setNext(__osrMonitorEnter);
             }
 
             /*
@@ -218,78 +218,81 @@ public final class OnStackReplacementPhase extends Phase
              * loop but the exit in a path of the loop that must be under a condition, else it will
              * throw an IllegalStateException anyway in the 2.iteration
              */
-            for (MonitorExitNode exit : graph.getNodes(MonitorExitNode.TYPE))
+            for (MonitorExitNode __exit : __graph.getNodes(MonitorExitNode.TYPE))
             {
-                MonitorIdNode id = exit.getMonitorId();
-                if (id.usages().filter(MonitorEnterNode.class).count() != 1)
+                MonitorIdNode __id = __exit.getMonitorId();
+                if (__id.usages().filter(MonitorEnterNode.class).count() != 1)
                 {
                     throw new BailoutException("Unbalanced monitor enter-exit in OSR compilation with locks. Object is locked before the loop, but released inside the loop.");
                 }
             }
         }
-        new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
+        new DeadCodeEliminationPhase(Optionality.Required).apply(__graph);
         // There must not be any parameter nodes left after OSR compilation.
     }
 
-    private static EntryMarkerNode getEntryMarker(StructuredGraph graph)
+    private static EntryMarkerNode getEntryMarker(StructuredGraph __graph)
     {
-        NodeIterable<EntryMarkerNode> osrNodes = graph.getNodes(EntryMarkerNode.TYPE);
-        EntryMarkerNode osr = osrNodes.first();
-        if (osr == null)
+        NodeIterable<EntryMarkerNode> __osrNodes = __graph.getNodes(EntryMarkerNode.TYPE);
+        EntryMarkerNode __osr = __osrNodes.first();
+        if (__osr == null)
         {
             throw new BailoutException("no OnStackReplacementNode generated");
         }
-        if (osrNodes.count() > 1)
+        if (__osrNodes.count() > 1)
         {
             throw new GraalError("multiple OnStackReplacementNodes generated");
         }
-        if (osr.stateAfter().stackSize() != 0)
+        if (__osr.stateAfter().stackSize() != 0)
         {
             throw new BailoutException("OSR with stack entries not supported");
         }
-        return osr;
+        return __osr;
     }
 
-    private static LoopBeginNode osrLoop(EntryMarkerNode osr)
+    private static LoopBeginNode osrLoop(EntryMarkerNode __osr)
     {
         // check that there is an OSR loop for the OSR begin
-        LoopsData loops = new LoopsData(osr.graph());
-        Loop<Block> l = loops.getCFG().getNodeToBlock().get(osr).getLoop();
-        if (l == null)
+        LoopsData __loops = new LoopsData(__osr.graph());
+        Loop<Block> __l = __loops.getCFG().getNodeToBlock().get(__osr).getLoop();
+        if (__l == null)
         {
             return null;
         }
-        return (LoopBeginNode) l.getHeader().getBeginNode();
+        return (LoopBeginNode) __l.getHeader().getBeginNode();
     }
 
-    private static boolean osrWithLocks(EntryMarkerNode osr)
+    private static boolean osrWithLocks(EntryMarkerNode __osr)
     {
-        return osr.stateAfter().locksSize() != 0;
+        return __osr.stateAfter().locksSize() != 0;
     }
 
     // @class OnStackReplacementPhase.OSRLocalSpeculationReason
     private static final class OSRLocalSpeculationReason implements SpeculationLog.SpeculationReason
     {
+        // @field
         private int bci;
+        // @field
         private Stamp speculatedStamp;
+        // @field
         private int localIndex;
 
         // @cons
-        OSRLocalSpeculationReason(int bci, Stamp speculatedStamp, int localIndex)
+        OSRLocalSpeculationReason(int __bci, Stamp __speculatedStamp, int __localIndex)
         {
             super();
-            this.bci = bci;
-            this.speculatedStamp = speculatedStamp;
-            this.localIndex = localIndex;
+            this.bci = __bci;
+            this.speculatedStamp = __speculatedStamp;
+            this.localIndex = __localIndex;
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (obj instanceof OSRLocalSpeculationReason)
+            if (__obj instanceof OSRLocalSpeculationReason)
             {
-                OSRLocalSpeculationReason that = (OSRLocalSpeculationReason) obj;
-                return this.bci == that.bci && this.speculatedStamp.equals(that.speculatedStamp) && this.localIndex == that.localIndex;
+                OSRLocalSpeculationReason __that = (OSRLocalSpeculationReason) __obj;
+                return this.bci == __that.bci && this.speculatedStamp.equals(__that.speculatedStamp) && this.localIndex == __that.localIndex;
             }
             return false;
         }

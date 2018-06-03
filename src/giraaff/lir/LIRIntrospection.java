@@ -23,41 +23,49 @@ import giraaff.lir.LIRInstruction.OperandMode;
 // @class LIRIntrospection
 abstract class LIRIntrospection<T> extends FieldIntrospection<T>
 {
+    // @def
     private static final Class<Value> VALUE_CLASS = Value.class;
+    // @def
     private static final Class<ConstantValue> CONSTANT_VALUE_CLASS = ConstantValue.class;
+    // @def
     private static final Class<Variable> VARIABLE_CLASS = Variable.class;
+    // @def
     private static final Class<RegisterValue> REGISTER_VALUE_CLASS = RegisterValue.class;
+    // @def
     private static final Class<StackSlot> STACK_SLOT_CLASS = StackSlot.class;
+    // @def
     private static final Class<Value[]> VALUE_ARRAY_CLASS = Value[].class;
 
     // @cons
-    LIRIntrospection(Class<T> clazz)
+    LIRIntrospection(Class<T> __clazz)
     {
-        super(clazz);
+        super(__clazz);
     }
 
     // @class LIRIntrospection.Values
     protected static final class Values extends Fields
     {
+        // @field
         private final int directCount;
+        // @field
         private final EnumSet<OperandFlag>[] flags;
 
         // @cons
-        public Values(OperandModeAnnotation mode)
+        public Values(OperandModeAnnotation __mode)
         {
-            this(mode.directCount, mode.values);
+            this(__mode.directCount, __mode.values);
         }
 
         @SuppressWarnings({"unchecked"})
         // @cons
-        public Values(int directCount, ArrayList<ValueFieldInfo> fields)
+        public Values(int __directCount, ArrayList<ValueFieldInfo> __fields)
         {
-            super(fields);
-            this.directCount = directCount;
-            flags = (EnumSet<OperandFlag>[]) new EnumSet<?>[fields.size()];
-            for (int i = 0; i < fields.size(); i++)
+            super(__fields);
+            this.directCount = __directCount;
+            flags = (EnumSet<OperandFlag>[]) new EnumSet<?>[__fields.size()];
+            for (int __i = 0; __i < __fields.size(); __i++)
             {
-                flags[i] = fields.get(i).flags;
+                flags[__i] = __fields.get(__i).flags;
             }
         }
 
@@ -66,56 +74,58 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
             return directCount;
         }
 
-        public EnumSet<OperandFlag> getFlags(int i)
+        public EnumSet<OperandFlag> getFlags(int __i)
         {
-            return flags[i];
+            return flags[__i];
         }
 
-        protected Value getValue(Object obj, int index)
+        protected Value getValue(Object __obj, int __index)
         {
-            return (Value) getObject(obj, index);
+            return (Value) getObject(__obj, __index);
         }
 
-        protected void setValue(Object obj, int index, Value value)
+        protected void setValue(Object __obj, int __index, Value __value)
         {
-            putObject(obj, index, value);
+            putObject(__obj, __index, __value);
         }
 
-        protected Value[] getValueArray(Object obj, int index)
+        protected Value[] getValueArray(Object __obj, int __index)
         {
-            return (Value[]) getObject(obj, index);
+            return (Value[]) getObject(__obj, __index);
         }
 
-        protected void setValueArray(Object obj, int index, Value[] valueArray)
+        protected void setValueArray(Object __obj, int __index, Value[] __valueArray)
         {
-            putObject(obj, index, valueArray);
+            putObject(__obj, __index, __valueArray);
         }
     }
 
     /**
      * The component values in an {@link LIRInstruction} or {@link CompositeValue}.
      */
+    // @field
     protected Values values;
 
     // @class LIRIntrospection.ValueFieldInfo
     protected static final class ValueFieldInfo extends FieldsScanner.FieldInfo
     {
+        // @field
         final EnumSet<OperandFlag> flags;
 
         // @cons
-        public ValueFieldInfo(long offset, String name, Class<?> type, Class<?> declaringClass, EnumSet<OperandFlag> flags)
+        public ValueFieldInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass, EnumSet<OperandFlag> __flags)
         {
-            super(offset, name, type, declaringClass);
-            this.flags = flags;
+            super(__offset, __name, __type, __declaringClass);
+            this.flags = __flags;
         }
 
         /**
          * Sorts non-array fields before array fields.
          */
         @Override
-        public int compareTo(FieldsScanner.FieldInfo o)
+        public int compareTo(FieldsScanner.FieldInfo __o)
         {
-            if (VALUE_ARRAY_CLASS.isAssignableFrom(o.type))
+            if (VALUE_ARRAY_CLASS.isAssignableFrom(__o.type))
             {
                 if (!VALUE_ARRAY_CLASS.isAssignableFrom(type))
                 {
@@ -129,7 +139,7 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
                     return 1;
                 }
             }
-            return super.compareTo(o);
+            return super.compareTo(__o);
         }
     }
 
@@ -139,141 +149,144 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
         /**
          * Number of non-array fields in {@link #values}.
          */
+        // @field
         public int directCount;
+        // @field
         public final ArrayList<ValueFieldInfo> values = new ArrayList<>();
     }
 
     // @class LIRIntrospection.LIRFieldsScanner
     protected abstract static class LIRFieldsScanner extends FieldsScanner
     {
+        // @field
         public final EconomicMap<Class<? extends Annotation>, OperandModeAnnotation> valueAnnotations;
 
         // @cons
-        public LIRFieldsScanner(FieldsScanner.CalcOffset calc)
+        public LIRFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
-            super(calc);
+            super(__calc);
             valueAnnotations = EconomicMap.create(Equivalence.DEFAULT);
         }
 
-        protected OperandModeAnnotation getOperandModeAnnotation(Field field)
+        protected OperandModeAnnotation getOperandModeAnnotation(Field __field)
         {
-            OperandModeAnnotation result = null;
-            MapCursor<Class<? extends Annotation>, OperandModeAnnotation> cursor = valueAnnotations.getEntries();
-            while (cursor.advance())
+            OperandModeAnnotation __result = null;
+            MapCursor<Class<? extends Annotation>, OperandModeAnnotation> __cursor = valueAnnotations.getEntries();
+            while (__cursor.advance())
             {
-                Annotation annotation = field.getAnnotation(cursor.getKey());
-                if (annotation != null)
+                Annotation __annotation = __field.getAnnotation(__cursor.getKey());
+                if (__annotation != null)
                 {
-                    result = cursor.getValue();
+                    __result = __cursor.getValue();
                 }
             }
-            return result;
+            return __result;
         }
 
         protected abstract EnumSet<OperandFlag> getFlags(Field field);
 
         @Override
-        protected void scanField(Field field, long offset)
+        protected void scanField(Field __field, long __offset)
         {
-            Class<?> type = field.getType();
-            if (VALUE_CLASS.isAssignableFrom(type) && !CONSTANT_VALUE_CLASS.isAssignableFrom(type))
+            Class<?> __type = __field.getType();
+            if (VALUE_CLASS.isAssignableFrom(__type) && !CONSTANT_VALUE_CLASS.isAssignableFrom(__type))
             {
-                OperandModeAnnotation annotation = getOperandModeAnnotation(field);
-                EnumSet<OperandFlag> flags = getFlags(field);
-                annotation.values.add(new ValueFieldInfo(offset, field.getName(), type, field.getDeclaringClass(), flags));
-                annotation.directCount++;
+                OperandModeAnnotation __annotation = getOperandModeAnnotation(__field);
+                EnumSet<OperandFlag> __flags = getFlags(__field);
+                __annotation.values.add(new ValueFieldInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __flags));
+                __annotation.directCount++;
             }
-            else if (VALUE_ARRAY_CLASS.isAssignableFrom(type))
+            else if (VALUE_ARRAY_CLASS.isAssignableFrom(__type))
             {
-                OperandModeAnnotation annotation = getOperandModeAnnotation(field);
-                EnumSet<OperandFlag> flags = getFlags(field);
-                annotation.values.add(new ValueFieldInfo(offset, field.getName(), type, field.getDeclaringClass(), flags));
+                OperandModeAnnotation __annotation = getOperandModeAnnotation(__field);
+                EnumSet<OperandFlag> __flags = getFlags(__field);
+                __annotation.values.add(new ValueFieldInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __flags));
             }
             else
             {
-                super.scanField(field, offset);
+                super.scanField(__field, __offset);
             }
         }
     }
 
-    protected static void forEach(LIRInstruction inst, Values values, OperandMode mode, InstructionValueProcedure proc)
+    protected static void forEach(LIRInstruction __inst, Values __values, OperandMode __mode, InstructionValueProcedure __proc)
     {
-        for (int i = 0; i < values.getCount(); i++)
+        for (int __i = 0; __i < __values.getCount(); __i++)
         {
-            if (i < values.getDirectCount())
+            if (__i < __values.getDirectCount())
             {
-                Value value = values.getValue(inst, i);
-                Value newValue;
-                if (value instanceof CompositeValue)
+                Value __value = __values.getValue(__inst, __i);
+                Value __newValue;
+                if (__value instanceof CompositeValue)
                 {
-                    CompositeValue composite = (CompositeValue) value;
-                    newValue = composite.forEachComponent(inst, mode, proc);
+                    CompositeValue __composite = (CompositeValue) __value;
+                    __newValue = __composite.forEachComponent(__inst, __mode, __proc);
                 }
                 else
                 {
-                    newValue = proc.doValue(inst, value, mode, values.getFlags(i));
+                    __newValue = __proc.doValue(__inst, __value, __mode, __values.getFlags(__i));
                 }
-                if (!value.identityEquals(newValue))
+                if (!__value.identityEquals(__newValue))
                 {
-                    values.setValue(inst, i, newValue);
+                    __values.setValue(__inst, __i, __newValue);
                 }
             }
             else
             {
-                Value[] valueArray = values.getValueArray(inst, i);
-                for (int j = 0; j < valueArray.length; j++)
+                Value[] __valueArray = __values.getValueArray(__inst, __i);
+                for (int __j = 0; __j < __valueArray.length; __j++)
                 {
-                    Value value = valueArray[j];
-                    Value newValue;
-                    if (value instanceof CompositeValue)
+                    Value __value = __valueArray[__j];
+                    Value __newValue;
+                    if (__value instanceof CompositeValue)
                     {
-                        CompositeValue composite = (CompositeValue) value;
-                        newValue = composite.forEachComponent(inst, mode, proc);
+                        CompositeValue __composite = (CompositeValue) __value;
+                        __newValue = __composite.forEachComponent(__inst, __mode, __proc);
                     }
                     else
                     {
-                        newValue = proc.doValue(inst, value, mode, values.getFlags(i));
+                        __newValue = __proc.doValue(__inst, __value, __mode, __values.getFlags(__i));
                     }
-                    if (!value.identityEquals(newValue))
+                    if (!__value.identityEquals(__newValue))
                     {
-                        valueArray[j] = newValue;
+                        __valueArray[__j] = __newValue;
                     }
                 }
             }
         }
     }
 
-    protected static void visitEach(LIRInstruction inst, Values values, OperandMode mode, InstructionValueConsumer proc)
+    protected static void visitEach(LIRInstruction __inst, Values __values, OperandMode __mode, InstructionValueConsumer __proc)
     {
-        for (int i = 0; i < values.getCount(); i++)
+        for (int __i = 0; __i < __values.getCount(); __i++)
         {
-            if (i < values.getDirectCount())
+            if (__i < __values.getDirectCount())
             {
-                Value value = values.getValue(inst, i);
-                if (value instanceof CompositeValue)
+                Value __value = __values.getValue(__inst, __i);
+                if (__value instanceof CompositeValue)
                 {
-                    CompositeValue composite = (CompositeValue) value;
-                    composite.visitEachComponent(inst, mode, proc);
+                    CompositeValue __composite = (CompositeValue) __value;
+                    __composite.visitEachComponent(__inst, __mode, __proc);
                 }
                 else
                 {
-                    proc.visitValue(inst, value, mode, values.getFlags(i));
+                    __proc.visitValue(__inst, __value, __mode, __values.getFlags(__i));
                 }
             }
             else
             {
-                Value[] valueArray = values.getValueArray(inst, i);
-                for (int j = 0; j < valueArray.length; j++)
+                Value[] __valueArray = __values.getValueArray(__inst, __i);
+                for (int __j = 0; __j < __valueArray.length; __j++)
                 {
-                    Value value = valueArray[j];
-                    if (value instanceof CompositeValue)
+                    Value __value = __valueArray[__j];
+                    if (__value instanceof CompositeValue)
                     {
-                        CompositeValue composite = (CompositeValue) value;
-                        composite.visitEachComponent(inst, mode, proc);
+                        CompositeValue __composite = (CompositeValue) __value;
+                        __composite.visitEachComponent(__inst, __mode, __proc);
                     }
                     else
                     {
-                        proc.visitValue(inst, value, mode, values.getFlags(i));
+                        __proc.visitValue(__inst, __value, __mode, __values.getFlags(__i));
                     }
                 }
             }

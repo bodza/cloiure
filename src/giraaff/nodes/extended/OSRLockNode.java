@@ -8,11 +8,12 @@ import giraaff.nodes.AbstractLocalNode;
 // @class OSRLockNode
 public final class OSRLockNode extends AbstractLocalNode implements IterableNodeType
 {
+    // @def
     public static final NodeClass<OSRLockNode> TYPE = NodeClass.create(OSRLockNode.class);
 
     // @cons
-    public OSRLockNode(int index, Stamp stamp)
+    public OSRLockNode(int __index, Stamp __stamp)
     {
-        super(TYPE, index, stamp);
+        super(TYPE, __index, __stamp);
     }
 }

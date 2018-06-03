@@ -14,57 +14,60 @@ import giraaff.word.WordTypes;
 // @class HotSpotSnippetReflectionProvider
 public final class HotSpotSnippetReflectionProvider implements SnippetReflectionProvider
 {
+    // @field
     private final HotSpotGraalRuntime runtime;
+    // @field
     private final HotSpotConstantReflectionProvider constantReflection;
+    // @field
     private final WordTypes wordTypes;
 
     // @cons
-    public HotSpotSnippetReflectionProvider(HotSpotGraalRuntime runtime, HotSpotConstantReflectionProvider constantReflection, WordTypes wordTypes)
+    public HotSpotSnippetReflectionProvider(HotSpotGraalRuntime __runtime, HotSpotConstantReflectionProvider __constantReflection, WordTypes __wordTypes)
     {
         super();
-        this.runtime = runtime;
-        this.constantReflection = constantReflection;
-        this.wordTypes = wordTypes;
+        this.runtime = __runtime;
+        this.constantReflection = __constantReflection;
+        this.wordTypes = __wordTypes;
     }
 
     @Override
-    public JavaConstant forObject(Object object)
+    public JavaConstant forObject(Object __object)
     {
-        return constantReflection.forObject(object);
+        return constantReflection.forObject(__object);
     }
 
     @Override
-    public Object asObject(ResolvedJavaType type, JavaConstant constant)
+    public Object asObject(ResolvedJavaType __type, JavaConstant __constant)
     {
-        if (constant.isNull())
+        if (__constant.isNull())
         {
             return null;
         }
-        HotSpotObjectConstant hsConstant = (HotSpotObjectConstant) constant;
-        return hsConstant.asObject(type);
+        HotSpotObjectConstant __hsConstant = (HotSpotObjectConstant) __constant;
+        return __hsConstant.asObject(__type);
     }
 
     @Override
-    public <T> T asObject(Class<T> type, JavaConstant constant)
+    public <T> T asObject(Class<T> __type, JavaConstant __constant)
     {
-        if (constant.isNull())
+        if (__constant.isNull())
         {
             return null;
         }
-        HotSpotObjectConstant hsConstant = (HotSpotObjectConstant) constant;
-        return hsConstant.asObject(type);
+        HotSpotObjectConstant __hsConstant = (HotSpotObjectConstant) __constant;
+        return __hsConstant.asObject(__type);
     }
 
     @Override
-    public JavaConstant forBoxed(JavaKind kind, Object value)
+    public JavaConstant forBoxed(JavaKind __kind, Object __value)
     {
-        if (kind == JavaKind.Object)
+        if (__kind == JavaKind.Object)
         {
-            return forObject(value);
+            return forObject(__value);
         }
         else
         {
-            return JavaConstant.forBoxedPrimitive(value);
+            return JavaConstant.forBoxedPrimitive(__value);
         }
     }
 }

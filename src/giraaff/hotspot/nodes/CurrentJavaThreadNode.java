@@ -20,26 +20,27 @@ import giraaff.word.WordTypes;
 // @class CurrentJavaThreadNode
 public final class CurrentJavaThreadNode extends FloatingNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<CurrentJavaThreadNode> TYPE = NodeClass.create(CurrentJavaThreadNode.class);
 
     // @cons
-    public CurrentJavaThreadNode(@InjectedNodeParameter WordTypes wordTypes)
+    public CurrentJavaThreadNode(@InjectedNodeParameter WordTypes __wordTypes)
     {
-        this(wordTypes.getWordKind());
+        this(__wordTypes.getWordKind());
     }
 
     // @cons
-    public CurrentJavaThreadNode(JavaKind wordKind)
+    public CurrentJavaThreadNode(JavaKind __wordKind)
     {
-        super(TYPE, StampFactory.forKind(wordKind));
+        super(TYPE, StampFactory.forKind(__wordKind));
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Register rawThread = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).getProviders().getRegisters().getThreadRegister();
-        PlatformKind wordKind = gen.getLIRGeneratorTool().target().arch.getWordKind();
-        gen.setResult(this, rawThread.asValue(LIRKind.value(wordKind)));
+        Register __rawThread = ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).getProviders().getRegisters().getThreadRegister();
+        PlatformKind __wordKind = __gen.getLIRGeneratorTool().target().arch.getWordKind();
+        __gen.setResult(this, __rawThread.asValue(LIRKind.value(__wordKind)));
     }
 
     @NodeIntrinsic

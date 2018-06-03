@@ -12,63 +12,64 @@ import giraaff.core.common.type.DataPointerConstant;
 // @class ArrayDataPointerConstant
 public final class ArrayDataPointerConstant extends DataPointerConstant
 {
+    // @field
     private final byte[] data;
 
     // @cons
-    public ArrayDataPointerConstant(byte[] array, int alignment)
+    public ArrayDataPointerConstant(byte[] __array, int __alignment)
     {
-        super(alignment);
-        data = array.clone();
+        super(__alignment);
+        data = __array.clone();
     }
 
     // @cons
-    public ArrayDataPointerConstant(short[] array, int alignment)
+    public ArrayDataPointerConstant(short[] __array, int __alignment)
     {
-        super(alignment);
-        ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 2);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        byteBuffer.asShortBuffer().put(array);
-        data = byteBuffer.array();
+        super(__alignment);
+        ByteBuffer __byteBuffer = ByteBuffer.allocate(__array.length * 2);
+        __byteBuffer.order(ByteOrder.nativeOrder());
+        __byteBuffer.asShortBuffer().put(__array);
+        data = __byteBuffer.array();
     }
 
     // @cons
-    public ArrayDataPointerConstant(int[] array, int alignment)
+    public ArrayDataPointerConstant(int[] __array, int __alignment)
     {
-        super(alignment);
-        ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 4);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        byteBuffer.asIntBuffer().put(array);
-        data = byteBuffer.array();
+        super(__alignment);
+        ByteBuffer __byteBuffer = ByteBuffer.allocate(__array.length * 4);
+        __byteBuffer.order(ByteOrder.nativeOrder());
+        __byteBuffer.asIntBuffer().put(__array);
+        data = __byteBuffer.array();
     }
 
     // @cons
-    public ArrayDataPointerConstant(float[] array, int alignment)
+    public ArrayDataPointerConstant(float[] __array, int __alignment)
     {
-        super(alignment);
-        ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 4);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        byteBuffer.asFloatBuffer().put(array);
-        data = byteBuffer.array();
+        super(__alignment);
+        ByteBuffer __byteBuffer = ByteBuffer.allocate(__array.length * 4);
+        __byteBuffer.order(ByteOrder.nativeOrder());
+        __byteBuffer.asFloatBuffer().put(__array);
+        data = __byteBuffer.array();
     }
 
     // @cons
-    public ArrayDataPointerConstant(double[] array, int alignment)
+    public ArrayDataPointerConstant(double[] __array, int __alignment)
     {
-        super(alignment);
-        ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 8);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        byteBuffer.asDoubleBuffer().put(array);
-        data = byteBuffer.array();
+        super(__alignment);
+        ByteBuffer __byteBuffer = ByteBuffer.allocate(__array.length * 8);
+        __byteBuffer.order(ByteOrder.nativeOrder());
+        __byteBuffer.asDoubleBuffer().put(__array);
+        data = __byteBuffer.array();
     }
 
     // @cons
-    public ArrayDataPointerConstant(long[] array, int alignment)
+    public ArrayDataPointerConstant(long[] __array, int __alignment)
     {
-        super(alignment);
-        ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 8);
-        byteBuffer.order(ByteOrder.nativeOrder());
-        byteBuffer.asLongBuffer().put(array);
-        data = byteBuffer.array();
+        super(__alignment);
+        ByteBuffer __byteBuffer = ByteBuffer.allocate(__array.length * 8);
+        __byteBuffer.order(ByteOrder.nativeOrder());
+        __byteBuffer.asLongBuffer().put(__array);
+        data = __byteBuffer.array();
     }
 
     @Override
@@ -78,9 +79,9 @@ public final class ArrayDataPointerConstant extends DataPointerConstant
     }
 
     @Override
-    public void serialize(ByteBuffer buffer)
+    public void serialize(ByteBuffer __buffer)
     {
-        buffer.put(data);
+        __buffer.put(data);
     }
 
     @Override

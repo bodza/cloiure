@@ -34,22 +34,22 @@ public final class AMD64ConvertSnippets implements Snippets
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static int f2i(float input, int result)
+    public static int f2i(float __input, int __result)
     {
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, __result == Integer.MIN_VALUE))
         {
-            if (Float.isNaN(input))
+            if (Float.isNaN(__input))
             {
                 // input is NaN -> return 0
                 return 0;
             }
-            else if (input > 0.0f)
+            else if (__input > 0.0f)
             {
                 // input is > 0 -> return max int
                 return Integer.MAX_VALUE;
             }
         }
-        return result;
+        return __result;
     }
 
     /**
@@ -64,22 +64,22 @@ public final class AMD64ConvertSnippets implements Snippets
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static long f2l(float input, long result)
+    public static long f2l(float __input, long __result)
     {
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, __result == Long.MIN_VALUE))
         {
-            if (Float.isNaN(input))
+            if (Float.isNaN(__input))
             {
                 // input is NaN -> return 0
                 return 0;
             }
-            else if (input > 0.0f)
+            else if (__input > 0.0f)
             {
                 // input is > 0 -> return max int
                 return Long.MAX_VALUE;
             }
         }
-        return result;
+        return __result;
     }
 
     /**
@@ -94,22 +94,22 @@ public final class AMD64ConvertSnippets implements Snippets
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static int d2i(double input, int result)
+    public static int d2i(double __input, int __result)
     {
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, __result == Integer.MIN_VALUE))
         {
-            if (Double.isNaN(input))
+            if (Double.isNaN(__input))
             {
                 // input is NaN -> return 0
                 return 0;
             }
-            else if (input > 0.0d)
+            else if (__input > 0.0d)
             {
                 // input is positive -> return maxInt
                 return Integer.MAX_VALUE;
             }
         }
-        return result;
+        return __result;
     }
 
     /**
@@ -124,36 +124,40 @@ public final class AMD64ConvertSnippets implements Snippets
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static long d2l(double input, long result)
+    public static long d2l(double __input, long __result)
     {
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, __result == Long.MIN_VALUE))
         {
-            if (Double.isNaN(input))
+            if (Double.isNaN(__input))
             {
                 // input is NaN -> return 0
                 return 0;
             }
-            else if (input > 0.0d)
+            else if (__input > 0.0d)
             {
                 // input is positive -> return maxInt
                 return Long.MAX_VALUE;
             }
         }
-        return result;
+        return __result;
     }
 
     // @class AMD64ConvertSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final SnippetInfo f2i;
+        // @field
         private final SnippetInfo f2l;
+        // @field
         private final SnippetInfo d2i;
+        // @field
         private final SnippetInfo d2l;
 
         // @cons
-        public Templates(Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        public Templates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
         {
-            super(providers, snippetReflection, target);
+            super(__providers, __snippetReflection, __target);
 
             f2i = snippet(AMD64ConvertSnippets.class, "f2i");
             f2l = snippet(AMD64ConvertSnippets.class, "f2l");
@@ -161,36 +165,36 @@ public final class AMD64ConvertSnippets implements Snippets
             d2l = snippet(AMD64ConvertSnippets.class, "d2l");
         }
 
-        public void lower(FloatConvertNode convert, LoweringTool tool)
+        public void lower(FloatConvertNode __convert, LoweringTool __tool)
         {
-            SnippetInfo key;
-            switch (convert.getFloatConvert())
+            SnippetInfo __key;
+            switch (__convert.getFloatConvert())
             {
                 case F2I:
-                    key = f2i;
+                    __key = f2i;
                     break;
                 case F2L:
-                    key = f2l;
+                    __key = f2l;
                     break;
                 case D2I:
-                    key = d2i;
+                    __key = d2i;
                     break;
                 case D2L:
-                    key = d2l;
+                    __key = d2l;
                     break;
                 default:
                     return;
             }
 
-            StructuredGraph graph = convert.graph();
+            StructuredGraph __graph = __convert.graph();
 
-            Arguments args = new Arguments(key, graph.getGuardsStage(), tool.getLoweringStage());
-            args.add("input", convert.getValue());
-            args.add("result", graph.unique(new AMD64FloatConvertNode(convert.getFloatConvert(), convert.getValue())));
+            Arguments __args = new Arguments(__key, __graph.getGuardsStage(), __tool.getLoweringStage());
+            __args.add("input", __convert.getValue());
+            __args.add("result", __graph.unique(new AMD64FloatConvertNode(__convert.getFloatConvert(), __convert.getValue())));
 
-            SnippetTemplate template = template(convert, args);
-            template.instantiate(providers.getMetaAccess(), convert, SnippetTemplate.DEFAULT_REPLACER, tool, args);
-            convert.safeDelete();
+            SnippetTemplate __template = template(__convert, __args);
+            __template.instantiate(providers.getMetaAccess(), __convert, SnippetTemplate.DEFAULT_REPLACER, __tool, __args);
+            __convert.safeDelete();
         }
     }
 }

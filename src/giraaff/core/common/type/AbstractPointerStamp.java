@@ -10,15 +10,17 @@ import jdk.vm.ci.meta.JavaKind;
 // @class AbstractPointerStamp
 public abstract class AbstractPointerStamp extends Stamp
 {
+    // @field
     private final boolean nonNull;
+    // @field
     private final boolean alwaysNull;
 
     // @cons
-    protected AbstractPointerStamp(boolean nonNull, boolean alwaysNull)
+    protected AbstractPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
         super();
-        this.nonNull = nonNull;
-        this.alwaysNull = alwaysNull;
+        this.nonNull = __nonNull;
+        this.alwaysNull = __alwaysNull;
     }
 
     public boolean nonNull()
@@ -36,41 +38,41 @@ public abstract class AbstractPointerStamp extends Stamp
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (alwaysNull ? 1231 : 1237);
-        result = prime * result + (nonNull ? 1231 : 1237);
-        return result;
+        final int __prime = 31;
+        int __result = 1;
+        __result = __prime * __result + (alwaysNull ? 1231 : 1237);
+        __result = __prime * __result + (nonNull ? 1231 : 1237);
+        return __result;
     }
 
-    protected Stamp defaultPointerJoin(Stamp stamp)
+    protected Stamp defaultPointerJoin(Stamp __stamp)
     {
-        AbstractPointerStamp other = (AbstractPointerStamp) stamp;
-        boolean joinNonNull = this.nonNull || other.nonNull;
-        boolean joinAlwaysNull = this.alwaysNull || other.alwaysNull;
-        if (joinNonNull && joinAlwaysNull)
+        AbstractPointerStamp __other = (AbstractPointerStamp) __stamp;
+        boolean __joinNonNull = this.nonNull || __other.nonNull;
+        boolean __joinAlwaysNull = this.alwaysNull || __other.alwaysNull;
+        if (__joinNonNull && __joinAlwaysNull)
         {
             return empty();
         }
         else
         {
-            return copyWith(joinNonNull, joinAlwaysNull);
+            return copyWith(__joinNonNull, __joinAlwaysNull);
         }
     }
 
     @Override
-    public Stamp improveWith(Stamp other)
+    public Stamp improveWith(Stamp __other)
     {
-        return join(other);
+        return join(__other);
     }
 
     @Override
-    public Stamp meet(Stamp stamp)
+    public Stamp meet(Stamp __stamp)
     {
-        AbstractPointerStamp other = (AbstractPointerStamp) stamp;
-        boolean meetNonNull = this.nonNull && other.nonNull;
-        boolean meetAlwaysNull = this.alwaysNull && other.alwaysNull;
-        return copyWith(meetNonNull, meetAlwaysNull);
+        AbstractPointerStamp __other = (AbstractPointerStamp) __stamp;
+        boolean __meetNonNull = this.nonNull && __other.nonNull;
+        boolean __meetAlwaysNull = this.alwaysNull && __other.alwaysNull;
+        return copyWith(__meetNonNull, __meetAlwaysNull);
     }
 
     @Override
@@ -79,22 +81,22 @@ public abstract class AbstractPointerStamp extends Stamp
         return copyWith(false, false);
     }
 
-    public static Stamp pointerNonNull(Stamp stamp)
+    public static Stamp pointerNonNull(Stamp __stamp)
     {
-        AbstractPointerStamp pointer = (AbstractPointerStamp) stamp;
-        return pointer.asNonNull();
+        AbstractPointerStamp __pointer = (AbstractPointerStamp) __stamp;
+        return __pointer.asNonNull();
     }
 
-    public static Stamp pointerMaybeNull(Stamp stamp)
+    public static Stamp pointerMaybeNull(Stamp __stamp)
     {
-        AbstractPointerStamp pointer = (AbstractPointerStamp) stamp;
-        return pointer.asMaybeNull();
+        AbstractPointerStamp __pointer = (AbstractPointerStamp) __stamp;
+        return __pointer.asMaybeNull();
     }
 
-    public static Stamp pointerAlwaysNull(Stamp stamp)
+    public static Stamp pointerAlwaysNull(Stamp __stamp)
     {
-        AbstractPointerStamp pointer = (AbstractPointerStamp) stamp;
-        return pointer.asAlwaysNull();
+        AbstractPointerStamp __pointer = (AbstractPointerStamp) __stamp;
+        return __pointer.asAlwaysNull();
     }
 
     public Stamp asNonNull()
@@ -125,18 +127,18 @@ public abstract class AbstractPointerStamp extends Stamp
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass())
+        if (__obj == null || getClass() != __obj.getClass())
         {
             return false;
         }
-        AbstractPointerStamp other = (AbstractPointerStamp) obj;
-        return this.alwaysNull == other.alwaysNull && this.nonNull == other.nonNull;
+        AbstractPointerStamp __other = (AbstractPointerStamp) __obj;
+        return this.alwaysNull == __other.alwaysNull && this.nonNull == __other.nonNull;
     }
 
     @Override

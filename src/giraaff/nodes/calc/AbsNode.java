@@ -16,53 +16,54 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AbsNode
 public final class AbsNode extends UnaryArithmeticNode<Abs> implements ArithmeticLIRLowerable, NarrowableArithmeticNode
 {
+    // @def
     public static final NodeClass<AbsNode> TYPE = NodeClass.create(AbsNode.class);
 
     // @cons
-    public AbsNode(ValueNode x)
+    public AbsNode(ValueNode __x)
     {
-        super(TYPE, ArithmeticOpTable::getAbs, x);
+        super(TYPE, ArithmeticOpTable::getAbs, __x);
     }
 
-    public static ValueNode create(ValueNode value, NodeView view)
+    public static ValueNode create(ValueNode __value, NodeView __view)
     {
-        ValueNode synonym = findSynonym(value, view);
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__value, __view);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return new NegateNode(value);
+        return new NegateNode(__value);
     }
 
-    protected static ValueNode findSynonym(ValueNode forValue, NodeView view)
+    protected static ValueNode findSynonym(ValueNode __forValue, NodeView __view)
     {
-        ArithmeticOpTable.UnaryOp<Abs> absOp = ArithmeticOpTable.forStamp(forValue.stamp(view)).getAbs();
-        ValueNode synonym = UnaryArithmeticNode.findSynonym(forValue, absOp);
-        if (synonym != null)
+        ArithmeticOpTable.UnaryOp<Abs> __absOp = ArithmeticOpTable.forStamp(__forValue.stamp(__view)).getAbs();
+        ValueNode __synonym = UnaryArithmeticNode.findSynonym(__forValue, __absOp);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         return null;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode ret = super.canonical(tool, forValue);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forValue);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
-        if (forValue instanceof AbsNode)
+        if (__forValue instanceof AbsNode)
         {
-            return forValue;
+            return __forValue;
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitMathAbs(nodeValueMap.operand(getValue())));
+        __nodeValueMap.setResult(this, __gen.emitMathAbs(__nodeValueMap.operand(getValue())));
     }
 }

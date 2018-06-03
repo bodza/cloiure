@@ -11,15 +11,17 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class LogicConstantNode
 public final class LogicConstantNode extends LogicNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<LogicConstantNode> TYPE = NodeClass.create(LogicConstantNode.class);
 
+    // @field
     protected final boolean value;
 
     // @cons
-    public LogicConstantNode(boolean value)
+    public LogicConstantNode(boolean __value)
     {
         super(TYPE);
-        this.value = value;
+        this.value = __value;
     }
 
     /**
@@ -28,9 +30,9 @@ public final class LogicConstantNode extends LogicNode implements LIRLowerable
      * @param v the boolean value for which to create the instruction
      * @return a node representing the boolean
      */
-    public static LogicConstantNode forBoolean(boolean v, Graph graph)
+    public static LogicConstantNode forBoolean(boolean __v, Graph __graph)
     {
-        return graph.unique(new LogicConstantNode(v));
+        return __graph.unique(new LogicConstantNode(__v));
     }
 
     /**
@@ -39,25 +41,25 @@ public final class LogicConstantNode extends LogicNode implements LIRLowerable
      * @param v the boolean value for which to create the instruction
      * @return a node representing the boolean
      */
-    public static LogicConstantNode forBoolean(boolean v)
+    public static LogicConstantNode forBoolean(boolean __v)
     {
-        return new LogicConstantNode(v);
+        return new LogicConstantNode(__v);
     }
 
     /**
      * Gets a constant for {@code true}.
      */
-    public static LogicConstantNode tautology(Graph graph)
+    public static LogicConstantNode tautology(Graph __graph)
     {
-        return forBoolean(true, graph);
+        return forBoolean(true, __graph);
     }
 
     /**
      * Gets a constant for {@code false}.
      */
-    public static LogicConstantNode contradiction(Graph graph)
+    public static LogicConstantNode contradiction(Graph __graph)
     {
-        return forBoolean(false, graph);
+        return forBoolean(false, __graph);
     }
 
     /**
@@ -82,7 +84,7 @@ public final class LogicConstantNode extends LogicNode implements LIRLowerable
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nothing to do
     }

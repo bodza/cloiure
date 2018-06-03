@@ -14,14 +14,16 @@ import giraaff.replacements.nodes.BasicArrayCopyNode;
 // @class ArrayCopyNode
 public final class ArrayCopyNode extends BasicArrayCopyNode implements Lowerable
 {
+    // @def
     public static final NodeClass<ArrayCopyNode> TYPE = NodeClass.create(ArrayCopyNode.class);
 
+    // @field
     private JavaKind elementKind;
 
     // @cons
-    public ArrayCopyNode(int bci, ValueNode src, ValueNode srcPos, ValueNode dst, ValueNode dstPos, ValueNode length)
+    public ArrayCopyNode(int __bci, ValueNode __src, ValueNode __srcPos, ValueNode __dst, ValueNode __dstPos, ValueNode __length)
     {
-        super(TYPE, src, srcPos, dst, dstPos, length, null, bci);
+        super(TYPE, __src, __srcPos, __dst, __dstPos, __length, null, __bci);
         elementKind = ArrayCopySnippets.Templates.selectComponentKind(this);
     }
 
@@ -40,8 +42,8 @@ public final class ArrayCopyNode extends BasicArrayCopyNode implements Lowerable
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 }

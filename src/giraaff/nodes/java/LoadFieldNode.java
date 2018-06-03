@@ -36,35 +36,37 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class LoadFieldNode
 public final class LoadFieldNode extends AccessFieldNode implements Canonicalizable.Unary<ValueNode>, Virtualizable, UncheckedInterfaceProvider
 {
+    // @def
     public static final NodeClass<LoadFieldNode> TYPE = NodeClass.create(LoadFieldNode.class);
 
+    // @field
     private final Stamp uncheckedStamp;
 
     // @cons
-    protected LoadFieldNode(StampPair stamp, ValueNode object, ResolvedJavaField field)
+    protected LoadFieldNode(StampPair __stamp, ValueNode __object, ResolvedJavaField __field)
     {
-        super(TYPE, stamp.getTrustedStamp(), object, field);
-        this.uncheckedStamp = stamp.getUncheckedStamp();
+        super(TYPE, __stamp.getTrustedStamp(), __object, __field);
+        this.uncheckedStamp = __stamp.getUncheckedStamp();
     }
 
-    public static LoadFieldNode create(Assumptions assumptions, ValueNode object, ResolvedJavaField field)
+    public static LoadFieldNode create(Assumptions __assumptions, ValueNode __object, ResolvedJavaField __field)
     {
-        return new LoadFieldNode(StampFactory.forDeclaredType(assumptions, field.getType(), false), object, field);
+        return new LoadFieldNode(StampFactory.forDeclaredType(__assumptions, __field.getType(), false), __object, __field);
     }
 
-    public static ValueNode create(ConstantFieldProvider constantFields, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Assumptions assumptions, ValueNode object, ResolvedJavaField field, boolean canonicalizeReads, boolean allUsagesAvailable)
+    public static ValueNode create(ConstantFieldProvider __constantFields, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Assumptions __assumptions, ValueNode __object, ResolvedJavaField __field, boolean __canonicalizeReads, boolean __allUsagesAvailable)
     {
-        return canonical(null, StampFactory.forDeclaredType(assumptions, field.getType(), false), object, field, constantFields, constantReflection, metaAccess, canonicalizeReads, allUsagesAvailable);
+        return canonical(null, StampFactory.forDeclaredType(__assumptions, __field.getType(), false), __object, __field, __constantFields, __constantReflection, __metaAccess, __canonicalizeReads, __allUsagesAvailable);
     }
 
-    public static LoadFieldNode createOverrideStamp(StampPair stamp, ValueNode object, ResolvedJavaField field)
+    public static LoadFieldNode createOverrideStamp(StampPair __stamp, ValueNode __object, ResolvedJavaField __field)
     {
-        return new LoadFieldNode(stamp, object, field);
+        return new LoadFieldNode(__stamp, __object, __field);
     }
 
-    public static ValueNode createOverrideStamp(ConstantFieldProvider constantFields, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, StampPair stamp, ValueNode object, ResolvedJavaField field, boolean canonicalizeReads, boolean allUsagesAvailable)
+    public static ValueNode createOverrideStamp(ConstantFieldProvider __constantFields, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, StampPair __stamp, ValueNode __object, ResolvedJavaField __field, boolean __canonicalizeReads, boolean __allUsagesAvailable)
     {
-        return canonical(null, stamp, object, field, constantFields, constantReflection, metaAccess, canonicalizeReads, allUsagesAvailable);
+        return canonical(null, __stamp, __object, __field, __constantFields, __constantReflection, __metaAccess, __canonicalizeReads, __allUsagesAvailable);
     }
 
     @Override
@@ -74,105 +76,105 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forObject)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forObject)
     {
-        NodeView view = NodeView.from(tool);
-        if (tool.allUsagesAvailable() && hasNoUsages() && !isVolatile() && (isStatic() || StampTool.isPointerNonNull(forObject.stamp(view))))
+        NodeView __view = NodeView.from(__tool);
+        if (__tool.allUsagesAvailable() && hasNoUsages() && !isVolatile() && (isStatic() || StampTool.isPointerNonNull(__forObject.stamp(__view))))
         {
             return null;
         }
-        return canonical(this, StampPair.create(stamp, uncheckedStamp), forObject, field, tool.getConstantFieldProvider(), tool.getConstantReflection(), tool.getMetaAccess(), tool.canonicalizeReads(), tool.allUsagesAvailable());
+        return canonical(this, StampPair.create(stamp, uncheckedStamp), __forObject, field, __tool.getConstantFieldProvider(), __tool.getConstantReflection(), __tool.getMetaAccess(), __tool.canonicalizeReads(), __tool.allUsagesAvailable());
     }
 
-    private static ValueNode canonical(LoadFieldNode loadFieldNode, StampPair stamp, ValueNode forObject, ResolvedJavaField field, ConstantFieldProvider constantFields, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, boolean canonicalizeReads, boolean allUsagesAvailable)
+    private static ValueNode canonical(LoadFieldNode __loadFieldNode, StampPair __stamp, ValueNode __forObject, ResolvedJavaField __field, ConstantFieldProvider __constantFields, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, boolean __canonicalizeReads, boolean __allUsagesAvailable)
     {
-        LoadFieldNode self = loadFieldNode;
-        if (canonicalizeReads && metaAccess != null)
+        LoadFieldNode __self = __loadFieldNode;
+        if (__canonicalizeReads && __metaAccess != null)
         {
-            ConstantNode constant = asConstant(constantFields, constantReflection, metaAccess, forObject, field);
-            if (constant != null)
+            ConstantNode __constant = asConstant(__constantFields, __constantReflection, __metaAccess, __forObject, __field);
+            if (__constant != null)
             {
-                return constant;
+                return __constant;
             }
-            if (allUsagesAvailable)
+            if (__allUsagesAvailable)
             {
-                PhiNode phi = asPhi(constantFields, constantReflection, metaAccess, forObject, field, stamp.getTrustedStamp());
-                if (phi != null)
+                PhiNode __phi = asPhi(__constantFields, __constantReflection, __metaAccess, __forObject, __field, __stamp.getTrustedStamp());
+                if (__phi != null)
                 {
-                    return phi;
+                    return __phi;
                 }
             }
         }
-        if (self != null && !field.isStatic() && forObject.isNullConstant())
+        if (__self != null && !__field.isStatic() && __forObject.isNullConstant())
         {
             return new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.NullCheckException);
         }
-        if (self == null)
+        if (__self == null)
         {
-            self = new LoadFieldNode(stamp, forObject, field);
+            __self = new LoadFieldNode(__stamp, __forObject, __field);
         }
-        return self;
+        return __self;
     }
 
     /**
      * Gets a constant value for this load if possible.
      */
-    public ConstantNode asConstant(CanonicalizerTool tool, ValueNode forObject)
+    public ConstantNode asConstant(CanonicalizerTool __tool, ValueNode __forObject)
     {
-        return asConstant(tool.getConstantFieldProvider(), tool.getConstantReflection(), tool.getMetaAccess(), forObject, field);
+        return asConstant(__tool.getConstantFieldProvider(), __tool.getConstantReflection(), __tool.getMetaAccess(), __forObject, field);
     }
 
-    private static ConstantNode asConstant(ConstantFieldProvider constantFields, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, ValueNode forObject, ResolvedJavaField field)
+    private static ConstantNode asConstant(ConstantFieldProvider __constantFields, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, ValueNode __forObject, ResolvedJavaField __field)
     {
-        if (field.isStatic())
+        if (__field.isStatic())
         {
-            return ConstantFoldUtil.tryConstantFold(constantFields, constantReflection, metaAccess, field, null);
+            return ConstantFoldUtil.tryConstantFold(__constantFields, __constantReflection, __metaAccess, __field, null);
         }
-        else if (forObject.isConstant() && !forObject.isNullConstant())
+        else if (__forObject.isConstant() && !__forObject.isNullConstant())
         {
-            return ConstantFoldUtil.tryConstantFold(constantFields, constantReflection, metaAccess, field, forObject.asJavaConstant());
+            return ConstantFoldUtil.tryConstantFold(__constantFields, __constantReflection, __metaAccess, __field, __forObject.asJavaConstant());
         }
         return null;
     }
 
-    public ConstantNode asConstant(CanonicalizerTool tool, JavaConstant constant)
+    public ConstantNode asConstant(CanonicalizerTool __tool, JavaConstant __constant)
     {
-        return ConstantFoldUtil.tryConstantFold(tool.getConstantFieldProvider(), tool.getConstantReflection(), tool.getMetaAccess(), field(), constant);
+        return ConstantFoldUtil.tryConstantFold(__tool.getConstantFieldProvider(), __tool.getConstantReflection(), __tool.getMetaAccess(), field(), __constant);
     }
 
-    private static PhiNode asPhi(ConstantFieldProvider constantFields, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAcccess, ValueNode forObject, ResolvedJavaField field, Stamp stamp)
+    private static PhiNode asPhi(ConstantFieldProvider __constantFields, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAcccess, ValueNode __forObject, ResolvedJavaField __field, Stamp __stamp)
     {
-        if (!field.isStatic() && field.isFinal() && forObject instanceof ValuePhiNode && ((ValuePhiNode) forObject).values().filter(NodePredicates.isNotA(ConstantNode.class)).isEmpty())
+        if (!__field.isStatic() && __field.isFinal() && __forObject instanceof ValuePhiNode && ((ValuePhiNode) __forObject).values().filter(NodePredicates.isNotA(ConstantNode.class)).isEmpty())
         {
-            PhiNode phi = (PhiNode) forObject;
-            ConstantNode[] constantNodes = new ConstantNode[phi.valueCount()];
-            for (int i = 0; i < phi.valueCount(); i++)
+            PhiNode __phi = (PhiNode) __forObject;
+            ConstantNode[] __constantNodes = new ConstantNode[__phi.valueCount()];
+            for (int __i = 0; __i < __phi.valueCount(); __i++)
             {
-                ConstantNode constant = ConstantFoldUtil.tryConstantFold(constantFields, constantReflection, metaAcccess, field, phi.valueAt(i).asJavaConstant());
-                if (constant == null)
+                ConstantNode __constant = ConstantFoldUtil.tryConstantFold(__constantFields, __constantReflection, __metaAcccess, __field, __phi.valueAt(__i).asJavaConstant());
+                if (__constant == null)
                 {
                     return null;
                 }
-                constantNodes[i] = constant;
+                __constantNodes[__i] = __constant;
             }
-            return new ValuePhiNode(stamp, phi.merge(), constantNodes);
+            return new ValuePhiNode(__stamp, __phi.merge(), __constantNodes);
         }
         return null;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            int fieldIndex = ((VirtualInstanceNode) alias).fieldIndex(field());
-            if (fieldIndex != -1)
+            int __fieldIndex = ((VirtualInstanceNode) __alias).fieldIndex(field());
+            if (__fieldIndex != -1)
             {
-                ValueNode entry = tool.getEntry((VirtualObjectNode) alias, fieldIndex);
-                if (stamp.isCompatible(entry.stamp(NodeView.DEFAULT)))
+                ValueNode __entry = __tool.getEntry((VirtualObjectNode) __alias, __fieldIndex);
+                if (stamp.isCompatible(__entry.stamp(NodeView.DEFAULT)))
                 {
-                    tool.replaceWith(entry);
+                    __tool.replaceWith(__entry);
                 }
             }
         }
@@ -184,9 +186,9 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
         return uncheckedStamp;
     }
 
-    public void setObject(ValueNode newObject)
+    public void setObject(ValueNode __newObject)
     {
-        this.updateUsages(object, newObject);
-        this.object = newObject;
+        this.updateUsages(object, __newObject);
+        this.object = __newObject;
     }
 }

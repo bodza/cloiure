@@ -27,44 +27,47 @@ import giraaff.word.Word;
 public class CreateExceptionStub extends SnippetStub
 {
     // @cons
-    protected CreateExceptionStub(String snippetMethodName, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    protected CreateExceptionStub(String __snippetMethodName, HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super(snippetMethodName, providers, linkage);
+        super(__snippetMethodName, __providers, __linkage);
     }
 
-    private static Word classAsCString(Class<?> cls)
+    private static Word classAsCString(Class<?> __cls)
     {
-        return CStringConstant.cstring(cls.getName().replace('.', '/'));
+        return CStringConstant.cstring(__cls.getName().replace('.', '/'));
     }
 
-    protected static Object createException(Register threadRegister, Class<? extends Throwable> exception)
+    protected static Object createException(Register __threadRegister, Class<? extends Throwable> __exception)
     {
-        return createException(threadRegister, exception, (Word) null);
+        return createException(__threadRegister, __exception, (Word) null);
     }
 
-    protected static Object createException(Register threadRegister, Class<? extends Throwable> exception, Word message)
+    protected static Object createException(Register __threadRegister, Class<? extends Throwable> __exception, Word __message)
     {
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        throwAndPostJvmtiException(THROW_AND_POST_JVMTI_EXCEPTION, thread, classAsCString(exception), message);
-        return HotSpotReplacementsUtil.clearPendingException(thread);
+        Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+        throwAndPostJvmtiException(THROW_AND_POST_JVMTI_EXCEPTION, __thread, classAsCString(__exception), __message);
+        return HotSpotReplacementsUtil.clearPendingException(__thread);
     }
 
-    protected static Object createException(Register threadRegister, Class<? extends Throwable> exception, KlassPointer klass)
+    protected static Object createException(Register __threadRegister, Class<? extends Throwable> __exception, KlassPointer __klass)
     {
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        throwKlassExternalNameException(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, thread, classAsCString(exception), klass);
-        return HotSpotReplacementsUtil.clearPendingException(thread);
+        Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+        throwKlassExternalNameException(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, __thread, classAsCString(__exception), __klass);
+        return HotSpotReplacementsUtil.clearPendingException(__thread);
     }
 
-    protected static Object createException(Register threadRegister, Class<? extends Throwable> exception, KlassPointer objKlass, KlassPointer targetKlass)
+    protected static Object createException(Register __threadRegister, Class<? extends Throwable> __exception, KlassPointer __objKlass, KlassPointer __targetKlass)
     {
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        throwClassCastException(THROW_CLASS_CAST_EXCEPTION, thread, classAsCString(exception), objKlass, targetKlass);
-        return HotSpotReplacementsUtil.clearPendingException(thread);
+        Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+        throwClassCastException(THROW_CLASS_CAST_EXCEPTION, __thread, classAsCString(__exception), __objKlass, __targetKlass);
+        return HotSpotReplacementsUtil.clearPendingException(__thread);
     }
 
+    // @def
     private static final ForeignCallDescriptor THROW_AND_POST_JVMTI_EXCEPTION = new ForeignCallDescriptor("throw_and_post_jvmti_exception", void.class, Word.class, Word.class, Word.class);
+    // @def
     private static final ForeignCallDescriptor THROW_KLASS_EXTERNAL_NAME_EXCEPTION = new ForeignCallDescriptor("throw_klass_external_name_exception", void.class, Word.class, Word.class, KlassPointer.class);
+    // @def
     private static final ForeignCallDescriptor THROW_CLASS_CAST_EXCEPTION = new ForeignCallDescriptor("throw_class_cast_exception", void.class, Word.class, Word.class, KlassPointer.class, KlassPointer.class);
 
     @NodeIntrinsic(StubForeignCallNode.class)
@@ -76,10 +79,10 @@ public class CreateExceptionStub extends SnippetStub
     @NodeIntrinsic(StubForeignCallNode.class)
     private static native void throwClassCastException(@ConstantNodeParameter ForeignCallDescriptor d, Word thread, Word type, KlassPointer objKlass, KlassPointer targetKlass);
 
-    public static void registerForeignCalls(HotSpotForeignCallsProviderImpl foreignCalls)
+    public static void registerForeignCalls(HotSpotForeignCallsProviderImpl __foreignCalls)
     {
-        foreignCalls.registerForeignCall(THROW_AND_POST_JVMTI_EXCEPTION, HotSpotRuntime.throwAndPostJvmtiExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
-        foreignCalls.registerForeignCall(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, HotSpotRuntime.throwKlassExternalNameExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
-        foreignCalls.registerForeignCall(THROW_CLASS_CAST_EXCEPTION, HotSpotRuntime.throwClassCastExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        __foreignCalls.registerForeignCall(THROW_AND_POST_JVMTI_EXCEPTION, HotSpotRuntime.throwAndPostJvmtiExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        __foreignCalls.registerForeignCall(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, HotSpotRuntime.throwKlassExternalNameExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        __foreignCalls.registerForeignCall(THROW_CLASS_CAST_EXCEPTION, HotSpotRuntime.throwClassCastExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
     }
 }

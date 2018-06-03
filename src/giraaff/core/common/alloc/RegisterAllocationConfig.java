@@ -18,76 +18,82 @@ public class RegisterAllocationConfig
     // @class RegisterAllocationConfig.AllocatableRegisters
     public static final class AllocatableRegisters
     {
+        // @field
         public final Register[] allocatableRegisters;
+        // @field
         public final int minRegisterNumber;
+        // @field
         public final int maxRegisterNumber;
 
         // @cons
-        public AllocatableRegisters(RegisterArray allocatableRegisters, int minRegisterNumber, int maxRegisterNumber)
+        public AllocatableRegisters(RegisterArray __allocatableRegisters, int __minRegisterNumber, int __maxRegisterNumber)
         {
             super();
-            this.allocatableRegisters = allocatableRegisters.toArray();
-            this.minRegisterNumber = minRegisterNumber;
-            this.maxRegisterNumber = maxRegisterNumber;
+            this.allocatableRegisters = __allocatableRegisters.toArray();
+            this.minRegisterNumber = __minRegisterNumber;
+            this.maxRegisterNumber = __maxRegisterNumber;
         }
     }
 
-    protected RegisterArray initAllocatable(RegisterArray registers)
+    protected RegisterArray initAllocatable(RegisterArray __registers)
     {
-        return registers;
+        return __registers;
     }
 
+    // @field
     protected final RegisterConfig registerConfig;
+    // @field
     private final EconomicMap<PlatformKind.Key, AllocatableRegisters> categorized = EconomicMap.create(Equivalence.DEFAULT);
+    // @field
     private RegisterArray cachedRegisters;
 
     // @cons
-    public RegisterAllocationConfig(RegisterConfig registerConfig)
+    public RegisterAllocationConfig(RegisterConfig __registerConfig)
     {
         super();
-        this.registerConfig = registerConfig;
+        this.registerConfig = __registerConfig;
     }
 
     /**
      * Gets the set of registers that can be used by the register allocator for a value of a particular kind.
      */
-    public AllocatableRegisters getAllocatableRegisters(PlatformKind kind)
+    public AllocatableRegisters getAllocatableRegisters(PlatformKind __kind)
     {
-        PlatformKind.Key key = kind.getKey();
-        if (categorized.containsKey(key))
+        PlatformKind.Key __key = __kind.getKey();
+        if (categorized.containsKey(__key))
         {
-            return categorized.get(key);
+            return categorized.get(__key);
         }
-        AllocatableRegisters ret = createAllocatableRegisters(registerConfig.filterAllocatableRegisters(kind, getAllocatableRegisters()));
-        categorized.put(key, ret);
-        return ret;
+        AllocatableRegisters __ret = createAllocatableRegisters(registerConfig.filterAllocatableRegisters(__kind, getAllocatableRegisters()));
+        categorized.put(__key, __ret);
+        return __ret;
     }
 
     /**
      * Gets the {@link RegisterCategory} for the given {@link PlatformKind}.
      */
-    public RegisterCategory getRegisterCategory(PlatformKind kind)
+    public RegisterCategory getRegisterCategory(PlatformKind __kind)
     {
-        return getAllocatableRegisters(kind).allocatableRegisters[0].getRegisterCategory();
+        return getAllocatableRegisters(__kind).allocatableRegisters[0].getRegisterCategory();
     }
 
-    protected AllocatableRegisters createAllocatableRegisters(RegisterArray registers)
+    protected AllocatableRegisters createAllocatableRegisters(RegisterArray __registers)
     {
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-        for (Register reg : registers)
+        int __min = Integer.MAX_VALUE;
+        int __max = Integer.MIN_VALUE;
+        for (Register __reg : __registers)
         {
-            int number = reg.number;
-            if (number < min)
+            int __number = __reg.number;
+            if (__number < __min)
             {
-                min = number;
+                __min = __number;
             }
-            if (number > max)
+            if (__number > __max)
             {
-                max = number;
+                __max = __number;
             }
         }
-        return new AllocatableRegisters(registers, min, max);
+        return new AllocatableRegisters(__registers, __min, __max);
     }
 
     /**

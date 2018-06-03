@@ -13,15 +13,17 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class G1ReferentFieldReadBarrier
 public final class G1ReferentFieldReadBarrier extends ObjectWriteBarrier
 {
+    // @def
     public static final NodeClass<G1ReferentFieldReadBarrier> TYPE = NodeClass.create(G1ReferentFieldReadBarrier.class);
 
+    // @field
     protected final boolean doLoad;
 
     // @cons
-    public G1ReferentFieldReadBarrier(AddressNode address, ValueNode expectedObject, boolean doLoad)
+    public G1ReferentFieldReadBarrier(AddressNode __address, ValueNode __expectedObject, boolean __doLoad)
     {
-        super(TYPE, address, expectedObject, true);
-        this.doLoad = doLoad;
+        super(TYPE, __address, __expectedObject, true);
+        this.doLoad = __doLoad;
     }
 
     public ValueNode getExpectedObject()

@@ -8,6 +8,7 @@ import giraaff.graph.NodeClass;
 // @class MergeNode
 public final class MergeNode extends AbstractMergeNode
 {
+    // @def
     public static final NodeClass<MergeNode> TYPE = NodeClass.create(MergeNode.class);
 
     // @cons
@@ -16,16 +17,16 @@ public final class MergeNode extends AbstractMergeNode
         super(TYPE);
     }
 
-    public static void removeMergeIfDegenerated(MergeNode node)
+    public static void removeMergeIfDegenerated(MergeNode __node)
     {
-        if (node.forwardEndCount() == 1 && node.hasNoUsages())
+        if (__node.forwardEndCount() == 1 && __node.hasNoUsages())
         {
-            FixedNode currentNext = node.next();
-            node.setNext(null);
-            EndNode forwardEnd = node.forwardEndAt(0);
-            forwardEnd.replaceAtPredecessor(currentNext);
-            node.markDeleted();
-            forwardEnd.markDeleted();
+            FixedNode __currentNext = __node.next();
+            __node.setNext(null);
+            EndNode __forwardEnd = __node.forwardEndAt(0);
+            __forwardEnd.replaceAtPredecessor(__currentNext);
+            __node.markDeleted();
+            __forwardEnd.markDeleted();
         }
     }
 }

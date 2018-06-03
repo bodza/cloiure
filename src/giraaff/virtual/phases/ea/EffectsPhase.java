@@ -30,91 +30,94 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
         public abstract void applyEffects();
     }
 
+    // @field
     private final int maxIterations;
+    // @field
     protected final CanonicalizerPhase canonicalizer;
+    // @field
     private final boolean unscheduled;
 
     // @cons
-    protected EffectsPhase(int maxIterations, CanonicalizerPhase canonicalizer)
+    protected EffectsPhase(int __maxIterations, CanonicalizerPhase __canonicalizer)
     {
-        this(maxIterations, canonicalizer, false);
+        this(__maxIterations, __canonicalizer, false);
     }
 
     // @cons
-    protected EffectsPhase(int maxIterations, CanonicalizerPhase canonicalizer, boolean unscheduled)
+    protected EffectsPhase(int __maxIterations, CanonicalizerPhase __canonicalizer, boolean __unscheduled)
     {
         super();
-        this.maxIterations = maxIterations;
-        this.canonicalizer = canonicalizer;
-        this.unscheduled = unscheduled;
+        this.maxIterations = __maxIterations;
+        this.canonicalizer = __canonicalizer;
+        this.unscheduled = __unscheduled;
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContextT context)
+    protected void run(StructuredGraph __graph, PhaseContextT __context)
     {
-        runAnalysis(graph, context);
+        runAnalysis(__graph, __context);
     }
 
-    public boolean runAnalysis(StructuredGraph graph, PhaseContextT context)
+    public boolean runAnalysis(StructuredGraph __graph, PhaseContextT __context)
     {
-        boolean changed = false;
-        for (int iteration = 0; iteration < maxIterations; iteration++)
+        boolean __changed = false;
+        for (int __iteration = 0; __iteration < maxIterations; __iteration++)
         {
-            ScheduleResult schedule;
-            ControlFlowGraph cfg;
+            ScheduleResult __schedule;
+            ControlFlowGraph __cfg;
             if (unscheduled)
             {
-                schedule = null;
-                cfg = ControlFlowGraph.compute(graph, true, true, false, false);
+                __schedule = null;
+                __cfg = ControlFlowGraph.compute(__graph, true, true, false, false);
             }
             else
             {
-                new SchedulePhase(SchedulePhase.SchedulingStrategy.EARLIEST).apply(graph);
-                schedule = graph.getLastSchedule();
-                cfg = schedule.getCFG();
+                new SchedulePhase(SchedulePhase.SchedulingStrategy.EARLIEST).apply(__graph);
+                __schedule = __graph.getLastSchedule();
+                __cfg = __schedule.getCFG();
             }
-            Closure<?> closure = createEffectsClosure(context, schedule, cfg);
-            ReentrantBlockIterator.apply(closure, cfg.getStartBlock());
+            Closure<?> __closure = createEffectsClosure(__context, __schedule, __cfg);
+            ReentrantBlockIterator.apply(__closure, __cfg.getStartBlock());
 
-            if (closure.needsApplyEffects())
+            if (__closure.needsApplyEffects())
             {
                 // apply the effects collected during this iteration
-                HashSetNodeEventListener listener = new HashSetNodeEventListener();
-                try (NodeEventScope nes = graph.trackNodeEvents(listener))
+                HashSetNodeEventListener __listener = new HashSetNodeEventListener();
+                try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
                 {
-                    closure.applyEffects();
+                    __closure.applyEffects();
                 }
 
-                new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
+                new DeadCodeEliminationPhase(Optionality.Required).apply(__graph);
 
-                EconomicSet<Node> changedNodes = listener.getNodes();
-                for (Node node : graph.getNodes())
+                EconomicSet<Node> __changedNodes = __listener.getNodes();
+                for (Node __node : __graph.getNodes())
                 {
-                    if (node instanceof Simplifiable)
+                    if (__node instanceof Simplifiable)
                     {
-                        changedNodes.add(node);
+                        __changedNodes.add(__node);
                     }
                 }
-                postIteration(graph, context, changedNodes);
+                postIteration(__graph, __context, __changedNodes);
             }
 
-            if (closure.hasChanged())
+            if (__closure.hasChanged())
             {
-                changed = true;
+                __changed = true;
             }
             else
             {
                 break;
             }
         }
-        return changed;
+        return __changed;
     }
 
-    protected void postIteration(final StructuredGraph graph, final PhaseContextT context, EconomicSet<Node> changedNodes)
+    protected void postIteration(final StructuredGraph __graph, final PhaseContextT __context, EconomicSet<Node> __changedNodes)
     {
         if (canonicalizer != null)
         {
-            canonicalizer.applyIncremental(graph, context, changedNodes);
+            canonicalizer.applyIncremental(__graph, __context, __changedNodes);
         }
     }
 

@@ -14,36 +14,41 @@ import giraaff.util.GraalError;
 // @class AMD64HotSpotLoadAddressOp
 public final class AMD64HotSpotLoadAddressOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotLoadAddressOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLoadAddressOp.class);
 
-    @Def({OperandFlag.REG}) protected AllocatableValue result;
+    @Def({OperandFlag.REG})
+    // @field
+    protected AllocatableValue result;
+    // @field
     private final Constant constant;
+    // @field
     private final Object note;
 
     // @cons
-    public AMD64HotSpotLoadAddressOp(AllocatableValue result, Constant constant, Object note)
+    public AMD64HotSpotLoadAddressOp(AllocatableValue __result, Constant __constant, Object __note)
     {
         super(TYPE);
-        this.result = result;
-        this.constant = constant;
-        this.note = note;
+        this.result = __result;
+        this.constant = __constant;
+        this.note = __note;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        crb.recordInlineDataInCodeWithNote(constant, note);
-        AMD64Kind kind = (AMD64Kind) result.getPlatformKind();
-        switch (kind)
+        __crb.recordInlineDataInCodeWithNote(constant, note);
+        AMD64Kind __kind = (AMD64Kind) result.getPlatformKind();
+        switch (__kind)
         {
             case DWORD:
-                masm.movl(ValueUtil.asRegister(result), masm.getPlaceholder(-1));
+                __masm.movl(ValueUtil.asRegister(result), __masm.getPlaceholder(-1));
                 break;
             case QWORD:
-                masm.movq(ValueUtil.asRegister(result), masm.getPlaceholder(-1));
+                __masm.movq(ValueUtil.asRegister(result), __masm.getPlaceholder(-1));
                 break;
             default:
-                throw GraalError.shouldNotReachHere("unexpected kind: " + kind);
+                throw GraalError.shouldNotReachHere("unexpected kind: " + __kind);
         }
     }
 }

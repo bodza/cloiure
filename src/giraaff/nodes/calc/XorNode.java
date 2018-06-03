@@ -22,74 +22,75 @@ import giraaff.nodes.util.GraphUtil;
 // @class XorNode
 public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCommutative<ValueNode>, NarrowableArithmeticNode
 {
+    // @def
     public static final NodeClass<XorNode> TYPE = NodeClass.create(XorNode.class);
 
     // @cons
-    public XorNode(ValueNode x, ValueNode y)
+    public XorNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, ArithmeticOpTable::getXor, x, y);
+        super(TYPE, ArithmeticOpTable::getXor, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Xor> op = ArithmeticOpTable.forStamp(x.stamp(view)).getXor();
-        Stamp stamp = op.foldStamp(x.stamp(view), y.stamp(view));
-        ConstantNode tryConstantFold = tryConstantFold(op, x, y, stamp, view);
-        if (tryConstantFold != null)
+        BinaryOp<Xor> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getXor();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
+        ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
+        if (__tryConstantFold != null)
         {
-            return tryConstantFold;
+            return __tryConstantFold;
         }
-        return canonical(null, op, stamp, x, y, view);
+        return canonical(null, __op, __stamp, __x, __y, __view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        NodeView view = NodeView.from(tool);
-        return canonical(this, getOp(forX, forY), stamp(NodeView.DEFAULT), forX, forY, view);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, getOp(__forX, __forY), stamp(NodeView.DEFAULT), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(XorNode self, BinaryOp<Xor> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    private static ValueNode canonical(XorNode __self, BinaryOp<Xor> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY))
+        if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {
-            return ConstantNode.forPrimitive(stamp, op.getZero(forX.stamp(view)));
+            return ConstantNode.forPrimitive(__stamp, __op.getZero(__forX.stamp(__view)));
         }
-        if (forX.isConstant() && !forY.isConstant())
+        if (__forX.isConstant() && !__forY.isConstant())
         {
-            return new XorNode(forY, forX);
+            return new XorNode(__forY, __forX);
         }
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            Constant c = forY.asConstant();
-            if (op.isNeutral(c))
+            Constant __c = __forY.asConstant();
+            if (__op.isNeutral(__c))
             {
-                return forX;
+                return __forX;
             }
 
-            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger())
+            if (__c instanceof PrimitiveConstant && ((PrimitiveConstant) __c).getJavaKind().isNumericInteger())
             {
-                long rawY = ((PrimitiveConstant) c).asLong();
-                long mask = CodeUtil.mask(PrimitiveStamp.getBits(stamp));
-                if ((rawY & mask) == mask)
+                long __rawY = ((PrimitiveConstant) __c).asLong();
+                long __mask = CodeUtil.mask(PrimitiveStamp.getBits(__stamp));
+                if ((__rawY & __mask) == __mask)
                 {
-                    return new NotNode(forX);
+                    return new NotNode(__forX);
                 }
             }
-            return reassociate(self != null ? self : (XorNode) new XorNode(forX, forY).maybeCommuteInputs(), ValueNode.isConstantPredicate(), forX, forY, view);
+            return reassociate(__self != null ? __self : (XorNode) new XorNode(__forX, __forY).maybeCommuteInputs(), ValueNode.isConstantPredicate(), __forX, __forY, __view);
         }
-        return self != null ? self : new XorNode(forX, forY).maybeCommuteInputs();
+        return __self != null ? __self : new XorNode(__forX, __forY).maybeCommuteInputs();
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitXor(nodeValueMap.operand(getX()), nodeValueMap.operand(getY())));
+        __nodeValueMap.setResult(this, __gen.emitXor(__nodeValueMap.operand(getX()), __nodeValueMap.operand(getY())));
     }
 }

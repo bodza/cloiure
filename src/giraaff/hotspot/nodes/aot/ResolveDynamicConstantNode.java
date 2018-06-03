@@ -14,15 +14,18 @@ import giraaff.nodes.spi.LoweringTool;
 // @class ResolveDynamicConstantNode
 public final class ResolveDynamicConstantNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<ResolveDynamicConstantNode> TYPE = NodeClass.create(ResolveDynamicConstantNode.class);
 
-    @Input ValueNode value;
+    @Input
+    // @field
+    ValueNode value;
 
     // @cons
-    public ResolveDynamicConstantNode(Stamp valueStamp, ValueNode value)
+    public ResolveDynamicConstantNode(Stamp __valueStamp, ValueNode __value)
     {
-        super(TYPE, valueStamp);
-        this.value = value;
+        super(TYPE, __valueStamp);
+        this.value = __value;
     }
 
     public ValueNode value()
@@ -31,9 +34,9 @@ public final class ResolveDynamicConstantNode extends DeoptimizingFixedWithNextN
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override

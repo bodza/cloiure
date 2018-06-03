@@ -16,37 +16,42 @@ import giraaff.lir.gen.LIRGenerator;
 // @class LIR
 public final class LIR extends LIRGenerator.VariableProvider
 {
+    // @field
     private final AbstractControlFlowGraph<?> cfg;
 
     /**
      * The linear-scan ordered list of blocks.
      */
+    // @field
     private final AbstractBlockBase<?>[] linearScanOrder;
 
     /**
      * The order in which the code is emitted.
      */
+    // @field
     private final AbstractBlockBase<?>[] codeEmittingOrder;
 
     /**
      * Map from {@linkplain AbstractBlockBase block} to {@linkplain LIRInstruction}s. Note that we
      * are using {@link ArrayList} instead of {@link List} to avoid interface dispatch.
      */
+    // @field
     private final BlockMap<ArrayList<LIRInstruction>> lirInstructions;
 
+    // @field
     private boolean hasArgInCallerFrame;
 
     /**
      * Creates a new LIR instance for the specified compilation.
      */
     // @cons
-    public LIR(AbstractControlFlowGraph<?> cfg, AbstractBlockBase<?>[] linearScanOrder, AbstractBlockBase<?>[] codeEmittingOrder)
+    public LIR(AbstractControlFlowGraph<?> __cfg, AbstractBlockBase<?>[] __linearScanOrder, AbstractBlockBase<?>[] __codeEmittingOrder)
     {
         super();
-        this.cfg = cfg;
-        this.codeEmittingOrder = codeEmittingOrder;
-        this.linearScanOrder = linearScanOrder;
-        this.lirInstructions = new BlockMap<>(cfg);
+        this.cfg = __cfg;
+        this.codeEmittingOrder = __codeEmittingOrder;
+        this.linearScanOrder = __linearScanOrder;
+        this.lirInstructions = new BlockMap<>(__cfg);
     }
 
     public AbstractControlFlowGraph<?> getControlFlowGraph()
@@ -54,14 +59,14 @@ public final class LIR extends LIRGenerator.VariableProvider
         return cfg;
     }
 
-    public ArrayList<LIRInstruction> getLIRforBlock(AbstractBlockBase<?> block)
+    public ArrayList<LIRInstruction> getLIRforBlock(AbstractBlockBase<?> __block)
     {
-        return lirInstructions.get(block);
+        return lirInstructions.get(__block);
     }
 
-    public void setLIRforBlock(AbstractBlockBase<?> block, ArrayList<LIRInstruction> list)
+    public void setLIRforBlock(AbstractBlockBase<?> __block, ArrayList<LIRInstruction> __list)
     {
-        lirInstructions.put(block, list);
+        lirInstructions.put(__block, __list);
     }
 
     /**
@@ -101,14 +106,14 @@ public final class LIR extends LIRGenerator.VariableProvider
      * @return the next block in the list that is none {@code null} or {@code null} if there is no
      *         such block
      */
-    public static AbstractBlockBase<?> getNextBlock(AbstractBlockBase<?>[] blocks, int blockIndex)
+    public static AbstractBlockBase<?> getNextBlock(AbstractBlockBase<?>[] __blocks, int __blockIndex)
     {
-        for (int nextIndex = blockIndex + 1; nextIndex > 0 && nextIndex < blocks.length; nextIndex++)
+        for (int __nextIndex = __blockIndex + 1; __nextIndex > 0 && __nextIndex < __blocks.length; __nextIndex++)
         {
-            AbstractBlockBase<?> nextBlock = blocks[nextIndex];
-            if (nextBlock != null)
+            AbstractBlockBase<?> __nextBlock = __blocks[__nextIndex];
+            if (__nextBlock != null)
             {
-                return nextBlock;
+                return __nextBlock;
             }
         }
         return null;
@@ -116,17 +121,17 @@ public final class LIR extends LIRGenerator.VariableProvider
 
     public void resetLabels()
     {
-        for (AbstractBlockBase<?> block : codeEmittingOrder())
+        for (AbstractBlockBase<?> __block : codeEmittingOrder())
         {
-            if (block == null)
+            if (__block == null)
             {
                 continue;
             }
-            for (LIRInstruction inst : lirInstructions.get(block))
+            for (LIRInstruction __inst : lirInstructions.get(__block))
             {
-                if (inst instanceof LabelOp)
+                if (__inst instanceof LabelOp)
                 {
-                    ((LabelOp) inst).getLabel().reset();
+                    ((LabelOp) __inst).getLabel().reset();
                 }
             }
         }

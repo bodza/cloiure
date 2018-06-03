@@ -14,16 +14,16 @@ public abstract class Phase extends BasePhase<Object>
         super();
     }
 
-    public final void apply(final StructuredGraph graph)
+    public final void apply(final StructuredGraph __graph)
     {
-        apply(graph, null);
+        apply(__graph, null);
     }
 
     protected abstract void run(StructuredGraph graph);
 
     @Override
-    protected final void run(StructuredGraph graph, Object context)
+    protected final void run(StructuredGraph __graph, Object __context)
     {
-        run(graph);
+        run(__graph);
     }
 }

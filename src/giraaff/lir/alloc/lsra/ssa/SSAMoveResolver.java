@@ -20,18 +20,21 @@ import giraaff.util.GraalError;
 // @class SSAMoveResolver
 public final class SSAMoveResolver extends MoveResolver
 {
+    // @def
     private static final int STACK_SLOT_IN_CALLER_FRAME_IDX = -1;
+    // @field
     private int[] stackBlocked;
+    // @field
     private final int firstVirtualStackIndex;
 
     // @cons
-    public SSAMoveResolver(LinearScan allocator)
+    public SSAMoveResolver(LinearScan __allocator)
     {
-        super(allocator);
-        FrameMapBuilderTool frameMapBuilderTool = (FrameMapBuilderTool) allocator.getFrameMapBuilder();
-        FrameMap frameMap = frameMapBuilderTool.getFrameMap();
-        this.stackBlocked = new int[frameMapBuilderTool.getNumberOfStackSlots()];
-        this.firstVirtualStackIndex = !frameMap.frameNeedsAllocating() ? 0 : frameMap.currentFrameSize() + 1;
+        super(__allocator);
+        FrameMapBuilderTool __frameMapBuilderTool = (FrameMapBuilderTool) __allocator.getFrameMapBuilder();
+        FrameMap __frameMap = __frameMapBuilderTool.getFrameMap();
+        this.stackBlocked = new int[__frameMapBuilderTool.getNumberOfStackSlots()];
+        this.firstVirtualStackIndex = !__frameMap.frameNeedsAllocating() ? 0 : __frameMap.currentFrameSize() + 1;
     }
 
     @Override
@@ -41,119 +44,119 @@ public final class SSAMoveResolver extends MoveResolver
     }
 
     @Override
-    protected boolean mightBeBlocked(Value location)
+    protected boolean mightBeBlocked(Value __location)
     {
-        if (super.mightBeBlocked(location))
+        if (super.mightBeBlocked(__location))
         {
             return true;
         }
-        if (LIRValueUtil.isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(__location))
         {
             return true;
         }
         return false;
     }
 
-    private int getStackArrayIndex(Value stackSlotValue)
+    private int getStackArrayIndex(Value __stackSlotValue)
     {
-        if (ValueUtil.isStackSlot(stackSlotValue))
+        if (ValueUtil.isStackSlot(__stackSlotValue))
         {
-            return getStackArrayIndex(ValueUtil.asStackSlot(stackSlotValue));
+            return getStackArrayIndex(ValueUtil.asStackSlot(__stackSlotValue));
         }
-        if (LIRValueUtil.isVirtualStackSlot(stackSlotValue))
+        if (LIRValueUtil.isVirtualStackSlot(__stackSlotValue))
         {
-            return getStackArrayIndex(LIRValueUtil.asVirtualStackSlot(stackSlotValue));
+            return getStackArrayIndex(LIRValueUtil.asVirtualStackSlot(__stackSlotValue));
         }
-        throw GraalError.shouldNotReachHere("value is not a stack slot: " + stackSlotValue);
+        throw GraalError.shouldNotReachHere("value is not a stack slot: " + __stackSlotValue);
     }
 
-    private int getStackArrayIndex(StackSlot stackSlot)
+    private int getStackArrayIndex(StackSlot __stackSlot)
     {
-        int stackIdx;
-        if (stackSlot.isInCallerFrame())
+        int __stackIdx;
+        if (__stackSlot.isInCallerFrame())
         {
             // incoming stack arguments can be ignored
-            stackIdx = STACK_SLOT_IN_CALLER_FRAME_IDX;
+            __stackIdx = STACK_SLOT_IN_CALLER_FRAME_IDX;
         }
         else
         {
-            int offset = -stackSlot.getRawOffset();
-            stackIdx = offset;
+            int __offset = -__stackSlot.getRawOffset();
+            __stackIdx = __offset;
         }
-        return stackIdx;
+        return __stackIdx;
     }
 
-    private int getStackArrayIndex(VirtualStackSlot virtualStackSlot)
+    private int getStackArrayIndex(VirtualStackSlot __virtualStackSlot)
     {
-        return firstVirtualStackIndex + virtualStackSlot.getId();
+        return firstVirtualStackIndex + __virtualStackSlot.getId();
     }
 
     @Override
-    protected void setValueBlocked(Value location, int direction)
+    protected void setValueBlocked(Value __location, int __direction)
     {
-        if (LIRValueUtil.isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(__location))
         {
-            int stackIdx = getStackArrayIndex(location);
-            if (stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
+            int __stackIdx = getStackArrayIndex(__location);
+            if (__stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
             {
                 // incoming stack arguments can be ignored
                 return;
             }
-            if (stackIdx >= stackBlocked.length)
+            if (__stackIdx >= stackBlocked.length)
             {
-                stackBlocked = Arrays.copyOf(stackBlocked, stackIdx + 1);
+                stackBlocked = Arrays.copyOf(stackBlocked, __stackIdx + 1);
             }
-            stackBlocked[stackIdx] += direction;
+            stackBlocked[__stackIdx] += __direction;
         }
         else
         {
-            super.setValueBlocked(location, direction);
+            super.setValueBlocked(__location, __direction);
         }
     }
 
     @Override
-    protected int valueBlocked(Value location)
+    protected int valueBlocked(Value __location)
     {
-        if (LIRValueUtil.isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(__location))
         {
-            int stackIdx = getStackArrayIndex(location);
-            if (stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
+            int __stackIdx = getStackArrayIndex(__location);
+            if (__stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
             {
                 // incoming stack arguments are always blocked (aka they can not be written)
                 return 1;
             }
-            if (stackIdx >= stackBlocked.length)
+            if (__stackIdx >= stackBlocked.length)
             {
                 return 0;
             }
-            return stackBlocked[stackIdx];
+            return stackBlocked[__stackIdx];
         }
-        return super.valueBlocked(location);
+        return super.valueBlocked(__location);
     }
 
     @Override
-    protected LIRInstruction createMove(AllocatableValue fromOpr, AllocatableValue toOpr, AllocatableValue fromLocation, AllocatableValue toLocation)
+    protected LIRInstruction createMove(AllocatableValue __fromOpr, AllocatableValue __toOpr, AllocatableValue __fromLocation, AllocatableValue __toLocation)
     {
-        if (LIRValueUtil.isStackSlotValue(toLocation) && LIRValueUtil.isStackSlotValue(fromLocation))
+        if (LIRValueUtil.isStackSlotValue(__toLocation) && LIRValueUtil.isStackSlotValue(__fromLocation))
         {
-            return getAllocator().getSpillMoveFactory().createStackMove(toOpr, fromOpr);
+            return getAllocator().getSpillMoveFactory().createStackMove(__toOpr, __fromOpr);
         }
-        return super.createMove(fromOpr, toOpr, fromLocation, toLocation);
+        return super.createMove(__fromOpr, __toOpr, __fromLocation, __toLocation);
     }
 
     @Override
-    protected void breakCycle(int spillCandidate)
+    protected void breakCycle(int __spillCandidate)
     {
-        if (spillCandidate != -1)
+        if (__spillCandidate != -1)
         {
-            super.breakCycle(spillCandidate);
+            super.breakCycle(__spillCandidate);
             return;
         }
         // Arbitrarily select the first entry for spilling.
-        int stackSpillCandidate = 0;
-        Interval fromInterval = getMappingFrom(stackSpillCandidate);
+        int __stackSpillCandidate = 0;
+        Interval __fromInterval = getMappingFrom(__stackSpillCandidate);
         // allocate new stack slot
-        VirtualStackSlot spillSlot = getAllocator().getFrameMapBuilder().allocateSpillSlot(fromInterval.kind());
-        spillInterval(stackSpillCandidate, fromInterval, spillSlot);
+        VirtualStackSlot __spillSlot = getAllocator().getFrameMapBuilder().allocateSpillSlot(__fromInterval.kind());
+        spillInterval(__stackSpillCandidate, __fromInterval, __spillSlot);
     }
 }

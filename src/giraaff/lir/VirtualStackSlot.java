@@ -11,13 +11,14 @@ import jdk.vm.ci.meta.ValueKind;
 // @class VirtualStackSlot
 public abstract class VirtualStackSlot extends AllocatableValue
 {
+    // @field
     private final int id;
 
     // @cons
-    public VirtualStackSlot(int id, ValueKind<?> kind)
+    public VirtualStackSlot(int __id, ValueKind<?> __kind)
     {
-        super(kind);
-        this.id = id;
+        super(__kind);
+        this.id = __id;
     }
 
     public int getId()
@@ -28,27 +29,27 @@ public abstract class VirtualStackSlot extends AllocatableValue
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        return prime * super.hashCode() + id;
+        final int __prime = 31;
+        return __prime * super.hashCode() + id;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (!super.equals(obj))
+        if (!super.equals(__obj))
         {
             return false;
         }
-        if (getClass() != obj.getClass())
+        if (getClass() != __obj.getClass())
         {
             return false;
         }
-        VirtualStackSlot other = (VirtualStackSlot) obj;
-        if (id != other.id)
+        VirtualStackSlot __other = (VirtualStackSlot) __obj;
+        if (id != __other.id)
         {
             return false;
         }

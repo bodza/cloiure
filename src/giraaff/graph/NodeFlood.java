@@ -7,23 +7,26 @@ import java.util.Queue;
 // @class NodeFlood
 public final class NodeFlood implements Iterable<Node>
 {
+    // @field
     private final NodeBitMap visited;
+    // @field
     private final Queue<Node> worklist = new ArrayDeque<>();
+    // @field
     private int totalMarkedCount;
 
     // @cons
-    public NodeFlood(Graph graph)
+    public NodeFlood(Graph __graph)
     {
         super();
-        visited = graph.createNodeBitMap();
+        visited = __graph.createNodeBitMap();
     }
 
-    public void add(Node node)
+    public void add(Node __node)
     {
-        if (node != null && !visited.isMarked(node))
+        if (__node != null && !visited.isMarked(__node))
         {
-            visited.mark(node);
-            worklist.add(node);
+            visited.mark(__node);
+            worklist.add(__node);
             totalMarkedCount++;
         }
     }
@@ -33,11 +36,11 @@ public final class NodeFlood implements Iterable<Node>
         return totalMarkedCount;
     }
 
-    public void addAll(Iterable<? extends Node> nodes)
+    public void addAll(Iterable<? extends Node> __nodes)
     {
-        for (Node node : nodes)
+        for (Node __node : __nodes)
         {
-            this.add(node);
+            this.add(__node);
         }
     }
 
@@ -46,14 +49,14 @@ public final class NodeFlood implements Iterable<Node>
         return visited;
     }
 
-    public boolean isMarked(Node node)
+    public boolean isMarked(Node __node)
     {
-        return visited.isMarked(node);
+        return visited.isMarked(__node);
     }
 
-    public boolean isNew(Node node)
+    public boolean isNew(Node __node)
     {
-        return visited.isNew(node);
+        return visited.isNew(__node);
     }
 
     @Override
@@ -85,16 +88,19 @@ public final class NodeFlood implements Iterable<Node>
     // @class NodeFlood.UnmarkedNodeIterator
     private static final class UnmarkedNodeIterator implements Iterator<Node>
     {
+        // @field
         private final NodeBitMap visited;
+        // @field
         private Iterator<Node> nodes;
+        // @field
         private Node nextNode;
 
         // @cons
-        UnmarkedNodeIterator(NodeBitMap visited, Iterator<Node> nodes)
+        UnmarkedNodeIterator(NodeBitMap __visited, Iterator<Node> __nodes)
         {
             super();
-            this.visited = visited;
-            this.nodes = nodes;
+            this.visited = __visited;
+            this.nodes = __nodes;
             forward();
         }
 

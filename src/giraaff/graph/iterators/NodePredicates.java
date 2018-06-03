@@ -5,8 +5,11 @@ import giraaff.graph.Node;
 // @class NodePredicates
 public abstract class NodePredicates
 {
+    // @def
     private static final TautologyPredicate TAUTOLOGY = new TautologyPredicate();
+    // @def
     private static final ContradictionPredicate CONTRADICTION = new ContradictionPredicate();
+    // @def
     private static final IsNullPredicate IS_NULL = new IsNullPredicate();
 
     public static NodePredicate alwaysTrue()
@@ -24,29 +27,29 @@ public abstract class NodePredicates
         return IS_NULL;
     }
 
-    public static NegativeTypePredicate isNotA(Class<? extends Node> clazz)
+    public static NegativeTypePredicate isNotA(Class<? extends Node> __clazz)
     {
-        return new NegativeTypePredicate(clazz);
+        return new NegativeTypePredicate(__clazz);
     }
 
-    public static PositiveTypePredicate isA(Class<? extends Node> clazz)
+    public static PositiveTypePredicate isA(Class<? extends Node> __clazz)
     {
-        return new PositiveTypePredicate(clazz);
+        return new PositiveTypePredicate(__clazz);
     }
 
     // @class NodePredicates.TautologyPredicate
     static final class TautologyPredicate implements NodePredicate
     {
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
             return true;
         }
 
         @Override
-        public NodePredicate and(NodePredicate np)
+        public NodePredicate and(NodePredicate __np)
         {
-            return np;
+            return __np;
         }
     }
 
@@ -54,13 +57,13 @@ public abstract class NodePredicates
     static final class ContradictionPredicate implements NodePredicate
     {
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
             return false;
         }
 
         @Override
-        public NodePredicate and(NodePredicate np)
+        public NodePredicate and(NodePredicate __np)
         {
             return this;
         }
@@ -69,40 +72,43 @@ public abstract class NodePredicates
     // @class NodePredicates.AndPredicate
     static final class AndPredicate implements NodePredicate
     {
+        // @field
         private final NodePredicate a;
+        // @field
         private final NodePredicate b;
 
         // @cons
-        AndPredicate(NodePredicate a, NodePredicate b)
+        AndPredicate(NodePredicate __a, NodePredicate __b)
         {
             super();
-            this.a = a;
-            this.b = b;
+            this.a = __a;
+            this.b = __b;
         }
 
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
-            return a.apply(n) && b.apply(n);
+            return a.apply(__n) && b.apply(__n);
         }
     }
 
     // @class NodePredicates.NotPredicate
     static final class NotPredicate implements NodePredicate
     {
+        // @field
         private final NodePredicate a;
 
         // @cons
-        NotPredicate(NodePredicate n)
+        NotPredicate(NodePredicate __n)
         {
             super();
-            this.a = n;
+            this.a = __n;
         }
 
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
-            return !a.apply(n);
+            return !a.apply(__n);
         }
 
         @Override
@@ -116,51 +122,53 @@ public abstract class NodePredicates
     static final class IsNullPredicate implements NodePredicate
     {
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
-            return n == null;
+            return __n == null;
         }
     }
 
     // @class NodePredicates.PositiveTypePredicate
     public static final class PositiveTypePredicate implements NodePredicate
     {
+        // @field
         private final Class<?> type;
+        // @field
         private PositiveTypePredicate or;
 
         // @cons
-        PositiveTypePredicate(Class<?> type)
+        PositiveTypePredicate(Class<?> __type)
         {
             super();
-            this.type = type;
+            this.type = __type;
         }
 
         // @cons
-        public PositiveTypePredicate(NegativeTypePredicate a)
+        public PositiveTypePredicate(NegativeTypePredicate __a)
         {
             super();
-            type = a.type;
-            if (a.nor != null)
+            type = __a.type;
+            if (__a.nor != null)
             {
-                or = new PositiveTypePredicate(a.nor);
+                or = new PositiveTypePredicate(__a.nor);
             }
         }
 
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
-            return type.isInstance(n) || (or != null && or.apply(n));
+            return type.isInstance(__n) || (or != null && or.apply(__n));
         }
 
-        public PositiveTypePredicate or(Class<? extends Node> clazz)
+        public PositiveTypePredicate or(Class<? extends Node> __clazz)
         {
             if (or == null)
             {
-                or = new PositiveTypePredicate(clazz);
+                or = new PositiveTypePredicate(__clazz);
             }
             else
             {
-                or.or(clazz);
+                or.or(__clazz);
             }
             return this;
         }
@@ -175,42 +183,44 @@ public abstract class NodePredicates
     // @class NodePredicates.NegativeTypePredicate
     public static final class NegativeTypePredicate implements NodePredicate
     {
+        // @field
         private final Class<?> type;
+        // @field
         private NegativeTypePredicate nor;
 
         // @cons
-        NegativeTypePredicate(Class<?> type)
+        NegativeTypePredicate(Class<?> __type)
         {
             super();
-            this.type = type;
+            this.type = __type;
         }
 
         // @cons
-        public NegativeTypePredicate(PositiveTypePredicate a)
+        public NegativeTypePredicate(PositiveTypePredicate __a)
         {
             super();
-            type = a.type;
-            if (a.or != null)
+            type = __a.type;
+            if (__a.or != null)
             {
-                nor = new NegativeTypePredicate(a.or);
+                nor = new NegativeTypePredicate(__a.or);
             }
         }
 
         @Override
-        public boolean apply(Node n)
+        public boolean apply(Node __n)
         {
-            return !type.isInstance(n) && (nor == null || nor.apply(n));
+            return !type.isInstance(__n) && (nor == null || nor.apply(__n));
         }
 
-        public NegativeTypePredicate nor(Class<? extends Node> clazz)
+        public NegativeTypePredicate nor(Class<? extends Node> __clazz)
         {
             if (nor == null)
             {
-                nor = new NegativeTypePredicate(clazz);
+                nor = new NegativeTypePredicate(__clazz);
             }
             else
             {
-                nor.nor(clazz);
+                nor.nor(__clazz);
             }
             return this;
         }

@@ -17,57 +17,58 @@ import giraaff.util.GraalError;
 // @class HotSpotCompressionNode
 public final class HotSpotCompressionNode extends CompressionNode
 {
+    // @def
     public static final NodeClass<HotSpotCompressionNode> TYPE = NodeClass.create(HotSpotCompressionNode.class);
 
     // @cons
-    public HotSpotCompressionNode(CompressionOp op, ValueNode input, CompressEncoding encoding)
+    public HotSpotCompressionNode(CompressionOp __op, ValueNode __input, CompressEncoding __encoding)
     {
-        super(TYPE, op, input, HotSpotNarrowOopStamp.mkStamp(op, input.stamp(NodeView.DEFAULT), encoding), encoding);
+        super(TYPE, __op, __input, HotSpotNarrowOopStamp.mkStamp(__op, __input.stamp(NodeView.DEFAULT), __encoding), __encoding);
     }
 
-    public static HotSpotCompressionNode compress(ValueNode input, CompressEncoding encoding)
+    public static HotSpotCompressionNode compress(ValueNode __input, CompressEncoding __encoding)
     {
-        return input.graph().unique(new HotSpotCompressionNode(CompressionOp.Compress, input, encoding));
+        return __input.graph().unique(new HotSpotCompressionNode(CompressionOp.Compress, __input, __encoding));
     }
 
-    public static CompressionNode uncompress(ValueNode input, CompressEncoding encoding)
+    public static CompressionNode uncompress(ValueNode __input, CompressEncoding __encoding)
     {
-        return input.graph().unique(new HotSpotCompressionNode(CompressionOp.Uncompress, input, encoding));
+        return __input.graph().unique(new HotSpotCompressionNode(CompressionOp.Uncompress, __input, __encoding));
     }
 
     @Override
-    protected Constant compress(Constant c)
+    protected Constant compress(Constant __c)
     {
-        if (JavaConstant.NULL_POINTER.equals(c))
+        if (JavaConstant.NULL_POINTER.equals(__c))
         {
             return HotSpotCompressedNullConstant.COMPRESSED_NULL;
         }
-        else if (c instanceof HotSpotConstant)
+        else if (__c instanceof HotSpotConstant)
         {
-            return ((HotSpotConstant) c).compress();
+            return ((HotSpotConstant) __c).compress();
         }
         else
         {
-            throw GraalError.shouldNotReachHere("invalid constant input for compress op: " + c);
+            throw GraalError.shouldNotReachHere("invalid constant input for compress op: " + __c);
         }
     }
 
     @Override
-    protected Constant uncompress(Constant c)
+    protected Constant uncompress(Constant __c)
     {
-        if (c instanceof HotSpotConstant)
+        if (__c instanceof HotSpotConstant)
         {
-            return ((HotSpotConstant) c).uncompress();
+            return ((HotSpotConstant) __c).uncompress();
         }
         else
         {
-            throw GraalError.shouldNotReachHere("invalid constant input for uncompress op: " + c);
+            throw GraalError.shouldNotReachHere("invalid constant input for uncompress op: " + __c);
         }
     }
 
     @Override
-    protected Stamp mkStamp(Stamp input)
+    protected Stamp mkStamp(Stamp __input)
     {
-        return HotSpotNarrowOopStamp.mkStamp(op, input, encoding);
+        return HotSpotNarrowOopStamp.mkStamp(op, __input, encoding);
     }
 }

@@ -19,24 +19,33 @@ import giraaff.nodes.spi.LoweringTool;
 // @class AtomicReadAndWriteNode
 public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<AtomicReadAndWriteNode> TYPE = NodeClass.create(AtomicReadAndWriteNode.class);
 
-    @Input ValueNode object;
-    @Input ValueNode offset;
-    @Input ValueNode newValue;
+    @Input
+    // @field
+    ValueNode object;
+    @Input
+    // @field
+    ValueNode offset;
+    @Input
+    // @field
+    ValueNode newValue;
 
+    // @field
     protected final JavaKind valueKind;
+    // @field
     protected final LocationIdentity locationIdentity;
 
     // @cons
-    public AtomicReadAndWriteNode(ValueNode object, ValueNode offset, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity)
+    public AtomicReadAndWriteNode(ValueNode __object, ValueNode __offset, ValueNode __newValue, JavaKind __valueKind, LocationIdentity __locationIdentity)
     {
-        super(TYPE, StampFactory.forKind(newValue.getStackKind()));
-        this.object = object;
-        this.offset = offset;
-        this.newValue = newValue;
-        this.valueKind = valueKind;
-        this.locationIdentity = locationIdentity;
+        super(TYPE, StampFactory.forKind(__newValue.getStackKind()));
+        this.object = __object;
+        this.offset = __offset;
+        this.newValue = __newValue;
+        this.valueKind = __valueKind;
+        this.locationIdentity = __locationIdentity;
     }
 
     public ValueNode object()
@@ -66,8 +75,8 @@ public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint imple
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 }

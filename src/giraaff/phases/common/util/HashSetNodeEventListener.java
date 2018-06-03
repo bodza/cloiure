@@ -18,7 +18,9 @@ import giraaff.graph.Node.IndirectCanonicalization;
 // @class HashSetNodeEventListener
 public final class HashSetNodeEventListener extends NodeEventListener
 {
+    // @field
     private final EconomicSet<Node> nodes;
+    // @field
     private final Set<NodeEvent> filter;
 
     /**
@@ -36,33 +38,33 @@ public final class HashSetNodeEventListener extends NodeEventListener
      * Creates a {@link NodeEventListener} that collects nodes from all events that match a given filter.
      */
     // @cons
-    public HashSetNodeEventListener(Set<NodeEvent> filter)
+    public HashSetNodeEventListener(Set<NodeEvent> __filter)
     {
         super();
         this.nodes = EconomicSet.create(Equivalence.IDENTITY);
-        this.filter = filter;
+        this.filter = __filter;
     }
 
     /**
      * Excludes a given event from those for which nodes are collected.
      */
-    public HashSetNodeEventListener exclude(NodeEvent e)
+    public HashSetNodeEventListener exclude(NodeEvent __e)
     {
-        filter.remove(e);
+        filter.remove(__e);
         return this;
     }
 
     @Override
-    public void changed(NodeEvent e, Node node)
+    public void changed(NodeEvent __e, Node __node)
     {
-        if (filter.contains(e))
+        if (filter.contains(__e))
         {
-            nodes.add(node);
-            if (node instanceof IndirectCanonicalization)
+            nodes.add(__node);
+            if (__node instanceof IndirectCanonicalization)
             {
-                for (Node usage : node.usages())
+                for (Node __usage : __node.usages())
                 {
-                    nodes.add(usage);
+                    nodes.add(__usage);
                 }
             }
         }

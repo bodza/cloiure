@@ -6,16 +6,19 @@ import java.util.NoSuchElementException;
 // @class IterativeNodeWorkList
 public final class IterativeNodeWorkList extends NodeWorkList
 {
+    // @def
     private static final int EXPLICIT_BITMAP_THRESHOLD = 10;
 
+    // @field
     private int iterationLimit;
+    // @field
     private NodeBitMap inQueue;
 
     // @cons
-    public IterativeNodeWorkList(Graph graph, boolean fill, int iterationLimitPerNode)
+    public IterativeNodeWorkList(Graph __graph, boolean __fill, int __iterationLimitPerNode)
     {
-        super(graph, fill);
-        iterationLimit = (int) Long.min(graph.getNodeCount() * (long) iterationLimitPerNode, Integer.MAX_VALUE);
+        super(__graph, __fill);
+        iterationLimit = (int) Long.min(__graph.getNodeCount() * (long) __iterationLimitPerNode, Integer.MAX_VALUE);
     }
 
     @Override
@@ -51,12 +54,12 @@ public final class IterativeNodeWorkList extends NodeWorkList
                     throw new NoSuchElementException();
                 }
                 dropDeleted();
-                Node node = IterativeNodeWorkList.this.worklist.remove();
+                Node __node = IterativeNodeWorkList.this.worklist.remove();
                 if (IterativeNodeWorkList.this.inQueue != null)
                 {
-                    IterativeNodeWorkList.this.inQueue.clearAndGrow(node);
+                    IterativeNodeWorkList.this.inQueue.clearAndGrow(__node);
                 }
-                return node;
+                return __node;
             }
 
             @Override
@@ -68,27 +71,27 @@ public final class IterativeNodeWorkList extends NodeWorkList
     }
 
     @Override
-    public void add(Node node)
+    public void add(Node __node)
     {
-        if (node != null)
+        if (__node != null)
         {
             if (this.inQueue == null && this.worklist.size() > EXPLICIT_BITMAP_THRESHOLD)
             {
-                inflateToBitMap(node.graph());
+                inflateToBitMap(__node.graph());
             }
 
             if (this.inQueue != null)
             {
-                if (this.inQueue.isMarkedAndGrow(node))
+                if (this.inQueue.isMarkedAndGrow(__node))
                 {
                     return;
                 }
             }
             else
             {
-                for (Node queuedNode : this.worklist)
+                for (Node __queuedNode : this.worklist)
                 {
-                    if (queuedNode == node)
+                    if (__queuedNode == __node)
                     {
                         return;
                     }
@@ -96,24 +99,24 @@ public final class IterativeNodeWorkList extends NodeWorkList
             }
             if (this.inQueue != null)
             {
-                this.inQueue.markAndGrow(node);
+                this.inQueue.markAndGrow(__node);
             }
-            this.worklist.add(node);
+            this.worklist.add(__node);
         }
     }
 
     @Override
-    public boolean contains(Node node)
+    public boolean contains(Node __node)
     {
         if (this.inQueue != null)
         {
-            return this.inQueue.isMarked(node);
+            return this.inQueue.isMarked(__node);
         }
         else
         {
-            for (Node queuedNode : this.worklist)
+            for (Node __queuedNode : this.worklist)
             {
-                if (queuedNode == node)
+                if (__queuedNode == __node)
                 {
                     return true;
                 }
@@ -122,14 +125,14 @@ public final class IterativeNodeWorkList extends NodeWorkList
         }
     }
 
-    private void inflateToBitMap(Graph graph)
+    private void inflateToBitMap(Graph __graph)
     {
-        this.inQueue = graph.createNodeBitMap();
-        for (Node queuedNode : this.worklist)
+        this.inQueue = __graph.createNodeBitMap();
+        for (Node __queuedNode : this.worklist)
         {
-            if (queuedNode.isAlive())
+            if (__queuedNode.isAlive())
             {
-                this.inQueue.mark(queuedNode);
+                this.inQueue.mark(__queuedNode);
             }
         }
     }

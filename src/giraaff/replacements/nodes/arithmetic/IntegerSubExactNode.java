@@ -21,13 +21,14 @@ import giraaff.nodes.util.GraphUtil;
 // @class IntegerSubExactNode
 public final class IntegerSubExactNode extends SubNode implements IntegerExactArithmeticNode
 {
+    // @def
     public static final NodeClass<IntegerSubExactNode> TYPE = NodeClass.create(IntegerSubExactNode.class);
 
     // @cons
-    public IntegerSubExactNode(ValueNode x, ValueNode y)
+    public IntegerSubExactNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, x, y);
-        setStamp(x.stamp(NodeView.DEFAULT).unrestricted());
+        super(TYPE, __x, __y);
+        setStamp(__x.stamp(NodeView.DEFAULT).unrestricted());
     }
 
     @Override
@@ -42,47 +43,47 @@ public final class IntegerSubExactNode extends SubNode implements IntegerExactAr
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY))
+        if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {
             return ConstantNode.forIntegerStamp(stamp(NodeView.DEFAULT), 0);
         }
-        if (forX.isConstant() && forY.isConstant())
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            return canonicalXYconstant(forX, forY);
+            return canonicalXYconstant(__forX, __forY);
         }
-        else if (forY.isConstant())
+        else if (__forY.isConstant())
         {
-            long c = forY.asJavaConstant().asLong();
-            if (c == 0)
+            long __c = __forY.asJavaConstant().asLong();
+            if (__c == 0)
             {
-                return forX;
+                return __forX;
             }
         }
         if (!IntegerStamp.subtractionCanOverflow((IntegerStamp) x.stamp(NodeView.DEFAULT), (IntegerStamp) y.stamp(NodeView.DEFAULT)))
         {
-            return new SubNode(x, y).canonical(tool);
+            return new SubNode(x, y).canonical(__tool);
         }
         return this;
     }
 
-    private ValueNode canonicalXYconstant(ValueNode forX, ValueNode forY)
+    private ValueNode canonicalXYconstant(ValueNode __forX, ValueNode __forY)
     {
-        JavaConstant xConst = forX.asJavaConstant();
-        JavaConstant yConst = forY.asJavaConstant();
+        JavaConstant __xConst = __forX.asJavaConstant();
+        JavaConstant __yConst = __forY.asJavaConstant();
         try
         {
-            if (xConst.getJavaKind() == JavaKind.Int)
+            if (__xConst.getJavaKind() == JavaKind.Int)
             {
-                return ConstantNode.forInt(Math.subtractExact(xConst.asInt(), yConst.asInt()));
+                return ConstantNode.forInt(Math.subtractExact(__xConst.asInt(), __yConst.asInt()));
             }
             else
             {
-                return ConstantNode.forLong(Math.subtractExact(xConst.asLong(), yConst.asLong()));
+                return ConstantNode.forLong(Math.subtractExact(__xConst.asLong(), __yConst.asLong()));
             }
         }
-        catch (ArithmeticException ex)
+        catch (ArithmeticException __ex)
         {
             // The operation will result in an overflow exception, so do not canonicalize.
         }
@@ -90,14 +91,14 @@ public final class IntegerSubExactNode extends SubNode implements IntegerExactAr
     }
 
     @Override
-    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode next, AbstractBeginNode deopt)
+    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode __next, AbstractBeginNode __deopt)
     {
-        return graph().add(new IntegerSubExactSplitNode(stamp(NodeView.DEFAULT), getX(), getY(), next, deopt));
+        return graph().add(new IntegerSubExactSplitNode(stamp(NodeView.DEFAULT), getX(), getY(), __next, __deopt));
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        IntegerExactArithmeticSplitNode.lower(tool, this);
+        IntegerExactArithmeticSplitNode.lower(__tool, this);
     }
 }

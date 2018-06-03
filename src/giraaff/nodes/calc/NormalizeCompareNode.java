@@ -22,49 +22,51 @@ import giraaff.nodes.ValueNode;
 // @class NormalizeCompareNode
 public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType
 {
+    // @def
     public static final NodeClass<NormalizeCompareNode> TYPE = NodeClass.create(NormalizeCompareNode.class);
 
+    // @field
     protected final boolean isUnorderedLess;
 
     // @cons
-    public NormalizeCompareNode(ValueNode x, ValueNode y, JavaKind kind, boolean isUnorderedLess)
+    public NormalizeCompareNode(ValueNode __x, ValueNode __y, JavaKind __kind, boolean __isUnorderedLess)
     {
-        super(TYPE, StampFactory.forInteger(kind, -1, 1), x, y);
-        this.isUnorderedLess = isUnorderedLess;
+        super(TYPE, StampFactory.forInteger(__kind, -1, 1), __x, __y);
+        this.isUnorderedLess = __isUnorderedLess;
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, boolean isUnorderedLess, JavaKind kind, ConstantReflectionProvider constantReflection)
+    public static ValueNode create(ValueNode __x, ValueNode __y, boolean __isUnorderedLess, JavaKind __kind, ConstantReflectionProvider __constantReflection)
     {
-        ValueNode result = tryConstantFold(x, y, isUnorderedLess, kind, constantReflection);
-        if (result != null)
+        ValueNode __result = tryConstantFold(__x, __y, __isUnorderedLess, __kind, __constantReflection);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
 
-        return new NormalizeCompareNode(x, y, kind, isUnorderedLess);
+        return new NormalizeCompareNode(__x, __y, __kind, __isUnorderedLess);
     }
 
-    protected static ValueNode tryConstantFold(ValueNode x, ValueNode y, boolean isUnorderedLess, JavaKind kind, ConstantReflectionProvider constantReflection)
+    protected static ValueNode tryConstantFold(ValueNode __x, ValueNode __y, boolean __isUnorderedLess, JavaKind __kind, ConstantReflectionProvider __constantReflection)
     {
-        LogicNode result = CompareNode.tryConstantFold(CanonicalCondition.EQ, x, y, null, false);
-        if (result instanceof LogicConstantNode)
+        LogicNode __result = CompareNode.tryConstantFold(CanonicalCondition.EQ, __x, __y, null, false);
+        if (__result instanceof LogicConstantNode)
         {
-            LogicConstantNode logicConstantNode = (LogicConstantNode) result;
-            LogicNode resultLT = CompareNode.tryConstantFold(CanonicalCondition.LT, x, y, constantReflection, isUnorderedLess);
-            if (resultLT instanceof LogicConstantNode)
+            LogicConstantNode __logicConstantNode = (LogicConstantNode) __result;
+            LogicNode __resultLT = CompareNode.tryConstantFold(CanonicalCondition.LT, __x, __y, __constantReflection, __isUnorderedLess);
+            if (__resultLT instanceof LogicConstantNode)
             {
-                LogicConstantNode logicConstantNodeLT = (LogicConstantNode) resultLT;
-                if (logicConstantNodeLT.getValue())
+                LogicConstantNode __logicConstantNodeLT = (LogicConstantNode) __resultLT;
+                if (__logicConstantNodeLT.getValue())
                 {
-                    return ConstantNode.forIntegerKind(kind, -1);
+                    return ConstantNode.forIntegerKind(__kind, -1);
                 }
-                else if (logicConstantNode.getValue())
+                else if (__logicConstantNode.getValue())
                 {
-                    return ConstantNode.forIntegerKind(kind, 0);
+                    return ConstantNode.forIntegerKind(__kind, 0);
                 }
                 else
                 {
-                    return ConstantNode.forIntegerKind(kind, 1);
+                    return ConstantNode.forIntegerKind(__kind, 1);
                 }
             }
         }
@@ -72,13 +74,13 @@ public final class NormalizeCompareNode extends BinaryNode implements IterableNo
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode result = tryConstantFold(x, y, isUnorderedLess, stamp(view).getStackKind(), tool.getConstantReflection());
-        if (result != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __result = tryConstantFold(x, y, isUnorderedLess, stamp(__view).getStackKind(), __tool.getConstantReflection());
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
         return this;
     }
@@ -90,7 +92,7 @@ public final class NormalizeCompareNode extends BinaryNode implements IterableNo
     }
 
     @Override
-    public Stamp foldStamp(Stamp stampX, Stamp stampY)
+    public Stamp foldStamp(Stamp __stampX, Stamp __stampY)
     {
         return stamp(NodeView.DEFAULT);
     }

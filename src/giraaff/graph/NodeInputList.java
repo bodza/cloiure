@@ -9,39 +9,39 @@ import giraaff.graph.Edges.Type;
 public final class NodeInputList<T extends Node> extends NodeList<T>
 {
     // @cons
-    public NodeInputList(Node self, int initialSize)
+    public NodeInputList(Node __self, int __initialSize)
     {
-        super(self, initialSize);
+        super(__self, __initialSize);
     }
 
     // @cons
-    public NodeInputList(Node self)
+    public NodeInputList(Node __self)
     {
-        super(self);
+        super(__self);
     }
 
     // @cons
-    public NodeInputList(Node self, T[] elements)
+    public NodeInputList(Node __self, T[] __elements)
     {
-        super(self, elements);
+        super(__self, __elements);
     }
 
     // @cons
-    public NodeInputList(Node self, List<? extends T> elements)
+    public NodeInputList(Node __self, List<? extends T> __elements)
     {
-        super(self, elements);
+        super(__self, __elements);
     }
 
     // @cons
-    public NodeInputList(Node self, Collection<? extends NodeInterface> elements)
+    public NodeInputList(Node __self, Collection<? extends NodeInterface> __elements)
     {
-        super(self, elements);
+        super(__self, __elements);
     }
 
     @Override
-    protected void update(T oldNode, T newNode)
+    protected void update(T __oldNode, T __newNode)
     {
-        self.updateUsages(oldNode, newNode);
+        self.updateUsages(__oldNode, __newNode);
     }
 
     @Override

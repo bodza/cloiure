@@ -53,18 +53,19 @@ public class LoopFragmentInside extends LoopFragment
      * peeling case. In the unrolling case they will be used as the value that replace the loop-phis
      * of the duplicated inside fragment
      */
+    // @field
     private EconomicMap<PhiNode, ValueNode> mergedInitializers;
     // @closure
     private final DuplicationReplacement dataFixBefore = new DuplicationReplacement()
     {
         @Override
-        public Node replacement(Node oriInput)
+        public Node replacement(Node __oriInput)
         {
-            if (!(oriInput instanceof ValueNode))
+            if (!(__oriInput instanceof ValueNode))
             {
-                return oriInput;
+                return __oriInput;
             }
-            return prim((ValueNode) oriInput);
+            return prim((ValueNode) __oriInput);
         }
     };
 
@@ -72,26 +73,26 @@ public class LoopFragmentInside extends LoopFragment
     private final DuplicationReplacement dataFixWithinAfter = new DuplicationReplacement()
     {
         @Override
-        public Node replacement(Node oriInput)
+        public Node replacement(Node __oriInput)
         {
-            if (!(oriInput instanceof ValueNode))
+            if (!(__oriInput instanceof ValueNode))
             {
-                return oriInput;
+                return __oriInput;
             }
-            return primAfter((ValueNode) oriInput);
+            return primAfter((ValueNode) __oriInput);
         }
     };
 
     // @cons
-    public LoopFragmentInside(LoopEx loop)
+    public LoopFragmentInside(LoopEx __loop)
     {
-        super(loop);
+        super(__loop);
     }
 
     // @cons
-    public LoopFragmentInside(LoopFragmentInside original)
+    public LoopFragmentInside(LoopFragmentInside __original)
     {
-        super(null, original);
+        super(null, __original);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class LoopFragmentInside extends LoopFragment
     }
 
     @SuppressWarnings("unused")
-    public void appendInside(LoopEx loop)
+    public void appendInside(LoopEx __loop)
     {
         // TODO
     }
@@ -119,28 +120,28 @@ public class LoopFragmentInside extends LoopFragment
     }
 
     @Override
-    public void insertBefore(LoopEx loop)
+    public void insertBefore(LoopEx __loop)
     {
         patchNodes(dataFixBefore);
 
-        AbstractBeginNode end = mergeEnds();
+        AbstractBeginNode __end = mergeEnds();
 
         mergeEarlyExits();
 
         original().patchPeeling(this);
 
-        AbstractBeginNode entry = getDuplicatedNode(loop.loopBegin());
-        loop.entryPoint().replaceAtPredecessor(entry);
-        end.setNext(loop.entryPoint());
+        AbstractBeginNode __entry = getDuplicatedNode(__loop.loopBegin());
+        __loop.entryPoint().replaceAtPredecessor(__entry);
+        __end.setNext(__loop.entryPoint());
     }
 
     /**
      * Duplicate the body within the loop after the current copy copy of the body, updating the
      * iteration limit to account for the duplication.
      */
-    public void insertWithinAfter(LoopEx loop)
+    public void insertWithinAfter(LoopEx __loop)
     {
-        insertWithinAfter(loop, true);
+        insertWithinAfter(__loop, true);
     }
 
     /**
@@ -148,159 +149,159 @@ public class LoopFragmentInside extends LoopFragment
      *
      * @param updateLimit true if the iteration limit should be adjusted.
      */
-    public void insertWithinAfter(LoopEx loop, boolean updateLimit)
+    public void insertWithinAfter(LoopEx __loop, boolean __updateLimit)
     {
         patchNodes(dataFixWithinAfter);
 
         // Collect any new back edges values before updating them since they might reference each other.
-        LoopBeginNode mainLoopBegin = loop.loopBegin();
-        ArrayList<ValueNode> backedgeValues = new ArrayList<>();
-        for (PhiNode mainPhiNode : mainLoopBegin.phis())
+        LoopBeginNode __mainLoopBegin = __loop.loopBegin();
+        ArrayList<ValueNode> __backedgeValues = new ArrayList<>();
+        for (PhiNode __mainPhiNode : __mainLoopBegin.phis())
         {
-            ValueNode duplicatedNode = getDuplicatedNode(mainPhiNode.valueAt(1));
-            if (duplicatedNode == null)
+            ValueNode __duplicatedNode = getDuplicatedNode(__mainPhiNode.valueAt(1));
+            if (__duplicatedNode == null)
             {
-                if (mainLoopBegin.isPhiAtMerge(mainPhiNode.valueAt(1)))
+                if (__mainLoopBegin.isPhiAtMerge(__mainPhiNode.valueAt(1)))
                 {
-                    duplicatedNode = ((PhiNode) (mainPhiNode.valueAt(1))).valueAt(1);
+                    __duplicatedNode = ((PhiNode) (__mainPhiNode.valueAt(1))).valueAt(1);
                 }
             }
-            backedgeValues.add(duplicatedNode);
+            __backedgeValues.add(__duplicatedNode);
         }
-        int index = 0;
-        for (PhiNode mainPhiNode : mainLoopBegin.phis())
+        int __index = 0;
+        for (PhiNode __mainPhiNode : __mainLoopBegin.phis())
         {
-            ValueNode duplicatedNode = backedgeValues.get(index++);
-            if (duplicatedNode != null)
+            ValueNode __duplicatedNode = __backedgeValues.get(__index++);
+            if (__duplicatedNode != null)
             {
-                mainPhiNode.setValueAt(1, duplicatedNode);
+                __mainPhiNode.setValueAt(1, __duplicatedNode);
             }
         }
 
-        placeNewSegmentAndCleanup(loop);
+        placeNewSegmentAndCleanup(__loop);
 
         // remove any safepoints from the original copy leaving only the duplicated one
-        for (SafepointNode safepoint : loop.whole().nodes().filter(SafepointNode.class))
+        for (SafepointNode __safepoint : __loop.whole().nodes().filter(SafepointNode.class))
         {
-            graph().removeFixed(safepoint);
+            graph().removeFixed(__safepoint);
         }
 
-        int unrollFactor = mainLoopBegin.getUnrollFactor();
-        StructuredGraph graph = mainLoopBegin.graph();
-        if (updateLimit)
+        int __unrollFactor = __mainLoopBegin.getUnrollFactor();
+        StructuredGraph __graph = __mainLoopBegin.graph();
+        if (__updateLimit)
         {
             // use the previous unrollFactor to update the exit condition to power of two
-            InductionVariable iv = loop.counted().getCounter();
-            CompareNode compareNode = (CompareNode) loop.counted().getLimitTest().condition();
-            ValueNode compareBound;
-            if (compareNode.getX() == iv.valueNode())
+            InductionVariable __iv = __loop.counted().getCounter();
+            CompareNode __compareNode = (CompareNode) __loop.counted().getLimitTest().condition();
+            ValueNode __compareBound;
+            if (__compareNode.getX() == __iv.valueNode())
             {
-                compareBound = compareNode.getY();
+                __compareBound = __compareNode.getY();
             }
-            else if (compareNode.getY() == iv.valueNode())
+            else if (__compareNode.getY() == __iv.valueNode())
             {
-                compareBound = compareNode.getX();
+                __compareBound = __compareNode.getX();
             }
             else
             {
                 throw GraalError.shouldNotReachHere();
             }
-            long originalStride = unrollFactor == 1 ? iv.constantStride() : iv.constantStride() / unrollFactor;
-            if (iv.direction() == InductionVariable.Direction.Up)
+            long __originalStride = __unrollFactor == 1 ? __iv.constantStride() : __iv.constantStride() / __unrollFactor;
+            if (__iv.direction() == InductionVariable.Direction.Up)
             {
-                ConstantNode aboveVal = graph.unique(ConstantNode.forIntegerStamp(iv.initNode().stamp(NodeView.DEFAULT), unrollFactor * originalStride));
-                ValueNode newLimit = graph.addWithoutUnique(new SubNode(compareBound, aboveVal));
-                compareNode.replaceFirstInput(compareBound, newLimit);
+                ConstantNode __aboveVal = __graph.unique(ConstantNode.forIntegerStamp(__iv.initNode().stamp(NodeView.DEFAULT), __unrollFactor * __originalStride));
+                ValueNode __newLimit = __graph.addWithoutUnique(new SubNode(__compareBound, __aboveVal));
+                __compareNode.replaceFirstInput(__compareBound, __newLimit);
             }
-            else if (iv.direction() == InductionVariable.Direction.Down)
+            else if (__iv.direction() == InductionVariable.Direction.Down)
             {
-                ConstantNode aboveVal = graph.unique(ConstantNode.forIntegerStamp(iv.initNode().stamp(NodeView.DEFAULT), unrollFactor * -originalStride));
-                ValueNode newLimit = graph.addWithoutUnique(new AddNode(compareBound, aboveVal));
-                compareNode.replaceFirstInput(compareBound, newLimit);
+                ConstantNode __aboveVal = __graph.unique(ConstantNode.forIntegerStamp(__iv.initNode().stamp(NodeView.DEFAULT), __unrollFactor * -__originalStride));
+                ValueNode __newLimit = __graph.addWithoutUnique(new AddNode(__compareBound, __aboveVal));
+                __compareNode.replaceFirstInput(__compareBound, __newLimit);
             }
         }
-        mainLoopBegin.setUnrollFactor(unrollFactor * 2);
-        mainLoopBegin.setLoopFrequency(mainLoopBegin.loopFrequency() / 2);
+        __mainLoopBegin.setUnrollFactor(__unrollFactor * 2);
+        __mainLoopBegin.setLoopFrequency(__mainLoopBegin.loopFrequency() / 2);
     }
 
-    private void placeNewSegmentAndCleanup(LoopEx loop)
+    private void placeNewSegmentAndCleanup(LoopEx __loop)
     {
-        CountedLoopInfo mainCounted = loop.counted();
-        LoopBeginNode mainLoopBegin = loop.loopBegin();
+        CountedLoopInfo __mainCounted = __loop.counted();
+        LoopBeginNode __mainLoopBegin = __loop.loopBegin();
         // discard the segment entry and its flow after if merging it into the loop
-        StructuredGraph graph = mainLoopBegin.graph();
-        IfNode loopTest = mainCounted.getLimitTest();
-        IfNode newSegmentTest = getDuplicatedNode(loopTest);
-        AbstractBeginNode trueSuccessor = loopTest.trueSuccessor();
-        AbstractBeginNode falseSuccessor = loopTest.falseSuccessor();
-        FixedNode firstNode;
-        boolean codeInTrueSide = false;
-        if (trueSuccessor == mainCounted.getBody())
+        StructuredGraph __graph = __mainLoopBegin.graph();
+        IfNode __loopTest = __mainCounted.getLimitTest();
+        IfNode __newSegmentTest = getDuplicatedNode(__loopTest);
+        AbstractBeginNode __trueSuccessor = __loopTest.trueSuccessor();
+        AbstractBeginNode __falseSuccessor = __loopTest.falseSuccessor();
+        FixedNode __firstNode;
+        boolean __codeInTrueSide = false;
+        if (__trueSuccessor == __mainCounted.getBody())
         {
-            firstNode = trueSuccessor.next();
-            codeInTrueSide = true;
+            __firstNode = __trueSuccessor.next();
+            __codeInTrueSide = true;
         }
         else
         {
-            firstNode = falseSuccessor.next();
+            __firstNode = __falseSuccessor.next();
         }
-        trueSuccessor = newSegmentTest.trueSuccessor();
-        falseSuccessor = newSegmentTest.falseSuccessor();
-        for (Node usage : falseSuccessor.anchored().snapshot())
+        __trueSuccessor = __newSegmentTest.trueSuccessor();
+        __falseSuccessor = __newSegmentTest.falseSuccessor();
+        for (Node __usage : __falseSuccessor.anchored().snapshot())
         {
-            usage.replaceFirstInput(falseSuccessor, loopTest.falseSuccessor());
+            __usage.replaceFirstInput(__falseSuccessor, __loopTest.falseSuccessor());
         }
-        for (Node usage : trueSuccessor.anchored().snapshot())
+        for (Node __usage : __trueSuccessor.anchored().snapshot())
         {
-            usage.replaceFirstInput(trueSuccessor, loopTest.trueSuccessor());
+            __usage.replaceFirstInput(__trueSuccessor, __loopTest.trueSuccessor());
         }
-        AbstractBeginNode startBlockNode;
-        if (codeInTrueSide)
+        AbstractBeginNode __startBlockNode;
+        if (__codeInTrueSide)
         {
-            startBlockNode = trueSuccessor;
-        }
-        else
-        {
-            startBlockNode = falseSuccessor;
-        }
-        FixedNode lastNode = getBlockEnd(startBlockNode);
-        LoopEndNode loopEndNode = mainLoopBegin.getSingleLoopEnd();
-        FixedWithNextNode lastCodeNode = (FixedWithNextNode) loopEndNode.predecessor();
-        FixedNode newSegmentFirstNode = getDuplicatedNode(firstNode);
-        FixedWithNextNode newSegmentLastNode = getDuplicatedNode(lastCodeNode);
-        if (firstNode instanceof LoopEndNode)
-        {
-            GraphUtil.killCFG(getDuplicatedNode(mainLoopBegin));
+            __startBlockNode = __trueSuccessor;
         }
         else
         {
-            newSegmentLastNode.clearSuccessors();
-            startBlockNode.setNext(lastNode);
-            lastCodeNode.replaceFirstSuccessor(loopEndNode, newSegmentFirstNode);
-            newSegmentLastNode.replaceFirstSuccessor(lastNode, loopEndNode);
-            lastCodeNode.setNext(newSegmentFirstNode);
-            newSegmentLastNode.setNext(loopEndNode);
-            startBlockNode.clearSuccessors();
-            lastNode.safeDelete();
-            Node newSegmentTestStart = newSegmentTest.predecessor();
-            LogicNode newSegmentIfTest = newSegmentTest.condition();
-            newSegmentTestStart.clearSuccessors();
-            newSegmentTest.safeDelete();
-            newSegmentIfTest.safeDelete();
-            trueSuccessor.safeDelete();
-            falseSuccessor.safeDelete();
-            newSegmentTestStart.safeDelete();
+            __startBlockNode = __falseSuccessor;
+        }
+        FixedNode __lastNode = getBlockEnd(__startBlockNode);
+        LoopEndNode __loopEndNode = __mainLoopBegin.getSingleLoopEnd();
+        FixedWithNextNode __lastCodeNode = (FixedWithNextNode) __loopEndNode.predecessor();
+        FixedNode __newSegmentFirstNode = getDuplicatedNode(__firstNode);
+        FixedWithNextNode __newSegmentLastNode = getDuplicatedNode(__lastCodeNode);
+        if (__firstNode instanceof LoopEndNode)
+        {
+            GraphUtil.killCFG(getDuplicatedNode(__mainLoopBegin));
+        }
+        else
+        {
+            __newSegmentLastNode.clearSuccessors();
+            __startBlockNode.setNext(__lastNode);
+            __lastCodeNode.replaceFirstSuccessor(__loopEndNode, __newSegmentFirstNode);
+            __newSegmentLastNode.replaceFirstSuccessor(__lastNode, __loopEndNode);
+            __lastCodeNode.setNext(__newSegmentFirstNode);
+            __newSegmentLastNode.setNext(__loopEndNode);
+            __startBlockNode.clearSuccessors();
+            __lastNode.safeDelete();
+            Node __newSegmentTestStart = __newSegmentTest.predecessor();
+            LogicNode __newSegmentIfTest = __newSegmentTest.condition();
+            __newSegmentTestStart.clearSuccessors();
+            __newSegmentTest.safeDelete();
+            __newSegmentIfTest.safeDelete();
+            __trueSuccessor.safeDelete();
+            __falseSuccessor.safeDelete();
+            __newSegmentTestStart.safeDelete();
         }
     }
 
-    private static EndNode getBlockEnd(FixedNode node)
+    private static EndNode getBlockEnd(FixedNode __node)
     {
-        FixedNode curNode = node;
-        while (curNode instanceof FixedWithNextNode)
+        FixedNode __curNode = __node;
+        while (__curNode instanceof FixedWithNextNode)
         {
-            curNode = ((FixedWithNextNode) curNode).next();
+            __curNode = ((FixedWithNextNode) __curNode).next();
         }
-        return (EndNode) curNode;
+        return (EndNode) __curNode;
     }
 
     @Override
@@ -308,38 +309,38 @@ public class LoopFragmentInside extends LoopFragment
     {
         if (nodes == null)
         {
-            LoopFragmentWhole whole = loop().whole();
-            whole.nodes(); // init nodes bitmap in whole
-            nodes = whole.nodes.copy();
+            LoopFragmentWhole __whole = loop().whole();
+            __whole.nodes(); // init nodes bitmap in whole
+            nodes = __whole.nodes.copy();
             // remove the phis
-            LoopBeginNode loopBegin = loop().loopBegin();
-            for (PhiNode phi : loopBegin.phis())
+            LoopBeginNode __loopBegin = loop().loopBegin();
+            for (PhiNode __phi : __loopBegin.phis())
             {
-                nodes.clear(phi);
+                nodes.clear(__phi);
             }
-            clearStateNodes(loopBegin);
-            for (LoopExitNode exit : exits())
+            clearStateNodes(__loopBegin);
+            for (LoopExitNode __exit : exits())
             {
-                clearStateNodes(exit);
-                for (ProxyNode proxy : exit.proxies())
+                clearStateNodes(__exit);
+                for (ProxyNode __proxy : __exit.proxies())
                 {
-                    nodes.clear(proxy);
+                    nodes.clear(__proxy);
                 }
             }
         }
         return nodes;
     }
 
-    private void clearStateNodes(StateSplit stateSplit)
+    private void clearStateNodes(StateSplit __stateSplit)
     {
-        FrameState loopState = stateSplit.stateAfter();
-        if (loopState != null)
+        FrameState __loopState = __stateSplit.stateAfter();
+        if (__loopState != null)
         {
-            loopState.applyToVirtual(v ->
+            __loopState.applyToVirtual(__v ->
             {
-                if (v.usages().filter(n -> nodes.isMarked(n) && n != stateSplit).isEmpty())
+                if (__v.usages().filter(__n -> nodes.isMarked(__n) && __n != __stateSplit).isEmpty())
                 {
-                    nodes.clear(v);
+                    nodes.clear(__v);
                 }
             });
         }
@@ -353,50 +354,51 @@ public class LoopFragmentInside extends LoopFragment
     @Override
     protected DuplicationReplacement getDuplicationReplacement()
     {
-        final LoopBeginNode loopBegin = loop().loopBegin();
-        final StructuredGraph graph = graph();
+        final LoopBeginNode __loopBegin = loop().loopBegin();
+        final StructuredGraph __graph = graph();
         // @closure
         return new DuplicationReplacement()
         {
+            // @field
             private EconomicMap<Node, Node> seenNode = EconomicMap.create(Equivalence.IDENTITY);
 
             @Override
-            public Node replacement(Node original)
+            public Node replacement(Node __original)
             {
-                if (original == loopBegin)
+                if (__original == __loopBegin)
                 {
-                    Node value = seenNode.get(original);
-                    if (value != null)
+                    Node __value = seenNode.get(__original);
+                    if (__value != null)
                     {
-                        return value;
+                        return __value;
                     }
-                    AbstractBeginNode newValue = graph.add(new BeginNode());
-                    seenNode.put(original, newValue);
-                    return newValue;
+                    AbstractBeginNode __newValue = __graph.add(new BeginNode());
+                    seenNode.put(__original, __newValue);
+                    return __newValue;
                 }
-                if (original instanceof LoopExitNode && ((LoopExitNode) original).loopBegin() == loopBegin)
+                if (__original instanceof LoopExitNode && ((LoopExitNode) __original).loopBegin() == __loopBegin)
                 {
-                    Node value = seenNode.get(original);
-                    if (value != null)
+                    Node __value = seenNode.get(__original);
+                    if (__value != null)
                     {
-                        return value;
+                        return __value;
                     }
-                    AbstractBeginNode newValue = graph.add(new BeginNode());
-                    seenNode.put(original, newValue);
-                    return newValue;
+                    AbstractBeginNode __newValue = __graph.add(new BeginNode());
+                    seenNode.put(__original, __newValue);
+                    return __newValue;
                 }
-                if (original instanceof LoopEndNode && ((LoopEndNode) original).loopBegin() == loopBegin)
+                if (__original instanceof LoopEndNode && ((LoopEndNode) __original).loopBegin() == __loopBegin)
                 {
-                    Node value = seenNode.get(original);
-                    if (value != null)
+                    Node __value = seenNode.get(__original);
+                    if (__value != null)
                     {
-                        return value;
+                        return __value;
                     }
-                    EndNode newValue = graph.add(new EndNode());
-                    seenNode.put(original, newValue);
-                    return newValue;
+                    EndNode __newValue = __graph.add(new EndNode());
+                    seenNode.put(__original, __newValue);
+                    return __newValue;
                 }
-                return original;
+                return __original;
             }
         };
     }
@@ -413,145 +415,145 @@ public class LoopFragmentInside extends LoopFragment
         // Nothing to do
     }
 
-    private static PhiNode patchPhi(StructuredGraph graph, PhiNode phi, AbstractMergeNode merge)
+    private static PhiNode patchPhi(StructuredGraph __graph, PhiNode __phi, AbstractMergeNode __merge)
     {
-        PhiNode ret;
-        if (phi instanceof ValuePhiNode)
+        PhiNode __ret;
+        if (__phi instanceof ValuePhiNode)
         {
-            ret = new ValuePhiNode(phi.stamp(NodeView.DEFAULT), merge);
+            __ret = new ValuePhiNode(__phi.stamp(NodeView.DEFAULT), __merge);
         }
-        else if (phi instanceof GuardPhiNode)
+        else if (__phi instanceof GuardPhiNode)
         {
-            ret = new GuardPhiNode(merge);
+            __ret = new GuardPhiNode(__merge);
         }
-        else if (phi instanceof MemoryPhiNode)
+        else if (__phi instanceof MemoryPhiNode)
         {
-            ret = new MemoryPhiNode(merge, ((MemoryPhiNode) phi).getLocationIdentity());
+            __ret = new MemoryPhiNode(__merge, ((MemoryPhiNode) __phi).getLocationIdentity());
         }
         else
         {
             throw GraalError.shouldNotReachHere();
         }
-        return graph.addWithoutUnique(ret);
+        return __graph.addWithoutUnique(__ret);
     }
 
-    private void patchPeeling(LoopFragmentInside peel)
+    private void patchPeeling(LoopFragmentInside __peel)
     {
-        LoopBeginNode loopBegin = loop().loopBegin();
-        StructuredGraph graph = loopBegin.graph();
-        List<PhiNode> newPhis = new LinkedList<>();
+        LoopBeginNode __loopBegin = loop().loopBegin();
+        StructuredGraph __graph = __loopBegin.graph();
+        List<PhiNode> __newPhis = new LinkedList<>();
 
-        NodeBitMap usagesToPatch = nodes.copy();
-        for (LoopExitNode exit : exits())
+        NodeBitMap __usagesToPatch = nodes.copy();
+        for (LoopExitNode __exit : exits())
         {
-            markStateNodes(exit, usagesToPatch);
-            for (ProxyNode proxy : exit.proxies())
+            markStateNodes(__exit, __usagesToPatch);
+            for (ProxyNode __proxy : __exit.proxies())
             {
-                usagesToPatch.markAndGrow(proxy);
+                __usagesToPatch.markAndGrow(__proxy);
             }
         }
-        markStateNodes(loopBegin, usagesToPatch);
+        markStateNodes(__loopBegin, __usagesToPatch);
 
-        List<PhiNode> oldPhis = loopBegin.phis().snapshot();
-        for (PhiNode phi : oldPhis)
+        List<PhiNode> __oldPhis = __loopBegin.phis().snapshot();
+        for (PhiNode __phi : __oldPhis)
         {
-            if (phi.hasNoUsages())
+            if (__phi.hasNoUsages())
             {
                 continue;
             }
-            ValueNode first;
-            if (loopBegin.loopEnds().count() == 1)
+            ValueNode __first;
+            if (__loopBegin.loopEnds().count() == 1)
             {
-                ValueNode b = phi.valueAt(loopBegin.loopEnds().first()); // back edge value
-                first = peel.prim(b); // corresponding value in the peel
+                ValueNode __b = __phi.valueAt(__loopBegin.loopEnds().first()); // back edge value
+                __first = __peel.prim(__b); // corresponding value in the peel
             }
             else
             {
-                first = peel.mergedInitializers.get(phi);
+                __first = __peel.mergedInitializers.get(__phi);
             }
             // create a new phi (we don't patch the old one since some usages of the old one may
             // still be valid)
-            PhiNode newPhi = patchPhi(graph, phi, loopBegin);
-            newPhi.addInput(first);
-            for (LoopEndNode end : loopBegin.orderedLoopEnds())
+            PhiNode __newPhi = patchPhi(__graph, __phi, __loopBegin);
+            __newPhi.addInput(__first);
+            for (LoopEndNode __end : __loopBegin.orderedLoopEnds())
             {
-                newPhi.addInput(phi.valueAt(end));
+                __newPhi.addInput(__phi.valueAt(__end));
             }
-            peel.putDuplicatedNode(phi, newPhi);
-            newPhis.add(newPhi);
-            for (Node usage : phi.usages().snapshot())
+            __peel.putDuplicatedNode(__phi, __newPhi);
+            __newPhis.add(__newPhi);
+            for (Node __usage : __phi.usages().snapshot())
             {
                 // patch only usages that should use the new phi ie usages that were peeled
-                if (usagesToPatch.isMarkedAndGrow(usage))
+                if (__usagesToPatch.isMarkedAndGrow(__usage))
                 {
-                    usage.replaceFirstInput(phi, newPhi);
+                    __usage.replaceFirstInput(__phi, __newPhi);
                 }
             }
         }
         // check new phis to see if they have as input some old phis, replace those inputs with the
         // new corresponding phis
-        for (PhiNode phi : newPhis)
+        for (PhiNode __phi : __newPhis)
         {
-            for (int i = 0; i < phi.valueCount(); i++)
+            for (int __i = 0; __i < __phi.valueCount(); __i++)
             {
-                ValueNode v = phi.valueAt(i);
-                if (loopBegin.isPhiAtMerge(v))
+                ValueNode __v = __phi.valueAt(__i);
+                if (__loopBegin.isPhiAtMerge(__v))
                 {
-                    PhiNode newV = peel.getDuplicatedNode((ValuePhiNode) v);
-                    if (newV != null)
+                    PhiNode __newV = __peel.getDuplicatedNode((ValuePhiNode) __v);
+                    if (__newV != null)
                     {
-                        phi.setValueAt(i, newV);
+                        __phi.setValueAt(__i, __newV);
                     }
                 }
             }
         }
 
-        boolean progress = true;
-        while (progress)
+        boolean __progress = true;
+        while (__progress)
         {
-            progress = false;
-            int i = 0;
-            outer: while (i < oldPhis.size())
+            __progress = false;
+            int __i = 0;
+            outer: while (__i < __oldPhis.size())
             {
-                PhiNode oldPhi = oldPhis.get(i);
-                for (Node usage : oldPhi.usages())
+                PhiNode __oldPhi = __oldPhis.get(__i);
+                for (Node __usage : __oldPhi.usages())
                 {
-                    if (usage instanceof PhiNode && oldPhis.contains(usage))
+                    if (__usage instanceof PhiNode && __oldPhis.contains(__usage))
                     {
                         // Do not mark.
                     }
                     else
                     {
                         // Mark alive by removing from delete set.
-                        oldPhis.remove(i);
-                        progress = true;
+                        __oldPhis.remove(__i);
+                        __progress = true;
                         continue outer;
                     }
                 }
-                i++;
+                __i++;
             }
         }
 
-        for (PhiNode deadPhi : oldPhis)
+        for (PhiNode __deadPhi : __oldPhis)
         {
-            deadPhi.clearInputs();
+            __deadPhi.clearInputs();
         }
 
-        for (PhiNode deadPhi : oldPhis)
+        for (PhiNode __deadPhi : __oldPhis)
         {
-            if (deadPhi.isAlive())
+            if (__deadPhi.isAlive())
             {
-                GraphUtil.killWithUnusedFloatingInputs(deadPhi);
+                GraphUtil.killWithUnusedFloatingInputs(__deadPhi);
             }
         }
     }
 
-    private static void markStateNodes(StateSplit stateSplit, NodeBitMap marks)
+    private static void markStateNodes(StateSplit __stateSplit, NodeBitMap __marks)
     {
-        FrameState exitState = stateSplit.stateAfter();
-        if (exitState != null)
+        FrameState __exitState = __stateSplit.stateAfter();
+        if (__exitState != null)
         {
-            exitState.applyToVirtual(v -> marks.markAndGrow(v));
+            __exitState.applyToVirtual(__v -> __marks.markAndGrow(__v));
         }
     }
 
@@ -562,125 +564,125 @@ public class LoopFragmentInside extends LoopFragment
      * @return corresponding value in the peel
      */
     @Override
-    protected ValueNode prim(ValueNode b)
+    protected ValueNode prim(ValueNode __b)
     {
-        LoopBeginNode loopBegin = original().loop().loopBegin();
-        if (loopBegin.isPhiAtMerge(b))
+        LoopBeginNode __loopBegin = original().loop().loopBegin();
+        if (__loopBegin.isPhiAtMerge(__b))
         {
-            PhiNode phi = (PhiNode) b;
-            return phi.valueAt(loopBegin.forwardEnd());
+            PhiNode __phi = (PhiNode) __b;
+            return __phi.valueAt(__loopBegin.forwardEnd());
         }
         else if (nodesReady)
         {
-            ValueNode v = getDuplicatedNode(b);
-            if (v == null)
+            ValueNode __v = getDuplicatedNode(__b);
+            if (__v == null)
             {
-                return b;
+                return __b;
             }
-            return v;
+            return __v;
         }
         else
         {
-            return b;
+            return __b;
         }
     }
 
-    protected ValueNode primAfter(ValueNode b)
+    protected ValueNode primAfter(ValueNode __b)
     {
-        LoopBeginNode loopBegin = original().loop().loopBegin();
-        if (loopBegin.isPhiAtMerge(b))
+        LoopBeginNode __loopBegin = original().loop().loopBegin();
+        if (__loopBegin.isPhiAtMerge(__b))
         {
-            PhiNode phi = (PhiNode) b;
-            return phi.valueAt(1);
+            PhiNode __phi = (PhiNode) __b;
+            return __phi.valueAt(1);
         }
         else if (nodesReady)
         {
-            ValueNode v = getDuplicatedNode(b);
-            if (v == null)
+            ValueNode __v = getDuplicatedNode(__b);
+            if (__v == null)
             {
-                return b;
+                return __b;
             }
-            return v;
+            return __v;
         }
         else
         {
-            return b;
+            return __b;
         }
     }
 
     private AbstractBeginNode mergeEnds()
     {
-        List<EndNode> endsToMerge = new LinkedList<>();
+        List<EndNode> __endsToMerge = new LinkedList<>();
         // map peel exits to the corresponding loop exits
-        EconomicMap<AbstractEndNode, LoopEndNode> reverseEnds = EconomicMap.create(Equivalence.IDENTITY);
-        LoopBeginNode loopBegin = original().loop().loopBegin();
-        for (LoopEndNode le : loopBegin.loopEnds())
+        EconomicMap<AbstractEndNode, LoopEndNode> __reverseEnds = EconomicMap.create(Equivalence.IDENTITY);
+        LoopBeginNode __loopBegin = original().loop().loopBegin();
+        for (LoopEndNode __le : __loopBegin.loopEnds())
         {
-            AbstractEndNode duplicate = getDuplicatedNode(le);
-            if (duplicate != null)
+            AbstractEndNode __duplicate = getDuplicatedNode(__le);
+            if (__duplicate != null)
             {
-                endsToMerge.add((EndNode) duplicate);
-                reverseEnds.put(duplicate, le);
+                __endsToMerge.add((EndNode) __duplicate);
+                __reverseEnds.put(__duplicate, __le);
             }
         }
         mergedInitializers = EconomicMap.create(Equivalence.IDENTITY);
-        AbstractBeginNode newExit;
-        StructuredGraph graph = graph();
-        if (endsToMerge.size() == 1)
+        AbstractBeginNode __newExit;
+        StructuredGraph __graph = graph();
+        if (__endsToMerge.size() == 1)
         {
-            AbstractEndNode end = endsToMerge.get(0);
-            newExit = graph.add(new BeginNode());
-            end.replaceAtPredecessor(newExit);
-            end.safeDelete();
+            AbstractEndNode __end = __endsToMerge.get(0);
+            __newExit = __graph.add(new BeginNode());
+            __end.replaceAtPredecessor(__newExit);
+            __end.safeDelete();
         }
         else
         {
-            AbstractMergeNode newExitMerge = graph.add(new MergeNode());
-            newExit = newExitMerge;
-            FrameState state = loopBegin.stateAfter();
-            FrameState duplicateState = null;
-            if (state != null)
+            AbstractMergeNode __newExitMerge = __graph.add(new MergeNode());
+            __newExit = __newExitMerge;
+            FrameState __state = __loopBegin.stateAfter();
+            FrameState __duplicateState = null;
+            if (__state != null)
             {
-                duplicateState = state.duplicateWithVirtualState();
-                newExitMerge.setStateAfter(duplicateState);
+                __duplicateState = __state.duplicateWithVirtualState();
+                __newExitMerge.setStateAfter(__duplicateState);
             }
-            for (EndNode end : endsToMerge)
+            for (EndNode __end : __endsToMerge)
             {
-                newExitMerge.addForwardEnd(end);
+                __newExitMerge.addForwardEnd(__end);
             }
 
-            for (final PhiNode phi : loopBegin.phis().snapshot())
+            for (final PhiNode __phi : __loopBegin.phis().snapshot())
             {
-                if (phi.hasNoUsages())
+                if (__phi.hasNoUsages())
                 {
                     continue;
                 }
-                final PhiNode firstPhi = patchPhi(graph, phi, newExitMerge);
-                for (AbstractEndNode end : newExitMerge.forwardEnds())
+                final PhiNode __firstPhi = patchPhi(__graph, __phi, __newExitMerge);
+                for (AbstractEndNode __end : __newExitMerge.forwardEnds())
                 {
-                    LoopEndNode loopEnd = reverseEnds.get(end);
-                    ValueNode prim = prim(phi.valueAt(loopEnd));
-                    firstPhi.addInput(prim);
+                    LoopEndNode __loopEnd = __reverseEnds.get(__end);
+                    ValueNode __prim = prim(__phi.valueAt(__loopEnd));
+                    __firstPhi.addInput(__prim);
                 }
-                ValueNode initializer = firstPhi;
-                if (duplicateState != null)
+                ValueNode __initializer = __firstPhi;
+                if (__duplicateState != null)
                 {
                     // fix the merge's state after
-                    duplicateState.applyToNonVirtual(new NodeClosure<ValueNode>()
+                    __duplicateState.applyToNonVirtual(new NodeClosure<ValueNode>()
                     {
                         @Override
-                        public void apply(Node from, ValueNode node)
+                        public void apply(Node __from, ValueNode __node)
                         {
-                            if (node == phi)
+                            if (__node == __phi)
                             {
-                                from.replaceFirstInput(phi, firstPhi);
+                                __from.replaceFirstInput(__phi, __firstPhi);
                             }
                         }
                     });
                 }
-                mergedInitializers.put(phi, initializer);
+                mergedInitializers.put(__phi, __initializer);
             }
         }
-        return newExit;
+        return __newExit;
     }
 }

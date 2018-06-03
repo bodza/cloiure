@@ -18,26 +18,27 @@ import giraaff.phases.common.AddressLoweringPhase.AddressLowering;
 // @class AMD64AddressLowering
 public class AMD64AddressLowering extends AddressLowering
 {
+    // @def
     private static final int ADDRESS_BITS = 64;
 
     @Override
-    public AddressNode lower(ValueNode base, ValueNode offset)
+    public AddressNode lower(ValueNode __base, ValueNode __offset)
     {
-        AMD64AddressNode ret = new AMD64AddressNode(base, offset);
-        StructuredGraph graph = base.graph();
+        AMD64AddressNode __ret = new AMD64AddressNode(__base, __offset);
+        StructuredGraph __graph = __base.graph();
 
-        boolean changed;
+        boolean __changed;
         do
         {
-            changed = improve(graph, ret, false, false);
-        } while (changed);
+            __changed = improve(__graph, __ret, false, false);
+        } while (__changed);
 
-        return graph.unique(ret);
+        return __graph.unique(__ret);
     }
 
-    private static boolean checkAddressBitWidth(ValueNode value)
+    private static boolean checkAddressBitWidth(ValueNode __value)
     {
-        return value == null || value.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(value.stamp(NodeView.DEFAULT)) == ADDRESS_BITS;
+        return __value == null || __value.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(__value.stamp(NodeView.DEFAULT)) == ADDRESS_BITS;
     }
 
     /**
@@ -52,148 +53,148 @@ public class AMD64AddressLowering extends AddressLowering
      *            extracted from the index will be negated as well
      * @return true if the address was modified
      */
-    protected boolean improve(StructuredGraph graph, AMD64AddressNode ret, boolean isBaseNegated, boolean isIndexNegated)
+    protected boolean improve(StructuredGraph __graph, AMD64AddressNode __ret, boolean __isBaseNegated, boolean __isIndexNegated)
     {
-        ValueNode newBase = improveInput(ret, ret.getBase(), 0, isBaseNegated);
-        if (newBase != ret.getBase())
+        ValueNode __newBase = improveInput(__ret, __ret.getBase(), 0, __isBaseNegated);
+        if (__newBase != __ret.getBase())
         {
-            ret.setBase(newBase);
+            __ret.setBase(__newBase);
             return true;
         }
 
-        ValueNode newIdx = improveInput(ret, ret.getIndex(), ret.getScale().log2, isIndexNegated);
-        if (newIdx != ret.getIndex())
+        ValueNode __newIdx = improveInput(__ret, __ret.getIndex(), __ret.getScale().log2, __isIndexNegated);
+        if (__newIdx != __ret.getIndex())
         {
-            ret.setIndex(newIdx);
+            __ret.setIndex(__newIdx);
             return true;
         }
 
-        if (ret.getIndex() instanceof LeftShiftNode)
+        if (__ret.getIndex() instanceof LeftShiftNode)
         {
-            LeftShiftNode shift = (LeftShiftNode) ret.getIndex();
-            if (shift.getY().isConstant())
+            LeftShiftNode __shift = (LeftShiftNode) __ret.getIndex();
+            if (__shift.getY().isConstant())
             {
-                int amount = ret.getScale().log2 + shift.getY().asJavaConstant().asInt();
-                Scale scale = Scale.fromShift(amount);
-                if (scale != null)
+                int __amount = __ret.getScale().log2 + __shift.getY().asJavaConstant().asInt();
+                Scale __scale = Scale.fromShift(__amount);
+                if (__scale != null)
                 {
-                    ret.setIndex(shift.getX());
-                    ret.setScale(scale);
+                    __ret.setIndex(__shift.getX());
+                    __ret.setScale(__scale);
                     return true;
                 }
             }
         }
 
-        if (ret.getScale() == Scale.Times1)
+        if (__ret.getScale() == Scale.Times1)
         {
-            if (ret.getIndex() == null && ret.getBase() instanceof AddNode)
+            if (__ret.getIndex() == null && __ret.getBase() instanceof AddNode)
             {
-                AddNode add = (AddNode) ret.getBase();
-                ret.setBase(add.getX());
-                ret.setIndex(considerNegation(graph, add.getY(), isBaseNegated));
+                AddNode __add = (AddNode) __ret.getBase();
+                __ret.setBase(__add.getX());
+                __ret.setIndex(considerNegation(__graph, __add.getY(), __isBaseNegated));
                 return true;
             }
 
-            if (ret.getBase() == null && ret.getIndex() instanceof AddNode)
+            if (__ret.getBase() == null && __ret.getIndex() instanceof AddNode)
             {
-                AddNode add = (AddNode) ret.getIndex();
-                ret.setBase(considerNegation(graph, add.getX(), isIndexNegated));
-                ret.setIndex(add.getY());
+                AddNode __add = (AddNode) __ret.getIndex();
+                __ret.setBase(considerNegation(__graph, __add.getX(), __isIndexNegated));
+                __ret.setIndex(__add.getY());
                 return true;
             }
 
-            if (ret.getBase() instanceof LeftShiftNode && !(ret.getIndex() instanceof LeftShiftNode))
+            if (__ret.getBase() instanceof LeftShiftNode && !(__ret.getIndex() instanceof LeftShiftNode))
             {
-                ValueNode tmp = ret.getBase();
-                ret.setBase(considerNegation(graph, ret.getIndex(), isIndexNegated != isBaseNegated));
-                ret.setIndex(considerNegation(graph, tmp, isIndexNegated != isBaseNegated));
+                ValueNode __tmp = __ret.getBase();
+                __ret.setBase(considerNegation(__graph, __ret.getIndex(), __isIndexNegated != __isBaseNegated));
+                __ret.setIndex(considerNegation(__graph, __tmp, __isIndexNegated != __isBaseNegated));
                 return true;
             }
         }
 
-        return improveNegation(graph, ret, isBaseNegated, isIndexNegated);
+        return improveNegation(__graph, __ret, __isBaseNegated, __isIndexNegated);
     }
 
-    private boolean improveNegation(StructuredGraph graph, AMD64AddressNode ret, boolean originalBaseNegated, boolean originalIndexNegated)
+    private boolean improveNegation(StructuredGraph __graph, AMD64AddressNode __ret, boolean __originalBaseNegated, boolean __originalIndexNegated)
     {
-        boolean baseNegated = originalBaseNegated;
-        boolean indexNegated = originalIndexNegated;
+        boolean __baseNegated = __originalBaseNegated;
+        boolean __indexNegated = __originalIndexNegated;
 
-        ValueNode originalBase = ret.getBase();
-        ValueNode originalIndex = ret.getIndex();
+        ValueNode __originalBase = __ret.getBase();
+        ValueNode __originalIndex = __ret.getIndex();
 
-        if (ret.getBase() instanceof NegateNode)
+        if (__ret.getBase() instanceof NegateNode)
         {
-            NegateNode negate = (NegateNode) ret.getBase();
-            ret.setBase(negate.getValue());
-            baseNegated = !baseNegated;
+            NegateNode __negate = (NegateNode) __ret.getBase();
+            __ret.setBase(__negate.getValue());
+            __baseNegated = !__baseNegated;
         }
 
-        if (ret.getIndex() instanceof NegateNode)
+        if (__ret.getIndex() instanceof NegateNode)
         {
-            NegateNode negate = (NegateNode) ret.getIndex();
-            ret.setIndex(negate.getValue());
-            indexNegated = !indexNegated;
+            NegateNode __negate = (NegateNode) __ret.getIndex();
+            __ret.setIndex(__negate.getValue());
+            __indexNegated = !__indexNegated;
         }
 
-        if (baseNegated != originalBaseNegated || indexNegated != originalIndexNegated)
+        if (__baseNegated != __originalBaseNegated || __indexNegated != __originalIndexNegated)
         {
-            ValueNode base = ret.getBase();
-            ValueNode index = ret.getIndex();
+            ValueNode __base = __ret.getBase();
+            ValueNode __index = __ret.getIndex();
 
-            boolean improved = improve(graph, ret, baseNegated, indexNegated);
-            if (baseNegated != originalBaseNegated)
+            boolean __improved = improve(__graph, __ret, __baseNegated, __indexNegated);
+            if (__baseNegated != __originalBaseNegated)
             {
-                if (base == ret.getBase())
+                if (__base == __ret.getBase())
                 {
-                    ret.setBase(originalBase);
+                    __ret.setBase(__originalBase);
                 }
-                else if (ret.getBase() != null)
+                else if (__ret.getBase() != null)
                 {
-                    ret.setBase(graph.maybeAddOrUnique(NegateNode.create(ret.getBase(), NodeView.DEFAULT)));
+                    __ret.setBase(__graph.maybeAddOrUnique(NegateNode.create(__ret.getBase(), NodeView.DEFAULT)));
                 }
             }
 
-            if (indexNegated != originalIndexNegated)
+            if (__indexNegated != __originalIndexNegated)
             {
-                if (index == ret.getIndex())
+                if (__index == __ret.getIndex())
                 {
-                    ret.setIndex(originalIndex);
+                    __ret.setIndex(__originalIndex);
                 }
-                else if (ret.getIndex() != null)
+                else if (__ret.getIndex() != null)
                 {
-                    ret.setIndex(graph.maybeAddOrUnique(NegateNode.create(ret.getIndex(), NodeView.DEFAULT)));
+                    __ret.setIndex(__graph.maybeAddOrUnique(NegateNode.create(__ret.getIndex(), NodeView.DEFAULT)));
                 }
             }
-            return improved;
+            return __improved;
         }
         return false;
     }
 
-    private static ValueNode considerNegation(StructuredGraph graph, ValueNode value, boolean negate)
+    private static ValueNode considerNegation(StructuredGraph __graph, ValueNode __value, boolean __negate)
     {
-        if (negate && value != null)
+        if (__negate && __value != null)
         {
-            return graph.maybeAddOrUnique(NegateNode.create(value, NodeView.DEFAULT));
+            return __graph.maybeAddOrUnique(NegateNode.create(__value, NodeView.DEFAULT));
         }
-        return value;
+        return __value;
     }
 
-    private static ValueNode improveInput(AMD64AddressNode address, ValueNode node, int shift, boolean negateExtractedDisplacement)
+    private static ValueNode improveInput(AMD64AddressNode __address, ValueNode __node, int __shift, boolean __negateExtractedDisplacement)
     {
-        if (node == null)
+        if (__node == null)
         {
             return null;
         }
 
-        JavaConstant c = node.asJavaConstant();
-        if (c != null)
+        JavaConstant __c = __node.asJavaConstant();
+        if (__c != null)
         {
-            return improveConstDisp(address, node, c, null, shift, negateExtractedDisplacement);
+            return improveConstDisp(__address, __node, __c, null, __shift, __negateExtractedDisplacement);
         }
         else
         {
-            if (node.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
+            if (__node.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
             {
                 /*
                  * we can't swallow zero-extends because of multiple reasons:
@@ -213,44 +214,44 @@ public class AMD64AddressLowering extends AddressLowering
                  * subsequent implicit zero-extension to 64 bit won't do what we expect).
                  */
 
-                if (node instanceof AddNode)
+                if (__node instanceof AddNode)
                 {
-                    AddNode add = (AddNode) node;
-                    if (add.getX().isConstant())
+                    AddNode __add = (AddNode) __node;
+                    if (__add.getX().isConstant())
                     {
-                        return improveConstDisp(address, node, add.getX().asJavaConstant(), add.getY(), shift, negateExtractedDisplacement);
+                        return improveConstDisp(__address, __node, __add.getX().asJavaConstant(), __add.getY(), __shift, __negateExtractedDisplacement);
                     }
-                    else if (add.getY().isConstant())
+                    else if (__add.getY().isConstant())
                     {
-                        return improveConstDisp(address, node, add.getY().asJavaConstant(), add.getX(), shift, negateExtractedDisplacement);
+                        return improveConstDisp(__address, __node, __add.getY().asJavaConstant(), __add.getX(), __shift, __negateExtractedDisplacement);
                     }
                 }
             }
         }
 
-        return node;
+        return __node;
     }
 
-    private static ValueNode improveConstDisp(AMD64AddressNode address, ValueNode original, JavaConstant c, ValueNode other, int shift, boolean negateExtractedDisplacement)
+    private static ValueNode improveConstDisp(AMD64AddressNode __address, ValueNode __original, JavaConstant __c, ValueNode __other, int __shift, boolean __negateExtractedDisplacement)
     {
-        if (c.getJavaKind().isNumericInteger())
+        if (__c.getJavaKind().isNumericInteger())
         {
-            long delta = c.asLong() << shift;
-            if (updateDisplacement(address, delta, negateExtractedDisplacement))
+            long __delta = __c.asLong() << __shift;
+            if (updateDisplacement(__address, __delta, __negateExtractedDisplacement))
             {
-                return other;
+                return __other;
             }
         }
-        return original;
+        return __original;
     }
 
-    protected static boolean updateDisplacement(AMD64AddressNode address, long displacementDelta, boolean negateDelta)
+    protected static boolean updateDisplacement(AMD64AddressNode __address, long __displacementDelta, boolean __negateDelta)
     {
-        long sign = negateDelta ? -1 : 1;
-        long disp = address.getDisplacement() + displacementDelta * sign;
-        if (NumUtil.isInt(disp))
+        long __sign = __negateDelta ? -1 : 1;
+        long __disp = __address.getDisplacement() + __displacementDelta * __sign;
+        if (NumUtil.isInt(__disp))
         {
-            address.setDisplacement((int) disp);
+            __address.setDisplacement((int) __disp);
             return true;
         }
         return false;

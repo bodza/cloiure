@@ -18,25 +18,27 @@ import giraaff.word.WordTypes;
 // @class CurrentLockNode
 public final class CurrentLockNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<CurrentLockNode> TYPE = NodeClass.create(CurrentLockNode.class);
 
+    // @field
     protected int lockDepth;
 
     // @cons
-    public CurrentLockNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth)
+    public CurrentLockNode(@InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
     {
-        super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
-        this.lockDepth = lockDepth;
+        super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
+        this.lockDepth = __lockDepth;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        HotSpotLIRGenerator hsGen = (HotSpotLIRGenerator) gen.getLIRGeneratorTool();
-        VirtualStackSlot slot = hsGen.getLockSlot(lockDepth);
+        HotSpotLIRGenerator __hsGen = (HotSpotLIRGenerator) __gen.getLIRGeneratorTool();
+        VirtualStackSlot __slot = __hsGen.getLockSlot(lockDepth);
         // the register allocator cannot handle stack -> register moves, so we use an LEA here
-        Value result = gen.getLIRGeneratorTool().emitAddress(slot);
-        gen.setResult(this, result);
+        Value __result = __gen.getLIRGeneratorTool().emitAddress(__slot);
+        __gen.setResult(this, __result);
     }
 
     @NodeIntrinsic

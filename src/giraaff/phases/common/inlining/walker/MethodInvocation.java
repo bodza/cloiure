@@ -21,10 +21,14 @@ import giraaff.phases.common.inlining.info.elem.InlineableGraph;
 // @class MethodInvocation
 public final class MethodInvocation
 {
+    // @field
     private final InlineInfo callee;
+    // @field
     private final double probability;
+    // @field
     private final double relevance;
 
+    // @field
     private int processedGraphs;
 
     /**
@@ -41,19 +45,21 @@ public final class MethodInvocation
      * instantiated in {@link #buildCallsiteHolderForElement(int)} can determine which of <i>its</i>
      * parameters are fixed.
      */
+    // @field
     private final BitSet freshlyInstantiatedArguments;
 
+    // @field
     private final int sizeFreshArgs;
 
     // @cons
-    public MethodInvocation(InlineInfo info, double probability, double relevance, BitSet freshlyInstantiatedArguments)
+    public MethodInvocation(InlineInfo __info, double __probability, double __relevance, BitSet __freshlyInstantiatedArguments)
     {
         super();
-        this.callee = info;
-        this.probability = probability;
-        this.relevance = relevance;
-        this.freshlyInstantiatedArguments = freshlyInstantiatedArguments;
-        this.sizeFreshArgs = freshlyInstantiatedArguments == null ? 0 : freshlyInstantiatedArguments.cardinality();
+        this.callee = __info;
+        this.probability = __probability;
+        this.relevance = __relevance;
+        this.freshlyInstantiatedArguments = __freshlyInstantiatedArguments;
+        this.sizeFreshArgs = __freshlyInstantiatedArguments == null ? 0 : __freshlyInstantiatedArguments.cardinality();
     }
 
     public void incrementProcessedGraphs()
@@ -101,12 +107,12 @@ public final class MethodInvocation
         return sizeFreshArgs;
     }
 
-    public CallsiteHolder buildCallsiteHolderForElement(int index)
+    public CallsiteHolder buildCallsiteHolderForElement(int __index)
     {
-        Inlineable elem = callee.inlineableElementAt(index);
-        InlineableGraph ig = (InlineableGraph) elem;
-        final double invokeProbability = probability * callee.probabilityAt(index);
-        final double invokeRelevance = relevance * callee.relevanceAt(index);
-        return new CallsiteHolderExplorable(ig.getGraph(), invokeProbability, invokeRelevance, freshlyInstantiatedArguments, null);
+        Inlineable __elem = callee.inlineableElementAt(__index);
+        InlineableGraph __ig = (InlineableGraph) __elem;
+        final double __invokeProbability = probability * callee.probabilityAt(__index);
+        final double __invokeRelevance = relevance * callee.relevanceAt(__index);
+        return new CallsiteHolderExplorable(__ig.getGraph(), __invokeProbability, __invokeRelevance, freshlyInstantiatedArguments, null);
     }
 }

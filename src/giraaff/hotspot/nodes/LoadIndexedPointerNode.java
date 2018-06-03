@@ -10,12 +10,13 @@ import giraaff.nodes.java.LoadIndexedNode;
 // @class LoadIndexedPointerNode
 public final class LoadIndexedPointerNode extends LoadIndexedNode
 {
+    // @def
     public static final NodeClass<LoadIndexedPointerNode> TYPE = NodeClass.create(LoadIndexedPointerNode.class);
 
     // @cons
-    public LoadIndexedPointerNode(Stamp stamp, ValueNode array, ValueNode index)
+    public LoadIndexedPointerNode(Stamp __stamp, ValueNode __array, ValueNode __index)
     {
-        super(TYPE, stamp, array, index, JavaKind.Illegal);
+        super(TYPE, __stamp, __array, __index, JavaKind.Illegal);
     }
 
     @Override

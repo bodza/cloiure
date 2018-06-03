@@ -25,22 +25,25 @@ public final class TypeCheckHints
         /**
          * A type seen while profiling a type check instruction.
          */
+        // @field
         public final ResolvedJavaType type;
 
         /**
          * Specifies if {@link #type} is a sub-type of the checked type.
          */
+        // @field
         public final boolean positive;
 
         // @cons
-        Hint(ResolvedJavaType type, boolean positive)
+        Hint(ResolvedJavaType __type, boolean __positive)
         {
             super();
-            this.type = type;
-            this.positive = positive;
+            this.type = __type;
+            this.positive = __positive;
         }
     }
 
+    // @def
     private static final Hint[] NO_HINTS = {};
 
     /**
@@ -48,21 +51,25 @@ public final class TypeCheckHints
      * the type check is a final class or has been speculated to be a final class and this value is
      * the only concrete subclass of the target type.
      */
+    // @field
     public final ResolvedJavaType exact;
 
     /**
      * The most likely types that the type check instruction will see.
      */
+    // @field
     public final Hint[] hints;
 
     /**
      * The profile from which this information was derived.
      */
+    // @field
     public final JavaTypeProfile profile;
 
     /**
      * The total probability that the type check will hit one of the types in {@link #hints}.
      */
+    // @field
     public final double hintHitProbability;
 
     /**
@@ -78,63 +85,63 @@ public final class TypeCheckHints
      * @param maxHints the maximum length of {@link #hints}
      */
     // @cons
-    public TypeCheckHints(TypeReference targetType, JavaTypeProfile profile, Assumptions assumptions, double minHintHitProbability, int maxHints)
+    public TypeCheckHints(TypeReference __targetType, JavaTypeProfile __profile, Assumptions __assumptions, double __minHintHitProbability, int __maxHints)
     {
         super();
-        this.profile = profile;
-        if (targetType != null && targetType.isExact())
+        this.profile = __profile;
+        if (__targetType != null && __targetType.isExact())
         {
-            exact = targetType.getType();
+            exact = __targetType.getType();
         }
         else
         {
             exact = null;
         }
-        Double[] hitProbability = { null };
-        this.hints = makeHints(targetType, profile, minHintHitProbability, maxHints, hitProbability);
-        this.hintHitProbability = hitProbability[0];
+        Double[] __hitProbability = { null };
+        this.hints = makeHints(__targetType, __profile, __minHintHitProbability, __maxHints, __hitProbability);
+        this.hintHitProbability = __hitProbability[0];
     }
 
-    private static Hint[] makeHints(TypeReference targetType, JavaTypeProfile profile, double minHintHitProbability, int maxHints, Double[] hitProbability)
+    private static Hint[] makeHints(TypeReference __targetType, JavaTypeProfile __profile, double __minHintHitProbability, int __maxHints, Double[] __hitProbability)
     {
-        double hitProb = 0.0d;
-        Hint[] hintsBuf = NO_HINTS;
-        if (profile != null)
+        double __hitProb = 0.0d;
+        Hint[] __hintsBuf = NO_HINTS;
+        if (__profile != null)
         {
-            double notRecordedTypes = profile.getNotRecordedProbability();
-            ProfiledType[] ptypes = profile.getTypes();
-            if (notRecordedTypes < (1D - minHintHitProbability) && ptypes != null && ptypes.length > 0)
+            double __notRecordedTypes = __profile.getNotRecordedProbability();
+            ProfiledType[] __ptypes = __profile.getTypes();
+            if (__notRecordedTypes < (1D - __minHintHitProbability) && __ptypes != null && __ptypes.length > 0)
             {
-                hintsBuf = new Hint[ptypes.length];
-                int hintCount = 0;
-                for (ProfiledType ptype : ptypes)
+                __hintsBuf = new Hint[__ptypes.length];
+                int __hintCount = 0;
+                for (ProfiledType __ptype : __ptypes)
                 {
-                    if (targetType != null)
+                    if (__targetType != null)
                     {
-                        ResolvedJavaType hintType = ptype.getType();
-                        hintsBuf[hintCount++] = new Hint(hintType, targetType.getType().isAssignableFrom(hintType));
-                        hitProb += ptype.getProbability();
+                        ResolvedJavaType __hintType = __ptype.getType();
+                        __hintsBuf[__hintCount++] = new Hint(__hintType, __targetType.getType().isAssignableFrom(__hintType));
+                        __hitProb += __ptype.getProbability();
                     }
-                    if (hintCount == maxHints)
+                    if (__hintCount == __maxHints)
                     {
                         break;
                     }
                 }
-                if (hitProb >= minHintHitProbability)
+                if (__hitProb >= __minHintHitProbability)
                 {
-                    if (hintsBuf.length != hintCount || hintCount > maxHints)
+                    if (__hintsBuf.length != __hintCount || __hintCount > __maxHints)
                     {
-                        hintsBuf = Arrays.copyOf(hintsBuf, Math.min(maxHints, hintCount));
+                        __hintsBuf = Arrays.copyOf(__hintsBuf, Math.min(__maxHints, __hintCount));
                     }
                 }
                 else
                 {
-                    hintsBuf = NO_HINTS;
-                    hitProb = 0.0d;
+                    __hintsBuf = NO_HINTS;
+                    __hitProb = 0.0d;
                 }
             }
         }
-        hitProbability[0] = hitProb;
-        return hintsBuf;
+        __hitProbability[0] = __hitProb;
+        return __hintsBuf;
     }
 }

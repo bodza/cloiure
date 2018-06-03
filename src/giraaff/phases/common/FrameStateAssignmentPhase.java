@@ -40,99 +40,99 @@ public final class FrameStateAssignmentPhase extends Phase
     private static final class FrameStateAssignmentClosure extends NodeIteratorClosure<FrameState>
     {
         @Override
-        protected FrameState processNode(FixedNode node, FrameState previousState)
+        protected FrameState processNode(FixedNode __node, FrameState __previousState)
         {
-            FrameState currentState = previousState;
-            if (node instanceof DeoptimizingNode.DeoptBefore)
+            FrameState __currentState = __previousState;
+            if (__node instanceof DeoptimizingNode.DeoptBefore)
             {
-                DeoptimizingNode.DeoptBefore deopt = (DeoptimizingNode.DeoptBefore) node;
-                if (deopt.canDeoptimize() && deopt.stateBefore() == null)
+                DeoptimizingNode.DeoptBefore __deopt = (DeoptimizingNode.DeoptBefore) __node;
+                if (__deopt.canDeoptimize() && __deopt.stateBefore() == null)
                 {
-                    GraalError.guarantee(currentState != null, "no FrameState at DeoptimizingNode %s", deopt);
-                    deopt.setStateBefore(currentState);
+                    GraalError.guarantee(__currentState != null, "no FrameState at DeoptimizingNode %s", __deopt);
+                    __deopt.setStateBefore(__currentState);
                 }
             }
 
-            if (node instanceof StateSplit)
+            if (__node instanceof StateSplit)
             {
-                StateSplit stateSplit = (StateSplit) node;
-                FrameState stateAfter = stateSplit.stateAfter();
-                if (stateAfter != null)
+                StateSplit __stateSplit = (StateSplit) __node;
+                FrameState __stateAfter = __stateSplit.stateAfter();
+                if (__stateAfter != null)
                 {
-                    if (stateAfter.bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
+                    if (__stateAfter.bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
                     {
-                        currentState = null;
+                        __currentState = null;
                     }
                     else
                     {
-                        currentState = stateAfter;
+                        __currentState = __stateAfter;
                     }
-                    stateSplit.setStateAfter(null);
+                    __stateSplit.setStateAfter(null);
                 }
             }
 
-            if (node instanceof DeoptimizingNode.DeoptDuring)
+            if (__node instanceof DeoptimizingNode.DeoptDuring)
             {
-                DeoptimizingNode.DeoptDuring deopt = (DeoptimizingNode.DeoptDuring) node;
-                if (deopt.canDeoptimize())
+                DeoptimizingNode.DeoptDuring __deopt = (DeoptimizingNode.DeoptDuring) __node;
+                if (__deopt.canDeoptimize())
                 {
-                    GraalError.guarantee(currentState != null, "no FrameState at DeoptimizingNode %s", deopt);
-                    deopt.computeStateDuring(currentState);
+                    GraalError.guarantee(__currentState != null, "no FrameState at DeoptimizingNode %s", __deopt);
+                    __deopt.computeStateDuring(__currentState);
                 }
             }
 
-            if (node instanceof DeoptimizingNode.DeoptAfter)
+            if (__node instanceof DeoptimizingNode.DeoptAfter)
             {
-                DeoptimizingNode.DeoptAfter deopt = (DeoptimizingNode.DeoptAfter) node;
-                if (deopt.canDeoptimize() && deopt.stateAfter() == null)
+                DeoptimizingNode.DeoptAfter __deopt = (DeoptimizingNode.DeoptAfter) __node;
+                if (__deopt.canDeoptimize() && __deopt.stateAfter() == null)
                 {
-                    GraalError.guarantee(currentState != null, "no FrameState at DeoptimizingNode %s", deopt);
-                    deopt.setStateAfter(currentState);
+                    GraalError.guarantee(__currentState != null, "no FrameState at DeoptimizingNode %s", __deopt);
+                    __deopt.setStateAfter(__currentState);
                 }
             }
 
-            return currentState;
+            return __currentState;
         }
 
         @Override
-        protected FrameState merge(AbstractMergeNode merge, List<FrameState> states)
+        protected FrameState merge(AbstractMergeNode __merge, List<FrameState> __states)
         {
-            FrameState singleFrameState = singleFrameState(states);
-            return singleFrameState == null ? merge.stateAfter() : singleFrameState;
+            FrameState __singleFrameState = singleFrameState(__states);
+            return __singleFrameState == null ? __merge.stateAfter() : __singleFrameState;
         }
 
         @Override
-        protected FrameState afterSplit(AbstractBeginNode node, FrameState oldState)
+        protected FrameState afterSplit(AbstractBeginNode __node, FrameState __oldState)
         {
-            return oldState;
+            return __oldState;
         }
 
         @Override
-        protected EconomicMap<LoopExitNode, FrameState> processLoop(LoopBeginNode loop, FrameState initialState)
+        protected EconomicMap<LoopExitNode, FrameState> processLoop(LoopBeginNode __loop, FrameState __initialState)
         {
-            return ReentrantNodeIterator.processLoop(this, loop, initialState).exitStates;
+            return ReentrantNodeIterator.processLoop(this, __loop, __initialState).exitStates;
         }
     }
 
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        if (graph.getGuardsStage().areFrameStatesAtSideEffects())
+        if (__graph.getGuardsStage().areFrameStatesAtSideEffects())
         {
-            ReentrantNodeIterator.apply(new FrameStateAssignmentClosure(), graph.start(), null);
-            graph.setGuardsStage(GuardsStage.AFTER_FSA);
-            graph.getNodes(FrameState.TYPE).filter(state -> state.hasNoUsages()).forEach(GraphUtil::killWithUnusedFloatingInputs);
+            ReentrantNodeIterator.apply(new FrameStateAssignmentClosure(), __graph.start(), null);
+            __graph.setGuardsStage(GuardsStage.AFTER_FSA);
+            __graph.getNodes(FrameState.TYPE).filter(__state -> __state.hasNoUsages()).forEach(GraphUtil::killWithUnusedFloatingInputs);
         }
     }
 
-    private static boolean hasFloatingDeopts(StructuredGraph graph)
+    private static boolean hasFloatingDeopts(StructuredGraph __graph)
     {
-        for (Node n : graph.getNodes())
+        for (Node __n : __graph.getNodes())
         {
-            if (n instanceof DeoptimizingNode && GraphUtil.isFloatingNode(n))
+            if (__n instanceof DeoptimizingNode && GraphUtil.isFloatingNode(__n))
             {
-                DeoptimizingNode deoptimizingNode = (DeoptimizingNode) n;
-                if (deoptimizingNode.canDeoptimize())
+                DeoptimizingNode __deoptimizingNode = (DeoptimizingNode) __n;
+                if (__deoptimizingNode.canDeoptimize())
                 {
                     return true;
                 }
@@ -141,19 +141,19 @@ public final class FrameStateAssignmentPhase extends Phase
         return false;
     }
 
-    private static FrameState singleFrameState(List<FrameState> states)
+    private static FrameState singleFrameState(List<FrameState> __states)
     {
-        FrameState singleState = states.get(0);
-        for (int i = 1; i < states.size(); ++i)
+        FrameState __singleState = __states.get(0);
+        for (int __i = 1; __i < __states.size(); ++__i)
         {
-            if (states.get(i) != singleState)
+            if (__states.get(__i) != __singleState)
             {
                 return null;
             }
         }
-        if (singleState != null && singleState.bci != BytecodeFrame.INVALID_FRAMESTATE_BCI)
+        if (__singleState != null && __singleState.bci != BytecodeFrame.INVALID_FRAMESTATE_BCI)
         {
-            return singleState;
+            return __singleState;
         }
         return null;
     }

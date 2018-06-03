@@ -15,65 +15,66 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class UnsignedDivNode
 public final class UnsignedDivNode extends IntegerDivRemNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<UnsignedDivNode> TYPE = NodeClass.create(UnsignedDivNode.class);
 
     // @cons
-    public UnsignedDivNode(ValueNode x, ValueNode y)
+    public UnsignedDivNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected UnsignedDivNode(NodeClass<? extends UnsignedDivNode> c, ValueNode x, ValueNode y)
+    protected UnsignedDivNode(NodeClass<? extends UnsignedDivNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, x.stamp(NodeView.DEFAULT).unrestricted(), Op.DIV, Type.UNSIGNED, x, y);
+        super(__c, __x.stamp(NodeView.DEFAULT).unrestricted(), Op.DIV, Type.UNSIGNED, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        Stamp stamp = x.stamp(view).unrestricted();
-        return canonical(null, x, y, stamp, view);
+        Stamp __stamp = __x.stamp(__view).unrestricted();
+        return canonical(null, __x, __y, __stamp, __view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        return canonical(this, forX, forY, stamp(view), view);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, __forX, __forY, stamp(__view), __view);
     }
 
     @SuppressWarnings("unused")
-    private static ValueNode canonical(UnsignedDivNode self, ValueNode forX, ValueNode forY, Stamp stamp, NodeView view)
+    private static ValueNode canonical(UnsignedDivNode __self, ValueNode __forX, ValueNode __forY, Stamp __stamp, NodeView __view)
     {
-        int bits = ((IntegerStamp) stamp).getBits();
-        if (forX.isConstant() && forY.isConstant())
+        int __bits = ((IntegerStamp) __stamp).getBits();
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            long yConst = CodeUtil.zeroExtend(forY.asJavaConstant().asLong(), bits);
-            if (yConst == 0)
+            long __yConst = CodeUtil.zeroExtend(__forY.asJavaConstant().asLong(), __bits);
+            if (__yConst == 0)
             {
-                return self != null ? self : new UnsignedDivNode(forX, forY); // this will trap,
+                return __self != null ? __self : new UnsignedDivNode(__forX, __forY); // this will trap,
                                                                               // cannot canonicalize
             }
-            return ConstantNode.forIntegerStamp(stamp, Long.divideUnsigned(CodeUtil.zeroExtend(forX.asJavaConstant().asLong(), bits), yConst));
+            return ConstantNode.forIntegerStamp(__stamp, Long.divideUnsigned(CodeUtil.zeroExtend(__forX.asJavaConstant().asLong(), __bits), __yConst));
         }
-        else if (forY.isConstant())
+        else if (__forY.isConstant())
         {
-            long c = CodeUtil.zeroExtend(forY.asJavaConstant().asLong(), bits);
-            if (c == 1)
+            long __c = CodeUtil.zeroExtend(__forY.asJavaConstant().asLong(), __bits);
+            if (__c == 1)
             {
-                return forX;
+                return __forX;
             }
-            if (CodeUtil.isPowerOf2(c))
+            if (CodeUtil.isPowerOf2(__c))
             {
-                return new UnsignedRightShiftNode(forX, ConstantNode.forInt(CodeUtil.log2(c)));
+                return new UnsignedRightShiftNode(__forX, ConstantNode.forInt(CodeUtil.log2(__c)));
             }
         }
-        return self != null ? self : new UnsignedDivNode(forX, forY);
+        return __self != null ? __self : new UnsignedDivNode(__forX, __forY);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, gen.getLIRGeneratorTool().getArithmetic().emitUDiv(gen.operand(getX()), gen.operand(getY()), gen.state(this)));
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitUDiv(__gen.operand(getX()), __gen.operand(getY()), __gen.state(this)));
     }
 }

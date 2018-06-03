@@ -10,22 +10,22 @@ import giraaff.replacements.nodes.BitScanReverseNode;
 public final class IntegerSubstitutions
 {
     @MethodSubstitution
-    public static int numberOfLeadingZeros(int i)
+    public static int numberOfLeadingZeros(int __i)
     {
-        if (i == 0)
+        if (__i == 0)
         {
             return 32;
         }
-        return 31 - BitScanReverseNode.unsafeScan(i);
+        return 31 - BitScanReverseNode.unsafeScan(__i);
     }
 
     @MethodSubstitution
-    public static int numberOfTrailingZeros(int i)
+    public static int numberOfTrailingZeros(int __i)
     {
-        if (i == 0)
+        if (__i == 0)
         {
             return 32;
         }
-        return BitScanForwardNode.unsafeScan(i);
+        return BitScanForwardNode.unsafeScan(__i);
     }
 }

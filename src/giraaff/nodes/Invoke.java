@@ -55,12 +55,12 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
      */
     default ResolvedJavaMethod getContextMethod()
     {
-        FrameState state = stateAfter();
-        if (state == null)
+        FrameState __state = stateAfter();
+        if (__state == null)
         {
-            state = stateDuring();
+            __state = stateDuring();
         }
-        return state.getMethod();
+        return __state.getMethod();
     }
 
     /**
@@ -71,19 +71,19 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
      */
     default ResolvedJavaType getContextType()
     {
-        ResolvedJavaMethod contextMethod = getContextMethod();
-        if (contextMethod == null)
+        ResolvedJavaMethod __contextMethod = getContextMethod();
+        if (__contextMethod == null)
         {
             return null;
         }
-        return contextMethod.getDeclaringClass();
+        return __contextMethod.getDeclaringClass();
     }
 
     @Override
     default void computeStateDuring(FrameState stateAfter)
     {
-        FrameState newStateDuring = stateAfter.duplicateModifiedDuringCall(bci(), asNode().getStackKind());
-        setStateDuring(newStateDuring);
+        FrameState __newStateDuring = stateAfter.duplicateModifiedDuringCall(bci(), asNode().getStackKind());
+        setStateDuring(__newStateDuring);
     }
 
     default ValueNode getReceiver()
@@ -93,12 +93,12 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
 
     default ResolvedJavaType getReceiverType()
     {
-        ResolvedJavaType receiverType = StampTool.typeOrNull(getReceiver());
-        if (receiverType == null)
+        ResolvedJavaType __receiverType = StampTool.typeOrNull(getReceiver());
+        if (__receiverType == null)
         {
-            receiverType = ((MethodCallTargetNode) callTarget()).targetMethod().getDeclaringClass();
+            __receiverType = ((MethodCallTargetNode) callTarget()).targetMethod().getDeclaringClass();
         }
-        return receiverType;
+        return __receiverType;
     }
 
     default InvokeKind getInvokeKind()

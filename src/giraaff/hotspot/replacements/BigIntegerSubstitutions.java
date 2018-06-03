@@ -17,63 +17,63 @@ public final class BigIntegerSubstitutions
     }
 
     @MethodSubstitution(isStatic = false)
-    static int[] multiplyToLen(@SuppressWarnings("unused") Object receiver, int[] x, int xlen, int[] y, int ylen, int[] zIn)
+    static int[] multiplyToLen(@SuppressWarnings("unused") Object __receiver, int[] __x, int __xlen, int[] __y, int __ylen, int[] __zIn)
     {
-        return multiplyToLenStatic(x, xlen, y, ylen, zIn);
+        return multiplyToLenStatic(__x, __xlen, __y, __ylen, __zIn);
     }
 
     @MethodSubstitution(isStatic = true)
-    static int[] multiplyToLenStatic(int[] x, int xlen, int[] y, int ylen, int[] zIn)
+    static int[] multiplyToLenStatic(int[] __x, int __xlen, int[] __y, int __ylen, int[] __zIn)
     {
-        int[] zResult = zIn;
-        int zLen;
-        if (zResult == null || zResult.length < (xlen + ylen))
+        int[] __zResult = __zIn;
+        int __zLen;
+        if (__zResult == null || __zResult.length < (__xlen + __ylen))
         {
-            zLen = xlen + ylen;
-            zResult = new int[xlen + ylen];
+            __zLen = __xlen + __ylen;
+            __zResult = new int[__xlen + __ylen];
         }
         else
         {
-            zLen = zIn.length;
+            __zLen = __zIn.length;
         }
-        HotSpotBackend.multiplyToLenStub(HotSpotReplacementsUtil.arrayStart(x), xlen, HotSpotReplacementsUtil.arrayStart(y), ylen, HotSpotReplacementsUtil.arrayStart(zResult), zLen);
-        return zResult;
+        HotSpotBackend.multiplyToLenStub(HotSpotReplacementsUtil.arrayStart(__x), __xlen, HotSpotReplacementsUtil.arrayStart(__y), __ylen, HotSpotReplacementsUtil.arrayStart(__zResult), __zLen);
+        return __zResult;
     }
 
     @MethodSubstitution(isStatic = true)
-    static int mulAdd(int[] out, int[] in, int offset, int len, int k)
+    static int mulAdd(int[] __out, int[] __in, int __offset, int __len, int __k)
     {
-        int[] outNonNull = GraalDirectives.guardingNonNull(out);
-        int newOffset = outNonNull.length - offset;
-        return HotSpotBackend.mulAddStub(HotSpotReplacementsUtil.arrayStart(outNonNull), HotSpotReplacementsUtil.arrayStart(in), newOffset, len, k);
+        int[] __outNonNull = GraalDirectives.guardingNonNull(__out);
+        int __newOffset = __outNonNull.length - __offset;
+        return HotSpotBackend.mulAddStub(HotSpotReplacementsUtil.arrayStart(__outNonNull), HotSpotReplacementsUtil.arrayStart(__in), __newOffset, __len, __k);
     }
 
     @MethodSubstitution(isStatic = true)
-    static int implMulAdd(int[] out, int[] in, int offset, int len, int k)
+    static int implMulAdd(int[] __out, int[] __in, int __offset, int __len, int __k)
     {
-        int[] outNonNull = GraalDirectives.guardingNonNull(out);
-        int newOffset = outNonNull.length - offset;
-        return HotSpotBackend.mulAddStub(HotSpotReplacementsUtil.arrayStart(outNonNull), HotSpotReplacementsUtil.arrayStart(in), newOffset, len, k);
+        int[] __outNonNull = GraalDirectives.guardingNonNull(__out);
+        int __newOffset = __outNonNull.length - __offset;
+        return HotSpotBackend.mulAddStub(HotSpotReplacementsUtil.arrayStart(__outNonNull), HotSpotReplacementsUtil.arrayStart(__in), __newOffset, __len, __k);
     }
 
     @MethodSubstitution(isStatic = true)
-    static int[] implMontgomeryMultiply(int[] a, int[] b, int[] n, int len, long inv, int[] product)
+    static int[] implMontgomeryMultiply(int[] __a, int[] __b, int[] __n, int __len, long __inv, int[] __product)
     {
-        HotSpotBackend.implMontgomeryMultiply(HotSpotReplacementsUtil.arrayStart(a), HotSpotReplacementsUtil.arrayStart(b), HotSpotReplacementsUtil.arrayStart(n), len, inv, HotSpotReplacementsUtil.arrayStart(product));
-        return product;
+        HotSpotBackend.implMontgomeryMultiply(HotSpotReplacementsUtil.arrayStart(__a), HotSpotReplacementsUtil.arrayStart(__b), HotSpotReplacementsUtil.arrayStart(__n), __len, __inv, HotSpotReplacementsUtil.arrayStart(__product));
+        return __product;
     }
 
     @MethodSubstitution(isStatic = true)
-    static int[] implMontgomerySquare(int[] a, int[] n, int len, long inv, int[] product)
+    static int[] implMontgomerySquare(int[] __a, int[] __n, int __len, long __inv, int[] __product)
     {
-        HotSpotBackend.implMontgomerySquare(HotSpotReplacementsUtil.arrayStart(a), HotSpotReplacementsUtil.arrayStart(n), len, inv, HotSpotReplacementsUtil.arrayStart(product));
-        return product;
+        HotSpotBackend.implMontgomerySquare(HotSpotReplacementsUtil.arrayStart(__a), HotSpotReplacementsUtil.arrayStart(__n), __len, __inv, HotSpotReplacementsUtil.arrayStart(__product));
+        return __product;
     }
 
     @MethodSubstitution(isStatic = true)
-    static int[] implSquareToLen(int[] x, int len, int[] z, int zLen)
+    static int[] implSquareToLen(int[] __x, int __len, int[] __z, int __zLen)
     {
-        HotSpotBackend.implSquareToLen(HotSpotReplacementsUtil.arrayStart(x), len, HotSpotReplacementsUtil.arrayStart(z), zLen);
-        return z;
+        HotSpotBackend.implSquareToLen(HotSpotReplacementsUtil.arrayStart(__x), __len, HotSpotReplacementsUtil.arrayStart(__z), __zLen);
+        return __z;
     }
 }

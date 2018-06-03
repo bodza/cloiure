@@ -14,30 +14,30 @@ import giraaff.replacements.nodes.ArrayEqualsNode;
 public final class StringSubstitutions
 {
     @MethodSubstitution(isStatic = false)
-    public static boolean equals(final String thisString, Object obj)
+    public static boolean equals(final String __thisString, Object __obj)
     {
-        if (thisString == obj)
+        if (__thisString == __obj)
         {
             return true;
         }
-        if (!(obj instanceof String))
+        if (!(__obj instanceof String))
         {
             return false;
         }
-        String thatString = (String) obj;
-        if (thisString.length() != thatString.length())
+        String __thatString = (String) __obj;
+        if (__thisString.length() != __thatString.length())
         {
             return false;
         }
-        if (thisString.length() == 0)
+        if (__thisString.length() == 0)
         {
             return true;
         }
 
-        final char[] array1 = getValue(thisString);
-        final char[] array2 = getValue(thatString);
+        final char[] __array1 = getValue(__thisString);
+        final char[] __array2 = getValue(__thatString);
 
-        return ArrayEqualsNode.equals(array1, array2, array1.length);
+        return ArrayEqualsNode.equals(__array1, __array2, __array1.length);
     }
 
     /**

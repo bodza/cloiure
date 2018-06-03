@@ -12,35 +12,38 @@ import giraaff.nodes.ValueNode;
 // @class VirtualInstanceNode
 public class VirtualInstanceNode extends VirtualObjectNode
 {
+    // @def
     public static final NodeClass<VirtualInstanceNode> TYPE = NodeClass.create(VirtualInstanceNode.class);
 
+    // @field
     protected final ResolvedJavaType type;
+    // @field
     protected final ResolvedJavaField[] fields;
 
     // @cons
-    public VirtualInstanceNode(ResolvedJavaType type, boolean hasIdentity)
+    public VirtualInstanceNode(ResolvedJavaType __type, boolean __hasIdentity)
     {
-        this(type, type.getInstanceFields(true), hasIdentity);
+        this(__type, __type.getInstanceFields(true), __hasIdentity);
     }
 
     // @cons
-    public VirtualInstanceNode(ResolvedJavaType type, ResolvedJavaField[] fields, boolean hasIdentity)
+    public VirtualInstanceNode(ResolvedJavaType __type, ResolvedJavaField[] __fields, boolean __hasIdentity)
     {
-        this(TYPE, type, fields, hasIdentity);
+        this(TYPE, __type, __fields, __hasIdentity);
     }
 
     // @cons
-    protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> c, ResolvedJavaType type, boolean hasIdentity)
+    protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> __c, ResolvedJavaType __type, boolean __hasIdentity)
     {
-        this(c, type, type.getInstanceFields(true), hasIdentity);
+        this(__c, __type, __type.getInstanceFields(true), __hasIdentity);
     }
 
     // @cons
-    protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> c, ResolvedJavaType type, ResolvedJavaField[] fields, boolean hasIdentity)
+    protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> __c, ResolvedJavaType __type, ResolvedJavaField[] __fields, boolean __hasIdentity)
     {
-        super(c, type, hasIdentity);
-        this.type = type;
-        this.fields = fields;
+        super(__c, __type, __hasIdentity);
+        this.type = __type;
+        this.fields = __fields;
     }
 
     @Override
@@ -55,9 +58,9 @@ public class VirtualInstanceNode extends VirtualObjectNode
         return fields.length;
     }
 
-    public ResolvedJavaField field(int index)
+    public ResolvedJavaField field(int __index)
     {
-        return fields[index];
+        return fields[__index];
     }
 
     public ResolvedJavaField[] getFields()
@@ -66,34 +69,34 @@ public class VirtualInstanceNode extends VirtualObjectNode
     }
 
     @Override
-    public String entryName(int index)
+    public String entryName(int __index)
     {
-        return fields[index].getName();
+        return fields[__index].getName();
     }
 
-    public int fieldIndex(ResolvedJavaField field)
+    public int fieldIndex(ResolvedJavaField __field)
     {
         // on average fields.length == ~6, so a linear search is fast enough
-        for (int i = 0; i < fields.length; i++)
+        for (int __i = 0; __i < fields.length; __i++)
         {
-            if (fields[i].equals(field))
+            if (fields[__i].equals(__field))
             {
-                return i;
+                return __i;
             }
         }
         return -1;
     }
 
     @Override
-    public int entryIndexForOffset(ArrayOffsetProvider arrayOffsetProvider, long constantOffset, JavaKind expectedEntryKind)
+    public int entryIndexForOffset(ArrayOffsetProvider __arrayOffsetProvider, long __constantOffset, JavaKind __expectedEntryKind)
     {
-        return fieldIndex(type.findInstanceFieldWithOffset(constantOffset, expectedEntryKind));
+        return fieldIndex(type.findInstanceFieldWithOffset(__constantOffset, __expectedEntryKind));
     }
 
     @Override
-    public JavaKind entryKind(int index)
+    public JavaKind entryKind(int __index)
     {
-        return fields[index].getJavaKind();
+        return fields[__index].getJavaKind();
     }
 
     @Override
@@ -103,7 +106,7 @@ public class VirtualInstanceNode extends VirtualObjectNode
     }
 
     @Override
-    public ValueNode getMaterializedRepresentation(FixedNode fixed, ValueNode[] entries, LockState locks)
+    public ValueNode getMaterializedRepresentation(FixedNode __fixed, ValueNode[] __entries, LockState __locks)
     {
         return new AllocatedObjectNode(this);
     }

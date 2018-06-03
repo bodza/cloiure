@@ -11,41 +11,42 @@ import giraaff.lir.phases.AllocationPhase.AllocationContext;
 // @class LinearScanRegisterAllocationPhase
 public final class LinearScanRegisterAllocationPhase extends LinearScanAllocationPhase
 {
+    // @field
     private final LinearScan allocator;
 
     // @cons
-    LinearScanRegisterAllocationPhase(LinearScan allocator)
+    LinearScanRegisterAllocationPhase(LinearScan __allocator)
     {
         super();
-        this.allocator = allocator;
+        this.allocator = __allocator;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult result, AllocationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __result, AllocationContext __context)
     {
         allocateRegisters();
     }
 
     void allocateRegisters()
     {
-        Interval precoloredIntervals;
-        Interval notPrecoloredIntervals;
+        Interval __precoloredIntervals;
+        Interval __notPrecoloredIntervals;
 
-        Pair<Interval, Interval> result = allocator.createUnhandledLists(LinearScan.IS_PRECOLORED_INTERVAL, LinearScan.IS_VARIABLE_INTERVAL);
-        precoloredIntervals = result.getLeft();
-        notPrecoloredIntervals = result.getRight();
+        Pair<Interval, Interval> __result = allocator.createUnhandledLists(LinearScan.IS_PRECOLORED_INTERVAL, LinearScan.IS_VARIABLE_INTERVAL);
+        __precoloredIntervals = __result.getLeft();
+        __notPrecoloredIntervals = __result.getRight();
 
         // allocate cpu registers
-        LinearScanWalker lsw;
+        LinearScanWalker __lsw;
         if (GraalOptions.lsraOptimization)
         {
-            lsw = new OptimizingLinearScanWalker(allocator, precoloredIntervals, notPrecoloredIntervals);
+            __lsw = new OptimizingLinearScanWalker(allocator, __precoloredIntervals, __notPrecoloredIntervals);
         }
         else
         {
-            lsw = new LinearScanWalker(allocator, precoloredIntervals, notPrecoloredIntervals);
+            __lsw = new LinearScanWalker(allocator, __precoloredIntervals, __notPrecoloredIntervals);
         }
-        lsw.walk();
-        lsw.finishAllocation();
+        __lsw.walk();
+        __lsw.finishAllocation();
     }
 }

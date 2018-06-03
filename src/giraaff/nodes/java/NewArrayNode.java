@@ -34,35 +34,37 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class NewArrayNode
 public final class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable
 {
+    // @def
     public static final NodeClass<NewArrayNode> TYPE = NodeClass.create(NewArrayNode.class);
 
+    // @field
     private final ResolvedJavaType elementType;
 
     // @cons
-    public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents)
+    public NewArrayNode(ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents)
     {
-        this(elementType, length, fillContents, null);
+        this(__elementType, __length, __fillContents, null);
     }
 
     // @cons
-    public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore)
+    public NewArrayNode(ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents, FrameState __stateBefore)
     {
-        this(TYPE, elementType, length, fillContents, stateBefore);
+        this(TYPE, __elementType, __length, __fillContents, __stateBefore);
     }
 
     // @cons
-    protected NewArrayNode(NodeClass<? extends NewArrayNode> c, ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore)
+    protected NewArrayNode(NodeClass<? extends NewArrayNode> __c, ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents, FrameState __stateBefore)
     {
-        super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(elementType.getArrayClass())), length, fillContents, stateBefore);
-        this.elementType = elementType;
+        super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__elementType.getArrayClass())), __length, __fillContents, __stateBefore);
+        this.elementType = __elementType;
     }
 
     @NodeIntrinsic
     private static native Object newArray(@ConstantNodeParameter Class<?> elementType, int length, @ConstantNodeParameter boolean fillContents);
 
-    public static Object newUninitializedArray(Class<?> elementType, int length)
+    public static Object newUninitializedArray(Class<?> __elementType, int __length)
     {
-        return newArray(elementType, length, false);
+        return newArray(__elementType, __length, false);
     }
 
     /**
@@ -76,30 +78,30 @@ public final class NewArrayNode extends AbstractNewArrayNode implements Virtuali
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode lengthAlias = tool.getAlias(length());
-        if (lengthAlias.asConstant() != null)
+        ValueNode __lengthAlias = __tool.getAlias(length());
+        if (__lengthAlias.asConstant() != null)
         {
-            int constantLength = lengthAlias.asJavaConstant().asInt();
-            if (constantLength >= 0 && constantLength < tool.getMaximumEntryCount())
+            int __constantLength = __lengthAlias.asJavaConstant().asInt();
+            if (__constantLength >= 0 && __constantLength < __tool.getMaximumEntryCount())
             {
-                ValueNode[] state = new ValueNode[constantLength];
-                ConstantNode defaultForKind = constantLength == 0 ? null : defaultElementValue();
-                for (int i = 0; i < constantLength; i++)
+                ValueNode[] __state = new ValueNode[__constantLength];
+                ConstantNode __defaultForKind = __constantLength == 0 ? null : defaultElementValue();
+                for (int __i = 0; __i < __constantLength; __i++)
                 {
-                    state[i] = defaultForKind;
+                    __state[__i] = __defaultForKind;
                 }
-                VirtualObjectNode virtualObject = createVirtualArrayNode(constantLength);
-                tool.createVirtualObject(virtualObject, state, Collections.<MonitorIdNode> emptyList(), false);
-                tool.replaceWithVirtual(virtualObject);
+                VirtualObjectNode __virtualObject = createVirtualArrayNode(__constantLength);
+                __tool.createVirtualObject(__virtualObject, __state, Collections.<MonitorIdNode> emptyList(), false);
+                __tool.replaceWithVirtual(__virtualObject);
             }
         }
     }
 
-    protected VirtualArrayNode createVirtualArrayNode(int constantLength)
+    protected VirtualArrayNode createVirtualArrayNode(int __constantLength)
     {
-        return new VirtualArrayNode(elementType(), constantLength);
+        return new VirtualArrayNode(elementType(), __constantLength);
     }
 
     // Factored out in a separate method so that subclasses can override it.
@@ -109,16 +111,16 @@ public final class NewArrayNode extends AbstractNewArrayNode implements Virtuali
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
         if (hasNoUsages())
         {
-            NodeView view = NodeView.from(tool);
-            Stamp lengthStamp = length().stamp(view);
-            if (lengthStamp instanceof IntegerStamp)
+            NodeView __view = NodeView.from(__tool);
+            Stamp __lengthStamp = length().stamp(__view);
+            if (__lengthStamp instanceof IntegerStamp)
             {
-                IntegerStamp lengthIntegerStamp = (IntegerStamp) lengthStamp;
-                if (lengthIntegerStamp.isPositive())
+                IntegerStamp __lengthIntegerStamp = (IntegerStamp) __lengthStamp;
+                if (__lengthIntegerStamp.isPositive())
                 {
                     GraphUtil.removeFixedWithUnusedInputs(this);
                     return;
@@ -127,10 +129,10 @@ public final class NewArrayNode extends AbstractNewArrayNode implements Virtuali
             // should be areFrameStatesAtSideEffects, but currently SVM will complain about RuntimeConstraint
             if (graph().getGuardsStage().allowsFloatingGuards())
             {
-                LogicNode lengthNegativeCondition = CompareNode.createCompareNode(graph(), CanonicalCondition.LT, length(), ConstantNode.forInt(0, graph()), tool.getConstantReflection(), view);
+                LogicNode __lengthNegativeCondition = CompareNode.createCompareNode(graph(), CanonicalCondition.LT, length(), ConstantNode.forInt(0, graph()), __tool.getConstantReflection(), __view);
                 // we do not have a non-deopting path for that at the moment so action=None.
-                FixedGuardNode guard = graph().add(new FixedGuardNode(lengthNegativeCondition, DeoptimizationReason.RuntimeConstraint, DeoptimizationAction.None, true));
-                graph().replaceFixedWithFixed(this, guard);
+                FixedGuardNode __guard = graph().add(new FixedGuardNode(__lengthNegativeCondition, DeoptimizationReason.RuntimeConstraint, DeoptimizationAction.None, true));
+                graph().replaceFixedWithFixed(this, __guard);
             }
         }
     }

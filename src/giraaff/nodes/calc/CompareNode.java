@@ -25,9 +25,12 @@ import giraaff.nodes.ValueNode;
 // @class CompareNode
 public abstract class CompareNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>
 {
+    // @def
     public static final NodeClass<CompareNode> TYPE = NodeClass.create(CompareNode.class);
 
+    // @field
     protected final CanonicalCondition condition;
+    // @field
     protected final boolean unorderedIsTrue;
 
     /**
@@ -37,11 +40,11 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
      * @param y the instruction that produces the second input to this instruction
      */
     // @cons
-    protected CompareNode(NodeClass<? extends CompareNode> c, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode x, ValueNode y)
+    protected CompareNode(NodeClass<? extends CompareNode> __c, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __x, ValueNode __y)
     {
-        super(c, x, y);
-        this.condition = condition;
-        this.unorderedIsTrue = unorderedIsTrue;
+        super(__c, __x, __y);
+        this.condition = __condition;
+        this.unorderedIsTrue = __unorderedIsTrue;
     }
 
     /**
@@ -64,21 +67,21 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         return this.unorderedIsTrue;
     }
 
-    public static LogicNode tryConstantFold(CanonicalCondition condition, ValueNode forX, ValueNode forY, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue)
+    public static LogicNode tryConstantFold(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
     {
-        if (forX.isConstant() && forY.isConstant() && (constantReflection != null || forX.asConstant() instanceof PrimitiveConstant))
+        if (__forX.isConstant() && __forY.isConstant() && (__constantReflection != null || __forX.asConstant() instanceof PrimitiveConstant))
         {
-            return LogicConstantNode.forBoolean(condition.foldCondition(forX.asConstant(), forY.asConstant(), constantReflection, unorderedIsTrue));
+            return LogicConstantNode.forBoolean(__condition.foldCondition(__forX.asConstant(), __forY.asConstant(), __constantReflection, __unorderedIsTrue));
         }
         return null;
     }
 
     @SuppressWarnings("unused")
-    public static LogicNode tryConstantFoldPrimitive(CanonicalCondition condition, ValueNode forX, ValueNode forY, boolean unorderedIsTrue, NodeView view)
+    public static LogicNode tryConstantFoldPrimitive(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, boolean __unorderedIsTrue, NodeView __view)
     {
-        if (forX.asConstant() instanceof PrimitiveConstant && forY.asConstant() instanceof PrimitiveConstant)
+        if (__forX.asConstant() instanceof PrimitiveConstant && __forY.asConstant() instanceof PrimitiveConstant)
         {
-            return LogicConstantNode.forBoolean(condition.foldCondition((PrimitiveConstant) forX.asConstant(), (PrimitiveConstant) forY.asConstant(), unorderedIsTrue));
+            return LogicConstantNode.forBoolean(__condition.foldCondition((PrimitiveConstant) __forX.asConstant(), (PrimitiveConstant) __forY.asConstant(), __unorderedIsTrue));
         }
         return null;
     }
@@ -97,100 +100,100 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
     // @class CompareNode.CompareOp
     public abstract static class CompareOp
     {
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __forX, ValueNode __forY, NodeView __view)
         {
-            LogicNode constantCondition = tryConstantFold(condition, forX, forY, constantReflection, unorderedIsTrue);
-            if (constantCondition != null)
+            LogicNode __constantCondition = tryConstantFold(__condition, __forX, __forY, __constantReflection, __unorderedIsTrue);
+            if (__constantCondition != null)
             {
-                return constantCondition;
+                return __constantCondition;
             }
-            LogicNode result;
-            if (forX.isConstant())
+            LogicNode __result;
+            if (__forX.isConstant())
             {
-                if ((result = canonicalizeSymmetricConstant(constantReflection, metaAccess, smallestCompareWidth, condition, forX.asConstant(), forY, true, unorderedIsTrue, view)) != null)
+                if ((__result = canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forX.asConstant(), __forY, true, __unorderedIsTrue, __view)) != null)
                 {
-                    return result;
+                    return __result;
                 }
             }
-            else if (forY.isConstant())
+            else if (__forY.isConstant())
             {
-                if ((result = canonicalizeSymmetricConstant(constantReflection, metaAccess, smallestCompareWidth, condition, forY.asConstant(), forX, false, unorderedIsTrue, view)) != null)
+                if ((__result = canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forY.asConstant(), __forX, false, __unorderedIsTrue, __view)) != null)
                 {
-                    return result;
+                    return __result;
                 }
             }
-            else if (forX instanceof ConvertNode && forY instanceof ConvertNode)
+            else if (__forX instanceof ConvertNode && __forY instanceof ConvertNode)
             {
-                ConvertNode convertX = (ConvertNode) forX;
-                ConvertNode convertY = (ConvertNode) forY;
-                if (convertX.preservesOrder(condition) && convertY.preservesOrder(condition) && convertX.getValue().stamp(view).isCompatible(convertY.getValue().stamp(view)))
+                ConvertNode __convertX = (ConvertNode) __forX;
+                ConvertNode __convertY = (ConvertNode) __forY;
+                if (__convertX.preservesOrder(__condition) && __convertY.preservesOrder(__condition) && __convertX.getValue().stamp(__view).isCompatible(__convertY.getValue().stamp(__view)))
                 {
-                    boolean supported = true;
-                    if (convertX.getValue().stamp(view) instanceof IntegerStamp)
+                    boolean __supported = true;
+                    if (__convertX.getValue().stamp(__view) instanceof IntegerStamp)
                     {
-                        IntegerStamp intStamp = (IntegerStamp) convertX.getValue().stamp(view);
-                        supported = smallestCompareWidth != null && intStamp.getBits() >= smallestCompareWidth;
+                        IntegerStamp __intStamp = (IntegerStamp) __convertX.getValue().stamp(__view);
+                        __supported = __smallestCompareWidth != null && __intStamp.getBits() >= __smallestCompareWidth;
                     }
 
-                    if (supported)
+                    if (__supported)
                     {
-                        boolean multiUsage = (convertX.asNode().hasMoreThanOneUsage() || convertY.asNode().hasMoreThanOneUsage());
-                        if ((forX instanceof ZeroExtendNode || forX instanceof SignExtendNode) && multiUsage)
+                        boolean __multiUsage = (__convertX.asNode().hasMoreThanOneUsage() || __convertY.asNode().hasMoreThanOneUsage());
+                        if ((__forX instanceof ZeroExtendNode || __forX instanceof SignExtendNode) && __multiUsage)
                         {
                             // Do not perform for zero or sign extend if there are multiple usages of the value.
                             return null;
                         }
-                        return duplicateModified(convertX.getValue(), convertY.getValue(), unorderedIsTrue, view);
+                        return duplicateModified(__convertX.getValue(), __convertY.getValue(), __unorderedIsTrue, __view);
                     }
                 }
             }
             return null;
         }
 
-        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)
+        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, Constant __constant, ValueNode __nonConstant, boolean __mirrored, boolean __unorderedIsTrue, NodeView __view)
         {
-            if (nonConstant instanceof ConditionalNode)
+            if (__nonConstant instanceof ConditionalNode)
             {
-                Condition realCondition = condition.asCondition();
-                if (mirrored)
+                Condition __realCondition = __condition.asCondition();
+                if (__mirrored)
                 {
-                    realCondition = realCondition.mirror();
+                    __realCondition = __realCondition.mirror();
                 }
-                return optimizeConditional(constant, (ConditionalNode) nonConstant, constantReflection, realCondition, unorderedIsTrue);
+                return optimizeConditional(__constant, (ConditionalNode) __nonConstant, __constantReflection, __realCondition, __unorderedIsTrue);
             }
-            else if (nonConstant instanceof NormalizeCompareNode)
+            else if (__nonConstant instanceof NormalizeCompareNode)
             {
-                return optimizeNormalizeCompare(constantReflection, metaAccess, smallestCompareWidth, constant, (NormalizeCompareNode) nonConstant, mirrored, view);
+                return optimizeNormalizeCompare(__constantReflection, __metaAccess, __smallestCompareWidth, __constant, (NormalizeCompareNode) __nonConstant, __mirrored, __view);
             }
-            else if (nonConstant instanceof ConvertNode)
+            else if (__nonConstant instanceof ConvertNode)
             {
-                ConvertNode convert = (ConvertNode) nonConstant;
-                boolean multiUsage = (convert.asNode().hasMoreThanOneUsage() && convert.getValue().hasExactlyOneUsage());
-                if ((convert instanceof ZeroExtendNode || convert instanceof SignExtendNode) && multiUsage)
+                ConvertNode __convert = (ConvertNode) __nonConstant;
+                boolean __multiUsage = (__convert.asNode().hasMoreThanOneUsage() && __convert.getValue().hasExactlyOneUsage());
+                if ((__convert instanceof ZeroExtendNode || __convert instanceof SignExtendNode) && __multiUsage)
                 {
                     // Do not perform for zero or sign extend if it could introduce new live values.
                     return null;
                 }
 
-                boolean supported = true;
-                if (convert.getValue().stamp(view) instanceof IntegerStamp)
+                boolean __supported = true;
+                if (__convert.getValue().stamp(__view) instanceof IntegerStamp)
                 {
-                    IntegerStamp intStamp = (IntegerStamp) convert.getValue().stamp(view);
-                    supported = smallestCompareWidth != null && intStamp.getBits() > smallestCompareWidth;
+                    IntegerStamp __intStamp = (IntegerStamp) __convert.getValue().stamp(__view);
+                    __supported = __smallestCompareWidth != null && __intStamp.getBits() > __smallestCompareWidth;
                 }
 
-                if (supported)
+                if (__supported)
                 {
-                    ConstantNode newConstant = canonicalConvertConstant(constantReflection, metaAccess, condition, convert, constant, view);
-                    if (newConstant != null)
+                    ConstantNode __newConstant = canonicalConvertConstant(__constantReflection, __metaAccess, __condition, __convert, __constant, __view);
+                    if (__newConstant != null)
                     {
-                        if (mirrored)
+                        if (__mirrored)
                         {
-                            return duplicateModified(newConstant, convert.getValue(), unorderedIsTrue, view);
+                            return duplicateModified(__newConstant, __convert.getValue(), __unorderedIsTrue, __view);
                         }
                         else
                         {
-                            return duplicateModified(convert.getValue(), newConstant, unorderedIsTrue, view);
+                            return duplicateModified(__convert.getValue(), __newConstant, __unorderedIsTrue, __view);
                         }
                     }
                 }
@@ -199,48 +202,48 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
             return null;
         }
 
-        private static ConstantNode canonicalConvertConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, CanonicalCondition condition, ConvertNode convert, Constant constant, NodeView view)
+        private static ConstantNode canonicalConvertConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, CanonicalCondition __condition, ConvertNode __convert, Constant __constant, NodeView __view)
         {
-            if (convert.preservesOrder(condition, constant, constantReflection))
+            if (__convert.preservesOrder(__condition, __constant, __constantReflection))
             {
-                Constant reverseConverted = convert.reverse(constant, constantReflection);
-                if (reverseConverted != null && convert.convert(reverseConverted, constantReflection).equals(constant))
+                Constant __reverseConverted = __convert.reverse(__constant, __constantReflection);
+                if (__reverseConverted != null && __convert.convert(__reverseConverted, __constantReflection).equals(__constant))
                 {
-                    return ConstantNode.forConstant(convert.getValue().stamp(view), reverseConverted, metaAccess);
+                    return ConstantNode.forConstant(__convert.getValue().stamp(__view), __reverseConverted, __metaAccess);
                 }
             }
             return null;
         }
 
         @SuppressWarnings("unused")
-        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)
+        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, Constant __constant, NormalizeCompareNode __normalizeNode, boolean __mirrored, NodeView __view)
         {
-            throw new BailoutException("NormalizeCompareNode connected to %s (%s %s %s)", this, constant, normalizeNode, mirrored);
+            throw new BailoutException("NormalizeCompareNode connected to %s (%s %s %s)", this, __constant, __normalizeNode, __mirrored);
         }
 
-        private static LogicNode optimizeConditional(Constant constant, ConditionalNode conditionalNode, ConstantReflectionProvider constantReflection, Condition cond, boolean unorderedIsTrue)
+        private static LogicNode optimizeConditional(Constant __constant, ConditionalNode __conditionalNode, ConstantReflectionProvider __constantReflection, Condition __cond, boolean __unorderedIsTrue)
         {
-            Constant trueConstant = conditionalNode.trueValue().asConstant();
-            Constant falseConstant = conditionalNode.falseValue().asConstant();
+            Constant __trueConstant = __conditionalNode.trueValue().asConstant();
+            Constant __falseConstant = __conditionalNode.falseValue().asConstant();
 
-            if (falseConstant != null && trueConstant != null && constantReflection != null)
+            if (__falseConstant != null && __trueConstant != null && __constantReflection != null)
             {
-                boolean trueResult = cond.foldCondition(trueConstant, constant, constantReflection, unorderedIsTrue);
-                boolean falseResult = cond.foldCondition(falseConstant, constant, constantReflection, unorderedIsTrue);
+                boolean __trueResult = __cond.foldCondition(__trueConstant, __constant, __constantReflection, __unorderedIsTrue);
+                boolean __falseResult = __cond.foldCondition(__falseConstant, __constant, __constantReflection, __unorderedIsTrue);
 
-                if (trueResult == falseResult)
+                if (__trueResult == __falseResult)
                 {
-                    return LogicConstantNode.forBoolean(trueResult);
+                    return LogicConstantNode.forBoolean(__trueResult);
                 }
                 else
                 {
-                    if (trueResult)
+                    if (__trueResult)
                     {
-                        return conditionalNode.condition();
+                        return __conditionalNode.condition();
                     }
                     else
                     {
-                        return LogicNegationNode.create(conditionalNode.condition());
+                        return LogicNegationNode.create(__conditionalNode.condition());
                     }
                 }
             }
@@ -251,75 +254,75 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         protected abstract LogicNode duplicateModified(ValueNode newW, ValueNode newY, boolean unorderedIsTrue, NodeView view);
     }
 
-    public static LogicNode createCompareNode(StructuredGraph graph, CanonicalCondition condition, ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view)
+    public static LogicNode createCompareNode(StructuredGraph __graph, CanonicalCondition __condition, ValueNode __x, ValueNode __y, ConstantReflectionProvider __constantReflection, NodeView __view)
     {
-        LogicNode result = createCompareNode(condition, x, y, constantReflection, view);
-        return (result.graph() == null ? graph.addOrUniqueWithInputs(result) : result);
+        LogicNode __result = createCompareNode(__condition, __x, __y, __constantReflection, __view);
+        return (__result.graph() == null ? __graph.addOrUniqueWithInputs(__result) : __result);
     }
 
-    public static LogicNode createCompareNode(CanonicalCondition condition, ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view)
+    public static LogicNode createCompareNode(CanonicalCondition __condition, ValueNode __x, ValueNode __y, ConstantReflectionProvider __constantReflection, NodeView __view)
     {
-        LogicNode comparison;
-        if (condition == CanonicalCondition.EQ)
+        LogicNode __comparison;
+        if (__condition == CanonicalCondition.EQ)
         {
-            if (x.stamp(view) instanceof AbstractObjectStamp)
+            if (__x.stamp(__view) instanceof AbstractObjectStamp)
             {
-                comparison = ObjectEqualsNode.create(x, y, constantReflection, view);
+                __comparison = ObjectEqualsNode.create(__x, __y, __constantReflection, __view);
             }
-            else if (x.stamp(view) instanceof AbstractPointerStamp)
+            else if (__x.stamp(__view) instanceof AbstractPointerStamp)
             {
-                comparison = PointerEqualsNode.create(x, y, view);
+                __comparison = PointerEqualsNode.create(__x, __y, __view);
             }
             else
             {
-                comparison = IntegerEqualsNode.create(x, y, view);
+                __comparison = IntegerEqualsNode.create(__x, __y, __view);
             }
         }
-        else if (condition == CanonicalCondition.LT)
+        else if (__condition == CanonicalCondition.LT)
         {
-            comparison = IntegerLessThanNode.create(x, y, view);
+            __comparison = IntegerLessThanNode.create(__x, __y, __view);
         }
         else
         {
-            comparison = IntegerBelowNode.create(x, y, view);
+            __comparison = IntegerBelowNode.create(__x, __y, __view);
         }
 
-        return comparison;
+        return __comparison;
     }
 
-    public static LogicNode createCompareNode(StructuredGraph graph, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode createCompareNode(StructuredGraph __graph, ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode result = createCompareNode(constantReflection, metaAccess, smallestCompareWidth, condition, x, y, view);
-        return (result.graph() == null ? graph.addOrUniqueWithInputs(result) : result);
+        LogicNode __result = createCompareNode(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __x, __y, __view);
+        return (__result.graph() == null ? __graph.addOrUniqueWithInputs(__result) : __result);
     }
 
-    public static LogicNode createCompareNode(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, CanonicalCondition condition, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode createCompareNode(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode comparison;
-        if (condition == CanonicalCondition.EQ)
+        LogicNode __comparison;
+        if (__condition == CanonicalCondition.EQ)
         {
-            if (x.stamp(view) instanceof AbstractObjectStamp)
+            if (__x.stamp(__view) instanceof AbstractObjectStamp)
             {
-                comparison = ObjectEqualsNode.create(constantReflection, metaAccess, x, y, view);
+                __comparison = ObjectEqualsNode.create(__constantReflection, __metaAccess, __x, __y, __view);
             }
-            else if (x.stamp(view) instanceof AbstractPointerStamp)
+            else if (__x.stamp(__view) instanceof AbstractPointerStamp)
             {
-                comparison = PointerEqualsNode.create(x, y, view);
+                __comparison = PointerEqualsNode.create(__x, __y, __view);
             }
             else
             {
-                comparison = IntegerEqualsNode.create(constantReflection, metaAccess, smallestCompareWidth, x, y, view);
+                __comparison = IntegerEqualsNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __x, __y, __view);
             }
         }
-        else if (condition == CanonicalCondition.LT)
+        else if (__condition == CanonicalCondition.LT)
         {
-            comparison = IntegerLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, x, y, view);
+            __comparison = IntegerLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __x, __y, __view);
         }
         else
         {
-            comparison = IntegerBelowNode.create(constantReflection, metaAccess, smallestCompareWidth, x, y, view);
+            __comparison = IntegerBelowNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __x, __y, __view);
         }
 
-        return comparison;
+        return __comparison;
     }
 }

@@ -35,38 +35,47 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     /**
      * The descriptor of the call.
      */
+    // @field
     protected final ForeignCallDescriptor descriptor;
 
     /**
      * Non-null (eventually) iff this is a call to a compiled {@linkplain Stub stub}.
      */
+    // @field
     private Stub stub;
 
     /**
      * The calling convention for this call.
      */
+    // @field
     private final CallingConvention outgoingCallingConvention;
 
     /**
      * The calling convention for incoming arguments to the stub, iff this call uses a compiled
      * {@linkplain Stub stub}.
      */
+    // @field
     private final CallingConvention incomingCallingConvention;
 
+    // @field
     private final RegisterEffect effect;
 
+    // @field
     private final Transition transition;
 
     /**
      * The registers and stack slots defined/killed by the call.
      */
+    // @field
     private Value[] temporaries = AllocatableValue.NONE;
 
     /**
      * The memory locations killed by the call.
      */
+    // @field
     private final LocationIdentity[] killedLocations;
 
+    // @field
     private final boolean reexecutable;
 
     /**
@@ -83,56 +92,56 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
      *            Deoptimization will not return to a point before a call that cannot be re-executed.
      * @param killedLocations the memory locations killed by the call
      */
-    public static HotSpotForeignCallLinkage create(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, HotSpotForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, long address, RegisterEffect effect, Type outgoingCcType, Type incomingCcType, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    public static HotSpotForeignCallLinkage create(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, HotSpotForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, long __address, RegisterEffect __effect, Type __outgoingCcType, Type __incomingCcType, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
-        CallingConvention outgoingCc = createCallingConvention(metaAccess, codeCache, wordTypes, foreignCalls, descriptor, outgoingCcType);
-        CallingConvention incomingCc = incomingCcType == null ? null : createCallingConvention(metaAccess, codeCache, wordTypes, foreignCalls, descriptor, incomingCcType);
-        HotSpotForeignCallLinkageImpl linkage = new HotSpotForeignCallLinkageImpl(descriptor, address, effect, transition, outgoingCc, incomingCc, reexecutable, killedLocations);
-        if (outgoingCcType == HotSpotCallingConventionType.NativeCall)
+        CallingConvention __outgoingCc = createCallingConvention(__metaAccess, __codeCache, __wordTypes, __foreignCalls, __descriptor, __outgoingCcType);
+        CallingConvention __incomingCc = __incomingCcType == null ? null : createCallingConvention(__metaAccess, __codeCache, __wordTypes, __foreignCalls, __descriptor, __incomingCcType);
+        HotSpotForeignCallLinkageImpl __linkage = new HotSpotForeignCallLinkageImpl(__descriptor, __address, __effect, __transition, __outgoingCc, __incomingCc, __reexecutable, __killedLocations);
+        if (__outgoingCcType == HotSpotCallingConventionType.NativeCall)
         {
-            linkage.temporaries = foreignCalls.getNativeABICallerSaveRegisters();
+            __linkage.temporaries = __foreignCalls.getNativeABICallerSaveRegisters();
         }
-        return linkage;
+        return __linkage;
     }
 
     /**
      * Gets a calling convention for a given descriptor and call type.
      */
-    public static CallingConvention createCallingConvention(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, ValueKindFactory<?> valueKindFactory, ForeignCallDescriptor descriptor, Type ccType)
+    public static CallingConvention createCallingConvention(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, ValueKindFactory<?> __valueKindFactory, ForeignCallDescriptor __descriptor, Type __ccType)
     {
-        Class<?>[] argumentTypes = descriptor.getArgumentTypes();
-        JavaType[] parameterTypes = new JavaType[argumentTypes.length];
-        for (int i = 0; i < parameterTypes.length; ++i)
+        Class<?>[] __argumentTypes = __descriptor.getArgumentTypes();
+        JavaType[] __parameterTypes = new JavaType[__argumentTypes.length];
+        for (int __i = 0; __i < __parameterTypes.length; ++__i)
         {
-            parameterTypes[i] = asJavaType(argumentTypes[i], metaAccess, wordTypes);
+            __parameterTypes[__i] = asJavaType(__argumentTypes[__i], __metaAccess, __wordTypes);
         }
-        JavaType returnType = asJavaType(descriptor.getResultType(), metaAccess, wordTypes);
-        RegisterConfig regConfig = codeCache.getRegisterConfig();
-        return regConfig.getCallingConvention(ccType, returnType, parameterTypes, valueKindFactory);
+        JavaType __returnType = asJavaType(__descriptor.getResultType(), __metaAccess, __wordTypes);
+        RegisterConfig __regConfig = __codeCache.getRegisterConfig();
+        return __regConfig.getCallingConvention(__ccType, __returnType, __parameterTypes, __valueKindFactory);
     }
 
-    private static JavaType asJavaType(Class<?> type, MetaAccessProvider metaAccess, WordTypes wordTypes)
+    private static JavaType asJavaType(Class<?> __type, MetaAccessProvider __metaAccess, WordTypes __wordTypes)
     {
-        ResolvedJavaType javaType = metaAccess.lookupJavaType(type);
-        if (wordTypes.isWord(javaType))
+        ResolvedJavaType __javaType = __metaAccess.lookupJavaType(__type);
+        if (__wordTypes.isWord(__javaType))
         {
-            javaType = metaAccess.lookupJavaType(wordTypes.getWordKind().toJavaClass());
+            __javaType = __metaAccess.lookupJavaType(__wordTypes.getWordKind().toJavaClass());
         }
-        return javaType;
+        return __javaType;
     }
 
     // @cons
-    public HotSpotForeignCallLinkageImpl(ForeignCallDescriptor descriptor, long address, RegisterEffect effect, Transition transition, CallingConvention outgoingCallingConvention, CallingConvention incomingCallingConvention, boolean reexecutable, LocationIdentity... killedLocations)
+    public HotSpotForeignCallLinkageImpl(ForeignCallDescriptor __descriptor, long __address, RegisterEffect __effect, Transition __transition, CallingConvention __outgoingCallingConvention, CallingConvention __incomingCallingConvention, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
-        super(address);
-        this.descriptor = descriptor;
-        this.address = address;
-        this.effect = effect;
-        this.transition = transition;
-        this.outgoingCallingConvention = outgoingCallingConvention;
-        this.incomingCallingConvention = incomingCallingConvention != null ? incomingCallingConvention : outgoingCallingConvention;
-        this.reexecutable = reexecutable;
-        this.killedLocations = killedLocations;
+        super(__address);
+        this.descriptor = __descriptor;
+        this.address = __address;
+        this.effect = __effect;
+        this.transition = __transition;
+        this.outgoingCallingConvention = __outgoingCallingConvention;
+        this.incomingCallingConvention = __incomingCallingConvention != null ? __incomingCallingConvention : __outgoingCallingConvention;
+        this.reexecutable = __reexecutable;
+        this.killedLocations = __killedLocations;
     }
 
     @Override
@@ -188,9 +197,9 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     }
 
     @Override
-    public void setCompiledStub(Stub stub)
+    public void setCompiledStub(Stub __stub)
     {
-        this.stub = stub;
+        this.stub = __stub;
     }
 
     /**
@@ -214,24 +223,24 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     }
 
     @Override
-    public void finalizeAddress(Backend backend)
+    public void finalizeAddress(Backend __backend)
     {
         if (address == 0)
         {
-            InstalledCode code = stub.getCode(backend);
+            InstalledCode __code = stub.getCode(__backend);
 
-            EconomicSet<Register> destroyedRegisters = stub.getDestroyedCallerRegisters();
-            if (!destroyedRegisters.isEmpty())
+            EconomicSet<Register> __destroyedRegisters = stub.getDestroyedCallerRegisters();
+            if (!__destroyedRegisters.isEmpty())
             {
-                AllocatableValue[] temporaryLocations = new AllocatableValue[destroyedRegisters.size()];
-                int i = 0;
-                for (Register reg : destroyedRegisters)
+                AllocatableValue[] __temporaryLocations = new AllocatableValue[__destroyedRegisters.size()];
+                int __i = 0;
+                for (Register __reg : __destroyedRegisters)
                 {
-                    temporaryLocations[i++] = reg.asValue();
+                    __temporaryLocations[__i++] = __reg.asValue();
                 }
-                temporaries = temporaryLocations;
+                temporaries = __temporaryLocations;
             }
-            address = code.getStart();
+            address = __code.getStart();
         }
     }
 

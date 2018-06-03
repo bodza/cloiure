@@ -16,13 +16,14 @@ import giraaff.phases.tiers.HighTierContext;
 // @class AbstractInlineInfo
 public abstract class AbstractInlineInfo implements InlineInfo
 {
+    // @field
     protected final Invoke invoke;
 
     // @cons
-    public AbstractInlineInfo(Invoke invoke)
+    public AbstractInlineInfo(Invoke __invoke)
     {
         super();
-        this.invoke = invoke;
+        this.invoke = __invoke;
     }
 
     @Override
@@ -37,34 +38,34 @@ public abstract class AbstractInlineInfo implements InlineInfo
         return invoke;
     }
 
-    protected static EconomicSet<Node> inline(Invoke invoke, ResolvedJavaMethod concrete, Inlineable inlineable, boolean receiverNullCheck, String reason)
+    protected static EconomicSet<Node> inline(Invoke __invoke, ResolvedJavaMethod __concrete, Inlineable __inlineable, boolean __receiverNullCheck, String __reason)
     {
-        StructuredGraph calleeGraph = ((InlineableGraph) inlineable).getGraph();
-        return InliningUtil.inlineForCanonicalization(invoke, calleeGraph, receiverNullCheck, concrete, reason, "InliningPhase");
+        StructuredGraph __calleeGraph = ((InlineableGraph) __inlineable).getGraph();
+        return InliningUtil.inlineForCanonicalization(__invoke, __calleeGraph, __receiverNullCheck, __concrete, __reason, "InliningPhase");
     }
 
     @Override
-    public final void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer)
+    public final void populateInlinableElements(HighTierContext __context, StructuredGraph __caller, CanonicalizerPhase __canonicalizer)
     {
-        for (int i = 0; i < numberOfMethods(); i++)
+        for (int __i = 0; __i < numberOfMethods(); __i++)
         {
-            Inlineable elem = Inlineable.getInlineableElement(methodAt(i), invoke, context, canonicalizer);
-            setInlinableElement(i, elem);
+            Inlineable __elem = Inlineable.getInlineableElement(methodAt(__i), invoke, __context, __canonicalizer);
+            setInlinableElement(__i, __elem);
         }
     }
 
     @Override
     public final int determineNodeCount()
     {
-        int nodes = 0;
-        for (int i = 0; i < numberOfMethods(); i++)
+        int __nodes = 0;
+        for (int __i = 0; __i < numberOfMethods(); __i++)
         {
-            Inlineable elem = inlineableElementAt(i);
-            if (elem != null)
+            Inlineable __elem = inlineableElementAt(__i);
+            if (__elem != null)
             {
-                nodes += elem.getNodeCount();
+                __nodes += __elem.getNodeCount();
             }
         }
-        return nodes;
+        return __nodes;
     }
 }

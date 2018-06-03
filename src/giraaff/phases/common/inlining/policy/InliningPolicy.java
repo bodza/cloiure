@@ -10,18 +10,22 @@ public interface InliningPolicy
     // @class InliningPolicy.Decision
     static final class Decision
     {
+        // @def
         public static final Decision YES = new Decision(true, "(unknown reason)");
+        // @def
         public static final Decision NO = new Decision(false, "(unknown reason)");
 
+        // @field
         public final boolean shouldInline;
+        // @field
         public final String reason;
 
         // @cons
-        private Decision(boolean shouldInline, String reason)
+        private Decision(boolean __shouldInline, String __reason)
         {
             super();
-            this.shouldInline = shouldInline;
-            this.reason = reason;
+            this.shouldInline = __shouldInline;
+            this.reason = __reason;
         }
     }
 

@@ -19,33 +19,42 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotJumpToExceptionHandlerInCallerOp
 final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpilogueBlockEndOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotJumpToExceptionHandlerInCallerOp> TYPE = LIRInstructionClass.create(AMD64HotSpotJumpToExceptionHandlerInCallerOp.class);
 
-    @Use(OperandFlag.REG) AllocatableValue handlerInCallerPc;
-    @Use(OperandFlag.REG) AllocatableValue exception;
-    @Use(OperandFlag.REG) AllocatableValue exceptionPc;
+    @Use(OperandFlag.REG)
+    // @field
+    AllocatableValue handlerInCallerPc;
+    @Use(OperandFlag.REG)
+    // @field
+    AllocatableValue exception;
+    @Use(OperandFlag.REG)
+    // @field
+    AllocatableValue exceptionPc;
+    // @field
     private final Register thread;
+    // @field
     private final int isMethodHandleReturnOffset;
 
     // @cons
-    AMD64HotSpotJumpToExceptionHandlerInCallerOp(AllocatableValue handlerInCallerPc, AllocatableValue exception, AllocatableValue exceptionPc, int isMethodHandleReturnOffset, Register thread)
+    AMD64HotSpotJumpToExceptionHandlerInCallerOp(AllocatableValue __handlerInCallerPc, AllocatableValue __exception, AllocatableValue __exceptionPc, int __isMethodHandleReturnOffset, Register __thread)
     {
         super(TYPE);
-        this.handlerInCallerPc = handlerInCallerPc;
-        this.exception = exception;
-        this.exceptionPc = exceptionPc;
-        this.isMethodHandleReturnOffset = isMethodHandleReturnOffset;
-        this.thread = thread;
+        this.handlerInCallerPc = __handlerInCallerPc;
+        this.exception = __exception;
+        this.exceptionPc = __exceptionPc;
+        this.isMethodHandleReturnOffset = __isMethodHandleReturnOffset;
+        this.thread = __thread;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        leaveFrameAndRestoreRbp(crb, masm);
+        leaveFrameAndRestoreRbp(__crb, __masm);
 
         // discard the return address, thus completing restoration of caller frame
-        masm.incrementq(AMD64.rsp, 8);
+        __masm.incrementq(AMD64.rsp, 8);
 
-        masm.jmp(ValueUtil.asRegister(handlerInCallerPc));
+        __masm.jmp(ValueUtil.asRegister(handlerInCallerPc));
     }
 }

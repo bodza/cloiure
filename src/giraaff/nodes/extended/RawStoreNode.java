@@ -27,31 +27,37 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class RawStoreNode
 public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, Lowerable, Virtualizable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<RawStoreNode> TYPE = NodeClass.create(RawStoreNode.class);
 
-    @Input ValueNode value;
-    @OptionalInput(InputType.State) FrameState stateAfter;
+    @Input
+    // @field
+    ValueNode value;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateAfter;
+    // @field
     private final boolean needsBarrier;
 
     // @cons
-    public RawStoreNode(ValueNode object, ValueNode offset, ValueNode value, JavaKind accessKind, LocationIdentity locationIdentity)
+    public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
-        this(object, offset, value, accessKind, locationIdentity, true);
+        this(__object, __offset, __value, __accessKind, __locationIdentity, true);
     }
 
     // @cons
-    public RawStoreNode(ValueNode object, ValueNode offset, ValueNode value, JavaKind accessKind, LocationIdentity locationIdentity, boolean needsBarrier)
+    public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __needsBarrier)
     {
-        this(object, offset, value, accessKind, locationIdentity, needsBarrier, null, false);
+        this(__object, __offset, __value, __accessKind, __locationIdentity, __needsBarrier, null, false);
     }
 
     // @cons
-    public RawStoreNode(ValueNode object, ValueNode offset, ValueNode value, JavaKind accessKind, LocationIdentity locationIdentity, boolean needsBarrier, FrameState stateAfter, boolean forceAnyLocation)
+    public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __needsBarrier, FrameState __stateAfter, boolean __forceAnyLocation)
     {
-        super(TYPE, StampFactory.forVoid(), object, offset, accessKind, locationIdentity, forceAnyLocation);
-        this.value = value;
-        this.needsBarrier = needsBarrier;
-        this.stateAfter = stateAfter;
+        super(TYPE, StampFactory.forVoid(), __object, __offset, __accessKind, __locationIdentity, __forceAnyLocation);
+        this.value = __value;
+        this.needsBarrier = __needsBarrier;
+        this.stateAfter = __stateAfter;
     }
 
     @NodeIntrinsic
@@ -72,10 +78,10 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -90,41 +96,41 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            ValueNode indexValue = tool.getAlias(offset());
-            if (indexValue.isConstant())
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            ValueNode __indexValue = __tool.getAlias(offset());
+            if (__indexValue.isConstant())
             {
-                long off = indexValue.asJavaConstant().asLong();
-                int entryIndex = virtual.entryIndexForOffset(tool.getArrayOffsetProvider(), off, accessKind());
-                if (entryIndex != -1 && tool.setVirtualEntry(virtual, entryIndex, value(), accessKind(), off))
+                long __off = __indexValue.asJavaConstant().asLong();
+                int __entryIndex = __virtual.entryIndexForOffset(__tool.getArrayOffsetProvider(), __off, accessKind());
+                if (__entryIndex != -1 && __tool.setVirtualEntry(__virtual, __entryIndex, value(), accessKind(), __off))
                 {
-                    tool.delete();
+                    __tool.delete();
                 }
             }
         }
     }
 
     @Override
-    protected ValueNode cloneAsFieldAccess(Assumptions assumptions, ResolvedJavaField field)
+    protected ValueNode cloneAsFieldAccess(Assumptions __assumptions, ResolvedJavaField __field)
     {
-        return new StoreFieldNode(object(), field, value(), stateAfter());
+        return new StoreFieldNode(object(), __field, value(), stateAfter());
     }
 
     @Override
-    protected ValueNode cloneAsArrayAccess(ValueNode location, LocationIdentity identity)
+    protected ValueNode cloneAsArrayAccess(ValueNode __location, LocationIdentity __identity)
     {
-        return new RawStoreNode(object(), location, value, accessKind(), identity, needsBarrier, stateAfter(), isAnyLocationForced());
+        return new RawStoreNode(object(), __location, value, accessKind(), __identity, needsBarrier, stateAfter(), isAnyLocationForced());
     }
 
     public FrameState getState()

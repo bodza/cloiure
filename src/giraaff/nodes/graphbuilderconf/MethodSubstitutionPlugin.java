@@ -28,25 +28,31 @@ import giraaff.util.GraalError;
 // @class MethodSubstitutionPlugin
 public final class MethodSubstitutionPlugin implements InvocationPlugin
 {
+    // @field
     private ResolvedJavaMethod cachedSubstitute;
 
     /**
      * The class in which the substitute method is declared.
      */
+    // @field
     private final Class<?> declaringClass;
 
     /**
      * The name of the original and substitute method.
      */
+    // @field
     private final String name;
 
     /**
      * The parameter types of the substitute method.
      */
+    // @field
     private final Type[] parameters;
 
+    // @field
     private final boolean originalIsStatic;
 
+    // @field
     private final BytecodeProvider bytecodeProvider;
 
     /**
@@ -60,14 +66,14 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
      *            {@link InvocationPlugin.Receiver}
      */
     // @cons
-    public MethodSubstitutionPlugin(BytecodeProvider bytecodeProvider, Class<?> declaringClass, String name, Type... parameters)
+    public MethodSubstitutionPlugin(BytecodeProvider __bytecodeProvider, Class<?> __declaringClass, String __name, Type... __parameters)
     {
         super();
-        this.bytecodeProvider = bytecodeProvider;
-        this.declaringClass = declaringClass;
-        this.name = name;
-        this.parameters = parameters;
-        this.originalIsStatic = parameters.length == 0 || parameters[0] != InvocationPlugin.Receiver.class;
+        this.bytecodeProvider = __bytecodeProvider;
+        this.declaringClass = __declaringClass;
+        this.name = __name;
+        this.parameters = __parameters;
+        this.originalIsStatic = __parameters.length == 0 || __parameters[0] != InvocationPlugin.Receiver.class;
     }
 
     @Override
@@ -80,11 +86,11 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
     /**
      * Gets the substitute method, resolving it first if necessary.
      */
-    public ResolvedJavaMethod getSubstitute(MetaAccessProvider metaAccess)
+    public ResolvedJavaMethod getSubstitute(MetaAccessProvider __metaAccess)
     {
         if (cachedSubstitute == null)
         {
-            cachedSubstitute = metaAccess.lookupJavaMethod(getJavaSubstitute());
+            cachedSubstitute = __metaAccess.lookupJavaMethod(getJavaSubstitute());
         }
         return cachedSubstitute;
     }
@@ -102,41 +108,41 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
      */
     Method getJavaSubstitute()
     {
-        Method substituteMethod = lookupSubstitute();
-        int modifiers = substituteMethod.getModifiers();
-        if (Modifier.isAbstract(modifiers) || Modifier.isNative(modifiers))
+        Method __substituteMethod = lookupSubstitute();
+        int __modifiers = __substituteMethod.getModifiers();
+        if (Modifier.isAbstract(__modifiers) || Modifier.isNative(__modifiers))
         {
-            throw new GraalError("Substitution method must not be abstract or native: " + substituteMethod);
+            throw new GraalError("Substitution method must not be abstract or native: " + __substituteMethod);
         }
-        if (!Modifier.isStatic(modifiers))
+        if (!Modifier.isStatic(__modifiers))
         {
-            throw new GraalError("Substitution method must be static: " + substituteMethod);
+            throw new GraalError("Substitution method must be static: " + __substituteMethod);
         }
-        return substituteMethod;
+        return __substituteMethod;
     }
 
     /**
      * Determines if a given method is the substitute method of this plugin.
      */
-    private boolean isSubstitute(Method m)
+    private boolean isSubstitute(Method __m)
     {
-        if (Modifier.isStatic(m.getModifiers()) && m.getName().equals(name))
+        if (Modifier.isStatic(__m.getModifiers()) && __m.getName().equals(name))
         {
-            if (parameters.length == m.getParameterCount())
+            if (parameters.length == __m.getParameterCount())
             {
-                Class<?>[] mparams = m.getParameterTypes();
-                int start = 0;
+                Class<?>[] __mparams = __m.getParameterTypes();
+                int __start = 0;
                 if (!originalIsStatic)
                 {
-                    start = 1;
-                    if (!mparams[0].isAssignableFrom(InvocationPlugins.resolveType(parameters[0], false)))
+                    __start = 1;
+                    if (!__mparams[0].isAssignableFrom(InvocationPlugins.resolveType(parameters[0], false)))
                     {
                         return false;
                     }
                 }
-                for (int i = start; i < mparams.length; i++)
+                for (int __i = __start; __i < __mparams.length; __i++)
                 {
-                    if (mparams[i] != InvocationPlugins.resolveType(parameters[i], false))
+                    if (__mparams[__i] != InvocationPlugins.resolveType(parameters[__i], false))
                     {
                         return false;
                     }
@@ -147,13 +153,13 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
         return false;
     }
 
-    private Method lookupSubstitute(Method excluding)
+    private Method lookupSubstitute(Method __excluding)
     {
-        for (Method m : declaringClass.getDeclaredMethods())
+        for (Method __m : declaringClass.getDeclaredMethods())
         {
-            if (!m.equals(excluding) && isSubstitute(m))
+            if (!__m.equals(__excluding) && isSubstitute(__m))
             {
-                return m;
+                return __m;
             }
         }
         return null;
@@ -164,18 +170,18 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
      */
     private Method lookupSubstitute()
     {
-        Method m = lookupSubstitute(null);
-        if (m != null)
+        Method __m = lookupSubstitute(null);
+        if (__m != null)
         {
-            return m;
+            return __m;
         }
         throw new GraalError("No method found specified by %s", this);
     }
 
     @Override
-    public boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] argsIncludingReceiver)
+    public boolean execute(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, InvocationPlugin.Receiver __receiver, ValueNode[] __argsIncludingReceiver)
     {
-        ResolvedJavaMethod subst = getSubstitute(b.getMetaAccess());
-        return b.intrinsify(bytecodeProvider, targetMethod, subst, receiver, argsIncludingReceiver);
+        ResolvedJavaMethod __subst = getSubstitute(__b.getMetaAccess());
+        return __b.intrinsify(bytecodeProvider, __targetMethod, __subst, __receiver, __argsIncludingReceiver);
     }
 }

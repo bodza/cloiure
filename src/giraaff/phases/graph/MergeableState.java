@@ -28,7 +28,7 @@ public abstract class MergeableState<T>
      *
      * @param loopBegin the begin node of the loop
      */
-    public void loopBegin(LoopBeginNode loopBegin)
+    public void loopBegin(LoopBeginNode __loopBegin)
     {
         // empty default implementation
     }
@@ -39,7 +39,7 @@ public abstract class MergeableState<T>
      * @param loopBegin the begin node of the loop
      * @param loopEndStates the states at the loop ends, sorted according to {@link LoopBeginNode#orderedLoopEnds()}
      */
-    public void loopEnds(LoopBeginNode loopBegin, List<T> loopEndStates)
+    public void loopEnds(LoopBeginNode __loopBegin, List<T> __loopEndStates)
     {
         // empty default implementation
     }
@@ -49,7 +49,7 @@ public abstract class MergeableState<T>
      *
      * @param node the successor of the control split that is about to be visited
      */
-    public void afterSplit(AbstractBeginNode node)
+    public void afterSplit(AbstractBeginNode __node)
     {
         // empty default implementation
     }

@@ -10,25 +10,25 @@ import giraaff.phases.tiers.PhaseContext;
 public final class LoopPeelingPhase extends LoopPhase<LoopPolicies>
 {
     // @cons
-    public LoopPeelingPhase(LoopPolicies policies)
+    public LoopPeelingPhase(LoopPolicies __policies)
     {
-        super(policies);
+        super(__policies);
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context)
+    protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        if (graph.hasLoops())
+        if (__graph.hasLoops())
         {
-            LoopsData data = new LoopsData(graph);
-            for (LoopEx loop : data.outerFirst())
+            LoopsData __data = new LoopsData(__graph);
+            for (LoopEx __loop : __data.outerFirst())
             {
-                if (getPolicies().shouldPeel(loop, data.getCFG(), context.getMetaAccess()))
+                if (getPolicies().shouldPeel(__loop, __data.getCFG(), __context.getMetaAccess()))
                 {
-                    LoopTransformations.peel(loop);
+                    LoopTransformations.peel(__loop);
                 }
             }
-            data.deleteUnusedNodes();
+            __data.deleteUnusedNodes();
         }
     }
 }

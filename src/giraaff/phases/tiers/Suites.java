@@ -10,9 +10,13 @@ import giraaff.phases.PhaseSuite;
 // @class Suites
 public final class Suites
 {
+    // @field
     private final PhaseSuite<HighTierContext> highTier;
+    // @field
     private final PhaseSuite<MidTierContext> midTier;
+    // @field
     private final PhaseSuite<LowTierContext> lowTier;
+    // @field
     private boolean immutable;
 
     public PhaseSuite<HighTierContext> getHighTier()
@@ -31,22 +35,22 @@ public final class Suites
     }
 
     // @cons
-    public Suites(PhaseSuite<HighTierContext> highTier, PhaseSuite<MidTierContext> midTier, PhaseSuite<LowTierContext> lowTier)
+    public Suites(PhaseSuite<HighTierContext> __highTier, PhaseSuite<MidTierContext> __midTier, PhaseSuite<LowTierContext> __lowTier)
     {
         super();
-        this.highTier = highTier;
-        this.midTier = midTier;
-        this.lowTier = lowTier;
+        this.highTier = __highTier;
+        this.midTier = __midTier;
+        this.lowTier = __lowTier;
     }
 
-    public static Suites createSuites(CompilerConfiguration config)
+    public static Suites createSuites(CompilerConfiguration __config)
     {
-        return new Suites(config.createHighTier(), config.createMidTier(), config.createLowTier());
+        return new Suites(__config.createHighTier(), __config.createMidTier(), __config.createLowTier());
     }
 
-    public static LIRSuites createLIRSuites(CompilerConfiguration config)
+    public static LIRSuites createLIRSuites(CompilerConfiguration __config)
     {
-        return new LIRSuites(config.createPreAllocationOptimizationStage(), config.createAllocationStage(), config.createPostAllocationOptimizationStage());
+        return new LIRSuites(__config.createPreAllocationOptimizationStage(), __config.createAllocationStage(), __config.createPostAllocationOptimizationStage());
     }
 
     public boolean isImmutable()

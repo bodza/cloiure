@@ -11,6 +11,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class PauseNode
 public final class PauseNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<PauseNode> TYPE = NodeClass.create(PauseNode.class);
 
     // @cons
@@ -20,9 +21,9 @@ public final class PauseNode extends FixedWithNextNode implements LIRLowerable
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().emitPause();
+        __gen.getLIRGeneratorTool().emitPause();
     }
 
     @NodeIntrinsic

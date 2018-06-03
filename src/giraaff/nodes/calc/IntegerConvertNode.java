@@ -25,12 +25,18 @@ import giraaff.nodes.spi.StampInverter;
 // @class IntegerConvertNode
 public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements ArithmeticOperation, ConvertNode, ArithmeticLIRLowerable, StampInverter
 {
-    @SuppressWarnings("rawtypes") public static final NodeClass<IntegerConvertNode> TYPE = NodeClass.create(IntegerConvertNode.class);
+    @SuppressWarnings("rawtypes")
+    // @def
+    public static final NodeClass<IntegerConvertNode> TYPE = NodeClass.create(IntegerConvertNode.class);
 
+    // @field
     protected final SerializableIntegerConvertFunction<OP> getOp;
+    // @field
     protected final SerializableIntegerConvertFunction<REV> getReverseOp;
 
+    // @field
     protected final int inputBits;
+    // @field
     protected final int resultBits;
 
     // @iface IntegerConvertNode.SerializableIntegerConvertFunction
@@ -39,13 +45,13 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     }
 
     // @cons
-    protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> c, SerializableIntegerConvertFunction<OP> getOp, SerializableIntegerConvertFunction<REV> getReverseOp, int inputBits, int resultBits, ValueNode input)
+    protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> __c, SerializableIntegerConvertFunction<OP> __getOp, SerializableIntegerConvertFunction<REV> __getReverseOp, int __inputBits, int __resultBits, ValueNode __input)
     {
-        super(c, getOp.apply(ArithmeticOpTable.forStamp(input.stamp(NodeView.DEFAULT))).foldStamp(inputBits, resultBits, input.stamp(NodeView.DEFAULT)), input);
-        this.getOp = getOp;
-        this.getReverseOp = getReverseOp;
-        this.inputBits = inputBits;
-        this.resultBits = resultBits;
+        super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__input.stamp(NodeView.DEFAULT))).foldStamp(__inputBits, __resultBits, __input.stamp(NodeView.DEFAULT)), __input);
+        this.getOp = __getOp;
+        this.getReverseOp = __getReverseOp;
+        this.inputBits = __inputBits;
+        this.resultBits = __resultBits;
     }
 
     public int getInputBits()
@@ -58,9 +64,9 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         return resultBits;
     }
 
-    protected final IntegerConvertOp<OP> getOp(ValueNode forValue)
+    protected final IntegerConvertOp<OP> getOp(ValueNode __forValue)
     {
-        return getOp.apply(ArithmeticOpTable.forStamp(forValue.stamp(NodeView.DEFAULT)));
+        return getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
@@ -70,110 +76,110 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     }
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant convert(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        return getArithmeticOp().foldConstant(getInputBits(), getResultBits(), c);
+        return getArithmeticOp().foldConstant(getInputBits(), getResultBits(), __c);
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        IntegerConvertOp<REV> reverse = getReverseOp.apply(ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)));
-        return reverse.foldConstant(getResultBits(), getInputBits(), c);
+        IntegerConvertOp<REV> __reverse = getReverseOp.apply(ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)));
+        return __reverse.foldConstant(getResultBits(), getInputBits(), __c);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        return getArithmeticOp().foldStamp(inputBits, resultBits, newStamp);
+        return getArithmeticOp().foldStamp(inputBits, resultBits, __newStamp);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode synonym = findSynonym(getOp(forValue), forValue, inputBits, resultBits, stamp(NodeView.DEFAULT));
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(getOp(__forValue), __forValue, inputBits, resultBits, stamp(NodeView.DEFAULT));
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         return this;
     }
 
-    protected static <T> ValueNode findSynonym(IntegerConvertOp<T> operation, ValueNode value, int inputBits, int resultBits, Stamp stamp)
+    protected static <T> ValueNode findSynonym(IntegerConvertOp<T> __operation, ValueNode __value, int __inputBits, int __resultBits, Stamp __stamp)
     {
-        if (inputBits == resultBits)
+        if (__inputBits == __resultBits)
         {
-            return value;
+            return __value;
         }
-        else if (value.isConstant())
+        else if (__value.isConstant())
         {
-            return ConstantNode.forPrimitive(stamp, operation.foldConstant(inputBits, resultBits, value.asConstant()));
+            return ConstantNode.forPrimitive(__stamp, __operation.foldConstant(__inputBits, __resultBits, __value.asConstant()));
         }
         return null;
     }
 
-    public static ValueNode convert(ValueNode input, Stamp stamp, NodeView view)
+    public static ValueNode convert(ValueNode __input, Stamp __stamp, NodeView __view)
     {
-        return convert(input, stamp, false, view);
+        return convert(__input, __stamp, false, __view);
     }
 
-    public static ValueNode convert(ValueNode input, Stamp stamp, StructuredGraph graph, NodeView view)
+    public static ValueNode convert(ValueNode __input, Stamp __stamp, StructuredGraph __graph, NodeView __view)
     {
-        ValueNode convert = convert(input, stamp, false, view);
-        if (!convert.isAlive())
+        ValueNode __convert = convert(__input, __stamp, false, __view);
+        if (!__convert.isAlive())
         {
-            convert = graph.addOrUniqueWithInputs(convert);
+            __convert = __graph.addOrUniqueWithInputs(__convert);
         }
-        return convert;
+        return __convert;
     }
 
-    public static ValueNode convertUnsigned(ValueNode input, Stamp stamp, NodeView view)
+    public static ValueNode convertUnsigned(ValueNode __input, Stamp __stamp, NodeView __view)
     {
-        return convert(input, stamp, true, view);
+        return convert(__input, __stamp, true, __view);
     }
 
-    public static ValueNode convertUnsigned(ValueNode input, Stamp stamp, StructuredGraph graph, NodeView view)
+    public static ValueNode convertUnsigned(ValueNode __input, Stamp __stamp, StructuredGraph __graph, NodeView __view)
     {
-        ValueNode convert = convert(input, stamp, true, view);
-        if (!convert.isAlive())
+        ValueNode __convert = convert(__input, __stamp, true, __view);
+        if (!__convert.isAlive())
         {
-            convert = graph.addOrUniqueWithInputs(convert);
+            __convert = __graph.addOrUniqueWithInputs(__convert);
         }
-        return convert;
+        return __convert;
     }
 
-    public static ValueNode convert(ValueNode input, Stamp stamp, boolean zeroExtend, NodeView view)
+    public static ValueNode convert(ValueNode __input, Stamp __stamp, boolean __zeroExtend, NodeView __view)
     {
-        IntegerStamp fromStamp = (IntegerStamp) input.stamp(view);
-        IntegerStamp toStamp = (IntegerStamp) stamp;
+        IntegerStamp __fromStamp = (IntegerStamp) __input.stamp(__view);
+        IntegerStamp __toStamp = (IntegerStamp) __stamp;
 
-        ValueNode result;
-        if (toStamp.getBits() == fromStamp.getBits())
+        ValueNode __result;
+        if (__toStamp.getBits() == __fromStamp.getBits())
         {
-            result = input;
+            __result = __input;
         }
-        else if (toStamp.getBits() < fromStamp.getBits())
+        else if (__toStamp.getBits() < __fromStamp.getBits())
         {
-            result = new NarrowNode(input, fromStamp.getBits(), toStamp.getBits());
+            __result = new NarrowNode(__input, __fromStamp.getBits(), __toStamp.getBits());
         }
-        else if (zeroExtend)
+        else if (__zeroExtend)
         {
             // toStamp.getBits() > fromStamp.getBits()
-            result = ZeroExtendNode.create(input, toStamp.getBits(), view);
+            __result = ZeroExtendNode.create(__input, __toStamp.getBits(), __view);
         }
         else
         {
             // toStamp.getBits() > fromStamp.getBits()
-            result = SignExtendNode.create(input, toStamp.getBits(), view);
+            __result = SignExtendNode.create(__input, __toStamp.getBits(), __view);
         }
 
-        IntegerStamp resultStamp = (IntegerStamp) result.stamp(view);
-        return result;
+        IntegerStamp __resultStamp = (IntegerStamp) __result.stamp(__view);
+        return __result;
     }
 
     @Override
-    public Stamp invertStamp(Stamp outStamp)
+    public Stamp invertStamp(Stamp __outStamp)
     {
-        return getArithmeticOp().invertStamp(inputBits, resultBits, outStamp);
+        return getArithmeticOp().invertStamp(inputBits, resultBits, __outStamp);
     }
 }

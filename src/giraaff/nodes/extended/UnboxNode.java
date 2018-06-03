@@ -23,9 +23,13 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class UnboxNode
 public final class UnboxNode extends FixedWithNextNode implements Virtualizable, Lowerable, Canonicalizable.Unary<ValueNode>
 {
+    // @def
     public static final NodeClass<UnboxNode> TYPE = NodeClass.create(UnboxNode.class);
 
-    @Input protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode value;
+    // @field
     protected final JavaKind boxingKind;
 
     @Override
@@ -35,21 +39,21 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
     }
 
     // @cons
-    public UnboxNode(ValueNode value, JavaKind boxingKind)
+    public UnboxNode(ValueNode __value, JavaKind __boxingKind)
     {
-        super(TYPE, StampFactory.forKind(boxingKind.getStackKind()));
-        this.value = value;
-        this.boxingKind = boxingKind;
+        super(TYPE, StampFactory.forKind(__boxingKind.getStackKind()));
+        this.value = __value;
+        this.boxingKind = __boxingKind;
     }
 
-    public static ValueNode create(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ValueNode value, JavaKind boxingKind)
+    public static ValueNode create(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ValueNode __value, JavaKind __boxingKind)
     {
-        ValueNode synonym = findSynonym(metaAccess, constantReflection, value, boxingKind);
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__metaAccess, __constantReflection, __value, __boxingKind);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return new UnboxNode(value, boxingKind);
+        return new UnboxNode(__value, __boxingKind);
     }
 
     public JavaKind getBoxingKind()
@@ -58,59 +62,59 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(getValue());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(getValue());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            ResolvedJavaType objectType = virtual.type();
-            ResolvedJavaType expectedType = tool.getMetaAccessProvider().lookupJavaType(boxingKind.toBoxedJavaClass());
-            if (objectType.equals(expectedType))
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            ResolvedJavaType __objectType = __virtual.type();
+            ResolvedJavaType __expectedType = __tool.getMetaAccessProvider().lookupJavaType(boxingKind.toBoxedJavaClass());
+            if (__objectType.equals(__expectedType))
             {
-                tool.replaceWithValue(tool.getEntry(virtual, 0));
+                __tool.replaceWithValue(__tool.getEntry(__virtual, 0));
             }
         }
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages() && StampTool.isPointerNonNull(forValue))
+        if (__tool.allUsagesAvailable() && hasNoUsages() && StampTool.isPointerNonNull(__forValue))
         {
             return null;
         }
-        ValueNode synonym = findSynonym(tool.getMetaAccess(), tool.getConstantReflection(), forValue, boxingKind);
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__tool.getMetaAccess(), __tool.getConstantReflection(), __forValue, boxingKind);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         return this;
     }
 
-    private static ValueNode findSynonym(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ValueNode forValue, JavaKind boxingKind)
+    private static ValueNode findSynonym(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ValueNode __forValue, JavaKind __boxingKind)
     {
-        if (forValue.isConstant())
+        if (__forValue.isConstant())
         {
-            JavaConstant constant = forValue.asJavaConstant();
-            JavaConstant unboxed = constantReflection.unboxPrimitive(constant);
-            if (unboxed != null && unboxed.getJavaKind() == boxingKind)
+            JavaConstant __constant = __forValue.asJavaConstant();
+            JavaConstant __unboxed = __constantReflection.unboxPrimitive(__constant);
+            if (__unboxed != null && __unboxed.getJavaKind() == __boxingKind)
             {
-                return ConstantNode.forConstant(unboxed, metaAccess);
+                return ConstantNode.forConstant(__unboxed, __metaAccess);
             }
         }
-        else if (forValue instanceof BoxNode)
+        else if (__forValue instanceof BoxNode)
         {
-            BoxNode box = (BoxNode) forValue;
-            if (boxingKind == box.getBoxingKind())
+            BoxNode __box = (BoxNode) __forValue;
+            if (__boxingKind == __box.getBoxingKind())
             {
-                return box.getValue();
+                return __box.getValue();
             }
         }
         return null;

@@ -17,15 +17,24 @@ import giraaff.nodes.util.GraphUtil;
 // @class LoopBeginNode
 public final class LoopBeginNode extends AbstractMergeNode implements IterableNodeType, LIRLowerable
 {
+    // @def
     public static final NodeClass<LoopBeginNode> TYPE = NodeClass.create(LoopBeginNode.class);
 
+    // @field
     protected double loopFrequency;
+    // @field
     protected double loopOrigFrequency;
+    // @field
     protected int nextEndIndex;
+    // @field
     protected int unswitches;
+    // @field
     protected int splits;
+    // @field
     protected int inversionCount;
+    // @field
     protected LoopType loopType;
+    // @field
     protected int unrollFactor;
 
     // @enum LoopBeginNode.LoopType
@@ -40,9 +49,12 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     /**
      * See {@link LoopEndNode#canSafepoint} for more information.
      */
+    // @field
     boolean canEndsSafepoint;
 
-    @OptionalInput(InputType.Guard) GuardingNode overflowGuard;
+    @OptionalInput(InputType.Guard)
+    // @field
+    GuardingNode overflowGuard;
 
     // @cons
     public LoopBeginNode()
@@ -97,9 +109,9 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         return unrollFactor;
     }
 
-    public void setUnrollFactor(int currentUnrollFactor)
+    public void setUnrollFactor(int __currentUnrollFactor)
     {
-        unrollFactor = currentUnrollFactor;
+        unrollFactor = __currentUnrollFactor;
     }
 
     /**
@@ -110,9 +122,9 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         // Store flag locally in case new loop ends are created later on.
         this.canEndsSafepoint = false;
         // Propagate flag to all existing loop ends.
-        for (LoopEndNode loopEnd : loopEnds())
+        for (LoopEndNode __loopEnd : loopEnds())
         {
-            loopEnd.disableSafepoint();
+            __loopEnd.disableSafepoint();
         }
     }
 
@@ -121,9 +133,9 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         return loopOrigFrequency;
     }
 
-    public void setLoopOrigFrequency(double loopOrigFrequency)
+    public void setLoopOrigFrequency(double __loopOrigFrequency)
     {
-        this.loopOrigFrequency = loopOrigFrequency;
+        this.loopOrigFrequency = __loopOrigFrequency;
     }
 
     public double loopFrequency()
@@ -131,9 +143,9 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         return loopFrequency;
     }
 
-    public void setLoopFrequency(double loopFrequency)
+    public void setLoopFrequency(double __loopFrequency)
     {
-        this.loopFrequency = loopFrequency;
+        this.loopFrequency = __loopFrequency;
     }
 
     /**
@@ -178,12 +190,12 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
      */
     public LoopEndNode[] orderedLoopEnds()
     {
-        LoopEndNode[] result = new LoopEndNode[this.getLoopEndCount()];
-        for (LoopEndNode end : loopEnds())
+        LoopEndNode[] __result = new LoopEndNode[this.getLoopEndCount()];
+        for (LoopEndNode __end : loopEnds())
         {
-            result[end.endIndex()] = end;
+            __result[__end.endIndex()] = __end;
         }
-        return result;
+        return __result;
     }
 
     public boolean isSingleEntryLoop()
@@ -207,32 +219,32 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // Nothing to emit, since this is node is used for structural purposes only.
     }
 
     @Override
-    protected void deleteEnd(AbstractEndNode end)
+    protected void deleteEnd(AbstractEndNode __end)
     {
-        if (end instanceof LoopEndNode)
+        if (__end instanceof LoopEndNode)
         {
-            LoopEndNode loopEnd = (LoopEndNode) end;
-            loopEnd.setLoopBegin(null);
-            int idx = loopEnd.endIndex();
-            for (LoopEndNode le : loopEnds())
+            LoopEndNode __loopEnd = (LoopEndNode) __end;
+            __loopEnd.setLoopBegin(null);
+            int __idx = __loopEnd.endIndex();
+            for (LoopEndNode __le : loopEnds())
             {
-                int leIdx = le.endIndex();
-                if (leIdx > idx)
+                int __leIdx = __le.endIndex();
+                if (__leIdx > __idx)
                 {
-                    le.setEndIndex(leIdx - 1);
+                    __le.setEndIndex(__leIdx - 1);
                 }
             }
             nextEndIndex--;
         }
         else
         {
-            super.deleteEnd(end);
+            super.deleteEnd(__end);
         }
     }
 
@@ -243,36 +255,36 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     }
 
     @Override
-    public int phiPredecessorIndex(AbstractEndNode pred)
+    public int phiPredecessorIndex(AbstractEndNode __pred)
     {
-        if (pred instanceof LoopEndNode)
+        if (__pred instanceof LoopEndNode)
         {
-            LoopEndNode loopEnd = (LoopEndNode) pred;
-            if (loopEnd.loopBegin() == this)
+            LoopEndNode __loopEnd = (LoopEndNode) __pred;
+            if (__loopEnd.loopBegin() == this)
             {
-                return loopEnd.endIndex() + forwardEndCount();
+                return __loopEnd.endIndex() + forwardEndCount();
             }
         }
         else
         {
-            return super.forwardEndIndex((EndNode) pred);
+            return super.forwardEndIndex((EndNode) __pred);
         }
-        throw new InternalError("should not reach here: " + "unknown pred : " + pred);
+        throw new InternalError("should not reach here: " + "unknown __pred : " + __pred);
     }
 
     @Override
-    public AbstractEndNode phiPredecessorAt(int index)
+    public AbstractEndNode phiPredecessorAt(int __index)
     {
-        if (index < forwardEndCount())
+        if (__index < forwardEndCount())
         {
-            return forwardEndAt(index);
+            return forwardEndAt(__index);
         }
-        for (LoopEndNode end : loopEnds())
+        for (LoopEndNode __end : loopEnds())
         {
-            int idx = index - forwardEndCount();
-            if (end.endIndex() == idx)
+            int __idx = __index - forwardEndCount();
+            if (__end.endIndex() == __idx)
             {
-                return end;
+                return __end;
             }
         }
         throw new InternalError("should not reach here");
@@ -303,20 +315,20 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         return inversionCount;
     }
 
-    public void setInversionCount(int count)
+    public void setInversionCount(int __count)
     {
-        inversionCount = count;
+        inversionCount = __count;
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
-        canonicalizePhis(tool);
+        canonicalizePhis(__tool);
     }
 
-    public boolean isLoopExit(AbstractBeginNode begin)
+    public boolean isLoopExit(AbstractBeginNode __begin)
     {
-        return begin instanceof LoopExitNode && ((LoopExitNode) begin).loopBegin() == this;
+        return __begin instanceof LoopExitNode && ((LoopExitNode) __begin).loopBegin() == this;
     }
 
     public LoopExitNode getSingleLoopExit()
@@ -331,14 +343,14 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public void removeExits()
     {
-        for (LoopExitNode loopexit : loopExits().snapshot())
+        for (LoopExitNode __loopexit : loopExits().snapshot())
         {
-            loopexit.removeProxies();
-            FrameState loopStateAfter = loopexit.stateAfter();
-            graph().replaceFixedWithFixed(loopexit, graph().add(new BeginNode()));
-            if (loopStateAfter != null)
+            __loopexit.removeProxies();
+            FrameState __loopStateAfter = __loopexit.stateAfter();
+            graph().replaceFixedWithFixed(__loopexit, graph().add(new BeginNode()));
+            if (__loopStateAfter != null)
             {
-                GraphUtil.tryKillUnused(loopStateAfter);
+                GraphUtil.tryKillUnused(__loopStateAfter);
             }
         }
     }
@@ -348,108 +360,108 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         return overflowGuard;
     }
 
-    public void setOverflowGuard(GuardingNode overflowGuard)
+    public void setOverflowGuard(GuardingNode __overflowGuard)
     {
-        updateUsagesInterface(this.overflowGuard, overflowGuard);
-        this.overflowGuard = overflowGuard;
+        updateUsagesInterface(this.overflowGuard, __overflowGuard);
+        this.overflowGuard = __overflowGuard;
     }
 
+    // @def
     private static final int NO_INCREMENT = Integer.MIN_VALUE;
 
     /**
-     * Returns an array with one entry for each input of the phi, which is either
-     * {@link #NO_INCREMENT} or the increment, i.e., the value by which the phi is incremented in
-     * the corresponding branch.
+     * Returns an array with one entry for each input of the phi, which is either {@link #NO_INCREMENT}
+     * or the increment, i.e., the value by which the phi is incremented in the corresponding branch.
      */
-    private static int[] getSelfIncrements(PhiNode phi)
+    private static int[] getSelfIncrements(PhiNode __phi)
     {
-        int[] selfIncrement = new int[phi.valueCount()];
-        for (int i = 0; i < phi.valueCount(); i++)
+        int[] __selfIncrement = new int[__phi.valueCount()];
+        for (int __i = 0; __i < __phi.valueCount(); __i++)
         {
-            ValueNode input = phi.valueAt(i);
-            long increment = NO_INCREMENT;
-            if (input != null && input instanceof AddNode && input.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
+            ValueNode __input = __phi.valueAt(__i);
+            long __increment = NO_INCREMENT;
+            if (__input != null && __input instanceof AddNode && __input.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
             {
-                AddNode add = (AddNode) input;
-                if (add.getX() == phi && add.getY().isConstant())
+                AddNode __add = (AddNode) __input;
+                if (__add.getX() == __phi && __add.getY().isConstant())
                 {
-                    increment = add.getY().asJavaConstant().asLong();
+                    __increment = __add.getY().asJavaConstant().asLong();
                 }
-                else if (add.getY() == phi && add.getX().isConstant())
+                else if (__add.getY() == __phi && __add.getX().isConstant())
                 {
-                    increment = add.getX().asJavaConstant().asLong();
+                    __increment = __add.getX().asJavaConstant().asLong();
                 }
             }
-            else if (input == phi)
+            else if (__input == __phi)
             {
-                increment = 0;
+                __increment = 0;
             }
-            if (increment < Integer.MIN_VALUE || increment > Integer.MAX_VALUE || increment == NO_INCREMENT)
+            if (__increment < Integer.MIN_VALUE || __increment > Integer.MAX_VALUE || __increment == NO_INCREMENT)
             {
-                increment = NO_INCREMENT;
+                __increment = NO_INCREMENT;
             }
-            selfIncrement[i] = (int) increment;
+            __selfIncrement[__i] = (int) __increment;
         }
-        return selfIncrement;
+        return __selfIncrement;
     }
 
     /**
      * Coalesces loop phis that represent the same value (which is not handled by normal Global
      * Value Numbering).
      */
-    public void canonicalizePhis(SimplifierTool tool)
+    public void canonicalizePhis(SimplifierTool __tool)
     {
-        int phiCount = phis().count();
-        if (phiCount > 1)
+        int __phiCount = phis().count();
+        if (__phiCount > 1)
         {
-            int phiInputCount = phiPredecessorCount();
-            int phiIndex = 0;
-            int[][] selfIncrement = new int[phiCount][];
-            PhiNode[] phis = this.phis().snapshot().toArray(new PhiNode[phiCount]);
+            int __phiInputCount = phiPredecessorCount();
+            int __phiIndex = 0;
+            int[][] __selfIncrement = new int[__phiCount][];
+            PhiNode[] __phis = this.phis().snapshot().toArray(new PhiNode[__phiCount]);
 
-            for (phiIndex = 0; phiIndex < phiCount; phiIndex++)
+            for (__phiIndex = 0; __phiIndex < __phiCount; __phiIndex++)
             {
-                PhiNode phi = phis[phiIndex];
-                if (phi != null)
+                PhiNode __phi = __phis[__phiIndex];
+                if (__phi != null)
                 {
-                    nextPhi: for (int otherPhiIndex = phiIndex + 1; otherPhiIndex < phiCount; otherPhiIndex++)
+                    nextPhi: for (int otherPhiIndex = __phiIndex + 1; otherPhiIndex < __phiCount; otherPhiIndex++)
                     {
-                        PhiNode otherPhi = phis[otherPhiIndex];
-                        if (otherPhi == null || phi.getNodeClass() != otherPhi.getNodeClass() || !phi.valueEquals(otherPhi))
+                        PhiNode __otherPhi = __phis[otherPhiIndex];
+                        if (__otherPhi == null || __phi.getNodeClass() != __otherPhi.getNodeClass() || !__phi.valueEquals(__otherPhi))
                         {
                             continue nextPhi;
                         }
-                        if (selfIncrement[phiIndex] == null)
+                        if (__selfIncrement[__phiIndex] == null)
                         {
-                            selfIncrement[phiIndex] = getSelfIncrements(phi);
+                            __selfIncrement[__phiIndex] = getSelfIncrements(__phi);
                         }
-                        if (selfIncrement[otherPhiIndex] == null)
+                        if (__selfIncrement[otherPhiIndex] == null)
                         {
-                            selfIncrement[otherPhiIndex] = getSelfIncrements(otherPhi);
+                            __selfIncrement[otherPhiIndex] = getSelfIncrements(__otherPhi);
                         }
-                        int[] phiIncrement = selfIncrement[phiIndex];
-                        int[] otherPhiIncrement = selfIncrement[otherPhiIndex];
-                        for (int inputIndex = 0; inputIndex < phiInputCount; inputIndex++)
+                        int[] __phiIncrement = __selfIncrement[__phiIndex];
+                        int[] __otherPhiIncrement = __selfIncrement[otherPhiIndex];
+                        for (int __inputIndex = 0; __inputIndex < __phiInputCount; __inputIndex++)
                         {
-                            if (phiIncrement[inputIndex] == NO_INCREMENT)
+                            if (__phiIncrement[__inputIndex] == NO_INCREMENT)
                             {
-                                if (phi.valueAt(inputIndex) != otherPhi.valueAt(inputIndex))
+                                if (__phi.valueAt(__inputIndex) != __otherPhi.valueAt(__inputIndex))
                                 {
                                     continue nextPhi;
                                 }
                             }
-                            if (phiIncrement[inputIndex] != otherPhiIncrement[inputIndex])
+                            if (__phiIncrement[__inputIndex] != __otherPhiIncrement[__inputIndex])
                             {
                                 continue nextPhi;
                             }
                         }
-                        if (tool != null)
+                        if (__tool != null)
                         {
-                            tool.addToWorkList(otherPhi.usages());
+                            __tool.addToWorkList(__otherPhi.usages());
                         }
-                        otherPhi.replaceAtUsages(phi);
-                        GraphUtil.killWithUnusedFloatingInputs(otherPhi);
-                        phis[otherPhiIndex] = null;
+                        __otherPhi.replaceAtUsages(__phi);
+                        GraphUtil.killWithUnusedFloatingInputs(__otherPhi);
+                        __phis[otherPhiIndex] = null;
                     }
                 }
             }

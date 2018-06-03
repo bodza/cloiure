@@ -53,90 +53,90 @@ public abstract class LoopTransformations
         super();
     }
 
-    public static void peel(LoopEx loop)
+    public static void peel(LoopEx __loop)
     {
-        loop.inside().duplicate().insertBefore(loop);
-        loop.loopBegin().setLoopFrequency(Math.max(0.0, loop.loopBegin().loopFrequency() - 1));
+        __loop.inside().duplicate().insertBefore(__loop);
+        __loop.loopBegin().setLoopFrequency(Math.max(0.0, __loop.loopBegin().loopFrequency() - 1));
     }
 
-    public static void fullUnroll(LoopEx loop, PhaseContext context, CanonicalizerPhase canonicalizer)
+    public static void fullUnroll(LoopEx __loop, PhaseContext __context, CanonicalizerPhase __canonicalizer)
     {
-        LoopBeginNode loopBegin = loop.loopBegin();
-        StructuredGraph graph = loopBegin.graph();
-        int initialNodeCount = graph.getNodeCount();
-        while (!loopBegin.isDeleted())
+        LoopBeginNode __loopBegin = __loop.loopBegin();
+        StructuredGraph __graph = __loopBegin.graph();
+        int __initialNodeCount = __graph.getNodeCount();
+        while (!__loopBegin.isDeleted())
         {
-            Mark mark = graph.getMark();
-            peel(loop);
-            canonicalizer.applyIncremental(graph, context, mark);
-            loop.invalidateFragments();
-            if (graph.getNodeCount() > initialNodeCount + GraalOptions.maximumDesiredSize * 2)
+            Mark __mark = __graph.getMark();
+            peel(__loop);
+            __canonicalizer.applyIncremental(__graph, __context, __mark);
+            __loop.invalidateFragments();
+            if (__graph.getNodeCount() > __initialNodeCount + GraalOptions.maximumDesiredSize * 2)
             {
                 throw new BailoutException(false, "full unroll: graph seems to grow out of proportion");
             }
         }
     }
 
-    public static void unswitch(LoopEx loop, List<ControlSplitNode> controlSplitNodeSet)
+    public static void unswitch(LoopEx __loop, List<ControlSplitNode> __controlSplitNodeSet)
     {
-        ControlSplitNode firstNode = controlSplitNodeSet.iterator().next();
-        LoopFragmentWhole originalLoop = loop.whole();
-        StructuredGraph graph = firstNode.graph();
+        ControlSplitNode __firstNode = __controlSplitNodeSet.iterator().next();
+        LoopFragmentWhole __originalLoop = __loop.whole();
+        StructuredGraph __graph = __firstNode.graph();
 
-        loop.loopBegin().incrementUnswitches();
+        __loop.loopBegin().incrementUnswitches();
 
         // create new control split out of loop
-        ControlSplitNode newControlSplit = (ControlSplitNode) firstNode.copyWithInputs();
-        originalLoop.entryPoint().replaceAtPredecessor(newControlSplit);
+        ControlSplitNode __newControlSplit = (ControlSplitNode) __firstNode.copyWithInputs();
+        __originalLoop.entryPoint().replaceAtPredecessor(__newControlSplit);
 
         /*
          * The code below assumes that all of the control split nodes have the same successor
          * structure, which should have been enforced by findUnswitchable.
          */
-        Iterator<Position> successors = firstNode.successorPositions().iterator();
+        Iterator<Position> __successors = __firstNode.successorPositions().iterator();
         // original loop is used as first successor
-        Position firstPosition = successors.next();
-        AbstractBeginNode originalLoopBegin = BeginNode.begin(originalLoop.entryPoint());
-        firstPosition.set(newControlSplit, originalLoopBegin);
+        Position __firstPosition = __successors.next();
+        AbstractBeginNode __originalLoopBegin = BeginNode.begin(__originalLoop.entryPoint());
+        __firstPosition.set(__newControlSplit, __originalLoopBegin);
 
-        while (successors.hasNext())
+        while (__successors.hasNext())
         {
-            Position position = successors.next();
+            Position __position = __successors.next();
             // create a new loop duplicate and connect it
-            LoopFragmentWhole duplicateLoop = originalLoop.duplicate();
-            AbstractBeginNode newBegin = BeginNode.begin(duplicateLoop.entryPoint());
-            position.set(newControlSplit, newBegin);
+            LoopFragmentWhole __duplicateLoop = __originalLoop.duplicate();
+            AbstractBeginNode __newBegin = BeginNode.begin(__duplicateLoop.entryPoint());
+            __position.set(__newControlSplit, __newBegin);
 
             // for each cloned ControlSplitNode, simplify the proper path
-            for (ControlSplitNode controlSplitNode : controlSplitNodeSet)
+            for (ControlSplitNode __controlSplitNode : __controlSplitNodeSet)
             {
-                ControlSplitNode duplicatedControlSplit = duplicateLoop.getDuplicatedNode(controlSplitNode);
-                if (duplicatedControlSplit.isAlive())
+                ControlSplitNode __duplicatedControlSplit = __duplicateLoop.getDuplicatedNode(__controlSplitNode);
+                if (__duplicatedControlSplit.isAlive())
                 {
-                    AbstractBeginNode survivingSuccessor = (AbstractBeginNode) position.get(duplicatedControlSplit);
-                    survivingSuccessor.replaceAtUsages(InputType.Guard, newBegin);
-                    graph.removeSplitPropagate(duplicatedControlSplit, survivingSuccessor);
+                    AbstractBeginNode __survivingSuccessor = (AbstractBeginNode) __position.get(__duplicatedControlSplit);
+                    __survivingSuccessor.replaceAtUsages(InputType.Guard, __newBegin);
+                    __graph.removeSplitPropagate(__duplicatedControlSplit, __survivingSuccessor);
                 }
             }
         }
         // original loop is simplified last to avoid deleting controlSplitNode too early
-        for (ControlSplitNode controlSplitNode : controlSplitNodeSet)
+        for (ControlSplitNode __controlSplitNode : __controlSplitNodeSet)
         {
-            if (controlSplitNode.isAlive())
+            if (__controlSplitNode.isAlive())
             {
-                AbstractBeginNode survivingSuccessor = (AbstractBeginNode) firstPosition.get(controlSplitNode);
-                survivingSuccessor.replaceAtUsages(InputType.Guard, originalLoopBegin);
-                graph.removeSplitPropagate(controlSplitNode, survivingSuccessor);
+                AbstractBeginNode __survivingSuccessor = (AbstractBeginNode) __firstPosition.get(__controlSplitNode);
+                __survivingSuccessor.replaceAtUsages(InputType.Guard, __originalLoopBegin);
+                __graph.removeSplitPropagate(__controlSplitNode, __survivingSuccessor);
             }
         }
 
         // TODO probabilities need some amount of fixup (probably also in other transforms)
     }
 
-    public static void partialUnroll(LoopEx loop)
+    public static void partialUnroll(LoopEx __loop)
     {
-        LoopFragmentInside newSegment = loop.inside().duplicate();
-        newSegment.insertWithinAfter(loop);
+        LoopFragmentInside __newSegment = __loop.inside().duplicate();
+        __newSegment.insertWithinAfter(__loop);
     }
 
     // This function splits candidate loops into pre, main and post loops,
@@ -204,120 +204,120 @@ public abstract class LoopTransformations
     // The pre loop is constrained to one iteration for now and will likely
     // be updated to produce vector alignment if applicable.
 
-    public static LoopBeginNode insertPrePostLoops(LoopEx loop)
+    public static LoopBeginNode insertPrePostLoops(LoopEx __loop)
     {
-        StructuredGraph graph = loop.loopBegin().graph();
-        LoopFragmentWhole preLoop = loop.whole();
-        CountedLoopInfo preCounted = loop.counted();
-        IfNode preLimit = preCounted.getLimitTest();
-        LoopBeginNode preLoopBegin = loop.loopBegin();
-        InductionVariable preIv = preCounted.getCounter();
-        LoopExitNode preLoopExitNode = preLoopBegin.getSingleLoopExit();
-        FixedNode continuationNode = preLoopExitNode.next();
+        StructuredGraph __graph = __loop.loopBegin().graph();
+        LoopFragmentWhole __preLoop = __loop.whole();
+        CountedLoopInfo __preCounted = __loop.counted();
+        IfNode __preLimit = __preCounted.getLimitTest();
+        LoopBeginNode __preLoopBegin = __loop.loopBegin();
+        InductionVariable __preIv = __preCounted.getCounter();
+        LoopExitNode __preLoopExitNode = __preLoopBegin.getSingleLoopExit();
+        FixedNode __continuationNode = __preLoopExitNode.next();
 
         // each duplication is inserted after the original, ergo create the post loop first
-        LoopFragmentWhole mainLoop = preLoop.duplicate();
-        LoopFragmentWhole postLoop = preLoop.duplicate();
-        preLoopBegin.incrementSplits();
-        preLoopBegin.incrementSplits();
-        preLoopBegin.setPreLoop();
-        LoopBeginNode mainLoopBegin = mainLoop.getDuplicatedNode(preLoopBegin);
-        mainLoopBegin.setMainLoop();
-        LoopBeginNode postLoopBegin = postLoop.getDuplicatedNode(preLoopBegin);
-        postLoopBegin.setPostLoop();
+        LoopFragmentWhole __mainLoop = __preLoop.duplicate();
+        LoopFragmentWhole __postLoop = __preLoop.duplicate();
+        __preLoopBegin.incrementSplits();
+        __preLoopBegin.incrementSplits();
+        __preLoopBegin.setPreLoop();
+        LoopBeginNode __mainLoopBegin = __mainLoop.getDuplicatedNode(__preLoopBegin);
+        __mainLoopBegin.setMainLoop();
+        LoopBeginNode __postLoopBegin = __postLoop.getDuplicatedNode(__preLoopBegin);
+        __postLoopBegin.setPostLoop();
 
-        EndNode postEndNode = getBlockEndAfterLoopExit(postLoopBegin);
-        AbstractMergeNode postMergeNode = postEndNode.merge();
-        LoopExitNode postLoopExitNode = postLoopBegin.getSingleLoopExit();
+        EndNode __postEndNode = getBlockEndAfterLoopExit(__postLoopBegin);
+        AbstractMergeNode __postMergeNode = __postEndNode.merge();
+        LoopExitNode __postLoopExitNode = __postLoopBegin.getSingleLoopExit();
 
         // update the main loop phi initialization to carry from the pre loop
-        for (PhiNode prePhiNode : preLoopBegin.phis())
+        for (PhiNode __prePhiNode : __preLoopBegin.phis())
         {
-            PhiNode mainPhiNode = mainLoop.getDuplicatedNode(prePhiNode);
-            mainPhiNode.setValueAt(0, prePhiNode);
+            PhiNode __mainPhiNode = __mainLoop.getDuplicatedNode(__prePhiNode);
+            __mainPhiNode.setValueAt(0, __prePhiNode);
         }
 
-        EndNode mainEndNode = getBlockEndAfterLoopExit(mainLoopBegin);
-        AbstractMergeNode mainMergeNode = mainEndNode.merge();
-        AbstractEndNode postEntryNode = postLoopBegin.forwardEnd();
+        EndNode __mainEndNode = getBlockEndAfterLoopExit(__mainLoopBegin);
+        AbstractMergeNode __mainMergeNode = __mainEndNode.merge();
+        AbstractEndNode __postEntryNode = __postLoopBegin.forwardEnd();
 
         // in the case of no Bounds tests, we just flow right into the main loop
-        AbstractBeginNode mainLandingNode = BeginNode.begin(postEntryNode);
-        LoopExitNode mainLoopExitNode = mainLoopBegin.getSingleLoopExit();
-        mainLoopExitNode.setNext(mainLandingNode);
-        preLoopExitNode.setNext(mainLoopBegin.forwardEnd());
+        AbstractBeginNode __mainLandingNode = BeginNode.begin(__postEntryNode);
+        LoopExitNode __mainLoopExitNode = __mainLoopBegin.getSingleLoopExit();
+        __mainLoopExitNode.setNext(__mainLandingNode);
+        __preLoopExitNode.setNext(__mainLoopBegin.forwardEnd());
 
         // add and update any phi edges as per merge usage as needed and update usages
-        processPreLoopPhis(loop, mainLoop, postLoop);
-        continuationNode.predecessor().clearSuccessors();
-        postLoopExitNode.setNext(continuationNode);
-        cleanupMerge(postMergeNode, postLoopExitNode);
-        cleanupMerge(mainMergeNode, mainLandingNode);
+        processPreLoopPhis(__loop, __mainLoop, __postLoop);
+        __continuationNode.predecessor().clearSuccessors();
+        __postLoopExitNode.setNext(__continuationNode);
+        cleanupMerge(__postMergeNode, __postLoopExitNode);
+        cleanupMerge(__mainMergeNode, __mainLandingNode);
 
         // change the preLoop to execute one iteration for now
-        updateMainLoopLimit(preLimit, preIv, mainLoop);
-        updatePreLoopLimit(preLimit, preIv, preCounted);
-        preLoopBegin.setLoopFrequency(1);
-        mainLoopBegin.setLoopFrequency(Math.max(0.0, mainLoopBegin.loopFrequency() - 2));
-        postLoopBegin.setLoopFrequency(Math.max(0.0, postLoopBegin.loopFrequency() - 1));
+        updateMainLoopLimit(__preLimit, __preIv, __mainLoop);
+        updatePreLoopLimit(__preLimit, __preIv, __preCounted);
+        __preLoopBegin.setLoopFrequency(1);
+        __mainLoopBegin.setLoopFrequency(Math.max(0.0, __mainLoopBegin.loopFrequency() - 2));
+        __postLoopBegin.setLoopFrequency(Math.max(0.0, __postLoopBegin.loopFrequency() - 1));
 
         // the pre and post loops don't require safepoints at all
-        for (SafepointNode safepoint : preLoop.nodes().filter(SafepointNode.class))
+        for (SafepointNode __safepoint : __preLoop.nodes().filter(SafepointNode.class))
         {
-            graph.removeFixed(safepoint);
+            __graph.removeFixed(__safepoint);
         }
-        for (SafepointNode safepoint : postLoop.nodes().filter(SafepointNode.class))
+        for (SafepointNode __safepoint : __postLoop.nodes().filter(SafepointNode.class))
         {
-            graph.removeFixed(safepoint);
+            __graph.removeFixed(__safepoint);
         }
-        return mainLoopBegin;
+        return __mainLoopBegin;
     }
 
     /**
      * Cleanup the merge and remove the predecessors too.
      */
-    private static void cleanupMerge(AbstractMergeNode mergeNode, AbstractBeginNode landingNode)
+    private static void cleanupMerge(AbstractMergeNode __mergeNode, AbstractBeginNode __landingNode)
     {
-        for (EndNode end : mergeNode.cfgPredecessors().snapshot())
+        for (EndNode __end : __mergeNode.cfgPredecessors().snapshot())
         {
-            mergeNode.removeEnd(end);
-            end.safeDelete();
+            __mergeNode.removeEnd(__end);
+            __end.safeDelete();
         }
-        mergeNode.prepareDelete(landingNode);
-        mergeNode.safeDelete();
+        __mergeNode.prepareDelete(__landingNode);
+        __mergeNode.safeDelete();
     }
 
-    private static void processPreLoopPhis(LoopEx preLoop, LoopFragmentWhole mainLoop, LoopFragmentWhole postLoop)
+    private static void processPreLoopPhis(LoopEx __preLoop, LoopFragmentWhole __mainLoop, LoopFragmentWhole __postLoop)
     {
         // process phis for the post loop
-        LoopBeginNode preLoopBegin = preLoop.loopBegin();
-        for (PhiNode prePhiNode : preLoopBegin.phis())
+        LoopBeginNode __preLoopBegin = __preLoop.loopBegin();
+        for (PhiNode __prePhiNode : __preLoopBegin.phis())
         {
-            PhiNode postPhiNode = postLoop.getDuplicatedNode(prePhiNode);
-            PhiNode mainPhiNode = mainLoop.getDuplicatedNode(prePhiNode);
-            postPhiNode.setValueAt(0, mainPhiNode);
+            PhiNode __postPhiNode = __postLoop.getDuplicatedNode(__prePhiNode);
+            PhiNode __mainPhiNode = __mainLoop.getDuplicatedNode(__prePhiNode);
+            __postPhiNode.setValueAt(0, __mainPhiNode);
 
             // build a work list to update the pre loop phis to the post loops phis
-            for (Node usage : prePhiNode.usages().snapshot())
+            for (Node __usage : __prePhiNode.usages().snapshot())
             {
-                if (usage == mainPhiNode)
+                if (__usage == __mainPhiNode)
                 {
                     continue;
                 }
-                if (preLoop.isOutsideLoop(usage))
+                if (__preLoop.isOutsideLoop(__usage))
                 {
-                    usage.replaceFirstInput(prePhiNode, postPhiNode);
+                    __usage.replaceFirstInput(__prePhiNode, __postPhiNode);
                 }
             }
         }
-        for (Node node : preLoop.inside().nodes())
+        for (Node __node : __preLoop.inside().nodes())
         {
-            for (Node externalUsage : node.usages().snapshot())
+            for (Node __externalUsage : __node.usages().snapshot())
             {
-                if (preLoop.isOutsideLoop(externalUsage))
+                if (__preLoop.isOutsideLoop(__externalUsage))
                 {
-                    Node postUsage = postLoop.getDuplicatedNode(node);
-                    externalUsage.replaceFirstInput(node, postUsage);
+                    Node __postUsage = __postLoop.getDuplicatedNode(__node);
+                    __externalUsage.replaceFirstInput(__node, __postUsage);
                 }
             }
         }
@@ -326,51 +326,51 @@ public abstract class LoopTransformations
     /**
      * Find the end of the block following the LoopExit.
      */
-    private static EndNode getBlockEndAfterLoopExit(LoopBeginNode curLoopBegin)
+    private static EndNode getBlockEndAfterLoopExit(LoopBeginNode __curLoopBegin)
     {
-        FixedNode node = curLoopBegin.getSingleLoopExit().next();
+        FixedNode __node = __curLoopBegin.getSingleLoopExit().next();
         // find the last node after the exit blocks starts
-        return getBlockEnd(node);
+        return getBlockEnd(__node);
     }
 
-    private static EndNode getBlockEnd(FixedNode node)
+    private static EndNode getBlockEnd(FixedNode __node)
     {
-        FixedNode curNode = node;
-        while (curNode instanceof FixedWithNextNode)
+        FixedNode __curNode = __node;
+        while (__curNode instanceof FixedWithNextNode)
         {
-            curNode = ((FixedWithNextNode) curNode).next();
+            __curNode = ((FixedWithNextNode) __curNode).next();
         }
-        return (EndNode) curNode;
+        return (EndNode) __curNode;
     }
 
-    private static void updateMainLoopLimit(IfNode preLimit, InductionVariable preIv, LoopFragmentWhole mainLoop)
+    private static void updateMainLoopLimit(IfNode __preLimit, InductionVariable __preIv, LoopFragmentWhole __mainLoop)
     {
         // update the main loops limit test to be different than the post loop
-        StructuredGraph graph = preLimit.graph();
-        IfNode mainLimit = mainLoop.getDuplicatedNode(preLimit);
-        LogicNode ifTest = mainLimit.condition();
-        CompareNode compareNode = (CompareNode) ifTest;
-        ValueNode prePhi = preIv.valueNode();
-        ValueNode mainPhi = mainLoop.getDuplicatedNode(prePhi);
-        ValueNode preStride = preIv.strideNode();
-        ValueNode mainStride;
-        if (preStride instanceof ConstantNode)
+        StructuredGraph __graph = __preLimit.graph();
+        IfNode __mainLimit = __mainLoop.getDuplicatedNode(__preLimit);
+        LogicNode __ifTest = __mainLimit.condition();
+        CompareNode __compareNode = (CompareNode) __ifTest;
+        ValueNode __prePhi = __preIv.valueNode();
+        ValueNode __mainPhi = __mainLoop.getDuplicatedNode(__prePhi);
+        ValueNode __preStride = __preIv.strideNode();
+        ValueNode __mainStride;
+        if (__preStride instanceof ConstantNode)
         {
-            mainStride = preStride;
+            __mainStride = __preStride;
         }
         else
         {
-            mainStride = mainLoop.getDuplicatedNode(preStride);
+            __mainStride = __mainLoop.getDuplicatedNode(__preStride);
         }
         // fetch the bounds to pose lowering the range by one
-        ValueNode ub = null;
-        if (compareNode.getX() == mainPhi)
+        ValueNode __ub = null;
+        if (__compareNode.getX() == __mainPhi)
         {
-            ub = compareNode.getY();
+            __ub = __compareNode.getY();
         }
-        else if (compareNode.getY() == mainPhi)
+        else if (__compareNode.getY() == __mainPhi)
         {
-            ub = compareNode.getX();
+            __ub = __compareNode.getX();
         }
         else
         {
@@ -378,114 +378,114 @@ public abstract class LoopTransformations
         }
 
         // Preloop always performs at least one iteration, so remove that from the main loop.
-        ValueNode newLimit = MathUtil.sub(graph, ub, mainStride);
+        ValueNode __newLimit = MathUtil.sub(__graph, __ub, __mainStride);
 
         // re-wire the condition with the new limit
-        compareNode.replaceFirstInput(ub, newLimit);
+        __compareNode.replaceFirstInput(__ub, __newLimit);
     }
 
-    private static void updatePreLoopLimit(IfNode preLimit, InductionVariable preIv, CountedLoopInfo preCounted)
+    private static void updatePreLoopLimit(IfNode __preLimit, InductionVariable __preIv, CountedLoopInfo __preCounted)
     {
         // update the pre loops limit test
-        StructuredGraph graph = preLimit.graph();
-        LogicNode ifTest = preLimit.condition();
-        CompareNode compareNode = (CompareNode) ifTest;
-        ValueNode prePhi = preIv.valueNode();
+        StructuredGraph __graph = __preLimit.graph();
+        LogicNode __ifTest = __preLimit.condition();
+        CompareNode __compareNode = (CompareNode) __ifTest;
+        ValueNode __prePhi = __preIv.valueNode();
         // make new limit one iteration
-        ValueNode initIv = preCounted.getStart();
-        ValueNode newLimit = MathUtil.add(graph, initIv, preIv.strideNode());
+        ValueNode __initIv = __preCounted.getStart();
+        ValueNode __newLimit = MathUtil.add(__graph, __initIv, __preIv.strideNode());
 
         // fetch the variable we are not replacing and configure the one we are
-        ValueNode ub;
-        if (compareNode.getX() == prePhi)
+        ValueNode __ub;
+        if (__compareNode.getX() == __prePhi)
         {
-            ub = compareNode.getY();
+            __ub = __compareNode.getY();
         }
-        else if (compareNode.getY() == prePhi)
+        else if (__compareNode.getY() == __prePhi)
         {
-            ub = compareNode.getX();
+            __ub = __compareNode.getX();
         }
         else
         {
             throw GraalError.shouldNotReachHere();
         }
         // re-wire the condition with the new limit
-        if (preIv.direction() == Direction.Up)
+        if (__preIv.direction() == Direction.Up)
         {
-            compareNode.replaceFirstInput(ub, graph.unique(new ConditionalNode(graph.unique(new IntegerLessThanNode(newLimit, ub)), newLimit, ub)));
+            __compareNode.replaceFirstInput(__ub, __graph.unique(new ConditionalNode(__graph.unique(new IntegerLessThanNode(__newLimit, __ub)), __newLimit, __ub)));
         }
         else
         {
-            compareNode.replaceFirstInput(ub, graph.unique(new ConditionalNode(graph.unique(new IntegerLessThanNode(ub, newLimit)), newLimit, ub)));
+            __compareNode.replaceFirstInput(__ub, __graph.unique(new ConditionalNode(__graph.unique(new IntegerLessThanNode(__ub, __newLimit)), __newLimit, __ub)));
         }
     }
 
-    public static List<ControlSplitNode> findUnswitchable(LoopEx loop)
+    public static List<ControlSplitNode> findUnswitchable(LoopEx __loop)
     {
-        List<ControlSplitNode> controls = null;
-        ValueNode invariantValue = null;
-        for (IfNode ifNode : loop.whole().nodes().filter(IfNode.class))
+        List<ControlSplitNode> __controls = null;
+        ValueNode __invariantValue = null;
+        for (IfNode __ifNode : __loop.whole().nodes().filter(IfNode.class))
         {
-            if (loop.isOutsideLoop(ifNode.condition()))
+            if (__loop.isOutsideLoop(__ifNode.condition()))
             {
-                if (controls == null)
+                if (__controls == null)
                 {
-                    invariantValue = ifNode.condition();
-                    controls = new ArrayList<>();
-                    controls.add(ifNode);
+                    __invariantValue = __ifNode.condition();
+                    __controls = new ArrayList<>();
+                    __controls.add(__ifNode);
                 }
-                else if (ifNode.condition() == invariantValue)
+                else if (__ifNode.condition() == __invariantValue)
                 {
-                    controls.add(ifNode);
+                    __controls.add(__ifNode);
                 }
             }
         }
-        if (controls == null)
+        if (__controls == null)
         {
-            SwitchNode firstSwitch = null;
-            for (SwitchNode switchNode : loop.whole().nodes().filter(SwitchNode.class))
+            SwitchNode __firstSwitch = null;
+            for (SwitchNode __switchNode : __loop.whole().nodes().filter(SwitchNode.class))
             {
-                if (switchNode.successors().count() > 1 && loop.isOutsideLoop(switchNode.value()))
+                if (__switchNode.successors().count() > 1 && __loop.isOutsideLoop(__switchNode.value()))
                 {
-                    if (controls == null)
+                    if (__controls == null)
                     {
-                        firstSwitch = switchNode;
-                        invariantValue = switchNode.value();
-                        controls = new ArrayList<>();
-                        controls.add(switchNode);
+                        __firstSwitch = __switchNode;
+                        __invariantValue = __switchNode.value();
+                        __controls = new ArrayList<>();
+                        __controls.add(__switchNode);
                     }
-                    else if (switchNode.value() == invariantValue && firstSwitch.structureEquals(switchNode))
+                    else if (__switchNode.value() == __invariantValue && __firstSwitch.structureEquals(__switchNode))
                     {
                         // only collect switches which test the same values in the same order
-                        controls.add(switchNode);
+                        __controls.add(__switchNode);
                     }
                 }
             }
         }
-        return controls;
+        return __controls;
     }
 
-    public static boolean isUnrollableLoop(LoopEx loop)
+    public static boolean isUnrollableLoop(LoopEx __loop)
     {
-        if (!loop.isCounted() || !loop.counted().getCounter().isConstantStride() || !loop.loop().getChildren().isEmpty())
+        if (!__loop.isCounted() || !__loop.counted().getCounter().isConstantStride() || !__loop.loop().getChildren().isEmpty())
         {
             return false;
         }
-        LoopBeginNode loopBegin = loop.loopBegin();
-        LogicNode condition = loop.counted().getLimitTest().condition();
-        if (!(condition instanceof CompareNode))
+        LoopBeginNode __loopBegin = __loop.loopBegin();
+        LogicNode __condition = __loop.counted().getLimitTest().condition();
+        if (!(__condition instanceof CompareNode))
         {
             return false;
         }
-        if (((CompareNode) condition).condition() == CanonicalCondition.EQ)
+        if (((CompareNode) __condition).condition() == CanonicalCondition.EQ)
         {
             return false;
         }
-        if (loopBegin.isMainLoop() || loopBegin.isSimpleLoop())
+        if (__loopBegin.isMainLoop() || __loopBegin.isSimpleLoop())
         {
             // Flow-less loops to partial unroll for now. 3 blocks corresponds to an if that either exits
             // or continues the loop. There might be fixed and floating work within the loop as well.
-            if (loop.loop().getBlocks().size() < 3)
+            if (__loop.loop().getBlocks().size() < 3)
             {
                 return true;
             }

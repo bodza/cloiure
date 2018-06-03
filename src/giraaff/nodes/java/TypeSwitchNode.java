@@ -32,21 +32,24 @@ import giraaff.nodes.util.GraphUtil;
 // @class TypeSwitchNode
 public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Simplifiable
 {
+    // @def
     public static final NodeClass<TypeSwitchNode> TYPE = NodeClass.create(TypeSwitchNode.class);
 
+    // @field
     protected final ResolvedJavaType[] keys;
+    // @field
     protected final Constant[] hubs;
 
     // @cons
-    public TypeSwitchNode(ValueNode value, AbstractBeginNode[] successors, ResolvedJavaType[] keys, double[] keyProbabilities, int[] keySuccessors, ConstantReflectionProvider constantReflection)
+    public TypeSwitchNode(ValueNode __value, AbstractBeginNode[] __successors, ResolvedJavaType[] __keys, double[] __keyProbabilities, int[] __keySuccessors, ConstantReflectionProvider __constantReflection)
     {
-        super(TYPE, value, successors, keySuccessors, keyProbabilities);
-        this.keys = keys;
+        super(TYPE, __value, __successors, __keySuccessors, __keyProbabilities);
+        this.keys = __keys;
 
-        hubs = new Constant[keys.length];
-        for (int i = 0; i < hubs.length; i++)
+        hubs = new Constant[__keys.length];
+        for (int __i = 0; __i < hubs.length; __i++)
         {
-            hubs[i] = constantReflection.asObjectHub(keys[i]);
+            hubs[__i] = __constantReflection.asObjectHub(__keys[__i]);
         }
     }
 
@@ -55,11 +58,11 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
      */
     private boolean assertKeys()
     {
-        for (int i = 0; i < keys.length; i++)
+        for (int __i = 0; __i < keys.length; __i++)
         {
-            for (int j = 0; j < keys.length; j++)
+            for (int __j = 0; __j < keys.length; __j++)
             {
-                if (i == j)
+                if (__i == __j)
                 {
                     continue;
                 }
@@ -81,132 +84,132 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
     }
 
     @Override
-    public Constant keyAt(int index)
+    public Constant keyAt(int __index)
     {
-        return hubs[index];
+        return hubs[__index];
     }
 
     @Override
-    public boolean equalKeys(SwitchNode switchNode)
+    public boolean equalKeys(SwitchNode __switchNode)
     {
-        if (!(switchNode instanceof TypeSwitchNode))
+        if (!(__switchNode instanceof TypeSwitchNode))
         {
             return false;
         }
-        TypeSwitchNode other = (TypeSwitchNode) switchNode;
-        return Arrays.equals(keys, other.keys);
+        TypeSwitchNode __other = (TypeSwitchNode) __switchNode;
+        return Arrays.equals(keys, __other.keys);
     }
 
-    public ResolvedJavaType typeAt(int index)
+    public ResolvedJavaType typeAt(int __index)
     {
-        return keys[index];
-    }
-
-    @Override
-    public void generate(NodeLIRBuilderTool gen)
-    {
-        gen.emitSwitch(this);
+        return keys[__index];
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        NodeView view = NodeView.from(tool);
+        __gen.emitSwitch(this);
+    }
+
+    @Override
+    public void simplify(SimplifierTool __tool)
+    {
+        NodeView __view = NodeView.from(__tool);
         if (value() instanceof ConstantNode)
         {
-            Constant constant = value().asConstant();
+            Constant __constant = value().asConstant();
 
-            int survivingEdge = keySuccessorIndex(keyCount());
-            for (int i = 0; i < keyCount(); i++)
+            int __survivingEdge = keySuccessorIndex(keyCount());
+            for (int __i = 0; __i < keyCount(); __i++)
             {
-                Constant typeHub = keyAt(i);
-                Boolean equal = tool.getConstantReflection().constantEquals(constant, typeHub);
-                if (equal == null)
+                Constant __typeHub = keyAt(__i);
+                Boolean __equal = __tool.getConstantReflection().constantEquals(__constant, __typeHub);
+                if (__equal == null)
                 {
                     // We don't know if this key is a match or not, so we cannot simplify.
                     return;
                 }
-                else if (equal.booleanValue())
+                else if (__equal.booleanValue())
                 {
-                    survivingEdge = keySuccessorIndex(i);
+                    __survivingEdge = keySuccessorIndex(__i);
                 }
             }
-            killOtherSuccessors(tool, survivingEdge);
+            killOtherSuccessors(__tool, __survivingEdge);
         }
-        if (value() instanceof LoadHubNode && ((LoadHubNode) value()).getValue().stamp(view) instanceof ObjectStamp)
+        if (value() instanceof LoadHubNode && ((LoadHubNode) value()).getValue().stamp(__view) instanceof ObjectStamp)
         {
-            ObjectStamp objectStamp = (ObjectStamp) ((LoadHubNode) value()).getValue().stamp(view);
-            if (objectStamp.type() != null)
+            ObjectStamp __objectStamp = (ObjectStamp) ((LoadHubNode) value()).getValue().stamp(__view);
+            if (__objectStamp.type() != null)
             {
-                int validKeys = 0;
-                for (int i = 0; i < keyCount(); i++)
+                int __validKeys = 0;
+                for (int __i = 0; __i < keyCount(); __i++)
                 {
-                    if (objectStamp.type().isAssignableFrom(keys[i]))
+                    if (__objectStamp.type().isAssignableFrom(keys[__i]))
                     {
-                        validKeys++;
+                        __validKeys++;
                     }
                 }
-                if (validKeys == 0)
+                if (__validKeys == 0)
                 {
-                    tool.addToWorkList(defaultSuccessor());
+                    __tool.addToWorkList(defaultSuccessor());
                     graph().removeSplitPropagate(this, defaultSuccessor());
                 }
-                else if (validKeys != keys.length)
+                else if (__validKeys != keys.length)
                 {
-                    ArrayList<AbstractBeginNode> newSuccessors = new ArrayList<>(blockSuccessorCount());
-                    ResolvedJavaType[] newKeys = new ResolvedJavaType[validKeys];
-                    int[] newKeySuccessors = new int[validKeys + 1];
-                    double[] newKeyProbabilities = new double[validKeys + 1];
-                    double totalProbability = 0;
-                    int current = 0;
-                    for (int i = 0; i < keyCount() + 1; i++)
+                    ArrayList<AbstractBeginNode> __newSuccessors = new ArrayList<>(blockSuccessorCount());
+                    ResolvedJavaType[] __newKeys = new ResolvedJavaType[__validKeys];
+                    int[] __newKeySuccessors = new int[__validKeys + 1];
+                    double[] __newKeyProbabilities = new double[__validKeys + 1];
+                    double __totalProbability = 0;
+                    int __current = 0;
+                    for (int __i = 0; __i < keyCount() + 1; __i++)
                     {
-                        if (i == keyCount() || objectStamp.type().isAssignableFrom(keys[i]))
+                        if (__i == keyCount() || __objectStamp.type().isAssignableFrom(keys[__i]))
                         {
-                            int index = newSuccessors.indexOf(keySuccessor(i));
-                            if (index == -1)
+                            int __index = __newSuccessors.indexOf(keySuccessor(__i));
+                            if (__index == -1)
                             {
-                                index = newSuccessors.size();
-                                newSuccessors.add(keySuccessor(i));
+                                __index = __newSuccessors.size();
+                                __newSuccessors.add(keySuccessor(__i));
                             }
-                            newKeySuccessors[current] = index;
-                            if (i < keyCount())
+                            __newKeySuccessors[__current] = __index;
+                            if (__i < keyCount())
                             {
-                                newKeys[current] = keys[i];
+                                __newKeys[__current] = keys[__i];
                             }
-                            newKeyProbabilities[current] = keyProbability(i);
-                            totalProbability += keyProbability(i);
-                            current++;
+                            __newKeyProbabilities[__current] = keyProbability(__i);
+                            __totalProbability += keyProbability(__i);
+                            __current++;
                         }
                     }
-                    if (totalProbability > 0)
+                    if (__totalProbability > 0)
                     {
-                        for (int i = 0; i < current; i++)
+                        for (int __i = 0; __i < __current; __i++)
                         {
-                            newKeyProbabilities[i] /= totalProbability;
+                            __newKeyProbabilities[__i] /= __totalProbability;
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < current; i++)
+                        for (int __i = 0; __i < __current; __i++)
                         {
-                            newKeyProbabilities[i] = 1.0 / current;
+                            __newKeyProbabilities[__i] = 1.0 / __current;
                         }
                     }
 
-                    for (int i = 0; i < blockSuccessorCount(); i++)
+                    for (int __i = 0; __i < blockSuccessorCount(); __i++)
                     {
-                        AbstractBeginNode successor = blockSuccessor(i);
-                        if (!newSuccessors.contains(successor))
+                        AbstractBeginNode __successor = blockSuccessor(__i);
+                        if (!__newSuccessors.contains(__successor))
                         {
-                            tool.deleteBranch(successor);
+                            __tool.deleteBranch(__successor);
                         }
-                        setBlockSuccessor(i, null);
+                        setBlockSuccessor(__i, null);
                     }
 
-                    AbstractBeginNode[] successorsArray = newSuccessors.toArray(new AbstractBeginNode[newSuccessors.size()]);
-                    TypeSwitchNode newSwitch = graph().add(new TypeSwitchNode(value(), successorsArray, newKeys, newKeyProbabilities, newKeySuccessors, tool.getConstantReflection()));
-                    ((FixedWithNextNode) predecessor()).setNext(newSwitch);
+                    AbstractBeginNode[] __successorsArray = __newSuccessors.toArray(new AbstractBeginNode[__newSuccessors.size()]);
+                    TypeSwitchNode __newSwitch = graph().add(new TypeSwitchNode(value(), __successorsArray, __newKeys, __newKeyProbabilities, __newKeySuccessors, __tool.getConstantReflection()));
+                    ((FixedWithNextNode) predecessor()).setNext(__newSwitch);
                     GraphUtil.killWithUnusedFloatingInputs(this);
                 }
             }
@@ -214,26 +217,26 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
     }
 
     @Override
-    public Stamp getValueStampForSuccessor(AbstractBeginNode beginNode)
+    public Stamp getValueStampForSuccessor(AbstractBeginNode __beginNode)
     {
-        Stamp result = null;
-        if (beginNode != defaultSuccessor())
+        Stamp __result = null;
+        if (__beginNode != defaultSuccessor())
         {
-            for (int i = 0; i < keyCount(); i++)
+            for (int __i = 0; __i < keyCount(); __i++)
             {
-                if (keySuccessor(i) == beginNode)
+                if (keySuccessor(__i) == __beginNode)
                 {
-                    if (result == null)
+                    if (__result == null)
                     {
-                        result = StampFactory.objectNonNull(TypeReference.createExactTrusted(typeAt(i)));
+                        __result = StampFactory.objectNonNull(TypeReference.createExactTrusted(typeAt(__i)));
                     }
                     else
                     {
-                        result = result.meet(StampFactory.objectNonNull(TypeReference.createExactTrusted(typeAt(i))));
+                        __result = __result.meet(StampFactory.objectNonNull(TypeReference.createExactTrusted(typeAt(__i))));
                     }
                 }
             }
         }
-        return result;
+        return __result;
     }
 }

@@ -15,62 +15,64 @@ import giraaff.phases.tiers.PhaseContext;
 // @class PartialEscapePhase
 public final class PartialEscapePhase extends EffectsPhase<PhaseContext>
 {
+    // @field
     private final boolean readElimination;
+    // @field
     private final BasePhase<PhaseContext> cleanupPhase;
 
     // @cons
-    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer)
+    public PartialEscapePhase(boolean __iterative, CanonicalizerPhase __canonicalizer)
     {
-        this(iterative, GraalOptions.optEarlyReadElimination, canonicalizer, null);
+        this(__iterative, GraalOptions.optEarlyReadElimination, __canonicalizer, null);
     }
 
     // @cons
-    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase)
+    public PartialEscapePhase(boolean __iterative, CanonicalizerPhase __canonicalizer, BasePhase<PhaseContext> __cleanupPhase)
     {
-        this(iterative, GraalOptions.optEarlyReadElimination, canonicalizer, cleanupPhase);
+        this(__iterative, GraalOptions.optEarlyReadElimination, __canonicalizer, __cleanupPhase);
     }
 
     // @cons
-    public PartialEscapePhase(boolean iterative, boolean readElimination, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase)
+    public PartialEscapePhase(boolean __iterative, boolean __readElimination, CanonicalizerPhase __canonicalizer, BasePhase<PhaseContext> __cleanupPhase)
     {
-        super(iterative ? GraalOptions.escapeAnalysisIterations : 1, canonicalizer);
-        this.readElimination = readElimination;
-        this.cleanupPhase = cleanupPhase;
+        super(__iterative ? GraalOptions.escapeAnalysisIterations : 1, __canonicalizer);
+        this.readElimination = __readElimination;
+        this.cleanupPhase = __cleanupPhase;
     }
 
     @Override
-    protected void postIteration(StructuredGraph graph, PhaseContext context, EconomicSet<Node> changedNodes)
+    protected void postIteration(StructuredGraph __graph, PhaseContext __context, EconomicSet<Node> __changedNodes)
     {
-        super.postIteration(graph, context, changedNodes);
+        super.postIteration(__graph, __context, __changedNodes);
         if (cleanupPhase != null)
         {
-            cleanupPhase.apply(graph, context);
+            cleanupPhase.apply(__graph, __context);
         }
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context)
+    protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        if (readElimination || graph.hasVirtualizableAllocation())
+        if (readElimination || __graph.hasVirtualizableAllocation())
         {
-            runAnalysis(graph, context);
+            runAnalysis(__graph, __context);
         }
     }
 
     @Override
-    protected Closure<?> createEffectsClosure(PhaseContext context, ScheduleResult schedule, ControlFlowGraph cfg)
+    protected Closure<?> createEffectsClosure(PhaseContext __context, ScheduleResult __schedule, ControlFlowGraph __cfg)
     {
-        for (VirtualObjectNode virtual : cfg.graph.getNodes(VirtualObjectNode.TYPE))
+        for (VirtualObjectNode __virtual : __cfg.graph.getNodes(VirtualObjectNode.TYPE))
         {
-            virtual.resetObjectId();
+            __virtual.resetObjectId();
         }
         if (readElimination)
         {
-            return new PEReadEliminationClosure(schedule, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getLowerer());
+            return new PEReadEliminationClosure(__schedule, __context.getMetaAccess(), __context.getConstantReflection(), __context.getConstantFieldProvider(), __context.getLowerer());
         }
         else
         {
-            return new PartialEscapeClosure.Final(schedule, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getLowerer());
+            return new PartialEscapeClosure.Final(__schedule, __context.getMetaAccess(), __context.getConstantReflection(), __context.getConstantFieldProvider(), __context.getLowerer());
         }
     }
 }

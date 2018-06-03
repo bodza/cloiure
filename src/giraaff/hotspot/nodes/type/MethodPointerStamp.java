@@ -29,19 +29,19 @@ public final class MethodPointerStamp extends MetaspacePointerStamp
     }
 
     // @cons
-    private MethodPointerStamp(boolean nonNull, boolean alwaysNull)
+    private MethodPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
-        super(nonNull, alwaysNull);
+        super(__nonNull, __alwaysNull);
     }
 
     @Override
-    protected AbstractPointerStamp copyWith(boolean newNonNull, boolean newAlwaysNull)
+    protected AbstractPointerStamp copyWith(boolean __newNonNull, boolean __newAlwaysNull)
     {
-        if (newNonNull)
+        if (__newNonNull)
         {
             return METHOD_NON_NULL;
         }
-        else if (newAlwaysNull)
+        else if (__newAlwaysNull)
         {
             return METHOD_ALWAYS_NULL;
         }
@@ -52,32 +52,32 @@ public final class MethodPointerStamp extends MetaspacePointerStamp
     }
 
     @Override
-    public boolean isCompatible(Stamp otherStamp)
+    public boolean isCompatible(Stamp __otherStamp)
     {
-        if (this == otherStamp)
+        if (this == __otherStamp)
         {
             return true;
         }
-        return otherStamp instanceof MethodPointerStamp;
+        return __otherStamp instanceof MethodPointerStamp;
     }
 
     @Override
-    public boolean isCompatible(Constant constant)
+    public boolean isCompatible(Constant __constant)
     {
-        if (constant instanceof HotSpotMetaspaceConstant)
+        if (__constant instanceof HotSpotMetaspaceConstant)
         {
-            return ((HotSpotMetaspaceConstant) constant).asResolvedJavaMethod() != null;
+            return ((HotSpotMetaspaceConstant) __constant).asResolvedJavaMethod() != null;
         }
         else
         {
-            return super.isCompatible(constant);
+            return super.isCompatible(__constant);
         }
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta)
+    public Stamp constant(Constant __c, MetaAccessProvider __meta)
     {
-        if (JavaConstant.NULL_POINTER.equals(c))
+        if (JavaConstant.NULL_POINTER.equals(__c))
         {
             return METHOD_ALWAYS_NULL;
         }
@@ -88,9 +88,9 @@ public final class MethodPointerStamp extends MetaspacePointerStamp
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
-        HotSpotMemoryAccessProvider hsProvider = (HotSpotMemoryAccessProvider) provider;
-        return hsProvider.readMethodPointerConstant(base, displacement);
+        HotSpotMemoryAccessProvider __hsProvider = (HotSpotMemoryAccessProvider) __provider;
+        return __hsProvider.readMethodPointerConstant(__base, __displacement);
     }
 }

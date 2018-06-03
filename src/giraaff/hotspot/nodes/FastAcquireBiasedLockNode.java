@@ -14,15 +14,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class FastAcquireBiasedLockNode
 public final class FastAcquireBiasedLockNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<FastAcquireBiasedLockNode> TYPE = NodeClass.create(FastAcquireBiasedLockNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
 
     // @cons
-    public FastAcquireBiasedLockNode(ValueNode object)
+    public FastAcquireBiasedLockNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
-        this.object = object;
+        this.object = __object;
     }
 
     public ValueNode object()
@@ -31,7 +34,7 @@ public final class FastAcquireBiasedLockNode extends FixedWithNextNode implement
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // this is just a marker node, so it generates nothing
     }

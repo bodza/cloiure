@@ -18,16 +18,19 @@ import giraaff.lir.Variable;
 // @class DefUseTree
 final class DefUseTree
 {
+    // @field
     private final LoadConstantOp instruction;
+    // @field
     private final AbstractBlockBase<?> block;
+    // @field
     private final List<UseEntry> uses;
 
     // @cons
-    DefUseTree(LIRInstruction instruction, AbstractBlockBase<?> block)
+    DefUseTree(LIRInstruction __instruction, AbstractBlockBase<?> __block)
     {
         super();
-        this.instruction = LoadConstantOp.asLoadConstantOp(instruction);
-        this.block = block;
+        this.instruction = LoadConstantOp.asLoadConstantOp(__instruction);
+        this.block = __block;
         this.uses = new ArrayList<>();
     }
 
@@ -51,9 +54,9 @@ final class DefUseTree
         return block;
     }
 
-    public void addUsage(AbstractBlockBase<?> b, LIRInstruction inst, Value value)
+    public void addUsage(AbstractBlockBase<?> __b, LIRInstruction __inst, Value __value)
     {
-        uses.add(new UseEntry(b, inst, value));
+        uses.add(new UseEntry(__b, __inst, __value));
     }
 
     public int usageCount()
@@ -61,8 +64,8 @@ final class DefUseTree
         return uses.size();
     }
 
-    public void forEach(Consumer<? super UseEntry> action)
+    public void forEach(Consumer<? super UseEntry> __action)
     {
-        uses.forEach(action);
+        uses.forEach(__action);
     }
 }

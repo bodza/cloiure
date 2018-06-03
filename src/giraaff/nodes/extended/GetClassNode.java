@@ -25,9 +25,12 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class GetClassNode
 public final class GetClassNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
+    // @def
     public static final NodeClass<GetClassNode> TYPE = NodeClass.create(GetClassNode.class);
 
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode object;
 
     public ValueNode getObject()
     {
@@ -35,48 +38,48 @@ public final class GetClassNode extends FloatingNode implements Lowerable, Canon
     }
 
     // @cons
-    public GetClassNode(Stamp stamp, ValueNode object)
+    public GetClassNode(Stamp __stamp, ValueNode __object)
     {
-        super(TYPE, stamp);
-        this.object = object;
+        super(TYPE, __stamp);
+        this.object = __object;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
-    public static ValueNode tryFold(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, NodeView view, ValueNode object)
+    public static ValueNode tryFold(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, NodeView __view, ValueNode __object)
     {
-        if (metaAccess != null && object != null && object.stamp(view) instanceof ObjectStamp)
+        if (__metaAccess != null && __object != null && __object.stamp(__view) instanceof ObjectStamp)
         {
-            ObjectStamp objectStamp = (ObjectStamp) object.stamp(view);
-            if (objectStamp.isExactType())
+            ObjectStamp __objectStamp = (ObjectStamp) __object.stamp(__view);
+            if (__objectStamp.isExactType())
             {
-                return ConstantNode.forConstant(constantReflection.asJavaClass(objectStamp.type()), metaAccess);
+                return ConstantNode.forConstant(__constantReflection.asJavaClass(__objectStamp.type()), __metaAccess);
             }
         }
         return null;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool)
+    public ValueNode canonical(CanonicalizerTool __tool)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode folded = tryFold(tool.getMetaAccess(), tool.getConstantReflection(), view, getObject());
-        return folded == null ? this : folded;
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __folded = tryFold(__tool.getMetaAccess(), __tool.getConstantReflection(), __view, getObject());
+        return __folded == null ? this : __folded;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(getObject());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(getObject());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            Constant javaClass = tool.getConstantReflectionProvider().asJavaClass(virtual.type());
-            tool.replaceWithValue(ConstantNode.forConstant(stamp(NodeView.DEFAULT), javaClass, tool.getMetaAccessProvider(), graph()));
+            VirtualObjectNode __virtual = (VirtualObjectNode) __alias;
+            Constant __javaClass = __tool.getConstantReflectionProvider().asJavaClass(__virtual.type());
+            __tool.replaceWithValue(ConstantNode.forConstant(stamp(NodeView.DEFAULT), __javaClass, __tool.getMetaAccessProvider(), graph()));
         }
     }
 }

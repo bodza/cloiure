@@ -14,22 +14,22 @@ import giraaff.util.GraalError;
 public final class ArrayStoreExceptionStub extends CreateExceptionStub
 {
     // @cons
-    public ArrayStoreExceptionStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public ArrayStoreExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super("createArrayStoreException", providers, linkage);
+        super("createArrayStoreException", __providers, __linkage);
     }
 
     @Override
-    protected Object getConstantParameterValue(int index, String name)
+    protected Object getConstantParameterValue(int __index, String __name)
     {
-        GraalError.guarantee(index == 1, "unknown parameter %s at index %d", name, index);
+        GraalError.guarantee(__index == 1, "unknown parameter %s at index %d", __name, __index);
         return providers.getRegisters().getThreadRegister();
     }
 
     @Snippet
-    private static Object createArrayStoreException(@Snippet.NonNullParameter Object object, @ConstantParameter Register threadRegister)
+    private static Object createArrayStoreException(@Snippet.NonNullParameter Object __object, @ConstantParameter Register __threadRegister)
     {
-        KlassPointer klass = HotSpotReplacementsUtil.loadHub(object);
-        return createException(threadRegister, ArrayStoreException.class, klass);
+        KlassPointer __klass = HotSpotReplacementsUtil.loadHub(__object);
+        return createException(__threadRegister, ArrayStoreException.class, __klass);
     }
 }

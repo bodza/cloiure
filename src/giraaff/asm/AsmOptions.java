@@ -9,5 +9,6 @@ public final class AsmOptions
         super();
     }
 
+    // @def
     public static int InitialCodeBufferSize = 232;
 }

@@ -6,12 +6,13 @@ import giraaff.graph.NodeClass;
 // @class FixedNode
 public abstract class FixedNode extends ValueNode implements FixedNodeInterface
 {
+    // @def
     public static final NodeClass<FixedNode> TYPE = NodeClass.create(FixedNode.class);
 
     // @cons
-    protected FixedNode(NodeClass<? extends FixedNode> c, Stamp stamp)
+    protected FixedNode(NodeClass<? extends FixedNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     @Override

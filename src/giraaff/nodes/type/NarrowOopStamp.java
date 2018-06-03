@@ -15,13 +15,14 @@ import giraaff.core.common.type.Stamp;
 // @class NarrowOopStamp
 public abstract class NarrowOopStamp extends AbstractObjectStamp
 {
+    // @field
     private final CompressEncoding encoding;
 
     // @cons
-    protected NarrowOopStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull, CompressEncoding encoding)
+    protected NarrowOopStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
-        super(type, exactType, nonNull, alwaysNull);
-        this.encoding = encoding;
+        super(__type, __exactType, __nonNull, __alwaysNull);
+        this.encoding = __encoding;
     }
 
     @Override
@@ -38,22 +39,22 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool)
+    public LIRKind getLIRKind(LIRKindTool __tool)
     {
-        return tool.getNarrowOopKind();
+        return __tool.getNarrowOopKind();
     }
 
     @Override
-    public boolean isCompatible(Stamp other)
+    public boolean isCompatible(Stamp __other)
     {
-        if (this == other)
+        if (this == __other)
         {
             return true;
         }
-        if (other instanceof NarrowOopStamp)
+        if (__other instanceof NarrowOopStamp)
         {
-            NarrowOopStamp narrow = (NarrowOopStamp) other;
-            return encoding.equals(narrow.encoding);
+            NarrowOopStamp __narrow = (NarrowOopStamp) __other;
+            return encoding.equals(__narrow.encoding);
         }
         return false;
     }
@@ -64,27 +65,27 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        return prime * super.hashCode() + encoding.hashCode();
+        final int __prime = 31;
+        return __prime * super.hashCode() + encoding.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass())
+        if (__obj == null || getClass() != __obj.getClass())
         {
             return false;
         }
-        NarrowOopStamp other = (NarrowOopStamp) obj;
-        if (!encoding.equals(other.encoding))
+        NarrowOopStamp __other = (NarrowOopStamp) __obj;
+        if (!encoding.equals(__other.encoding))
         {
             return false;
         }
-        return super.equals(other);
+        return super.equals(__other);
     }
 
     @Override

@@ -17,26 +17,31 @@ import giraaff.nodes.spi.LoweringTool;
 // @class ComputeObjectAddressNode
 public final class ComputeObjectAddressNode extends FixedWithNextNode implements Lowerable, ControlFlowAnchored
 {
+    // @def
     public static final NodeClass<ComputeObjectAddressNode> TYPE = NodeClass.create(ComputeObjectAddressNode.class);
 
-    @Input ValueNode object;
-    @Input ValueNode offset;
+    @Input
+    // @field
+    ValueNode object;
+    @Input
+    // @field
+    ValueNode offset;
 
     // @cons
-    public ComputeObjectAddressNode(ValueNode obj, ValueNode offset)
+    public ComputeObjectAddressNode(ValueNode __obj, ValueNode __offset)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Long));
-        this.object = obj;
-        this.offset = offset;
+        this.object = __obj;
+        this.offset = __offset;
     }
 
     @NodeIntrinsic
     public static native long get(Object array, long offset);
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public ValueNode getObject()

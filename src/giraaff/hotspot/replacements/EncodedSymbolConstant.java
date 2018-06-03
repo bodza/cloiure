@@ -19,14 +19,16 @@ import giraaff.core.common.type.DataPointerConstant;
 // @class EncodedSymbolConstant
 public final class EncodedSymbolConstant extends DataPointerConstant
 {
+    // @field
     private final Constant constant;
+    // @field
     private byte[] bytes;
 
     // @cons
-    public EncodedSymbolConstant(Constant constant)
+    public EncodedSymbolConstant(Constant __constant)
     {
         super(1);
-        this.constant = constant;
+        this.constant = __constant;
     }
 
     @Override
@@ -36,9 +38,9 @@ public final class EncodedSymbolConstant extends DataPointerConstant
     }
 
     @Override
-    public void serialize(ByteBuffer buffer)
+    public void serialize(ByteBuffer __buffer)
     {
-        buffer.put(getEncodedConstant());
+        __buffer.put(getEncodedConstant());
     }
 
     /**
@@ -47,49 +49,49 @@ public final class EncodedSymbolConstant extends DataPointerConstant
      *
      * @param s a java.lang.String in UTF-16
      */
-    private static byte[] toUTF8String(String s)
+    private static byte[] toUTF8String(String __s)
     {
-        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream())
+        try (ByteArrayOutputStream __bytes = new ByteArrayOutputStream())
         {
-            DataOutputStream stream = new DataOutputStream(bytes);
-            stream.writeUTF(s);
-            return bytes.toByteArray();
+            DataOutputStream __stream = new DataOutputStream(__bytes);
+            __stream.writeUTF(__s);
+            return __bytes.toByteArray();
         }
-        catch (Exception e)
+        catch (Exception __e)
         {
-            throw new BailoutException(e, "UTF-8 encoding failed: %s", s);
+            throw new BailoutException(__e, "UTF-8 encoding failed: %s", __s);
         }
     }
 
-    private static byte[] encodeConstant(Constant constant)
+    private static byte[] encodeConstant(Constant __constant)
     {
-        if (constant instanceof HotSpotObjectConstant)
+        if (__constant instanceof HotSpotObjectConstant)
         {
-            return toUTF8String(((HotSpotObjectConstant) constant).asObject(String.class));
+            return toUTF8String(((HotSpotObjectConstant) __constant).asObject(String.class));
         }
-        else if (constant instanceof HotSpotMetaspaceConstant)
+        else if (__constant instanceof HotSpotMetaspaceConstant)
         {
-            HotSpotMetaspaceConstant metaspaceConstant = ((HotSpotMetaspaceConstant) constant);
-            HotSpotResolvedObjectType klass = metaspaceConstant.asResolvedJavaType();
-            if (klass != null)
+            HotSpotMetaspaceConstant __metaspaceConstant = ((HotSpotMetaspaceConstant) __constant);
+            HotSpotResolvedObjectType __klass = __metaspaceConstant.asResolvedJavaType();
+            if (__klass != null)
             {
-                return toUTF8String(klass.getName());
+                return toUTF8String(__klass.getName());
             }
-            HotSpotResolvedJavaMethod method = metaspaceConstant.asResolvedJavaMethod();
-            if (method != null)
+            HotSpotResolvedJavaMethod __method = __metaspaceConstant.asResolvedJavaMethod();
+            if (__method != null)
             {
-                byte[] methodName = toUTF8String(method.getName());
-                byte[] signature = toUTF8String(method.getSignature().toMethodDescriptor());
-                byte[] result = new byte[methodName.length + signature.length];
-                int resultPos = 0;
-                System.arraycopy(methodName, 0, result, resultPos, methodName.length);
-                resultPos += methodName.length;
-                System.arraycopy(signature, 0, result, resultPos, signature.length);
-                resultPos += signature.length;
-                return result;
+                byte[] __methodName = toUTF8String(__method.getName());
+                byte[] __signature = toUTF8String(__method.getSignature().toMethodDescriptor());
+                byte[] __result = new byte[__methodName.length + __signature.length];
+                int __resultPos = 0;
+                System.arraycopy(__methodName, 0, __result, __resultPos, __methodName.length);
+                __resultPos += __methodName.length;
+                System.arraycopy(__signature, 0, __result, __resultPos, __signature.length);
+                __resultPos += __signature.length;
+                return __result;
             }
         }
-        throw new BailoutException("encoding of constant %s failed", constant);
+        throw new BailoutException("encoding of constant %s failed", __constant);
     }
 
     public byte[] getEncodedConstant()

@@ -53,12 +53,13 @@ import giraaff.lir.framemap.FrameMap;
 // @class AMD64FrameMap
 public final class AMD64FrameMap extends FrameMap
 {
+    // @field
     private StackSlot rbpSpillSlot;
 
     // @cons
-    public AMD64FrameMap(CodeCacheProvider codeCache, RegisterConfig registerConfig)
+    public AMD64FrameMap(CodeCacheProvider __codeCache, RegisterConfig __registerConfig)
     {
-        super(codeCache, registerConfig);
+        super(__codeCache, __registerConfig);
         // (negative) offset relative to sp + total frame size
         initialSpillSize = returnAddressSize();
         spillSize = initialSpillSize;
@@ -77,15 +78,15 @@ public final class AMD64FrameMap extends FrameMap
     }
 
     @Override
-    protected int alignFrameSize(int size)
+    protected int alignFrameSize(int __size)
     {
-        return NumUtil.roundUp(size + returnAddressSize(), getTarget().stackAlignment) - returnAddressSize();
+        return NumUtil.roundUp(__size + returnAddressSize(), getTarget().stackAlignment) - returnAddressSize();
     }
 
     @Override
-    public int offsetForStackSlot(StackSlot slot)
+    public int offsetForStackSlot(StackSlot __slot)
     {
-        return super.offsetForStackSlot(slot);
+        return super.offsetForStackSlot(__slot);
     }
 
     /**

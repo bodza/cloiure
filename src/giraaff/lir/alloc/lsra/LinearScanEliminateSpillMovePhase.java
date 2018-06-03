@@ -24,25 +24,26 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     private static final IntervalPredicate mustStoreAtDefinition = new LinearScan.IntervalPredicate()
     {
         @Override
-        public boolean apply(Interval i)
+        public boolean apply(Interval __i)
         {
-            return i.isSplitParent() && i.spillState() == SpillState.StoreAtDefinition;
+            return __i.isSplitParent() && __i.spillState() == SpillState.StoreAtDefinition;
         }
     };
 
+    // @field
     protected final LinearScan allocator;
 
     // @cons
-    protected LinearScanEliminateSpillMovePhase(LinearScan allocator)
+    protected LinearScanEliminateSpillMovePhase(LinearScan __allocator)
     {
         super();
-        this.allocator = allocator;
+        this.allocator = __allocator;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
     {
-        eliminateSpillMoves(lirGenRes);
+        eliminateSpillMoves(__lirGenRes);
     }
 
     /**
@@ -56,70 +57,70 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     }
 
     // called once before assignment of register numbers
-    void eliminateSpillMoves(LIRGenerationResult res)
+    void eliminateSpillMoves(LIRGenerationResult __res)
     {
         /*
          * Collect all intervals that must be stored after their definition. The list is sorted
          * by Interval.spillDefinitionPos.
          */
-        Interval interval = allocator.createUnhandledLists(mustStoreAtDefinition, null).getLeft();
+        Interval __interval = allocator.createUnhandledLists(mustStoreAtDefinition, null).getLeft();
 
-        LIRInsertionBuffer insertionBuffer = new LIRInsertionBuffer();
-        for (AbstractBlockBase<?> block : allocator.sortedBlocks())
+        LIRInsertionBuffer __insertionBuffer = new LIRInsertionBuffer();
+        for (AbstractBlockBase<?> __block : allocator.sortedBlocks())
         {
-            ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(block);
-            int numInst = instructions.size();
+            ArrayList<LIRInstruction> __instructions = allocator.getLIR().getLIRforBlock(__block);
+            int __numInst = __instructions.size();
 
             // iterate all instructions of the block.
-            for (int j = firstInstructionOfInterest(); j < numInst; j++)
+            for (int __j = firstInstructionOfInterest(); __j < __numInst; __j++)
             {
-                LIRInstruction op = instructions.get(j);
-                int opId = op.id();
+                LIRInstruction __op = __instructions.get(__j);
+                int __opId = __op.id();
 
-                if (opId == -1)
+                if (__opId == -1)
                 {
-                    MoveOp move = MoveOp.asMoveOp(op);
+                    MoveOp __move = MoveOp.asMoveOp(__op);
                     /*
                      * Remove move from register to stack if the stack slot is guaranteed to
                      * be correct. Only moves that have been inserted by LinearScan can be removed.
                      */
-                    if (GraalOptions.lirOptLSRAEliminateSpillMoves && canEliminateSpillMove(block, move))
+                    if (GraalOptions.lirOptLSRAEliminateSpillMoves && canEliminateSpillMove(__block, __move))
                     {
                         // Move target is a stack slot that is always correct, so eliminate instruction.
 
                         // null-instructions are deleted by assignRegNum
-                        instructions.set(j, null);
+                        __instructions.set(__j, null);
                     }
                 }
                 else
                 {
                     // Insert move from register to stack just after the beginning of the interval.
-                    while (!interval.isEndMarker() && interval.spillDefinitionPos() == opId)
+                    while (!__interval.isEndMarker() && __interval.spillDefinitionPos() == __opId)
                     {
-                        if (!interval.canMaterialize())
+                        if (!__interval.canMaterialize())
                         {
-                            if (!insertionBuffer.initialized())
+                            if (!__insertionBuffer.initialized())
                             {
                                 // prepare insertion buffer (appended when all instructions in the block are processed)
-                                insertionBuffer.init(instructions);
+                                __insertionBuffer.init(__instructions);
                             }
 
-                            AllocatableValue fromLocation = interval.location();
-                            AllocatableValue toLocation = LinearScan.canonicalSpillOpr(interval);
-                            if (!fromLocation.equals(toLocation))
+                            AllocatableValue __fromLocation = __interval.location();
+                            AllocatableValue __toLocation = LinearScan.canonicalSpillOpr(__interval);
+                            if (!__fromLocation.equals(__toLocation))
                             {
-                                LIRInstruction move = allocator.getSpillMoveFactory().createMove(toLocation, fromLocation);
-                                insertionBuffer.append(j + 1, move);
+                                LIRInstruction __move = allocator.getSpillMoveFactory().createMove(__toLocation, __fromLocation);
+                                __insertionBuffer.append(__j + 1, __move);
                             }
                         }
-                        interval = interval.next;
+                        __interval = __interval.next;
                     }
                 }
             }
 
-            if (insertionBuffer.initialized())
+            if (__insertionBuffer.initialized())
             {
-                insertionBuffer.finish();
+                __insertionBuffer.finish();
             }
         }
     }
@@ -128,11 +129,11 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
      * @param block The block {@code move} is located in.
      * @param move Spill move.
      */
-    protected boolean canEliminateSpillMove(AbstractBlockBase<?> block, MoveOp move)
+    protected boolean canEliminateSpillMove(AbstractBlockBase<?> __block, MoveOp __move)
     {
-        Interval curInterval = allocator.intervalFor(move.getResult());
+        Interval __curInterval = allocator.intervalFor(__move.getResult());
 
-        if (!ValueUtil.isRegister(curInterval.location()) && curInterval.alwaysInMemory())
+        if (!ValueUtil.isRegister(__curInterval.location()) && __curInterval.alwaysInMemory())
         {
             return true;
         }

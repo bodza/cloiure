@@ -27,22 +27,30 @@ public final class AMD64Call
     // @class AMD64Call.CallOp
     public abstract static class CallOp extends AMD64LIRInstruction
     {
+        // @def
         public static final LIRInstructionClass<CallOp> TYPE = LIRInstructionClass.create(CallOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value result;
-        @Use({OperandFlag.REG, OperandFlag.STACK}) protected Value[] parameters;
-        @Temp({OperandFlag.REG, OperandFlag.STACK}) protected Value[] temps;
+        @Def({OperandFlag.REG, OperandFlag.ILLEGAL})
+        // @field
+        protected Value result;
+        @Use({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        protected Value[] parameters;
+        @Temp({OperandFlag.REG, OperandFlag.STACK})
+        // @field
+        protected Value[] temps;
         // @State
+        // @field
         protected LIRFrameState state;
 
         // @cons
-        protected CallOp(LIRInstructionClass<? extends CallOp> c, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
+        protected CallOp(LIRInstructionClass<? extends CallOp> __c, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
-            super(c);
-            this.result = result;
-            this.parameters = parameters;
-            this.state = state;
-            this.temps = addStackSlotsToTemporaries(parameters, temps);
+            super(__c);
+            this.result = __result;
+            this.parameters = __parameters;
+            this.state = __state;
+            this.temps = addStackSlotsToTemporaries(__parameters, __temps);
         }
 
         @Override
@@ -55,15 +63,17 @@ public final class AMD64Call
     // @class AMD64Call.MethodCallOp
     public abstract static class MethodCallOp extends CallOp
     {
+        // @def
         public static final LIRInstructionClass<MethodCallOp> TYPE = LIRInstructionClass.create(MethodCallOp.class);
 
+        // @field
         protected final ResolvedJavaMethod callTarget;
 
         // @cons
-        protected MethodCallOp(LIRInstructionClass<? extends MethodCallOp> c, ResolvedJavaMethod callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
+        protected MethodCallOp(LIRInstructionClass<? extends MethodCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
-            super(c, result, parameters, temps, state);
-            this.callTarget = callTarget;
+            super(__c, __result, __parameters, __temps, __state);
+            this.callTarget = __callTarget;
         }
     }
 
@@ -71,29 +81,30 @@ public final class AMD64Call
     // @class AMD64Call.DirectCallOp
     public static class DirectCallOp extends MethodCallOp
     {
+        // @def
         public static final LIRInstructionClass<DirectCallOp> TYPE = LIRInstructionClass.create(DirectCallOp.class);
 
         // @cons
-        public DirectCallOp(ResolvedJavaMethod callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
+        public DirectCallOp(ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
-            this(TYPE, callTarget, result, parameters, temps, state);
+            this(TYPE, __callTarget, __result, __parameters, __temps, __state);
         }
 
         // @cons
-        protected DirectCallOp(LIRInstructionClass<? extends DirectCallOp> c, ResolvedJavaMethod callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
+        protected DirectCallOp(LIRInstructionClass<? extends DirectCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
-            super(c, callTarget, result, parameters, temps, state);
+            super(__c, __callTarget, __result, __parameters, __temps, __state);
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            directCall(crb, masm, callTarget, null, true, state);
+            directCall(__crb, __masm, callTarget, null, true, state);
         }
 
-        public int emitCall(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public int emitCall(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            return directCall(crb, masm, callTarget, null, true, state);
+            return directCall(__crb, __masm, callTarget, null, true, state);
         }
     }
 
@@ -101,42 +112,47 @@ public final class AMD64Call
     // @class AMD64Call.IndirectCallOp
     public static class IndirectCallOp extends MethodCallOp
     {
+        // @def
         public static final LIRInstructionClass<IndirectCallOp> TYPE = LIRInstructionClass.create(IndirectCallOp.class);
 
-        @Use({OperandFlag.REG}) protected Value targetAddress;
+        @Use({OperandFlag.REG})
+        // @field
+        protected Value targetAddress;
 
         // @cons
-        public IndirectCallOp(ResolvedJavaMethod callTarget, Value result, Value[] parameters, Value[] temps, Value targetAddress, LIRFrameState state)
+        public IndirectCallOp(ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, Value __targetAddress, LIRFrameState __state)
         {
-            this(TYPE, callTarget, result, parameters, temps, targetAddress, state);
+            this(TYPE, __callTarget, __result, __parameters, __temps, __targetAddress, __state);
         }
 
         // @cons
-        protected IndirectCallOp(LIRInstructionClass<? extends IndirectCallOp> c, ResolvedJavaMethod callTarget, Value result, Value[] parameters, Value[] temps, Value targetAddress, LIRFrameState state)
+        protected IndirectCallOp(LIRInstructionClass<? extends IndirectCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, Value __targetAddress, LIRFrameState __state)
         {
-            super(c, callTarget, result, parameters, temps, state);
-            this.targetAddress = targetAddress;
+            super(__c, __callTarget, __result, __parameters, __temps, __state);
+            this.targetAddress = __targetAddress;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            indirectCall(crb, masm, ValueUtil.asRegister(targetAddress), callTarget, state);
+            indirectCall(__crb, __masm, ValueUtil.asRegister(targetAddress), callTarget, state);
         }
     }
 
     // @class AMD64Call.ForeignCallOp
     public abstract static class ForeignCallOp extends CallOp implements ZapRegistersAfterInstruction
     {
+        // @def
         public static final LIRInstructionClass<ForeignCallOp> TYPE = LIRInstructionClass.create(ForeignCallOp.class);
 
+        // @field
         protected final ForeignCallLinkage callTarget;
 
         // @cons
-        public ForeignCallOp(LIRInstructionClass<? extends ForeignCallOp> c, ForeignCallLinkage callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
+        public ForeignCallOp(LIRInstructionClass<? extends ForeignCallOp> __c, ForeignCallLinkage __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
-            super(c, result, parameters, temps, state);
-            this.callTarget = callTarget;
+            super(__c, __result, __parameters, __temps, __state);
+            this.callTarget = __callTarget;
         }
 
         @Override
@@ -150,18 +166,19 @@ public final class AMD64Call
     // @class AMD64Call.DirectNearForeignCallOp
     public static final class DirectNearForeignCallOp extends ForeignCallOp
     {
+        // @def
         public static final LIRInstructionClass<DirectNearForeignCallOp> TYPE = LIRInstructionClass.create(DirectNearForeignCallOp.class);
 
         // @cons
-        public DirectNearForeignCallOp(ForeignCallLinkage linkage, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
+        public DirectNearForeignCallOp(ForeignCallLinkage __linkage, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
-            super(TYPE, linkage, result, parameters, temps, state);
+            super(TYPE, __linkage, __result, __parameters, __temps, __state);
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            directCall(crb, masm, callTarget, null, false, state);
+            directCall(__crb, __masm, callTarget, null, false, state);
         }
     }
 
@@ -169,79 +186,82 @@ public final class AMD64Call
     // @class AMD64Call.DirectFarForeignCallOp
     public static final class DirectFarForeignCallOp extends ForeignCallOp
     {
+        // @def
         public static final LIRInstructionClass<DirectFarForeignCallOp> TYPE = LIRInstructionClass.create(DirectFarForeignCallOp.class);
 
-        @Temp({OperandFlag.REG}) protected AllocatableValue callTemp;
+        @Temp({OperandFlag.REG})
+        // @field
+        protected AllocatableValue callTemp;
 
         // @cons
-        public DirectFarForeignCallOp(ForeignCallLinkage callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
+        public DirectFarForeignCallOp(ForeignCallLinkage __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
-            super(TYPE, callTarget, result, parameters, temps, state);
+            super(TYPE, __callTarget, __result, __parameters, __temps, __state);
             // The register allocator does not support virtual registers that are used at the call site, so use a fixed register.
             callTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.QWORD));
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            directCall(crb, masm, callTarget, ((RegisterValue) callTemp).getRegister(), false, state);
+            directCall(__crb, __masm, callTarget, ((RegisterValue) callTemp).getRegister(), false, state);
         }
     }
 
-    public static int directCall(CompilationResultBuilder crb, AMD64MacroAssembler masm, InvokeTarget callTarget, Register scratch, boolean align, LIRFrameState info)
+    public static int directCall(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, InvokeTarget __callTarget, Register __scratch, boolean __align, LIRFrameState __info)
     {
-        if (align)
+        if (__align)
         {
-            emitAlignmentForDirectCall(crb, masm);
+            emitAlignmentForDirectCall(__crb, __masm);
         }
-        int callPCOffset;
-        if (scratch != null)
+        int __callPCOffset;
+        if (__scratch != null)
         {
             // offset might not fit a 32-bit immediate, generate an indirect call with a 64-bit immediate
-            masm.movq(scratch, 0L);
-            callPCOffset = masm.position();
-            masm.call(scratch);
+            __masm.movq(__scratch, 0L);
+            __callPCOffset = __masm.position();
+            __masm.call(__scratch);
         }
         else
         {
-            callPCOffset = masm.position();
-            masm.call();
+            __callPCOffset = __masm.position();
+            __masm.call();
         }
-        crb.recordExceptionHandlers(masm.position(), info);
-        masm.ensureUniquePC();
-        return callPCOffset;
+        __crb.recordExceptionHandlers(__masm.position(), __info);
+        __masm.ensureUniquePC();
+        return __callPCOffset;
     }
 
-    protected static void emitAlignmentForDirectCall(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    protected static void emitAlignmentForDirectCall(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         // make sure that the displacement word of the call ends up word aligned
-        int offset = masm.position();
-        offset += crb.target.arch.getMachineCodeCallDisplacementOffset();
-        int modulus = crb.target.wordSize;
-        if (offset % modulus != 0)
+        int __offset = __masm.position();
+        __offset += __crb.target.arch.getMachineCodeCallDisplacementOffset();
+        int __modulus = __crb.target.wordSize;
+        if (__offset % __modulus != 0)
         {
-            masm.nop(modulus - offset % modulus);
+            __masm.nop(__modulus - __offset % __modulus);
         }
     }
 
-    public static void directJmp(CompilationResultBuilder crb, AMD64MacroAssembler masm, InvokeTarget target)
+    public static void directJmp(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, InvokeTarget __target)
     {
-        masm.jmp(0, true);
-        masm.ensureUniquePC();
+        __masm.jmp(0, true);
+        __masm.ensureUniquePC();
     }
 
-    public static void directConditionalJmp(CompilationResultBuilder crb, AMD64MacroAssembler masm, InvokeTarget target, ConditionFlag cond)
+    public static void directConditionalJmp(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, InvokeTarget __target, ConditionFlag __cond)
     {
-        masm.jcc(cond, 0, true);
-        masm.ensureUniquePC();
+        __masm.jcc(__cond, 0, true);
+        __masm.ensureUniquePC();
     }
 
-    public static int indirectCall(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register dst, InvokeTarget callTarget, LIRFrameState info)
+    public static int indirectCall(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Register __dst, InvokeTarget __callTarget, LIRFrameState __info)
     {
-        int before = masm.position();
-        masm.call(dst);
-        crb.recordExceptionHandlers(masm.position(), info);
-        masm.ensureUniquePC();
-        return before;
+        int __before = __masm.position();
+        __masm.call(__dst);
+        __crb.recordExceptionHandlers(__masm.position(), __info);
+        __masm.ensureUniquePC();
+        return __before;
     }
 }

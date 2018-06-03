@@ -5,32 +5,33 @@ import java.util.Iterator;
 // @class SingletonNodeWorkList
 public final class SingletonNodeWorkList extends NodeWorkList
 {
+    // @field
     private final NodeBitMap visited;
 
     // @cons
-    public SingletonNodeWorkList(Graph graph)
+    public SingletonNodeWorkList(Graph __graph)
     {
-        super(graph, false);
-        this.visited = graph.createNodeBitMap();
+        super(__graph, false);
+        this.visited = __graph.createNodeBitMap();
     }
 
     @Override
-    public void add(Node node)
+    public void add(Node __node)
     {
-        if (node != null)
+        if (__node != null)
         {
-            if (!this.visited.isMarkedAndGrow(node))
+            if (!this.visited.isMarkedAndGrow(__node))
             {
-                this.visited.mark(node);
-                this.worklist.add(node);
+                this.visited.mark(__node);
+                this.worklist.add(__node);
             }
         }
     }
 
     @Override
-    public boolean contains(Node node)
+    public boolean contains(Node __node)
     {
-        return this.visited.isMarked(node);
+        return this.visited.isMarked(__node);
     }
 
     @Override

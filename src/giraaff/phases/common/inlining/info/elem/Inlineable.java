@@ -9,9 +9,9 @@ import giraaff.phases.tiers.HighTierContext;
 // @iface Inlineable
 public interface Inlineable
 {
-    static Inlineable getInlineableElement(final ResolvedJavaMethod method, Invoke invoke, HighTierContext context, CanonicalizerPhase canonicalizer)
+    static Inlineable getInlineableElement(final ResolvedJavaMethod __method, Invoke __invoke, HighTierContext __context, CanonicalizerPhase __canonicalizer)
     {
-        return new InlineableGraph(method, invoke, context, canonicalizer);
+        return new InlineableGraph(__method, __invoke, __context, __canonicalizer);
     }
 
     int getNodeCount();

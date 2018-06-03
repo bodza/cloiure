@@ -19,6 +19,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class CallTargetNode
 public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<CallTargetNode> TYPE = NodeClass.create(CallTargetNode.class);
 
     // @enum CallTargetNode.InvokeKind
@@ -29,11 +30,12 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
         Static(true),
         Virtual(false);
 
-        InvokeKind(boolean direct)
+        InvokeKind(boolean __direct)
         {
-            this.direct = direct;
+            this.direct = __direct;
         }
 
+        // @field
         private final boolean direct;
 
         public boolean hasReceiver()
@@ -57,19 +59,24 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
         }
     }
 
-    @Input protected NodeInputList<ValueNode> arguments;
+    @Input
+    // @field
+    protected NodeInputList<ValueNode> arguments;
+    // @field
     protected ResolvedJavaMethod targetMethod;
+    // @field
     protected InvokeKind invokeKind;
+    // @field
     protected final StampPair returnStamp;
 
     // @cons
-    protected CallTargetNode(NodeClass<? extends CallTargetNode> c, ValueNode[] arguments, ResolvedJavaMethod targetMethod, InvokeKind invokeKind, StampPair returnStamp)
+    protected CallTargetNode(NodeClass<? extends CallTargetNode> __c, ValueNode[] __arguments, ResolvedJavaMethod __targetMethod, InvokeKind __invokeKind, StampPair __returnStamp)
     {
-        super(c, StampFactory.forVoid());
-        this.targetMethod = targetMethod;
-        this.invokeKind = invokeKind;
-        this.arguments = new NodeInputList<>(this, arguments);
-        this.returnStamp = returnStamp;
+        super(__c, StampFactory.forVoid());
+        this.targetMethod = __targetMethod;
+        this.invokeKind = __invokeKind;
+        this.arguments = new NodeInputList<>(this, __arguments);
+        this.returnStamp = __returnStamp;
     }
 
     public NodeInputList<ValueNode> arguments()
@@ -77,16 +84,16 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
         return arguments;
     }
 
-    public static Stamp createReturnStamp(Assumptions assumptions, JavaType returnType)
+    public static Stamp createReturnStamp(Assumptions __assumptions, JavaType __returnType)
     {
-        JavaKind kind = returnType.getJavaKind();
-        if (kind == JavaKind.Object && returnType instanceof ResolvedJavaType)
+        JavaKind __kind = __returnType.getJavaKind();
+        if (__kind == JavaKind.Object && __returnType instanceof ResolvedJavaType)
         {
-            return StampFactory.object(TypeReference.create(assumptions, (ResolvedJavaType) returnType));
+            return StampFactory.object(TypeReference.create(__assumptions, (ResolvedJavaType) __returnType));
         }
         else
         {
-            return StampFactory.forKind(kind);
+            return StampFactory.forKind(__kind);
         }
     }
 
@@ -101,14 +108,14 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
     public abstract String targetName();
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nop
     }
 
-    public void setTargetMethod(ResolvedJavaMethod method)
+    public void setTargetMethod(ResolvedJavaMethod __method)
     {
-        targetMethod = method;
+        targetMethod = __method;
     }
 
     /**
@@ -126,8 +133,8 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
         return invokeKind;
     }
 
-    public void setInvokeKind(InvokeKind kind)
+    public void setInvokeKind(InvokeKind __kind)
     {
-        this.invokeKind = kind;
+        this.invokeKind = __kind;
     }
 }

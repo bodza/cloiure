@@ -25,17 +25,20 @@ public final class DataSection implements Iterable<Data>
     // @class DataSection.Data
     public abstract static class Data
     {
+        // @field
         private int alignment;
+        // @field
         private final int size;
 
+        // @field
         private DataSectionReference ref;
 
         // @cons
-        protected Data(int alignment, int size)
+        protected Data(int __alignment, int __size)
         {
             super();
-            this.alignment = alignment;
-            this.size = size;
+            this.alignment = __alignment;
+            this.size = __size;
 
             // initialized in DataSection.insertData(Data)
             ref = null;
@@ -43,13 +46,13 @@ public final class DataSection implements Iterable<Data>
 
         protected abstract void emit(ByteBuffer buffer, Patches patches);
 
-        public void updateAlignment(int newAlignment)
+        public void updateAlignment(int __newAlignment)
         {
-            if (newAlignment == alignment)
+            if (__newAlignment == alignment)
             {
                 return;
             }
-            alignment = lcm(alignment, newAlignment);
+            alignment = lcm(alignment, __newAlignment);
         }
 
         public int getAlignment()
@@ -70,16 +73,16 @@ public final class DataSection implements Iterable<Data>
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (obj == this)
+            if (__obj == this)
             {
                 return true;
             }
-            if (obj instanceof Data)
+            if (__obj instanceof Data)
             {
-                Data that = (Data) obj;
-                if (this.alignment == that.alignment && this.size == that.size && this.ref.equals(that.ref))
+                Data __that = (Data) __obj;
+                if (this.alignment == __that.alignment && this.size == __that.size && this.ref.equals(__that.ref))
                 {
                     return true;
                 }
@@ -91,45 +94,47 @@ public final class DataSection implements Iterable<Data>
     // @class DataSection.RawData
     public static final class RawData extends Data
     {
+        // @field
         private final byte[] data;
 
         // @cons
-        public RawData(byte[] data, int alignment)
+        public RawData(byte[] __data, int __alignment)
         {
-            super(alignment, data.length);
-            this.data = data;
+            super(__alignment, __data.length);
+            this.data = __data;
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches)
+        protected void emit(ByteBuffer __buffer, Patches __patches)
         {
-            buffer.put(data);
+            __buffer.put(data);
         }
     }
 
     // @class DataSection.SerializableData
     public static final class SerializableData extends Data
     {
+        // @field
         private final SerializableConstant constant;
 
         // @cons
-        public SerializableData(SerializableConstant constant)
+        public SerializableData(SerializableConstant __constant)
         {
-            this(constant, 1);
+            this(__constant, 1);
         }
 
         // @cons
-        public SerializableData(SerializableConstant constant, int alignment)
+        public SerializableData(SerializableConstant __constant, int __alignment)
         {
-            super(alignment, constant.getSerializedSize());
-            this.constant = constant;
+            super(__alignment, __constant.getSerializedSize());
+            this.constant = __constant;
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches)
+        protected void emit(ByteBuffer __buffer, Patches __patches)
         {
-            int position = buffer.position();
-            constant.serialize(buffer);
+            int __position = __buffer.position();
+            constant.serialize(__buffer);
         }
     }
 
@@ -137,77 +142,77 @@ public final class DataSection implements Iterable<Data>
     public static class ZeroData extends Data
     {
         // @cons
-        protected ZeroData(int alignment, int size)
+        protected ZeroData(int __alignment, int __size)
         {
-            super(alignment, size);
+            super(__alignment, __size);
         }
 
-        public static ZeroData create(int alignment, int size)
+        public static ZeroData create(int __alignment, int __size)
         {
-            switch (size)
+            switch (__size)
             {
                 case 1:
                     // @closure
-                    return new ZeroData(alignment, size)
+                    return new ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches)
+                        protected void emit(ByteBuffer __buffer, Patches __patches)
                         {
-                            buffer.put((byte) 0);
+                            __buffer.put((byte) 0);
                         }
                     };
 
                 case 2:
                     // @closure
-                    return new ZeroData(alignment, size)
+                    return new ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches)
+                        protected void emit(ByteBuffer __buffer, Patches __patches)
                         {
-                            buffer.putShort((short) 0);
+                            __buffer.putShort((short) 0);
                         }
                     };
 
                 case 4:
                     // @closure
-                    return new ZeroData(alignment, size)
+                    return new ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches)
+                        protected void emit(ByteBuffer __buffer, Patches __patches)
                         {
-                            buffer.putInt(0);
+                            __buffer.putInt(0);
                         }
                     };
 
                 case 8:
                     // @closure
-                    return new ZeroData(alignment, size)
+                    return new ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches)
+                        protected void emit(ByteBuffer __buffer, Patches __patches)
                         {
-                            buffer.putLong(0);
+                            __buffer.putLong(0);
                         }
                     };
 
                 default:
-                    return new ZeroData(alignment, size);
+                    return new ZeroData(__alignment, __size);
             }
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches)
+        protected void emit(ByteBuffer __buffer, Patches __patches)
         {
-            int rest = getSize();
-            while (rest > 8)
+            int __rest = getSize();
+            while (__rest > 8)
             {
-                buffer.putLong(0L);
-                rest -= 8;
+                __buffer.putLong(0L);
+                __rest -= 8;
             }
-            while (rest > 0)
+            while (__rest > 0)
             {
-                buffer.put((byte) 0);
-                rest--;
+                __buffer.put((byte) 0);
+                __rest--;
             }
         }
     }
@@ -215,41 +220,46 @@ public final class DataSection implements Iterable<Data>
     // @class DataSection.PackedData
     public static final class PackedData extends Data
     {
+        // @field
         private final Data[] nested;
 
         // @cons
-        private PackedData(int alignment, int size, Data[] nested)
+        private PackedData(int __alignment, int __size, Data[] __nested)
         {
-            super(alignment, size);
-            this.nested = nested;
+            super(__alignment, __size);
+            this.nested = __nested;
         }
 
-        public static PackedData create(Data[] nested)
+        public static PackedData create(Data[] __nested)
         {
-            int size = 0;
-            int alignment = 1;
-            for (int i = 0; i < nested.length; i++)
+            int __size = 0;
+            int __alignment = 1;
+            for (int __i = 0; __i < __nested.length; __i++)
             {
-                alignment = DataSection.lcm(alignment, nested[i].getAlignment());
-                size += nested[i].getSize();
+                __alignment = DataSection.lcm(__alignment, __nested[__i].getAlignment());
+                __size += __nested[__i].getSize();
             }
-            return new PackedData(alignment, size, nested);
+            return new PackedData(__alignment, __size, __nested);
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches)
+        protected void emit(ByteBuffer __buffer, Patches __patches)
         {
-            for (Data data : nested)
+            for (Data __data : nested)
             {
-                data.emit(buffer, patches);
+                __data.emit(__buffer, __patches);
             }
         }
     }
 
+    // @field
     private final ArrayList<Data> dataItems = new ArrayList<>();
 
+    // @field
     private boolean closed;
+    // @field
     private int sectionAlignment;
+    // @field
     private int sectionSize;
 
     @Override
@@ -260,16 +270,16 @@ public final class DataSection implements Iterable<Data>
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj instanceof DataSection)
+        if (__obj instanceof DataSection)
         {
-            DataSection that = (DataSection) obj;
-            if (this.closed == that.closed && this.sectionAlignment == that.sectionAlignment && this.sectionSize == that.sectionSize && Objects.equals(this.dataItems, that.dataItems))
+            DataSection __that = (DataSection) __obj;
+            if (this.closed == __that.closed && this.sectionAlignment == __that.sectionAlignment && this.sectionSize == __that.sectionSize && Objects.equals(this.dataItems, __that.dataItems))
             {
                 return true;
             }
@@ -284,17 +294,17 @@ public final class DataSection implements Iterable<Data>
      * @param data the {@link Data} item to be inserted
      * @return a unique {@link DataSectionReference} identifying the {@link Data} item
      */
-    public DataSectionReference insertData(Data data)
+    public DataSectionReference insertData(Data __data)
     {
         checkOpen();
-        synchronized (data)
+        synchronized (__data)
         {
-            if (data.ref == null)
+            if (__data.ref == null)
             {
-                data.ref = new DataSectionReference();
-                dataItems.add(data);
+                __data.ref = new DataSectionReference();
+                dataItems.add(__data);
             }
-            return data.ref;
+            return __data.ref;
         }
     }
 
@@ -302,16 +312,16 @@ public final class DataSection implements Iterable<Data>
      * Transfers all {@link Data} from the provided other {@link DataSection} to this
      * {@link DataSection}, and empties the other section.
      */
-    public void addAll(DataSection other)
+    public void addAll(DataSection __other)
     {
         checkOpen();
-        other.checkOpen();
+        __other.checkOpen();
 
-        for (Data data : other.dataItems)
+        for (Data __data : __other.dataItems)
         {
-            dataItems.add(data);
+            dataItems.add(__data);
         }
-        other.dataItems.clear();
+        __other.dataItems.clear();
     }
 
     /**
@@ -333,21 +343,21 @@ public final class DataSection implements Iterable<Data>
         closed = true;
 
         // simple heuristic: put items with larger alignment requirement first
-        dataItems.sort((a, b) -> a.alignment - b.alignment);
+        dataItems.sort((__a, __b) -> __a.alignment - __b.alignment);
 
-        int position = 0;
-        int alignment = 1;
-        for (Data d : dataItems)
+        int __position = 0;
+        int __alignment = 1;
+        for (Data __d : dataItems)
         {
-            alignment = lcm(alignment, d.alignment);
-            position = align(position, d.alignment);
+            __alignment = lcm(__alignment, __d.alignment);
+            __position = align(__position, __d.alignment);
 
-            d.ref.setOffset(position);
-            position += d.size;
+            __d.ref.setOffset(__position);
+            __position += __d.size;
         }
 
-        sectionAlignment = alignment;
-        sectionSize = position;
+        sectionAlignment = __alignment;
+        sectionSize = __position;
     }
 
     /**
@@ -382,9 +392,9 @@ public final class DataSection implements Iterable<Data>
      * @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
      *            relocations in the data section
      */
-    public void buildDataSection(ByteBuffer buffer, Patches patch)
+    public void buildDataSection(ByteBuffer __buffer, Patches __patch)
     {
-        buildDataSection(buffer, patch, (r, s) -> {});
+        buildDataSection(__buffer, __patch, (__r, __s) -> {});
     }
 
     /**
@@ -399,34 +409,34 @@ public final class DataSection implements Iterable<Data>
      * @param onEmit a function that is called before emitting each data item with the
      *            {@link DataSectionReference} and the size of the data.
      */
-    public void buildDataSection(ByteBuffer buffer, Patches patch, BiConsumer<DataSectionReference, Integer> onEmit)
+    public void buildDataSection(ByteBuffer __buffer, Patches __patch, BiConsumer<DataSectionReference, Integer> __onEmit)
     {
         checkClosed();
-        int start = buffer.position();
-        for (Data d : dataItems)
+        int __start = __buffer.position();
+        for (Data __d : dataItems)
         {
-            buffer.position(start + d.ref.getOffset());
-            onEmit.accept(d.ref, d.getSize());
-            d.emit(buffer, patch);
+            __buffer.position(__start + __d.ref.getOffset());
+            __onEmit.accept(__d.ref, __d.getSize());
+            __d.emit(__buffer, __patch);
         }
-        buffer.position(start + sectionSize);
+        __buffer.position(__start + sectionSize);
     }
 
-    public Data findData(DataSectionReference ref)
+    public Data findData(DataSectionReference __ref)
     {
-        for (Data d : dataItems)
+        for (Data __d : dataItems)
         {
-            if (d.ref == ref)
+            if (__d.ref == __ref)
             {
-                return d;
+                return __d;
             }
         }
         return null;
     }
 
-    public static void emit(ByteBuffer buffer, Data data, Patches patch)
+    public static void emit(ByteBuffer __buffer, Data __data, Patches __patch)
     {
-        data.emit(buffer, patch);
+        __data.emit(__buffer, __patch);
     }
 
     @Override
@@ -435,33 +445,33 @@ public final class DataSection implements Iterable<Data>
         return dataItems.iterator();
     }
 
-    private static int lcm(int x, int y)
+    private static int lcm(int __x, int __y)
     {
-        if (x == 0)
+        if (__x == 0)
         {
-            return y;
+            return __y;
         }
-        else if (y == 0)
+        else if (__y == 0)
         {
-            return x;
-        }
-
-        int a = Math.max(x, y);
-        int b = Math.min(x, y);
-        while (b > 0)
-        {
-            int tmp = a % b;
-            a = b;
-            b = tmp;
+            return __x;
         }
 
-        int gcd = a;
-        return x * y / gcd;
+        int __a = Math.max(__x, __y);
+        int __b = Math.min(__x, __y);
+        while (__b > 0)
+        {
+            int __tmp = __a % __b;
+            __a = __b;
+            __b = __tmp;
+        }
+
+        int __gcd = __a;
+        return __x * __y / __gcd;
     }
 
-    private static int align(int position, int alignment)
+    private static int align(int __position, int __alignment)
     {
-        return ((position + alignment - 1) / alignment) * alignment;
+        return ((__position + __alignment - 1) / __alignment) * __alignment;
     }
 
     private void checkClosed()

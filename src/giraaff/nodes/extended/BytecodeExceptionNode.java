@@ -22,17 +22,21 @@ import giraaff.nodes.spi.LoweringTool;
 // @class BytecodeExceptionNode
 public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<BytecodeExceptionNode> TYPE = NodeClass.create(BytecodeExceptionNode.class);
 
+    // @field
     protected final Class<? extends Throwable> exceptionClass;
-    @Input NodeInputList<ValueNode> arguments;
+    @Input
+    // @field
+    NodeInputList<ValueNode> arguments;
 
     // @cons
-    public BytecodeExceptionNode(MetaAccessProvider metaAccess, Class<? extends Throwable> exceptionClass, ValueNode... arguments)
+    public BytecodeExceptionNode(MetaAccessProvider __metaAccess, Class<? extends Throwable> __exceptionClass, ValueNode... __arguments)
     {
-        super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(metaAccess.lookupJavaType(exceptionClass))));
-        this.exceptionClass = exceptionClass;
-        this.arguments = new NodeInputList<>(this, arguments);
+        super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(__metaAccess.lookupJavaType(__exceptionClass))));
+        this.exceptionClass = __exceptionClass;
+        this.arguments = new NodeInputList<>(this, __arguments);
     }
 
     public Class<? extends Throwable> getExceptionClass()
@@ -47,9 +51,9 @@ public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implem
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public NodeInputList<ValueNode> getArguments()

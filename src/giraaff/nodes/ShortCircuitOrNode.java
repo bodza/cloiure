@@ -13,23 +13,31 @@ import giraaff.nodes.spi.ValueProxy;
 // @class ShortCircuitOrNode
 public final class ShortCircuitOrNode extends LogicNode implements IterableNodeType, Canonicalizable.Binary<LogicNode>
 {
+    // @def
     public static final NodeClass<ShortCircuitOrNode> TYPE = NodeClass.create(ShortCircuitOrNode.class);
 
-    @Input(InputType.Condition) LogicNode x;
-    @Input(InputType.Condition) LogicNode y;
+    @Input(InputType.Condition)
+    // @field
+    LogicNode x;
+    @Input(InputType.Condition)
+    // @field
+    LogicNode y;
+    // @field
     protected boolean xNegated;
+    // @field
     protected boolean yNegated;
+    // @field
     protected double shortCircuitProbability;
 
     // @cons
-    public ShortCircuitOrNode(LogicNode x, boolean xNegated, LogicNode y, boolean yNegated, double shortCircuitProbability)
+    public ShortCircuitOrNode(LogicNode __x, boolean __xNegated, LogicNode __y, boolean __yNegated, double __shortCircuitProbability)
     {
         super(TYPE);
-        this.x = x;
-        this.xNegated = xNegated;
-        this.y = y;
-        this.yNegated = yNegated;
-        this.shortCircuitProbability = shortCircuitProbability;
+        this.x = __x;
+        this.xNegated = __xNegated;
+        this.y = __y;
+        this.yNegated = __yNegated;
+        this.shortCircuitProbability = __shortCircuitProbability;
     }
 
     @Override
@@ -63,27 +71,27 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
         return shortCircuitProbability;
     }
 
-    protected ShortCircuitOrNode canonicalizeNegation(LogicNode forX, LogicNode forY)
+    protected ShortCircuitOrNode canonicalizeNegation(LogicNode __forX, LogicNode __forY)
     {
-        LogicNode xCond = forX;
-        boolean xNeg = xNegated;
-        while (xCond instanceof LogicNegationNode)
+        LogicNode __xCond = __forX;
+        boolean __xNeg = xNegated;
+        while (__xCond instanceof LogicNegationNode)
         {
-            xCond = ((LogicNegationNode) xCond).getValue();
-            xNeg = !xNeg;
+            __xCond = ((LogicNegationNode) __xCond).getValue();
+            __xNeg = !__xNeg;
         }
 
-        LogicNode yCond = forY;
-        boolean yNeg = yNegated;
-        while (yCond instanceof LogicNegationNode)
+        LogicNode __yCond = __forY;
+        boolean __yNeg = yNegated;
+        while (__yCond instanceof LogicNegationNode)
         {
-            yCond = ((LogicNegationNode) yCond).getValue();
-            yNeg = !yNeg;
+            __yCond = ((LogicNegationNode) __yCond).getValue();
+            __yNeg = !__yNeg;
         }
 
-        if (xCond != forX || yCond != forY)
+        if (__xCond != __forX || __yCond != __forY)
         {
-            return new ShortCircuitOrNode(xCond, xNeg, yCond, yNeg, shortCircuitProbability);
+            return new ShortCircuitOrNode(__xCond, __xNeg, __yCond, __yNeg, shortCircuitProbability);
         }
         else
         {
@@ -92,15 +100,15 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
     }
 
     @Override
-    public LogicNode canonical(CanonicalizerTool tool, LogicNode forX, LogicNode forY)
+    public LogicNode canonical(CanonicalizerTool __tool, LogicNode __forX, LogicNode __forY)
     {
-        ShortCircuitOrNode ret = canonicalizeNegation(forX, forY);
-        if (ret != this)
+        ShortCircuitOrNode __ret = canonicalizeNegation(__forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        if (forX == forY)
+        if (__forX == __forY)
         {
             //  a ||  a = a
             //  a || !a = true
@@ -111,7 +119,7 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
                 if (isYNegated())
                 {
                     // !a || !a = !a
-                    return LogicNegationNode.create(forX);
+                    return LogicNegationNode.create(__forX);
                 }
                 else
                 {
@@ -129,13 +137,13 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
                 else
                 {
                     // a || a = a
-                    return forX;
+                    return __forX;
                 }
             }
         }
-        if (forX instanceof LogicConstantNode)
+        if (__forX instanceof LogicConstantNode)
         {
-            if (((LogicConstantNode) forX).getValue() ^ isXNegated())
+            if (((LogicConstantNode) __forX).getValue() ^ isXNegated())
             {
                 return LogicConstantNode.tautology();
             }
@@ -143,17 +151,17 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
             {
                 if (isYNegated())
                 {
-                    return new LogicNegationNode(forY);
+                    return new LogicNegationNode(__forY);
                 }
                 else
                 {
-                    return forY;
+                    return __forY;
                 }
             }
         }
-        if (forY instanceof LogicConstantNode)
+        if (__forY instanceof LogicConstantNode)
         {
-            if (((LogicConstantNode) forY).getValue() ^ isYNegated())
+            if (((LogicConstantNode) __forY).getValue() ^ isYNegated())
             {
                 return LogicConstantNode.tautology();
             }
@@ -161,58 +169,58 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
             {
                 if (isXNegated())
                 {
-                    return new LogicNegationNode(forX);
+                    return new LogicNegationNode(__forX);
                 }
                 else
                 {
-                    return forX;
+                    return __forX;
                 }
             }
         }
 
-        if (forX instanceof ShortCircuitOrNode)
+        if (__forX instanceof ShortCircuitOrNode)
         {
-            ShortCircuitOrNode inner = (ShortCircuitOrNode) forX;
-            if (forY == inner.getX())
+            ShortCircuitOrNode __inner = (ShortCircuitOrNode) __forX;
+            if (__forY == __inner.getX())
             {
-                return optimizeShortCircuit(inner, this.xNegated, this.yNegated, true);
+                return optimizeShortCircuit(__inner, this.xNegated, this.yNegated, true);
             }
-            else if (forY == inner.getY())
+            else if (__forY == __inner.getY())
             {
-                return optimizeShortCircuit(inner, this.xNegated, this.yNegated, false);
+                return optimizeShortCircuit(__inner, this.xNegated, this.yNegated, false);
             }
         }
-        else if (forY instanceof ShortCircuitOrNode)
+        else if (__forY instanceof ShortCircuitOrNode)
         {
-            ShortCircuitOrNode inner = (ShortCircuitOrNode) forY;
-            if (inner.getX() == forX)
+            ShortCircuitOrNode __inner = (ShortCircuitOrNode) __forY;
+            if (__inner.getX() == __forX)
             {
-                return optimizeShortCircuit(inner, this.yNegated, this.xNegated, true);
+                return optimizeShortCircuit(__inner, this.yNegated, this.xNegated, true);
             }
-            else if (inner.getY() == forX)
+            else if (__inner.getY() == __forX)
             {
-                return optimizeShortCircuit(inner, this.yNegated, this.xNegated, false);
+                return optimizeShortCircuit(__inner, this.yNegated, this.xNegated, false);
             }
         }
 
         // check whether !X => Y constant
-        if (forX instanceof UnaryOpLogicNode && forY instanceof UnaryOpLogicNode)
+        if (__forX instanceof UnaryOpLogicNode && __forY instanceof UnaryOpLogicNode)
         {
-            UnaryOpLogicNode unaryX = (UnaryOpLogicNode) forX;
-            UnaryOpLogicNode unaryY = (UnaryOpLogicNode) forY;
-            if (skipThroughPisAndProxies(unaryX.getValue()) == skipThroughPisAndProxies(unaryY.getValue()))
+            UnaryOpLogicNode __unaryX = (UnaryOpLogicNode) __forX;
+            UnaryOpLogicNode __unaryY = (UnaryOpLogicNode) __forY;
+            if (skipThroughPisAndProxies(__unaryX.getValue()) == skipThroughPisAndProxies(__unaryY.getValue()))
             {
                 // !X => Y is constant
-                Stamp succStamp = unaryX.getSucceedingStampForValue(!isXNegated());
-                TriState fold = unaryY.tryFold(succStamp);
-                if (fold.isKnown())
+                Stamp __succStamp = __unaryX.getSucceedingStampForValue(!isXNegated());
+                TriState __fold = __unaryY.tryFold(__succStamp);
+                if (__fold.isKnown())
                 {
-                    boolean yResult = fold.toBoolean() ^ isYNegated();
-                    return yResult
+                    boolean __yResult = __fold.toBoolean() ^ isYNegated();
+                    return __yResult
                                     ? LogicConstantNode.tautology()
                                     : (isXNegated()
-                                                    ? LogicNegationNode.create(forX)
-                                                    : forX);
+                                                    ? LogicNegationNode.create(__forX)
+                                                    : __forX);
                 }
             }
         }
@@ -220,38 +228,38 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
         return this;
     }
 
-    private static ValueNode skipThroughPisAndProxies(ValueNode node)
+    private static ValueNode skipThroughPisAndProxies(ValueNode __node)
     {
-        for (ValueNode n = node; n != null; )
+        for (ValueNode __n = __node; __n != null; )
         {
-            if (n instanceof PiNode)
+            if (__n instanceof PiNode)
             {
-                n = ((PiNode) n).getOriginalNode();
+                __n = ((PiNode) __n).getOriginalNode();
             }
-            else if (n instanceof ValueProxy)
+            else if (__n instanceof ValueProxy)
             {
-                n = ((ValueProxy) n).getOriginalNode();
+                __n = ((ValueProxy) __n).getOriginalNode();
             }
             else
             {
-                return n;
+                return __n;
             }
         }
         return null;
     }
 
-    private static LogicNode optimizeShortCircuit(ShortCircuitOrNode inner, boolean innerNegated, boolean matchNegated, boolean matchIsInnerX)
+    private static LogicNode optimizeShortCircuit(ShortCircuitOrNode __inner, boolean __innerNegated, boolean __matchNegated, boolean __matchIsInnerX)
     {
-        boolean innerMatchNegated;
-        if (matchIsInnerX)
+        boolean __innerMatchNegated;
+        if (__matchIsInnerX)
         {
-            innerMatchNegated = inner.isXNegated();
+            __innerMatchNegated = __inner.isXNegated();
         }
         else
         {
-            innerMatchNegated = inner.isYNegated();
+            __innerMatchNegated = __inner.isYNegated();
         }
-        if (!innerNegated)
+        if (!__innerNegated)
         {
             // The four digit results of the expression used in the 16 subsequent formula
             // comments correspond to results when using the following truth table for
@@ -259,14 +267,14 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
             // _ 1234
             // a 1100
             // b 1010
-            if (innerMatchNegated == matchNegated)
+            if (__innerMatchNegated == __matchNegated)
             {
                 // ( (!a ||!b) ||!a) => 0111 (!a ||!b)
                 // ( (!a || b) ||!a) => 1011 (!a || b)
                 // ( ( a ||!b) || a) => 1101 ( a ||!b)
                 // ( ( a || b) || a) => 1110 ( a || b)
                 // Only the inner or is relevant, the outer or never adds information.
-                return inner;
+                return __inner;
             }
             else
             {
@@ -280,26 +288,26 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
         }
         else
         {
-            if (innerMatchNegated == matchNegated)
+            if (__innerMatchNegated == __matchNegated)
             {
                 // (!(!a ||!b) ||!a) => 1011 (!a || b)
                 // (!(!a || b) ||!a) => 0111 (!a ||!b)
                 // (!( a ||!b) || a) => 1110 ( a || b)
                 // (!( a || b) || a) => 1101 ( a ||!b)
-                boolean newInnerXNegated = inner.isXNegated();
-                boolean newInnerYNegated = inner.isYNegated();
-                double newProbability = inner.getShortCircuitProbability();
-                if (matchIsInnerX)
+                boolean __newInnerXNegated = __inner.isXNegated();
+                boolean __newInnerYNegated = __inner.isYNegated();
+                double __newProbability = __inner.getShortCircuitProbability();
+                if (__matchIsInnerX)
                 {
-                    newInnerYNegated = !newInnerYNegated;
+                    __newInnerYNegated = !__newInnerYNegated;
                 }
                 else
                 {
-                    newInnerXNegated = !newInnerXNegated;
-                    newProbability = 1.0 - newProbability;
+                    __newInnerXNegated = !__newInnerXNegated;
+                    __newProbability = 1.0 - __newProbability;
                 }
                 // The expression can be transformed into a single or.
-                return new ShortCircuitOrNode(inner.getX(), newInnerXNegated, inner.getY(), newInnerYNegated, newProbability);
+                return new ShortCircuitOrNode(__inner.getX(), __newInnerXNegated, __inner.getY(), __newInnerYNegated, __newProbability);
             }
             else
             {
@@ -307,19 +315,19 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
                 // (!(!a || b) || a) => 1100 (a)
                 // (!( a ||!b) ||!a) => 0011 (!a)
                 // (!( a || b) ||!a) => 0011 (!a)
-                LogicNode result = inner.getY();
-                if (matchIsInnerX)
+                LogicNode __result = __inner.getY();
+                if (__matchIsInnerX)
                 {
-                    result = inner.getX();
+                    __result = __inner.getX();
                 }
                 // Only the second part of the outer or is relevant.
-                if (matchNegated)
+                if (__matchNegated)
                 {
-                    return LogicNegationNode.create(result);
+                    return LogicNegationNode.create(__result);
                 }
                 else
                 {
-                    return result;
+                    return __result;
                 }
             }
         }

@@ -27,80 +27,82 @@ import giraaff.util.GraalError;
 // @class IntegerLessThanNode
 public final class IntegerLessThanNode extends IntegerLowerThanNode
 {
+    // @def
     public static final NodeClass<IntegerLessThanNode> TYPE = NodeClass.create(IntegerLessThanNode.class);
 
+    // @def
     private static final LessThanOp OP = new LessThanOp();
 
     // @cons
-    public IntegerLessThanNode(ValueNode x, ValueNode y)
+    public IntegerLessThanNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, x, y, OP);
+        super(TYPE, __x, __y, OP);
     }
 
-    public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        return OP.create(x, y, view);
+        return OP.create(__x, __y, __view);
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
+    public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode value = OP.canonical(constantReflection, metaAccess, smallestCompareWidth, OP.getCondition(), false, x, y, view);
-        if (value != null)
+        LogicNode __value = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, OP.getCondition(), false, __x, __y, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
-        return create(x, y, view);
+        return create(__x, __y, __view);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.smallestCompareWidth(), OP.getCondition(), false, forX, forY, view);
-        if (value != null)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), OP.getCondition(), false, __forX, __forY, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
         return this;
     }
 
-    public static boolean subtractMayUnderflow(long x, long y, long minValue)
+    public static boolean subtractMayUnderflow(long __x, long __y, long __minValue)
     {
-        long r = x - y;
+        long __r = __x - __y;
         // HD 2-12 Overflow iff the arguments have different signs and
         // the sign of the result is different than the sign of x
-        return (((x ^ y) & (x ^ r)) < 0) || r <= minValue;
+        return (((__x ^ __y) & (__x ^ __r)) < 0) || __r <= __minValue;
     }
 
-    public static boolean subtractMayOverflow(long x, long y, long maxValue)
+    public static boolean subtractMayOverflow(long __x, long __y, long __maxValue)
     {
-        long r = x - y;
+        long __r = __x - __y;
         // HD 2-12 Overflow iff the arguments have different signs and
         // the sign of the result is different than the sign of x
-        return (((x ^ y) & (x ^ r)) < 0) || r > maxValue;
+        return (((__x ^ __y) & (__x ^ __r)) < 0) || __r > __maxValue;
     }
 
     // @class IntegerLessThanNode.LessThanOp
     public static final class LessThanOp extends LowerOp
     {
         @Override
-        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
         {
-            if (newX.stamp(view) instanceof FloatStamp && newY.stamp(view) instanceof FloatStamp)
+            if (__newX.stamp(__view) instanceof FloatStamp && __newY.stamp(__view) instanceof FloatStamp)
             {
-                return new FloatLessThanNode(newX, newY, unorderedIsTrue); // TODO Is the last arg supposed to be true?
+                return new FloatLessThanNode(__newX, __newY, __unorderedIsTrue); // TODO Is the last arg supposed to be true?
             }
-            else if (newX.stamp(view) instanceof IntegerStamp && newY.stamp(view) instanceof IntegerStamp)
+            else if (__newX.stamp(__view) instanceof IntegerStamp && __newY.stamp(__view) instanceof IntegerStamp)
             {
-                return new IntegerLessThanNode(newX, newY);
+                return new IntegerLessThanNode(__newX, __newY);
             }
             throw GraalError.shouldNotReachHere();
         }
 
         @Override
-        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)
+        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, Constant __constant, NormalizeCompareNode __normalizeNode, boolean __mirrored, NodeView __view)
         {
-            PrimitiveConstant primitive = (PrimitiveConstant) constant;
+            PrimitiveConstant __primitive = (PrimitiveConstant) __constant;
             /*
              * a NC b < c  (not mirrored)
              * cases for c:
@@ -120,37 +122,37 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
              *
              * We can handle mirroring by swapping a & b and negating the constant.
              */
-            ValueNode a = mirrored ? normalizeNode.getY() : normalizeNode.getX();
-            ValueNode b = mirrored ? normalizeNode.getX() : normalizeNode.getY();
-            long cst = mirrored ? -primitive.asLong() : primitive.asLong();
+            ValueNode __a = __mirrored ? __normalizeNode.getY() : __normalizeNode.getX();
+            ValueNode __b = __mirrored ? __normalizeNode.getX() : __normalizeNode.getY();
+            long __cst = __mirrored ? -__primitive.asLong() : __primitive.asLong();
 
-            if (cst == 0)
+            if (__cst == 0)
             {
-                if (normalizeNode.getX().getStackKind() == JavaKind.Double || normalizeNode.getX().getStackKind() == JavaKind.Float)
+                if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
-                    return FloatLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, a, b, mirrored ^ normalizeNode.isUnorderedLess, view);
+                    return FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __a, __b, __mirrored ^ __normalizeNode.isUnorderedLess, __view);
                 }
                 else
                 {
-                    return IntegerLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, a, b, view);
+                    return IntegerLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __a, __b, __view);
                 }
             }
-            else if (cst == 1)
+            else if (__cst == 1)
             {
                 // a <= b <=> !(a > b)
-                LogicNode compare;
-                if (normalizeNode.getX().getStackKind() == JavaKind.Double || normalizeNode.getX().getStackKind() == JavaKind.Float)
+                LogicNode __compare;
+                if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
                 {
                     // since we negate, we have to reverse the unordered result
-                    compare = FloatLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, b, a, mirrored == normalizeNode.isUnorderedLess, view);
+                    __compare = FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __b, __a, __mirrored == __normalizeNode.isUnorderedLess, __view);
                 }
                 else
                 {
-                    compare = IntegerLessThanNode.create(constantReflection, metaAccess, smallestCompareWidth, b, a, view);
+                    __compare = IntegerLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __b, __a, __view);
                 }
-                return LogicNegationNode.create(compare);
+                return LogicNegationNode.create(__compare);
             }
-            else if (cst <= -1)
+            else if (__cst <= -1)
             {
                 return LogicConstantNode.contradiction();
             }
@@ -161,119 +163,119 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         }
 
         @Override
-        protected LogicNode findSynonym(ValueNode forX, ValueNode forY, NodeView view)
+        protected LogicNode findSynonym(ValueNode __forX, ValueNode __forY, NodeView __view)
         {
-            LogicNode result = super.findSynonym(forX, forY, view);
-            if (result != null)
+            LogicNode __result = super.findSynonym(__forX, __forY, __view);
+            if (__result != null)
             {
-                return result;
+                return __result;
             }
-            if (forX.stamp(view) instanceof IntegerStamp && forY.stamp(view) instanceof IntegerStamp)
+            if (__forX.stamp(__view) instanceof IntegerStamp && __forY.stamp(__view) instanceof IntegerStamp)
             {
-                if (IntegerStamp.sameSign((IntegerStamp) forX.stamp(view), (IntegerStamp) forY.stamp(view)))
+                if (IntegerStamp.sameSign((IntegerStamp) __forX.stamp(__view), (IntegerStamp) __forY.stamp(__view)))
                 {
-                    return new IntegerBelowNode(forX, forY);
+                    return new IntegerBelowNode(__forX, __forY);
                 }
             }
-            if (forY.isConstant() && forX instanceof SubNode)
+            if (__forY.isConstant() && __forX instanceof SubNode)
             {
-                SubNode sub = (SubNode) forX;
-                ValueNode xx = null;
-                ValueNode yy = null;
-                boolean negate = false;
-                if (forY.asConstant().isDefaultForKind())
+                SubNode __sub = (SubNode) __forX;
+                ValueNode __xx = null;
+                ValueNode __yy = null;
+                boolean __negate = false;
+                if (__forY.asConstant().isDefaultForKind())
                 {
                     // (x - y) < 0 when x - y is known not to underflow <=> x < y
-                    xx = sub.getX();
-                    yy = sub.getY();
+                    __xx = __sub.getX();
+                    __yy = __sub.getY();
                 }
-                else if (forY.isJavaConstant() && forY.asJavaConstant().asLong() == 1)
+                else if (__forY.isJavaConstant() && __forY.asJavaConstant().asLong() == 1)
                 {
                     // (x - y) < 1 when x - y is known not to underflow <=> !(y < x)
-                    xx = sub.getY();
-                    yy = sub.getX();
-                    negate = true;
+                    __xx = __sub.getY();
+                    __yy = __sub.getX();
+                    __negate = true;
                 }
-                if (xx != null)
+                if (__xx != null)
                 {
-                    IntegerStamp xStamp = (IntegerStamp) sub.getX().stamp(view);
-                    IntegerStamp yStamp = (IntegerStamp) sub.getY().stamp(view);
-                    long minValue = CodeUtil.minValue(xStamp.getBits());
-                    long maxValue = CodeUtil.maxValue(xStamp.getBits());
+                    IntegerStamp __xStamp = (IntegerStamp) __sub.getX().stamp(__view);
+                    IntegerStamp __yStamp = (IntegerStamp) __sub.getY().stamp(__view);
+                    long __minValue = CodeUtil.minValue(__xStamp.getBits());
+                    long __maxValue = CodeUtil.maxValue(__xStamp.getBits());
 
-                    if (!subtractMayUnderflow(xStamp.lowerBound(), yStamp.upperBound(), minValue) && !subtractMayOverflow(xStamp.upperBound(), yStamp.lowerBound(), maxValue))
+                    if (!subtractMayUnderflow(__xStamp.lowerBound(), __yStamp.upperBound(), __minValue) && !subtractMayOverflow(__xStamp.upperBound(), __yStamp.lowerBound(), __maxValue))
                     {
-                        LogicNode logic = new IntegerLessThanNode(xx, yy);
-                        if (negate)
+                        LogicNode __logic = new IntegerLessThanNode(__xx, __yy);
+                        if (__negate)
                         {
-                            logic = LogicNegationNode.create(logic);
+                            __logic = LogicNegationNode.create(__logic);
                         }
-                        return logic;
+                        return __logic;
                     }
                 }
             }
 
-            if (forX.stamp(view) instanceof IntegerStamp)
+            if (__forX.stamp(__view) instanceof IntegerStamp)
             {
-                int bits = ((IntegerStamp) forX.stamp(view)).getBits();
-                long min = OP.minValue(bits);
-                long xResidue = 0;
-                ValueNode left = null;
-                JavaConstant leftCst = null;
-                if (forX instanceof AddNode)
+                int __bits = ((IntegerStamp) __forX.stamp(__view)).getBits();
+                long __min = OP.minValue(__bits);
+                long __xResidue = 0;
+                ValueNode __left = null;
+                JavaConstant __leftCst = null;
+                if (__forX instanceof AddNode)
                 {
-                    AddNode xAdd = (AddNode) forX;
-                    if (xAdd.getY().isJavaConstant())
+                    AddNode __xAdd = (AddNode) __forX;
+                    if (__xAdd.getY().isJavaConstant())
                     {
-                        long xCst = xAdd.getY().asJavaConstant().asLong();
-                        xResidue = xCst - min;
-                        left = xAdd.getX();
+                        long __xCst = __xAdd.getY().asJavaConstant().asLong();
+                        __xResidue = __xCst - __min;
+                        __left = __xAdd.getX();
                     }
                 }
-                else if (forX.isJavaConstant())
+                else if (__forX.isJavaConstant())
                 {
-                    leftCst = forX.asJavaConstant();
+                    __leftCst = __forX.asJavaConstant();
                 }
-                if (left != null || leftCst != null)
+                if (__left != null || __leftCst != null)
                 {
-                    long yResidue = 0;
-                    ValueNode right = null;
-                    JavaConstant rightCst = null;
-                    if (forY instanceof AddNode)
+                    long __yResidue = 0;
+                    ValueNode __right = null;
+                    JavaConstant __rightCst = null;
+                    if (__forY instanceof AddNode)
                     {
-                        AddNode yAdd = (AddNode) forY;
-                        if (yAdd.getY().isJavaConstant())
+                        AddNode __yAdd = (AddNode) __forY;
+                        if (__yAdd.getY().isJavaConstant())
                         {
-                            long yCst = yAdd.getY().asJavaConstant().asLong();
-                            yResidue = yCst - min;
-                            right = yAdd.getX();
+                            long __yCst = __yAdd.getY().asJavaConstant().asLong();
+                            __yResidue = __yCst - __min;
+                            __right = __yAdd.getX();
                         }
                     }
-                    else if (forY.isJavaConstant())
+                    else if (__forY.isJavaConstant())
                     {
-                        rightCst = forY.asJavaConstant();
+                        __rightCst = __forY.asJavaConstant();
                     }
-                    if (right != null || rightCst != null)
+                    if (__right != null || __rightCst != null)
                     {
-                        if ((xResidue == 0 && left != null) || (yResidue == 0 && right != null))
+                        if ((__xResidue == 0 && __left != null) || (__yResidue == 0 && __right != null))
                         {
-                            if (left == null)
+                            if (__left == null)
                             {
-                                left = ConstantNode.forIntegerBits(bits, leftCst.asLong() - min);
+                                __left = ConstantNode.forIntegerBits(__bits, __leftCst.asLong() - __min);
                             }
-                            else if (xResidue != 0)
+                            else if (__xResidue != 0)
                             {
-                                left = AddNode.create(left, ConstantNode.forIntegerBits(bits, xResidue), view);
+                                __left = AddNode.create(__left, ConstantNode.forIntegerBits(__bits, __xResidue), __view);
                             }
-                            if (right == null)
+                            if (__right == null)
                             {
-                                right = ConstantNode.forIntegerBits(bits, rightCst.asLong() - min);
+                                __right = ConstantNode.forIntegerBits(__bits, __rightCst.asLong() - __min);
                             }
-                            else if (yResidue != 0)
+                            else if (__yResidue != 0)
                             {
-                                right = AddNode.create(right, ConstantNode.forIntegerBits(bits, yResidue), view);
+                                __right = AddNode.create(__right, ConstantNode.forIntegerBits(__bits, __yResidue), __view);
                             }
-                            return new IntegerBelowNode(left, right);
+                            return new IntegerBelowNode(__left, __right);
                         }
                     }
                 }
@@ -288,63 +290,63 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         }
 
         @Override
-        protected IntegerLowerThanNode createNode(ValueNode x, ValueNode y)
+        protected IntegerLowerThanNode createNode(ValueNode __x, ValueNode __y)
         {
-            return new IntegerLessThanNode(x, y);
+            return new IntegerLessThanNode(__x, __y);
         }
 
         @Override
-        protected long upperBound(IntegerStamp stamp)
+        protected long upperBound(IntegerStamp __stamp)
         {
-            return stamp.upperBound();
+            return __stamp.upperBound();
         }
 
         @Override
-        protected long lowerBound(IntegerStamp stamp)
+        protected long lowerBound(IntegerStamp __stamp)
         {
-            return stamp.lowerBound();
+            return __stamp.lowerBound();
         }
 
         @Override
-        protected int compare(long a, long b)
+        protected int compare(long __a, long __b)
         {
-            return Long.compare(a, b);
+            return Long.compare(__a, __b);
         }
 
         @Override
-        protected long min(long a, long b)
+        protected long min(long __a, long __b)
         {
-            return Math.min(a, b);
+            return Math.min(__a, __b);
         }
 
         @Override
-        protected long max(long a, long b)
+        protected long max(long __a, long __b)
         {
-            return Math.max(a, b);
+            return Math.max(__a, __b);
         }
 
         @Override
-        protected long cast(long a, int bits)
+        protected long cast(long __a, int __bits)
         {
-            return CodeUtil.signExtend(a, bits);
+            return CodeUtil.signExtend(__a, __bits);
         }
 
         @Override
-        protected long minValue(int bits)
+        protected long minValue(int __bits)
         {
-            return NumUtil.minValue(bits);
+            return NumUtil.minValue(__bits);
         }
 
         @Override
-        protected long maxValue(int bits)
+        protected long maxValue(int __bits)
         {
-            return NumUtil.maxValue(bits);
+            return NumUtil.maxValue(__bits);
         }
 
         @Override
-        protected IntegerStamp forInteger(int bits, long min, long max)
+        protected IntegerStamp forInteger(int __bits, long __min, long __max)
         {
-            return StampFactory.forInteger(bits, cast(min, bits), cast(max, bits));
+            return StampFactory.forInteger(__bits, cast(__min, __bits), cast(__max, __bits));
         }
     }
 }

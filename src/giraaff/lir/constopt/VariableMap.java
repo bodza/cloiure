@@ -14,6 +14,7 @@ import giraaff.lir.Variable;
 // @class VariableMap
 final class VariableMap<T>
 {
+    // @field
     private final ArrayList<T> content;
 
     // @cons
@@ -23,40 +24,40 @@ final class VariableMap<T>
         content = new ArrayList<>();
     }
 
-    public T get(Variable key)
+    public T get(Variable __key)
     {
-        if (key == null || key.index >= content.size())
+        if (__key == null || __key.index >= content.size())
         {
             return null;
         }
-        return content.get(key.index);
+        return content.get(__key.index);
     }
 
-    public T put(Variable key, T value)
+    public T put(Variable __key, T __value)
     {
-        while (key.index >= content.size())
+        while (__key.index >= content.size())
         {
             content.add(null);
         }
-        return content.set(key.index, value);
+        return content.set(__key.index, __value);
     }
 
-    public T remove(Variable key)
+    public T remove(Variable __key)
     {
-        if (key.index >= content.size())
+        if (__key.index >= content.size())
         {
             return null;
         }
-        return content.set(key.index, null);
+        return content.set(__key.index, null);
     }
 
-    public void forEach(Consumer<T> action)
+    public void forEach(Consumer<T> __action)
     {
-        for (T e : content)
+        for (T __e : content)
         {
-            if (e != null)
+            if (__e != null)
             {
-                action.accept(e);
+                __action.accept(__e);
             }
         }
     }
@@ -64,14 +65,14 @@ final class VariableMap<T>
     /**
      * Keeps only keys which match the given predicate.
      */
-    public void filter(Predicate<T> predicate)
+    public void filter(Predicate<T> __predicate)
     {
-        for (int i = 0; i < content.size(); i++)
+        for (int __i = 0; __i < content.size(); __i++)
         {
-            T e = content.get(i);
-            if (e != null && !predicate.test(e))
+            T __e = content.get(__i);
+            if (__e != null && !__predicate.test(__e))
             {
-                content.set(i, null);
+                content.set(__i, null);
             }
         }
     }

@@ -30,55 +30,56 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     private static final ClassValue<CompositeValueClass<?>> compositeClass = new ClassValue<CompositeValueClass<?>>()
     {
         @Override
-        protected CompositeValueClass<?> computeValue(Class<?> type)
+        protected CompositeValueClass<?> computeValue(Class<?> __type)
         {
-            return new CompositeValueClass<>(type);
+            return new CompositeValueClass<>(__type);
         }
     };
 
     @SuppressWarnings("unchecked")
-    public static <T> CompositeValueClass<T> get(Class<T> type)
+    public static <T> CompositeValueClass<T> get(Class<T> __type)
     {
-        return (CompositeValueClass<T>) compositeClass.get(type);
+        return (CompositeValueClass<T>) compositeClass.get(__type);
     }
 
+    // @field
     private final Values values;
 
     // @cons
-    private CompositeValueClass(Class<T> clazz)
+    private CompositeValueClass(Class<T> __clazz)
     {
-        super(clazz);
+        super(__clazz);
 
-        CompositeValueFieldsScanner vfs = new CompositeValueFieldsScanner(new FieldsScanner.DefaultCalcOffset());
-        vfs.scan(clazz, CompositeValue.class, false);
+        CompositeValueFieldsScanner __vfs = new CompositeValueFieldsScanner(new FieldsScanner.DefaultCalcOffset());
+        __vfs.scan(__clazz, CompositeValue.class, false);
 
-        values = new Values(vfs.valueAnnotations.get(CompositeValue.Component.class));
-        data = new Fields(vfs.data);
+        values = new Values(__vfs.valueAnnotations.get(CompositeValue.Component.class));
+        data = new Fields(__vfs.data);
     }
 
     // @class CompositeValueClass.CompositeValueFieldsScanner
     private static final class CompositeValueFieldsScanner extends LIRFieldsScanner
     {
         // @cons
-        CompositeValueFieldsScanner(FieldsScanner.CalcOffset calc)
+        CompositeValueFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
-            super(calc);
+            super(__calc);
             valueAnnotations.put(CompositeValue.Component.class, new OperandModeAnnotation());
         }
 
         @Override
-        protected EnumSet<OperandFlag> getFlags(Field field)
+        protected EnumSet<OperandFlag> getFlags(Field __field)
         {
-            EnumSet<OperandFlag> result = EnumSet.noneOf(OperandFlag.class);
-            if (field.isAnnotationPresent(CompositeValue.Component.class))
+            EnumSet<OperandFlag> __result = EnumSet.noneOf(OperandFlag.class);
+            if (__field.isAnnotationPresent(CompositeValue.Component.class))
             {
-                result.addAll(Arrays.asList(field.getAnnotation(CompositeValue.Component.class).value()));
+                __result.addAll(Arrays.asList(__field.getAnnotation(CompositeValue.Component.class).value()));
             }
             else
             {
                 GraalError.shouldNotReachHere();
             }
-            return result;
+            return __result;
         }
     }
 

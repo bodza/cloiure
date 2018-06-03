@@ -23,52 +23,53 @@ import giraaff.nodes.type.StampTool;
 // @class AMD64CountLeadingZerosNode
 public final class AMD64CountLeadingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<AMD64CountLeadingZerosNode> TYPE = NodeClass.create(AMD64CountLeadingZerosNode.class);
 
     // @cons
-    public AMD64CountLeadingZerosNode(ValueNode value)
+    public AMD64CountLeadingZerosNode(ValueNode __value)
     {
-        super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
+        super(TYPE, computeStamp(__value.stamp(NodeView.DEFAULT), __value), __value);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        return computeStamp(newStamp, getValue());
+        return computeStamp(__newStamp, getValue());
     }
 
-    private static Stamp computeStamp(Stamp newStamp, ValueNode theValue)
+    private static Stamp computeStamp(Stamp __newStamp, ValueNode __theValue)
     {
-        return StampTool.stampForLeadingZeros((IntegerStamp) newStamp);
+        return StampTool.stampForLeadingZeros((IntegerStamp) __newStamp);
     }
 
-    public static ValueNode tryFold(ValueNode value)
+    public static ValueNode tryFold(ValueNode __value)
     {
-        if (value.isConstant())
+        if (__value.isConstant())
         {
-            JavaConstant c = value.asJavaConstant();
-            if (value.getStackKind() == JavaKind.Int)
+            JavaConstant __c = __value.asJavaConstant();
+            if (__value.getStackKind() == JavaKind.Int)
             {
-                return ConstantNode.forInt(Integer.numberOfLeadingZeros(c.asInt()));
+                return ConstantNode.forInt(Integer.numberOfLeadingZeros(__c.asInt()));
             }
             else
             {
-                return ConstantNode.forInt(Long.numberOfLeadingZeros(c.asLong()));
+                return ConstantNode.forInt(Long.numberOfLeadingZeros(__c.asLong()));
             }
         }
         return null;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode folded = tryFold(forValue);
-        return folded != null ? folded : this;
+        ValueNode __folded = tryFold(__forValue);
+        return __folded != null ? __folded : this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) gen).emitCountLeadingZeros(builder.operand(getValue())));
+        __builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) __gen).emitCountLeadingZeros(__builder.operand(getValue())));
     }
 }

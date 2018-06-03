@@ -17,49 +17,52 @@ import giraaff.phases.common.inlining.info.elem.Inlineable;
 // @class AbstractInliningPolicy
 public abstract class AbstractInliningPolicy implements InliningPolicy
 {
+    // @def
     public static final float RelevanceCapForInlining = 1.0f;
+    // @def
     public static final float CapInheritedRelevance = 1.0f;
+    // @field
     protected final Map<Invoke, Double> hints;
 
     // @cons
-    public AbstractInliningPolicy(Map<Invoke, Double> hints)
+    public AbstractInliningPolicy(Map<Invoke, Double> __hints)
     {
         super();
-        this.hints = hints;
+        this.hints = __hints;
     }
 
-    protected double computeMaximumSize(double relevance, int configuredMaximum)
+    protected double computeMaximumSize(double __relevance, int __configuredMaximum)
     {
-        double inlineRatio = Math.min(RelevanceCapForInlining, relevance);
-        return configuredMaximum * inlineRatio;
+        double __inlineRatio = Math.min(RelevanceCapForInlining, __relevance);
+        return __configuredMaximum * __inlineRatio;
     }
 
-    protected double getInliningBonus(InlineInfo info)
+    protected double getInliningBonus(InlineInfo __info)
     {
-        if (hints != null && hints.containsKey(info.invoke()))
+        if (hints != null && hints.containsKey(__info.invoke()))
         {
-            return hints.get(info.invoke());
+            return hints.get(__info.invoke());
         }
         return 1;
     }
 
-    protected boolean isIntrinsic(Replacements replacements, InlineInfo info)
+    protected boolean isIntrinsic(Replacements __replacements, InlineInfo __info)
     {
         if (GraalOptions.alwaysInlineIntrinsics)
         {
-            return onlyIntrinsics(replacements, info);
+            return onlyIntrinsics(__replacements, __info);
         }
         else
         {
-            return onlyForcedIntrinsics(replacements, info);
+            return onlyForcedIntrinsics(__replacements, __info);
         }
     }
 
-    private static boolean onlyIntrinsics(Replacements replacements, InlineInfo info)
+    private static boolean onlyIntrinsics(Replacements __replacements, InlineInfo __info)
     {
-        for (int i = 0; i < info.numberOfMethods(); i++)
+        for (int __i = 0; __i < __info.numberOfMethods(); __i++)
         {
-            if (!InliningUtil.canIntrinsify(replacements, info.methodAt(i), info.invoke().bci()))
+            if (!InliningUtil.canIntrinsify(__replacements, __info.methodAt(__i), __info.invoke().bci()))
             {
                 return false;
             }
@@ -67,50 +70,50 @@ public abstract class AbstractInliningPolicy implements InliningPolicy
         return true;
     }
 
-    private static boolean onlyForcedIntrinsics(Replacements replacements, InlineInfo info)
+    private static boolean onlyForcedIntrinsics(Replacements __replacements, InlineInfo __info)
     {
-        if (!onlyIntrinsics(replacements, info))
+        if (!onlyIntrinsics(__replacements, __info))
         {
             return false;
         }
-        if (!info.shouldInline())
+        if (!__info.shouldInline())
         {
             return false;
         }
         return true;
     }
 
-    protected static int previousLowLevelGraphSize(InlineInfo info)
+    protected static int previousLowLevelGraphSize(InlineInfo __info)
     {
-        int size = 0;
-        for (int i = 0; i < info.numberOfMethods(); i++)
+        int __size = 0;
+        for (int __i = 0; __i < __info.numberOfMethods(); __i++)
         {
-            ResolvedJavaMethod m = info.methodAt(i);
-            ProfilingInfo profile = info.graph().getProfilingInfo(m);
-            int compiledGraphSize = profile.getCompilerIRSize(StructuredGraph.class);
-            if (compiledGraphSize > 0)
+            ResolvedJavaMethod __m = __info.methodAt(__i);
+            ProfilingInfo __profile = __info.graph().getProfilingInfo(__m);
+            int __compiledGraphSize = __profile.getCompilerIRSize(StructuredGraph.class);
+            if (__compiledGraphSize > 0)
             {
-                size += compiledGraphSize;
+                __size += __compiledGraphSize;
             }
         }
-        return size;
+        return __size;
     }
 
-    protected static double determineInvokeProbability(InlineInfo info)
+    protected static double determineInvokeProbability(InlineInfo __info)
     {
-        double invokeProbability = 0;
-        for (int i = 0; i < info.numberOfMethods(); i++)
+        double __invokeProbability = 0;
+        for (int __i = 0; __i < __info.numberOfMethods(); __i++)
         {
-            Inlineable callee = info.inlineableElementAt(i);
-            Iterable<Invoke> invokes = callee.getInvokes();
-            if (invokes.iterator().hasNext())
+            Inlineable __callee = __info.inlineableElementAt(__i);
+            Iterable<Invoke> __invokes = __callee.getInvokes();
+            if (__invokes.iterator().hasNext())
             {
-                for (Invoke invoke : invokes)
+                for (Invoke __invoke : __invokes)
                 {
-                    invokeProbability += callee.getProbability(invoke);
+                    __invokeProbability += __callee.getProbability(__invoke);
                 }
             }
         }
-        return invokeProbability;
+        return __invokeProbability;
     }
 }

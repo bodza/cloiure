@@ -13,23 +13,25 @@ import giraaff.nodes.extended.ForeignCallNode;
 // @class ForeignCallPlugin
 public final class ForeignCallPlugin implements InvocationPlugin
 {
+    // @field
     private final ForeignCallsProvider foreignCalls;
+    // @field
     private final ForeignCallDescriptor descriptor;
 
     // @cons
-    public ForeignCallPlugin(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor)
+    public ForeignCallPlugin(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor)
     {
         super();
-        this.foreignCalls = foreignCalls;
-        this.descriptor = descriptor;
+        this.foreignCalls = __foreignCalls;
+        this.descriptor = __descriptor;
     }
 
     @Override
-    public boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] args)
+    public boolean execute(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, InvocationPlugin.Receiver __receiver, ValueNode[] __args)
     {
-        ForeignCallNode foreignCall = new ForeignCallNode(foreignCalls, descriptor, args);
-        foreignCall.setBci(b.bci());
-        b.addPush(targetMethod.getSignature().getReturnKind(), foreignCall);
+        ForeignCallNode __foreignCall = new ForeignCallNode(foreignCalls, descriptor, __args);
+        __foreignCall.setBci(__b.bci());
+        __b.addPush(__targetMethod.getSignature().getReturnKind(), __foreignCall);
         return true;
     }
 }

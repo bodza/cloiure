@@ -20,12 +20,13 @@ import giraaff.nodes.ValueNode;
 // @class PureFunctionMacroNode
 public abstract class PureFunctionMacroNode extends MacroStateSplitNode implements Canonicalizable
 {
+    // @def
     public static final NodeClass<PureFunctionMacroNode> TYPE = NodeClass.create(PureFunctionMacroNode.class);
 
     // @cons
-    public PureFunctionMacroNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    public PureFunctionMacroNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
-        super(c, invokeKind, targetMethod, bci, returnStamp, arguments);
+        super(__c, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }
 
     /**
@@ -35,21 +36,21 @@ public abstract class PureFunctionMacroNode extends MacroStateSplitNode implemen
     protected abstract JavaConstant evaluate(JavaConstant param, MetaAccessProvider metaAccess);
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             return null;
         }
         else
         {
-            ValueNode param = arguments.get(0);
-            if (param.isConstant())
+            ValueNode __param = arguments.get(0);
+            if (__param.isConstant())
             {
-                JavaConstant constant = evaluate(param.asJavaConstant(), tool.getMetaAccess());
-                if (constant != null)
+                JavaConstant __constant = evaluate(__param.asJavaConstant(), __tool.getMetaAccess());
+                if (__constant != null)
                 {
-                    return ConstantNode.forConstant(constant, tool.getMetaAccess());
+                    return ConstantNode.forConstant(__constant, __tool.getMetaAccess());
                 }
             }
         }

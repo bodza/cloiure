@@ -15,25 +15,31 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64ClearRegisterOp
 public final class AMD64ClearRegisterOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64ClearRegisterOp> TYPE = LIRInstructionClass.create(AMD64ClearRegisterOp.class);
 
-    @Opcode private final AMD64RMOp op;
+    @Opcode
+    // @field
+    private final AMD64RMOp op;
+    // @field
     private final OperandSize size;
 
-    @Def({OperandFlag.REG}) protected AllocatableValue result;
+    @Def({OperandFlag.REG})
+    // @field
+    protected AllocatableValue result;
 
     // @cons
-    public AMD64ClearRegisterOp(OperandSize size, AllocatableValue result)
+    public AMD64ClearRegisterOp(OperandSize __size, AllocatableValue __result)
     {
         super(TYPE);
-        this.op = AMD64BinaryArithmetic.XOR.getRMOpcode(size);
-        this.size = size;
-        this.result = result;
+        this.op = AMD64BinaryArithmetic.XOR.getRMOpcode(__size);
+        this.size = __size;
+        this.result = __result;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        op.emit(masm, size, ValueUtil.asRegister(result), ValueUtil.asRegister(result));
+        op.emit(__masm, size, ValueUtil.asRegister(result), ValueUtil.asRegister(result));
     }
 }

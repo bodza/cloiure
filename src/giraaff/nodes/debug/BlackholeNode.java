@@ -10,15 +10,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class BlackholeNode
 public final class BlackholeNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<BlackholeNode> TYPE = NodeClass.create(BlackholeNode.class);
 
-    @Input ValueNode value;
+    @Input
+    // @field
+    ValueNode value;
 
     // @cons
-    public BlackholeNode(ValueNode value)
+    public BlackholeNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = value;
+        this.value = __value;
     }
 
     public ValueNode getValue()
@@ -27,8 +30,8 @@ public final class BlackholeNode extends FixedWithNextNode implements LIRLowerab
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().emitBlackhole(gen.operand(value));
+        __gen.getLIRGeneratorTool().emitBlackhole(__gen.operand(value));
     }
 }

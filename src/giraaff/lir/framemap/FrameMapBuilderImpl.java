@@ -21,47 +21,53 @@ import giraaff.util.GraalError;
 // @class FrameMapBuilderImpl
 public class FrameMapBuilderImpl extends FrameMapBuilderTool
 {
+    // @field
     private final RegisterConfig registerConfig;
+    // @field
     private final CodeCacheProvider codeCache;
+    // @field
     private final FrameMap frameMap;
+    // @field
     private final List<VirtualStackSlot> stackSlots;
+    // @field
     private final List<CallingConvention> calls;
+    // @field
     private int numStackSlots;
 
     // @cons
-    public FrameMapBuilderImpl(FrameMap frameMap, CodeCacheProvider codeCache, RegisterConfig registerConfig)
+    public FrameMapBuilderImpl(FrameMap __frameMap, CodeCacheProvider __codeCache, RegisterConfig __registerConfig)
     {
         super();
-        this.registerConfig = registerConfig == null ? codeCache.getRegisterConfig() : registerConfig;
-        this.codeCache = codeCache;
-        this.frameMap = frameMap;
+        this.registerConfig = __registerConfig == null ? __codeCache.getRegisterConfig() : __registerConfig;
+        this.codeCache = __codeCache;
+        this.frameMap = __frameMap;
         this.stackSlots = new ArrayList<>();
         this.calls = new ArrayList<>();
         this.numStackSlots = 0;
     }
 
     @Override
-    public VirtualStackSlot allocateSpillSlot(ValueKind<?> kind)
+    public VirtualStackSlot allocateSpillSlot(ValueKind<?> __kind)
     {
-        SimpleVirtualStackSlot slot = new SimpleVirtualStackSlot(numStackSlots++, kind);
-        stackSlots.add(slot);
-        return slot;
+        SimpleVirtualStackSlot __slot = new SimpleVirtualStackSlot(numStackSlots++, __kind);
+        stackSlots.add(__slot);
+        return __slot;
     }
 
     @Override
-    public VirtualStackSlot allocateStackSlots(int slots, BitSet objects, List<VirtualStackSlot> outObjectStackSlots)
+    public VirtualStackSlot allocateStackSlots(int __slots, BitSet __objects, List<VirtualStackSlot> __outObjectStackSlots)
     {
-        if (slots == 0)
+        if (__slots == 0)
         {
             return null;
         }
-        if (outObjectStackSlots != null)
+        if (__outObjectStackSlots != null)
         {
             throw GraalError.unimplemented();
         }
-        VirtualStackSlotRange slot = new VirtualStackSlotRange(numStackSlots++, slots, objects, LIRKind.fromJavaKind(frameMap.getTarget().arch, JavaKind.Object));
-        stackSlots.add(slot);
-        return slot;
+        VirtualStackSlotRange __slot = new VirtualStackSlotRange(numStackSlots++, __slots, __objects, LIRKind.fromJavaKind(frameMap.getTarget().arch, JavaKind.Object));
+        stackSlots.add(__slot);
+        return __slot;
     }
 
     @Override
@@ -89,17 +95,17 @@ public class FrameMapBuilderImpl extends FrameMapBuilderTool
     }
 
     @Override
-    public void callsMethod(CallingConvention cc)
+    public void callsMethod(CallingConvention __cc)
     {
-        calls.add(cc);
+        calls.add(__cc);
     }
 
     @Override
-    public FrameMap buildFrameMap(LIRGenerationResult res)
+    public FrameMap buildFrameMap(LIRGenerationResult __res)
     {
-        for (CallingConvention cc : calls)
+        for (CallingConvention __cc : calls)
         {
-            frameMap.callsMethod(cc);
+            frameMap.callsMethod(__cc);
         }
         frameMap.finish();
         return frameMap;

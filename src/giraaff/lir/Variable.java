@@ -15,23 +15,25 @@ public final class Variable extends AllocatableValue
     /**
      * The identifier of the variable. This is a non-zero index in a contiguous 0-based name space.
      */
+    // @field
     public final int index;
 
+    // @field
     private String name;
 
     /**
      * Creates a new variable.
      */
     // @cons
-    public Variable(ValueKind<?> kind, int index)
+    public Variable(ValueKind<?> __kind, int __index)
     {
-        super(kind);
-        this.index = index;
+        super(__kind);
+        this.index = __index;
     }
 
-    public void setName(String name)
+    public void setName(String __name)
     {
-        this.name = name;
+        this.name = __name;
     }
 
     public String getName()
@@ -46,12 +48,12 @@ public final class Variable extends AllocatableValue
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (obj instanceof Variable)
+        if (__obj instanceof Variable)
         {
-            Variable other = (Variable) obj;
-            return super.equals(other) && index == other.index;
+            Variable __other = (Variable) __obj;
+            return super.equals(__other) && index == __other.index;
         }
         return false;
     }

@@ -6,8 +6,11 @@ import java.util.NoSuchElementException;
 // @class NodeUsageIterator
 final class NodeUsageIterator implements Iterator<Node>
 {
+    // @field
     final Node node;
+    // @field
     int index = -1;
+    // @field
     Node current;
 
     void advance()
@@ -24,19 +27,19 @@ final class NodeUsageIterator implements Iterator<Node>
         }
         else
         {
-            int relativeIndex = index - Node.INLINE_USAGE_COUNT;
-            if (relativeIndex < node.extraUsagesCount)
+            int __relativeIndex = index - Node.INLINE_USAGE_COUNT;
+            if (__relativeIndex < node.extraUsagesCount)
             {
-                current = node.extraUsages[relativeIndex];
+                current = node.extraUsages[__relativeIndex];
             }
         }
     }
 
     // @cons
-    NodeUsageIterator(Node node)
+    NodeUsageIterator(Node __node)
     {
         super();
-        this.node = node;
+        this.node = __node;
         advance();
     }
 
@@ -49,13 +52,13 @@ final class NodeUsageIterator implements Iterator<Node>
     @Override
     public Node next()
     {
-        Node result = current;
-        if (result == null)
+        Node __result = current;
+        if (__result == null)
         {
             throw new NoSuchElementException();
         }
         advance();
-        return result;
+        return __result;
     }
 
     @Override

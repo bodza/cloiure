@@ -11,15 +11,18 @@ import giraaff.nodes.ValueNode;
 // @class GuardedUnsafeLoadNode
 public final class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedNode
 {
+    // @def
     public static final NodeClass<GuardedUnsafeLoadNode> TYPE = NodeClass.create(GuardedUnsafeLoadNode.class);
 
-    @OptionalInput(InputType.Guard) protected GuardingNode guard;
+    @OptionalInput(InputType.Guard)
+    // @field
+    protected GuardingNode guard;
 
     // @cons
-    public GuardedUnsafeLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, GuardingNode guard)
+    public GuardedUnsafeLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, GuardingNode __guard)
     {
-        super(TYPE, object, offset, accessKind, locationIdentity);
-        this.guard = guard;
+        super(TYPE, __object, __offset, __accessKind, __locationIdentity);
+        this.guard = __guard;
     }
 
     @Override
@@ -29,9 +32,9 @@ public final class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedN
     }
 
     @Override
-    public void setGuard(GuardingNode guard)
+    public void setGuard(GuardingNode __guard)
     {
-        updateUsagesInterface(this.guard, guard);
-        this.guard = guard;
+        updateUsagesInterface(this.guard, __guard);
+        this.guard = __guard;
     }
 }

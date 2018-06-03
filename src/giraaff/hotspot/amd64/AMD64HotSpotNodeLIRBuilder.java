@@ -41,10 +41,10 @@ import giraaff.nodes.ValueNode;
 public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder
 {
     // @cons
-    public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
+    public AMD64HotSpotNodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __gen)
     {
-        super(graph, gen);
-        ((AMD64HotSpotLIRGenerator) gen).setLockStackHolder(((HotSpotLockStackHolder) getLockStackHolder()));
+        super(__graph, __gen);
+        ((AMD64HotSpotLIRGenerator) __gen).setLockStackHolder(((HotSpotLockStackHolder) getLockStackHolder()));
     }
 
     private AMD64HotSpotLIRGenerator getGen()
@@ -59,97 +59,97 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
     }
 
     @Override
-    protected void emitPrologue(StructuredGraph graph)
+    protected void emitPrologue(StructuredGraph __graph)
     {
-        CallingConvention incomingArguments = gen.getResult().getCallingConvention();
+        CallingConvention __incomingArguments = gen.getResult().getCallingConvention();
 
-        Value[] params = new Value[incomingArguments.getArgumentCount() + 1];
-        for (int i = 0; i < params.length - 1; i++)
+        Value[] __params = new Value[__incomingArguments.getArgumentCount() + 1];
+        for (int __i = 0; __i < __params.length - 1; __i++)
         {
-            params[i] = incomingArguments.getArgument(i);
-            if (ValueUtil.isStackSlot(params[i]))
+            __params[__i] = __incomingArguments.getArgument(__i);
+            if (ValueUtil.isStackSlot(__params[__i]))
             {
-                StackSlot slot = ValueUtil.asStackSlot(params[i]);
-                if (slot.isInCallerFrame() && !gen.getResult().getLIR().hasArgInCallerFrame())
+                StackSlot __slot = ValueUtil.asStackSlot(__params[__i]);
+                if (__slot.isInCallerFrame() && !gen.getResult().getLIR().hasArgInCallerFrame())
                 {
                     gen.getResult().getLIR().setHasArgInCallerFrame();
                 }
             }
         }
-        params[params.length - 1] = AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD));
+        __params[__params.length - 1] = AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD));
 
-        gen.emitIncomingValues(params);
+        gen.emitIncomingValues(__params);
 
         getGen().emitSaveRbp();
 
         getGen().append(((HotSpotLockStackHolder) getLockStackHolder()).lockStack());
 
-        for (ParameterNode param : graph.getNodes(ParameterNode.TYPE))
+        for (ParameterNode __param : __graph.getNodes(ParameterNode.TYPE))
         {
-            Value paramValue = params[param.index()];
-            setResult(param, gen.emitMove(paramValue));
+            Value __paramValue = __params[__param.index()];
+            setResult(__param, gen.emitMove(__paramValue));
         }
     }
 
     @Override
-    public void visitSafepointNode(SafepointNode i)
+    public void visitSafepointNode(SafepointNode __i)
     {
-        LIRFrameState info = state(i);
-        Register thread = getGen().getProviders().getRegisters().getThreadRegister();
-        append(new AMD64HotSpotSafepointOp(info, this, thread));
+        LIRFrameState __info = state(__i);
+        Register __thread = getGen().getProviders().getRegisters().getThreadRegister();
+        append(new AMD64HotSpotSafepointOp(__info, this, __thread));
     }
 
     @Override
-    protected void emitDirectCall(DirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState)
+    protected void emitDirectCall(DirectCallTargetNode __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __callState)
     {
-        InvokeKind invokeKind = ((HotSpotDirectCallTargetNode) callTarget).invokeKind();
-        if (invokeKind.isIndirect())
+        InvokeKind __invokeKind = ((HotSpotDirectCallTargetNode) __callTarget).invokeKind();
+        if (__invokeKind.isIndirect())
         {
-            append(new AMD64HotspotDirectVirtualCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind));
-        }
-        else
-        {
-            HotSpotResolvedJavaMethod resolvedMethod = (HotSpotResolvedJavaMethod) callTarget.targetMethod();
-            append(new AMD64HotSpotDirectStaticCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind));
-        }
-    }
-
-    @Override
-    protected void emitIndirectCall(IndirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState)
-    {
-        if (callTarget instanceof HotSpotIndirectCallTargetNode)
-        {
-            Value metaspaceMethodSrc = operand(((HotSpotIndirectCallTargetNode) callTarget).metaspaceMethod());
-            Value targetAddressSrc = operand(callTarget.computedAddress());
-            AllocatableValue metaspaceMethodDst = AMD64.rbx.asValue(metaspaceMethodSrc.getValueKind());
-            AllocatableValue targetAddressDst = AMD64.rax.asValue(targetAddressSrc.getValueKind());
-            gen.emitMove(metaspaceMethodDst, metaspaceMethodSrc);
-            gen.emitMove(targetAddressDst, targetAddressSrc);
-            append(new AMD64IndirectCallOp(callTarget.targetMethod(), result, parameters, temps, metaspaceMethodDst, targetAddressDst, callState));
+            append(new AMD64HotspotDirectVirtualCallOp(__callTarget.targetMethod(), __result, __parameters, __temps, __callState, __invokeKind));
         }
         else
         {
-            super.emitIndirectCall(callTarget, result, parameters, temps, callState);
+            HotSpotResolvedJavaMethod __resolvedMethod = (HotSpotResolvedJavaMethod) __callTarget.targetMethod();
+            append(new AMD64HotSpotDirectStaticCallOp(__callTarget.targetMethod(), __result, __parameters, __temps, __callState, __invokeKind));
         }
     }
 
     @Override
-    public void emitPatchReturnAddress(ValueNode address)
+    protected void emitIndirectCall(IndirectCallTargetNode __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __callState)
     {
-        append(new AMD64HotSpotPatchReturnAddressOp(gen.load(operand(address))));
+        if (__callTarget instanceof HotSpotIndirectCallTargetNode)
+        {
+            Value __metaspaceMethodSrc = operand(((HotSpotIndirectCallTargetNode) __callTarget).metaspaceMethod());
+            Value __targetAddressSrc = operand(__callTarget.computedAddress());
+            AllocatableValue __metaspaceMethodDst = AMD64.rbx.asValue(__metaspaceMethodSrc.getValueKind());
+            AllocatableValue __targetAddressDst = AMD64.rax.asValue(__targetAddressSrc.getValueKind());
+            gen.emitMove(__metaspaceMethodDst, __metaspaceMethodSrc);
+            gen.emitMove(__targetAddressDst, __targetAddressSrc);
+            append(new AMD64IndirectCallOp(__callTarget.targetMethod(), __result, __parameters, __temps, __metaspaceMethodDst, __targetAddressDst, __callState));
+        }
+        else
+        {
+            super.emitIndirectCall(__callTarget, __result, __parameters, __temps, __callState);
+        }
     }
 
     @Override
-    public void emitJumpToExceptionHandlerInCaller(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc)
+    public void emitPatchReturnAddress(ValueNode __address)
     {
-        Variable handler = gen.load(operand(handlerInCallerPc));
-        ForeignCallLinkage linkage = gen.getForeignCalls().lookupForeignCall(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER);
-        CallingConvention outgoingCc = linkage.getOutgoingCallingConvention();
-        RegisterValue exceptionFixed = (RegisterValue) outgoingCc.getArgument(0);
-        RegisterValue exceptionPcFixed = (RegisterValue) outgoingCc.getArgument(1);
-        gen.emitMove(exceptionFixed, operand(exception));
-        gen.emitMove(exceptionPcFixed, operand(exceptionPc));
-        Register thread = getGen().getProviders().getRegisters().getThreadRegister();
-        append(new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, HotSpotRuntime.threadIsMethodHandleReturnOffset, thread));
+        append(new AMD64HotSpotPatchReturnAddressOp(gen.load(operand(__address))));
+    }
+
+    @Override
+    public void emitJumpToExceptionHandlerInCaller(ValueNode __handlerInCallerPc, ValueNode __exception, ValueNode __exceptionPc)
+    {
+        Variable __handler = gen.load(operand(__handlerInCallerPc));
+        ForeignCallLinkage __linkage = gen.getForeignCalls().lookupForeignCall(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER);
+        CallingConvention __outgoingCc = __linkage.getOutgoingCallingConvention();
+        RegisterValue __exceptionFixed = (RegisterValue) __outgoingCc.getArgument(0);
+        RegisterValue __exceptionPcFixed = (RegisterValue) __outgoingCc.getArgument(1);
+        gen.emitMove(__exceptionFixed, operand(__exception));
+        gen.emitMove(__exceptionPcFixed, operand(__exceptionPc));
+        Register __thread = getGen().getProviders().getRegisters().getThreadRegister();
+        append(new AMD64HotSpotJumpToExceptionHandlerInCallerOp(__handler, __exceptionFixed, __exceptionPcFixed, HotSpotRuntime.threadIsMethodHandleReturnOffset, __thread));
     }
 }

@@ -9,21 +9,24 @@ import giraaff.nodes.extended.AnchoringNode;
 // @class FloatingAnchoredNode
 public abstract class FloatingAnchoredNode extends FloatingNode
 {
+    // @def
     public static final NodeClass<FloatingAnchoredNode> TYPE = NodeClass.create(FloatingAnchoredNode.class);
 
-    @Input(InputType.Anchor) protected AnchoringNode anchor;
+    @Input(InputType.Anchor)
+    // @field
+    protected AnchoringNode anchor;
 
     // @cons
-    public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> c, Stamp stamp)
+    public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     // @cons
-    public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> c, Stamp stamp, AnchoringNode anchor)
+    public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> __c, Stamp __stamp, AnchoringNode __anchor)
     {
-        super(c, stamp);
-        this.anchor = anchor;
+        super(__c, __stamp);
+        this.anchor = __anchor;
     }
 
     public AnchoringNode getAnchor()
@@ -31,9 +34,9 @@ public abstract class FloatingAnchoredNode extends FloatingNode
         return anchor;
     }
 
-    public void setAnchor(AnchoringNode x)
+    public void setAnchor(AnchoringNode __x)
     {
-        updateUsagesInterface(this.anchor, x);
-        this.anchor = x;
+        updateUsagesInterface(this.anchor, __x);
+        this.anchor = __x;
     }
 }

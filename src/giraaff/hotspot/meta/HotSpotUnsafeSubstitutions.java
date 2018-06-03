@@ -18,15 +18,16 @@ public final class HotSpotUnsafeSubstitutions
         super();
     }
 
+    // @def
     public static final String copyMemoryName = "copyMemory0";
 
     @SuppressWarnings("unused")
     @MethodSubstitution(isStatic = false)
-    static void copyMemory(Object receiver, Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes)
+    static void copyMemory(Object __receiver, Object __srcBase, long __srcOffset, Object __destBase, long __destOffset, long __bytes)
     {
-        Word srcAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(srcBase, srcOffset));
-        Word dstAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(destBase, destOffset));
-        Word size = WordFactory.signed(bytes);
-        HotSpotBackend.unsafeArraycopy(srcAddr, dstAddr, size);
+        Word __srcAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__srcBase, __srcOffset));
+        Word __dstAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__destBase, __destOffset));
+        Word __size = WordFactory.signed(__bytes);
+        HotSpotBackend.unsafeArraycopy(__srcAddr, __dstAddr, __size);
     }
 }

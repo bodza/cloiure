@@ -22,8 +22,10 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class GraalHotSpotVMConfigNode
 public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerable, Canonicalizable
 {
+    // @def
     public static final NodeClass<GraalHotSpotVMConfigNode> TYPE = NodeClass.create(GraalHotSpotVMConfigNode.class);
 
+    // @field
     protected final int markId;
 
     /**
@@ -42,10 +44,10 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
      * @param markId id of the config value
      */
     // @cons
-    public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp stamp, int markId)
+    public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp __stamp, int __markId)
     {
-        super(TYPE, stamp);
-        this.markId = markId;
+        super(TYPE, __stamp);
+        this.markId = __markId;
     }
 
     /**
@@ -55,16 +57,16 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
      * @param kind explicit type of the node
      */
     // @cons
-    public GraalHotSpotVMConfigNode(int markId, JavaKind kind)
+    public GraalHotSpotVMConfigNode(int __markId, JavaKind __kind)
     {
-        super(TYPE, StampFactory.forKind(kind));
-        this.markId = markId;
+        super(TYPE, StampFactory.forKind(__kind));
+        this.markId = __markId;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadConfigValue(markId, gen.getLIRGeneratorTool().getLIRKind(stamp)));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadConfigValue(markId, __gen.getLIRGeneratorTool().getLIRKind(stamp)));
     }
 
     @NodeIntrinsic
@@ -115,7 +117,7 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (markId == 0)
         {

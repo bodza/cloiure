@@ -18,17 +18,20 @@ import java.util.stream.Stream;
 // @class DominatorOptimizationProblem
 public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
 {
+    // @field
     private AbstractBlockBase<?>[] blocks;
+    // @field
     private EnumMap<E, BitSet> flags;
+    // @field
     private BlockMap<C> costs;
 
     // @cons
-    protected DominatorOptimizationProblem(Class<E> flagType, AbstractControlFlowGraph<?> cfg)
+    protected DominatorOptimizationProblem(Class<E> __flagType, AbstractControlFlowGraph<?> __cfg)
     {
         super();
-        this.blocks = cfg.getBlocks();
-        flags = new EnumMap<>(flagType);
-        costs = new BlockMap<>(cfg);
+        this.blocks = __cfg.getBlocks();
+        flags = new EnumMap<>(__flagType);
+        costs = new BlockMap<>(__cfg);
     }
 
     public final AbstractBlockBase<?>[] getBlocks()
@@ -36,83 +39,83 @@ public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
         return blocks;
     }
 
-    public final AbstractBlockBase<?> getBlockForId(int id)
+    public final AbstractBlockBase<?> getBlockForId(int __id)
     {
-        return blocks[id];
+        return blocks[__id];
     }
 
     /**
      * Sets a flag for a block.
      */
-    public final void set(E flag, AbstractBlockBase<?> block)
+    public final void set(E __flag, AbstractBlockBase<?> __block)
     {
-        BitSet bitSet = flags.get(flag);
-        if (bitSet == null)
+        BitSet __bitSet = flags.get(__flag);
+        if (__bitSet == null)
         {
-            bitSet = new BitSet(blocks.length);
-            flags.put(flag, bitSet);
+            __bitSet = new BitSet(blocks.length);
+            flags.put(__flag, __bitSet);
         }
-        bitSet.set(block.getId());
+        __bitSet.set(__block.getId());
     }
 
     /**
      * Checks whether a flag is set for a block.
      */
-    public final boolean get(E flag, AbstractBlockBase<?> block)
+    public final boolean get(E __flag, AbstractBlockBase<?> __block)
     {
-        BitSet bitSet = flags.get(flag);
-        return bitSet == null ? false : bitSet.get(block.getId());
+        BitSet __bitSet = flags.get(__flag);
+        return __bitSet == null ? false : __bitSet.get(__block.getId());
     }
 
     /**
      * Returns a {@linkplain Stream} of blocks for which {@code flag} is set.
      */
-    public final Stream<? extends AbstractBlockBase<?>> stream(E flag)
+    public final Stream<? extends AbstractBlockBase<?>> stream(E __flag)
     {
-        return Arrays.asList(getBlocks()).stream().filter(block -> get(flag, block));
+        return Arrays.asList(getBlocks()).stream().filter(__block -> get(__flag, __block));
     }
 
     /**
      * Returns the cost object associated with {@code block}. Might return {@code null} if not set.
      */
-    public final C getCost(AbstractBlockBase<?> block)
+    public final C getCost(AbstractBlockBase<?> __block)
     {
-        return costs.get(block);
+        return costs.get(__block);
     }
 
     /**
      * Sets the cost for a {@code block}.
      */
-    public final void setCost(AbstractBlockBase<?> block, C cost)
+    public final void setCost(AbstractBlockBase<?> __block, C __cost)
     {
-        costs.put(block, cost);
+        costs.put(__block, __cost);
     }
 
     /**
      * Sets {@code flag} for all blocks along the dominator path from {@code block} to the root
      * until a block it finds a block where {@code flag} is already set.
      */
-    public final void setDominatorPath(E flag, AbstractBlockBase<?> block)
+    public final void setDominatorPath(E __flag, AbstractBlockBase<?> __block)
     {
-        BitSet bitSet = flags.get(flag);
-        if (bitSet == null)
+        BitSet __bitSet = flags.get(__flag);
+        if (__bitSet == null)
         {
-            bitSet = new BitSet(blocks.length);
-            flags.put(flag, bitSet);
+            __bitSet = new BitSet(blocks.length);
+            flags.put(__flag, __bitSet);
         }
-        for (AbstractBlockBase<?> b = block; b != null && !bitSet.get(b.getId()); b = b.getDominator())
+        for (AbstractBlockBase<?> __b = __block; __b != null && !__bitSet.get(__b.getId()); __b = __b.getDominator())
         {
             // mark block
-            bitSet.set(b.getId());
+            __bitSet.set(__b.getId());
         }
     }
 
     /**
      * Returns a {@link Stream} of flags associated with {@code block}.
      */
-    public final Stream<E> getFlagsForBlock(AbstractBlockBase<?> block)
+    public final Stream<E> getFlagsForBlock(AbstractBlockBase<?> __block)
     {
-        return getFlags().stream().filter(flag -> get(flag, block));
+        return getFlags().stream().filter(__flag -> get(__flag, __block));
     }
 
     /**
@@ -127,8 +130,8 @@ public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
     /**
      * Returns the name of a flag.
      */
-    public String getName(E flag)
+    public String getName(E __flag)
     {
-        return flag.toString();
+        return __flag.toString();
     }
 }

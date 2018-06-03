@@ -32,7 +32,7 @@ public final class IllegalStamp extends Stamp
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool)
+    public LIRKind getLIRKind(LIRKindTool __tool)
     {
         return LIRKind.Illegal;
     }
@@ -56,42 +56,42 @@ public final class IllegalStamp extends Stamp
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta)
+    public Stamp constant(Constant __c, MetaAccessProvider __meta)
     {
         return this;
     }
 
     @Override
-    public ResolvedJavaType javaType(MetaAccessProvider metaAccess)
+    public ResolvedJavaType javaType(MetaAccessProvider __metaAccess)
     {
         throw GraalError.shouldNotReachHere("illegal stamp has no Java type");
     }
 
     @Override
-    public Stamp meet(Stamp other)
+    public Stamp meet(Stamp __other)
     {
         return this;
     }
 
     @Override
-    public Stamp join(Stamp other)
+    public Stamp join(Stamp __other)
     {
         return this;
     }
 
     @Override
-    public boolean isCompatible(Stamp stamp)
+    public boolean isCompatible(Stamp __stamp)
     {
-        return stamp instanceof IllegalStamp;
+        return __stamp instanceof IllegalStamp;
     }
 
     @Override
-    public boolean isCompatible(Constant constant)
+    public boolean isCompatible(Constant __constant)
     {
-        if (constant instanceof PrimitiveConstant)
+        if (__constant instanceof PrimitiveConstant)
         {
-            PrimitiveConstant prim = (PrimitiveConstant) constant;
-            return prim.getJavaKind() == JavaKind.Illegal;
+            PrimitiveConstant __prim = (PrimitiveConstant) __constant;
+            return __prim.getJavaKind() == JavaKind.Illegal;
         }
         return false;
     }
@@ -103,17 +103,18 @@ public final class IllegalStamp extends Stamp
     }
 
     @Override
-    public Stamp improveWith(Stamp other)
+    public Stamp improveWith(Stamp __other)
     {
         return this;
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
         throw GraalError.shouldNotReachHere("can't read values of illegal stamp");
     }
 
+    // @def
     private static final IllegalStamp instance = new IllegalStamp();
 
     static IllegalStamp getInstance()

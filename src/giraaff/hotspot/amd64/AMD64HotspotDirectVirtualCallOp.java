@@ -21,26 +21,28 @@ import giraaff.nodes.CallTargetNode.InvokeKind;
 // @class AMD64HotspotDirectVirtualCallOp
 final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotspotDirectVirtualCallOp> TYPE = LIRInstructionClass.create(AMD64HotspotDirectVirtualCallOp.class);
 
+    // @field
     private final InvokeKind invokeKind;
 
     // @cons
-    AMD64HotspotDirectVirtualCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind)
+    AMD64HotspotDirectVirtualCallOp(ResolvedJavaMethod __target, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state, InvokeKind __invokeKind)
     {
-        super(TYPE, target, result, parameters, temps, state);
-        this.invokeKind = invokeKind;
+        super(TYPE, __target, __result, __parameters, __temps, __state);
+        this.invokeKind = __invokeKind;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         // The mark for an invocation that uses an inline cache must be placed
         // at the instruction that loads the Klass from the inline cache.
-        crb.recordMark(invokeKind == InvokeKind.Virtual ? HotSpotRuntime.invokevirtualMark : HotSpotRuntime.invokeinterfaceMark);
+        __crb.recordMark(invokeKind == InvokeKind.Virtual ? HotSpotRuntime.invokevirtualMark : HotSpotRuntime.invokeinterfaceMark);
         // This must be emitted exactly like this to ensure, it's patchable.
-        masm.movq(AMD64.rax, HotSpotRuntime.nonOopBits);
-        int offset = super.emitCall(crb, masm);
-        crb.recordInvokeVirtualOrInterfaceCallOp(offset);
+        __masm.movq(AMD64.rax, HotSpotRuntime.nonOopBits);
+        int __offset = super.emitCall(__crb, __masm);
+        __crb.recordInvokeVirtualOrInterfaceCallOp(__offset);
     }
 }

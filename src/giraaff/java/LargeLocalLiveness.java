@@ -7,103 +7,108 @@ import giraaff.java.BciBlockMapping.BciBlock;
 // @class LargeLocalLiveness
 public final class LargeLocalLiveness extends LocalLiveness
 {
+    // @field
     private BitSet[] localsLiveIn;
+    // @field
     private BitSet[] localsLiveOut;
+    // @field
     private BitSet[] localsLiveGen;
+    // @field
     private BitSet[] localsLiveKill;
+    // @field
     private BitSet[] localsChangedInLoop;
 
     // @cons
-    public LargeLocalLiveness(BciBlock[] blocks, int maxLocals, int loopCount)
+    public LargeLocalLiveness(BciBlock[] __blocks, int __maxLocals, int __loopCount)
     {
-        super(blocks);
-        int blocksSize = blocks.length;
-        localsLiveIn = new BitSet[blocksSize];
-        localsLiveOut = new BitSet[blocksSize];
-        localsLiveGen = new BitSet[blocksSize];
-        localsLiveKill = new BitSet[blocksSize];
-        for (int i = 0; i < blocksSize; i++)
+        super(__blocks);
+        int __blocksSize = __blocks.length;
+        localsLiveIn = new BitSet[__blocksSize];
+        localsLiveOut = new BitSet[__blocksSize];
+        localsLiveGen = new BitSet[__blocksSize];
+        localsLiveKill = new BitSet[__blocksSize];
+        for (int __i = 0; __i < __blocksSize; __i++)
         {
-            localsLiveIn[i] = new BitSet(maxLocals);
-            localsLiveOut[i] = new BitSet(maxLocals);
-            localsLiveGen[i] = new BitSet(maxLocals);
-            localsLiveKill[i] = new BitSet(maxLocals);
+            localsLiveIn[__i] = new BitSet(__maxLocals);
+            localsLiveOut[__i] = new BitSet(__maxLocals);
+            localsLiveGen[__i] = new BitSet(__maxLocals);
+            localsLiveKill[__i] = new BitSet(__maxLocals);
         }
-        localsChangedInLoop = new BitSet[loopCount];
-        for (int i = 0; i < loopCount; ++i)
+        localsChangedInLoop = new BitSet[__loopCount];
+        for (int __i = 0; __i < __loopCount; ++__i)
         {
-            localsChangedInLoop[i] = new BitSet(maxLocals);
-        }
-    }
-
-    @Override
-    protected int liveOutCardinality(int blockID)
-    {
-        return localsLiveOut[blockID].cardinality();
-    }
-
-    @Override
-    protected void propagateLiveness(int blockID, int successorID)
-    {
-        localsLiveOut[blockID].or(localsLiveIn[successorID]);
-    }
-
-    @Override
-    protected void updateLiveness(int blockID)
-    {
-        BitSet liveIn = localsLiveIn[blockID];
-        liveIn.clear();
-        liveIn.or(localsLiveOut[blockID]);
-        liveIn.andNot(localsLiveKill[blockID]);
-        liveIn.or(localsLiveGen[blockID]);
-    }
-
-    @Override
-    protected void loadOne(int blockID, int local)
-    {
-        if (!localsLiveKill[blockID].get(local))
-        {
-            localsLiveGen[blockID].set(local);
+            localsChangedInLoop[__i] = new BitSet(__maxLocals);
         }
     }
 
     @Override
-    protected void storeOne(int blockID, int local)
+    protected int liveOutCardinality(int __blockID)
     {
-        if (!localsLiveGen[blockID].get(local))
+        return localsLiveOut[__blockID].cardinality();
+    }
+
+    @Override
+    protected void propagateLiveness(int __blockID, int __successorID)
+    {
+        localsLiveOut[__blockID].or(localsLiveIn[__successorID]);
+    }
+
+    @Override
+    protected void updateLiveness(int __blockID)
+    {
+        BitSet __liveIn = localsLiveIn[__blockID];
+        __liveIn.clear();
+        __liveIn.or(localsLiveOut[__blockID]);
+        __liveIn.andNot(localsLiveKill[__blockID]);
+        __liveIn.or(localsLiveGen[__blockID]);
+    }
+
+    @Override
+    protected void loadOne(int __blockID, int __local)
+    {
+        if (!localsLiveKill[__blockID].get(__local))
         {
-            localsLiveKill[blockID].set(local);
+            localsLiveGen[__blockID].set(__local);
+        }
+    }
+
+    @Override
+    protected void storeOne(int __blockID, int __local)
+    {
+        if (!localsLiveGen[__blockID].get(__local))
+        {
+            localsLiveKill[__blockID].set(__local);
         }
 
-        BciBlock block = blocks[blockID];
-        long tmp = block.loops;
-        int pos = 0;
-        while (tmp != 0)
+        BciBlock __block = blocks[__blockID];
+        long __tmp = __block.loops;
+        int __pos = 0;
+        while (__tmp != 0)
         {
-            if ((tmp & 1L) == 1L)
+            if ((__tmp & 1L) == 1L)
             {
-                this.localsChangedInLoop[pos].set(local);
+                this.localsChangedInLoop[__pos].set(__local);
             }
-            tmp >>>= 1;
-            ++pos;
+            __tmp >>>= 1;
+            ++__pos;
         }
     }
 
     @Override
-    public boolean localIsLiveIn(BciBlock block, int local)
+    public boolean localIsLiveIn(BciBlock __block, int __local)
     {
-        return block.getId() >= Integer.MAX_VALUE ? true : localsLiveIn[block.getId()].get(local);
+        return __block.getId() >= Integer.MAX_VALUE ? true : localsLiveIn[__block.getId()].get(__local);
     }
 
     @Override
-    public boolean localIsLiveOut(BciBlock block, int local)
+    public boolean localIsLiveOut(BciBlock __block, int __local)
     {
-        return block.getId() >= Integer.MAX_VALUE ? true : localsLiveOut[block.getId()].get(local);
+        return __block.getId() >= Integer.MAX_VALUE ? true : localsLiveOut[__block.getId()].get(__local);
     }
 
     @Override
-    public boolean localIsChangedInLoop(int loopId, int local)
+    public boolean localIsChangedInLoop(int __loopId, int __local)
     {
-        return localsChangedInLoop[loopId].get(local);
+        return localsChangedInLoop[__loopId].get(__local);
     }
 }

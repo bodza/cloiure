@@ -48,77 +48,93 @@ public final class CompilationResultBuilder
     // @class CompilationResultBuilder.ExceptionInfo
     private static final class ExceptionInfo
     {
+        // @field
         public final int codeOffset;
+        // @field
         public final LabelRef exceptionEdge;
 
         // @cons
-        ExceptionInfo(int pcOffset, LabelRef exceptionEdge)
+        ExceptionInfo(int __pcOffset, LabelRef __exceptionEdge)
         {
             super();
-            this.codeOffset = pcOffset;
-            this.exceptionEdge = exceptionEdge;
+            this.codeOffset = __pcOffset;
+            this.exceptionEdge = __exceptionEdge;
         }
     }
 
+    // @field
     public final Assembler asm;
+    // @field
     public final DataBuilder dataBuilder;
+    // @field
     public final CompilationResult compilationResult;
+    // @field
     public final TargetDescription target;
+    // @field
     public final CodeCacheProvider codeCache;
+    // @field
     public final ForeignCallsProvider foreignCalls;
+    // @field
     public final FrameMap frameMap;
 
     /**
      * The LIR for which code is being generated.
      */
+    // @field
     protected LIR lir;
 
     /**
      * The index of the block currently being emitted.
      */
+    // @field
     protected int currentBlockIndex;
 
     /**
      * The object that emits code for managing a method's frame.
      */
+    // @field
     public final FrameContext frameContext;
 
+    // @field
     private List<ExceptionInfo> exceptionInfoList;
 
+    // @field
     private final EconomicMap<Constant, Data> dataCache;
 
+    // @field
     private Consumer<LIRInstruction> beforeOp;
+    // @field
     private Consumer<LIRInstruction> afterOp;
 
     // @cons
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, CompilationResult compilationResult)
+    public CompilationResultBuilder(CodeCacheProvider __codeCache, ForeignCallsProvider __foreignCalls, FrameMap __frameMap, Assembler __asm, DataBuilder __dataBuilder, FrameContext __frameContext, CompilationResult __compilationResult)
     {
-        this(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, compilationResult, EconomicMap.create(Equivalence.DEFAULT));
+        this(__codeCache, __foreignCalls, __frameMap, __asm, __dataBuilder, __frameContext, __compilationResult, EconomicMap.create(Equivalence.DEFAULT));
     }
 
     // @cons
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache)
+    public CompilationResultBuilder(CodeCacheProvider __codeCache, ForeignCallsProvider __foreignCalls, FrameMap __frameMap, Assembler __asm, DataBuilder __dataBuilder, FrameContext __frameContext, CompilationResult __compilationResult, EconomicMap<Constant, Data> __dataCache)
     {
         super();
-        this.target = codeCache.getTarget();
-        this.codeCache = codeCache;
-        this.foreignCalls = foreignCalls;
-        this.frameMap = frameMap;
-        this.asm = asm;
-        this.dataBuilder = dataBuilder;
-        this.compilationResult = compilationResult;
-        this.frameContext = frameContext;
-        this.dataCache = dataCache;
+        this.target = __codeCache.getTarget();
+        this.codeCache = __codeCache;
+        this.foreignCalls = __foreignCalls;
+        this.frameMap = __frameMap;
+        this.asm = __asm;
+        this.dataBuilder = __dataBuilder;
+        this.compilationResult = __compilationResult;
+        this.frameContext = __frameContext;
+        this.dataCache = __dataCache;
     }
 
-    public void setTotalFrameSize(int frameSize)
+    public void setTotalFrameSize(int __frameSize)
     {
-        compilationResult.setTotalFrameSize(frameSize);
+        compilationResult.setTotalFrameSize(__frameSize);
     }
 
-    public Mark recordMark(Object id)
+    public Mark recordMark(Object __id)
     {
-        return compilationResult.recordMark(asm.position(), id);
+        return compilationResult.recordMark(asm.position(), __id);
     }
 
     /**
@@ -128,15 +144,15 @@ public final class CompilationResultBuilder
      */
     public void finish()
     {
-        int position = asm.position();
-        compilationResult.setTargetCode(asm.close(false), position);
+        int __position = asm.position();
+        compilationResult.setTargetCode(asm.close(false), __position);
 
         // record exception handlers if they exist
         if (exceptionInfoList != null)
         {
-            for (ExceptionInfo ei : exceptionInfoList)
+            for (ExceptionInfo __ei : exceptionInfoList)
             {
-                compilationResult.recordExceptionHandler(ei.codeOffset, ei.exceptionEdge.label().position());
+                compilationResult.recordExceptionHandler(__ei.codeOffset, __ei.exceptionEdge.label().position());
             }
         }
         closeCompilationResult();
@@ -150,77 +166,77 @@ public final class CompilationResultBuilder
         compilationResult.close();
     }
 
-    public void recordExceptionHandlers(int pcOffset, LIRFrameState info)
+    public void recordExceptionHandlers(int __pcOffset, LIRFrameState __info)
     {
-        if (info != null)
+        if (__info != null)
         {
-            if (info.exceptionEdge != null)
+            if (__info.exceptionEdge != null)
             {
                 if (exceptionInfoList == null)
                 {
                     exceptionInfoList = new ArrayList<>(4);
                 }
-                exceptionInfoList.add(new ExceptionInfo(pcOffset, info.exceptionEdge));
+                exceptionInfoList.add(new ExceptionInfo(__pcOffset, __info.exceptionEdge));
             }
         }
     }
 
-    public void recordInlineDataInCode(Constant data)
+    public void recordInlineDataInCode(Constant __data)
     {
-        if (data instanceof VMConstant)
+        if (__data instanceof VMConstant)
         {
-            compilationResult.recordDataPatch(asm.position(), new ConstantReference((VMConstant) data));
+            compilationResult.recordDataPatch(asm.position(), new ConstantReference((VMConstant) __data));
         }
     }
 
-    public void recordInlineDataInCodeWithNote(Constant data, Object note)
+    public void recordInlineDataInCodeWithNote(Constant __data, Object __note)
     {
-        if (data instanceof VMConstant)
+        if (__data instanceof VMConstant)
         {
-            compilationResult.recordDataPatchWithNote(asm.position(), new ConstantReference((VMConstant) data), note);
+            compilationResult.recordDataPatchWithNote(asm.position(), new ConstantReference((VMConstant) __data), __note);
         }
     }
 
-    public AbstractAddress recordDataSectionReference(Data data)
+    public AbstractAddress recordDataSectionReference(Data __data)
     {
-        DataSectionReference reference = compilationResult.getDataSection().insertData(data);
-        int instructionStart = asm.position();
-        compilationResult.recordDataPatch(instructionStart, reference);
-        return asm.getPlaceholder(instructionStart);
+        DataSectionReference __reference = compilationResult.getDataSection().insertData(__data);
+        int __instructionStart = asm.position();
+        compilationResult.recordDataPatch(__instructionStart, __reference);
+        return asm.getPlaceholder(__instructionStart);
     }
 
-    public AbstractAddress recordDataReferenceInCode(DataPointerConstant constant)
+    public AbstractAddress recordDataReferenceInCode(DataPointerConstant __constant)
     {
-        return recordDataReferenceInCode(constant, constant.getAlignment());
+        return recordDataReferenceInCode(__constant, __constant.getAlignment());
     }
 
-    public AbstractAddress recordDataReferenceInCode(Constant constant, int alignment)
+    public AbstractAddress recordDataReferenceInCode(Constant __constant, int __alignment)
     {
-        Data data = createDataItem(constant);
-        data.updateAlignment(alignment);
-        return recordDataSectionReference(data);
+        Data __data = createDataItem(__constant);
+        __data.updateAlignment(__alignment);
+        return recordDataSectionReference(__data);
     }
 
-    public AbstractAddress recordDataReferenceInCode(Data data, int alignment)
+    public AbstractAddress recordDataReferenceInCode(Data __data, int __alignment)
     {
-        data.updateAlignment(alignment);
-        return recordDataSectionReference(data);
+        __data.updateAlignment(__alignment);
+        return recordDataSectionReference(__data);
     }
 
-    public Data createDataItem(Constant constant)
+    public Data createDataItem(Constant __constant)
     {
-        Data data = dataCache.get(constant);
-        if (data == null)
+        Data __data = dataCache.get(__constant);
+        if (__data == null)
         {
-            data = dataBuilder.createDataItem(constant);
-            dataCache.put(constant, data);
+            __data = dataBuilder.createDataItem(__constant);
+            dataCache.put(__constant, __data);
         }
-        return data;
+        return __data;
     }
 
-    public AbstractAddress recordDataReferenceInCode(byte[] data, int alignment)
+    public AbstractAddress recordDataReferenceInCode(byte[] __data, int __alignment)
     {
-        return recordDataSectionReference(new RawData(data, alignment));
+        return recordDataSectionReference(new RawData(__data, __alignment));
     }
 
     /**
@@ -229,7 +245,7 @@ public final class CompilationResultBuilder
      * @param isNegated negation status of the branch's condition.
      */
     @SuppressWarnings("unused")
-    public void recordBranch(int pcOffset, boolean isNegated)
+    public void recordBranch(int __pcOffset, boolean __isNegated)
     {
     }
 
@@ -238,7 +254,7 @@ public final class CompilationResultBuilder
      * at offset {@code pcOffset} in the code.
      */
     @SuppressWarnings("unused")
-    public void recordInvokeVirtualOrInterfaceCallOp(int pcOffset)
+    public void recordInvokeVirtualOrInterfaceCallOp(int __pcOffset)
     {
     }
 
@@ -247,7 +263,7 @@ public final class CompilationResultBuilder
      * {@code pcOffset} in the code.
      */
     @SuppressWarnings("unused")
-    public void recordInlineInvokeCallOp(int pcOffset)
+    public void recordInlineInvokeCallOp(int __pcOffset)
     {
     }
 
@@ -255,183 +271,183 @@ public final class CompilationResultBuilder
      * Returns the integer value of any constant that can be represented by a 32-bit integer value,
      * including long constants that fit into the 32-bit range.
      */
-    public int asIntConst(Value value)
+    public int asIntConst(Value __value)
     {
-        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
-        long c = constant.asLong();
-        if (!NumUtil.isInt(c))
+        JavaConstant __constant = LIRValueUtil.asJavaConstant(__value);
+        long __c = __constant.asLong();
+        if (!NumUtil.isInt(__c))
         {
             throw GraalError.shouldNotReachHere();
         }
-        return (int) c;
+        return (int) __c;
     }
 
     /**
      * Returns the float value of any constant that can be represented by a 32-bit float value.
      */
-    public float asFloatConst(Value value)
+    public float asFloatConst(Value __value)
     {
-        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
-        return constant.asFloat();
+        JavaConstant __constant = LIRValueUtil.asJavaConstant(__value);
+        return __constant.asFloat();
     }
 
     /**
      * Returns the long value of any constant that can be represented by a 64-bit long value.
      */
-    public long asLongConst(Value value)
+    public long asLongConst(Value __value)
     {
-        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
-        return constant.asLong();
+        JavaConstant __constant = LIRValueUtil.asJavaConstant(__value);
+        return __constant.asLong();
     }
 
     /**
      * Returns the double value of any constant that can be represented by a 64-bit float value.
      */
-    public double asDoubleConst(Value value)
+    public double asDoubleConst(Value __value)
     {
-        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
-        return constant.asDouble();
+        JavaConstant __constant = LIRValueUtil.asJavaConstant(__value);
+        return __constant.asDouble();
     }
 
     /**
      * Returns the address of a float constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asFloatConstRef(JavaConstant value)
+    public AbstractAddress asFloatConstRef(JavaConstant __value)
     {
-        return asFloatConstRef(value, 4);
+        return asFloatConstRef(__value, 4);
     }
 
-    public AbstractAddress asFloatConstRef(JavaConstant value, int alignment)
+    public AbstractAddress asFloatConstRef(JavaConstant __value, int __alignment)
     {
-        return recordDataReferenceInCode(value, alignment);
+        return recordDataReferenceInCode(__value, __alignment);
     }
 
     /**
      * Returns the address of a double constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asDoubleConstRef(JavaConstant value)
+    public AbstractAddress asDoubleConstRef(JavaConstant __value)
     {
-        return asDoubleConstRef(value, 8);
+        return asDoubleConstRef(__value, 8);
     }
 
-    public AbstractAddress asDoubleConstRef(JavaConstant value, int alignment)
+    public AbstractAddress asDoubleConstRef(JavaConstant __value, int __alignment)
     {
-        return recordDataReferenceInCode(value, alignment);
+        return recordDataReferenceInCode(__value, __alignment);
     }
 
     /**
      * Returns the address of a long constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asLongConstRef(JavaConstant value)
+    public AbstractAddress asLongConstRef(JavaConstant __value)
     {
-        return recordDataReferenceInCode(value, 8);
+        return recordDataReferenceInCode(__value, 8);
     }
 
     /**
      * Returns the address of an object constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asObjectConstRef(JavaConstant value)
+    public AbstractAddress asObjectConstRef(JavaConstant __value)
     {
-        return recordDataReferenceInCode(value, 8);
+        return recordDataReferenceInCode(__value, 8);
     }
 
-    public AbstractAddress asByteAddr(Value value)
+    public AbstractAddress asByteAddr(Value __value)
     {
-        return asAddress(value);
+        return asAddress(__value);
     }
 
-    public AbstractAddress asShortAddr(Value value)
+    public AbstractAddress asShortAddr(Value __value)
     {
-        return asAddress(value);
+        return asAddress(__value);
     }
 
-    public AbstractAddress asIntAddr(Value value)
+    public AbstractAddress asIntAddr(Value __value)
     {
-        return asAddress(value);
+        return asAddress(__value);
     }
 
-    public AbstractAddress asLongAddr(Value value)
+    public AbstractAddress asLongAddr(Value __value)
     {
-        return asAddress(value);
+        return asAddress(__value);
     }
 
-    public AbstractAddress asFloatAddr(Value value)
+    public AbstractAddress asFloatAddr(Value __value)
     {
-        return asAddress(value);
+        return asAddress(__value);
     }
 
-    public AbstractAddress asDoubleAddr(Value value)
+    public AbstractAddress asDoubleAddr(Value __value)
     {
-        return asAddress(value);
+        return asAddress(__value);
     }
 
-    public AbstractAddress asAddress(Value value)
+    public AbstractAddress asAddress(Value __value)
     {
-        StackSlot slot = ValueUtil.asStackSlot(value);
-        return asm.makeAddress(frameMap.getRegisterConfig().getFrameRegister(), frameMap.offsetForStackSlot(slot));
+        StackSlot __slot = ValueUtil.asStackSlot(__value);
+        return asm.makeAddress(frameMap.getRegisterConfig().getFrameRegister(), frameMap.offsetForStackSlot(__slot));
     }
 
     /**
      * Determines if a given edge from the block currently being emitted goes to its lexical successor.
      */
-    public boolean isSuccessorEdge(LabelRef edge)
+    public boolean isSuccessorEdge(LabelRef __edge)
     {
-        AbstractBlockBase<?>[] order = lir.codeEmittingOrder();
-        AbstractBlockBase<?> nextBlock = LIR.getNextBlock(order, currentBlockIndex);
-        return nextBlock == edge.getTargetBlock();
+        AbstractBlockBase<?>[] __order = lir.codeEmittingOrder();
+        AbstractBlockBase<?> __nextBlock = LIR.getNextBlock(__order, currentBlockIndex);
+        return __nextBlock == __edge.getTargetBlock();
     }
 
     /**
      * Emits code for {@code lir} in its {@linkplain LIR#codeEmittingOrder() code emitting order}.
      */
-    public void emit(@SuppressWarnings("hiding") LIR lir)
+    public void emit(@SuppressWarnings("hiding") LIR __lir)
     {
-        this.lir = lir;
+        this.lir = __lir;
         this.currentBlockIndex = 0;
         frameContext.enter(this);
-        for (AbstractBlockBase<?> b : lir.codeEmittingOrder())
+        for (AbstractBlockBase<?> __b : __lir.codeEmittingOrder())
         {
-            emitBlock(b);
+            emitBlock(__b);
             currentBlockIndex++;
         }
         this.lir = null;
         this.currentBlockIndex = 0;
     }
 
-    private void emitBlock(AbstractBlockBase<?> block)
+    private void emitBlock(AbstractBlockBase<?> __block)
     {
-        if (block == null)
+        if (__block == null)
         {
             return;
         }
 
-        for (LIRInstruction op : lir.getLIRforBlock(block))
+        for (LIRInstruction __op : lir.getLIRforBlock(__block))
         {
             if (beforeOp != null)
             {
-                beforeOp.accept(op);
+                beforeOp.accept(__op);
             }
-            emitOp(this, op);
+            emitOp(this, __op);
             if (afterOp != null)
             {
-                afterOp.accept(op);
+                afterOp.accept(__op);
             }
         }
     }
 
-    private static void emitOp(CompilationResultBuilder crb, LIRInstruction op)
+    private static void emitOp(CompilationResultBuilder __crb, LIRInstruction __op)
     {
         try
         {
-            op.emitCode(crb);
+            __op.emitCode(__crb);
         }
-        catch (AssertionError t)
+        catch (AssertionError __t)
         {
-            throw new GraalError(t);
+            throw new GraalError(__t);
         }
-        catch (RuntimeException t)
+        catch (RuntimeException __t)
         {
-            throw new GraalError(t);
+            throw new GraalError(__t);
         }
     }
 
@@ -449,9 +465,9 @@ public final class CompilationResultBuilder
         }
     }
 
-    public void setOpCallback(Consumer<LIRInstruction> beforeOp, Consumer<LIRInstruction> afterOp)
+    public void setOpCallback(Consumer<LIRInstruction> __beforeOp, Consumer<LIRInstruction> __afterOp)
     {
-        this.beforeOp = beforeOp;
-        this.afterOp = afterOp;
+        this.beforeOp = __beforeOp;
+        this.afterOp = __afterOp;
     }
 }

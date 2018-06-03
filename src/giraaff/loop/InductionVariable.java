@@ -34,13 +34,14 @@ public abstract class InductionVariable
 
     public abstract StructuredGraph graph();
 
+    // @field
     protected final LoopEx loop;
 
     // @cons
-    public InductionVariable(LoopEx loop)
+    public InductionVariable(LoopEx __loop)
     {
         super();
-        this.loop = loop;
+        this.loop = __loop;
     }
 
     public LoopEx getLoop()

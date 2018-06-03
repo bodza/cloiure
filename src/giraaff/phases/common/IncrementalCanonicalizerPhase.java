@@ -14,36 +14,37 @@ import giraaff.phases.tiers.PhaseContext;
 // @class IncrementalCanonicalizerPhase
 public final class IncrementalCanonicalizerPhase<C extends PhaseContext> extends PhaseSuite<C>
 {
+    // @field
     private final CanonicalizerPhase canonicalizer;
 
     // @cons
-    public IncrementalCanonicalizerPhase(CanonicalizerPhase canonicalizer)
+    public IncrementalCanonicalizerPhase(CanonicalizerPhase __canonicalizer)
     {
         super();
-        this.canonicalizer = canonicalizer;
+        this.canonicalizer = __canonicalizer;
     }
 
     // @cons
-    public IncrementalCanonicalizerPhase(CanonicalizerPhase canonicalizer, BasePhase<? super C> phase)
+    public IncrementalCanonicalizerPhase(CanonicalizerPhase __canonicalizer, BasePhase<? super C> __phase)
     {
         super();
-        this.canonicalizer = canonicalizer;
-        appendPhase(phase);
+        this.canonicalizer = __canonicalizer;
+        appendPhase(__phase);
     }
 
     @Override
     @SuppressWarnings("try")
-    protected void run(StructuredGraph graph, C context)
+    protected void run(StructuredGraph __graph, C __context)
     {
-        HashSetNodeEventListener listener = new HashSetNodeEventListener();
-        try (NodeEventScope nes = graph.trackNodeEvents(listener))
+        HashSetNodeEventListener __listener = new HashSetNodeEventListener();
+        try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
         {
-            super.run(graph, context);
+            super.run(__graph, __context);
         }
 
-        if (!listener.getNodes().isEmpty())
+        if (!__listener.getNodes().isEmpty())
         {
-            canonicalizer.applyIncremental(graph, context, listener.getNodes(), null);
+            canonicalizer.applyIncremental(__graph, __context, __listener.getNodes(), null);
         }
     }
 }

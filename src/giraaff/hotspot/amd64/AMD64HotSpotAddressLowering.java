@@ -32,14 +32,18 @@ import giraaff.nodes.memory.address.OffsetAddressNode;
 // @class AMD64HotSpotAddressLowering
 public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
 {
+    // @def
     private static final int ADDRESS_BITS = 64;
+    // @def
     private static final int INT_BITS = 32;
 
+    // @field
     private final long heapBase;
+    // @field
     private final Register heapBaseRegister;
 
     // @cons
-    public AMD64HotSpotAddressLowering(Register heapBaseRegister)
+    public AMD64HotSpotAddressLowering(Register __heapBaseRegister)
     {
         super();
         this.heapBase = HotSpotRuntime.oopEncoding.getBase();
@@ -49,37 +53,37 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
         }
         else
         {
-            this.heapBaseRegister = heapBaseRegister;
+            this.heapBaseRegister = __heapBaseRegister;
         }
     }
 
     @Override
-    protected final boolean improveUncompression(AMD64AddressNode addr, CompressionNode compression, ValueNode other)
+    protected final boolean improveUncompression(AMD64AddressNode __addr, CompressionNode __compression, ValueNode __other)
     {
-        CompressEncoding encoding = compression.getEncoding();
-        Scale scale = Scale.fromShift(encoding.getShift());
-        if (scale == null)
+        CompressEncoding __encoding = __compression.getEncoding();
+        Scale __scale = Scale.fromShift(__encoding.getShift());
+        if (__scale == null)
         {
             return false;
         }
 
-        if (heapBaseRegister != null && encoding.getBase() == heapBase)
+        if (heapBaseRegister != null && __encoding.getBase() == heapBase)
         {
-            if (other == null)
+            if (__other == null)
             {
-                ValueNode base = compression.graph().unique(new HeapBaseNode(heapBaseRegister));
-                addr.setBase(base);
+                ValueNode __base = __compression.graph().unique(new HeapBaseNode(heapBaseRegister));
+                __addr.setBase(__base);
             }
             else
             {
                 return false;
             }
         }
-        else if (encoding.getBase() != 0)
+        else if (__encoding.getBase() != 0)
         {
-            if (updateDisplacement(addr, encoding.getBase(), false))
+            if (updateDisplacement(__addr, __encoding.getBase(), false))
             {
-                addr.setBase(other);
+                __addr.setBase(__other);
             }
             else
             {
@@ -88,148 +92,148 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
         }
         else
         {
-            addr.setBase(other);
+            __addr.setBase(__other);
         }
 
-        addr.setScale(scale);
-        addr.setIndex(compression.getValue());
+        __addr.setScale(__scale);
+        __addr.setIndex(__compression.getValue());
         return true;
     }
 
     @Override
-    public void preProcess(StructuredGraph graph)
+    public void preProcess(StructuredGraph __graph)
     {
-        if (graph.hasLoops())
+        if (__graph.hasLoops())
         {
-            LoopsData loopsData = new LoopsData(graph);
-            loopsData.detectedCountedLoops();
-            for (LoopEx loop : loopsData.countedLoops())
+            LoopsData __loopsData = new LoopsData(__graph);
+            __loopsData.detectedCountedLoops();
+            for (LoopEx __loop : __loopsData.countedLoops())
             {
-                for (OffsetAddressNode offsetAdressNode : loop.whole().nodes().filter(OffsetAddressNode.class))
+                for (OffsetAddressNode __offsetAdressNode : __loop.whole().nodes().filter(OffsetAddressNode.class))
                 {
-                    tryOptimize(offsetAdressNode, loop);
+                    tryOptimize(__offsetAdressNode, __loop);
                 }
             }
         }
     }
 
     @Override
-    public void postProcess(AddressNode lowered)
+    public void postProcess(AddressNode __lowered)
     {
         // Allow implicit zero extend for always positive input. This assumes
         // that the upper bits of the operand is zero out by the backend.
-        AMD64AddressNode address = (AMD64AddressNode) lowered;
-        address.setBase(tryImplicitZeroExtend(address.getBase()));
-        address.setIndex(tryImplicitZeroExtend(address.getIndex()));
+        AMD64AddressNode __address = (AMD64AddressNode) __lowered;
+        __address.setBase(tryImplicitZeroExtend(__address.getBase()));
+        __address.setIndex(tryImplicitZeroExtend(__address.getIndex()));
     }
 
-    private static void tryOptimize(OffsetAddressNode offsetAddress, LoopEx loop)
+    private static void tryOptimize(OffsetAddressNode __offsetAddress, LoopEx __loop)
     {
-        EconomicMap<Node, InductionVariable> ivs = loop.getInductionVariables();
-        InductionVariable currentIV = ivs.get(offsetAddress.getOffset());
-        while (currentIV != null)
+        EconomicMap<Node, InductionVariable> __ivs = __loop.getInductionVariables();
+        InductionVariable __currentIV = __ivs.get(__offsetAddress.getOffset());
+        while (__currentIV != null)
         {
-            if (!(currentIV instanceof DerivedInductionVariable))
+            if (!(__currentIV instanceof DerivedInductionVariable))
             {
                 break;
             }
-            ValueNode currentValue = currentIV.valueNode();
-            if (currentValue.isDeleted())
+            ValueNode __currentValue = __currentIV.valueNode();
+            if (__currentValue.isDeleted())
             {
                 break;
             }
 
-            if (currentValue instanceof ZeroExtendNode)
+            if (__currentValue instanceof ZeroExtendNode)
             {
-                ZeroExtendNode zeroExtendNode = (ZeroExtendNode) currentValue;
-                if (applicableToImplicitZeroExtend(zeroExtendNode))
+                ZeroExtendNode __zeroExtendNode = (ZeroExtendNode) __currentValue;
+                if (applicableToImplicitZeroExtend(__zeroExtendNode))
                 {
-                    ValueNode input = zeroExtendNode.getValue();
-                    if (input instanceof AddNode)
+                    ValueNode __input = __zeroExtendNode.getValue();
+                    if (__input instanceof AddNode)
                     {
-                        AddNode add = (AddNode) input;
-                        if (add.getX().isConstant())
+                        AddNode __add = (AddNode) __input;
+                        if (__add.getX().isConstant())
                         {
-                            optimizeAdd(zeroExtendNode, (ConstantNode) add.getX(), add.getY(), loop);
+                            optimizeAdd(__zeroExtendNode, (ConstantNode) __add.getX(), __add.getY(), __loop);
                         }
-                        else if (add.getY().isConstant())
+                        else if (__add.getY().isConstant())
                         {
-                            optimizeAdd(zeroExtendNode, (ConstantNode) add.getY(), add.getX(), loop);
+                            optimizeAdd(__zeroExtendNode, (ConstantNode) __add.getY(), __add.getX(), __loop);
                         }
                     }
                 }
             }
 
-            currentIV = ((DerivedInductionVariable) currentIV).getBase();
+            __currentIV = ((DerivedInductionVariable) __currentIV).getBase();
         }
     }
 
     /**
      * Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
      */
-    private static void optimizeAdd(ZeroExtendNode zeroExtendNode, ConstantNode constant, ValueNode other, LoopEx loop)
+    private static void optimizeAdd(ZeroExtendNode __zeroExtendNode, ConstantNode __constant, ValueNode __other, LoopEx __loop)
     {
-        StructuredGraph graph = zeroExtendNode.graph();
-        AddNode addNode = graph.unique(new AddNode(signExtend(other, loop), ConstantNode.forLong(constant.asJavaConstant().asInt(), graph)));
-        zeroExtendNode.replaceAtUsages(addNode);
+        StructuredGraph __graph = __zeroExtendNode.graph();
+        AddNode __addNode = __graph.unique(new AddNode(signExtend(__other, __loop), ConstantNode.forLong(__constant.asJavaConstant().asInt(), __graph)));
+        __zeroExtendNode.replaceAtUsages(__addNode);
     }
 
     /**
      * Create a sign extend for {@code input}, or zero extend if {@code input} can be proven positive.
      */
-    private static ValueNode signExtend(ValueNode input, LoopEx loop)
+    private static ValueNode signExtend(ValueNode __input, LoopEx __loop)
     {
-        StructuredGraph graph = input.graph();
-        if (input instanceof PhiNode)
+        StructuredGraph __graph = __input.graph();
+        if (__input instanceof PhiNode)
         {
-            EconomicMap<Node, InductionVariable> ivs = loop.getInductionVariables();
-            InductionVariable inductionVariable = ivs.get(input);
-            if (inductionVariable != null && inductionVariable instanceof BasicInductionVariable)
+            EconomicMap<Node, InductionVariable> __ivs = __loop.getInductionVariables();
+            InductionVariable __inductionVariable = __ivs.get(__input);
+            if (__inductionVariable != null && __inductionVariable instanceof BasicInductionVariable)
             {
-                CountedLoopInfo countedLoopInfo = loop.counted();
-                IntegerStamp initStamp = (IntegerStamp) inductionVariable.initNode().stamp(NodeView.DEFAULT);
-                if (initStamp.isPositive())
+                CountedLoopInfo __countedLoopInfo = __loop.counted();
+                IntegerStamp __initStamp = (IntegerStamp) __inductionVariable.initNode().stamp(NodeView.DEFAULT);
+                if (__initStamp.isPositive())
                 {
-                    if (inductionVariable.isConstantExtremum())
+                    if (__inductionVariable.isConstantExtremum())
                     {
-                        long init = inductionVariable.constantInit();
-                        long stride = inductionVariable.constantStride();
-                        long extremum = inductionVariable.constantExtremum();
+                        long __init = __inductionVariable.constantInit();
+                        long __stride = __inductionVariable.constantStride();
+                        long __extremum = __inductionVariable.constantExtremum();
 
-                        if (init >= 0 && extremum >= 0)
+                        if (__init >= 0 && __extremum >= 0)
                         {
-                            long shortestTrip = (extremum - init) / stride + 1;
-                            if (countedLoopInfo.constantMaxTripCount().equals(shortestTrip))
+                            long __shortestTrip = (__extremum - __init) / __stride + 1;
+                            if (__countedLoopInfo.constantMaxTripCount().equals(__shortestTrip))
                             {
-                                return graph.unique(new ZeroExtendNode(input, INT_BITS, ADDRESS_BITS, true));
+                                return __graph.unique(new ZeroExtendNode(__input, INT_BITS, ADDRESS_BITS, true));
                             }
                         }
                     }
-                    if (countedLoopInfo.getCounter() == inductionVariable && inductionVariable.direction() == InductionVariable.Direction.Up && countedLoopInfo.getOverFlowGuard() != null)
+                    if (__countedLoopInfo.getCounter() == __inductionVariable && __inductionVariable.direction() == InductionVariable.Direction.Up && __countedLoopInfo.getOverFlowGuard() != null)
                     {
-                        return graph.unique(new ZeroExtendNode(input, INT_BITS, ADDRESS_BITS, true));
+                        return __graph.unique(new ZeroExtendNode(__input, INT_BITS, ADDRESS_BITS, true));
                     }
                 }
             }
         }
-        return input.graph().maybeAddOrUnique(SignExtendNode.create(input, ADDRESS_BITS, NodeView.DEFAULT));
+        return __input.graph().maybeAddOrUnique(SignExtendNode.create(__input, ADDRESS_BITS, NodeView.DEFAULT));
     }
 
-    private static boolean applicableToImplicitZeroExtend(ZeroExtendNode zeroExtendNode)
+    private static boolean applicableToImplicitZeroExtend(ZeroExtendNode __zeroExtendNode)
     {
-        return zeroExtendNode.isInputAlwaysPositive() && zeroExtendNode.getInputBits() == INT_BITS && zeroExtendNode.getResultBits() == ADDRESS_BITS;
+        return __zeroExtendNode.isInputAlwaysPositive() && __zeroExtendNode.getInputBits() == INT_BITS && __zeroExtendNode.getResultBits() == ADDRESS_BITS;
     }
 
-    private static ValueNode tryImplicitZeroExtend(ValueNode input)
+    private static ValueNode tryImplicitZeroExtend(ValueNode __input)
     {
-        if (input instanceof ZeroExtendNode)
+        if (__input instanceof ZeroExtendNode)
         {
-            ZeroExtendNode zeroExtendNode = (ZeroExtendNode) input;
-            if (applicableToImplicitZeroExtend(zeroExtendNode))
+            ZeroExtendNode __zeroExtendNode = (ZeroExtendNode) __input;
+            if (applicableToImplicitZeroExtend(__zeroExtendNode))
             {
-                return zeroExtendNode.getValue();
+                return __zeroExtendNode.getValue();
             }
         }
-        return input;
+        return __input;
     }
 }

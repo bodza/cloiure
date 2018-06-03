@@ -21,23 +21,39 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotConstantRetrievalOp
 public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotConstantRetrievalOp> TYPE = LIRInstructionClass.create(AMD64HotSpotConstantRetrievalOp.class);
 
-    @Def protected AllocatableValue result;
+    @Def
+    // @field
+    protected AllocatableValue result;
+    // @field
     protected final Constant[] constants;
-    @Alive protected AllocatableValue[] constantDescriptions;
-    @Temp protected AllocatableValue[] gotSlotOffsetParameters;
-    @Temp protected AllocatableValue[] descriptionParameters;
-    @Temp protected Value[] callTemps;
+    @Alive
+    // @field
+    protected AllocatableValue[] constantDescriptions;
+    @Temp
+    // @field
+    protected AllocatableValue[] gotSlotOffsetParameters;
+    @Temp
+    // @field
+    protected AllocatableValue[] descriptionParameters;
+    @Temp
+    // @field
+    protected Value[] callTemps;
     // @State
+    // @field
     protected LIRFrameState state;
+    // @field
     private final ForeignCallLinkage callLinkage;
+    // @field
     private final Object[] notes;
 
     // @class AMD64HotSpotConstantRetrievalOp.CollectTemporaries
     // @closure
     private final class CollectTemporaries implements ValueProcedure
     {
+        // @field
         ArrayList<Value> values = new ArrayList<>();
 
         // @cons
@@ -53,59 +69,59 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         }
 
         @Override
-        public Value doValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        public Value doValue(Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
         {
-            values.add(value);
-            return value;
+            values.add(__value);
+            return __value;
         }
     }
 
     // @cons
-    public AMD64HotSpotConstantRetrievalOp(Constant[] constants, AllocatableValue[] constantDescriptions, LIRFrameState state, ForeignCallLinkage callLinkage, Object[] notes)
+    public AMD64HotSpotConstantRetrievalOp(Constant[] __constants, AllocatableValue[] __constantDescriptions, LIRFrameState __state, ForeignCallLinkage __callLinkage, Object[] __notes)
     {
         super(TYPE);
-        this.constantDescriptions = constantDescriptions;
-        this.constants = constants;
-        this.state = state;
-        this.notes = notes;
+        this.constantDescriptions = __constantDescriptions;
+        this.constants = __constants;
+        this.state = __state;
+        this.notes = __notes;
 
         // call arguments
-        CallingConvention callingConvention = callLinkage.getOutgoingCallingConvention();
-        this.gotSlotOffsetParameters = new AllocatableValue[constants.length];
-        int argIndex = 0;
-        for (int i = 0; i < constants.length; i++, argIndex++)
+        CallingConvention __callingConvention = __callLinkage.getOutgoingCallingConvention();
+        this.gotSlotOffsetParameters = new AllocatableValue[__constants.length];
+        int __argIndex = 0;
+        for (int __i = 0; __i < __constants.length; __i++, __argIndex++)
         {
-            this.gotSlotOffsetParameters[i] = callingConvention.getArgument(argIndex);
+            this.gotSlotOffsetParameters[__i] = __callingConvention.getArgument(__argIndex);
         }
-        this.descriptionParameters = new AllocatableValue[constantDescriptions.length];
-        for (int i = 0; i < constantDescriptions.length; i++, argIndex++)
+        this.descriptionParameters = new AllocatableValue[__constantDescriptions.length];
+        for (int __i = 0; __i < __constantDescriptions.length; __i++, __argIndex++)
         {
-            this.descriptionParameters[i] = callingConvention.getArgument(argIndex);
+            this.descriptionParameters[__i] = __callingConvention.getArgument(__argIndex);
         }
-        this.result = callingConvention.getReturn();
+        this.result = __callingConvention.getReturn();
 
-        this.callLinkage = callLinkage;
+        this.callLinkage = __callLinkage;
 
         // compute registers that are killed by the stub, but are not used as other temps.
         this.callTemps = new Value[0];
-        this.callTemps = LIRValueUtil.subtractRegisters(callLinkage.getTemporaries(), new CollectTemporaries().asArray());
+        this.callTemps = LIRValueUtil.subtractRegisters(__callLinkage.getTemporaries(), new CollectTemporaries().asArray());
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         // metadata_adr
-        for (int i = 0; i < constants.length; i++)
+        for (int __i = 0; __i < constants.length; __i++)
         {
-            crb.recordInlineDataInCodeWithNote(constants[i], notes[i]);
-            masm.leaq(ValueUtil.asRegister(gotSlotOffsetParameters[i]), masm.getPlaceholder(-1));
+            __crb.recordInlineDataInCodeWithNote(constants[__i], notes[__i]);
+            __masm.leaq(ValueUtil.asRegister(gotSlotOffsetParameters[__i]), __masm.getPlaceholder(-1));
         }
 
-        for (int i = 0; i < constantDescriptions.length; i++)
+        for (int __i = 0; __i < constantDescriptions.length; __i++)
         {
-            masm.movq(ValueUtil.asRegister(descriptionParameters[i]), ValueUtil.asRegister(constantDescriptions[i]));
+            __masm.movq(ValueUtil.asRegister(descriptionParameters[__i]), ValueUtil.asRegister(constantDescriptions[__i]));
         }
 
-        masm.call();
+        __masm.call();
     }
 }

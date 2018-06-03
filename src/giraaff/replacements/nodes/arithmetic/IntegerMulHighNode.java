@@ -19,59 +19,60 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class IntegerMulHighNode
 public final class IntegerMulHighNode extends BinaryArithmeticNode<MulHigh> implements Canonicalizable.BinaryCommutative<ValueNode>
 {
+    // @def
     public static final NodeClass<IntegerMulHighNode> TYPE = NodeClass.create(IntegerMulHighNode.class);
 
     // @cons
-    public IntegerMulHighNode(ValueNode x, ValueNode y)
+    public IntegerMulHighNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, ArithmeticOpTable::getMulHigh, x, y);
+        super(TYPE, ArithmeticOpTable::getMulHigh, __x, __y);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        Value a = nodeValueMap.operand(getX());
-        Value b = nodeValueMap.operand(getY());
-        nodeValueMap.setResult(this, gen.emitMulHigh(a, b));
+        Value __a = __nodeValueMap.operand(getX());
+        Value __b = __nodeValueMap.operand(getY());
+        __nodeValueMap.setResult(this, __gen.emitMulHigh(__a, __b));
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        if (forX.isConstant() && !forY.isConstant())
+        if (__forX.isConstant() && !__forY.isConstant())
         {
             // we try to swap and canonicalize
-            ValueNode improvement = canonical(tool, forY, forX);
-            if (improvement != this)
+            ValueNode __improvement = canonical(__tool, __forY, __forX);
+            if (__improvement != this)
             {
-                return improvement;
+                return __improvement;
             }
             // if this fails we only swap
-            return new IntegerMulHighNode(forY, forX);
+            return new IntegerMulHighNode(__forY, __forX);
         }
-        return canonical(this, forY);
+        return canonical(this, __forY);
     }
 
-    private static ValueNode canonical(IntegerMulHighNode self, ValueNode forY)
+    private static ValueNode canonical(IntegerMulHighNode __self, ValueNode __forY)
     {
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            Constant c = forY.asConstant();
-            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger())
+            Constant __c = __forY.asConstant();
+            if (__c instanceof PrimitiveConstant && ((PrimitiveConstant) __c).getJavaKind().isNumericInteger())
             {
-                long i = ((PrimitiveConstant) c).asLong();
-                if (i == 0 || i == 1)
+                long __i = ((PrimitiveConstant) __c).asLong();
+                if (__i == 0 || __i == 1)
                 {
-                    return ConstantNode.forIntegerStamp(self.stamp(NodeView.DEFAULT), 0);
+                    return ConstantNode.forIntegerStamp(__self.stamp(NodeView.DEFAULT), 0);
                 }
             }
         }
-        return self;
+        return __self;
     }
 }

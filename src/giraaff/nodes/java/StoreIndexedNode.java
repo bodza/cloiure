@@ -22,10 +22,15 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class StoreIndexedNode
 public final class StoreIndexedNode extends AccessIndexedNode implements StateSplit, Lowerable, Virtualizable
 {
+    // @def
     public static final NodeClass<StoreIndexedNode> TYPE = NodeClass.create(StoreIndexedNode.class);
 
-    @Input ValueNode value;
-    @OptionalInput(InputType.State) FrameState stateAfter;
+    @Input
+    // @field
+    ValueNode value;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateAfter;
 
     @Override
     public FrameState stateAfter()
@@ -34,10 +39,10 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -52,28 +57,28 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
     }
 
     // @cons
-    public StoreIndexedNode(ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value)
+    public StoreIndexedNode(ValueNode __array, ValueNode __index, JavaKind __elementKind, ValueNode __value)
     {
-        super(TYPE, StampFactory.forVoid(), array, index, elementKind);
-        this.value = value;
+        super(TYPE, StampFactory.forVoid(), __array, __index, __elementKind);
+        this.value = __value;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(array());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(array());
+        if (__alias instanceof VirtualObjectNode)
         {
-            ValueNode indexValue = tool.getAlias(index());
-            int idx = indexValue.isConstant() ? indexValue.asJavaConstant().asInt() : -1;
-            VirtualArrayNode virtual = (VirtualArrayNode) alias;
-            if (idx >= 0 && idx < virtual.entryCount())
+            ValueNode __indexValue = __tool.getAlias(index());
+            int __idx = __indexValue.isConstant() ? __indexValue.asJavaConstant().asInt() : -1;
+            VirtualArrayNode __virtual = (VirtualArrayNode) __alias;
+            if (__idx >= 0 && __idx < __virtual.entryCount())
             {
-                ResolvedJavaType componentType = virtual.type().getComponentType();
-                if (componentType.isPrimitive() || StampTool.isPointerAlwaysNull(value) || componentType.getSuperclass() == null || (StampTool.typeReferenceOrNull(value) != null && componentType.isAssignableFrom(StampTool.typeOrNull(value))))
+                ResolvedJavaType __componentType = __virtual.type().getComponentType();
+                if (__componentType.isPrimitive() || StampTool.isPointerAlwaysNull(value) || __componentType.getSuperclass() == null || (StampTool.typeReferenceOrNull(value) != null && __componentType.isAssignableFrom(StampTool.typeOrNull(value))))
                 {
-                    tool.setVirtualEntry(virtual, idx, value());
-                    tool.delete();
+                    __tool.setVirtualEntry(__virtual, __idx, value());
+                    __tool.delete();
                 }
             }
         }

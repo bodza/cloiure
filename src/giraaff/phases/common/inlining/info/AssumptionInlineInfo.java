@@ -18,24 +18,25 @@ import giraaff.phases.util.Providers;
 // @class AssumptionInlineInfo
 public final class AssumptionInlineInfo extends ExactInlineInfo
 {
+    // @field
     private final AssumptionResult<?> takenAssumption;
 
     // @cons
-    public AssumptionInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, AssumptionResult<?> takenAssumption)
+    public AssumptionInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete, AssumptionResult<?> __takenAssumption)
     {
-        super(invoke, concrete);
-        this.takenAssumption = takenAssumption;
+        super(__invoke, __concrete);
+        this.takenAssumption = __takenAssumption;
     }
 
     @Override
-    public EconomicSet<Node> inline(Providers providers, String reason)
+    public EconomicSet<Node> inline(Providers __providers, String __reason)
     {
         takenAssumption.recordTo(invoke.asNode().graph().getAssumptions());
-        return super.inline(providers, reason);
+        return super.inline(__providers, __reason);
     }
 
     @Override
-    public void tryToDevirtualizeInvoke(Providers providers)
+    public void tryToDevirtualizeInvoke(Providers __providers)
     {
         takenAssumption.recordTo(invoke.asNode().graph().getAssumptions());
         InliningUtil.replaceInvokeCallTarget(invoke, graph(), InvokeKind.Special, concrete);

@@ -18,9 +18,9 @@ public final class AMD64StringLatin1Substitutions
      * @param other is byte[]
      */
     @MethodSubstitution
-    public static int compareTo(byte[] value, byte[] other)
+    public static int compareTo(byte[] __value, byte[] __other)
     {
-        return ArrayCompareToNode.compareTo(value, other, value.length, other.length, JavaKind.Byte, JavaKind.Byte);
+        return ArrayCompareToNode.compareTo(__value, __other, __value.length, __other.length, JavaKind.Byte, JavaKind.Byte);
     }
 
     /**
@@ -28,8 +28,8 @@ public final class AMD64StringLatin1Substitutions
      * @param other is char[]
      */
     @MethodSubstitution
-    public static int compareToUTF16(byte[] value, byte[] other)
+    public static int compareToUTF16(byte[] __value, byte[] __other)
     {
-        return ArrayCompareToNode.compareTo(value, other, value.length, other.length, JavaKind.Byte, JavaKind.Char);
+        return ArrayCompareToNode.compareTo(__value, __other, __value.length, __other.length, JavaKind.Byte, JavaKind.Char);
     }
 }

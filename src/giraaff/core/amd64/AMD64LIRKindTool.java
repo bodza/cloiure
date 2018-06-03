@@ -10,17 +10,17 @@ import giraaff.util.GraalError;
 public abstract class AMD64LIRKindTool implements LIRKindTool
 {
     @Override
-    public LIRKind getIntegerKind(int bits)
+    public LIRKind getIntegerKind(int __bits)
     {
-        if (bits <= 8)
+        if (__bits <= 8)
         {
             return LIRKind.value(AMD64Kind.BYTE);
         }
-        else if (bits <= 16)
+        else if (__bits <= 16)
         {
             return LIRKind.value(AMD64Kind.WORD);
         }
-        else if (bits <= 32)
+        else if (__bits <= 32)
         {
             return LIRKind.value(AMD64Kind.DWORD);
         }
@@ -31,9 +31,9 @@ public abstract class AMD64LIRKindTool implements LIRKindTool
     }
 
     @Override
-    public LIRKind getFloatingKind(int bits)
+    public LIRKind getFloatingKind(int __bits)
     {
-        switch (bits)
+        switch (__bits)
         {
             case 32:
                 return LIRKind.value(AMD64Kind.SINGLE);

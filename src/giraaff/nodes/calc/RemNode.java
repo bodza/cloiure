@@ -16,41 +16,42 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class RemNode
 public final class RemNode extends BinaryArithmeticNode<Rem> implements Lowerable
 {
+    // @def
     public static final NodeClass<RemNode> TYPE = NodeClass.create(RemNode.class);
 
     // @cons
-    protected RemNode(ValueNode x, ValueNode y)
+    protected RemNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected RemNode(NodeClass<? extends RemNode> c, ValueNode x, ValueNode y)
+    protected RemNode(NodeClass<? extends RemNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, ArithmeticOpTable::getRem, x, y);
+        super(__c, ArithmeticOpTable::getRem, __x, __y);
     }
 
-    public static ValueNode create(ValueNode forX, ValueNode forY, NodeView view)
+    public static ValueNode create(ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        BinaryOp<Rem> op = ArithmeticOpTable.forStamp(forX.stamp(view)).getRem();
-        Stamp stamp = op.foldStamp(forX.stamp(view), forY.stamp(view));
-        ConstantNode tryConstantFold = tryConstantFold(op, forX, forY, stamp, view);
-        if (tryConstantFold != null)
+        BinaryOp<Rem> __op = ArithmeticOpTable.forStamp(__forX.stamp(__view)).getRem();
+        Stamp __stamp = __op.foldStamp(__forX.stamp(__view), __forY.stamp(__view));
+        ConstantNode __tryConstantFold = tryConstantFold(__op, __forX, __forY, __stamp, __view);
+        if (__tryConstantFold != null)
         {
-            return tryConstantFold;
+            return __tryConstantFold;
         }
-        return new RemNode(forX, forY);
+        return new RemNode(__forX, __forY);
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitRem(nodeValueMap.operand(getX()), nodeValueMap.operand(getY()), null));
+        __nodeValueMap.setResult(this, __gen.emitRem(__nodeValueMap.operand(getX()), __nodeValueMap.operand(getY()), null));
     }
 }

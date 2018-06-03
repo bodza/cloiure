@@ -7,10 +7,14 @@ package giraaff.api.directives;
 // @class GraalDirectives
 public final class GraalDirectives
 {
+    // @def
     public static final double LIKELY_PROBABILITY = 0.75;
+    // @def
     public static final double UNLIKELY_PROBABILITY = 1.0 - LIKELY_PROBABILITY;
 
+    // @def
     public static final double SLOWPATH_PROBABILITY = 0.0001;
+    // @def
     public static final double FASTPATH_PROBABILITY = 1.0 - SLOWPATH_PROBABILITY;
 
     /**
@@ -69,9 +73,9 @@ public final class GraalDirectives
      *
      * @param probability the probability value between 0.0 and 1.0 that should be injected
      */
-    public static boolean injectBranchProbability(double probability, boolean condition)
+    public static boolean injectBranchProbability(double __probability, boolean __condition)
     {
-        return condition;
+        return __condition;
     }
 
     /**
@@ -91,9 +95,9 @@ public final class GraalDirectives
      *
      * @param iterations the expected number of iterations that should be injected
      */
-    public static boolean injectIterationCount(double iterations, boolean condition)
+    public static boolean injectIterationCount(double __iterations, boolean __condition)
     {
-        return injectBranchProbability(1. - 1. / iterations, condition);
+        return injectBranchProbability(1. - 1. / __iterations, __condition);
     }
 
     /**
@@ -101,16 +105,7 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(boolean value)
-    {
-    }
-
-    /**
-     * Consume a value, making sure the compiler doesn't optimize away the computation of this
-     * value, even if it is otherwise unused.
-     */
-    @SuppressWarnings("unused")
-    public static void blackhole(byte value)
+    public static void blackhole(boolean __value)
     {
     }
 
@@ -119,7 +114,7 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(short value)
+    public static void blackhole(byte __value)
     {
     }
 
@@ -128,7 +123,7 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(char value)
+    public static void blackhole(short __value)
     {
     }
 
@@ -137,7 +132,7 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(int value)
+    public static void blackhole(char __value)
     {
     }
 
@@ -146,7 +141,7 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(long value)
+    public static void blackhole(int __value)
     {
     }
 
@@ -155,7 +150,7 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(float value)
+    public static void blackhole(long __value)
     {
     }
 
@@ -164,7 +159,7 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(double value)
+    public static void blackhole(float __value)
     {
     }
 
@@ -173,7 +168,16 @@ public final class GraalDirectives
      * value, even if it is otherwise unused.
      */
     @SuppressWarnings("unused")
-    public static void blackhole(Object value)
+    public static void blackhole(double __value)
+    {
+    }
+
+    /**
+     * Consume a value, making sure the compiler doesn't optimize away the computation of this
+     * value, even if it is otherwise unused.
+     */
+    @SuppressWarnings("unused")
+    public static void blackhole(Object __value)
     {
     }
 
@@ -181,7 +185,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(boolean value)
+    public static void bindToRegister(boolean __value)
     {
     }
 
@@ -189,7 +193,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(byte value)
+    public static void bindToRegister(byte __value)
     {
     }
 
@@ -197,7 +201,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(short value)
+    public static void bindToRegister(short __value)
     {
     }
 
@@ -205,7 +209,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(char value)
+    public static void bindToRegister(char __value)
     {
     }
 
@@ -213,7 +217,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(int value)
+    public static void bindToRegister(int __value)
     {
     }
 
@@ -221,7 +225,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(long value)
+    public static void bindToRegister(long __value)
     {
     }
 
@@ -229,7 +233,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(float value)
+    public static void bindToRegister(float __value)
     {
     }
 
@@ -237,7 +241,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(double value)
+    public static void bindToRegister(double __value)
     {
     }
 
@@ -245,7 +249,7 @@ public final class GraalDirectives
      * Forces a value to be kept in a register.
      */
     @SuppressWarnings("unused")
-    public static void bindToRegister(Object value)
+    public static void bindToRegister(Object __value)
     {
     }
 
@@ -263,9 +267,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static boolean opaque(boolean value)
+    public static boolean opaque(boolean __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -275,9 +279,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static byte opaque(byte value)
+    public static byte opaque(byte __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -287,9 +291,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static short opaque(short value)
+    public static short opaque(short __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -299,9 +303,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static char opaque(char value)
+    public static char opaque(char __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -311,9 +315,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static int opaque(int value)
+    public static int opaque(int __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -323,9 +327,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static long opaque(long value)
+    public static long opaque(long __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -335,9 +339,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static float opaque(float value)
+    public static float opaque(float __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -347,9 +351,9 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static double opaque(double value)
+    public static double opaque(double __value)
     {
-        return value;
+        return __value;
     }
 
     /**
@@ -359,32 +363,32 @@ public final class GraalDirectives
      * opaque(3) will result in a real multiplication, because the compiler will not see that
      * opaque(3) is a constant.
      */
-    public static <T> T opaque(T value)
+    public static <T> T opaque(T __value)
     {
-        return value;
+        return __value;
     }
 
-    public static <T> T guardingNonNull(T value)
+    public static <T> T guardingNonNull(T __value)
     {
-        if (value == null)
+        if (__value == null)
         {
             deoptimize();
         }
-        return value;
+        return __value;
     }
 
     /**
      * Ensures that the given object will be virtual (escape analyzed) at all points that are
      * dominated by the current position.
      */
-    public static void ensureVirtualized(@SuppressWarnings("unused") Object object)
+    public static void ensureVirtualized(@SuppressWarnings("unused") Object __object)
     {
     }
 
     /**
      * Ensures that the given object will be virtual at the current position.
      */
-    public static void ensureVirtualizedHere(@SuppressWarnings("unused") Object object)
+    public static void ensureVirtualizedHere(@SuppressWarnings("unused") Object __object)
     {
     }
 }

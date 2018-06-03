@@ -16,25 +16,28 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 // @class UnaryArithmeticNode
 public abstract class UnaryArithmeticNode<OP> extends UnaryNode implements ArithmeticOperation, ArithmeticLIRLowerable
 {
-    @SuppressWarnings("rawtypes") public static final NodeClass<UnaryArithmeticNode> TYPE = NodeClass.create(UnaryArithmeticNode.class);
+    @SuppressWarnings("rawtypes")
+    // @def
+    public static final NodeClass<UnaryArithmeticNode> TYPE = NodeClass.create(UnaryArithmeticNode.class);
 
     // @iface UnaryArithmeticNode.SerializableUnaryFunction
     protected interface SerializableUnaryFunction<T> extends Function<ArithmeticOpTable, UnaryOp<T>>
     {
     }
 
+    // @field
     protected final SerializableUnaryFunction<OP> getOp;
 
     // @cons
-    protected UnaryArithmeticNode(NodeClass<? extends UnaryArithmeticNode<OP>> c, SerializableUnaryFunction<OP> getOp, ValueNode value)
+    protected UnaryArithmeticNode(NodeClass<? extends UnaryArithmeticNode<OP>> __c, SerializableUnaryFunction<OP> __getOp, ValueNode __value)
     {
-        super(c, getOp.apply(ArithmeticOpTable.forStamp(value.stamp(NodeView.DEFAULT))).foldStamp(value.stamp(NodeView.DEFAULT)), value);
-        this.getOp = getOp;
+        super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__value.stamp(NodeView.DEFAULT))).foldStamp(__value.stamp(NodeView.DEFAULT)), __value);
+        this.getOp = __getOp;
     }
 
-    protected final UnaryOp<OP> getOp(ValueNode forValue)
+    protected final UnaryOp<OP> getOp(ValueNode __forValue)
     {
-        return getOp.apply(ArithmeticOpTable.forStamp(forValue.stamp(NodeView.DEFAULT)));
+        return getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
@@ -44,27 +47,27 @@ public abstract class UnaryArithmeticNode<OP> extends UnaryNode implements Arith
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
-        return getOp(getValue()).foldStamp(newStamp);
+        return getOp(getValue()).foldStamp(__newStamp);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        ValueNode synonym = findSynonym(forValue, getOp(forValue));
-        if (synonym != null)
+        ValueNode __synonym = findSynonym(__forValue, getOp(__forValue));
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         return this;
     }
 
-    protected static <OP> ValueNode findSynonym(ValueNode forValue, UnaryOp<OP> op)
+    protected static <OP> ValueNode findSynonym(ValueNode __forValue, UnaryOp<OP> __op)
     {
-        if (forValue.isConstant())
+        if (__forValue.isConstant())
         {
-            return ConstantNode.forPrimitive(op.foldStamp(forValue.stamp(NodeView.DEFAULT)), op.foldConstant(forValue.asConstant()));
+            return ConstantNode.forPrimitive(__op.foldStamp(__forValue.stamp(NodeView.DEFAULT)), __op.foldConstant(__forValue.asConstant()));
         }
         return null;
     }

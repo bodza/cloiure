@@ -35,6 +35,7 @@ public final class ComputeBlockOrder
     /**
      * The initial capacities of the worklists used for iteratively finding the block order.
      */
+    // @def
     private static final int INITIAL_WORKLIST_CAPACITY = 10;
 
     /**
@@ -42,6 +43,7 @@ public final class ComputeBlockOrder
      * a merge node when calculating the linear scan order. A high value means that predecessors
      * of merge nodes are more likely to be scheduled before the merge node.
      */
+    // @def
     private static final int PENALTY_VERSUS_UNSCHEDULED = 10;
 
     /**
@@ -49,12 +51,12 @@ public final class ComputeBlockOrder
      *
      * @return sorted list of blocks
      */
-    public static <T extends AbstractBlockBase<T>> AbstractBlockBase<?>[] computeLinearScanOrder(int blockCount, T startBlock)
+    public static <T extends AbstractBlockBase<T>> AbstractBlockBase<?>[] computeLinearScanOrder(int __blockCount, T __startBlock)
     {
-        List<T> order = new ArrayList<>();
-        BitSet visitedBlocks = new BitSet(blockCount);
-        computeLinearScanOrder(order, initializeWorklist(startBlock, visitedBlocks), visitedBlocks);
-        return order.toArray(new AbstractBlockBase<?>[0]);
+        List<T> __order = new ArrayList<>();
+        BitSet __visitedBlocks = new BitSet(__blockCount);
+        computeLinearScanOrder(__order, initializeWorklist(__startBlock, __visitedBlocks), __visitedBlocks);
+        return __order.toArray(new AbstractBlockBase<?>[0]);
     }
 
     /**
@@ -62,82 +64,82 @@ public final class ComputeBlockOrder
      *
      * @return sorted list of blocks
      */
-    public static <T extends AbstractBlockBase<T>> AbstractBlockBase<?>[] computeCodeEmittingOrder(int blockCount, T startBlock)
+    public static <T extends AbstractBlockBase<T>> AbstractBlockBase<?>[] computeCodeEmittingOrder(int __blockCount, T __startBlock)
     {
-        List<T> order = new ArrayList<>();
-        BitSet visitedBlocks = new BitSet(blockCount);
-        computeCodeEmittingOrder(order, initializeWorklist(startBlock, visitedBlocks), visitedBlocks);
-        return order.toArray(new AbstractBlockBase<?>[0]);
+        List<T> __order = new ArrayList<>();
+        BitSet __visitedBlocks = new BitSet(__blockCount);
+        computeCodeEmittingOrder(__order, initializeWorklist(__startBlock, __visitedBlocks), __visitedBlocks);
+        return __order.toArray(new AbstractBlockBase<?>[0]);
     }
 
     /**
      * Iteratively adds paths to the code emission block order.
      */
-    private static <T extends AbstractBlockBase<T>> void computeCodeEmittingOrder(List<T> order, PriorityQueue<T> worklist, BitSet visitedBlocks)
+    private static <T extends AbstractBlockBase<T>> void computeCodeEmittingOrder(List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
-        while (!worklist.isEmpty())
+        while (!__worklist.isEmpty())
         {
-            addPathToCodeEmittingOrder(worklist.poll(), order, worklist, visitedBlocks);
+            addPathToCodeEmittingOrder(__worklist.poll(), __order, __worklist, __visitedBlocks);
         }
     }
 
     /**
      * Iteratively adds paths to the linear scan block order.
      */
-    private static <T extends AbstractBlockBase<T>> void computeLinearScanOrder(List<T> order, PriorityQueue<T> worklist, BitSet visitedBlocks)
+    private static <T extends AbstractBlockBase<T>> void computeLinearScanOrder(List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
-        while (!worklist.isEmpty())
+        while (!__worklist.isEmpty())
         {
-            T nextImportantPath = worklist.poll();
+            T __nextImportantPath = __worklist.poll();
             do
             {
-                nextImportantPath = addPathToLinearScanOrder(nextImportantPath, order, worklist, visitedBlocks);
-            } while (nextImportantPath != null);
+                __nextImportantPath = addPathToLinearScanOrder(__nextImportantPath, __order, __worklist, __visitedBlocks);
+            } while (__nextImportantPath != null);
         }
     }
 
     /**
      * Initializes the priority queue used for the work list of blocks and adds the start block.
      */
-    private static <T extends AbstractBlockBase<T>> PriorityQueue<T> initializeWorklist(T startBlock, BitSet visitedBlocks)
+    private static <T extends AbstractBlockBase<T>> PriorityQueue<T> initializeWorklist(T __startBlock, BitSet __visitedBlocks)
     {
-        PriorityQueue<T> result = new PriorityQueue<>(INITIAL_WORKLIST_CAPACITY, new BlockOrderComparator<>());
-        result.add(startBlock);
-        visitedBlocks.set(startBlock.getId());
-        return result;
+        PriorityQueue<T> __result = new PriorityQueue<>(INITIAL_WORKLIST_CAPACITY, new BlockOrderComparator<>());
+        __result.add(__startBlock);
+        __visitedBlocks.set(__startBlock.getId());
+        return __result;
     }
 
     /**
      * Add a linear path to the linear scan order greedily following the most likely successor.
      */
-    private static <T extends AbstractBlockBase<T>> T addPathToLinearScanOrder(T block, List<T> order, PriorityQueue<T> worklist, BitSet visitedBlocks)
+    private static <T extends AbstractBlockBase<T>> T addPathToLinearScanOrder(T __block, List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
-        block.setLinearScanNumber(order.size());
-        order.add(block);
-        T mostLikelySuccessor = findAndMarkMostLikelySuccessor(block, visitedBlocks);
-        enqueueSuccessors(block, worklist, visitedBlocks);
-        if (mostLikelySuccessor != null)
+        __block.setLinearScanNumber(__order.size());
+        __order.add(__block);
+        T __mostLikelySuccessor = findAndMarkMostLikelySuccessor(__block, __visitedBlocks);
+        enqueueSuccessors(__block, __worklist, __visitedBlocks);
+        if (__mostLikelySuccessor != null)
         {
-            if (!mostLikelySuccessor.isLoopHeader() && mostLikelySuccessor.getPredecessorCount() > 1)
+            if (!__mostLikelySuccessor.isLoopHeader() && __mostLikelySuccessor.getPredecessorCount() > 1)
             {
                 // We are at a merge. Check probabilities of predecessors that are not yet scheduled.
-                double unscheduledSum = 0.0;
-                for (T pred : mostLikelySuccessor.getPredecessors())
+                double __unscheduledSum = 0.0;
+                for (T __pred : __mostLikelySuccessor.getPredecessors())
                 {
-                    if (pred.getLinearScanNumber() == -1)
+                    if (__pred.getLinearScanNumber() == -1)
                     {
-                        unscheduledSum += pred.probability();
+                        __unscheduledSum += __pred.probability();
                     }
                 }
 
-                if (unscheduledSum > block.probability() / PENALTY_VERSUS_UNSCHEDULED)
+                if (__unscheduledSum > __block.probability() / PENALTY_VERSUS_UNSCHEDULED)
                 {
                     // Add this merge only after at least one additional predecessor gets scheduled.
-                    visitedBlocks.clear(mostLikelySuccessor.getId());
+                    __visitedBlocks.clear(__mostLikelySuccessor.getId());
                     return null;
                 }
             }
-            return mostLikelySuccessor;
+            return __mostLikelySuccessor;
         }
         return null;
     }
@@ -145,86 +147,86 @@ public final class ComputeBlockOrder
     /**
      * Add a linear path to the code emission order greedily following the most likely successor.
      */
-    private static <T extends AbstractBlockBase<T>> void addPathToCodeEmittingOrder(T initialBlock, List<T> order, PriorityQueue<T> worklist, BitSet visitedBlocks)
+    private static <T extends AbstractBlockBase<T>> void addPathToCodeEmittingOrder(T __initialBlock, List<T> __order, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
-        T block = initialBlock;
-        while (block != null)
+        T __block = __initialBlock;
+        while (__block != null)
         {
             // Skip loop headers if there is only a single loop end block to make
             // the backward jump be a conditional jump.
-            if (!skipLoopHeader(block))
+            if (!skipLoopHeader(__block))
             {
                 // Align unskipped loop headers as they are the target of the backward jump.
-                if (block.isLoopHeader())
+                if (__block.isLoopHeader())
                 {
-                    block.setAlign(true);
+                    __block.setAlign(true);
                 }
-                addBlock(block, order);
+                addBlock(__block, __order);
             }
 
-            Loop<T> loop = block.getLoop();
-            if (block.isLoopEnd() && skipLoopHeader(loop.getHeader()))
+            Loop<T> __loop = __block.getLoop();
+            if (__block.isLoopEnd() && skipLoopHeader(__loop.getHeader()))
             {
                 // This is the only loop end of a skipped loop header.
                 // Add the header immediately afterwards.
-                addBlock(loop.getHeader(), order);
+                addBlock(__loop.getHeader(), __order);
 
                 // Make sure the loop successors of the loop header are aligned,
                 // as they are the target of the backward jump.
-                for (T successor : loop.getHeader().getSuccessors())
+                for (T __successor : __loop.getHeader().getSuccessors())
                 {
-                    if (successor.getLoopDepth() == block.getLoopDepth())
+                    if (__successor.getLoopDepth() == __block.getLoopDepth())
                     {
-                        successor.setAlign(true);
+                        __successor.setAlign(true);
                     }
                 }
             }
 
-            T mostLikelySuccessor = findAndMarkMostLikelySuccessor(block, visitedBlocks);
-            enqueueSuccessors(block, worklist, visitedBlocks);
-            block = mostLikelySuccessor;
+            T __mostLikelySuccessor = findAndMarkMostLikelySuccessor(__block, __visitedBlocks);
+            enqueueSuccessors(__block, __worklist, __visitedBlocks);
+            __block = __mostLikelySuccessor;
         }
     }
 
     /**
      * Adds a block to the ordering.
      */
-    private static <T extends AbstractBlockBase<T>> void addBlock(T header, List<T> order)
+    private static <T extends AbstractBlockBase<T>> void addBlock(T __header, List<T> __order)
     {
-        order.add(header);
+        __order.add(__header);
     }
 
     /**
      * Find the highest likely unvisited successor block of a given block.
      */
-    private static <T extends AbstractBlockBase<T>> T findAndMarkMostLikelySuccessor(T block, BitSet visitedBlocks)
+    private static <T extends AbstractBlockBase<T>> T findAndMarkMostLikelySuccessor(T __block, BitSet __visitedBlocks)
     {
-        T result = null;
-        for (T successor : block.getSuccessors())
+        T __result = null;
+        for (T __successor : __block.getSuccessors())
         {
-            if (!visitedBlocks.get(successor.getId()) && successor.getLoopDepth() >= block.getLoopDepth() && (result == null || successor.probability() >= result.probability()))
+            if (!__visitedBlocks.get(__successor.getId()) && __successor.getLoopDepth() >= __block.getLoopDepth() && (__result == null || __successor.probability() >= __result.probability()))
             {
-                result = successor;
+                __result = __successor;
             }
         }
-        if (result != null)
+        if (__result != null)
         {
-            visitedBlocks.set(result.getId());
+            __visitedBlocks.set(__result.getId());
         }
-        return result;
+        return __result;
     }
 
     /**
      * Add successor blocks into the given work list if they are not already marked as visited.
      */
-    private static <T extends AbstractBlockBase<T>> void enqueueSuccessors(T block, PriorityQueue<T> worklist, BitSet visitedBlocks)
+    private static <T extends AbstractBlockBase<T>> void enqueueSuccessors(T __block, PriorityQueue<T> __worklist, BitSet __visitedBlocks)
     {
-        for (T successor : block.getSuccessors())
+        for (T __successor : __block.getSuccessors())
         {
-            if (!visitedBlocks.get(successor.getId()))
+            if (!__visitedBlocks.get(__successor.getId()))
             {
-                visitedBlocks.set(successor.getId());
-                worklist.add(successor);
+                __visitedBlocks.set(__successor.getId());
+                __worklist.add(__successor);
             }
         }
     }
@@ -233,9 +235,9 @@ public final class ComputeBlockOrder
      * Skip the loop header block if the loop consists of more than one block and it has only a
      * single loop end block.
      */
-    private static <T extends AbstractBlockBase<T>> boolean skipLoopHeader(AbstractBlockBase<T> block)
+    private static <T extends AbstractBlockBase<T>> boolean skipLoopHeader(AbstractBlockBase<T> __block)
     {
-        return (block.isLoopHeader() && !block.isLoopEnd() && block.getLoop().numBackedges() == 1);
+        return (__block.isLoopHeader() && !__block.isLoopEnd() && __block.getLoop().numBackedges() == 1);
     }
 
     /**
@@ -244,24 +246,25 @@ public final class ComputeBlockOrder
     // @class ComputeBlockOrder.BlockOrderComparator
     private static final class BlockOrderComparator<T extends AbstractBlockBase<T>> implements Comparator<T>
     {
+        // @def
         private static final double EPSILON = 1E-6;
 
         @Override
-        public int compare(T a, T b)
+        public int compare(T __a, T __b)
         {
             // Loop blocks before any loop exit block. The only exception are
             // blocks that are (almost) impossible to reach.
-            if (a.probability() > EPSILON && b.probability() > EPSILON)
+            if (__a.probability() > EPSILON && __b.probability() > EPSILON)
             {
-                int diff = b.getLoopDepth() - a.getLoopDepth();
-                if (diff != 0)
+                int __diff = __b.getLoopDepth() - __a.getLoopDepth();
+                if (__diff != 0)
                 {
-                    return diff;
+                    return __diff;
                 }
             }
 
             // Blocks with high probability before blocks with low probability.
-            if (a.probability() > b.probability())
+            if (__a.probability() > __b.probability())
             {
                 return -1;
             }

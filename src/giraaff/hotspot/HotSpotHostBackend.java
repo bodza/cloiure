@@ -24,49 +24,51 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
     /**
      * Descriptor for {@code SharedRuntime::deopt_blob()->unpack()}.
      */
+    // @def
     public static final ForeignCallDescriptor DEOPTIMIZATION_HANDLER = new ForeignCallDescriptor("deoptHandler", void.class);
 
     /**
      * Descriptor for {@code SharedRuntime::deopt_blob()->uncommon_trap()}.
      */
+    // @def
     public static final ForeignCallDescriptor UNCOMMON_TRAP_HANDLER = new ForeignCallDescriptor("uncommonTrapHandler", void.class);
 
     // @cons
-    public HotSpotHostBackend(HotSpotGraalRuntime runtime, HotSpotProviders providers)
+    public HotSpotHostBackend(HotSpotGraalRuntime __runtime, HotSpotProviders __providers)
     {
-        super(runtime, providers);
+        super(__runtime, __providers);
     }
 
     @Override
     public void completeInitialization()
     {
-        final HotSpotProviders providers = getProviders();
-        HotSpotHostForeignCallsProvider foreignCalls = (HotSpotHostForeignCallsProvider) providers.getForeignCalls();
-        final HotSpotLoweringProvider lowerer = (HotSpotLoweringProvider) providers.getLowerer();
+        final HotSpotProviders __providers = getProviders();
+        HotSpotHostForeignCallsProvider __foreignCalls = (HotSpotHostForeignCallsProvider) __providers.getForeignCalls();
+        final HotSpotLoweringProvider __lowerer = (HotSpotLoweringProvider) __providers.getLowerer();
 
-        foreignCalls.initialize(providers);
-        lowerer.initialize(providers);
+        __foreignCalls.initialize(__providers);
+        __lowerer.initialize(__providers);
     }
 
-    protected CallingConvention makeCallingConvention(StructuredGraph graph, Stub stub)
+    protected CallingConvention makeCallingConvention(StructuredGraph __graph, Stub __stub)
     {
-        if (stub != null)
+        if (__stub != null)
         {
-            return stub.getLinkage().getIncomingCallingConvention();
+            return __stub.getLinkage().getIncomingCallingConvention();
         }
 
-        CallingConvention cc = CodeUtil.getCallingConvention(getCodeCache(), HotSpotCallingConventionType.JavaCallee, graph.method(), this);
-        if (graph.getEntryBCI() != JVMCICompiler.INVOCATION_ENTRY_BCI)
+        CallingConvention __cc = CodeUtil.getCallingConvention(getCodeCache(), HotSpotCallingConventionType.JavaCallee, __graph.method(), this);
+        if (__graph.getEntryBCI() != JVMCICompiler.INVOCATION_ENTRY_BCI)
         {
             // for OSR, only a pointer is passed to the method.
-            JavaType[] parameterTypes = new JavaType[] { getMetaAccess().lookupJavaType(long.class) };
-            CallingConvention tmp = getCodeCache().getRegisterConfig().getCallingConvention(HotSpotCallingConventionType.JavaCallee, getMetaAccess().lookupJavaType(void.class), parameterTypes, this);
-            cc = new CallingConvention(cc.getStackSize(), cc.getReturn(), tmp.getArgument(0));
+            JavaType[] __parameterTypes = new JavaType[] { getMetaAccess().lookupJavaType(long.class) };
+            CallingConvention __tmp = getCodeCache().getRegisterConfig().getCallingConvention(HotSpotCallingConventionType.JavaCallee, getMetaAccess().lookupJavaType(void.class), __parameterTypes, this);
+            __cc = new CallingConvention(__cc.getStackSize(), __cc.getReturn(), __tmp.getArgument(0));
         }
-        return cc;
+        return __cc;
     }
 
-    public void emitStackOverflowCheck(CompilationResultBuilder crb)
+    public void emitStackOverflowCheck(CompilationResultBuilder __crb)
     {
         if (HotSpotRuntime.useStackBanging)
         {
@@ -78,24 +80,24 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
             // entry code needs to do is bang once for the end of this shadow zone.
             // The entry code may need to bang additional pages if the framesize is greater than a page.
 
-            int pageSize = HotSpotRuntime.vmPageSize;
-            int bangEnd = NumUtil.roundUp(HotSpotRuntime.stackShadowPages * 4 * CodeUtil.K, pageSize);
+            int __pageSize = HotSpotRuntime.vmPageSize;
+            int __bangEnd = NumUtil.roundUp(HotSpotRuntime.stackShadowPages * 4 * CodeUtil.K, __pageSize);
 
             // This is how far the previous frame's stack banging extended.
-            int bangEndSafe = bangEnd;
+            int __bangEndSafe = __bangEnd;
 
-            int frameSize = crb.frameMap.frameSize();
-            if (frameSize > pageSize)
+            int __frameSize = __crb.frameMap.frameSize();
+            if (__frameSize > __pageSize)
             {
-                bangEnd += frameSize;
+                __bangEnd += __frameSize;
             }
 
-            int bangOffset = bangEndSafe;
-            while (bangOffset <= bangEnd)
+            int __bangOffset = __bangEndSafe;
+            while (__bangOffset <= __bangEnd)
             {
                 // Need at least one stack bang at end of shadow zone.
-                bangStackWithOffset(crb, bangOffset);
-                bangOffset += pageSize;
+                bangStackWithOffset(__crb, __bangOffset);
+                __bangOffset += __pageSize;
             }
         }
     }

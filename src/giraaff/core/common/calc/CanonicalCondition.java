@@ -11,11 +11,12 @@ public enum CanonicalCondition
     LT(Condition.LT),
     BT(Condition.BT);
 
+    // @field
     private final Condition condition;
 
-    CanonicalCondition(Condition condition)
+    CanonicalCondition(Condition __condition)
     {
-        this.condition = condition;
+        this.condition = __condition;
     }
 
     public Condition asCondition()
@@ -23,13 +24,13 @@ public enum CanonicalCondition
         return condition;
     }
 
-    public boolean foldCondition(Constant lt, Constant rt, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue)
+    public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
     {
-        return asCondition().foldCondition(lt, rt, constantReflection, unorderedIsTrue);
+        return asCondition().foldCondition(__lt, __rt, __constantReflection, __unorderedIsTrue);
     }
 
-    public boolean foldCondition(PrimitiveConstant lp, PrimitiveConstant rp, boolean unorderedIsTrue)
+    public boolean foldCondition(PrimitiveConstant __lp, PrimitiveConstant __rp, boolean __unorderedIsTrue)
     {
-        return asCondition().foldCondition(lp, rp, unorderedIsTrue);
+        return asCondition().foldCondition(__lp, __rp, __unorderedIsTrue);
     }
 }

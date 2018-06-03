@@ -26,33 +26,42 @@ import giraaff.phases.common.inlining.InliningUtil;
 // @class ComputeInliningRelevance
 public final class ComputeInliningRelevance
 {
+    // @def
     private static final double EPSILON = 1d / Integer.MAX_VALUE;
+    // @def
     private static final double UNINITIALIZED = -1D;
 
+    // @def
     private static final int EXPECTED_MIN_INVOKE_COUNT = 3;
+    // @def
     private static final int EXPECTED_INVOKE_RATIO = 20;
+    // @def
     private static final int EXPECTED_LOOP_COUNT = 3;
 
+    // @field
     private final StructuredGraph graph;
+    // @field
     private final ToDoubleFunction<FixedNode> nodeProbabilities;
 
     /**
      * Node relevances are pre-computed for all invokes if the graph contains loops. If there are no
      * loops, the computation happens lazily based on {@link #rootScope}.
      */
+    // @field
     private EconomicMap<FixedNode, Double> nodeRelevances;
     /**
      * This scope is non-null if (and only if) there are no loops in the graph. In this case, the
      * root scope is used to compute invoke relevances on the fly.
      */
+    // @field
     private Scope rootScope;
 
     // @cons
-    public ComputeInliningRelevance(StructuredGraph graph, ToDoubleFunction<FixedNode> nodeProbabilities)
+    public ComputeInliningRelevance(StructuredGraph __graph, ToDoubleFunction<FixedNode> __nodeProbabilities)
     {
         super();
-        this.graph = graph;
-        this.nodeProbabilities = nodeProbabilities;
+        this.graph = __graph;
+        this.nodeProbabilities = __nodeProbabilities;
     }
 
     /**
@@ -73,81 +82,81 @@ public final class ComputeInliningRelevance
             {
                 nodeRelevances = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_MIN_INVOKE_COUNT + InliningUtil.getNodeCount(graph) / EXPECTED_INVOKE_RATIO);
             }
-            NodeWorkList workList = graph.createNodeWorkList();
-            EconomicMap<LoopBeginNode, Scope> loops = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_LOOP_COUNT);
+            NodeWorkList __workList = graph.createNodeWorkList();
+            EconomicMap<LoopBeginNode, Scope> __loops = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_LOOP_COUNT);
 
-            Scope topScope = new Scope(graph.start(), null);
-            for (LoopBeginNode loopBegin : graph.getNodes(LoopBeginNode.TYPE))
+            Scope __topScope = new Scope(graph.start(), null);
+            for (LoopBeginNode __loopBegin : graph.getNodes(LoopBeginNode.TYPE))
             {
-                createLoopScope(loopBegin, loops, topScope);
+                createLoopScope(__loopBegin, __loops, __topScope);
             }
 
-            topScope.process(workList);
-            for (Scope scope : loops.getValues())
+            __topScope.process(__workList);
+            for (Scope __scope : __loops.getValues())
             {
-                scope.process(workList);
+                __scope.process(__workList);
             }
         }
     }
 
-    public double getRelevance(Invoke invoke)
+    public double getRelevance(Invoke __invoke)
     {
         if (rootScope != null)
         {
-            return rootScope.computeInvokeRelevance(invoke);
+            return rootScope.computeInvokeRelevance(__invoke);
         }
-        return nodeRelevances.get(invoke.asNode());
+        return nodeRelevances.get(__invoke.asNode());
     }
 
     /**
      * Determines the parent of the given loop and creates a {@link Scope} object for each one. This
      * method will call itself recursively if no {@link Scope} for the parent loop exists.
      */
-    private Scope createLoopScope(LoopBeginNode loopBegin, EconomicMap<LoopBeginNode, Scope> loops, Scope topScope)
+    private Scope createLoopScope(LoopBeginNode __loopBegin, EconomicMap<LoopBeginNode, Scope> __loops, Scope __topScope)
     {
-        Scope scope = loops.get(loopBegin);
-        if (scope == null)
+        Scope __scope = __loops.get(__loopBegin);
+        if (__scope == null)
         {
-            final Scope parent;
+            final Scope __parent;
             // look for the parent scope
-            FixedNode current = loopBegin.forwardEnd();
+            FixedNode __current = __loopBegin.forwardEnd();
             while (true)
             {
-                if (current.predecessor() == null)
+                if (__current.predecessor() == null)
                 {
-                    if (current instanceof LoopBeginNode)
+                    if (__current instanceof LoopBeginNode)
                     {
                         // if we reach a LoopBeginNode then we're within this loop
-                        parent = createLoopScope((LoopBeginNode) current, loops, topScope);
+                        __parent = createLoopScope((LoopBeginNode) __current, __loops, __topScope);
                         break;
                     }
-                    else if (current instanceof StartNode)
+                    else if (__current instanceof StartNode)
                     {
                         // we're within the outermost scope
-                        parent = topScope;
+                        __parent = __topScope;
                         break;
                     }
                     else
                     {
                         // follow any path upwards - it doesn't matter which one
-                        current = ((AbstractMergeNode) current).forwardEndAt(0);
+                        __current = ((AbstractMergeNode) __current).forwardEndAt(0);
                     }
                 }
-                else if (current instanceof LoopExitNode)
+                else if (__current instanceof LoopExitNode)
                 {
                     // if we reach a loop exit then we follow this loop and have the same parent
-                    parent = createLoopScope(((LoopExitNode) current).loopBegin(), loops, topScope).parent;
+                    __parent = createLoopScope(((LoopExitNode) __current).loopBegin(), __loops, __topScope).parent;
                     break;
                 }
                 else
                 {
-                    current = (FixedNode) current.predecessor();
+                    __current = (FixedNode) __current.predecessor();
                 }
             }
-            scope = new Scope(loopBegin, parent);
-            loops.put(loopBegin, scope);
+            __scope = new Scope(__loopBegin, __parent);
+            __loops.put(__loopBegin, __scope);
         }
-        return scope;
+        return __scope;
     }
 
     /**
@@ -159,24 +168,28 @@ public final class ComputeInliningRelevance
     // @closure
     private final class Scope
     {
+        // @field
         public final FixedNode start;
+        // @field
         public final Scope parent; // can be null for the outermost scope
 
         /**
          * The minimum probability along the most probable path in this scope. Computed lazily.
          */
+        // @field
         private double fastPathMinProbability = ComputeInliningRelevance.UNINITIALIZED;
         /**
          * A measure of how important this scope is within its parent scope. Computed lazily.
          */
+        // @field
         private double scopeRelevanceWithinParent = ComputeInliningRelevance.UNINITIALIZED;
 
         // @cons
-        Scope(FixedNode start, Scope parent)
+        Scope(FixedNode __start, Scope __parent)
         {
             super();
-            this.start = start;
-            this.parent = parent;
+            this.start = __start;
+            this.parent = __parent;
         }
 
         public double getFastPathMinProbability()
@@ -198,9 +211,9 @@ public final class ComputeInliningRelevance
             {
                 if (start instanceof LoopBeginNode)
                 {
-                    double scopeEntryProbability = ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(((LoopBeginNode) start).forwardEnd());
+                    double __scopeEntryProbability = ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(((LoopBeginNode) start).forwardEnd());
 
-                    scopeRelevanceWithinParent = scopeEntryProbability / parent.getFastPathMinProbability();
+                    scopeRelevanceWithinParent = __scopeEntryProbability / parent.getFastPathMinProbability();
                 }
                 else
                 {
@@ -215,46 +228,46 @@ public final class ComputeInliningRelevance
          * all fixed nodes. Child loops are skipped by going from loop entries directly to the loop
          * exits. Processing stops at loop exits of the current loop.
          */
-        public void process(NodeWorkList workList)
+        public void process(NodeWorkList __workList)
         {
-            workList.addAll(start.successors());
+            __workList.addAll(start.successors());
 
-            for (Node current : workList)
+            for (Node __current : __workList)
             {
-                if (current instanceof Invoke)
+                if (__current instanceof Invoke)
                 {
                     // process the invoke and queue its successors
-                    ComputeInliningRelevance.this.nodeRelevances.put((FixedNode) current, computeInvokeRelevance((Invoke) current));
-                    workList.addAll(current.successors());
+                    ComputeInliningRelevance.this.nodeRelevances.put((FixedNode) __current, computeInvokeRelevance((Invoke) __current));
+                    __workList.addAll(__current.successors());
                 }
-                else if (current instanceof LoopBeginNode)
+                else if (__current instanceof LoopBeginNode)
                 {
                     // skip child loops by advancing over the loop exits
-                    ((LoopBeginNode) current).loopExits().forEach(exit -> workList.add(exit.next()));
+                    ((LoopBeginNode) __current).loopExits().forEach(__exit -> __workList.add(__exit.next()));
                 }
-                else if (current instanceof LoopEndNode)
+                else if (__current instanceof LoopEndNode)
                 {
                     // nothing to do
                 }
-                else if (current instanceof LoopExitNode)
+                else if (__current instanceof LoopExitNode)
                 {
                     // nothing to do
                 }
-                else if (current instanceof FixedWithNextNode)
+                else if (__current instanceof FixedWithNextNode)
                 {
-                    workList.add(((FixedWithNextNode) current).next());
+                    __workList.add(((FixedWithNextNode) __current).next());
                 }
-                else if (current instanceof EndNode)
+                else if (__current instanceof EndNode)
                 {
-                    workList.add(((EndNode) current).merge());
+                    __workList.add(((EndNode) __current).merge());
                 }
-                else if (current instanceof ControlSinkNode)
+                else if (__current instanceof ControlSinkNode)
                 {
                     // nothing to do
                 }
-                else if (current instanceof ControlSplitNode)
+                else if (__current instanceof ControlSplitNode)
                 {
-                    workList.addAll(current.successors());
+                    __workList.addAll(__current.successors());
                 }
             }
         }
@@ -263,9 +276,9 @@ public final class ComputeInliningRelevance
          * The relevance of an invoke is the ratio between the invoke's probability and the current
          * scope's fastPathMinProbability, adjusted by scopeRelevanceWithinParent.
          */
-        public double computeInvokeRelevance(Invoke invoke)
+        public double computeInvokeRelevance(Invoke __invoke)
         {
-            return (ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(invoke.asNode()) / getFastPathMinProbability()) * Math.min(getScopeRelevanceWithinParent(), 1.0);
+            return (ComputeInliningRelevance.this.nodeProbabilities.applyAsDouble(__invoke.asNode()) / getFastPathMinProbability()) * Math.min(getScopeRelevanceWithinParent(), 1.0);
         }
     }
 
@@ -273,108 +286,108 @@ public final class ComputeInliningRelevance
      * Computes the minimum probability along the most probable path within the scope. During
      * iteration, the method returns immediately once a loop exit is discovered.
      */
-    private double computeFastPathMinProbability(FixedNode scopeStart)
+    private double computeFastPathMinProbability(FixedNode __scopeStart)
     {
-        ArrayList<FixedNode> pathBeginNodes = new ArrayList<>();
-        pathBeginNodes.add(scopeStart);
-        double minPathProbability = nodeProbabilities.applyAsDouble(scopeStart);
-        boolean isLoopScope = scopeStart instanceof LoopBeginNode;
+        ArrayList<FixedNode> __pathBeginNodes = new ArrayList<>();
+        __pathBeginNodes.add(__scopeStart);
+        double __minPathProbability = nodeProbabilities.applyAsDouble(__scopeStart);
+        boolean __isLoopScope = __scopeStart instanceof LoopBeginNode;
 
         do
         {
-            Node current = pathBeginNodes.remove(pathBeginNodes.size() - 1);
+            Node __current = __pathBeginNodes.remove(__pathBeginNodes.size() - 1);
             do
             {
-                if (isLoopScope && current instanceof LoopExitNode && ((LoopBeginNode) scopeStart).loopExits().contains((LoopExitNode) current))
+                if (__isLoopScope && __current instanceof LoopExitNode && ((LoopBeginNode) __scopeStart).loopExits().contains((LoopExitNode) __current))
                 {
-                    return minPathProbability;
+                    return __minPathProbability;
                 }
-                else if (current instanceof LoopBeginNode && current != scopeStart)
+                else if (__current instanceof LoopBeginNode && __current != __scopeStart)
                 {
-                    current = getMaxProbabilityLoopExit((LoopBeginNode) current, pathBeginNodes);
-                    minPathProbability = getMinPathProbability((FixedNode) current, minPathProbability);
+                    __current = getMaxProbabilityLoopExit((LoopBeginNode) __current, __pathBeginNodes);
+                    __minPathProbability = getMinPathProbability((FixedNode) __current, __minPathProbability);
                 }
-                else if (current instanceof ControlSplitNode)
+                else if (__current instanceof ControlSplitNode)
                 {
-                    current = getMaxProbabilitySux((ControlSplitNode) current, pathBeginNodes);
-                    minPathProbability = getMinPathProbability((FixedNode) current, minPathProbability);
+                    __current = getMaxProbabilitySux((ControlSplitNode) __current, __pathBeginNodes);
+                    __minPathProbability = getMinPathProbability((FixedNode) __current, __minPathProbability);
                 }
                 else
                 {
-                    current = current.successors().first();
+                    __current = __current.successors().first();
                 }
-            } while (current != null);
-        } while (!pathBeginNodes.isEmpty());
+            } while (__current != null);
+        } while (!__pathBeginNodes.isEmpty());
 
-        return minPathProbability;
+        return __minPathProbability;
     }
 
-    private double getMinPathProbability(FixedNode current, double minPathProbability)
+    private double getMinPathProbability(FixedNode __current, double __minPathProbability)
     {
-        return current == null ? minPathProbability : Math.min(minPathProbability, nodeProbabilities.applyAsDouble(current));
+        return __current == null ? __minPathProbability : Math.min(__minPathProbability, nodeProbabilities.applyAsDouble(__current));
     }
 
     /**
      * Returns the most probable successor. If multiple successors share the maximum probability,
      * one is returned and the others are enqueued in pathBeginNodes.
      */
-    private static Node getMaxProbabilitySux(ControlSplitNode controlSplit, ArrayList<FixedNode> pathBeginNodes)
+    private static Node getMaxProbabilitySux(ControlSplitNode __controlSplit, ArrayList<FixedNode> __pathBeginNodes)
     {
-        Node maxSux = null;
-        double maxProbability = 0.0;
-        int pathBeginCount = pathBeginNodes.size();
+        Node __maxSux = null;
+        double __maxProbability = 0.0;
+        int __pathBeginCount = __pathBeginNodes.size();
 
-        for (Node sux : controlSplit.successors())
+        for (Node __sux : __controlSplit.successors())
         {
-            double probability = controlSplit.probability((AbstractBeginNode) sux);
-            if (probability > maxProbability)
+            double __probability = __controlSplit.probability((AbstractBeginNode) __sux);
+            if (__probability > __maxProbability)
             {
-                maxProbability = probability;
-                maxSux = sux;
-                truncate(pathBeginNodes, pathBeginCount);
+                __maxProbability = __probability;
+                __maxSux = __sux;
+                truncate(__pathBeginNodes, __pathBeginCount);
             }
-            else if (probability == maxProbability)
+            else if (__probability == __maxProbability)
             {
-                pathBeginNodes.add((FixedNode) sux);
+                __pathBeginNodes.add((FixedNode) __sux);
             }
         }
 
-        return maxSux;
+        return __maxSux;
     }
 
     /**
      * Returns the most probable loop exit. If multiple successors share the maximum probability,
      * one is returned and the others are enqueued in pathBeginNodes.
      */
-    private Node getMaxProbabilityLoopExit(LoopBeginNode loopBegin, ArrayList<FixedNode> pathBeginNodes)
+    private Node getMaxProbabilityLoopExit(LoopBeginNode __loopBegin, ArrayList<FixedNode> __pathBeginNodes)
     {
-        Node maxSux = null;
-        double maxProbability = 0.0;
-        int pathBeginCount = pathBeginNodes.size();
+        Node __maxSux = null;
+        double __maxProbability = 0.0;
+        int __pathBeginCount = __pathBeginNodes.size();
 
-        for (LoopExitNode sux : loopBegin.loopExits())
+        for (LoopExitNode __sux : __loopBegin.loopExits())
         {
-            double probability = nodeProbabilities.applyAsDouble(sux);
-            if (probability > maxProbability)
+            double __probability = nodeProbabilities.applyAsDouble(__sux);
+            if (__probability > __maxProbability)
             {
-                maxProbability = probability;
-                maxSux = sux;
-                truncate(pathBeginNodes, pathBeginCount);
+                __maxProbability = __probability;
+                __maxSux = __sux;
+                truncate(__pathBeginNodes, __pathBeginCount);
             }
-            else if (probability == maxProbability)
+            else if (__probability == __maxProbability)
             {
-                pathBeginNodes.add(sux);
+                __pathBeginNodes.add(__sux);
             }
         }
 
-        return maxSux;
+        return __maxSux;
     }
 
-    private static void truncate(ArrayList<FixedNode> pathBeginNodes, int pathBeginCount)
+    private static void truncate(ArrayList<FixedNode> __pathBeginNodes, int __pathBeginCount)
     {
-        for (int i = pathBeginNodes.size() - pathBeginCount; i > 0; i--)
+        for (int __i = __pathBeginNodes.size() - __pathBeginCount; __i > 0; __i--)
         {
-            pathBeginNodes.remove(pathBeginNodes.size() - 1);
+            __pathBeginNodes.remove(__pathBeginNodes.size() - 1);
         }
     }
 }

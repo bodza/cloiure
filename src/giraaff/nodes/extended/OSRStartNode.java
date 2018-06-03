@@ -9,6 +9,7 @@ import giraaff.nodes.spi.LoweringTool;
 // @class OSRStartNode
 public final class OSRStartNode extends StartNode implements Lowerable
 {
+    // @def
     public static final NodeClass<OSRStartNode> TYPE = NodeClass.create(OSRStartNode.class);
 
     // @cons
@@ -18,9 +19,9 @@ public final class OSRStartNode extends StartNode implements Lowerable
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public NodeIterable<OSRLocalNode> getOSRLocals()

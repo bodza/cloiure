@@ -16,13 +16,15 @@ public enum FloatConvert
     L2D(FloatConvertCategory.IntegerToFloatingPoint, 64),
     F2D(FloatConvertCategory.FloatingPointToFloatingPoint, 32);
 
+    // @field
     private final FloatConvertCategory category;
+    // @field
     private final int inputBits;
 
-    FloatConvert(FloatConvertCategory category, int inputBits)
+    FloatConvert(FloatConvertCategory __category, int __inputBits)
     {
-        this.category = category;
-        this.inputBits = inputBits;
+        this.category = __category;
+        this.inputBits = __inputBits;
     }
 
     public FloatConvertCategory getCategory()

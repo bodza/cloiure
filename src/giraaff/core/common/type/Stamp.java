@@ -27,9 +27,9 @@ public abstract class Stamp
      */
     public abstract ResolvedJavaType javaType(MetaAccessProvider metaAccess);
 
-    public boolean alwaysDistinct(Stamp other)
+    public boolean alwaysDistinct(Stamp __other)
     {
-        return join(other).isEmpty();
+        return join(__other).isEmpty();
     }
 
     /**
@@ -149,23 +149,23 @@ public abstract class Stamp
      * @param other the stamp that should be used to improve this stamp
      * @return the newly improved stamp or {@code null} if an improvement was not possible
      */
-    public final Stamp tryImproveWith(Stamp other)
+    public final Stamp tryImproveWith(Stamp __other)
     {
-        Stamp improved = improveWith(other);
-        if (improved.equals(this))
+        Stamp __improved = improveWith(__other);
+        if (__improved.equals(this))
         {
             return null;
         }
-        return improved;
+        return __improved;
     }
 
-    public boolean neverDistinct(Stamp other)
+    public boolean neverDistinct(Stamp __other)
     {
-        Constant constant = this.asConstant();
-        if (constant != null)
+        Constant __constant = this.asConstant();
+        if (__constant != null)
         {
-            Constant otherConstant = other.asConstant();
-            return otherConstant != null && constant.equals(otherConstant);
+            Constant __otherConstant = __other.asConstant();
+            return __otherConstant != null && __constant.equals(__otherConstant);
         }
         return false;
     }

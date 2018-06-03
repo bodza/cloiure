@@ -16,27 +16,32 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
     /**
      * Denotes the location of a value that is guaranteed to be unchanging.
      */
+    // @def
     public static final LocationIdentity FINAL_LOCATION = NamedLocationIdentity.immutable("FINAL_LOCATION");
 
     /**
      * Denotes the location of the length field of a Java array.
      */
+    // @def
     public static final LocationIdentity ARRAY_LENGTH_LOCATION = NamedLocationIdentity.immutable("[].length");
 
     /**
      * Denotes an off-heap address.
      */
+    // @def
     public static final LocationIdentity OFF_HEAP_LOCATION = NamedLocationIdentity.mutable("OFF_HEAP_LOCATION");
 
+    // @field
     private final String name;
+    // @field
     private final boolean immutable;
 
     // @cons
-    protected NamedLocationIdentity(String name, boolean immutable)
+    protected NamedLocationIdentity(String __name, boolean __immutable)
     {
         super();
-        this.name = name;
-        this.immutable = immutable;
+        this.name = __name;
+        this.immutable = __immutable;
     }
 
     /**
@@ -44,9 +49,9 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      *
      * @param name the name of the new location identity
      */
-    public static NamedLocationIdentity mutable(String name)
+    public static NamedLocationIdentity mutable(String __name)
     {
-        return create(name, false);
+        return create(__name, false);
     }
 
     /**
@@ -56,9 +61,9 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      *
      * @param name the name of the new location identity
      */
-    public static NamedLocationIdentity immutable(String name)
+    public static NamedLocationIdentity immutable(String __name)
     {
-        return create(name, true);
+        return create(__name, true);
     }
 
     /**
@@ -67,9 +72,9 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      * @param name the name of the new location identity
      * @param immutable true if the location is immutable
      */
-    private static NamedLocationIdentity create(String name, boolean immutable)
+    private static NamedLocationIdentity create(String __name, boolean __immutable)
     {
-        return new NamedLocationIdentity(name, immutable);
+        return new NamedLocationIdentity(__name, __immutable);
     }
 
     @Override
@@ -83,20 +88,21 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      * the same kind must have the same location identity unless an alias analysis guarantees that
      * two distinct arrays are accessed.
      */
-    public static LocationIdentity getArrayLocation(JavaKind elementKind)
+    public static LocationIdentity getArrayLocation(JavaKind __elementKind)
     {
-        return ARRAY_LOCATIONS.get(elementKind);
+        return ARRAY_LOCATIONS.get(__elementKind);
     }
 
+    // @def
     private static final EnumMap<JavaKind, LocationIdentity> ARRAY_LOCATIONS = initArrayLocations();
 
     private static EnumMap<JavaKind, LocationIdentity> initArrayLocations()
     {
-        EnumMap<JavaKind, LocationIdentity> result = new EnumMap<>(JavaKind.class);
-        for (JavaKind kind : JavaKind.values())
+        EnumMap<JavaKind, LocationIdentity> __result = new EnumMap<>(JavaKind.class);
+        for (JavaKind __kind : JavaKind.values())
         {
-            result.put(kind, NamedLocationIdentity.mutable("Array: " + kind.getJavaName()));
+            __result.put(__kind, NamedLocationIdentity.mutable("Array: " + __kind.getJavaName()));
         }
-        return result;
+        return __result;
     }
 }

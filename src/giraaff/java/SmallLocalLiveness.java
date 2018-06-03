@@ -7,94 +7,100 @@ public final class SmallLocalLiveness extends LocalLiveness
 {
     // local n is represented by the bit accessible as (1 << n)
 
+    // @field
     private final long[] localsLiveIn;
+    // @field
     private final long[] localsLiveOut;
+    // @field
     private final long[] localsLiveGen;
+    // @field
     private final long[] localsLiveKill;
+    // @field
     private final long[] localsChangedInLoop;
+    // @field
     private final int maxLocals;
 
     // @cons
-    public SmallLocalLiveness(BciBlock[] blocks, int maxLocals, int loopCount)
+    public SmallLocalLiveness(BciBlock[] __blocks, int __maxLocals, int __loopCount)
     {
-        super(blocks);
-        this.maxLocals = maxLocals;
-        int blockSize = blocks.length;
-        localsLiveIn = new long[blockSize];
-        localsLiveOut = new long[blockSize];
-        localsLiveGen = new long[blockSize];
-        localsLiveKill = new long[blockSize];
-        localsChangedInLoop = new long[loopCount];
+        super(__blocks);
+        this.maxLocals = __maxLocals;
+        int __blockSize = __blocks.length;
+        localsLiveIn = new long[__blockSize];
+        localsLiveOut = new long[__blockSize];
+        localsLiveGen = new long[__blockSize];
+        localsLiveKill = new long[__blockSize];
+        localsChangedInLoop = new long[__loopCount];
     }
 
     @Override
-    protected int liveOutCardinality(int blockID)
+    protected int liveOutCardinality(int __blockID)
     {
-        return Long.bitCount(localsLiveOut[blockID]);
+        return Long.bitCount(localsLiveOut[__blockID]);
     }
 
     @Override
-    protected void propagateLiveness(int blockID, int successorID)
+    protected void propagateLiveness(int __blockID, int __successorID)
     {
-        localsLiveOut[blockID] |= localsLiveIn[successorID];
+        localsLiveOut[__blockID] |= localsLiveIn[__successorID];
     }
 
     @Override
-    protected void updateLiveness(int blockID)
+    protected void updateLiveness(int __blockID)
     {
-        localsLiveIn[blockID] = (localsLiveOut[blockID] & ~localsLiveKill[blockID]) | localsLiveGen[blockID];
+        localsLiveIn[__blockID] = (localsLiveOut[__blockID] & ~localsLiveKill[__blockID]) | localsLiveGen[__blockID];
     }
 
     @Override
-    protected void loadOne(int blockID, int local)
+    protected void loadOne(int __blockID, int __local)
     {
-        long bit = 1L << local;
-        if ((localsLiveKill[blockID] & bit) == 0L)
+        long __bit = 1L << __local;
+        if ((localsLiveKill[__blockID] & __bit) == 0L)
         {
-            localsLiveGen[blockID] |= bit;
+            localsLiveGen[__blockID] |= __bit;
         }
     }
 
     @Override
-    protected void storeOne(int blockID, int local)
+    protected void storeOne(int __blockID, int __local)
     {
-        long bit = 1L << local;
-        if ((localsLiveGen[blockID] & bit) == 0L)
+        long __bit = 1L << __local;
+        if ((localsLiveGen[__blockID] & __bit) == 0L)
         {
-            localsLiveKill[blockID] |= bit;
+            localsLiveKill[__blockID] |= __bit;
         }
 
-        BciBlock block = blocks[blockID];
-        long tmp = block.loops;
-        int pos = 0;
-        while (tmp != 0)
+        BciBlock __block = blocks[__blockID];
+        long __tmp = __block.loops;
+        int __pos = 0;
+        while (__tmp != 0)
         {
-            if ((tmp & 1L) == 1L)
+            if ((__tmp & 1L) == 1L)
             {
-                this.localsChangedInLoop[pos] |= bit;
+                this.localsChangedInLoop[__pos] |= __bit;
             }
-            tmp >>>= 1;
-            ++pos;
+            __tmp >>>= 1;
+            ++__pos;
         }
     }
 
     @Override
-    public boolean localIsLiveIn(BciBlock block, int local)
+    public boolean localIsLiveIn(BciBlock __block, int __local)
     {
-        int blockID = block.getId();
-        return blockID >= Integer.MAX_VALUE ? false : (localsLiveIn[blockID] & (1L << local)) != 0L;
+        int __blockID = __block.getId();
+        return __blockID >= Integer.MAX_VALUE ? false : (localsLiveIn[__blockID] & (1L << __local)) != 0L;
     }
 
     @Override
-    public boolean localIsLiveOut(BciBlock block, int local)
+    public boolean localIsLiveOut(BciBlock __block, int __local)
     {
-        int blockID = block.getId();
-        return blockID >= Integer.MAX_VALUE ? false : (localsLiveOut[blockID] & (1L << local)) != 0L;
+        int __blockID = __block.getId();
+        return __blockID >= Integer.MAX_VALUE ? false : (localsLiveOut[__blockID] & (1L << __local)) != 0L;
     }
 
     @Override
-    public boolean localIsChangedInLoop(int loopId, int local)
+    public boolean localIsChangedInLoop(int __loopId, int __local)
     {
-        return (localsChangedInLoop[loopId] & (1L << local)) != 0L;
+        return (localsChangedInLoop[__loopId] & (1L << __local)) != 0L;
     }
 }

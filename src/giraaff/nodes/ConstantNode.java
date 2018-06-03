@@ -27,16 +27,20 @@ import giraaff.util.GraalError;
 // @class ConstantNode
 public final class ConstantNode extends FloatingNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<ConstantNode> TYPE = NodeClass.create(ConstantNode.class);
 
+    // @field
     protected final Constant value;
 
+    // @field
     private final int stableDimension;
+    // @field
     private final boolean isDefaultStable;
 
-    private static ConstantNode createPrimitive(JavaConstant value)
+    private static ConstantNode createPrimitive(JavaConstant __value)
     {
-        return new ConstantNode(value, StampFactory.forConstant(value));
+        return new ConstantNode(__value, StampFactory.forConstant(__value));
     }
 
     /**
@@ -45,18 +49,18 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param value the constant
      */
     // @cons
-    public ConstantNode(Constant value, Stamp stamp)
+    public ConstantNode(Constant __value, Stamp __stamp)
     {
-        this(value, stamp, 0, false);
+        this(__value, __stamp, 0, false);
     }
 
     // @cons
-    private ConstantNode(Constant value, Stamp stamp, int stableDimension, boolean isDefaultStable)
+    private ConstantNode(Constant __value, Stamp __stamp, int __stableDimension, boolean __isDefaultStable)
     {
-        super(TYPE, stamp);
-        this.value = value;
-        this.stableDimension = stableDimension;
-        if (stableDimension == 0)
+        super(TYPE, __stamp);
+        this.value = __value;
+        this.stableDimension = __stableDimension;
+        if (__stableDimension == 0)
         {
             /*
              * Ensure that isDefaultStable has a canonical value to avoid having two constant nodes that only differ
@@ -66,7 +70,7 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         }
         else
         {
-            this.isDefaultStable = isDefaultStable;
+            this.isDefaultStable = __isDefaultStable;
         }
     }
 
@@ -98,38 +102,38 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * Gathers all the {@link ConstantNode}s that are inputs to the
      * {@linkplain StructuredGraph#getNodes() live nodes} in a given graph.
      */
-    public static NodeIterable<ConstantNode> getConstantNodes(StructuredGraph graph)
+    public static NodeIterable<ConstantNode> getConstantNodes(StructuredGraph __graph)
     {
-        return graph.getNodes().filter(ConstantNode.class);
+        return __graph.getNodes().filter(ConstantNode.class);
     }
 
     /**
      * Replaces this node at its usages with another node.
      */
-    public void replace(StructuredGraph graph, Node replacement)
+    public void replace(StructuredGraph __graph, Node __replacement)
     {
-        replaceAtUsagesAndDelete(replacement);
+        replaceAtUsagesAndDelete(__replacement);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRKind kind = gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
+        LIRKind __kind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
         if (onlyUsedInVirtualState())
         {
-            gen.setResult(this, new ConstantValue(kind, value));
+            __gen.setResult(this, new ConstantValue(__kind, value));
         }
         else
         {
-            gen.setResult(this, gen.getLIRGeneratorTool().emitConstant(kind, value));
+            __gen.setResult(this, __gen.getLIRGeneratorTool().emitConstant(__kind, value));
         }
     }
 
     private boolean onlyUsedInVirtualState()
     {
-        for (Node n : this.usages())
+        for (Node __n : this.usages())
         {
-            if (n instanceof VirtualState)
+            if (__n instanceof VirtualState)
             {
                 // Only virtual usage.
             }
@@ -141,109 +145,109 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         return true;
     }
 
-    public static ConstantNode forConstant(JavaConstant constant, MetaAccessProvider metaAccess, StructuredGraph graph)
+    public static ConstantNode forConstant(JavaConstant __constant, MetaAccessProvider __metaAccess, StructuredGraph __graph)
     {
-        if (constant.getJavaKind().getStackKind() == JavaKind.Int && constant.getJavaKind() != JavaKind.Int)
+        if (__constant.getJavaKind().getStackKind() == JavaKind.Int && __constant.getJavaKind() != JavaKind.Int)
         {
-            return forInt(constant.asInt(), graph);
+            return forInt(__constant.asInt(), __graph);
         }
-        if (constant.getJavaKind() == JavaKind.Object)
+        if (__constant.getJavaKind() == JavaKind.Object)
         {
-            return unique(graph, new ConstantNode(constant, StampFactory.forConstant(constant, metaAccess)));
-        }
-        else
-        {
-            return unique(graph, createPrimitive(constant));
-        }
-    }
-
-    public static ConstantNode forConstant(JavaConstant constant, int stableDimension, boolean isDefaultStable, MetaAccessProvider metaAccess)
-    {
-        if (constant.getJavaKind().getStackKind() == JavaKind.Int && constant.getJavaKind() != JavaKind.Int)
-        {
-            return forInt(constant.asInt());
-        }
-        if (constant.getJavaKind() == JavaKind.Object)
-        {
-            return new ConstantNode(constant, StampFactory.forConstant(constant, metaAccess), stableDimension, isDefaultStable);
+            return unique(__graph, new ConstantNode(__constant, StampFactory.forConstant(__constant, __metaAccess)));
         }
         else
         {
-            return createPrimitive(constant);
+            return unique(__graph, createPrimitive(__constant));
         }
     }
 
-    public static ConstantNode forConstant(JavaConstant array, MetaAccessProvider metaAccess)
+    public static ConstantNode forConstant(JavaConstant __constant, int __stableDimension, boolean __isDefaultStable, MetaAccessProvider __metaAccess)
     {
-        return forConstant(array, 0, false, metaAccess);
+        if (__constant.getJavaKind().getStackKind() == JavaKind.Int && __constant.getJavaKind() != JavaKind.Int)
+        {
+            return forInt(__constant.asInt());
+        }
+        if (__constant.getJavaKind() == JavaKind.Object)
+        {
+            return new ConstantNode(__constant, StampFactory.forConstant(__constant, __metaAccess), __stableDimension, __isDefaultStable);
+        }
+        else
+        {
+            return createPrimitive(__constant);
+        }
     }
 
-    public static ConstantNode forConstant(Stamp stamp, Constant constant, MetaAccessProvider metaAccess, StructuredGraph graph)
+    public static ConstantNode forConstant(JavaConstant __array, MetaAccessProvider __metaAccess)
     {
-        return graph.unique(new ConstantNode(constant, stamp.constant(constant, metaAccess)));
+        return forConstant(__array, 0, false, __metaAccess);
     }
 
-    public static ConstantNode forConstant(Stamp stamp, Constant constant, int stableDimension, boolean isDefaultStable, MetaAccessProvider metaAccess)
+    public static ConstantNode forConstant(Stamp __stamp, Constant __constant, MetaAccessProvider __metaAccess, StructuredGraph __graph)
     {
-        return new ConstantNode(constant, stamp.constant(constant, metaAccess), stableDimension, isDefaultStable);
+        return __graph.unique(new ConstantNode(__constant, __stamp.constant(__constant, __metaAccess)));
     }
 
-    public static ConstantNode forConstant(Stamp stamp, Constant constant, MetaAccessProvider metaAccess)
+    public static ConstantNode forConstant(Stamp __stamp, Constant __constant, int __stableDimension, boolean __isDefaultStable, MetaAccessProvider __metaAccess)
     {
-        return new ConstantNode(constant, stamp.constant(constant, metaAccess));
+        return new ConstantNode(__constant, __stamp.constant(__constant, __metaAccess), __stableDimension, __isDefaultStable);
+    }
+
+    public static ConstantNode forConstant(Stamp __stamp, Constant __constant, MetaAccessProvider __metaAccess)
+    {
+        return new ConstantNode(__constant, __stamp.constant(__constant, __metaAccess));
     }
 
     /**
      * Returns a node for a Java primitive.
      */
-    public static ConstantNode forPrimitive(JavaConstant constant, StructuredGraph graph)
+    public static ConstantNode forPrimitive(JavaConstant __constant, StructuredGraph __graph)
     {
-        return forConstant(constant, null, graph);
+        return forConstant(__constant, null, __graph);
     }
 
     /**
      * Returns a node for a Java primitive.
      */
-    public static ConstantNode forPrimitive(JavaConstant constant)
+    public static ConstantNode forPrimitive(JavaConstant __constant)
     {
-        return forConstant(constant, null);
+        return forConstant(__constant, null);
     }
 
     /**
      * Returns a node for a primitive of a given type.
      */
-    public static ConstantNode forPrimitive(Stamp stamp, JavaConstant constant, StructuredGraph graph)
+    public static ConstantNode forPrimitive(Stamp __stamp, JavaConstant __constant, StructuredGraph __graph)
     {
-        if (stamp instanceof IntegerStamp)
+        if (__stamp instanceof IntegerStamp)
         {
-            IntegerStamp istamp = (IntegerStamp) stamp;
-            return forIntegerBits(istamp.getBits(), constant, graph);
+            IntegerStamp __istamp = (IntegerStamp) __stamp;
+            return forIntegerBits(__istamp.getBits(), __constant, __graph);
         }
         else
         {
-            return forPrimitive(constant, graph);
+            return forPrimitive(__constant, __graph);
         }
     }
 
     /**
      * Returns a node for a primitive of a given type.
      */
-    public static ConstantNode forPrimitive(Stamp stamp, Constant constant)
+    public static ConstantNode forPrimitive(Stamp __stamp, Constant __constant)
     {
-        if (stamp instanceof IntegerStamp)
+        if (__stamp instanceof IntegerStamp)
         {
-            PrimitiveConstant primitive = (PrimitiveConstant) constant;
-            IntegerStamp istamp = (IntegerStamp) stamp;
-            return forIntegerBits(istamp.getBits(), primitive);
+            PrimitiveConstant __primitive = (PrimitiveConstant) __constant;
+            IntegerStamp __istamp = (IntegerStamp) __stamp;
+            return forIntegerBits(__istamp.getBits(), __primitive);
         }
-        else if (stamp instanceof FloatStamp)
+        else if (__stamp instanceof FloatStamp)
         {
-            PrimitiveConstant primitive = (PrimitiveConstant) constant;
-            return forConstant(primitive, null);
+            PrimitiveConstant __primitive = (PrimitiveConstant) __constant;
+            return forConstant(__primitive, null);
         }
         else
         {
-            return new ConstantNode(constant, stamp.constant(constant, null));
+            return new ConstantNode(__constant, __stamp.constant(__constant, null));
         }
     }
 
@@ -253,9 +257,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param d the double value for which to create the instruction
      * @return a node for a double constant
      */
-    public static ConstantNode forDouble(double d, StructuredGraph graph)
+    public static ConstantNode forDouble(double __d, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forDouble(d)));
+        return unique(__graph, createPrimitive(JavaConstant.forDouble(__d)));
     }
 
     /**
@@ -264,9 +268,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param d the double value for which to create the instruction
      * @return a node for a double constant
      */
-    public static ConstantNode forDouble(double d)
+    public static ConstantNode forDouble(double __d)
     {
-        return createPrimitive(JavaConstant.forDouble(d));
+        return createPrimitive(JavaConstant.forDouble(__d));
     }
 
     /**
@@ -275,9 +279,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param f the float value for which to create the instruction
      * @return a node for a float constant
      */
-    public static ConstantNode forFloat(float f, StructuredGraph graph)
+    public static ConstantNode forFloat(float __f, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forFloat(f)));
+        return unique(__graph, createPrimitive(JavaConstant.forFloat(__f)));
     }
 
     /**
@@ -286,9 +290,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param f the float value for which to create the instruction
      * @return a node for a float constant
      */
-    public static ConstantNode forFloat(float f)
+    public static ConstantNode forFloat(float __f)
     {
-        return createPrimitive(JavaConstant.forFloat(f));
+        return createPrimitive(JavaConstant.forFloat(__f));
     }
 
     /**
@@ -297,9 +301,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the long value for which to create the instruction
      * @return a node for an long constant
      */
-    public static ConstantNode forLong(long i, StructuredGraph graph)
+    public static ConstantNode forLong(long __i, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forLong(i)));
+        return unique(__graph, createPrimitive(JavaConstant.forLong(__i)));
     }
 
     /**
@@ -308,9 +312,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the long value for which to create the instruction
      * @return a node for an long constant
      */
-    public static ConstantNode forLong(long i)
+    public static ConstantNode forLong(long __i)
     {
-        return createPrimitive(JavaConstant.forLong(i));
+        return createPrimitive(JavaConstant.forLong(__i));
     }
 
     /**
@@ -319,9 +323,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the integer value for which to create the instruction
      * @return a node for an integer constant
      */
-    public static ConstantNode forInt(int i, StructuredGraph graph)
+    public static ConstantNode forInt(int __i, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forInt(i)));
+        return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
     }
 
     /**
@@ -330,9 +334,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the integer value for which to create the instruction
      * @return a node for an integer constant
      */
-    public static ConstantNode forInt(int i)
+    public static ConstantNode forInt(int __i)
     {
-        return createPrimitive(JavaConstant.forInt(i));
+        return createPrimitive(JavaConstant.forInt(__i));
     }
 
     /**
@@ -341,9 +345,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the boolean value for which to create the instruction
      * @return a node representing the boolean
      */
-    public static ConstantNode forBoolean(boolean i, StructuredGraph graph)
+    public static ConstantNode forBoolean(boolean __i, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forInt(i ? 1 : 0)));
+        return unique(__graph, createPrimitive(JavaConstant.forInt(__i ? 1 : 0)));
     }
 
     /**
@@ -352,9 +356,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the boolean value for which to create the instruction
      * @return a node representing the boolean
      */
-    public static ConstantNode forBoolean(boolean i)
+    public static ConstantNode forBoolean(boolean __i)
     {
-        return createPrimitive(JavaConstant.forInt(i ? 1 : 0));
+        return createPrimitive(JavaConstant.forInt(__i ? 1 : 0));
     }
 
     /**
@@ -363,9 +367,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the byte value for which to create the instruction
      * @return a node representing the byte
      */
-    public static ConstantNode forByte(byte i, StructuredGraph graph)
+    public static ConstantNode forByte(byte __i, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forInt(i)));
+        return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
     }
 
     /**
@@ -374,9 +378,9 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the char value for which to create the instruction
      * @return a node representing the char
      */
-    public static ConstantNode forChar(char i, StructuredGraph graph)
+    public static ConstantNode forChar(char __i, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forInt(i)));
+        return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
     }
 
     /**
@@ -385,160 +389,160 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
      * @param i the short value for which to create the instruction
      * @return a node representing the short
      */
-    public static ConstantNode forShort(short i, StructuredGraph graph)
+    public static ConstantNode forShort(short __i, StructuredGraph __graph)
     {
-        return unique(graph, createPrimitive(JavaConstant.forInt(i)));
+        return unique(__graph, createPrimitive(JavaConstant.forInt(__i)));
     }
 
-    private static ConstantNode unique(StructuredGraph graph, ConstantNode node)
+    private static ConstantNode unique(StructuredGraph __graph, ConstantNode __node)
     {
-        return graph.unique(node);
+        return __graph.unique(__node);
     }
 
-    private static ConstantNode forIntegerBits(int bits, JavaConstant constant, StructuredGraph graph)
+    private static ConstantNode forIntegerBits(int __bits, JavaConstant __constant, StructuredGraph __graph)
     {
-        long value = constant.asLong();
-        long bounds = CodeUtil.signExtend(value, bits);
-        return unique(graph, new ConstantNode(constant, StampFactory.forInteger(bits, bounds, bounds)));
-    }
-
-    /**
-     * Returns a node for a constant integer that's not directly representable as Java primitive
-     * (e.g. short).
-     */
-    public static ConstantNode forIntegerBits(int bits, long value, StructuredGraph graph)
-    {
-        return forIntegerBits(bits, JavaConstant.forPrimitiveInt(bits, value), graph);
-    }
-
-    private static ConstantNode forIntegerBits(int bits, JavaConstant constant)
-    {
-        long value = constant.asLong();
-        long bounds = CodeUtil.signExtend(value, bits);
-        return new ConstantNode(constant, StampFactory.forInteger(bits, bounds, bounds));
+        long __value = __constant.asLong();
+        long __bounds = CodeUtil.signExtend(__value, __bits);
+        return unique(__graph, new ConstantNode(__constant, StampFactory.forInteger(__bits, __bounds, __bounds)));
     }
 
     /**
      * Returns a node for a constant integer that's not directly representable as Java primitive
      * (e.g. short).
      */
-    public static ConstantNode forIntegerBits(int bits, long value)
+    public static ConstantNode forIntegerBits(int __bits, long __value, StructuredGraph __graph)
     {
-        return forIntegerBits(bits, JavaConstant.forPrimitiveInt(bits, value));
+        return forIntegerBits(__bits, JavaConstant.forPrimitiveInt(__bits, __value), __graph);
+    }
+
+    private static ConstantNode forIntegerBits(int __bits, JavaConstant __constant)
+    {
+        long __value = __constant.asLong();
+        long __bounds = CodeUtil.signExtend(__value, __bits);
+        return new ConstantNode(__constant, StampFactory.forInteger(__bits, __bounds, __bounds));
+    }
+
+    /**
+     * Returns a node for a constant integer that's not directly representable as Java primitive
+     * (e.g. short).
+     */
+    public static ConstantNode forIntegerBits(int __bits, long __value)
+    {
+        return forIntegerBits(__bits, JavaConstant.forPrimitiveInt(__bits, __value));
     }
 
     /**
      * Returns a node for a constant integer that's compatible to a given stamp.
      */
-    public static ConstantNode forIntegerStamp(Stamp stamp, long value, StructuredGraph graph)
+    public static ConstantNode forIntegerStamp(Stamp __stamp, long __value, StructuredGraph __graph)
     {
-        if (stamp instanceof IntegerStamp)
+        if (__stamp instanceof IntegerStamp)
         {
-            IntegerStamp intStamp = (IntegerStamp) stamp;
-            return forIntegerBits(intStamp.getBits(), value, graph);
+            IntegerStamp __intStamp = (IntegerStamp) __stamp;
+            return forIntegerBits(__intStamp.getBits(), __value, __graph);
         }
         else
         {
-            return forIntegerKind(stamp.getStackKind(), value, graph);
+            return forIntegerKind(__stamp.getStackKind(), __value, __graph);
         }
     }
 
     /**
      * Returns a node for a constant integer that's compatible to a given stamp.
      */
-    public static ConstantNode forIntegerStamp(Stamp stamp, long value)
+    public static ConstantNode forIntegerStamp(Stamp __stamp, long __value)
     {
-        if (stamp instanceof IntegerStamp)
+        if (__stamp instanceof IntegerStamp)
         {
-            IntegerStamp intStamp = (IntegerStamp) stamp;
-            return forIntegerBits(intStamp.getBits(), value);
+            IntegerStamp __intStamp = (IntegerStamp) __stamp;
+            return forIntegerBits(__intStamp.getBits(), __value);
         }
         else
         {
-            return forIntegerKind(stamp.getStackKind(), value);
+            return forIntegerKind(__stamp.getStackKind(), __value);
         }
     }
 
-    public static ConstantNode forIntegerKind(JavaKind kind, long value, StructuredGraph graph)
+    public static ConstantNode forIntegerKind(JavaKind __kind, long __value, StructuredGraph __graph)
     {
-        switch (kind)
+        switch (__kind)
         {
             case Byte:
             case Short:
             case Int:
-                return ConstantNode.forInt((int) value, graph);
+                return ConstantNode.forInt((int) __value, __graph);
             case Long:
-                return ConstantNode.forLong(value, graph);
+                return ConstantNode.forLong(__value, __graph);
             default:
-                throw GraalError.shouldNotReachHere("unknown kind " + kind);
+                throw GraalError.shouldNotReachHere("unknown kind " + __kind);
         }
     }
 
-    public static ConstantNode forIntegerKind(JavaKind kind, long value)
+    public static ConstantNode forIntegerKind(JavaKind __kind, long __value)
     {
-        switch (kind)
+        switch (__kind)
         {
             case Byte:
             case Short:
             case Int:
-                return createPrimitive(JavaConstant.forInt((int) value));
+                return createPrimitive(JavaConstant.forInt((int) __value));
             case Long:
-                return createPrimitive(JavaConstant.forLong(value));
+                return createPrimitive(JavaConstant.forLong(__value));
             default:
-                throw GraalError.shouldNotReachHere("unknown kind " + kind);
+                throw GraalError.shouldNotReachHere("unknown kind " + __kind);
         }
     }
 
-    public static ConstantNode forFloatingKind(JavaKind kind, double value, StructuredGraph graph)
+    public static ConstantNode forFloatingKind(JavaKind __kind, double __value, StructuredGraph __graph)
     {
-        switch (kind)
+        switch (__kind)
         {
             case Float:
-                return ConstantNode.forFloat((float) value, graph);
+                return ConstantNode.forFloat((float) __value, __graph);
             case Double:
-                return ConstantNode.forDouble(value, graph);
+                return ConstantNode.forDouble(__value, __graph);
             default:
-                throw GraalError.shouldNotReachHere("unknown kind " + kind);
+                throw GraalError.shouldNotReachHere("unknown kind " + __kind);
         }
     }
 
-    public static ConstantNode forFloatingKind(JavaKind kind, double value)
+    public static ConstantNode forFloatingKind(JavaKind __kind, double __value)
     {
-        switch (kind)
+        switch (__kind)
         {
             case Float:
-                return ConstantNode.forFloat((float) value);
+                return ConstantNode.forFloat((float) __value);
             case Double:
-                return ConstantNode.forDouble(value);
+                return ConstantNode.forDouble(__value);
             default:
-                throw GraalError.shouldNotReachHere("unknown kind " + kind);
+                throw GraalError.shouldNotReachHere("unknown kind " + __kind);
         }
     }
 
     /**
      * Returns a node for a constant double that's compatible to a given stamp.
      */
-    public static ConstantNode forFloatingStamp(Stamp stamp, double value, StructuredGraph graph)
+    public static ConstantNode forFloatingStamp(Stamp __stamp, double __value, StructuredGraph __graph)
     {
-        return forFloatingKind(stamp.getStackKind(), value, graph);
+        return forFloatingKind(__stamp.getStackKind(), __value, __graph);
     }
 
     /**
      * Returns a node for a constant double that's compatible to a given stamp.
      */
-    public static ConstantNode forFloatingStamp(Stamp stamp, double value)
+    public static ConstantNode forFloatingStamp(Stamp __stamp, double __value)
     {
-        return forFloatingKind(stamp.getStackKind(), value);
+        return forFloatingKind(__stamp.getStackKind(), __value);
     }
 
-    public static ConstantNode defaultForKind(JavaKind kind, StructuredGraph graph)
+    public static ConstantNode defaultForKind(JavaKind __kind, StructuredGraph __graph)
     {
-        return unique(graph, defaultForKind(kind));
+        return unique(__graph, defaultForKind(__kind));
     }
 
-    public static ConstantNode defaultForKind(JavaKind kind)
+    public static ConstantNode defaultForKind(JavaKind __kind)
     {
-        switch (kind)
+        switch (__kind)
         {
             case Boolean:
             case Byte:

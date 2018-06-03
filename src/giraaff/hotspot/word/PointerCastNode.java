@@ -18,15 +18,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class PointerCastNode
 public final class PointerCastNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable
 {
+    // @def
     public static final NodeClass<PointerCastNode> TYPE = NodeClass.create(PointerCastNode.class);
 
-    @Input ValueNode input;
+    @Input
+    // @field
+    ValueNode input;
 
     // @cons
-    public PointerCastNode(Stamp stamp, ValueNode input)
+    public PointerCastNode(Stamp __stamp, ValueNode __input)
     {
-        super(TYPE, stamp);
-        this.input = input;
+        super(TYPE, __stamp);
+        this.input = __input;
     }
 
     public ValueNode getInput()
@@ -35,8 +38,8 @@ public final class PointerCastNode extends FloatingNode implements LIRLowerable,
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, gen.operand(input));
+        __gen.setResult(this, __gen.operand(input));
     }
 }

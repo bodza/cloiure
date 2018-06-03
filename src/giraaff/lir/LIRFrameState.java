@@ -6,14 +6,16 @@ package giraaff.lir;
 // @class LIRFrameState
 public final class LIRFrameState
 {
+    // @def
     public static final LIRFrameState NO_STATE = new LIRFrameState(null);
 
+    // @field
     public final LabelRef exceptionEdge;
 
     // @cons
-    public LIRFrameState(LabelRef exceptionEdge)
+    public LIRFrameState(LabelRef __exceptionEdge)
     {
         super();
-        this.exceptionEdge = exceptionEdge;
+        this.exceptionEdge = __exceptionEdge;
     }
 }

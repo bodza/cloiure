@@ -30,48 +30,52 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class WordCastNode
 public final class WordCastNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable
 {
+    // @def
     public static final NodeClass<WordCastNode> TYPE = NodeClass.create(WordCastNode.class);
 
-    @Input ValueNode input;
+    @Input
+    // @field
+    ValueNode input;
+    // @field
     public final boolean trackedPointer;
 
-    public static WordCastNode wordToObject(ValueNode input, JavaKind wordKind)
+    public static WordCastNode wordToObject(ValueNode __input, JavaKind __wordKind)
     {
-        return new WordCastNode(StampFactory.object(), input);
+        return new WordCastNode(StampFactory.object(), __input);
     }
 
-    public static WordCastNode wordToObjectNonNull(ValueNode input, JavaKind wordKind)
+    public static WordCastNode wordToObjectNonNull(ValueNode __input, JavaKind __wordKind)
     {
-        return new WordCastNode(StampFactory.objectNonNull(), input);
+        return new WordCastNode(StampFactory.objectNonNull(), __input);
     }
 
-    public static WordCastNode addressToWord(ValueNode input, JavaKind wordKind)
+    public static WordCastNode addressToWord(ValueNode __input, JavaKind __wordKind)
     {
-        return new WordCastNode(StampFactory.forKind(wordKind), input);
+        return new WordCastNode(StampFactory.forKind(__wordKind), __input);
     }
 
-    public static WordCastNode objectToTrackedPointer(ValueNode input, JavaKind wordKind)
+    public static WordCastNode objectToTrackedPointer(ValueNode __input, JavaKind __wordKind)
     {
-        return new WordCastNode(StampFactory.forKind(wordKind), input, true);
+        return new WordCastNode(StampFactory.forKind(__wordKind), __input, true);
     }
 
-    public static WordCastNode objectToUntrackedPointer(ValueNode input, JavaKind wordKind)
+    public static WordCastNode objectToUntrackedPointer(ValueNode __input, JavaKind __wordKind)
     {
-        return new WordCastNode(StampFactory.forKind(wordKind), input, false);
-    }
-
-    // @cons
-    protected WordCastNode(Stamp stamp, ValueNode input)
-    {
-        this(stamp, input, true);
+        return new WordCastNode(StampFactory.forKind(__wordKind), __input, false);
     }
 
     // @cons
-    protected WordCastNode(Stamp stamp, ValueNode input, boolean trackedPointer)
+    protected WordCastNode(Stamp __stamp, ValueNode __input)
     {
-        super(TYPE, stamp);
-        this.input = input;
-        this.trackedPointer = trackedPointer;
+        this(__stamp, __input, true);
+    }
+
+    // @cons
+    protected WordCastNode(Stamp __stamp, ValueNode __input, boolean __trackedPointer)
+    {
+        super(TYPE, __stamp);
+        this.input = __input;
+        this.trackedPointer = __trackedPointer;
     }
 
     public ValueNode getInput()
@@ -80,9 +84,9 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             // If the cast is unused, it can be eliminated.
             return input;
@@ -97,7 +101,7 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
             }
             else if (input.asJavaConstant().getJavaKind().isNumericInteger() && input.asJavaConstant().asLong() == 0)
             {
-                return ConstantNode.forConstant(stamp(NodeView.DEFAULT), JavaConstant.NULL_POINTER, tool.getMetaAccess());
+                return ConstantNode.forConstant(stamp(NodeView.DEFAULT), JavaConstant.NULL_POINTER, __tool.getMetaAccess());
             }
         }
 
@@ -105,26 +109,26 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value value = gen.operand(input);
-        ValueKind<?> kind = gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
+        Value __value = __gen.operand(input);
+        ValueKind<?> __kind = __gen.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
 
-        if (trackedPointer && LIRKind.isValue(kind) && !LIRKind.isValue(value))
+        if (trackedPointer && LIRKind.isValue(__kind) && !LIRKind.isValue(__value))
         {
             // just change the PlatformKind, but don't drop reference information
-            kind = value.getValueKind().changeType(kind.getPlatformKind());
+            __kind = __value.getValueKind().changeType(__kind.getPlatformKind());
         }
 
-        if (kind.equals(value.getValueKind()) && !(value instanceof ConstantValue))
+        if (__kind.equals(__value.getValueKind()) && !(__value instanceof ConstantValue))
         {
-            gen.setResult(this, value);
+            __gen.setResult(this, __value);
         }
         else
         {
-            AllocatableValue result = gen.getLIRGeneratorTool().newVariable(kind);
-            gen.getLIRGeneratorTool().emitMove(result, value);
-            gen.setResult(this, result);
+            AllocatableValue __result = __gen.getLIRGeneratorTool().newVariable(__kind);
+            __gen.getLIRGeneratorTool().emitMove(__result, __value);
+            __gen.setResult(this, __result);
         }
     }
 }

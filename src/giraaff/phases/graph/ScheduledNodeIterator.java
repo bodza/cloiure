@@ -18,54 +18,57 @@ import giraaff.nodes.cfg.Block;
 // @class ScheduledNodeIterator
 public abstract class ScheduledNodeIterator
 {
+    // @field
     private FixedWithNextNode lastFixed;
+    // @field
     private FixedWithNextNode reconnect;
+    // @field
     private ListIterator<Node> iterator;
 
-    public void processNodes(Block block, ScheduleResult schedule)
+    public void processNodes(Block __block, ScheduleResult __schedule)
     {
-        lastFixed = block.getBeginNode();
+        lastFixed = __block.getBeginNode();
         reconnect = null;
-        iterator = schedule.nodesFor(block).listIterator();
+        iterator = __schedule.nodesFor(__block).listIterator();
 
         while (iterator.hasNext())
         {
-            Node node = iterator.next();
-            if (!node.isAlive())
+            Node __node = iterator.next();
+            if (!__node.isAlive())
             {
                 continue;
             }
-            if (reconnect != null && node instanceof FixedNode)
+            if (reconnect != null && __node instanceof FixedNode)
             {
-                reconnect.setNext((FixedNode) node);
+                reconnect.setNext((FixedNode) __node);
                 reconnect = null;
             }
-            if (node instanceof FixedWithNextNode)
+            if (__node instanceof FixedWithNextNode)
             {
-                lastFixed = (FixedWithNextNode) node;
+                lastFixed = (FixedWithNextNode) __node;
             }
-            processNode(node);
+            processNode(__node);
         }
         if (reconnect != null)
         {
-            reconnect.setNext(block.getFirstSuccessor().getBeginNode());
+            reconnect.setNext(__block.getFirstSuccessor().getBeginNode());
         }
     }
 
-    protected void insert(FixedNode start, FixedWithNextNode end)
+    protected void insert(FixedNode __start, FixedWithNextNode __end)
     {
-        this.lastFixed.setNext(start);
-        this.lastFixed = end;
-        this.reconnect = end;
+        this.lastFixed.setNext(__start);
+        this.lastFixed = __end;
+        this.reconnect = __end;
     }
 
-    protected void replaceCurrent(FixedWithNextNode newNode)
+    protected void replaceCurrent(FixedWithNextNode __newNode)
     {
-        Node current = iterator.previous();
+        Node __current = iterator.previous();
         iterator.next(); // needed because of the previous() call
-        current.replaceAndDelete(newNode);
-        insert(newNode, newNode);
-        iterator.set(newNode);
+        __current.replaceAndDelete(__newNode);
+        insert(__newNode, __newNode);
+        iterator.set(__newNode);
     }
 
     protected abstract void processNode(Node node);

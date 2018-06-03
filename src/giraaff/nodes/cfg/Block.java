@@ -21,24 +21,32 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 // @class Block
 public final class Block extends AbstractBlockBase<Block>
 {
+    // @def
     public static final Block[] EMPTY_ARRAY = new Block[0];
 
+    // @field
     protected final AbstractBeginNode beginNode;
 
+    // @field
     protected FixedNode endNode;
 
+    // @field
     protected double probability;
+    // @field
     private Loop<Block> loop;
 
+    // @field
     protected Block postdominator;
+    // @field
     private LocationSet killLocations;
+    // @field
     private LocationSet killLocationsBetweenThisAndDominator;
 
     // @cons
-    public Block(AbstractBeginNode node)
+    public Block(AbstractBeginNode __node)
     {
         super();
-        this.beginNode = node;
+        this.beginNode = __node;
     }
 
     public AbstractBeginNode getBeginNode()
@@ -76,9 +84,9 @@ public final class Block extends AbstractBlockBase<Block>
         return loop;
     }
 
-    public void setLoop(Loop<Block> loop)
+    public void setLoop(Loop<Block> __loop)
     {
-        this.loop = loop;
+        this.loop = __loop;
     }
 
     @Override
@@ -102,8 +110,8 @@ public final class Block extends AbstractBlockBase<Block>
     @Override
     public boolean isExceptionEntry()
     {
-        Node predecessor = getBeginNode().predecessor();
-        return predecessor != null && predecessor instanceof InvokeWithExceptionNode && getBeginNode() == ((InvokeWithExceptionNode) predecessor).exceptionEdge();
+        Node __predecessor = getBeginNode().predecessor();
+        return __predecessor != null && __predecessor instanceof InvokeWithExceptionNode && getBeginNode() == ((InvokeWithExceptionNode) __predecessor).exceptionEdge();
     }
 
     public Block getFirstPredecessor()
@@ -118,20 +126,20 @@ public final class Block extends AbstractBlockBase<Block>
 
     public Block getEarliestPostDominated()
     {
-        Block b = this;
+        Block __b = this;
         while (true)
         {
-            Block dom = b.getDominator();
-            if (dom != null && dom.getPostdominator() == b)
+            Block __dom = __b.getDominator();
+            if (__dom != null && __dom.getPostdominator() == __b)
             {
-                b = dom;
+                __b = __dom;
             }
             else
             {
                 break;
             }
         }
-        return b;
+        return __b;
     }
 
     @Override
@@ -144,6 +152,7 @@ public final class Block extends AbstractBlockBase<Block>
     // @closure
     private final class NodeIterator implements Iterator<FixedNode>
     {
+        // @field
         private FixedNode cur;
 
         // @cons
@@ -162,21 +171,21 @@ public final class Block extends AbstractBlockBase<Block>
         @Override
         public FixedNode next()
         {
-            FixedNode result = cur;
-            if (result instanceof FixedWithNextNode)
+            FixedNode __result = cur;
+            if (__result instanceof FixedWithNextNode)
             {
-                FixedNode next = ((FixedWithNextNode) result).next();
-                if (next instanceof AbstractBeginNode)
+                FixedNode __next = ((FixedWithNextNode) __result).next();
+                if (__next instanceof AbstractBeginNode)
                 {
-                    next = null;
+                    __next = null;
                 }
-                cur = next;
+                cur = __next;
             }
             else
             {
                 cur = null;
             }
-            return result;
+            return __result;
         }
 
         @Override
@@ -205,29 +214,29 @@ public final class Block extends AbstractBlockBase<Block>
         return probability;
     }
 
-    public void setProbability(double probability)
+    public void setProbability(double __probability)
     {
-        this.probability = probability;
+        this.probability = __probability;
     }
 
     @Override
-    public Block getDominator(int distance)
+    public Block getDominator(int __distance)
     {
-        Block result = this;
-        for (int i = 0; i < distance; ++i)
+        Block __result = this;
+        for (int __i = 0; __i < __distance; ++__i)
         {
-            result = result.getDominator();
+            __result = __result.getDominator();
         }
-        return result;
+        return __result;
     }
 
-    public boolean canKill(LocationIdentity location)
+    public boolean canKill(LocationIdentity __location)
     {
-        if (location.isImmutable())
+        if (__location.isImmutable())
         {
             return false;
         }
-        return getKillLocations().contains(location);
+        return getKillLocations().contains(__location);
     }
 
     public LocationSet getKillLocations()
@@ -241,96 +250,96 @@ public final class Block extends AbstractBlockBase<Block>
 
     private LocationSet calcKillLocations()
     {
-        LocationSet result = new LocationSet();
-        for (FixedNode node : this.getNodes())
+        LocationSet __result = new LocationSet();
+        for (FixedNode __node : this.getNodes())
         {
-            if (node instanceof MemoryCheckpoint.Single)
+            if (__node instanceof MemoryCheckpoint.Single)
             {
-                LocationIdentity identity = ((MemoryCheckpoint.Single) node).getLocationIdentity();
-                result.add(identity);
+                LocationIdentity __identity = ((MemoryCheckpoint.Single) __node).getLocationIdentity();
+                __result.add(__identity);
             }
-            else if (node instanceof MemoryCheckpoint.Multi)
+            else if (__node instanceof MemoryCheckpoint.Multi)
             {
-                for (LocationIdentity identity : ((MemoryCheckpoint.Multi) node).getLocationIdentities())
+                for (LocationIdentity __identity : ((MemoryCheckpoint.Multi) __node).getLocationIdentities())
                 {
-                    result.add(identity);
+                    __result.add(__identity);
                 }
             }
-            if (result.isAny())
+            if (__result.isAny())
             {
                 break;
             }
         }
-        return result;
+        return __result;
     }
 
-    public boolean canKillBetweenThisAndDominator(LocationIdentity location)
+    public boolean canKillBetweenThisAndDominator(LocationIdentity __location)
     {
-        if (location.isImmutable())
+        if (__location.isImmutable())
         {
             return false;
         }
-        return this.getKillLocationsBetweenThisAndDominator().contains(location);
+        return this.getKillLocationsBetweenThisAndDominator().contains(__location);
     }
 
     private LocationSet getKillLocationsBetweenThisAndDominator()
     {
         if (this.killLocationsBetweenThisAndDominator == null)
         {
-            LocationSet dominatorResult = new LocationSet();
-            Block stopBlock = getDominator();
+            LocationSet __dominatorResult = new LocationSet();
+            Block __stopBlock = getDominator();
             if (this.isLoopHeader())
             {
-                dominatorResult.addAll(((HIRLoop) this.getLoop()).getKillLocations());
+                __dominatorResult.addAll(((HIRLoop) this.getLoop()).getKillLocations());
             }
             else
             {
-                for (Block b : this.getPredecessors())
+                for (Block __b : this.getPredecessors())
                 {
-                    if (b != stopBlock)
+                    if (__b != __stopBlock)
                     {
-                        dominatorResult.addAll(b.getKillLocations());
-                        if (dominatorResult.isAny())
+                        __dominatorResult.addAll(__b.getKillLocations());
+                        if (__dominatorResult.isAny())
                         {
                             break;
                         }
-                        b.calcKillLocationsBetweenThisAndTarget(dominatorResult, stopBlock);
-                        if (dominatorResult.isAny())
+                        __b.calcKillLocationsBetweenThisAndTarget(__dominatorResult, __stopBlock);
+                        if (__dominatorResult.isAny())
                         {
                             break;
                         }
                     }
                 }
             }
-            this.killLocationsBetweenThisAndDominator = dominatorResult;
+            this.killLocationsBetweenThisAndDominator = __dominatorResult;
         }
         return this.killLocationsBetweenThisAndDominator;
     }
 
-    private void calcKillLocationsBetweenThisAndTarget(LocationSet result, Block stopBlock)
+    private void calcKillLocationsBetweenThisAndTarget(LocationSet __result, Block __stopBlock)
     {
-        if (stopBlock == this || result.isAny())
+        if (__stopBlock == this || __result.isAny())
         {
             // We reached the stop block => nothing to do.
             return;
         }
         else
         {
-            if (stopBlock == this.getDominator())
+            if (__stopBlock == this.getDominator())
             {
-                result.addAll(this.getKillLocationsBetweenThisAndDominator());
+                __result.addAll(this.getKillLocationsBetweenThisAndDominator());
             }
             else
             {
                 // Divide and conquer: Aggregate kill locations from this to the dominator and then
                 // from the dominator onwards.
-                calcKillLocationsBetweenThisAndTarget(result, this.getDominator());
-                result.addAll(this.getDominator().getKillLocations());
-                if (result.isAny())
+                calcKillLocationsBetweenThisAndTarget(__result, this.getDominator());
+                __result.addAll(this.getDominator().getKillLocations());
+                if (__result.isAny())
                 {
                     return;
                 }
-                this.getDominator().calcKillLocationsBetweenThisAndTarget(result, stopBlock);
+                this.getDominator().calcKillLocationsBetweenThisAndTarget(__result, __stopBlock);
             }
         }
     }
@@ -339,47 +348,47 @@ public final class Block extends AbstractBlockBase<Block>
     public void delete()
     {
         // adjust successor and predecessor lists
-        Block next = getSuccessors()[0];
-        for (Block pred : getPredecessors())
+        Block __next = getSuccessors()[0];
+        for (Block __pred : getPredecessors())
         {
-            Block[] predSuccs = pred.successors;
-            Block[] newPredSuccs = new Block[predSuccs.length];
-            for (int i = 0; i < predSuccs.length; ++i)
+            Block[] __predSuccs = __pred.successors;
+            Block[] __newPredSuccs = new Block[__predSuccs.length];
+            for (int __i = 0; __i < __predSuccs.length; ++__i)
             {
-                if (predSuccs[i] == this)
+                if (__predSuccs[__i] == this)
                 {
-                    newPredSuccs[i] = next;
+                    __newPredSuccs[__i] = __next;
                 }
                 else
                 {
-                    newPredSuccs[i] = predSuccs[i];
+                    __newPredSuccs[__i] = __predSuccs[__i];
                 }
             }
-            pred.setSuccessors(newPredSuccs);
+            __pred.setSuccessors(__newPredSuccs);
         }
 
-        ArrayList<Block> newPreds = new ArrayList<>();
-        for (int i = 0; i < next.getPredecessorCount(); i++)
+        ArrayList<Block> __newPreds = new ArrayList<>();
+        for (int __i = 0; __i < __next.getPredecessorCount(); __i++)
         {
-            Block curPred = next.getPredecessors()[i];
-            if (curPred == this)
+            Block __curPred = __next.getPredecessors()[__i];
+            if (__curPred == this)
             {
-                for (Block b : getPredecessors())
+                for (Block __b : getPredecessors())
                 {
-                    newPreds.add(b);
+                    __newPreds.add(__b);
                 }
             }
             else
             {
-                newPreds.add(curPred);
+                __newPreds.add(__curPred);
             }
         }
 
-        next.setPredecessors(newPreds.toArray(new Block[0]));
+        __next.setPredecessors(__newPreds.toArray(new Block[0]));
     }
 
-    protected void setPostDominator(Block postdominator)
+    protected void setPostDominator(Block __postdominator)
     {
-        this.postdominator = postdominator;
+        this.postdominator = __postdominator;
     }
 }

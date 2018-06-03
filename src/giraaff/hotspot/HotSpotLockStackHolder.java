@@ -8,13 +8,14 @@ import giraaff.core.gen.LockStackHolder;
 // @class HotSpotLockStackHolder
 public final class HotSpotLockStackHolder extends LockStackHolder
 {
+    // @field
     private final HotSpotLockStack lockStack;
 
     // @cons
-    public HotSpotLockStackHolder(HotSpotLockStack lockStack)
+    public HotSpotLockStackHolder(HotSpotLockStack __lockStack)
     {
         super();
-        this.lockStack = lockStack;
+        this.lockStack = __lockStack;
     }
 
     public HotSpotLockStack lockStack()

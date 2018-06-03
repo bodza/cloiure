@@ -14,30 +14,35 @@ import giraaff.util.GraalError;
 // @class AMD64ByteSwapOp
 public final class AMD64ByteSwapOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64ByteSwapOp> TYPE = LIRInstructionClass.create(AMD64ByteSwapOp.class);
 
-    @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
-    @Use protected Value input;
+    @Def({OperandFlag.REG, OperandFlag.HINT})
+    // @field
+    protected Value result;
+    @Use
+    // @field
+    protected Value input;
 
     // @cons
-    public AMD64ByteSwapOp(Value result, Value input)
+    public AMD64ByteSwapOp(Value __result, Value __input)
     {
         super(TYPE);
-        this.result = result;
-        this.input = input;
+        this.result = __result;
+        this.input = __input;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        AMD64Move.move(crb, masm, result, input);
+        AMD64Move.move(__crb, __masm, result, input);
         switch ((AMD64Kind) input.getPlatformKind())
         {
             case DWORD:
-                masm.bswapl(ValueUtil.asRegister(result));
+                __masm.bswapl(ValueUtil.asRegister(result));
                 break;
             case QWORD:
-                masm.bswapq(ValueUtil.asRegister(result));
+                __masm.bswapq(ValueUtil.asRegister(result));
                 break;
             default:
                 throw GraalError.shouldNotReachHere();

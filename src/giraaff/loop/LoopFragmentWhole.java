@@ -19,23 +19,23 @@ import giraaff.nodes.cfg.Block;
 public final class LoopFragmentWhole extends LoopFragment
 {
     // @cons
-    public LoopFragmentWhole(LoopEx loop)
+    public LoopFragmentWhole(LoopEx __loop)
     {
-        super(loop);
+        super(__loop);
     }
 
     // @cons
-    public LoopFragmentWhole(LoopFragmentWhole original)
+    public LoopFragmentWhole(LoopFragmentWhole __original)
     {
-        super(null, original);
+        super(null, __original);
     }
 
     @Override
     public LoopFragmentWhole duplicate()
     {
-        LoopFragmentWhole loopFragmentWhole = new LoopFragmentWhole(this);
-        loopFragmentWhole.reify();
-        return loopFragmentWhole;
+        LoopFragmentWhole __loopFragmentWhole = new LoopFragmentWhole(this);
+        __loopFragmentWhole.reify();
+        return __loopFragmentWhole;
     }
 
     private void reify()
@@ -50,40 +50,41 @@ public final class LoopFragmentWhole extends LoopFragment
     {
         if (nodes == null)
         {
-            Loop<Block> loop = loop().loop();
-            nodes = LoopFragment.computeNodes(graph(), LoopFragment.toHirBlocks(loop.getBlocks()), LoopFragment.toHirExits(loop.getExits()));
+            Loop<Block> __loop = loop().loop();
+            nodes = LoopFragment.computeNodes(graph(), LoopFragment.toHirBlocks(__loop.getBlocks()), LoopFragment.toHirExits(__loop.getExits()));
         }
         return nodes;
     }
 
     @Override
-    protected ValueNode prim(ValueNode b)
+    protected ValueNode prim(ValueNode __b)
     {
-        return getDuplicatedNode(b);
+        return getDuplicatedNode(__b);
     }
 
     @Override
     protected DuplicationReplacement getDuplicationReplacement()
     {
-        final FixedNode entry = loop().entryPoint();
-        final Graph graph = this.graph();
+        final FixedNode __entry = loop().entryPoint();
+        final Graph __graph = this.graph();
         // @closure
         return new DuplicationReplacement()
         {
+            // @field
             private EndNode endNode;
 
             @Override
-            public Node replacement(Node o)
+            public Node replacement(Node __o)
             {
-                if (o == entry)
+                if (__o == __entry)
                 {
                     if (endNode == null)
                     {
-                        endNode = graph.add(new EndNode());
+                        endNode = __graph.add(new EndNode());
                     }
                     return endNode;
                 }
-                return o;
+                return __o;
             }
         };
     }
@@ -92,8 +93,8 @@ public final class LoopFragmentWhole extends LoopFragment
     {
         if (isDuplicate())
         {
-            LoopBeginNode newLoopBegin = getDuplicatedNode(original().loop().loopBegin());
-            return newLoopBegin.forwardEnd();
+            LoopBeginNode __newLoopBegin = getDuplicatedNode(original().loop().loopBegin());
+            return __newLoopBegin.forwardEnd();
         }
         return loop().entryPoint();
     }
@@ -106,37 +107,37 @@ public final class LoopFragmentWhole extends LoopFragment
 
     void cleanupLoopExits()
     {
-        LoopBeginNode loopBegin = original().loop().loopBegin();
-        StructuredGraph graph = loopBegin.graph();
-        if (graph.getGuardsStage() == StructuredGraph.GuardsStage.AFTER_FSA)
+        LoopBeginNode __loopBegin = original().loop().loopBegin();
+        StructuredGraph __graph = __loopBegin.graph();
+        if (__graph.getGuardsStage() == StructuredGraph.GuardsStage.AFTER_FSA)
         {
             // After FrameStateAssignment ControlFlowGraph treats loop exits differently which means
             // that the LoopExitNodes can be in a block which post dominates the true loop exit. For
             // cloning to work right they must agree.
-            EconomicSet<LoopExitNode> exits = EconomicSet.create();
-            for (Block exitBlock : original().loop().loop().getExits())
+            EconomicSet<LoopExitNode> __exits = EconomicSet.create();
+            for (Block __exitBlock : original().loop().loop().getExits())
             {
-                LoopExitNode exitNode = exitBlock.getLoopExit();
-                if (exitNode == null)
+                LoopExitNode __exitNode = __exitBlock.getLoopExit();
+                if (__exitNode == null)
                 {
-                    exitNode = graph.add(new LoopExitNode(loopBegin));
-                    graph.addAfterFixed(exitBlock.getBeginNode(), exitNode);
+                    __exitNode = __graph.add(new LoopExitNode(__loopBegin));
+                    __graph.addAfterFixed(__exitBlock.getBeginNode(), __exitNode);
                     if (nodes != null)
                     {
-                        nodes.mark(exitNode);
+                        nodes.mark(__exitNode);
                     }
                 }
-                exits.add(exitNode);
+                __exits.add(__exitNode);
             }
-            for (LoopExitNode exitNode : loopBegin.loopExits())
+            for (LoopExitNode __exitNode : __loopBegin.loopExits())
             {
-                if (!exits.contains(exitNode))
+                if (!__exits.contains(__exitNode))
                 {
                     if (nodes != null)
                     {
-                        nodes.clear(exitNode);
+                        nodes.clear(__exitNode);
                     }
-                    graph.removeFixed(exitNode);
+                    __graph.removeFixed(__exitNode);
                 }
             }
         }
@@ -149,7 +150,7 @@ public final class LoopFragmentWhole extends LoopFragment
     }
 
     @Override
-    public void insertBefore(LoopEx loop)
+    public void insertBefore(LoopEx __loop)
     {
         // TODO auto-generated method stub
     }

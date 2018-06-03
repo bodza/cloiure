@@ -14,6 +14,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class LoopEndNode
 public final class LoopEndNode extends AbstractEndNode
 {
+    // @def
     public static final NodeClass<LoopEndNode> TYPE = NodeClass.create(LoopEndNode.class);
 
     /*
@@ -21,7 +22,10 @@ public final class LoopEndNode extends AbstractEndNode
      * evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
      * after - but we still must not have type system violations for that short amount of time.
      */
-    @Input(InputType.Association) AbstractBeginNode loopBegin;
+    @Input(InputType.Association)
+    // @field
+    AbstractBeginNode loopBegin;
+    // @field
     protected int endIndex;
 
     /**
@@ -38,16 +42,17 @@ public final class LoopEndNode extends AbstractEndNode
      * {@link LoopBeginNode#canEndsSafepoint loop begin}. New loop ends inherit the flag value from
      * the loop begin.
      */
+    // @field
     boolean canSafepoint;
 
     // @cons
-    public LoopEndNode(LoopBeginNode begin)
+    public LoopEndNode(LoopBeginNode __begin)
     {
         super(TYPE);
-        int idx = begin.nextEndIndex();
-        this.endIndex = idx;
-        this.loopBegin = begin;
-        this.canSafepoint = begin.canEndsSafepoint;
+        int __idx = __begin.nextEndIndex();
+        this.endIndex = __idx;
+        this.loopBegin = __begin;
+        this.canSafepoint = __begin.canEndsSafepoint;
     }
 
     @Override
@@ -61,10 +66,10 @@ public final class LoopEndNode extends AbstractEndNode
         return (LoopBeginNode) loopBegin;
     }
 
-    public void setLoopBegin(LoopBeginNode x)
+    public void setLoopBegin(LoopBeginNode __x)
     {
-        updateUsages(this.loopBegin, x);
-        this.loopBegin = x;
+        updateUsages(this.loopBegin, __x);
+        this.loopBegin = __x;
     }
 
     /**
@@ -82,10 +87,10 @@ public final class LoopEndNode extends AbstractEndNode
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.visitLoopEnd(this);
-        super.generate(gen);
+        __gen.visitLoopEnd(this);
+        super.generate(__gen);
     }
 
     /**
@@ -100,9 +105,9 @@ public final class LoopEndNode extends AbstractEndNode
         return endIndex;
     }
 
-    void setEndIndex(int idx)
+    void setEndIndex(int __idx)
     {
-        this.endIndex = idx;
+        this.endIndex = __idx;
     }
 
     @Override

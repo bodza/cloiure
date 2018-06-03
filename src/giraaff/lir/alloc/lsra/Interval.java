@@ -36,25 +36,28 @@ public final class Interval
         /**
          * List of intervals whose binding is currently {@link RegisterBinding#Fixed}.
          */
+        // @field
         public Interval fixed;
 
         /**
          * List of intervals whose binding is currently {@link RegisterBinding#Any}.
          */
+        // @field
         public Interval any;
 
         /**
          * List of intervals whose binding is currently {@link RegisterBinding#Stack}.
          */
+        // @field
         public Interval stack;
 
         // @cons
-        RegisterBindingLists(Interval fixed, Interval any, Interval stack)
+        RegisterBindingLists(Interval __fixed, Interval __any, Interval __stack)
         {
             super();
-            this.fixed = fixed;
-            this.any = any;
-            this.stack = stack;
+            this.fixed = __fixed;
+            this.any = __any;
+            this.stack = __stack;
         }
 
         /**
@@ -63,9 +66,9 @@ public final class Interval
          * @param binding specifies the list to be returned
          * @return the list of intervals whose binding is {@code binding}
          */
-        public Interval get(RegisterBinding binding)
+        public Interval get(RegisterBinding __binding)
         {
-            switch (binding)
+            switch (__binding)
             {
                 case Any:
                     return any;
@@ -83,18 +86,18 @@ public final class Interval
          * @param binding specifies the list to be replaced
          * @param list a list of intervals whose binding is {@code binding}
          */
-        public void set(RegisterBinding binding, Interval list)
+        public void set(RegisterBinding __binding, Interval __list)
         {
-            switch (binding)
+            switch (__binding)
             {
                 case Any:
-                    any = list;
+                    any = __list;
                     break;
                 case Fixed:
-                    fixed = list;
+                    fixed = __list;
                     break;
                 case Stack:
-                    stack = list;
+                    stack = __list;
                     break;
             }
         }
@@ -105,29 +108,29 @@ public final class Interval
          * @param binding specifies the list to be updated
          * @param interval the interval to add
          */
-        public void addToListSortedByCurrentFromPositions(RegisterBinding binding, Interval interval)
+        public void addToListSortedByCurrentFromPositions(RegisterBinding __binding, Interval __interval)
         {
-            Interval list = get(binding);
-            Interval prev = null;
-            Interval cur = list;
-            while (cur.currentFrom() < interval.currentFrom())
+            Interval __list = get(__binding);
+            Interval __prev = null;
+            Interval __cur = __list;
+            while (__cur.currentFrom() < __interval.currentFrom())
             {
-                prev = cur;
-                cur = cur.next;
+                __prev = __cur;
+                __cur = __cur.next;
             }
-            Interval result = list;
-            if (prev == null)
+            Interval __result = __list;
+            if (__prev == null)
             {
                 // add to head of list
-                result = interval;
+                __result = __interval;
             }
             else
             {
                 // add before 'cur'
-                prev.next = interval;
+                __prev.next = __interval;
             }
-            interval.next = cur;
-            set(binding, result);
+            __interval.next = __cur;
+            set(__binding, __result);
         }
 
         /**
@@ -137,26 +140,26 @@ public final class Interval
          * @param binding specifies the list to be updated
          * @param interval the interval to add
          */
-        public void addToListSortedByStartAndUsePositions(RegisterBinding binding, Interval interval)
+        public void addToListSortedByStartAndUsePositions(RegisterBinding __binding, Interval __interval)
         {
-            Interval list = get(binding);
-            Interval prev = null;
-            Interval cur = list;
-            while (cur.from() < interval.from() || (cur.from() == interval.from() && cur.firstUsage(RegisterPriority.None) < interval.firstUsage(RegisterPriority.None)))
+            Interval __list = get(__binding);
+            Interval __prev = null;
+            Interval __cur = __list;
+            while (__cur.from() < __interval.from() || (__cur.from() == __interval.from() && __cur.firstUsage(RegisterPriority.None) < __interval.firstUsage(RegisterPriority.None)))
             {
-                prev = cur;
-                cur = cur.next;
+                __prev = __cur;
+                __cur = __cur.next;
             }
-            if (prev == null)
+            if (__prev == null)
             {
-                list = interval;
+                __list = __interval;
             }
             else
             {
-                prev.next = interval;
+                __prev.next = __interval;
             }
-            interval.next = cur;
-            set(binding, list);
+            __interval.next = __cur;
+            set(__binding, __list);
         }
 
         /**
@@ -165,23 +168,23 @@ public final class Interval
          * @param binding specifies the list to be updated
          * @param i the interval to remove
          */
-        public void remove(RegisterBinding binding, Interval i)
+        public void remove(RegisterBinding __binding, Interval __i)
         {
-            Interval list = get(binding);
-            Interval prev = null;
-            Interval cur = list;
-            while (cur != i)
+            Interval __list = get(__binding);
+            Interval __prev = null;
+            Interval __cur = __list;
+            while (__cur != __i)
             {
-                prev = cur;
-                cur = cur.next;
+                __prev = __cur;
+                __cur = __cur.next;
             }
-            if (prev == null)
+            if (__prev == null)
             {
-                set(binding, cur.next);
+                set(__binding, __cur.next);
             }
             else
             {
-                prev.next = cur.next;
+                __prev.next = __cur.next;
             }
         }
     }
@@ -214,22 +217,23 @@ public final class Interval
          */
         MustHaveRegister;
 
+        // @def
         public static final RegisterPriority[] VALUES = values();
 
         /**
          * Determines if this priority is higher than or equal to a given priority.
          */
-        public boolean greaterEqual(RegisterPriority other)
+        public boolean greaterEqual(RegisterPriority __other)
         {
-            return ordinal() >= other.ordinal();
+            return ordinal() >= __other.ordinal();
         }
 
         /**
          * Determines if this priority is lower than a given priority.
          */
-        public boolean lessThan(RegisterPriority other)
+        public boolean lessThan(RegisterPriority __other)
         {
-            return ordinal() < other.ordinal();
+            return ordinal() < __other.ordinal();
         }
     }
 
@@ -255,6 +259,7 @@ public final class Interval
          */
         Stack;
 
+        // @def
         public static final RegisterBinding[] VALUES = values();
     }
 
@@ -333,6 +338,7 @@ public final class Interval
          */
         NoOptimization;
 
+        // @def
         public static final EnumSet<SpillState> ALWAYS_IN_MEMORY = EnumSet.of(SpillInDominator, StoreAtDefinition, StartInMemory);
     }
 
@@ -343,6 +349,7 @@ public final class Interval
     // @class Interval.UsePosList
     public static final class UsePosList
     {
+        // @field
         private IntList list;
 
         /**
@@ -351,17 +358,17 @@ public final class Interval
          * @param initialCapacity the initial capacity of the list in terms of entries
          */
         // @cons
-        public UsePosList(int initialCapacity)
+        public UsePosList(int __initialCapacity)
         {
             super();
-            list = new IntList(initialCapacity * 2);
+            list = new IntList(__initialCapacity * 2);
         }
 
         // @cons
-        private UsePosList(IntList list)
+        private UsePosList(IntList __list)
         {
             super();
-            this.list = list;
+            this.list = __list;
         }
 
         /**
@@ -373,20 +380,20 @@ public final class Interval
          * @return a use position list containing all entries removed from this list that have a use
          *         position greater or equal than {@code splitPos}
          */
-        public UsePosList splitAt(int splitPos)
+        public UsePosList splitAt(int __splitPos)
         {
-            int i = size() - 1;
-            int len = 0;
-            while (i >= 0 && usePos(i) < splitPos)
+            int __i = size() - 1;
+            int __len = 0;
+            while (__i >= 0 && usePos(__i) < __splitPos)
             {
-                --i;
-                len += 2;
+                --__i;
+                __len += 2;
             }
-            int listSplitIndex = (i + 1) * 2;
-            IntList childList = list;
-            list = IntList.copy(this.list, listSplitIndex, len);
-            childList.setSize(listSplitIndex);
-            return new UsePosList(childList);
+            int __listSplitIndex = (__i + 1) * 2;
+            IntList __childList = list;
+            list = IntList.copy(this.list, __listSplitIndex, __len);
+            __childList.setSize(__listSplitIndex);
+            return new UsePosList(__childList);
         }
 
         /**
@@ -395,9 +402,9 @@ public final class Interval
          * @param index the index of the entry for which the use position is returned
          * @return the use position of entry {@code index} in this list
          */
-        public int usePos(int index)
+        public int usePos(int __index)
         {
-            return list.get(index << 1);
+            return list.get(__index << 1);
         }
 
         /**
@@ -406,15 +413,15 @@ public final class Interval
          * @param index the index of the entry for which the register priority is returned
          * @return the register priority of entry {@code index} in this list
          */
-        public RegisterPriority registerPriority(int index)
+        public RegisterPriority registerPriority(int __index)
         {
-            return RegisterPriority.VALUES[list.get((index << 1) + 1)];
+            return RegisterPriority.VALUES[list.get((__index << 1) + 1)];
         }
 
-        public void add(int usePos, RegisterPriority registerPriority)
+        public void add(int __usePos, RegisterPriority __registerPriority)
         {
-            list.add(usePos);
-            list.add(registerPriority.ordinal());
+            list.add(__usePos);
+            list.add(__registerPriority.ordinal());
         }
 
         public int size()
@@ -427,129 +434,150 @@ public final class Interval
             list.setSize(list.size() - 2);
         }
 
-        public void setRegisterPriority(int index, RegisterPriority registerPriority)
+        public void setRegisterPriority(int __index, RegisterPriority __registerPriority)
         {
-            list.set((index << 1) + 1, registerPriority.ordinal());
+            list.set((__index << 1) + 1, __registerPriority.ordinal());
         }
     }
 
+    // @def
     protected static final int END_MARKER_OPERAND_NUMBER = Integer.MIN_VALUE;
 
     /**
      * The {@linkplain RegisterValue register} or {@linkplain Variable variable} for this interval
      * prior to register allocation.
      */
+    // @field
     public final AllocatableValue operand;
 
     /**
      * The operand number for this interval's {@linkplain #operand operand}.
      */
+    // @field
     public final int operandNumber;
 
     /**
      * The {@linkplain RegisterValue register} or {@linkplain StackSlot spill slot} assigned to this
      * interval. In case of a spilled interval which is re-materialized this is {@link Value#ILLEGAL}.
      */
+    // @field
     private AllocatableValue location;
 
     /**
      * The stack slot to which all splits of this interval are spilled if necessary.
      */
+    // @field
     private AllocatableValue spillSlot;
 
     /**
      * The kind of this interval.
      */
+    // @field
     private ValueKind<?> kind;
 
     /**
      * The head of the list of ranges describing this interval. This list is sorted by
      * {@linkplain LIRInstruction#id instruction ids}.
      */
+    // @field
     private Range first;
 
     /**
      * List of (use-positions, register-priorities) pairs, sorted by use-positions.
      */
+    // @field
     private UsePosList usePosList;
 
     /**
      * Iterator used to traverse the ranges of an interval.
      */
+    // @field
     private Range current;
 
     /**
      * Link to next interval in a sorted list of intervals that ends with LinearScan.intervalEndMarker.
      */
+    // @field
     Interval next;
 
     /**
      * The linear-scan state of this interval.
      */
+    // @field
     State state;
 
+    // @field
     private int cachedTo; // cached value: to of last range (-1: not cached)
 
     /**
      * The interval from which this one is derived. If this is a {@linkplain #isSplitParent() split
      * parent}, it points to itself.
      */
+    // @field
     private Interval splitParent;
 
     /**
      * List of all intervals that are split off from this interval. This is only used if this is a
      * {@linkplain #isSplitParent() split parent}.
      */
+    // @field
     private List<Interval> splitChildren = Collections.emptyList();
 
     /**
      * Current split child that has been active or inactive last (always stored in split parents).
      */
+    // @field
     private Interval currentSplitChild;
 
     /**
      * Specifies if move is inserted between currentSplitChild and this interval when interval gets
      * active the first time.
      */
+    // @field
     private boolean insertMoveWhenActivated;
 
     /**
      * For spill move optimization.
      */
+    // @field
     private SpillState spillState;
 
     /**
      * Position where this interval is defined (if defined only once).
      */
+    // @field
     private int spillDefinitionPos;
 
     /**
      * This interval should be assigned the same location as the hint interval.
      */
+    // @field
     private Interval locationHint;
 
     /**
      * The value with which a spilled child interval can be re-materialized. Currently this must be
      * a Constant.
      */
+    // @field
     private Constant materializedValue;
 
     /**
      * The number of times {@link #addMaterializationValue(Constant)} is called.
      */
+    // @field
     private int numMaterializationValuesAdded;
 
-    void assignLocation(AllocatableValue newLocation)
+    void assignLocation(AllocatableValue __newLocation)
     {
-        if (ValueUtil.isRegister(newLocation))
+        if (ValueUtil.isRegister(__newLocation))
         {
-            if (newLocation.getValueKind().equals(LIRKind.Illegal) && !kind.equals(LIRKind.Illegal))
+            if (__newLocation.getValueKind().equals(LIRKind.Illegal) && !kind.equals(LIRKind.Illegal))
             {
-                this.location = ValueUtil.asRegister(newLocation).asValue(kind);
+                this.location = ValueUtil.asRegister(__newLocation).asValue(kind);
                 return;
             }
         }
-        this.location = newLocation;
+        this.location = __newLocation;
     }
 
     /**
@@ -574,9 +602,9 @@ public final class Interval
         return kind;
     }
 
-    public void setKind(ValueKind<?> kind)
+    public void setKind(ValueKind<?> __kind)
     {
-        this.kind = kind;
+        this.kind = __kind;
     }
 
     public Range first()
@@ -603,9 +631,9 @@ public final class Interval
         return usePosList.size();
     }
 
-    public void setLocationHint(Interval interval)
+    public void setLocationHint(Interval __interval)
     {
-        locationHint = interval;
+        locationHint = __interval;
     }
 
     public boolean isSplitParent()
@@ -634,9 +662,9 @@ public final class Interval
         return splitParent().spillSlot;
     }
 
-    public void setSpillSlot(AllocatableValue slot)
+    public void setSpillSlot(AllocatableValue __slot)
     {
-        splitParent().spillSlot = slot;
+        splitParent().spillSlot = __slot;
     }
 
     Interval currentSplitChild()
@@ -654,9 +682,9 @@ public final class Interval
         return insertMoveWhenActivated;
     }
 
-    void setInsertMoveWhenActivated(boolean b)
+    void setInsertMoveWhenActivated(boolean __b)
     {
-        insertMoveWhenActivated = b;
+        insertMoveWhenActivated = __b;
     }
 
     // for spill optimization
@@ -670,14 +698,14 @@ public final class Interval
         return splitParent().spillDefinitionPos;
     }
 
-    public void setSpillState(SpillState state)
+    public void setSpillState(SpillState __state)
     {
-        splitParent().spillState = state;
+        splitParent().spillState = __state;
     }
 
-    public void setSpillDefinitionPos(int pos)
+    public void setSpillDefinitionPos(int __pos)
     {
-        splitParent().spillDefinitionPos = pos;
+        splitParent().spillDefinitionPos = __pos;
     }
 
     // returns true if this interval has a shadow copy on the stack that is always correct
@@ -692,14 +720,14 @@ public final class Interval
     }
 
     // test intersection
-    boolean intersects(Interval i)
+    boolean intersects(Interval __i)
     {
-        return first.intersects(i.first);
+        return first.intersects(__i.first);
     }
 
-    int intersectsAt(Interval i)
+    int intersectsAt(Interval __i)
     {
-        return first.intersectsAt(i.first);
+        return first.intersectsAt(__i.first);
     }
 
     // range iteration
@@ -728,31 +756,31 @@ public final class Interval
         return current.isEndMarker();
     }
 
-    boolean currentIntersects(Interval it)
+    boolean currentIntersects(Interval __it)
     {
-        return current.intersects(it.current);
+        return current.intersects(__it.current);
     }
 
-    int currentIntersectsAt(Interval it)
+    int currentIntersectsAt(Interval __it)
     {
-        return current.intersectsAt(it.current);
+        return current.intersectsAt(__it.current);
     }
 
     // @cons
-    Interval(AllocatableValue operand, int operandNumber, Interval intervalEndMarker, Range rangeEndMarker)
+    Interval(AllocatableValue __operand, int __operandNumber, Interval __intervalEndMarker, Range __rangeEndMarker)
     {
         super();
-        this.operand = operand;
-        this.operandNumber = operandNumber;
-        if (ValueUtil.isRegister(operand))
+        this.operand = __operand;
+        this.operandNumber = __operandNumber;
+        if (ValueUtil.isRegister(__operand))
         {
-            location = operand;
+            location = __operand;
         }
         this.kind = LIRKind.Illegal;
-        this.first = rangeEndMarker;
+        this.first = __rangeEndMarker;
         this.usePosList = new UsePosList(4);
-        this.current = rangeEndMarker;
-        this.next = intervalEndMarker;
+        this.current = __rangeEndMarker;
+        this.next = __intervalEndMarker;
         this.cachedTo = -1;
         this.spillState = SpillState.NoDefinitionFound;
         this.spillDefinitionPos = -1;
@@ -763,11 +791,11 @@ public final class Interval
     /**
      * Sets the value which is used for re-materialization.
      */
-    public void addMaterializationValue(Constant value)
+    public void addMaterializationValue(Constant __value)
     {
         if (numMaterializationValuesAdded == 0)
         {
-            materializedValue = value;
+            materializedValue = __value;
         }
         else
         {
@@ -796,17 +824,17 @@ public final class Interval
 
     int calcTo()
     {
-        Range r = first;
-        while (!r.next.isEndMarker())
+        Range __r = first;
+        while (!__r.next.isEndMarker())
         {
-            r = r.next;
+            __r = __r.next;
         }
-        return r.to;
+        return __r.to;
     }
 
-    public Interval locationHint(boolean searchSplitChild)
+    public Interval locationHint(boolean __searchSplitChild)
     {
-        if (!searchSplitChild)
+        if (!__searchSplitChild)
         {
             return locationHint;
         }
@@ -820,13 +848,13 @@ public final class Interval
             else if (!locationHint.splitChildren.isEmpty())
             {
                 // search the first split child that has a register assigned
-                int len = locationHint.splitChildren.size();
-                for (int i = 0; i < len; i++)
+                int __len = locationHint.splitChildren.size();
+                for (int __i = 0; __i < __len; __i++)
                 {
-                    Interval interval = locationHint.splitChildren.get(i);
-                    if (interval.location != null && ValueUtil.isRegister(interval.location))
+                    Interval __interval = locationHint.splitChildren.get(__i);
+                    if (__interval.location != null && ValueUtil.isRegister(__interval.location))
                     {
-                        return interval;
+                        return __interval;
                     }
                 }
             }
@@ -836,7 +864,7 @@ public final class Interval
         return null;
     }
 
-    Interval getSplitChildAtOpId(int opId, LIRInstruction.OperandMode mode, LinearScan allocator)
+    Interval getSplitChildAtOpId(int __opId, LIRInstruction.OperandMode __mode, LinearScan __allocator)
     {
         if (splitChildren.isEmpty())
         {
@@ -844,96 +872,96 @@ public final class Interval
         }
         else
         {
-            Interval result = null;
-            int len = splitChildren.size();
+            Interval __result = null;
+            int __len = splitChildren.size();
 
             // in outputMode, the end of the interval (opId == cur.to()) is not valid
-            int toOffset = (mode == LIRInstruction.OperandMode.DEF ? 0 : 1);
+            int __toOffset = (__mode == LIRInstruction.OperandMode.DEF ? 0 : 1);
 
-            int i;
-            for (i = 0; i < len; i++)
+            int __i;
+            for (__i = 0; __i < __len; __i++)
             {
-                Interval cur = splitChildren.get(i);
-                if (cur.from() <= opId && opId < cur.to() + toOffset)
+                Interval __cur = splitChildren.get(__i);
+                if (__cur.from() <= __opId && __opId < __cur.to() + __toOffset)
                 {
-                    if (i > 0)
+                    if (__i > 0)
                     {
                         // exchange current split child to start of list (faster access for next call)
-                        Util.atPutGrow(splitChildren, i, splitChildren.get(0), null);
-                        Util.atPutGrow(splitChildren, 0, cur, null);
+                        Util.atPutGrow(splitChildren, __i, splitChildren.get(0), null);
+                        Util.atPutGrow(splitChildren, 0, __cur, null);
                     }
 
                     // interval found
-                    result = cur;
+                    __result = __cur;
                     break;
                 }
             }
 
-            return result;
+            return __result;
         }
     }
 
     // returns the interval that covers the given opId or null if there is none
-    Interval getIntervalCoveringOpId(int opId)
+    Interval getIntervalCoveringOpId(int __opId)
     {
-        if (opId >= from())
+        if (__opId >= from())
         {
             return this;
         }
 
-        Interval parent = splitParent();
-        Interval result = null;
+        Interval __parent = splitParent();
+        Interval __result = null;
 
-        int len = parent.splitChildren.size();
+        int __len = __parent.splitChildren.size();
 
-        for (int i = len - 1; i >= 0; i--)
+        for (int __i = __len - 1; __i >= 0; __i--)
         {
-            Interval cur = parent.splitChildren.get(i);
-            if (cur.from() <= opId && opId < cur.to())
+            Interval __cur = __parent.splitChildren.get(__i);
+            if (__cur.from() <= __opId && __opId < __cur.to())
             {
-                result = cur;
+                __result = __cur;
             }
         }
 
-        return result;
+        return __result;
     }
 
     // returns the last split child that ends before the given opId
-    Interval getSplitChildBeforeOpId(int opId)
+    Interval getSplitChildBeforeOpId(int __opId)
     {
-        Interval parent = splitParent();
-        Interval result = null;
+        Interval __parent = splitParent();
+        Interval __result = null;
 
-        int len = parent.splitChildren.size();
+        int __len = __parent.splitChildren.size();
 
-        for (int i = len - 1; i >= 0; i--)
+        for (int __i = __len - 1; __i >= 0; __i--)
         {
-            Interval cur = parent.splitChildren.get(i);
-            if (cur.to() <= opId && (result == null || result.to() < cur.to()))
+            Interval __cur = __parent.splitChildren.get(__i);
+            if (__cur.to() <= __opId && (__result == null || __result.to() < __cur.to()))
             {
-                result = cur;
+                __result = __cur;
             }
         }
 
-        return result;
+        return __result;
     }
 
     // checks if opId is covered by any split child
-    boolean splitChildCovers(int opId, LIRInstruction.OperandMode mode)
+    boolean splitChildCovers(int __opId, LIRInstruction.OperandMode __mode)
     {
         if (splitChildren.isEmpty())
         {
             // simple case if interval was not split
-            return covers(opId, mode);
+            return covers(__opId, __mode);
         }
         else
         {
             // extended case: check all split children
-            int len = splitChildren.size();
-            for (int i = 0; i < len; i++)
+            int __len = splitChildren.size();
+            for (int __i = 0; __i < __len; __i++)
             {
-                Interval cur = splitChildren.get(i);
-                if (cur.covers(opId, mode))
+                Interval __cur = splitChildren.get(__i);
+                if (__cur.covers(__opId, __mode))
                 {
                     return true;
                 }
@@ -942,131 +970,131 @@ public final class Interval
         }
     }
 
-    private RegisterPriority adaptPriority(RegisterPriority priority)
+    private RegisterPriority adaptPriority(RegisterPriority __priority)
     {
         /*
          * In case of re-materialized values we require that use-operands are registers,
          * because we don't have the value in a stack location.
          * (Note that ShouldHaveRegister means that the operand can also be a StackSlot).
          */
-        if (priority == RegisterPriority.ShouldHaveRegister && canMaterialize())
+        if (__priority == RegisterPriority.ShouldHaveRegister && canMaterialize())
         {
             return RegisterPriority.MustHaveRegister;
         }
-        return priority;
+        return __priority;
     }
 
     // note: use positions are sorted descending = first use has highest index
-    int firstUsage(RegisterPriority minRegisterPriority)
+    int firstUsage(RegisterPriority __minRegisterPriority)
     {
-        for (int i = usePosList.size() - 1; i >= 0; --i)
+        for (int __i = usePosList.size() - 1; __i >= 0; --__i)
         {
-            RegisterPriority registerPriority = adaptPriority(usePosList.registerPriority(i));
-            if (registerPriority.greaterEqual(minRegisterPriority))
+            RegisterPriority __registerPriority = adaptPriority(usePosList.registerPriority(__i));
+            if (__registerPriority.greaterEqual(__minRegisterPriority))
             {
-                return usePosList.usePos(i);
+                return usePosList.usePos(__i);
             }
         }
         return Integer.MAX_VALUE;
     }
 
-    int nextUsage(RegisterPriority minRegisterPriority, int from)
+    int nextUsage(RegisterPriority __minRegisterPriority, int __from)
     {
-        for (int i = usePosList.size() - 1; i >= 0; --i)
+        for (int __i = usePosList.size() - 1; __i >= 0; --__i)
         {
-            int usePos = usePosList.usePos(i);
-            if (usePos >= from && adaptPriority(usePosList.registerPriority(i)).greaterEqual(minRegisterPriority))
+            int __usePos = usePosList.usePos(__i);
+            if (__usePos >= __from && adaptPriority(usePosList.registerPriority(__i)).greaterEqual(__minRegisterPriority))
             {
-                return usePos;
+                return __usePos;
             }
         }
         return Integer.MAX_VALUE;
     }
 
-    int nextUsageExact(RegisterPriority exactRegisterPriority, int from)
+    int nextUsageExact(RegisterPriority __exactRegisterPriority, int __from)
     {
-        for (int i = usePosList.size() - 1; i >= 0; --i)
+        for (int __i = usePosList.size() - 1; __i >= 0; --__i)
         {
-            int usePos = usePosList.usePos(i);
-            if (usePos >= from && adaptPriority(usePosList.registerPriority(i)) == exactRegisterPriority)
+            int __usePos = usePosList.usePos(__i);
+            if (__usePos >= __from && adaptPriority(usePosList.registerPriority(__i)) == __exactRegisterPriority)
             {
-                return usePos;
+                return __usePos;
             }
         }
         return Integer.MAX_VALUE;
     }
 
-    int previousUsage(RegisterPriority minRegisterPriority, int from)
+    int previousUsage(RegisterPriority __minRegisterPriority, int __from)
     {
-        int prev = -1;
-        for (int i = usePosList.size() - 1; i >= 0; --i)
+        int __prev = -1;
+        for (int __i = usePosList.size() - 1; __i >= 0; --__i)
         {
-            int usePos = usePosList.usePos(i);
-            if (usePos > from)
+            int __usePos = usePosList.usePos(__i);
+            if (__usePos > __from)
             {
-                return prev;
+                return __prev;
             }
-            if (adaptPriority(usePosList.registerPriority(i)).greaterEqual(minRegisterPriority))
+            if (adaptPriority(usePosList.registerPriority(__i)).greaterEqual(__minRegisterPriority))
             {
-                prev = usePos;
+                __prev = __usePos;
             }
         }
-        return prev;
+        return __prev;
     }
 
-    public void addUsePos(int pos, RegisterPriority registerPriority)
+    public void addUsePos(int __pos, RegisterPriority __registerPriority)
     {
         // do not add use positions for precolored intervals because they are never used
-        if (registerPriority != RegisterPriority.None && LIRValueUtil.isVariable(operand))
+        if (__registerPriority != RegisterPriority.None && LIRValueUtil.isVariable(operand))
         {
             // note: addUse is called in descending order, so list gets sorted automatically by just appending new use positions
-            int len = usePosList.size();
-            if (len == 0 || usePosList.usePos(len - 1) > pos)
+            int __len = usePosList.size();
+            if (__len == 0 || usePosList.usePos(__len - 1) > __pos)
             {
-                usePosList.add(pos, registerPriority);
+                usePosList.add(__pos, __registerPriority);
             }
-            else if (usePosList.registerPriority(len - 1).lessThan(registerPriority))
+            else if (usePosList.registerPriority(__len - 1).lessThan(__registerPriority))
             {
-                usePosList.setRegisterPriority(len - 1, registerPriority);
+                usePosList.setRegisterPriority(__len - 1, __registerPriority);
             }
         }
     }
 
-    public void addRange(int from, int to)
+    public void addRange(int __from, int __to)
     {
-        if (first.from <= to)
+        if (first.from <= __to)
         {
             // join intersecting ranges
-            first.from = Math.min(from, first().from);
-            first.to = Math.max(to, first().to);
+            first.from = Math.min(__from, first().from);
+            first.to = Math.max(__to, first().to);
         }
         else
         {
             // insert new range
-            first = new Range(from, to, first());
+            first = new Range(__from, __to, first());
         }
     }
 
-    Interval newSplitChild(LinearScan allocator)
+    Interval newSplitChild(LinearScan __allocator)
     {
         // allocate new interval
-        Interval parent = splitParent();
-        Interval result = allocator.createDerivedInterval(parent);
-        result.setKind(kind());
+        Interval __parent = splitParent();
+        Interval __result = __allocator.createDerivedInterval(__parent);
+        __result.setKind(kind());
 
-        result.splitParent = parent;
-        result.setLocationHint(parent);
+        __result.splitParent = __parent;
+        __result.setLocationHint(__parent);
 
         // insert new interval in children-list of parent
-        if (parent.splitChildren.isEmpty())
+        if (__parent.splitChildren.isEmpty())
         {
             // create new non-shared list
-            parent.splitChildren = new ArrayList<>(4);
-            parent.splitChildren.add(this);
+            __parent.splitChildren = new ArrayList<>(4);
+            __parent.splitChildren.add(this);
         }
-        parent.splitChildren.add(result);
+        __parent.splitChildren.add(__result);
 
-        return result;
+        return __result;
     }
 
     /**
@@ -1083,38 +1111,38 @@ public final class Interval
      * @param allocator the register allocator context
      * @return the child interval split off from this interval
      */
-    Interval split(int splitPos, LinearScan allocator)
+    Interval split(int __splitPos, LinearScan __allocator)
     {
         // allocate new interval
-        Interval result = newSplitChild(allocator);
+        Interval __result = newSplitChild(__allocator);
 
         // split the ranges
-        Range prev = null;
-        Range cur = first;
-        while (!cur.isEndMarker() && cur.to <= splitPos)
+        Range __prev = null;
+        Range __cur = first;
+        while (!__cur.isEndMarker() && __cur.to <= __splitPos)
         {
-            prev = cur;
-            cur = cur.next;
+            __prev = __cur;
+            __cur = __cur.next;
         }
 
-        if (cur.from < splitPos)
+        if (__cur.from < __splitPos)
         {
-            result.first = new Range(splitPos, cur.to, cur.next);
-            cur.to = splitPos;
-            cur.next = allocator.rangeEndMarker;
+            __result.first = new Range(__splitPos, __cur.to, __cur.next);
+            __cur.to = __splitPos;
+            __cur.next = __allocator.rangeEndMarker;
         }
         else
         {
-            result.first = cur;
-            prev.next = allocator.rangeEndMarker;
+            __result.first = __cur;
+            __prev.next = __allocator.rangeEndMarker;
         }
-        result.current = result.first;
+        __result.current = __result.first;
         cachedTo = -1; // clear cached value
 
         // split list of use positions
-        result.usePosList = usePosList.splitAt(splitPos);
+        __result.usePosList = usePosList.splitAt(__splitPos);
 
-        return result;
+        return __result;
     }
 
     /**
@@ -1122,45 +1150,45 @@ public final class Interval
      *
      * Currently, only the first range can be split, and the new interval must not have split positions
      */
-    Interval splitFromStart(int splitPos, LinearScan allocator)
+    Interval splitFromStart(int __splitPos, LinearScan __allocator)
     {
         // allocate new interval
-        Interval result = newSplitChild(allocator);
+        Interval __result = newSplitChild(__allocator);
 
         // the new interval has only one range (checked by assertion above,
         // so the splitting of the ranges is very simple
-        result.addRange(first.from, splitPos);
+        __result.addRange(first.from, __splitPos);
 
-        if (splitPos == first.to)
+        if (__splitPos == first.to)
         {
             first = first.next;
         }
         else
         {
-            first.from = splitPos;
+            first.from = __splitPos;
         }
 
-        return result;
+        return __result;
     }
 
     // returns true if the opId is inside the interval
-    boolean covers(int opId, LIRInstruction.OperandMode mode)
+    boolean covers(int __opId, LIRInstruction.OperandMode __mode)
     {
-        Range cur = first;
+        Range __cur = first;
 
-        while (!cur.isEndMarker() && cur.to < opId)
+        while (!__cur.isEndMarker() && __cur.to < __opId)
         {
-            cur = cur.next;
+            __cur = __cur.next;
         }
-        if (!cur.isEndMarker())
+        if (!__cur.isEndMarker())
         {
-            if (mode == LIRInstruction.OperandMode.DEF)
+            if (__mode == LIRInstruction.OperandMode.DEF)
             {
-                return cur.from <= opId && opId < cur.to;
+                return __cur.from <= __opId && __opId < __cur.to;
             }
             else
             {
-                return cur.from <= opId && opId <= cur.to;
+                return __cur.from <= __opId && __opId <= __cur.to;
             }
         }
         return false;
@@ -1168,13 +1196,13 @@ public final class Interval
 
     // returns true if the interval has any hole between holeFrom and holeTo
     // (even if the hole has only the length 1)
-    boolean hasHoleBetween(int holeFrom, int holeTo)
+    boolean hasHoleBetween(int __holeFrom, int __holeTo)
     {
-        Range cur = first;
-        while (!cur.isEndMarker())
+        Range __cur = first;
+        while (!__cur.isEndMarker())
         {
             // hole-range starts before this range . hole
-            if (holeFrom < cur.from)
+            if (__holeFrom < __cur.from)
             {
                 return true;
 
@@ -1182,7 +1210,7 @@ public final class Interval
             }
             else
             {
-                if (holeTo <= cur.to)
+                if (__holeTo <= __cur.to)
                 {
                     return false;
 
@@ -1190,14 +1218,14 @@ public final class Interval
                 }
                 else
                 {
-                    if (holeFrom <= cur.to)
+                    if (__holeFrom <= __cur.to)
                     {
                         return true;
                     }
                 }
             }
 
-            cur = cur.next;
+            __cur = __cur.next;
         }
 
         return false;

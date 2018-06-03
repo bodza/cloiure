@@ -30,50 +30,63 @@ import giraaff.nodes.util.GraphUtil;
 // @class ArrayCompareToNode
 public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
+    // @def
     public static final NodeClass<ArrayCompareToNode> TYPE = NodeClass.create(ArrayCompareToNode.class);
 
     /** {@link JavaKind} of one array to compare. */
+    // @field
     protected final JavaKind kind1;
 
     /** {@link JavaKind} of the other array to compare. */
+    // @field
     protected final JavaKind kind2;
 
     /** One array to be tested for equality. */
-    @Input ValueNode array1;
+    @Input
+    // @field
+    ValueNode array1;
 
     /** The other array to be tested for equality. */
-    @Input ValueNode array2;
+    @Input
+    // @field
+    ValueNode array2;
 
     /** Length of one array. */
-    @Input ValueNode length1;
+    @Input
+    // @field
+    ValueNode length1;
 
     /** Length of the other array. */
-    @Input ValueNode length2;
+    @Input
+    // @field
+    ValueNode length2;
 
-    @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
+    @OptionalInput(InputType.Memory)
+    // @field
+    MemoryNode lastLocationAccess;
 
     // @cons
-    public ArrayCompareToNode(ValueNode array1, ValueNode array2, ValueNode length1, ValueNode length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2)
+    public ArrayCompareToNode(ValueNode __array1, ValueNode __array2, ValueNode __length1, ValueNode __length2, @ConstantNodeParameter JavaKind __kind1, @ConstantNodeParameter JavaKind __kind2)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
-        this.kind1 = kind1;
-        this.kind2 = kind2;
-        this.array1 = array1;
-        this.array2 = array2;
-        this.length1 = length1;
-        this.length2 = length2;
+        this.kind1 = __kind1;
+        this.kind2 = __kind2;
+        this.array1 = __array1;
+        this.array2 = __array2;
+        this.length1 = __length1;
+        this.length2 = __length2;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             return null;
         }
-        ValueNode a1 = GraphUtil.unproxify(array1);
-        ValueNode a2 = GraphUtil.unproxify(array2);
-        if (a1 == a2)
+        ValueNode __a1 = GraphUtil.unproxify(array1);
+        ValueNode __a2 = GraphUtil.unproxify(array2);
+        if (__a1 == __a2)
         {
             return ConstantNode.forInt(0);
         }
@@ -81,14 +94,14 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias1 = tool.getAlias(array1);
-        ValueNode alias2 = tool.getAlias(array2);
-        if (alias1 == alias2)
+        ValueNode __alias1 = __tool.getAlias(array1);
+        ValueNode __alias2 = __tool.getAlias(array2);
+        if (__alias1 == __alias2)
         {
             // the same virtual objects will always have the same contents
-            tool.replaceWithValue(ConstantNode.forInt(0, graph()));
+            __tool.replaceWithValue(ConstantNode.forInt(0, graph()));
         }
     }
 
@@ -96,10 +109,10 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     public static native int compareTo(Object array1, Object array2, int length1, int length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result = gen.getLIRGeneratorTool().emitArrayCompareTo(kind1, kind2, gen.operand(array1), gen.operand(array2), gen.operand(length1), gen.operand(length2));
-        gen.setResult(this, result);
+        Value __result = __gen.getLIRGeneratorTool().emitArrayCompareTo(kind1, kind2, __gen.operand(array1), __gen.operand(array2), __gen.operand(length1), __gen.operand(length2));
+        __gen.setResult(this, __result);
     }
 
     @Override
@@ -115,9 +128,9 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     }
 
     @Override
-    public void setLastLocationAccess(MemoryNode lla)
+    public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(lla));
-        lastLocationAccess = lla;
+        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__lla));
+        lastLocationAccess = __lla;
     }
 }

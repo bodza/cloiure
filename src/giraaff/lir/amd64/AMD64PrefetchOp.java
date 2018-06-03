@@ -9,35 +9,39 @@ import giraaff.util.GraalError;
 // @class AMD64PrefetchOp
 public final class AMD64PrefetchOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64PrefetchOp> TYPE = LIRInstructionClass.create(AMD64PrefetchOp.class);
 
+    // @field
     private final int instr; // AllocatePrefetchInstr
-    @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
+    @Alive({OperandFlag.COMPOSITE})
+    // @field
+    protected AMD64AddressValue address;
 
     // @cons
-    public AMD64PrefetchOp(AMD64AddressValue address, int instr)
+    public AMD64PrefetchOp(AMD64AddressValue __address, int __instr)
     {
         super(TYPE);
-        this.address = address;
-        this.instr = instr;
+        this.address = __address;
+        this.instr = __instr;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         switch (instr)
         {
             case 0:
-                masm.prefetchnta(address.toAddress());
+                __masm.prefetchnta(address.toAddress());
                 break;
             case 1:
-                masm.prefetcht0(address.toAddress());
+                __masm.prefetcht0(address.toAddress());
                 break;
             case 2:
-                masm.prefetcht2(address.toAddress());
+                __masm.prefetcht2(address.toAddress());
                 break;
             case 3:
-                masm.prefetchw(address.toAddress());
+                __masm.prefetchw(address.toAddress());
                 break;
             default:
                 throw GraalError.shouldNotReachHere("unspported prefetch op " + instr);

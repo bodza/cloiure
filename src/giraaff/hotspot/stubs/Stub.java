@@ -35,21 +35,24 @@ public abstract class Stub
     /**
      * The linkage information for a call to this stub from compiled code.
      */
+    // @field
     protected final HotSpotForeignCallLinkage linkage;
 
     /**
      * The code installed for the stub.
      */
+    // @field
     protected InstalledCode code;
 
     /**
      * The registers destroyed by this stub (from the caller's perspective).
      */
+    // @field
     private EconomicSet<Register> destroyedCallerRegisters;
 
-    public void initDestroyedCallerRegisters(EconomicSet<Register> registers)
+    public void initDestroyedCallerRegisters(EconomicSet<Register> __registers)
     {
-        destroyedCallerRegisters = registers;
+        destroyedCallerRegisters = __registers;
     }
 
     /**
@@ -70,6 +73,7 @@ public abstract class Stub
         return true;
     }
 
+    // @field
     protected final HotSpotProviders providers;
 
     /**
@@ -78,11 +82,11 @@ public abstract class Stub
      * @param linkage linkage details for a call to the stub
      */
     // @cons
-    public Stub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public Stub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super();
-        this.linkage = linkage;
-        this.providers = providers;
+        this.linkage = __linkage;
+        this.providers = __providers;
     }
 
     /**
@@ -111,37 +115,37 @@ public abstract class Stub
     /**
      * Gets the code for this stub, compiling it first if necessary.
      */
-    public synchronized InstalledCode getCode(final Backend backend)
+    public synchronized InstalledCode getCode(final Backend __backend)
     {
         if (this.code == null)
         {
-            CodeCacheProvider codeCache = providers.getCodeCache();
-            CompilationResult compResult = buildCompilationResult(backend);
-            HotSpotCompiledCode compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(codeCache, null, null, compResult);
-            this.code = codeCache.installCode(null, compiledCode, null, null, false);
+            CodeCacheProvider __codeCache = providers.getCodeCache();
+            CompilationResult __compResult = buildCompilationResult(__backend);
+            HotSpotCompiledCode __compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(__codeCache, null, null, __compResult);
+            this.code = __codeCache.installCode(null, __compiledCode, null, null, false);
         }
 
         return this.code;
     }
 
-    private final CompilationResult buildCompilationResult(final Backend backend)
+    private final CompilationResult buildCompilationResult(final Backend __backend)
     {
-        final StructuredGraph graph = getStubGraph();
+        final StructuredGraph __graph = getStubGraph();
 
         // stubs cannot be recompiled, so they cannot be compiled with assumptions
-        if (!(graph.start() instanceof StubStartNode))
+        if (!(__graph.start() instanceof StubStartNode))
         {
-            StubStartNode newStart = graph.add(new StubStartNode(Stub.this));
-            newStart.setStateAfter(graph.start().stateAfter());
-            graph.replaceFixed(graph.start(), newStart);
+            StubStartNode __newStart = __graph.add(new StubStartNode(Stub.this));
+            __newStart.setStateAfter(__graph.start().stateAfter());
+            __graph.replaceFixed(__graph.start(), __newStart);
         }
 
-        Suites suites = providers.getSuites().getDefaultSuites();
-        suites = new Suites(new PhaseSuite<>(), suites.getMidTier(), suites.getLowTier());
-        GraalCompiler.emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
-        CompilationResult result = new CompilationResult();
-        LIRSuites lirSuites = new LIRSuites(providers.getSuites().getDefaultLIRSuites());
-        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, result, CompilationResultBuilderFactory.DEFAULT, getRegisterConfig(), lirSuites);
-        return result;
+        Suites __suites = providers.getSuites().getDefaultSuites();
+        __suites = new Suites(new PhaseSuite<>(), __suites.getMidTier(), __suites.getLowTier());
+        GraalCompiler.emitFrontEnd(providers, __backend, __graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), __suites);
+        CompilationResult __result = new CompilationResult();
+        LIRSuites __lirSuites = new LIRSuites(providers.getSuites().getDefaultLIRSuites());
+        GraalCompiler.emitBackEnd(__graph, Stub.this, getInstalledCodeOwner(), __backend, __result, CompilationResultBuilderFactory.DEFAULT, getRegisterConfig(), __lirSuites);
+        return __result;
     }
 }

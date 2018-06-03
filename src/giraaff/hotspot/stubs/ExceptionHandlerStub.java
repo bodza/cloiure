@@ -30,9 +30,9 @@ import giraaff.word.Word;
 public final class ExceptionHandlerStub extends SnippetStub
 {
     // @cons
-    public ExceptionHandlerStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public ExceptionHandlerStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super("exceptionHandler", providers, linkage);
+        super("exceptionHandler", __providers, __linkage);
     }
 
     /**
@@ -47,31 +47,32 @@ public final class ExceptionHandlerStub extends SnippetStub
     }
 
     @Override
-    protected Object getConstantParameterValue(int index, String name)
+    protected Object getConstantParameterValue(int __index, String __name)
     {
-        if (index == 2)
+        if (__index == 2)
         {
             return providers.getRegisters().getThreadRegister();
         }
-        throw GraalError.shouldNotReachHere("unknown parameter " + name + " at index " + index);
+        throw GraalError.shouldNotReachHere("unknown parameter " + __name + " at __index " + __index);
     }
 
     @Snippet
-    private static void exceptionHandler(Object exception, Word exceptionPc, @ConstantParameter Register threadRegister)
+    private static void exceptionHandler(Object __exception, Word __exceptionPc, @ConstantParameter Register __threadRegister)
     {
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        HotSpotReplacementsUtil.writeExceptionOop(thread, exception);
-        HotSpotReplacementsUtil.writeExceptionPc(thread, exceptionPc);
+        Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+        HotSpotReplacementsUtil.writeExceptionOop(__thread, __exception);
+        HotSpotReplacementsUtil.writeExceptionPc(__thread, __exceptionPc);
 
         // patch throwing pc into return address so that deoptimization finds the right debug info
-        PatchReturnAddressNode.patchReturnAddress(exceptionPc);
+        PatchReturnAddressNode.patchReturnAddress(__exceptionPc);
 
-        Word handlerPc = exceptionHandlerForPc(EXCEPTION_HANDLER_FOR_PC, thread);
+        Word __handlerPc = exceptionHandlerForPc(EXCEPTION_HANDLER_FOR_PC, __thread);
 
         // patch the return address so that this stub returns to the exception handler
-        JumpToExceptionHandlerNode.jumpToExceptionHandler(handlerPc);
+        JumpToExceptionHandlerNode.jumpToExceptionHandler(__handlerPc);
     }
 
+    // @def
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_PC = StubUtil.newDescriptor(ExceptionHandlerStub.class, "exceptionHandlerForPc", Word.class, Word.class);
 
     @NodeIntrinsic(value = StubForeignCallNode.class)

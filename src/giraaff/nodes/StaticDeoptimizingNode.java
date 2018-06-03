@@ -31,14 +31,14 @@ public interface StaticDeoptimizingNode extends ValueNodeInterface
         Profile,
         None;
 
-        public boolean isHigherPriorityThan(GuardPriority other)
+        public boolean isHigherPriorityThan(GuardPriority __other)
         {
-            return this.compareTo(other) < 0;
+            return this.compareTo(__other) < 0;
         }
 
-        public boolean isLowerPriorityThan(GuardPriority other)
+        public boolean isLowerPriorityThan(GuardPriority __other)
         {
-            return this.compareTo(other) > 0;
+            return this.compareTo(__other) > 0;
         }
 
         public static GuardPriority highest()
@@ -66,13 +66,13 @@ public interface StaticDeoptimizingNode extends ValueNodeInterface
         throw GraalError.shouldNotReachHere();
     }
 
-    static DeoptimizationAction mergeActions(DeoptimizationAction a1, DeoptimizationAction a2)
+    static DeoptimizationAction mergeActions(DeoptimizationAction __a1, DeoptimizationAction __a2)
     {
-        if (a1 == a2)
+        if (__a1 == __a2)
         {
-            return a1;
+            return __a1;
         }
-        if (a1 == DeoptimizationAction.InvalidateRecompile && a2 == DeoptimizationAction.InvalidateReprofile || a1 == DeoptimizationAction.InvalidateReprofile && a2 == DeoptimizationAction.InvalidateRecompile)
+        if (__a1 == DeoptimizationAction.InvalidateRecompile && __a2 == DeoptimizationAction.InvalidateReprofile || __a1 == DeoptimizationAction.InvalidateReprofile && __a2 == DeoptimizationAction.InvalidateRecompile)
         {
             return DeoptimizationAction.InvalidateReprofile;
         }

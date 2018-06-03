@@ -15,12 +15,19 @@ import giraaff.nodes.util.GraphUtil;
 // @class AbstractFixedGuardNode
 public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNode implements Simplifiable, GuardingNode, DeoptimizingGuard
 {
+    // @def
     public static final NodeClass<AbstractFixedGuardNode> TYPE = NodeClass.create(AbstractFixedGuardNode.class);
 
-    @Input(InputType.Condition) protected LogicNode condition;
+    @Input(InputType.Condition)
+    // @field
+    protected LogicNode condition;
+    // @field
     protected DeoptimizationReason reason;
+    // @field
     protected DeoptimizationAction action;
+    // @field
     protected JavaConstant speculation;
+    // @field
     protected boolean negated;
 
     @Override
@@ -35,22 +42,22 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     }
 
     @Override
-    public void setCondition(LogicNode x, boolean negated)
+    public void setCondition(LogicNode __x, boolean __negated)
     {
-        updateUsages(condition, x);
-        condition = x;
-        this.negated = negated;
+        updateUsages(condition, __x);
+        condition = __x;
+        this.negated = __negated;
     }
 
     // @cons
-    protected AbstractFixedGuardNode(NodeClass<? extends AbstractFixedGuardNode> c, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
+    protected AbstractFixedGuardNode(NodeClass<? extends AbstractFixedGuardNode> __c, LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action, JavaConstant __speculation, boolean __negated)
     {
-        super(c, StampFactory.forVoid());
-        this.action = action;
-        this.speculation = speculation;
-        this.negated = negated;
-        this.condition = condition;
-        this.reason = deoptReason;
+        super(__c, StampFactory.forVoid());
+        this.action = __action;
+        this.speculation = __speculation;
+        this.negated = __negated;
+        this.condition = __condition;
+        this.reason = __deoptReason;
     }
 
     @Override
@@ -78,38 +85,38 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
         while (condition instanceof LogicNegationNode)
         {
-            LogicNegationNode negation = (LogicNegationNode) condition;
-            setCondition(negation.getValue(), !negated);
+            LogicNegationNode __negation = (LogicNegationNode) condition;
+            setCondition(__negation.getValue(), !negated);
         }
     }
 
     public DeoptimizeNode lowerToIf()
     {
-        FixedNode currentNext = next();
+        FixedNode __currentNext = next();
         setNext(null);
-        DeoptimizeNode deopt = graph().add(new DeoptimizeNode(action, reason, speculation));
-        deopt.setStateBefore(stateBefore());
-        IfNode ifNode;
-        AbstractBeginNode noDeoptSuccessor;
+        DeoptimizeNode __deopt = graph().add(new DeoptimizeNode(action, reason, speculation));
+        __deopt.setStateBefore(stateBefore());
+        IfNode __ifNode;
+        AbstractBeginNode __noDeoptSuccessor;
         if (negated)
         {
-            ifNode = graph().add(new IfNode(condition, deopt, currentNext, 0));
-            noDeoptSuccessor = ifNode.falseSuccessor();
+            __ifNode = graph().add(new IfNode(condition, __deopt, __currentNext, 0));
+            __noDeoptSuccessor = __ifNode.falseSuccessor();
         }
         else
         {
-            ifNode = graph().add(new IfNode(condition, currentNext, deopt, 1));
-            noDeoptSuccessor = ifNode.trueSuccessor();
+            __ifNode = graph().add(new IfNode(condition, __currentNext, __deopt, 1));
+            __noDeoptSuccessor = __ifNode.trueSuccessor();
         }
-        ((FixedWithNextNode) predecessor()).setNext(ifNode);
-        this.replaceAtUsages(noDeoptSuccessor);
+        ((FixedWithNextNode) predecessor()).setNext(__ifNode);
+        this.replaceAtUsages(__noDeoptSuccessor);
         GraphUtil.killWithUnusedFloatingInputs(this);
 
-        return deopt;
+        return __deopt;
     }
 
     @Override
@@ -119,14 +126,14 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     }
 
     @Override
-    public void setAction(DeoptimizationAction action)
+    public void setAction(DeoptimizationAction __action)
     {
-        this.action = action;
+        this.action = __action;
     }
 
     @Override
-    public void setReason(DeoptimizationReason reason)
+    public void setReason(DeoptimizationReason __reason)
     {
-        this.reason = reason;
+        this.reason = __reason;
     }
 }

@@ -19,132 +19,133 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AddNode
 public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {
+    // @def
     public static final NodeClass<AddNode> TYPE = NodeClass.create(AddNode.class);
 
     // @cons
-    public AddNode(ValueNode x, ValueNode y)
+    public AddNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected AddNode(NodeClass<? extends AddNode> c, ValueNode x, ValueNode y)
+    protected AddNode(NodeClass<? extends AddNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, ArithmeticOpTable::getAdd, x, y);
+        super(__c, ArithmeticOpTable::getAdd, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Add> op = ArithmeticOpTable.forStamp(x.stamp(view)).getAdd();
-        Stamp stamp = op.foldStamp(x.stamp(view), y.stamp(view));
-        ConstantNode tryConstantFold = tryConstantFold(op, x, y, stamp, view);
-        if (tryConstantFold != null)
+        BinaryOp<Add> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getAdd();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
+        ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
+        if (__tryConstantFold != null)
         {
-            return tryConstantFold;
+            return __tryConstantFold;
         }
-        if (x.isConstant() && !y.isConstant())
+        if (__x.isConstant() && !__y.isConstant())
         {
-            return canonical(null, op, y, x, view);
+            return canonical(null, __op, __y, __x, __view);
         }
         else
         {
-            return canonical(null, op, x, y, view);
+            return canonical(null, __op, __x, __y, __view);
         }
     }
 
-    private static ValueNode canonical(AddNode addNode, BinaryOp<Add> op, ValueNode forX, ValueNode forY, NodeView view)
+    private static ValueNode canonical(AddNode __addNode, BinaryOp<Add> __op, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        AddNode self = addNode;
-        boolean associative = op.isAssociative();
-        if (associative)
+        AddNode __self = __addNode;
+        boolean __associative = __op.isAssociative();
+        if (__associative)
         {
-            if (forX instanceof SubNode)
+            if (__forX instanceof SubNode)
             {
-                SubNode sub = (SubNode) forX;
-                if (sub.getY() == forY)
+                SubNode __sub = (SubNode) __forX;
+                if (__sub.getY() == __forY)
                 {
                     // (a - b) + b
-                    return sub.getX();
+                    return __sub.getX();
                 }
             }
-            if (forY instanceof SubNode)
+            if (__forY instanceof SubNode)
             {
-                SubNode sub = (SubNode) forY;
-                if (sub.getY() == forX)
+                SubNode __sub = (SubNode) __forY;
+                if (__sub.getY() == __forX)
                 {
                     // b + (a - b)
-                    return sub.getX();
+                    return __sub.getX();
                 }
             }
         }
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            Constant c = forY.asConstant();
-            if (op.isNeutral(c))
+            Constant __c = __forY.asConstant();
+            if (__op.isNeutral(__c))
             {
-                return forX;
+                return __forX;
             }
-            if (associative && self != null)
+            if (__associative && __self != null)
             {
                 // canonicalize expressions like "(a + 1) + 2"
-                ValueNode reassociated = reassociate(self, ValueNode.isConstantPredicate(), forX, forY, view);
-                if (reassociated != self)
+                ValueNode __reassociated = reassociate(__self, ValueNode.isConstantPredicate(), __forX, __forY, __view);
+                if (__reassociated != __self)
                 {
-                    return reassociated;
+                    return __reassociated;
                 }
             }
         }
-        if (forX instanceof NegateNode)
+        if (__forX instanceof NegateNode)
         {
-            return BinaryArithmeticNode.sub(forY, ((NegateNode) forX).getValue(), view);
+            return BinaryArithmeticNode.sub(__forY, ((NegateNode) __forX).getValue(), __view);
         }
-        else if (forY instanceof NegateNode)
+        else if (__forY instanceof NegateNode)
         {
-            return BinaryArithmeticNode.sub(forX, ((NegateNode) forY).getValue(), view);
+            return BinaryArithmeticNode.sub(__forX, ((NegateNode) __forY).getValue(), __view);
         }
-        if (self == null)
+        if (__self == null)
         {
-            self = (AddNode) new AddNode(forX, forY).maybeCommuteInputs();
+            __self = (AddNode) new AddNode(__forX, __forY).maybeCommuteInputs();
         }
-        return self;
+        return __self;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        if (forX.isConstant() && !forY.isConstant())
+        if (__forX.isConstant() && !__forY.isConstant())
         {
             // we try to swap and canonicalize
-            ValueNode improvement = canonical(tool, forY, forX);
-            if (improvement != this)
+            ValueNode __improvement = canonical(__tool, __forY, __forX);
+            if (__improvement != this)
             {
-                return improvement;
+                return __improvement;
             }
             // if this fails we only swap
-            return new AddNode(forY, forX);
+            return new AddNode(__forY, __forX);
         }
-        BinaryOp<Add> op = getOp(forX, forY);
-        NodeView view = NodeView.from(tool);
-        return canonical(this, op, forX, forY, view);
+        BinaryOp<Add> __op = getOp(__forX, __forY);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, __op, __forX, __forY, __view);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        Value op1 = nodeValueMap.operand(getX());
-        Value op2 = nodeValueMap.operand(getY());
-        if (shouldSwapInputs(nodeValueMap))
+        Value __op1 = __nodeValueMap.operand(getX());
+        Value __op2 = __nodeValueMap.operand(getY());
+        if (shouldSwapInputs(__nodeValueMap))
         {
-            Value tmp = op1;
-            op1 = op2;
-            op2 = tmp;
+            Value __tmp = __op1;
+            __op1 = __op2;
+            __op2 = __tmp;
         }
-        nodeValueMap.setResult(this, gen.emitAdd(op1, op2, false));
+        __nodeValueMap.setResult(this, __gen.emitAdd(__op1, __op2, false));
     }
 }

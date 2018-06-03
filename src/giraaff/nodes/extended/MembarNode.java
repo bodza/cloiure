@@ -16,23 +16,26 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class MembarNode
 public final class MembarNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<MembarNode> TYPE = NodeClass.create(MembarNode.class);
 
+    // @field
     protected final int barriers;
+    // @field
     protected final LocationIdentity location;
 
     // @cons
-    public MembarNode(int barriers)
+    public MembarNode(int __barriers)
     {
-        this(barriers, LocationIdentity.any());
+        this(__barriers, LocationIdentity.any());
     }
 
     // @cons
-    public MembarNode(int barriers, LocationIdentity location)
+    public MembarNode(int __barriers, LocationIdentity __location)
     {
         super(TYPE, StampFactory.forVoid());
-        this.barriers = barriers;
-        this.location = location;
+        this.barriers = __barriers;
+        this.location = __location;
     }
 
     @Override
@@ -42,9 +45,9 @@ public final class MembarNode extends FixedWithNextNode implements LIRLowerable,
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().emitMembar(barriers);
+        __gen.getLIRGeneratorTool().emitMembar(barriers);
     }
 
     @NodeIntrinsic

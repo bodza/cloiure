@@ -13,9 +13,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class UnwindNode
 public final class UnwindNode extends ControlSinkNode implements Lowerable, LIRLowerable
 {
+    // @def
     public static final NodeClass<UnwindNode> TYPE = NodeClass.create(UnwindNode.class);
 
-    @Input ValueNode exception;
+    @Input
+    // @field
+    ValueNode exception;
 
     public ValueNode exception()
     {
@@ -23,21 +26,21 @@ public final class UnwindNode extends ControlSinkNode implements Lowerable, LIRL
     }
 
     // @cons
-    public UnwindNode(ValueNode exception)
+    public UnwindNode(ValueNode __exception)
     {
         super(TYPE, StampFactory.forVoid());
-        this.exception = exception;
+        this.exception = __exception;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().emitUnwind(gen.operand(exception()));
+        __gen.getLIRGeneratorTool().emitUnwind(__gen.operand(exception()));
     }
 }

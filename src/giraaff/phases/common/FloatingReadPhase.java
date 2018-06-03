@@ -51,26 +51,29 @@ import giraaff.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
 // @class FloatingReadPhase
 public final class FloatingReadPhase extends Phase
 {
+    // @field
     private boolean createFloatingReads;
+    // @field
     private boolean createMemoryMapNodes;
 
     // @class FloatingReadPhase.MemoryMapImpl
     public static final class MemoryMapImpl implements MemoryMap
     {
+        // @field
         private final EconomicMap<LocationIdentity, MemoryNode> lastMemorySnapshot;
 
         // @cons
-        public MemoryMapImpl(MemoryMapImpl memoryMap)
+        public MemoryMapImpl(MemoryMapImpl __memoryMap)
         {
             super();
-            lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT, memoryMap.lastMemorySnapshot);
+            lastMemorySnapshot = EconomicMap.create(Equivalence.DEFAULT, __memoryMap.lastMemorySnapshot);
         }
 
         // @cons
-        public MemoryMapImpl(StartNode start)
+        public MemoryMapImpl(StartNode __start)
         {
             this();
-            lastMemorySnapshot.put(LocationIdentity.any(), start);
+            lastMemorySnapshot.put(LocationIdentity.any(), __start);
         }
 
         // @cons
@@ -81,21 +84,21 @@ public final class FloatingReadPhase extends Phase
         }
 
         @Override
-        public MemoryNode getLastLocationAccess(LocationIdentity locationIdentity)
+        public MemoryNode getLastLocationAccess(LocationIdentity __locationIdentity)
         {
-            MemoryNode lastLocationAccess;
-            if (locationIdentity.isImmutable())
+            MemoryNode __lastLocationAccess;
+            if (__locationIdentity.isImmutable())
             {
                 return null;
             }
             else
             {
-                lastLocationAccess = lastMemorySnapshot.get(locationIdentity);
-                if (lastLocationAccess == null)
+                __lastLocationAccess = lastMemorySnapshot.get(__locationIdentity);
+                if (__lastLocationAccess == null)
                 {
-                    lastLocationAccess = lastMemorySnapshot.get(LocationIdentity.any());
+                    __lastLocationAccess = lastMemorySnapshot.get(LocationIdentity.any());
                 }
-                return lastLocationAccess;
+                return __lastLocationAccess;
             }
         }
 
@@ -123,317 +126,320 @@ public final class FloatingReadPhase extends Phase
      * @param createMemoryMapNodes a {@link MemoryMapNode} will be created for each return if this is true
      */
     // @cons
-    public FloatingReadPhase(boolean createFloatingReads, boolean createMemoryMapNodes)
+    public FloatingReadPhase(boolean __createFloatingReads, boolean __createMemoryMapNodes)
     {
         super();
-        this.createFloatingReads = createFloatingReads;
-        this.createMemoryMapNodes = createMemoryMapNodes;
+        this.createFloatingReads = __createFloatingReads;
+        this.createMemoryMapNodes = __createMemoryMapNodes;
     }
 
     /**
      * Removes nodes from a given set that (transitively) have a usage outside the set.
      */
-    private static EconomicSet<Node> removeExternallyUsedNodes(EconomicSet<Node> set)
+    private static EconomicSet<Node> removeExternallyUsedNodes(EconomicSet<Node> __set)
     {
-        boolean change;
+        boolean __change;
         do
         {
-            change = false;
-            for (Iterator<Node> iter = set.iterator(); iter.hasNext(); )
+            __change = false;
+            for (Iterator<Node> __iter = __set.iterator(); __iter.hasNext(); )
             {
-                Node node = iter.next();
-                for (Node usage : node.usages())
+                Node __node = __iter.next();
+                for (Node __usage : __node.usages())
                 {
-                    if (!set.contains(usage))
+                    if (!__set.contains(__usage))
                     {
-                        change = true;
-                        iter.remove();
+                        __change = true;
+                        __iter.remove();
                         break;
                     }
                 }
             }
-        } while (change);
-        return set;
+        } while (__change);
+        return __set;
     }
 
-    protected void processNode(FixedNode node, EconomicSet<LocationIdentity> currentState)
+    protected void processNode(FixedNode __node, EconomicSet<LocationIdentity> __currentState)
     {
-        if (node instanceof MemoryCheckpoint.Single)
+        if (__node instanceof MemoryCheckpoint.Single)
         {
-            processIdentity(currentState, ((MemoryCheckpoint.Single) node).getLocationIdentity());
+            processIdentity(__currentState, ((MemoryCheckpoint.Single) __node).getLocationIdentity());
         }
-        else if (node instanceof MemoryCheckpoint.Multi)
+        else if (__node instanceof MemoryCheckpoint.Multi)
         {
-            for (LocationIdentity identity : ((MemoryCheckpoint.Multi) node).getLocationIdentities())
+            for (LocationIdentity __identity : ((MemoryCheckpoint.Multi) __node).getLocationIdentities())
             {
-                processIdentity(currentState, identity);
+                processIdentity(__currentState, __identity);
             }
         }
     }
 
-    private static void processIdentity(EconomicSet<LocationIdentity> currentState, LocationIdentity identity)
+    private static void processIdentity(EconomicSet<LocationIdentity> __currentState, LocationIdentity __identity)
     {
-        if (identity.isMutable())
+        if (__identity.isMutable())
         {
-            currentState.add(identity);
+            __currentState.add(__identity);
         }
     }
 
-    protected void processBlock(Block b, EconomicSet<LocationIdentity> currentState)
+    protected void processBlock(Block __b, EconomicSet<LocationIdentity> __currentState)
     {
-        for (FixedNode n : b.getNodes())
+        for (FixedNode __n : __b.getNodes())
         {
-            processNode(n, currentState);
+            processNode(__n, __currentState);
         }
     }
 
-    private EconomicSet<LocationIdentity> processLoop(HIRLoop loop, EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops)
+    private EconomicSet<LocationIdentity> processLoop(HIRLoop __loop, EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> __modifiedInLoops)
     {
-        LoopBeginNode loopBegin = (LoopBeginNode) loop.getHeader().getBeginNode();
-        EconomicSet<LocationIdentity> result = modifiedInLoops.get(loopBegin);
-        if (result != null)
+        LoopBeginNode __loopBegin = (LoopBeginNode) __loop.getHeader().getBeginNode();
+        EconomicSet<LocationIdentity> __result = __modifiedInLoops.get(__loopBegin);
+        if (__result != null)
         {
-            return result;
+            return __result;
         }
 
-        result = EconomicSet.create(Equivalence.DEFAULT);
-        for (Loop<Block> inner : loop.getChildren())
+        __result = EconomicSet.create(Equivalence.DEFAULT);
+        for (Loop<Block> __inner : __loop.getChildren())
         {
-            result.addAll(processLoop((HIRLoop) inner, modifiedInLoops));
+            __result.addAll(processLoop((HIRLoop) __inner, __modifiedInLoops));
         }
 
-        for (Block b : loop.getBlocks())
+        for (Block __b : __loop.getBlocks())
         {
-            if (b.getLoop() == loop)
+            if (__b.getLoop() == __loop)
             {
-                processBlock(b, result);
+                processBlock(__b, __result);
             }
         }
 
-        modifiedInLoops.put(loopBegin, result);
-        return result;
+        __modifiedInLoops.put(__loopBegin, __result);
+        return __result;
     }
 
     @Override
     @SuppressWarnings("try")
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops = null;
-        if (graph.hasLoops())
+        EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> __modifiedInLoops = null;
+        if (__graph.hasLoops())
         {
-            modifiedInLoops = EconomicMap.create(Equivalence.IDENTITY);
-            ControlFlowGraph cfg = ControlFlowGraph.compute(graph, true, true, false, false);
-            for (Loop<?> l : cfg.getLoops())
+            __modifiedInLoops = EconomicMap.create(Equivalence.IDENTITY);
+            ControlFlowGraph __cfg = ControlFlowGraph.compute(__graph, true, true, false, false);
+            for (Loop<?> __l : __cfg.getLoops())
             {
-                HIRLoop loop = (HIRLoop) l;
-                processLoop(loop, modifiedInLoops);
+                HIRLoop __loop = (HIRLoop) __l;
+                processLoop(__loop, __modifiedInLoops);
             }
         }
 
-        HashSetNodeEventListener listener = new HashSetNodeEventListener(EnumSet.of(NodeEvent.NODE_ADDED, NodeEvent.ZERO_USAGES));
-        try (NodeEventScope nes = graph.trackNodeEvents(listener))
+        HashSetNodeEventListener __listener = new HashSetNodeEventListener(EnumSet.of(NodeEvent.NODE_ADDED, NodeEvent.ZERO_USAGES));
+        try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
         {
-            ReentrantNodeIterator.apply(new FloatingReadClosure(modifiedInLoops, createFloatingReads, createMemoryMapNodes), graph.start(), new MemoryMapImpl(graph.start()));
+            ReentrantNodeIterator.apply(new FloatingReadClosure(__modifiedInLoops, createFloatingReads, createMemoryMapNodes), __graph.start(), new MemoryMapImpl(__graph.start()));
         }
 
-        for (Node n : removeExternallyUsedNodes(listener.getNodes()))
+        for (Node __n : removeExternallyUsedNodes(__listener.getNodes()))
         {
-            if (n.isAlive() && n instanceof FloatingNode)
+            if (__n.isAlive() && __n instanceof FloatingNode)
             {
-                n.replaceAtUsages(null);
-                GraphUtil.killWithUnusedFloatingInputs(n);
+                __n.replaceAtUsages(null);
+                GraphUtil.killWithUnusedFloatingInputs(__n);
             }
         }
         if (createFloatingReads)
         {
-            graph.setAfterFloatingReadPhase(true);
+            __graph.setAfterFloatingReadPhase(true);
         }
     }
 
-    public static MemoryMapImpl mergeMemoryMaps(AbstractMergeNode merge, List<? extends MemoryMap> states)
+    public static MemoryMapImpl mergeMemoryMaps(AbstractMergeNode __merge, List<? extends MemoryMap> __states)
     {
-        MemoryMapImpl newState = new MemoryMapImpl();
+        MemoryMapImpl __newState = new MemoryMapImpl();
 
-        EconomicSet<LocationIdentity> keys = EconomicSet.create(Equivalence.DEFAULT);
-        for (MemoryMap other : states)
+        EconomicSet<LocationIdentity> __keys = EconomicSet.create(Equivalence.DEFAULT);
+        for (MemoryMap __other : __states)
         {
-            keys.addAll(other.getLocations());
+            __keys.addAll(__other.getLocations());
         }
 
-        for (LocationIdentity key : keys)
+        for (LocationIdentity __key : __keys)
         {
-            int mergedStatesCount = 0;
-            boolean isPhi = false;
-            MemoryNode merged = null;
-            for (MemoryMap state : states)
+            int __mergedStatesCount = 0;
+            boolean __isPhi = false;
+            MemoryNode __merged = null;
+            for (MemoryMap __state : __states)
             {
-                MemoryNode last = state.getLastLocationAccess(key);
-                if (isPhi)
+                MemoryNode __last = __state.getLastLocationAccess(__key);
+                if (__isPhi)
                 {
-                    ((MemoryPhiNode) merged).addInput(ValueNodeUtil.asNode(last));
+                    ((MemoryPhiNode) __merged).addInput(ValueNodeUtil.asNode(__last));
                 }
                 else
                 {
-                    if (merged == last)
+                    if (__merged == __last)
                     {
                         // nothing to do
                     }
-                    else if (merged == null)
+                    else if (__merged == null)
                     {
-                        merged = last;
+                        __merged = __last;
                     }
                     else
                     {
-                        MemoryPhiNode phi = merge.graph().addWithoutUnique(new MemoryPhiNode(merge, key));
-                        for (int j = 0; j < mergedStatesCount; j++)
+                        MemoryPhiNode __phi = __merge.graph().addWithoutUnique(new MemoryPhiNode(__merge, __key));
+                        for (int __j = 0; __j < __mergedStatesCount; __j++)
                         {
-                            phi.addInput(ValueNodeUtil.asNode(merged));
+                            __phi.addInput(ValueNodeUtil.asNode(__merged));
                         }
-                        phi.addInput(ValueNodeUtil.asNode(last));
-                        merged = phi;
-                        isPhi = true;
+                        __phi.addInput(ValueNodeUtil.asNode(__last));
+                        __merged = __phi;
+                        __isPhi = true;
                     }
                 }
-                mergedStatesCount++;
+                __mergedStatesCount++;
             }
-            newState.lastMemorySnapshot.put(key, merged);
+            __newState.lastMemorySnapshot.put(__key, __merged);
         }
-        return newState;
+        return __newState;
     }
 
     // @class FloatingReadPhase.FloatingReadClosure
     public static final class FloatingReadClosure extends NodeIteratorClosure<MemoryMapImpl>
     {
+        // @field
         private final EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops;
+        // @field
         private boolean createFloatingReads;
+        // @field
         private boolean createMemoryMapNodes;
 
         // @cons
-        public FloatingReadClosure(EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops, boolean createFloatingReads, boolean createMemoryMapNodes)
+        public FloatingReadClosure(EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> __modifiedInLoops, boolean __createFloatingReads, boolean __createMemoryMapNodes)
         {
             super();
-            this.modifiedInLoops = modifiedInLoops;
-            this.createFloatingReads = createFloatingReads;
-            this.createMemoryMapNodes = createMemoryMapNodes;
+            this.modifiedInLoops = __modifiedInLoops;
+            this.createFloatingReads = __createFloatingReads;
+            this.createMemoryMapNodes = __createMemoryMapNodes;
         }
 
         @Override
-        protected MemoryMapImpl processNode(FixedNode node, MemoryMapImpl state)
+        protected MemoryMapImpl processNode(FixedNode __node, MemoryMapImpl __state)
         {
-            if (node instanceof MemoryAnchorNode)
+            if (__node instanceof MemoryAnchorNode)
             {
-                processAnchor((MemoryAnchorNode) node, state);
-                return state;
+                processAnchor((MemoryAnchorNode) __node, __state);
+                return __state;
             }
 
-            if (node instanceof MemoryAccess)
+            if (__node instanceof MemoryAccess)
             {
-                processAccess((MemoryAccess) node, state);
+                processAccess((MemoryAccess) __node, __state);
             }
 
-            if (createFloatingReads & node instanceof FloatableAccessNode)
+            if (createFloatingReads & __node instanceof FloatableAccessNode)
             {
-                processFloatable((FloatableAccessNode) node, state);
+                processFloatable((FloatableAccessNode) __node, __state);
             }
-            else if (node instanceof MemoryCheckpoint.Single)
+            else if (__node instanceof MemoryCheckpoint.Single)
             {
-                processCheckpoint((MemoryCheckpoint.Single) node, state);
+                processCheckpoint((MemoryCheckpoint.Single) __node, __state);
             }
-            else if (node instanceof MemoryCheckpoint.Multi)
+            else if (__node instanceof MemoryCheckpoint.Multi)
             {
-                processCheckpoint((MemoryCheckpoint.Multi) node, state);
+                processCheckpoint((MemoryCheckpoint.Multi) __node, __state);
             }
 
-            if (createMemoryMapNodes && node instanceof ReturnNode)
+            if (createMemoryMapNodes && __node instanceof ReturnNode)
             {
-                ((ReturnNode) node).setMemoryMap(node.graph().unique(new MemoryMapNode(state.lastMemorySnapshot)));
+                ((ReturnNode) __node).setMemoryMap(__node.graph().unique(new MemoryMapNode(__state.lastMemorySnapshot)));
             }
-            return state;
+            return __state;
         }
 
         /**
          * Improve the memory graph by re-wiring all usages of a {@link MemoryAnchorNode} to the
          * real last access location.
          */
-        private static void processAnchor(MemoryAnchorNode anchor, MemoryMapImpl state)
+        private static void processAnchor(MemoryAnchorNode __anchor, MemoryMapImpl __state)
         {
-            for (Node node : anchor.usages().snapshot())
+            for (Node __node : __anchor.usages().snapshot())
             {
-                if (node instanceof MemoryAccess)
+                if (__node instanceof MemoryAccess)
                 {
-                    MemoryAccess access = (MemoryAccess) node;
-                    if (access.getLastLocationAccess() == anchor)
+                    MemoryAccess __access = (MemoryAccess) __node;
+                    if (__access.getLastLocationAccess() == __anchor)
                     {
-                        MemoryNode lastLocationAccess = state.getLastLocationAccess(access.getLocationIdentity());
-                        access.setLastLocationAccess(lastLocationAccess);
+                        MemoryNode __lastLocationAccess = __state.getLastLocationAccess(__access.getLocationIdentity());
+                        __access.setLastLocationAccess(__lastLocationAccess);
                     }
                 }
             }
 
-            if (anchor.hasNoUsages())
+            if (__anchor.hasNoUsages())
             {
-                anchor.graph().removeFixed(anchor);
+                __anchor.graph().removeFixed(__anchor);
             }
         }
 
-        private static void processAccess(MemoryAccess access, MemoryMapImpl state)
+        private static void processAccess(MemoryAccess __access, MemoryMapImpl __state)
         {
-            LocationIdentity locationIdentity = access.getLocationIdentity();
-            if (!locationIdentity.equals(LocationIdentity.any()))
+            LocationIdentity __locationIdentity = __access.getLocationIdentity();
+            if (!__locationIdentity.equals(LocationIdentity.any()))
             {
-                MemoryNode lastLocationAccess = state.getLastLocationAccess(locationIdentity);
-                access.setLastLocationAccess(lastLocationAccess);
+                MemoryNode __lastLocationAccess = __state.getLastLocationAccess(__locationIdentity);
+                __access.setLastLocationAccess(__lastLocationAccess);
             }
         }
 
-        private static void processCheckpoint(MemoryCheckpoint.Single checkpoint, MemoryMapImpl state)
+        private static void processCheckpoint(MemoryCheckpoint.Single __checkpoint, MemoryMapImpl __state)
         {
-            processIdentity(checkpoint.getLocationIdentity(), checkpoint, state);
+            processIdentity(__checkpoint.getLocationIdentity(), __checkpoint, __state);
         }
 
-        private static void processCheckpoint(MemoryCheckpoint.Multi checkpoint, MemoryMapImpl state)
+        private static void processCheckpoint(MemoryCheckpoint.Multi __checkpoint, MemoryMapImpl __state)
         {
-            for (LocationIdentity identity : checkpoint.getLocationIdentities())
+            for (LocationIdentity __identity : __checkpoint.getLocationIdentities())
             {
-                processIdentity(identity, checkpoint, state);
+                processIdentity(__identity, __checkpoint, __state);
             }
         }
 
-        private static void processIdentity(LocationIdentity identity, MemoryCheckpoint checkpoint, MemoryMapImpl state)
+        private static void processIdentity(LocationIdentity __identity, MemoryCheckpoint __checkpoint, MemoryMapImpl __state)
         {
-            if (identity.isAny())
+            if (__identity.isAny())
             {
-                state.lastMemorySnapshot.clear();
+                __state.lastMemorySnapshot.clear();
             }
-            if (identity.isMutable())
+            if (__identity.isMutable())
             {
-                state.lastMemorySnapshot.put(identity, checkpoint);
+                __state.lastMemorySnapshot.put(__identity, __checkpoint);
             }
         }
 
-        private static void processFloatable(FloatableAccessNode accessNode, MemoryMapImpl state)
+        private static void processFloatable(FloatableAccessNode __accessNode, MemoryMapImpl __state)
         {
-            StructuredGraph graph = accessNode.graph();
-            LocationIdentity locationIdentity = accessNode.getLocationIdentity();
-            if (accessNode.canFloat())
+            StructuredGraph __graph = __accessNode.graph();
+            LocationIdentity __locationIdentity = __accessNode.getLocationIdentity();
+            if (__accessNode.canFloat())
             {
-                MemoryNode lastLocationAccess = state.getLastLocationAccess(locationIdentity);
-                FloatingAccessNode floatingNode = accessNode.asFloatingNode(lastLocationAccess);
-                graph.replaceFixedWithFloating(accessNode, floatingNode);
+                MemoryNode __lastLocationAccess = __state.getLastLocationAccess(__locationIdentity);
+                FloatingAccessNode __floatingNode = __accessNode.asFloatingNode(__lastLocationAccess);
+                __graph.replaceFixedWithFloating(__accessNode, __floatingNode);
             }
         }
 
         @Override
-        protected MemoryMapImpl merge(AbstractMergeNode merge, List<MemoryMapImpl> states)
+        protected MemoryMapImpl merge(AbstractMergeNode __merge, List<MemoryMapImpl> __states)
         {
-            return mergeMemoryMaps(merge, states);
+            return mergeMemoryMaps(__merge, __states);
         }
 
         @Override
-        protected MemoryMapImpl afterSplit(AbstractBeginNode node, MemoryMapImpl oldState)
+        protected MemoryMapImpl afterSplit(AbstractBeginNode __node, MemoryMapImpl __oldState)
         {
-            MemoryMapImpl result = new MemoryMapImpl(oldState);
-            if (node.predecessor() instanceof InvokeWithExceptionNode)
+            MemoryMapImpl __result = new MemoryMapImpl(__oldState);
+            if (__node.predecessor() instanceof InvokeWithExceptionNode)
             {
                 /*
                  * InvokeWithException cannot be the lastLocationAccess for a FloatingReadNode.
@@ -442,52 +448,52 @@ public final class FloatingReadPhase extends Phase
                  * normal or exceptional successor - and we have to tell the scheduler here which
                  * side it needs to choose by putting in the location identity on both successors.
                  */
-                InvokeWithExceptionNode invoke = (InvokeWithExceptionNode) node.predecessor();
-                result.lastMemorySnapshot.put(invoke.getLocationIdentity(), (MemoryCheckpoint) node);
+                InvokeWithExceptionNode __invoke = (InvokeWithExceptionNode) __node.predecessor();
+                __result.lastMemorySnapshot.put(__invoke.getLocationIdentity(), (MemoryCheckpoint) __node);
             }
-            return result;
+            return __result;
         }
 
         @Override
-        protected EconomicMap<LoopExitNode, MemoryMapImpl> processLoop(LoopBeginNode loop, MemoryMapImpl initialState)
+        protected EconomicMap<LoopExitNode, MemoryMapImpl> processLoop(LoopBeginNode __loop, MemoryMapImpl __initialState)
         {
-            EconomicSet<LocationIdentity> modifiedLocations = modifiedInLoops.get(loop);
-            EconomicMap<LocationIdentity, MemoryPhiNode> phis = EconomicMap.create(Equivalence.DEFAULT);
-            if (modifiedLocations.contains(LocationIdentity.any()))
+            EconomicSet<LocationIdentity> __modifiedLocations = modifiedInLoops.get(__loop);
+            EconomicMap<LocationIdentity, MemoryPhiNode> __phis = EconomicMap.create(Equivalence.DEFAULT);
+            if (__modifiedLocations.contains(LocationIdentity.any()))
             {
                 // create phis for all locations if ANY is modified in the loop
-                modifiedLocations = EconomicSet.create(Equivalence.DEFAULT, modifiedLocations);
-                modifiedLocations.addAll(initialState.lastMemorySnapshot.getKeys());
+                __modifiedLocations = EconomicSet.create(Equivalence.DEFAULT, __modifiedLocations);
+                __modifiedLocations.addAll(__initialState.lastMemorySnapshot.getKeys());
             }
 
-            for (LocationIdentity location : modifiedLocations)
+            for (LocationIdentity __location : __modifiedLocations)
             {
-                createMemoryPhi(loop, initialState, phis, location);
+                createMemoryPhi(__loop, __initialState, __phis, __location);
             }
-            initialState.lastMemorySnapshot.putAll(phis);
+            __initialState.lastMemorySnapshot.putAll(__phis);
 
-            LoopInfo<MemoryMapImpl> loopInfo = ReentrantNodeIterator.processLoop(this, loop, initialState);
+            LoopInfo<MemoryMapImpl> __loopInfo = ReentrantNodeIterator.processLoop(this, __loop, __initialState);
 
-            UnmodifiableMapCursor<LoopEndNode, MemoryMapImpl> endStateCursor = loopInfo.endStates.getEntries();
-            while (endStateCursor.advance())
+            UnmodifiableMapCursor<LoopEndNode, MemoryMapImpl> __endStateCursor = __loopInfo.endStates.getEntries();
+            while (__endStateCursor.advance())
             {
-                int endIndex = loop.phiPredecessorIndex(endStateCursor.getKey());
-                UnmodifiableMapCursor<LocationIdentity, MemoryPhiNode> phiCursor = phis.getEntries();
-                while (phiCursor.advance())
+                int __endIndex = __loop.phiPredecessorIndex(__endStateCursor.getKey());
+                UnmodifiableMapCursor<LocationIdentity, MemoryPhiNode> __phiCursor = __phis.getEntries();
+                while (__phiCursor.advance())
                 {
-                    LocationIdentity key = phiCursor.getKey();
-                    PhiNode phi = phiCursor.getValue();
-                    phi.initializeValueAt(endIndex, ValueNodeUtil.asNode(endStateCursor.getValue().getLastLocationAccess(key)));
+                    LocationIdentity __key = __phiCursor.getKey();
+                    PhiNode __phi = __phiCursor.getValue();
+                    __phi.initializeValueAt(__endIndex, ValueNodeUtil.asNode(__endStateCursor.getValue().getLastLocationAccess(__key)));
                 }
             }
-            return loopInfo.exitStates;
+            return __loopInfo.exitStates;
         }
 
-        private static void createMemoryPhi(LoopBeginNode loop, MemoryMapImpl initialState, EconomicMap<LocationIdentity, MemoryPhiNode> phis, LocationIdentity location)
+        private static void createMemoryPhi(LoopBeginNode __loop, MemoryMapImpl __initialState, EconomicMap<LocationIdentity, MemoryPhiNode> __phis, LocationIdentity __location)
         {
-            MemoryPhiNode phi = loop.graph().addWithoutUnique(new MemoryPhiNode(loop, location));
-            phi.addInput(ValueNodeUtil.asNode(initialState.getLastLocationAccess(location)));
-            phis.put(location, phi);
+            MemoryPhiNode __phi = __loop.graph().addWithoutUnique(new MemoryPhiNode(__loop, __location));
+            __phi.addInput(ValueNodeUtil.asNode(__initialState.getLastLocationAccess(__location)));
+            __phis.put(__location, __phi);
         }
     }
 }

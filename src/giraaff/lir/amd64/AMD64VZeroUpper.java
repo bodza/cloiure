@@ -15,47 +15,50 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64VZeroUpper
 public final class AMD64VZeroUpper extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64VZeroUpper> TYPE = LIRInstructionClass.create(AMD64VZeroUpper.class);
 
-    @Temp protected final RegisterValue[] xmmRegisters;
+    @Temp
+    // @field
+    protected final RegisterValue[] xmmRegisters;
 
     // @cons
-    public AMD64VZeroUpper(Value[] exclude)
+    public AMD64VZeroUpper(Value[] __exclude)
     {
         super(TYPE);
-        xmmRegisters = initRegisterValues(exclude);
+        xmmRegisters = initRegisterValues(__exclude);
     }
 
-    private static RegisterValue[] initRegisterValues(Value[] exclude)
+    private static RegisterValue[] initRegisterValues(Value[] __exclude)
     {
-        BitSet skippedRegs = new BitSet();
-        int numSkipped = 0;
-        if (exclude != null)
+        BitSet __skippedRegs = new BitSet();
+        int __numSkipped = 0;
+        if (__exclude != null)
         {
-            for (Value value : exclude)
+            for (Value __value : __exclude)
             {
-                if (ValueUtil.isRegister(value) && ValueUtil.asRegister(value).getRegisterCategory().equals(AMD64.XMM))
+                if (ValueUtil.isRegister(__value) && ValueUtil.asRegister(__value).getRegisterCategory().equals(AMD64.XMM))
                 {
-                    skippedRegs.set(ValueUtil.asRegister(value).number);
-                    numSkipped++;
+                    __skippedRegs.set(ValueUtil.asRegister(__value).number);
+                    __numSkipped++;
                 }
             }
         }
-        RegisterValue[] regs = new RegisterValue[AMD64.xmmRegistersAVX512.length - numSkipped];
-        for (int i = 0, j = 0; i < AMD64.xmmRegistersAVX512.length; i++)
+        RegisterValue[] __regs = new RegisterValue[AMD64.xmmRegistersAVX512.length - __numSkipped];
+        for (int __i = 0, j = 0; __i < AMD64.xmmRegistersAVX512.length; __i++)
         {
-            Register reg = AMD64.xmmRegistersAVX512[i];
-            if (!skippedRegs.get(reg.number))
+            Register __reg = AMD64.xmmRegistersAVX512[__i];
+            if (!__skippedRegs.get(__reg.number))
             {
-                regs[j++] = reg.asValue();
+                __regs[j++] = __reg.asValue();
             }
         }
-        return regs;
+        return __regs;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler asm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __asm)
     {
-        asm.vzeroupper();
+        __asm.vzeroupper();
     }
 }

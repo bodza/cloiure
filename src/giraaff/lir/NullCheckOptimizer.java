@@ -14,44 +14,44 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 public final class NullCheckOptimizer extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
     {
-        LIR ir = lirGenRes.getLIR();
-        AbstractBlockBase<?>[] blocks = ir.codeEmittingOrder();
-        NullCheckOptimizer.foldNullChecks(ir, blocks, target.implicitNullCheckLimit);
+        LIR __ir = __lirGenRes.getLIR();
+        AbstractBlockBase<?>[] __blocks = __ir.codeEmittingOrder();
+        NullCheckOptimizer.foldNullChecks(__ir, __blocks, __target.implicitNullCheckLimit);
     }
 
-    private static void foldNullChecks(LIR ir, AbstractBlockBase<?>[] blocks, int implicitNullCheckLimit)
+    private static void foldNullChecks(LIR __ir, AbstractBlockBase<?>[] __blocks, int __implicitNullCheckLimit)
     {
-        for (AbstractBlockBase<?> block : blocks)
+        for (AbstractBlockBase<?> __block : __blocks)
         {
-            if (block == null)
+            if (__block == null)
             {
                 continue;
             }
-            ArrayList<LIRInstruction> list = ir.getLIRforBlock(block);
+            ArrayList<LIRInstruction> __list = __ir.getLIRforBlock(__block);
 
-            if (!list.isEmpty())
+            if (!__list.isEmpty())
             {
-                LIRInstruction lastInstruction = list.get(0);
-                for (int i = 0; i < list.size(); i++)
+                LIRInstruction __lastInstruction = __list.get(0);
+                for (int __i = 0; __i < __list.size(); __i++)
                 {
-                    LIRInstruction instruction = list.get(i);
+                    LIRInstruction __instruction = __list.get(__i);
 
-                    if (instruction instanceof ImplicitNullCheck && lastInstruction instanceof NullCheck)
+                    if (__instruction instanceof ImplicitNullCheck && __lastInstruction instanceof NullCheck)
                     {
-                        NullCheck nullCheck = (NullCheck) lastInstruction;
-                        ImplicitNullCheck implicitNullCheck = (ImplicitNullCheck) instruction;
-                        if (implicitNullCheck.makeNullCheckFor(nullCheck.getCheckedValue(), nullCheck.getState(), implicitNullCheckLimit))
+                        NullCheck __nullCheck = (NullCheck) __lastInstruction;
+                        ImplicitNullCheck __implicitNullCheck = (ImplicitNullCheck) __instruction;
+                        if (__implicitNullCheck.makeNullCheckFor(__nullCheck.getCheckedValue(), __nullCheck.getState(), __implicitNullCheckLimit))
                         {
-                            list.remove(i - 1);
-                            if (i < list.size())
+                            __list.remove(__i - 1);
+                            if (__i < __list.size())
                             {
-                                instruction = list.get(i);
+                                __instruction = __list.get(__i);
                             }
                         }
                     }
-                    lastInstruction = instruction;
+                    __lastInstruction = __instruction;
                 }
             }
         }

@@ -7,13 +7,14 @@ import giraaff.phases.tiers.PhaseContext;
 // @class LoopPhase
 public abstract class LoopPhase<P extends LoopPolicies> extends BasePhase<PhaseContext>
 {
+    // @field
     private P policies;
 
     // @cons
-    public LoopPhase(P policies)
+    public LoopPhase(P __policies)
     {
         super();
-        this.policies = policies;
+        this.policies = __policies;
     }
 
     protected P getPolicies()

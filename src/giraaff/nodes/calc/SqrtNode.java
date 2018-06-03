@@ -16,27 +16,28 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class SqrtNode
 public final class SqrtNode extends UnaryArithmeticNode<Sqrt> implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<SqrtNode> TYPE = NodeClass.create(SqrtNode.class);
 
     // @cons
-    protected SqrtNode(ValueNode x)
+    protected SqrtNode(ValueNode __x)
     {
-        super(TYPE, ArithmeticOpTable::getSqrt, x);
+        super(TYPE, ArithmeticOpTable::getSqrt, __x);
     }
 
-    public static ValueNode create(ValueNode x, NodeView view)
+    public static ValueNode create(ValueNode __x, NodeView __view)
     {
-        if (x.isConstant())
+        if (__x.isConstant())
         {
-            ArithmeticOpTable.UnaryOp<Sqrt> op = ArithmeticOpTable.forStamp(x.stamp(view)).getSqrt();
-            return ConstantNode.forPrimitive(op.foldStamp(x.stamp(view)), op.foldConstant(x.asConstant()));
+            ArithmeticOpTable.UnaryOp<Sqrt> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getSqrt();
+            return ConstantNode.forPrimitive(__op.foldStamp(__x.stamp(__view)), __op.foldConstant(__x.asConstant()));
         }
-        return new SqrtNode(x);
+        return new SqrtNode(__x);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitMathSqrt(nodeValueMap.operand(getValue())));
+        __nodeValueMap.setResult(this, __gen.emitMathSqrt(__nodeValueMap.operand(getValue())));
     }
 }

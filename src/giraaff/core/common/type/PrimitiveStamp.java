@@ -9,13 +9,14 @@ import jdk.vm.ci.meta.MemoryAccessProvider;
 // @class PrimitiveStamp
 public abstract class PrimitiveStamp extends ArithmeticStamp
 {
+    // @field
     private final int bits;
 
     // @cons
-    protected PrimitiveStamp(int bits, ArithmeticOpTable ops)
+    protected PrimitiveStamp(int __bits, ArithmeticOpTable __ops)
     {
-        super(ops);
-        this.bits = bits;
+        super(__ops);
+        this.bits = __bits;
     }
 
     /**
@@ -26,11 +27,11 @@ public abstract class PrimitiveStamp extends ArithmeticStamp
         return bits;
     }
 
-    public static int getBits(Stamp stamp)
+    public static int getBits(Stamp __stamp)
     {
-        if (stamp instanceof PrimitiveStamp)
+        if (__stamp instanceof PrimitiveStamp)
         {
-            return ((PrimitiveStamp) stamp).getBits();
+            return ((PrimitiveStamp) __stamp).getBits();
         }
         else
         {
@@ -39,13 +40,13 @@ public abstract class PrimitiveStamp extends ArithmeticStamp
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
         try
         {
-            return provider.readPrimitiveConstant(getStackKind(), base, displacement, getBits());
+            return __provider.readPrimitiveConstant(getStackKind(), __base, __displacement, getBits());
         }
-        catch (IllegalArgumentException e)
+        catch (IllegalArgumentException __e)
         {
             // It's possible that the base and displacement aren't valid together so simply return null.
             return null;
@@ -55,26 +56,26 @@ public abstract class PrimitiveStamp extends ArithmeticStamp
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        return prime * super.hashCode() + bits;
+        final int __prime = 31;
+        return __prime * super.hashCode() + bits;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (!(obj instanceof PrimitiveStamp))
+        if (!(__obj instanceof PrimitiveStamp))
         {
             return false;
         }
-        PrimitiveStamp other = (PrimitiveStamp) obj;
-        if (bits != other.bits)
+        PrimitiveStamp __other = (PrimitiveStamp) __obj;
+        if (bits != __other.bits)
         {
             return false;
         }
-        return super.equals(obj);
+        return super.equals(__obj);
     }
 }

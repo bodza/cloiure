@@ -15,9 +15,12 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class VirtualObjectState
 public final class VirtualObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
+    // @def
     public static final NodeClass<VirtualObjectState> TYPE = NodeClass.create(VirtualObjectState.class);
 
-    @OptionalInput NodeInputList<ValueNode> values;
+    @OptionalInput
+    // @field
+    NodeInputList<ValueNode> values;
 
     public NodeInputList<ValueNode> values()
     {
@@ -25,17 +28,17 @@ public final class VirtualObjectState extends EscapeObjectState implements Node.
     }
 
     // @cons
-    public VirtualObjectState(VirtualObjectNode object, ValueNode[] values)
+    public VirtualObjectState(VirtualObjectNode __object, ValueNode[] __values)
     {
-        super(TYPE, object);
-        this.values = new NodeInputList<>(this, values);
+        super(TYPE, __object);
+        this.values = new NodeInputList<>(this, __values);
     }
 
     // @cons
-    public VirtualObjectState(VirtualObjectNode object, List<ValueNode> values)
+    public VirtualObjectState(VirtualObjectNode __object, List<ValueNode> __values)
     {
-        super(TYPE, object);
-        this.values = new NodeInputList<>(this, values);
+        super(TYPE, __object);
+        this.values = new NodeInputList<>(this, __values);
     }
 
     @Override
@@ -45,13 +48,13 @@ public final class VirtualObjectState extends EscapeObjectState implements Node.
     }
 
     @Override
-    public void applyToNonVirtual(NodeClosure<? super ValueNode> closure)
+    public void applyToNonVirtual(NodeClosure<? super ValueNode> __closure)
     {
-        for (ValueNode value : values)
+        for (ValueNode __value : values)
         {
-            if (value != null)
+            if (__value != null)
             {
-                closure.apply(this, value);
+                __closure.apply(this, __value);
             }
         }
     }

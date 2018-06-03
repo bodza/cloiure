@@ -19,65 +19,65 @@ import giraaff.util.GraalError;
 public final class SimpleStackSlotAllocator extends AllocationPhase
 {
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
     {
-        allocateStackSlots((FrameMapBuilderTool) lirGenRes.getFrameMapBuilder(), lirGenRes);
-        lirGenRes.buildFrameMap();
+        allocateStackSlots((FrameMapBuilderTool) __lirGenRes.getFrameMapBuilder(), __lirGenRes);
+        __lirGenRes.buildFrameMap();
     }
 
-    public void allocateStackSlots(FrameMapBuilderTool builder, LIRGenerationResult res)
+    public void allocateStackSlots(FrameMapBuilderTool __builder, LIRGenerationResult __res)
     {
-        StackSlot[] mapping = new StackSlot[builder.getNumberOfStackSlots()];
-        for (VirtualStackSlot virtualSlot : builder.getStackSlots())
+        StackSlot[] __mapping = new StackSlot[__builder.getNumberOfStackSlots()];
+        for (VirtualStackSlot __virtualSlot : __builder.getStackSlots())
         {
-            final StackSlot slot;
-            if (virtualSlot instanceof SimpleVirtualStackSlot)
+            final StackSlot __slot;
+            if (__virtualSlot instanceof SimpleVirtualStackSlot)
             {
-                slot = mapSimpleVirtualStackSlot(builder, (SimpleVirtualStackSlot) virtualSlot);
+                __slot = mapSimpleVirtualStackSlot(__builder, (SimpleVirtualStackSlot) __virtualSlot);
             }
-            else if (virtualSlot instanceof VirtualStackSlotRange)
+            else if (__virtualSlot instanceof VirtualStackSlotRange)
             {
-                VirtualStackSlotRange slotRange = (VirtualStackSlotRange) virtualSlot;
-                slot = mapVirtualStackSlotRange(builder, slotRange);
+                VirtualStackSlotRange __slotRange = (VirtualStackSlotRange) __virtualSlot;
+                __slot = mapVirtualStackSlotRange(__builder, __slotRange);
             }
             else
             {
-                throw GraalError.shouldNotReachHere("Unknown VirtualStackSlot: " + virtualSlot);
+                throw GraalError.shouldNotReachHere("Unknown VirtualStackSlot: " + __virtualSlot);
             }
-            mapping[virtualSlot.getId()] = slot;
+            __mapping[__virtualSlot.getId()] = __slot;
         }
-        updateLIR(res, mapping);
+        updateLIR(__res, __mapping);
     }
 
-    protected void updateLIR(LIRGenerationResult res, StackSlot[] mapping)
+    protected void updateLIR(LIRGenerationResult __res, StackSlot[] __mapping)
     {
-        ValueProcedure updateProc = (value, mode, flags) ->
+        ValueProcedure __updateProc = (__value, __mode, __flags) ->
         {
-            if (LIRValueUtil.isVirtualStackSlot(value))
+            if (LIRValueUtil.isVirtualStackSlot(__value))
             {
-                return mapping[LIRValueUtil.asVirtualStackSlot(value).getId()];
+                return __mapping[LIRValueUtil.asVirtualStackSlot(__value).getId()];
             }
-            return value;
+            return __value;
         };
-        for (AbstractBlockBase<?> block : res.getLIR().getControlFlowGraph().getBlocks())
+        for (AbstractBlockBase<?> __block : __res.getLIR().getControlFlowGraph().getBlocks())
         {
-            for (LIRInstruction inst : res.getLIR().getLIRforBlock(block))
+            for (LIRInstruction __inst : __res.getLIR().getLIRforBlock(__block))
             {
-                inst.forEachAlive(updateProc);
-                inst.forEachInput(updateProc);
-                inst.forEachOutput(updateProc);
-                inst.forEachTemp(updateProc);
+                __inst.forEachAlive(__updateProc);
+                __inst.forEachInput(__updateProc);
+                __inst.forEachOutput(__updateProc);
+                __inst.forEachTemp(__updateProc);
             }
         }
     }
 
-    protected StackSlot mapSimpleVirtualStackSlot(FrameMapBuilderTool builder, SimpleVirtualStackSlot virtualStackSlot)
+    protected StackSlot mapSimpleVirtualStackSlot(FrameMapBuilderTool __builder, SimpleVirtualStackSlot __virtualStackSlot)
     {
-        return builder.getFrameMap().allocateSpillSlot(virtualStackSlot.getValueKind());
+        return __builder.getFrameMap().allocateSpillSlot(__virtualStackSlot.getValueKind());
     }
 
-    protected StackSlot mapVirtualStackSlotRange(FrameMapBuilderTool builder, VirtualStackSlotRange virtualStackSlot)
+    protected StackSlot mapVirtualStackSlotRange(FrameMapBuilderTool __builder, VirtualStackSlotRange __virtualStackSlot)
     {
-        return builder.getFrameMap().allocateStackSlots(virtualStackSlot.getSlots(), virtualStackSlot.getObjects());
+        return __builder.getFrameMap().allocateStackSlots(__virtualStackSlot.getSlots(), __virtualStackSlot.getObjects());
     }
 }

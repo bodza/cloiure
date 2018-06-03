@@ -25,14 +25,17 @@ import giraaff.util.GraalError;
 // @class MacroStateSplitNode
 public abstract class MacroStateSplitNode extends MacroNode implements StateSplit, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<MacroStateSplitNode> TYPE = NodeClass.create(MacroStateSplitNode.class);
 
-    @OptionalInput(InputType.State) protected FrameState stateAfter;
+    @OptionalInput(InputType.State)
+    // @field
+    protected FrameState stateAfter;
 
     // @cons
-    protected MacroStateSplitNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    protected MacroStateSplitNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
-        super(c, invokeKind, targetMethod, bci, returnStamp, arguments);
+        super(__c, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }
 
     @Override
@@ -42,10 +45,10 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -60,19 +63,19 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
         return LocationIdentity.any();
     }
 
-    protected void replaceSnippetInvokes(StructuredGraph snippetGraph)
+    protected void replaceSnippetInvokes(StructuredGraph __snippetGraph)
     {
-        for (MethodCallTargetNode call : snippetGraph.getNodes(MethodCallTargetNode.TYPE))
+        for (MethodCallTargetNode __call : __snippetGraph.getNodes(MethodCallTargetNode.TYPE))
         {
-            Invoke invoke = call.invoke();
-            if (!call.targetMethod().equals(getTargetMethod()))
+            Invoke __invoke = __call.invoke();
+            if (!__call.targetMethod().equals(getTargetMethod()))
             {
                 throw new GraalError("unexpected invoke %s in snippet", getClass().getSimpleName());
             }
             // here we need to fix the bci of the invoke
-            InvokeNode newInvoke = snippetGraph.add(new InvokeNode(invoke.callTarget(), bci()));
-            newInvoke.setStateAfter(invoke.stateAfter());
-            snippetGraph.replaceFixedWithFixed((InvokeNode) invoke.asNode(), newInvoke);
+            InvokeNode __newInvoke = __snippetGraph.add(new InvokeNode(__invoke.callTarget(), bci()));
+            __newInvoke.setStateAfter(__invoke.stateAfter());
+            __snippetGraph.replaceFixedWithFixed((InvokeNode) __invoke.asNode(), __newInvoke);
         }
     }
 }

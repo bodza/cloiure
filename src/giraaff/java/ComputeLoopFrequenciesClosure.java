@@ -18,6 +18,7 @@ import giraaff.phases.graph.ReentrantNodeIterator;
 // @class ComputeLoopFrequenciesClosure
 public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.NodeIteratorClosure<Double>
 {
+    // @def
     private static final ComputeLoopFrequenciesClosure INSTANCE = new ComputeLoopFrequenciesClosure();
 
     // @cons
@@ -27,51 +28,51 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
     }
 
     @Override
-    protected Double processNode(FixedNode node, Double currentState)
+    protected Double processNode(FixedNode __node, Double __currentState)
     {
         // normal nodes never change the probability of a path
-        return currentState;
+        return __currentState;
     }
 
     @Override
-    protected Double merge(AbstractMergeNode merge, List<Double> states)
+    protected Double merge(AbstractMergeNode __merge, List<Double> __states)
     {
         // a merge has the sum of all predecessor probabilities
-        double result = 0.0;
-        for (double d : states)
+        double __result = 0.0;
+        for (double __d : __states)
         {
-            result += d;
+            __result += __d;
         }
-        return result;
+        return __result;
     }
 
     @Override
-    protected Double afterSplit(AbstractBeginNode node, Double oldState)
+    protected Double afterSplit(AbstractBeginNode __node, Double __oldState)
     {
         // a control split splits up the probability
-        ControlSplitNode split = (ControlSplitNode) node.predecessor();
-        return oldState * split.probability(node);
+        ControlSplitNode __split = (ControlSplitNode) __node.predecessor();
+        return __oldState * __split.probability(__node);
     }
 
     @Override
-    protected EconomicMap<LoopExitNode, Double> processLoop(LoopBeginNode loop, Double initialState)
+    protected EconomicMap<LoopExitNode, Double> processLoop(LoopBeginNode __loop, Double __initialState)
     {
-        EconomicMap<LoopExitNode, Double> exitStates = ReentrantNodeIterator.processLoop(this, loop, 1D).exitStates;
+        EconomicMap<LoopExitNode, Double> __exitStates = ReentrantNodeIterator.processLoop(this, __loop, 1D).exitStates;
 
-        double exitProbability = 0.0;
-        for (double d : exitStates.getValues())
+        double __exitProbability = 0.0;
+        for (double __d : __exitStates.getValues())
         {
-            exitProbability += d;
+            __exitProbability += __d;
         }
-        exitProbability = Math.min(1.0, exitProbability);
-        exitProbability = Math.max(ControlFlowGraph.MIN_PROBABILITY, exitProbability);
-        double loopFrequency = 1.0 / exitProbability;
-        loop.setLoopFrequency(loopFrequency);
+        __exitProbability = Math.min(1.0, __exitProbability);
+        __exitProbability = Math.max(ControlFlowGraph.MIN_PROBABILITY, __exitProbability);
+        double __loopFrequency = 1.0 / __exitProbability;
+        __loop.setLoopFrequency(__loopFrequency);
 
-        double adjustmentFactor = initialState * loopFrequency;
-        exitStates.replaceAll((exitNode, probability) -> ControlFlowGraph.multiplyProbabilities(probability, adjustmentFactor));
+        double __adjustmentFactor = __initialState * __loopFrequency;
+        __exitStates.replaceAll((__exitNode, __probability) -> ControlFlowGraph.multiplyProbabilities(__probability, __adjustmentFactor));
 
-        return exitStates;
+        return __exitStates;
     }
 
     /**
@@ -79,11 +80,11 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
      * reverse postorder iteration and computing the probability of all fixed nodes. The combined
      * probability of all exits of a loop can be used to compute the loop's expected frequency.
      */
-    public static void compute(StructuredGraph graph)
+    public static void compute(StructuredGraph __graph)
     {
-        if (graph.hasLoops())
+        if (__graph.hasLoops())
         {
-            ReentrantNodeIterator.apply(INSTANCE, graph.start(), 1D);
+            ReentrantNodeIterator.apply(INSTANCE, __graph.start(), 1D);
         }
     }
 
@@ -91,11 +92,12 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
     public static final class ComputeLoopFrequencyPhase extends Phase
     {
         @Override
-        protected void run(StructuredGraph graph)
+        protected void run(StructuredGraph __graph)
         {
-            compute(graph);
+            compute(__graph);
         }
     }
 
+    // @def
     public static final ComputeLoopFrequencyPhase PHASE_INSTANCE = new ComputeLoopFrequencyPhase();
 }

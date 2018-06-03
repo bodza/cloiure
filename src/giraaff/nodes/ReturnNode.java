@@ -14,10 +14,15 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class ReturnNode
 public final class ReturnNode extends ControlSinkNode implements LIRLowerable, IterableNodeType
 {
+    // @def
     public static final NodeClass<ReturnNode> TYPE = NodeClass.create(ReturnNode.class);
 
-    @OptionalInput ValueNode result;
-    @OptionalInput(InputType.Extension) MemoryMapNode memoryMap;
+    @OptionalInput
+    // @field
+    ValueNode result;
+    @OptionalInput(InputType.Extension)
+    // @field
+    MemoryMapNode memoryMap;
 
     public ValueNode result()
     {
@@ -25,36 +30,36 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
     }
 
     // @cons
-    public ReturnNode(ValueNode result)
+    public ReturnNode(ValueNode __result)
     {
-        this(result, null);
+        this(__result, null);
     }
 
     // @cons
-    public ReturnNode(ValueNode result, MemoryMapNode memoryMap)
+    public ReturnNode(ValueNode __result, MemoryMapNode __memoryMap)
     {
         super(TYPE, StampFactory.forVoid());
-        this.result = result;
-        this.memoryMap = memoryMap;
+        this.result = __result;
+        this.memoryMap = __memoryMap;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         if (result == null)
         {
-            gen.getLIRGeneratorTool().emitReturn(JavaKind.Void, null);
+            __gen.getLIRGeneratorTool().emitReturn(JavaKind.Void, null);
         }
         else
         {
-            gen.getLIRGeneratorTool().emitReturn(result.getStackKind(), gen.operand(result));
+            __gen.getLIRGeneratorTool().emitReturn(result.getStackKind(), __gen.operand(result));
         }
     }
 
-    public void setMemoryMap(MemoryMapNode memoryMap)
+    public void setMemoryMap(MemoryMapNode __memoryMap)
     {
-        updateUsages(this.memoryMap, memoryMap);
-        this.memoryMap = memoryMap;
+        updateUsages(this.memoryMap, __memoryMap);
+        this.memoryMap = __memoryMap;
     }
 
     public MemoryMapNode getMemoryMap()
@@ -62,13 +67,13 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
         return memoryMap;
     }
 
-    private boolean verifyReturn(TargetDescription target)
+    private boolean verifyReturn(TargetDescription __target)
     {
         if (graph().method() != null)
         {
-            JavaKind actual = result == null ? JavaKind.Void : result.getStackKind();
-            JavaKind expected = graph().method().getSignature().getReturnKind().getStackKind();
-            if (actual == target.wordJavaKind && expected == JavaKind.Object)
+            JavaKind __actual = result == null ? JavaKind.Void : result.getStackKind();
+            JavaKind __expected = graph().method().getSignature().getReturnKind().getStackKind();
+            if (__actual == __target.wordJavaKind && __expected == JavaKind.Object)
             {
                 // OK, we're compiling a snippet that returns a Word
                 return true;

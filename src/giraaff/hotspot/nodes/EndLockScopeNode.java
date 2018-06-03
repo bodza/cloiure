@@ -17,6 +17,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class EndLockScopeNode
 public final class EndLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorExit, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<EndLockScopeNode> TYPE = NodeClass.create(EndLockScopeNode.class);
 
     // @cons
@@ -38,7 +39,7 @@ public final class EndLockScopeNode extends AbstractMemoryCheckpoint implements 
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
     }
 

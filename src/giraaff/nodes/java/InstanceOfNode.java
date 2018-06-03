@@ -32,74 +32,79 @@ import giraaff.nodes.type.StampTool;
 // @class InstanceOfNode
 public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtualizable
 {
+    // @def
     public static final NodeClass<InstanceOfNode> TYPE = NodeClass.create(InstanceOfNode.class);
 
+    // @field
     private ObjectStamp checkedStamp;
 
+    // @field
     private JavaTypeProfile profile;
-    @OptionalInput(InputType.Anchor) protected AnchoringNode anchor;
+    @OptionalInput(InputType.Anchor)
+    // @field
+    protected AnchoringNode anchor;
 
     // @cons
-    private InstanceOfNode(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    private InstanceOfNode(ObjectStamp __checkedStamp, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
-        this(TYPE, checkedStamp, object, profile, anchor);
+        this(TYPE, __checkedStamp, __object, __profile, __anchor);
     }
 
     // @cons
-    protected InstanceOfNode(NodeClass<? extends InstanceOfNode> c, ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    protected InstanceOfNode(NodeClass<? extends InstanceOfNode> __c, ObjectStamp __checkedStamp, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
-        super(c, object);
-        this.checkedStamp = checkedStamp;
-        this.profile = profile;
-        this.anchor = anchor;
+        super(__c, __object);
+        this.checkedStamp = __checkedStamp;
+        this.profile = __profile;
+        this.anchor = __anchor;
     }
 
-    public static LogicNode createAllowNull(TypeReference type, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    public static LogicNode createAllowNull(TypeReference __type, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
-        if (StampTool.isPointerNonNull(object))
+        if (StampTool.isPointerNonNull(__object))
         {
-            return create(type, object, profile, anchor);
+            return create(__type, __object, __profile, __anchor);
         }
-        return createHelper(StampFactory.object(type), object, profile, anchor);
+        return createHelper(StampFactory.object(__type), __object, __profile, __anchor);
     }
 
-    public static LogicNode create(TypeReference type, ValueNode object)
+    public static LogicNode create(TypeReference __type, ValueNode __object)
     {
-        return create(type, object, null, null);
+        return create(__type, __object, null, null);
     }
 
-    public static LogicNode create(TypeReference type, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    public static LogicNode create(TypeReference __type, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
-        return createHelper(StampFactory.objectNonNull(type), object, profile, anchor);
+        return createHelper(StampFactory.objectNonNull(__type), __object, __profile, __anchor);
     }
 
-    public static LogicNode createHelper(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    public static LogicNode createHelper(ObjectStamp __checkedStamp, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
-        LogicNode synonym = findSynonym(checkedStamp, object, NodeView.DEFAULT);
-        if (synonym != null)
+        LogicNode __synonym = findSynonym(__checkedStamp, __object, NodeView.DEFAULT);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         else
         {
-            return new InstanceOfNode(checkedStamp, object, profile, anchor);
+            return new InstanceOfNode(__checkedStamp, __object, __profile, __anchor);
         }
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        NodeView view = NodeView.from(tool);
-        LogicNode synonym = findSynonym(checkedStamp, forValue, view);
-        if (synonym != null)
+        NodeView __view = NodeView.from(__tool);
+        LogicNode __synonym = findSynonym(checkedStamp, __forValue, __view);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
         else
         {
@@ -107,38 +112,38 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
         }
     }
 
-    public static LogicNode findSynonym(ObjectStamp checkedStamp, ValueNode object, NodeView view)
+    public static LogicNode findSynonym(ObjectStamp __checkedStamp, ValueNode __object, NodeView __view)
     {
-        ObjectStamp inputStamp = (ObjectStamp) object.stamp(view);
-        ObjectStamp joinedStamp = (ObjectStamp) checkedStamp.join(inputStamp);
+        ObjectStamp __inputStamp = (ObjectStamp) __object.stamp(__view);
+        ObjectStamp __joinedStamp = (ObjectStamp) __checkedStamp.join(__inputStamp);
 
-        if (joinedStamp.isEmpty())
+        if (__joinedStamp.isEmpty())
         {
             // The check can never succeed, the intersection of the two stamps is empty.
             return LogicConstantNode.contradiction();
         }
         else
         {
-            ObjectStamp meetStamp = (ObjectStamp) checkedStamp.meet(inputStamp);
-            if (checkedStamp.equals(meetStamp))
+            ObjectStamp __meetStamp = (ObjectStamp) __checkedStamp.meet(__inputStamp);
+            if (__checkedStamp.equals(__meetStamp))
             {
                 // The check will always succeed, the union of the two stamps is equal to the checked stamp.
                 return LogicConstantNode.tautology();
             }
-            else if (checkedStamp.alwaysNull())
+            else if (__checkedStamp.alwaysNull())
             {
-                return IsNullNode.create(object);
+                return IsNullNode.create(__object);
             }
-            else if (Objects.equals(checkedStamp.type(), meetStamp.type()) && checkedStamp.isExactType() == meetStamp.isExactType() && checkedStamp.alwaysNull() == meetStamp.alwaysNull())
+            else if (Objects.equals(__checkedStamp.type(), __meetStamp.type()) && __checkedStamp.isExactType() == __meetStamp.isExactType() && __checkedStamp.alwaysNull() == __meetStamp.alwaysNull())
             {
                 // The only difference makes the null-ness of the value => simplify the check.
-                if (checkedStamp.nonNull())
+                if (__checkedStamp.nonNull())
                 {
-                    return LogicNegationNode.create(IsNullNode.create(object));
+                    return LogicNegationNode.create(IsNullNode.create(__object));
                 }
                 else
                 {
-                    return IsNullNode.create(object);
+                    return IsNullNode.create(__object);
                 }
             }
         }
@@ -159,20 +164,20 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(getValue());
-        TriState fold = tryFold(alias.stamp(NodeView.DEFAULT));
-        if (fold != TriState.UNKNOWN)
+        ValueNode __alias = __tool.getAlias(getValue());
+        TriState __fold = tryFold(__alias.stamp(NodeView.DEFAULT));
+        if (__fold != TriState.UNKNOWN)
         {
-            tool.replaceWithValue(LogicConstantNode.forBoolean(fold.isTrue(), graph()));
+            __tool.replaceWithValue(LogicConstantNode.forBoolean(__fold.isTrue(), graph()));
         }
     }
 
     @Override
-    public Stamp getSucceedingStampForValue(boolean negated)
+    public Stamp getSucceedingStampForValue(boolean __negated)
     {
-        if (negated)
+        if (__negated)
         {
             return null;
         }
@@ -183,22 +188,22 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
     }
 
     @Override
-    public TriState tryFold(Stamp valueStamp)
+    public TriState tryFold(Stamp __valueStamp)
     {
-        if (valueStamp instanceof ObjectStamp)
+        if (__valueStamp instanceof ObjectStamp)
         {
-            ObjectStamp inputStamp = (ObjectStamp) valueStamp;
-            ObjectStamp joinedStamp = (ObjectStamp) checkedStamp.join(inputStamp);
+            ObjectStamp __inputStamp = (ObjectStamp) __valueStamp;
+            ObjectStamp __joinedStamp = (ObjectStamp) checkedStamp.join(__inputStamp);
 
-            if (joinedStamp.isEmpty())
+            if (__joinedStamp.isEmpty())
             {
                 // The check can never succeed, the intersection of the two stamps is empty.
                 return TriState.FALSE;
             }
             else
             {
-                ObjectStamp meetStamp = (ObjectStamp) checkedStamp.meet(inputStamp);
-                if (checkedStamp.equals(meetStamp))
+                ObjectStamp __meetStamp = (ObjectStamp) checkedStamp.meet(__inputStamp);
+                if (checkedStamp.equals(__meetStamp))
                 {
                     // The check will always succeed, the union of the two stamps is equal to the checked stamp.
                     return TriState.TRUE;
@@ -213,11 +218,11 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
         return !checkedStamp.nonNull();
     }
 
-    public void setProfile(JavaTypeProfile typeProfile, AnchoringNode anchor)
+    public void setProfile(JavaTypeProfile __typeProfile, AnchoringNode __anchor)
     {
-        this.profile = typeProfile;
-        updateUsagesInterface(this.anchor, anchor);
-        this.anchor = anchor;
+        this.profile = __typeProfile;
+        updateUsagesInterface(this.anchor, __anchor);
+        this.anchor = __anchor;
     }
 
     public AnchoringNode getAnchor()
@@ -230,8 +235,8 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
         return checkedStamp;
     }
 
-    public void strengthenCheckedStamp(ObjectStamp newCheckedStamp)
+    public void strengthenCheckedStamp(ObjectStamp __newCheckedStamp)
     {
-        this.checkedStamp = newCheckedStamp;
+        this.checkedStamp = __newCheckedStamp;
     }
 }

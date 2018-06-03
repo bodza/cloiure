@@ -8,11 +8,12 @@ public enum HotSpotConstantLoadAction
     MAKE_NOT_ENTRANT(2),
     LOAD_COUNTERS(3);
 
+    // @field
     private int value;
 
-    HotSpotConstantLoadAction(int value)
+    HotSpotConstantLoadAction(int __value)
     {
-        this.value = value;
+        this.value = __value;
     }
 
     public int value()

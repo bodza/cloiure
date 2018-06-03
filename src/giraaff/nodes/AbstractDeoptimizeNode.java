@@ -16,15 +16,18 @@ import giraaff.nodeinfo.InputType;
 // @class AbstractDeoptimizeNode
 public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements IterableNodeType, DeoptimizingNode.DeoptBefore
 {
+    // @def
     public static final NodeClass<AbstractDeoptimizeNode> TYPE = NodeClass.create(AbstractDeoptimizeNode.class);
 
-    @OptionalInput(InputType.State) FrameState stateBefore;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateBefore;
 
     // @cons
-    protected AbstractDeoptimizeNode(NodeClass<? extends AbstractDeoptimizeNode> c, FrameState stateBefore)
+    protected AbstractDeoptimizeNode(NodeClass<? extends AbstractDeoptimizeNode> __c, FrameState __stateBefore)
     {
-        super(c, StampFactory.forVoid());
-        this.stateBefore = stateBefore;
+        super(__c, StampFactory.forVoid());
+        this.stateBefore = __stateBefore;
     }
 
     @Override
@@ -40,10 +43,10 @@ public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements 
     }
 
     @Override
-    public void setStateBefore(FrameState f)
+    public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, f);
-        stateBefore = f;
+        updateUsages(stateBefore, __f);
+        stateBefore = __f;
     }
 
     public abstract ValueNode getActionAndReason(MetaAccessProvider metaAccess);

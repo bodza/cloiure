@@ -17,16 +17,19 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class VirtualObjectNode
 public abstract class VirtualObjectNode extends ValueNode implements LIRLowerable, IterableNodeType
 {
+    // @def
     public static final NodeClass<VirtualObjectNode> TYPE = NodeClass.create(VirtualObjectNode.class);
 
+    // @field
     protected boolean hasIdentity;
+    // @field
     private int objectId = -1;
 
     // @cons
-    protected VirtualObjectNode(NodeClass<? extends VirtualObjectNode> c, ResolvedJavaType type, boolean hasIdentity)
+    protected VirtualObjectNode(NodeClass<? extends VirtualObjectNode> __c, ResolvedJavaType __type, boolean __hasIdentity)
     {
-        super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)));
-        this.hasIdentity = hasIdentity;
+        super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)));
+        this.hasIdentity = __hasIdentity;
     }
 
     public final int getObjectId()
@@ -39,15 +42,15 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
         this.objectId = -1;
     }
 
-    public final void setObjectId(int objectId)
+    public final void setObjectId(int __objectId)
     {
-        this.objectId = objectId;
+        this.objectId = __objectId;
     }
 
     @Override
-    protected void afterClone(Node other)
+    protected void afterClone(Node __other)
     {
-        super.afterClone(other);
+        super.afterClone(__other);
         resetObjectId();
     }
 
@@ -97,9 +100,9 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
         return hasIdentity;
     }
 
-    public void setIdentity(boolean identity)
+    public void setIdentity(boolean __identity)
     {
-        this.hasIdentity = identity;
+        this.hasIdentity = __identity;
     }
 
     /**
@@ -110,7 +113,7 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
     public abstract ValueNode getMaterializedRepresentation(FixedNode fixed, ValueNode[] entries, LockState locks);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nothing to do...
     }

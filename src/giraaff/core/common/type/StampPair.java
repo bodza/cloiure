@@ -7,25 +7,27 @@ package giraaff.core.common.type;
 // @class StampPair
 public final class StampPair
 {
+    // @field
     private final Stamp trustedStamp;
+    // @field
     private final Stamp uncheckedStamp;
 
     // @cons
-    private StampPair(Stamp trustedStamp, Stamp uncheckedStamp)
+    private StampPair(Stamp __trustedStamp, Stamp __uncheckedStamp)
     {
         super();
-        this.trustedStamp = trustedStamp;
-        this.uncheckedStamp = uncheckedStamp;
+        this.trustedStamp = __trustedStamp;
+        this.uncheckedStamp = __uncheckedStamp;
     }
 
-    public static StampPair create(Stamp trustedStamp, Stamp uncheckedStamp)
+    public static StampPair create(Stamp __trustedStamp, Stamp __uncheckedStamp)
     {
-        return new StampPair(trustedStamp, uncheckedStamp);
+        return new StampPair(__trustedStamp, __uncheckedStamp);
     }
 
-    public static StampPair createSingle(Stamp stamp)
+    public static StampPair createSingle(Stamp __stamp)
     {
-        return new StampPair(stamp, null);
+        return new StampPair(__stamp, null);
     }
 
     public Stamp getUncheckedStamp()

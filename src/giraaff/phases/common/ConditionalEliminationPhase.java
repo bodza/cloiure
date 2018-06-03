@@ -77,607 +77,619 @@ import giraaff.phases.tiers.PhaseContext;
 // @class ConditionalEliminationPhase
 public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 {
+    // @field
     private final boolean fullSchedule;
+    // @field
     private final boolean moveGuards;
 
     // @cons
-    public ConditionalEliminationPhase(boolean fullSchedule)
+    public ConditionalEliminationPhase(boolean __fullSchedule)
     {
-        this(fullSchedule, true);
+        this(__fullSchedule, true);
     }
 
     // @cons
-    public ConditionalEliminationPhase(boolean fullSchedule, boolean moveGuards)
+    public ConditionalEliminationPhase(boolean __fullSchedule, boolean __moveGuards)
     {
         super();
-        this.fullSchedule = fullSchedule;
-        this.moveGuards = moveGuards;
+        this.fullSchedule = __fullSchedule;
+        this.moveGuards = __moveGuards;
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context)
+    protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        BlockMap<List<Node>> blockToNodes = null;
-        NodeMap<Block> nodeToBlock = null;
-        ControlFlowGraph cfg = ControlFlowGraph.compute(graph, true, true, true, true);
+        BlockMap<List<Node>> __blockToNodes = null;
+        NodeMap<Block> __nodeToBlock = null;
+        ControlFlowGraph __cfg = ControlFlowGraph.compute(__graph, true, true, true, true);
         if (fullSchedule)
         {
             if (moveGuards)
             {
-                cfg.visitDominatorTree(new MoveGuardsUpwards(), graph.hasValueProxies());
+                __cfg.visitDominatorTree(new MoveGuardsUpwards(), __graph.hasValueProxies());
             }
-            SchedulePhase.run(graph, SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER, cfg);
-            ScheduleResult r = graph.getLastSchedule();
-            blockToNodes = r.getBlockToNodesMap();
-            nodeToBlock = r.getNodeToBlockMap();
+            SchedulePhase.run(__graph, SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER, __cfg);
+            ScheduleResult __r = __graph.getLastSchedule();
+            __blockToNodes = __r.getBlockToNodesMap();
+            __nodeToBlock = __r.getNodeToBlockMap();
         }
         else
         {
-            nodeToBlock = cfg.getNodeToBlock();
-            blockToNodes = getBlockToNodes(cfg);
+            __nodeToBlock = __cfg.getNodeToBlock();
+            __blockToNodes = getBlockToNodes(__cfg);
         }
-        ControlFlowGraph.RecursiveVisitor<?> visitor = createVisitor(graph, cfg, blockToNodes, nodeToBlock, context);
-        cfg.visitDominatorTree(visitor, graph.hasValueProxies());
+        ControlFlowGraph.RecursiveVisitor<?> __visitor = createVisitor(__graph, __cfg, __blockToNodes, __nodeToBlock, __context);
+        __cfg.visitDominatorTree(__visitor, __graph.hasValueProxies());
     }
 
-    protected BlockMap<List<Node>> getBlockToNodes(@SuppressWarnings("unused") ControlFlowGraph cfg)
+    protected BlockMap<List<Node>> getBlockToNodes(@SuppressWarnings("unused") ControlFlowGraph __cfg)
     {
         return null;
     }
 
-    protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph graph, @SuppressWarnings("unused") ControlFlowGraph cfg, BlockMap<List<Node>> blockToNodes, NodeMap<Block> nodeToBlock, PhaseContext context)
+    protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph __graph, @SuppressWarnings("unused") ControlFlowGraph __cfg, BlockMap<List<Node>> __blockToNodes, NodeMap<Block> __nodeToBlock, PhaseContext __context)
     {
-        return new Instance(graph, blockToNodes, nodeToBlock, context);
+        return new Instance(__graph, __blockToNodes, __nodeToBlock, __context);
     }
 
     // @class ConditionalEliminationPhase.MoveGuardsUpwards
     public static final class MoveGuardsUpwards implements ControlFlowGraph.RecursiveVisitor<Block>
     {
+        // @field
         Block anchorBlock;
 
         @Override
-        public Block enter(Block b)
+        public Block enter(Block __b)
         {
-            Block oldAnchorBlock = anchorBlock;
-            if (b.getDominator() == null || b.getDominator().getPostdominator() != b)
+            Block __oldAnchorBlock = anchorBlock;
+            if (__b.getDominator() == null || __b.getDominator().getPostdominator() != __b)
             {
                 // New anchor.
-                anchorBlock = b;
+                anchorBlock = __b;
             }
 
-            AbstractBeginNode beginNode = b.getBeginNode();
-            if (beginNode instanceof AbstractMergeNode && anchorBlock != b)
+            AbstractBeginNode __beginNode = __b.getBeginNode();
+            if (__beginNode instanceof AbstractMergeNode && anchorBlock != __b)
             {
-                AbstractMergeNode mergeNode = (AbstractMergeNode) beginNode;
-                for (GuardNode guard : mergeNode.guards().snapshot())
+                AbstractMergeNode __mergeNode = (AbstractMergeNode) __beginNode;
+                for (GuardNode __guard : __mergeNode.guards().snapshot())
                 {
-                    GuardNode newlyCreatedGuard = new GuardNode(guard.getCondition(), anchorBlock.getBeginNode(), guard.getReason(), guard.getAction(), guard.isNegated(), guard.getSpeculation());
-                    GuardNode newGuard = mergeNode.graph().unique(newlyCreatedGuard);
-                    guard.replaceAndDelete(newGuard);
+                    GuardNode __newlyCreatedGuard = new GuardNode(__guard.getCondition(), anchorBlock.getBeginNode(), __guard.getReason(), __guard.getAction(), __guard.isNegated(), __guard.getSpeculation());
+                    GuardNode __newGuard = __mergeNode.graph().unique(__newlyCreatedGuard);
+                    __guard.replaceAndDelete(__newGuard);
                 }
             }
 
-            FixedNode endNode = b.getEndNode();
-            if (endNode instanceof IfNode)
+            FixedNode __endNode = __b.getEndNode();
+            if (__endNode instanceof IfNode)
             {
-                IfNode node = (IfNode) endNode;
+                IfNode __node = (IfNode) __endNode;
 
                 // Check if we can move guards upwards.
-                AbstractBeginNode trueSuccessor = node.trueSuccessor();
-                EconomicMap<LogicNode, GuardNode> trueGuards = EconomicMap.create(Equivalence.IDENTITY);
-                for (GuardNode guard : trueSuccessor.guards())
+                AbstractBeginNode __trueSuccessor = __node.trueSuccessor();
+                EconomicMap<LogicNode, GuardNode> __trueGuards = EconomicMap.create(Equivalence.IDENTITY);
+                for (GuardNode __guard : __trueSuccessor.guards())
                 {
-                    LogicNode condition = guard.getCondition();
-                    if (condition.hasMoreThanOneUsage())
+                    LogicNode __condition = __guard.getCondition();
+                    if (__condition.hasMoreThanOneUsage())
                     {
-                        trueGuards.put(condition, guard);
+                        __trueGuards.put(__condition, __guard);
                     }
                 }
 
-                if (!trueGuards.isEmpty())
+                if (!__trueGuards.isEmpty())
                 {
-                    for (GuardNode guard : node.falseSuccessor().guards().snapshot())
+                    for (GuardNode __guard : __node.falseSuccessor().guards().snapshot())
                     {
-                        GuardNode otherGuard = trueGuards.get(guard.getCondition());
-                        if (otherGuard != null && guard.isNegated() == otherGuard.isNegated())
+                        GuardNode __otherGuard = __trueGuards.get(__guard.getCondition());
+                        if (__otherGuard != null && __guard.isNegated() == __otherGuard.isNegated())
                         {
-                            JavaConstant speculation = otherGuard.getSpeculation();
-                            if (speculation == null)
+                            JavaConstant __speculation = __otherGuard.getSpeculation();
+                            if (__speculation == null)
                             {
-                                speculation = guard.getSpeculation();
+                                __speculation = __guard.getSpeculation();
                             }
-                            else if (guard.getSpeculation() != null && guard.getSpeculation() != speculation)
+                            else if (__guard.getSpeculation() != null && __guard.getSpeculation() != __speculation)
                             {
                                 // Cannot optimize due to different speculations.
                                 continue;
                             }
-                            GuardNode newlyCreatedGuard = new GuardNode(guard.getCondition(), anchorBlock.getBeginNode(), guard.getReason(), guard.getAction(), guard.isNegated(), speculation);
-                            GuardNode newGuard = node.graph().unique(newlyCreatedGuard);
-                            if (otherGuard.isAlive())
+                            GuardNode __newlyCreatedGuard = new GuardNode(__guard.getCondition(), anchorBlock.getBeginNode(), __guard.getReason(), __guard.getAction(), __guard.isNegated(), __speculation);
+                            GuardNode __newGuard = __node.graph().unique(__newlyCreatedGuard);
+                            if (__otherGuard.isAlive())
                             {
-                                otherGuard.replaceAndDelete(newGuard);
+                                __otherGuard.replaceAndDelete(__newGuard);
                             }
-                            guard.replaceAndDelete(newGuard);
+                            __guard.replaceAndDelete(__newGuard);
                         }
                     }
                 }
             }
-            return oldAnchorBlock;
+            return __oldAnchorBlock;
         }
 
         @Override
-        public void exit(Block b, Block value)
+        public void exit(Block __b, Block __value)
         {
-            anchorBlock = value;
+            anchorBlock = __value;
         }
     }
 
     // @class ConditionalEliminationPhase.PhiInfoElement
     private static final class PhiInfoElement
     {
+        // @field
         private EconomicMap<EndNode, InfoElement> infoElements;
 
-        public void set(EndNode end, InfoElement infoElement)
+        public void set(EndNode __end, InfoElement __infoElement)
         {
             if (infoElements == null)
             {
                 infoElements = EconomicMap.create(Equivalence.IDENTITY);
             }
-            infoElements.put(end, infoElement);
+            infoElements.put(__end, __infoElement);
         }
 
-        public InfoElement get(EndNode end)
+        public InfoElement get(EndNode __end)
         {
             if (infoElements == null)
             {
                 return null;
             }
-            return infoElements.get(end);
+            return infoElements.get(__end);
         }
     }
 
     // @class ConditionalEliminationPhase.Instance
     public static final class Instance implements ControlFlowGraph.RecursiveVisitor<Integer>
     {
+        // @field
         protected final NodeMap<InfoElement> map;
+        // @field
         protected final BlockMap<List<Node>> blockToNodes;
+        // @field
         protected final NodeMap<Block> nodeToBlock;
+        // @field
         protected final CanonicalizerTool tool;
+        // @field
         protected final NodeStack undoOperations;
+        // @field
         protected final StructuredGraph graph;
+        // @field
         protected final EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>> mergeMaps;
 
         /**
          * Tests which may be eliminated because post dominating tests to prove a broader condition.
          */
+        // @field
         private Deque<DeoptimizingGuard> pendingTests;
 
         // @cons
-        public Instance(StructuredGraph graph, BlockMap<List<Node>> blockToNodes, NodeMap<Block> nodeToBlock, PhaseContext context)
+        public Instance(StructuredGraph __graph, BlockMap<List<Node>> __blockToNodes, NodeMap<Block> __nodeToBlock, PhaseContext __context)
         {
             super();
-            this.graph = graph;
-            this.blockToNodes = blockToNodes;
-            this.nodeToBlock = nodeToBlock;
+            this.graph = __graph;
+            this.blockToNodes = __blockToNodes;
+            this.nodeToBlock = __nodeToBlock;
             this.undoOperations = new NodeStack();
-            this.map = graph.createNodeMap();
+            this.map = __graph.createNodeMap();
             pendingTests = new ArrayDeque<>();
-            tool = GraphUtil.getDefaultSimplifier(context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), false, graph.getAssumptions(), context.getLowerer());
+            tool = GraphUtil.getDefaultSimplifier(__context.getMetaAccess(), __context.getConstantReflection(), __context.getConstantFieldProvider(), false, __graph.getAssumptions(), __context.getLowerer());
             mergeMaps = EconomicMap.create();
         }
 
-        protected void processConditionAnchor(ConditionAnchorNode node)
+        protected void processConditionAnchor(ConditionAnchorNode __node)
         {
-            tryProveCondition(node.condition(), (guard, result, guardedValueStamp, newInput) ->
+            tryProveCondition(__node.condition(), (__guard, __result, __guardedValueStamp, __newInput) ->
             {
-                if (result != node.isNegated())
+                if (__result != __node.isNegated())
                 {
-                    node.replaceAtUsages(guard.asNode());
-                    GraphUtil.unlinkFixedNode(node);
-                    GraphUtil.killWithUnusedFloatingInputs(node);
+                    __node.replaceAtUsages(__guard.asNode());
+                    GraphUtil.unlinkFixedNode(__node);
+                    GraphUtil.killWithUnusedFloatingInputs(__node);
                 }
                 else
                 {
-                    ValueAnchorNode valueAnchor = node.graph().add(new ValueAnchorNode(null));
-                    node.replaceAtUsages(valueAnchor);
-                    node.graph().replaceFixedWithFixed(node, valueAnchor);
+                    ValueAnchorNode __valueAnchor = __node.graph().add(new ValueAnchorNode(null));
+                    __node.replaceAtUsages(__valueAnchor);
+                    __node.graph().replaceFixedWithFixed(__node, __valueAnchor);
                 }
                 return true;
             });
         }
 
-        protected void processGuard(GuardNode node)
+        protected void processGuard(GuardNode __node)
         {
-            if (!tryProveGuardCondition(node, node.getCondition(), (guard, result, guardedValueStamp, newInput) ->
+            if (!tryProveGuardCondition(__node, __node.getCondition(), (__guard, __result, __guardedValueStamp, __newInput) ->
             {
-                if (result != node.isNegated())
+                if (__result != __node.isNegated())
                 {
-                    node.replaceAndDelete(guard.asNode());
+                    __node.replaceAndDelete(__guard.asNode());
                 }
                 else
                 {
-                    DeoptimizeNode deopt = node.graph().add(new DeoptimizeNode(node.getAction(), node.getReason(), node.getSpeculation()));
-                    AbstractBeginNode beginNode = (AbstractBeginNode) node.getAnchor();
-                    FixedNode next = beginNode.next();
-                    beginNode.setNext(deopt);
-                    GraphUtil.killCFG(next);
+                    DeoptimizeNode __deopt = __node.graph().add(new DeoptimizeNode(__node.getAction(), __node.getReason(), __node.getSpeculation()));
+                    AbstractBeginNode __beginNode = (AbstractBeginNode) __node.getAnchor();
+                    FixedNode __next = __beginNode.next();
+                    __beginNode.setNext(__deopt);
+                    GraphUtil.killCFG(__next);
                 }
                 return true;
             }))
             {
-                registerNewCondition(node.getCondition(), node.isNegated(), node);
+                registerNewCondition(__node.getCondition(), __node.isNegated(), __node);
             }
         }
 
-        protected void processFixedGuard(FixedGuardNode node)
+        protected void processFixedGuard(FixedGuardNode __node)
         {
-            if (!tryProveGuardCondition(node, node.condition(), (guard, result, guardedValueStamp, newInput) ->
+            if (!tryProveGuardCondition(__node, __node.condition(), (__guard, __result, __guardedValueStamp, __newInput) ->
             {
-                if (result != node.isNegated())
+                if (__result != __node.isNegated())
                 {
-                    node.replaceAtUsages(guard.asNode());
-                    GraphUtil.unlinkFixedNode(node);
-                    GraphUtil.killWithUnusedFloatingInputs(node);
+                    __node.replaceAtUsages(__guard.asNode());
+                    GraphUtil.unlinkFixedNode(__node);
+                    GraphUtil.killWithUnusedFloatingInputs(__node);
                 }
                 else
                 {
-                    DeoptimizeNode deopt = node.graph().add(new DeoptimizeNode(node.getAction(), node.getReason(), node.getSpeculation()));
-                    deopt.setStateBefore(node.stateBefore());
-                    node.replaceAtPredecessor(deopt);
-                    GraphUtil.killCFG(node);
+                    DeoptimizeNode __deopt = __node.graph().add(new DeoptimizeNode(__node.getAction(), __node.getReason(), __node.getSpeculation()));
+                    __deopt.setStateBefore(__node.stateBefore());
+                    __node.replaceAtPredecessor(__deopt);
+                    GraphUtil.killCFG(__node);
                 }
                 return true;
             }))
             {
-                registerNewCondition(node.condition(), node.isNegated(), node);
+                registerNewCondition(__node.condition(), __node.isNegated(), __node);
             }
         }
 
-        protected void processIf(IfNode node)
+        protected void processIf(IfNode __node)
         {
-            tryProveCondition(node.condition(), (guard, result, guardedValueStamp, newInput) ->
+            tryProveCondition(__node.condition(), (__guard, __result, __guardedValueStamp, __newInput) ->
             {
-                AbstractBeginNode survivingSuccessor = node.getSuccessor(result);
-                survivingSuccessor.replaceAtUsages(InputType.Guard, guard.asNode());
-                survivingSuccessor.replaceAtPredecessor(null);
-                node.replaceAtPredecessor(survivingSuccessor);
-                GraphUtil.killCFG(node);
+                AbstractBeginNode __survivingSuccessor = __node.getSuccessor(__result);
+                __survivingSuccessor.replaceAtUsages(InputType.Guard, __guard.asNode());
+                __survivingSuccessor.replaceAtPredecessor(null);
+                __node.replaceAtPredecessor(__survivingSuccessor);
+                GraphUtil.killCFG(__node);
                 return true;
             });
         }
 
         @Override
-        public Integer enter(Block block)
+        public Integer enter(Block __block)
         {
-            int mark = undoOperations.size();
+            int __mark = undoOperations.size();
             // For now conservatively collect guards only within the same block.
             pendingTests.clear();
-            processNodes(block);
-            return mark;
+            processNodes(__block);
+            return __mark;
         }
 
-        protected void processNodes(Block block)
+        protected void processNodes(Block __block)
         {
             if (blockToNodes != null)
             {
-                for (Node n : blockToNodes.get(block))
+                for (Node __n : blockToNodes.get(__block))
                 {
-                    if (n.isAlive())
+                    if (__n.isAlive())
                     {
-                        processNode(n);
+                        processNode(__n);
                     }
                 }
             }
             else
             {
-                processBlock(block);
+                processBlock(__block);
             }
         }
 
-        private void processBlock(Block block)
+        private void processBlock(Block __block)
         {
-            FixedNode n = block.getBeginNode();
-            FixedNode endNode = block.getEndNode();
-            while (n != endNode)
+            FixedNode __n = __block.getBeginNode();
+            FixedNode __endNode = __block.getEndNode();
+            while (__n != __endNode)
             {
-                if (n.isDeleted() || endNode.isDeleted())
+                if (__n.isDeleted() || __endNode.isDeleted())
                 {
                     // This branch was deleted!
                     return;
                 }
-                FixedNode next = ((FixedWithNextNode) n).next();
-                processNode(n);
-                n = next;
+                FixedNode __next = ((FixedWithNextNode) __n).next();
+                processNode(__n);
+                __n = __next;
             }
-            if (endNode.isAlive())
+            if (__endNode.isAlive())
             {
-                processNode(endNode);
+                processNode(__endNode);
             }
         }
 
-        protected void processNode(Node node)
+        protected void processNode(Node __node)
         {
-            if (node instanceof NodeWithState && !(node instanceof GuardingNode))
+            if (__node instanceof NodeWithState && !(__node instanceof GuardingNode))
             {
                 pendingTests.clear();
             }
 
-            if (node instanceof MergeNode)
+            if (__node instanceof MergeNode)
             {
-                introducePisForPhis((MergeNode) node);
+                introducePisForPhis((MergeNode) __node);
             }
 
-            if (node instanceof AbstractBeginNode)
+            if (__node instanceof AbstractBeginNode)
             {
-                if (node instanceof LoopExitNode && graph.hasValueProxies())
+                if (__node instanceof LoopExitNode && graph.hasValueProxies())
                 {
                     // Condition must not be used down this path.
                     return;
                 }
-                processAbstractBegin((AbstractBeginNode) node);
+                processAbstractBegin((AbstractBeginNode) __node);
             }
-            else if (node instanceof FixedGuardNode)
+            else if (__node instanceof FixedGuardNode)
             {
-                processFixedGuard((FixedGuardNode) node);
+                processFixedGuard((FixedGuardNode) __node);
             }
-            else if (node instanceof GuardNode)
+            else if (__node instanceof GuardNode)
             {
-                processGuard((GuardNode) node);
+                processGuard((GuardNode) __node);
             }
-            else if (node instanceof ConditionAnchorNode)
+            else if (__node instanceof ConditionAnchorNode)
             {
-                processConditionAnchor((ConditionAnchorNode) node);
+                processConditionAnchor((ConditionAnchorNode) __node);
             }
-            else if (node instanceof IfNode)
+            else if (__node instanceof IfNode)
             {
-                processIf((IfNode) node);
+                processIf((IfNode) __node);
             }
-            else if (node instanceof EndNode)
+            else if (__node instanceof EndNode)
             {
-                processEnd((EndNode) node);
+                processEnd((EndNode) __node);
             }
         }
 
-        protected void introducePisForPhis(MergeNode merge)
+        protected void introducePisForPhis(MergeNode __merge)
         {
-            EconomicMap<ValuePhiNode, PhiInfoElement> mergeMap = this.mergeMaps.get(merge);
-            if (mergeMap != null)
+            EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.mergeMaps.get(__merge);
+            if (__mergeMap != null)
             {
-                MapCursor<ValuePhiNode, PhiInfoElement> entries = mergeMap.getEntries();
-                while (entries.advance())
+                MapCursor<ValuePhiNode, PhiInfoElement> __entries = __mergeMap.getEntries();
+                while (__entries.advance())
                 {
-                    ValuePhiNode phi = entries.getKey();
+                    ValuePhiNode __phi = __entries.getKey();
                     // Phi might have been killed already via a conditional elimination in another branch.
-                    if (phi.isDeleted())
+                    if (__phi.isDeleted())
                     {
                         continue;
                     }
-                    PhiInfoElement phiInfoElements = entries.getValue();
-                    Stamp bestPossibleStamp = null;
-                    for (int i = 0; i < phi.valueCount(); ++i)
+                    PhiInfoElement __phiInfoElements = __entries.getValue();
+                    Stamp __bestPossibleStamp = null;
+                    for (int __i = 0; __i < __phi.valueCount(); ++__i)
                     {
-                        ValueNode valueAt = phi.valueAt(i);
-                        Stamp curBestStamp = valueAt.stamp(NodeView.DEFAULT);
-                        InfoElement infoElement = phiInfoElements.get(merge.forwardEndAt(i));
-                        if (infoElement != null)
+                        ValueNode __valueAt = __phi.valueAt(__i);
+                        Stamp __curBestStamp = __valueAt.stamp(NodeView.DEFAULT);
+                        InfoElement __infoElement = __phiInfoElements.get(__merge.forwardEndAt(__i));
+                        if (__infoElement != null)
                         {
-                            curBestStamp = curBestStamp.join(infoElement.getStamp());
+                            __curBestStamp = __curBestStamp.join(__infoElement.getStamp());
                         }
 
-                        if (bestPossibleStamp == null)
+                        if (__bestPossibleStamp == null)
                         {
-                            bestPossibleStamp = curBestStamp;
+                            __bestPossibleStamp = __curBestStamp;
                         }
                         else
                         {
-                            bestPossibleStamp = bestPossibleStamp.meet(curBestStamp);
+                            __bestPossibleStamp = __bestPossibleStamp.meet(__curBestStamp);
                         }
                     }
 
-                    Stamp oldStamp = phi.stamp(NodeView.DEFAULT);
-                    if (oldStamp.tryImproveWith(bestPossibleStamp) != null)
+                    Stamp __oldStamp = __phi.stamp(NodeView.DEFAULT);
+                    if (__oldStamp.tryImproveWith(__bestPossibleStamp) != null)
                     {
                         // Need to be careful to not run into stamp update cycles with the iterative canonicalization.
-                        boolean allow = false;
-                        if (bestPossibleStamp instanceof ObjectStamp)
+                        boolean __allow = false;
+                        if (__bestPossibleStamp instanceof ObjectStamp)
                         {
                             // Always allow object stamps.
-                            allow = true;
+                            __allow = true;
                         }
-                        else if (bestPossibleStamp instanceof IntegerStamp)
+                        else if (__bestPossibleStamp instanceof IntegerStamp)
                         {
-                            IntegerStamp integerStamp = (IntegerStamp) bestPossibleStamp;
-                            IntegerStamp oldIntegerStamp = (IntegerStamp) oldStamp;
-                            if (integerStamp.isPositive() != oldIntegerStamp.isPositive())
+                            IntegerStamp __integerStamp = (IntegerStamp) __bestPossibleStamp;
+                            IntegerStamp __oldIntegerStamp = (IntegerStamp) __oldStamp;
+                            if (__integerStamp.isPositive() != __oldIntegerStamp.isPositive())
                             {
-                                allow = true;
+                                __allow = true;
                             }
-                            else if (integerStamp.isNegative() != oldIntegerStamp.isNegative())
+                            else if (__integerStamp.isNegative() != __oldIntegerStamp.isNegative())
                             {
-                                allow = true;
+                                __allow = true;
                             }
-                            else if (integerStamp.isStrictlyPositive() != oldIntegerStamp.isStrictlyPositive())
+                            else if (__integerStamp.isStrictlyPositive() != __oldIntegerStamp.isStrictlyPositive())
                             {
-                                allow = true;
+                                __allow = true;
                             }
-                            else if (integerStamp.isStrictlyNegative() != oldIntegerStamp.isStrictlyNegative())
+                            else if (__integerStamp.isStrictlyNegative() != __oldIntegerStamp.isStrictlyNegative())
                             {
-                                allow = true;
+                                __allow = true;
                             }
-                            else if (integerStamp.asConstant() != null)
+                            else if (__integerStamp.asConstant() != null)
                             {
-                                allow = true;
+                                __allow = true;
                             }
-                            else if (oldStamp.isUnrestricted())
+                            else if (__oldStamp.isUnrestricted())
                             {
-                                allow = true;
+                                __allow = true;
                             }
                         }
                         else
                         {
-                            allow = (bestPossibleStamp.asConstant() != null);
+                            __allow = (__bestPossibleStamp.asConstant() != null);
                         }
 
-                        if (allow)
+                        if (__allow)
                         {
-                            ValuePhiNode newPhi = graph.addWithoutUnique(new ValuePhiNode(bestPossibleStamp, merge));
-                            for (int i = 0; i < phi.valueCount(); ++i)
+                            ValuePhiNode __newPhi = graph.addWithoutUnique(new ValuePhiNode(__bestPossibleStamp, __merge));
+                            for (int __i = 0; __i < __phi.valueCount(); ++__i)
                             {
-                                ValueNode valueAt = phi.valueAt(i);
-                                if (bestPossibleStamp.meet(valueAt.stamp(NodeView.DEFAULT)).equals(bestPossibleStamp))
+                                ValueNode __valueAt = __phi.valueAt(__i);
+                                if (__bestPossibleStamp.meet(__valueAt.stamp(NodeView.DEFAULT)).equals(__bestPossibleStamp))
                                 {
                                     // Pi not required here.
                                 }
                                 else
                                 {
-                                    InfoElement infoElement = phiInfoElements.get(merge.forwardEndAt(i));
-                                    Stamp curBestStamp = infoElement.getStamp();
-                                    ValueNode input = infoElement.getProxifiedInput();
-                                    if (input == null)
+                                    InfoElement __infoElement = __phiInfoElements.get(__merge.forwardEndAt(__i));
+                                    Stamp __curBestStamp = __infoElement.getStamp();
+                                    ValueNode __input = __infoElement.getProxifiedInput();
+                                    if (__input == null)
                                     {
-                                        input = valueAt;
+                                        __input = __valueAt;
                                     }
-                                    ValueNode valueNode = graph.maybeAddOrUnique(PiNode.create(input, curBestStamp, (ValueNode) infoElement.guard));
-                                    valueAt = valueNode;
+                                    ValueNode __valueNode = graph.maybeAddOrUnique(PiNode.create(__input, __curBestStamp, (ValueNode) __infoElement.guard));
+                                    __valueAt = __valueNode;
                                 }
-                                newPhi.addInput(valueAt);
+                                __newPhi.addInput(__valueAt);
                             }
-                            phi.replaceAtUsagesAndDelete(newPhi);
+                            __phi.replaceAtUsagesAndDelete(__newPhi);
                         }
                     }
                 }
             }
         }
 
-        protected void processEnd(EndNode end)
+        protected void processEnd(EndNode __end)
         {
-            AbstractMergeNode abstractMerge = end.merge();
-            if (abstractMerge instanceof MergeNode)
+            AbstractMergeNode __abstractMerge = __end.merge();
+            if (__abstractMerge instanceof MergeNode)
             {
-                MergeNode merge = (MergeNode) abstractMerge;
+                MergeNode __merge = (MergeNode) __abstractMerge;
 
-                EconomicMap<ValuePhiNode, PhiInfoElement> mergeMap = this.mergeMaps.get(merge);
-                for (ValuePhiNode phi : merge.valuePhis())
+                EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.mergeMaps.get(__merge);
+                for (ValuePhiNode __phi : __merge.valuePhis())
                 {
-                    ValueNode valueAt = phi.valueAt(end);
-                    InfoElement infoElement = this.getInfoElements(valueAt);
-                    while (infoElement != null)
+                    ValueNode __valueAt = __phi.valueAt(__end);
+                    InfoElement __infoElement = this.getInfoElements(__valueAt);
+                    while (__infoElement != null)
                     {
-                        Stamp newStamp = infoElement.getStamp();
-                        if (phi.stamp(NodeView.DEFAULT).tryImproveWith(newStamp) != null)
+                        Stamp __newStamp = __infoElement.getStamp();
+                        if (__phi.stamp(NodeView.DEFAULT).tryImproveWith(__newStamp) != null)
                         {
-                            if (mergeMap == null)
+                            if (__mergeMap == null)
                             {
-                                mergeMap = EconomicMap.create();
-                                mergeMaps.put(merge, mergeMap);
+                                __mergeMap = EconomicMap.create();
+                                mergeMaps.put(__merge, __mergeMap);
                             }
 
-                            PhiInfoElement phiInfoElement = mergeMap.get(phi);
-                            if (phiInfoElement == null)
+                            PhiInfoElement __phiInfoElement = __mergeMap.get(__phi);
+                            if (__phiInfoElement == null)
                             {
-                                phiInfoElement = new PhiInfoElement();
-                                mergeMap.put(phi, phiInfoElement);
+                                __phiInfoElement = new PhiInfoElement();
+                                __mergeMap.put(__phi, __phiInfoElement);
                             }
 
-                            phiInfoElement.set(end, infoElement);
+                            __phiInfoElement.set(__end, __infoElement);
                             break;
                         }
-                        infoElement = nextElement(infoElement);
+                        __infoElement = nextElement(__infoElement);
                     }
                 }
             }
         }
 
-        protected void registerNewCondition(LogicNode condition, boolean negated, GuardingNode guard)
+        protected void registerNewCondition(LogicNode __condition, boolean __negated, GuardingNode __guard)
         {
-            if (condition instanceof UnaryOpLogicNode)
+            if (__condition instanceof UnaryOpLogicNode)
             {
-                UnaryOpLogicNode unaryLogicNode = (UnaryOpLogicNode) condition;
-                ValueNode value = unaryLogicNode.getValue();
-                if (maybeMultipleUsages(value))
+                UnaryOpLogicNode __unaryLogicNode = (UnaryOpLogicNode) __condition;
+                ValueNode __value = __unaryLogicNode.getValue();
+                if (maybeMultipleUsages(__value))
                 {
                     // getSucceedingStampForValue doesn't take the (potentially a Pi Node) input
                     // stamp into account, so it can be safely propagated.
-                    Stamp newStamp = unaryLogicNode.getSucceedingStampForValue(negated);
-                    registerNewStamp(value, newStamp, guard, true);
+                    Stamp __newStamp = __unaryLogicNode.getSucceedingStampForValue(__negated);
+                    registerNewStamp(__value, __newStamp, __guard, true);
                 }
             }
-            else if (condition instanceof BinaryOpLogicNode)
+            else if (__condition instanceof BinaryOpLogicNode)
             {
-                BinaryOpLogicNode binaryOpLogicNode = (BinaryOpLogicNode) condition;
-                ValueNode x = binaryOpLogicNode.getX();
-                ValueNode y = binaryOpLogicNode.getY();
-                if (!x.isConstant() && maybeMultipleUsages(x))
+                BinaryOpLogicNode __binaryOpLogicNode = (BinaryOpLogicNode) __condition;
+                ValueNode __x = __binaryOpLogicNode.getX();
+                ValueNode __y = __binaryOpLogicNode.getY();
+                if (!__x.isConstant() && maybeMultipleUsages(__x))
                 {
-                    Stamp newStampX = binaryOpLogicNode.getSucceedingStampForX(negated, getSafeStamp(x), getOtherSafeStamp(y));
-                    registerNewStamp(x, newStampX, guard);
+                    Stamp __newStampX = __binaryOpLogicNode.getSucceedingStampForX(__negated, getSafeStamp(__x), getOtherSafeStamp(__y));
+                    registerNewStamp(__x, __newStampX, __guard);
                 }
 
-                if (!y.isConstant() && maybeMultipleUsages(y))
+                if (!__y.isConstant() && maybeMultipleUsages(__y))
                 {
-                    Stamp newStampY = binaryOpLogicNode.getSucceedingStampForY(negated, getOtherSafeStamp(x), getSafeStamp(y));
-                    registerNewStamp(y, newStampY, guard);
+                    Stamp __newStampY = __binaryOpLogicNode.getSucceedingStampForY(__negated, getOtherSafeStamp(__x), getSafeStamp(__y));
+                    registerNewStamp(__y, __newStampY, __guard);
                 }
 
-                if (condition instanceof IntegerEqualsNode && guard instanceof DeoptimizingGuard && !negated)
+                if (__condition instanceof IntegerEqualsNode && __guard instanceof DeoptimizingGuard && !__negated)
                 {
-                    if (y.isConstant() && x instanceof AndNode)
+                    if (__y.isConstant() && __x instanceof AndNode)
                     {
-                        AndNode and = (AndNode) x;
-                        ValueNode andX = and.getX();
-                        if (and.getY() == y && maybeMultipleUsages(andX))
+                        AndNode __and = (AndNode) __x;
+                        ValueNode __andX = __and.getX();
+                        if (__and.getY() == __y && maybeMultipleUsages(__andX))
                         {
                             /*
                              * This 'and' proves something about some of the bits in and.getX().
                              * It's equivalent to or'ing in the mask value since those values are known to be set.
                              */
-                            BinaryOp<Or> op = ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT)).getOr();
-                            IntegerStamp newStampX = (IntegerStamp) op.foldStamp(getSafeStamp(andX), getOtherSafeStamp(y));
-                            registerNewStamp(andX, newStampX, guard);
+                            BinaryOp<Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
+                            IntegerStamp __newStampX = (IntegerStamp) __op.foldStamp(getSafeStamp(__andX), getOtherSafeStamp(__y));
+                            registerNewStamp(__andX, __newStampX, __guard);
                         }
                     }
                 }
             }
-            if (guard instanceof DeoptimizingGuard)
+            if (__guard instanceof DeoptimizingGuard)
             {
-                pendingTests.push((DeoptimizingGuard) guard);
+                pendingTests.push((DeoptimizingGuard) __guard);
             }
-            registerCondition(condition, negated, guard);
+            registerCondition(__condition, __negated, __guard);
         }
 
-        Pair<InfoElement, Stamp> recursiveFoldStamp(Node node)
+        Pair<InfoElement, Stamp> recursiveFoldStamp(Node __node)
         {
-            if (node instanceof UnaryNode)
+            if (__node instanceof UnaryNode)
             {
-                UnaryNode unary = (UnaryNode) node;
-                ValueNode value = unary.getValue();
-                InfoElement infoElement = getInfoElements(value);
-                while (infoElement != null)
+                UnaryNode __unary = (UnaryNode) __node;
+                ValueNode __value = __unary.getValue();
+                InfoElement __infoElement = getInfoElements(__value);
+                while (__infoElement != null)
                 {
-                    Stamp result = unary.foldStamp(infoElement.getStamp());
-                    if (result != null)
+                    Stamp __result = __unary.foldStamp(__infoElement.getStamp());
+                    if (__result != null)
                     {
-                        return Pair.create(infoElement, result);
+                        return Pair.create(__infoElement, __result);
                     }
-                    infoElement = nextElement(infoElement);
+                    __infoElement = nextElement(__infoElement);
                 }
             }
-            else if (node instanceof BinaryNode)
+            else if (__node instanceof BinaryNode)
             {
-                BinaryNode binary = (BinaryNode) node;
-                ValueNode y = binary.getY();
-                ValueNode x = binary.getX();
-                if (y.isConstant())
+                BinaryNode __binary = (BinaryNode) __node;
+                ValueNode __y = __binary.getY();
+                ValueNode __x = __binary.getX();
+                if (__y.isConstant())
                 {
-                    InfoElement infoElement = getInfoElements(x);
-                    while (infoElement != null)
+                    InfoElement __infoElement = getInfoElements(__x);
+                    while (__infoElement != null)
                     {
-                        Stamp result = binary.foldStamp(infoElement.stamp, y.stamp(NodeView.DEFAULT));
-                        if (result != null)
+                        Stamp __result = __binary.foldStamp(__infoElement.stamp, __y.stamp(NodeView.DEFAULT));
+                        if (__result != null)
                         {
-                            return Pair.create(infoElement, result);
+                            return Pair.create(__infoElement, __result);
                         }
-                        infoElement = nextElement(infoElement);
+                        __infoElement = nextElement(__infoElement);
                     }
                 }
             }
@@ -689,9 +701,9 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
          * We may directly use the stamp here without restriction, because any later lookup of the
          * registered info elements is in the same chain of pi nodes.
          */
-        private static Stamp getSafeStamp(ValueNode x)
+        private static Stamp getSafeStamp(ValueNode __x)
         {
-            return x.stamp(NodeView.DEFAULT);
+            return __x.stamp(NodeView.DEFAULT);
         }
 
         /**
@@ -702,13 +714,13 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
          * (e.g. the stamp of a parameter after inlining, or the stamp of a fixed node that can
          * never be replaced with a pi node via canonicalization).
          */
-        private static Stamp getOtherSafeStamp(ValueNode x)
+        private static Stamp getOtherSafeStamp(ValueNode __x)
         {
-            if (x.isConstant() || x.graph().isAfterFixedReadPhase())
+            if (__x.isConstant() || __x.graph().isAfterFixedReadPhase())
             {
-                return x.stamp(NodeView.DEFAULT);
+                return __x.stamp(NodeView.DEFAULT);
             }
-            return x.stamp(NodeView.DEFAULT).unrestricted();
+            return __x.stamp(NodeView.DEFAULT).unrestricted();
         }
 
         /**
@@ -718,9 +730,9 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
          *
          * @return the pair of the @{link InfoElement} used and the stamp produced for the whole expression
          */
-        Pair<InfoElement, Stamp> recursiveFoldStampFromInfo(Node node)
+        Pair<InfoElement, Stamp> recursiveFoldStampFromInfo(Node __node)
         {
-            return recursiveFoldStamp(node);
+            return recursiveFoldStamp(__node);
         }
 
         /**
@@ -740,50 +752,50 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
          *     ...
          * </pre>
          */
-        protected boolean foldPendingTest(DeoptimizingGuard thisGuard, ValueNode original, Stamp newStamp, GuardRewirer rewireGuardFunction)
+        protected boolean foldPendingTest(DeoptimizingGuard __thisGuard, ValueNode __original, Stamp __newStamp, GuardRewirer __rewireGuardFunction)
         {
-            for (DeoptimizingGuard pendingGuard : pendingTests)
+            for (DeoptimizingGuard __pendingGuard : pendingTests)
             {
-                LogicNode pendingCondition = pendingGuard.getCondition();
-                TriState result = TriState.UNKNOWN;
-                if (pendingCondition instanceof UnaryOpLogicNode)
+                LogicNode __pendingCondition = __pendingGuard.getCondition();
+                TriState __result = TriState.UNKNOWN;
+                if (__pendingCondition instanceof UnaryOpLogicNode)
                 {
-                    UnaryOpLogicNode unaryLogicNode = (UnaryOpLogicNode) pendingCondition;
-                    if (unaryLogicNode.getValue() == original)
+                    UnaryOpLogicNode __unaryLogicNode = (UnaryOpLogicNode) __pendingCondition;
+                    if (__unaryLogicNode.getValue() == __original)
                     {
-                        result = unaryLogicNode.tryFold(newStamp);
+                        __result = __unaryLogicNode.tryFold(__newStamp);
                     }
                 }
-                else if (pendingCondition instanceof BinaryOpLogicNode)
+                else if (__pendingCondition instanceof BinaryOpLogicNode)
                 {
-                    BinaryOpLogicNode binaryOpLogicNode = (BinaryOpLogicNode) pendingCondition;
-                    ValueNode x = binaryOpLogicNode.getX();
-                    ValueNode y = binaryOpLogicNode.getY();
-                    if (x == original)
+                    BinaryOpLogicNode __binaryOpLogicNode = (BinaryOpLogicNode) __pendingCondition;
+                    ValueNode __x = __binaryOpLogicNode.getX();
+                    ValueNode __y = __binaryOpLogicNode.getY();
+                    if (__x == __original)
                     {
-                        result = binaryOpLogicNode.tryFold(newStamp, getOtherSafeStamp(y));
+                        __result = __binaryOpLogicNode.tryFold(__newStamp, getOtherSafeStamp(__y));
                     }
-                    else if (y == original)
+                    else if (__y == __original)
                     {
-                        result = binaryOpLogicNode.tryFold(getOtherSafeStamp(x), newStamp);
+                        __result = __binaryOpLogicNode.tryFold(getOtherSafeStamp(__x), __newStamp);
                     }
-                    else if (binaryOpLogicNode instanceof IntegerEqualsNode && y.isConstant() && x instanceof AndNode)
+                    else if (__binaryOpLogicNode instanceof IntegerEqualsNode && __y.isConstant() && __x instanceof AndNode)
                     {
-                        AndNode and = (AndNode) x;
-                        if (and.getY() == y && and.getX() == original)
+                        AndNode __and = (AndNode) __x;
+                        if (__and.getY() == __y && __and.getX() == __original)
                         {
-                            BinaryOp<And> andOp = ArithmeticOpTable.forStamp(newStamp).getAnd();
-                            result = binaryOpLogicNode.tryFold(andOp.foldStamp(newStamp, getOtherSafeStamp(y)), getOtherSafeStamp(y));
+                            BinaryOp<And> __andOp = ArithmeticOpTable.forStamp(__newStamp).getAnd();
+                            __result = __binaryOpLogicNode.tryFold(__andOp.foldStamp(__newStamp, getOtherSafeStamp(__y)), getOtherSafeStamp(__y));
                         }
                     }
                 }
-                if (result.isKnown())
+                if (__result.isKnown())
                 {
                     /*
                      * The test case be folded using the information available but the test can only
                      * be moved up if we're sure there's no schedule dependence.
                      */
-                    if (canScheduleAbove(thisGuard.getCondition(), pendingGuard.asNode(), original) && foldGuard(thisGuard, pendingGuard, result.toBoolean(), newStamp, rewireGuardFunction))
+                    if (canScheduleAbove(__thisGuard.getCondition(), __pendingGuard.asNode(), __original) && foldGuard(__thisGuard, __pendingGuard, __result.toBoolean(), __newStamp, __rewireGuardFunction))
                     {
                         return true;
                     }
@@ -792,42 +804,42 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             return false;
         }
 
-        private boolean canScheduleAbove(Node n, Node target, ValueNode knownToBeAbove)
+        private boolean canScheduleAbove(Node __n, Node __target, ValueNode __knownToBeAbove)
         {
-            Block targetBlock = nodeToBlock.get(target);
-            Block testBlock = nodeToBlock.get(n);
-            if (targetBlock != null && testBlock != null)
+            Block __targetBlock = nodeToBlock.get(__target);
+            Block __testBlock = nodeToBlock.get(__n);
+            if (__targetBlock != null && __testBlock != null)
             {
-                if (targetBlock == testBlock)
+                if (__targetBlock == __testBlock)
                 {
-                    for (Node fixed : blockToNodes.get(targetBlock))
+                    for (Node __fixed : blockToNodes.get(__targetBlock))
                     {
-                        if (fixed == n)
+                        if (__fixed == __n)
                         {
                             return true;
                         }
-                        else if (fixed == target)
+                        else if (__fixed == __target)
                         {
                             break;
                         }
                     }
                 }
-                else if (AbstractControlFlowGraph.dominates(testBlock, targetBlock))
+                else if (AbstractControlFlowGraph.dominates(__testBlock, __targetBlock))
                 {
                     return true;
                 }
             }
-            InputFilter v = new InputFilter(knownToBeAbove);
-            n.applyInputs(v);
-            return v.ok;
+            InputFilter __v = new InputFilter(__knownToBeAbove);
+            __n.applyInputs(__v);
+            return __v.ok;
         }
 
-        protected boolean foldGuard(DeoptimizingGuard thisGuard, DeoptimizingGuard otherGuard, boolean outcome, Stamp guardedValueStamp, GuardRewirer rewireGuardFunction)
+        protected boolean foldGuard(DeoptimizingGuard __thisGuard, DeoptimizingGuard __otherGuard, boolean __outcome, Stamp __guardedValueStamp, GuardRewirer __rewireGuardFunction)
         {
-            DeoptimizationAction action = StaticDeoptimizingNode.mergeActions(otherGuard.getAction(), thisGuard.getAction());
-            if (action != null && otherGuard.getSpeculation() == thisGuard.getSpeculation())
+            DeoptimizationAction __action = StaticDeoptimizingNode.mergeActions(__otherGuard.getAction(), __thisGuard.getAction());
+            if (__action != null && __otherGuard.getSpeculation() == __thisGuard.getSpeculation())
             {
-                LogicNode condition = (LogicNode) thisGuard.getCondition().copyWithInputs();
+                LogicNode __condition = (LogicNode) __thisGuard.getCondition().copyWithInputs();
                 /*
                  * We have ...; guard(C1); guard(C2);...
                  *
@@ -840,164 +852,164 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                  * - If C2 => !C1, 'mustDeopt' is true and we transform to ..; guard(C1); deopt;
                  */
                 // for the second case, the action of the deopt is copied from there:
-                thisGuard.setAction(action);
-                GuardRewirer rewirer = (guard, result, innerGuardedValueStamp, newInput) ->
+                __thisGuard.setAction(__action);
+                GuardRewirer __rewirer = (__guard, __result, __innerGuardedValueStamp, __newInput) ->
                 {
                     // 'result' is 'outcome', 'guard' is 'otherGuard'
-                    boolean mustDeopt = result == otherGuard.isNegated();
-                    if (rewireGuardFunction.rewire(guard, mustDeopt == thisGuard.isNegated(), innerGuardedValueStamp, newInput))
+                    boolean __mustDeopt = __result == __otherGuard.isNegated();
+                    if (__rewireGuardFunction.rewire(__guard, __mustDeopt == __thisGuard.isNegated(), __innerGuardedValueStamp, __newInput))
                     {
-                        if (!mustDeopt)
+                        if (!__mustDeopt)
                         {
-                            otherGuard.setCondition(condition, thisGuard.isNegated());
-                            otherGuard.setAction(action);
-                            otherGuard.setReason(thisGuard.getReason());
+                            __otherGuard.setCondition(__condition, __thisGuard.isNegated());
+                            __otherGuard.setAction(__action);
+                            __otherGuard.setReason(__thisGuard.getReason());
                         }
                         return true;
                     }
-                    condition.safeDelete();
+                    __condition.safeDelete();
                     return false;
                 };
                 // move the later test up
-                return rewireGuards(otherGuard, outcome, null, guardedValueStamp, rewirer);
+                return rewireGuards(__otherGuard, __outcome, null, __guardedValueStamp, __rewirer);
             }
             return false;
         }
 
-        protected void registerCondition(LogicNode condition, boolean negated, GuardingNode guard)
+        protected void registerCondition(LogicNode __condition, boolean __negated, GuardingNode __guard)
         {
-            if (condition.hasMoreThanOneUsage())
+            if (__condition.hasMoreThanOneUsage())
             {
-                registerNewStamp(condition, negated ? StampFactory.contradiction() : StampFactory.tautology(), guard);
+                registerNewStamp(__condition, __negated ? StampFactory.contradiction() : StampFactory.tautology(), __guard);
             }
         }
 
-        protected InfoElement getInfoElements(ValueNode proxiedValue)
+        protected InfoElement getInfoElements(ValueNode __proxiedValue)
         {
-            ValueNode value = GraphUtil.skipPi(proxiedValue);
-            if (value == null)
+            ValueNode __value = GraphUtil.skipPi(__proxiedValue);
+            if (__value == null)
             {
                 return null;
             }
-            return map.getAndGrow(value);
+            return map.getAndGrow(__value);
         }
 
-        protected boolean rewireGuards(GuardingNode guard, boolean result, ValueNode proxifiedInput, Stamp guardedValueStamp, GuardRewirer rewireGuardFunction)
+        protected boolean rewireGuards(GuardingNode __guard, boolean __result, ValueNode __proxifiedInput, Stamp __guardedValueStamp, GuardRewirer __rewireGuardFunction)
         {
-            return rewireGuardFunction.rewire(guard, result, guardedValueStamp, proxifiedInput);
+            return __rewireGuardFunction.rewire(__guard, __result, __guardedValueStamp, __proxifiedInput);
         }
 
-        protected boolean tryProveCondition(LogicNode node, GuardRewirer rewireGuardFunction)
+        protected boolean tryProveCondition(LogicNode __node, GuardRewirer __rewireGuardFunction)
         {
-            return tryProveGuardCondition(null, node, rewireGuardFunction);
+            return tryProveGuardCondition(null, __node, __rewireGuardFunction);
         }
 
-        private InfoElement nextElement(InfoElement current)
+        private InfoElement nextElement(InfoElement __current)
         {
-            InfoElement parent = current.getParent();
-            if (parent != null)
+            InfoElement __parent = __current.getParent();
+            if (__parent != null)
             {
-                return parent;
+                return __parent;
             }
             else
             {
-                ValueNode proxifiedInput = current.getProxifiedInput();
-                if (proxifiedInput instanceof PiNode)
+                ValueNode __proxifiedInput = __current.getProxifiedInput();
+                if (__proxifiedInput instanceof PiNode)
                 {
-                    PiNode piNode = (PiNode) proxifiedInput;
-                    return getInfoElements(piNode.getOriginalNode());
+                    PiNode __piNode = (PiNode) __proxifiedInput;
+                    return getInfoElements(__piNode.getOriginalNode());
                 }
             }
             return null;
         }
 
-        protected boolean tryProveGuardCondition(DeoptimizingGuard thisGuard, LogicNode node, GuardRewirer rewireGuardFunction)
+        protected boolean tryProveGuardCondition(DeoptimizingGuard __thisGuard, LogicNode __node, GuardRewirer __rewireGuardFunction)
         {
-            InfoElement infoElement = getInfoElements(node);
-            while (infoElement != null)
+            InfoElement __infoElement = getInfoElements(__node);
+            while (__infoElement != null)
             {
-                Stamp stamp = infoElement.getStamp();
-                JavaConstant constant = (JavaConstant) stamp.asConstant();
-                if (constant != null)
+                Stamp __stamp = __infoElement.getStamp();
+                JavaConstant __constant = (JavaConstant) __stamp.asConstant();
+                if (__constant != null)
                 {
                     // No proxified input and stamp required.
-                    return rewireGuards(infoElement.getGuard(), constant.asBoolean(), null, null, rewireGuardFunction);
+                    return rewireGuards(__infoElement.getGuard(), __constant.asBoolean(), null, null, __rewireGuardFunction);
                 }
-                infoElement = nextElement(infoElement);
+                __infoElement = nextElement(__infoElement);
             }
 
-            if (node instanceof UnaryOpLogicNode)
+            if (__node instanceof UnaryOpLogicNode)
             {
-                UnaryOpLogicNode unaryLogicNode = (UnaryOpLogicNode) node;
-                ValueNode value = unaryLogicNode.getValue();
-                infoElement = getInfoElements(value);
-                while (infoElement != null)
+                UnaryOpLogicNode __unaryLogicNode = (UnaryOpLogicNode) __node;
+                ValueNode __value = __unaryLogicNode.getValue();
+                __infoElement = getInfoElements(__value);
+                while (__infoElement != null)
                 {
-                    Stamp stamp = infoElement.getStamp();
-                    TriState result = unaryLogicNode.tryFold(stamp);
-                    if (result.isKnown())
+                    Stamp __stamp = __infoElement.getStamp();
+                    TriState __result = __unaryLogicNode.tryFold(__stamp);
+                    if (__result.isKnown())
                     {
-                        return rewireGuards(infoElement.getGuard(), result.toBoolean(), infoElement.getProxifiedInput(), infoElement.getStamp(), rewireGuardFunction);
+                        return rewireGuards(__infoElement.getGuard(), __result.toBoolean(), __infoElement.getProxifiedInput(), __infoElement.getStamp(), __rewireGuardFunction);
                     }
-                    infoElement = nextElement(infoElement);
+                    __infoElement = nextElement(__infoElement);
                 }
-                Pair<InfoElement, Stamp> foldResult = recursiveFoldStampFromInfo(value);
-                if (foldResult != null)
+                Pair<InfoElement, Stamp> __foldResult = recursiveFoldStampFromInfo(__value);
+                if (__foldResult != null)
                 {
-                    TriState result = unaryLogicNode.tryFold(foldResult.getRight());
-                    if (result.isKnown())
+                    TriState __result = __unaryLogicNode.tryFold(__foldResult.getRight());
+                    if (__result.isKnown())
                     {
-                        return rewireGuards(foldResult.getLeft().getGuard(), result.toBoolean(), foldResult.getLeft().getProxifiedInput(), foldResult.getRight(), rewireGuardFunction);
+                        return rewireGuards(__foldResult.getLeft().getGuard(), __result.toBoolean(), __foldResult.getLeft().getProxifiedInput(), __foldResult.getRight(), __rewireGuardFunction);
                     }
                 }
-                if (thisGuard != null)
+                if (__thisGuard != null)
                 {
-                    Stamp newStamp = unaryLogicNode.getSucceedingStampForValue(thisGuard.isNegated());
-                    if (newStamp != null && foldPendingTest(thisGuard, value, newStamp, rewireGuardFunction))
+                    Stamp __newStamp = __unaryLogicNode.getSucceedingStampForValue(__thisGuard.isNegated());
+                    if (__newStamp != null && foldPendingTest(__thisGuard, __value, __newStamp, __rewireGuardFunction))
                     {
                         return true;
                     }
                 }
             }
-            else if (node instanceof BinaryOpLogicNode)
+            else if (__node instanceof BinaryOpLogicNode)
             {
-                BinaryOpLogicNode binaryOpLogicNode = (BinaryOpLogicNode) node;
-                ValueNode x = binaryOpLogicNode.getX();
-                ValueNode y = binaryOpLogicNode.getY();
-                infoElement = getInfoElements(x);
-                while (infoElement != null)
+                BinaryOpLogicNode __binaryOpLogicNode = (BinaryOpLogicNode) __node;
+                ValueNode __x = __binaryOpLogicNode.getX();
+                ValueNode __y = __binaryOpLogicNode.getY();
+                __infoElement = getInfoElements(__x);
+                while (__infoElement != null)
                 {
-                    TriState result = binaryOpLogicNode.tryFold(infoElement.getStamp(), y.stamp(NodeView.DEFAULT));
-                    if (result.isKnown())
+                    TriState __result = __binaryOpLogicNode.tryFold(__infoElement.getStamp(), __y.stamp(NodeView.DEFAULT));
+                    if (__result.isKnown())
                     {
-                        return rewireGuards(infoElement.getGuard(), result.toBoolean(), infoElement.getProxifiedInput(), infoElement.getStamp(), rewireGuardFunction);
+                        return rewireGuards(__infoElement.getGuard(), __result.toBoolean(), __infoElement.getProxifiedInput(), __infoElement.getStamp(), __rewireGuardFunction);
                     }
-                    infoElement = nextElement(infoElement);
+                    __infoElement = nextElement(__infoElement);
                 }
 
-                if (y.isConstant())
+                if (__y.isConstant())
                 {
-                    Pair<InfoElement, Stamp> foldResult = recursiveFoldStampFromInfo(x);
-                    if (foldResult != null)
+                    Pair<InfoElement, Stamp> __foldResult = recursiveFoldStampFromInfo(__x);
+                    if (__foldResult != null)
                     {
-                        TriState result = binaryOpLogicNode.tryFold(foldResult.getRight(), y.stamp(NodeView.DEFAULT));
-                        if (result.isKnown())
+                        TriState __result = __binaryOpLogicNode.tryFold(__foldResult.getRight(), __y.stamp(NodeView.DEFAULT));
+                        if (__result.isKnown())
                         {
-                            return rewireGuards(foldResult.getLeft().getGuard(), result.toBoolean(), foldResult.getLeft().getProxifiedInput(), foldResult.getRight(), rewireGuardFunction);
+                            return rewireGuards(__foldResult.getLeft().getGuard(), __result.toBoolean(), __foldResult.getLeft().getProxifiedInput(), __foldResult.getRight(), __rewireGuardFunction);
                         }
                     }
                 }
                 else
                 {
-                    infoElement = getInfoElements(y);
-                    while (infoElement != null)
+                    __infoElement = getInfoElements(__y);
+                    while (__infoElement != null)
                     {
-                        TriState result = binaryOpLogicNode.tryFold(x.stamp(NodeView.DEFAULT), infoElement.getStamp());
-                        if (result.isKnown())
+                        TriState __result = __binaryOpLogicNode.tryFold(__x.stamp(NodeView.DEFAULT), __infoElement.getStamp());
+                        if (__result.isKnown())
                         {
-                            return rewireGuards(infoElement.getGuard(), result.toBoolean(), infoElement.getProxifiedInput(), infoElement.getStamp(), rewireGuardFunction);
+                            return rewireGuards(__infoElement.getGuard(), __result.toBoolean(), __infoElement.getProxifiedInput(), __infoElement.getStamp(), __rewireGuardFunction);
                         }
-                        infoElement = nextElement(infoElement);
+                        __infoElement = nextElement(__infoElement);
                     }
                 }
 
@@ -1008,39 +1020,39 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                  * reason for the constant restriction is that if more than 1 real value is involved
                  * the code might need to adopt multiple guards to have proper dependences.
                  */
-                if (x instanceof BinaryArithmeticNode<?> && y.isConstant())
+                if (__x instanceof BinaryArithmeticNode<?> && __y.isConstant())
                 {
-                    BinaryArithmeticNode<?> binary = (BinaryArithmeticNode<?>) x;
-                    if (binary.getY().isConstant())
+                    BinaryArithmeticNode<?> __binary = (BinaryArithmeticNode<?>) __x;
+                    if (__binary.getY().isConstant())
                     {
-                        infoElement = getInfoElements(binary.getX());
-                        while (infoElement != null)
+                        __infoElement = getInfoElements(__binary.getX());
+                        while (__infoElement != null)
                         {
-                            Stamp newStampX = binary.foldStamp(infoElement.getStamp(), binary.getY().stamp(NodeView.DEFAULT));
-                            TriState result = binaryOpLogicNode.tryFold(newStampX, y.stamp(NodeView.DEFAULT));
-                            if (result.isKnown())
+                            Stamp __newStampX = __binary.foldStamp(__infoElement.getStamp(), __binary.getY().stamp(NodeView.DEFAULT));
+                            TriState __result = __binaryOpLogicNode.tryFold(__newStampX, __y.stamp(NodeView.DEFAULT));
+                            if (__result.isKnown())
                             {
-                                return rewireGuards(infoElement.getGuard(), result.toBoolean(), infoElement.getProxifiedInput(), newStampX, rewireGuardFunction);
+                                return rewireGuards(__infoElement.getGuard(), __result.toBoolean(), __infoElement.getProxifiedInput(), __newStampX, __rewireGuardFunction);
                             }
-                            infoElement = nextElement(infoElement);
+                            __infoElement = nextElement(__infoElement);
                         }
                     }
                 }
 
-                if (thisGuard != null && binaryOpLogicNode instanceof IntegerEqualsNode && !thisGuard.isNegated())
+                if (__thisGuard != null && __binaryOpLogicNode instanceof IntegerEqualsNode && !__thisGuard.isNegated())
                 {
-                    if (y.isConstant() && x instanceof AndNode)
+                    if (__y.isConstant() && __x instanceof AndNode)
                     {
-                        AndNode and = (AndNode) x;
-                        if (and.getY() == y)
+                        AndNode __and = (AndNode) __x;
+                        if (__and.getY() == __y)
                         {
                             /*
                              * This 'and' proves something about some of the bits in and.getX().
                              * It's equivalent to or'ing in the mask value since those values are known to be set.
                              */
-                            BinaryOp<Or> op = ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT)).getOr();
-                            IntegerStamp newStampX = (IntegerStamp) op.foldStamp(getSafeStamp(and.getX()), getOtherSafeStamp(y));
-                            if (foldPendingTest(thisGuard, and.getX(), newStampX, rewireGuardFunction))
+                            BinaryOp<Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
+                            IntegerStamp __newStampX = (IntegerStamp) __op.foldStamp(getSafeStamp(__and.getX()), getOtherSafeStamp(__y));
+                            if (foldPendingTest(__thisGuard, __and.getX(), __newStampX, __rewireGuardFunction))
                             {
                                 return true;
                             }
@@ -1048,56 +1060,56 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     }
                 }
 
-                if (thisGuard != null)
+                if (__thisGuard != null)
                 {
-                    if (!x.isConstant())
+                    if (!__x.isConstant())
                     {
-                        Stamp newStampX = binaryOpLogicNode.getSucceedingStampForX(thisGuard.isNegated(), getSafeStamp(x), getOtherSafeStamp(y));
-                        if (newStampX != null && foldPendingTest(thisGuard, x, newStampX, rewireGuardFunction))
+                        Stamp __newStampX = __binaryOpLogicNode.getSucceedingStampForX(__thisGuard.isNegated(), getSafeStamp(__x), getOtherSafeStamp(__y));
+                        if (__newStampX != null && foldPendingTest(__thisGuard, __x, __newStampX, __rewireGuardFunction))
                         {
                             return true;
                         }
                     }
-                    if (!y.isConstant())
+                    if (!__y.isConstant())
                     {
-                        Stamp newStampY = binaryOpLogicNode.getSucceedingStampForY(thisGuard.isNegated(), getOtherSafeStamp(x), getSafeStamp(y));
-                        if (newStampY != null && foldPendingTest(thisGuard, y, newStampY, rewireGuardFunction))
+                        Stamp __newStampY = __binaryOpLogicNode.getSucceedingStampForY(__thisGuard.isNegated(), getOtherSafeStamp(__x), getSafeStamp(__y));
+                        if (__newStampY != null && foldPendingTest(__thisGuard, __y, __newStampY, __rewireGuardFunction))
                         {
                             return true;
                         }
                     }
                 }
             }
-            else if (node instanceof ShortCircuitOrNode)
+            else if (__node instanceof ShortCircuitOrNode)
             {
-                final ShortCircuitOrNode shortCircuitOrNode = (ShortCircuitOrNode) node;
-                return tryProveCondition(shortCircuitOrNode.getX(), (guard, result, guardedValueStamp, newInput) ->
+                final ShortCircuitOrNode __shortCircuitOrNode = (ShortCircuitOrNode) __node;
+                return tryProveCondition(__shortCircuitOrNode.getX(), (__guard, __result, __guardedValueStamp, __newInput) ->
                 {
-                    if (result == !shortCircuitOrNode.isXNegated())
+                    if (__result == !__shortCircuitOrNode.isXNegated())
                     {
-                        return rewireGuards(guard, true, newInput, guardedValueStamp, rewireGuardFunction);
+                        return rewireGuards(__guard, true, __newInput, __guardedValueStamp, __rewireGuardFunction);
                     }
                     else
                     {
-                        return tryProveCondition(shortCircuitOrNode.getY(), (innerGuard, innerResult, innerGuardedValueStamp, innerNewInput) ->
+                        return tryProveCondition(__shortCircuitOrNode.getY(), (__innerGuard, __innerResult, __innerGuardedValueStamp, __innerNewInput) ->
                         {
-                            ValueNode proxifiedInput = newInput;
-                            if (proxifiedInput == null)
+                            ValueNode __proxifiedInput = __newInput;
+                            if (__proxifiedInput == null)
                             {
-                                proxifiedInput = innerNewInput;
+                                __proxifiedInput = __innerNewInput;
                             }
-                            else if (innerNewInput != null)
+                            else if (__innerNewInput != null)
                             {
-                                if (innerNewInput != newInput)
+                                if (__innerNewInput != __newInput)
                                 {
                                     // Cannot canonicalize due to different proxied inputs.
                                     return false;
                                 }
                             }
                             // Can only canonicalize if the guards are equal.
-                            if (innerGuard == guard)
+                            if (__innerGuard == __guard)
                             {
-                                return rewireGuards(guard, innerResult ^ shortCircuitOrNode.isYNegated(), proxifiedInput, guardedValueStamp, rewireGuardFunction);
+                                return rewireGuards(__guard, __innerResult ^ __shortCircuitOrNode.isYNegated(), __proxifiedInput, __guardedValueStamp, __rewireGuardFunction);
                             }
                             return false;
                         });
@@ -1108,40 +1120,40 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             return false;
         }
 
-        protected void registerNewStamp(ValueNode maybeProxiedValue, Stamp newStamp, GuardingNode guard)
+        protected void registerNewStamp(ValueNode __maybeProxiedValue, Stamp __newStamp, GuardingNode __guard)
         {
-            registerNewStamp(maybeProxiedValue, newStamp, guard, false);
+            registerNewStamp(__maybeProxiedValue, __newStamp, __guard, false);
         }
 
-        protected void registerNewStamp(ValueNode maybeProxiedValue, Stamp newStamp, GuardingNode guard, boolean propagateThroughPis)
+        protected void registerNewStamp(ValueNode __maybeProxiedValue, Stamp __newStamp, GuardingNode __guard, boolean __propagateThroughPis)
         {
-            if (newStamp == null || newStamp.isUnrestricted())
+            if (__newStamp == null || __newStamp.isUnrestricted())
             {
                 return;
             }
 
-            ValueNode value = maybeProxiedValue;
-            Stamp stamp = newStamp;
+            ValueNode __value = __maybeProxiedValue;
+            Stamp __stamp = __newStamp;
 
-            while (stamp != null && value != null)
+            while (__stamp != null && __value != null)
             {
-                ValueNode proxiedValue = null;
-                if (value instanceof PiNode)
+                ValueNode __proxiedValue = null;
+                if (__value instanceof PiNode)
                 {
-                    proxiedValue = value;
+                    __proxiedValue = __value;
                 }
-                map.setAndGrow(value, new InfoElement(stamp, guard, proxiedValue, map.getAndGrow(value)));
-                undoOperations.push(value);
-                if (propagateThroughPis && value instanceof PiNode)
+                map.setAndGrow(__value, new InfoElement(__stamp, __guard, __proxiedValue, map.getAndGrow(__value)));
+                undoOperations.push(__value);
+                if (__propagateThroughPis && __value instanceof PiNode)
                 {
-                    PiNode piNode = (PiNode) value;
-                    value = piNode.getOriginalNode();
+                    PiNode __piNode = (PiNode) __value;
+                    __value = __piNode.getOriginalNode();
                 }
-                else if (value instanceof StampInverter)
+                else if (__value instanceof StampInverter)
                 {
-                    StampInverter stampInverter = (StampInverter) value;
-                    value = stampInverter.getValue();
-                    stamp = stampInverter.invertStamp(stamp);
+                    StampInverter __stampInverter = (StampInverter) __value;
+                    __value = __stampInverter.getValue();
+                    __stamp = __stampInverter.invertStamp(__stamp);
                 }
                 else
                 {
@@ -1150,81 +1162,81 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             }
         }
 
-        protected void processAbstractBegin(AbstractBeginNode beginNode)
+        protected void processAbstractBegin(AbstractBeginNode __beginNode)
         {
-            Node predecessor = beginNode.predecessor();
-            if (predecessor instanceof IfNode)
+            Node __predecessor = __beginNode.predecessor();
+            if (__predecessor instanceof IfNode)
             {
-                IfNode ifNode = (IfNode) predecessor;
-                boolean negated = (ifNode.falseSuccessor() == beginNode);
-                LogicNode condition = ifNode.condition();
-                registerNewCondition(condition, negated, beginNode);
+                IfNode __ifNode = (IfNode) __predecessor;
+                boolean __negated = (__ifNode.falseSuccessor() == __beginNode);
+                LogicNode __condition = __ifNode.condition();
+                registerNewCondition(__condition, __negated, __beginNode);
             }
-            else if (predecessor instanceof TypeSwitchNode)
+            else if (__predecessor instanceof TypeSwitchNode)
             {
-                TypeSwitchNode typeSwitch = (TypeSwitchNode) predecessor;
-                processTypeSwitch(beginNode, typeSwitch);
+                TypeSwitchNode __typeSwitch = (TypeSwitchNode) __predecessor;
+                processTypeSwitch(__beginNode, __typeSwitch);
             }
-            else if (predecessor instanceof IntegerSwitchNode)
+            else if (__predecessor instanceof IntegerSwitchNode)
             {
-                IntegerSwitchNode integerSwitchNode = (IntegerSwitchNode) predecessor;
-                processIntegerSwitch(beginNode, integerSwitchNode);
+                IntegerSwitchNode __integerSwitchNode = (IntegerSwitchNode) __predecessor;
+                processIntegerSwitch(__beginNode, __integerSwitchNode);
             }
         }
 
-        private static boolean maybeMultipleUsages(ValueNode value)
+        private static boolean maybeMultipleUsages(ValueNode __value)
         {
-            if (value.hasMoreThanOneUsage())
+            if (__value.hasMoreThanOneUsage())
             {
                 return true;
             }
             else
             {
-                return value instanceof ProxyNode || value instanceof PiNode || value instanceof StampInverter;
+                return __value instanceof ProxyNode || __value instanceof PiNode || __value instanceof StampInverter;
             }
         }
 
-        protected void processIntegerSwitch(AbstractBeginNode beginNode, IntegerSwitchNode integerSwitchNode)
+        protected void processIntegerSwitch(AbstractBeginNode __beginNode, IntegerSwitchNode __integerSwitchNode)
         {
-            ValueNode value = integerSwitchNode.value();
-            if (maybeMultipleUsages(value))
+            ValueNode __value = __integerSwitchNode.value();
+            if (maybeMultipleUsages(__value))
             {
-                Stamp stamp = integerSwitchNode.getValueStampForSuccessor(beginNode);
-                if (stamp != null)
+                Stamp __stamp = __integerSwitchNode.getValueStampForSuccessor(__beginNode);
+                if (__stamp != null)
                 {
-                    registerNewStamp(value, stamp, beginNode);
+                    registerNewStamp(__value, __stamp, __beginNode);
                 }
             }
         }
 
-        protected void processTypeSwitch(AbstractBeginNode beginNode, TypeSwitchNode typeSwitch)
+        protected void processTypeSwitch(AbstractBeginNode __beginNode, TypeSwitchNode __typeSwitch)
         {
-            ValueNode hub = typeSwitch.value();
-            if (hub instanceof LoadHubNode)
+            ValueNode __hub = __typeSwitch.value();
+            if (__hub instanceof LoadHubNode)
             {
-                LoadHubNode loadHub = (LoadHubNode) hub;
-                ValueNode value = loadHub.getValue();
-                if (maybeMultipleUsages(value))
+                LoadHubNode __loadHub = (LoadHubNode) __hub;
+                ValueNode __value = __loadHub.getValue();
+                if (maybeMultipleUsages(__value))
                 {
-                    Stamp stamp = typeSwitch.getValueStampForSuccessor(beginNode);
-                    if (stamp != null)
+                    Stamp __stamp = __typeSwitch.getValueStampForSuccessor(__beginNode);
+                    if (__stamp != null)
                     {
-                        registerNewStamp(value, stamp, beginNode);
+                        registerNewStamp(__value, __stamp, __beginNode);
                     }
                 }
             }
         }
 
         @Override
-        public void exit(Block b, Integer state)
+        public void exit(Block __b, Integer __state)
         {
-            int mark = state;
-            while (undoOperations.size() > mark)
+            int __mark = __state;
+            while (undoOperations.size() > __mark)
             {
-                Node node = undoOperations.pop();
-                if (node.isAlive())
+                Node __node = undoOperations.pop();
+                if (__node.isAlive())
                 {
-                    map.set(node, map.get(node).getParent());
+                    map.set(__node, map.get(__node).getParent());
                 }
             }
         }
@@ -1243,44 +1255,46 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     // @class ConditionalEliminationPhase.InputFilter
     static final class InputFilter extends Node.EdgeVisitor
     {
+        // @field
         boolean ok;
+        // @field
         private ValueNode value;
 
         // @cons
-        InputFilter(ValueNode value)
+        InputFilter(ValueNode __value)
         {
             super();
-            this.value = value;
+            this.value = __value;
             this.ok = true;
         }
 
         @Override
-        public Node apply(Node node, Node curNode)
+        public Node apply(Node __node, Node __curNode)
         {
             if (!ok)
             {
                 // abort the recursion
-                return curNode;
+                return __curNode;
             }
-            if (!(curNode instanceof ValueNode))
+            if (!(__curNode instanceof ValueNode))
             {
                 ok = false;
-                return curNode;
+                return __curNode;
             }
-            ValueNode curValue = (ValueNode) curNode;
-            if (curValue.isConstant() || curValue == value || curValue instanceof ParameterNode)
+            ValueNode __curValue = (ValueNode) __curNode;
+            if (__curValue.isConstant() || __curValue == value || __curValue instanceof ParameterNode)
             {
-                return curNode;
+                return __curNode;
             }
-            if (curValue instanceof BinaryNode || curValue instanceof UnaryNode)
+            if (__curValue instanceof BinaryNode || __curValue instanceof UnaryNode)
             {
-                curValue.applyInputs(this);
+                __curValue.applyInputs(this);
             }
             else
             {
                 ok = false;
             }
-            return curNode;
+            return __curNode;
         }
     }
 
@@ -1303,19 +1317,23 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     // @class ConditionalEliminationPhase.InfoElement
     protected static final class InfoElement
     {
+        // @field
         private final Stamp stamp;
+        // @field
         private final GuardingNode guard;
+        // @field
         private final ValueNode proxifiedInput;
+        // @field
         private final InfoElement parent;
 
         // @cons
-        public InfoElement(Stamp stamp, GuardingNode guard, ValueNode proxifiedInput, InfoElement parent)
+        public InfoElement(Stamp __stamp, GuardingNode __guard, ValueNode __proxifiedInput, InfoElement __parent)
         {
             super();
-            this.stamp = stamp;
-            this.guard = guard;
-            this.proxifiedInput = proxifiedInput;
-            this.parent = parent;
+            this.stamp = __stamp;
+            this.guard = __guard;
+            this.proxifiedInput = __proxifiedInput;
+            this.parent = __parent;
         }
 
         public InfoElement getParent()

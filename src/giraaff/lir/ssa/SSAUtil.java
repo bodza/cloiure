@@ -65,111 +65,111 @@ public final class SSAUtil
      * Visits each phi value pair of an edge, i.e. the outgoing value from the predecessor and the
      * incoming value to the merge block.
      */
-    public static void forEachPhiValuePair(LIR lir, AbstractBlockBase<?> merge, AbstractBlockBase<?> pred, PhiValueVisitor visitor)
+    public static void forEachPhiValuePair(LIR __lir, AbstractBlockBase<?> __merge, AbstractBlockBase<?> __pred, PhiValueVisitor __visitor)
     {
-        if (merge.getPredecessorCount() < 2)
+        if (__merge.getPredecessorCount() < 2)
         {
             return;
         }
 
-        JumpOp jump = phiOut(lir, pred);
-        LabelOp label = phiIn(lir, merge);
+        JumpOp __jump = phiOut(__lir, __pred);
+        LabelOp __label = phiIn(__lir, __merge);
 
-        for (int i = 0; i < label.getPhiSize(); i++)
+        for (int __i = 0; __i < __label.getPhiSize(); __i++)
         {
-            visitor.visit(label.getIncomingValue(i), jump.getOutgoingValue(i));
+            __visitor.visit(__label.getIncomingValue(__i), __jump.getOutgoingValue(__i));
         }
     }
 
-    public static JumpOp phiOut(LIR lir, AbstractBlockBase<?> block)
+    public static JumpOp phiOut(LIR __lir, AbstractBlockBase<?> __block)
     {
-        ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-        int index = instructions.size() - 1;
-        LIRInstruction op = instructions.get(index);
-        return (JumpOp) op;
+        ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
+        int __index = __instructions.size() - 1;
+        LIRInstruction __op = __instructions.get(__index);
+        return (JumpOp) __op;
     }
 
-    public static JumpOp phiOutOrNull(LIR lir, AbstractBlockBase<?> block)
+    public static JumpOp phiOutOrNull(LIR __lir, AbstractBlockBase<?> __block)
     {
-        if (block.getSuccessorCount() != 1)
+        if (__block.getSuccessorCount() != 1)
         {
             return null;
         }
-        return phiOut(lir, block);
+        return phiOut(__lir, __block);
     }
 
-    public static int phiOutIndex(LIR lir, AbstractBlockBase<?> block)
+    public static int phiOutIndex(LIR __lir, AbstractBlockBase<?> __block)
     {
-        ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-        return instructions.size() - 1;
+        ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
+        return __instructions.size() - 1;
     }
 
-    public static LabelOp phiIn(LIR lir, AbstractBlockBase<?> block)
+    public static LabelOp phiIn(LIR __lir, AbstractBlockBase<?> __block)
     {
-        return (LabelOp) lir.getLIRforBlock(block).get(0);
+        return (LabelOp) __lir.getLIRforBlock(__block).get(0);
     }
 
-    public static void removePhiOut(LIR lir, AbstractBlockBase<?> block)
+    public static void removePhiOut(LIR __lir, AbstractBlockBase<?> __block)
     {
-        JumpOp jump = phiOut(lir, block);
-        jump.clearOutgoingValues();
+        JumpOp __jump = phiOut(__lir, __block);
+        __jump.clearOutgoingValues();
     }
 
-    public static void removePhiIn(LIR lir, AbstractBlockBase<?> block)
+    public static void removePhiIn(LIR __lir, AbstractBlockBase<?> __block)
     {
-        LabelOp label = phiIn(lir, block);
-        label.clearIncomingValues();
+        LabelOp __label = phiIn(__lir, __block);
+        __label.clearIncomingValues();
     }
 
-    public static boolean isMerge(AbstractBlockBase<?> block)
+    public static boolean isMerge(AbstractBlockBase<?> __block)
     {
-        return block.getPredecessorCount() > 1;
+        return __block.getPredecessorCount() > 1;
     }
 
-    public static void forEachPhiRegisterHint(LIR lir, AbstractBlockBase<?> block, LabelOp label, Value targetValue, OperandMode mode, ValueConsumer valueConsumer)
+    public static void forEachPhiRegisterHint(LIR __lir, AbstractBlockBase<?> __block, LabelOp __label, Value __targetValue, OperandMode __mode, ValueConsumer __valueConsumer)
     {
-        if (!label.isPhiIn())
+        if (!__label.isPhiIn())
         {
             return;
         }
-        int idx = indexOfValue(label, targetValue);
+        int __idx = indexOfValue(__label, __targetValue);
 
-        for (AbstractBlockBase<?> pred : block.getPredecessors())
+        for (AbstractBlockBase<?> __pred : __block.getPredecessors())
         {
-            JumpOp jump = phiOut(lir, pred);
-            Value sourceValue = jump.getOutgoingValue(idx);
-            valueConsumer.visitValue(jump, sourceValue, null, null);
+            JumpOp __jump = phiOut(__lir, __pred);
+            Value __sourceValue = __jump.getOutgoingValue(__idx);
+            __valueConsumer.visitValue(__jump, __sourceValue, null, null);
         }
     }
 
-    private static int indexOfValue(LabelOp label, Value value)
+    private static int indexOfValue(LabelOp __label, Value __value)
     {
-        for (int i = 0; i < label.getIncomingSize(); i++)
+        for (int __i = 0; __i < __label.getIncomingSize(); __i++)
         {
-            if (label.getIncomingValue(i).equals(value))
+            if (__label.getIncomingValue(__i).equals(__value))
             {
-                return i;
+                return __i;
             }
         }
         return -1;
     }
 
-    public static int numPhiOut(LIR lir, AbstractBlockBase<?> block)
+    public static int numPhiOut(LIR __lir, AbstractBlockBase<?> __block)
     {
-        if (block.getSuccessorCount() != 1)
+        if (__block.getSuccessorCount() != 1)
         {
             // cannot be a phi_out block
             return 0;
         }
-        return numPhiIn(lir, block.getSuccessors()[0]);
+        return numPhiIn(__lir, __block.getSuccessors()[0]);
     }
 
-    private static int numPhiIn(LIR lir, AbstractBlockBase<?> block)
+    private static int numPhiIn(LIR __lir, AbstractBlockBase<?> __block)
     {
-        if (!isMerge(block))
+        if (!isMerge(__block))
         {
             return 0;
         }
-        return phiIn(lir, block).getPhiSize();
+        return phiIn(__lir, __block).getPhiSize();
     }
 }

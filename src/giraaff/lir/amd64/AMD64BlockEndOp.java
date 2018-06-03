@@ -9,18 +9,19 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64BlockEndOp
 public abstract class AMD64BlockEndOp extends LIRInstruction implements BlockEndOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64BlockEndOp> TYPE = LIRInstructionClass.create(AMD64BlockEndOp.class);
 
     // @cons
-    protected AMD64BlockEndOp(LIRInstructionClass<? extends AMD64BlockEndOp> c)
+    protected AMD64BlockEndOp(LIRInstructionClass<? extends AMD64BlockEndOp> __c)
     {
-        super(c);
+        super(__c);
     }
 
     @Override
-    public final void emitCode(CompilationResultBuilder crb)
+    public final void emitCode(CompilationResultBuilder __crb)
     {
-        emitCode(crb, (AMD64MacroAssembler) crb.asm);
+        emitCode(__crb, (AMD64MacroAssembler) __crb.asm);
     }
 
     public abstract void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm);

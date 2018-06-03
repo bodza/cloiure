@@ -144,6 +144,7 @@ public abstract class LIRInstruction
     /**
      * For validity checking of the operand flags defined by instruction subclasses.
      */
+    // @def
     protected static final EnumMap<OperandMode, EnumSet<OperandFlag>> ALLOWED_FLAGS;
 
     static
@@ -158,23 +159,26 @@ public abstract class LIRInstruction
     /**
      * The flags of the base and index value of an address.
      */
+    // @def
     protected static final EnumSet<OperandFlag> ADDRESS_FLAGS = EnumSet.of(OperandFlag.REG, OperandFlag.ILLEGAL);
 
+    // @field
     private final LIRInstructionClass<?> instructionClass;
 
     /**
      * Instruction id for register allocation.
      */
+    // @field
     private int id;
 
     /**
      * Constructs a new LIR instruction.
      */
     // @cons
-    public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> c)
+    public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> __c)
     {
         super();
-        instructionClass = c;
+        instructionClass = __c;
         id = -1;
     }
 
@@ -185,9 +189,9 @@ public abstract class LIRInstruction
         return id;
     }
 
-    public final void setId(int id)
+    public final void setId(int __id)
     {
-        this.id = id;
+        this.id = __id;
     }
 
     public final String name()
@@ -206,99 +210,99 @@ public abstract class LIRInstruction
     }
 
     // InstructionValueProcedures
-    public final void forEachInput(InstructionValueProcedure proc)
+    public final void forEachInput(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachUse(this, proc);
+        instructionClass.forEachUse(this, __proc);
     }
 
-    public final void forEachAlive(InstructionValueProcedure proc)
+    public final void forEachAlive(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachAlive(this, proc);
+        instructionClass.forEachAlive(this, __proc);
     }
 
-    public final void forEachTemp(InstructionValueProcedure proc)
+    public final void forEachTemp(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachTemp(this, proc);
+        instructionClass.forEachTemp(this, __proc);
     }
 
-    public final void forEachOutput(InstructionValueProcedure proc)
+    public final void forEachOutput(InstructionValueProcedure __proc)
     {
-        instructionClass.forEachDef(this, proc);
+        instructionClass.forEachDef(this, __proc);
     }
 
     // ValueProcedures
-    public final void forEachInput(ValueProcedure proc)
+    public final void forEachInput(ValueProcedure __proc)
     {
-        instructionClass.forEachUse(this, proc);
+        instructionClass.forEachUse(this, __proc);
     }
 
-    public final void forEachAlive(ValueProcedure proc)
+    public final void forEachAlive(ValueProcedure __proc)
     {
-        instructionClass.forEachAlive(this, proc);
+        instructionClass.forEachAlive(this, __proc);
     }
 
-    public final void forEachTemp(ValueProcedure proc)
+    public final void forEachTemp(ValueProcedure __proc)
     {
-        instructionClass.forEachTemp(this, proc);
+        instructionClass.forEachTemp(this, __proc);
     }
 
-    public final void forEachOutput(ValueProcedure proc)
+    public final void forEachOutput(ValueProcedure __proc)
     {
-        instructionClass.forEachDef(this, proc);
+        instructionClass.forEachDef(this, __proc);
     }
 
     // InstructionValueConsumers
-    public final void visitEachInput(InstructionValueConsumer proc)
+    public final void visitEachInput(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachUse(this, proc);
+        instructionClass.visitEachUse(this, __proc);
     }
 
-    public final void visitEachAlive(InstructionValueConsumer proc)
+    public final void visitEachAlive(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachAlive(this, proc);
+        instructionClass.visitEachAlive(this, __proc);
     }
 
-    public final void visitEachTemp(InstructionValueConsumer proc)
+    public final void visitEachTemp(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachTemp(this, proc);
+        instructionClass.visitEachTemp(this, __proc);
     }
 
-    public final void visitEachOutput(InstructionValueConsumer proc)
+    public final void visitEachOutput(InstructionValueConsumer __proc)
     {
-        instructionClass.visitEachDef(this, proc);
+        instructionClass.visitEachDef(this, __proc);
     }
 
     // ValueConsumers
-    public final void visitEachInput(ValueConsumer proc)
+    public final void visitEachInput(ValueConsumer __proc)
     {
-        instructionClass.visitEachUse(this, proc);
+        instructionClass.visitEachUse(this, __proc);
     }
 
-    public final void visitEachAlive(ValueConsumer proc)
+    public final void visitEachAlive(ValueConsumer __proc)
     {
-        instructionClass.visitEachAlive(this, proc);
+        instructionClass.visitEachAlive(this, __proc);
     }
 
-    public final void visitEachTemp(ValueConsumer proc)
+    public final void visitEachTemp(ValueConsumer __proc)
     {
-        instructionClass.visitEachTemp(this, proc);
+        instructionClass.visitEachTemp(this, __proc);
     }
 
-    public final void visitEachOutput(ValueConsumer proc)
+    public final void visitEachOutput(ValueConsumer __proc)
     {
-        instructionClass.visitEachDef(this, proc);
-    }
-
-    @SuppressWarnings("unused")
-    public final Value forEachRegisterHint(Value value, OperandMode mode, InstructionValueProcedure proc)
-    {
-        return instructionClass.forEachRegisterHint(this, mode, proc);
+        instructionClass.visitEachDef(this, __proc);
     }
 
     @SuppressWarnings("unused")
-    public final Value forEachRegisterHint(Value value, OperandMode mode, ValueProcedure proc)
+    public final Value forEachRegisterHint(Value __value, OperandMode __mode, InstructionValueProcedure __proc)
     {
-        return instructionClass.forEachRegisterHint(this, mode, proc);
+        return instructionClass.forEachRegisterHint(this, __mode, __proc);
+    }
+
+    @SuppressWarnings("unused")
+    public final Value forEachRegisterHint(Value __value, OperandMode __mode, ValueProcedure __proc)
+    {
+        return instructionClass.forEachRegisterHint(this, __mode, __proc);
     }
 
     /**
@@ -340,30 +344,30 @@ public abstract class LIRInstruction
      *
      * @return additional temporaries
      */
-    protected static Value[] addStackSlotsToTemporaries(Value[] parameters, Value[] temporaries)
+    protected static Value[] addStackSlotsToTemporaries(Value[] __parameters, Value[] __temporaries)
     {
-        int extraTemps = 0;
-        for (Value p : parameters)
+        int __extraTemps = 0;
+        for (Value __p : __parameters)
         {
-            if (ValueUtil.isStackSlot(p))
+            if (ValueUtil.isStackSlot(__p))
             {
-                extraTemps++;
+                __extraTemps++;
             }
         }
-        if (extraTemps != 0)
+        if (__extraTemps != 0)
         {
-            int index = temporaries.length;
-            Value[] newTemporaries = Arrays.copyOf(temporaries, temporaries.length + extraTemps);
-            for (Value p : parameters)
+            int __index = __temporaries.length;
+            Value[] __newTemporaries = Arrays.copyOf(__temporaries, __temporaries.length + __extraTemps);
+            for (Value __p : __parameters)
             {
-                if (ValueUtil.isStackSlot(p))
+                if (ValueUtil.isStackSlot(__p))
                 {
-                    newTemporaries[index++] = p;
+                    __newTemporaries[__index++] = __p;
                 }
             }
-            return newTemporaries;
+            return __newTemporaries;
         }
-        return temporaries;
+        return __temporaries;
     }
 
     public LIRInstructionClass<?> getLIRInstructionClass()

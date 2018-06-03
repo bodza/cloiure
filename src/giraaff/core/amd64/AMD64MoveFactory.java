@@ -28,23 +28,23 @@ import giraaff.util.GraalError;
 public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
 {
     // @cons
-    public AMD64MoveFactory(BackupSlotProvider backupSlotProvider)
+    public AMD64MoveFactory(BackupSlotProvider __backupSlotProvider)
     {
-        super(backupSlotProvider);
+        super(__backupSlotProvider);
     }
 
     @Override
-    public boolean canInlineConstant(Constant con)
+    public boolean canInlineConstant(Constant __con)
     {
-        if (con instanceof JavaConstant)
+        if (__con instanceof JavaConstant)
         {
-            JavaConstant c = (JavaConstant) con;
-            switch (c.getJavaKind())
+            JavaConstant __c = (JavaConstant) __con;
+            switch (__c.getJavaKind())
             {
                 case Long:
-                    return NumUtil.isInt(c.asLong());
+                    return NumUtil.isInt(__c.asLong());
                 case Object:
-                    return c.isNull();
+                    return __c.isNull();
                 default:
                     return true;
             }
@@ -53,13 +53,13 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
     }
 
     @Override
-    public boolean allowConstantToStackMove(Constant constant)
+    public boolean allowConstantToStackMove(Constant __constant)
     {
-        if (constant instanceof DataPointerConstant)
+        if (__constant instanceof DataPointerConstant)
         {
             return false;
         }
-        if (constant instanceof JavaConstant && !AMD64Move.canMoveConst2Stack(((JavaConstant) constant)))
+        if (__constant instanceof JavaConstant && !AMD64Move.canMoveConst2Stack(((JavaConstant) __constant)))
         {
             return false;
         }
@@ -67,59 +67,59 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
     }
 
     @Override
-    public AMD64LIRInstruction createMove(AllocatableValue dst, Value src)
+    public AMD64LIRInstruction createMove(AllocatableValue __dst, Value __src)
     {
-        if (src instanceof AMD64AddressValue)
+        if (__src instanceof AMD64AddressValue)
         {
-            return new LeaOp(dst, (AMD64AddressValue) src, AMD64Assembler.OperandSize.QWORD);
+            return new LeaOp(__dst, (AMD64AddressValue) __src, AMD64Assembler.OperandSize.QWORD);
         }
-        else if (LIRValueUtil.isConstantValue(src))
+        else if (LIRValueUtil.isConstantValue(__src))
         {
-            return createLoad(dst, LIRValueUtil.asConstant(src));
+            return createLoad(__dst, LIRValueUtil.asConstant(__src));
         }
-        else if (ValueUtil.isRegister(src) || LIRValueUtil.isStackSlotValue(dst))
+        else if (ValueUtil.isRegister(__src) || LIRValueUtil.isStackSlotValue(__dst))
         {
-            return new MoveFromRegOp((AMD64Kind) dst.getPlatformKind(), dst, (AllocatableValue) src);
+            return new MoveFromRegOp((AMD64Kind) __dst.getPlatformKind(), __dst, (AllocatableValue) __src);
         }
         else
         {
-            return new MoveToRegOp((AMD64Kind) dst.getPlatformKind(), dst, (AllocatableValue) src);
+            return new MoveToRegOp((AMD64Kind) __dst.getPlatformKind(), __dst, (AllocatableValue) __src);
         }
     }
 
     @Override
-    public AMD64LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input, Register scratchRegister, AllocatableValue backupSlot)
+    public AMD64LIRInstruction createStackMove(AllocatableValue __result, AllocatableValue __input, Register __scratchRegister, AllocatableValue __backupSlot)
     {
-        return new AMD64StackMove(result, input, scratchRegister, backupSlot);
+        return new AMD64StackMove(__result, __input, __scratchRegister, __backupSlot);
     }
 
     @Override
-    public AMD64LIRInstruction createLoad(AllocatableValue dst, Constant src)
+    public AMD64LIRInstruction createLoad(AllocatableValue __dst, Constant __src)
     {
-        if (src instanceof JavaConstant)
+        if (__src instanceof JavaConstant)
         {
-            return new MoveFromConstOp(dst, (JavaConstant) src);
+            return new MoveFromConstOp(__dst, (JavaConstant) __src);
         }
-        else if (src instanceof DataPointerConstant)
+        else if (__src instanceof DataPointerConstant)
         {
-            return new LeaDataOp(dst, (DataPointerConstant) src);
+            return new LeaDataOp(__dst, (DataPointerConstant) __src);
         }
         else
         {
-            throw GraalError.shouldNotReachHere("unsupported constant: " + src);
+            throw GraalError.shouldNotReachHere("unsupported constant: " + __src);
         }
     }
 
     @Override
-    public LIRInstruction createStackLoad(AllocatableValue result, Constant input)
+    public LIRInstruction createStackLoad(AllocatableValue __result, Constant __input)
     {
-        if (input instanceof JavaConstant)
+        if (__input instanceof JavaConstant)
         {
-            return new MoveFromConstOp(result, (JavaConstant) input);
+            return new MoveFromConstOp(__result, (JavaConstant) __input);
         }
         else
         {
-            throw GraalError.shouldNotReachHere("unsupported constant for stack load: " + input);
+            throw GraalError.shouldNotReachHere("unsupported constant for stack load: " + __input);
         }
     }
 }

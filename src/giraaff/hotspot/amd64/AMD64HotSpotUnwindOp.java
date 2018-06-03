@@ -24,29 +24,32 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotUnwindOp
 final class AMD64HotSpotUnwindOp extends AMD64HotSpotEpilogueBlockEndOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotUnwindOp> TYPE = LIRInstructionClass.create(AMD64HotSpotUnwindOp.class);
 
-    @Use({OperandFlag.REG}) protected RegisterValue exception;
+    @Use({OperandFlag.REG})
+    // @field
+    protected RegisterValue exception;
 
     // @cons
-    AMD64HotSpotUnwindOp(RegisterValue exception)
+    AMD64HotSpotUnwindOp(RegisterValue __exception)
     {
         super(TYPE);
-        this.exception = exception;
+        this.exception = __exception;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        leaveFrameAndRestoreRbp(crb, masm);
+        leaveFrameAndRestoreRbp(__crb, __masm);
 
-        ForeignCallLinkage linkage = crb.foreignCalls.lookupForeignCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER);
-        CallingConvention cc = linkage.getOutgoingCallingConvention();
+        ForeignCallLinkage __linkage = __crb.foreignCalls.lookupForeignCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER);
+        CallingConvention __cc = __linkage.getOutgoingCallingConvention();
 
         // Get return address (is on top of stack after leave).
-        Register returnAddress = ValueUtil.asRegister(cc.getArgument(1));
-        masm.movq(returnAddress, new AMD64Address(AMD64.rsp, 0));
+        Register __returnAddress = ValueUtil.asRegister(__cc.getArgument(1));
+        __masm.movq(__returnAddress, new AMD64Address(AMD64.rsp, 0));
 
-        AMD64Call.directJmp(crb, masm, linkage);
+        AMD64Call.directJmp(__crb, __masm, __linkage);
     }
 }

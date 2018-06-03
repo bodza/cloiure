@@ -34,57 +34,57 @@ public final class HotSpotCompiledCodeBuilder
         super();
     }
 
-    public static HotSpotCompiledCode createCompiledCode(CodeCacheProvider codeCache, ResolvedJavaMethod method, HotSpotCompilationRequest compRequest, CompilationResult compResult)
+    public static HotSpotCompiledCode createCompiledCode(CodeCacheProvider __codeCache, ResolvedJavaMethod __method, HotSpotCompilationRequest __compRequest, CompilationResult __compResult)
     {
-        byte[] targetCode = compResult.getTargetCode();
-        int targetCodeSize = compResult.getTargetCodeSize();
+        byte[] __targetCode = __compResult.getTargetCode();
+        int __targetCodeSize = __compResult.getTargetCodeSize();
 
-        Site[] sites = getSortedSites(codeCache, compResult);
+        Site[] __sites = getSortedSites(__codeCache, __compResult);
 
-        Assumption[] assumptions = compResult.getAssumptions();
+        Assumption[] __assumptions = __compResult.getAssumptions();
 
-        ResolvedJavaMethod[] methods = compResult.getMethods();
+        ResolvedJavaMethod[] __methods = __compResult.getMethods();
 
-        Comment[] comments = new Comment[0];
+        Comment[] __comments = new Comment[0];
 
-        DataSection data = compResult.getDataSection();
-        byte[] dataSection = new byte[data.getSectionSize()];
+        DataSection __data = __compResult.getDataSection();
+        byte[] __dataSection = new byte[__data.getSectionSize()];
 
-        ByteBuffer buffer = ByteBuffer.wrap(dataSection).order(ByteOrder.nativeOrder());
-        Builder<DataPatch> patchBuilder = Stream.builder();
-        data.buildDataSection(buffer, (position, vmConstant) ->
+        ByteBuffer __buffer = ByteBuffer.wrap(__dataSection).order(ByteOrder.nativeOrder());
+        Builder<DataPatch> __patchBuilder = Stream.builder();
+        __data.buildDataSection(__buffer, (__position, __vmConstant) ->
         {
-            patchBuilder.accept(new DataPatch(position, new ConstantReference(vmConstant)));
+            __patchBuilder.accept(new DataPatch(__position, new ConstantReference(__vmConstant)));
         });
 
-        int dataSectionAlignment = data.getSectionAlignment();
-        DataPatch[] dataSectionPatches = patchBuilder.build().toArray(len -> new DataPatch[len]);
+        int __dataSectionAlignment = __data.getSectionAlignment();
+        DataPatch[] __dataSectionPatches = __patchBuilder.build().toArray(__len -> new DataPatch[__len]);
 
-        int totalFrameSize = compResult.getTotalFrameSize();
+        int __totalFrameSize = __compResult.getTotalFrameSize();
 
-        if (method instanceof HotSpotResolvedJavaMethod)
+        if (__method instanceof HotSpotResolvedJavaMethod)
         {
-            HotSpotResolvedJavaMethod hsMethod = (HotSpotResolvedJavaMethod) method;
-            int entryBCI = compResult.getEntryBCI();
-            boolean hasUnsafeAccess = compResult.hasUnsafeAccess();
+            HotSpotResolvedJavaMethod __hsMethod = (HotSpotResolvedJavaMethod) __method;
+            int __entryBCI = __compResult.getEntryBCI();
+            boolean __hasUnsafeAccess = __compResult.hasUnsafeAccess();
 
-            int id;
-            long jvmciEnv;
-            if (compRequest != null)
+            int __id;
+            long __jvmciEnv;
+            if (__compRequest != null)
             {
-                id = compRequest.getId();
-                jvmciEnv = compRequest.getJvmciEnv();
+                __id = __compRequest.getId();
+                __jvmciEnv = __compRequest.getJvmciEnv();
             }
             else
             {
-                id = hsMethod.allocateCompileId(entryBCI);
-                jvmciEnv = 0L;
+                __id = __hsMethod.allocateCompileId(__entryBCI);
+                __jvmciEnv = 0L;
             }
-            return new HotSpotCompiledNmethod(null, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, false, totalFrameSize, null, hsMethod, entryBCI, id, jvmciEnv, hasUnsafeAccess);
+            return new HotSpotCompiledNmethod(null, __targetCode, __targetCodeSize, __sites, __assumptions, __methods, __comments, __dataSection, __dataSectionAlignment, __dataSectionPatches, false, __totalFrameSize, null, __hsMethod, __entryBCI, __id, __jvmciEnv, __hasUnsafeAccess);
         }
         else
         {
-            return new HotSpotCompiledCode(null, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, false, totalFrameSize, null);
+            return new HotSpotCompiledCode(null, __targetCode, __targetCodeSize, __sites, __assumptions, __methods, __comments, __dataSection, __dataSectionAlignment, __dataSectionPatches, false, __totalFrameSize, null);
         }
     }
 
@@ -92,35 +92,35 @@ public final class HotSpotCompiledCodeBuilder
     static final class SiteComparator implements Comparator<Site>
     {
         @Override
-        public int compare(Site s1, Site s2)
+        public int compare(Site __s1, Site __s2)
         {
-            if (s1.pcOffset == s2.pcOffset)
+            if (__s1.pcOffset == __s2.pcOffset)
             {
                 // Marks must come first since patching a call site
                 // may need to know the mark denoting the call type
                 // (see uses of CodeInstaller::_next_call_type).
-                boolean s1IsMark = s1 instanceof Mark;
-                boolean s2IsMark = s2 instanceof Mark;
-                if (s1IsMark != s2IsMark)
+                boolean __s1IsMark = __s1 instanceof Mark;
+                boolean __s2IsMark = __s2 instanceof Mark;
+                if (__s1IsMark != __s2IsMark)
                 {
-                    return s1IsMark ? -1 : 1;
+                    return __s1IsMark ? -1 : 1;
                 }
             }
-            return s1.pcOffset - s2.pcOffset;
+            return __s1.pcOffset - __s2.pcOffset;
         }
     }
 
     /**
      * HotSpot expects sites to be presented in ascending order of PC (see {@code DebugInformationRecorder::add_new_pc_offset}).
      */
-    private static Site[] getSortedSites(CodeCacheProvider codeCache, CompilationResult result)
+    private static Site[] getSortedSites(CodeCacheProvider __codeCache, CompilationResult __result)
     {
-        List<Site> sites = new ArrayList<>(result.getExceptionHandlers().size() + result.getDataPatches().size() + result.getMarks().size());
-        sites.addAll(result.getExceptionHandlers());
-        sites.addAll(result.getDataPatches());
-        sites.addAll(result.getMarks());
+        List<Site> __sites = new ArrayList<>(__result.getExceptionHandlers().size() + __result.getDataPatches().size() + __result.getMarks().size());
+        __sites.addAll(__result.getExceptionHandlers());
+        __sites.addAll(__result.getDataPatches());
+        __sites.addAll(__result.getMarks());
 
-        Collections.sort(sites, new SiteComparator());
-        return sites.toArray(new Site[sites.size()]);
+        Collections.sort(__sites, new SiteComparator());
+        return __sites.toArray(new Site[__sites.size()]);
     }
 }

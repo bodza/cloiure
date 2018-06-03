@@ -6,17 +6,18 @@ import giraaff.nodes.memory.address.AddressNode;
 // @class SerialWriteBarrier
 public final class SerialWriteBarrier extends ObjectWriteBarrier
 {
+    // @def
     public static final NodeClass<SerialWriteBarrier> TYPE = NodeClass.create(SerialWriteBarrier.class);
 
     // @cons
-    public SerialWriteBarrier(AddressNode address, boolean precise)
+    public SerialWriteBarrier(AddressNode __address, boolean __precise)
     {
-        this(TYPE, address, precise);
+        this(TYPE, __address, __precise);
     }
 
     // @cons
-    protected SerialWriteBarrier(NodeClass<? extends SerialWriteBarrier> c, AddressNode address, boolean precise)
+    protected SerialWriteBarrier(NodeClass<? extends SerialWriteBarrier> __c, AddressNode __address, boolean __precise)
     {
-        super(c, address, null, precise);
+        super(__c, __address, null, __precise);
     }
 }

@@ -12,6 +12,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64PauseOp
 public final class AMD64PauseOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64PauseOp> TYPE = LIRInstructionClass.create(AMD64PauseOp.class);
 
     // @cons
@@ -21,8 +22,8 @@ public final class AMD64PauseOp extends AMD64LIRInstruction
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler asm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __asm)
     {
-        asm.pause();
+        __asm.pause();
     }
 }

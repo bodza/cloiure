@@ -12,9 +12,12 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class MaterializedObjectState
 public final class MaterializedObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
+    // @def
     public static final NodeClass<MaterializedObjectState> TYPE = NodeClass.create(MaterializedObjectState.class);
 
-    @Input ValueNode materializedValue;
+    @Input
+    // @field
+    ValueNode materializedValue;
 
     public ValueNode materializedValue()
     {
@@ -22,10 +25,10 @@ public final class MaterializedObjectState extends EscapeObjectState implements 
     }
 
     // @cons
-    public MaterializedObjectState(VirtualObjectNode object, ValueNode materializedValue)
+    public MaterializedObjectState(VirtualObjectNode __object, ValueNode __materializedValue)
     {
-        super(TYPE, object);
-        this.materializedValue = materializedValue;
+        super(TYPE, __object);
+        this.materializedValue = __materializedValue;
     }
 
     @Override
@@ -35,8 +38,8 @@ public final class MaterializedObjectState extends EscapeObjectState implements 
     }
 
     @Override
-    public void applyToNonVirtual(NodeClosure<? super ValueNode> closure)
+    public void applyToNonVirtual(NodeClosure<? super ValueNode> __closure)
     {
-        closure.apply(this, materializedValue);
+        __closure.apply(this, materializedValue);
     }
 }

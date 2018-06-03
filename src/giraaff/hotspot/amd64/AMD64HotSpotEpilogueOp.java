@@ -19,39 +19,41 @@ import giraaff.lir.asm.CompilationResultBuilder;
 abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD64HotSpotRestoreRbpOp
 {
     // @cons
-    protected AMD64HotSpotEpilogueOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueOp> c)
+    protected AMD64HotSpotEpilogueOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueOp> __c)
     {
-        super(c);
+        super(__c);
     }
 
-    @Use({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue savedRbp = PLACEHOLDER;
+    @Use({OperandFlag.REG, OperandFlag.STACK})
+    // @field
+    private AllocatableValue savedRbp = PLACEHOLDER;
 
-    protected void leaveFrameAndRestoreRbp(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    protected void leaveFrameAndRestoreRbp(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        leaveFrameAndRestoreRbp(savedRbp, crb, masm);
+        leaveFrameAndRestoreRbp(savedRbp, __crb, __masm);
     }
 
-    static void leaveFrameAndRestoreRbp(AllocatableValue savedRbp, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    static void leaveFrameAndRestoreRbp(AllocatableValue __savedRbp, CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        if (ValueUtil.isStackSlot(savedRbp))
+        if (ValueUtil.isStackSlot(__savedRbp))
         {
             // restoring RBP from the stack must be done before the frame is removed
-            masm.movq(AMD64.rbp, (AMD64Address) crb.asAddress(savedRbp));
+            __masm.movq(AMD64.rbp, (AMD64Address) __crb.asAddress(__savedRbp));
         }
         else
         {
-            Register framePointer = ValueUtil.asRegister(savedRbp);
-            if (!framePointer.equals(AMD64.rbp))
+            Register __framePointer = ValueUtil.asRegister(__savedRbp);
+            if (!__framePointer.equals(AMD64.rbp))
             {
-                masm.movq(AMD64.rbp, framePointer);
+                __masm.movq(AMD64.rbp, __framePointer);
             }
         }
-        crb.frameContext.leave(crb);
+        __crb.frameContext.leave(__crb);
     }
 
     @Override
-    public void setSavedRbp(AllocatableValue value)
+    public void setSavedRbp(AllocatableValue __value)
     {
-        savedRbp = value;
+        savedRbp = __value;
     }
 }

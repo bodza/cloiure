@@ -16,23 +16,26 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class VirtualArrayNode
 public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLengthProvider
 {
+    // @def
     public static final NodeClass<VirtualArrayNode> TYPE = NodeClass.create(VirtualArrayNode.class);
 
+    // @field
     protected final ResolvedJavaType componentType;
+    // @field
     protected final int length;
 
     // @cons
-    public VirtualArrayNode(ResolvedJavaType componentType, int length)
+    public VirtualArrayNode(ResolvedJavaType __componentType, int __length)
     {
-        this(TYPE, componentType, length);
+        this(TYPE, __componentType, __length);
     }
 
     // @cons
-    protected VirtualArrayNode(NodeClass<? extends VirtualObjectNode> c, ResolvedJavaType componentType, int length)
+    protected VirtualArrayNode(NodeClass<? extends VirtualObjectNode> __c, ResolvedJavaType __componentType, int __length)
     {
-        super(c, componentType.getArrayClass(), true);
-        this.componentType = componentType;
-        this.length = length;
+        super(__c, __componentType.getArrayClass(), true);
+        this.componentType = __componentType;
+        this.length = __length;
     }
 
     @Override
@@ -53,54 +56,54 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nothing to do...
     }
 
     @Override
-    public String entryName(int index)
+    public String entryName(int __index)
     {
-        return "[" + index + "]";
+        return "[" + __index + "]";
     }
 
     @Override
-    public int entryIndexForOffset(ArrayOffsetProvider arrayOffsetProvider, long constantOffset, JavaKind expectedEntryKind)
+    public int entryIndexForOffset(ArrayOffsetProvider __arrayOffsetProvider, long __constantOffset, JavaKind __expectedEntryKind)
     {
-        return entryIndexForOffset(arrayOffsetProvider, constantOffset, expectedEntryKind, componentType, length);
+        return entryIndexForOffset(__arrayOffsetProvider, __constantOffset, __expectedEntryKind, componentType, length);
     }
 
-    public static int entryIndexForOffset(ArrayOffsetProvider arrayOffsetProvider, long constantOffset, JavaKind expectedEntryKind, ResolvedJavaType componentType, int length)
+    public static int entryIndexForOffset(ArrayOffsetProvider __arrayOffsetProvider, long __constantOffset, JavaKind __expectedEntryKind, ResolvedJavaType __componentType, int __length)
     {
-        int baseOffset = arrayOffsetProvider.arrayBaseOffset(componentType.getJavaKind());
-        int indexScale = arrayOffsetProvider.arrayScalingFactor(componentType.getJavaKind());
+        int __baseOffset = __arrayOffsetProvider.arrayBaseOffset(__componentType.getJavaKind());
+        int __indexScale = __arrayOffsetProvider.arrayScalingFactor(__componentType.getJavaKind());
 
-        long offset;
-        if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN && componentType.isPrimitive())
+        long __offset;
+        if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN && __componentType.isPrimitive())
         {
             // on big endian, we expect the value to be correctly aligned in memory
-            int componentByteCount = componentType.getJavaKind().getByteCount();
-            offset = constantOffset - (componentByteCount - Math.min(componentByteCount, 4 + expectedEntryKind.getByteCount()));
+            int __componentByteCount = __componentType.getJavaKind().getByteCount();
+            __offset = __constantOffset - (__componentByteCount - Math.min(__componentByteCount, 4 + __expectedEntryKind.getByteCount()));
         }
         else
         {
-            offset = constantOffset;
+            __offset = __constantOffset;
         }
-        long index = offset - baseOffset;
-        if (index % indexScale != 0)
+        long __index = __offset - __baseOffset;
+        if (__index % __indexScale != 0)
         {
             return -1;
         }
-        long elementIndex = index / indexScale;
-        if (elementIndex < 0 || elementIndex >= length)
+        long __elementIndex = __index / __indexScale;
+        if (__elementIndex < 0 || __elementIndex >= __length)
         {
             return -1;
         }
-        return (int) elementIndex;
+        return (int) __elementIndex;
     }
 
     @Override
-    public JavaKind entryKind(int index)
+    public JavaKind entryKind(int __index)
     {
         return componentType.getJavaKind();
     }
@@ -112,7 +115,7 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     }
 
     @Override
-    public ValueNode getMaterializedRepresentation(FixedNode fixed, ValueNode[] entries, LockState locks)
+    public ValueNode getMaterializedRepresentation(FixedNode __fixed, ValueNode[] __entries, LockState __locks)
     {
         return new AllocatedObjectNode(this);
     }

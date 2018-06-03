@@ -26,77 +26,79 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 // @class TypeReference
 public final class TypeReference
 {
+    // @field
     private final ResolvedJavaType type;
+    // @field
     private final boolean exactReference;
 
     // @cons
-    private TypeReference(ResolvedJavaType type, boolean exactReference)
+    private TypeReference(ResolvedJavaType __type, boolean __exactReference)
     {
         super();
-        this.type = type;
-        this.exactReference = exactReference;
+        this.type = __type;
+        this.exactReference = __exactReference;
     }
 
     /**
      * Creates an exact type reference using the given type.
      */
-    public static TypeReference createExactTrusted(ResolvedJavaType type)
+    public static TypeReference createExactTrusted(ResolvedJavaType __type)
     {
-        if (type == null)
+        if (__type == null)
         {
             return null;
         }
-        return new TypeReference(type, true);
+        return new TypeReference(__type, true);
     }
 
     /**
      * Creates a type reference using the given type without assumptions and without trusting interface types.
      */
-    public static TypeReference createWithoutAssumptions(ResolvedJavaType type)
+    public static TypeReference createWithoutAssumptions(ResolvedJavaType __type)
     {
-        return create(null, type);
+        return create(null, __type);
     }
 
     /**
      * Creates a type reference using the given type without assumptions and trusting interface types.
      */
-    public static TypeReference createTrustedWithoutAssumptions(ResolvedJavaType type)
+    public static TypeReference createTrustedWithoutAssumptions(ResolvedJavaType __type)
     {
-        return createTrusted(null, type);
+        return createTrusted(null, __type);
     }
 
     /**
      * Creates a type reference using the given type with assumptions and without trusting interface types.
      */
-    public static TypeReference create(Assumptions assumptions, ResolvedJavaType type)
+    public static TypeReference create(Assumptions __assumptions, ResolvedJavaType __type)
     {
-        return createTrusted(assumptions, filterInterfaceTypesOut(type));
+        return createTrusted(__assumptions, filterInterfaceTypesOut(__type));
     }
 
     /**
      * Create a type reference using the given type with assumptions and trusting interface types.
      */
-    public static TypeReference createTrusted(Assumptions assumptions, ResolvedJavaType type)
+    public static TypeReference createTrusted(Assumptions __assumptions, ResolvedJavaType __type)
     {
-        if (type == null)
+        if (__type == null)
         {
             return null;
         }
-        ResolvedJavaType exactType = type.isLeaf() ? type : null;
-        if (exactType == null)
+        ResolvedJavaType __exactType = __type.isLeaf() ? __type : null;
+        if (__exactType == null)
         {
-            Assumptions.AssumptionResult<ResolvedJavaType> leafConcreteSubtype = type.findLeafConcreteSubtype();
-            if (leafConcreteSubtype != null && leafConcreteSubtype.canRecordTo(assumptions))
+            Assumptions.AssumptionResult<ResolvedJavaType> __leafConcreteSubtype = __type.findLeafConcreteSubtype();
+            if (__leafConcreteSubtype != null && __leafConcreteSubtype.canRecordTo(__assumptions))
             {
-                leafConcreteSubtype.recordTo(assumptions);
-                exactType = leafConcreteSubtype.getResult();
+                __leafConcreteSubtype.recordTo(__assumptions);
+                __exactType = __leafConcreteSubtype.getResult();
             }
         }
-        if (exactType == null)
+        if (__exactType == null)
         {
-            return new TypeReference(type, false);
+            return new TypeReference(__type, false);
         }
-        return new TypeReference(exactType, true);
+        return new TypeReference(__exactType, true);
     }
 
     /**
@@ -128,25 +130,25 @@ public final class TypeReference
         return new TypeReference(type, true);
     }
 
-    private static ResolvedJavaType filterInterfaceTypesOut(ResolvedJavaType type)
+    private static ResolvedJavaType filterInterfaceTypesOut(ResolvedJavaType __type)
     {
-        if (type != null)
+        if (__type != null)
         {
-            if (type.isArray())
+            if (__type.isArray())
             {
-                ResolvedJavaType componentType = filterInterfaceTypesOut(type.getComponentType());
-                if (componentType != null)
+                ResolvedJavaType __componentType = filterInterfaceTypesOut(__type.getComponentType());
+                if (__componentType != null)
                 {
-                    return componentType.getArrayClass();
+                    return __componentType.getArrayClass();
                 }
                 // returns Object[].class
-                return type.getSuperclass().getArrayClass();
+                return __type.getSuperclass().getArrayClass();
             }
-            if (type.isInterface())
+            if (__type.isInterface())
             {
                 return null;
             }
         }
-        return type;
+        return __type;
     }
 }

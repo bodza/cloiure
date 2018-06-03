@@ -14,12 +14,13 @@ import giraaff.nodes.calc.FloatingNode;
 // @class AddressNode
 public abstract class AddressNode extends FloatingNode implements IndirectCanonicalization
 {
+    // @def
     public static final NodeClass<AddressNode> TYPE = NodeClass.create(AddressNode.class);
 
     // @cons
-    protected AddressNode(NodeClass<? extends AddressNode> c)
+    protected AddressNode(NodeClass<? extends AddressNode> __c)
     {
-        super(c, StampFactory.pointer());
+        super(__c, StampFactory.pointer());
     }
 
     // @class AddressNode.Address

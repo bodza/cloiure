@@ -11,9 +11,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class UnaryOpLogicNode
 public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Unary<ValueNode>
 {
+    // @def
     public static final NodeClass<UnaryOpLogicNode> TYPE = NodeClass.create(UnaryOpLogicNode.class);
 
-    @Input protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode value;
 
     @Override
     public ValueNode getValue()
@@ -22,25 +25,25 @@ public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable
     }
 
     // @cons
-    public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> c, ValueNode value)
+    public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> __c, ValueNode __value)
     {
-        super(c);
-        this.value = value;
+        super(__c);
+        this.value = __value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
     }
 
-    public Stamp getSucceedingStampForValue(boolean negated, Stamp valueStamp)
+    public Stamp getSucceedingStampForValue(boolean __negated, Stamp __valueStamp)
     {
-        Stamp succStamp = getSucceedingStampForValue(negated);
-        if (succStamp != null)
+        Stamp __succStamp = getSucceedingStampForValue(__negated);
+        if (__succStamp != null)
         {
-            succStamp = succStamp.join(valueStamp);
+            __succStamp = __succStamp.join(__valueStamp);
         }
-        return succStamp;
+        return __succStamp;
     }
 
     public abstract Stamp getSucceedingStampForValue(boolean negated);

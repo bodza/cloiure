@@ -17,6 +17,7 @@ import giraaff.nodes.spi.LoweringTool;
 // @class SnippetLowerableMemoryNode
 public final class SnippetLowerableMemoryNode extends FixedWithNextNode implements Lowerable, MemoryAccess
 {
+    // @def
     public static final NodeClass<SnippetLowerableMemoryNode> TYPE = NodeClass.create(SnippetLowerableMemoryNode.class);
 
     // @iface SnippetLowerableMemoryNode.SnippetLowering
@@ -25,23 +26,29 @@ public final class SnippetLowerableMemoryNode extends FixedWithNextNode implemen
         void lower(SnippetLowerableMemoryNode node, LoweringTool tool);
     }
 
-    @Input protected NodeInputList<ValueNode> arguments;
-    @OptionalInput(InputType.Memory) protected MemoryNode lastLocationAccess;
+    @Input
+    // @field
+    protected NodeInputList<ValueNode> arguments;
+    @OptionalInput(InputType.Memory)
+    // @field
+    protected MemoryNode lastLocationAccess;
+    // @field
     private final LocationIdentity locationIdentity;
+    // @field
     SnippetLowering lowering;
 
     // @cons
-    public SnippetLowerableMemoryNode(SnippetLowering lowering, LocationIdentity locationIdentity, Stamp stamp, ValueNode... arguments)
+    public SnippetLowerableMemoryNode(SnippetLowering __lowering, LocationIdentity __locationIdentity, Stamp __stamp, ValueNode... __arguments)
     {
-        super(TYPE, stamp);
-        this.arguments = new NodeInputList<>(this, arguments);
-        this.lowering = lowering;
-        this.locationIdentity = locationIdentity;
+        super(TYPE, __stamp);
+        this.arguments = new NodeInputList<>(this, __arguments);
+        this.lowering = __lowering;
+        this.locationIdentity = __locationIdentity;
     }
 
-    public ValueNode getArgument(int i)
+    public ValueNode getArgument(int __i)
     {
-        return arguments.get(i);
+        return arguments.get(__i);
     }
 
     public int getArgumentCount()
@@ -50,9 +57,9 @@ public final class SnippetLowerableMemoryNode extends FixedWithNextNode implemen
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        lowering.lower(this, tool);
+        lowering.lower(this, __tool);
     }
 
     @Override
@@ -68,9 +75,9 @@ public final class SnippetLowerableMemoryNode extends FixedWithNextNode implemen
     }
 
     @Override
-    public void setLastLocationAccess(MemoryNode lla)
+    public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(lla));
-        lastLocationAccess = lla;
+        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__lla));
+        lastLocationAccess = __lla;
     }
 }

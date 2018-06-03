@@ -29,15 +29,17 @@ public final class ReentrantBlockIterator
     // @class ReentrantBlockIterator.LoopInfo
     public static final class LoopInfo<StateT>
     {
+        // @field
         public final List<StateT> endStates;
+        // @field
         public final List<StateT> exitStates;
 
         // @cons
-        public LoopInfo(int endCount, int exitCount)
+        public LoopInfo(int __endCount, int __exitCount)
         {
             super();
-            endStates = new ArrayList<>(endCount);
-            exitStates = new ArrayList<>(exitCount);
+            endStates = new ArrayList<>(__endCount);
+            exitStates = new ArrayList<>(__exitCount);
         }
     }
 
@@ -55,123 +57,123 @@ public final class ReentrantBlockIterator
         protected abstract List<StateT> processLoop(Loop<Block> loop, StateT initialState);
     }
 
-    public static <StateT> LoopInfo<StateT> processLoop(BlockIteratorClosure<StateT> closure, Loop<Block> loop, StateT initialState)
+    public static <StateT> LoopInfo<StateT> processLoop(BlockIteratorClosure<StateT> __closure, Loop<Block> __loop, StateT __initialState)
     {
-        EconomicMap<FixedNode, StateT> blockEndStates = apply(closure, loop.getHeader(), initialState, block -> !(block.getLoop() == loop || block.isLoopHeader()));
+        EconomicMap<FixedNode, StateT> __blockEndStates = apply(__closure, __loop.getHeader(), __initialState, __block -> !(__block.getLoop() == __loop || __block.isLoopHeader()));
 
-        Block[] predecessors = loop.getHeader().getPredecessors();
-        LoopInfo<StateT> info = new LoopInfo<>(predecessors.length - 1, loop.getExits().size());
-        for (int i = 1; i < predecessors.length; i++)
+        Block[] __predecessors = __loop.getHeader().getPredecessors();
+        LoopInfo<StateT> __info = new LoopInfo<>(__predecessors.length - 1, __loop.getExits().size());
+        for (int __i = 1; __i < __predecessors.length; __i++)
         {
-            StateT endState = blockEndStates.get(predecessors[i].getEndNode());
+            StateT __endState = __blockEndStates.get(__predecessors[__i].getEndNode());
             // make sure all end states are unique objects
-            info.endStates.add(closure.cloneState(endState));
+            __info.endStates.add(__closure.cloneState(__endState));
         }
-        for (Block loopExit : loop.getExits())
+        for (Block __loopExit : __loop.getExits())
         {
-            StateT exitState = blockEndStates.get(loopExit.getBeginNode());
+            StateT __exitState = __blockEndStates.get(__loopExit.getBeginNode());
             // make sure all exit states are unique objects
-            info.exitStates.add(closure.cloneState(exitState));
+            __info.exitStates.add(__closure.cloneState(__exitState));
         }
-        return info;
+        return __info;
     }
 
-    public static <StateT> void apply(BlockIteratorClosure<StateT> closure, Block start)
+    public static <StateT> void apply(BlockIteratorClosure<StateT> __closure, Block __start)
     {
-        apply(closure, start, closure.getInitialState(), null);
+        apply(__closure, __start, __closure.getInitialState(), null);
     }
 
-    public static <StateT> EconomicMap<FixedNode, StateT> apply(BlockIteratorClosure<StateT> closure, Block start, StateT initialState, Predicate<Block> stopAtBlock)
+    public static <StateT> EconomicMap<FixedNode, StateT> apply(BlockIteratorClosure<StateT> __closure, Block __start, StateT __initialState, Predicate<Block> __stopAtBlock)
     {
-        Deque<Block> blockQueue = new ArrayDeque<>();
+        Deque<Block> __blockQueue = new ArrayDeque<>();
         // States are stored on EndNodes before merges, and on BeginNodes after ControlSplitNodes.
-        EconomicMap<FixedNode, StateT> states = EconomicMap.create(Equivalence.IDENTITY);
+        EconomicMap<FixedNode, StateT> __states = EconomicMap.create(Equivalence.IDENTITY);
 
-        StateT state = initialState;
-        Block current = start;
+        StateT __state = __initialState;
+        Block __current = __start;
 
-        StructuredGraph graph = start.getBeginNode().graph();
+        StructuredGraph __graph = __start.getBeginNode().graph();
         while (true)
         {
-            Block next = null;
-            if (stopAtBlock != null && stopAtBlock.test(current))
+            Block __next = null;
+            if (__stopAtBlock != null && __stopAtBlock.test(__current))
             {
-                states.put(current.getBeginNode(), state);
+                __states.put(__current.getBeginNode(), __state);
             }
             else
             {
-                state = closure.processBlock(current, state);
+                __state = __closure.processBlock(__current, __state);
 
-                Block[] successors = current.getSuccessors();
-                if (successors.length == 0)
+                Block[] __successors = __current.getSuccessors();
+                if (__successors.length == 0)
                 {
                     // nothing to do...
                 }
-                else if (successors.length == 1)
+                else if (__successors.length == 1)
                 {
-                    Block successor = successors[0];
-                    if (successor.isLoopHeader())
+                    Block __successor = __successors[0];
+                    if (__successor.isLoopHeader())
                     {
-                        if (current.isLoopEnd())
+                        if (__current.isLoopEnd())
                         {
                             // nothing to do... loop ends only lead to loop begins we've already visited
-                            states.put(current.getEndNode(), state);
+                            __states.put(__current.getEndNode(), __state);
                         }
                         else
                         {
-                            recurseIntoLoop(closure, blockQueue, states, state, successor);
+                            recurseIntoLoop(__closure, __blockQueue, __states, __state, __successor);
                         }
                     }
-                    else if (current.getEndNode() instanceof AbstractEndNode)
+                    else if (__current.getEndNode() instanceof AbstractEndNode)
                     {
-                        AbstractEndNode end = (AbstractEndNode) current.getEndNode();
+                        AbstractEndNode __end = (AbstractEndNode) __current.getEndNode();
 
                         // add the end node and see if the merge is ready for processing
-                        AbstractMergeNode merge = end.merge();
-                        if (allEndsVisited(states, current, merge))
+                        AbstractMergeNode __merge = __end.merge();
+                        if (allEndsVisited(__states, __current, __merge))
                         {
-                            ArrayList<StateT> mergedStates = mergeStates(states, state, current, successor, merge);
-                            state = closure.merge(successor, mergedStates);
-                            next = successor;
+                            ArrayList<StateT> __mergedStates = mergeStates(__states, __state, __current, __successor, __merge);
+                            __state = __closure.merge(__successor, __mergedStates);
+                            __next = __successor;
                         }
                         else
                         {
-                            states.put(end, state);
+                            __states.put(__end, __state);
                         }
                     }
                     else
                     {
-                        next = successor;
+                        __next = __successor;
                     }
                 }
                 else
                 {
-                    next = processMultipleSuccessors(closure, blockQueue, states, state, successors);
+                    __next = processMultipleSuccessors(__closure, __blockQueue, __states, __state, __successors);
                 }
             }
 
             // get next queued block
-            if (next != null)
+            if (__next != null)
             {
-                current = next;
+                __current = __next;
             }
-            else if (blockQueue.isEmpty())
+            else if (__blockQueue.isEmpty())
             {
-                return states;
+                return __states;
             }
             else
             {
-                current = blockQueue.removeFirst();
-                state = states.removeKey(current.getBeginNode());
+                __current = __blockQueue.removeFirst();
+                __state = __states.removeKey(__current.getBeginNode());
             }
         }
     }
 
-    private static <StateT> boolean allEndsVisited(EconomicMap<FixedNode, StateT> states, Block current, AbstractMergeNode merge)
+    private static <StateT> boolean allEndsVisited(EconomicMap<FixedNode, StateT> __states, Block __current, AbstractMergeNode __merge)
     {
-        for (AbstractEndNode forwardEnd : merge.forwardEnds())
+        for (AbstractEndNode __forwardEnd : __merge.forwardEnds())
         {
-            if (forwardEnd != current.getEndNode() && !states.containsKey(forwardEnd))
+            if (__forwardEnd != __current.getEndNode() && !__states.containsKey(__forwardEnd))
             {
                 return false;
             }
@@ -179,41 +181,41 @@ public final class ReentrantBlockIterator
         return true;
     }
 
-    private static <StateT> Block processMultipleSuccessors(BlockIteratorClosure<StateT> closure, Deque<Block> blockQueue, EconomicMap<FixedNode, StateT> states, StateT state, Block[] successors)
+    private static <StateT> Block processMultipleSuccessors(BlockIteratorClosure<StateT> __closure, Deque<Block> __blockQueue, EconomicMap<FixedNode, StateT> __states, StateT __state, Block[] __successors)
     {
-        for (int i = 1; i < successors.length; i++)
+        for (int __i = 1; __i < __successors.length; __i++)
         {
-            Block successor = successors[i];
-            blockQueue.addFirst(successor);
-            states.put(successor.getBeginNode(), closure.cloneState(state));
+            Block __successor = __successors[__i];
+            __blockQueue.addFirst(__successor);
+            __states.put(__successor.getBeginNode(), __closure.cloneState(__state));
         }
-        return successors[0];
+        return __successors[0];
     }
 
-    private static <StateT> ArrayList<StateT> mergeStates(EconomicMap<FixedNode, StateT> states, StateT state, Block current, Block successor, AbstractMergeNode merge)
+    private static <StateT> ArrayList<StateT> mergeStates(EconomicMap<FixedNode, StateT> __states, StateT __state, Block __current, Block __successor, AbstractMergeNode __merge)
     {
-        ArrayList<StateT> mergedStates = new ArrayList<>(merge.forwardEndCount());
-        for (Block predecessor : successor.getPredecessors())
+        ArrayList<StateT> __mergedStates = new ArrayList<>(__merge.forwardEndCount());
+        for (Block __predecessor : __successor.getPredecessors())
         {
-            StateT endState = predecessor == current ? state : states.removeKey(predecessor.getEndNode());
-            mergedStates.add(endState);
+            StateT __endState = __predecessor == __current ? __state : __states.removeKey(__predecessor.getEndNode());
+            __mergedStates.add(__endState);
         }
-        return mergedStates;
+        return __mergedStates;
     }
 
-    private static <StateT> void recurseIntoLoop(BlockIteratorClosure<StateT> closure, Deque<Block> blockQueue, EconomicMap<FixedNode, StateT> states, StateT state, Block successor)
+    private static <StateT> void recurseIntoLoop(BlockIteratorClosure<StateT> __closure, Deque<Block> __blockQueue, EconomicMap<FixedNode, StateT> __states, StateT __state, Block __successor)
     {
         // recurse into the loop
-        Loop<Block> loop = successor.getLoop();
-        LoopBeginNode loopBegin = (LoopBeginNode) loop.getHeader().getBeginNode();
+        Loop<Block> __loop = __successor.getLoop();
+        LoopBeginNode __loopBegin = (LoopBeginNode) __loop.getHeader().getBeginNode();
 
-        List<StateT> exitStates = closure.processLoop(loop, state);
+        List<StateT> __exitStates = __closure.processLoop(__loop, __state);
 
-        int i = 0;
-        for (Block exit : loop.getExits())
+        int __i = 0;
+        for (Block __exit : __loop.getExits())
         {
-            states.put(exit.getBeginNode(), exitStates.get(i++));
-            blockQueue.addFirst(exit);
+            __states.put(__exit.getBeginNode(), __exitStates.get(__i++));
+            __blockQueue.addFirst(__exit);
         }
     }
 }

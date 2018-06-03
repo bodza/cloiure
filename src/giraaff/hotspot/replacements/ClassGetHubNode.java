@@ -42,82 +42,85 @@ import giraaff.nodes.spi.LoweringTool;
 // @class ClassGetHubNode
 public final class ClassGetHubNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
+    // @def
     public static final NodeClass<ClassGetHubNode> TYPE = NodeClass.create(ClassGetHubNode.class);
 
-    @Input protected ValueNode clazz;
+    @Input
+    // @field
+    protected ValueNode clazz;
 
     // @cons
-    public ClassGetHubNode(ValueNode clazz)
+    public ClassGetHubNode(ValueNode __clazz)
     {
         super(TYPE, KlassPointerStamp.klass());
-        this.clazz = clazz;
+        this.clazz = __clazz;
     }
 
-    public static ValueNode create(ValueNode clazz, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, boolean allUsagesAvailable)
+    public static ValueNode create(ValueNode __clazz, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, boolean __allUsagesAvailable)
     {
-        return canonical(null, metaAccess, constantReflection, allUsagesAvailable, KlassPointerStamp.klass(), clazz);
+        return canonical(null, __metaAccess, __constantReflection, __allUsagesAvailable, KlassPointerStamp.klass(), __clazz);
     }
 
     @SuppressWarnings("unused")
-    public static boolean intrinsify(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode clazz)
+    public static boolean intrinsify(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode __clazz)
     {
-        ValueNode clazzValue = create(clazz, b.getMetaAccess(), b.getConstantReflection(), false);
-        b.push(JavaKind.Object, b.append(clazzValue));
+        ValueNode __clazzValue = create(__clazz, __b.getMetaAccess(), __b.getConstantReflection(), false);
+        __b.push(JavaKind.Object, __b.append(__clazzValue));
         return true;
     }
 
-    public static ValueNode canonical(ClassGetHubNode classGetHubNode, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, boolean allUsagesAvailable, Stamp stamp, ValueNode clazz)
+    public static ValueNode canonical(ClassGetHubNode __classGetHubNode, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, boolean __allUsagesAvailable, Stamp __stamp, ValueNode __clazz)
     {
-        ClassGetHubNode self = classGetHubNode;
-        if (allUsagesAvailable && self != null && self.hasNoUsages())
+        ClassGetHubNode __self = __classGetHubNode;
+        if (__allUsagesAvailable && __self != null && __self.hasNoUsages())
         {
             return null;
         }
         else
         {
-            if (clazz.isConstant())
+            if (__clazz.isConstant())
             {
-                if (metaAccess != null)
+                if (__metaAccess != null)
                 {
-                    ResolvedJavaType exactType = constantReflection.asJavaType(clazz.asJavaConstant());
-                    if (exactType.isPrimitive())
+                    ResolvedJavaType __exactType = __constantReflection.asJavaType(__clazz.asJavaConstant());
+                    if (__exactType.isPrimitive())
                     {
-                        return ConstantNode.forConstant(stamp, JavaConstant.NULL_POINTER, metaAccess);
+                        return ConstantNode.forConstant(__stamp, JavaConstant.NULL_POINTER, __metaAccess);
                     }
                     else
                     {
-                        return ConstantNode.forConstant(stamp, constantReflection.asObjectHub(exactType), metaAccess);
+                        return ConstantNode.forConstant(__stamp, __constantReflection.asObjectHub(__exactType), __metaAccess);
                     }
                 }
             }
-            if (clazz instanceof GetClassNode)
+            if (__clazz instanceof GetClassNode)
             {
-                GetClassNode getClass = (GetClassNode) clazz;
-                return new LoadHubNode(KlassPointerStamp.klassNonNull(), getClass.getObject());
+                GetClassNode __getClass = (GetClassNode) __clazz;
+                return new LoadHubNode(KlassPointerStamp.klassNonNull(), __getClass.getObject());
             }
-            if (clazz instanceof HubGetClassNode)
+            if (__clazz instanceof HubGetClassNode)
             {
                 // replace: _klass._java_mirror._klass -> _klass
-                return ((HubGetClassNode) clazz).getHub();
+                return ((HubGetClassNode) __clazz).getHub();
             }
-            if (self == null)
+            if (__self == null)
             {
-                self = new ClassGetHubNode(clazz);
+                __self = new ClassGetHubNode(__clazz);
             }
-            return self;
+            return __self;
         }
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        return canonical(this, tool.getMetaAccess(), tool.getConstantReflection(), tool.allUsagesAvailable(), stamp(NodeView.DEFAULT), clazz);
+        return canonical(this, __tool.getMetaAccess(), __tool.getConstantReflection(), __tool.allUsagesAvailable(), stamp(NodeView.DEFAULT), clazz);
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @NodeIntrinsic
@@ -133,24 +136,24 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     }
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant convert(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        ResolvedJavaType exactType = constantReflection.asJavaType(c);
-        if (exactType.isPrimitive())
+        ResolvedJavaType __exactType = __constantReflection.asJavaType(__c);
+        if (__exactType.isPrimitive())
         {
             return JavaConstant.NULL_POINTER;
         }
         else
         {
-            return constantReflection.asObjectHub(exactType);
+            return __constantReflection.asObjectHub(__exactType);
         }
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        ResolvedJavaType objectType = constantReflection.asJavaType(c);
-        return constantReflection.asJavaClass(objectType);
+        ResolvedJavaType __objectType = __constantReflection.asJavaType(__c);
+        return __constantReflection.asJavaClass(__objectType);
     }
 
     @Override
@@ -169,9 +172,9 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     }
 
     @Override
-    public boolean preservesOrder(CanonicalCondition op, Constant value, ConstantReflectionProvider constantReflection)
+    public boolean preservesOrder(CanonicalCondition __op, Constant __value, ConstantReflectionProvider __constantReflection)
     {
-        ResolvedJavaType exactType = constantReflection.asJavaType(value);
-        return !exactType.isPrimitive();
+        ResolvedJavaType __exactType = __constantReflection.asJavaType(__value);
+        return !__exactType.isPrimitive();
     }
 }

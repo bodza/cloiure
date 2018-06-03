@@ -11,21 +11,24 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class PrefetchAllocateNode
 public final class PrefetchAllocateNode extends FixedWithNextNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<PrefetchAllocateNode> TYPE = NodeClass.create(PrefetchAllocateNode.class);
 
-    @Input(InputType.Association) AddressNode address;
+    @Input(InputType.Association)
+    // @field
+    AddressNode address;
 
     // @cons
-    public PrefetchAllocateNode(ValueNode address)
+    public PrefetchAllocateNode(ValueNode __address)
     {
         super(TYPE, StampFactory.forVoid());
-        this.address = (AddressNode) address;
+        this.address = (AddressNode) __address;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.getLIRGeneratorTool().emitPrefetchAllocate(gen.operand(address));
+        __gen.getLIRGeneratorTool().emitPrefetchAllocate(__gen.operand(address));
     }
 
     @NodeIntrinsic

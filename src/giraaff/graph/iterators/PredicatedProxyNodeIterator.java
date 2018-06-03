@@ -7,15 +7,17 @@ import giraaff.graph.Node;
 // @class PredicatedProxyNodeIterator
 public final class PredicatedProxyNodeIterator<T extends Node> extends NodeIterator<T>
 {
+    // @field
     private final Iterator<T> iterator;
+    // @field
     private final NodePredicate predicate;
 
     // @cons
-    public PredicatedProxyNodeIterator(Iterator<T> iterator, NodePredicate predicate)
+    public PredicatedProxyNodeIterator(Iterator<T> __iterator, NodePredicate __predicate)
     {
         super();
-        this.iterator = iterator;
-        this.predicate = predicate;
+        this.iterator = __iterator;
+        this.predicate = __predicate;
     }
 
     @Override

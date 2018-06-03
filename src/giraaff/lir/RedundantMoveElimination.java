@@ -34,10 +34,10 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 public final class RedundantMoveElimination extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
     {
-        Optimization redundantMoveElimination = new Optimization(lirGenRes.getFrameMap());
-        redundantMoveElimination.doOptimize(lirGenRes.getLIR());
+        Optimization __redundantMoveElimination = new Optimization(__lirGenRes.getFrameMap());
+        __redundantMoveElimination.doOptimize(__lirGenRes.getLIR());
     }
 
     /**
@@ -55,133 +55,144 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
     private static final class BlockData
     {
         // @cons
-        BlockData(int stateSize)
+        BlockData(int __stateSize)
         {
             super();
-            entryState = new int[stateSize];
-            exitState = new int[stateSize];
+            entryState = new int[__stateSize];
+            exitState = new int[__stateSize];
         }
 
         /*
          * The state at block entry for global dataflow analysis. It contains a global value number
          * for each location to optimize.
          */
+        // @field
         int[] entryState;
 
         /*
          * The state at block exit for global dataflow analysis. It contains a global value number
          * for each location to optimize.
          */
+        // @field
         int[] exitState;
 
         /*
          * The starting number for global value numbering in this block.
          */
+        // @field
         int entryValueNum;
     }
 
     // @class RedundantMoveElimination.Optimization
     private static final class Optimization
     {
+        // @field
         EconomicMap<AbstractBlockBase<?>, BlockData> blockData = EconomicMap.create(Equivalence.IDENTITY);
 
+        // @field
         RegisterArray callerSaveRegs;
 
         /**
          * Contains the register number for registers which can be optimized and -1 for the others.
          */
+        // @field
         int[] eligibleRegs;
 
         /**
          * A map from the {@link StackSlot} {@link #getOffset offset} to an index into the state.
          * StackSlots of different kinds that map to the same location will map to the same index.
          */
+        // @field
         EconomicMap<Integer, Integer> stackIndices = EconomicMap.create(Equivalence.DEFAULT);
 
+        // @field
         int numRegs;
 
+        // @field
         private final FrameMap frameMap;
 
         // Pseudo value for a not yet assigned location.
+        // @def
         static final int INIT_VALUE = 0;
 
         // @cons
-        Optimization(FrameMap frameMap)
+        Optimization(FrameMap __frameMap)
         {
             super();
-            this.frameMap = frameMap;
+            this.frameMap = __frameMap;
         }
 
         /**
          * The main method doing the elimination of redundant moves.
          */
-        private void doOptimize(LIR lir)
+        private void doOptimize(LIR __lir)
         {
-            RegisterConfig registerConfig = frameMap.getRegisterConfig();
-            callerSaveRegs = registerConfig.getCallerSaveRegisters();
+            RegisterConfig __registerConfig = frameMap.getRegisterConfig();
+            callerSaveRegs = __registerConfig.getCallerSaveRegisters();
 
-            initBlockData(lir);
+            initBlockData(__lir);
 
             // Compute a table of the registers which are eligible for move optimization.
             // Unallocatable registers should never be optimized.
             eligibleRegs = new int[numRegs];
             Arrays.fill(eligibleRegs, -1);
-            for (Register reg : registerConfig.getAllocatableRegisters())
+            for (Register __reg : __registerConfig.getAllocatableRegisters())
             {
-                if (reg.number < numRegs)
+                if (__reg.number < numRegs)
                 {
-                    eligibleRegs[reg.number] = reg.number;
+                    eligibleRegs[__reg.number] = __reg.number;
                 }
             }
 
-            if (!solveDataFlow(lir))
+            if (!solveDataFlow(__lir))
             {
                 return;
             }
 
-            eliminateMoves(lir);
+            eliminateMoves(__lir);
         }
 
         /**
          * The maximum number of locations * blocks. This is a complexity limit for the inner loop
          * in {@link #mergeState} (assuming a small number of iterations in {@link #solveDataFlow}.
          */
+        // @def
         private static final int COMPLEXITY_LIMIT = 30000;
 
-        private void initBlockData(LIR lir)
+        private void initBlockData(LIR __lir)
         {
-            AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
+            AbstractBlockBase<?>[] __blocks = __lir.linearScanOrder();
             numRegs = 0;
 
-            int maxStackLocations = COMPLEXITY_LIMIT / blocks.length;
+            int __maxStackLocations = COMPLEXITY_LIMIT / __blocks.length;
 
             /*
              * Search for relevant locations which can be optimized. These are register or stack
              * slots which occur as destinations of move instructions.
              */
-            for (AbstractBlockBase<?> block : blocks)
+            for (AbstractBlockBase<?> __block : __blocks)
             {
-                ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-                for (LIRInstruction op : instructions)
+                ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
+                for (LIRInstruction __op : __instructions)
                 {
-                    if (isEligibleMove(op))
+                    if (isEligibleMove(__op))
                     {
-                        Value dest = MoveOp.asMoveOp(op).getResult();
-                        if (ValueUtil.isRegister(dest))
+                        Value __dest = MoveOp.asMoveOp(__op).getResult();
+                        if (ValueUtil.isRegister(__dest))
                         {
-                            int regNum = ((RegisterValue) dest).getRegister().number;
-                            if (regNum >= numRegs)
+                            int __regNum = ((RegisterValue) __dest).getRegister().number;
+                            if (__regNum >= numRegs)
                             {
-                                numRegs = regNum + 1;
+                                numRegs = __regNum + 1;
                             }
                         }
-                        else if (ValueUtil.isStackSlot(dest))
+                        else if (ValueUtil.isStackSlot(__dest))
                         {
-                            StackSlot stackSlot = (StackSlot) dest;
-                            Integer offset = getOffset(stackSlot);
-                            if (!stackIndices.containsKey(offset) && stackIndices.size() < maxStackLocations)
+                            StackSlot __stackSlot = (StackSlot) __dest;
+                            Integer __offset = getOffset(__stackSlot);
+                            if (!stackIndices.containsKey(__offset) && stackIndices.size() < __maxStackLocations)
                             {
-                                stackIndices.put(offset, stackIndices.size());
+                                stackIndices.put(__offset, stackIndices.size());
                             }
                         }
                     }
@@ -189,17 +200,17 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             }
 
             // Now we know the number of locations to optimize, so we can allocate the block states.
-            int numLocations = numRegs + stackIndices.size();
-            for (AbstractBlockBase<?> block : blocks)
+            int __numLocations = numRegs + stackIndices.size();
+            for (AbstractBlockBase<?> __block : __blocks)
             {
-                BlockData data = new BlockData(numLocations);
-                blockData.put(block, data);
+                BlockData __data = new BlockData(__numLocations);
+                blockData.put(__block, __data);
             }
         }
 
-        private int getOffset(StackSlot stackSlot)
+        private int getOffset(StackSlot __stackSlot)
         {
-            return stackSlot.getOffset(frameMap.totalFrameSize());
+            return __stackSlot.getOffset(frameMap.totalFrameSize());
         }
 
         /**
@@ -207,35 +218,35 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
          *
          * @return Returns true on success and false if the control flow is too complex.
          */
-        private boolean solveDataFlow(LIR lir)
+        private boolean solveDataFlow(LIR __lir)
         {
-            AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
+            AbstractBlockBase<?>[] __blocks = __lir.linearScanOrder();
 
-            int numIter = 0;
+            int __numIter = 0;
 
             // Iterate until there are no more changes.
-            int currentValueNum = 1;
-            boolean firstRound = true;
-            boolean changed;
+            int __currentValueNum = 1;
+            boolean __firstRound = true;
+            boolean __changed;
             do
             {
-                changed = false;
-                for (AbstractBlockBase<?> block : blocks)
+                __changed = false;
+                for (AbstractBlockBase<?> __block : __blocks)
                 {
-                    BlockData data = blockData.get(block);
+                    BlockData __data = blockData.get(__block);
                     /*
                      * Initialize the number for global value numbering for this block.
                      * It is essential that the starting number for a block is consistent
                      * at all iterations and also in eliminateMoves().
                      */
-                    if (firstRound)
+                    if (__firstRound)
                     {
-                        data.entryValueNum = currentValueNum;
+                        __data.entryValueNum = __currentValueNum;
                     }
-                    int valueNum = data.entryValueNum;
-                    boolean newState = false;
+                    int __valueNum = __data.entryValueNum;
+                    boolean __newState = false;
 
-                    if (block == blocks[0] || block.isExceptionEntry())
+                    if (__block == __blocks[0] || __block.isExceptionEntry())
                     {
                         /*
                          * The entry block has undefined values. And also exception handler blocks:
@@ -244,50 +255,50 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                          * and in reality such moves are not in the control flow in case of an exception.
                          * So we assume a save default for exception handler blocks.
                          */
-                        clearValues(data.entryState, valueNum);
+                        clearValues(__data.entryState, __valueNum);
                     }
                     else
                     {
                         // Merge the states of predecessor blocks.
-                        for (AbstractBlockBase<?> predecessor : block.getPredecessors())
+                        for (AbstractBlockBase<?> __predecessor : __block.getPredecessors())
                         {
-                            BlockData predData = blockData.get(predecessor);
-                            newState |= mergeState(data.entryState, predData.exitState, valueNum);
+                            BlockData __predData = blockData.get(__predecessor);
+                            __newState |= mergeState(__data.entryState, __predData.exitState, __valueNum);
                         }
                     }
                     // Advance by the value numbers which are "consumed" by clearValues and mergeState.
-                    valueNum += data.entryState.length;
+                    __valueNum += __data.entryState.length;
 
-                    if (newState || firstRound)
+                    if (__newState || __firstRound)
                     {
                         /*
                          * Derive the exit state from the entry state by iterating
                          * through all instructions of the block.
                          */
-                        int[] iterState = data.exitState;
-                        copyState(iterState, data.entryState);
-                        ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
+                        int[] __iterState = __data.exitState;
+                        copyState(__iterState, __data.entryState);
+                        ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
 
-                        for (LIRInstruction op : instructions)
+                        for (LIRInstruction __op : __instructions)
                         {
-                            valueNum = updateState(iterState, op, valueNum);
+                            __valueNum = updateState(__iterState, __op, __valueNum);
                         }
-                        changed = true;
+                        __changed = true;
                     }
-                    if (firstRound)
+                    if (__firstRound)
                     {
-                        currentValueNum = valueNum;
+                        __currentValueNum = __valueNum;
                     }
                 }
-                firstRound = false;
-                numIter++;
+                __firstRound = false;
+                __numIter++;
 
-                if (numIter > 5)
+                if (__numIter > 5)
                 {
                     // This is _very_ seldom.
                     return false;
                 }
-            } while (changed);
+            } while (__changed);
 
             return true;
         }
@@ -295,43 +306,43 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         /**
          * Deletes all move instructions where the target location already contains the source value.
          */
-        private void eliminateMoves(LIR lir)
+        private void eliminateMoves(LIR __lir)
         {
-            AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
+            AbstractBlockBase<?>[] __blocks = __lir.linearScanOrder();
 
-            for (AbstractBlockBase<?> block : blocks)
+            for (AbstractBlockBase<?> __block : __blocks)
             {
-                ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-                BlockData data = blockData.get(block);
-                boolean hasDead = false;
+                ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
+                BlockData __data = blockData.get(__block);
+                boolean __hasDead = false;
 
                 // reuse the entry state for iteration, we don't need it later
-                int[] iterState = data.entryState;
+                int[] __iterState = __data.entryState;
 
                 // add the values which are "consumed" by clearValues and mergeState in solveDataFlow
-                int valueNum = data.entryValueNum + data.entryState.length;
+                int __valueNum = __data.entryValueNum + __data.entryState.length;
 
-                int numInsts = instructions.size();
-                for (int idx = 0; idx < numInsts; idx++)
+                int __numInsts = __instructions.size();
+                for (int __idx = 0; __idx < __numInsts; __idx++)
                 {
-                    LIRInstruction op = instructions.get(idx);
-                    if (isEligibleMove(op))
+                    LIRInstruction __op = __instructions.get(__idx);
+                    if (isEligibleMove(__op))
                     {
-                        ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
-                        int sourceIdx = getStateIdx(moveOp.getInput());
-                        int destIdx = getStateIdx(moveOp.getResult());
-                        if (sourceIdx >= 0 && destIdx >= 0 && iterState[sourceIdx] == iterState[destIdx])
+                        ValueMoveOp __moveOp = ValueMoveOp.asValueMoveOp(__op);
+                        int __sourceIdx = getStateIdx(__moveOp.getInput());
+                        int __destIdx = getStateIdx(__moveOp.getResult());
+                        if (__sourceIdx >= 0 && __destIdx >= 0 && __iterState[__sourceIdx] == __iterState[__destIdx])
                         {
-                            instructions.set(idx, null);
-                            hasDead = true;
+                            __instructions.set(__idx, null);
+                            __hasDead = true;
                         }
                     }
                     // it doesn't harm if updateState is also called for a deleted move
-                    valueNum = updateState(iterState, op, valueNum);
+                    __valueNum = updateState(__iterState, __op, __valueNum);
                 }
-                if (hasDead)
+                if (__hasDead)
                 {
-                    instructions.removeAll(Collections.singleton(null));
+                    __instructions.removeAll(Collections.singleton(null));
                 }
             }
         }
@@ -339,31 +350,31 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         /**
          * Updates the state for one instruction.
          */
-        private int updateState(final int[] state, LIRInstruction op, int initValueNum)
+        private int updateState(final int[] __state, LIRInstruction __op, int __initValueNum)
         {
-            if (isEligibleMove(op))
+            if (isEligibleMove(__op))
             {
                 // handle the special case of a move instruction
-                ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
-                int sourceIdx = getStateIdx(moveOp.getInput());
-                int destIdx = getStateIdx(moveOp.getResult());
-                if (sourceIdx >= 0 && destIdx >= 0)
+                ValueMoveOp __moveOp = ValueMoveOp.asValueMoveOp(__op);
+                int __sourceIdx = getStateIdx(__moveOp.getInput());
+                int __destIdx = getStateIdx(__moveOp.getResult());
+                if (__sourceIdx >= 0 && __destIdx >= 0)
                 {
-                    state[destIdx] = state[sourceIdx];
-                    return initValueNum;
+                    __state[__destIdx] = __state[__sourceIdx];
+                    return __initValueNum;
                 }
             }
 
-            int valueNum = initValueNum;
+            int __valueNum = __initValueNum;
 
-            if (op.destroysCallerSavedRegisters())
+            if (__op.destroysCallerSavedRegisters())
             {
-                for (Register reg : callerSaveRegs)
+                for (Register __reg : callerSaveRegs)
                 {
-                    if (reg.number < numRegs)
+                    if (__reg.number < numRegs)
                     {
                         // Kind.Object is the save default
-                        state[reg.number] = encodeValueNum(valueNum++, true);
+                        __state[__reg.number] = encodeValueNum(__valueNum++, true);
                     }
                 }
             }
@@ -373,90 +384,91 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             // @closure
             final class OutputValueConsumer implements ValueConsumer
             {
+                // @field
                 int opValueNum;
 
                 // @cons
-                OutputValueConsumer(int opValueNum)
+                OutputValueConsumer(int __opValueNum)
                 {
                     super();
-                    this.opValueNum = opValueNum;
+                    this.opValueNum = __opValueNum;
                 }
 
                 @Override
-                public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+                public void visitValue(Value __operand, OperandMode __mode, EnumSet<OperandFlag> __flags)
                 {
-                    int stateIdx = RedundantMoveElimination.Optimization.this.getStateIdx(operand);
-                    if (stateIdx >= 0)
+                    int __stateIdx = RedundantMoveElimination.Optimization.this.getStateIdx(__operand);
+                    if (__stateIdx >= 0)
                     {
                         // Assign a unique number to the output or temp location.
-                        state[stateIdx] = encodeValueNum(opValueNum++, !LIRKind.isValue(operand));
+                        __state[__stateIdx] = encodeValueNum(opValueNum++, !LIRKind.isValue(__operand));
                     }
                 }
             }
 
-            OutputValueConsumer outputValueConsumer = new OutputValueConsumer(valueNum);
+            OutputValueConsumer __outputValueConsumer = new OutputValueConsumer(__valueNum);
 
-            op.visitEachTemp(outputValueConsumer);
+            __op.visitEachTemp(__outputValueConsumer);
             // Semantically the output values are written _after_ the temp values.
-            op.visitEachOutput(outputValueConsumer);
+            __op.visitEachOutput(__outputValueConsumer);
 
-            return outputValueConsumer.opValueNum;
+            return __outputValueConsumer.opValueNum;
         }
 
         /**
          * The state merge function for dataflow joins.
          */
-        private static boolean mergeState(int[] dest, int[] source, int defNum)
+        private static boolean mergeState(int[] __dest, int[] __source, int __defNum)
         {
-            boolean changed = false;
-            for (int idx = 0; idx < source.length; idx++)
+            boolean __changed = false;
+            for (int __idx = 0; __idx < __source.length; __idx++)
             {
-                int phiNum = defNum + idx;
-                int dst = dest[idx];
-                int src = source[idx];
-                if (dst != src && src != INIT_VALUE && dst != encodeValueNum(phiNum, isObjectValue(dst)))
+                int __phiNum = __defNum + __idx;
+                int __dst = __dest[__idx];
+                int __src = __source[__idx];
+                if (__dst != __src && __src != INIT_VALUE && __dst != encodeValueNum(__phiNum, isObjectValue(__dst)))
                 {
-                    if (dst != INIT_VALUE)
+                    if (__dst != INIT_VALUE)
                     {
-                        dst = encodeValueNum(phiNum, isObjectValue(dst) || isObjectValue(src));
+                        __dst = encodeValueNum(__phiNum, isObjectValue(__dst) || isObjectValue(__src));
                     }
                     else
                     {
-                        dst = src;
+                        __dst = __src;
                     }
-                    dest[idx] = dst;
-                    changed = true;
+                    __dest[__idx] = __dst;
+                    __changed = true;
                 }
             }
-            return changed;
+            return __changed;
         }
 
-        private static void copyState(int[] dest, int[] source)
+        private static void copyState(int[] __dest, int[] __source)
         {
-            for (int idx = 0; idx < source.length; idx++)
+            for (int __idx = 0; __idx < __source.length; __idx++)
             {
-                dest[idx] = source[idx];
+                __dest[__idx] = __source[__idx];
             }
         }
 
-        private static void clearValues(int[] state, int defNum)
+        private static void clearValues(int[] __state, int __defNum)
         {
-            for (int idx = 0; idx < state.length; idx++)
+            for (int __idx = 0; __idx < __state.length; __idx++)
             {
-                int phiNum = defNum + idx;
+                int __phiNum = __defNum + __idx;
                 // Let the killed values assume to be object references: it's the save default.
-                state[idx] = encodeValueNum(phiNum, true);
+                __state[__idx] = encodeValueNum(__phiNum, true);
             }
         }
 
-        private static void clearValuesOfKindObject(int[] state, int defNum)
+        private static void clearValuesOfKindObject(int[] __state, int __defNum)
         {
-            for (int idx = 0; idx < state.length; idx++)
+            for (int __idx = 0; __idx < __state.length; __idx++)
             {
-                int phiNum = defNum + idx;
-                if (isObjectValue(state[idx]))
+                int __phiNum = __defNum + __idx;
+                if (isObjectValue(__state[__idx]))
                 {
-                    state[idx] = encodeValueNum(phiNum, true);
+                    __state[__idx] = encodeValueNum(__phiNum, true);
                 }
             }
         }
@@ -464,24 +476,24 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         /**
          * Returns the index to the state arrays in BlockData for a specific location.
          */
-        private int getStateIdx(Value location)
+        private int getStateIdx(Value __location)
         {
-            if (ValueUtil.isRegister(location))
+            if (ValueUtil.isRegister(__location))
             {
-                int regNum = ((RegisterValue) location).getRegister().number;
-                if (regNum < numRegs)
+                int __regNum = ((RegisterValue) __location).getRegister().number;
+                if (__regNum < numRegs)
                 {
-                    return eligibleRegs[regNum];
+                    return eligibleRegs[__regNum];
                 }
                 return -1;
             }
-            if (ValueUtil.isStackSlot(location))
+            if (ValueUtil.isStackSlot(__location))
             {
-                StackSlot slot = (StackSlot) location;
-                Integer index = stackIndices.get(getOffset(slot));
-                if (index != null)
+                StackSlot __slot = (StackSlot) __location;
+                Integer __index = stackIndices.get(getOffset(__slot));
+                if (__index != null)
                 {
-                    return index.intValue() + numRegs;
+                    return __index.intValue() + numRegs;
                 }
             }
             return -1;
@@ -490,35 +502,35 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         /**
          * Encodes a value number + the is-object information to a number to be stored in a state.
          */
-        private static int encodeValueNum(int valueNum, boolean isObjectKind)
+        private static int encodeValueNum(int __valueNum, boolean __isObjectKind)
         {
-            if (isObjectKind)
+            if (__isObjectKind)
             {
-                return -valueNum;
+                return -__valueNum;
             }
-            return valueNum;
+            return __valueNum;
         }
 
         /**
          * Returns true if an encoded value number (which is stored in a state) refers to an object reference.
          */
-        private static boolean isObjectValue(int encodedValueNum)
+        private static boolean isObjectValue(int __encodedValueNum)
         {
-            return encodedValueNum < 0;
+            return __encodedValueNum < 0;
         }
 
         /**
          * Returns true for a move instruction which is a candidate for elimination.
          */
-        private static boolean isEligibleMove(LIRInstruction op)
+        private static boolean isEligibleMove(LIRInstruction __op)
         {
-            if (ValueMoveOp.isValueMoveOp(op))
+            if (ValueMoveOp.isValueMoveOp(__op))
             {
-                ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
-                Value source = moveOp.getInput();
-                Value dest = moveOp.getResult();
+                ValueMoveOp __moveOp = ValueMoveOp.asValueMoveOp(__op);
+                Value __source = __moveOp.getInput();
+                Value __dest = __moveOp.getResult();
                 // Moves with mismatching kinds are not moves, but memory loads/stores!
-                return source.getValueKind().equals(dest.getValueKind());
+                return __source.getValueKind().equals(__dest.getValueKind());
             }
             return false;
         }

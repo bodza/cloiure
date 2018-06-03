@@ -46,9 +46,9 @@ import giraaff.replacements.SnippetTemplate.UsageReplacer;
 public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 {
     // @cons
-    public InstanceOfSnippetsTemplates(Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+    public InstanceOfSnippetsTemplates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
     {
-        super(providers, snippetReflection, target);
+        super(__providers, __snippetReflection, __target);
     }
 
     /**
@@ -56,32 +56,32 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
      */
     protected abstract Arguments makeArguments(InstanceOfUsageReplacer replacer, LoweringTool tool);
 
-    public void lower(FloatingNode instanceOf, LoweringTool tool)
+    public void lower(FloatingNode __instanceOf, LoweringTool __tool)
     {
-        List<Node> usages = instanceOf.usages().snapshot();
+        List<Node> __usages = __instanceOf.usages().snapshot();
 
-        Instantiation instantiation = new Instantiation();
-        for (Node usage : usages)
+        Instantiation __instantiation = new Instantiation();
+        for (Node __usage : __usages)
         {
-            final StructuredGraph graph = (StructuredGraph) usage.graph();
+            final StructuredGraph __graph = (StructuredGraph) __usage.graph();
 
-            InstanceOfUsageReplacer replacer = createReplacer(instanceOf, instantiation, usage, graph);
+            InstanceOfUsageReplacer __replacer = createReplacer(__instanceOf, __instantiation, __usage, __graph);
 
-            if (instantiation.isInitialized())
+            if (__instantiation.isInitialized())
             {
                 // no need to re-instantiate the snippet - just re-use its result
-                replacer.replaceUsingInstantiation();
+                __replacer.replaceUsingInstantiation();
             }
             else
             {
-                Arguments args = makeArguments(replacer, tool);
-                template(instanceOf, args).instantiate(providers.getMetaAccess(), instanceOf, replacer, tool, args);
+                Arguments __args = makeArguments(__replacer, __tool);
+                template(__instanceOf, __args).instantiate(providers.getMetaAccess(), __instanceOf, __replacer, __tool, __args);
             }
         }
 
-        if (!instanceOf.isDeleted())
+        if (!__instanceOf.isDeleted())
         {
-            GraphUtil.killWithUnusedFloatingInputs(instanceOf);
+            GraphUtil.killWithUnusedFloatingInputs(__instanceOf);
         }
     }
 
@@ -89,40 +89,40 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
      * Gets the specific replacer object used to replace the usage of an instanceof node with the
      * result of an instantiated instanceof snippet.
      */
-    protected InstanceOfUsageReplacer createReplacer(FloatingNode instanceOf, Instantiation instantiation, Node usage, final StructuredGraph graph)
+    protected InstanceOfUsageReplacer createReplacer(FloatingNode __instanceOf, Instantiation __instantiation, Node __usage, final StructuredGraph __graph)
     {
-        InstanceOfUsageReplacer replacer;
-        if (!canMaterialize(usage))
+        InstanceOfUsageReplacer __replacer;
+        if (!canMaterialize(__usage))
         {
-            ValueNode trueValue = ConstantNode.forInt(1, graph);
-            ValueNode falseValue = ConstantNode.forInt(0, graph);
-            if (instantiation.isInitialized() && (trueValue != instantiation.trueValue || falseValue != instantiation.falseValue))
+            ValueNode __trueValue = ConstantNode.forInt(1, __graph);
+            ValueNode __falseValue = ConstantNode.forInt(0, __graph);
+            if (__instantiation.isInitialized() && (__trueValue != __instantiation.trueValue || __falseValue != __instantiation.falseValue))
             {
                 // This code doesn't really care what values are used so adopt the values from the previous instantiation.
-                trueValue = instantiation.trueValue;
-                falseValue = instantiation.falseValue;
+                __trueValue = __instantiation.trueValue;
+                __falseValue = __instantiation.falseValue;
             }
-            replacer = new NonMaterializationUsageReplacer(instantiation, trueValue, falseValue, instanceOf, usage);
+            __replacer = new NonMaterializationUsageReplacer(__instantiation, __trueValue, __falseValue, __instanceOf, __usage);
         }
         else
         {
-            ConditionalNode c = (ConditionalNode) usage;
-            replacer = new MaterializationUsageReplacer(instantiation, c.trueValue(), c.falseValue(), instanceOf, c);
+            ConditionalNode __c = (ConditionalNode) __usage;
+            __replacer = new MaterializationUsageReplacer(__instantiation, __c.trueValue(), __c.falseValue(), __instanceOf, __c);
         }
-        return replacer;
+        return __replacer;
     }
 
     /**
      * Determines if an {@code instanceof} usage can be materialized.
      */
-    protected boolean canMaterialize(Node usage)
+    protected boolean canMaterialize(Node __usage)
     {
-        if (usage instanceof ConditionalNode)
+        if (__usage instanceof ConditionalNode)
         {
-            ConditionalNode cn = (ConditionalNode) usage;
-            return cn.trueValue().isConstant() && cn.falseValue().isConstant();
+            ConditionalNode __cn = (ConditionalNode) __usage;
+            return __cn.trueValue().isConstant() && __cn.falseValue().isConstant();
         }
-        if (usage instanceof IfNode || usage instanceof FixedGuardNode || usage instanceof ShortCircuitOrNode || usage instanceof ConditionAnchorNode)
+        if (__usage instanceof IfNode || __usage instanceof FixedGuardNode || __usage instanceof ShortCircuitOrNode || __usage instanceof ConditionAnchorNode)
         {
             return false;
         }
@@ -136,9 +136,13 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // @class InstanceOfSnippetsTemplates.Instantiation
     public static final class Instantiation
     {
+        // @field
         private ValueNode result;
+        // @field
         private LogicNode condition;
+        // @field
         private ValueNode trueValue;
+        // @field
         private ValueNode falseValue;
 
         /**
@@ -149,11 +153,11 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
             return result != null;
         }
 
-        void initialize(ValueNode r, ValueNode t, ValueNode f)
+        void initialize(ValueNode __r, ValueNode __t, ValueNode __f)
         {
-            this.result = r;
-            this.trueValue = t;
-            this.falseValue = f;
+            this.result = __r;
+            this.trueValue = __t;
+            this.falseValue = __f;
         }
 
         /**
@@ -161,16 +165,16 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
          *
          * @param testValue the returned condition is true if the result is equal to this value
          */
-        LogicNode asCondition(ValueNode testValue)
+        LogicNode asCondition(ValueNode __testValue)
         {
             if (result.isConstant())
             {
-                return LogicConstantNode.forBoolean(result.asConstant().equals(testValue.asConstant()), result.graph());
+                return LogicConstantNode.forBoolean(result.asConstant().equals(__testValue.asConstant()), result.graph());
             }
-            if (condition == null || (!(condition instanceof CompareNode)) || ((CompareNode) condition).getY() != testValue)
+            if (condition == null || (!(condition instanceof CompareNode)) || ((CompareNode) condition).getY() != __testValue)
             {
                 // re-use previously generated condition if the trueValue for the test is the same
-                condition = CompareNode.createCompareNode(result.graph(), CanonicalCondition.EQ, result, testValue, null, NodeView.DEFAULT);
+                condition = CompareNode.createCompareNode(result.graph(), CanonicalCondition.EQ, result, __testValue, null, NodeView.DEFAULT);
             }
             return condition;
         }
@@ -181,16 +185,16 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
          * @param t the true value for the materialization
          * @param f the false value for the materialization
          */
-        ValueNode asMaterialization(StructuredGraph graph, ValueNode t, ValueNode f)
+        ValueNode asMaterialization(StructuredGraph __graph, ValueNode __t, ValueNode __f)
         {
-            if (t == this.trueValue && f == this.falseValue)
+            if (__t == this.trueValue && __f == this.falseValue)
             {
                 // Can simply use the phi result if the same materialized values are expected.
                 return result;
             }
             else
             {
-                return graph.unique(new ConditionalNode(asCondition(trueValue), t, f));
+                return __graph.unique(new ConditionalNode(asCondition(trueValue), __t, __f));
             }
         }
     }
@@ -201,19 +205,23 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // @class InstanceOfSnippetsTemplates.InstanceOfUsageReplacer
     public abstract static class InstanceOfUsageReplacer implements UsageReplacer
     {
+        // @field
         public final Instantiation instantiation;
+        // @field
         public final FloatingNode instanceOf;
+        // @field
         public final ValueNode trueValue;
+        // @field
         public final ValueNode falseValue;
 
         // @cons
-        public InstanceOfUsageReplacer(Instantiation instantiation, FloatingNode instanceOf, ValueNode trueValue, ValueNode falseValue)
+        public InstanceOfUsageReplacer(Instantiation __instantiation, FloatingNode __instanceOf, ValueNode __trueValue, ValueNode __falseValue)
         {
             super();
-            this.instantiation = instantiation;
-            this.instanceOf = instanceOf;
-            this.trueValue = trueValue;
-            this.falseValue = falseValue;
+            this.instantiation = __instantiation;
+            this.instanceOf = __instanceOf;
+            this.trueValue = __trueValue;
+            this.falseValue = __falseValue;
         }
 
         /**
@@ -229,13 +237,14 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // @class InstanceOfSnippetsTemplates.NonMaterializationUsageReplacer
     public static final class NonMaterializationUsageReplacer extends InstanceOfUsageReplacer
     {
+        // @field
         private final Node usage;
 
         // @cons
-        public NonMaterializationUsageReplacer(Instantiation instantiation, ValueNode trueValue, ValueNode falseValue, FloatingNode instanceOf, Node usage)
+        public NonMaterializationUsageReplacer(Instantiation __instantiation, ValueNode __trueValue, ValueNode __falseValue, FloatingNode __instanceOf, Node __usage)
         {
-            super(instantiation, instanceOf, trueValue, falseValue);
-            this.usage = usage;
+            super(__instantiation, __instanceOf, __trueValue, __falseValue);
+            this.usage = __usage;
         }
 
         @Override
@@ -245,11 +254,11 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
         }
 
         @Override
-        public void replace(ValueNode oldNode, ValueNode newNode)
+        public void replace(ValueNode __oldNode, ValueNode __newNode)
         {
-            newNode.inferStamp();
-            instantiation.initialize(newNode, trueValue, falseValue);
-            usage.replaceFirstInput(oldNode, instantiation.asCondition(trueValue));
+            __newNode.inferStamp();
+            instantiation.initialize(__newNode, trueValue, falseValue);
+            usage.replaceFirstInput(__oldNode, instantiation.asCondition(trueValue));
         }
     }
 
@@ -260,29 +269,30 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // @class InstanceOfSnippetsTemplates.MaterializationUsageReplacer
     public static final class MaterializationUsageReplacer extends InstanceOfUsageReplacer
     {
+        // @field
         public final ConditionalNode usage;
 
         // @cons
-        public MaterializationUsageReplacer(Instantiation instantiation, ValueNode trueValue, ValueNode falseValue, FloatingNode instanceOf, ConditionalNode usage)
+        public MaterializationUsageReplacer(Instantiation __instantiation, ValueNode __trueValue, ValueNode __falseValue, FloatingNode __instanceOf, ConditionalNode __usage)
         {
-            super(instantiation, instanceOf, trueValue, falseValue);
-            this.usage = usage;
+            super(__instantiation, __instanceOf, __trueValue, __falseValue);
+            this.usage = __usage;
         }
 
         @Override
         public void replaceUsingInstantiation()
         {
-            ValueNode newValue = instantiation.asMaterialization(usage.graph(), trueValue, falseValue);
-            usage.replaceAtUsages(newValue);
+            ValueNode __newValue = instantiation.asMaterialization(usage.graph(), trueValue, falseValue);
+            usage.replaceAtUsages(__newValue);
             GraphUtil.killWithUnusedFloatingInputs(usage);
         }
 
         @Override
-        public void replace(ValueNode oldNode, ValueNode newNode)
+        public void replace(ValueNode __oldNode, ValueNode __newNode)
         {
-            newNode.inferStamp();
-            instantiation.initialize(newNode, trueValue, falseValue);
-            usage.replaceAtUsages(newNode);
+            __newNode.inferStamp();
+            instantiation.initialize(__newNode, trueValue, falseValue);
+            usage.replaceAtUsages(__newNode);
             GraphUtil.killWithUnusedFloatingInputs(usage);
         }
     }

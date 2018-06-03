@@ -12,15 +12,15 @@ import giraaff.core.common.spi.LIRKindTool;
 public class ObjectStamp extends AbstractObjectStamp
 {
     // @cons
-    public ObjectStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull)
+    public ObjectStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull)
     {
-        super(type, exactType, nonNull, alwaysNull);
+        super(__type, __exactType, __nonNull, __alwaysNull);
     }
 
     @Override
-    protected ObjectStamp copyWith(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull)
+    protected ObjectStamp copyWith(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull)
     {
-        return new ObjectStamp(type, exactType, nonNull, alwaysNull);
+        return new ObjectStamp(__type, __exactType, __nonNull, __alwaysNull);
     }
 
     @Override
@@ -30,13 +30,13 @@ public class ObjectStamp extends AbstractObjectStamp
     }
 
     @Override
-    public boolean isCompatible(Stamp other)
+    public boolean isCompatible(Stamp __other)
     {
-        if (this == other)
+        if (this == __other)
         {
             return true;
         }
-        if (other instanceof ObjectStamp)
+        if (__other instanceof ObjectStamp)
         {
             return true;
         }
@@ -44,29 +44,29 @@ public class ObjectStamp extends AbstractObjectStamp
     }
 
     @Override
-    public boolean isCompatible(Constant constant)
+    public boolean isCompatible(Constant __constant)
     {
-        if (constant instanceof JavaConstant)
+        if (__constant instanceof JavaConstant)
         {
-            return ((JavaConstant) constant).getJavaKind().isObject();
+            return ((JavaConstant) __constant).getJavaKind().isObject();
         }
         return false;
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool)
+    public LIRKind getLIRKind(LIRKindTool __tool)
     {
-        return tool.getObjectKind();
+        return __tool.getObjectKind();
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
         try
         {
-            return provider.readObjectConstant(base, displacement);
+            return __provider.readObjectConstant(__base, __displacement);
         }
-        catch (IllegalArgumentException e)
+        catch (IllegalArgumentException __e)
         {
             // It's possible that the base and displacement aren't valid together so simply return null.
             return null;

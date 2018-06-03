@@ -19,10 +19,15 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class StoreFieldNode
 public final class StoreFieldNode extends AccessFieldNode implements StateSplit, Virtualizable
 {
+    // @def
     public static final NodeClass<StoreFieldNode> TYPE = NodeClass.create(StoreFieldNode.class);
 
-    @Input ValueNode value;
-    @OptionalInput(InputType.State) FrameState stateAfter;
+    @Input
+    // @field
+    ValueNode value;
+    @OptionalInput(InputType.State)
+    // @field
+    FrameState stateAfter;
 
     @Override
     public FrameState stateAfter()
@@ -31,10 +36,10 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
     }
 
     @Override
-    public void setStateAfter(FrameState x)
+    public void setStateAfter(FrameState __x)
     {
-        updateUsages(stateAfter, x);
-        stateAfter = x;
+        updateUsages(stateAfter, __x);
+        stateAfter = __x;
     }
 
     @Override
@@ -49,32 +54,32 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
     }
 
     // @cons
-    public StoreFieldNode(ValueNode object, ResolvedJavaField field, ValueNode value)
+    public StoreFieldNode(ValueNode __object, ResolvedJavaField __field, ValueNode __value)
     {
-        super(TYPE, StampFactory.forVoid(), object, field);
-        this.value = value;
+        super(TYPE, StampFactory.forVoid(), __object, __field);
+        this.value = __value;
     }
 
     // @cons
-    public StoreFieldNode(ValueNode object, ResolvedJavaField field, ValueNode value, FrameState stateAfter)
+    public StoreFieldNode(ValueNode __object, ResolvedJavaField __field, ValueNode __value, FrameState __stateAfter)
     {
-        super(TYPE, StampFactory.forVoid(), object, field);
-        this.value = value;
-        this.stateAfter = stateAfter;
+        super(TYPE, StampFactory.forVoid(), __object, __field);
+        this.value = __value;
+        this.stateAfter = __stateAfter;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode)
+        ValueNode __alias = __tool.getAlias(object());
+        if (__alias instanceof VirtualObjectNode)
         {
-            VirtualInstanceNode virtual = (VirtualInstanceNode) alias;
-            int fieldIndex = virtual.fieldIndex(field());
-            if (fieldIndex != -1)
+            VirtualInstanceNode __virtual = (VirtualInstanceNode) __alias;
+            int __fieldIndex = __virtual.fieldIndex(field());
+            if (__fieldIndex != -1)
             {
-                tool.setVirtualEntry(virtual, fieldIndex, value());
-                tool.delete();
+                __tool.setVirtualEntry(__virtual, __fieldIndex, value());
+                __tool.delete();
             }
         }
     }

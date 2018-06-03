@@ -6,6 +6,7 @@ import giraaff.graph.NodeClass;
 // @class EndNode
 public final class EndNode extends AbstractEndNode
 {
+    // @def
     public static final NodeClass<EndNode> TYPE = NodeClass.create(EndNode.class);
 
     // @cons

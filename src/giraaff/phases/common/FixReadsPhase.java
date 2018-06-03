@@ -60,45 +60,47 @@ import giraaff.phases.tiers.PhaseContext;
 // @class FixReadsPhase
 public final class FixReadsPhase extends BasePhase<LowTierContext>
 {
+    // @field
     protected boolean replaceInputsWithConstants;
+    // @field
     protected Phase schedulePhase;
 
     // @class FixReadsPhase.FixReadsClosure
     private static final class FixReadsClosure extends ScheduledNodeIterator
     {
         @Override
-        protected void processNode(Node node)
+        protected void processNode(Node __node)
         {
-            if (node instanceof AbstractMergeNode)
+            if (__node instanceof AbstractMergeNode)
             {
-                AbstractMergeNode mergeNode = (AbstractMergeNode) node;
-                for (MemoryPhiNode memoryPhi : mergeNode.memoryPhis().snapshot())
+                AbstractMergeNode __mergeNode = (AbstractMergeNode) __node;
+                for (MemoryPhiNode __memoryPhi : __mergeNode.memoryPhis().snapshot())
                 {
                     // Memory phi nodes are no longer necessary at this point.
-                    memoryPhi.replaceAtUsages(null);
-                    memoryPhi.safeDelete();
+                    __memoryPhi.replaceAtUsages(null);
+                    __memoryPhi.safeDelete();
                 }
             }
-            else if (node instanceof FloatingAccessNode)
+            else if (__node instanceof FloatingAccessNode)
             {
-                FloatingAccessNode floatingAccessNode = (FloatingAccessNode) node;
-                floatingAccessNode.setLastLocationAccess(null);
-                FixedAccessNode fixedAccess = floatingAccessNode.asFixedNode();
-                replaceCurrent(fixedAccess);
+                FloatingAccessNode __floatingAccessNode = (FloatingAccessNode) __node;
+                __floatingAccessNode.setLastLocationAccess(null);
+                FixedAccessNode __fixedAccess = __floatingAccessNode.asFixedNode();
+                replaceCurrent(__fixedAccess);
             }
-            else if (node instanceof PiNode)
+            else if (__node instanceof PiNode)
             {
-                PiNode piNode = (PiNode) node;
-                if (piNode.stamp(NodeView.DEFAULT).isCompatible(piNode.getOriginalNode().stamp(NodeView.DEFAULT)))
+                PiNode __piNode = (PiNode) __node;
+                if (__piNode.stamp(NodeView.DEFAULT).isCompatible(__piNode.getOriginalNode().stamp(NodeView.DEFAULT)))
                 {
                     // Pi nodes are no longer necessary at this point.
-                    piNode.replaceAndDelete(piNode.getOriginalNode());
+                    __piNode.replaceAndDelete(__piNode.getOriginalNode());
                 }
             }
-            else if (node instanceof MemoryAccess)
+            else if (__node instanceof MemoryAccess)
             {
-                MemoryAccess memoryAccess = (MemoryAccess) node;
-                memoryAccess.setLastLocationAccess(null);
+                MemoryAccess __memoryAccess = (MemoryAccess) __node;
+                __memoryAccess.setLastLocationAccess(null);
             }
         }
     }
@@ -106,475 +108,484 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
     // @class FixReadsPhase.RawConditionalEliminationVisitor
     protected static final class RawConditionalEliminationVisitor implements RecursiveVisitor<Integer>
     {
+        // @field
         protected final NodeMap<StampElement> stampMap;
+        // @field
         protected final NodeStack undoOperations;
+        // @field
         private final ScheduleResult schedule;
+        // @field
         private final StructuredGraph graph;
+        // @field
         private final MetaAccessProvider metaAccess;
+        // @field
         private final boolean replaceConstantInputs;
+        // @field
         private final BlockMap<Integer> blockActionStart;
+        // @field
         private final EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>> endMaps;
 
         // @cons
-        protected RawConditionalEliminationVisitor(StructuredGraph graph, ScheduleResult schedule, MetaAccessProvider metaAccess, boolean replaceInputsWithConstants)
+        protected RawConditionalEliminationVisitor(StructuredGraph __graph, ScheduleResult __schedule, MetaAccessProvider __metaAccess, boolean __replaceInputsWithConstants)
         {
             super();
-            this.graph = graph;
-            this.schedule = schedule;
-            this.metaAccess = metaAccess;
-            blockActionStart = new BlockMap<>(schedule.getCFG());
+            this.graph = __graph;
+            this.schedule = __schedule;
+            this.metaAccess = __metaAccess;
+            blockActionStart = new BlockMap<>(__schedule.getCFG());
             endMaps = EconomicMap.create();
-            stampMap = graph.createNodeMap();
+            stampMap = __graph.createNodeMap();
             undoOperations = new NodeStack();
-            replaceConstantInputs = replaceInputsWithConstants && GraalOptions.replaceInputsWithConstantsBasedOnStamps;
+            replaceConstantInputs = __replaceInputsWithConstants && GraalOptions.replaceInputsWithConstantsBasedOnStamps;
         }
 
-        protected void replaceInput(Position p, Node oldInput, Node newConstantInput)
+        protected void replaceInput(Position __p, Node __oldInput, Node __newConstantInput)
         {
-            p.set(oldInput, newConstantInput);
+            __p.set(__oldInput, __newConstantInput);
         }
 
-        protected int replaceConstantInputs(Node node)
+        protected int replaceConstantInputs(Node __node)
         {
-            int replacements = 0;
+            int __replacements = 0;
             // Check if we can replace any of the inputs with a constant.
-            for (Position p : node.inputPositions())
+            for (Position __p : __node.inputPositions())
             {
-                Node input = p.get(node);
-                if (p.getInputType() == InputType.Value)
+                Node __input = __p.get(__node);
+                if (__p.getInputType() == InputType.Value)
                 {
-                    if (input instanceof ValueNode)
+                    if (__input instanceof ValueNode)
                     {
-                        ValueNode valueNode = (ValueNode) input;
-                        if (valueNode instanceof ConstantNode)
+                        ValueNode __valueNode = (ValueNode) __input;
+                        if (__valueNode instanceof ConstantNode)
                         {
                             // Input already is a constant.
                         }
                         else
                         {
-                            Stamp bestStamp = getBestStamp(valueNode);
-                            Constant constant = bestStamp.asConstant();
-                            if (constant != null)
+                            Stamp __bestStamp = getBestStamp(__valueNode);
+                            Constant __constant = __bestStamp.asConstant();
+                            if (__constant != null)
                             {
-                                if (bestStamp instanceof FloatStamp)
+                                if (__bestStamp instanceof FloatStamp)
                                 {
-                                    FloatStamp floatStamp = (FloatStamp) bestStamp;
-                                    if (floatStamp.contains(0.0d))
+                                    FloatStamp __floatStamp = (FloatStamp) __bestStamp;
+                                    if (__floatStamp.contains(0.0d))
                                     {
                                         // Could also be -0.0d.
                                         continue;
                                     }
                                 }
-                                ConstantNode stampConstant = ConstantNode.forConstant(bestStamp, constant, metaAccess, graph);
-                                replaceInput(p, node, stampConstant);
-                                replacements++;
+                                ConstantNode __stampConstant = ConstantNode.forConstant(__bestStamp, __constant, metaAccess, graph);
+                                replaceInput(__p, __node, __stampConstant);
+                                __replacements++;
                             }
                         }
                     }
                 }
             }
-            return replacements;
+            return __replacements;
         }
 
-        protected void processNode(Node node)
+        protected void processNode(Node __node)
         {
             if (replaceConstantInputs)
             {
-                replaceConstantInputs(node);
+                replaceConstantInputs(__node);
             }
 
-            if (node instanceof MergeNode)
+            if (__node instanceof MergeNode)
             {
-                registerCombinedStamps((MergeNode) node);
+                registerCombinedStamps((MergeNode) __node);
             }
 
-            if (node instanceof AbstractBeginNode)
+            if (__node instanceof AbstractBeginNode)
             {
-                processAbstractBegin((AbstractBeginNode) node);
+                processAbstractBegin((AbstractBeginNode) __node);
             }
-            else if (node instanceof IfNode)
+            else if (__node instanceof IfNode)
             {
-                processIf((IfNode) node);
+                processIf((IfNode) __node);
             }
-            else if (node instanceof IntegerSwitchNode)
+            else if (__node instanceof IntegerSwitchNode)
             {
-                processIntegerSwitch((IntegerSwitchNode) node);
+                processIntegerSwitch((IntegerSwitchNode) __node);
             }
-            else if (node instanceof BinaryNode)
+            else if (__node instanceof BinaryNode)
             {
-                processBinary((BinaryNode) node);
+                processBinary((BinaryNode) __node);
             }
-            else if (node instanceof ConditionalNode)
+            else if (__node instanceof ConditionalNode)
             {
-                processConditional((ConditionalNode) node);
+                processConditional((ConditionalNode) __node);
             }
-            else if (node instanceof UnaryNode)
+            else if (__node instanceof UnaryNode)
             {
-                processUnary((UnaryNode) node);
+                processUnary((UnaryNode) __node);
             }
-            else if (node instanceof EndNode)
+            else if (__node instanceof EndNode)
             {
-                processEnd((EndNode) node);
+                processEnd((EndNode) __node);
             }
         }
 
-        protected void registerCombinedStamps(MergeNode node)
+        protected void registerCombinedStamps(MergeNode __node)
         {
-            EconomicMap<ValueNode, Stamp> endMap = endMaps.get(node);
-            MapCursor<ValueNode, Stamp> entries = endMap.getEntries();
-            while (entries.advance())
+            EconomicMap<ValueNode, Stamp> __endMap = endMaps.get(__node);
+            MapCursor<ValueNode, Stamp> __entries = __endMap.getEntries();
+            while (__entries.advance())
             {
-                ValueNode value = entries.getKey();
-                if (value.isDeleted())
+                ValueNode __value = __entries.getKey();
+                if (__value.isDeleted())
                 {
                     // nodes from this map can be deleted when a loop dies
                     continue;
                 }
-                registerNewValueStamp(value, entries.getValue());
+                registerNewValueStamp(__value, __entries.getValue());
             }
         }
 
-        protected void processEnd(EndNode node)
+        protected void processEnd(EndNode __node)
         {
-            AbstractMergeNode abstractMerge = node.merge();
-            if (abstractMerge instanceof MergeNode)
+            AbstractMergeNode __abstractMerge = __node.merge();
+            if (__abstractMerge instanceof MergeNode)
             {
-                MergeNode merge = (MergeNode) abstractMerge;
+                MergeNode __merge = (MergeNode) __abstractMerge;
 
-                NodeMap<Block> blockToNodeMap = this.schedule.getNodeToBlockMap();
-                Block mergeBlock = blockToNodeMap.get(merge);
-                Block mergeBlockDominator = mergeBlock.getDominator();
-                Block currentBlock = blockToNodeMap.get(node);
+                NodeMap<Block> __blockToNodeMap = this.schedule.getNodeToBlockMap();
+                Block __mergeBlock = __blockToNodeMap.get(__merge);
+                Block __mergeBlockDominator = __mergeBlock.getDominator();
+                Block __currentBlock = __blockToNodeMap.get(__node);
 
-                EconomicMap<ValueNode, Stamp> currentEndMap = endMaps.get(merge);
+                EconomicMap<ValueNode, Stamp> __currentEndMap = endMaps.get(__merge);
 
-                if (currentEndMap == null || !currentEndMap.isEmpty())
+                if (__currentEndMap == null || !__currentEndMap.isEmpty())
                 {
-                    EconomicMap<ValueNode, Stamp> endMap = EconomicMap.create();
+                    EconomicMap<ValueNode, Stamp> __endMap = EconomicMap.create();
 
                     // process phis
-                    for (ValuePhiNode phi : merge.valuePhis())
+                    for (ValuePhiNode __phi : __merge.valuePhis())
                     {
-                        if (currentEndMap == null || currentEndMap.containsKey(phi))
+                        if (__currentEndMap == null || __currentEndMap.containsKey(__phi))
                         {
-                            ValueNode valueAt = phi.valueAt(node);
-                            Stamp bestStamp = getBestStamp(valueAt);
+                            ValueNode __valueAt = __phi.valueAt(__node);
+                            Stamp __bestStamp = getBestStamp(__valueAt);
 
-                            if (currentEndMap != null)
+                            if (__currentEndMap != null)
                             {
-                                bestStamp = bestStamp.meet(currentEndMap.get(phi));
+                                __bestStamp = __bestStamp.meet(__currentEndMap.get(__phi));
                             }
 
-                            if (!bestStamp.equals(phi.stamp(NodeView.DEFAULT)))
+                            if (!__bestStamp.equals(__phi.stamp(NodeView.DEFAULT)))
                             {
-                                endMap.put(phi, bestStamp);
+                                __endMap.put(__phi, __bestStamp);
                             }
                         }
                     }
 
-                    int lastMark = undoOperations.size();
-                    while (currentBlock != mergeBlockDominator)
+                    int __lastMark = undoOperations.size();
+                    while (__currentBlock != __mergeBlockDominator)
                     {
-                        int mark = blockActionStart.get(currentBlock);
-                        for (int i = lastMark - 1; i >= mark; --i)
+                        int __mark = blockActionStart.get(__currentBlock);
+                        for (int __i = __lastMark - 1; __i >= __mark; --__i)
                         {
-                            ValueNode nodeWithNewStamp = (ValueNode) undoOperations.get(i);
+                            ValueNode __nodeWithNewStamp = (ValueNode) undoOperations.get(__i);
 
-                            if (nodeWithNewStamp.isDeleted() || nodeWithNewStamp instanceof LogicNode || nodeWithNewStamp instanceof ConstantNode || blockToNodeMap.isNew(nodeWithNewStamp))
+                            if (__nodeWithNewStamp.isDeleted() || __nodeWithNewStamp instanceof LogicNode || __nodeWithNewStamp instanceof ConstantNode || __blockToNodeMap.isNew(__nodeWithNewStamp))
                             {
                                 continue;
                             }
 
-                            Block block = getBlock(nodeWithNewStamp, blockToNodeMap);
-                            if (block == null || block.getId() <= mergeBlockDominator.getId())
+                            Block __block = getBlock(__nodeWithNewStamp, __blockToNodeMap);
+                            if (__block == null || __block.getId() <= __mergeBlockDominator.getId())
                             {
                                 // Node with new stamp in path to the merge block dominator and that
                                 // at the same time was defined at least in the merge block dominator
                                 // (i.e. therefore can be used after the merge.)
 
-                                Stamp bestStamp = getBestStamp(nodeWithNewStamp);
+                                Stamp __bestStamp = getBestStamp(__nodeWithNewStamp);
 
-                                if (currentEndMap != null)
+                                if (__currentEndMap != null)
                                 {
-                                    Stamp otherEndsStamp = currentEndMap.get(nodeWithNewStamp);
-                                    if (otherEndsStamp == null)
+                                    Stamp __otherEndsStamp = __currentEndMap.get(__nodeWithNewStamp);
+                                    if (__otherEndsStamp == null)
                                     {
                                         // No stamp registered in one of the previously processed ends => skip.
                                         continue;
                                     }
-                                    bestStamp = bestStamp.meet(otherEndsStamp);
+                                    __bestStamp = __bestStamp.meet(__otherEndsStamp);
                                 }
 
-                                if (nodeWithNewStamp.stamp(NodeView.DEFAULT).tryImproveWith(bestStamp) == null)
+                                if (__nodeWithNewStamp.stamp(NodeView.DEFAULT).tryImproveWith(__bestStamp) == null)
                                 {
                                     // No point in registering the stamp.
                                 }
                                 else
                                 {
-                                    endMap.put(nodeWithNewStamp, bestStamp);
+                                    __endMap.put(__nodeWithNewStamp, __bestStamp);
                                 }
                             }
                         }
-                        currentBlock = currentBlock.getDominator();
+                        __currentBlock = __currentBlock.getDominator();
                     }
 
-                    endMaps.put(merge, endMap);
+                    endMaps.put(__merge, __endMap);
                 }
             }
         }
 
-        private static Block getBlock(ValueNode node, NodeMap<Block> blockToNodeMap)
+        private static Block getBlock(ValueNode __node, NodeMap<Block> __blockToNodeMap)
         {
-            if (node instanceof PhiNode)
+            if (__node instanceof PhiNode)
             {
-                PhiNode phiNode = (PhiNode) node;
-                return blockToNodeMap.get(phiNode.merge());
+                PhiNode __phiNode = (PhiNode) __node;
+                return __blockToNodeMap.get(__phiNode.merge());
             }
-            return blockToNodeMap.get(node);
+            return __blockToNodeMap.get(__node);
         }
 
-        protected void processUnary(UnaryNode node)
+        protected void processUnary(UnaryNode __node)
         {
-            Stamp newStamp = node.foldStamp(getBestStamp(node.getValue()));
-            if (!checkReplaceWithConstant(newStamp, node))
+            Stamp __newStamp = __node.foldStamp(getBestStamp(__node.getValue()));
+            if (!checkReplaceWithConstant(__newStamp, __node))
             {
-                registerNewValueStamp(node, newStamp);
+                registerNewValueStamp(__node, __newStamp);
             }
         }
 
-        protected boolean checkReplaceWithConstant(Stamp newStamp, ValueNode node)
+        protected boolean checkReplaceWithConstant(Stamp __newStamp, ValueNode __node)
         {
-            Constant constant = newStamp.asConstant();
-            if (constant != null && !(node instanceof ConstantNode))
+            Constant __constant = __newStamp.asConstant();
+            if (__constant != null && !(__node instanceof ConstantNode))
             {
-                ConstantNode stampConstant = ConstantNode.forConstant(newStamp, constant, metaAccess, graph);
-                node.replaceAtUsages(InputType.Value, stampConstant);
-                GraphUtil.tryKillUnused(node);
+                ConstantNode __stampConstant = ConstantNode.forConstant(__newStamp, __constant, metaAccess, graph);
+                __node.replaceAtUsages(InputType.Value, __stampConstant);
+                GraphUtil.tryKillUnused(__node);
                 return true;
             }
             return false;
         }
 
-        protected void processBinary(BinaryNode node)
+        protected void processBinary(BinaryNode __node)
         {
-            Stamp xStamp = getBestStamp(node.getX());
-            Stamp yStamp = getBestStamp(node.getY());
-            Stamp newStamp = node.foldStamp(xStamp, yStamp);
-            if (!checkReplaceWithConstant(newStamp, node))
+            Stamp __xStamp = getBestStamp(__node.getX());
+            Stamp __yStamp = getBestStamp(__node.getY());
+            Stamp __newStamp = __node.foldStamp(__xStamp, __yStamp);
+            if (!checkReplaceWithConstant(__newStamp, __node))
             {
-                registerNewValueStamp(node, newStamp);
+                registerNewValueStamp(__node, __newStamp);
             }
         }
 
-        protected void processIntegerSwitch(IntegerSwitchNode node)
+        protected void processIntegerSwitch(IntegerSwitchNode __node)
         {
-            Stamp bestStamp = getBestStamp(node.value());
-            node.tryRemoveUnreachableKeys(null, bestStamp);
+            Stamp __bestStamp = getBestStamp(__node.value());
+            __node.tryRemoveUnreachableKeys(null, __bestStamp);
         }
 
-        protected void processIf(IfNode node)
+        protected void processIf(IfNode __node)
         {
-            TriState result = tryProveCondition(node.condition());
-            if (result != TriState.UNKNOWN)
+            TriState __result = tryProveCondition(__node.condition());
+            if (__result != TriState.UNKNOWN)
             {
-                boolean isTrue = (result == TriState.TRUE);
-                AbstractBeginNode survivingSuccessor = node.getSuccessor(isTrue);
-                survivingSuccessor.replaceAtUsages(null);
-                survivingSuccessor.replaceAtPredecessor(null);
-                node.replaceAtPredecessor(survivingSuccessor);
-                GraphUtil.killCFG(node);
+                boolean __isTrue = (__result == TriState.TRUE);
+                AbstractBeginNode __survivingSuccessor = __node.getSuccessor(__isTrue);
+                __survivingSuccessor.replaceAtUsages(null);
+                __survivingSuccessor.replaceAtPredecessor(null);
+                __node.replaceAtPredecessor(__survivingSuccessor);
+                GraphUtil.killCFG(__node);
             }
         }
 
-        protected void processConditional(ConditionalNode node)
+        protected void processConditional(ConditionalNode __node)
         {
-            TriState result = tryProveCondition(node.condition());
-            if (result != TriState.UNKNOWN)
+            TriState __result = tryProveCondition(__node.condition());
+            if (__result != TriState.UNKNOWN)
             {
-                boolean isTrue = (result == TriState.TRUE);
-                node.replaceAndDelete(isTrue ? node.trueValue() : node.falseValue());
+                boolean __isTrue = (__result == TriState.TRUE);
+                __node.replaceAndDelete(__isTrue ? __node.trueValue() : __node.falseValue());
             }
             else
             {
-                Stamp trueStamp = getBestStamp(node.trueValue());
-                Stamp falseStamp = getBestStamp(node.falseValue());
-                registerNewStamp(node, trueStamp.meet(falseStamp));
+                Stamp __trueStamp = getBestStamp(__node.trueValue());
+                Stamp __falseStamp = getBestStamp(__node.falseValue());
+                registerNewStamp(__node, __trueStamp.meet(__falseStamp));
             }
         }
 
-        protected TriState tryProveCondition(LogicNode condition)
+        protected TriState tryProveCondition(LogicNode __condition)
         {
-            Stamp conditionStamp = this.getBestStamp(condition);
-            if (conditionStamp == StampFactory.tautology())
+            Stamp __conditionStamp = this.getBestStamp(__condition);
+            if (__conditionStamp == StampFactory.tautology())
             {
                 return TriState.TRUE;
             }
-            else if (conditionStamp == StampFactory.contradiction())
+            else if (__conditionStamp == StampFactory.contradiction())
             {
                 return TriState.FALSE;
             }
 
-            if (condition instanceof UnaryOpLogicNode)
+            if (__condition instanceof UnaryOpLogicNode)
             {
-                UnaryOpLogicNode unaryOpLogicNode = (UnaryOpLogicNode) condition;
-                return unaryOpLogicNode.tryFold(this.getBestStamp(unaryOpLogicNode.getValue()));
+                UnaryOpLogicNode __unaryOpLogicNode = (UnaryOpLogicNode) __condition;
+                return __unaryOpLogicNode.tryFold(this.getBestStamp(__unaryOpLogicNode.getValue()));
             }
-            else if (condition instanceof BinaryOpLogicNode)
+            else if (__condition instanceof BinaryOpLogicNode)
             {
-                BinaryOpLogicNode binaryOpLogicNode = (BinaryOpLogicNode) condition;
-                return binaryOpLogicNode.tryFold(this.getBestStamp(binaryOpLogicNode.getX()), this.getBestStamp(binaryOpLogicNode.getY()));
+                BinaryOpLogicNode __binaryOpLogicNode = (BinaryOpLogicNode) __condition;
+                return __binaryOpLogicNode.tryFold(this.getBestStamp(__binaryOpLogicNode.getX()), this.getBestStamp(__binaryOpLogicNode.getY()));
             }
 
             return TriState.UNKNOWN;
         }
 
-        protected void processAbstractBegin(AbstractBeginNode beginNode)
+        protected void processAbstractBegin(AbstractBeginNode __beginNode)
         {
-            Node predecessor = beginNode.predecessor();
-            if (predecessor instanceof IfNode)
+            Node __predecessor = __beginNode.predecessor();
+            if (__predecessor instanceof IfNode)
             {
-                IfNode ifNode = (IfNode) predecessor;
-                boolean negated = (ifNode.falseSuccessor() == beginNode);
-                LogicNode condition = ifNode.condition();
-                registerNewCondition(condition, negated);
+                IfNode __ifNode = (IfNode) __predecessor;
+                boolean __negated = (__ifNode.falseSuccessor() == __beginNode);
+                LogicNode __condition = __ifNode.condition();
+                registerNewCondition(__condition, __negated);
             }
-            else if (predecessor instanceof IntegerSwitchNode)
+            else if (__predecessor instanceof IntegerSwitchNode)
             {
-                IntegerSwitchNode integerSwitchNode = (IntegerSwitchNode) predecessor;
-                registerIntegerSwitch(beginNode, integerSwitchNode);
+                IntegerSwitchNode __integerSwitchNode = (IntegerSwitchNode) __predecessor;
+                registerIntegerSwitch(__beginNode, __integerSwitchNode);
             }
         }
 
-        private void registerIntegerSwitch(AbstractBeginNode beginNode, IntegerSwitchNode integerSwitchNode)
+        private void registerIntegerSwitch(AbstractBeginNode __beginNode, IntegerSwitchNode __integerSwitchNode)
         {
-            registerNewValueStamp(integerSwitchNode.value(), integerSwitchNode.getValueStampForSuccessor(beginNode));
+            registerNewValueStamp(__integerSwitchNode.value(), __integerSwitchNode.getValueStampForSuccessor(__beginNode));
         }
 
-        protected void registerNewCondition(LogicNode condition, boolean negated)
+        protected void registerNewCondition(LogicNode __condition, boolean __negated)
         {
-            if (condition instanceof UnaryOpLogicNode)
+            if (__condition instanceof UnaryOpLogicNode)
             {
-                UnaryOpLogicNode unaryLogicNode = (UnaryOpLogicNode) condition;
-                ValueNode value = unaryLogicNode.getValue();
-                Stamp newStamp = unaryLogicNode.getSucceedingStampForValue(negated);
-                registerNewValueStamp(value, newStamp);
+                UnaryOpLogicNode __unaryLogicNode = (UnaryOpLogicNode) __condition;
+                ValueNode __value = __unaryLogicNode.getValue();
+                Stamp __newStamp = __unaryLogicNode.getSucceedingStampForValue(__negated);
+                registerNewValueStamp(__value, __newStamp);
             }
-            else if (condition instanceof BinaryOpLogicNode)
+            else if (__condition instanceof BinaryOpLogicNode)
             {
-                BinaryOpLogicNode binaryOpLogicNode = (BinaryOpLogicNode) condition;
-                ValueNode x = binaryOpLogicNode.getX();
-                ValueNode y = binaryOpLogicNode.getY();
-                Stamp xStamp = getBestStamp(x);
-                Stamp yStamp = getBestStamp(y);
-                registerNewValueStamp(x, binaryOpLogicNode.getSucceedingStampForX(negated, xStamp, yStamp));
-                registerNewValueStamp(y, binaryOpLogicNode.getSucceedingStampForY(negated, xStamp, yStamp));
+                BinaryOpLogicNode __binaryOpLogicNode = (BinaryOpLogicNode) __condition;
+                ValueNode __x = __binaryOpLogicNode.getX();
+                ValueNode __y = __binaryOpLogicNode.getY();
+                Stamp __xStamp = getBestStamp(__x);
+                Stamp __yStamp = getBestStamp(__y);
+                registerNewValueStamp(__x, __binaryOpLogicNode.getSucceedingStampForX(__negated, __xStamp, __yStamp));
+                registerNewValueStamp(__y, __binaryOpLogicNode.getSucceedingStampForY(__negated, __xStamp, __yStamp));
             }
-            registerCondition(condition, negated);
+            registerCondition(__condition, __negated);
         }
 
-        protected void registerCondition(LogicNode condition, boolean negated)
+        protected void registerCondition(LogicNode __condition, boolean __negated)
         {
-            registerNewStamp(condition, negated ? StampFactory.contradiction() : StampFactory.tautology());
+            registerNewStamp(__condition, __negated ? StampFactory.contradiction() : StampFactory.tautology());
         }
 
-        protected boolean registerNewValueStamp(ValueNode value, Stamp newStamp)
+        protected boolean registerNewValueStamp(ValueNode __value, Stamp __newStamp)
         {
-            if (newStamp != null && !value.isConstant())
+            if (__newStamp != null && !__value.isConstant())
             {
-                Stamp currentStamp = getBestStamp(value);
-                Stamp betterStamp = currentStamp.tryImproveWith(newStamp);
-                if (betterStamp != null)
+                Stamp __currentStamp = getBestStamp(__value);
+                Stamp __betterStamp = __currentStamp.tryImproveWith(__newStamp);
+                if (__betterStamp != null)
                 {
-                    registerNewStamp(value, betterStamp);
+                    registerNewStamp(__value, __betterStamp);
                     return true;
                 }
             }
             return false;
         }
 
-        protected void registerNewStamp(ValueNode value, Stamp newStamp)
+        protected void registerNewStamp(ValueNode __value, Stamp __newStamp)
         {
-            ValueNode originalNode = value;
-            stampMap.setAndGrow(originalNode, new StampElement(newStamp, stampMap.getAndGrow(originalNode)));
-            undoOperations.push(originalNode);
+            ValueNode __originalNode = __value;
+            stampMap.setAndGrow(__originalNode, new StampElement(__newStamp, stampMap.getAndGrow(__originalNode)));
+            undoOperations.push(__originalNode);
         }
 
-        protected Stamp getBestStamp(ValueNode value)
+        protected Stamp getBestStamp(ValueNode __value)
         {
-            ValueNode originalNode = value;
-            StampElement currentStamp = stampMap.getAndGrow(originalNode);
-            if (currentStamp == null)
+            ValueNode __originalNode = __value;
+            StampElement __currentStamp = stampMap.getAndGrow(__originalNode);
+            if (__currentStamp == null)
             {
-                return value.stamp(NodeView.DEFAULT);
+                return __value.stamp(NodeView.DEFAULT);
             }
-            return currentStamp.getStamp();
+            return __currentStamp.getStamp();
         }
 
         @Override
-        public Integer enter(Block b)
+        public Integer enter(Block __b)
         {
-            int mark = undoOperations.size();
-            blockActionStart.put(b, mark);
-            for (Node n : schedule.getBlockToNodesMap().get(b))
+            int __mark = undoOperations.size();
+            blockActionStart.put(__b, __mark);
+            for (Node __n : schedule.getBlockToNodesMap().get(__b))
             {
-                if (n.isAlive())
+                if (__n.isAlive())
                 {
-                    processNode(n);
+                    processNode(__n);
                 }
             }
-            return mark;
+            return __mark;
         }
 
         @Override
-        public void exit(Block b, Integer state)
+        public void exit(Block __b, Integer __state)
         {
-            int mark = state;
-            while (undoOperations.size() > mark)
+            int __mark = __state;
+            while (undoOperations.size() > __mark)
             {
-                Node node = undoOperations.pop();
-                if (node.isAlive())
+                Node __node = undoOperations.pop();
+                if (__node.isAlive())
                 {
-                    stampMap.set(node, stampMap.get(node).getParent());
+                    stampMap.set(__node, stampMap.get(__node).getParent());
                 }
             }
         }
     }
 
     // @cons
-    public FixReadsPhase(boolean replaceInputsWithConstants, Phase schedulePhase)
+    public FixReadsPhase(boolean __replaceInputsWithConstants, Phase __schedulePhase)
     {
         super();
-        this.replaceInputsWithConstants = replaceInputsWithConstants;
-        this.schedulePhase = schedulePhase;
+        this.replaceInputsWithConstants = __replaceInputsWithConstants;
+        this.schedulePhase = __schedulePhase;
     }
 
     @Override
-    protected void run(StructuredGraph graph, LowTierContext context)
+    protected void run(StructuredGraph __graph, LowTierContext __context)
     {
-        schedulePhase.apply(graph);
-        ScheduleResult schedule = graph.getLastSchedule();
-        FixReadsClosure fixReadsClosure = new FixReadsClosure();
-        for (Block block : schedule.getCFG().getBlocks())
+        schedulePhase.apply(__graph);
+        ScheduleResult __schedule = __graph.getLastSchedule();
+        FixReadsClosure __fixReadsClosure = new FixReadsClosure();
+        for (Block __block : __schedule.getCFG().getBlocks())
         {
-            fixReadsClosure.processNodes(block, schedule);
+            __fixReadsClosure.processNodes(__block, __schedule);
         }
         if (GraalOptions.rawConditionalElimination)
         {
-            schedule.getCFG().visitDominatorTree(createVisitor(graph, schedule, context), false);
+            __schedule.getCFG().visitDominatorTree(createVisitor(__graph, __schedule, __context), false);
         }
-        graph.setAfterFixReadPhase(true);
+        __graph.setAfterFixReadPhase(true);
     }
 
     // @class FixReadsPhase.RawCEPhase
     public static final class RawCEPhase extends BasePhase<LowTierContext>
     {
+        // @field
         private final boolean replaceInputsWithConstants;
 
         // @cons
-        public RawCEPhase(boolean replaceInputsWithConstants)
+        public RawCEPhase(boolean __replaceInputsWithConstants)
         {
             super();
-            this.replaceInputsWithConstants = replaceInputsWithConstants;
+            this.replaceInputsWithConstants = __replaceInputsWithConstants;
         }
 
         @Override
@@ -584,35 +595,37 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         }
 
         @Override
-        protected void run(StructuredGraph graph, LowTierContext context)
+        protected void run(StructuredGraph __graph, LowTierContext __context)
         {
             if (GraalOptions.rawConditionalElimination)
             {
-                SchedulePhase schedulePhase = new SchedulePhase(SchedulingStrategy.LATEST, true);
-                schedulePhase.apply(graph);
-                ScheduleResult schedule = graph.getLastSchedule();
-                schedule.getCFG().visitDominatorTree(new RawConditionalEliminationVisitor(graph, schedule, context.getMetaAccess(), replaceInputsWithConstants), false);
+                SchedulePhase __schedulePhase = new SchedulePhase(SchedulingStrategy.LATEST, true);
+                __schedulePhase.apply(__graph);
+                ScheduleResult __schedule = __graph.getLastSchedule();
+                __schedule.getCFG().visitDominatorTree(new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), replaceInputsWithConstants), false);
             }
         }
     }
 
-    protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph graph, ScheduleResult schedule, PhaseContext context)
+    protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph __graph, ScheduleResult __schedule, PhaseContext __context)
     {
-        return new RawConditionalEliminationVisitor(graph, schedule, context.getMetaAccess(), replaceInputsWithConstants);
+        return new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), replaceInputsWithConstants);
     }
 
     // @class FixReadsPhase.StampElement
     protected static final class StampElement
     {
+        // @field
         private final Stamp stamp;
+        // @field
         private final StampElement parent;
 
         // @cons
-        public StampElement(Stamp stamp, StampElement parent)
+        public StampElement(Stamp __stamp, StampElement __parent)
         {
             super();
-            this.stamp = stamp;
-            this.parent = parent;
+            this.stamp = __stamp;
+            this.parent = __parent;
         }
 
         public StampElement getParent()
@@ -626,8 +639,8 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         }
     }
 
-    public void setReplaceInputsWithConstants(boolean replaceInputsWithConstants)
+    public void setReplaceInputsWithConstants(boolean __replaceInputsWithConstants)
     {
-        this.replaceInputsWithConstants = replaceInputsWithConstants;
+        this.replaceInputsWithConstants = __replaceInputsWithConstants;
     }
 }

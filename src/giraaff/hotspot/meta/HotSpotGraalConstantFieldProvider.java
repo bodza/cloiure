@@ -16,24 +16,24 @@ import giraaff.hotspot.HotSpotRuntime;
 public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvider
 {
     // @cons
-    public HotSpotGraalConstantFieldProvider(MetaAccessProvider metaAccess)
+    public HotSpotGraalConstantFieldProvider(MetaAccessProvider __metaAccess)
     {
-        super(metaAccess);
-        this.metaAccess = metaAccess;
+        super(__metaAccess);
+        this.metaAccess = __metaAccess;
     }
 
     @Override
-    protected boolean isFinalFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
+    protected boolean isFinalFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldTool<?> __tool)
     {
-        if (super.isFinalFieldValueConstant(field, value, tool))
+        if (super.isFinalFieldValueConstant(__field, __value, __tool))
         {
             return true;
         }
 
-        if (!field.isStatic())
+        if (!__field.isStatic())
         {
-            JavaConstant receiver = tool.getReceiver();
-            if (getNodeClassType().isInstance(receiver))
+            JavaConstant __receiver = __tool.getReceiver();
+            if (getNodeClassType().isInstance(__receiver))
             {
                 return true;
             }
@@ -43,17 +43,17 @@ public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFiel
     }
 
     @Override
-    protected boolean isStableFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
+    protected boolean isStableFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldTool<?> __tool)
     {
-        if (super.isStableFieldValueConstant(field, value, tool))
+        if (super.isStableFieldValueConstant(__field, __value, __tool))
         {
             return true;
         }
 
-        if (!field.isStatic())
+        if (!__field.isStatic())
         {
-            JavaConstant receiver = tool.getReceiver();
-            if (getHotSpotVMConfigType().isInstance(receiver))
+            JavaConstant __receiver = __tool.getReceiver();
+            if (getHotSpotVMConfigType().isInstance(__receiver))
             {
                 return true;
             }
@@ -62,9 +62,12 @@ public final class HotSpotGraalConstantFieldProvider extends HotSpotConstantFiel
         return false;
     }
 
+    // @field
     private final MetaAccessProvider metaAccess;
 
+    // @field
     private ResolvedJavaType cachedHotSpotVMConfigType;
+    // @field
     private ResolvedJavaType cachedNodeClassType;
 
     private ResolvedJavaType getHotSpotVMConfigType()

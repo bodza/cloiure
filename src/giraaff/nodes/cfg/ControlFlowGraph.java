@@ -33,14 +33,21 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
      * supported by double. That way we can never overflow to infinity when multiplying two
      * probability values.
      */
+    // @def
     public static final double MIN_PROBABILITY = 0x1.0p-500;
+    // @def
     public static final double MAX_PROBABILITY = 1 / MIN_PROBABILITY;
 
+    // @field
     public final StructuredGraph graph;
 
+    // @field
     private NodeMap<Block> nodeToBlock;
+    // @field
     private Block[] reversePostOrder;
+    // @field
     private List<Loop<Block>> loops;
+    // @field
     private int maxDominatorDepth;
 
     // @iface ControlFlowGraph.RecursiveVisitor
@@ -51,124 +58,126 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         void exit(Block b, V value);
     }
 
-    public static ControlFlowGraph compute(StructuredGraph graph, boolean connectBlocks, boolean computeLoops, boolean computeDominators, boolean computePostdominators)
+    public static ControlFlowGraph compute(StructuredGraph __graph, boolean __connectBlocks, boolean __computeLoops, boolean __computeDominators, boolean __computePostdominators)
     {
-        ControlFlowGraph cfg = new ControlFlowGraph(graph);
-        cfg.identifyBlocks();
-        cfg.computeProbabilities();
+        ControlFlowGraph __cfg = new ControlFlowGraph(__graph);
+        __cfg.identifyBlocks();
+        __cfg.computeProbabilities();
 
-        if (computeLoops)
+        if (__computeLoops)
         {
-            cfg.computeLoopInformation();
+            __cfg.computeLoopInformation();
         }
-        if (computeDominators)
+        if (__computeDominators)
         {
-            cfg.computeDominators();
+            __cfg.computeDominators();
         }
-        if (computePostdominators)
+        if (__computePostdominators)
         {
-            cfg.computePostdominators();
+            __cfg.computePostdominators();
         }
 
-        return cfg;
+        return __cfg;
     }
 
     @SuppressWarnings("unchecked")
-    public <V> void visitDominatorTreeDefault(RecursiveVisitor<V> visitor)
+    public <V> void visitDominatorTreeDefault(RecursiveVisitor<V> __visitor)
     {
-        Block[] stack = new Block[maxDominatorDepth + 1];
-        Block current = getStartBlock();
-        int tos = 0;
-        Object[] values = null;
-        int valuesTOS = 0;
+        Block[] __stack = new Block[maxDominatorDepth + 1];
+        Block __current = getStartBlock();
+        int __tos = 0;
+        Object[] __values = null;
+        int __valuesTOS = 0;
 
-        while (tos >= 0)
+        while (__tos >= 0)
         {
-            Block state = stack[tos];
-            if (state == null || state.getDominator() == null || state.getDominator().getPostdominator() != state)
+            Block __state = __stack[__tos];
+            if (__state == null || __state.getDominator() == null || __state.getDominator().getPostdominator() != __state)
             {
-                if (state == null)
+                if (__state == null)
                 {
                     // We enter this block for the first time.
-                    V value = visitor.enter(current);
-                    if (value != null || values != null)
+                    V __value = __visitor.enter(__current);
+                    if (__value != null || __values != null)
                     {
-                        if (values == null)
+                        if (__values == null)
                         {
-                            values = new Object[maxDominatorDepth + 1];
+                            __values = new Object[maxDominatorDepth + 1];
                         }
-                        values[valuesTOS++] = value;
+                        __values[__valuesTOS++] = __value;
                     }
 
-                    Block dominated = skipPostDom(current.getFirstDominated());
-                    if (dominated != null)
+                    Block __dominated = skipPostDom(__current.getFirstDominated());
+                    if (__dominated != null)
                     {
                         // Descend into dominated.
-                        stack[tos] = dominated;
-                        current = dominated;
-                        stack[++tos] = null;
+                        __stack[__tos] = __dominated;
+                        __current = __dominated;
+                        __stack[++__tos] = null;
                         continue;
                     }
                 }
                 else
                 {
-                    Block next = skipPostDom(state.getDominatedSibling());
-                    if (next != null)
+                    Block __next = skipPostDom(__state.getDominatedSibling());
+                    if (__next != null)
                     {
                         // Descend into dominated.
-                        stack[tos] = next;
-                        current = next;
-                        stack[++tos] = null;
+                        __stack[__tos] = __next;
+                        __current = __next;
+                        __stack[++__tos] = null;
                         continue;
                     }
                 }
 
                 // Finished processing all normal dominators.
-                Block postDom = current.getPostdominator();
-                if (postDom != null && postDom.getDominator() == current)
+                Block __postDom = __current.getPostdominator();
+                if (__postDom != null && __postDom.getDominator() == __current)
                 {
                     // Descend into post dominator.
-                    stack[tos] = postDom;
-                    current = postDom;
-                    stack[++tos] = null;
+                    __stack[__tos] = __postDom;
+                    __current = __postDom;
+                    __stack[++__tos] = null;
                     continue;
                 }
             }
 
             // Finished processing this node, exit and pop from stack.
-            V value = null;
-            if (values != null && valuesTOS > 0)
+            V __value = null;
+            if (__values != null && __valuesTOS > 0)
             {
-                value = (V) values[--valuesTOS];
+                __value = (V) __values[--__valuesTOS];
             }
-            visitor.exit(current, value);
-            current = current.getDominator();
-            --tos;
+            __visitor.exit(__current, __value);
+            __current = __current.getDominator();
+            --__tos;
         }
     }
 
-    private static Block skipPostDom(Block block)
+    private static Block skipPostDom(Block __block)
     {
-        if (block != null && block.getDominator().getPostdominator() == block)
+        if (__block != null && __block.getDominator().getPostdominator() == __block)
         {
             // This is an always reached block.
-            return block.getDominatedSibling();
+            return __block.getDominatedSibling();
         }
-        return block;
+        return __block;
     }
 
     // @class ControlFlowGraph.DeferredExit
     public static final class DeferredExit
     {
         // @cons
-        public DeferredExit(Block block, DeferredExit next)
+        public DeferredExit(Block __block, DeferredExit __next)
         {
             super();
-            this.block = block;
-            this.next = next;
+            this.block = __block;
+            this.next = __next;
         }
 
+        // @field
         private final Block block;
+        // @field
         private final DeferredExit next;
 
         public Block getBlock()
@@ -182,240 +191,240 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         }
     }
 
-    public static void addDeferredExit(DeferredExit[] deferredExits, Block b)
+    public static void addDeferredExit(DeferredExit[] __deferredExits, Block __b)
     {
-        Loop<Block> outermostExited = b.getDominator().getLoop();
-        Loop<Block> exitBlockLoop = b.getLoop();
-        while (outermostExited.getParent() != null && outermostExited.getParent() != exitBlockLoop)
+        Loop<Block> __outermostExited = __b.getDominator().getLoop();
+        Loop<Block> __exitBlockLoop = __b.getLoop();
+        while (__outermostExited.getParent() != null && __outermostExited.getParent() != __exitBlockLoop)
         {
-            outermostExited = outermostExited.getParent();
+            __outermostExited = __outermostExited.getParent();
         }
-        int loopIndex = outermostExited.getIndex();
-        deferredExits[loopIndex] = new DeferredExit(b, deferredExits[loopIndex]);
+        int __loopIndex = __outermostExited.getIndex();
+        __deferredExits[__loopIndex] = new DeferredExit(__b, __deferredExits[__loopIndex]);
     }
 
     @SuppressWarnings({"unchecked"})
-    public <V> void visitDominatorTreeDeferLoopExits(RecursiveVisitor<V> visitor)
+    public <V> void visitDominatorTreeDeferLoopExits(RecursiveVisitor<V> __visitor)
     {
-        Block[] stack = new Block[getBlocks().length];
-        int tos = 0;
-        BitSet visited = new BitSet(getBlocks().length);
-        int loopCount = getLoops().size();
-        DeferredExit[] deferredExits = new DeferredExit[loopCount];
-        Object[] values = null;
-        int valuesTOS = 0;
-        stack[0] = getStartBlock();
+        Block[] __stack = new Block[getBlocks().length];
+        int __tos = 0;
+        BitSet __visited = new BitSet(getBlocks().length);
+        int __loopCount = getLoops().size();
+        DeferredExit[] __deferredExits = new DeferredExit[__loopCount];
+        Object[] __values = null;
+        int __valuesTOS = 0;
+        __stack[0] = getStartBlock();
 
-        while (tos >= 0)
+        while (__tos >= 0)
         {
-            Block cur = stack[tos];
-            int curId = cur.getId();
-            if (visited.get(curId))
+            Block __cur = __stack[__tos];
+            int __curId = __cur.getId();
+            if (__visited.get(__curId))
             {
-                V value = null;
-                if (values != null && valuesTOS > 0)
+                V __value = null;
+                if (__values != null && __valuesTOS > 0)
                 {
-                    value = (V) values[--valuesTOS];
+                    __value = (V) __values[--__valuesTOS];
                 }
-                visitor.exit(cur, value);
-                --tos;
-                if (cur.isLoopHeader())
+                __visitor.exit(__cur, __value);
+                --__tos;
+                if (__cur.isLoopHeader())
                 {
-                    int loopIndex = cur.getLoop().getIndex();
-                    DeferredExit deferredExit = deferredExits[loopIndex];
-                    if (deferredExit != null)
+                    int __loopIndex = __cur.getLoop().getIndex();
+                    DeferredExit __deferredExit = __deferredExits[__loopIndex];
+                    if (__deferredExit != null)
                     {
-                        while (deferredExit != null)
+                        while (__deferredExit != null)
                         {
-                            stack[++tos] = deferredExit.block;
-                            deferredExit = deferredExit.next;
+                            __stack[++__tos] = __deferredExit.block;
+                            __deferredExit = __deferredExit.next;
                         }
-                        deferredExits[loopIndex] = null;
+                        __deferredExits[__loopIndex] = null;
                     }
                 }
             }
             else
             {
-                visited.set(curId);
-                V value = visitor.enter(cur);
-                if (value != null || values != null)
+                __visited.set(__curId);
+                V __value = __visitor.enter(__cur);
+                if (__value != null || __values != null)
                 {
-                    if (values == null)
+                    if (__values == null)
                     {
-                        values = new Object[maxDominatorDepth + 1];
+                        __values = new Object[maxDominatorDepth + 1];
                     }
-                    values[valuesTOS++] = value;
+                    __values[__valuesTOS++] = __value;
                 }
 
-                Block alwaysReached = cur.getPostdominator();
-                if (alwaysReached != null)
+                Block __alwaysReached = __cur.getPostdominator();
+                if (__alwaysReached != null)
                 {
-                    if (alwaysReached.getDominator() != cur)
+                    if (__alwaysReached.getDominator() != __cur)
                     {
-                        alwaysReached = null;
+                        __alwaysReached = null;
                     }
-                    else if (isDominatorTreeLoopExit(alwaysReached))
+                    else if (isDominatorTreeLoopExit(__alwaysReached))
                     {
-                        addDeferredExit(deferredExits, alwaysReached);
+                        addDeferredExit(__deferredExits, __alwaysReached);
                     }
                     else
                     {
-                        stack[++tos] = alwaysReached;
+                        __stack[++__tos] = __alwaysReached;
                     }
                 }
 
-                Block b = cur.getFirstDominated();
-                while (b != null)
+                Block __b = __cur.getFirstDominated();
+                while (__b != null)
                 {
-                    if (b != alwaysReached)
+                    if (__b != __alwaysReached)
                     {
-                        if (isDominatorTreeLoopExit(b))
+                        if (isDominatorTreeLoopExit(__b))
                         {
-                            addDeferredExit(deferredExits, b);
+                            addDeferredExit(__deferredExits, __b);
                         }
                         else
                         {
-                            stack[++tos] = b;
+                            __stack[++__tos] = __b;
                         }
                     }
-                    b = b.getDominatedSibling();
+                    __b = __b.getDominatedSibling();
                 }
             }
         }
     }
 
-    public <V> void visitDominatorTree(RecursiveVisitor<V> visitor, boolean deferLoopExits)
+    public <V> void visitDominatorTree(RecursiveVisitor<V> __visitor, boolean __deferLoopExits)
     {
-        if (deferLoopExits && this.getLoops().size() > 0)
+        if (__deferLoopExits && this.getLoops().size() > 0)
         {
-            visitDominatorTreeDeferLoopExits(visitor);
+            visitDominatorTreeDeferLoopExits(__visitor);
         }
         else
         {
-            visitDominatorTreeDefault(visitor);
+            visitDominatorTreeDefault(__visitor);
         }
     }
 
-    public static boolean isDominatorTreeLoopExit(Block b)
+    public static boolean isDominatorTreeLoopExit(Block __b)
     {
-        Block dominator = b.getDominator();
-        return dominator != null && b.getLoop() != dominator.getLoop() && (!b.isLoopHeader() || dominator.getLoopDepth() >= b.getLoopDepth());
+        Block __dominator = __b.getDominator();
+        return __dominator != null && __b.getLoop() != __dominator.getLoop() && (!__b.isLoopHeader() || __dominator.getLoopDepth() >= __b.getLoopDepth());
     }
 
     // @cons
-    private ControlFlowGraph(StructuredGraph graph)
+    private ControlFlowGraph(StructuredGraph __graph)
     {
         super();
-        this.graph = graph;
-        this.nodeToBlock = graph.createNodeMap();
+        this.graph = __graph;
+        this.nodeToBlock = __graph.createNodeMap();
     }
 
     private void computeDominators()
     {
-        Block[] blocks = reversePostOrder;
-        int curMaxDominatorDepth = 0;
-        for (int i = 1; i < blocks.length; i++)
+        Block[] __blocks = reversePostOrder;
+        int __curMaxDominatorDepth = 0;
+        for (int __i = 1; __i < __blocks.length; __i++)
         {
-            Block block = blocks[i];
-            Block dominator = null;
-            for (Block pred : block.getPredecessors())
+            Block __block = __blocks[__i];
+            Block __dominator = null;
+            for (Block __pred : __block.getPredecessors())
             {
-                if (!pred.isLoopEnd())
+                if (!__pred.isLoopEnd())
                 {
-                    dominator = ((dominator == null) ? pred : commonDominatorRaw(dominator, pred));
+                    __dominator = ((__dominator == null) ? __pred : commonDominatorRaw(__dominator, __pred));
                 }
             }
 
             // Set dominator.
-            block.setDominator(dominator);
+            __block.setDominator(__dominator);
 
             // Keep dominated linked list sorted by block ID such that predecessor blocks are always
             // before successor blocks.
-            Block currentDominated = dominator.getFirstDominated();
-            if (currentDominated != null && currentDominated.getId() < block.getId())
+            Block __currentDominated = __dominator.getFirstDominated();
+            if (__currentDominated != null && __currentDominated.getId() < __block.getId())
             {
-                while (currentDominated.getDominatedSibling() != null && currentDominated.getDominatedSibling().getId() < block.getId())
+                while (__currentDominated.getDominatedSibling() != null && __currentDominated.getDominatedSibling().getId() < __block.getId())
                 {
-                    currentDominated = currentDominated.getDominatedSibling();
+                    __currentDominated = __currentDominated.getDominatedSibling();
                 }
-                block.setDominatedSibling(currentDominated.getDominatedSibling());
-                currentDominated.setDominatedSibling(block);
+                __block.setDominatedSibling(__currentDominated.getDominatedSibling());
+                __currentDominated.setDominatedSibling(__block);
             }
             else
             {
-                block.setDominatedSibling(dominator.getFirstDominated());
-                dominator.setFirstDominated(block);
+                __block.setDominatedSibling(__dominator.getFirstDominated());
+                __dominator.setFirstDominated(__block);
             }
 
-            curMaxDominatorDepth = Math.max(curMaxDominatorDepth, block.getDominatorDepth());
+            __curMaxDominatorDepth = Math.max(__curMaxDominatorDepth, __block.getDominatorDepth());
         }
-        this.maxDominatorDepth = curMaxDominatorDepth;
+        this.maxDominatorDepth = __curMaxDominatorDepth;
         calcDominatorRanges(getStartBlock(), reversePostOrder.length);
     }
 
-    private static void calcDominatorRanges(Block block, int size)
+    private static void calcDominatorRanges(Block __block, int __size)
     {
-        Block[] stack = new Block[size];
-        stack[0] = block;
-        int tos = 0;
-        int myNumber = 0;
+        Block[] __stack = new Block[__size];
+        __stack[0] = __block;
+        int __tos = 0;
+        int __myNumber = 0;
 
         do
         {
-            Block cur = stack[tos];
-            Block dominated = cur.getFirstDominated();
+            Block __cur = __stack[__tos];
+            Block __dominated = __cur.getFirstDominated();
 
-            if (cur.getDominatorNumber() == -1)
+            if (__cur.getDominatorNumber() == -1)
             {
-                cur.setDominatorNumber(myNumber);
-                if (dominated != null)
+                __cur.setDominatorNumber(__myNumber);
+                if (__dominated != null)
                 {
                     // Push children onto stack.
                     do
                     {
-                        stack[++tos] = dominated;
-                        dominated = dominated.getDominatedSibling();
-                    } while (dominated != null);
+                        __stack[++__tos] = __dominated;
+                        __dominated = __dominated.getDominatedSibling();
+                    } while (__dominated != null);
                 }
                 else
                 {
-                    cur.setMaxChildDomNumber(myNumber);
-                    --tos;
+                    __cur.setMaxChildDomNumber(__myNumber);
+                    --__tos;
                 }
-                ++myNumber;
+                ++__myNumber;
             }
             else
             {
-                cur.setMaxChildDomNumber(dominated.getMaxChildDominatorNumber());
-                --tos;
+                __cur.setMaxChildDomNumber(__dominated.getMaxChildDominatorNumber());
+                --__tos;
             }
-        } while (tos >= 0);
+        } while (__tos >= 0);
     }
 
-    private static Block commonDominatorRaw(Block a, Block b)
+    private static Block commonDominatorRaw(Block __a, Block __b)
     {
-        int aDomDepth = a.getDominatorDepth();
-        int bDomDepth = b.getDominatorDepth();
-        if (aDomDepth > bDomDepth)
+        int __aDomDepth = __a.getDominatorDepth();
+        int __bDomDepth = __b.getDominatorDepth();
+        if (__aDomDepth > __bDomDepth)
         {
-            return commonDominatorRawSameDepth(a.getDominator(aDomDepth - bDomDepth), b);
+            return commonDominatorRawSameDepth(__a.getDominator(__aDomDepth - __bDomDepth), __b);
         }
         else
         {
-            return commonDominatorRawSameDepth(a, b.getDominator(bDomDepth - aDomDepth));
+            return commonDominatorRawSameDepth(__a, __b.getDominator(__bDomDepth - __aDomDepth));
         }
     }
 
-    private static Block commonDominatorRawSameDepth(Block a, Block b)
+    private static Block commonDominatorRawSameDepth(Block __a, Block __b)
     {
-        Block iterA = a;
-        Block iterB = b;
-        while (iterA != iterB)
+        Block __iterA = __a;
+        Block __iterB = __b;
+        while (__iterA != __iterB)
         {
-            iterA = iterA.getDominator();
-            iterB = iterB.getDominator();
+            __iterA = __iterA.getDominator();
+            __iterB = __iterB.getDominator();
         }
-        return iterA;
+        return __iterA;
     }
 
     @Override
@@ -440,9 +449,9 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         return nodeToBlock;
     }
 
-    public Block blockFor(Node node)
+    public Block blockFor(Node __node)
     {
-        return nodeToBlock.get(node);
+        return nodeToBlock.get(__node);
     }
 
     @Override
@@ -456,26 +465,26 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         return maxDominatorDepth;
     }
 
-    private void identifyBlock(Block block)
+    private void identifyBlock(Block __block)
     {
-        FixedWithNextNode cur = block.getBeginNode();
+        FixedWithNextNode __cur = __block.getBeginNode();
         while (true)
         {
-            nodeToBlock.set(cur, block);
-            FixedNode next = cur.next();
-            if (next instanceof AbstractBeginNode)
+            nodeToBlock.set(__cur, __block);
+            FixedNode __next = __cur.next();
+            if (__next instanceof AbstractBeginNode)
             {
-                block.endNode = cur;
+                __block.endNode = __cur;
                 return;
             }
-            else if (next instanceof FixedWithNextNode)
+            else if (__next instanceof FixedWithNextNode)
             {
-                cur = (FixedWithNextNode) next;
+                __cur = (FixedWithNextNode) __next;
             }
             else
             {
-                nodeToBlock.set(next, block);
-                block.endNode = next;
+                nodeToBlock.set(__next, __block);
+                __block.endNode = __next;
                 return;
             }
         }
@@ -488,175 +497,175 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     private void identifyBlocks()
     {
         // Find all block headers.
-        int numBlocks = 0;
-        for (AbstractBeginNode begin : graph.getNodes(AbstractBeginNode.TYPE))
+        int __numBlocks = 0;
+        for (AbstractBeginNode __begin : graph.getNodes(AbstractBeginNode.TYPE))
         {
-            Block block = new Block(begin);
-            identifyBlock(block);
-            numBlocks++;
+            Block __block = new Block(__begin);
+            identifyBlock(__block);
+            __numBlocks++;
         }
 
         // Compute reverse post order.
-        int count = 0;
-        NodeMap<Block> nodeMap = this.nodeToBlock;
-        Block[] stack = new Block[numBlocks];
-        int tos = 0;
-        Block startBlock = blockFor(graph.start());
-        stack[0] = startBlock;
-        startBlock.setPredecessors(Block.EMPTY_ARRAY);
+        int __count = 0;
+        NodeMap<Block> __nodeMap = this.nodeToBlock;
+        Block[] __stack = new Block[__numBlocks];
+        int __tos = 0;
+        Block __startBlock = blockFor(graph.start());
+        __stack[0] = __startBlock;
+        __startBlock.setPredecessors(Block.EMPTY_ARRAY);
         do
         {
-            Block block = stack[tos];
-            int id = block.getId();
-            if (id == BLOCK_ID_INITIAL)
+            Block __block = __stack[__tos];
+            int __id = __block.getId();
+            if (__id == BLOCK_ID_INITIAL)
             {
                 // First time we see this block: push all successors.
-                FixedNode last = block.getEndNode();
-                if (last instanceof EndNode)
+                FixedNode __last = __block.getEndNode();
+                if (__last instanceof EndNode)
                 {
-                    EndNode endNode = (EndNode) last;
-                    Block suxBlock = nodeMap.get(endNode.merge());
-                    if (suxBlock.getId() == BLOCK_ID_INITIAL)
+                    EndNode __endNode = (EndNode) __last;
+                    Block __suxBlock = __nodeMap.get(__endNode.merge());
+                    if (__suxBlock.getId() == BLOCK_ID_INITIAL)
                     {
-                        stack[++tos] = suxBlock;
+                        __stack[++__tos] = __suxBlock;
                     }
-                    block.setSuccessors(new Block[] { suxBlock });
+                    __block.setSuccessors(new Block[] { __suxBlock });
                 }
-                else if (last instanceof IfNode)
+                else if (__last instanceof IfNode)
                 {
-                    IfNode ifNode = (IfNode) last;
-                    Block trueSucc = nodeMap.get(ifNode.trueSuccessor());
-                    stack[++tos] = trueSucc;
-                    Block falseSucc = nodeMap.get(ifNode.falseSuccessor());
-                    stack[++tos] = falseSucc;
-                    block.setSuccessors(new Block[] { trueSucc, falseSucc });
-                    Block[] ifPred = new Block[] { block };
-                    trueSucc.setPredecessors(ifPred);
-                    falseSucc.setPredecessors(ifPred);
+                    IfNode __ifNode = (IfNode) __last;
+                    Block __trueSucc = __nodeMap.get(__ifNode.trueSuccessor());
+                    __stack[++__tos] = __trueSucc;
+                    Block __falseSucc = __nodeMap.get(__ifNode.falseSuccessor());
+                    __stack[++__tos] = __falseSucc;
+                    __block.setSuccessors(new Block[] { __trueSucc, __falseSucc });
+                    Block[] __ifPred = new Block[] { __block };
+                    __trueSucc.setPredecessors(__ifPred);
+                    __falseSucc.setPredecessors(__ifPred);
                 }
-                else if (last instanceof LoopEndNode)
+                else if (__last instanceof LoopEndNode)
                 {
-                    LoopEndNode loopEndNode = (LoopEndNode) last;
-                    block.setSuccessors(new Block[] { nodeMap.get(loopEndNode.loopBegin()) });
+                    LoopEndNode __loopEndNode = (LoopEndNode) __last;
+                    __block.setSuccessors(new Block[] { __nodeMap.get(__loopEndNode.loopBegin()) });
                     // Nothing to do push onto the stack.
                 }
-                else if (last instanceof ControlSinkNode)
+                else if (__last instanceof ControlSinkNode)
                 {
-                    block.setSuccessors(Block.EMPTY_ARRAY);
+                    __block.setSuccessors(Block.EMPTY_ARRAY);
                 }
                 else
                 {
-                    int startTos = tos;
-                    Block[] ifPred = new Block[] { block };
-                    for (Node suxNode : last.successors())
+                    int __startTos = __tos;
+                    Block[] __ifPred = new Block[] { __block };
+                    for (Node __suxNode : __last.successors())
                     {
-                        Block sux = nodeMap.get(suxNode);
-                        stack[++tos] = sux;
-                        sux.setPredecessors(ifPred);
+                        Block __sux = __nodeMap.get(__suxNode);
+                        __stack[++__tos] = __sux;
+                        __sux.setPredecessors(__ifPred);
                     }
-                    int suxCount = tos - startTos;
-                    Block[] successors = new Block[suxCount];
-                    System.arraycopy(stack, startTos + 1, successors, 0, suxCount);
-                    block.setSuccessors(successors);
+                    int __suxCount = __tos - __startTos;
+                    Block[] __successors = new Block[__suxCount];
+                    System.arraycopy(__stack, __startTos + 1, __successors, 0, __suxCount);
+                    __block.setSuccessors(__successors);
                 }
-                block.setId(BLOCK_ID_VISITED);
-                AbstractBeginNode beginNode = block.getBeginNode();
-                if (beginNode instanceof LoopBeginNode)
+                __block.setId(BLOCK_ID_VISITED);
+                AbstractBeginNode __beginNode = __block.getBeginNode();
+                if (__beginNode instanceof LoopBeginNode)
                 {
-                    computeLoopPredecessors(nodeMap, block, (LoopBeginNode) beginNode);
+                    computeLoopPredecessors(__nodeMap, __block, (LoopBeginNode) __beginNode);
                 }
-                else if (beginNode instanceof MergeNode)
+                else if (__beginNode instanceof MergeNode)
                 {
-                    MergeNode mergeNode = (MergeNode) beginNode;
-                    int forwardEndCount = mergeNode.forwardEndCount();
-                    Block[] predecessors = new Block[forwardEndCount];
-                    for (int i = 0; i < forwardEndCount; ++i)
+                    MergeNode __mergeNode = (MergeNode) __beginNode;
+                    int __forwardEndCount = __mergeNode.forwardEndCount();
+                    Block[] __predecessors = new Block[__forwardEndCount];
+                    for (int __i = 0; __i < __forwardEndCount; ++__i)
                     {
-                        predecessors[i] = nodeMap.get(mergeNode.forwardEndAt(i));
+                        __predecessors[__i] = __nodeMap.get(__mergeNode.forwardEndAt(__i));
                     }
-                    block.setPredecessors(predecessors);
+                    __block.setPredecessors(__predecessors);
                 }
             }
-            else if (id == BLOCK_ID_VISITED)
+            else if (__id == BLOCK_ID_VISITED)
             {
                 // Second time we see this block: All successors have been processed,
                 // so add block to result list. Can safely reuse the stack for this.
-                --tos;
-                count++;
-                int index = numBlocks - count;
-                stack[index] = block;
-                block.setId(index);
+                --__tos;
+                __count++;
+                int __index = __numBlocks - __count;
+                __stack[__index] = __block;
+                __block.setId(__index);
             }
             else
             {
                 throw GraalError.shouldNotReachHere();
             }
-        } while (tos >= 0);
+        } while (__tos >= 0);
 
         // Compute reverse postorder and number blocks.
-        this.reversePostOrder = stack;
+        this.reversePostOrder = __stack;
     }
 
-    private static void computeLoopPredecessors(NodeMap<Block> nodeMap, Block block, LoopBeginNode loopBeginNode)
+    private static void computeLoopPredecessors(NodeMap<Block> __nodeMap, Block __block, LoopBeginNode __loopBeginNode)
     {
-        int forwardEndCount = loopBeginNode.forwardEndCount();
-        LoopEndNode[] loopEnds = loopBeginNode.orderedLoopEnds();
-        Block[] predecessors = new Block[forwardEndCount + loopEnds.length];
-        for (int i = 0; i < forwardEndCount; ++i)
+        int __forwardEndCount = __loopBeginNode.forwardEndCount();
+        LoopEndNode[] __loopEnds = __loopBeginNode.orderedLoopEnds();
+        Block[] __predecessors = new Block[__forwardEndCount + __loopEnds.length];
+        for (int __i = 0; __i < __forwardEndCount; ++__i)
         {
-            predecessors[i] = nodeMap.get(loopBeginNode.forwardEndAt(i));
+            __predecessors[__i] = __nodeMap.get(__loopBeginNode.forwardEndAt(__i));
         }
-        for (int i = 0; i < loopEnds.length; ++i)
+        for (int __i = 0; __i < __loopEnds.length; ++__i)
         {
-            predecessors[i + forwardEndCount] = nodeMap.get(loopEnds[i]);
+            __predecessors[__i + __forwardEndCount] = __nodeMap.get(__loopEnds[__i]);
         }
-        block.setPredecessors(predecessors);
+        __block.setPredecessors(__predecessors);
     }
 
     private void computeProbabilities()
     {
-        for (Block block : reversePostOrder)
+        for (Block __block : reversePostOrder)
         {
-            Block[] predecessors = block.getPredecessors();
+            Block[] __predecessors = __block.getPredecessors();
 
-            double probability;
-            if (predecessors.length == 0)
+            double __probability;
+            if (__predecessors.length == 0)
             {
-                probability = 1D;
+                __probability = 1D;
             }
-            else if (predecessors.length == 1)
+            else if (__predecessors.length == 1)
             {
-                Block pred = predecessors[0];
-                probability = pred.probability;
-                if (pred.getSuccessorCount() > 1)
+                Block __pred = __predecessors[0];
+                __probability = __pred.probability;
+                if (__pred.getSuccessorCount() > 1)
                 {
-                    ControlSplitNode controlSplit = (ControlSplitNode) pred.getEndNode();
-                    probability = multiplyProbabilities(probability, controlSplit.probability(block.getBeginNode()));
+                    ControlSplitNode __controlSplit = (ControlSplitNode) __pred.getEndNode();
+                    __probability = multiplyProbabilities(__probability, __controlSplit.probability(__block.getBeginNode()));
                 }
             }
             else
             {
-                probability = predecessors[0].probability;
-                for (int i = 1; i < predecessors.length; ++i)
+                __probability = __predecessors[0].probability;
+                for (int __i = 1; __i < __predecessors.length; ++__i)
                 {
-                    probability += predecessors[i].probability;
+                    __probability += __predecessors[__i].probability;
                 }
 
-                if (block.getBeginNode() instanceof LoopBeginNode)
+                if (__block.getBeginNode() instanceof LoopBeginNode)
                 {
-                    LoopBeginNode loopBegin = (LoopBeginNode) block.getBeginNode();
-                    probability = multiplyProbabilities(probability, loopBegin.loopFrequency());
+                    LoopBeginNode __loopBegin = (LoopBeginNode) __block.getBeginNode();
+                    __probability = multiplyProbabilities(__probability, __loopBegin.loopFrequency());
                 }
             }
-            if (probability < MIN_PROBABILITY)
+            if (__probability < MIN_PROBABILITY)
             {
-                probability = MIN_PROBABILITY;
+                __probability = MIN_PROBABILITY;
             }
-            else if (probability > MAX_PROBABILITY)
+            else if (__probability > MAX_PROBABILITY)
             {
-                probability = MAX_PROBABILITY;
+                __probability = MAX_PROBABILITY;
             }
-            block.setProbability(probability);
+            __block.setProbability(__probability);
         }
     }
 
@@ -665,51 +674,51 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         loops = new ArrayList<>();
         if (graph.hasLoops())
         {
-            Block[] stack = new Block[this.reversePostOrder.length];
-            for (Block block : reversePostOrder)
+            Block[] __stack = new Block[this.reversePostOrder.length];
+            for (Block __block : reversePostOrder)
             {
-                AbstractBeginNode beginNode = block.getBeginNode();
-                if (beginNode instanceof LoopBeginNode)
+                AbstractBeginNode __beginNode = __block.getBeginNode();
+                if (__beginNode instanceof LoopBeginNode)
                 {
-                    Loop<Block> parent = block.getLoop();
-                    Loop<Block> loop = new HIRLoop(parent, loops.size(), block);
-                    if (parent != null)
+                    Loop<Block> __parent = __block.getLoop();
+                    Loop<Block> __loop = new HIRLoop(__parent, loops.size(), __block);
+                    if (__parent != null)
                     {
-                        parent.getChildren().add(loop);
+                        __parent.getChildren().add(__loop);
                     }
-                    loops.add(loop);
-                    block.setLoop(loop);
-                    loop.getBlocks().add(block);
+                    loops.add(__loop);
+                    __block.setLoop(__loop);
+                    __loop.getBlocks().add(__block);
 
-                    LoopBeginNode loopBegin = (LoopBeginNode) beginNode;
-                    for (LoopEndNode end : loopBegin.loopEnds())
+                    LoopBeginNode __loopBegin = (LoopBeginNode) __beginNode;
+                    for (LoopEndNode __end : __loopBegin.loopEnds())
                     {
-                        Block endBlock = nodeToBlock.get(end);
-                        computeLoopBlocks(endBlock, loop, stack, true);
+                        Block __endBlock = nodeToBlock.get(__end);
+                        computeLoopBlocks(__endBlock, __loop, __stack, true);
                     }
 
                     if (graph.getGuardsStage() != GuardsStage.AFTER_FSA)
                     {
-                        for (LoopExitNode exit : loopBegin.loopExits())
+                        for (LoopExitNode __exit : __loopBegin.loopExits())
                         {
-                            Block exitBlock = nodeToBlock.get(exit);
-                            computeLoopBlocks(exitBlock.getFirstPredecessor(), loop, stack, true);
-                            loop.addExit(exitBlock);
+                            Block __exitBlock = nodeToBlock.get(__exit);
+                            computeLoopBlocks(__exitBlock.getFirstPredecessor(), __loop, __stack, true);
+                            __loop.addExit(__exitBlock);
                         }
 
                         // The following loop can add new blocks to the end of the loop's block list.
-                        int size = loop.getBlocks().size();
-                        for (int i = 0; i < size; ++i)
+                        int __size = __loop.getBlocks().size();
+                        for (int __i = 0; __i < __size; ++__i)
                         {
-                            Block b = loop.getBlocks().get(i);
-                            for (Block sux : b.getSuccessors())
+                            Block __b = __loop.getBlocks().get(__i);
+                            for (Block __sux : __b.getSuccessors())
                             {
-                                if (sux.getLoop() != loop)
+                                if (__sux.getLoop() != __loop)
                                 {
-                                    AbstractBeginNode begin = sux.getBeginNode();
-                                    if (!(begin instanceof LoopExitNode && ((LoopExitNode) begin).loopBegin() == loopBegin))
+                                    AbstractBeginNode __begin = __sux.getBeginNode();
+                                    if (!(__begin instanceof LoopExitNode && ((LoopExitNode) __begin).loopBegin() == __loopBegin))
                                     {
-                                        computeLoopBlocks(sux, loop, stack, false);
+                                        computeLoopBlocks(__sux, __loop, __stack, false);
                                     }
                                 }
                             }
@@ -722,24 +731,24 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         // Compute the loop exit blocks after FSA.
         if (graph.getGuardsStage() == GuardsStage.AFTER_FSA)
         {
-            for (Block b : reversePostOrder)
+            for (Block __b : reversePostOrder)
             {
-                if (b.getLoop() != null)
+                if (__b.getLoop() != null)
                 {
-                    for (Block succ : b.getSuccessors())
+                    for (Block __succ : __b.getSuccessors())
                     {
                         // if the loop of the succ is a different one (or none)
-                        if (b.getLoop() != succ.getLoop())
+                        if (__b.getLoop() != __succ.getLoop())
                         {
                             // and the succ loop is not a child loop of the curr one
-                            if (succ.getLoop() == null)
+                            if (__succ.getLoop() == null)
                             {
                                 // we might exit multiple loops if b.loops is not a loop at depth 0
-                                Loop<Block> curr = b.getLoop();
-                                while (curr != null)
+                                Loop<Block> __curr = __b.getLoop();
+                                while (__curr != null)
                                 {
-                                    curr.addExit(succ);
-                                    curr = curr.getParent();
+                                    __curr.addExit(__succ);
+                                    __curr = __curr.getParent();
                                 }
                             }
                             else
@@ -756,14 +765,14 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                                  * the CFG will identify them as separate blocks, we just take the
                                  * first one and exit all loops at this one
                                  */
-                                if (succ.getLoop().getParent() != b.getLoop())
+                                if (__succ.getLoop().getParent() != __b.getLoop())
                                 {
                                     // b.loop must not be a transitive parent of succ.loop
-                                    Loop<Block> curr = b.getLoop();
-                                    while (curr != null && curr != succ.getLoop())
+                                    Loop<Block> __curr = __b.getLoop();
+                                    while (__curr != null && __curr != __succ.getLoop())
                                     {
-                                        curr.addExit(succ);
-                                        curr = curr.getParent();
+                                        __curr.addExit(__succ);
+                                        __curr = __curr.getParent();
                                     }
                                 }
                             }
@@ -774,114 +783,114 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         }
     }
 
-    private static void computeLoopBlocks(Block start, Loop<Block> loop, Block[] stack, boolean usePred)
+    private static void computeLoopBlocks(Block __start, Loop<Block> __loop, Block[] __stack, boolean __usePred)
     {
-        if (start.getLoop() != loop)
+        if (__start.getLoop() != __loop)
         {
-            start.setLoop(loop);
-            stack[0] = start;
-            loop.getBlocks().add(start);
-            int tos = 0;
+            __start.setLoop(__loop);
+            __stack[0] = __start;
+            __loop.getBlocks().add(__start);
+            int __tos = 0;
             do
             {
-                Block block = stack[tos--];
+                Block __block = __stack[__tos--];
 
                 // Add predecessors or successors to the loop.
-                for (Block b : (usePred ? block.getPredecessors() : block.getSuccessors()))
+                for (Block __b : (__usePred ? __block.getPredecessors() : __block.getSuccessors()))
                 {
-                    if (b.getLoop() != loop)
+                    if (__b.getLoop() != __loop)
                     {
-                        stack[++tos] = b;
-                        b.setLoop(loop);
-                        loop.getBlocks().add(b);
+                        __stack[++__tos] = __b;
+                        __b.setLoop(__loop);
+                        __loop.getBlocks().add(__b);
                     }
                 }
-            } while (tos >= 0);
+            } while (__tos >= 0);
         }
     }
 
     public void computePostdominators()
     {
-        Block[] reversePostOrderTmp = this.reversePostOrder;
-        outer: for (int j = reversePostOrderTmp.length - 1; j >= 0; --j)
+        Block[] __reversePostOrderTmp = this.reversePostOrder;
+        outer: for (int j = __reversePostOrderTmp.length - 1; j >= 0; --j)
         {
-            Block block = reversePostOrderTmp[j];
-            if (block.isLoopEnd())
+            Block __block = __reversePostOrderTmp[j];
+            if (__block.isLoopEnd())
             {
                 // We do not want the loop header registered as the postdominator of the loop end.
                 continue;
             }
-            if (block.getSuccessorCount() == 0)
+            if (__block.getSuccessorCount() == 0)
             {
                 // No successors => no postdominator.
                 continue;
             }
-            Block firstSucc = block.getSuccessors()[0];
-            if (block.getSuccessorCount() == 1)
+            Block __firstSucc = __block.getSuccessors()[0];
+            if (__block.getSuccessorCount() == 1)
             {
-                block.postdominator = firstSucc;
+                __block.postdominator = __firstSucc;
                 continue;
             }
-            Block postdominator = firstSucc;
-            for (Block sux : block.getSuccessors())
+            Block __postdominator = __firstSucc;
+            for (Block __sux : __block.getSuccessors())
             {
-                postdominator = commonPostdominator(postdominator, sux);
-                if (postdominator == null)
+                __postdominator = commonPostdominator(__postdominator, __sux);
+                if (__postdominator == null)
                 {
                     // There is a dead end => no postdominator available.
                     continue outer;
                 }
             }
-            block.setPostDominator(postdominator);
+            __block.setPostDominator(__postdominator);
         }
     }
 
-    private static Block commonPostdominator(Block a, Block b)
+    private static Block commonPostdominator(Block __a, Block __b)
     {
-        Block iterA = a;
-        Block iterB = b;
-        while (iterA != iterB)
+        Block __iterA = __a;
+        Block __iterB = __b;
+        while (__iterA != __iterB)
         {
-            if (iterA.getId() < iterB.getId())
+            if (__iterA.getId() < __iterB.getId())
             {
-                iterA = iterA.getPostdominator();
-                if (iterA == null)
+                __iterA = __iterA.getPostdominator();
+                if (__iterA == null)
                 {
                     return null;
                 }
             }
             else
             {
-                iterB = iterB.getPostdominator();
-                if (iterB == null)
+                __iterB = __iterB.getPostdominator();
+                if (__iterB == null)
                 {
                     return null;
                 }
             }
         }
-        return iterA;
+        return __iterA;
     }
 
-    public void setNodeToBlock(NodeMap<Block> nodeMap)
+    public void setNodeToBlock(NodeMap<Block> __nodeMap)
     {
-        this.nodeToBlock = nodeMap;
+        this.nodeToBlock = __nodeMap;
     }
 
     /**
      * Multiplies a and b and clamps the between {@link ControlFlowGraph#MIN_PROBABILITY} and
      * {@link ControlFlowGraph#MAX_PROBABILITY}.
      */
-    public static double multiplyProbabilities(double a, double b)
+    public static double multiplyProbabilities(double __a, double __b)
     {
-        double r = a * b;
-        if (r > MAX_PROBABILITY)
+        double __r = __a * __b;
+        if (__r > MAX_PROBABILITY)
         {
             return MAX_PROBABILITY;
         }
-        if (r < MIN_PROBABILITY)
+        if (__r < MIN_PROBABILITY)
         {
             return MIN_PROBABILITY;
         }
-        return r;
+        return __r;
     }
 }

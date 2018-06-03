@@ -10,10 +10,15 @@ import giraaff.nodes.spi.LoweringTool;
 // @class StoreHubNode
 public final class StoreHubNode extends FixedWithNextNode implements Lowerable
 {
+    // @def
     public static final NodeClass<StoreHubNode> TYPE = NodeClass.create(StoreHubNode.class);
 
-    @Input ValueNode value;
-    @Input ValueNode object;
+    @Input
+    // @field
+    ValueNode value;
+    @Input
+    // @field
+    ValueNode object;
 
     public ValueNode getValue()
     {
@@ -26,17 +31,17 @@ public final class StoreHubNode extends FixedWithNextNode implements Lowerable
     }
 
     // @cons
-    public StoreHubNode(ValueNode object, ValueNode value)
+    public StoreHubNode(ValueNode __object, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
-        this.value = value;
-        this.object = object;
+        this.value = __value;
+        this.object = __object;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @NodeIntrinsic

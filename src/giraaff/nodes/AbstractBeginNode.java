@@ -18,42 +18,43 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AbstractBeginNode
 public abstract class AbstractBeginNode extends FixedWithNextNode implements LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType
 {
+    // @def
     public static final NodeClass<AbstractBeginNode> TYPE = NodeClass.create(AbstractBeginNode.class);
 
     // @cons
-    protected AbstractBeginNode(NodeClass<? extends AbstractBeginNode> c)
+    protected AbstractBeginNode(NodeClass<? extends AbstractBeginNode> __c)
     {
-        this(c, StampFactory.forVoid());
+        this(__c, StampFactory.forVoid());
     }
 
     // @cons
-    protected AbstractBeginNode(NodeClass<? extends AbstractBeginNode> c, Stamp stamp)
+    protected AbstractBeginNode(NodeClass<? extends AbstractBeginNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
-    public static AbstractBeginNode prevBegin(FixedNode from)
+    public static AbstractBeginNode prevBegin(FixedNode __from)
     {
-        Node next = from;
-        while (next != null)
+        Node __next = __from;
+        while (__next != null)
         {
-            if (next instanceof AbstractBeginNode)
+            if (__next instanceof AbstractBeginNode)
             {
-                return (AbstractBeginNode) next;
+                return (AbstractBeginNode) __next;
             }
-            next = next.predecessor();
+            __next = __next.predecessor();
         }
         return null;
     }
 
-    private void evacuateGuards(FixedNode evacuateFrom)
+    private void evacuateGuards(FixedNode __evacuateFrom)
     {
         if (!hasNoUsages())
         {
-            AbstractBeginNode prevBegin = prevBegin(evacuateFrom);
-            for (Node anchored : anchored().snapshot())
+            AbstractBeginNode __prevBegin = prevBegin(__evacuateFrom);
+            for (Node __anchored : anchored().snapshot())
             {
-                anchored.replaceFirstInput(this, prevBegin);
+                __anchored.replaceFirstInput(this, __prevBegin);
             }
         }
     }
@@ -63,13 +64,13 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
         prepareDelete((FixedNode) predecessor());
     }
 
-    public void prepareDelete(FixedNode evacuateFrom)
+    public void prepareDelete(FixedNode __evacuateFrom)
     {
-        evacuateGuards(evacuateFrom);
+        evacuateGuards(__evacuateFrom);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // nop
     }
@@ -100,13 +101,14 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
     // @class AbstractBeginNode.BlockNodeIterator
     private static final class BlockNodeIterator implements Iterator<FixedNode>
     {
+        // @field
         private FixedNode current;
 
         // @cons
-        BlockNodeIterator(FixedNode next)
+        BlockNodeIterator(FixedNode __next)
         {
             super();
-            this.current = next;
+            this.current = __next;
         }
 
         @Override
@@ -118,8 +120,8 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
         @Override
         public FixedNode next()
         {
-            FixedNode ret = current;
-            if (ret == null)
+            FixedNode __ret = current;
+            if (__ret == null)
             {
                 throw new NoSuchElementException();
             }
@@ -135,7 +137,7 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
             {
                 current = null;
             }
-            return ret;
+            return __ret;
         }
 
         @Override

@@ -16,30 +16,34 @@ import giraaff.phases.tiers.HighTierContext;
 // @class InliningPhase
 public final class InliningPhase extends AbstractInliningPhase
 {
+    // @field
     private final InliningPolicy inliningPolicy;
+    // @field
     private final CanonicalizerPhase canonicalizer;
+    // @field
     private LinkedList<Invoke> rootInvokes = null;
 
+    // @field
     private int maxMethodPerInlining = Integer.MAX_VALUE;
 
     // @cons
-    public InliningPhase(CanonicalizerPhase canonicalizer)
+    public InliningPhase(CanonicalizerPhase __canonicalizer)
     {
-        this(new GreedyInliningPolicy(null), canonicalizer);
+        this(new GreedyInliningPolicy(null), __canonicalizer);
     }
 
     // @cons
-    public InliningPhase(Map<Invoke, Double> hints, CanonicalizerPhase canonicalizer)
+    public InliningPhase(Map<Invoke, Double> __hints, CanonicalizerPhase __canonicalizer)
     {
-        this(new GreedyInliningPolicy(hints), canonicalizer);
+        this(new GreedyInliningPolicy(__hints), __canonicalizer);
     }
 
     // @cons
-    public InliningPhase(InliningPolicy policy, CanonicalizerPhase canonicalizer)
+    public InliningPhase(InliningPolicy __policy, CanonicalizerPhase __canonicalizer)
     {
         super();
-        this.inliningPolicy = policy;
-        this.canonicalizer = canonicalizer;
+        this.inliningPolicy = __policy;
+        this.canonicalizer = __canonicalizer;
     }
 
     public CanonicalizerPhase getCanonicalizer()
@@ -47,14 +51,14 @@ public final class InliningPhase extends AbstractInliningPhase
         return canonicalizer;
     }
 
-    public void setMaxMethodsPerInlining(int max)
+    public void setMaxMethodsPerInlining(int __max)
     {
-        maxMethodPerInlining = max;
+        maxMethodPerInlining = __max;
     }
 
-    public void setRootInvokes(LinkedList<Invoke> rootInvokes)
+    public void setRootInvokes(LinkedList<Invoke> __rootInvokes)
     {
-        this.rootInvokes = rootInvokes;
+        this.rootInvokes = __rootInvokes;
     }
 
     /**
@@ -64,19 +68,19 @@ public final class InliningPhase extends AbstractInliningPhase
      * @see InliningData#moveForward()
      */
     @Override
-    protected void run(final StructuredGraph graph, final HighTierContext context)
+    protected void run(final StructuredGraph __graph, final HighTierContext __context)
     {
-        final InliningData data = new InliningData(graph, context, maxMethodPerInlining, canonicalizer, inliningPolicy, rootInvokes);
+        final InliningData __data = new InliningData(__graph, __context, maxMethodPerInlining, canonicalizer, inliningPolicy, rootInvokes);
 
-        int count = 0;
-        int limit = GraalOptions.methodInlineBailoutLimit;
-        while (data.hasUnprocessedGraphs())
+        int __count = 0;
+        int __limit = GraalOptions.methodInlineBailoutLimit;
+        while (__data.hasUnprocessedGraphs())
         {
-            boolean wasInlined = data.moveForward();
-            count++;
-            if (!wasInlined)
+            boolean __wasInlined = __data.moveForward();
+            __count++;
+            if (!__wasInlined)
             {
-                if (limit > 0 && count == limit)
+                if (__limit > 0 && __count == __limit)
                 {
                     // limit the amount of exploration which is done
                     break;

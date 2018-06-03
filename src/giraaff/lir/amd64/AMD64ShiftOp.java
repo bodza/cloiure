@@ -19,31 +19,41 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64ShiftOp
 public final class AMD64ShiftOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64ShiftOp> TYPE = LIRInstructionClass.create(AMD64ShiftOp.class);
 
-    @Opcode private final AMD64MOp opcode;
+    @Opcode
+    // @field
+    private final AMD64MOp opcode;
+    // @field
     private final OperandSize size;
 
-    @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
-    @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue x;
-    @Alive({OperandFlag.REG}) protected AllocatableValue y;
+    @Def({OperandFlag.REG, OperandFlag.HINT})
+    // @field
+    protected AllocatableValue result;
+    @Use({OperandFlag.REG, OperandFlag.STACK})
+    // @field
+    protected AllocatableValue x;
+    @Alive({OperandFlag.REG})
+    // @field
+    protected AllocatableValue y;
 
     // @cons
-    public AMD64ShiftOp(AMD64MOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+    public AMD64ShiftOp(AMD64MOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
     {
         super(TYPE);
-        this.opcode = opcode;
-        this.size = size;
+        this.opcode = __opcode;
+        this.size = __size;
 
-        this.result = result;
-        this.x = x;
-        this.y = y;
+        this.result = __result;
+        this.x = __x;
+        this.y = __y;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        AMD64Move.move(crb, masm, result, x);
-        opcode.emit(masm, size, ValueUtil.asRegister(result));
+        AMD64Move.move(__crb, __masm, result, x);
+        opcode.emit(__masm, size, ValueUtil.asRegister(result));
     }
 }

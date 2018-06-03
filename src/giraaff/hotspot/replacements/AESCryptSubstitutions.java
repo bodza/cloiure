@@ -38,14 +38,18 @@ public final class AESCryptSubstitutions
         super();
     }
 
+    // @def
     static final long kOffset;
+    // @def
     static final long lastKeyOffset;
+    // @def
     static final Class<?> AESCryptClass;
 
     /**
      * The AES block size is a constant 128 bits as defined by the
      * <a href="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf">standard<a/>.
      */
+    // @def
     static final int AES_BLOCK_SIZE_IN_BYTES = 16;
 
     static
@@ -54,39 +58,39 @@ public final class AESCryptSubstitutions
         {
             // Need to use the system class loader as com.sun.crypto.provider.AESCrypt is normally loaded
             // by the extension class loader, which is not delegated to by the JVMCI class loader.
-            ClassLoader cl = ClassLoader.getSystemClassLoader();
-            AESCryptClass = Class.forName("com.sun.crypto.provider.AESCrypt", true, cl);
+            ClassLoader __cl = ClassLoader.getSystemClassLoader();
+            AESCryptClass = Class.forName("com.sun.crypto.provider.AESCrypt", true, __cl);
             kOffset = UnsafeAccess.UNSAFE.objectFieldOffset(AESCryptClass.getDeclaredField("K"));
             lastKeyOffset = UnsafeAccess.UNSAFE.objectFieldOffset(AESCryptClass.getDeclaredField("lastKey"));
         }
-        catch (Exception ex)
+        catch (Exception __ex)
         {
-            throw new GraalError(ex);
+            throw new GraalError(__ex);
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    static void encryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    static void encryptBlock(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
-        crypt(rcvr, in, inOffset, out, outOffset, true, false);
+        crypt(__rcvr, __in, __inOffset, __out, __outOffset, true, false);
     }
 
     @MethodSubstitution(isStatic = false)
-    static void implEncryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    static void implEncryptBlock(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
-        crypt(rcvr, in, inOffset, out, outOffset, true, false);
+        crypt(__rcvr, __in, __inOffset, __out, __outOffset, true, false);
     }
 
     @MethodSubstitution(isStatic = false)
-    static void decryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    static void decryptBlock(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
-        crypt(rcvr, in, inOffset, out, outOffset, false, false);
+        crypt(__rcvr, __in, __inOffset, __out, __outOffset, false, false);
     }
 
     @MethodSubstitution(isStatic = false)
-    static void implDecryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    static void implDecryptBlock(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
-        crypt(rcvr, in, inOffset, out, outOffset, false, false);
+        crypt(__rcvr, __in, __inOffset, __out, __outOffset, false, false);
     }
 
     /**
@@ -94,43 +98,43 @@ public final class AESCryptSubstitutions
      * issues between Java key expansion and hardware crypto instructions.
      */
     @MethodSubstitution(value = "decryptBlock", isStatic = false)
-    static void decryptBlockWithOriginalKey(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    static void decryptBlockWithOriginalKey(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
-        crypt(rcvr, in, inOffset, out, outOffset, false, true);
+        crypt(__rcvr, __in, __inOffset, __out, __outOffset, false, true);
     }
 
     /**
      * @see #decryptBlockWithOriginalKey(Object, byte[], int, byte[], int)
      */
     @MethodSubstitution(value = "implDecryptBlock", isStatic = false)
-    static void implDecryptBlockWithOriginalKey(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    static void implDecryptBlockWithOriginalKey(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
-        crypt(rcvr, in, inOffset, out, outOffset, false, true);
+        crypt(__rcvr, __in, __inOffset, __out, __outOffset, false, true);
     }
 
-    private static void crypt(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset, boolean encrypt, boolean withOriginalKey)
+    private static void crypt(Object __rcvr, byte[] __in, int __inOffset, byte[] __out, int __outOffset, boolean __encrypt, boolean __withOriginalKey)
     {
-        checkArgs(in, inOffset, out, outOffset);
-        Object realReceiver = PiNode.piCastNonNull(rcvr, AESCryptClass);
-        Object kObject = RawLoadNode.load(realReceiver, kOffset, JavaKind.Object, LocationIdentity.any());
-        Pointer kAddr = Word.objectToTrackedPointer(kObject).add(HotSpotRuntime.getArrayBaseOffset(JavaKind.Int));
-        Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + inOffset));
-        Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + outOffset));
-        if (encrypt)
+        checkArgs(__in, __inOffset, __out, __outOffset);
+        Object __realReceiver = PiNode.piCastNonNull(__rcvr, AESCryptClass);
+        Object __kObject = RawLoadNode.load(__realReceiver, kOffset, JavaKind.Object, LocationIdentity.any());
+        Pointer __kAddr = Word.objectToTrackedPointer(__kObject).add(HotSpotRuntime.getArrayBaseOffset(JavaKind.Int));
+        Word __inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__in, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + __inOffset));
+        Word __outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__out, HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte) + __outOffset));
+        if (__encrypt)
         {
-            encryptBlockStub(HotSpotBackend.ENCRYPT_BLOCK, inAddr, outAddr, kAddr);
+            encryptBlockStub(HotSpotBackend.ENCRYPT_BLOCK, __inAddr, __outAddr, __kAddr);
         }
         else
         {
-            if (withOriginalKey)
+            if (__withOriginalKey)
             {
-                Object lastKeyObject = RawLoadNode.load(realReceiver, lastKeyOffset, JavaKind.Object, LocationIdentity.any());
-                Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte));
-                decryptBlockWithOriginalKeyStub(HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY, inAddr, outAddr, kAddr, lastKeyAddr);
+                Object __lastKeyObject = RawLoadNode.load(__realReceiver, lastKeyOffset, JavaKind.Object, LocationIdentity.any());
+                Pointer __lastKeyAddr = Word.objectToTrackedPointer(__lastKeyObject).add(HotSpotRuntime.getArrayBaseOffset(JavaKind.Byte));
+                decryptBlockWithOriginalKeyStub(HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY, __inAddr, __outAddr, __kAddr, __lastKeyAddr);
             }
             else
             {
-                decryptBlockStub(HotSpotBackend.DECRYPT_BLOCK, inAddr, outAddr, kAddr);
+                decryptBlockStub(HotSpotBackend.DECRYPT_BLOCK, __inAddr, __outAddr, __kAddr);
             }
         }
     }
@@ -138,9 +142,9 @@ public final class AESCryptSubstitutions
     /**
      * Perform null and array bounds checks for arguments to a cipher operation.
      */
-    static void checkArgs(byte[] in, int inOffset, byte[] out, int outOffset)
+    static void checkArgs(byte[] __in, int __inOffset, byte[] __out, int __outOffset)
     {
-        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, inOffset < 0 || in.length - AES_BLOCK_SIZE_IN_BYTES < inOffset || outOffset < 0 || out.length - AES_BLOCK_SIZE_IN_BYTES < outOffset))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, __inOffset < 0 || __in.length - AES_BLOCK_SIZE_IN_BYTES < __inOffset || __outOffset < 0 || __out.length - AES_BLOCK_SIZE_IN_BYTES < __outOffset))
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }

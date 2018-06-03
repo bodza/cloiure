@@ -20,31 +20,31 @@ import giraaff.util.GraalError;
 public final class HotSpotNarrowOopStamp extends NarrowOopStamp
 {
     // @cons
-    private HotSpotNarrowOopStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull, CompressEncoding encoding)
+    private HotSpotNarrowOopStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
-        super(type, exactType, nonNull, alwaysNull, encoding);
+        super(__type, __exactType, __nonNull, __alwaysNull, __encoding);
     }
 
     @Override
-    protected AbstractObjectStamp copyWith(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull)
+    protected AbstractObjectStamp copyWith(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull)
     {
-        return new HotSpotNarrowOopStamp(type, exactType, nonNull, alwaysNull, getEncoding());
+        return new HotSpotNarrowOopStamp(__type, __exactType, __nonNull, __alwaysNull, getEncoding());
     }
 
-    public static Stamp compressed(AbstractObjectStamp stamp, CompressEncoding encoding)
+    public static Stamp compressed(AbstractObjectStamp __stamp, CompressEncoding __encoding)
     {
-        return new HotSpotNarrowOopStamp(stamp.type(), stamp.isExactType(), stamp.nonNull(), stamp.alwaysNull(), encoding);
+        return new HotSpotNarrowOopStamp(__stamp.type(), __stamp.isExactType(), __stamp.nonNull(), __stamp.alwaysNull(), __encoding);
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
         try
         {
-            HotSpotMemoryAccessProvider hsProvider = (HotSpotMemoryAccessProvider) provider;
-            return hsProvider.readNarrowOopConstant(base, displacement);
+            HotSpotMemoryAccessProvider __hsProvider = (HotSpotMemoryAccessProvider) __provider;
+            return __hsProvider.readNarrowOopConstant(__base, __displacement);
         }
-        catch (IllegalArgumentException e)
+        catch (IllegalArgumentException __e)
         {
             return null;
         }
@@ -64,44 +64,44 @@ public final class HotSpotNarrowOopStamp extends NarrowOopStamp
     }
 
     @Override
-    public boolean isCompatible(Constant other)
+    public boolean isCompatible(Constant __other)
     {
-        if (other instanceof HotSpotObjectConstant)
+        if (__other instanceof HotSpotObjectConstant)
         {
-            return ((HotSpotObjectConstant) other).isCompressed();
+            return ((HotSpotObjectConstant) __other).isCompressed();
         }
         return true;
     }
 
-    public static Stamp mkStamp(CompressionOp op, Stamp input, CompressEncoding encoding)
+    public static Stamp mkStamp(CompressionOp __op, Stamp __input, CompressEncoding __encoding)
     {
-        switch (op)
+        switch (__op)
         {
             case Compress:
-                if (input instanceof ObjectStamp)
+                if (__input instanceof ObjectStamp)
                 {
                     // compressed oop
-                    return HotSpotNarrowOopStamp.compressed((ObjectStamp) input, encoding);
+                    return HotSpotNarrowOopStamp.compressed((ObjectStamp) __input, __encoding);
                 }
-                else if (input instanceof KlassPointerStamp)
+                else if (__input instanceof KlassPointerStamp)
                 {
                     // compressed klass pointer
-                    return ((KlassPointerStamp) input).compressed(encoding);
+                    return ((KlassPointerStamp) __input).compressed(__encoding);
                 }
                 break;
             case Uncompress:
-                if (input instanceof NarrowOopStamp)
+                if (__input instanceof NarrowOopStamp)
                 {
                     // oop
-                    return ((NarrowOopStamp) input).uncompressed();
+                    return ((NarrowOopStamp) __input).uncompressed();
                 }
-                else if (input instanceof KlassPointerStamp)
+                else if (__input instanceof KlassPointerStamp)
                 {
                     // metaspace pointer
-                    return ((KlassPointerStamp) input).uncompressed();
+                    return ((KlassPointerStamp) __input).uncompressed();
                 }
                 break;
         }
-        throw GraalError.shouldNotReachHere("unexpected input stamp: " + input);
+        throw GraalError.shouldNotReachHere("unexpected input stamp: " + __input);
     }
 }

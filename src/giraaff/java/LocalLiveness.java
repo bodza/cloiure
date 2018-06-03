@@ -11,58 +11,59 @@ import giraaff.java.BciBlockMapping.BciBlock;
 // @class LocalLiveness
 public abstract class LocalLiveness
 {
+    // @field
     protected final BciBlock[] blocks;
 
-    public static LocalLiveness compute(BytecodeStream stream, BciBlock[] blocks, int maxLocals, int loopCount)
+    public static LocalLiveness compute(BytecodeStream __stream, BciBlock[] __blocks, int __maxLocals, int __loopCount)
     {
-        LocalLiveness liveness = maxLocals <= 64 ? new SmallLocalLiveness(blocks, maxLocals, loopCount) : new LargeLocalLiveness(blocks, maxLocals, loopCount);
-        liveness.computeLiveness(stream);
-        return liveness;
+        LocalLiveness __liveness = __maxLocals <= 64 ? new SmallLocalLiveness(__blocks, __maxLocals, __loopCount) : new LargeLocalLiveness(__blocks, __maxLocals, __loopCount);
+        __liveness.computeLiveness(__stream);
+        return __liveness;
     }
 
     // @cons
-    protected LocalLiveness(BciBlock[] blocks)
+    protected LocalLiveness(BciBlock[] __blocks)
     {
         super();
-        this.blocks = blocks;
+        this.blocks = __blocks;
     }
 
-    void computeLiveness(BytecodeStream stream)
+    void computeLiveness(BytecodeStream __stream)
     {
-        for (BciBlock block : blocks)
+        for (BciBlock __block : blocks)
         {
-            computeLocalLiveness(stream, block);
+            computeLocalLiveness(__stream, __block);
         }
 
-        boolean changed;
-        int iteration = 0;
+        boolean __changed;
+        int __iteration = 0;
         do
         {
-            changed = false;
-            for (int i = blocks.length - 1; i >= 0; i--)
+            __changed = false;
+            for (int __i = blocks.length - 1; __i >= 0; __i--)
             {
-                BciBlock block = blocks[i];
-                int blockID = block.getId();
+                BciBlock __block = blocks[__i];
+                int __blockID = __block.getId();
 
-                boolean blockChanged = (iteration == 0);
-                if (block.getSuccessorCount() > 0)
+                boolean __blockChanged = (__iteration == 0);
+                if (__block.getSuccessorCount() > 0)
                 {
-                    int oldCardinality = liveOutCardinality(blockID);
-                    for (BciBlock sux : block.getSuccessors())
+                    int __oldCardinality = liveOutCardinality(__blockID);
+                    for (BciBlock __sux : __block.getSuccessors())
                     {
-                        propagateLiveness(blockID, sux.getId());
+                        propagateLiveness(__blockID, __sux.getId());
                     }
-                    blockChanged |= (oldCardinality != liveOutCardinality(blockID));
+                    __blockChanged |= (__oldCardinality != liveOutCardinality(__blockID));
                 }
 
-                if (blockChanged)
+                if (__blockChanged)
                 {
-                    updateLiveness(blockID);
+                    updateLiveness(__blockID);
                 }
-                changed |= blockChanged;
+                __changed |= __blockChanged;
             }
-            iteration++;
-        } while (changed);
+            __iteration++;
+        } while (__changed);
     }
 
     /**
@@ -105,130 +106,130 @@ public abstract class LocalLiveness
      */
     protected abstract void storeOne(int blockID, int local);
 
-    private void computeLocalLiveness(BytecodeStream stream, BciBlock block)
+    private void computeLocalLiveness(BytecodeStream __stream, BciBlock __block)
     {
-        if (block.isExceptionDispatch())
+        if (__block.isExceptionDispatch())
         {
             return;
         }
-        int blockID = block.getId();
-        int localIndex;
-        stream.setBCI(block.startBci);
-        while (stream.currentBCI() <= block.endBci)
+        int __blockID = __block.getId();
+        int __localIndex;
+        __stream.setBCI(__block.startBci);
+        while (__stream.currentBCI() <= __block.endBci)
         {
-            switch (stream.currentBC())
+            switch (__stream.currentBC())
             {
                 case Bytecodes.LLOAD:
                 case Bytecodes.DLOAD:
-                    loadTwo(blockID, stream.readLocalIndex());
+                    loadTwo(__blockID, __stream.readLocalIndex());
                     break;
                 case Bytecodes.LLOAD_0:
                 case Bytecodes.DLOAD_0:
-                    loadTwo(blockID, 0);
+                    loadTwo(__blockID, 0);
                     break;
                 case Bytecodes.LLOAD_1:
                 case Bytecodes.DLOAD_1:
-                    loadTwo(blockID, 1);
+                    loadTwo(__blockID, 1);
                     break;
                 case Bytecodes.LLOAD_2:
                 case Bytecodes.DLOAD_2:
-                    loadTwo(blockID, 2);
+                    loadTwo(__blockID, 2);
                     break;
                 case Bytecodes.LLOAD_3:
                 case Bytecodes.DLOAD_3:
-                    loadTwo(blockID, 3);
+                    loadTwo(__blockID, 3);
                     break;
                 case Bytecodes.IINC:
-                    localIndex = stream.readLocalIndex();
-                    loadOne(blockID, localIndex);
-                    storeOne(blockID, localIndex);
+                    __localIndex = __stream.readLocalIndex();
+                    loadOne(__blockID, __localIndex);
+                    storeOne(__blockID, __localIndex);
                     break;
                 case Bytecodes.ILOAD:
                 case Bytecodes.FLOAD:
                 case Bytecodes.ALOAD:
                 case Bytecodes.RET:
-                    loadOne(blockID, stream.readLocalIndex());
+                    loadOne(__blockID, __stream.readLocalIndex());
                     break;
                 case Bytecodes.ILOAD_0:
                 case Bytecodes.FLOAD_0:
                 case Bytecodes.ALOAD_0:
-                    loadOne(blockID, 0);
+                    loadOne(__blockID, 0);
                     break;
                 case Bytecodes.ILOAD_1:
                 case Bytecodes.FLOAD_1:
                 case Bytecodes.ALOAD_1:
-                    loadOne(blockID, 1);
+                    loadOne(__blockID, 1);
                     break;
                 case Bytecodes.ILOAD_2:
                 case Bytecodes.FLOAD_2:
                 case Bytecodes.ALOAD_2:
-                    loadOne(blockID, 2);
+                    loadOne(__blockID, 2);
                     break;
                 case Bytecodes.ILOAD_3:
                 case Bytecodes.FLOAD_3:
                 case Bytecodes.ALOAD_3:
-                    loadOne(blockID, 3);
+                    loadOne(__blockID, 3);
                     break;
 
                 case Bytecodes.LSTORE:
                 case Bytecodes.DSTORE:
-                    storeTwo(blockID, stream.readLocalIndex());
+                    storeTwo(__blockID, __stream.readLocalIndex());
                     break;
                 case Bytecodes.LSTORE_0:
                 case Bytecodes.DSTORE_0:
-                    storeTwo(blockID, 0);
+                    storeTwo(__blockID, 0);
                     break;
                 case Bytecodes.LSTORE_1:
                 case Bytecodes.DSTORE_1:
-                    storeTwo(blockID, 1);
+                    storeTwo(__blockID, 1);
                     break;
                 case Bytecodes.LSTORE_2:
                 case Bytecodes.DSTORE_2:
-                    storeTwo(blockID, 2);
+                    storeTwo(__blockID, 2);
                     break;
                 case Bytecodes.LSTORE_3:
                 case Bytecodes.DSTORE_3:
-                    storeTwo(blockID, 3);
+                    storeTwo(__blockID, 3);
                     break;
                 case Bytecodes.ISTORE:
                 case Bytecodes.FSTORE:
                 case Bytecodes.ASTORE:
-                    storeOne(blockID, stream.readLocalIndex());
+                    storeOne(__blockID, __stream.readLocalIndex());
                     break;
                 case Bytecodes.ISTORE_0:
                 case Bytecodes.FSTORE_0:
                 case Bytecodes.ASTORE_0:
-                    storeOne(blockID, 0);
+                    storeOne(__blockID, 0);
                     break;
                 case Bytecodes.ISTORE_1:
                 case Bytecodes.FSTORE_1:
                 case Bytecodes.ASTORE_1:
-                    storeOne(blockID, 1);
+                    storeOne(__blockID, 1);
                     break;
                 case Bytecodes.ISTORE_2:
                 case Bytecodes.FSTORE_2:
                 case Bytecodes.ASTORE_2:
-                    storeOne(blockID, 2);
+                    storeOne(__blockID, 2);
                     break;
                 case Bytecodes.ISTORE_3:
                 case Bytecodes.FSTORE_3:
                 case Bytecodes.ASTORE_3:
-                    storeOne(blockID, 3);
+                    storeOne(__blockID, 3);
                     break;
             }
-            stream.next();
+            __stream.next();
         }
     }
 
-    private void loadTwo(int blockID, int local)
+    private void loadTwo(int __blockID, int __local)
     {
-        loadOne(blockID, local);
-        loadOne(blockID, local + 1);
+        loadOne(__blockID, __local);
+        loadOne(__blockID, __local + 1);
     }
 
-    private void storeTwo(int blockID, int local)
+    private void storeTwo(int __blockID, int __local)
     {
-        storeOne(blockID, local);
-        storeOne(blockID, local + 1);
+        storeOne(__blockID, __local);
+        storeOne(__blockID, __local + 1);
     }
 }

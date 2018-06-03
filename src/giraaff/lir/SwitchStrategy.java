@@ -74,19 +74,23 @@ public abstract class SwitchStrategy
     // @class SwitchStrategy.BaseSwitchClosure
     public abstract static class BaseSwitchClosure implements SwitchClosure
     {
+        // @field
         private final CompilationResultBuilder crb;
+        // @field
         private final Assembler masm;
+        // @field
         private final LabelRef[] keyTargets;
+        // @field
         private final LabelRef defaultTarget;
 
         // @cons
-        public BaseSwitchClosure(CompilationResultBuilder crb, Assembler masm, LabelRef[] keyTargets, LabelRef defaultTarget)
+        public BaseSwitchClosure(CompilationResultBuilder __crb, Assembler __masm, LabelRef[] __keyTargets, LabelRef __defaultTarget)
         {
             super();
-            this.crb = crb;
-            this.masm = masm;
-            this.keyTargets = keyTargets;
-            this.defaultTarget = defaultTarget;
+            this.crb = __crb;
+            this.masm = __masm;
+            this.keyTargets = __keyTargets;
+            this.defaultTarget = __defaultTarget;
         }
 
         /**
@@ -96,55 +100,55 @@ public abstract class SwitchStrategy
         protected abstract void conditionalJump(int index, Condition condition, Label target);
 
         @Override
-        public void conditionalJump(int index, Condition condition, boolean targetDefault)
+        public void conditionalJump(int __index, Condition __condition, boolean __targetDefault)
         {
-            Label target = targetDefault ? defaultTarget.label() : keyTargets[index].label();
-            if (condition == null)
+            Label __target = __targetDefault ? defaultTarget.label() : keyTargets[__index].label();
+            if (__condition == null)
             {
-                masm.jmp(target);
+                masm.jmp(__target);
             }
             else
             {
-                conditionalJump(index, condition, target);
+                conditionalJump(__index, __condition, __target);
             }
         }
 
         @Override
-        public void conditionalJumpOrDefault(int index, Condition condition, boolean canFallThrough)
+        public void conditionalJumpOrDefault(int __index, Condition __condition, boolean __canFallThrough)
         {
-            if (canFallThrough && crb.isSuccessorEdge(defaultTarget))
+            if (__canFallThrough && crb.isSuccessorEdge(defaultTarget))
             {
-                conditionalJump(index, condition, keyTargets[index].label());
+                conditionalJump(__index, __condition, keyTargets[__index].label());
             }
-            else if (canFallThrough && crb.isSuccessorEdge(keyTargets[index]))
+            else if (__canFallThrough && crb.isSuccessorEdge(keyTargets[__index]))
             {
-                conditionalJump(index, condition.negate(), defaultTarget.label());
+                conditionalJump(__index, __condition.negate(), defaultTarget.label());
             }
             else
             {
-                conditionalJump(index, condition, keyTargets[index].label());
+                conditionalJump(__index, __condition, keyTargets[__index].label());
                 masm.jmp(defaultTarget.label());
             }
         }
 
         @Override
-        public Label conditionalJump(int index, Condition condition)
+        public Label conditionalJump(int __index, Condition __condition)
         {
-            Label label = new Label();
-            conditionalJump(index, condition, label);
-            return label;
+            Label __label = new Label();
+            conditionalJump(__index, __condition, __label);
+            return __label;
         }
 
         @Override
-        public void bind(Label label)
+        public void bind(Label __label)
         {
-            masm.bind(label);
+            masm.bind(__label);
         }
 
         @Override
-        public boolean isSameTarget(int index1, int index2)
+        public boolean isSameTarget(int __index1, int __index2)
         {
-            return keyTargets[index1] == keyTargets[index2];
+            return keyTargets[__index1] == keyTargets[__index2];
         }
     }
 
@@ -156,72 +160,80 @@ public abstract class SwitchStrategy
     // @closure
     private final class EffortClosure implements SwitchClosure
     {
+        // @field
         private int defaultEffort;
+        // @field
         private int defaultCount;
+        // @field
         private final int[] keyEfforts = new int[SwitchStrategy.this.keyProbabilities.length];
+        // @field
         private final int[] keyCounts = new int[SwitchStrategy.this.keyProbabilities.length];
+        // @field
         private final LabelRef[] keyTargets;
 
         // @cons
-        EffortClosure(LabelRef[] keyTargets)
+        EffortClosure(LabelRef[] __keyTargets)
         {
             super();
-            this.keyTargets = keyTargets;
+            this.keyTargets = __keyTargets;
         }
 
         @Override
-        public void conditionalJump(int index, Condition condition, boolean defaultTarget)
+        public void conditionalJump(int __index, Condition __condition, boolean __defaultTarget)
         {
             // nothing to do
         }
 
         @Override
-        public void conditionalJumpOrDefault(int index, Condition condition, boolean canFallThrough)
+        public void conditionalJumpOrDefault(int __index, Condition __condition, boolean __canFallThrough)
         {
             // nothing to do
         }
 
         @Override
-        public Label conditionalJump(int index, Condition condition)
+        public Label conditionalJump(int __index, Condition __condition)
         {
             // nothing to do
             return null;
         }
 
         @Override
-        public void bind(Label label)
+        public void bind(Label __label)
         {
             // nothing to do
         }
 
         @Override
-        public boolean isSameTarget(int index1, int index2)
+        public boolean isSameTarget(int __index1, int __index2)
         {
-            return keyTargets[index1] == keyTargets[index2];
+            return keyTargets[__index1] == keyTargets[__index2];
         }
 
         public double getAverageEffort()
         {
-            double defaultProbability = 1;
-            double effort = 0;
-            for (int i = 0; i < SwitchStrategy.this.keyProbabilities.length; i++)
+            double __defaultProbability = 1;
+            double __effort = 0;
+            for (int __i = 0; __i < SwitchStrategy.this.keyProbabilities.length; __i++)
             {
-                effort += keyEfforts[i] * SwitchStrategy.this.keyProbabilities[i] / keyCounts[i];
-                defaultProbability -= SwitchStrategy.this.keyProbabilities[i];
+                __effort += keyEfforts[__i] * SwitchStrategy.this.keyProbabilities[__i] / keyCounts[__i];
+                __defaultProbability -= SwitchStrategy.this.keyProbabilities[__i];
             }
-            return effort + defaultEffort * defaultProbability / defaultCount;
+            return __effort + defaultEffort * __defaultProbability / defaultCount;
         }
     }
 
+    // @field
     public final double[] keyProbabilities;
+    // @field
     private double averageEffort = -1;
+    // @field
     private EffortClosure effortClosure;
 
     // @cons
-    public SwitchStrategy(double[] keyProbabilities)
+    public SwitchStrategy(double[] __keyProbabilities)
     {
         super();
-        this.keyProbabilities = keyProbabilities;
+        this.keyProbabilities = __keyProbabilities;
     }
 
     public abstract Constant[] getKeyConstants();
@@ -235,14 +247,14 @@ public abstract class SwitchStrategy
      * Tells the system that the given (inclusive) range of keys is reached after depth number
      * of comparisons, which is used to calculate the average effort.
      */
-    protected void registerEffort(int rangeStart, int rangeEnd, int depth)
+    protected void registerEffort(int __rangeStart, int __rangeEnd, int __depth)
     {
         if (effortClosure != null)
         {
-            for (int i = rangeStart; i <= rangeEnd; i++)
+            for (int __i = __rangeStart; __i <= __rangeEnd; __i++)
             {
-                effortClosure.keyEfforts[i] += depth;
-                effortClosure.keyCounts[i]++;
+                effortClosure.keyEfforts[__i] += __depth;
+                effortClosure.keyCounts[__i]++;
             }
         }
     }
@@ -251,11 +263,11 @@ public abstract class SwitchStrategy
      * Tells the system that the default successor is reached after depth number of comparisons,
      * which is used to calculate average effort.
      */
-    protected void registerDefaultEffort(int depth)
+    protected void registerDefaultEffort(int __depth)
     {
         if (effortClosure != null)
         {
-            effortClosure.defaultEffort += depth;
+            effortClosure.defaultEffort += __depth;
             effortClosure.defaultCount++;
         }
     }
@@ -267,28 +279,30 @@ public abstract class SwitchStrategy
     // @class SwitchStrategy.SequentialStrategy
     public static final class SequentialStrategy extends SwitchStrategy
     {
+        // @field
         private final Integer[] indexes;
+        // @field
         private final Constant[] keyConstants;
 
         // @cons
-        public SequentialStrategy(final double[] keyProbabilities, Constant[] keyConstants)
+        public SequentialStrategy(final double[] __keyProbabilities, Constant[] __keyConstants)
         {
-            super(keyProbabilities);
+            super(__keyProbabilities);
 
-            this.keyConstants = keyConstants;
-            int keyCount = keyConstants.length;
-            indexes = new Integer[keyCount];
-            for (int i = 0; i < keyCount; i++)
+            this.keyConstants = __keyConstants;
+            int __keyCount = __keyConstants.length;
+            indexes = new Integer[__keyCount];
+            for (int __i = 0; __i < __keyCount; __i++)
             {
-                indexes[i] = i;
+                indexes[__i] = __i;
             }
             // @closure
             Arrays.sort(indexes, new Comparator<Integer>()
             {
                 @Override
-                public int compare(Integer o1, Integer o2)
+                public int compare(Integer __o1, Integer __o2)
                 {
-                    return keyProbabilities[o1] < keyProbabilities[o2] ? 1 : keyProbabilities[o1] > keyProbabilities[o2] ? -1 : 0;
+                    return __keyProbabilities[__o1] < __keyProbabilities[__o2] ? 1 : __keyProbabilities[__o1] > __keyProbabilities[__o2] ? -1 : 0;
                 }
             });
         }
@@ -300,14 +314,14 @@ public abstract class SwitchStrategy
         }
 
         @Override
-        public void run(SwitchClosure closure)
+        public void run(SwitchClosure __closure)
         {
-            for (int i = 0; i < keyConstants.length - 1; i++)
+            for (int __i = 0; __i < keyConstants.length - 1; __i++)
             {
-                closure.conditionalJump(indexes[i], Condition.EQ, false);
-                registerEffort(indexes[i], indexes[i], i + 1);
+                __closure.conditionalJump(indexes[__i], Condition.EQ, false);
+                registerEffort(indexes[__i], indexes[__i], __i + 1);
             }
-            closure.conditionalJumpOrDefault(indexes[keyConstants.length - 1], Condition.EQ, true);
+            __closure.conditionalJumpOrDefault(indexes[keyConstants.length - 1], Condition.EQ, true);
             registerEffort(indexes[keyConstants.length - 1], indexes[keyConstants.length - 1], keyConstants.length);
             registerDefaultEffort(keyConstants.length);
         }
@@ -319,13 +333,14 @@ public abstract class SwitchStrategy
     // @class SwitchStrategy.PrimitiveStrategy
     private abstract static class PrimitiveStrategy extends SwitchStrategy
     {
+        // @field
         protected final JavaConstant[] keyConstants;
 
         // @cons
-        protected PrimitiveStrategy(double[] keyProbabilities, JavaConstant[] keyConstants)
+        protected PrimitiveStrategy(double[] __keyProbabilities, JavaConstant[] __keyConstants)
         {
-            super(keyProbabilities);
-            this.keyConstants = keyConstants;
+            super(__keyProbabilities);
+            this.keyConstants = __keyConstants;
         }
 
         @Override
@@ -338,14 +353,14 @@ public abstract class SwitchStrategy
          * Looks for the end of a stretch of key constants that are successive numbers and have the
          * same target.
          */
-        protected int getSliceEnd(SwitchClosure closure, int pos)
+        protected int getSliceEnd(SwitchClosure __closure, int __pos)
         {
-            int slice = pos;
-            while (slice < (keyConstants.length - 1) && keyConstants[slice + 1].asLong() == keyConstants[slice].asLong() + 1 && closure.isSameTarget(slice, slice + 1))
+            int __slice = __pos;
+            while (__slice < (keyConstants.length - 1) && keyConstants[__slice + 1].asLong() == keyConstants[__slice].asLong() + 1 && __closure.isSameTarget(__slice, __slice + 1))
             {
-                slice++;
+                __slice++;
             }
-            return slice;
+            return __slice;
         }
     }
 
@@ -356,74 +371,75 @@ public abstract class SwitchStrategy
     // @class SwitchStrategy.RangesStrategy
     public static final class RangesStrategy extends PrimitiveStrategy
     {
+        // @field
         private final Integer[] indexes;
 
         // @cons
-        public RangesStrategy(final double[] keyProbabilities, JavaConstant[] keyConstants)
+        public RangesStrategy(final double[] __keyProbabilities, JavaConstant[] __keyConstants)
         {
-            super(keyProbabilities, keyConstants);
+            super(__keyProbabilities, __keyConstants);
 
-            int keyCount = keyConstants.length;
-            indexes = new Integer[keyCount];
-            for (int i = 0; i < keyCount; i++)
+            int __keyCount = __keyConstants.length;
+            indexes = new Integer[__keyCount];
+            for (int __i = 0; __i < __keyCount; __i++)
             {
-                indexes[i] = i;
+                indexes[__i] = __i;
             }
             // @closure
             Arrays.sort(indexes, new Comparator<Integer>()
             {
                 @Override
-                public int compare(Integer o1, Integer o2)
+                public int compare(Integer __o1, Integer __o2)
                 {
-                    return keyProbabilities[o1] < keyProbabilities[o2] ? 1 : keyProbabilities[o1] > keyProbabilities[o2] ? -1 : 0;
+                    return __keyProbabilities[__o1] < __keyProbabilities[__o2] ? 1 : __keyProbabilities[__o1] > __keyProbabilities[__o2] ? -1 : 0;
                 }
             });
         }
 
         @Override
-        public void run(SwitchClosure closure)
+        public void run(SwitchClosure __closure)
         {
-            int depth = 0;
-            closure.conditionalJump(0, Condition.LT, true);
-            registerDefaultEffort(++depth);
-            int rangeStart = 0;
-            int rangeEnd = getSliceEnd(closure, rangeStart);
-            while (rangeEnd != keyConstants.length - 1)
+            int __depth = 0;
+            __closure.conditionalJump(0, Condition.LT, true);
+            registerDefaultEffort(++__depth);
+            int __rangeStart = 0;
+            int __rangeEnd = getSliceEnd(__closure, __rangeStart);
+            while (__rangeEnd != keyConstants.length - 1)
             {
-                if (rangeStart == rangeEnd)
+                if (__rangeStart == __rangeEnd)
                 {
-                    closure.conditionalJump(rangeStart, Condition.EQ, false);
-                    registerEffort(rangeStart, rangeEnd, ++depth);
+                    __closure.conditionalJump(__rangeStart, Condition.EQ, false);
+                    registerEffort(__rangeStart, __rangeEnd, ++__depth);
                 }
                 else
                 {
-                    if (rangeStart == 0 || keyConstants[rangeStart - 1].asLong() + 1 != keyConstants[rangeStart].asLong())
+                    if (__rangeStart == 0 || keyConstants[__rangeStart - 1].asLong() + 1 != keyConstants[__rangeStart].asLong())
                     {
-                        closure.conditionalJump(rangeStart, Condition.LT, true);
-                        registerDefaultEffort(++depth);
+                        __closure.conditionalJump(__rangeStart, Condition.LT, true);
+                        registerDefaultEffort(++__depth);
                     }
-                    closure.conditionalJump(rangeEnd, Condition.LE, false);
-                    registerEffort(rangeStart, rangeEnd, ++depth);
+                    __closure.conditionalJump(__rangeEnd, Condition.LE, false);
+                    registerEffort(__rangeStart, __rangeEnd, ++__depth);
                 }
-                rangeStart = rangeEnd + 1;
-                rangeEnd = getSliceEnd(closure, rangeStart);
+                __rangeStart = __rangeEnd + 1;
+                __rangeEnd = getSliceEnd(__closure, __rangeStart);
             }
-            if (rangeStart == rangeEnd)
+            if (__rangeStart == __rangeEnd)
             {
-                closure.conditionalJumpOrDefault(rangeStart, Condition.EQ, true);
-                registerEffort(rangeStart, rangeEnd, ++depth);
-                registerDefaultEffort(depth);
+                __closure.conditionalJumpOrDefault(__rangeStart, Condition.EQ, true);
+                registerEffort(__rangeStart, __rangeEnd, ++__depth);
+                registerDefaultEffort(__depth);
             }
             else
             {
-                if (rangeStart == 0 || keyConstants[rangeStart - 1].asLong() + 1 != keyConstants[rangeStart].asLong())
+                if (__rangeStart == 0 || keyConstants[__rangeStart - 1].asLong() + 1 != keyConstants[__rangeStart].asLong())
                 {
-                    closure.conditionalJump(rangeStart, Condition.LT, true);
-                    registerDefaultEffort(++depth);
+                    __closure.conditionalJump(__rangeStart, Condition.LT, true);
+                    registerDefaultEffort(++__depth);
                 }
-                closure.conditionalJumpOrDefault(rangeEnd, Condition.LE, true);
-                registerEffort(rangeStart, rangeEnd, ++depth);
-                registerDefaultEffort(depth);
+                __closure.conditionalJumpOrDefault(__rangeEnd, Condition.LE, true);
+                registerEffort(__rangeStart, __rangeEnd, ++__depth);
+                registerDefaultEffort(__depth);
             }
         }
     }
@@ -434,27 +450,29 @@ public abstract class SwitchStrategy
     // @class SwitchStrategy.BinaryStrategy
     public static final class BinaryStrategy extends PrimitiveStrategy
     {
+        // @def
         private static final double MIN_PROBABILITY = 0.00001;
 
+        // @field
         private final double[] probabilitySums;
 
         // @cons
-        public BinaryStrategy(double[] keyProbabilities, JavaConstant[] keyConstants)
+        public BinaryStrategy(double[] __keyProbabilities, JavaConstant[] __keyConstants)
         {
-            super(keyProbabilities, keyConstants);
-            probabilitySums = new double[keyProbabilities.length + 1];
-            double sum = 0;
-            for (int i = 0; i < keyConstants.length; i++)
+            super(__keyProbabilities, __keyConstants);
+            probabilitySums = new double[__keyProbabilities.length + 1];
+            double __sum = 0;
+            for (int __i = 0; __i < __keyConstants.length; __i++)
             {
-                sum += Math.max(keyProbabilities[i], MIN_PROBABILITY);
-                probabilitySums[i + 1] = sum;
+                __sum += Math.max(__keyProbabilities[__i], MIN_PROBABILITY);
+                probabilitySums[__i + 1] = __sum;
             }
         }
 
         @Override
-        public void run(SwitchClosure closure)
+        public void run(SwitchClosure __closure)
         {
-            recurseBinarySwitch(closure, 0, keyConstants.length - 1, 0);
+            recurseBinarySwitch(__closure, 0, keyConstants.length - 1, 0);
         }
 
         /**
@@ -463,139 +481,139 @@ public abstract class SwitchStrategy
          * than zero, then we always know that the value is equal to or bigger than the left key.
          * This does not hold for the right key, as there may be a gap afterwards.
          */
-        private void recurseBinarySwitch(SwitchClosure closure, int left, int right, int startDepth)
+        private void recurseBinarySwitch(SwitchClosure __closure, int __left, int __right, int __startDepth)
         {
-            int depth = startDepth;
-            boolean leftBorder = left == 0;
-            boolean rightBorder = right == keyConstants.length - 1;
+            int __depth = __startDepth;
+            boolean __leftBorder = __left == 0;
+            boolean __rightBorder = __right == keyConstants.length - 1;
 
-            if (left + 1 == right)
+            if (__left + 1 == __right)
             {
                 // only two possible values
-                if (leftBorder || rightBorder || keyConstants[right].asLong() + 1 != keyConstants[right + 1].asLong() || keyConstants[left].asLong() + 1 != keyConstants[right].asLong())
+                if (__leftBorder || __rightBorder || keyConstants[__right].asLong() + 1 != keyConstants[__right + 1].asLong() || keyConstants[__left].asLong() + 1 != keyConstants[__right].asLong())
                 {
-                    closure.conditionalJump(left, Condition.EQ, false);
-                    registerEffort(left, left, ++depth);
-                    closure.conditionalJumpOrDefault(right, Condition.EQ, rightBorder);
-                    registerEffort(right, right, ++depth);
-                    registerDefaultEffort(depth);
+                    __closure.conditionalJump(__left, Condition.EQ, false);
+                    registerEffort(__left, __left, ++__depth);
+                    __closure.conditionalJumpOrDefault(__right, Condition.EQ, __rightBorder);
+                    registerEffort(__right, __right, ++__depth);
+                    registerDefaultEffort(__depth);
                 }
                 else
                 {
                     // here we know that the value can only be one of these two keys in the range
-                    closure.conditionalJump(left, Condition.EQ, false);
-                    registerEffort(left, left, ++depth);
-                    closure.conditionalJump(right, null, false);
-                    registerEffort(right, right, depth);
+                    __closure.conditionalJump(__left, Condition.EQ, false);
+                    registerEffort(__left, __left, ++__depth);
+                    __closure.conditionalJump(__right, null, false);
+                    registerEffort(__right, __right, __depth);
                 }
                 return;
             }
-            double probabilityStart = probabilitySums[left];
-            double probabilityMiddle = (probabilityStart + probabilitySums[right + 1]) / 2;
-            int middle = left;
-            while (getSliceEnd(closure, middle + 1) < right && probabilitySums[getSliceEnd(closure, middle + 1)] < probabilityMiddle)
+            double __probabilityStart = probabilitySums[__left];
+            double __probabilityMiddle = (__probabilityStart + probabilitySums[__right + 1]) / 2;
+            int __middle = __left;
+            while (getSliceEnd(__closure, __middle + 1) < __right && probabilitySums[getSliceEnd(__closure, __middle + 1)] < __probabilityMiddle)
             {
-                middle = getSliceEnd(closure, middle + 1);
+                __middle = getSliceEnd(__closure, __middle + 1);
             }
-            middle = getSliceEnd(closure, middle);
+            __middle = getSliceEnd(__closure, __middle);
 
-            if (getSliceEnd(closure, left) == middle)
+            if (getSliceEnd(__closure, __left) == __middle)
             {
-                if (left == 0)
+                if (__left == 0)
                 {
-                    closure.conditionalJump(0, Condition.LT, true);
-                    registerDefaultEffort(++depth);
+                    __closure.conditionalJump(0, Condition.LT, true);
+                    registerDefaultEffort(++__depth);
                 }
-                closure.conditionalJump(middle, Condition.LE, false);
-                registerEffort(left, middle, ++depth);
+                __closure.conditionalJump(__middle, Condition.LE, false);
+                registerEffort(__left, __middle, ++__depth);
 
-                if (middle + 1 == right)
+                if (__middle + 1 == __right)
                 {
-                    closure.conditionalJumpOrDefault(right, Condition.EQ, rightBorder);
-                    registerEffort(right, right, ++depth);
-                    registerDefaultEffort(depth);
+                    __closure.conditionalJumpOrDefault(__right, Condition.EQ, __rightBorder);
+                    registerEffort(__right, __right, ++__depth);
+                    registerDefaultEffort(__depth);
                 }
                 else
                 {
-                    if (keyConstants[middle].asLong() + 1 != keyConstants[middle + 1].asLong())
+                    if (keyConstants[__middle].asLong() + 1 != keyConstants[__middle + 1].asLong())
                     {
-                        closure.conditionalJump(middle + 1, Condition.LT, true);
-                        registerDefaultEffort(++depth);
+                        __closure.conditionalJump(__middle + 1, Condition.LT, true);
+                        registerDefaultEffort(++__depth);
                     }
-                    if (getSliceEnd(closure, middle + 1) == right)
+                    if (getSliceEnd(__closure, __middle + 1) == __right)
                     {
-                        if (right == keyConstants.length - 1 || keyConstants[right].asLong() + 1 != keyConstants[right + 1].asLong())
+                        if (__right == keyConstants.length - 1 || keyConstants[__right].asLong() + 1 != keyConstants[__right + 1].asLong())
                         {
-                            closure.conditionalJumpOrDefault(right, Condition.LE, rightBorder);
-                            registerEffort(middle + 1, right, ++depth);
-                            registerDefaultEffort(depth);
+                            __closure.conditionalJumpOrDefault(__right, Condition.LE, __rightBorder);
+                            registerEffort(__middle + 1, __right, ++__depth);
+                            registerDefaultEffort(__depth);
                         }
                         else
                         {
-                            closure.conditionalJump(middle + 1, null, false);
-                            registerEffort(middle + 1, right, depth);
+                            __closure.conditionalJump(__middle + 1, null, false);
+                            registerEffort(__middle + 1, __right, __depth);
                         }
                     }
                     else
                     {
-                        recurseBinarySwitch(closure, middle + 1, right, depth);
+                        recurseBinarySwitch(__closure, __middle + 1, __right, __depth);
                     }
                 }
             }
-            else if (getSliceEnd(closure, middle + 1) == right)
+            else if (getSliceEnd(__closure, __middle + 1) == __right)
             {
-                if (rightBorder || keyConstants[right].asLong() + 1 != keyConstants[right + 1].asLong())
+                if (__rightBorder || keyConstants[__right].asLong() + 1 != keyConstants[__right + 1].asLong())
                 {
-                    closure.conditionalJump(right, Condition.GT, true);
-                    registerDefaultEffort(++depth);
+                    __closure.conditionalJump(__right, Condition.GT, true);
+                    registerDefaultEffort(++__depth);
                 }
-                closure.conditionalJump(middle + 1, Condition.GE, false);
-                registerEffort(middle + 1, right, ++depth);
-                recurseBinarySwitch(closure, left, middle, depth);
+                __closure.conditionalJump(__middle + 1, Condition.GE, false);
+                registerEffort(__middle + 1, __right, ++__depth);
+                recurseBinarySwitch(__closure, __left, __middle, __depth);
             }
             else
             {
-                Label label = closure.conditionalJump(middle + 1, Condition.GE);
-                depth++;
-                recurseBinarySwitch(closure, left, middle, depth);
-                closure.bind(label);
-                recurseBinarySwitch(closure, middle + 1, right, depth);
+                Label __label = __closure.conditionalJump(__middle + 1, Condition.GE);
+                __depth++;
+                recurseBinarySwitch(__closure, __left, __middle, __depth);
+                __closure.bind(__label);
+                recurseBinarySwitch(__closure, __middle + 1, __right, __depth);
             }
         }
     }
 
     public abstract void run(SwitchClosure closure);
 
-    private static SwitchStrategy[] getStrategies(double[] keyProbabilities, JavaConstant[] keyConstants, LabelRef[] keyTargets)
+    private static SwitchStrategy[] getStrategies(double[] __keyProbabilities, JavaConstant[] __keyConstants, LabelRef[] __keyTargets)
     {
-        SwitchStrategy[] strategies = new SwitchStrategy[] { new SequentialStrategy(keyProbabilities, keyConstants), new RangesStrategy(keyProbabilities, keyConstants), new BinaryStrategy(keyProbabilities, keyConstants) };
-        for (SwitchStrategy strategy : strategies)
+        SwitchStrategy[] __strategies = new SwitchStrategy[] { new SequentialStrategy(__keyProbabilities, __keyConstants), new RangesStrategy(__keyProbabilities, __keyConstants), new BinaryStrategy(__keyProbabilities, __keyConstants) };
+        for (SwitchStrategy __strategy : __strategies)
         {
-            strategy.effortClosure = strategy.new EffortClosure(keyTargets);
-            strategy.run(strategy.effortClosure);
-            strategy.averageEffort = strategy.effortClosure.getAverageEffort();
-            strategy.effortClosure = null;
+            __strategy.effortClosure = __strategy.new EffortClosure(__keyTargets);
+            __strategy.run(__strategy.effortClosure);
+            __strategy.averageEffort = __strategy.effortClosure.getAverageEffort();
+            __strategy.effortClosure = null;
         }
-        return strategies;
+        return __strategies;
     }
 
     /**
      * Creates all switch strategies for the given switch, evaluates them (based on average effort)
      * and returns the best one.
      */
-    public static SwitchStrategy getBestStrategy(double[] keyProbabilities, JavaConstant[] keyConstants, LabelRef[] keyTargets)
+    public static SwitchStrategy getBestStrategy(double[] __keyProbabilities, JavaConstant[] __keyConstants, LabelRef[] __keyTargets)
     {
-        SwitchStrategy[] strategies = getStrategies(keyProbabilities, keyConstants, keyTargets);
-        double bestEffort = Integer.MAX_VALUE;
-        SwitchStrategy bestStrategy = null;
-        for (SwitchStrategy strategy : strategies)
+        SwitchStrategy[] __strategies = getStrategies(__keyProbabilities, __keyConstants, __keyTargets);
+        double __bestEffort = Integer.MAX_VALUE;
+        SwitchStrategy __bestStrategy = null;
+        for (SwitchStrategy __strategy : __strategies)
         {
-            if (strategy.getAverageEffort() < bestEffort)
+            if (__strategy.getAverageEffort() < __bestEffort)
             {
-                bestEffort = strategy.getAverageEffort();
-                bestStrategy = strategy;
+                __bestEffort = __strategy.getAverageEffort();
+                __bestStrategy = __strategy;
             }
         }
-        return bestStrategy;
+        return __bestStrategy;
     }
 }

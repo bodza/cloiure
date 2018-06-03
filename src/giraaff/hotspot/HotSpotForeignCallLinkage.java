@@ -66,6 +66,7 @@ public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTar
     /**
      * Sentinel marker for a computed jump address.
      */
+    // @field
     long JUMP_ADDRESS = 0xDEADDEADBEEFBEEFL;
 
     boolean isReexecutable();

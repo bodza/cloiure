@@ -43,7 +43,9 @@ import giraaff.util.GraalError;
 // @class EffectsClosure
 public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> extends EffectsPhase.Closure<BlockT>
 {
+    // @field
     protected final ControlFlowGraph cfg;
+    // @field
     protected final ScheduleResult schedule;
 
     /**
@@ -55,11 +57,13 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
      * This alias map exists only once and is not part of the block state, so that during iterative
      * loop processing the alias of a node may be changed to another value.
      */
+    // @field
     protected final NodeMap<ValueNode> aliases;
 
     /**
      * This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
      */
+    // @field
     private final NodeBitMap hasScalarReplacedInputs;
 
     /*
@@ -71,36 +75,41 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
      * The effects accumulated during analysis of nodes. They may be cleared and re-filled during
      * iterative loop processing.
      */
+    // @field
     protected final BlockMap<GraphEffectList> blockEffects;
 
     /**
      * Effects that can only be applied after the effects from within the loop have been applied and
      * that must be applied before any effect from after the loop is applied. E.g., updating phis.
      */
+    // @field
     protected final EconomicMap<Loop<Block>, GraphEffectList> loopMergeEffects = EconomicMap.create(Equivalence.IDENTITY);
 
     /**
      * The entry state of loops is needed when loop proxies are processed.
      */
+    // @field
     private final EconomicMap<LoopBeginNode, BlockT> loopEntryStates = EconomicMap.create(Equivalence.IDENTITY);
 
     // Intended to be used by read-eliminating phases based on the effects phase.
+    // @field
     protected final EconomicMap<Loop<Block>, LoopKillCache> loopLocationKillCache = EconomicMap.create(Equivalence.IDENTITY);
 
+    // @field
     protected boolean changed;
 
     // @cons
-    public EffectsClosure(ScheduleResult schedule, ControlFlowGraph cfg)
+    public EffectsClosure(ScheduleResult __schedule, ControlFlowGraph __cfg)
     {
         super();
-        this.schedule = schedule;
-        this.cfg = cfg;
-        this.aliases = cfg.graph.createNodeMap();
-        this.hasScalarReplacedInputs = cfg.graph.createNodeBitMap();
-        this.blockEffects = new BlockMap<>(cfg);
-        for (Block block : cfg.getBlocks())
+        this.schedule = __schedule;
+        this.cfg = __cfg;
+        this.aliases = __cfg.graph.createNodeMap();
+        this.hasScalarReplacedInputs = __cfg.graph.createNodeBitMap();
+        this.blockEffects = new BlockMap<>(__cfg);
+        for (Block __block : __cfg.getBlocks())
         {
-            blockEffects.put(block, new GraphEffectList());
+            blockEffects.put(__block, new GraphEffectList());
         }
     }
 
@@ -119,9 +128,9 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     @Override
     public void applyEffects()
     {
-        final StructuredGraph graph = cfg.graph;
-        final ArrayList<Node> obsoleteNodes = new ArrayList<>(0);
-        final ArrayList<GraphEffectList> effectList = new ArrayList<>();
+        final StructuredGraph __graph = cfg.graph;
+        final ArrayList<Node> __obsoleteNodes = new ArrayList<>(0);
+        final ArrayList<GraphEffectList> __effectList = new ArrayList<>();
 
         // Effects are applied during a ordered iteration over the blocks to apply them in the correct
         // order, e.g. apply the effect that adds a node to the graph before the node is used.
@@ -134,121 +143,121 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
                 return null;
             }
 
-            private void apply(GraphEffectList effects)
+            private void apply(GraphEffectList __effects)
             {
-                if (effects != null && !effects.isEmpty())
+                if (__effects != null && !__effects.isEmpty())
                 {
-                    effectList.add(effects);
+                    __effectList.add(__effects);
                 }
             }
 
             @Override
-            protected Void processBlock(Block block, Void currentState)
+            protected Void processBlock(Block __block, Void __currentState)
             {
-                apply(blockEffects.get(block));
-                return currentState;
+                apply(blockEffects.get(__block));
+                return __currentState;
             }
 
             @Override
-            protected Void merge(Block merge, List<Void> states)
+            protected Void merge(Block __merge, List<Void> __states)
             {
                 return null;
             }
 
             @Override
-            protected Void cloneState(Void oldState)
+            protected Void cloneState(Void __oldState)
             {
-                return oldState;
+                return __oldState;
             }
 
             @Override
-            protected List<Void> processLoop(Loop<Block> loop, Void initialState)
+            protected List<Void> processLoop(Loop<Block> __loop, Void __initialState)
             {
-                LoopInfo<Void> info = ReentrantBlockIterator.processLoop(this, loop, initialState);
-                apply(loopMergeEffects.get(loop));
-                return info.exitStates;
+                LoopInfo<Void> __info = ReentrantBlockIterator.processLoop(this, __loop, __initialState);
+                apply(loopMergeEffects.get(__loop));
+                return __info.exitStates;
             }
         };
         ReentrantBlockIterator.apply(closure, cfg.getStartBlock());
-        for (GraphEffectList effects : effectList)
+        for (GraphEffectList __effects : __effectList)
         {
-            effects.apply(graph, obsoleteNodes, false);
+            __effects.apply(__graph, __obsoleteNodes, false);
         }
         // Effects that modify the cfg (e.g. removing a branch for an if that got a constant condition)
         // need to be performed after all other effects, because they change phi value indexes.
-        for (GraphEffectList effects : effectList)
+        for (GraphEffectList __effects : __effectList)
         {
-            effects.apply(graph, obsoleteNodes, true);
+            __effects.apply(__graph, __obsoleteNodes, true);
         }
-        for (Node node : obsoleteNodes)
+        for (Node __node : __obsoleteNodes)
         {
-            if (node.isAlive() && node.hasNoUsages())
+            if (__node.isAlive() && __node.hasNoUsages())
             {
-                node.replaceAtUsages(null);
-                GraphUtil.killWithUnusedFloatingInputs(node);
+                __node.replaceAtUsages(null);
+                GraphUtil.killWithUnusedFloatingInputs(__node);
             }
         }
     }
 
     @Override
-    protected BlockT processBlock(Block block, BlockT state)
+    protected BlockT processBlock(Block __block, BlockT __state)
     {
-        if (!state.isDead())
+        if (!__state.isDead())
         {
-            GraphEffectList effects = blockEffects.get(block);
+            GraphEffectList __effects = blockEffects.get(__block);
 
             /*
              * If we enter an if branch that is known to be unreachable, we mark it as dead and
              * cease to do any more analysis on it. At merges, these dead branches will be ignored.
              */
-            if (block.getBeginNode().predecessor() instanceof IfNode)
+            if (__block.getBeginNode().predecessor() instanceof IfNode)
             {
-                IfNode ifNode = (IfNode) block.getBeginNode().predecessor();
-                LogicNode condition = ifNode.condition();
-                Node alias = getScalarAlias(condition);
-                if (alias instanceof LogicConstantNode)
+                IfNode __ifNode = (IfNode) __block.getBeginNode().predecessor();
+                LogicNode __condition = __ifNode.condition();
+                Node __alias = getScalarAlias(__condition);
+                if (__alias instanceof LogicConstantNode)
                 {
-                    LogicConstantNode constant = (LogicConstantNode) alias;
-                    boolean isTrueSuccessor = block.getBeginNode() == ifNode.trueSuccessor();
+                    LogicConstantNode __constant = (LogicConstantNode) __alias;
+                    boolean __isTrueSuccessor = __block.getBeginNode() == __ifNode.trueSuccessor();
 
-                    if (constant.getValue() != isTrueSuccessor)
+                    if (__constant.getValue() != __isTrueSuccessor)
                     {
-                        state.markAsDead();
-                        effects.killIfBranch(ifNode, constant.getValue());
-                        return state;
+                        __state.markAsDead();
+                        __effects.killIfBranch(__ifNode, __constant.getValue());
+                        return __state;
                     }
                 }
             }
 
             // a lastFixedNode is needed in case we want to insert fixed nodes
-            FixedWithNextNode lastFixedNode = null;
-            Iterable<? extends Node> nodes = schedule != null ? schedule.getBlockToNodesMap().get(block) : block.getNodes();
-            for (Node node : nodes)
+            FixedWithNextNode __lastFixedNode = null;
+            Iterable<? extends Node> __nodes = schedule != null ? schedule.getBlockToNodesMap().get(__block) : __block.getNodes();
+            for (Node __node : __nodes)
             {
                 // reset the aliases (may be non-null due to iterative loop processing)
-                aliases.set(node, null);
-                if (node instanceof LoopExitNode)
+                aliases.set(__node, null);
+                if (__node instanceof LoopExitNode)
                 {
-                    LoopExitNode loopExit = (LoopExitNode) node;
-                    for (ProxyNode proxy : loopExit.proxies())
+                    LoopExitNode __loopExit = (LoopExitNode) __node;
+                    for (ProxyNode __proxy : __loopExit.proxies())
                     {
-                        aliases.set(proxy, null);
-                        changed |= processNode(proxy, state, effects, lastFixedNode) && isSignificantNode(node);
+                        aliases.set(__proxy, null);
+                        changed |= processNode(__proxy, __state, __effects, __lastFixedNode) && isSignificantNode(__node);
                     }
-                    processLoopExit(loopExit, loopEntryStates.get(loopExit.loopBegin()), state, blockEffects.get(block));
+                    processLoopExit(__loopExit, loopEntryStates.get(__loopExit.loopBegin()), __state, blockEffects.get(__block));
                 }
-                changed |= processNode(node, state, effects, lastFixedNode) && isSignificantNode(node);
-                if (node instanceof FixedWithNextNode)
+                changed |= processNode(__node, __state, __effects, __lastFixedNode) && isSignificantNode(__node);
+                if (__node instanceof FixedWithNextNode)
                 {
-                    lastFixedNode = (FixedWithNextNode) node;
+                    __lastFixedNode = (FixedWithNextNode) __node;
                 }
-                if (state.isDead())
+                if (__state.isDead())
                 {
                     break;
                 }
             }
         }
-        return state;
+        return __state;
     }
 
     /**
@@ -256,9 +265,9 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
      * are not considered to be "important". If only changes to those nodes are discovered during
      * analysis, the effects need not be applied.
      */
-    private static boolean isSignificantNode(Node node)
+    private static boolean isSignificantNode(Node __node)
     {
-        return !(node instanceof CommitAllocationNode || node instanceof AllocatedObjectNode || node instanceof BoxNode);
+        return !(__node instanceof CommitAllocationNode || __node instanceof AllocatedObjectNode || __node instanceof BoxNode);
     }
 
     /**
@@ -269,26 +278,26 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     protected abstract boolean processNode(Node node, BlockT state, GraphEffectList effects, FixedWithNextNode lastFixedNode);
 
     @Override
-    protected BlockT merge(Block merge, List<BlockT> states)
+    protected BlockT merge(Block __merge, List<BlockT> __states)
     {
-        MergeProcessor processor = createMergeProcessor(merge);
-        doMergeWithoutDead(processor, states);
-        blockEffects.get(merge).addAll(processor.mergeEffects);
-        blockEffects.get(merge).addAll(processor.afterMergeEffects);
-        return processor.newState;
+        MergeProcessor __processor = createMergeProcessor(__merge);
+        doMergeWithoutDead(__processor, __states);
+        blockEffects.get(__merge).addAll(__processor.mergeEffects);
+        blockEffects.get(__merge).addAll(__processor.afterMergeEffects);
+        return __processor.newState;
     }
 
     @Override
-    protected final List<BlockT> processLoop(Loop<Block> loop, BlockT initialState)
+    protected final List<BlockT> processLoop(Loop<Block> __loop, BlockT __initialState)
     {
-        if (initialState.isDead())
+        if (__initialState.isDead())
         {
-            ArrayList<BlockT> states = new ArrayList<>();
-            for (int i = 0; i < loop.getExits().size(); i++)
+            ArrayList<BlockT> __states = new ArrayList<>();
+            for (int __i = 0; __i < __loop.getExits().size(); __i++)
             {
-                states.add(initialState);
+                __states.add(__initialState);
             }
-            return states;
+            return __states;
         }
         /*
          * Special case nested loops: To avoid an exponential runtime for nested loops we try to
@@ -305,11 +314,11 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
          * loops and do the first iteration with the (possible) changes from outer loops. If there
          * are no changes we only have to do 1 iteration and are done.
          */
-        BlockT initialStateRemovedKilledLocations = stripKilledLoopLocations(loop, cloneState(initialState));
-        BlockT loopEntryState = initialStateRemovedKilledLocations;
-        BlockT lastMergedState = cloneState(initialStateRemovedKilledLocations);
-        processInitialLoopState(loop, lastMergedState);
-        MergeProcessor mergeProcessor = createMergeProcessor(loop.getHeader());
+        BlockT __initialStateRemovedKilledLocations = stripKilledLoopLocations(__loop, cloneState(__initialState));
+        BlockT __loopEntryState = __initialStateRemovedKilledLocations;
+        BlockT __lastMergedState = cloneState(__initialStateRemovedKilledLocations);
+        processInitialLoopState(__loop, __lastMergedState);
+        MergeProcessor __mergeProcessor = createMergeProcessor(__loop.getHeader());
         /*
          * Iterative loop processing: we take the predecessor state as the loop's starting state,
          * processing the loop contents, merge the states of all loop ends, and check whether the
@@ -319,95 +328,95 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
          * This processing converges because the merge processing always makes the starting state
          * more generic, e.g. adding phis instead of non-phi values.
          */
-        for (int iteration = 0; iteration < 10; iteration++)
+        for (int __iteration = 0; __iteration < 10; __iteration++)
         {
-            LoopInfo<BlockT> info = ReentrantBlockIterator.processLoop(this, loop, cloneState(lastMergedState));
+            LoopInfo<BlockT> __info = ReentrantBlockIterator.processLoop(this, __loop, cloneState(__lastMergedState));
 
-            List<BlockT> states = new ArrayList<>();
-            states.add(initialStateRemovedKilledLocations);
-            states.addAll(info.endStates);
-            doMergeWithoutDead(mergeProcessor, states);
+            List<BlockT> __states = new ArrayList<>();
+            __states.add(__initialStateRemovedKilledLocations);
+            __states.addAll(__info.endStates);
+            doMergeWithoutDead(__mergeProcessor, __states);
 
-            if (mergeProcessor.newState.equivalentTo(lastMergedState))
+            if (__mergeProcessor.newState.equivalentTo(__lastMergedState))
             {
-                blockEffects.get(loop.getHeader()).insertAll(mergeProcessor.mergeEffects, 0);
-                loopMergeEffects.put(loop, mergeProcessor.afterMergeEffects);
+                blockEffects.get(__loop.getHeader()).insertAll(__mergeProcessor.mergeEffects, 0);
+                loopMergeEffects.put(__loop, __mergeProcessor.afterMergeEffects);
 
-                loopEntryStates.put((LoopBeginNode) loop.getHeader().getBeginNode(), loopEntryState);
+                loopEntryStates.put((LoopBeginNode) __loop.getHeader().getBeginNode(), __loopEntryState);
 
-                processKilledLoopLocations(loop, initialStateRemovedKilledLocations, mergeProcessor.newState);
-                return info.exitStates;
+                processKilledLoopLocations(__loop, __initialStateRemovedKilledLocations, __mergeProcessor.newState);
+                return __info.exitStates;
             }
             else
             {
-                lastMergedState = mergeProcessor.newState;
-                for (Block block : loop.getBlocks())
+                __lastMergedState = __mergeProcessor.newState;
+                for (Block __block : __loop.getBlocks())
                 {
-                    blockEffects.get(block).clear();
+                    blockEffects.get(__block).clear();
                 }
             }
         }
-        throw new GraalError("too many iterations at %s", loop);
+        throw new GraalError("too many iterations at %s", __loop);
     }
 
     @SuppressWarnings("unused")
-    protected BlockT stripKilledLoopLocations(Loop<Block> loop, BlockT initialState)
+    protected BlockT stripKilledLoopLocations(Loop<Block> __loop, BlockT __initialState)
     {
-        return initialState;
+        return __initialState;
     }
 
     @SuppressWarnings("unused")
-    protected void processKilledLoopLocations(Loop<Block> loop, BlockT initialState, BlockT mergedStates)
+    protected void processKilledLoopLocations(Loop<Block> __loop, BlockT __initialState, BlockT __mergedStates)
     {
         // nothing to do
     }
 
     @SuppressWarnings("unused")
-    protected void processInitialLoopState(Loop<Block> loop, BlockT initialState)
+    protected void processInitialLoopState(Loop<Block> __loop, BlockT __initialState)
     {
         // nothing to do
     }
 
-    private void doMergeWithoutDead(MergeProcessor mergeProcessor, List<BlockT> states)
+    private void doMergeWithoutDead(MergeProcessor __mergeProcessor, List<BlockT> __states)
     {
-        int alive = 0;
-        for (BlockT state : states)
+        int __alive = 0;
+        for (BlockT __state : __states)
         {
-            if (!state.isDead())
+            if (!__state.isDead())
             {
-                alive++;
+                __alive++;
             }
         }
-        if (alive == 0)
+        if (__alive == 0)
         {
-            mergeProcessor.setNewState(states.get(0));
+            __mergeProcessor.setNewState(__states.get(0));
         }
-        else if (alive == states.size())
+        else if (__alive == __states.size())
         {
-            int[] stateIndexes = new int[states.size()];
-            for (int i = 0; i < stateIndexes.length; i++)
+            int[] __stateIndexes = new int[__states.size()];
+            for (int __i = 0; __i < __stateIndexes.length; __i++)
             {
-                stateIndexes[i] = i;
+                __stateIndexes[__i] = __i;
             }
-            mergeProcessor.setStateIndexes(stateIndexes);
-            mergeProcessor.setNewState(getInitialState());
-            mergeProcessor.merge(states);
+            __mergeProcessor.setStateIndexes(__stateIndexes);
+            __mergeProcessor.setNewState(getInitialState());
+            __mergeProcessor.merge(__states);
         }
         else
         {
-            ArrayList<BlockT> aliveStates = new ArrayList<>(alive);
-            int[] stateIndexes = new int[alive];
-            for (int i = 0; i < states.size(); i++)
+            ArrayList<BlockT> __aliveStates = new ArrayList<>(__alive);
+            int[] __stateIndexes = new int[__alive];
+            for (int __i = 0; __i < __states.size(); __i++)
             {
-                if (!states.get(i).isDead())
+                if (!__states.get(__i).isDead())
                 {
-                    stateIndexes[aliveStates.size()] = i;
-                    aliveStates.add(states.get(i));
+                    __stateIndexes[__aliveStates.size()] = __i;
+                    __aliveStates.add(__states.get(__i));
                 }
             }
-            mergeProcessor.setStateIndexes(stateIndexes);
-            mergeProcessor.setNewState(getInitialState());
-            mergeProcessor.merge(aliveStates);
+            __mergeProcessor.setStateIndexes(__stateIndexes);
+            __mergeProcessor.setNewState(getInitialState());
+            __mergeProcessor.merge(__aliveStates);
         }
     }
 
@@ -422,25 +431,31 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     // @closure
     protected abstract class MergeProcessor
     {
+        // @field
         private final Block mergeBlock;
+        // @field
         private final AbstractMergeNode merge;
 
+        // @field
         protected final GraphEffectList mergeEffects = new GraphEffectList();
+        // @field
         protected final GraphEffectList afterMergeEffects = new GraphEffectList();
 
         /**
          * The indexes are used to map from an index in the list of active (non-dead) predecessors
          * to an index in the list of all predecessors (the latter may be larger).
          */
+        // @field
         private int[] stateIndexes;
+        // @field
         protected BlockT newState;
 
         // @cons
-        public MergeProcessor(Block mergeBlock)
+        public MergeProcessor(Block __mergeBlock)
         {
             super();
-            this.mergeBlock = mergeBlock;
-            this.merge = (AbstractMergeNode) mergeBlock.getBeginNode();
+            this.mergeBlock = __mergeBlock;
+            this.merge = (AbstractMergeNode) __mergeBlock.getBeginNode();
         }
 
         /**
@@ -448,21 +463,21 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
          */
         protected abstract void merge(List<BlockT> states);
 
-        private void setNewState(BlockT state)
+        private void setNewState(BlockT __state)
         {
-            this.newState = state;
+            this.newState = __state;
             mergeEffects.clear();
             afterMergeEffects.clear();
         }
 
-        private void setStateIndexes(int[] stateIndexes)
+        private void setStateIndexes(int[] __stateIndexes)
         {
-            this.stateIndexes = stateIndexes;
+            this.stateIndexes = __stateIndexes;
         }
 
-        protected final Block getPredecessor(int index)
+        protected final Block getPredecessor(int __index)
         {
-            return this.mergeBlock.getPredecessors()[this.stateIndexes[index]];
+            return this.mergeBlock.getPredecessors()[this.stateIndexes[__index]];
         }
 
         protected final NodeIterable<PhiNode> getPhis()
@@ -470,19 +485,19 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
             return this.merge.phis();
         }
 
-        protected final ValueNode getPhiValueAt(PhiNode phi, int index)
+        protected final ValueNode getPhiValueAt(PhiNode __phi, int __index)
         {
-            return phi.valueAt(this.stateIndexes[index]);
+            return __phi.valueAt(this.stateIndexes[__index]);
         }
 
-        protected final ValuePhiNode createValuePhi(Stamp stamp)
+        protected final ValuePhiNode createValuePhi(Stamp __stamp)
         {
-            return new ValuePhiNode(stamp, this.merge, new ValueNode[this.mergeBlock.getPredecessorCount()]);
+            return new ValuePhiNode(__stamp, this.merge, new ValueNode[this.mergeBlock.getPredecessorCount()]);
         }
 
-        protected final void setPhiInput(PhiNode phi, int index, ValueNode value)
+        protected final void setPhiInput(PhiNode __phi, int __index, ValueNode __value)
         {
-            afterMergeEffects.initializePhiInput(phi, this.stateIndexes[index], value);
+            afterMergeEffects.initializePhiInput(__phi, this.stateIndexes[__index], __value);
         }
 
         protected final StructuredGraph graph()
@@ -491,46 +506,50 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         }
     }
 
-    public void addScalarAlias(ValueNode node, ValueNode alias)
+    public void addScalarAlias(ValueNode __node, ValueNode __alias)
     {
-        aliases.set(node, alias);
-        for (Node usage : node.usages())
+        aliases.set(__node, __alias);
+        for (Node __usage : __node.usages())
         {
-            if (!hasScalarReplacedInputs.isNew(usage))
+            if (!hasScalarReplacedInputs.isNew(__usage))
             {
-                hasScalarReplacedInputs.mark(usage);
+                hasScalarReplacedInputs.mark(__usage);
             }
         }
     }
 
-    protected final boolean hasScalarReplacedInputs(Node node)
+    protected final boolean hasScalarReplacedInputs(Node __node)
     {
-        return hasScalarReplacedInputs.isMarked(node);
+        return hasScalarReplacedInputs.isMarked(__node);
     }
 
-    public ValueNode getScalarAlias(ValueNode node)
+    public ValueNode getScalarAlias(ValueNode __node)
     {
-        if (node == null || !node.isAlive() || aliases.isNew(node))
+        if (__node == null || !__node.isAlive() || aliases.isNew(__node))
         {
-            return node;
+            return __node;
         }
-        ValueNode result = aliases.get(node);
-        return (result == null || result instanceof VirtualObjectNode) ? node : result;
+        ValueNode __result = aliases.get(__node);
+        return (__result == null || __result instanceof VirtualObjectNode) ? __node : __result;
     }
 
     // @class EffectsClosure.LoopKillCache
     protected static final class LoopKillCache
     {
+        // @field
         private int visits;
+        // @field
         private LocationIdentity firstLocation;
+        // @field
         private EconomicSet<LocationIdentity> killedLocations;
+        // @field
         private boolean killsAll;
 
         // @cons
-        protected LoopKillCache(int visits)
+        protected LoopKillCache(int __visits)
         {
             super();
-            this.visits = visits;
+            this.visits = __visits;
         }
 
         protected void visited()
@@ -550,7 +569,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
             killedLocations = null;
         }
 
-        protected boolean containsLocation(LocationIdentity locationIdentity)
+        protected boolean containsLocation(LocationIdentity __locationIdentity)
         {
             if (killsAll)
             {
@@ -560,22 +579,22 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
             {
                 return false;
             }
-            if (!firstLocation.equals(locationIdentity))
+            if (!firstLocation.equals(__locationIdentity))
             {
-                return killedLocations != null ? killedLocations.contains(locationIdentity) : false;
+                return killedLocations != null ? killedLocations.contains(__locationIdentity) : false;
             }
             return true;
         }
 
-        protected void rememberLoopKilledLocation(LocationIdentity locationIdentity)
+        protected void rememberLoopKilledLocation(LocationIdentity __locationIdentity)
         {
             if (killsAll)
             {
                 return;
             }
-            if (firstLocation == null || firstLocation.equals(locationIdentity))
+            if (firstLocation == null || firstLocation.equals(__locationIdentity))
             {
-                firstLocation = locationIdentity;
+                firstLocation = __locationIdentity;
             }
             else
             {
@@ -583,7 +602,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
                 {
                     killedLocations = EconomicSet.create(Equivalence.IDENTITY);
                 }
-                killedLocations.add(locationIdentity);
+                killedLocations.add(__locationIdentity);
             }
         }
 

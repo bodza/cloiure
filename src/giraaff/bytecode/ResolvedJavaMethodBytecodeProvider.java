@@ -11,6 +11,7 @@ public final class ResolvedJavaMethodBytecodeProvider implements BytecodeProvide
     /**
      * A state-less, shared {@link ResolvedJavaMethodBytecodeProvider} instance.
      */
+    // @def
     public static final ResolvedJavaMethodBytecodeProvider INSTANCE = new ResolvedJavaMethodBytecodeProvider();
 
     // @cons
@@ -20,9 +21,9 @@ public final class ResolvedJavaMethodBytecodeProvider implements BytecodeProvide
     }
 
     @Override
-    public Bytecode getBytecode(ResolvedJavaMethod method)
+    public Bytecode getBytecode(ResolvedJavaMethod __method)
     {
-        return new ResolvedJavaMethodBytecode(method);
+        return new ResolvedJavaMethodBytecode(__method);
     }
 
     @Override

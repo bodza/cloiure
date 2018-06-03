@@ -19,12 +19,16 @@ import giraaff.core.common.type.Stamp;
 // @class KlassPointerStamp
 public final class KlassPointerStamp extends MetaspacePointerStamp
 {
+    // @def
     private static final KlassPointerStamp KLASS = new KlassPointerStamp(false, false);
 
+    // @def
     private static final KlassPointerStamp KLASS_NON_NULL = new KlassPointerStamp(true, false);
 
+    // @def
     private static final KlassPointerStamp KLASS_ALWAYS_NULL = new KlassPointerStamp(false, true);
 
+    // @field
     private final CompressEncoding encoding;
 
     public static KlassPointerStamp klass()
@@ -43,65 +47,65 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
     }
 
     // @cons
-    private KlassPointerStamp(boolean nonNull, boolean alwaysNull)
+    private KlassPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
-        this(nonNull, alwaysNull, null);
+        this(__nonNull, __alwaysNull, null);
     }
 
     // @cons
-    private KlassPointerStamp(boolean nonNull, boolean alwaysNull, CompressEncoding encoding)
+    private KlassPointerStamp(boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
-        super(nonNull, alwaysNull);
-        this.encoding = encoding;
+        super(__nonNull, __alwaysNull);
+        this.encoding = __encoding;
     }
 
     @Override
-    protected AbstractPointerStamp copyWith(boolean newNonNull, boolean newAlwaysNull)
+    protected AbstractPointerStamp copyWith(boolean __newNonNull, boolean __newAlwaysNull)
     {
-        return new KlassPointerStamp(newNonNull, newAlwaysNull, encoding);
+        return new KlassPointerStamp(__newNonNull, __newAlwaysNull, encoding);
     }
 
     @Override
-    public boolean isCompatible(Stamp otherStamp)
+    public boolean isCompatible(Stamp __otherStamp)
     {
-        if (this == otherStamp)
+        if (this == __otherStamp)
         {
             return true;
         }
-        if (otherStamp instanceof KlassPointerStamp)
+        if (__otherStamp instanceof KlassPointerStamp)
         {
-            KlassPointerStamp other = (KlassPointerStamp) otherStamp;
-            return Objects.equals(this.encoding, other.encoding);
+            KlassPointerStamp __other = (KlassPointerStamp) __otherStamp;
+            return Objects.equals(this.encoding, __other.encoding);
         }
         return false;
     }
 
     @Override
-    public boolean isCompatible(Constant constant)
+    public boolean isCompatible(Constant __constant)
     {
-        if (constant instanceof HotSpotMetaspaceConstant)
+        if (__constant instanceof HotSpotMetaspaceConstant)
         {
-            return ((HotSpotMetaspaceConstant) constant).asResolvedJavaType() != null;
+            return ((HotSpotMetaspaceConstant) __constant).asResolvedJavaType() != null;
         }
         else
         {
-            return super.isCompatible(constant);
+            return super.isCompatible(__constant);
         }
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta)
+    public Stamp constant(Constant __c, MetaAccessProvider __meta)
     {
         if (isCompressed())
         {
-            if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(c))
+            if (HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__c))
             {
                 return new KlassPointerStamp(false, true, encoding);
             }
         }
         else
         {
-            if (JavaConstant.NULL_POINTER.equals(c))
+            if (JavaConstant.NULL_POINTER.equals(__c))
             {
                 return KLASS_ALWAYS_NULL;
             }
@@ -135,15 +139,15 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool)
+    public LIRKind getLIRKind(LIRKindTool __tool)
     {
         if (isCompressed())
         {
-            return tool.getNarrowPointerKind();
+            return __tool.getNarrowPointerKind();
         }
         else
         {
-            return super.getLIRKind(tool);
+            return super.getLIRKind(__tool);
         }
     }
 
@@ -157,9 +161,9 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
         return encoding;
     }
 
-    public KlassPointerStamp compressed(CompressEncoding newEncoding)
+    public KlassPointerStamp compressed(CompressEncoding __newEncoding)
     {
-        return new KlassPointerStamp(nonNull(), alwaysNull(), newEncoding);
+        return new KlassPointerStamp(nonNull(), alwaysNull(), __newEncoding);
     }
 
     public KlassPointerStamp uncompressed()
@@ -168,42 +172,42 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    public Constant readConstant(MemoryAccessProvider __provider, Constant __base, long __displacement)
     {
-        HotSpotMemoryAccessProvider hsProvider = (HotSpotMemoryAccessProvider) provider;
+        HotSpotMemoryAccessProvider __hsProvider = (HotSpotMemoryAccessProvider) __provider;
         if (isCompressed())
         {
-            return hsProvider.readNarrowKlassPointerConstant(base, displacement);
+            return __hsProvider.readNarrowKlassPointerConstant(__base, __displacement);
         }
         else
         {
-            return hsProvider.readKlassPointerConstant(base, displacement);
+            return __hsProvider.readKlassPointerConstant(__base, __displacement);
         }
     }
 
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        return prime * super.hashCode() + ((encoding != null) ? encoding.hashCode() : 0);
+        final int __prime = 31;
+        return __prime * super.hashCode() + ((encoding != null) ? encoding.hashCode() : 0);
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (!super.equals(obj))
+        if (!super.equals(__obj))
         {
             return false;
         }
-        if (!(obj instanceof KlassPointerStamp))
+        if (!(__obj instanceof KlassPointerStamp))
         {
             return false;
         }
-        KlassPointerStamp other = (KlassPointerStamp) obj;
-        return Objects.equals(this.encoding, other.encoding);
+        KlassPointerStamp __other = (KlassPointerStamp) __obj;
+        return Objects.equals(this.encoding, __other.encoding);
     }
 }

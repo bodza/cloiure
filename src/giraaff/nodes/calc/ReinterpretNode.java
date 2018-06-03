@@ -30,63 +30,64 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class ReinterpretNode
 public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLowerable
 {
+    // @def
     public static final NodeClass<ReinterpretNode> TYPE = NodeClass.create(ReinterpretNode.class);
 
     // @cons
-    protected ReinterpretNode(JavaKind to, ValueNode value)
+    protected ReinterpretNode(JavaKind __to, ValueNode __value)
     {
-        this(StampFactory.forKind(to), value);
+        this(StampFactory.forKind(__to), __value);
     }
 
     // @cons
-    protected ReinterpretNode(Stamp to, ValueNode value)
+    protected ReinterpretNode(Stamp __to, ValueNode __value)
     {
-        super(TYPE, getReinterpretStamp(to, value.stamp(NodeView.DEFAULT)), value);
+        super(TYPE, getReinterpretStamp(__to, __value.stamp(NodeView.DEFAULT)), __value);
     }
 
-    public static ValueNode create(JavaKind to, ValueNode value, NodeView view)
+    public static ValueNode create(JavaKind __to, ValueNode __value, NodeView __view)
     {
-        return create(StampFactory.forKind(to), value, view);
+        return create(StampFactory.forKind(__to), __value, __view);
     }
 
-    public static ValueNode create(Stamp to, ValueNode value, NodeView view)
+    public static ValueNode create(Stamp __to, ValueNode __value, NodeView __view)
     {
-        return canonical(null, to, value, view);
+        return canonical(null, __to, __value, __view);
     }
 
-    private static SerializableConstant evalConst(Stamp stamp, SerializableConstant c)
+    private static SerializableConstant evalConst(Stamp __stamp, SerializableConstant __c)
     {
         // We don't care about byte order here. Either would produce the correct result.
-        ByteBuffer buffer = ByteBuffer.wrap(new byte[c.getSerializedSize()]).order(ByteOrder.nativeOrder());
-        c.serialize(buffer);
+        ByteBuffer __buffer = ByteBuffer.wrap(new byte[__c.getSerializedSize()]).order(ByteOrder.nativeOrder());
+        __c.serialize(__buffer);
 
-        buffer.rewind();
-        return ((ArithmeticStamp) stamp).deserialize(buffer);
+        __buffer.rewind();
+        return ((ArithmeticStamp) __stamp).deserialize(__buffer);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forValue)
     {
-        NodeView view = NodeView.from(tool);
-        return canonical(this, this.stamp(view), forValue, view);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, this.stamp(__view), __forValue, __view);
     }
 
-    public static ValueNode canonical(ReinterpretNode node, Stamp forStamp, ValueNode forValue, NodeView view)
+    public static ValueNode canonical(ReinterpretNode __node, Stamp __forStamp, ValueNode __forValue, NodeView __view)
     {
-        if (forValue.isConstant())
+        if (__forValue.isConstant())
         {
-            return ConstantNode.forConstant(forStamp, evalConst(forStamp, (SerializableConstant) forValue.asConstant()), null);
+            return ConstantNode.forConstant(__forStamp, evalConst(__forStamp, (SerializableConstant) __forValue.asConstant()), null);
         }
-        if (forStamp.isCompatible(forValue.stamp(view)))
+        if (__forStamp.isCompatible(__forValue.stamp(__view)))
         {
-            return forValue;
+            return __forValue;
         }
-        if (forValue instanceof ReinterpretNode)
+        if (__forValue instanceof ReinterpretNode)
         {
-            ReinterpretNode reinterpret = (ReinterpretNode) forValue;
-            return new ReinterpretNode(forStamp, reinterpret.getValue());
+            ReinterpretNode __reinterpret = (ReinterpretNode) __forValue;
+            return new ReinterpretNode(__forStamp, __reinterpret.getValue());
         }
-        return node != null ? node : new ReinterpretNode(forStamp, forValue);
+        return __node != null ? __node : new ReinterpretNode(__forStamp, __forValue);
     }
 
     /**
@@ -100,89 +101,89 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
      * So we can compute a better integer range if we know that the input is positive, negative,
      * finite, non-zero and/or not NaN.
      */
-    private static IntegerStamp floatToInt(FloatStamp stamp)
+    private static IntegerStamp floatToInt(FloatStamp __stamp)
     {
-        int bits = stamp.getBits();
+        int __bits = __stamp.getBits();
 
-        long signBit = 1L << (bits - 1);
-        long exponentMask;
-        if (bits == 64)
+        long __signBit = 1L << (__bits - 1);
+        long __exponentMask;
+        if (__bits == 64)
         {
-            exponentMask = Double.doubleToRawLongBits(Double.POSITIVE_INFINITY);
+            __exponentMask = Double.doubleToRawLongBits(Double.POSITIVE_INFINITY);
         }
         else
         {
-            exponentMask = Float.floatToRawIntBits(Float.POSITIVE_INFINITY);
+            __exponentMask = Float.floatToRawIntBits(Float.POSITIVE_INFINITY);
         }
 
-        long positiveInfinity = exponentMask;
-        long negativeInfinity = CodeUtil.signExtend(signBit | positiveInfinity, bits);
-        long negativeZero = CodeUtil.signExtend(signBit | 0, bits);
+        long __positiveInfinity = __exponentMask;
+        long __negativeInfinity = CodeUtil.signExtend(__signBit | __positiveInfinity, __bits);
+        long __negativeZero = CodeUtil.signExtend(__signBit | 0, __bits);
 
-        if (stamp.isNaN())
+        if (__stamp.isNaN())
         {
             // special case: in addition to the range, we know NaN has all exponent bits set
-            return IntegerStamp.create(bits, negativeInfinity + 1, CodeUtil.maxValue(bits), exponentMask, CodeUtil.mask(bits));
+            return IntegerStamp.create(__bits, __negativeInfinity + 1, CodeUtil.maxValue(__bits), __exponentMask, CodeUtil.mask(__bits));
         }
 
-        long upperBound;
-        if (stamp.isNonNaN())
+        long __upperBound;
+        if (__stamp.isNonNaN())
         {
-            if (stamp.upperBound() < 0.0)
+            if (__stamp.upperBound() < 0.0)
             {
-                if (stamp.lowerBound() > Double.NEGATIVE_INFINITY)
+                if (__stamp.lowerBound() > Double.NEGATIVE_INFINITY)
                 {
-                    upperBound = negativeInfinity - 1;
+                    __upperBound = __negativeInfinity - 1;
                 }
                 else
                 {
-                    upperBound = negativeInfinity;
+                    __upperBound = __negativeInfinity;
                 }
             }
-            else if (stamp.upperBound() == 0.0)
+            else if (__stamp.upperBound() == 0.0)
             {
-                upperBound = 0;
+                __upperBound = 0;
             }
-            else if (stamp.upperBound() < Double.POSITIVE_INFINITY)
+            else if (__stamp.upperBound() < Double.POSITIVE_INFINITY)
             {
-                upperBound = positiveInfinity - 1;
+                __upperBound = __positiveInfinity - 1;
             }
             else
             {
-                upperBound = positiveInfinity;
+                __upperBound = __positiveInfinity;
             }
         }
         else
         {
-            upperBound = CodeUtil.maxValue(bits);
+            __upperBound = CodeUtil.maxValue(__bits);
         }
 
-        long lowerBound;
-        if (stamp.lowerBound() > 0.0)
+        long __lowerBound;
+        if (__stamp.lowerBound() > 0.0)
         {
-            if (stamp.isNonNaN())
+            if (__stamp.isNonNaN())
             {
-                lowerBound = 1;
+                __lowerBound = 1;
             }
             else
             {
-                lowerBound = negativeInfinity + 1;
+                __lowerBound = __negativeInfinity + 1;
             }
         }
-        else if (stamp.upperBound() == Double.NEGATIVE_INFINITY)
+        else if (__stamp.upperBound() == Double.NEGATIVE_INFINITY)
         {
-            lowerBound = negativeInfinity;
+            __lowerBound = __negativeInfinity;
         }
-        else if (stamp.upperBound() < 0.0)
+        else if (__stamp.upperBound() < 0.0)
         {
-            lowerBound = negativeZero + 1;
+            __lowerBound = __negativeZero + 1;
         }
         else
         {
-            lowerBound = negativeZero;
+            __lowerBound = __negativeZero;
         }
 
-        return StampFactory.forInteger(bits, lowerBound, upperBound);
+        return StampFactory.forInteger(__bits, __lowerBound, __upperBound);
     }
 
     /**
@@ -196,135 +197,135 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
      * So from certain integer ranges we may be able to infer something about the sign, finiteness
      * or NaN-ness of the result.
      */
-    private static FloatStamp intToFloat(IntegerStamp stamp)
+    private static FloatStamp intToFloat(IntegerStamp __stamp)
     {
-        int bits = stamp.getBits();
+        int __bits = __stamp.getBits();
 
-        double minPositive;
-        double maxPositive;
+        double __minPositive;
+        double __maxPositive;
 
-        long signBit = 1L << (bits - 1);
-        long exponentMask;
-        if (bits == 64)
+        long __signBit = 1L << (__bits - 1);
+        long __exponentMask;
+        if (__bits == 64)
         {
-            exponentMask = Double.doubleToRawLongBits(Double.POSITIVE_INFINITY);
-            minPositive = Double.MIN_VALUE;
-            maxPositive = Double.MAX_VALUE;
+            __exponentMask = Double.doubleToRawLongBits(Double.POSITIVE_INFINITY);
+            __minPositive = Double.MIN_VALUE;
+            __maxPositive = Double.MAX_VALUE;
         }
         else
         {
-            exponentMask = Float.floatToRawIntBits(Float.POSITIVE_INFINITY);
-            minPositive = Float.MIN_VALUE;
-            maxPositive = Float.MAX_VALUE;
+            __exponentMask = Float.floatToRawIntBits(Float.POSITIVE_INFINITY);
+            __minPositive = Float.MIN_VALUE;
+            __maxPositive = Float.MAX_VALUE;
         }
 
-        long significandMask = CodeUtil.mask(bits) & ~(signBit | exponentMask);
+        long __significandMask = CodeUtil.mask(__bits) & ~(__signBit | __exponentMask);
 
-        long positiveInfinity = exponentMask;
-        long negativeInfinity = CodeUtil.signExtend(signBit | positiveInfinity, bits);
-        long negativeZero = CodeUtil.signExtend(signBit | 0, bits);
+        long __positiveInfinity = __exponentMask;
+        long __negativeInfinity = CodeUtil.signExtend(__signBit | __positiveInfinity, __bits);
+        long __negativeZero = CodeUtil.signExtend(__signBit | 0, __bits);
 
-        if ((stamp.downMask() & exponentMask) == exponentMask && (stamp.downMask() & significandMask) != 0)
+        if ((__stamp.downMask() & __exponentMask) == __exponentMask && (__stamp.downMask() & __significandMask) != 0)
         {
             // if all exponent bits and at least one significand bit are set, the result is NaN
-            return new FloatStamp(bits, Double.NaN, Double.NaN, false);
+            return new FloatStamp(__bits, Double.NaN, Double.NaN, false);
         }
 
-        double upperBound;
-        if (stamp.upperBound() < negativeInfinity)
+        double __upperBound;
+        if (__stamp.upperBound() < __negativeInfinity)
         {
-            if (stamp.lowerBound() > negativeZero)
+            if (__stamp.lowerBound() > __negativeZero)
             {
-                upperBound = -minPositive;
+                __upperBound = -__minPositive;
             }
             else
             {
-                upperBound = -0.0;
+                __upperBound = -0.0;
             }
         }
-        else if (stamp.upperBound() < 0)
+        else if (__stamp.upperBound() < 0)
         {
-            if (stamp.lowerBound() > negativeInfinity)
+            if (__stamp.lowerBound() > __negativeInfinity)
             {
-                return new FloatStamp(bits, Double.NaN, Double.NaN, false);
+                return new FloatStamp(__bits, Double.NaN, Double.NaN, false);
             }
-            else if (stamp.lowerBound() == negativeInfinity)
+            else if (__stamp.lowerBound() == __negativeInfinity)
             {
-                upperBound = Double.NEGATIVE_INFINITY;
+                __upperBound = Double.NEGATIVE_INFINITY;
             }
-            else if (stamp.lowerBound() > negativeZero)
+            else if (__stamp.lowerBound() > __negativeZero)
             {
-                upperBound = -minPositive;
+                __upperBound = -__minPositive;
             }
             else
             {
-                upperBound = -0.0;
+                __upperBound = -0.0;
             }
         }
-        else if (stamp.upperBound() == 0)
+        else if (__stamp.upperBound() == 0)
         {
-            upperBound = 0.0;
+            __upperBound = 0.0;
         }
-        else if (stamp.upperBound() < positiveInfinity)
+        else if (__stamp.upperBound() < __positiveInfinity)
         {
-            upperBound = maxPositive;
-        }
-        else
-        {
-            upperBound = Double.POSITIVE_INFINITY;
-        }
-
-        double lowerBound;
-        if (stamp.lowerBound() > positiveInfinity)
-        {
-            return new FloatStamp(bits, Double.NaN, Double.NaN, false);
-        }
-        else if (stamp.lowerBound() == positiveInfinity)
-        {
-            lowerBound = Double.POSITIVE_INFINITY;
-        }
-        else if (stamp.lowerBound() > 0)
-        {
-            lowerBound = minPositive;
-        }
-        else if (stamp.lowerBound() > negativeInfinity)
-        {
-            lowerBound = 0.0;
+            __upperBound = __maxPositive;
         }
         else
         {
-            lowerBound = Double.NEGATIVE_INFINITY;
+            __upperBound = Double.POSITIVE_INFINITY;
         }
 
-        boolean nonNaN;
-        if ((stamp.upMask() & exponentMask) != exponentMask)
+        double __lowerBound;
+        if (__stamp.lowerBound() > __positiveInfinity)
+        {
+            return new FloatStamp(__bits, Double.NaN, Double.NaN, false);
+        }
+        else if (__stamp.lowerBound() == __positiveInfinity)
+        {
+            __lowerBound = Double.POSITIVE_INFINITY;
+        }
+        else if (__stamp.lowerBound() > 0)
+        {
+            __lowerBound = __minPositive;
+        }
+        else if (__stamp.lowerBound() > __negativeInfinity)
+        {
+            __lowerBound = 0.0;
+        }
+        else
+        {
+            __lowerBound = Double.NEGATIVE_INFINITY;
+        }
+
+        boolean __nonNaN;
+        if ((__stamp.upMask() & __exponentMask) != __exponentMask)
         {
             // NaN has all exponent bits set
-            nonNaN = true;
+            __nonNaN = true;
         }
         else
         {
-            boolean negativeNaNBlock = stamp.lowerBound() < 0 && stamp.upperBound() > negativeInfinity;
-            boolean positiveNaNBlock = stamp.upperBound() > positiveInfinity;
-            nonNaN = !negativeNaNBlock && !positiveNaNBlock;
+            boolean __negativeNaNBlock = __stamp.lowerBound() < 0 && __stamp.upperBound() > __negativeInfinity;
+            boolean __positiveNaNBlock = __stamp.upperBound() > __positiveInfinity;
+            __nonNaN = !__negativeNaNBlock && !__positiveNaNBlock;
         }
 
-        return new FloatStamp(bits, lowerBound, upperBound, nonNaN);
+        return new FloatStamp(__bits, __lowerBound, __upperBound, __nonNaN);
     }
 
-    private static Stamp getReinterpretStamp(Stamp toStamp, Stamp fromStamp)
+    private static Stamp getReinterpretStamp(Stamp __toStamp, Stamp __fromStamp)
     {
-        if (toStamp instanceof IntegerStamp && fromStamp instanceof FloatStamp)
+        if (__toStamp instanceof IntegerStamp && __fromStamp instanceof FloatStamp)
         {
-            return floatToInt((FloatStamp) fromStamp);
+            return floatToInt((FloatStamp) __fromStamp);
         }
-        else if (toStamp instanceof FloatStamp && fromStamp instanceof IntegerStamp)
+        else if (__toStamp instanceof FloatStamp && __fromStamp instanceof IntegerStamp)
         {
-            return intToFloat((IntegerStamp) fromStamp);
+            return intToFloat((IntegerStamp) __fromStamp);
         }
         else
         {
-            return toStamp;
+            return __toStamp;
         }
     }
 
@@ -335,14 +336,14 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __builder, ArithmeticLIRGeneratorTool __gen)
     {
-        LIRKind kind = builder.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
-        builder.setResult(this, gen.emitReinterpret(kind, builder.operand(getValue())));
+        LIRKind __kind = __builder.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
+        __builder.setResult(this, __gen.emitReinterpret(__kind, __builder.operand(getValue())));
     }
 
-    public static ValueNode reinterpret(JavaKind toKind, ValueNode value)
+    public static ValueNode reinterpret(JavaKind __toKind, ValueNode __value)
     {
-        return value.graph().unique(new ReinterpretNode(toKind, value));
+        return __value.graph().unique(new ReinterpretNode(__toKind, __value));
     }
 }

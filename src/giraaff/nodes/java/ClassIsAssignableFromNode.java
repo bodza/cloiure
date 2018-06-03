@@ -22,12 +22,13 @@ import giraaff.nodes.spi.LoweringTool;
 // @class ClassIsAssignableFromNode
 public final class ClassIsAssignableFromNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {
+    // @def
     public static final NodeClass<ClassIsAssignableFromNode> TYPE = NodeClass.create(ClassIsAssignableFromNode.class);
 
     // @cons
-    public ClassIsAssignableFromNode(ValueNode thisClass, ValueNode otherClass)
+    public ClassIsAssignableFromNode(ValueNode __thisClass, ValueNode __otherClass)
     {
-        super(TYPE, thisClass, otherClass);
+        super(TYPE, __thisClass, __otherClass);
     }
 
     public ValueNode getThisClass()
@@ -41,41 +42,41 @@ public final class ClassIsAssignableFromNode extends BinaryOpLogicNode implement
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        if (forX.isConstant() && forY.isConstant())
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            ConstantReflectionProvider constantReflection = tool.getConstantReflection();
-            ResolvedJavaType thisType = constantReflection.asJavaType(forX.asJavaConstant());
-            ResolvedJavaType otherType = constantReflection.asJavaType(forY.asJavaConstant());
-            if (thisType != null && otherType != null)
+            ConstantReflectionProvider __constantReflection = __tool.getConstantReflection();
+            ResolvedJavaType __thisType = __constantReflection.asJavaType(__forX.asJavaConstant());
+            ResolvedJavaType __otherType = __constantReflection.asJavaType(__forY.asJavaConstant());
+            if (__thisType != null && __otherType != null)
             {
-                return LogicConstantNode.forBoolean(thisType.isAssignableFrom(otherType));
+                return LogicConstantNode.forBoolean(__thisType.isAssignableFrom(__otherType));
             }
         }
         return this;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
-    {
-        return null;
-    }
-
-    @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForX(boolean __negated, Stamp __xStamp, Stamp __yStamp)
     {
         return null;
     }
 
     @Override
-    public TriState tryFold(Stamp xStamp, Stamp yStamp)
+    public Stamp getSucceedingStampForY(boolean __negated, Stamp __xStamp, Stamp __yStamp)
+    {
+        return null;
+    }
+
+    @Override
+    public TriState tryFold(Stamp __xStamp, Stamp __yStamp)
     {
         return TriState.UNKNOWN;
     }

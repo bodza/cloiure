@@ -20,13 +20,14 @@ import giraaff.nodes.spi.LoweringTool;
 // @class IntegerMulExactNode
 public final class IntegerMulExactNode extends MulNode implements IntegerExactArithmeticNode
 {
+    // @def
     public static final NodeClass<IntegerMulExactNode> TYPE = NodeClass.create(IntegerMulExactNode.class);
 
     // @cons
-    public IntegerMulExactNode(ValueNode x, ValueNode y)
+    public IntegerMulExactNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, x, y);
-        setStamp(x.stamp(NodeView.DEFAULT).unrestricted());
+        super(TYPE, __x, __y);
+        setStamp(__x.stamp(NodeView.DEFAULT).unrestricted());
     }
 
     @Override
@@ -41,51 +42,51 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        if (forX.isConstant() && !forY.isConstant())
+        if (__forX.isConstant() && !__forY.isConstant())
         {
-            return new IntegerMulExactNode(forY, forX).canonical(tool);
+            return new IntegerMulExactNode(__forY, __forX).canonical(__tool);
         }
-        if (forX.isConstant())
+        if (__forX.isConstant())
         {
-            return canonicalXconstant(forX, forY);
+            return canonicalXconstant(__forX, __forY);
         }
-        else if (forY.isConstant())
+        else if (__forY.isConstant())
         {
-            long c = forY.asJavaConstant().asLong();
-            if (c == 1)
+            long __c = __forY.asJavaConstant().asLong();
+            if (__c == 1)
             {
-                return forX;
+                return __forX;
             }
-            if (c == 0)
+            if (__c == 0)
             {
                 return ConstantNode.forIntegerStamp(stamp(NodeView.DEFAULT), 0);
             }
         }
         if (!IntegerStamp.multiplicationCanOverflow((IntegerStamp) x.stamp(NodeView.DEFAULT), (IntegerStamp) y.stamp(NodeView.DEFAULT)))
         {
-            return new MulNode(x, y).canonical(tool);
+            return new MulNode(x, y).canonical(__tool);
         }
         return this;
     }
 
-    private ValueNode canonicalXconstant(ValueNode forX, ValueNode forY)
+    private ValueNode canonicalXconstant(ValueNode __forX, ValueNode __forY)
     {
-        JavaConstant xConst = forX.asJavaConstant();
-        JavaConstant yConst = forY.asJavaConstant();
+        JavaConstant __xConst = __forX.asJavaConstant();
+        JavaConstant __yConst = __forY.asJavaConstant();
         try
         {
-            if (xConst.getJavaKind() == JavaKind.Int)
+            if (__xConst.getJavaKind() == JavaKind.Int)
             {
-                return ConstantNode.forInt(Math.multiplyExact(xConst.asInt(), yConst.asInt()));
+                return ConstantNode.forInt(Math.multiplyExact(__xConst.asInt(), __yConst.asInt()));
             }
             else
             {
-                return ConstantNode.forLong(Math.multiplyExact(xConst.asLong(), yConst.asLong()));
+                return ConstantNode.forLong(Math.multiplyExact(__xConst.asLong(), __yConst.asLong()));
             }
         }
-        catch (ArithmeticException ex)
+        catch (ArithmeticException __ex)
         {
             // The operation will result in an overflow exception, so do not canonicalize.
         }
@@ -93,14 +94,14 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
     }
 
     @Override
-    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode next, AbstractBeginNode deopt)
+    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode __next, AbstractBeginNode __deopt)
     {
-        return graph().add(new IntegerMulExactSplitNode(stamp(NodeView.DEFAULT), getX(), getY(), next, deopt));
+        return graph().add(new IntegerMulExactSplitNode(stamp(NodeView.DEFAULT), getX(), getY(), __next, __deopt));
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        IntegerExactArithmeticSplitNode.lower(tool, this);
+        IntegerExactArithmeticSplitNode.lower(__tool, this);
     }
 }

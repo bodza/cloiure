@@ -8,21 +8,21 @@ import giraaff.phases.tiers.PhaseContext;
 public abstract class ContextlessLoopPhase<P extends LoopPolicies> extends LoopPhase<P>
 {
     // @cons
-    public ContextlessLoopPhase(P policies)
+    public ContextlessLoopPhase(P __policies)
     {
-        super(policies);
+        super(__policies);
     }
 
-    public final void apply(final StructuredGraph graph)
+    public final void apply(final StructuredGraph __graph)
     {
-        apply(graph, null);
+        apply(__graph, null);
     }
 
     protected abstract void run(StructuredGraph graph);
 
     @Override
-    protected final void run(StructuredGraph graph, PhaseContext context)
+    protected final void run(StructuredGraph __graph, PhaseContext __context)
     {
-        run(graph);
+        run(__graph);
     }
 }

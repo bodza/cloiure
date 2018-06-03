@@ -16,31 +16,39 @@ import giraaff.util.UnsafeAccess;
 // @class UnsafeArrayTypeWriter
 public abstract class UnsafeArrayTypeWriter implements TypeWriter
 {
+    // @def
     private static final int MIN_CHUNK_LENGTH = 200;
+    // @def
     private static final int MAX_CHUNK_LENGTH = 16000;
 
     // @class UnsafeArrayTypeWriter.Chunk
     static final class Chunk
     {
+        // @field
         protected final byte[] data;
+        // @field
         protected int size;
+        // @field
         protected Chunk next;
 
         // @cons
-        protected Chunk(int arrayLength)
+        protected Chunk(int __arrayLength)
         {
             super();
-            data = new byte[arrayLength];
+            data = new byte[__arrayLength];
         }
     }
 
+    // @field
     protected final Chunk firstChunk;
+    // @field
     protected Chunk writeChunk;
+    // @field
     protected int totalSize;
 
-    public static UnsafeArrayTypeWriter create(boolean supportsUnalignedMemoryAccess)
+    public static UnsafeArrayTypeWriter create(boolean __supportsUnalignedMemoryAccess)
     {
-        if (supportsUnalignedMemoryAccess)
+        if (__supportsUnalignedMemoryAccess)
         {
             return new UnalignedUnsafeArrayTypeWriter();
         }
@@ -67,58 +75,58 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
     /**
      * Copies the buffer into the provided byte[] array of length {@link #getBytesWritten()}.
      */
-    public final byte[] toArray(byte[] result)
+    public final byte[] toArray(byte[] __result)
     {
-        int resultIdx = 0;
-        for (Chunk cur = firstChunk; cur != null; cur = cur.next)
+        int __resultIdx = 0;
+        for (Chunk __cur = firstChunk; __cur != null; __cur = __cur.next)
         {
-            System.arraycopy(cur.data, 0, result, resultIdx, cur.size);
-            resultIdx += cur.size;
+            System.arraycopy(__cur.data, 0, __result, __resultIdx, __cur.size);
+            __resultIdx += __cur.size;
         }
-        return result;
+        return __result;
     }
 
     @Override
-    public final void putS1(long value)
+    public final void putS1(long __value)
     {
-        long offset = writeOffset(Byte.BYTES);
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset, TypeConversion.asS1(value));
+        long __offset = writeOffset(Byte.BYTES);
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset, TypeConversion.asS1(__value));
     }
 
     @Override
-    public final void putU1(long value)
+    public final void putU1(long __value)
     {
-        long offset = writeOffset(Byte.BYTES);
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset, TypeConversion.asU1(value));
+        long __offset = writeOffset(Byte.BYTES);
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset, TypeConversion.asU1(__value));
     }
 
     @Override
-    public final void putU2(long value)
+    public final void putU2(long __value)
     {
-        putS2(TypeConversion.asU2(value));
+        putS2(TypeConversion.asU2(__value));
     }
 
     @Override
-    public final void putU4(long value)
+    public final void putU4(long __value)
     {
-        putS4(TypeConversion.asU4(value));
+        putS4(TypeConversion.asU4(__value));
     }
 
-    protected long writeOffset(int writeBytes)
+    protected long writeOffset(int __writeBytes)
     {
-        if (writeChunk.size + writeBytes >= writeChunk.data.length)
+        if (writeChunk.size + __writeBytes >= writeChunk.data.length)
         {
-            Chunk newChunk = new Chunk(Math.min(writeChunk.data.length * 2, MAX_CHUNK_LENGTH));
-            writeChunk.next = newChunk;
-            writeChunk = newChunk;
+            Chunk __newChunk = new Chunk(Math.min(writeChunk.data.length * 2, MAX_CHUNK_LENGTH));
+            writeChunk.next = __newChunk;
+            writeChunk = __newChunk;
         }
 
-        long result = writeChunk.size + UnsafeAccess.UNSAFE.ARRAY_BYTE_BASE_OFFSET;
+        long __result = writeChunk.size + UnsafeAccess.UNSAFE.ARRAY_BYTE_BASE_OFFSET;
 
-        totalSize += writeBytes;
-        writeChunk.size += writeBytes;
+        totalSize += __writeBytes;
+        writeChunk.size += __writeBytes;
 
-        return result;
+        return __result;
     }
 }
 
@@ -126,24 +134,24 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
 final class UnalignedUnsafeArrayTypeWriter extends UnsafeArrayTypeWriter
 {
     @Override
-    public void putS2(long value)
+    public void putS2(long __value)
     {
-        long offset = writeOffset(Short.BYTES);
-        UnsafeAccess.UNSAFE.putShort(writeChunk.data, offset, TypeConversion.asS2(value));
+        long __offset = writeOffset(Short.BYTES);
+        UnsafeAccess.UNSAFE.putShort(writeChunk.data, __offset, TypeConversion.asS2(__value));
     }
 
     @Override
-    public void putS4(long value)
+    public void putS4(long __value)
     {
-        long offset = writeOffset(Integer.BYTES);
-        UnsafeAccess.UNSAFE.putInt(writeChunk.data, offset, TypeConversion.asS4(value));
+        long __offset = writeOffset(Integer.BYTES);
+        UnsafeAccess.UNSAFE.putInt(writeChunk.data, __offset, TypeConversion.asS4(__value));
     }
 
     @Override
-    public void putS8(long value)
+    public void putS8(long __value)
     {
-        long offset = writeOffset(Long.BYTES);
-        UnsafeAccess.UNSAFE.putLong(writeChunk.data, offset, value);
+        long __offset = writeOffset(Long.BYTES);
+        UnsafeAccess.UNSAFE.putLong(writeChunk.data, __offset, __value);
     }
 }
 
@@ -151,34 +159,34 @@ final class UnalignedUnsafeArrayTypeWriter extends UnsafeArrayTypeWriter
 final class AlignedUnsafeArrayTypeWriter extends UnsafeArrayTypeWriter
 {
     @Override
-    public void putS2(long value)
+    public void putS2(long __value)
     {
-        long offset = writeOffset(Short.BYTES);
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 0, (byte) (value >> 0));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 1, (byte) (value >> 8));
+        long __offset = writeOffset(Short.BYTES);
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 0, (byte) (__value >> 0));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 1, (byte) (__value >> 8));
     }
 
     @Override
-    public void putS4(long value)
+    public void putS4(long __value)
     {
-        long offset = writeOffset(Integer.BYTES);
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 0, (byte) (value >> 0));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 1, (byte) (value >> 8));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 2, (byte) (value >> 16));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 3, (byte) (value >> 24));
+        long __offset = writeOffset(Integer.BYTES);
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 0, (byte) (__value >> 0));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 1, (byte) (__value >> 8));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 2, (byte) (__value >> 16));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 3, (byte) (__value >> 24));
     }
 
     @Override
-    public void putS8(long value)
+    public void putS8(long __value)
     {
-        long offset = writeOffset(Long.BYTES);
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 0, (byte) (value >> 0));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 1, (byte) (value >> 8));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 2, (byte) (value >> 16));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 3, (byte) (value >> 24));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 4, (byte) (value >> 32));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 5, (byte) (value >> 40));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 6, (byte) (value >> 48));
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset + 7, (byte) (value >> 56));
+        long __offset = writeOffset(Long.BYTES);
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 0, (byte) (__value >> 0));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 1, (byte) (__value >> 8));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 2, (byte) (__value >> 16));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 3, (byte) (__value >> 24));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 4, (byte) (__value >> 32));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 5, (byte) (__value >> 40));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 6, (byte) (__value >> 48));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, __offset + 7, (byte) (__value >> 56));
     }
 }

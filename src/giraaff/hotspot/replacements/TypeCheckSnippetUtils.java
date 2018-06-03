@@ -21,54 +21,54 @@ import giraaff.word.Word;
 // @class TypeCheckSnippetUtils
 public final class TypeCheckSnippetUtils
 {
-    static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull)
+    static boolean checkSecondarySubType(KlassPointer __t, KlassPointer __sNonNull)
     {
         // if (S.cache == T) return true
-        if (sNonNull.readKlassPointer(HotSpotRuntime.secondarySuperCacheOffset, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION).equal(t))
+        if (__sNonNull.readKlassPointer(HotSpotRuntime.secondarySuperCacheOffset, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION).equal(__t))
         {
             return true;
         }
 
-        return checkSelfAndSupers(t, sNonNull);
+        return checkSelfAndSupers(__t, __sNonNull);
     }
 
-    static boolean checkUnknownSubType(KlassPointer t, KlassPointer sNonNull)
+    static boolean checkUnknownSubType(KlassPointer __t, KlassPointer __sNonNull)
     {
         // int off = T.offset
-        int superCheckOffset = t.readInt(HotSpotRuntime.superCheckOffsetOffset, HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION);
-        boolean primary = superCheckOffset != HotSpotRuntime.secondarySuperCacheOffset;
+        int __superCheckOffset = __t.readInt(HotSpotRuntime.superCheckOffsetOffset, HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION);
+        boolean __primary = __superCheckOffset != HotSpotRuntime.secondarySuperCacheOffset;
 
         // if (T = S[off]) return true
-        if (sNonNull.readKlassPointer(superCheckOffset, HotSpotReplacementsUtil.PRIMARY_SUPERS_LOCATION).equal(t))
+        if (__sNonNull.readKlassPointer(__superCheckOffset, HotSpotReplacementsUtil.PRIMARY_SUPERS_LOCATION).equal(__t))
         {
             return true;
         }
 
         // if (off != &cache) return false
-        if (primary)
+        if (__primary)
         {
             return false;
         }
 
-        return checkSelfAndSupers(t, sNonNull);
+        return checkSelfAndSupers(__t, __sNonNull);
     }
 
-    private static boolean checkSelfAndSupers(KlassPointer t, KlassPointer s)
+    private static boolean checkSelfAndSupers(KlassPointer __t, KlassPointer __s)
     {
         // if (T == S) return true
-        if (s.equal(t))
+        if (__s.equal(__t))
         {
             return true;
         }
 
         // if (S.scan_s_s_array(T)) { S.cache = T; return true; }
-        Word secondarySupers = s.readWord(HotSpotRuntime.secondarySupersOffset, HotSpotReplacementsUtil.SECONDARY_SUPERS_LOCATION);
-        int length = secondarySupers.readInt(HotSpotRuntime.metaspaceArrayLengthOffset, HotSpotReplacementsUtil.METASPACE_ARRAY_LENGTH_LOCATION);
-        for (int i = 0; i < length; i++)
+        Word __secondarySupers = __s.readWord(HotSpotRuntime.secondarySupersOffset, HotSpotReplacementsUtil.SECONDARY_SUPERS_LOCATION);
+        int __length = __secondarySupers.readInt(HotSpotRuntime.metaspaceArrayLengthOffset, HotSpotReplacementsUtil.METASPACE_ARRAY_LENGTH_LOCATION);
+        for (int __i = 0; __i < __length; __i++)
         {
-            if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, t.equal(loadSecondarySupersElement(secondarySupers, i))))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, __t.equal(loadSecondarySupersElement(__secondarySupers, __i))))
             {
-                s.writeKlassPointer(HotSpotRuntime.secondarySuperCacheOffset, t, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+                __s.writeKlassPointer(HotSpotRuntime.secondarySuperCacheOffset, __t, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
                 return true;
             }
         }
@@ -84,47 +84,49 @@ public final class TypeCheckSnippetUtils
         /**
          * The hubs of the hint types.
          */
+        // @field
         public final ConstantNode[] hubs;
 
         /**
          * A predicate over {@link #hubs} specifying whether the corresponding hint type is a
          * sub-type of the checked type.
          */
+        // @field
         public final boolean[] isPositive;
 
         // @cons
-        Hints(ConstantNode[] hints, boolean[] hintIsPositive)
+        Hints(ConstantNode[] __hints, boolean[] __hintIsPositive)
         {
             super();
-            this.hubs = hints;
-            this.isPositive = hintIsPositive;
+            this.hubs = __hints;
+            this.isPositive = __hintIsPositive;
         }
     }
 
-    static Hints createHints(TypeCheckHints hints, MetaAccessProvider metaAccess, boolean positiveOnly, StructuredGraph graph)
+    static Hints createHints(TypeCheckHints __hints, MetaAccessProvider __metaAccess, boolean __positiveOnly, StructuredGraph __graph)
     {
-        ConstantNode[] hubs = new ConstantNode[hints.hints.length];
-        boolean[] isPositive = new boolean[hints.hints.length];
-        int index = 0;
-        for (int i = 0; i < hubs.length; i++)
+        ConstantNode[] __hubs = new ConstantNode[__hints.hints.length];
+        boolean[] __isPositive = new boolean[__hints.hints.length];
+        int __index = 0;
+        for (int __i = 0; __i < __hubs.length; __i++)
         {
-            if (!positiveOnly || hints.hints[i].positive)
+            if (!__positiveOnly || __hints.hints[__i].positive)
             {
-                hubs[index] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) hints.hints[i].type).klass(), metaAccess, graph);
-                isPositive[index] = hints.hints[i].positive;
-                index++;
+                __hubs[__index] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) __hints.hints[__i].type).klass(), __metaAccess, __graph);
+                __isPositive[__index] = __hints.hints[__i].positive;
+                __index++;
             }
         }
-        if (positiveOnly && index != hubs.length)
+        if (__positiveOnly && __index != __hubs.length)
         {
-            hubs = Arrays.copyOf(hubs, index);
-            isPositive = Arrays.copyOf(isPositive, index);
+            __hubs = Arrays.copyOf(__hubs, __index);
+            __isPositive = Arrays.copyOf(__isPositive, __index);
         }
-        return new Hints(hubs, isPositive);
+        return new Hints(__hubs, __isPositive);
     }
 
-    static KlassPointer loadSecondarySupersElement(Word metaspaceArray, int index)
+    static KlassPointer loadSecondarySupersElement(Word __metaspaceArray, int __index)
     {
-        return KlassPointer.fromWord(metaspaceArray.readWord(HotSpotRuntime.metaspaceArrayBaseOffset + index * HotSpotReplacementsUtil.wordSize(), HotSpotReplacementsUtil.SECONDARY_SUPERS_ELEMENT_LOCATION));
+        return KlassPointer.fromWord(__metaspaceArray.readWord(HotSpotRuntime.metaspaceArrayBaseOffset + __index * HotSpotReplacementsUtil.wordSize(), HotSpotReplacementsUtil.SECONDARY_SUPERS_ELEMENT_LOCATION));
     }
 }

@@ -11,15 +11,15 @@ public final class ValueNodeUtil
         super();
     }
 
-    public static ValueNode asNode(MemoryNode node)
+    public static ValueNode asNode(MemoryNode __node)
     {
-        if (node == null)
+        if (__node == null)
         {
             return null;
         }
         else
         {
-            return node.asNode();
+            return __node.asNode();
         }
     }
 }

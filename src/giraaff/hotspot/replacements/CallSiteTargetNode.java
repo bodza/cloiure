@@ -22,12 +22,13 @@ import giraaff.replacements.nodes.MacroStateSplitNode;
 // @class CallSiteTargetNode
 public final class CallSiteTargetNode extends MacroStateSplitNode implements Canonicalizable, Lowerable
 {
+    // @def
     public static final NodeClass<CallSiteTargetNode> TYPE = NodeClass.create(CallSiteTargetNode.class);
 
     // @cons
-    public CallSiteTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode receiver)
+    public CallSiteTargetNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode __receiver)
     {
-        super(TYPE, invokeKind, targetMethod, bci, returnStamp, receiver);
+        super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __receiver);
     }
 
     private ValueNode getCallSite()
@@ -35,46 +36,46 @@ public final class CallSiteTargetNode extends MacroStateSplitNode implements Can
         return arguments.get(0);
     }
 
-    public static ConstantNode tryFold(ValueNode callSite, MetaAccessProvider metaAccess, Assumptions assumptions)
+    public static ConstantNode tryFold(ValueNode __callSite, MetaAccessProvider __metaAccess, Assumptions __assumptions)
     {
-        if (callSite != null && callSite.isConstant() && !callSite.isNullConstant())
+        if (__callSite != null && __callSite.isConstant() && !__callSite.isNullConstant())
         {
-            HotSpotObjectConstant c = (HotSpotObjectConstant) callSite.asConstant();
-            JavaConstant target = c.getCallSiteTarget(assumptions);
-            if (target != null)
+            HotSpotObjectConstant __c = (HotSpotObjectConstant) __callSite.asConstant();
+            JavaConstant __target = __c.getCallSiteTarget(__assumptions);
+            if (__target != null)
             {
-                return ConstantNode.forConstant(target, metaAccess);
+                return ConstantNode.forConstant(__target, __metaAccess);
             }
         }
         return null;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        ConstantNode target = tryFold(getCallSite(), tool.getMetaAccess(), graph().getAssumptions());
-        if (target != null)
+        ConstantNode __target = tryFold(getCallSite(), __tool.getMetaAccess(), graph().getAssumptions());
+        if (__target != null)
         {
-            return target;
+            return __target;
         }
 
         return this;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        ConstantNode target = tryFold(getCallSite(), tool.getMetaAccess(), graph().getAssumptions());
+        ConstantNode __target = tryFold(getCallSite(), __tool.getMetaAccess(), graph().getAssumptions());
 
-        if (target != null)
+        if (__target != null)
         {
-            graph().replaceFixedWithFloating(this, target);
+            graph().replaceFixedWithFloating(this, __target);
         }
         else
         {
-            InvokeNode invoke = createInvoke();
-            graph().replaceFixedWithFixed(this, invoke);
-            invoke.lower(tool);
+            InvokeNode __invoke = createInvoke();
+            graph().replaceFixedWithFixed(this, __invoke);
+            __invoke.lower(__tool);
         }
     }
 }

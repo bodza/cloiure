@@ -15,27 +15,29 @@ import giraaff.phases.tiers.SuitesCreator;
 // @class HotSpotSuitesProvider
 public class HotSpotSuitesProvider extends SuitesProviderBase
 {
+    // @field
     protected final HotSpotGraalRuntime runtime;
 
+    // @field
     private final SuitesCreator defaultSuitesCreator;
 
     // @cons
-    public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, HotSpotGraalRuntime runtime)
+    public HotSpotSuitesProvider(SuitesCreator __defaultSuitesCreator, HotSpotGraalRuntime __runtime)
     {
         super();
-        this.defaultSuitesCreator = defaultSuitesCreator;
-        this.runtime = runtime;
+        this.defaultSuitesCreator = __defaultSuitesCreator;
+        this.runtime = __runtime;
         this.defaultGraphBuilderSuite = createGraphBuilderSuite();
     }
 
     @Override
     public Suites createSuites()
     {
-        Suites ret = defaultSuitesCreator.createSuites();
+        Suites __ret = defaultSuitesCreator.createSuites();
 
-        ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase());
+        __ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase());
 
-        return ret;
+        return __ret;
     }
 
     protected PhaseSuite<HighTierContext> createGraphBuilderSuite()

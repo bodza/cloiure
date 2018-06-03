@@ -5,13 +5,15 @@ package giraaff.graph;
  */
 class NodeIdAccessor
 {
+    // @field
     final Graph graph;
+    // @field
     final int epoch;
 
-    NodeIdAccessor(Graph graph)
+    NodeIdAccessor(Graph __graph)
     {
-        this.graph = graph;
-        this.epoch = graph.compressions;
+        this.graph = __graph;
+        this.epoch = __graph.compressions;
     }
 
     Graph getGraph()
@@ -23,8 +25,8 @@ class NodeIdAccessor
      * Gets the identifier for a node. If assertions are enabled, this method asserts that the
      * identifier is stable.
      */
-    int getNodeId(Node node)
+    int getNodeId(Node __node)
     {
-        return node.id();
+        return __node.id();
     }
 }

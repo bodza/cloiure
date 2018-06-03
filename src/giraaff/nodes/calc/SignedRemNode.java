@@ -15,24 +15,25 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class SignedRemNode
 public final class SignedRemNode extends IntegerDivRemNode implements LIRLowerable
 {
+    // @def
     public static final NodeClass<SignedRemNode> TYPE = NodeClass.create(SignedRemNode.class);
 
     // @cons
-    protected SignedRemNode(ValueNode x, ValueNode y)
+    protected SignedRemNode(ValueNode __x, ValueNode __y)
     {
-        this(TYPE, x, y);
+        this(TYPE, __x, __y);
     }
 
     // @cons
-    protected SignedRemNode(NodeClass<? extends SignedRemNode> c, ValueNode x, ValueNode y)
+    protected SignedRemNode(NodeClass<? extends SignedRemNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(c, IntegerStamp.OPS.getRem().foldStamp(x.stamp(NodeView.DEFAULT), y.stamp(NodeView.DEFAULT)), Op.REM, Type.SIGNED, x, y);
+        super(__c, IntegerStamp.OPS.getRem().foldStamp(__x.stamp(NodeView.DEFAULT), __y.stamp(NodeView.DEFAULT)), Op.REM, Type.SIGNED, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        Stamp stamp = IntegerStamp.OPS.getRem().foldStamp(x.stamp(view), y.stamp(view));
-        return canonical(null, x, y, stamp, view);
+        Stamp __stamp = IntegerStamp.OPS.getRem().foldStamp(__x.stamp(__view), __y.stamp(__view));
+        return canonical(null, __x, __y, __stamp, __view);
     }
 
     @Override
@@ -42,64 +43,64 @@ public final class SignedRemNode extends IntegerDivRemNode implements LIRLowerab
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        return canonical(this, forX, forY, stamp(view), view);
+        NodeView __view = NodeView.from(__tool);
+        return canonical(this, __forX, __forY, stamp(__view), __view);
     }
 
-    private static ValueNode canonical(SignedRemNode self, ValueNode forX, ValueNode forY, Stamp stamp, NodeView view)
+    private static ValueNode canonical(SignedRemNode __self, ValueNode __forX, ValueNode __forY, Stamp __stamp, NodeView __view)
     {
-        if (forX.isConstant() && forY.isConstant())
+        if (__forX.isConstant() && __forY.isConstant())
         {
-            long y = forY.asJavaConstant().asLong();
-            if (y == 0)
+            long __y = __forY.asJavaConstant().asLong();
+            if (__y == 0)
             {
-                return self != null ? self : new SignedRemNode(forX, forY); // this will trap, can
+                return __self != null ? __self : new SignedRemNode(__forX, __forY); // this will trap, can
                                                                             // not canonicalize
             }
-            return ConstantNode.forIntegerStamp(stamp, forX.asJavaConstant().asLong() % y);
+            return ConstantNode.forIntegerStamp(__stamp, __forX.asJavaConstant().asLong() % __y);
         }
-        else if (forY.isConstant() && forX.stamp(view) instanceof IntegerStamp && forY.stamp(view) instanceof IntegerStamp)
+        else if (__forY.isConstant() && __forX.stamp(__view) instanceof IntegerStamp && __forY.stamp(__view) instanceof IntegerStamp)
         {
-            long constY = forY.asJavaConstant().asLong();
-            IntegerStamp xStamp = (IntegerStamp) forX.stamp(view);
-            IntegerStamp yStamp = (IntegerStamp) forY.stamp(view);
-            if (constY < 0 && constY != CodeUtil.minValue(yStamp.getBits()))
+            long __constY = __forY.asJavaConstant().asLong();
+            IntegerStamp __xStamp = (IntegerStamp) __forX.stamp(__view);
+            IntegerStamp __yStamp = (IntegerStamp) __forY.stamp(__view);
+            if (__constY < 0 && __constY != CodeUtil.minValue(__yStamp.getBits()))
             {
-                Stamp newStamp = IntegerStamp.OPS.getRem().foldStamp(forX.stamp(view), forY.stamp(view));
-                return canonical(null, forX, ConstantNode.forIntegerStamp(yStamp, -constY), newStamp, view);
+                Stamp __newStamp = IntegerStamp.OPS.getRem().foldStamp(__forX.stamp(__view), __forY.stamp(__view));
+                return canonical(null, __forX, ConstantNode.forIntegerStamp(__yStamp, -__constY), __newStamp, __view);
             }
 
-            if (constY == 1)
+            if (__constY == 1)
             {
-                return ConstantNode.forIntegerStamp(stamp, 0);
+                return ConstantNode.forIntegerStamp(__stamp, 0);
             }
-            else if (CodeUtil.isPowerOf2(constY))
+            else if (CodeUtil.isPowerOf2(__constY))
             {
-                if (xStamp.isPositive())
+                if (__xStamp.isPositive())
                 {
                     // x & (y - 1)
-                    return new AndNode(forX, ConstantNode.forIntegerStamp(stamp, constY - 1));
+                    return new AndNode(__forX, ConstantNode.forIntegerStamp(__stamp, __constY - 1));
                 }
-                else if (xStamp.isNegative())
+                else if (__xStamp.isNegative())
                 {
                     // -((-x) & (y - 1))
-                    return new NegateNode(new AndNode(new NegateNode(forX), ConstantNode.forIntegerStamp(stamp, constY - 1)));
+                    return new NegateNode(new AndNode(new NegateNode(__forX), ConstantNode.forIntegerStamp(__stamp, __constY - 1)));
                 }
                 else
                 {
                     // x - ((x / y) << log2(y))
-                    return SubNode.create(forX, LeftShiftNode.create(SignedDivNode.canonical(forX, constY, view), ConstantNode.forInt(CodeUtil.log2(constY)), view), view);
+                    return SubNode.create(__forX, LeftShiftNode.create(SignedDivNode.canonical(__forX, __constY, __view), ConstantNode.forInt(CodeUtil.log2(__constY)), __view), __view);
                 }
             }
         }
-        return self != null ? self : new SignedRemNode(forX, forY);
+        return __self != null ? __self : new SignedRemNode(__forX, __forY);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, gen.getLIRGeneratorTool().getArithmetic().emitRem(gen.operand(getX()), gen.operand(getY()), gen.state(this)));
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitRem(__gen.operand(getX()), __gen.operand(getY()), __gen.state(this)));
     }
 }

@@ -28,22 +28,23 @@ public final class CRC32CSubstitutions
         super();
     }
 
+    // @def
     public static final ForeignCallDescriptor UPDATE_BYTES_CRC32C = new ForeignCallDescriptor("updateBytesCRC32C", int.class, int.class, WordBase.class, int.class);
 
     @NodeIntrinsic(ForeignCallNode.class)
     public static native int updateBytesCRC32(@ConstantNodeParameter ForeignCallDescriptor descriptor, int crc, WordBase buf, int length);
 
     @MethodSubstitution
-    static int updateBytes(int crc, byte[] b, int off, int end)
+    static int updateBytes(int __crc, byte[] __b, int __off, int __end)
     {
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(b, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + off));
-        return updateBytesCRC32(UPDATE_BYTES_CRC32C, crc, bufAddr, end - off);
+        Word __bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(__b, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + __off));
+        return updateBytesCRC32(UPDATE_BYTES_CRC32C, __crc, __bufAddr, __end - __off);
     }
 
     @MethodSubstitution
-    static int updateDirectByteBuffer(int crc, long addr, int off, int end)
+    static int updateDirectByteBuffer(int __crc, long __addr, int __off, int __end)
     {
-        WordBase bufAddr = WordFactory.unsigned(addr).add(off);
-        return updateBytesCRC32(UPDATE_BYTES_CRC32C, crc, bufAddr, end - off);
+        WordBase __bufAddr = WordFactory.unsigned(__addr).add(__off);
+        return updateBytesCRC32(UPDATE_BYTES_CRC32C, __crc, __bufAddr, __end - __off);
     }
 }

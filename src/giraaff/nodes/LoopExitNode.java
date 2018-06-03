@@ -12,6 +12,7 @@ import giraaff.nodeinfo.InputType;
 // @class LoopExitNode
 public final class LoopExitNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable
 {
+    // @def
     public static final NodeClass<LoopExitNode> TYPE = NodeClass.create(LoopExitNode.class);
 
     /*
@@ -19,13 +20,15 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
      * evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
      * after - but we still must not have type system violations for that short amount of time.
      */
-    @Input(InputType.Association) AbstractBeginNode loopBegin;
+    @Input(InputType.Association)
+    // @field
+    AbstractBeginNode loopBegin;
 
     // @cons
-    public LoopExitNode(LoopBeginNode loop)
+    public LoopExitNode(LoopBeginNode __loop)
     {
         super(TYPE);
-        loopBegin = loop;
+        loopBegin = __loop;
     }
 
     public LoopBeginNode loopBegin()
@@ -36,22 +39,22 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     @Override
     public NodeIterable<Node> anchored()
     {
-        return super.anchored().filter(n ->
+        return super.anchored().filter(__n ->
         {
-            if (n instanceof ProxyNode)
+            if (__n instanceof ProxyNode)
             {
-                ProxyNode proxyNode = (ProxyNode) n;
-                return proxyNode.proxyPoint() != this;
+                ProxyNode __proxyNode = (ProxyNode) __n;
+                return __proxyNode.proxyPoint() != this;
             }
             return true;
         });
     }
 
     @Override
-    public void prepareDelete(FixedNode evacuateFrom)
+    public void prepareDelete(FixedNode __evacuateFrom)
     {
         removeProxies();
-        super.prepareDelete(evacuateFrom);
+        super.prepareDelete(__evacuateFrom);
     }
 
     public void removeProxies()
@@ -60,11 +63,11 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
         {
             outer: while (true)
             {
-                for (ProxyNode vpn : proxies().snapshot())
+                for (ProxyNode __vpn : proxies().snapshot())
                 {
-                    ValueNode value = vpn.value();
-                    vpn.replaceAtUsagesAndDelete(value);
-                    if (value == this)
+                    ValueNode __value = __vpn.value();
+                    __vpn.replaceAtUsagesAndDelete(__value);
+                    if (__value == this)
                     {
                         // Guard proxy could have this input as value.
                         continue outer;
@@ -78,26 +81,26 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     @SuppressWarnings({"unchecked", "rawtypes"})
     public NodeIterable<ProxyNode> proxies()
     {
-        return (NodeIterable) usages().filter(n ->
+        return (NodeIterable) usages().filter(__n ->
         {
-            if (n instanceof ProxyNode)
+            if (__n instanceof ProxyNode)
             {
-                ProxyNode proxyNode = (ProxyNode) n;
-                return proxyNode.proxyPoint() == this;
+                ProxyNode __proxyNode = (ProxyNode) __n;
+                return __proxyNode.proxyPoint() == this;
             }
             return false;
         });
     }
 
     @Override
-    public void simplify(SimplifierTool tool)
+    public void simplify(SimplifierTool __tool)
     {
-        Node prev = this.predecessor();
-        while (tool.allUsagesAvailable() && prev instanceof BeginNode && prev.hasNoUsages())
+        Node __prev = this.predecessor();
+        while (__tool.allUsagesAvailable() && __prev instanceof BeginNode && __prev.hasNoUsages())
         {
-            AbstractBeginNode begin = (AbstractBeginNode) prev;
-            prev = prev.predecessor();
-            graph().removeFixed(begin);
+            AbstractBeginNode __begin = (AbstractBeginNode) __prev;
+            __prev = __prev.predecessor();
+            graph().removeFixed(__begin);
         }
     }
 }

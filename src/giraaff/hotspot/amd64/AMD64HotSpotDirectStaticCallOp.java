@@ -20,21 +20,23 @@ import giraaff.nodes.CallTargetNode.InvokeKind;
 // @class AMD64HotSpotDirectStaticCallOp
 final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotDirectStaticCallOp> TYPE = LIRInstructionClass.create(AMD64HotSpotDirectStaticCallOp.class);
 
+    // @field
     private final InvokeKind invokeKind;
 
     // @cons
-    AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind)
+    AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod __target, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state, InvokeKind __invokeKind)
     {
-        super(TYPE, target, result, parameters, temps, state);
-        this.invokeKind = invokeKind;
+        super(TYPE, __target, __result, __parameters, __temps, __state);
+        this.invokeKind = __invokeKind;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        crb.recordMark(invokeKind == InvokeKind.Static ? HotSpotRuntime.invokestaticMark : HotSpotRuntime.invokespecialMark);
-        super.emitCode(crb, masm);
+        __crb.recordMark(invokeKind == InvokeKind.Static ? HotSpotRuntime.invokestaticMark : HotSpotRuntime.invokespecialMark);
+        super.emitCode(__crb, __masm);
     }
 }

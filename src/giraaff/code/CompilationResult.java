@@ -25,28 +25,38 @@ import org.graalvm.collections.EconomicSet;
 // @class CompilationResult
 public final class CompilationResult
 {
+    // @field
     private boolean closed;
 
+    // @field
     private int entryBCI = -1;
 
+    // @field
     private final DataSection dataSection = new DataSection();
 
+    // @field
     private final List<DataPatch> dataPatches = new ArrayList<>();
+    // @field
     private final List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
+    // @field
     private final List<Mark> marks = new ArrayList<>();
 
+    // @field
     private int totalFrameSize = -1;
 
     /**
      * The buffer containing the emitted machine code.
      */
+    // @field
     private byte[] targetCode;
 
     /**
      * The leading number of bytes in {@link #targetCode} containing the emitted machine code.
      */
+    // @field
     private int targetCodeSize;
 
+    // @field
     private Assumption[] assumptions;
 
     /**
@@ -54,15 +64,19 @@ public final class CompilationResult
      * {@code null}, then the compilation did not record method dependencies. Otherwise, the first
      * element of this array is the root method of the compilation.
      */
+    // @field
     private ResolvedJavaMethod[] methods;
 
     /**
      * The list of fields that were accessed from the bytecodes.
      */
+    // @field
     private ResolvedJavaField[] fields;
 
+    // @field
     private int bytecodeSize;
 
+    // @field
     private boolean hasUnsafeAccess;
 
     // @cons
@@ -79,24 +93,24 @@ public final class CompilationResult
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object __obj)
     {
-        if (this == obj)
+        if (this == __obj)
         {
             return true;
         }
-        if (obj != null && obj.getClass() == getClass())
+        if (__obj != null && __obj.getClass() == getClass())
         {
-            CompilationResult that = (CompilationResult) obj;
-            return (this.entryBCI == that.entryBCI &&
-                    this.totalFrameSize == that.totalFrameSize &&
-                    this.targetCodeSize == that.targetCodeSize &&
-                    Objects.equals(this.dataSection, that.dataSection) &&
-                    Objects.equals(this.exceptionHandlers, that.exceptionHandlers) &&
-                    Objects.equals(this.dataPatches, that.dataPatches) &&
-                    Objects.equals(this.marks,  that.marks) &&
-                    Arrays.equals(this.assumptions, that.assumptions) &&
-                    Arrays.equals(targetCode, that.targetCode));
+            CompilationResult __that = (CompilationResult) __obj;
+            return (this.entryBCI == __that.entryBCI &&
+                    this.totalFrameSize == __that.totalFrameSize &&
+                    this.targetCodeSize == __that.targetCodeSize &&
+                    Objects.equals(this.dataSection, __that.dataSection) &&
+                    Objects.equals(this.exceptionHandlers, __that.exceptionHandlers) &&
+                    Objects.equals(this.dataPatches, __that.dataPatches) &&
+                    Objects.equals(this.marks,  __that.marks) &&
+                    Arrays.equals(this.assumptions, __that.assumptions) &&
+                    Arrays.equals(targetCode, __that.targetCode));
         }
         return false;
     }
@@ -112,18 +126,18 @@ public final class CompilationResult
     /**
      * @param entryBCI the entryBCI to set
      */
-    public void setEntryBCI(int entryBCI)
+    public void setEntryBCI(int __entryBCI)
     {
         checkOpen();
-        this.entryBCI = entryBCI;
+        this.entryBCI = __entryBCI;
     }
 
     /**
      * Sets the assumptions made during compilation.
      */
-    public void setAssumptions(Assumption[] assumptions)
+    public void setAssumptions(Assumption[] __assumptions)
     {
-        this.assumptions = assumptions;
+        this.assumptions = __assumptions;
     }
 
     /**
@@ -142,21 +156,21 @@ public final class CompilationResult
      * @param rootMethod the root method of the compilation
      * @param inlinedMethods the methods inlined during compilation
      */
-    public void setMethods(ResolvedJavaMethod rootMethod, Collection<ResolvedJavaMethod> inlinedMethods)
+    public void setMethods(ResolvedJavaMethod __rootMethod, Collection<ResolvedJavaMethod> __inlinedMethods)
     {
         checkOpen();
-        if (inlinedMethods.contains(rootMethod))
+        if (__inlinedMethods.contains(__rootMethod))
         {
-            methods = inlinedMethods.toArray(new ResolvedJavaMethod[inlinedMethods.size()]);
-            for (int i = 0; i < methods.length; i++)
+            methods = __inlinedMethods.toArray(new ResolvedJavaMethod[__inlinedMethods.size()]);
+            for (int __i = 0; __i < methods.length; __i++)
             {
-                if (methods[i].equals(rootMethod))
+                if (methods[__i].equals(__rootMethod))
                 {
-                    if (i != 0)
+                    if (__i != 0)
                     {
-                        ResolvedJavaMethod tmp = methods[0];
-                        methods[0] = methods[i];
-                        methods[i] = tmp;
+                        ResolvedJavaMethod __tmp = methods[0];
+                        methods[0] = methods[__i];
+                        methods[__i] = __tmp;
                     }
                     break;
                 }
@@ -164,12 +178,12 @@ public final class CompilationResult
         }
         else
         {
-            methods = new ResolvedJavaMethod[1 + inlinedMethods.size()];
-            methods[0] = rootMethod;
-            int i = 1;
-            for (ResolvedJavaMethod m : inlinedMethods)
+            methods = new ResolvedJavaMethod[1 + __inlinedMethods.size()];
+            methods[0] = __rootMethod;
+            int __i = 1;
+            for (ResolvedJavaMethod __m : __inlinedMethods)
             {
-                methods[i++] = m;
+                methods[__i++] = __m;
             }
         }
     }
@@ -193,11 +207,11 @@ public final class CompilationResult
      *
      * @param accessedFields the collected set of fields accessed during compilation
      */
-    public void setFields(EconomicSet<ResolvedJavaField> accessedFields)
+    public void setFields(EconomicSet<ResolvedJavaField> __accessedFields)
     {
-        if (accessedFields != null)
+        if (__accessedFields != null)
         {
-            fields = accessedFields.toArray(new ResolvedJavaField[accessedFields.size()]);
+            fields = __accessedFields.toArray(new ResolvedJavaField[__accessedFields.size()]);
         }
     }
 
@@ -214,10 +228,10 @@ public final class CompilationResult
         return fields;
     }
 
-    public void setBytecodeSize(int bytecodeSize)
+    public void setBytecodeSize(int __bytecodeSize)
     {
         checkOpen();
-        this.bytecodeSize = bytecodeSize;
+        this.bytecodeSize = __bytecodeSize;
     }
 
     public int getBytecodeSize()
@@ -246,10 +260,10 @@ public final class CompilationResult
      *
      * @param size the size of the frame in bytes
      */
-    public void setTotalFrameSize(int size)
+    public void setTotalFrameSize(int __size)
     {
         checkOpen();
-        totalFrameSize = size;
+        totalFrameSize = __size;
     }
 
     /**
@@ -258,11 +272,11 @@ public final class CompilationResult
      * @param code the machine code generated
      * @param size the size of the machine code
      */
-    public void setTargetCode(byte[] code, int size)
+    public void setTargetCode(byte[] __code, int __size)
     {
         checkOpen();
-        targetCode = code;
-        targetCodeSize = size;
+        targetCode = __code;
+        targetCodeSize = __size;
     }
 
     /**
@@ -272,10 +286,10 @@ public final class CompilationResult
      * @param codePos the position in the code that needs to be patched
      * @param ref the reference that should be inserted in the code
      */
-    public void recordDataPatch(int codePos, Reference ref)
+    public void recordDataPatch(int __codePos, Reference __ref)
     {
         checkOpen();
-        dataPatches.add(new DataPatch(codePos, ref));
+        dataPatches.add(new DataPatch(__codePos, __ref));
     }
 
     /**
@@ -286,9 +300,9 @@ public final class CompilationResult
      * @param ref the reference that should be inserted in the code
      * @param note a note attached to data patch for use by post-processing tools
      */
-    public void recordDataPatchWithNote(int codePos, Reference ref, Object note)
+    public void recordDataPatchWithNote(int __codePos, Reference __ref, Object __note)
     {
-        dataPatches.add(new DataPatch(codePos, ref, note));
+        dataPatches.add(new DataPatch(__codePos, __ref, __note));
     }
 
     /**
@@ -297,10 +311,10 @@ public final class CompilationResult
      * @param codePos the position in the code that is covered by the handler
      * @param handlerPos the position of the handler
      */
-    public void recordExceptionHandler(int codePos, int handlerPos)
+    public void recordExceptionHandler(int __codePos, int __handlerPos)
     {
         checkOpen();
-        exceptionHandlers.add(new ExceptionHandler(codePos, handlerPos));
+        exceptionHandlers.add(new ExceptionHandler(__codePos, __handlerPos));
     }
 
     /**
@@ -309,12 +323,12 @@ public final class CompilationResult
      * @param codePos the position in the code that is covered by the handler
      * @param markId the identifier for this mark
      */
-    public Mark recordMark(int codePos, Object markId)
+    public Mark recordMark(int __codePos, Object __markId)
     {
         checkOpen();
-        Mark mark = new Mark(codePos, markId);
-        marks.add(mark);
-        return mark;
+        Mark __mark = new Mark(__codePos, __markId);
+        marks.add(__mark);
+        return __mark;
     }
 
     /**
@@ -369,10 +383,10 @@ public final class CompilationResult
         return Collections.unmodifiableList(marks);
     }
 
-    public void setHasUnsafeAccess(boolean hasUnsafeAccess)
+    public void setHasUnsafeAccess(boolean __hasUnsafeAccess)
     {
         checkOpen();
-        this.hasUnsafeAccess = hasUnsafeAccess;
+        this.hasUnsafeAccess = __hasUnsafeAccess;
     }
 
     public boolean hasUnsafeAccess()

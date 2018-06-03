@@ -12,12 +12,13 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 // @class StartNode
 public class StartNode extends BeginStateSplitNode implements MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<StartNode> TYPE = NodeClass.create(StartNode.class);
 
     // @cons
-    protected StartNode(NodeClass<? extends StartNode> c)
+    protected StartNode(NodeClass<? extends StartNode> __c)
     {
-        super(c);
+        super(__c);
     }
 
     // @cons

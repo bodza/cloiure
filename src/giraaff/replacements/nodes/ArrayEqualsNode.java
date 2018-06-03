@@ -34,30 +34,40 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class ArrayEqualsNode
 public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
+    // @def
     public static final NodeClass<ArrayEqualsNode> TYPE = NodeClass.create(ArrayEqualsNode.class);
 
     /** {@link JavaKind} of the arrays to compare. */
+    // @field
     protected final JavaKind kind;
 
     /** One array to be tested for equality. */
-    @Input ValueNode array1;
+    @Input
+    // @field
+    ValueNode array1;
 
     /** The other array to be tested for equality. */
-    @Input ValueNode array2;
+    @Input
+    // @field
+    ValueNode array2;
 
     /** Length of both arrays. */
-    @Input ValueNode length;
+    @Input
+    // @field
+    ValueNode length;
 
-    @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
+    @OptionalInput(InputType.Memory)
+    // @field
+    MemoryNode lastLocationAccess;
 
     // @cons
-    public ArrayEqualsNode(ValueNode array1, ValueNode array2, ValueNode length, @ConstantNodeParameter JavaKind kind)
+    public ArrayEqualsNode(ValueNode __array1, ValueNode __array2, ValueNode __length, @ConstantNodeParameter JavaKind __kind)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));
-        this.kind = kind;
-        this.array1 = array1;
-        this.array2 = array2;
-        this.length = length;
+        this.kind = __kind;
+        this.array1 = __array1;
+        this.array2 = __array2;
+        this.length = __length;
     }
 
     public ValueNode getArray1()
@@ -75,19 +85,19 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
         return length;
     }
 
-    private static boolean isNaNFloat(JavaConstant constant)
+    private static boolean isNaNFloat(JavaConstant __constant)
     {
-        JavaKind kind = constant.getJavaKind();
-        return (kind == JavaKind.Float && Float.isNaN(constant.asFloat())) || (kind == JavaKind.Double && Double.isNaN(constant.asDouble()));
+        JavaKind __kind = __constant.getJavaKind();
+        return (__kind == JavaKind.Float && Float.isNaN(__constant.asFloat())) || (__kind == JavaKind.Double && Double.isNaN(__constant.asDouble()));
     }
 
-    private static boolean arrayEquals(ConstantReflectionProvider constantReflection, JavaConstant a, JavaConstant b, int len)
+    private static boolean arrayEquals(ConstantReflectionProvider __constantReflection, JavaConstant __a, JavaConstant __b, int __len)
     {
-        for (int i = 0; i < len; i++)
+        for (int __i = 0; __i < __len; __i++)
         {
-            JavaConstant aElem = constantReflection.readArrayElement(a, i);
-            JavaConstant bElem = constantReflection.readArrayElement(b, i);
-            if (!constantReflection.constantEquals(aElem, bElem) && !(isNaNFloat(aElem) && isNaNFloat(bElem)))
+            JavaConstant __aElem = __constantReflection.readArrayElement(__a, __i);
+            JavaConstant __bElem = __constantReflection.readArrayElement(__b, __i);
+            if (!__constantReflection.constantEquals(__aElem, __bElem) && !(isNaNFloat(__aElem) && isNaNFloat(__bElem)))
             {
                 return false;
             }
@@ -96,99 +106,99 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             return null;
         }
-        ValueNode a1 = GraphUtil.unproxify(array1);
-        ValueNode a2 = GraphUtil.unproxify(array2);
-        if (a1 == a2)
+        ValueNode __a1 = GraphUtil.unproxify(array1);
+        ValueNode __a2 = GraphUtil.unproxify(array2);
+        if (__a1 == __a2)
         {
             return ConstantNode.forBoolean(true);
         }
-        if (a1.isConstant() && a2.isConstant() && length.isConstant())
+        if (__a1.isConstant() && __a2.isConstant() && length.isConstant())
         {
-            ConstantNode c1 = (ConstantNode) a1;
-            ConstantNode c2 = (ConstantNode) a2;
-            if (c1.getStableDimension() >= 1 && c2.getStableDimension() >= 1)
+            ConstantNode __c1 = (ConstantNode) __a1;
+            ConstantNode __c2 = (ConstantNode) __a2;
+            if (__c1.getStableDimension() >= 1 && __c2.getStableDimension() >= 1)
             {
-                boolean ret = arrayEquals(tool.getConstantReflection(), c1.asJavaConstant(), c2.asJavaConstant(), length.asJavaConstant().asInt());
-                return ConstantNode.forBoolean(ret);
+                boolean __ret = arrayEquals(__tool.getConstantReflection(), __c1.asJavaConstant(), __c2.asJavaConstant(), length.asJavaConstant().asInt());
+                return ConstantNode.forBoolean(__ret);
             }
         }
         return this;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias1 = tool.getAlias(array1);
-        ValueNode alias2 = tool.getAlias(array2);
-        if (alias1 == alias2)
+        ValueNode __alias1 = __tool.getAlias(array1);
+        ValueNode __alias2 = __tool.getAlias(array2);
+        if (__alias1 == __alias2)
         {
             // the same virtual objects will always have the same contents
-            tool.replaceWithValue(ConstantNode.forBoolean(true, graph()));
+            __tool.replaceWithValue(ConstantNode.forBoolean(true, graph()));
         }
-        else if (alias1 instanceof VirtualObjectNode && alias2 instanceof VirtualObjectNode)
+        else if (__alias1 instanceof VirtualObjectNode && __alias2 instanceof VirtualObjectNode)
         {
-            VirtualObjectNode virtual1 = (VirtualObjectNode) alias1;
-            VirtualObjectNode virtual2 = (VirtualObjectNode) alias2;
+            VirtualObjectNode __virtual1 = (VirtualObjectNode) __alias1;
+            VirtualObjectNode __virtual2 = (VirtualObjectNode) __alias2;
 
-            if (virtual1.entryCount() == virtual2.entryCount())
+            if (__virtual1.entryCount() == __virtual2.entryCount())
             {
-                int entryCount = virtual1.entryCount();
-                boolean allEqual = true;
-                for (int i = 0; i < entryCount; i++)
+                int __entryCount = __virtual1.entryCount();
+                boolean __allEqual = true;
+                for (int __i = 0; __i < __entryCount; __i++)
                 {
-                    ValueNode entry1 = tool.getEntry(virtual1, i);
-                    ValueNode entry2 = tool.getEntry(virtual2, i);
-                    if (entry1 != entry2)
+                    ValueNode __entry1 = __tool.getEntry(__virtual1, __i);
+                    ValueNode __entry2 = __tool.getEntry(__virtual2, __i);
+                    if (__entry1 != __entry2)
                     {
-                        if (entry1 instanceof ConstantNode && entry2 instanceof ConstantNode)
+                        if (__entry1 instanceof ConstantNode && __entry2 instanceof ConstantNode)
                         {
                             // Float NaN constants are different constant nodes but treated as
                             // equal in Arrays.equals([F[F) or Arrays.equals([D[D).
-                            if (entry1.getStackKind() == JavaKind.Float && entry2.getStackKind() == JavaKind.Float)
+                            if (__entry1.getStackKind() == JavaKind.Float && __entry2.getStackKind() == JavaKind.Float)
                             {
-                                float value1 = ((JavaConstant) ((ConstantNode) entry1).asConstant()).asFloat();
-                                float value2 = ((JavaConstant) ((ConstantNode) entry2).asConstant()).asFloat();
-                                if (Float.floatToIntBits(value1) != Float.floatToIntBits(value2))
+                                float __value1 = ((JavaConstant) ((ConstantNode) __entry1).asConstant()).asFloat();
+                                float __value2 = ((JavaConstant) ((ConstantNode) __entry2).asConstant()).asFloat();
+                                if (Float.floatToIntBits(__value1) != Float.floatToIntBits(__value2))
                                 {
-                                    allEqual = false;
+                                    __allEqual = false;
                                 }
                             }
-                            else if (entry1.getStackKind() == JavaKind.Double && entry2.getStackKind() == JavaKind.Double)
+                            else if (__entry1.getStackKind() == JavaKind.Double && __entry2.getStackKind() == JavaKind.Double)
                             {
-                                double value1 = ((JavaConstant) ((ConstantNode) entry1).asConstant()).asDouble();
-                                double value2 = ((JavaConstant) ((ConstantNode) entry2).asConstant()).asDouble();
-                                if (Double.doubleToLongBits(value1) != Double.doubleToLongBits(value2))
+                                double __value1 = ((JavaConstant) ((ConstantNode) __entry1).asConstant()).asDouble();
+                                double __value2 = ((JavaConstant) ((ConstantNode) __entry2).asConstant()).asDouble();
+                                if (Double.doubleToLongBits(__value1) != Double.doubleToLongBits(__value2))
                                 {
-                                    allEqual = false;
+                                    __allEqual = false;
                                 }
                             }
                             else
                             {
-                                allEqual = false;
+                                __allEqual = false;
                             }
                         }
                         else
                         {
                             // the contents might be different
-                            allEqual = false;
+                            __allEqual = false;
                         }
                     }
-                    if (entry1.stamp(NodeView.DEFAULT).alwaysDistinct(entry2.stamp(NodeView.DEFAULT)))
+                    if (__entry1.stamp(NodeView.DEFAULT).alwaysDistinct(__entry2.stamp(NodeView.DEFAULT)))
                     {
                         // the contents are different
-                        tool.replaceWithValue(ConstantNode.forBoolean(false, graph()));
+                        __tool.replaceWithValue(ConstantNode.forBoolean(false, graph()));
                         return;
                     }
                 }
-                if (allEqual)
+                if (__allEqual)
                 {
-                    tool.replaceWithValue(ConstantNode.forBoolean(true, graph()));
+                    __tool.replaceWithValue(ConstantNode.forBoolean(true, graph()));
                 }
             }
         }
@@ -197,51 +207,51 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
     @NodeIntrinsic
     public static native boolean equals(Object array1, Object array2, int length, @ConstantNodeParameter JavaKind kind);
 
-    public static boolean equals(boolean[] array1, boolean[] array2, int length)
+    public static boolean equals(boolean[] __array1, boolean[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Boolean);
+        return equals(__array1, __array2, __length, JavaKind.Boolean);
     }
 
-    public static boolean equals(byte[] array1, byte[] array2, int length)
+    public static boolean equals(byte[] __array1, byte[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Byte);
+        return equals(__array1, __array2, __length, JavaKind.Byte);
     }
 
-    public static boolean equals(char[] array1, char[] array2, int length)
+    public static boolean equals(char[] __array1, char[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Char);
+        return equals(__array1, __array2, __length, JavaKind.Char);
     }
 
-    public static boolean equals(short[] array1, short[] array2, int length)
+    public static boolean equals(short[] __array1, short[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Short);
+        return equals(__array1, __array2, __length, JavaKind.Short);
     }
 
-    public static boolean equals(int[] array1, int[] array2, int length)
+    public static boolean equals(int[] __array1, int[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Int);
+        return equals(__array1, __array2, __length, JavaKind.Int);
     }
 
-    public static boolean equals(long[] array1, long[] array2, int length)
+    public static boolean equals(long[] __array1, long[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Long);
+        return equals(__array1, __array2, __length, JavaKind.Long);
     }
 
-    public static boolean equals(float[] array1, float[] array2, int length)
+    public static boolean equals(float[] __array1, float[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Float);
+        return equals(__array1, __array2, __length, JavaKind.Float);
     }
 
-    public static boolean equals(double[] array1, double[] array2, int length)
+    public static boolean equals(double[] __array1, double[] __array2, int __length)
     {
-        return equals(array1, array2, length, JavaKind.Double);
+        return equals(__array1, __array2, __length, JavaKind.Double);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value result = gen.getLIRGeneratorTool().emitArrayEquals(kind, gen.operand(array1), gen.operand(array2), gen.operand(length));
-        gen.setResult(this, result);
+        Value __result = __gen.getLIRGeneratorTool().emitArrayEquals(kind, __gen.operand(array1), __gen.operand(array2), __gen.operand(length));
+        __gen.setResult(this, __result);
     }
 
     @Override
@@ -257,9 +267,9 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
     }
 
     @Override
-    public void setLastLocationAccess(MemoryNode lla)
+    public void setLastLocationAccess(MemoryNode __lla)
     {
-        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(lla));
-        lastLocationAccess = lla;
+        updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(__lla));
+        lastLocationAccess = __lla;
     }
 }

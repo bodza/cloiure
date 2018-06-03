@@ -12,23 +12,27 @@ import giraaff.nodes.spi.LoweringTool;
 // @class ResolveMethodAndLoadCountersNode
 public final class ResolveMethodAndLoadCountersNode extends DeoptimizingFixedWithNextNode implements Lowerable
 {
+    // @def
     public static final NodeClass<ResolveMethodAndLoadCountersNode> TYPE = NodeClass.create(ResolveMethodAndLoadCountersNode.class);
 
+    // @field
     ResolvedJavaMethod method;
-    @Input ValueNode hub;
+    @Input
+    // @field
+    ValueNode hub;
 
     // @cons
-    public ResolveMethodAndLoadCountersNode(ResolvedJavaMethod method, ValueNode hub)
+    public ResolveMethodAndLoadCountersNode(ResolvedJavaMethod __method, ValueNode __hub)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());
-        this.method = method;
-        this.hub = hub;
+        this.method = __method;
+        this.hub = __hub;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     public ResolvedJavaMethod getMethod()

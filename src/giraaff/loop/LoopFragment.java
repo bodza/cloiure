@@ -43,25 +43,30 @@ import giraaff.util.GraalError;
 // @class LoopFragment
 public abstract class LoopFragment
 {
+    // @field
     private final LoopEx loop;
+    // @field
     private final LoopFragment original;
+    // @field
     protected NodeBitMap nodes;
+    // @field
     protected boolean nodesReady;
+    // @field
     private EconomicMap<Node, Node> duplicationMap;
 
     // @cons
-    public LoopFragment(LoopEx loop)
+    public LoopFragment(LoopEx __loop)
     {
-        this(loop, null);
+        this(__loop, null);
         this.nodesReady = true;
     }
 
     // @cons
-    public LoopFragment(LoopEx loop, LoopFragment original)
+    public LoopFragment(LoopEx __loop, LoopFragment __original)
     {
         super();
-        this.loop = loop;
-        this.original = original;
+        this.loop = __loop;
+        this.original = __original;
         this.nodesReady = false;
     }
 
@@ -82,20 +87,20 @@ public abstract class LoopFragment
         // TODO possibly abstract
     }
 
-    public boolean contains(Node n)
+    public boolean contains(Node __n)
     {
-        return nodes().isMarkedAndGrow(n);
+        return nodes().isMarkedAndGrow(__n);
     }
 
     @SuppressWarnings("unchecked")
-    public <New extends Node, Old extends New> New getDuplicatedNode(Old n)
+    public <New extends Node, Old extends New> New getDuplicatedNode(Old __n)
     {
-        return (New) duplicationMap.get(n);
+        return (New) duplicationMap.get(__n);
     }
 
-    protected <New extends Node, Old extends New> void putDuplicatedNode(Old oldNode, New newNode)
+    protected <New extends Node, Old extends New> void putDuplicatedNode(Old __oldNode, New __newNode)
     {
-        duplicationMap.put(oldNode, newNode);
+        duplicationMap.put(__oldNode, __newNode);
     }
 
     /**
@@ -121,16 +126,16 @@ public abstract class LoopFragment
 
     public StructuredGraph graph()
     {
-        LoopEx l;
+        LoopEx __l;
         if (isDuplicate())
         {
-            l = original().loop();
+            __l = original().loop();
         }
         else
         {
-            l = loop();
+            __l = loop();
         }
-        return l.loopBegin().graph();
+        return __l.loopBegin().graph();
     }
 
     protected abstract DuplicationReplacement getDuplicationReplacement();
@@ -139,49 +144,49 @@ public abstract class LoopFragment
 
     protected abstract void finishDuplication();
 
-    protected void patchNodes(final DuplicationReplacement dataFix)
+    protected void patchNodes(final DuplicationReplacement __dataFix)
     {
         if (isDuplicate() && !nodesReady)
         {
-            final DuplicationReplacement cfgFix = original().getDuplicationReplacement();
-            DuplicationReplacement dr;
-            if (cfgFix == null && dataFix != null)
+            final DuplicationReplacement __cfgFix = original().getDuplicationReplacement();
+            DuplicationReplacement __dr;
+            if (__cfgFix == null && __dataFix != null)
             {
-                dr = dataFix;
+                __dr = __dataFix;
             }
-            else if (cfgFix != null && dataFix == null)
+            else if (__cfgFix != null && __dataFix == null)
             {
-                dr = cfgFix;
+                __dr = __cfgFix;
             }
-            else if (cfgFix != null && dataFix != null)
+            else if (__cfgFix != null && __dataFix != null)
             {
                 // @closure
-                dr = new DuplicationReplacement()
+                __dr = new DuplicationReplacement()
                 {
                     @Override
-                    public Node replacement(Node o)
+                    public Node replacement(Node __o)
                     {
-                        Node r1 = dataFix.replacement(o);
-                        if (r1 != o)
+                        Node __r1 = __dataFix.replacement(__o);
+                        if (__r1 != __o)
                         {
-                            return r1;
+                            return __r1;
                         }
-                        Node r2 = cfgFix.replacement(o);
-                        if (r2 != o)
+                        Node __r2 = __cfgFix.replacement(__o);
+                        if (__r2 != __o)
                         {
-                            return r2;
+                            return __r2;
                         }
-                        return o;
+                        return __o;
                     }
                 };
             }
             else
             {
-                dr = null;
+                __dr = null;
             }
             beforeDuplication();
-            NodeIterable<Node> nodesIterable = original().nodes();
-            duplicationMap = graph().addDuplicates(nodesIterable, graph(), nodesIterable.count(), dr);
+            NodeIterable<Node> __nodesIterable = original().nodes();
+            duplicationMap = graph().addDuplicates(__nodesIterable, graph(), __nodesIterable.count(), __dr);
             finishDuplication();
             nodes = new NodeBitMap(graph());
             nodes.markAll(duplicationMap.getValues());
@@ -193,112 +198,112 @@ public abstract class LoopFragment
         }
     }
 
-    protected static NodeBitMap computeNodes(Graph graph, Iterable<AbstractBeginNode> blocks)
+    protected static NodeBitMap computeNodes(Graph __graph, Iterable<AbstractBeginNode> __blocks)
     {
-        return computeNodes(graph, blocks, Collections.emptyList());
+        return computeNodes(__graph, __blocks, Collections.emptyList());
     }
 
-    protected static NodeBitMap computeNodes(Graph graph, Iterable<AbstractBeginNode> blocks, Iterable<AbstractBeginNode> earlyExits)
+    protected static NodeBitMap computeNodes(Graph __graph, Iterable<AbstractBeginNode> __blocks, Iterable<AbstractBeginNode> __earlyExits)
     {
-        final NodeBitMap nodes = graph.createNodeBitMap();
-        computeNodes(nodes, graph, blocks, earlyExits);
-        return nodes;
+        final NodeBitMap __nodes = __graph.createNodeBitMap();
+        computeNodes(__nodes, __graph, __blocks, __earlyExits);
+        return __nodes;
     }
 
-    protected static void computeNodes(NodeBitMap nodes, Graph graph, Iterable<AbstractBeginNode> blocks, Iterable<AbstractBeginNode> earlyExits)
+    protected static void computeNodes(NodeBitMap __nodes, Graph __graph, Iterable<AbstractBeginNode> __blocks, Iterable<AbstractBeginNode> __earlyExits)
     {
-        for (AbstractBeginNode b : blocks)
+        for (AbstractBeginNode __b : __blocks)
         {
-            if (b.isDeleted())
+            if (__b.isDeleted())
             {
                 continue;
             }
 
-            for (Node n : b.getBlockNodes())
+            for (Node __n : __b.getBlockNodes())
             {
-                if (n instanceof Invoke)
+                if (__n instanceof Invoke)
                 {
-                    nodes.mark(((Invoke) n).callTarget());
+                    __nodes.mark(((Invoke) __n).callTarget());
                 }
-                if (n instanceof NodeWithState)
+                if (__n instanceof NodeWithState)
                 {
-                    NodeWithState withState = (NodeWithState) n;
-                    withState.states().forEach(state -> state.applyToVirtual(node -> nodes.mark(node)));
+                    NodeWithState __withState = (NodeWithState) __n;
+                    __withState.states().forEach(__state -> __state.applyToVirtual(__node -> __nodes.mark(__node)));
                 }
-                if (n instanceof AbstractMergeNode)
+                if (__n instanceof AbstractMergeNode)
                 {
                     // if a merge is in the loop, all of its phis are also in the loop
-                    for (PhiNode phi : ((AbstractMergeNode) n).phis())
+                    for (PhiNode __phi : ((AbstractMergeNode) __n).phis())
                     {
-                        nodes.mark(phi);
+                        __nodes.mark(__phi);
                     }
                 }
-                nodes.mark(n);
+                __nodes.mark(__n);
             }
         }
-        for (AbstractBeginNode earlyExit : earlyExits)
+        for (AbstractBeginNode __earlyExit : __earlyExits)
         {
-            if (earlyExit.isDeleted())
+            if (__earlyExit.isDeleted())
             {
                 continue;
             }
 
-            nodes.mark(earlyExit);
+            __nodes.mark(__earlyExit);
 
-            if (earlyExit instanceof LoopExitNode)
+            if (__earlyExit instanceof LoopExitNode)
             {
-                LoopExitNode loopExit = (LoopExitNode) earlyExit;
-                FrameState stateAfter = loopExit.stateAfter();
-                if (stateAfter != null)
+                LoopExitNode __loopExit = (LoopExitNode) __earlyExit;
+                FrameState __stateAfter = __loopExit.stateAfter();
+                if (__stateAfter != null)
                 {
-                    stateAfter.applyToVirtual(node -> nodes.mark(node));
+                    __stateAfter.applyToVirtual(__node -> __nodes.mark(__node));
                 }
-                for (ProxyNode proxy : loopExit.proxies())
+                for (ProxyNode __proxy : __loopExit.proxies())
                 {
-                    nodes.mark(proxy);
+                    __nodes.mark(__proxy);
                 }
             }
         }
 
-        final NodeBitMap nonLoopNodes = graph.createNodeBitMap();
-        Deque<WorkListEntry> worklist = new ArrayDeque<>();
-        for (AbstractBeginNode b : blocks)
+        final NodeBitMap __nonLoopNodes = __graph.createNodeBitMap();
+        Deque<WorkListEntry> __worklist = new ArrayDeque<>();
+        for (AbstractBeginNode __b : __blocks)
         {
-            if (b.isDeleted())
+            if (__b.isDeleted())
             {
                 continue;
             }
 
-            for (Node n : b.getBlockNodes())
+            for (Node __n : __b.getBlockNodes())
             {
-                if (n instanceof CommitAllocationNode)
+                if (__n instanceof CommitAllocationNode)
                 {
-                    for (VirtualObjectNode obj : ((CommitAllocationNode) n).getVirtualObjects())
+                    for (VirtualObjectNode __obj : ((CommitAllocationNode) __n).getVirtualObjects())
                     {
-                        markFloating(worklist, obj, nodes, nonLoopNodes);
+                        markFloating(__worklist, __obj, __nodes, __nonLoopNodes);
                     }
                 }
-                if (n instanceof MonitorEnterNode)
+                if (__n instanceof MonitorEnterNode)
                 {
-                    markFloating(worklist, ((MonitorEnterNode) n).getMonitorId(), nodes, nonLoopNodes);
+                    markFloating(__worklist, ((MonitorEnterNode) __n).getMonitorId(), __nodes, __nonLoopNodes);
                 }
-                if (n instanceof AbstractMergeNode)
+                if (__n instanceof AbstractMergeNode)
                 {
                     /*
                      * Since we already marked all phi nodes as being in the loop to break cycles,
                      * we also have to iterate over their usages here.
                      */
-                    for (PhiNode phi : ((AbstractMergeNode) n).phis())
+                    for (PhiNode __phi : ((AbstractMergeNode) __n).phis())
                     {
-                        for (Node usage : phi.usages())
+                        for (Node __usage : __phi.usages())
                         {
-                            markFloating(worklist, usage, nodes, nonLoopNodes);
+                            markFloating(__worklist, __usage, __nodes, __nonLoopNodes);
                         }
                     }
                 }
-                for (Node usage : n.usages())
+                for (Node __usage : __n.usages())
                 {
-                    markFloating(worklist, usage, nodes, nonLoopNodes);
+                    markFloating(__worklist, __usage, __nodes, __nonLoopNodes);
                 }
             }
         }
@@ -307,28 +312,31 @@ public abstract class LoopFragment
     // @class LoopFragment.WorkListEntry
     static final class WorkListEntry
     {
+        // @field
         final Iterator<Node> usages;
+        // @field
         final Node n;
+        // @field
         boolean isLoopNode;
 
         // @cons
-        WorkListEntry(Node n, NodeBitMap loopNodes)
+        WorkListEntry(Node __n, NodeBitMap __loopNodes)
         {
             super();
-            this.n = n;
-            this.usages = n.usages().iterator();
-            this.isLoopNode = loopNodes.isMarked(n);
+            this.n = __n;
+            this.usages = __n.usages().iterator();
+            this.isLoopNode = __loopNodes.isMarked(__n);
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (!(obj instanceof WorkListEntry))
+            if (!(__obj instanceof WorkListEntry))
             {
                 return false;
             }
-            WorkListEntry other = (WorkListEntry) obj;
-            return this.n == other.n;
+            WorkListEntry __other = (WorkListEntry) __obj;
+            return this.n == __other.n;
         }
 
         @Override
@@ -338,17 +346,17 @@ public abstract class LoopFragment
         }
     }
 
-    static TriState isLoopNode(Node n, NodeBitMap loopNodes, NodeBitMap nonLoopNodes)
+    static TriState isLoopNode(Node __n, NodeBitMap __loopNodes, NodeBitMap __nonLoopNodes)
     {
-        if (loopNodes.isMarked(n))
+        if (__loopNodes.isMarked(__n))
         {
             return TriState.TRUE;
         }
-        if (nonLoopNodes.isMarked(n))
+        if (__nonLoopNodes.isMarked(__n))
         {
             return TriState.FALSE;
         }
-        if (n instanceof FixedNode || n instanceof PhiNode)
+        if (__n instanceof FixedNode || __n instanceof PhiNode)
         {
             // phi nodes are treated the same as fixed nodes in this algorithm to break cycles
             return TriState.FALSE;
@@ -356,59 +364,59 @@ public abstract class LoopFragment
         return TriState.UNKNOWN;
     }
 
-    private static void markFloating(Deque<WorkListEntry> workList, Node start, NodeBitMap loopNodes, NodeBitMap nonLoopNodes)
+    private static void markFloating(Deque<WorkListEntry> __workList, Node __start, NodeBitMap __loopNodes, NodeBitMap __nonLoopNodes)
     {
-        if (isLoopNode(start, loopNodes, nonLoopNodes).isKnown())
+        if (isLoopNode(__start, __loopNodes, __nonLoopNodes).isKnown())
         {
             return;
         }
-        workList.push(new WorkListEntry(start, loopNodes));
-        while (!workList.isEmpty())
+        __workList.push(new WorkListEntry(__start, __loopNodes));
+        while (!__workList.isEmpty())
         {
-            WorkListEntry currentEntry = workList.peek();
-            if (currentEntry.usages.hasNext())
+            WorkListEntry __currentEntry = __workList.peek();
+            if (__currentEntry.usages.hasNext())
             {
-                Node current = currentEntry.usages.next();
-                TriState result = isLoopNode(current, loopNodes, nonLoopNodes);
-                if (result.isKnown())
+                Node __current = __currentEntry.usages.next();
+                TriState __result = isLoopNode(__current, __loopNodes, __nonLoopNodes);
+                if (__result.isKnown())
                 {
-                    if (result.toBoolean())
+                    if (__result.toBoolean())
                     {
-                        currentEntry.isLoopNode = true;
+                        __currentEntry.isLoopNode = true;
                     }
                 }
                 else
                 {
-                    workList.push(new WorkListEntry(current, loopNodes));
+                    __workList.push(new WorkListEntry(__current, __loopNodes));
                 }
             }
             else
             {
-                workList.pop();
-                boolean isLoopNode = currentEntry.isLoopNode;
-                Node current = currentEntry.n;
-                if (!isLoopNode && current instanceof GuardNode)
+                __workList.pop();
+                boolean __isLoopNode = __currentEntry.isLoopNode;
+                Node __current = __currentEntry.n;
+                if (!__isLoopNode && __current instanceof GuardNode)
                 {
                     // (gd) this is only OK if we are not going to make loop transforms based on this
-                    isLoopNode = true;
+                    __isLoopNode = true;
                 }
-                if (isLoopNode)
+                if (__isLoopNode)
                 {
-                    loopNodes.mark(current);
-                    for (WorkListEntry e : workList)
+                    __loopNodes.mark(__current);
+                    for (WorkListEntry __e : __workList)
                     {
-                        e.isLoopNode = true;
+                        __e.isLoopNode = true;
                     }
                 }
                 else
                 {
-                    nonLoopNodes.mark(current);
+                    __nonLoopNodes.mark(__current);
                 }
             }
         }
     }
 
-    public static NodeIterable<AbstractBeginNode> toHirBlocks(final Iterable<Block> blocks)
+    public static NodeIterable<AbstractBeginNode> toHirBlocks(final Iterable<Block> __blocks)
     {
         // @closure
         return new NodeIterable<AbstractBeginNode>()
@@ -416,7 +424,7 @@ public abstract class LoopFragment
             @Override
             public Iterator<AbstractBeginNode> iterator()
             {
-                final Iterator<Block> it = blocks.iterator();
+                final Iterator<Block> __it = __blocks.iterator();
                 // @closure
                 return new Iterator<AbstractBeginNode>()
                 {
@@ -429,20 +437,20 @@ public abstract class LoopFragment
                     @Override
                     public AbstractBeginNode next()
                     {
-                        return it.next().getBeginNode();
+                        return __it.next().getBeginNode();
                     }
 
                     @Override
                     public boolean hasNext()
                     {
-                        return it.hasNext();
+                        return __it.hasNext();
                     }
                 };
             }
         };
     }
 
-    public static NodeIterable<AbstractBeginNode> toHirExits(final Iterable<Block> blocks)
+    public static NodeIterable<AbstractBeginNode> toHirExits(final Iterable<Block> __blocks)
     {
         // @closure
         return new NodeIterable<AbstractBeginNode>()
@@ -450,7 +458,7 @@ public abstract class LoopFragment
             @Override
             public Iterator<AbstractBeginNode> iterator()
             {
-                final Iterator<Block> it = blocks.iterator();
+                final Iterator<Block> __it = __blocks.iterator();
                 // @closure
                 return new Iterator<AbstractBeginNode>()
                 {
@@ -466,19 +474,19 @@ public abstract class LoopFragment
                     @Override
                     public AbstractBeginNode next()
                     {
-                        Block next = it.next();
-                        LoopExitNode exit = next.getLoopExit();
-                        if (exit != null)
+                        Block __next = __it.next();
+                        LoopExitNode __exit = __next.getLoopExit();
+                        if (__exit != null)
                         {
-                            return exit;
+                            return __exit;
                         }
-                        return next.getBeginNode();
+                        return __next.getBeginNode();
                     }
 
                     @Override
                     public boolean hasNext()
                     {
-                        return it.hasNext();
+                        return __it.hasNext();
                     }
                 };
             }
@@ -491,36 +499,36 @@ public abstract class LoopFragment
      */
     protected void mergeEarlyExits()
     {
-        StructuredGraph graph = graph();
-        for (AbstractBeginNode earlyExit : LoopFragment.toHirBlocks(original().loop().loop().getExits()))
+        StructuredGraph __graph = graph();
+        for (AbstractBeginNode __earlyExit : LoopFragment.toHirBlocks(original().loop().loop().getExits()))
         {
-            LoopExitNode loopEarlyExit = (LoopExitNode) earlyExit;
-            FixedNode next = loopEarlyExit.next();
-            if (loopEarlyExit.isDeleted() || !this.original().contains(loopEarlyExit))
+            LoopExitNode __loopEarlyExit = (LoopExitNode) __earlyExit;
+            FixedNode __next = __loopEarlyExit.next();
+            if (__loopEarlyExit.isDeleted() || !this.original().contains(__loopEarlyExit))
             {
                 continue;
             }
-            AbstractBeginNode newEarlyExit = getDuplicatedNode(loopEarlyExit);
-            if (newEarlyExit == null)
+            AbstractBeginNode __newEarlyExit = getDuplicatedNode(__loopEarlyExit);
+            if (__newEarlyExit == null)
             {
                 continue;
             }
-            MergeNode merge = graph.add(new MergeNode());
-            EndNode originalEnd = graph.add(new EndNode());
-            EndNode newEnd = graph.add(new EndNode());
-            merge.addForwardEnd(originalEnd);
-            merge.addForwardEnd(newEnd);
-            loopEarlyExit.setNext(originalEnd);
-            newEarlyExit.setNext(newEnd);
-            merge.setNext(next);
+            MergeNode __merge = __graph.add(new MergeNode());
+            EndNode __originalEnd = __graph.add(new EndNode());
+            EndNode __newEnd = __graph.add(new EndNode());
+            __merge.addForwardEnd(__originalEnd);
+            __merge.addForwardEnd(__newEnd);
+            __loopEarlyExit.setNext(__originalEnd);
+            __newEarlyExit.setNext(__newEnd);
+            __merge.setNext(__next);
 
-            FrameState exitState = loopEarlyExit.stateAfter();
-            if (exitState != null)
+            FrameState __exitState = __loopEarlyExit.stateAfter();
+            if (__exitState != null)
             {
-                FrameState originalExitState = exitState;
-                exitState = exitState.duplicateWithVirtualState();
-                loopEarlyExit.setStateAfter(exitState);
-                merge.setStateAfter(originalExitState);
+                FrameState __originalExitState = __exitState;
+                __exitState = __exitState.duplicateWithVirtualState();
+                __loopEarlyExit.setStateAfter(__exitState);
+                __merge.setStateAfter(__originalExitState);
                 /*
                  * Using the old exit's state as the merge's state is necessary because some of the VirtualState
                  * nodes contained in the old exit's state may be shared by other dominated VirtualStates.
@@ -528,63 +536,63 @@ public abstract class LoopFragment
                  *
                  * We now update the original fragment's nodes accordingly:
                  */
-                originalExitState.applyToVirtual(node -> original.nodes.clearAndGrow(node));
-                exitState.applyToVirtual(node -> original.nodes.markAndGrow(node));
+                __originalExitState.applyToVirtual(__node -> original.nodes.clearAndGrow(__node));
+                __exitState.applyToVirtual(__node -> original.nodes.markAndGrow(__node));
             }
-            FrameState finalExitState = exitState;
+            FrameState __finalExitState = __exitState;
 
-            for (Node anchored : loopEarlyExit.anchored().snapshot())
+            for (Node __anchored : __loopEarlyExit.anchored().snapshot())
             {
-                anchored.replaceFirstInput(loopEarlyExit, merge);
+                __anchored.replaceFirstInput(__loopEarlyExit, __merge);
             }
 
-            boolean newEarlyExitIsLoopExit = newEarlyExit instanceof LoopExitNode;
-            for (ProxyNode vpn : loopEarlyExit.proxies().snapshot())
+            boolean __newEarlyExitIsLoopExit = __newEarlyExit instanceof LoopExitNode;
+            for (ProxyNode __vpn : __loopEarlyExit.proxies().snapshot())
             {
-                if (vpn.hasNoUsages())
+                if (__vpn.hasNoUsages())
                 {
                     continue;
                 }
-                if (vpn.value() == null)
+                if (__vpn.value() == null)
                 {
-                    vpn.replaceAtUsages(null);
+                    __vpn.replaceAtUsages(null);
                     continue;
                 }
-                final ValueNode replaceWith;
-                ValueNode newVpn = prim(newEarlyExitIsLoopExit ? vpn : vpn.value());
-                if (newVpn != null)
+                final ValueNode __replaceWith;
+                ValueNode __newVpn = prim(__newEarlyExitIsLoopExit ? __vpn : __vpn.value());
+                if (__newVpn != null)
                 {
-                    PhiNode phi;
-                    if (vpn instanceof ValueProxyNode)
+                    PhiNode __phi;
+                    if (__vpn instanceof ValueProxyNode)
                     {
-                        phi = graph.addWithoutUnique(new ValuePhiNode(vpn.stamp(NodeView.DEFAULT), merge));
+                        __phi = __graph.addWithoutUnique(new ValuePhiNode(__vpn.stamp(NodeView.DEFAULT), __merge));
                     }
-                    else if (vpn instanceof GuardProxyNode)
+                    else if (__vpn instanceof GuardProxyNode)
                     {
-                        phi = graph.addWithoutUnique(new GuardPhiNode(merge));
+                        __phi = __graph.addWithoutUnique(new GuardPhiNode(__merge));
                     }
                     else
                     {
                         throw GraalError.shouldNotReachHere();
                     }
-                    phi.addInput(vpn);
-                    phi.addInput(newVpn);
-                    replaceWith = phi;
+                    __phi.addInput(__vpn);
+                    __phi.addInput(__newVpn);
+                    __replaceWith = __phi;
                 }
                 else
                 {
-                    replaceWith = vpn.value();
+                    __replaceWith = __vpn.value();
                 }
-                vpn.replaceAtMatchingUsages(replaceWith, usage ->
+                __vpn.replaceAtMatchingUsages(__replaceWith, __usage ->
                 {
-                    if (merge.isPhiAtMerge(usage))
+                    if (__merge.isPhiAtMerge(__usage))
                     {
                         return false;
                     }
-                    if (usage instanceof VirtualState)
+                    if (__usage instanceof VirtualState)
                     {
-                        VirtualState stateUsage = (VirtualState) usage;
-                        if (finalExitState != null && finalExitState.isPartOfThisState(stateUsage))
+                        VirtualState __stateUsage = (VirtualState) __usage;
+                        if (__finalExitState != null && __finalExitState.isPartOfThisState(__stateUsage))
                         {
                             return false;
                         }

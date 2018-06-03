@@ -9,21 +9,21 @@ import java.util.function.BiConsumer;
 public abstract class PrintableDominatorOptimizationProblem<E extends Enum<E>, C extends PropertyConsumable> extends DominatorOptimizationProblem<E, C> implements PrintableCFG
 {
     // @cons
-    protected PrintableDominatorOptimizationProblem(Class<E> keyType, AbstractControlFlowGraph<?> cfg)
+    protected PrintableDominatorOptimizationProblem(Class<E> __keyType, AbstractControlFlowGraph<?> __cfg)
     {
-        super(keyType, cfg);
+        super(__keyType, __cfg);
     }
 
     @Override
-    public void forEachPropertyPair(AbstractBlockBase<?> block, BiConsumer<String, String> action)
+    public void forEachPropertyPair(AbstractBlockBase<?> __block, BiConsumer<String, String> __action)
     {
         // for each flag
-        getFlags().forEach(flag -> ((BiConsumer<String, Boolean>) (name, value) -> action.accept(name, value ? "true" : "false")).accept(getName(flag), get(flag, block)));
+        getFlags().forEach(__flag -> ((BiConsumer<String, Boolean>) (__name, __value) -> __action.accept(__name, __value ? "true" : "false")).accept(getName(__flag), get(__flag, __block)));
         // for each property
-        C cost = getCost(block);
-        if (cost != null)
+        C __cost = getCost(__block);
+        if (__cost != null)
         {
-            cost.forEachProperty((name, value) -> action.accept(name, value));
+            __cost.forEachProperty((__name, __value) -> __action.accept(__name, __value));
         }
     }
 }

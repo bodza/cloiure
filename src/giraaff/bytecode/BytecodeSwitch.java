@@ -10,15 +10,18 @@ public abstract class BytecodeSwitch
     /**
      * The {@link BytecodeStream} containing the bytecode array.
      */
+    // @field
     protected final BytecodeStream stream;
     /**
      * Index of start of switch instruction.
      */
+    // @field
     protected final int bci;
     /**
      * Index of the start of the additional data for the switch instruction, aligned to a multiple
      * of four from the method start.
      */
+    // @field
     protected final int alignedBci;
 
     /**
@@ -28,12 +31,12 @@ public abstract class BytecodeSwitch
      * @param bci the index in the stream of the switch instruction
      */
     // @cons
-    public BytecodeSwitch(BytecodeStream stream, int bci)
+    public BytecodeSwitch(BytecodeStream __stream, int __bci)
     {
         super();
-        this.stream = stream;
-        this.bci = bci;
-        this.alignedBci = (bci + 4) & 0xfffffffc;
+        this.stream = __stream;
+        this.bci = __bci;
+        this.alignedBci = (__bci + 4) & 0xfffffffc;
     }
 
     /**
@@ -52,9 +55,9 @@ public abstract class BytecodeSwitch
      * @param i index of the switch target
      * @return the index of the instruction denoted by the {@code i}'th switch target
      */
-    public int targetAt(int i)
+    public int targetAt(int __i)
     {
-        return bci + offsetAt(i);
+        return bci + offsetAt(__i);
     }
 
     /**

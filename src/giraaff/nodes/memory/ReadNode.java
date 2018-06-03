@@ -33,38 +33,39 @@ import giraaff.util.GraalError;
 // @class ReadNode
 public final class ReadNode extends FloatableAccessNode implements LIRLowerableAccess, Canonicalizable, Virtualizable, GuardingNode
 {
+    // @def
     public static final NodeClass<ReadNode> TYPE = NodeClass.create(ReadNode.class);
 
     // @cons
-    public ReadNode(AddressNode address, LocationIdentity location, Stamp stamp, BarrierType barrierType)
+    public ReadNode(AddressNode __address, LocationIdentity __location, Stamp __stamp, BarrierType __barrierType)
     {
-        this(TYPE, address, location, stamp, null, barrierType, false, null);
+        this(TYPE, __address, __location, __stamp, null, __barrierType, false, null);
     }
 
     // @cons
-    protected ReadNode(NodeClass<? extends ReadNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck, FrameState stateBefore)
+    protected ReadNode(NodeClass<? extends ReadNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
     {
-        super(c, address, location, stamp, guard, barrierType, nullCheck, stateBefore);
+        super(__c, __address, __location, __stamp, __guard, __barrierType, __nullCheck, __stateBefore);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        LIRKind readKind = gen.getLIRGeneratorTool().getLIRKind(getAccessStamp());
-        gen.setResult(this, gen.getLIRGeneratorTool().getArithmetic().emitLoad(readKind, gen.operand(address), gen.state(this)));
+        LIRKind __readKind = __gen.getLIRGeneratorTool().getLIRKind(getAccessStamp());
+        __gen.setResult(this, __gen.getLIRGeneratorTool().getArithmetic().emitLoad(__readKind, __gen.operand(address), __gen.state(this)));
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
-        if (tool.allUsagesAvailable() && hasNoUsages())
+        if (__tool.allUsagesAvailable() && hasNoUsages())
         {
             // Read without usages or guard can be safely removed.
             return null;
         }
         if (!getNullCheck())
         {
-            return canonicalizeRead(this, getAddress(), getLocationIdentity(), tool);
+            return canonicalizeRead(this, getAddress(), getLocationIdentity(), __tool);
         }
         else
         {
@@ -75,58 +76,58 @@ public final class ReadNode extends FloatableAccessNode implements LIRLowerableA
     }
 
     @Override
-    public FloatingAccessNode asFloatingNode(MemoryNode lastLocationAccess)
+    public FloatingAccessNode asFloatingNode(MemoryNode __lastLocationAccess)
     {
-        return graph().unique(new FloatingReadNode(getAddress(), getLocationIdentity(), lastLocationAccess, stamp(NodeView.DEFAULT), getGuard(), getBarrierType()));
+        return graph().unique(new FloatingReadNode(getAddress(), getLocationIdentity(), __lastLocationAccess, stamp(NodeView.DEFAULT), getGuard(), getBarrierType()));
     }
 
     @Override
-    public boolean isAllowedUsageType(InputType type)
+    public boolean isAllowedUsageType(InputType __type)
     {
-        return (getNullCheck() && type == InputType.Guard) ? true : super.isAllowedUsageType(type);
+        return (getNullCheck() && __type == InputType.Guard) ? true : super.isAllowedUsageType(__type);
     }
 
-    public static ValueNode canonicalizeRead(ValueNode read, AddressNode address, LocationIdentity locationIdentity, CanonicalizerTool tool)
+    public static ValueNode canonicalizeRead(ValueNode __read, AddressNode __address, LocationIdentity __locationIdentity, CanonicalizerTool __tool)
     {
-        NodeView view = NodeView.from(tool);
-        MetaAccessProvider metaAccess = tool.getMetaAccess();
-        if (tool.canonicalizeReads() && address instanceof OffsetAddressNode)
+        NodeView __view = NodeView.from(__tool);
+        MetaAccessProvider __metaAccess = __tool.getMetaAccess();
+        if (__tool.canonicalizeReads() && __address instanceof OffsetAddressNode)
         {
-            OffsetAddressNode objAddress = (OffsetAddressNode) address;
-            ValueNode object = objAddress.getBase();
-            if (metaAccess != null && object.isConstant() && !object.isNullConstant() && objAddress.getOffset().isConstant())
+            OffsetAddressNode __objAddress = (OffsetAddressNode) __address;
+            ValueNode __object = __objAddress.getBase();
+            if (__metaAccess != null && __object.isConstant() && !__object.isNullConstant() && __objAddress.getOffset().isConstant())
             {
-                long displacement = objAddress.getOffset().asJavaConstant().asLong();
-                int stableDimension = ((ConstantNode) object).getStableDimension();
-                if (locationIdentity.isImmutable() || stableDimension > 0)
+                long __displacement = __objAddress.getOffset().asJavaConstant().asLong();
+                int __stableDimension = ((ConstantNode) __object).getStableDimension();
+                if (__locationIdentity.isImmutable() || __stableDimension > 0)
                 {
-                    Constant constant = read.stamp(view).readConstant(tool.getConstantReflection().getMemoryAccessProvider(), object.asConstant(), displacement);
-                    boolean isDefaultStable = locationIdentity.isImmutable() || ((ConstantNode) object).isDefaultStable();
-                    if (constant != null && (isDefaultStable || !constant.isDefaultForKind()))
+                    Constant __constant = __read.stamp(__view).readConstant(__tool.getConstantReflection().getMemoryAccessProvider(), __object.asConstant(), __displacement);
+                    boolean __isDefaultStable = __locationIdentity.isImmutable() || ((ConstantNode) __object).isDefaultStable();
+                    if (__constant != null && (__isDefaultStable || !__constant.isDefaultForKind()))
                     {
-                        return ConstantNode.forConstant(read.stamp(view), constant, Math.max(stableDimension - 1, 0), isDefaultStable, metaAccess);
+                        return ConstantNode.forConstant(__read.stamp(__view), __constant, Math.max(__stableDimension - 1, 0), __isDefaultStable, __metaAccess);
                     }
                 }
             }
-            if (locationIdentity.equals(NamedLocationIdentity.ARRAY_LENGTH_LOCATION))
+            if (__locationIdentity.equals(NamedLocationIdentity.ARRAY_LENGTH_LOCATION))
             {
-                ValueNode length = GraphUtil.arrayLength(object);
-                if (length != null)
+                ValueNode __length = GraphUtil.arrayLength(__object);
+                if (__length != null)
                 {
-                    return length;
+                    return __length;
                 }
             }
-            if (locationIdentity instanceof CanonicalizableLocation)
+            if (__locationIdentity instanceof CanonicalizableLocation)
             {
-                CanonicalizableLocation canonicalize = (CanonicalizableLocation) locationIdentity;
-                return canonicalize.canonicalizeRead(read, address, object, tool);
+                CanonicalizableLocation __canonicalize = (CanonicalizableLocation) __locationIdentity;
+                return __canonicalize.canonicalizeRead(__read, __address, __object, __tool);
             }
         }
-        return read;
+        return __read;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
         throw GraalError.shouldNotReachHere("unexpected ReadNode before PEA");
     }

@@ -12,9 +12,12 @@ import giraaff.nodes.ValueNode;
 // @class UnaryNode
 public abstract class UnaryNode extends FloatingNode implements Canonicalizable.Unary<ValueNode>
 {
+    // @def
     public static final NodeClass<UnaryNode> TYPE = NodeClass.create(UnaryNode.class);
 
-    @Input protected ValueNode value;
+    @Input
+    // @field
+    protected ValueNode value;
 
     @Override
     public ValueNode getValue()
@@ -22,10 +25,10 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
         return value;
     }
 
-    public void setValue(ValueNode value)
+    public void setValue(ValueNode __value)
     {
-        updateUsages(this.value, value);
-        this.value = value;
+        updateUsages(this.value, __value);
+        this.value = __value;
     }
 
     /**
@@ -35,10 +38,10 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
      * @param value the input instruction
      */
     // @cons
-    protected UnaryNode(NodeClass<? extends UnaryNode> c, Stamp stamp, ValueNode value)
+    protected UnaryNode(NodeClass<? extends UnaryNode> __c, Stamp __stamp, ValueNode __value)
     {
-        super(c, stamp);
-        this.value = value;
+        super(__c, __stamp);
+        this.value = __value;
     }
 
     @Override
@@ -52,7 +55,7 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
      * with the current value of {@link #value}. This code is used to provide the default
      * implementation of {@link #inferStamp()} and may be used by external optimizations.
      */
-    public Stamp foldStamp(Stamp newStamp)
+    public Stamp foldStamp(Stamp __newStamp)
     {
         return stamp(NodeView.DEFAULT);
     }

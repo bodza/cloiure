@@ -9,25 +9,28 @@ import giraaff.graph.NodeClass;
 // @class FixedWithNextNode
 public abstract class FixedWithNextNode extends FixedNode
 {
+    // @def
     public static final NodeClass<FixedWithNextNode> TYPE = NodeClass.create(FixedWithNextNode.class);
 
-    @Successor protected FixedNode next;
+    @Successor
+    // @field
+    protected FixedNode next;
 
     public FixedNode next()
     {
         return next;
     }
 
-    public void setNext(FixedNode x)
+    public void setNext(FixedNode __x)
     {
-        updatePredecessor(next, x);
-        next = x;
+        updatePredecessor(next, __x);
+        next = __x;
     }
 
     // @cons
-    public FixedWithNextNode(NodeClass<? extends FixedWithNextNode> c, Stamp stamp)
+    public FixedWithNextNode(NodeClass<? extends FixedWithNextNode> __c, Stamp __stamp)
     {
-        super(c, stamp);
+        super(__c, __stamp);
     }
 
     @Override

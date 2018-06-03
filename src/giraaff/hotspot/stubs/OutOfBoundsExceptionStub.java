@@ -17,57 +17,60 @@ import giraaff.word.Word;
 public final class OutOfBoundsExceptionStub extends CreateExceptionStub
 {
     // @cons
-    public OutOfBoundsExceptionStub(HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    public OutOfBoundsExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
-        super("createOutOfBoundsException", providers, linkage);
+        super("createOutOfBoundsException", __providers, __linkage);
     }
 
+    // @def
     private static final int MAX_INT_STRING_SIZE = Integer.toString(Integer.MIN_VALUE).length();
 
     @Override
-    protected Object getConstantParameterValue(int index, String name)
+    protected Object getConstantParameterValue(int __index, String __name)
     {
-        switch (index)
+        switch (__index)
         {
             case 1:
                 return providers.getRegisters().getThreadRegister();
             case 2:
-                int wordSize = providers.getWordTypes().getWordKind().getByteCount();
+            {
+                int __wordSize = providers.getWordTypes().getWordKind().getByteCount();
                 // (MAX_INT_STRING_SIZE + 1) / wordSize, rounded up
-                return MAX_INT_STRING_SIZE / wordSize + 1;
+                return MAX_INT_STRING_SIZE / __wordSize + 1;
+            }
             default:
-                throw GraalError.shouldNotReachHere("unknown parameter " + name + " at index " + index);
+                throw GraalError.shouldNotReachHere("unknown parameter " + __name + " at __index " + __index);
         }
     }
 
     @Snippet
-    private static Object createOutOfBoundsException(int idx, @ConstantParameter Register threadRegister, @ConstantParameter int bufferSizeInWords)
+    private static Object createOutOfBoundsException(int __idx, @ConstantParameter Register __threadRegister, @ConstantParameter int __bufferSizeInWords)
     {
-        Word buffer = AllocaNode.alloca(bufferSizeInWords);
+        Word __buffer = AllocaNode.alloca(__bufferSizeInWords);
 
-        long number = idx;
-        if (number < 0)
+        long __number = __idx;
+        if (__number < 0)
         {
-            number = -number;
+            __number = -__number;
         }
 
-        Word ptr = buffer.add(MAX_INT_STRING_SIZE);
-        ptr.writeByte(0, (byte) 0);
+        Word __ptr = __buffer.add(MAX_INT_STRING_SIZE);
+        __ptr.writeByte(0, (byte) 0);
         do
         {
-            long digit = number % 10;
-            number /= 10;
+            long __digit = __number % 10;
+            __number /= 10;
 
-            ptr = ptr.subtract(1);
-            ptr.writeByte(0, (byte) ('0' + digit));
-        } while (number > 0);
+            __ptr = __ptr.subtract(1);
+            __ptr.writeByte(0, (byte) ('0' + __digit));
+        } while (__number > 0);
 
-        if (idx < 0)
+        if (__idx < 0)
         {
-            ptr = ptr.subtract(1);
-            ptr.writeByte(0, (byte) '-');
+            __ptr = __ptr.subtract(1);
+            __ptr.writeByte(0, (byte) '-');
         }
 
-        return createException(threadRegister, ArrayIndexOutOfBoundsException.class, ptr);
+        return createException(__threadRegister, ArrayIndexOutOfBoundsException.class, __ptr);
     }
 }

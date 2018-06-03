@@ -29,9 +29,9 @@ public interface NodeView
     NodeView DEFAULT = new NodeView()
     {
         @Override
-        public Stamp stamp(ValueNode node)
+        public Stamp stamp(ValueNode __node)
         {
-            return node.stamp;
+            return __node.stamp;
         }
     };
 
@@ -42,11 +42,11 @@ public interface NodeView
      */
     Stamp stamp(ValueNode node);
 
-    static NodeView from(CanonicalizerTool tool)
+    static NodeView from(CanonicalizerTool __tool)
     {
-        if (tool instanceof NodeView)
+        if (__tool instanceof NodeView)
         {
-            return (NodeView) tool;
+            return (NodeView) __tool;
         }
         return DEFAULT;
     }

@@ -12,9 +12,13 @@ import giraaff.asm.AbstractAddress;
 // @class AMD64Address
 public final class AMD64Address extends AbstractAddress
 {
+    // @field
     private final Register base;
+    // @field
     private final Register index;
+    // @field
     private final Scale scale;
+    // @field
     private final int displacement;
 
     /**
@@ -22,6 +26,7 @@ public final class AMD64Address extends AbstractAddress
      * placeholder patching information. Only used for {@link AMD64Assembler#getPlaceholder
      * placeholder addresses}.
      */
+    // @field
     final int instructionStartPosition;
 
     /**
@@ -30,9 +35,9 @@ public final class AMD64Address extends AbstractAddress
      * @param base the base register
      */
     // @cons
-    public AMD64Address(Register base)
+    public AMD64Address(Register __base)
     {
-        this(base, Register.None, Scale.Times1, 0);
+        this(__base, Register.None, Scale.Times1, 0);
     }
 
     /**
@@ -42,9 +47,9 @@ public final class AMD64Address extends AbstractAddress
      * @param displacement the displacement
      */
     // @cons
-    public AMD64Address(Register base, int displacement)
+    public AMD64Address(Register __base, int __displacement)
     {
-        this(base, Register.None, Scale.Times1, displacement);
+        this(__base, Register.None, Scale.Times1, __displacement);
     }
 
     /**
@@ -55,9 +60,9 @@ public final class AMD64Address extends AbstractAddress
      * @param scale the scaling factor
      */
     // @cons
-    public AMD64Address(Register base, Register index, Scale scale)
+    public AMD64Address(Register __base, Register __index, Scale __scale)
     {
-        this(base, index, scale, 0, -1);
+        this(__base, __index, __scale, 0, -1);
     }
 
     /**
@@ -70,20 +75,20 @@ public final class AMD64Address extends AbstractAddress
      * @param displacement the displacement
      */
     // @cons
-    public AMD64Address(Register base, Register index, Scale scale, int displacement)
+    public AMD64Address(Register __base, Register __index, Scale __scale, int __displacement)
     {
-        this(base, index, scale, displacement, -1);
+        this(__base, __index, __scale, __displacement, -1);
     }
 
     // @cons
-    AMD64Address(Register base, Register index, Scale scale, int displacement, int instructionStartPosition)
+    AMD64Address(Register __base, Register __index, Scale __scale, int __displacement, int __instructionStartPosition)
     {
         super();
-        this.base = base;
-        this.index = index;
-        this.scale = scale;
-        this.displacement = displacement;
-        this.instructionStartPosition = instructionStartPosition;
+        this.base = __base;
+        this.index = __index;
+        this.scale = __scale;
+        this.displacement = __displacement;
+        this.instructionStartPosition = __instructionStartPosition;
     }
 
     /**
@@ -97,25 +102,27 @@ public final class AMD64Address extends AbstractAddress
         Times4(4, 2),
         Times8(8, 3);
 
-        Scale(int value, int log2)
+        Scale(int __value, int __log2)
         {
-            this.value = value;
-            this.log2 = log2;
+            this.value = __value;
+            this.log2 = __log2;
         }
 
         /**
          * The value (or multiplier) of this scale.
          */
+        // @field
         public final int value;
 
         /**
          * The {@linkplain #value value} of this scale log 2.
          */
+        // @field
         public final int log2;
 
-        public static Scale fromInt(int scale)
+        public static Scale fromInt(int __scale)
         {
-            switch (scale)
+            switch (__scale)
             {
                 case 1:
                     return Times1;
@@ -130,9 +137,9 @@ public final class AMD64Address extends AbstractAddress
             }
         }
 
-        public static Scale fromShift(int shift)
+        public static Scale fromShift(int __shift)
         {
-            switch (shift)
+            switch (__shift)
             {
                 case 0:
                     return Times1;

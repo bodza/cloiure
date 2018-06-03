@@ -26,82 +26,85 @@ import giraaff.nodes.type.StampTool;
 // @class LoadHubNode
 public final class LoadHubNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
+    // @def
     public static final NodeClass<LoadHubNode> TYPE = NodeClass.create(LoadHubNode.class);
 
-    @Input ValueNode value;
+    @Input
+    // @field
+    ValueNode value;
 
     public ValueNode getValue()
     {
         return value;
     }
 
-    private static Stamp hubStamp(StampProvider stampProvider, ValueNode value)
+    private static Stamp hubStamp(StampProvider __stampProvider, ValueNode __value)
     {
-        return stampProvider.createHubStamp(((ObjectStamp) value.stamp(NodeView.DEFAULT)));
+        return __stampProvider.createHubStamp(((ObjectStamp) __value.stamp(NodeView.DEFAULT)));
     }
 
-    public static ValueNode create(ValueNode value, StampProvider stampProvider, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
+    public static ValueNode create(ValueNode __value, StampProvider __stampProvider, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection)
     {
-        Stamp stamp = hubStamp(stampProvider, value);
-        ValueNode synonym = findSynonym(value, stamp, metaAccess, constantReflection);
-        if (synonym != null)
+        Stamp __stamp = hubStamp(__stampProvider, __value);
+        ValueNode __synonym = findSynonym(__value, __stamp, __metaAccess, __constantReflection);
+        if (__synonym != null)
         {
-            return synonym;
+            return __synonym;
         }
-        return new LoadHubNode(stamp, value);
+        return new LoadHubNode(__stamp, __value);
     }
 
     // @cons
-    public LoadHubNode(@InjectedNodeParameter StampProvider stampProvider, ValueNode value)
+    public LoadHubNode(@InjectedNodeParameter StampProvider __stampProvider, ValueNode __value)
     {
-        this(hubStamp(stampProvider, value), value);
+        this(hubStamp(__stampProvider, __value), __value);
     }
 
     // @cons
-    public LoadHubNode(Stamp stamp, ValueNode value)
+    public LoadHubNode(Stamp __stamp, ValueNode __value)
     {
-        super(TYPE, stamp);
-        this.value = value;
+        super(TYPE, __stamp);
+        this.value = __value;
     }
 
     @Override
-    public void lower(LoweringTool tool)
+    public void lower(LoweringTool __tool)
     {
-        tool.getLowerer().lower(this, tool);
+        __tool.getLowerer().lower(this, __tool);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool)
+    public ValueNode canonical(CanonicalizerTool __tool)
     {
-        NodeView view = NodeView.from(tool);
-        MetaAccessProvider metaAccess = tool.getMetaAccess();
-        ValueNode curValue = getValue();
-        ValueNode newNode = findSynonym(curValue, stamp(view), metaAccess, tool.getConstantReflection());
-        if (newNode != null)
+        NodeView __view = NodeView.from(__tool);
+        MetaAccessProvider __metaAccess = __tool.getMetaAccess();
+        ValueNode __curValue = getValue();
+        ValueNode __newNode = findSynonym(__curValue, stamp(__view), __metaAccess, __tool.getConstantReflection());
+        if (__newNode != null)
         {
-            return newNode;
+            return __newNode;
         }
         return this;
     }
 
-    public static ValueNode findSynonym(ValueNode curValue, Stamp stamp, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
+    public static ValueNode findSynonym(ValueNode __curValue, Stamp __stamp, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection)
     {
-        TypeReference type = StampTool.typeReferenceOrNull(curValue);
-        if (type != null && type.isExact())
+        TypeReference __type = StampTool.typeReferenceOrNull(__curValue);
+        if (__type != null && __type.isExact())
         {
-            return ConstantNode.forConstant(stamp, constantReflection.asObjectHub(type.getType()), metaAccess);
+            return ConstantNode.forConstant(__stamp, __constantReflection.asObjectHub(__type.getType()), __metaAccess);
         }
         return null;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool)
+    public void virtualize(VirtualizerTool __tool)
     {
-        ValueNode alias = tool.getAlias(getValue());
-        TypeReference type = StampTool.typeReferenceOrNull(alias);
-        if (type != null && type.isExact())
+        ValueNode __alias = __tool.getAlias(getValue());
+        TypeReference __type = StampTool.typeReferenceOrNull(__alias);
+        if (__type != null && __type.isExact())
         {
-            tool.replaceWithValue(ConstantNode.forConstant(stamp(NodeView.DEFAULT), tool.getConstantReflectionProvider().asObjectHub(type.getType()), tool.getMetaAccessProvider(), graph()));
+            __tool.replaceWithValue(ConstantNode.forConstant(stamp(NodeView.DEFAULT), __tool.getConstantReflectionProvider().asObjectHub(__type.getType()), __tool.getMetaAccessProvider(), graph()));
         }
     }
 }

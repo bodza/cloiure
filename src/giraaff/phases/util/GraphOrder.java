@@ -24,64 +24,64 @@ public final class GraphOrder
         super();
     }
 
-    private static List<Node> createOrder(StructuredGraph graph)
+    private static List<Node> createOrder(StructuredGraph __graph)
     {
-        final ArrayList<Node> nodes = new ArrayList<>();
-        final NodeBitMap visited = graph.createNodeBitMap();
+        final ArrayList<Node> __nodes = new ArrayList<>();
+        final NodeBitMap __visited = __graph.createNodeBitMap();
 
         // @closure
-        new StatelessPostOrderNodeIterator(graph.start())
+        new StatelessPostOrderNodeIterator(__graph.start())
         {
             @Override
-            protected void node(FixedNode node)
+            protected void node(FixedNode __node)
             {
-                visitForward(nodes, visited, node, false);
+                visitForward(__nodes, __visited, __node, false);
             }
         }.apply();
-        return nodes;
+        return __nodes;
     }
 
-    private static void visitForward(ArrayList<Node> nodes, NodeBitMap visited, Node node, boolean floatingOnly)
+    private static void visitForward(ArrayList<Node> __nodes, NodeBitMap __visited, Node __node, boolean __floatingOnly)
     {
-        if (node != null && !visited.isMarked(node))
+        if (__node != null && !__visited.isMarked(__node))
         {
-            if (floatingOnly && node instanceof FixedNode)
+            if (__floatingOnly && __node instanceof FixedNode)
             {
-                throw new GraalError("unexpected reference to fixed node: %s (this indicates an unexpected cycle)", node);
+                throw new GraalError("unexpected reference to fixed node: %s (this indicates an unexpected cycle)", __node);
             }
-            visited.mark(node);
-            FrameState stateAfter = null;
-            if (node instanceof StateSplit)
+            __visited.mark(__node);
+            FrameState __stateAfter = null;
+            if (__node instanceof StateSplit)
             {
-                stateAfter = ((StateSplit) node).stateAfter();
+                __stateAfter = ((StateSplit) __node).stateAfter();
             }
-            for (Node input : node.inputs())
+            for (Node __input : __node.inputs())
             {
-                if (input != stateAfter)
+                if (__input != __stateAfter)
                 {
-                    visitForward(nodes, visited, input, true);
+                    visitForward(__nodes, __visited, __input, true);
                 }
             }
-            if (node instanceof EndNode)
+            if (__node instanceof EndNode)
             {
-                EndNode end = (EndNode) node;
-                for (PhiNode phi : end.merge().phis())
+                EndNode __end = (EndNode) __node;
+                for (PhiNode __phi : __end.merge().phis())
                 {
-                    visitForward(nodes, visited, phi.valueAt(end), true);
+                    visitForward(__nodes, __visited, __phi.valueAt(__end), true);
                 }
             }
-            nodes.add(node);
-            if (node instanceof AbstractMergeNode)
+            __nodes.add(__node);
+            if (__node instanceof AbstractMergeNode)
             {
-                for (PhiNode phi : ((AbstractMergeNode) node).phis())
+                for (PhiNode __phi : ((AbstractMergeNode) __node).phis())
                 {
-                    visited.mark(phi);
-                    nodes.add(phi);
+                    __visited.mark(__phi);
+                    __nodes.add(__phi);
                 }
             }
-            if (stateAfter != null)
+            if (__stateAfter != null)
             {
-                visitForward(nodes, visited, stateAfter, true);
+                visitForward(__nodes, __visited, __stateAfter, true);
             }
         }
     }

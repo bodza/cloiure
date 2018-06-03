@@ -11,6 +11,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class ControlFlowAnchorNode
 public final class ControlFlowAnchorNode extends FixedWithNextNode implements LIRLowerable, ControlFlowAnchored
 {
+    // @def
     public static final NodeClass<ControlFlowAnchorNode> TYPE = NodeClass.create(ControlFlowAnchorNode.class);
 
     // @class ControlFlowAnchorNode.Unique
@@ -18,6 +19,7 @@ public final class ControlFlowAnchorNode extends FixedWithNextNode implements LI
     {
     }
 
+    // @field
     protected Unique unique;
 
     // @cons
@@ -31,19 +33,19 @@ public final class ControlFlowAnchorNode extends FixedWithNextNode implements LI
      * Used by MacroSubstitution.
      */
     // @cons
-    public ControlFlowAnchorNode(@SuppressWarnings("unused") Invoke invoke)
+    public ControlFlowAnchorNode(@SuppressWarnings("unused") Invoke __invoke)
     {
         this();
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
         // do nothing
     }
 
     @Override
-    protected void afterClone(Node other)
+    protected void afterClone(Node __other)
     {
     }
 }

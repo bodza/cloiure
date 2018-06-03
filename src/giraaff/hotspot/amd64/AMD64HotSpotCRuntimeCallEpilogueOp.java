@@ -13,29 +13,34 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotCRuntimeCallEpilogueOp
 final class AMD64HotSpotCRuntimeCallEpilogueOp extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64HotSpotCRuntimeCallEpilogueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotCRuntimeCallEpilogueOp.class);
 
+    // @field
     private final int threadLastJavaSpOffset;
+    // @field
     private final int threadLastJavaFpOffset;
+    // @field
     private final int threadLastJavaPcOffset;
+    // @field
     private final Register thread;
 
     // @cons
-    AMD64HotSpotCRuntimeCallEpilogueOp(int threadLastJavaSpOffset, int threadLastJavaFpOffset, int threadLastJavaPcOffset, Register thread)
+    AMD64HotSpotCRuntimeCallEpilogueOp(int __threadLastJavaSpOffset, int __threadLastJavaFpOffset, int __threadLastJavaPcOffset, Register __thread)
     {
         super(TYPE);
-        this.threadLastJavaSpOffset = threadLastJavaSpOffset;
-        this.threadLastJavaFpOffset = threadLastJavaFpOffset;
-        this.threadLastJavaPcOffset = threadLastJavaPcOffset;
-        this.thread = thread;
+        this.threadLastJavaSpOffset = __threadLastJavaSpOffset;
+        this.threadLastJavaFpOffset = __threadLastJavaFpOffset;
+        this.threadLastJavaPcOffset = __threadLastJavaPcOffset;
+        this.thread = __thread;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
         // reset last Java frame
-        masm.movslq(new AMD64Address(thread, threadLastJavaSpOffset), 0);
-        masm.movslq(new AMD64Address(thread, threadLastJavaFpOffset), 0);
-        masm.movslq(new AMD64Address(thread, threadLastJavaPcOffset), 0);
+        __masm.movslq(new AMD64Address(thread, threadLastJavaSpOffset), 0);
+        __masm.movslq(new AMD64Address(thread, threadLastJavaFpOffset), 0);
+        __masm.movslq(new AMD64Address(thread, threadLastJavaPcOffset), 0);
     }
 }

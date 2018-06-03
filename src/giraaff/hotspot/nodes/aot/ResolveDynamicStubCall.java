@@ -29,24 +29,30 @@ import giraaff.util.GraalError;
 // @class ResolveDynamicStubCall
 public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
 {
+    // @def
     public static final NodeClass<ResolveDynamicStubCall> TYPE = NodeClass.create(ResolveDynamicStubCall.class);
 
-    @OptionalInput protected ValueNode value;
-    @OptionalInput(InputType.State) protected FrameState stateBefore;
+    @OptionalInput
+    // @field
+    protected ValueNode value;
+    @OptionalInput(InputType.State)
+    // @field
+    protected FrameState stateBefore;
+    // @field
     protected Constant constant;
 
     // @cons
-    public ResolveDynamicStubCall(ValueNode value)
+    public ResolveDynamicStubCall(ValueNode __value)
     {
-        super(TYPE, value.stamp(NodeView.DEFAULT));
-        this.value = value;
+        super(TYPE, __value.stamp(NodeView.DEFAULT));
+        this.value = __value;
     }
 
     @NodeIntrinsic
     public static native Object resolveInvoke(Object value);
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (value != null)
         {
@@ -56,9 +62,9 @@ public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint imple
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        gen.setResult(this, ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitResolveDynamicInvoke(constant, gen.state(this)));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitResolveDynamicInvoke(constant, __gen.state(this)));
     }
 
     @Override
@@ -80,10 +86,10 @@ public final class ResolveDynamicStubCall extends AbstractMemoryCheckpoint imple
     }
 
     @Override
-    public void setStateBefore(FrameState f)
+    public void setStateBefore(FrameState __f)
     {
-        updateUsages(stateBefore, f);
-        stateBefore = f;
+        updateUsages(stateBefore, __f);
+        stateBefore = __f;
     }
 
     @Override

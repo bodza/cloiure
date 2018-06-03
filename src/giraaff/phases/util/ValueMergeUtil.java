@@ -16,64 +16,64 @@ import giraaff.nodes.ValuePhiNode;
 // @class ValueMergeUtil
 public class ValueMergeUtil
 {
-    public static ValueNode mergeReturns(AbstractMergeNode merge, List<? extends ReturnNode> returnNodes)
+    public static ValueNode mergeReturns(AbstractMergeNode __merge, List<? extends ReturnNode> __returnNodes)
     {
-        return mergeValueProducers(merge, returnNodes, null, returnNode -> returnNode.result());
+        return mergeValueProducers(__merge, __returnNodes, null, __returnNode -> __returnNode.result());
     }
 
-    public static <T> ValueNode mergeValueProducers(AbstractMergeNode merge, List<? extends T> valueProducers, Function<T, FixedWithNextNode> lastInstrFunction, Function<T, ValueNode> valueFunction)
+    public static <T> ValueNode mergeValueProducers(AbstractMergeNode __merge, List<? extends T> __valueProducers, Function<T, FixedWithNextNode> __lastInstrFunction, Function<T, ValueNode> __valueFunction)
     {
-        ValueNode singleResult = null;
-        PhiNode phiResult = null;
-        for (T valueProducer : valueProducers)
+        ValueNode __singleResult = null;
+        PhiNode __phiResult = null;
+        for (T __valueProducer : __valueProducers)
         {
-            ValueNode result = valueFunction.apply(valueProducer);
-            if (result != null)
+            ValueNode __result = __valueFunction.apply(__valueProducer);
+            if (__result != null)
             {
-                if (phiResult == null && (singleResult == null || singleResult == result))
+                if (__phiResult == null && (__singleResult == null || __singleResult == __result))
                 {
                     // Only one result value, so no need yet for a phi node.
-                    singleResult = result;
+                    __singleResult = __result;
                 }
-                else if (phiResult == null)
+                else if (__phiResult == null)
                 {
                     // Found a second result value, so create phi node.
-                    phiResult = merge.graph().addWithoutUnique(new ValuePhiNode(result.stamp(NodeView.DEFAULT).unrestricted(), merge));
-                    for (int i = 0; i < merge.forwardEndCount(); i++)
+                    __phiResult = __merge.graph().addWithoutUnique(new ValuePhiNode(__result.stamp(NodeView.DEFAULT).unrestricted(), __merge));
+                    for (int __i = 0; __i < __merge.forwardEndCount(); __i++)
                     {
-                        phiResult.addInput(singleResult);
+                        __phiResult.addInput(__singleResult);
                     }
-                    phiResult.addInput(result);
+                    __phiResult.addInput(__result);
                 }
                 else
                 {
                     // Multiple return values, just add to existing phi node.
-                    phiResult.addInput(result);
+                    __phiResult.addInput(__result);
                 }
             }
 
             // create and wire up a new EndNode
-            EndNode endNode = merge.graph().add(new EndNode());
-            merge.addForwardEnd(endNode);
-            if (lastInstrFunction == null)
+            EndNode __endNode = __merge.graph().add(new EndNode());
+            __merge.addForwardEnd(__endNode);
+            if (__lastInstrFunction == null)
             {
-                ((ControlSinkNode) valueProducer).replaceAndDelete(endNode);
+                ((ControlSinkNode) __valueProducer).replaceAndDelete(__endNode);
             }
             else
             {
-                FixedWithNextNode lastInstr = lastInstrFunction.apply(valueProducer);
-                lastInstr.setNext(endNode);
+                FixedWithNextNode __lastInstr = __lastInstrFunction.apply(__valueProducer);
+                __lastInstr.setNext(__endNode);
             }
         }
 
-        if (phiResult != null)
+        if (__phiResult != null)
         {
-            phiResult.inferStamp();
-            return phiResult;
+            __phiResult.inferStamp();
+            return __phiResult;
         }
         else
         {
-            return singleResult;
+            return __singleResult;
         }
     }
 }

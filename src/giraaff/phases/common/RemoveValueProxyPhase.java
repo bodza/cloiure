@@ -11,24 +11,24 @@ import giraaff.phases.Phase;
 public final class RemoveValueProxyPhase extends Phase
 {
     @Override
-    protected void run(StructuredGraph graph)
+    protected void run(StructuredGraph __graph)
     {
-        for (LoopExitNode exit : graph.getNodes(LoopExitNode.TYPE))
+        for (LoopExitNode __exit : __graph.getNodes(LoopExitNode.TYPE))
         {
-            for (ProxyNode vpn : exit.proxies().snapshot())
+            for (ProxyNode __vpn : __exit.proxies().snapshot())
             {
-                vpn.replaceAtUsagesAndDelete(vpn.value());
+                __vpn.replaceAtUsagesAndDelete(__vpn.value());
             }
-            FrameState stateAfter = exit.stateAfter();
-            if (stateAfter != null)
+            FrameState __stateAfter = __exit.stateAfter();
+            if (__stateAfter != null)
             {
-                exit.setStateAfter(null);
-                if (stateAfter.hasNoUsages())
+                __exit.setStateAfter(null);
+                if (__stateAfter.hasNoUsages())
                 {
-                    GraphUtil.killWithUnusedFloatingInputs(stateAfter);
+                    GraphUtil.killWithUnusedFloatingInputs(__stateAfter);
                 }
             }
         }
-        graph.setHasValueProxies(false);
+        __graph.setHasValueProxies(false);
     }
 }

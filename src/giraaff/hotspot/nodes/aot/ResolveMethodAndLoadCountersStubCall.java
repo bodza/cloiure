@@ -25,27 +25,35 @@ import giraaff.nodes.util.GraphUtil;
 // @class ResolveMethodAndLoadCountersStubCall
 public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
+    // @def
     public static final NodeClass<ResolveMethodAndLoadCountersStubCall> TYPE = NodeClass.create(ResolveMethodAndLoadCountersStubCall.class);
 
-    @OptionalInput protected ValueNode method;
-    @Input protected ValueNode klassHint;
-    @Input protected ValueNode methodDescription;
+    @OptionalInput
+    // @field
+    protected ValueNode method;
+    @Input
+    // @field
+    protected ValueNode klassHint;
+    @Input
+    // @field
+    protected ValueNode methodDescription;
+    // @field
     protected Constant methodConstant;
 
     // @cons
-    public ResolveMethodAndLoadCountersStubCall(ValueNode method, ValueNode klassHint, ValueNode methodDescription)
+    public ResolveMethodAndLoadCountersStubCall(ValueNode __method, ValueNode __klassHint, ValueNode __methodDescription)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());
-        this.klassHint = klassHint;
-        this.method = method;
-        this.methodDescription = methodDescription;
+        this.klassHint = __klassHint;
+        this.method = __method;
+        this.methodDescription = __methodDescription;
     }
 
     @NodeIntrinsic
     public static native MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer method, KlassPointer klassHint, Object methodDescription);
 
     @Override
-    public Node canonical(CanonicalizerTool tool)
+    public Node canonical(CanonicalizerTool __tool)
     {
         if (method != null)
         {
@@ -55,12 +63,12 @@ public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStub
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen)
+    public void generate(NodeLIRBuilderTool __gen)
     {
-        Value methodDescriptionValue = gen.operand(methodDescription);
-        Value klassHintValue = gen.operand(klassHint);
-        LIRFrameState fs = gen.state(this);
+        Value __methodDescriptionValue = __gen.operand(methodDescription);
+        Value __klassHintValue = __gen.operand(klassHint);
+        LIRFrameState __fs = __gen.state(this);
 
-        gen.setResult(this, ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitResolveMethodAndLoadCounters(methodConstant, klassHintValue, methodDescriptionValue, fs));
+        __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitResolveMethodAndLoadCounters(methodConstant, __klassHintValue, __methodDescriptionValue, __fs));
     }
 }

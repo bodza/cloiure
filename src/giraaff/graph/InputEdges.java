@@ -9,44 +9,46 @@ import giraaff.nodeinfo.InputType;
 // @class InputEdges
 public final class InputEdges extends Edges
 {
+    // @field
     private final InputType[] inputTypes;
+    // @field
     private final boolean[] isOptional;
 
     // @cons
-    public InputEdges(int directCount, ArrayList<InputInfo> edges)
+    public InputEdges(int __directCount, ArrayList<InputInfo> __edges)
     {
-        super(Type.Inputs, directCount, edges);
+        super(Type.Inputs, __directCount, __edges);
 
-        this.inputTypes = new InputType[edges.size()];
-        this.isOptional = new boolean[edges.size()];
-        for (int i = 0; i < edges.size(); i++)
+        this.inputTypes = new InputType[__edges.size()];
+        this.isOptional = new boolean[__edges.size()];
+        for (int __i = 0; __i < __edges.size(); __i++)
         {
-            this.inputTypes[i] = edges.get(i).inputType;
-            this.isOptional[i] = edges.get(i).optional;
+            this.inputTypes[__i] = __edges.get(__i).inputType;
+            this.isOptional[__i] = __edges.get(__i).optional;
         }
     }
 
-    public static void translateInto(InputEdges inputs, ArrayList<InputInfo> infos)
+    public static void translateInto(InputEdges __inputs, ArrayList<InputInfo> __infos)
     {
-        for (int index = 0; index < inputs.getCount(); index++)
+        for (int __index = 0; __index < __inputs.getCount(); __index++)
         {
-            infos.add(new InputInfo(inputs.offsets[index], inputs.getName(index), inputs.getType(index), inputs.getDeclaringClass(index), inputs.inputTypes[index], inputs.isOptional(index)));
+            __infos.add(new InputInfo(__inputs.offsets[__index], __inputs.getName(__index), __inputs.getType(__index), __inputs.getDeclaringClass(__index), __inputs.inputTypes[__index], __inputs.isOptional(__index)));
         }
     }
 
-    public InputType getInputType(int index)
+    public InputType getInputType(int __index)
     {
-        return inputTypes[index];
+        return inputTypes[__index];
     }
 
-    public boolean isOptional(int index)
+    public boolean isOptional(int __index)
     {
-        return isOptional[index];
+        return isOptional[__index];
     }
 
     @Override
-    public void update(Node node, Node oldValue, Node newValue)
+    public void update(Node __node, Node __oldValue, Node __newValue)
     {
-        node.updateUsages(oldValue, newValue);
+        __node.updateUsages(__oldValue, __newValue);
     }
 }

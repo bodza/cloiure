@@ -12,34 +12,43 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64CCall
 public final class AMD64CCall extends AMD64LIRInstruction
 {
+    // @def
     public static final LIRInstructionClass<AMD64CCall> TYPE = LIRInstructionClass.create(AMD64CCall.class);
 
-    @Def({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value result;
-    @Use({OperandFlag.REG, OperandFlag.STACK}) protected Value[] parameters;
-    @Use({OperandFlag.REG}) protected Value functionPtr;
-    @Use({OperandFlag.REG}) protected Value numberOfFloatingPointArguments;
+    @Def({OperandFlag.REG, OperandFlag.ILLEGAL})
+    // @field
+    protected Value result;
+    @Use({OperandFlag.REG, OperandFlag.STACK})
+    // @field
+    protected Value[] parameters;
+    @Use({OperandFlag.REG})
+    // @field
+    protected Value functionPtr;
+    @Use({OperandFlag.REG})
+    // @field
+    protected Value numberOfFloatingPointArguments;
 
     // @cons
-    public AMD64CCall(Value result, Value functionPtr, Value numberOfFloatingPointArguments, Value[] parameters)
+    public AMD64CCall(Value __result, Value __functionPtr, Value __numberOfFloatingPointArguments, Value[] __parameters)
     {
         super(TYPE);
-        this.result = result;
-        this.functionPtr = functionPtr;
-        this.parameters = parameters;
-        this.numberOfFloatingPointArguments = numberOfFloatingPointArguments;
+        this.result = __result;
+        this.functionPtr = __functionPtr;
+        this.parameters = __parameters;
+        this.numberOfFloatingPointArguments = __numberOfFloatingPointArguments;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        directCall(masm);
+        directCall(__masm);
     }
 
-    private void directCall(AMD64MacroAssembler masm)
+    private void directCall(AMD64MacroAssembler __masm)
     {
-        Register reg = ValueUtil.asRegister(functionPtr);
-        masm.call(reg);
-        masm.ensureUniquePC();
+        Register __reg = ValueUtil.asRegister(functionPtr);
+        __masm.call(__reg);
+        __masm.ensureUniquePC();
     }
 
     @Override

@@ -8,12 +8,13 @@ import giraaff.nodes.LoopBeginNode;
 // @class HIRLoop
 public final class HIRLoop extends Loop<Block>
 {
+    // @field
     private LocationSet killLocations;
 
     // @cons
-    protected HIRLoop(Loop<Block> parent, int index, Block header)
+    protected HIRLoop(Loop<Block> __parent, int __index, Block __header)
     {
-        super(parent, index, header);
+        super(__parent, __index, __header);
     }
 
     @Override
@@ -27,11 +28,11 @@ public final class HIRLoop extends Loop<Block>
         if (killLocations == null)
         {
             killLocations = new LocationSet();
-            for (Block b : this.getBlocks())
+            for (Block __b : this.getBlocks())
             {
-                if (b.getLoop() == this)
+                if (__b.getLoop() == this)
                 {
-                    killLocations.addAll(b.getKillLocations());
+                    killLocations.addAll(__b.getKillLocations());
                     if (killLocations.isAny())
                     {
                         break;
@@ -39,19 +40,19 @@ public final class HIRLoop extends Loop<Block>
                 }
             }
         }
-        for (Loop<Block> child : this.getChildren())
+        for (Loop<Block> __child : this.getChildren())
         {
             if (killLocations.isAny())
             {
                 break;
             }
-            killLocations.addAll(((HIRLoop) child).getKillLocations());
+            killLocations.addAll(((HIRLoop) __child).getKillLocations());
         }
         return killLocations;
     }
 
-    public boolean canKill(LocationIdentity location)
+    public boolean canKill(LocationIdentity __location)
     {
-        return getKillLocations().contains(location);
+        return getKillLocations().contains(__location);
     }
 }

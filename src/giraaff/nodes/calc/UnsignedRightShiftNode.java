@@ -17,108 +17,109 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class UnsignedRightShiftNode
 public final class UnsignedRightShiftNode extends ShiftNode<UShr>
 {
+    // @def
     public static final NodeClass<UnsignedRightShiftNode> TYPE = NodeClass.create(UnsignedRightShiftNode.class);
 
     // @cons
-    public UnsignedRightShiftNode(ValueNode x, ValueNode y)
+    public UnsignedRightShiftNode(ValueNode __x, ValueNode __y)
     {
-        super(TYPE, ArithmeticOpTable::getUShr, x, y);
+        super(TYPE, ArithmeticOpTable::getUShr, __x, __y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        ArithmeticOpTable.ShiftOp<UShr> op = ArithmeticOpTable.forStamp(x.stamp(view)).getUShr();
-        Stamp stamp = op.foldStamp(x.stamp(view), (IntegerStamp) y.stamp(view));
-        ValueNode value = ShiftNode.canonical(op, stamp, x, y, view);
-        if (value != null)
+        ArithmeticOpTable.ShiftOp<UShr> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getUShr();
+        Stamp __stamp = __op.foldStamp(__x.stamp(__view), (IntegerStamp) __y.stamp(__view));
+        ValueNode __value = ShiftNode.canonical(__op, __stamp, __x, __y, __view);
+        if (__value != null)
         {
-            return value;
+            return __value;
         }
 
-        return canonical(null, op, stamp, x, y, view);
+        return canonical(null, __op, __stamp, __x, __y, __view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
-        NodeView view = NodeView.from(tool);
-        ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this)
+        NodeView __view = NodeView.from(__tool);
+        ValueNode __ret = super.canonical(__tool, __forX, __forY);
+        if (__ret != this)
         {
-            return ret;
+            return __ret;
         }
 
-        return canonical(this, this.getArithmeticOp(), this.stamp(view), forX, forY, view);
+        return canonical(this, this.getArithmeticOp(), this.stamp(__view), __forX, __forY, __view);
     }
 
     @SuppressWarnings("unused")
-    private static ValueNode canonical(UnsignedRightShiftNode node, ArithmeticOpTable.ShiftOp<UShr> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    private static ValueNode canonical(UnsignedRightShiftNode __node, ArithmeticOpTable.ShiftOp<UShr> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        if (forY.isConstant())
+        if (__forY.isConstant())
         {
-            int amount = forY.asJavaConstant().asInt();
-            int originalAmout = amount;
-            int mask = op.getShiftAmountMask(stamp);
-            amount &= mask;
-            if (amount == 0)
+            int __amount = __forY.asJavaConstant().asInt();
+            int __originalAmout = __amount;
+            int __mask = __op.getShiftAmountMask(__stamp);
+            __amount &= __mask;
+            if (__amount == 0)
             {
-                return forX;
+                return __forX;
             }
-            if (forX instanceof ShiftNode)
+            if (__forX instanceof ShiftNode)
             {
-                ShiftNode<?> other = (ShiftNode<?>) forX;
-                if (other.getY().isConstant())
+                ShiftNode<?> __other = (ShiftNode<?>) __forX;
+                if (__other.getY().isConstant())
                 {
-                    int otherAmount = other.getY().asJavaConstant().asInt() & mask;
-                    if (other instanceof UnsignedRightShiftNode)
+                    int __otherAmount = __other.getY().asJavaConstant().asInt() & __mask;
+                    if (__other instanceof UnsignedRightShiftNode)
                     {
-                        int total = amount + otherAmount;
-                        if (total != (total & mask))
+                        int __total = __amount + __otherAmount;
+                        if (__total != (__total & __mask))
                         {
-                            return ConstantNode.forIntegerKind(stamp.getStackKind(), 0);
+                            return ConstantNode.forIntegerKind(__stamp.getStackKind(), 0);
                         }
-                        return new UnsignedRightShiftNode(other.getX(), ConstantNode.forInt(total));
+                        return new UnsignedRightShiftNode(__other.getX(), ConstantNode.forInt(__total));
                     }
-                    else if (other instanceof LeftShiftNode && otherAmount == amount)
+                    else if (__other instanceof LeftShiftNode && __otherAmount == __amount)
                     {
-                        if (stamp.getStackKind() == JavaKind.Long)
+                        if (__stamp.getStackKind() == JavaKind.Long)
                         {
-                            return new AndNode(other.getX(), ConstantNode.forLong(-1L >>> amount));
+                            return new AndNode(__other.getX(), ConstantNode.forLong(-1L >>> __amount));
                         }
                         else
                         {
-                            return new AndNode(other.getX(), ConstantNode.forInt(-1 >>> amount));
+                            return new AndNode(__other.getX(), ConstantNode.forInt(-1 >>> __amount));
                         }
                     }
                 }
             }
-            if (originalAmout != amount)
+            if (__originalAmout != __amount)
             {
-                return new UnsignedRightShiftNode(forX, ConstantNode.forInt(amount));
+                return new UnsignedRightShiftNode(__forX, ConstantNode.forInt(__amount));
             }
         }
 
-        if (node != null)
+        if (__node != null)
         {
-            return node;
+            return __node;
         }
-        return new UnsignedRightShiftNode(forX, forY);
+        return new UnsignedRightShiftNode(__forX, __forY);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    public void generate(NodeLIRBuilderTool __nodeValueMap, ArithmeticLIRGeneratorTool __gen)
     {
-        nodeValueMap.setResult(this, gen.emitUShr(nodeValueMap.operand(getX()), nodeValueMap.operand(getY())));
+        __nodeValueMap.setResult(this, __gen.emitUShr(__nodeValueMap.operand(getX()), __nodeValueMap.operand(getY())));
     }
 
     @Override
-    public boolean isNarrowable(int resultBits)
+    public boolean isNarrowable(int __resultBits)
     {
-        if (super.isNarrowable(resultBits))
+        if (super.isNarrowable(__resultBits))
         {
             // For unsigned right shifts, the narrow can be done before the shift if the cut off bits are all zero.
-            IntegerStamp inputStamp = (IntegerStamp) getX().stamp(NodeView.DEFAULT);
-            return (inputStamp.upMask() & ~(resultBits - 1)) == 0;
+            IntegerStamp __inputStamp = (IntegerStamp) getX().stamp(NodeView.DEFAULT);
+            return (__inputStamp.upMask() & ~(__resultBits - 1)) == 0;
         }
         else
         {

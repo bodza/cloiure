@@ -11,20 +11,20 @@ import giraaff.phases.tiers.CompilerConfiguration;
 public class AMD64SuitesCreator extends DefaultSuitesCreator
 {
     // @cons
-    public AMD64SuitesCreator(CompilerConfiguration compilerConfiguration, Plugins plugins)
+    public AMD64SuitesCreator(CompilerConfiguration __compilerConfiguration, Plugins __plugins)
     {
-        super(compilerConfiguration, plugins);
+        super(__compilerConfiguration, __plugins);
     }
 
     @Override
     public LIRSuites createLIRSuites()
     {
-        LIRSuites lirSuites = super.createLIRSuites();
+        LIRSuites __lirSuites = super.createLIRSuites();
         if (GraalOptions.lirOptStackMoveOptimizer)
         {
             // note: this phase must be inserted *after* RedundantMoveElimination
-            lirSuites.getPostAllocationOptimizationStage().appendPhase(new StackMoveOptimizationPhase());
+            __lirSuites.getPostAllocationOptimizationStage().appendPhase(new StackMoveOptimizationPhase());
         }
-        return lirSuites;
+        return __lirSuites;
     }
 }

@@ -48,46 +48,48 @@ public final class LoadExceptionObjectSnippets implements Snippets
     }
 
     @Snippet
-    public static Object loadException(@ConstantParameter Register threadRegister)
+    public static Object loadException(@ConstantParameter Register __threadRegister)
     {
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        Object exception = HotSpotReplacementsUtil.readExceptionOop(thread);
-        HotSpotReplacementsUtil.writeExceptionOop(thread, null);
-        HotSpotReplacementsUtil.writeExceptionPc(thread, WordFactory.zero());
-        return PiNode.piCastToSnippetReplaceeStamp(exception);
+        Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
+        Object __exception = HotSpotReplacementsUtil.readExceptionOop(__thread);
+        HotSpotReplacementsUtil.writeExceptionOop(__thread, null);
+        HotSpotReplacementsUtil.writeExceptionPc(__thread, WordFactory.zero());
+        return PiNode.piCastToSnippetReplaceeStamp(__exception);
     }
 
     // @class LoadExceptionObjectSnippets.Templates
     public static final class Templates extends AbstractTemplates
     {
+        // @field
         private final SnippetInfo loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", HotSpotReplacementsUtil.EXCEPTION_OOP_LOCATION, HotSpotReplacementsUtil.EXCEPTION_PC_LOCATION);
+        // @field
         private final HotSpotWordTypes wordTypes;
 
         // @cons
-        public Templates(HotSpotProviders providers, TargetDescription target)
+        public Templates(HotSpotProviders __providers, TargetDescription __target)
         {
-            super(providers, providers.getSnippetReflection(), target);
-            this.wordTypes = providers.getWordTypes();
+            super(__providers, __providers.getSnippetReflection(), __target);
+            this.wordTypes = __providers.getWordTypes();
         }
 
-        public void lower(LoadExceptionObjectNode loadExceptionObject, HotSpotRegistersProvider registers, LoweringTool tool)
+        public void lower(LoadExceptionObjectNode __loadExceptionObject, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            StructuredGraph graph = loadExceptionObject.graph();
+            StructuredGraph __graph = __loadExceptionObject.graph();
             if (GraalOptions.loadExceptionObjectInVM)
             {
-                ResolvedJavaType wordType = providers.getMetaAccess().lookupJavaType(Word.class);
-                Stamp stamp = wordTypes.getWordStamp(wordType);
-                ReadRegisterNode thread = graph.add(new ReadRegisterNode(stamp, registers.getThreadRegister(), true, false));
-                graph.addBeforeFixed(loadExceptionObject, thread);
-                ForeignCallNode loadExceptionC = graph.add(new ForeignCallNode(providers.getForeignCalls(), HotSpotForeignCallsProviderImpl.LOAD_AND_CLEAR_EXCEPTION, thread));
-                loadExceptionC.setStateAfter(loadExceptionObject.stateAfter());
-                graph.replaceFixedWithFixed(loadExceptionObject, loadExceptionC);
+                ResolvedJavaType __wordType = providers.getMetaAccess().lookupJavaType(Word.class);
+                Stamp __stamp = wordTypes.getWordStamp(__wordType);
+                ReadRegisterNode __thread = __graph.add(new ReadRegisterNode(__stamp, __registers.getThreadRegister(), true, false));
+                __graph.addBeforeFixed(__loadExceptionObject, __thread);
+                ForeignCallNode __loadExceptionC = __graph.add(new ForeignCallNode(providers.getForeignCalls(), HotSpotForeignCallsProviderImpl.LOAD_AND_CLEAR_EXCEPTION, __thread));
+                __loadExceptionC.setStateAfter(__loadExceptionObject.stateAfter());
+                __graph.replaceFixedWithFixed(__loadExceptionObject, __loadExceptionC);
             }
             else
             {
-                Arguments args = new Arguments(loadException, loadExceptionObject.graph().getGuardsStage(), tool.getLoweringStage());
-                args.addConst("threadRegister", registers.getThreadRegister());
-                template(loadExceptionObject, args).instantiate(providers.getMetaAccess(), loadExceptionObject, SnippetTemplate.DEFAULT_REPLACER, args);
+                Arguments __args = new Arguments(loadException, __loadExceptionObject.graph().getGuardsStage(), __tool.getLoweringStage());
+                __args.addConst("threadRegister", __registers.getThreadRegister());
+                template(__loadExceptionObject, __args).instantiate(providers.getMetaAccess(), __loadExceptionObject, SnippetTemplate.DEFAULT_REPLACER, __args);
             }
         }
     }

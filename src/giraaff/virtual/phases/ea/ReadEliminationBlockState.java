@@ -14,20 +14,23 @@ import giraaff.nodes.ValueNode;
 // @class ReadEliminationBlockState
 public final class ReadEliminationBlockState extends EffectsBlockState<ReadEliminationBlockState>
 {
+    // @field
     final EconomicMap<CacheEntry<?>, ValueNode> readCache;
 
     // @class ReadEliminationBlockState.CacheEntry
     abstract static class CacheEntry<T>
     {
+        // @field
         public final ValueNode object;
+        // @field
         public final T identity;
 
         // @cons
-        CacheEntry(ValueNode object, T identity)
+        CacheEntry(ValueNode __object, T __identity)
         {
             super();
-            this.object = object;
-            this.identity = identity;
+            this.object = __object;
+            this.identity = __identity;
         }
 
         public abstract CacheEntry<T> duplicateWithObject(ValueNode newObject);
@@ -35,19 +38,19 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         @Override
         public int hashCode()
         {
-            int result = 31 + ((identity == null) ? 0 : identity.hashCode());
-            return 31 * result + ((object == null) ? 0 : object.hashCode());
+            int __result = 31 + ((identity == null) ? 0 : identity.hashCode());
+            return 31 * __result + ((object == null) ? 0 : object.hashCode());
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (!(obj instanceof CacheEntry<?>))
+            if (!(__obj instanceof CacheEntry<?>))
             {
                 return false;
             }
-            CacheEntry<?> other = (CacheEntry<?>) obj;
-            return identity.equals(other.identity) && object == other.object;
+            CacheEntry<?> __other = (CacheEntry<?>) __obj;
+            return identity.equals(__other.identity) && object == __other.object;
         }
 
         public abstract boolean conflicts(LocationIdentity other);
@@ -59,21 +62,21 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
     static final class LoadCacheEntry extends CacheEntry<LocationIdentity>
     {
         // @cons
-        LoadCacheEntry(ValueNode object, LocationIdentity identity)
+        LoadCacheEntry(ValueNode __object, LocationIdentity __identity)
         {
-            super(object, identity);
+            super(__object, __identity);
         }
 
         @Override
-        public CacheEntry<LocationIdentity> duplicateWithObject(ValueNode newObject)
+        public CacheEntry<LocationIdentity> duplicateWithObject(ValueNode __newObject)
         {
-            return new LoadCacheEntry(newObject, identity);
+            return new LoadCacheEntry(__newObject, identity);
         }
 
         @Override
-        public boolean conflicts(LocationIdentity other)
+        public boolean conflicts(LocationIdentity __other)
         {
-            return identity.equals(other);
+            return identity.equals(__other);
         }
 
         @Override
@@ -90,25 +93,26 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
     // @class ReadEliminationBlockState.UnsafeLoadCacheEntry
     static final class UnsafeLoadCacheEntry extends CacheEntry<ValueNode>
     {
+        // @field
         private final LocationIdentity locationIdentity;
 
         // @cons
-        UnsafeLoadCacheEntry(ValueNode object, ValueNode location, LocationIdentity locationIdentity)
+        UnsafeLoadCacheEntry(ValueNode __object, ValueNode __location, LocationIdentity __locationIdentity)
         {
-            super(object, location);
-            this.locationIdentity = locationIdentity;
+            super(__object, __location);
+            this.locationIdentity = __locationIdentity;
         }
 
         @Override
-        public CacheEntry<ValueNode> duplicateWithObject(ValueNode newObject)
+        public CacheEntry<ValueNode> duplicateWithObject(ValueNode __newObject)
         {
-            return new UnsafeLoadCacheEntry(newObject, identity, locationIdentity);
+            return new UnsafeLoadCacheEntry(__newObject, identity, locationIdentity);
         }
 
         @Override
-        public boolean conflicts(LocationIdentity other)
+        public boolean conflicts(LocationIdentity __other)
         {
-            return locationIdentity.equals(other);
+            return locationIdentity.equals(__other);
         }
 
         @Override
@@ -118,12 +122,12 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         }
 
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(Object __obj)
         {
-            if (obj instanceof UnsafeLoadCacheEntry)
+            if (__obj instanceof UnsafeLoadCacheEntry)
             {
-                UnsafeLoadCacheEntry other = (UnsafeLoadCacheEntry) obj;
-                return super.equals(other) && locationIdentity.equals(other.locationIdentity);
+                UnsafeLoadCacheEntry __other = (UnsafeLoadCacheEntry) __obj;
+                return super.equals(__other) && locationIdentity.equals(__other.locationIdentity);
             }
             return false;
         }
@@ -143,26 +147,26 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
     }
 
     // @cons
-    public ReadEliminationBlockState(ReadEliminationBlockState other)
+    public ReadEliminationBlockState(ReadEliminationBlockState __other)
     {
         super();
-        readCache = EconomicMap.create(Equivalence.DEFAULT, other.readCache);
+        readCache = EconomicMap.create(Equivalence.DEFAULT, __other.readCache);
     }
 
     @Override
-    public boolean equivalentTo(ReadEliminationBlockState other)
+    public boolean equivalentTo(ReadEliminationBlockState __other)
     {
-        return isSubMapOf(readCache, other.readCache);
+        return isSubMapOf(readCache, __other.readCache);
     }
 
-    public void addCacheEntry(CacheEntry<?> identifier, ValueNode value)
+    public void addCacheEntry(CacheEntry<?> __identifier, ValueNode __value)
     {
-        readCache.put(identifier, value);
+        readCache.put(__identifier, __value);
     }
 
-    public ValueNode getCacheEntry(CacheEntry<?> identifier)
+    public ValueNode getCacheEntry(CacheEntry<?> __identifier)
     {
-        return readCache.get(identifier);
+        return readCache.get(__identifier);
     }
 
     public void killReadCache()
@@ -170,15 +174,15 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         readCache.clear();
     }
 
-    public void killReadCache(LocationIdentity identity)
+    public void killReadCache(LocationIdentity __identity)
     {
-        Iterator<CacheEntry<?>> iterator = readCache.getKeys().iterator();
-        while (iterator.hasNext())
+        Iterator<CacheEntry<?>> __iterator = readCache.getKeys().iterator();
+        while (__iterator.hasNext())
         {
-            CacheEntry<?> entry = iterator.next();
-            if (entry.conflicts(identity))
+            CacheEntry<?> __entry = __iterator.next();
+            if (__entry.conflicts(__identity))
             {
-                iterator.remove();
+                __iterator.remove();
             }
         }
     }
