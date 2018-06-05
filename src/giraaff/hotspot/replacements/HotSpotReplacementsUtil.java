@@ -229,9 +229,6 @@ public final class HotSpotReplacementsUtil
     // @def
     public static final LocationIdentity JAVA_THREAD_THREAD_OBJECT_LOCATION = NamedLocationIdentity.immutable("JavaThread::_threadObj");
 
-    // @def
-    public static final LocationIdentity JAVA_THREAD_OSTHREAD_LOCATION = NamedLocationIdentity.mutable("JavaThread::_osthread");
-
     // @Fold
     public static final JavaKind getWordKind()
     {

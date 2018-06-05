@@ -101,11 +101,6 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
         return loadLongConfigValue(HotSpotRuntime.heapEndAddressMark);
     }
 
-    public static long crcTableAddress()
-    {
-        return loadLongConfigValue(HotSpotRuntime.crcTableAddressMark);
-    }
-
     public static int logOfHeapRegionGrainBytes()
     {
         return loadIntConfigValue(HotSpotRuntime.logOfHeapRegionGrainBytesMark);
@@ -134,10 +129,6 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
         else if (this.___markId == HotSpotRuntime.heapEndAddressMark)
         {
             return ConstantNode.forLong(HotSpotRuntime.heapEndAddress);
-        }
-        else if (this.___markId == HotSpotRuntime.crcTableAddressMark)
-        {
-            return ConstantNode.forLong(HotSpotRuntime.crcTableAddress);
         }
         else if (this.___markId == HotSpotRuntime.logOfHeapRegionGrainBytesMark)
         {

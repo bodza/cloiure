@@ -4,8 +4,6 @@ import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MutableCallSite;
 import java.lang.invoke.VolatileCallSite;
 import java.lang.reflect.Array;
-import java.math.BigInteger;
-import java.util.zip.CRC32;
 
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
@@ -26,12 +24,7 @@ import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.CurrentJavaThreadNode;
-import giraaff.hotspot.replacements.AESCryptSubstitutions;
-import giraaff.hotspot.replacements.BigIntegerSubstitutions;
-import giraaff.hotspot.replacements.CRC32CSubstitutions;
-import giraaff.hotspot.replacements.CRC32Substitutions;
 import giraaff.hotspot.replacements.CallSiteTargetNode;
-import giraaff.hotspot.replacements.CipherBlockChainingSubstitutions;
 import giraaff.hotspot.replacements.ClassGetHubNode;
 import giraaff.hotspot.replacements.HotSpotArraySubstitutions;
 import giraaff.hotspot.replacements.HotSpotClassSubstitutions;
@@ -41,9 +34,6 @@ import giraaff.hotspot.replacements.ObjectCloneNode;
 import giraaff.hotspot.replacements.ObjectSubstitutions;
 import giraaff.hotspot.replacements.ReflectionGetCallerClassNode;
 import giraaff.hotspot.replacements.ReflectionSubstitutions;
-import giraaff.hotspot.replacements.SHA2Substitutions;
-import giraaff.hotspot.replacements.SHA5Substitutions;
-import giraaff.hotspot.replacements.ThreadSubstitutions;
 import giraaff.hotspot.replacements.arraycopy.ArrayCopyNode;
 import giraaff.hotspot.word.HotSpotWordTypes;
 import giraaff.nodes.ConstantNode;
@@ -124,11 +114,6 @@ public final class HotSpotGraphBuilderPlugins
                 registerCallSitePlugins(__invocationPlugins);
                 registerReflectionPlugins(__invocationPlugins, __replacementBytecodeProvider);
                 registerConstantPoolPlugins(__invocationPlugins, __wordTypes, __replacementBytecodeProvider);
-                registerAESPlugins(__invocationPlugins, __replacementBytecodeProvider);
-                registerCRC32Plugins(__invocationPlugins, __replacementBytecodeProvider);
-                registerCRC32CPlugins(__invocationPlugins, __replacementBytecodeProvider);
-                registerBigIntegerPlugins(__invocationPlugins, __replacementBytecodeProvider);
-                registerSHAPlugins(__invocationPlugins, __replacementBytecodeProvider);
                 registerUnsafePlugins(__invocationPlugins, __replacementBytecodeProvider);
                 StandardGraphBuilderPlugins.registerInvocationPlugins(__metaAccess, __snippetReflection, __invocationPlugins, __replacementBytecodeProvider, true);
                 registerArrayPlugins(__invocationPlugins, __replacementBytecodeProvider);
@@ -411,94 +396,10 @@ public final class HotSpotGraphBuilderPlugins
                 return true;
             }
         });
-
-        __r.registerMethodSubstitution(ThreadSubstitutions.class, "isInterrupted", Receiver.class, boolean.class);
     }
-
-    // @def
-    public static final String cbcEncryptName = "implEncrypt";
-    // @def
-    public static final String cbcDecryptName = "implDecrypt";
-    // @def
-    public static final String aesEncryptName = "implEncryptBlock";
-    // @def
-    public static final String aesDecryptName = "implDecryptBlock";
 
     // @def
     public static final String reflectionClass = "jdk.internal.reflect.Reflection";
     // @def
     public static final String constantPoolClass = "jdk.internal.reflect.ConstantPool";
-
-    private static void registerAESPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
-    {
-        if (HotSpotRuntime.useAESIntrinsics)
-        {
-            Registration __r = new Registration(__plugins, "com.sun.crypto.provider.CipherBlockChaining", __bytecodeProvider);
-            __r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcEncryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
-            __r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcDecryptName, cbcDecryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
-            __r = new Registration(__plugins, "com.sun.crypto.provider.AESCrypt", __bytecodeProvider);
-            __r.registerMethodSubstitution(AESCryptSubstitutions.class, aesEncryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
-            __r.registerMethodSubstitution(AESCryptSubstitutions.class, aesDecryptName, aesDecryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
-        }
-    }
-
-    private static void registerSHAPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
-    {
-        if (HotSpotRuntime.useSHA256Intrinsics)
-        {
-            Registration __r = new Registration(__plugins, "sun.security.provider.SHA2", __bytecodeProvider);
-            __r.registerMethodSubstitution(SHA2Substitutions.class, SHA2Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
-        }
-        if (HotSpotRuntime.useSHA512Intrinsics)
-        {
-            Registration __r = new Registration(__plugins, "sun.security.provider.SHA5", __bytecodeProvider);
-            __r.registerMethodSubstitution(SHA5Substitutions.class, SHA5Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
-        }
-    }
-
-    private static void registerBigIntegerPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
-    {
-        Registration __r = new Registration(__plugins, BigInteger.class, __bytecodeProvider);
-        if (HotSpotRuntime.useMulAddIntrinsic)
-        {
-            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMulAdd", int[].class, int[].class, int.class, int.class, int.class);
-        }
-        if (HotSpotRuntime.useMultiplyToLenIntrinsic)
-        {
-            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMultiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class, int[].class);
-        }
-        if (HotSpotRuntime.useSquareToLenIntrinsic)
-        {
-            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implSquareToLen", int[].class, int.class, int[].class, int.class);
-        }
-        if (HotSpotRuntime.useMontgomeryMultiplyIntrinsic)
-        {
-            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomeryMultiply", int[].class, int[].class, int[].class, int.class, long.class, int[].class);
-        }
-        if (HotSpotRuntime.useMontgomerySquareIntrinsic)
-        {
-            __r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMontgomerySquare", int[].class, int[].class, int.class, long.class, int[].class);
-        }
-    }
-
-    private static void registerCRC32Plugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
-    {
-        if (HotSpotRuntime.useCRC32Intrinsics)
-        {
-            Registration __r = new Registration(__plugins, CRC32.class, __bytecodeProvider);
-            __r.registerMethodSubstitution(CRC32Substitutions.class, "update", int.class, int.class);
-            __r.registerMethodSubstitution(CRC32Substitutions.class, "updateBytes0", int.class, byte[].class, int.class, int.class);
-            __r.registerMethodSubstitution(CRC32Substitutions.class, "updateByteBuffer0", int.class, long.class, int.class, int.class);
-        }
-    }
-
-    private static void registerCRC32CPlugins(InvocationPlugins __plugins, BytecodeProvider __bytecodeProvider)
-    {
-        if (HotSpotRuntime.useCRC32CIntrinsics)
-        {
-            Registration __r = new Registration(__plugins, "java.util.zip.CRC32C", __bytecodeProvider);
-            __r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateBytes", int.class, byte[].class, int.class, int.class);
-            __r.registerMethodSubstitution(CRC32CSubstitutions.class, "updateDirectByteBuffer", int.class, long.class, int.class, int.class);
-        }
-    }
 }

@@ -32,17 +32,7 @@ public final class HotSpotRuntime
         useTLAB                        = c.getFlag("UseTLAB",                        Boolean.class),
         useBiasedLocking               = c.getFlag("UseBiasedLocking",               Boolean.class),
         usePopCountInstruction         = c.getFlag("UsePopCountInstruction",         Boolean.class),
-        useAESIntrinsics               = c.getFlag("UseAESIntrinsics",               Boolean.class),
-        useCRC32Intrinsics             = c.getFlag("UseCRC32Intrinsics",             Boolean.class),
-        useCRC32CIntrinsics            = c.getFlag("UseCRC32CIntrinsics",            Boolean.class),
         threadLocalHandshakes          = c.getFlag("ThreadLocalHandshakes",          Boolean.class),
-        useSHA256Intrinsics            = c.getFlag("UseSHA256Intrinsics",            Boolean.class),
-        useSHA512Intrinsics            = c.getFlag("UseSHA512Intrinsics",            Boolean.class),
-        useMulAddIntrinsic             = c.getFlag("UseMulAddIntrinsic",             Boolean.class),
-        useMultiplyToLenIntrinsic      = c.getFlag("UseMultiplyToLenIntrinsic",      Boolean.class),
-        useSquareToLenIntrinsic        = c.getFlag("UseSquareToLenIntrinsic",        Boolean.class),
-        useMontgomeryMultiplyIntrinsic = c.getFlag("UseMontgomeryMultiplyIntrinsic", Boolean.class),
-        useMontgomerySquareIntrinsic   = c.getFlag("UseMontgomerySquareIntrinsic",   Boolean.class),
         useG1GC                        = c.getFlag("UseG1GC",                        Boolean.class),
         useDeferredInitBarriers        = c.getFlag("ReduceInitialCardMarks",         Boolean.class);
 
@@ -144,7 +134,6 @@ public final class HotSpotRuntime
         threadTlabOffset                 = c.getFieldOffset("Thread::_tlab",                        Integer.class, "ThreadLocalAllocBuffer"),
         javaThreadAnchorOffset           = c.getFieldOffset("JavaThread::_anchor",                  Integer.class, "JavaFrameAnchor"),
         threadObjectOffset               = c.getFieldOffset("JavaThread::_threadObj",               Integer.class, "oop"),
-        osThreadOffset                   = c.getFieldOffset("JavaThread::_osthread",                Integer.class, "OSThread*"),
         threadIsMethodHandleReturnOffset = c.getFieldOffset("JavaThread::_is_method_handle_return", Integer.class, "int"),
         objectResultOffset               = c.getFieldOffset("JavaThread::_vm_result",               Integer.class, "oop");
 
@@ -157,8 +146,7 @@ public final class HotSpotRuntime
         threadExceptionPcOffset        = c.getFieldOffset("JavaThread::_exception_pc",               Integer.class, "address"),
         pendingExceptionOffset         = c.getFieldOffset("ThreadShadow::_pending_exception",        Integer.class, "oop"),
         pendingDeoptimizationOffset    = c.getFieldOffset("JavaThread::_pending_deoptimization",     Integer.class, "int"),
-        pendingFailedSpeculationOffset = c.getFieldOffset("JavaThread::_pending_failed_speculation", Integer.class, "oop"),
-        osThreadInterruptedOffset      = c.getFieldOffset("OSThread::_interrupted",                  Integer.class, "jint");
+        pendingFailedSpeculationOffset = c.getFieldOffset("JavaThread::_pending_failed_speculation", Integer.class, "oop");
 
     // @defs
     public static final int
@@ -338,23 +326,6 @@ public final class HotSpotRuntime
 
     // @defs
     public static final long
-        aescryptEncryptBlockStub               = c.getFieldValue("StubRoutines::_aescrypt_encryptBlock",               Long.class, "address"),
-        aescryptDecryptBlockStub               = c.getFieldValue("StubRoutines::_aescrypt_decryptBlock",               Long.class, "address"),
-        cipherBlockChainingEncryptAESCryptStub = c.getFieldValue("StubRoutines::_cipherBlockChaining_encryptAESCrypt", Long.class, "address"),
-        cipherBlockChainingDecryptAESCryptStub = c.getFieldValue("StubRoutines::_cipherBlockChaining_decryptAESCrypt", Long.class, "address"),
-        crcTableAddress                        = c.getFieldValue("StubRoutines::_crc_table_adr",                       Long.class, "address"),
-        updateBytesCRC32Stub                   = c.getFieldValue("StubRoutines::_updateBytesCRC32",                    Long.class, "address"),
-        updateBytesCRC32C                      = c.getFieldValue("StubRoutines::_updateBytesCRC32C",                   Long.class, "address"),
-        sha256ImplCompress                     = c.getFieldValue("StubRoutines::_sha256_implCompress",                 Long.class, "address"),
-        sha512ImplCompress                     = c.getFieldValue("StubRoutines::_sha512_implCompress",                 Long.class, "address"),
-        multiplyToLen                          = c.getFieldValue("StubRoutines::_multiplyToLen",                       Long.class, "address"),
-        squareToLen                            = c.getFieldValue("StubRoutines::_squareToLen",                         Long.class, "address"),
-        mulAdd                                 = c.getFieldValue("StubRoutines::_mulAdd",                              Long.class, "address"),
-        montgomeryMultiply                     = c.getFieldValue("StubRoutines::_montgomeryMultiply",                  Long.class, "address"),
-        montgomerySquare                       = c.getFieldValue("StubRoutines::_montgomerySquare",                    Long.class, "address");
-
-    // @defs
-    public static final long
         jbyteArraycopy     = c.getFieldValue("StubRoutines::_jbyte_arraycopy",      Long.class, "address"),
         jshortArraycopy    = c.getFieldValue("StubRoutines::_jshort_arraycopy",     Long.class, "address"),
         jintArraycopy      = c.getFieldValue("StubRoutines::_jint_arraycopy",       Long.class, "address"),
@@ -403,7 +374,6 @@ public final class HotSpotRuntime
         newMultiArrayAddress                   = c.getAddress("JVMCIRuntime::new_multi_array"),
         dynamicNewArrayAddress                 = c.getAddress("JVMCIRuntime::dynamic_new_array"),
         dynamicNewInstanceAddress              = c.getAddress("JVMCIRuntime::dynamic_new_instance"),
-        threadIsInterruptedAddress             = c.getAddress("JVMCIRuntime::thread_is_interrupted"),
         identityHashCodeAddress                = c.getAddress("JVMCIRuntime::identity_hash_code"),
         exceptionHandlerForPcAddress           = c.getAddress("JVMCIRuntime::exception_handler_for_pc"),
         monitorenterAddress                    = c.getAddress("JVMCIRuntime::monitorenter"),
@@ -446,7 +416,6 @@ public final class HotSpotRuntime
         heapTopAddressMark                      = c.getConstant("CodeInstaller::HEAP_TOP_ADDRESS",                       Integer.class),
         heapEndAddressMark                      = c.getConstant("CodeInstaller::HEAP_END_ADDRESS",                       Integer.class),
         narrowKlassBaseAddressMark              = c.getConstant("CodeInstaller::NARROW_KLASS_BASE_ADDRESS",              Integer.class),
-        crcTableAddressMark                     = c.getConstant("CodeInstaller::CRC_TABLE_ADDRESS",                      Integer.class),
         logOfHeapRegionGrainBytesMark           = c.getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES",         Integer.class),
         inlineContiguousAllocationSupportedMark = c.getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class);
 

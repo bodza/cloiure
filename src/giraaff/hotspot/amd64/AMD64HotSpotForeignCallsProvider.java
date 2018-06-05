@@ -22,8 +22,6 @@ import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
-import giraaff.hotspot.replacements.CRC32CSubstitutions;
-import giraaff.hotspot.replacements.CRC32Substitutions;
 import giraaff.word.WordTypes;
 
 // @class AMD64HotSpotForeignCallsProvider
@@ -53,15 +51,6 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
         CallingConvention __exceptionCc = new CallingConvention(0, Value.ILLEGAL, __exception, __exceptionPc);
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER, 0L, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, __exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER, HotSpotForeignCallLinkage.JUMP_ADDRESS, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, __exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
-
-        if (HotSpotRuntime.useCRC32Intrinsics)
-        {
-            registerForeignCall(CRC32Substitutions.UPDATE_BYTES_CRC32, HotSpotRuntime.updateBytesCRC32Stub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
-        }
-        if (HotSpotRuntime.useCRC32CIntrinsics)
-        {
-            registerForeignCall(CRC32CSubstitutions.UPDATE_BYTES_CRC32C, HotSpotRuntime.updateBytesCRC32C, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
-        }
 
         super.initialize(__providers);
     }
