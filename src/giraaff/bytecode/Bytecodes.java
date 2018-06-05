@@ -31,11 +31,6 @@ public final class Bytecodes
         ICONST_5        =   8, // 0x08
         LCONST_0        =   9, // 0x09
         LCONST_1        =  10, // 0x0A
-        FCONST_0        =  11, // 0x0B
-        FCONST_1        =  12, // 0x0C
-        FCONST_2        =  13, // 0x0D
-        DCONST_0        =  14, // 0x0E
-        DCONST_1        =  15, // 0x0F
         BIPUSH          =  16, // 0x10
         SIPUSH          =  17, // 0x11
         LDC             =  18, // 0x12
@@ -43,8 +38,6 @@ public final class Bytecodes
         LDC2_W          =  20, // 0x14
         ILOAD           =  21, // 0x15
         LLOAD           =  22, // 0x16
-        FLOAD           =  23, // 0x17
-        DLOAD           =  24, // 0x18
         ALOAD           =  25, // 0x19
         ILOAD_0         =  26, // 0x1A
         ILOAD_1         =  27, // 0x1B
@@ -54,30 +47,18 @@ public final class Bytecodes
         LLOAD_1         =  31, // 0x1F
         LLOAD_2         =  32, // 0x20
         LLOAD_3         =  33, // 0x21
-        FLOAD_0         =  34, // 0x22
-        FLOAD_1         =  35, // 0x23
-        FLOAD_2         =  36, // 0x24
-        FLOAD_3         =  37, // 0x25
-        DLOAD_0         =  38, // 0x26
-        DLOAD_1         =  39, // 0x27
-        DLOAD_2         =  40, // 0x28
-        DLOAD_3         =  41, // 0x29
         ALOAD_0         =  42, // 0x2A
         ALOAD_1         =  43, // 0x2B
         ALOAD_2         =  44, // 0x2C
         ALOAD_3         =  45, // 0x2D
         IALOAD          =  46, // 0x2E
         LALOAD          =  47, // 0x2F
-        FALOAD          =  48, // 0x30
-        DALOAD          =  49, // 0x31
         AALOAD          =  50, // 0x32
         BALOAD          =  51, // 0x33
         CALOAD          =  52, // 0x34
         SALOAD          =  53, // 0x35
         ISTORE          =  54, // 0x36
         LSTORE          =  55, // 0x37
-        FSTORE          =  56, // 0x38
-        DSTORE          =  57, // 0x39
         ASTORE          =  58, // 0x3A
         ISTORE_0        =  59, // 0x3B
         ISTORE_1        =  60, // 0x3C
@@ -87,22 +68,12 @@ public final class Bytecodes
         LSTORE_1        =  64, // 0x40
         LSTORE_2        =  65, // 0x41
         LSTORE_3        =  66, // 0x42
-        FSTORE_0        =  67, // 0x43
-        FSTORE_1        =  68, // 0x44
-        FSTORE_2        =  69, // 0x45
-        FSTORE_3        =  70, // 0x46
-        DSTORE_0        =  71, // 0x47
-        DSTORE_1        =  72, // 0x48
-        DSTORE_2        =  73, // 0x49
-        DSTORE_3        =  74, // 0x4A
         ASTORE_0        =  75, // 0x4B
         ASTORE_1        =  76, // 0x4C
         ASTORE_2        =  77, // 0x4D
         ASTORE_3        =  78, // 0x4E
         IASTORE         =  79, // 0x4F
         LASTORE         =  80, // 0x50
-        FASTORE         =  81, // 0x51
-        DASTORE         =  82, // 0x52
         AASTORE         =  83, // 0x53
         BASTORE         =  84, // 0x54
         CASTORE         =  85, // 0x55
@@ -118,28 +89,16 @@ public final class Bytecodes
         SWAP            =  95, // 0x5F
         IADD            =  96, // 0x60
         LADD            =  97, // 0x61
-        FADD            =  98, // 0x62
-        DADD            =  99, // 0x63
         ISUB            = 100, // 0x64
         LSUB            = 101, // 0x65
-        FSUB            = 102, // 0x66
-        DSUB            = 103, // 0x67
         IMUL            = 104, // 0x68
         LMUL            = 105, // 0x69
-        FMUL            = 106, // 0x6A
-        DMUL            = 107, // 0x6B
         IDIV            = 108, // 0x6C
         LDIV            = 109, // 0x6D
-        FDIV            = 110, // 0x6E
-        DDIV            = 111, // 0x6F
         IREM            = 112, // 0x70
         LREM            = 113, // 0x71
-        FREM            = 114, // 0x72
-        DREM            = 115, // 0x73
         INEG            = 116, // 0x74
         LNEG            = 117, // 0x75
-        FNEG            = 118, // 0x76
-        DNEG            = 119, // 0x77
         ISHL            = 120, // 0x78
         LSHL            = 121, // 0x79
         ISHR            = 122, // 0x7A
@@ -154,25 +113,11 @@ public final class Bytecodes
         LXOR            = 131, // 0x83
         IINC            = 132, // 0x84
         I2L             = 133, // 0x85
-        I2F             = 134, // 0x86
-        I2D             = 135, // 0x87
         L2I             = 136, // 0x88
-        L2F             = 137, // 0x89
-        L2D             = 138, // 0x8A
-        F2I             = 139, // 0x8B
-        F2L             = 140, // 0x8C
-        F2D             = 141, // 0x8D
-        D2I             = 142, // 0x8E
-        D2L             = 143, // 0x8F
-        D2F             = 144, // 0x90
         I2B             = 145, // 0x91
         I2C             = 146, // 0x92
         I2S             = 147, // 0x93
         LCMP            = 148, // 0x94
-        FCMPL           = 149, // 0x95
-        FCMPG           = 150, // 0x96
-        DCMPL           = 151, // 0x97
-        DCMPG           = 152, // 0x98
         IFEQ            = 153, // 0x99
         IFNE            = 154, // 0x9A
         IFLT            = 155, // 0x9B
@@ -194,8 +139,6 @@ public final class Bytecodes
         LOOKUPSWITCH    = 171, // 0xAB
         IRETURN         = 172, // 0xAC
         LRETURN         = 173, // 0xAD
-        FRETURN         = 174, // 0xAE
-        DRETURN         = 175, // 0xAF
         ARETURN         = 176, // 0xB0
         RETURN          = 177, // 0xB1
         GETSTATIC       = 178, // 0xB2
@@ -230,7 +173,7 @@ public final class Bytecodes
     // The last opcode defined by the JVM specification. To iterate over all JVM bytecodes:
     //
     // <pre>
-    // for (int opcode = 0; opcode &lt;= Bytecodes.LAST_JVM_OPCODE; ++opcode) {
+    // for (int opcode = 0; opcode <= Bytecodes.LAST_JVM_OPCODE; ++opcode) {
     // }
     // </pre>
     ///
@@ -370,11 +313,6 @@ public final class Bytecodes
         def(ICONST_5        , "iconst_5"        , "b"    ,  1);
         def(LCONST_0        , "lconst_0"        , "b"    ,  2);
         def(LCONST_1        , "lconst_1"        , "b"    ,  2);
-        def(FCONST_0        , "fconst_0"        , "b"    ,  1);
-        def(FCONST_1        , "fconst_1"        , "b"    ,  1);
-        def(FCONST_2        , "fconst_2"        , "b"    ,  1);
-        def(DCONST_0        , "dconst_0"        , "b"    ,  2);
-        def(DCONST_1        , "dconst_1"        , "b"    ,  2);
         def(BIPUSH          , "bipush"          , "bc"   ,  1);
         def(SIPUSH          , "sipush"          , "bcc"  ,  1);
         def(LDC             , "ldc"             , "bi"   ,  1, Flags.TRAP);
@@ -382,8 +320,6 @@ public final class Bytecodes
         def(LDC2_W          , "ldc2_w"          , "bii"  ,  2, Flags.TRAP);
         def(ILOAD           , "iload"           , "bi"   ,  1, Flags.LOAD);
         def(LLOAD           , "lload"           , "bi"   ,  2, Flags.LOAD);
-        def(FLOAD           , "fload"           , "bi"   ,  1, Flags.LOAD);
-        def(DLOAD           , "dload"           , "bi"   ,  2, Flags.LOAD);
         def(ALOAD           , "aload"           , "bi"   ,  1, Flags.LOAD);
         def(ILOAD_0         , "iload_0"         , "b"    ,  1, Flags.LOAD);
         def(ILOAD_1         , "iload_1"         , "b"    ,  1, Flags.LOAD);
@@ -393,30 +329,18 @@ public final class Bytecodes
         def(LLOAD_1         , "lload_1"         , "b"    ,  2, Flags.LOAD);
         def(LLOAD_2         , "lload_2"         , "b"    ,  2, Flags.LOAD);
         def(LLOAD_3         , "lload_3"         , "b"    ,  2, Flags.LOAD);
-        def(FLOAD_0         , "fload_0"         , "b"    ,  1, Flags.LOAD);
-        def(FLOAD_1         , "fload_1"         , "b"    ,  1, Flags.LOAD);
-        def(FLOAD_2         , "fload_2"         , "b"    ,  1, Flags.LOAD);
-        def(FLOAD_3         , "fload_3"         , "b"    ,  1, Flags.LOAD);
-        def(DLOAD_0         , "dload_0"         , "b"    ,  2, Flags.LOAD);
-        def(DLOAD_1         , "dload_1"         , "b"    ,  2, Flags.LOAD);
-        def(DLOAD_2         , "dload_2"         , "b"    ,  2, Flags.LOAD);
-        def(DLOAD_3         , "dload_3"         , "b"    ,  2, Flags.LOAD);
         def(ALOAD_0         , "aload_0"         , "b"    ,  1, Flags.LOAD);
         def(ALOAD_1         , "aload_1"         , "b"    ,  1, Flags.LOAD);
         def(ALOAD_2         , "aload_2"         , "b"    ,  1, Flags.LOAD);
         def(ALOAD_3         , "aload_3"         , "b"    ,  1, Flags.LOAD);
         def(IALOAD          , "iaload"          , "b"    , -1, Flags.TRAP);
         def(LALOAD          , "laload"          , "b"    ,  0, Flags.TRAP);
-        def(FALOAD          , "faload"          , "b"    , -1, Flags.TRAP);
-        def(DALOAD          , "daload"          , "b"    ,  0, Flags.TRAP);
         def(AALOAD          , "aaload"          , "b"    , -1, Flags.TRAP);
         def(BALOAD          , "baload"          , "b"    , -1, Flags.TRAP);
         def(CALOAD          , "caload"          , "b"    , -1, Flags.TRAP);
         def(SALOAD          , "saload"          , "b"    , -1, Flags.TRAP);
         def(ISTORE          , "istore"          , "bi"   , -1, Flags.STORE);
         def(LSTORE          , "lstore"          , "bi"   , -2, Flags.STORE);
-        def(FSTORE          , "fstore"          , "bi"   , -1, Flags.STORE);
-        def(DSTORE          , "dstore"          , "bi"   , -2, Flags.STORE);
         def(ASTORE          , "astore"          , "bi"   , -1, Flags.STORE);
         def(ISTORE_0        , "istore_0"        , "b"    , -1, Flags.STORE);
         def(ISTORE_1        , "istore_1"        , "b"    , -1, Flags.STORE);
@@ -426,22 +350,12 @@ public final class Bytecodes
         def(LSTORE_1        , "lstore_1"        , "b"    , -2, Flags.STORE);
         def(LSTORE_2        , "lstore_2"        , "b"    , -2, Flags.STORE);
         def(LSTORE_3        , "lstore_3"        , "b"    , -2, Flags.STORE);
-        def(FSTORE_0        , "fstore_0"        , "b"    , -1, Flags.STORE);
-        def(FSTORE_1        , "fstore_1"        , "b"    , -1, Flags.STORE);
-        def(FSTORE_2        , "fstore_2"        , "b"    , -1, Flags.STORE);
-        def(FSTORE_3        , "fstore_3"        , "b"    , -1, Flags.STORE);
-        def(DSTORE_0        , "dstore_0"        , "b"    , -2, Flags.STORE);
-        def(DSTORE_1        , "dstore_1"        , "b"    , -2, Flags.STORE);
-        def(DSTORE_2        , "dstore_2"        , "b"    , -2, Flags.STORE);
-        def(DSTORE_3        , "dstore_3"        , "b"    , -2, Flags.STORE);
         def(ASTORE_0        , "astore_0"        , "b"    , -1, Flags.STORE);
         def(ASTORE_1        , "astore_1"        , "b"    , -1, Flags.STORE);
         def(ASTORE_2        , "astore_2"        , "b"    , -1, Flags.STORE);
         def(ASTORE_3        , "astore_3"        , "b"    , -1, Flags.STORE);
         def(IASTORE         , "iastore"         , "b"    , -3, Flags.TRAP);
         def(LASTORE         , "lastore"         , "b"    , -4, Flags.TRAP);
-        def(FASTORE         , "fastore"         , "b"    , -3, Flags.TRAP);
-        def(DASTORE         , "dastore"         , "b"    , -4, Flags.TRAP);
         def(AASTORE         , "aastore"         , "b"    , -3, Flags.TRAP);
         def(BASTORE         , "bastore"         , "b"    , -3, Flags.TRAP);
         def(CASTORE         , "castore"         , "b"    , -3, Flags.TRAP);
@@ -457,28 +371,16 @@ public final class Bytecodes
         def(SWAP            , "swap"            , "b"    ,  0);
         def(IADD            , "iadd"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
         def(LADD            , "ladd"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(FADD            , "fadd"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(DADD            , "dadd"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
         def(ISUB            , "isub"            , "b"    , -1);
         def(LSUB            , "lsub"            , "b"    , -2);
-        def(FSUB            , "fsub"            , "b"    , -1);
-        def(DSUB            , "dsub"            , "b"    , -2);
         def(IMUL            , "imul"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
         def(LMUL            , "lmul"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(FMUL            , "fmul"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(DMUL            , "dmul"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
         def(IDIV            , "idiv"            , "b"    , -1, Flags.TRAP);
         def(LDIV            , "ldiv"            , "b"    , -2, Flags.TRAP);
-        def(FDIV            , "fdiv"            , "b"    , -1);
-        def(DDIV            , "ddiv"            , "b"    , -2);
         def(IREM            , "irem"            , "b"    , -1, Flags.TRAP);
         def(LREM            , "lrem"            , "b"    , -2, Flags.TRAP);
-        def(FREM            , "frem"            , "b"    , -1);
-        def(DREM            , "drem"            , "b"    , -2);
         def(INEG            , "ineg"            , "b"    ,  0);
         def(LNEG            , "lneg"            , "b"    ,  0);
-        def(FNEG            , "fneg"            , "b"    ,  0);
-        def(DNEG            , "dneg"            , "b"    ,  0);
         def(ISHL            , "ishl"            , "b"    , -1);
         def(LSHL            , "lshl"            , "b"    , -1);
         def(ISHR            , "ishr"            , "b"    , -1);
@@ -493,25 +395,11 @@ public final class Bytecodes
         def(LXOR            , "lxor"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
         def(IINC            , "iinc"            , "bic"  ,  0, Flags.LOAD | Flags.STORE);
         def(I2L             , "i2l"             , "b"    ,  1);
-        def(I2F             , "i2f"             , "b"    ,  0);
-        def(I2D             , "i2d"             , "b"    ,  1);
         def(L2I             , "l2i"             , "b"    , -1);
-        def(L2F             , "l2f"             , "b"    , -1);
-        def(L2D             , "l2d"             , "b"    ,  0);
-        def(F2I             , "f2i"             , "b"    ,  0);
-        def(F2L             , "f2l"             , "b"    ,  1);
-        def(F2D             , "f2d"             , "b"    ,  1);
-        def(D2I             , "d2i"             , "b"    , -1);
-        def(D2L             , "d2l"             , "b"    ,  0);
-        def(D2F             , "d2f"             , "b"    , -1);
         def(I2B             , "i2b"             , "b"    ,  0);
         def(I2C             , "i2c"             , "b"    ,  0);
         def(I2S             , "i2s"             , "b"    ,  0);
         def(LCMP            , "lcmp"            , "b"    , -3);
-        def(FCMPL           , "fcmpl"           , "b"    , -1);
-        def(FCMPG           , "fcmpg"           , "b"    , -1);
-        def(DCMPL           , "dcmpl"           , "b"    , -3);
-        def(DCMPG           , "dcmpg"           , "b"    , -3);
         def(IFEQ            , "ifeq"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
         def(IFNE            , "ifne"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
         def(IFLT            , "iflt"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
@@ -533,8 +421,6 @@ public final class Bytecodes
         def(LOOKUPSWITCH    , "lookupswitch"    , ""     , -1, Flags.STOP);
         def(IRETURN         , "ireturn"         , "b"    , -1, Flags.TRAP | Flags.STOP);
         def(LRETURN         , "lreturn"         , "b"    , -2, Flags.TRAP | Flags.STOP);
-        def(FRETURN         , "freturn"         , "b"    , -1, Flags.TRAP | Flags.STOP);
-        def(DRETURN         , "dreturn"         , "b"    , -2, Flags.TRAP | Flags.STOP);
         def(ARETURN         , "areturn"         , "b"    , -1, Flags.TRAP | Flags.STOP);
         def(RETURN          , "return"          , "b"    ,  0, Flags.TRAP | Flags.STOP);
         def(GETSTATIC       , "getstatic"       , "bjj"  ,  1, Flags.TRAP | Flags.FIELD_READ);
@@ -759,49 +645,39 @@ public final class Bytecodes
         switch (__op)
         {
             // arithmetic ops
-            case IADD: // fall through
-            case LADD: // fall through
-            case FADD: // fall through
-            case DADD:
+            case IADD:
+            case LADD:
                 return "+";
-            case ISUB: // fall through
-            case LSUB: // fall through
-            case FSUB: // fall through
-            case DSUB:
+            case ISUB:
+            case LSUB:
                 return "-";
-            case IMUL: // fall through
-            case LMUL: // fall through
-            case FMUL: // fall through
-            case DMUL:
+            case IMUL:
+            case LMUL:
                 return "*";
-            case IDIV: // fall through
-            case LDIV: // fall through
-            case FDIV: // fall through
-            case DDIV:
+            case IDIV:
+            case LDIV:
                 return "/";
-            case IREM: // fall through
-            case LREM: // fall through
-            case FREM: // fall through
-            case DREM:
+            case IREM:
+            case LREM:
                 return "%";
             // shift ops
-            case ISHL: // fall through
+            case ISHL:
             case LSHL:
                 return "<<";
-            case ISHR: // fall through
+            case ISHR:
             case LSHR:
                 return ">>";
-            case IUSHR: // fall through
+            case IUSHR:
             case LUSHR:
                 return ">>>";
             // logic ops
-            case IAND: // fall through
+            case IAND:
             case LAND:
                 return "&";
-            case IOR: // fall through
+            case IOR:
             case LOR:
                 return "|";
-            case IXOR: // fall through
+            case IXOR:
             case LXOR:
                 return "^";
         }
@@ -829,8 +705,7 @@ public final class Bytecodes
     private static void def(int __opcode, String __name, String __format, int __stackEffect, int __flags)
     {
         nameArray[__opcode] = __name;
-        int __instructionLength = __format.length();
-        lengthArray[__opcode] = __instructionLength;
+        lengthArray[__opcode] = __format.length();
         stackEffectArray[__opcode] = __stackEffect;
         Bytecodes.flagsArray[__opcode] = __flags;
     }

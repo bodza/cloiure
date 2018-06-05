@@ -4,7 +4,6 @@ import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
 import giraaff.core.common.LIRKind;
-import giraaff.core.common.calc.FloatConvert;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.Variable;
 
@@ -54,8 +53,6 @@ public interface ArithmeticLIRGeneratorTool
 
     Value emitUShr(Value __a, Value __b);
 
-    Value emitFloatConvert(FloatConvert __op, Value __inputVal);
-
     Value emitReinterpret(LIRKind __to, Value __inputVal);
 
     Value emitNarrow(Value __inputVal, int __bits);
@@ -63,10 +60,6 @@ public interface ArithmeticLIRGeneratorTool
     Value emitSignExtend(Value __inputVal, int __fromBits, int __toBits);
 
     Value emitZeroExtend(Value __inputVal, int __fromBits, int __toBits);
-
-    Value emitMathAbs(Value __input);
-
-    Value emitMathSqrt(Value __input);
 
     Value emitBitCount(Value __operand);
 

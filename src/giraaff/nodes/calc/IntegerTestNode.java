@@ -14,7 +14,7 @@ import giraaff.nodes.ValueNode;
 
 ///
 // This node will perform a "test" operation on its arguments. Its result is equivalent to the
-// expression "(x &amp; y) == 0", meaning that it will return true if (and only if) no bit is set in
+// expression "(x & y) == 0", meaning that it will return true if (and only if) no bit is set in
 // both x and y.
 ///
 // @class IntegerTestNode

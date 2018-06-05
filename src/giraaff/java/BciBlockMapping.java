@@ -572,11 +572,9 @@ public final class BciBlockMapping
 
             switch (__stream.currentBC())
             {
-                case Bytecodes.IRETURN: // fall through
-                case Bytecodes.LRETURN: // fall through
-                case Bytecodes.FRETURN: // fall through
-                case Bytecodes.DRETURN: // fall through
-                case Bytecodes.ARETURN: // fall through
+                case Bytecodes.IRETURN:
+                case Bytecodes.LRETURN:
+                case Bytecodes.ARETURN:
                 case Bytecodes.RETURN:
                 {
                     __current = null;
@@ -592,21 +590,21 @@ public final class BciBlockMapping
                     }
                     break;
                 }
-                case Bytecodes.IFEQ:      // fall through
-                case Bytecodes.IFNE:      // fall through
-                case Bytecodes.IFLT:      // fall through
-                case Bytecodes.IFGE:      // fall through
-                case Bytecodes.IFGT:      // fall through
-                case Bytecodes.IFLE:      // fall through
-                case Bytecodes.IF_ICMPEQ: // fall through
-                case Bytecodes.IF_ICMPNE: // fall through
-                case Bytecodes.IF_ICMPLT: // fall through
-                case Bytecodes.IF_ICMPGE: // fall through
-                case Bytecodes.IF_ICMPGT: // fall through
-                case Bytecodes.IF_ICMPLE: // fall through
-                case Bytecodes.IF_ACMPEQ: // fall through
-                case Bytecodes.IF_ACMPNE: // fall through
-                case Bytecodes.IFNULL:    // fall through
+                case Bytecodes.IFEQ:
+                case Bytecodes.IFNE:
+                case Bytecodes.IFLT:
+                case Bytecodes.IFGE:
+                case Bytecodes.IFGT:
+                case Bytecodes.IFLE:
+                case Bytecodes.IF_ICMPEQ:
+                case Bytecodes.IF_ICMPNE:
+                case Bytecodes.IF_ICMPLT:
+                case Bytecodes.IF_ICMPGE:
+                case Bytecodes.IF_ICMPGT:
+                case Bytecodes.IF_ICMPLE:
+                case Bytecodes.IF_ACMPEQ:
+                case Bytecodes.IF_ACMPNE:
+                case Bytecodes.IFNULL:
                 case Bytecodes.IFNONNULL:
                 {
                     __current = null;
@@ -672,16 +670,12 @@ public final class BciBlockMapping
                 }
                 case Bytecodes.IASTORE:
                 case Bytecodes.LASTORE:
-                case Bytecodes.FASTORE:
-                case Bytecodes.DASTORE:
                 case Bytecodes.AASTORE:
                 case Bytecodes.BASTORE:
                 case Bytecodes.CASTORE:
                 case Bytecodes.SASTORE:
                 case Bytecodes.IALOAD:
                 case Bytecodes.LALOAD:
-                case Bytecodes.FALOAD:
-                case Bytecodes.DALOAD:
                 case Bytecodes.AALOAD:
                 case Bytecodes.BALOAD:
                 case Bytecodes.CALOAD:

@@ -189,7 +189,7 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     // criterion: {@code (a + 2) + 1 => a + (1 + 2)}.
     //
     // This method accepts only {@linkplain BinaryOp#isAssociative() associative} operations such as
-    // +, -, *, &amp;, | and ^.
+    // +, -, *, &, | and ^.
     ///
     public static ValueNode reassociate(BinaryArithmeticNode<?> __node, NodePredicate __criterion, ValueNode __forX, ValueNode __forY, NodeView __view)
     {

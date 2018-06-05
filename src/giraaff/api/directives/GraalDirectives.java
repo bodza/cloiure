@@ -56,51 +56,6 @@ public final class GraalDirectives
     }
 
     ///
-    // Injects a probability for the given condition into the profiling information of a branch
-    // instruction. The probability must be a value between 0.0 and 1.0 (inclusive).
-    //
-    // Example usage (it specifies that the likelihood for a to be greater than b is 90%):
-    //
-    // <code>
-    // if (injectBranchProbability(0.9, a &gt; b)) {
-    //    // ...
-    // }
-    // </code>
-    //
-    // There are predefined constants for commonly used probabilities (see
-    // {@link #LIKELY_PROBABILITY} , {@link #UNLIKELY_PROBABILITY}, {@link #SLOWPATH_PROBABILITY},
-    // {@link #FASTPATH_PROBABILITY} ).
-    //
-    // @param probability the probability value between 0.0 and 1.0 that should be injected
-    ///
-    public static boolean injectBranchProbability(double __probability, boolean __condition)
-    {
-        return __condition;
-    }
-
-    ///
-    // Injects an average iteration count of a loop into the probability information of a loop exit
-    // condition. The iteration count specifies how often the condition is checked, i.e. in for and
-    // while loops it is one more than the body iteration count, and in do-while loops it is equal
-    // to the body iteration count. The iteration count must be >= 1.0.
-    //
-    // Example usage (it specifies that the expected iteration count of the loop condition is 500,
-    // so the iteration count of the loop body is 499):
-    //
-    // <code>
-    // for (int i = 0; injectIterationCount(500, i < array.length); i++) {
-    //     // ...
-    // }
-    // </code>
-    //
-    // @param iterations the expected number of iterations that should be injected
-    ///
-    public static boolean injectIterationCount(double __iterations, boolean __condition)
-    {
-        return injectBranchProbability(1. - 1. / __iterations, __condition);
-    }
-
-    ///
     // Consume a value, making sure the compiler doesn't optimize away the computation of this
     // value, even if it is otherwise unused.
     ///

@@ -11,7 +11,6 @@ import java.util.function.Predicate;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaKind;
 
-import giraaff.core.common.calc.FloatConvert;
 import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Add;
 import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.And;
 import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Div;
@@ -31,7 +30,6 @@ import giraaff.core.common.type.ArithmeticOpTable.ShiftOp.UShr;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Abs;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Neg;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Not;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Sqrt;
 
 ///
 // Information about arithmetic operations.
@@ -75,8 +73,6 @@ public final class ArithmeticOpTable
 
     // @field
     private final UnaryOp<Abs> ___abs;
-    // @field
-    private final UnaryOp<Sqrt> ___sqrt;
 
     // @field
     private final IntegerConvertOp<ZeroExtend> ___zeroExtend;
@@ -85,8 +81,6 @@ public final class ArithmeticOpTable
     // @field
     private final IntegerConvertOp<Narrow> ___narrow;
 
-    // @field
-    private final FloatConvertOp[] ___floatConvert;
     // @field
     private final int ___hash;
 
@@ -109,7 +103,7 @@ public final class ArithmeticOpTable
 
     public UnaryOp<?>[] getUnaryOps()
     {
-        return new UnaryOp<?>[] { this.___neg, this.___not, this.___abs, this.___sqrt };
+        return new UnaryOp<?>[] { this.___neg, this.___not, this.___abs };
     }
 
     public ShiftOp<?>[] getShiftOps()
@@ -123,7 +117,7 @@ public final class ArithmeticOpTable
     }
 
     // @def
-    public static final ArithmeticOpTable EMPTY = new ArithmeticOpTable(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    public static final ArithmeticOpTable EMPTY = new ArithmeticOpTable(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
     // @iface ArithmeticOpTable.ArithmeticOpWrapper
     public interface ArithmeticOpWrapper
@@ -135,8 +129,6 @@ public final class ArithmeticOpTable
         <OP> ShiftOp<OP> wrapShiftOp(ShiftOp<OP> __op);
 
         <OP> IntegerConvertOp<OP> wrapIntegerConvertOp(IntegerConvertOp<OP> __op);
-
-        FloatConvertOp wrapFloatConvertOp(FloatConvertOp __op);
     }
 
     private static <T> T wrapIfNonNull(Function<T, T> __wrapper, T __obj)
@@ -149,25 +141,6 @@ public final class ArithmeticOpTable
         {
             return __wrapper.apply(__obj);
         }
-    }
-
-    ///
-    // Filters {@code inputs} with {@code predicate}, applies {@code mapper} and adds them in the
-    // array provided by {@code arrayGenerator}.
-    //
-    // @return the array provided by {@code arrayGenerator}.
-    ///
-    private static <T, R> R[] filterAndMapToArray(T[] __inputs, Predicate<? super T> __predicate, Function<? super T, ? extends R> __mapper, IntFunction<R[]> __arrayGenerator)
-    {
-        List<R> __resultList = new ArrayList<>();
-        for (T __t : __inputs)
-        {
-            if (__predicate.test(__t))
-            {
-                __resultList.add(__mapper.apply(__t));
-            }
-        }
-        return __resultList.toArray(__arrayGenerator.apply(__resultList.size()));
     }
 
     public static ArithmeticOpTable wrap(ArithmeticOpWrapper __wrapper, ArithmeticOpTable __inner)
@@ -192,18 +165,16 @@ public final class ArithmeticOpTable
         ShiftOp<UShr> __ushr = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getUShr());
 
         UnaryOp<Abs> __abs = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getAbs());
-        UnaryOp<Sqrt> __sqrt = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getSqrt());
 
         IntegerConvertOp<ZeroExtend> __zeroExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getZeroExtend());
         IntegerConvertOp<SignExtend> __signExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getSignExtend());
         IntegerConvertOp<Narrow> __narrow = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getNarrow());
 
-        FloatConvertOp[] __floatConvert = filterAndMapToArray(__inner.___floatConvert, Objects::nonNull, __wrapper::wrapFloatConvertOp, FloatConvertOp[]::new);
-        return new ArithmeticOpTable(__neg, __add, __sub, __mul, __mulHigh, __umulHigh, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __sqrt, __zeroExtend, __signExtend, __narrow, __floatConvert);
+        return new ArithmeticOpTable(__neg, __add, __sub, __mul, __mulHigh, __umulHigh, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __zeroExtend, __signExtend, __narrow);
     }
 
     // @cons
-    protected ArithmeticOpTable(UnaryOp<Neg> __neg, BinaryOp<Add> __add, BinaryOp<Sub> __sub, BinaryOp<Mul> __mul, BinaryOp<MulHigh> __mulHigh, BinaryOp<UMulHigh> __umulHigh, BinaryOp<Div> __div, BinaryOp<Rem> __rem, UnaryOp<Not> __not, BinaryOp<And> __and, BinaryOp<Or> __or, BinaryOp<Xor> __xor, ShiftOp<Shl> __shl, ShiftOp<Shr> __shr, ShiftOp<UShr> __ushr, UnaryOp<Abs> __abs, UnaryOp<Sqrt> __sqrt, IntegerConvertOp<ZeroExtend> __zeroExtend, IntegerConvertOp<SignExtend> __signExtend, IntegerConvertOp<Narrow> __narrow, FloatConvertOp... __floatConvert)
+    protected ArithmeticOpTable(UnaryOp<Neg> __neg, BinaryOp<Add> __add, BinaryOp<Sub> __sub, BinaryOp<Mul> __mul, BinaryOp<MulHigh> __mulHigh, BinaryOp<UMulHigh> __umulHigh, BinaryOp<Div> __div, BinaryOp<Rem> __rem, UnaryOp<Not> __not, BinaryOp<And> __and, BinaryOp<Or> __or, BinaryOp<Xor> __xor, ShiftOp<Shl> __shl, ShiftOp<Shr> __shr, ShiftOp<UShr> __ushr, UnaryOp<Abs> __abs, IntegerConvertOp<ZeroExtend> __zeroExtend, IntegerConvertOp<SignExtend> __signExtend, IntegerConvertOp<Narrow> __narrow)
     {
         super();
         this.___neg = __neg;
@@ -222,17 +193,11 @@ public final class ArithmeticOpTable
         this.___shr = __shr;
         this.___ushr = __ushr;
         this.___abs = __abs;
-        this.___sqrt = __sqrt;
         this.___zeroExtend = __zeroExtend;
         this.___signExtend = __signExtend;
         this.___narrow = __narrow;
-        this.___floatConvert = new FloatConvertOp[FloatConvert.values().length];
-        for (FloatConvertOp __op : __floatConvert)
-        {
-            this.___floatConvert[__op.getFloatConvert().ordinal()] = __op;
-        }
 
-        this.___hash = Objects.hash(__neg, __add, __sub, __mul, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __sqrt, __zeroExtend, __signExtend, __narrow);
+        this.___hash = Objects.hash(__neg, __add, __sub, __mul, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __zeroExtend, __signExtend, __narrow);
     }
 
     @Override
@@ -370,14 +335,6 @@ public final class ArithmeticOpTable
     }
 
     ///
-    // Describes the square root operation.
-    ///
-    public UnaryOp<Sqrt> getSqrt()
-    {
-        return this.___sqrt;
-    }
-
-    ///
     // Describes the zero extend conversion.
     ///
     public IntegerConvertOp<ZeroExtend> getZeroExtend()
@@ -401,14 +358,6 @@ public final class ArithmeticOpTable
         return this.___narrow;
     }
 
-    ///
-    // Describes integer/float/double conversions.
-    ///
-    public FloatConvertOp getFloatConvert(FloatConvert __op)
-    {
-        return this.___floatConvert[__op.ordinal()];
-    }
-
     private boolean opsEquals(ArithmeticOpTable __that)
     {
         return Objects.equals(this.___neg, __that.___neg) &&
@@ -427,7 +376,6 @@ public final class ArithmeticOpTable
                Objects.equals(this.___shr, __that.___shr) &&
                Objects.equals(this.___ushr, __that.___ushr) &&
                Objects.equals(this.___abs, __that.___abs) &&
-               Objects.equals(this.___sqrt, __that.___sqrt) &&
                Objects.equals(this.___zeroExtend, __that.___zeroExtend) &&
                Objects.equals(this.___signExtend, __that.___signExtend) &&
                Objects.equals(this.___narrow, __that.___narrow);
@@ -451,10 +399,7 @@ public final class ArithmeticOpTable
         ArithmeticOpTable __that = (ArithmeticOpTable) __obj;
         if (opsEquals(__that))
         {
-            if (Arrays.equals(this.___floatConvert, __that.___floatConvert))
-            {
-                return true;
-            }
+            return true;
         }
         return false;
     }
@@ -535,16 +480,6 @@ public final class ArithmeticOpTable
             protected Abs()
             {
                 super("ABS");
-            }
-        }
-
-        // @class ArithmeticOpTable.UnaryOp.Sqrt
-        public abstract static class Sqrt extends UnaryOp<Sqrt>
-        {
-            // @cons
-            protected Sqrt()
-            {
-                super("SQRT");
             }
         }
 
@@ -848,61 +783,6 @@ public final class ArithmeticOpTable
         // Get the shift amount mask for a given result stamp.
         ///
         public abstract int getShiftAmountMask(Stamp __s);
-    }
-
-    // @class ArithmeticOpTable.FloatConvertOp
-    public abstract static class FloatConvertOp extends UnaryOp<FloatConvertOp>
-    {
-        // @field
-        private final FloatConvert ___op;
-
-        // @cons
-        protected FloatConvertOp(FloatConvert __op)
-        {
-            super(__op.name());
-            this.___op = __op;
-        }
-
-        public FloatConvert getFloatConvert()
-        {
-            return this.___op;
-        }
-
-        @Override
-        public FloatConvertOp unwrap()
-        {
-            return this;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            final int __prime = 31;
-            return __prime * super.hashCode() + this.___op.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object __obj)
-        {
-            if (this == __obj)
-            {
-                return true;
-            }
-            if (!super.equals(__obj))
-            {
-                return false;
-            }
-            if (getClass() != __obj.getClass())
-            {
-                return false;
-            }
-            FloatConvertOp __that = (FloatConvertOp) __obj;
-            if (this.___op != __that.___op)
-            {
-                return false;
-            }
-            return true;
-        }
     }
 
     // @class ArithmeticOpTable.IntegerConvertOp

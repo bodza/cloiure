@@ -48,6 +48,7 @@ import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.nodes.virtual.VirtualArrayNode;
+import giraaff.util.GraalError;
 import giraaff.virtual.phases.ea.PEReadEliminationBlockState.ReadCacheEntry;
 
 // @class PEReadEliminationClosure
@@ -179,9 +180,10 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
             switch (__declaredKind)
             {
                 case Object:
-                case Double:
                 case Long:
                     return false;
+                case Double:
+                    throw GraalError.shouldNotReachHere();
                 default:
                     return true;
             }

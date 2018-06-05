@@ -33,7 +33,7 @@ public abstract class IntegerLowerThanNode extends CompareNode
     // @cons
     protected IntegerLowerThanNode(NodeClass<? extends CompareNode> __c, ValueNode __x, ValueNode __y, LowerOp __op)
     {
-        super(__c, __op.getCondition(), false, __x, __y);
+        super(__c, __op.getCondition(), __x, __y);
         this.___op = __op;
     }
 
@@ -124,9 +124,9 @@ public abstract class IntegerLowerThanNode extends CompareNode
     public abstract static class LowerOp extends CompareOp
     {
         @Override
-        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __forX, ValueNode __forY, NodeView __view)
+        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, NodeView __view)
         {
-            LogicNode __result = super.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __unorderedIsTrue, __forX, __forY, __view);
+            LogicNode __result = super.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forX, __forY, __view);
             if (__result != null)
             {
                 return __result;
@@ -173,7 +173,7 @@ public abstract class IntegerLowerThanNode extends CompareNode
 
         public LogicNode create(ValueNode __x, ValueNode __y, NodeView __view)
         {
-            LogicNode __result = CompareNode.tryConstantFoldPrimitive(getCondition(), __x, __y, false, __view);
+            LogicNode __result = CompareNode.tryConstantFoldPrimitive(getCondition(), __x, __y, __view);
             if (__result != null)
             {
                 return __result;

@@ -141,29 +141,6 @@ public final class AMD64ControlFlow
         }
     }
 
-    // @class AMD64ControlFlow.FloatBranchOp
-    public static final class FloatBranchOp extends BranchOp
-    {
-        // @def
-        public static final LIRInstructionClass<FloatBranchOp> TYPE = LIRInstructionClass.create(FloatBranchOp.class);
-
-        // @field
-        protected boolean ___unorderedIsTrue;
-
-        // @cons
-        public FloatBranchOp(Condition __condition, boolean __unorderedIsTrue, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability)
-        {
-            super(TYPE, floatCond(__condition), __trueDestination, __falseDestination, __trueDestinationProbability);
-            this.___unorderedIsTrue = __unorderedIsTrue;
-        }
-
-        @Override
-        protected void jcc(AMD64MacroAssembler __masm, boolean __negate, LabelRef __target)
-        {
-            floatJcc(__masm, __negate ? this.___condition.negate() : this.___condition, __negate ? !this.___unorderedIsTrue : this.___unorderedIsTrue, __target.label());
-        }
-    }
-
     // @class AMD64ControlFlow.StrategySwitchOp
     public static class StrategySwitchOp extends AMD64BlockEndOp
     {
@@ -401,34 +378,6 @@ public final class AMD64ControlFlow
     }
 
     @Opcode
-    // @class AMD64ControlFlow.FloatCondSetOp
-    public static final class FloatCondSetOp extends AMD64LIRInstruction
-    {
-        // @def
-        public static final LIRInstructionClass<FloatCondSetOp> TYPE = LIRInstructionClass.create(FloatCondSetOp.class);
-
-        @Def({OperandFlag.REG, OperandFlag.HINT})
-        // @field
-        protected Value ___result;
-        // @field
-        private final ConditionFlag ___condition;
-
-        // @cons
-        public FloatCondSetOp(Variable __result, Condition __condition)
-        {
-            super(TYPE);
-            this.___result = __result;
-            this.___condition = floatCond(__condition);
-        }
-
-        @Override
-        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
-        {
-            setcc(__masm, this.___result, this.___condition);
-        }
-    }
-
-    @Opcode
     // @class AMD64ControlFlow.CondMoveOp
     public static final class CondMoveOp extends AMD64LIRInstruction
     {
@@ -460,79 +409,8 @@ public final class AMD64ControlFlow
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            cmove(__crb, __masm, this.___result, false, this.___condition, false, this.___trueValue, this.___falseValue);
-        }
-    }
-
-    @Opcode
-    // @class AMD64ControlFlow.FloatCondMoveOp
-    public static final class FloatCondMoveOp extends AMD64LIRInstruction
-    {
-        // @def
-        public static final LIRInstructionClass<FloatCondMoveOp> TYPE = LIRInstructionClass.create(FloatCondMoveOp.class);
-
-        @Def({OperandFlag.REG})
-        // @field
-        protected Value ___result;
-        @Alive({OperandFlag.REG})
-        // @field
-        protected Value ___trueValue;
-        @Alive({OperandFlag.REG})
-        // @field
-        protected Value ___falseValue;
-        // @field
-        private final ConditionFlag ___condition;
-        // @field
-        private final boolean ___unorderedIsTrue;
-
-        // @cons
-        public FloatCondMoveOp(Variable __result, Condition __condition, boolean __unorderedIsTrue, Variable __trueValue, Variable __falseValue)
-        {
-            super(TYPE);
-            this.___result = __result;
-            this.___condition = floatCond(__condition);
-            this.___unorderedIsTrue = __unorderedIsTrue;
-            this.___trueValue = __trueValue;
-            this.___falseValue = __falseValue;
-        }
-
-        @Override
-        public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
-        {
-            cmove(__crb, __masm, this.___result, true, this.___condition, this.___unorderedIsTrue, this.___trueValue, this.___falseValue);
-        }
-    }
-
-    private static void floatJcc(AMD64MacroAssembler __masm, ConditionFlag __condition, boolean __unorderedIsTrue, Label __label)
-    {
-        Label __endLabel = new Label();
-        if (__unorderedIsTrue && !trueOnUnordered(__condition))
-        {
-            __masm.jcc(ConditionFlag.Parity, __label);
-        }
-        else if (!__unorderedIsTrue && trueOnUnordered(__condition))
-        {
-            __masm.jccb(ConditionFlag.Parity, __endLabel);
-        }
-        __masm.jcc(__condition, __label);
-        __masm.bind(__endLabel);
-    }
-
-    private static void cmove(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, Value __result, boolean __isFloat, ConditionFlag __condition, boolean __unorderedIsTrue, Value __trueValue, Value __falseValue)
-    {
-        AMD64Move.move(__crb, __masm, __result, __falseValue);
-        cmove(__crb, __masm, __result, __condition, __trueValue);
-
-        if (__isFloat)
-        {
-            if (__unorderedIsTrue && !trueOnUnordered(__condition))
-            {
-                cmove(__crb, __masm, __result, ConditionFlag.Parity, __trueValue);
-            }
-            else if (!__unorderedIsTrue && trueOnUnordered(__condition))
-            {
-                cmove(__crb, __masm, __result, ConditionFlag.Parity, __falseValue);
-            }
+            AMD64Move.move(__crb, __masm, this.___result, this.___falseValue);
+            cmove(__crb, __masm, this.___result, this.___condition, this.___trueValue);
         }
     }
 
@@ -626,53 +504,6 @@ public final class AMD64ControlFlow
                 return ConditionFlag.Above;
             case BT:
                 return ConditionFlag.Below;
-            default:
-                throw GraalError.shouldNotReachHere();
-        }
-    }
-
-    private static ConditionFlag floatCond(Condition __cond)
-    {
-        switch (__cond)
-        {
-            case EQ:
-                return ConditionFlag.Equal;
-            case NE:
-                return ConditionFlag.NotEqual;
-            case LT:
-                return ConditionFlag.Below;
-            case LE:
-                return ConditionFlag.BelowEqual;
-            case GE:
-                return ConditionFlag.AboveEqual;
-            case GT:
-                return ConditionFlag.Above;
-            default:
-                throw GraalError.shouldNotReachHere();
-        }
-    }
-
-    public static boolean trueOnUnordered(Condition __condition)
-    {
-        return trueOnUnordered(floatCond(__condition));
-    }
-
-    private static boolean trueOnUnordered(ConditionFlag __condition)
-    {
-        switch (__condition)
-        {
-            case AboveEqual:
-            case NotEqual:
-            case Above:
-            case Less:
-            case Overflow:
-                return false;
-            case Equal:
-            case BelowEqual:
-            case Below:
-            case GreaterEqual:
-            case NoOverflow:
-                return true;
             default:
                 throw GraalError.shouldNotReachHere();
         }

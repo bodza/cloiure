@@ -578,17 +578,6 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                             __number += 7;
                         }
                     }
-                    else if (__type == Float.TYPE)
-                    {
-                        float __floatValue = this.___data.getFloat(__n, __i);
-                        __number += Float.floatToRawIntBits(__floatValue);
-                    }
-                    else if (__type == Double.TYPE)
-                    {
-                        double __doubleValue = this.___data.getDouble(__n, __i);
-                        long __longValue = Double.doubleToRawLongBits(__doubleValue);
-                        __number += __longValue ^ (__longValue >>> 32);
-                    }
                     else if (__type == Short.TYPE)
                     {
                         short __shortValue = this.___data.getShort(__n, __i);
@@ -603,6 +592,10 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                     {
                         byte __byteValue = this.___data.getByte(__n, __i);
                         __number += __byteValue;
+                    }
+                    else
+                    {
+                        throw GraalError.shouldNotReachHere();
                     }
                 }
                 else
@@ -724,24 +717,6 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                         return false;
                     }
                 }
-                else if (__type == Float.TYPE)
-                {
-                    float __aFloat = this.___data.getFloat(__a, __i);
-                    float __bFloat = this.___data.getFloat(__b, __i);
-                    if (__aFloat != __bFloat)
-                    {
-                        return false;
-                    }
-                }
-                else if (__type == Double.TYPE)
-                {
-                    double __aDouble = this.___data.getDouble(__a, __i);
-                    double __bDouble = this.___data.getDouble(__b, __i);
-                    if (__aDouble != __bDouble)
-                    {
-                        return false;
-                    }
-                }
                 else if (__type == Short.TYPE)
                 {
                     short __aShort = this.___data.getShort(__a, __i);
@@ -768,6 +743,10 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                     {
                         return false;
                     }
+                }
+                else
+                {
+                    throw GraalError.shouldNotReachHere();
                 }
             }
             else

@@ -24,13 +24,13 @@ public enum CanonicalCondition
         return this.___condition;
     }
 
-    public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
+    public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection)
     {
-        return asCondition().foldCondition(__lt, __rt, __constantReflection, __unorderedIsTrue);
+        return asCondition().foldCondition(__lt, __rt, __constantReflection);
     }
 
-    public boolean foldCondition(PrimitiveConstant __lp, PrimitiveConstant __rp, boolean __unorderedIsTrue)
+    public boolean foldCondition(PrimitiveConstant __lp, PrimitiveConstant __rp)
     {
-        return asCondition().foldCondition(__lp, __rp, __unorderedIsTrue);
+        return asCondition().foldCondition(__lp, __rp);
     }
 }

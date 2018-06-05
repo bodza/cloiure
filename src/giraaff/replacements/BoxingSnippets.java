@@ -45,18 +45,6 @@ public final class BoxingSnippets implements Snippets
     }
 
     @Snippet
-    public static Object doubleValueOf(double __value)
-    {
-        return PiNode.piCastToSnippetReplaceeStamp(Double.valueOf(__value));
-    }
-
-    @Snippet
-    public static Object floatValueOf(float __value)
-    {
-        return PiNode.piCastToSnippetReplaceeStamp(Float.valueOf(__value));
-    }
-
-    @Snippet
     public static Object intValueOf(int __value)
     {
         return PiNode.piCastToSnippetReplaceeStamp(Integer.valueOf(__value));
@@ -90,18 +78,6 @@ public final class BoxingSnippets implements Snippets
     public static char charValue(Character __value)
     {
         return __value.charValue();
-    }
-
-    @Snippet
-    public static double doubleValue(Double __value)
-    {
-        return __value.doubleValue();
-    }
-
-    @Snippet
-    public static float floatValue(Float __value)
-    {
-        return __value.floatValue();
     }
 
     @Snippet
@@ -175,7 +151,7 @@ public final class BoxingSnippets implements Snippets
         public Templates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
         {
             super(__providers, __snippetReflection, __target);
-            for (JavaKind __kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short })
+            for (JavaKind __kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Int, JavaKind.Long, JavaKind.Short })
             {
                 this.___boxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "ValueOf"));
                 this.___unboxSnippets.put(__kind, snippet(BoxingSnippets.class, __kind.getJavaName() + "Value"));

@@ -1307,7 +1307,7 @@ public class SnippetTemplate
     // @param replacee the node that will be replaced
     // @param replacer object that replaces the usages of {@code replacee}
     // @param args the arguments to be bound to the flattened positional parameters of the snippet
-    // @return the map of duplicated nodes (original -&gt; duplicate)
+    // @return the map of duplicated nodes (original -> duplicate)
     ///
     public UnmodifiableEconomicMap<Node, Node> instantiate(MetaAccessProvider __metaAccess, FixedNode __replacee, UsageReplacer __replacer, Arguments __args)
     {
@@ -1321,7 +1321,7 @@ public class SnippetTemplate
     // @param replacer object that replaces the usages of {@code replacee}
     // @param args the arguments to be bound to the flattened positional parameters of the snippet
     // @param killReplacee is true, the replacee node is deleted
-    // @return the map of duplicated nodes (original -&gt; duplicate)
+    // @return the map of duplicated nodes (original -> duplicate)
     ///
     public UnmodifiableEconomicMap<Node, Node> instantiate(MetaAccessProvider __metaAccess, FixedNode __replacee, UsageReplacer __replacer, Arguments __args, boolean __killReplacee)
     {

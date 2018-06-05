@@ -26,9 +26,7 @@ public final class ObjectCloneSnippets implements Snippets
         arrayCloneMethods.put(JavaKind.Char, getCloneMethod("charArrayClone", char[].class));
         arrayCloneMethods.put(JavaKind.Short, getCloneMethod("shortArrayClone", short[].class));
         arrayCloneMethods.put(JavaKind.Int, getCloneMethod("intArrayClone", int[].class));
-        arrayCloneMethods.put(JavaKind.Float, getCloneMethod("floatArrayClone", float[].class));
         arrayCloneMethods.put(JavaKind.Long, getCloneMethod("longArrayClone", long[].class));
-        arrayCloneMethods.put(JavaKind.Double, getCloneMethod("doubleArrayClone", double[].class));
         arrayCloneMethods.put(JavaKind.Object, getCloneMethod("objectArrayClone", Object[].class));
     }
 
@@ -85,26 +83,10 @@ public final class ObjectCloneSnippets implements Snippets
     }
 
     @Snippet
-    public static float[] floatArrayClone(float[] __src)
-    {
-        float[] __result = (float[]) NewArrayNode.newUninitializedArray(Float.TYPE, __src.length);
-        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Float);
-        return __result;
-    }
-
-    @Snippet
     public static long[] longArrayClone(long[] __src)
     {
         long[] __result = (long[]) NewArrayNode.newUninitializedArray(Long.TYPE, __src.length);
         ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Long);
-        return __result;
-    }
-
-    @Snippet
-    public static double[] doubleArrayClone(double[] __src)
-    {
-        double[] __result = (double[]) NewArrayNode.newUninitializedArray(Double.TYPE, __src.length);
-        ArrayCopyCallNode.disjointArraycopy(__src, 0, __result, 0, __src.length, JavaKind.Double);
         return __result;
     }
 

@@ -126,14 +126,6 @@ public class Fields
                 {
                     UnsafeAccess.UNSAFE.putBoolean(__to, __offset, UnsafeAccess.UNSAFE.getBoolean(__from, __offset));
                 }
-                else if (__type == Float.TYPE)
-                {
-                    UnsafeAccess.UNSAFE.putFloat(__to, __offset, UnsafeAccess.UNSAFE.getFloat(__from, __offset));
-                }
-                else if (__type == Double.TYPE)
-                {
-                    UnsafeAccess.UNSAFE.putDouble(__to, __offset, UnsafeAccess.UNSAFE.getDouble(__from, __offset));
-                }
                 else if (__type == Short.TYPE)
                 {
                     UnsafeAccess.UNSAFE.putShort(__to, __offset, UnsafeAccess.UNSAFE.getShort(__from, __offset));
@@ -145,6 +137,10 @@ public class Fields
                 else if (__type == Byte.TYPE)
                 {
                     UnsafeAccess.UNSAFE.putByte(__to, __offset, UnsafeAccess.UNSAFE.getByte(__from, __offset));
+                }
+                else
+                {
+                    throw GraalError.shouldNotReachHere();
                 }
             }
             else
@@ -181,14 +177,6 @@ public class Fields
             {
                 __value = UnsafeAccess.UNSAFE.getBoolean(__object, __offset);
             }
-            else if (__type == Float.TYPE)
-            {
-                __value = UnsafeAccess.UNSAFE.getFloat(__object, __offset);
-            }
-            else if (__type == Double.TYPE)
-            {
-                __value = UnsafeAccess.UNSAFE.getDouble(__object, __offset);
-            }
             else if (__type == Short.TYPE)
             {
                 __value = UnsafeAccess.UNSAFE.getShort(__object, __offset);
@@ -200,6 +188,10 @@ public class Fields
             else if (__type == Byte.TYPE)
             {
                 __value = UnsafeAccess.UNSAFE.getByte(__object, __offset);
+            }
+            else
+            {
+                throw GraalError.shouldNotReachHere();
             }
         }
         else
@@ -232,14 +224,6 @@ public class Fields
         else if (__type == Boolean.TYPE)
         {
             return UnsafeAccess.UNSAFE.getBoolean(__object, __offset) ? 1 : 0;
-        }
-        else if (__type == Float.TYPE)
-        {
-            return Float.floatToRawIntBits(UnsafeAccess.UNSAFE.getFloat(__object, __offset));
-        }
-        else if (__type == Double.TYPE)
-        {
-            return Double.doubleToRawLongBits(UnsafeAccess.UNSAFE.getDouble(__object, __offset));
         }
         else if (__type == Short.TYPE)
         {
@@ -316,14 +300,6 @@ public class Fields
             {
                 UnsafeAccess.UNSAFE.putBoolean(__object, __offset, (Boolean) __value);
             }
-            else if (__type == Float.TYPE)
-            {
-                UnsafeAccess.UNSAFE.putFloat(__object, __offset, (Float) __value);
-            }
-            else if (__type == Double.TYPE)
-            {
-                UnsafeAccess.UNSAFE.putDouble(__object, __offset, (Double) __value);
-            }
             else if (__type == Short.TYPE)
             {
                 UnsafeAccess.UNSAFE.putShort(__object, __offset, (Short) __value);
@@ -335,6 +311,10 @@ public class Fields
             else if (__type == Byte.TYPE)
             {
                 UnsafeAccess.UNSAFE.putByte(__object, __offset, (Byte) __value);
+            }
+            else
+            {
+                throw GraalError.shouldNotReachHere();
             }
         }
         else
@@ -358,14 +338,6 @@ public class Fields
         else if (__type == Boolean.TYPE)
         {
             UnsafeAccess.UNSAFE.putBoolean(__object, __offset, __value != 0);
-        }
-        else if (__type == Float.TYPE)
-        {
-            UnsafeAccess.UNSAFE.putFloat(__object, __offset, Float.intBitsToFloat((int) __value));
-        }
-        else if (__type == Double.TYPE)
-        {
-            UnsafeAccess.UNSAFE.putDouble(__object, __offset, Double.longBitsToDouble(__value));
         }
         else if (__type == Short.TYPE)
         {

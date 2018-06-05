@@ -478,7 +478,7 @@ public final class LoweringPhase extends BasePhase<PhaseContext>
     //     preprocess();
     //     // Process always reached block first.
     //     Block alwaysReachedBlock = block.getPostdominator();
-    //     if (alwaysReachedBlock != null &amp;&amp; alwaysReachedBlock.getDominator() == block) {
+    //     if (alwaysReachedBlock != null && alwaysReachedBlock.getDominator() == block) {
     //         processBlock(alwaysReachedBlock);
     //     }
     //

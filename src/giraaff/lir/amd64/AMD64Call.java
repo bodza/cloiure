@@ -19,7 +19,6 @@ import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
-import giraaff.lir.gen.DiagnosticLIRGeneratorTool.ZapRegistersAfterInstruction;
 
 // @class AMD64Call
 public final class AMD64Call
@@ -140,7 +139,7 @@ public final class AMD64Call
     }
 
     // @class AMD64Call.ForeignCallOp
-    public abstract static class ForeignCallOp extends CallOp implements ZapRegistersAfterInstruction
+    public abstract static class ForeignCallOp extends CallOp
     {
         // @def
         public static final LIRInstructionClass<ForeignCallOp> TYPE = LIRInstructionClass.create(ForeignCallOp.class);

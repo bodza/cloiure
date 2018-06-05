@@ -48,7 +48,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.calc.Condition;
 import giraaff.core.common.calc.Condition.CanonicalizedCondition;
-import giraaff.core.common.calc.FloatConvert;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.ObjectStamp;
@@ -101,8 +100,6 @@ import giraaff.nodes.calc.AddNode;
 import giraaff.nodes.calc.AndNode;
 import giraaff.nodes.calc.CompareNode;
 import giraaff.nodes.calc.ConditionalNode;
-import giraaff.nodes.calc.FloatConvertNode;
-import giraaff.nodes.calc.FloatDivNode;
 import giraaff.nodes.calc.IntegerBelowNode;
 import giraaff.nodes.calc.IntegerEqualsNode;
 import giraaff.nodes.calc.IntegerLessThanNode;
@@ -815,31 +812,6 @@ public final class BytecodeParser implements GraphBuilderContext
         return MulNode.create(__x, __y, NodeView.DEFAULT);
     }
 
-    protected ValueNode genFloatAdd(ValueNode __x, ValueNode __y)
-    {
-        return AddNode.create(__x, __y, NodeView.DEFAULT);
-    }
-
-    protected ValueNode genFloatSub(ValueNode __x, ValueNode __y)
-    {
-        return SubNode.create(__x, __y, NodeView.DEFAULT);
-    }
-
-    protected ValueNode genFloatMul(ValueNode __x, ValueNode __y)
-    {
-        return MulNode.create(__x, __y, NodeView.DEFAULT);
-    }
-
-    protected ValueNode genFloatDiv(ValueNode __x, ValueNode __y)
-    {
-        return FloatDivNode.create(__x, __y, NodeView.DEFAULT);
-    }
-
-    protected ValueNode genFloatRem(ValueNode __x, ValueNode __y)
-    {
-        return RemNode.create(__x, __y, NodeView.DEFAULT);
-    }
-
     protected ValueNode genIntegerDiv(ValueNode __x, ValueNode __y)
     {
         return SignedDivNode.create(__x, __y, NodeView.DEFAULT);
@@ -885,14 +857,9 @@ public final class BytecodeParser implements GraphBuilderContext
         return XorNode.create(__x, __y, NodeView.DEFAULT);
     }
 
-    protected ValueNode genNormalizeCompare(ValueNode __x, ValueNode __y, boolean __isUnorderedLess)
+    protected ValueNode genNormalizeCompare(ValueNode __x, ValueNode __y)
     {
-        return NormalizeCompareNode.create(__x, __y, __isUnorderedLess, JavaKind.Int, this.___constantReflection);
-    }
-
-    protected ValueNode genFloatConvert(FloatConvert __op, ValueNode __input)
-    {
-        return FloatConvertNode.create(__op, __input, NodeView.DEFAULT);
+        return NormalizeCompareNode.create(__x, __y, JavaKind.Int, this.___constantReflection);
     }
 
     protected ValueNode genNarrow(ValueNode __input, int __bitCount)
@@ -3393,46 +3360,16 @@ public final class BytecodeParser implements GraphBuilderContext
                 __v = genIntegerAdd(__x, __y);
                 break;
             }
-            case Bytecodes.FADD:
-            case Bytecodes.DADD:
-            {
-                __v = genFloatAdd(__x, __y);
-                break;
-            }
             case Bytecodes.ISUB:
             case Bytecodes.LSUB:
             {
                 __v = genIntegerSub(__x, __y);
                 break;
             }
-            case Bytecodes.FSUB:
-            case Bytecodes.DSUB:
-            {
-                __v = genFloatSub(__x, __y);
-                break;
-            }
             case Bytecodes.IMUL:
             case Bytecodes.LMUL:
             {
                 __v = genIntegerMul(__x, __y);
-                break;
-            }
-            case Bytecodes.FMUL:
-            case Bytecodes.DMUL:
-            {
-                __v = genFloatMul(__x, __y);
-                break;
-            }
-            case Bytecodes.FDIV:
-            case Bytecodes.DDIV:
-            {
-                __v = genFloatDiv(__x, __y);
-                break;
-            }
-            case Bytecodes.FREM:
-            case Bytecodes.DREM:
-            {
-                __v = genFloatRem(__x, __y);
                 break;
             }
             default:
@@ -3534,17 +3471,11 @@ public final class BytecodeParser implements GraphBuilderContext
         this.___frameState.push(__kind, append(__v));
     }
 
-    private void genCompareOp(JavaKind __kind, boolean __isUnorderedLess)
+    private void genCompareOp(JavaKind __kind)
     {
         ValueNode __y = this.___frameState.pop(__kind);
         ValueNode __x = this.___frameState.pop(__kind);
-        this.___frameState.push(JavaKind.Int, append(genNormalizeCompare(__x, __y, __isUnorderedLess)));
-    }
-
-    private void genFloatConvert(FloatConvert __op, JavaKind __from, JavaKind __to)
-    {
-        ValueNode __input = this.___frameState.pop(__from);
-        this.___frameState.push(__to, append(genFloatConvert(__op, __input)));
+        this.___frameState.push(JavaKind.Int, append(genNormalizeCompare(__x, __y)));
     }
 
     private void genSignExtend(JavaKind __from, JavaKind __to)
@@ -4394,157 +4325,102 @@ public final class BytecodeParser implements GraphBuilderContext
         {
             case Bytecodes.NOP:             break; // nothing to do
             case Bytecodes.ACONST_NULL:     this.___frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER)); break;
-            case Bytecodes.ICONST_M1:       // fall through
-            case Bytecodes.ICONST_0:        // fall through
-            case Bytecodes.ICONST_1:        // fall through
-            case Bytecodes.ICONST_2:        // fall through
-            case Bytecodes.ICONST_3:        // fall through
-            case Bytecodes.ICONST_4:        // fall through
+            case Bytecodes.ICONST_M1:
+            case Bytecodes.ICONST_0:
+            case Bytecodes.ICONST_1:
+            case Bytecodes.ICONST_2:
+            case Bytecodes.ICONST_3:
+            case Bytecodes.ICONST_4:
             case Bytecodes.ICONST_5:        this.___frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(__opcode - Bytecodes.ICONST_0))); break;
-            case Bytecodes.LCONST_0:        // fall through
+            case Bytecodes.LCONST_0:
             case Bytecodes.LCONST_1:        this.___frameState.push(JavaKind.Long, appendConstant(JavaConstant.forLong(__opcode - Bytecodes.LCONST_0))); break;
-            case Bytecodes.FCONST_0:        // fall through
-            case Bytecodes.FCONST_1:        // fall through
-            case Bytecodes.FCONST_2:        this.___frameState.push(JavaKind.Float, appendConstant(JavaConstant.forFloat(__opcode - Bytecodes.FCONST_0))); break;
-            case Bytecodes.DCONST_0:        // fall through
-            case Bytecodes.DCONST_1:        this.___frameState.push(JavaKind.Double, appendConstant(JavaConstant.forDouble(__opcode - Bytecodes.DCONST_0))); break;
             case Bytecodes.BIPUSH:          this.___frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(this.___stream.readByte()))); break;
             case Bytecodes.SIPUSH:          this.___frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(this.___stream.readShort()))); break;
-            case Bytecodes.LDC:             // fall through
-            case Bytecodes.LDC_W:           // fall through
+            case Bytecodes.LDC:
+            case Bytecodes.LDC_W:
             case Bytecodes.LDC2_W:          genLoadConstant(this.___stream.readCPI(), __opcode); break;
             case Bytecodes.ILOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Int); break;
             case Bytecodes.LLOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Long); break;
-            case Bytecodes.FLOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Float); break;
-            case Bytecodes.DLOAD:           loadLocal(this.___stream.readLocalIndex(), JavaKind.Double); break;
             case Bytecodes.ALOAD:           loadLocalObject(this.___stream.readLocalIndex()); break;
-            case Bytecodes.ILOAD_0:         // fall through
-            case Bytecodes.ILOAD_1:         // fall through
-            case Bytecodes.ILOAD_2:         // fall through
+            case Bytecodes.ILOAD_0:
+            case Bytecodes.ILOAD_1:
+            case Bytecodes.ILOAD_2:
             case Bytecodes.ILOAD_3:         loadLocal(__opcode - Bytecodes.ILOAD_0, JavaKind.Int); break;
-            case Bytecodes.LLOAD_0:         // fall through
-            case Bytecodes.LLOAD_1:         // fall through
-            case Bytecodes.LLOAD_2:         // fall through
+            case Bytecodes.LLOAD_0:
+            case Bytecodes.LLOAD_1:
+            case Bytecodes.LLOAD_2:
             case Bytecodes.LLOAD_3:         loadLocal(__opcode - Bytecodes.LLOAD_0, JavaKind.Long); break;
-            case Bytecodes.FLOAD_0:         // fall through
-            case Bytecodes.FLOAD_1:         // fall through
-            case Bytecodes.FLOAD_2:         // fall through
-            case Bytecodes.FLOAD_3:         loadLocal(__opcode - Bytecodes.FLOAD_0, JavaKind.Float); break;
-            case Bytecodes.DLOAD_0:         // fall through
-            case Bytecodes.DLOAD_1:         // fall through
-            case Bytecodes.DLOAD_2:         // fall through
-            case Bytecodes.DLOAD_3:         loadLocal(__opcode - Bytecodes.DLOAD_0, JavaKind.Double); break;
-            case Bytecodes.ALOAD_0:         // fall through
-            case Bytecodes.ALOAD_1:         // fall through
-            case Bytecodes.ALOAD_2:         // fall through
+            case Bytecodes.ALOAD_0:
+            case Bytecodes.ALOAD_1:
+            case Bytecodes.ALOAD_2:
             case Bytecodes.ALOAD_3:         loadLocalObject(__opcode - Bytecodes.ALOAD_0); break;
             case Bytecodes.IALOAD:          genLoadIndexed(JavaKind.Int); break;
             case Bytecodes.LALOAD:          genLoadIndexed(JavaKind.Long); break;
-            case Bytecodes.FALOAD:          genLoadIndexed(JavaKind.Float); break;
-            case Bytecodes.DALOAD:          genLoadIndexed(JavaKind.Double); break;
             case Bytecodes.AALOAD:          genLoadIndexed(JavaKind.Object); break;
             case Bytecodes.BALOAD:          genLoadIndexed(JavaKind.Byte); break;
             case Bytecodes.CALOAD:          genLoadIndexed(JavaKind.Char); break;
             case Bytecodes.SALOAD:          genLoadIndexed(JavaKind.Short); break;
             case Bytecodes.ISTORE:          storeLocal(JavaKind.Int, this.___stream.readLocalIndex()); break;
             case Bytecodes.LSTORE:          storeLocal(JavaKind.Long, this.___stream.readLocalIndex()); break;
-            case Bytecodes.FSTORE:          storeLocal(JavaKind.Float, this.___stream.readLocalIndex()); break;
-            case Bytecodes.DSTORE:          storeLocal(JavaKind.Double, this.___stream.readLocalIndex()); break;
             case Bytecodes.ASTORE:          storeLocal(JavaKind.Object, this.___stream.readLocalIndex()); break;
-            case Bytecodes.ISTORE_0:        // fall through
-            case Bytecodes.ISTORE_1:        // fall through
-            case Bytecodes.ISTORE_2:        // fall through
+            case Bytecodes.ISTORE_0:
+            case Bytecodes.ISTORE_1:
+            case Bytecodes.ISTORE_2:
             case Bytecodes.ISTORE_3:        storeLocal(JavaKind.Int, __opcode - Bytecodes.ISTORE_0); break;
-            case Bytecodes.LSTORE_0:        // fall through
-            case Bytecodes.LSTORE_1:        // fall through
-            case Bytecodes.LSTORE_2:        // fall through
+            case Bytecodes.LSTORE_0:
+            case Bytecodes.LSTORE_1:
+            case Bytecodes.LSTORE_2:
             case Bytecodes.LSTORE_3:        storeLocal(JavaKind.Long, __opcode - Bytecodes.LSTORE_0); break;
-            case Bytecodes.FSTORE_0:        // fall through
-            case Bytecodes.FSTORE_1:        // fall through
-            case Bytecodes.FSTORE_2:        // fall through
-            case Bytecodes.FSTORE_3:        storeLocal(JavaKind.Float, __opcode - Bytecodes.FSTORE_0); break;
-            case Bytecodes.DSTORE_0:        // fall through
-            case Bytecodes.DSTORE_1:        // fall through
-            case Bytecodes.DSTORE_2:        // fall through
-            case Bytecodes.DSTORE_3:        storeLocal(JavaKind.Double, __opcode - Bytecodes.DSTORE_0); break;
-            case Bytecodes.ASTORE_0:        // fall through
-            case Bytecodes.ASTORE_1:        // fall through
-            case Bytecodes.ASTORE_2:        // fall through
+            case Bytecodes.ASTORE_0:
+            case Bytecodes.ASTORE_1:
+            case Bytecodes.ASTORE_2:
             case Bytecodes.ASTORE_3:        storeLocal(JavaKind.Object, __opcode - Bytecodes.ASTORE_0); break;
             case Bytecodes.IASTORE:         genStoreIndexed(JavaKind.Int); break;
             case Bytecodes.LASTORE:         genStoreIndexed(JavaKind.Long); break;
-            case Bytecodes.FASTORE:         genStoreIndexed(JavaKind.Float); break;
-            case Bytecodes.DASTORE:         genStoreIndexed(JavaKind.Double); break;
             case Bytecodes.AASTORE:         genStoreIndexed(JavaKind.Object); break;
             case Bytecodes.BASTORE:         genStoreIndexed(JavaKind.Byte); break;
             case Bytecodes.CASTORE:         genStoreIndexed(JavaKind.Char); break;
             case Bytecodes.SASTORE:         genStoreIndexed(JavaKind.Short); break;
-            case Bytecodes.POP:             // fall through
-            case Bytecodes.POP2:            // fall through
-            case Bytecodes.DUP:             // fall through
-            case Bytecodes.DUP_X1:          // fall through
-            case Bytecodes.DUP_X2:          // fall through
-            case Bytecodes.DUP2:            // fall through
-            case Bytecodes.DUP2_X1:         // fall through
-            case Bytecodes.DUP2_X2:         // fall through
+            case Bytecodes.POP:
+            case Bytecodes.POP2:
+            case Bytecodes.DUP:
+            case Bytecodes.DUP_X1:
+            case Bytecodes.DUP_X2:
+            case Bytecodes.DUP2:
+            case Bytecodes.DUP2_X1:
+            case Bytecodes.DUP2_X2:
             case Bytecodes.SWAP:            this.___frameState.stackOp(__opcode); break;
-            case Bytecodes.IADD:            // fall through
-            case Bytecodes.ISUB:            // fall through
+            case Bytecodes.IADD:
+            case Bytecodes.ISUB:
             case Bytecodes.IMUL:            genArithmeticOp(JavaKind.Int, __opcode); break;
-            case Bytecodes.IDIV:            // fall through
+            case Bytecodes.IDIV:
             case Bytecodes.IREM:            genIntegerDivOp(JavaKind.Int, __opcode); break;
-            case Bytecodes.LADD:            // fall through
-            case Bytecodes.LSUB:            // fall through
+            case Bytecodes.LADD:
+            case Bytecodes.LSUB:
             case Bytecodes.LMUL:            genArithmeticOp(JavaKind.Long, __opcode); break;
-            case Bytecodes.LDIV:            // fall through
+            case Bytecodes.LDIV:
             case Bytecodes.LREM:            genIntegerDivOp(JavaKind.Long, __opcode); break;
-            case Bytecodes.FADD:            // fall through
-            case Bytecodes.FSUB:            // fall through
-            case Bytecodes.FMUL:            // fall through
-            case Bytecodes.FDIV:            // fall through
-            case Bytecodes.FREM:            genArithmeticOp(JavaKind.Float, __opcode); break;
-            case Bytecodes.DADD:            // fall through
-            case Bytecodes.DSUB:            // fall through
-            case Bytecodes.DMUL:            // fall through
-            case Bytecodes.DDIV:            // fall through
-            case Bytecodes.DREM:            genArithmeticOp(JavaKind.Double, __opcode); break;
             case Bytecodes.INEG:            genNegateOp(JavaKind.Int); break;
             case Bytecodes.LNEG:            genNegateOp(JavaKind.Long); break;
-            case Bytecodes.FNEG:            genNegateOp(JavaKind.Float); break;
-            case Bytecodes.DNEG:            genNegateOp(JavaKind.Double); break;
-            case Bytecodes.ISHL:            // fall through
-            case Bytecodes.ISHR:            // fall through
+            case Bytecodes.ISHL:
+            case Bytecodes.ISHR:
             case Bytecodes.IUSHR:           genShiftOp(JavaKind.Int, __opcode); break;
-            case Bytecodes.IAND:            // fall through
-            case Bytecodes.IOR:             // fall through
+            case Bytecodes.IAND:
+            case Bytecodes.IOR:
             case Bytecodes.IXOR:            genLogicOp(JavaKind.Int, __opcode); break;
-            case Bytecodes.LSHL:            // fall through
-            case Bytecodes.LSHR:            // fall through
+            case Bytecodes.LSHL:
+            case Bytecodes.LSHR:
             case Bytecodes.LUSHR:           genShiftOp(JavaKind.Long, __opcode); break;
-            case Bytecodes.LAND:            // fall through
-            case Bytecodes.LOR:             // fall through
+            case Bytecodes.LAND:
+            case Bytecodes.LOR:
             case Bytecodes.LXOR:            genLogicOp(JavaKind.Long, __opcode); break;
             case Bytecodes.IINC:            genIncrement(); break;
-            case Bytecodes.I2F:             genFloatConvert(FloatConvert.I2F, JavaKind.Int, JavaKind.Float); break;
-            case Bytecodes.I2D:             genFloatConvert(FloatConvert.I2D, JavaKind.Int, JavaKind.Double); break;
-            case Bytecodes.L2F:             genFloatConvert(FloatConvert.L2F, JavaKind.Long, JavaKind.Float); break;
-            case Bytecodes.L2D:             genFloatConvert(FloatConvert.L2D, JavaKind.Long, JavaKind.Double); break;
-            case Bytecodes.F2I:             genFloatConvert(FloatConvert.F2I, JavaKind.Float, JavaKind.Int); break;
-            case Bytecodes.F2L:             genFloatConvert(FloatConvert.F2L, JavaKind.Float, JavaKind.Long); break;
-            case Bytecodes.F2D:             genFloatConvert(FloatConvert.F2D, JavaKind.Float, JavaKind.Double); break;
-            case Bytecodes.D2I:             genFloatConvert(FloatConvert.D2I, JavaKind.Double, JavaKind.Int); break;
-            case Bytecodes.D2L:             genFloatConvert(FloatConvert.D2L, JavaKind.Double, JavaKind.Long); break;
-            case Bytecodes.D2F:             genFloatConvert(FloatConvert.D2F, JavaKind.Double, JavaKind.Float); break;
             case Bytecodes.L2I:             genNarrow(JavaKind.Long, JavaKind.Int); break;
             case Bytecodes.I2L:             genSignExtend(JavaKind.Int, JavaKind.Long); break;
             case Bytecodes.I2B:             genSignExtend(JavaKind.Byte, JavaKind.Int); break;
             case Bytecodes.I2S:             genSignExtend(JavaKind.Short, JavaKind.Int); break;
             case Bytecodes.I2C:             genZeroExtend(JavaKind.Char, JavaKind.Int); break;
-            case Bytecodes.LCMP:            genCompareOp(JavaKind.Long, false); break;
-            case Bytecodes.FCMPL:           genCompareOp(JavaKind.Float, true); break;
-            case Bytecodes.FCMPG:           genCompareOp(JavaKind.Float, false); break;
-            case Bytecodes.DCMPL:           genCompareOp(JavaKind.Double, true); break;
-            case Bytecodes.DCMPG:           genCompareOp(JavaKind.Double, false); break;
+            case Bytecodes.LCMP:            genCompareOp(JavaKind.Long); break;
             case Bytecodes.IFEQ:            genIfZero(Condition.EQ); break;
             case Bytecodes.IFNE:            genIfZero(Condition.NE); break;
             case Bytecodes.IFLT:            genIfZero(Condition.LT); break;
@@ -4566,8 +4442,6 @@ public final class BytecodeParser implements GraphBuilderContext
             case Bytecodes.LOOKUPSWITCH:    genSwitch(new BytecodeLookupSwitch(getStream(), bci())); break;
             case Bytecodes.IRETURN:         genReturn(this.___frameState.pop(JavaKind.Int), JavaKind.Int); break;
             case Bytecodes.LRETURN:         genReturn(this.___frameState.pop(JavaKind.Long), JavaKind.Long); break;
-            case Bytecodes.FRETURN:         genReturn(this.___frameState.pop(JavaKind.Float), JavaKind.Float); break;
-            case Bytecodes.DRETURN:         genReturn(this.___frameState.pop(JavaKind.Double), JavaKind.Double); break;
             case Bytecodes.ARETURN:         genReturn(this.___frameState.pop(JavaKind.Object), JavaKind.Object); break;
             case Bytecodes.RETURN:          genReturn(null, JavaKind.Void); break;
             case Bytecodes.GETSTATIC:       __cpi = this.___stream.readCPI(); genGetStatic(__cpi, __opcode); break;

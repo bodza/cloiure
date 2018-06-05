@@ -61,11 +61,6 @@ public final class StampFactory
         setCache(__kind, IntegerStamp.create(__bits, __kind.getMinValue(), __kind.getMaxValue(), 0, __mask));
     }
 
-    private static void setFloatCache(JavaKind __kind)
-    {
-        setCache(__kind, new FloatStamp(__kind.getBitCount()));
-    }
-
     static
     {
         setIntCache(JavaKind.Boolean);
@@ -74,9 +69,6 @@ public final class StampFactory
         setIntCache(JavaKind.Char);
         setIntCache(JavaKind.Int);
         setIntCache(JavaKind.Long);
-
-        setFloatCache(JavaKind.Float);
-        setFloatCache(JavaKind.Double);
 
         setCache(JavaKind.Object, objectStamp);
         setCache(JavaKind.Void, VoidStamp.getInstance());
@@ -195,11 +187,6 @@ public final class StampFactory
         return IntegerStamp.create(__bits, __lowerBound, __upperBound, 0, CodeUtil.mask(__bits));
     }
 
-    public static FloatStamp forFloat(JavaKind __kind, double __lowerBound, double __upperBound, boolean __nonNaN)
-    {
-        return new FloatStamp(__kind.getBitCount(), __lowerBound, __upperBound, __nonNaN);
-    }
-
     public static Stamp forConstant(JavaConstant __value)
     {
         JavaKind __kind = __value.getJavaKind();
@@ -215,10 +202,6 @@ public final class StampFactory
                 long __mask = __value.asLong() & CodeUtil.mask(__kind.getBitCount());
                 return forInteger(__kind.getStackKind(), __value.asLong(), __value.asLong(), __mask, __mask);
             }
-            case Float:
-                return forFloat(__kind, __value.asFloat(), __value.asFloat(), !Float.isNaN(__value.asFloat()));
-            case Double:
-                return forFloat(__kind, __value.asDouble(), __value.asDouble(), !Double.isNaN(__value.asDouble()));
             case Illegal:
                 return forKind(JavaKind.Illegal);
             case Object:

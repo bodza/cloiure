@@ -51,14 +51,14 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
     // @cons
     protected PointerEqualsNode(NodeClass<? extends PointerEqualsNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(__c, CanonicalCondition.EQ, false, __x, __y);
+        super(__c, CanonicalCondition.EQ, __x, __y);
     }
 
     @Override
     public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, false, __forX, __forY, __view);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, __forX, __forY, __view);
         if (__value != null)
         {
             return __value;
@@ -104,7 +104,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
         }
 
         @Override
-        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __forX, ValueNode __forY, NodeView __view)
+        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, NodeView __view)
         {
             LogicNode __result = findSynonym(__forX, __forY, __view);
             if (__result != null)
@@ -115,11 +115,11 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
             {
                 return LogicConstantNode.contradiction();
             }
-            return super.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __unorderedIsTrue, __forX, __forY, __view);
+            return super.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forX, __forY, __view);
         }
 
         @Override
-        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, NodeView __view)
         {
             return new PointerEqualsNode(__newX, __newY);
         }

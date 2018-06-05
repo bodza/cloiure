@@ -9,7 +9,6 @@ import org.graalvm.collections.MapCursor;
 
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.BlockMap;
-import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;
@@ -166,15 +165,6 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
                             Constant __constant = __bestStamp.asConstant();
                             if (__constant != null)
                             {
-                                if (__bestStamp instanceof FloatStamp)
-                                {
-                                    FloatStamp __floatStamp = (FloatStamp) __bestStamp;
-                                    if (__floatStamp.contains(0.0d))
-                                    {
-                                        // Could also be -0.0d.
-                                        continue;
-                                    }
-                                }
                                 ConstantNode __stampConstant = ConstantNode.forConstant(__bestStamp, __constant, this.___metaAccess, this.___graph);
                                 replaceInput(__p, __node, __stampConstant);
                                 __replacements++;

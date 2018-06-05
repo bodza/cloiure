@@ -742,18 +742,8 @@ public final class AMD64Move
                 __masm.movq(ValueUtil.asRegister(__result), ValueUtil.asRegister(__input));
                 break;
             }
-            case SINGLE:
-            {
-                __masm.movflt(ValueUtil.asRegister(__result, AMD64Kind.SINGLE), ValueUtil.asRegister(__input, AMD64Kind.SINGLE));
-                break;
-            }
-            case DOUBLE:
-            {
-                __masm.movdbl(ValueUtil.asRegister(__result, AMD64Kind.DOUBLE), ValueUtil.asRegister(__input, AMD64Kind.DOUBLE));
-                break;
-            }
             default:
-                throw GraalError.shouldNotReachHere("kind=" + __kind);
+                throw GraalError.shouldNotReachHere();
         }
     }
 
@@ -780,16 +770,6 @@ public final class AMD64Move
             case QWORD:
             {
                 __masm.movq(__dest, __input);
-                break;
-            }
-            case SINGLE:
-            {
-                __masm.movflt(__dest, __input);
-                break;
-            }
-            case DOUBLE:
-            {
-                __masm.movsd(__dest, __input);
                 break;
             }
             default:
@@ -820,16 +800,6 @@ public final class AMD64Move
             case QWORD:
             {
                 __masm.movq(__result, __src);
-                break;
-            }
-            case SINGLE:
-            {
-                __masm.movflt(__result, __src);
-                break;
-            }
-            case DOUBLE:
-            {
-                __masm.movdbl(__result, __src);
                 break;
             }
             default:
@@ -870,28 +840,6 @@ public final class AMD64Move
                     __masm.movq(__result, __input.asLong());
                 }
                 break;
-            case Float:
-                // This is *not* the same as 'constant == 0.0f' in the case where constant is -0.0f
-                if (Float.floatToRawIntBits(__input.asFloat()) == Float.floatToRawIntBits(0.0f))
-                {
-                    __masm.xorps(__result, __result);
-                }
-                else
-                {
-                    __masm.movflt(__result, (AMD64Address) __crb.asFloatConstRef(__input));
-                }
-                break;
-            case Double:
-                // This is *not* the same as 'constant == 0.0d' in the case where constant is -0.0d
-                if (Double.doubleToRawLongBits(__input.asDouble()) == Double.doubleToRawLongBits(0.0d))
-                {
-                    __masm.xorpd(__result, __result);
-                }
-                else
-                {
-                    __masm.movdbl(__result, (AMD64Address) __crb.asDoubleConstRef(__input));
-                }
-                break;
             case Object:
                 // Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 // in which case the XOR will modify the condition flags and interfere with the Jcc.
@@ -921,10 +869,6 @@ public final class AMD64Move
             case Int:
                 break;
             case Long:
-                break;
-            case Float:
-                break;
-            case Double:
                 break;
             case Object:
                 if (__input.isNull())
@@ -957,16 +901,6 @@ public final class AMD64Move
                 __imm = __input.asLong();
                 break;
             }
-            case Float:
-            {
-                __imm = Float.floatToRawIntBits(__input.asFloat());
-                break;
-            }
-            case Double:
-            {
-                __imm = Double.doubleToRawLongBits(__input.asDouble());
-                break;
-            }
             case Object:
                 if (__input.isNull())
                 {
@@ -974,7 +908,7 @@ public final class AMD64Move
                 }
                 else
                 {
-                    throw GraalError.shouldNotReachHere("Non-null object constants must be in register");
+                    throw GraalError.shouldNotReachHere("non-null object constants must be in register");
                 }
                 break;
             default:
@@ -994,19 +928,17 @@ public final class AMD64Move
                 break;
             }
             case DWORD:
-            case SINGLE:
             {
                 __masm.movl(__dest, (int) __imm);
                 break;
             }
             case QWORD:
-            case DOUBLE:
             {
                 __masm.movlong(__dest, __imm);
                 break;
             }
             default:
-                throw GraalError.shouldNotReachHere("Unknown result Kind: " + __result.getPlatformKind());
+                throw GraalError.shouldNotReachHere();
         }
     }
 

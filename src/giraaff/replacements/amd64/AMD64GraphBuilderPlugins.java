@@ -10,7 +10,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.lir.amd64.AMD64ArithmeticLIRGeneratorTool.RoundingMode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
@@ -43,10 +42,8 @@ public final class AMD64GraphBuilderPlugins
                 registerIntegerLongPlugins(__invocationPlugins, IntegerSubstitutions.class, JavaKind.Int, __arch, __replacementsBytecodeProvider);
                 registerIntegerLongPlugins(__invocationPlugins, LongSubstitutions.class, JavaKind.Long, __arch, __replacementsBytecodeProvider);
                 registerUnsafePlugins(__invocationPlugins, __replacementsBytecodeProvider);
-                registerStringPlugins(__invocationPlugins, __arch, __replacementsBytecodeProvider);
                 registerStringLatin1Plugins(__invocationPlugins, __replacementsBytecodeProvider);
                 registerStringUTF16Plugins(__invocationPlugins, __replacementsBytecodeProvider);
-                registerMathPlugins(__invocationPlugins, __arch, __replacementsBytecodeProvider);
                 registerArraysEqualsPlugins(__invocationPlugins, __replacementsBytecodeProvider);
             }
         });
@@ -121,36 +118,6 @@ public final class AMD64GraphBuilderPlugins
                 }
             });
         }
-    }
-
-    private static void registerMathPlugins(InvocationPlugins __plugins, AMD64 __arch, BytecodeProvider __bytecodeProvider)
-    {
-        Registration __r = new Registration(__plugins, Math.class, __bytecodeProvider);
-
-        if (__arch.getFeatures().contains(CPUFeature.SSE4_1))
-        {
-            registerRound(__r, "rint", RoundingMode.NEAREST);
-            registerRound(__r, "ceil", RoundingMode.UP);
-            registerRound(__r, "floor", RoundingMode.DOWN);
-        }
-    }
-
-    private static void registerRound(Registration __r, String __name, RoundingMode __mode)
-    {
-        // @closure
-        __r.register1(__name, Double.TYPE, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __arg)
-            {
-                __b.push(JavaKind.Double, __b.append(new AMD64RoundNode(__arg, __mode)));
-                return true;
-            }
-        });
-    }
-
-    private static void registerStringPlugins(InvocationPlugins __plugins, AMD64 __arch, BytecodeProvider __replacementsBytecodeProvider)
-    {
     }
 
     private static void registerStringLatin1Plugins(InvocationPlugins __plugins, BytecodeProvider __replacementsBytecodeProvider)

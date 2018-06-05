@@ -14,11 +14,6 @@ public interface LIRKindTool
     LIRKind getIntegerKind(int __bits);
 
     ///
-    // Get an architecture specific floating point kind of a certain size.
-    ///
-    LIRKind getFloatingKind(int __bits);
-
-    ///
     // Get the architecture specific kind used to represent Java objects.
     ///
     LIRKind getObjectKind();

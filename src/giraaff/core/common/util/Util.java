@@ -95,10 +95,6 @@ public final class Util
                 return JavaConstant.forByte((byte) 0);
             case Char:
                 return JavaConstant.forChar((char) 0);
-            case Double:
-                return JavaConstant.DOUBLE_0;
-            case Float:
-                return JavaConstant.FLOAT_0;
             case Int:
                 return JavaConstant.INT_0;
             case Long:
@@ -123,10 +119,6 @@ public final class Util
                 return JavaConstant.forByte((byte) 1);
             case Char:
                 return JavaConstant.forChar((char) 1);
-            case Double:
-                return JavaConstant.DOUBLE_1;
-            case Float:
-                return JavaConstant.FLOAT_1;
             case Int:
                 return JavaConstant.INT_1;
             case Long:

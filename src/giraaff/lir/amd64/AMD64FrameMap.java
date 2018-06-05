@@ -37,7 +37,7 @@ import giraaff.lir.framemap.FrameMap;
 //            | outgoing overflow argument n   |    ^            |      |
 //            :     ...                        :    | positive   |      |
 //            | outgoing overflow argument 0   |    | offsets    v      v
-//    %sp--&gt;  +--------------------------------+---------------------------
+//    %sp-->  +--------------------------------+---------------------------
 //
 // </pre>
 //

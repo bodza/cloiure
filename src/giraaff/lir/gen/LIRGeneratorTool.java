@@ -31,7 +31,7 @@ import giraaff.lir.Variable;
 import giraaff.util.GraalError;
 
 // @iface LIRGeneratorTool
-public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindFactory<LIRKind>
+public interface LIRGeneratorTool extends ValueKindFactory<LIRKind>
 {
     ///
     // Factory for creating moves.
@@ -213,13 +213,13 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
 
     void emitJump(LabelRef __label);
 
-    void emitCompareBranch(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, boolean __unorderedIsTrue, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability);
+    void emitCompareBranch(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability);
 
     void emitOverflowCheckBranch(LabelRef __overflow, LabelRef __noOverflow, LIRKind __cmpKind, double __overflowProbability);
 
     void emitIntegerTestBranch(Value __left, Value __right, LabelRef __trueDestination, LabelRef __falseDestination, double __trueSuccessorProbability);
 
-    Variable emitConditionalMove(PlatformKind __cmpKind, Value __leftVal, Value __right, Condition __cond, boolean __unorderedIsTrue, Value __trueValue, Value __falseValue);
+    Variable emitConditionalMove(PlatformKind __cmpKind, Value __leftVal, Value __right, Condition __cond, Value __trueValue, Value __falseValue);
 
     Variable emitIntegerTestMove(Value __leftVal, Value __right, Value __trueValue, Value __falseValue);
 
@@ -240,8 +240,6 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
     void emitBlackhole(Value __operand);
 
     LIRKind getLIRKind(Stamp __stamp);
-
-    void emitPause();
 
     void emitPrefetchAllocate(Value __address);
 

@@ -13,10 +13,8 @@ import jdk.vm.ci.meta.SerializableConstant;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
-import giraaff.core.common.calc.FloatConvert;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.FloatConvertOp;
 import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp;
 import giraaff.core.common.type.ArithmeticOpTable.ShiftOp;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp;
@@ -1676,8 +1674,6 @@ public final class IntegerStamp extends PrimitiveStamp
             }
         },
 
-        null,
-
         // @closure
         new IntegerConvertOp.ZeroExtend()
         {
@@ -1813,102 +1809,6 @@ public final class IntegerStamp extends PrimitiveStamp
                 long __newLowerBound = CodeUtil.signExtend((__lowerBound | __newDownMask) & __newUpMask, __resultBits);
                 long __newUpperBound = CodeUtil.signExtend((__upperBound | __newDownMask) & __newUpMask, __resultBits);
                 return new IntegerStamp(__resultBits, __newLowerBound, __newUpperBound, __newDownMask, __newUpMask);
-            }
-        },
-
-        // @closure
-        new FloatConvertOp(FloatConvert.I2F)
-        {
-            @Override
-            public Constant foldConstant(Constant __c)
-            {
-                PrimitiveConstant __value = (PrimitiveConstant) __c;
-                return JavaConstant.forFloat(__value.asInt());
-            }
-
-            @Override
-            public Stamp foldStamp(Stamp __input)
-            {
-                if (__input.isEmpty())
-                {
-                    return StampFactory.empty(JavaKind.Float);
-                }
-                IntegerStamp __stamp = (IntegerStamp) __input;
-                float __lowerBound = __stamp.lowerBound();
-                float __upperBound = __stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Float, __lowerBound, __upperBound, true);
-            }
-        },
-
-        // @closure
-        new FloatConvertOp(FloatConvert.L2F)
-        {
-            @Override
-            public Constant foldConstant(Constant __c)
-            {
-                PrimitiveConstant __value = (PrimitiveConstant) __c;
-                return JavaConstant.forFloat(__value.asLong());
-            }
-
-            @Override
-            public Stamp foldStamp(Stamp __input)
-            {
-                if (__input.isEmpty())
-                {
-                    return StampFactory.empty(JavaKind.Float);
-                }
-                IntegerStamp __stamp = (IntegerStamp) __input;
-                float __lowerBound = __stamp.lowerBound();
-                float __upperBound = __stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Float, __lowerBound, __upperBound, true);
-            }
-        },
-
-        // @closure
-        new FloatConvertOp(FloatConvert.I2D)
-        {
-            @Override
-            public Constant foldConstant(Constant __c)
-            {
-                PrimitiveConstant __value = (PrimitiveConstant) __c;
-                return JavaConstant.forDouble(__value.asInt());
-            }
-
-            @Override
-            public Stamp foldStamp(Stamp __input)
-            {
-                if (__input.isEmpty())
-                {
-                    return StampFactory.empty(JavaKind.Double);
-                }
-                IntegerStamp __stamp = (IntegerStamp) __input;
-                double __lowerBound = __stamp.lowerBound();
-                double __upperBound = __stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Double, __lowerBound, __upperBound, true);
-            }
-        },
-
-        // @closure
-        new FloatConvertOp(FloatConvert.L2D)
-        {
-            @Override
-            public Constant foldConstant(Constant __c)
-            {
-                PrimitiveConstant __value = (PrimitiveConstant) __c;
-                return JavaConstant.forDouble(__value.asLong());
-            }
-
-            @Override
-            public Stamp foldStamp(Stamp __input)
-            {
-                if (__input.isEmpty())
-                {
-                    return StampFactory.empty(JavaKind.Double);
-                }
-                IntegerStamp __stamp = (IntegerStamp) __input;
-                double __lowerBound = __stamp.lowerBound();
-                double __upperBound = __stamp.upperBound();
-                return StampFactory.forFloat(JavaKind.Double, __lowerBound, __upperBound, true);
             }
         }
     );

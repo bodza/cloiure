@@ -672,18 +672,10 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         {
             CompareNode __compareA = (CompareNode) __a;
             Condition __conditionA = __compareA.condition().asCondition();
-            if (__compareA.unorderedIsTrue())
-            {
-                return false;
-            }
             if (__b instanceof CompareNode)
             {
                 CompareNode __compareB = (CompareNode) __b;
                 if (__compareA == __compareB)
-                {
-                    return false;
-                }
-                if (__compareB.unorderedIsTrue())
                 {
                     return false;
                 }
@@ -959,7 +951,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     NodeView __view = NodeView.from(__tool);
                     if ((__lessThan.getX() == __equals.getX() && __lessThan.getY() == __equals.getY()) || (__lessThan.getX() == __equals.getY() && __lessThan.getY() == __equals.getX()))
                     {
-                        return graph().unique(new NormalizeCompareNode(__lessThan.getX(), __lessThan.getY(), __conditional.trueValue().stamp(__view).getStackKind(), false));
+                        return graph().unique(new NormalizeCompareNode(__lessThan.getX(), __lessThan.getY(), __conditional.trueValue().stamp(__view).getStackKind()));
                     }
                 }
             }
@@ -1352,7 +1344,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         {
             EndNode __end = __ends.next();
             __phiValues.put(__end, __phi.valueAt(__end));
-            if (__compare.condition().foldCondition(__xs[__i], __ys[__i], __tool.getConstantReflection(), __compare.unorderedIsTrue()))
+            if (__compare.condition().foldCondition(__xs[__i], __ys[__i], __tool.getConstantReflection()))
             {
                 __trueEnds.add(__end);
             }

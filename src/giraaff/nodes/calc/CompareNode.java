@@ -30,8 +30,6 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
 
     // @field
     protected final CanonicalCondition ___condition;
-    // @field
-    protected final boolean ___unorderedIsTrue;
 
     ///
     // Constructs a new Compare instruction.
@@ -40,11 +38,10 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
     // @param y the instruction that produces the second input to this instruction
     ///
     // @cons
-    protected CompareNode(NodeClass<? extends CompareNode> __c, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __x, ValueNode __y)
+    protected CompareNode(NodeClass<? extends CompareNode> __c, CanonicalCondition __condition, ValueNode __x, ValueNode __y)
     {
         super(__c, __x, __y);
         this.___condition = __condition;
-        this.___unorderedIsTrue = __unorderedIsTrue;
     }
 
     ///
@@ -57,38 +54,28 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         return this.___condition;
     }
 
-    ///
-    // Checks whether unordered inputs mean true or false (only applies to float operations).
-    //
-    // @return {@code true} if unordered inputs produce true
-    ///
-    public final boolean unorderedIsTrue()
-    {
-        return this.___unorderedIsTrue;
-    }
-
-    public static LogicNode tryConstantFold(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
+    public static LogicNode tryConstantFold(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, ConstantReflectionProvider __constantReflection)
     {
         if (__forX.isConstant() && __forY.isConstant() && (__constantReflection != null || __forX.asConstant() instanceof PrimitiveConstant))
         {
-            return LogicConstantNode.forBoolean(__condition.foldCondition(__forX.asConstant(), __forY.asConstant(), __constantReflection, __unorderedIsTrue));
+            return LogicConstantNode.forBoolean(__condition.foldCondition(__forX.asConstant(), __forY.asConstant(), __constantReflection));
         }
         return null;
     }
 
     @SuppressWarnings("unused")
-    public static LogicNode tryConstantFoldPrimitive(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, boolean __unorderedIsTrue, NodeView __view)
+    public static LogicNode tryConstantFoldPrimitive(CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         if (__forX.asConstant() instanceof PrimitiveConstant && __forY.asConstant() instanceof PrimitiveConstant)
         {
-            return LogicConstantNode.forBoolean(__condition.foldCondition((PrimitiveConstant) __forX.asConstant(), (PrimitiveConstant) __forY.asConstant(), __unorderedIsTrue));
+            return LogicConstantNode.forBoolean(__condition.foldCondition((PrimitiveConstant) __forX.asConstant(), (PrimitiveConstant) __forY.asConstant()));
         }
         return null;
     }
 
     ///
-    // Does this operation represent an identity check such that for x == y, x is exactly the same
-    // thing as y. This is generally true except for some floating point comparisons.
+    // Does this operation represent an identity check such that for x == y,
+    // x is exactly the same thing as y.
     //
     // @return true for identity comparisons
     ///
@@ -100,9 +87,9 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
     // @class CompareNode.CompareOp
     public abstract static class CompareOp
     {
-        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, boolean __unorderedIsTrue, ValueNode __forX, ValueNode __forY, NodeView __view)
+        public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, NodeView __view)
         {
-            LogicNode __constantCondition = tryConstantFold(__condition, __forX, __forY, __constantReflection, __unorderedIsTrue);
+            LogicNode __constantCondition = tryConstantFold(__condition, __forX, __forY, __constantReflection);
             if (__constantCondition != null)
             {
                 return __constantCondition;
@@ -110,14 +97,14 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
             LogicNode __result;
             if (__forX.isConstant())
             {
-                if ((__result = canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forX.asConstant(), __forY, true, __unorderedIsTrue, __view)) != null)
+                if ((__result = canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forX.asConstant(), __forY, true, __view)) != null)
                 {
                     return __result;
                 }
             }
             else if (__forY.isConstant())
             {
-                if ((__result = canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forY.asConstant(), __forX, false, __unorderedIsTrue, __view)) != null)
+                if ((__result = canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __forY.asConstant(), __forX, false, __view)) != null)
                 {
                     return __result;
                 }
@@ -143,14 +130,14 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
                             // Do not perform for zero or sign extend if there are multiple usages of the value.
                             return null;
                         }
-                        return duplicateModified(__convertX.getValue(), __convertY.getValue(), __unorderedIsTrue, __view);
+                        return duplicateModified(__convertX.getValue(), __convertY.getValue(), __view);
                     }
                 }
             }
             return null;
         }
 
-        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, Constant __constant, ValueNode __nonConstant, boolean __mirrored, boolean __unorderedIsTrue, NodeView __view)
+        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, Constant __constant, ValueNode __nonConstant, boolean __mirrored, NodeView __view)
         {
             if (__nonConstant instanceof ConditionalNode)
             {
@@ -159,7 +146,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
                 {
                     __realCondition = __realCondition.mirror();
                 }
-                return optimizeConditional(__constant, (ConditionalNode) __nonConstant, __constantReflection, __realCondition, __unorderedIsTrue);
+                return optimizeConditional(__constant, (ConditionalNode) __nonConstant, __constantReflection, __realCondition);
             }
             else if (__nonConstant instanceof NormalizeCompareNode)
             {
@@ -189,11 +176,11 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
                     {
                         if (__mirrored)
                         {
-                            return duplicateModified(__newConstant, __convert.getValue(), __unorderedIsTrue, __view);
+                            return duplicateModified(__newConstant, __convert.getValue(), __view);
                         }
                         else
                         {
-                            return duplicateModified(__convert.getValue(), __newConstant, __unorderedIsTrue, __view);
+                            return duplicateModified(__convert.getValue(), __newConstant, __view);
                         }
                     }
                 }
@@ -221,15 +208,15 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
             throw new BailoutException("NormalizeCompareNode connected to %s (%s %s %s)", this, __constant, __normalizeNode, __mirrored);
         }
 
-        private static LogicNode optimizeConditional(Constant __constant, ConditionalNode __conditionalNode, ConstantReflectionProvider __constantReflection, Condition __cond, boolean __unorderedIsTrue)
+        private static LogicNode optimizeConditional(Constant __constant, ConditionalNode __conditionalNode, ConstantReflectionProvider __constantReflection, Condition __cond)
         {
             Constant __trueConstant = __conditionalNode.trueValue().asConstant();
             Constant __falseConstant = __conditionalNode.falseValue().asConstant();
 
             if (__falseConstant != null && __trueConstant != null && __constantReflection != null)
             {
-                boolean __trueResult = __cond.foldCondition(__trueConstant, __constant, __constantReflection, __unorderedIsTrue);
-                boolean __falseResult = __cond.foldCondition(__falseConstant, __constant, __constantReflection, __unorderedIsTrue);
+                boolean __trueResult = __cond.foldCondition(__trueConstant, __constant, __constantReflection);
+                boolean __falseResult = __cond.foldCondition(__falseConstant, __constant, __constantReflection);
 
                 if (__trueResult == __falseResult)
                 {
@@ -251,7 +238,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
             return null;
         }
 
-        protected abstract LogicNode duplicateModified(ValueNode __newW, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view);
+        protected abstract LogicNode duplicateModified(ValueNode __newW, ValueNode __newY, NodeView __view);
     }
 
     public static LogicNode createCompareNode(StructuredGraph __graph, CanonicalCondition __condition, ValueNode __x, ValueNode __y, ConstantReflectionProvider __constantReflection, NodeView __view)

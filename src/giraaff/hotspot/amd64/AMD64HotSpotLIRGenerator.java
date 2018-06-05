@@ -352,8 +352,8 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     }
 
     ///
-    // Gets the {@link Stub} this generator is generating code for or {@code null} if a stub is not
-    // being generated.
+    // Gets the {@link Stub} this generator is generating code for or {@code null}
+    // if a stub is not being generated.
     ///
     public Stub getStub()
     {

@@ -23,19 +23,14 @@ import giraaff.asm.amd64.AMD64Assembler.AMD64RMIOp;
 import giraaff.asm.amd64.AMD64Assembler.AMD64RMOp;
 import giraaff.asm.amd64.AMD64Assembler.AMD64RRMOp;
 import giraaff.asm.amd64.AMD64Assembler.AMD64Shift;
-import giraaff.asm.amd64.AMD64Assembler.AVXOp;
 import giraaff.asm.amd64.AMD64Assembler.OperandSize;
-import giraaff.asm.amd64.AMD64Assembler.SSEOp;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
-import giraaff.core.common.calc.FloatConvert;
 import giraaff.lir.ConstantValue;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.Variable;
 import giraaff.lir.amd64.AMD64AddressValue;
-import giraaff.lir.amd64.AMD64Arithmetic;
-import giraaff.lir.amd64.AMD64Arithmetic.FPDivRemOp;
 import giraaff.lir.amd64.AMD64ArithmeticLIRGeneratorTool;
 import giraaff.lir.amd64.AMD64Binary;
 import giraaff.lir.amd64.AMD64BinaryConsumer;
@@ -69,8 +64,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     {
         AllocatableValue __input = getLIRGen().asAllocatable(__inputVal);
         Variable __result = getLIRGen().newVariable(LIRKind.combine(__input));
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         switch ((AMD64Kind) __input.getPlatformKind())
         {
             case DWORD:
@@ -83,26 +76,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
                 getLIRGen().append(new AMD64Unary.MOp(AMD64MOp.NEG, OperandSize.QWORD, __result, __input));
                 break;
             }
-            case SINGLE:
-                if (__isAvx)
-                {
-                    getLIRGen().append(new AMD64Binary.DataThreeOp(AVXOp.XOR, OperandSize.PS, __result, __input, JavaConstant.forFloat(Float.intBitsToFloat(0x80000000)), 16));
-                }
-                else
-                {
-                    getLIRGen().append(new AMD64Binary.DataTwoOp(SSEOp.XOR, OperandSize.PS, __result, __input, JavaConstant.forFloat(Float.intBitsToFloat(0x80000000)), 16));
-                }
-                break;
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    getLIRGen().append(new AMD64Binary.DataThreeOp(AVXOp.XOR, OperandSize.PD, __result, __input, JavaConstant.forDouble(Double.longBitsToDouble(0x8000000000000000L)), 16));
-                }
-                else
-                {
-                    getLIRGen().append(new AMD64Binary.DataTwoOp(SSEOp.XOR, OperandSize.PD, __result, __input, JavaConstant.forDouble(Double.longBitsToDouble(0x8000000000000000L)), 16));
-                }
-                break;
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -293,8 +266,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     @Override
     public Variable emitAdd(LIRKind __resultKind, Value __a, Value __b, boolean __setFlags)
     {
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
@@ -317,24 +288,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
                     }
                 }
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.ADD, OperandSize.QWORD, true, __a, __b, __setFlags);
-            case SINGLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.ADD, OperandSize.SS, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.ADD, OperandSize.SS, true, __a, __b);
-                }
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.ADD, OperandSize.SD, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.ADD, OperandSize.SD, true, __a, __b);
-                }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -343,32 +296,12 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     @Override
     public Variable emitSub(LIRKind __resultKind, Value __a, Value __b, boolean __setFlags)
     {
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.SUB, OperandSize.DWORD, false, __a, __b, __setFlags);
             case QWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.SUB, OperandSize.QWORD, false, __a, __b, __setFlags);
-            case SINGLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.SUB, OperandSize.SS, false, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.SUB, OperandSize.SS, false, __a, __b);
-                }
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.SUB, OperandSize.SD, false, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.SUB, OperandSize.SD, false, __a, __b);
-                }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -420,32 +353,12 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     public Variable emitMul(Value __a, Value __b, boolean __setFlags)
     {
         LIRKind __resultKind = LIRKind.combine(__a, __b);
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
                 return emitIMUL(OperandSize.DWORD, __a, __b);
             case QWORD:
                 return emitIMUL(OperandSize.QWORD, __a, __b);
-            case SINGLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.MUL, OperandSize.SS, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.MUL, OperandSize.SS, true, __a, __b);
-                }
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.MUL, OperandSize.SD, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.MUL, OperandSize.SD, true, __a, __b);
-                }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -608,8 +521,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     @Override
     public Value emitDiv(Value __a, Value __b, LIRFrameState __state)
     {
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         LIRKind __resultKind = LIRKind.combine(__a, __b);
         switch ((AMD64Kind) __a.getPlatformKind())
         {
@@ -623,24 +534,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
                 AMD64MulDivOp __lop = emitIDIV(OperandSize.QWORD, __a, __b, __state);
                 return getLIRGen().emitMove(__lop.getQuotient());
             }
-            case SINGLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.DIV, OperandSize.SS, false, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.DIV, OperandSize.SS, false, __a, __b);
-                }
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.DIV, OperandSize.SD, false, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.DIV, OperandSize.SD, false, __a, __b);
-                }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -660,20 +553,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
             {
                 AMD64MulDivOp __lop = emitIDIV(OperandSize.QWORD, __a, __b, __state);
                 return getLIRGen().emitMove(__lop.getRemainder());
-            }
-            case SINGLE:
-            {
-                LIRGenerator __gen = getLIRGen();
-                Variable __result = __gen.newVariable(LIRKind.combine(__a, __b));
-                __gen.append(new FPDivRemOp(AMD64Arithmetic.FREM, __result, __gen.load(__a), __gen.load(__b)));
-                return __result;
-            }
-            case DOUBLE:
-            {
-                LIRGenerator __gen = getLIRGen();
-                Variable __result = __gen.newVariable(LIRKind.combine(__a, __b));
-                __gen.append(new FPDivRemOp(AMD64Arithmetic.DREM, __result, __gen.load(__a), __gen.load(__b)));
-                return __result;
             }
             default:
                 throw GraalError.shouldNotReachHere();
@@ -728,32 +607,12 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     public Variable emitAnd(Value __a, Value __b)
     {
         LIRKind __resultKind = LIRKind.combine(__a, __b);
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.AND, OperandSize.DWORD, true, __a, __b, false);
             case QWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.AND, OperandSize.QWORD, true, __a, __b, false);
-            case SINGLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.AND, OperandSize.PS, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.AND, OperandSize.PS, true, __a, __b);
-                }
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.AND, OperandSize.PD, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.AND, OperandSize.PD, true, __a, __b);
-                }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -763,32 +622,12 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     public Variable emitOr(Value __a, Value __b)
     {
         LIRKind __resultKind = LIRKind.combine(__a, __b);
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.OR, OperandSize.DWORD, true, __a, __b, false);
             case QWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.OR, OperandSize.QWORD, true, __a, __b, false);
-            case SINGLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.OR, OperandSize.PS, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.OR, OperandSize.PS, true, __a, __b);
-                }
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.OR, OperandSize.PD, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.OR, OperandSize.PD, true, __a, __b);
-                }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -798,32 +637,12 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
     public Variable emitXor(Value __a, Value __b)
     {
         LIRKind __resultKind = LIRKind.combine(__a, __b);
-        TargetDescription __target = getLIRGen().target();
-        boolean __isAvx = ((AMD64) __target.arch).getFeatures().contains(CPUFeature.AVX);
         switch ((AMD64Kind) __a.getPlatformKind())
         {
             case DWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.XOR, OperandSize.DWORD, true, __a, __b, false);
             case QWORD:
                 return emitBinary(__resultKind, AMD64BinaryArithmetic.XOR, OperandSize.QWORD, true, __a, __b, false);
-            case SINGLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.XOR, OperandSize.PS, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.XOR, OperandSize.PS, true, __a, __b);
-                }
-            case DOUBLE:
-                if (__isAvx)
-                {
-                    return emitBinary(__resultKind, AVXOp.XOR, OperandSize.PD, true, __a, __b);
-                }
-                else
-                {
-                    return emitBinary(__resultKind, SSEOp.XOR, OperandSize.PD, true, __a, __b);
-                }
             default:
                 throw GraalError.shouldNotReachHere();
         }
@@ -947,71 +766,7 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
             return __inputVal;
         }
 
-        AllocatableValue __input = getLIRGen().asAllocatable(__inputVal);
-        // Conversions between integer to floating point types require moves between CPU and FPU registers.
-        AMD64Kind __fromKind = (AMD64Kind) __from.getPlatformKind();
-        switch ((AMD64Kind) __to.getPlatformKind())
-        {
-            case DWORD:
-                switch (__fromKind)
-                {
-                    case SINGLE:
-                        return emitConvertOp(__to, AMD64MROp.MOVD, OperandSize.DWORD, __input);
-                }
-                break;
-            case QWORD:
-                switch (__fromKind)
-                {
-                    case DOUBLE:
-                        return emitConvertOp(__to, AMD64MROp.MOVQ, OperandSize.QWORD, __input);
-                }
-                break;
-            case SINGLE:
-                switch (__fromKind)
-                {
-                    case DWORD:
-                        return emitConvertOp(__to, AMD64RMOp.MOVD, OperandSize.DWORD, __input);
-                }
-                break;
-            case DOUBLE:
-                switch (__fromKind)
-                {
-                    case QWORD:
-                        return emitConvertOp(__to, AMD64RMOp.MOVQ, OperandSize.QWORD, __input);
-                }
-                break;
-        }
         throw GraalError.shouldNotReachHere();
-    }
-
-    @Override
-    public Value emitFloatConvert(FloatConvert __op, Value __input)
-    {
-        switch (__op)
-        {
-            case D2F:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.SINGLE), SSEOp.CVTSD2SS, OperandSize.SD, __input);
-            case D2I:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.DWORD), SSEOp.CVTTSD2SI, OperandSize.DWORD, __input);
-            case D2L:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.QWORD), SSEOp.CVTTSD2SI, OperandSize.QWORD, __input);
-            case F2D:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.DOUBLE), SSEOp.CVTSS2SD, OperandSize.SS, __input);
-            case F2I:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.DWORD), SSEOp.CVTTSS2SI, OperandSize.DWORD, __input);
-            case F2L:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.QWORD), SSEOp.CVTTSS2SI, OperandSize.QWORD, __input);
-            case I2D:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.DOUBLE), SSEOp.CVTSI2SD, OperandSize.DWORD, __input);
-            case I2F:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.SINGLE), SSEOp.CVTSI2SS, OperandSize.DWORD, __input);
-            case L2D:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.DOUBLE), SSEOp.CVTSI2SD, OperandSize.QWORD, __input);
-            case L2F:
-                return emitConvertOp(LIRKind.combine(__input).changeType(AMD64Kind.SINGLE), SSEOp.CVTSI2SS, OperandSize.QWORD, __input);
-            default:
-                throw GraalError.shouldNotReachHere();
-        }
     }
 
     @Override
@@ -1198,52 +953,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
         return __result;
     }
 
-    @Override
-    public Value emitMathAbs(Value __input)
-    {
-        LIRGenerator __gen = getLIRGen();
-        Variable __result = __gen.newVariable(LIRKind.combine(__input));
-        switch ((AMD64Kind) __input.getPlatformKind())
-        {
-            case SINGLE:
-            {
-                __gen.append(new AMD64Binary.DataTwoOp(SSEOp.AND, OperandSize.PS, __result, __gen.asAllocatable(__input), JavaConstant.forFloat(Float.intBitsToFloat(0x7FFFFFFF)), 16));
-                break;
-            }
-            case DOUBLE:
-            {
-                __gen.append(new AMD64Binary.DataTwoOp(SSEOp.AND, OperandSize.PD, __result, __gen.asAllocatable(__input), JavaConstant.forDouble(Double.longBitsToDouble(0x7FFFFFFFFFFFFFFFL)), 16));
-                break;
-            }
-            default:
-                throw GraalError.shouldNotReachHere();
-        }
-        return __result;
-    }
-
-    @Override
-    public Value emitMathSqrt(Value __input)
-    {
-        LIRGenerator __gen = getLIRGen();
-        Variable __result = __gen.newVariable(LIRKind.combine(__input));
-        switch ((AMD64Kind) __input.getPlatformKind())
-        {
-            case SINGLE:
-            {
-                __gen.append(new AMD64Unary.RMOp(SSEOp.SQRT, OperandSize.SS, __result, __gen.asAllocatable(__input)));
-                break;
-            }
-            case DOUBLE:
-            {
-                __gen.append(new AMD64Unary.RMOp(SSEOp.SQRT, OperandSize.SD, __result, __gen.asAllocatable(__input)));
-                break;
-            }
-            default:
-                throw GraalError.shouldNotReachHere();
-        }
-        return __result;
-    }
-
     protected AMD64LIRGenerator getAMD64LIRGen()
     {
         return (AMD64LIRGenerator) getLIRGen();
@@ -1274,16 +983,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
             case QWORD:
             {
                 getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOV, OperandSize.QWORD, __result, __loadAddress, __state));
-                break;
-            }
-            case SINGLE:
-            {
-                getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVSS, OperandSize.SS, __result, __loadAddress, __state));
-                break;
-            }
-            case DOUBLE:
-            {
-                getLIRGen().append(new AMD64Unary.MemoryOp(AMD64RMOp.MOVSD, OperandSize.SD, __result, __loadAddress, __state));
                 break;
             }
             default:
@@ -1341,14 +1040,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
                     __size = OperandSize.QWORD;
                     __imm = __jc.asLong();
                     break;
-                case SINGLE:
-                    __size = OperandSize.DWORD;
-                    __imm = Float.floatToRawIntBits(__jc.asFloat());
-                    break;
-                case DOUBLE:
-                    __size = OperandSize.QWORD;
-                    __imm = Double.doubleToRawLongBits(__jc.asDouble());
-                    break;
                 default:
                     throw GraalError.shouldNotReachHere("unexpected kind " + __kind);
             }
@@ -1386,16 +1077,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
             case QWORD:
             {
                 getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOV, OperandSize.QWORD, __address, __value, __state));
-                break;
-            }
-            case SINGLE:
-            {
-                getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOVSS, OperandSize.SS, __address, __value, __state));
-                break;
-            }
-            case DOUBLE:
-            {
-                getLIRGen().append(new AMD64BinaryConsumer.MemoryMROp(AMD64MROp.MOVSD, OperandSize.SD, __address, __value, __state));
                 break;
             }
             default:
@@ -1444,16 +1125,6 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
                 __size = OperandSize.QWORD;
                 break;
             }
-            case SINGLE:
-            {
-                getLIRGen().append(new AMD64BinaryConsumer.Op(SSEOp.UCOMIS, OperandSize.PS, __left, getLIRGen().asAllocatable(__right)));
-                return;
-            }
-            case DOUBLE:
-            {
-                getLIRGen().append(new AMD64BinaryConsumer.Op(SSEOp.UCOMIS, OperandSize.PD, __left, getLIRGen().asAllocatable(__right)));
-                return;
-            }
             default:
                 throw GraalError.shouldNotReachHere("unexpected kind: " + __cmpKind);
         }
@@ -1498,21 +1169,5 @@ public final class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator im
 
         // fallback: load, then compare
         getLIRGen().append(new AMD64BinaryConsumer.Op(AMD64BinaryArithmetic.CMP.getRMOpcode(__size), __size, __left, getLIRGen().asAllocatable(__right)));
-    }
-
-    @Override
-    public Value emitRound(Value __value, RoundingMode __mode)
-    {
-        LIRGenerator __gen = getLIRGen();
-        Variable __result = __gen.newVariable(LIRKind.combine(__value));
-        if (__value.getPlatformKind() == AMD64Kind.SINGLE)
-        {
-            __gen.append(new AMD64Binary.RMIOp(AMD64RMIOp.ROUNDSS, OperandSize.PD, __result, __gen.asAllocatable(__value), __mode.___encoding));
-        }
-        else
-        {
-            __gen.append(new AMD64Binary.RMIOp(AMD64RMIOp.ROUNDSD, OperandSize.PD, __result, __gen.asAllocatable(__value), __mode.___encoding));
-        }
-        return __result;
     }
 }

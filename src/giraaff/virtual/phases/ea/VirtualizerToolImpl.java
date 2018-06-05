@@ -141,13 +141,12 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
         {
             if (__entryKind == JavaKind.Long && __oldValue.getStackKind() == __newValue.getStackKind() && __oldValue.getStackKind().isPrimitive())
             {
-                // Special case: If the entryKind is long, allow arbitrary kinds as long as a value
-                // of the same kind is already there. This can only happen if some other node
-                // initialized the entry with a value of a different kind. One example where this
-                // happens is the Truffle NewFrameNode.
+                // Special case: If the entryKind is long, allow arbitrary kinds as long as a value of the
+                // same kind is already there. This can only happen if some other node initialized the entry with
+                // a value of a different kind. One example where this happens is the Truffle NewFrameNode.
                 __canVirtualize = true;
             }
-            else if (__entryKind == JavaKind.Int && (__accessKind == JavaKind.Long || __accessKind == JavaKind.Double) && __offset % 8 == 0)
+            else if (__entryKind == JavaKind.Int && __accessKind == JavaKind.Long && __offset % 8 == 0)
             {
                 // Special case: Allow storing a single long or double value into two consecutive int slots.
                 int __nextIndex = __virtual.entryIndexForOffset(getArrayOffsetProvider(), __offset + 4, JavaKind.Int);
@@ -168,7 +167,7 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
                     // storing double word value two int slots
                     this.___state.setEntry(__virtual.getObjectId(), __index + 1, getIllegalConstant());
                 }
-                else if (__oldValue.getStackKind() == JavaKind.Double || __oldValue.getStackKind() == JavaKind.Long)
+                else if (__oldValue.getStackKind() == JavaKind.Long)
                 {
                     // splitting double word constant by storing over it with an int
                     ValueNode __secondHalf = UnpackEndianHalfNode.create(__oldValue, false, NodeView.DEFAULT);

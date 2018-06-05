@@ -204,7 +204,7 @@ public final class GraalCompiler
         AllocationContext __allocContext = new AllocationContext(__lirGen.getSpillMoveFactory(), __registerAllocationConfig);
         __lirSuites.getAllocationStage().apply(__target, __lirGenRes, __allocContext);
 
-        PostAllocationOptimizationContext __postAllocOptContext = new PostAllocationOptimizationContext(__lirGen);
+        PostAllocationOptimizationContext __postAllocOptContext = new PostAllocationOptimizationContext();
         __lirSuites.getPostAllocationOptimizationStage().apply(__target, __lirGenRes, __postAllocOptContext);
 
         return __lirGenRes;

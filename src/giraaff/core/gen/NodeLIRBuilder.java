@@ -431,13 +431,13 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     {
         LIRKind __kind = this.___gen.getLIRKind(__node.getValue().stamp(NodeView.DEFAULT));
         Value __nullValue = this.___gen.emitConstant(__kind, JavaConstant.NULL_POINTER);
-        this.___gen.emitCompareBranch(__kind.getPlatformKind(), operand(__node.getValue()), __nullValue, Condition.EQ, false, __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
+        this.___gen.emitCompareBranch(__kind.getPlatformKind(), operand(__node.getValue()), __nullValue, Condition.EQ, __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
     }
 
     public void emitCompareBranch(CompareNode __compare, LabelRef __trueSuccessor, LabelRef __falseSuccessor, double __trueSuccessorProbability)
     {
         PlatformKind __kind = this.___gen.getLIRKind(__compare.getX().stamp(NodeView.DEFAULT)).getPlatformKind();
-        this.___gen.emitCompareBranch(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __compare.unorderedIsTrue(), __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
+        this.___gen.emitCompareBranch(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __trueSuccessor, __falseSuccessor, __trueSuccessorProbability);
     }
 
     public void emitIntegerTestBranch(IntegerTestNode __test, LabelRef __trueSuccessor, LabelRef __falseSuccessor, double __trueSuccessorProbability)
@@ -466,13 +466,13 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             IsNullNode __isNullNode = (IsNullNode) __node;
             LIRKind __kind = this.___gen.getLIRKind(__isNullNode.getValue().stamp(NodeView.DEFAULT));
             Value __nullValue = this.___gen.emitConstant(__kind, JavaConstant.NULL_POINTER);
-            return this.___gen.emitConditionalMove(__kind.getPlatformKind(), operand(__isNullNode.getValue()), __nullValue, Condition.EQ, false, __trueValue, __falseValue);
+            return this.___gen.emitConditionalMove(__kind.getPlatformKind(), operand(__isNullNode.getValue()), __nullValue, Condition.EQ, __trueValue, __falseValue);
         }
         else if (__node instanceof CompareNode)
         {
             CompareNode __compare = (CompareNode) __node;
             PlatformKind __kind = this.___gen.getLIRKind(__compare.getX().stamp(NodeView.DEFAULT)).getPlatformKind();
-            return this.___gen.emitConditionalMove(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __compare.unorderedIsTrue(), __trueValue, __falseValue);
+            return this.___gen.emitConditionalMove(__kind, operand(__compare.getX()), operand(__compare.getY()), __compare.condition().asCondition(), __trueValue, __falseValue);
         }
         else if (__node instanceof LogicConstantNode)
         {
@@ -581,7 +581,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                 double __probability = __x.probability(__x.keySuccessor(0));
                 LIRKind __kind = this.___gen.getLIRKind(__x.value().stamp(NodeView.DEFAULT));
                 Value __key = this.___gen.emitConstant(__kind, __x.keyAt(0));
-                this.___gen.emitCompareBranch(__kind.getPlatformKind(), this.___gen.load(operand(__x.value())), __key, Condition.EQ, false, getLIRBlock(__x.keySuccessor(0)), __defaultTarget, __probability);
+                this.___gen.emitCompareBranch(__kind.getPlatformKind(), this.___gen.load(operand(__x.value())), __key, Condition.EQ, getLIRBlock(__x.keySuccessor(0)), __defaultTarget, __probability);
             }
             else if (__x instanceof IntegerSwitchNode && __x.isSorted())
             {

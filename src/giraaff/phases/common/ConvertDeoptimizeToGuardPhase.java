@@ -139,7 +139,7 @@ public final class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
             {
                 __ys = __yPhi.valueAt(__mergePredecessor).asConstant();
             }
-            if (__xs != null && __ys != null && __compare.condition().foldCondition(__xs, __ys, __context.getConstantReflection(), __compare.unorderedIsTrue()) == __fixedGuard.isNegated())
+            if (__xs != null && __ys != null && __compare.condition().foldCondition(__xs, __ys, __context.getConstantReflection()) == __fixedGuard.isNegated())
             {
                 propagateFixed(__mergePredecessor, __fixedGuard, __context.getLowerer());
             }

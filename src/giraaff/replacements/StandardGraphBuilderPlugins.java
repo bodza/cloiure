@@ -38,16 +38,12 @@ import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
-import giraaff.nodes.calc.AbsNode;
 import giraaff.nodes.calc.CompareNode;
 import giraaff.nodes.calc.ConditionalNode;
-import giraaff.nodes.calc.FloatEqualsNode;
 import giraaff.nodes.calc.IntegerEqualsNode;
 import giraaff.nodes.calc.NarrowNode;
-import giraaff.nodes.calc.ReinterpretNode;
 import giraaff.nodes.calc.RightShiftNode;
 import giraaff.nodes.calc.SignExtendNode;
-import giraaff.nodes.calc.SqrtNode;
 import giraaff.nodes.calc.UnsignedDivNode;
 import giraaff.nodes.calc.UnsignedRemNode;
 import giraaff.nodes.calc.ZeroExtendNode;
@@ -108,8 +104,6 @@ public final class StandardGraphBuilderPlugins
         registerShortPlugins(__plugins);
         registerIntegerLongPlugins(__plugins, JavaKind.Int);
         registerIntegerLongPlugins(__plugins, JavaKind.Long);
-        registerFloatPlugins(__plugins);
-        registerDoublePlugins(__plugins);
         registerArraysPlugins(__plugins, __bytecodeProvider);
         registerArrayPlugins(__plugins, __bytecodeProvider);
         registerUnsafePlugins(__plugins, __bytecodeProvider);
@@ -309,82 +303,6 @@ public final class StandardGraphBuilderPlugins
         });
     }
 
-    private static void registerFloatPlugins(InvocationPlugins __plugins)
-    {
-        Registration __r = new Registration(__plugins, Float.class);
-        // @closure
-        __r.register1("floatToRawIntBits", float.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                __b.push(JavaKind.Int, __b.append(ReinterpretNode.create(JavaKind.Int, __value, NodeView.DEFAULT)));
-                return true;
-            }
-        });
-        // @closure
-        __r.register1("floatToIntBits", float.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                LogicNode __notNan = __b.append(FloatEqualsNode.create(__value, __value, NodeView.DEFAULT));
-                ValueNode __raw = __b.append(ReinterpretNode.create(JavaKind.Int, __value, NodeView.DEFAULT));
-                ValueNode __result = __b.append(ConditionalNode.create(__notNan, __raw, ConstantNode.forInt(0x7fc00000), NodeView.DEFAULT));
-                __b.push(JavaKind.Int, __result);
-                return true;
-            }
-        });
-        // @closure
-        __r.register1("intBitsToFloat", int.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                __b.push(JavaKind.Float, __b.append(ReinterpretNode.create(JavaKind.Float, __value, NodeView.DEFAULT)));
-                return true;
-            }
-        });
-    }
-
-    private static void registerDoublePlugins(InvocationPlugins __plugins)
-    {
-        Registration __r = new Registration(__plugins, Double.class);
-        // @closure
-        __r.register1("doubleToRawLongBits", double.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                __b.push(JavaKind.Long, __b.append(ReinterpretNode.create(JavaKind.Long, __value, NodeView.DEFAULT)));
-                return true;
-            }
-        });
-        // @closure
-        __r.register1("doubleToLongBits", double.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                LogicNode __notNan = __b.append(FloatEqualsNode.create(__value, __value, NodeView.DEFAULT));
-                ValueNode __raw = __b.append(ReinterpretNode.create(JavaKind.Long, __value, NodeView.DEFAULT));
-                ValueNode __result = __b.append(ConditionalNode.create(__notNan, __raw, ConstantNode.forLong(0x7ff8000000000000L), NodeView.DEFAULT));
-                __b.push(JavaKind.Long, __result);
-                return true;
-            }
-        });
-        // @closure
-        __r.register1("longBitsToDouble", long.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                __b.push(JavaKind.Double, __b.append(ReinterpretNode.create(JavaKind.Double, __value, NodeView.DEFAULT)));
-                return true;
-            }
-        });
-    }
-
     private static void registerMathPlugins(InvocationPlugins __plugins, boolean __allowDeoptimization)
     {
         Registration __r = new Registration(__plugins, Math.class);
@@ -450,36 +368,6 @@ public final class StandardGraphBuilderPlugins
                 });
             }
         }
-        // @closure
-        __r.register1("abs", Float.TYPE, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                __b.push(JavaKind.Float, __b.append(new AbsNode(__value).canonical(null)));
-                return true;
-            }
-        });
-        // @closure
-        __r.register1("abs", Double.TYPE, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                __b.push(JavaKind.Double, __b.append(new AbsNode(__value).canonical(null)));
-                return true;
-            }
-        });
-        // @closure
-        __r.register1("sqrt", Double.TYPE, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __value)
-            {
-                __b.push(JavaKind.Double, __b.append(SqrtNode.create(__value, NodeView.DEFAULT)));
-                return true;
-            }
-        });
     }
 
     // @class StandardGraphBuilderPlugins.UnsignedMathPlugin
@@ -943,17 +831,6 @@ public final class StandardGraphBuilderPlugins
             public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver)
             {
                 __b.add(new ControlFlowAnchorNode());
-                return true;
-            }
-        });
-
-        // @closure
-        __r.register2("injectBranchProbability", double.class, boolean.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __probability, ValueNode __condition)
-            {
-                __b.addPush(JavaKind.Boolean, new BranchProbabilityNode(__probability, __condition));
                 return true;
             }
         });

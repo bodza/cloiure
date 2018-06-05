@@ -9,14 +9,13 @@ import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
-import giraaff.lir.gen.DiagnosticLIRGeneratorTool.ZapStackArgumentSpaceBeforeInstruction;
 
 ///
 // Returns from a function.
 ///
 @Opcode
 // @class AMD64HotSpotReturnOp
-final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implements ZapStackArgumentSpaceBeforeInstruction
+final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     // @def
     public static final LIRInstructionClass<AMD64HotSpotReturnOp> TYPE = LIRInstructionClass.create(AMD64HotSpotReturnOp.class);

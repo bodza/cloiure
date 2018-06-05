@@ -49,11 +49,6 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     // @field
     private final ArrayList<CodeInstallationTaskFactory> ___codeInstallationTaskFactories;
 
-    // @def
-    public static final ForeignCallDescriptor ARITHMETIC_FREM = new ForeignCallDescriptor("arithmeticFrem", float.class, float.class, float.class);
-    // @def
-    public static final ForeignCallDescriptor ARITHMETIC_DREM = new ForeignCallDescriptor("arithmeticDrem", double.class, double.class, double.class);
-
     // @cons
     protected Backend(Providers __providers)
     {

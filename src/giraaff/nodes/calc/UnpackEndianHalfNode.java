@@ -67,10 +67,6 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
     public void lower(ByteOrder __byteOrder)
     {
         ValueNode __result = this.___value;
-        if (this.___value.getStackKind() == JavaKind.Double)
-        {
-            __result = graph().unique(new ReinterpretNode(JavaKind.Long, this.___value));
-        }
         if ((__byteOrder == ByteOrder.BIG_ENDIAN) == this.___firstHalf)
         {
             __result = graph().unique(new UnsignedRightShiftNode(__result, ConstantNode.forInt(32, graph())));

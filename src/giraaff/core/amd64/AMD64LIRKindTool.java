@@ -31,20 +31,6 @@ public abstract class AMD64LIRKindTool implements LIRKindTool
     }
 
     @Override
-    public LIRKind getFloatingKind(int __bits)
-    {
-        switch (__bits)
-        {
-            case 32:
-                return LIRKind.value(AMD64Kind.SINGLE);
-            case 64:
-                return LIRKind.value(AMD64Kind.DOUBLE);
-            default:
-                throw GraalError.shouldNotReachHere();
-        }
-    }
-
-    @Override
     public LIRKind getObjectKind()
     {
         return LIRKind.reference(AMD64Kind.QWORD);

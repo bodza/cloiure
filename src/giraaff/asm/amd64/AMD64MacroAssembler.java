@@ -259,57 +259,6 @@ public final class AMD64MacroAssembler extends AMD64Assembler
         }
     }
 
-    public void movflt(Register __dst, Register __src)
-    {
-        if (AMD64AsmOptions.UseXmmRegToRegMoveAll)
-        {
-            movaps(__dst, __src);
-        }
-        else
-        {
-            movss(__dst, __src);
-        }
-    }
-
-    public void movflt(Register __dst, AMD64Address __src)
-    {
-        movss(__dst, __src);
-    }
-
-    public void movflt(AMD64Address __dst, Register __src)
-    {
-        movss(__dst, __src);
-    }
-
-    public void movdbl(Register __dst, Register __src)
-    {
-        if (AMD64AsmOptions.UseXmmRegToRegMoveAll)
-        {
-            movapd(__dst, __src);
-        }
-        else
-        {
-            movsd(__dst, __src);
-        }
-    }
-
-    public void movdbl(Register __dst, AMD64Address __src)
-    {
-        if (AMD64AsmOptions.UseXmmLoadAndClearUpper)
-        {
-            movsd(__dst, __src);
-        }
-        else
-        {
-            movlpd(__dst, __src);
-        }
-    }
-
-    public void movdbl(AMD64Address __dst, Register __src)
-    {
-        movsd(__dst, __src);
-    }
-
     ///
     // Non-atomic write of a 64-bit constant to memory.
     // Do not use if the address might be a volatile field!
@@ -338,11 +287,5 @@ public final class AMD64MacroAssembler extends AMD64Assembler
     {
         setb(__cc, __dst);
         movzbq(__dst, __dst);
-    }
-
-    public final void fpop()
-    {
-        ffree(0);
-        fincstp();
     }
 }

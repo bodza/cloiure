@@ -85,19 +85,13 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
         return this.___length;
     }
 
-    private static boolean isNaNFloat(JavaConstant __constant)
-    {
-        JavaKind __kind = __constant.getJavaKind();
-        return (__kind == JavaKind.Float && Float.isNaN(__constant.asFloat())) || (__kind == JavaKind.Double && Double.isNaN(__constant.asDouble()));
-    }
-
     private static boolean arrayEquals(ConstantReflectionProvider __constantReflection, JavaConstant __a, JavaConstant __b, int __len)
     {
         for (int __i = 0; __i < __len; __i++)
         {
             JavaConstant __aElem = __constantReflection.readArrayElement(__a, __i);
             JavaConstant __bElem = __constantReflection.readArrayElement(__b, __i);
-            if (!__constantReflection.constantEquals(__aElem, __bElem) && !(isNaNFloat(__aElem) && isNaNFloat(__bElem)))
+            if (!__constantReflection.constantEquals(__aElem, __bElem))
             {
                 return false;
             }
@@ -156,38 +150,8 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
                     ValueNode __entry2 = __tool.getEntry(__virtual2, __i);
                     if (__entry1 != __entry2)
                     {
-                        if (__entry1 instanceof ConstantNode && __entry2 instanceof ConstantNode)
-                        {
-                            // Float NaN constants are different constant nodes but treated as
-                            // equal in Arrays.equals([F[F) or Arrays.equals([D[D).
-                            if (__entry1.getStackKind() == JavaKind.Float && __entry2.getStackKind() == JavaKind.Float)
-                            {
-                                float __value1 = ((JavaConstant) ((ConstantNode) __entry1).asConstant()).asFloat();
-                                float __value2 = ((JavaConstant) ((ConstantNode) __entry2).asConstant()).asFloat();
-                                if (Float.floatToIntBits(__value1) != Float.floatToIntBits(__value2))
-                                {
-                                    __allEqual = false;
-                                }
-                            }
-                            else if (__entry1.getStackKind() == JavaKind.Double && __entry2.getStackKind() == JavaKind.Double)
-                            {
-                                double __value1 = ((JavaConstant) ((ConstantNode) __entry1).asConstant()).asDouble();
-                                double __value2 = ((JavaConstant) ((ConstantNode) __entry2).asConstant()).asDouble();
-                                if (Double.doubleToLongBits(__value1) != Double.doubleToLongBits(__value2))
-                                {
-                                    __allEqual = false;
-                                }
-                            }
-                            else
-                            {
-                                __allEqual = false;
-                            }
-                        }
-                        else
-                        {
-                            // the contents might be different
-                            __allEqual = false;
-                        }
+                        // the contents might be different
+                        __allEqual = false;
                     }
                     if (__entry1.stamp(NodeView.DEFAULT).alwaysDistinct(__entry2.stamp(NodeView.DEFAULT)))
                     {
@@ -237,21 +201,10 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
         return equals(__array1, __array2, __length, JavaKind.Long);
     }
 
-    public static boolean equals(float[] __array1, float[] __array2, int __length)
-    {
-        return equals(__array1, __array2, __length, JavaKind.Float);
-    }
-
-    public static boolean equals(double[] __array1, double[] __array2, int __length)
-    {
-        return equals(__array1, __array2, __length, JavaKind.Double);
-    }
-
     @Override
     public void generate(NodeLIRBuilderTool __gen)
     {
-        Value __result = __gen.getLIRGeneratorTool().emitArrayEquals(this.___kind, __gen.operand(this.___array1), __gen.operand(this.___array2), __gen.operand(this.___length));
-        __gen.setResult(this, __result);
+        __gen.setResult(this, __gen.getLIRGeneratorTool().emitArrayEquals(this.___kind, __gen.operand(this.___array1), __gen.operand(this.___array2), __gen.operand(this.___length)));
     }
 
     @Override

@@ -345,24 +345,6 @@ public final class HotSpotGraphBuilderPlugins
                 return readMetaspaceConstantPoolElement(__b, __constantPoolOop, __index, JavaKind.Long, __wordTypes);
             }
         });
-        // @closure
-        __r.register3("getFloatAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __constantPoolOop, ValueNode __index)
-            {
-                return readMetaspaceConstantPoolElement(__b, __constantPoolOop, __index, JavaKind.Float, __wordTypes);
-            }
-        });
-        // @closure
-        __r.register3("getDoubleAt0", Receiver.class, Object.class, int.class, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, Receiver __receiver, ValueNode __constantPoolOop, ValueNode __index)
-            {
-                return readMetaspaceConstantPoolElement(__b, __constantPoolOop, __index, JavaKind.Double, __wordTypes);
-            }
-        });
     }
 
     private static void registerSystemPlugins(InvocationPlugins __plugins, ForeignCallsProvider __foreignCalls)

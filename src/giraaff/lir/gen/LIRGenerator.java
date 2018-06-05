@@ -371,7 +371,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     public abstract void emitJump(LabelRef __label);
 
     @Override
-    public abstract void emitCompareBranch(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, boolean __unorderedIsTrue, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability);
+    public abstract void emitCompareBranch(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability);
 
     @Override
     public abstract void emitOverflowCheckBranch(LabelRef __overflow, LabelRef __noOverflow, LIRKind __cmpKind, double __overflowProbability);
@@ -380,7 +380,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     public abstract void emitIntegerTestBranch(Value __left, Value __right, LabelRef __trueDestination, LabelRef __falseDestination, double __trueSuccessorProbability);
 
     @Override
-    public abstract Variable emitConditionalMove(PlatformKind __cmpKind, Value __leftVal, Value __right, Condition __cond, boolean __unorderedIsTrue, Value __trueValue, Value __falseValue);
+    public abstract Variable emitConditionalMove(PlatformKind __cmpKind, Value __leftVal, Value __right, Condition __cond, Value __trueValue, Value __falseValue);
 
     @Override
     public abstract Variable emitIntegerTestMove(Value __leftVal, Value __right, Value __trueValue, Value __falseValue);
@@ -472,11 +472,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     {
     }
 
-    ///
-    // Gets a garbage value for a given kind.
-    ///
-    protected abstract JavaConstant zapValueForKind(PlatformKind __kind);
-
     @Override
     public LIRKind getLIRKind(Stamp __stamp)
     {
@@ -515,53 +510,5 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     public void emitBlackhole(Value __operand)
     {
         append(new StandardOp.BlackholeOp(__operand));
-    }
-
-    @Override
-    public abstract SaveRegistersOp createZapRegisters(Register[] __zappedRegisters, JavaConstant[] __zapValues);
-
-    @Override
-    public SaveRegistersOp createZapRegisters()
-    {
-        Register[] __zappedRegisters = getResult().getFrameMap().getRegisterConfig().getAllocatableRegisters().toArray();
-        JavaConstant[] __zapValues = new JavaConstant[__zappedRegisters.length];
-        for (int __i = 0; __i < __zappedRegisters.length; __i++)
-        {
-            PlatformKind __kind = target().arch.getLargestStorableKind(__zappedRegisters[__i].getRegisterCategory());
-            __zapValues[__i] = zapValueForKind(__kind);
-        }
-        return createZapRegisters(__zappedRegisters, __zapValues);
-    }
-
-    @Override
-    public abstract LIRInstruction createZapArgumentSpace(StackSlot[] __zappedStack, JavaConstant[] __zapValues);
-
-    @Override
-    public LIRInstruction zapArgumentSpace()
-    {
-        List<StackSlot> __slots = null;
-        for (AllocatableValue __arg : this.___res.getCallingConvention().getArguments())
-        {
-            if (ValueUtil.isStackSlot(__arg))
-            {
-                if (__slots == null)
-                {
-                    __slots = new ArrayList<>();
-                }
-                __slots.add((StackSlot) __arg);
-            }
-        }
-        if (__slots == null)
-        {
-            return null;
-        }
-        StackSlot[] __zappedStack = __slots.toArray(new StackSlot[__slots.size()]);
-        JavaConstant[] __zapValues = new JavaConstant[__zappedStack.length];
-        for (int __i = 0; __i < __zappedStack.length; __i++)
-        {
-            PlatformKind __kind = __zappedStack[__i].getPlatformKind();
-            __zapValues[__i] = zapValueForKind(__kind);
-        }
-        return createZapArgumentSpace(__zappedStack, __zapValues);
     }
 }

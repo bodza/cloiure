@@ -8,7 +8,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
 import giraaff.core.common.LIRKind;
-import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
@@ -238,59 +237,10 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
             IntegerStamp __istamp = (IntegerStamp) __stamp;
             return forIntegerBits(__istamp.getBits(), __primitive);
         }
-        else if (__stamp instanceof FloatStamp)
-        {
-            PrimitiveConstant __primitive = (PrimitiveConstant) __constant;
-            return forConstant(__primitive, null);
-        }
         else
         {
             return new ConstantNode(__constant, __stamp.constant(__constant, null));
         }
-    }
-
-    ///
-    // Returns a node for a double constant.
-    //
-    // @param d the double value for which to create the instruction
-    // @return a node for a double constant
-    ///
-    public static ConstantNode forDouble(double __d, StructuredGraph __graph)
-    {
-        return unique(__graph, createPrimitive(JavaConstant.forDouble(__d)));
-    }
-
-    ///
-    // Returns a node for a double constant.
-    //
-    // @param d the double value for which to create the instruction
-    // @return a node for a double constant
-    ///
-    public static ConstantNode forDouble(double __d)
-    {
-        return createPrimitive(JavaConstant.forDouble(__d));
-    }
-
-    ///
-    // Returns a node for a float constant.
-    //
-    // @param f the float value for which to create the instruction
-    // @return a node for a float constant
-    ///
-    public static ConstantNode forFloat(float __f, StructuredGraph __graph)
-    {
-        return unique(__graph, createPrimitive(JavaConstant.forFloat(__f)));
-    }
-
-    ///
-    // Returns a node for a float constant.
-    //
-    // @param f the float value for which to create the instruction
-    // @return a node for a float constant
-    ///
-    public static ConstantNode forFloat(float __f)
-    {
-        return createPrimitive(JavaConstant.forFloat(__f));
     }
 
     ///
@@ -491,48 +441,6 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         }
     }
 
-    public static ConstantNode forFloatingKind(JavaKind __kind, double __value, StructuredGraph __graph)
-    {
-        switch (__kind)
-        {
-            case Float:
-                return ConstantNode.forFloat((float) __value, __graph);
-            case Double:
-                return ConstantNode.forDouble(__value, __graph);
-            default:
-                throw GraalError.shouldNotReachHere("unknown kind " + __kind);
-        }
-    }
-
-    public static ConstantNode forFloatingKind(JavaKind __kind, double __value)
-    {
-        switch (__kind)
-        {
-            case Float:
-                return ConstantNode.forFloat((float) __value);
-            case Double:
-                return ConstantNode.forDouble(__value);
-            default:
-                throw GraalError.shouldNotReachHere("unknown kind " + __kind);
-        }
-    }
-
-    ///
-    // Returns a node for a constant double that's compatible to a given stamp.
-    ///
-    public static ConstantNode forFloatingStamp(Stamp __stamp, double __value, StructuredGraph __graph)
-    {
-        return forFloatingKind(__stamp.getStackKind(), __value, __graph);
-    }
-
-    ///
-    // Returns a node for a constant double that's compatible to a given stamp.
-    ///
-    public static ConstantNode forFloatingStamp(Stamp __stamp, double __value)
-    {
-        return forFloatingKind(__stamp.getStackKind(), __value);
-    }
-
     public static ConstantNode defaultForKind(JavaKind __kind, StructuredGraph __graph)
     {
         return unique(__graph, defaultForKind(__kind));
@@ -548,10 +456,6 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
             case Short:
             case Int:
                 return ConstantNode.forInt(0);
-            case Double:
-                return ConstantNode.forDouble(0.0);
-            case Float:
-                return ConstantNode.forFloat(0.0f);
             case Long:
                 return ConstantNode.forLong(0L);
             case Object:

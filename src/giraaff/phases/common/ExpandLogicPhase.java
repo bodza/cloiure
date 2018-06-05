@@ -1,6 +1,5 @@
 package giraaff.phases.common;
 
-import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.Graph;
 import giraaff.graph.Node;
@@ -17,8 +16,6 @@ import giraaff.nodes.ShortCircuitOrNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.ConditionalNode;
-import giraaff.nodes.calc.FloatEqualsNode;
-import giraaff.nodes.calc.FloatLessThanNode;
 import giraaff.nodes.calc.IntegerEqualsNode;
 import giraaff.nodes.calc.IntegerLessThanNode;
 import giraaff.nodes.calc.NormalizeCompareNode;
@@ -48,21 +45,11 @@ public final class ExpandLogicPhase extends Phase
 
     private static void processNormalizeCompareNode(NormalizeCompareNode __normalize)
     {
-        LogicNode __equalComp;
-        LogicNode __lessComp;
         StructuredGraph __graph = __normalize.graph();
         ValueNode __x = __normalize.getX();
         ValueNode __y = __normalize.getY();
-        if (__x.stamp(NodeView.DEFAULT) instanceof FloatStamp)
-        {
-            __equalComp = __graph.addOrUniqueWithInputs(FloatEqualsNode.create(__x, __y, NodeView.DEFAULT));
-            __lessComp = __graph.addOrUniqueWithInputs(FloatLessThanNode.create(__x, __y, __normalize.isUnorderedLess(), NodeView.DEFAULT));
-        }
-        else
-        {
-            __equalComp = __graph.addOrUniqueWithInputs(IntegerEqualsNode.create(__x, __y, NodeView.DEFAULT));
-            __lessComp = __graph.addOrUniqueWithInputs(IntegerLessThanNode.create(__x, __y, NodeView.DEFAULT));
-        }
+        LogicNode __equalComp = __graph.addOrUniqueWithInputs(IntegerEqualsNode.create(__x, __y, NodeView.DEFAULT));
+        LogicNode __lessComp = __graph.addOrUniqueWithInputs(IntegerLessThanNode.create(__x, __y, NodeView.DEFAULT));
 
         Stamp __stamp = __normalize.stamp(NodeView.DEFAULT);
         ConditionalNode __equalValue = __graph.unique(new ConditionalNode(__equalComp, ConstantNode.forIntegerStamp(__stamp, 0, __graph), ConstantNode.forIntegerStamp(__stamp, 1, __graph)));

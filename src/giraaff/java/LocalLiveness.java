@@ -5,8 +5,7 @@ import giraaff.bytecode.Bytecodes;
 import giraaff.java.BciBlockMapping.BciBlock;
 
 ///
-// Encapsulates the liveness calculation, so that subclasses for locals &le; 64 and locals &gt; 64
-// can be implemented.
+// Encapsulates the liveness calculation, so that subclasses for locals <= 64 and locals > 64 can be implemented.
 ///
 // @class LocalLiveness
 public abstract class LocalLiveness
@@ -120,31 +119,26 @@ public abstract class LocalLiveness
             switch (__stream.currentBC())
             {
                 case Bytecodes.LLOAD:
-                case Bytecodes.DLOAD:
                 {
                     loadTwo(__blockID, __stream.readLocalIndex());
                     break;
                 }
                 case Bytecodes.LLOAD_0:
-                case Bytecodes.DLOAD_0:
                 {
                     loadTwo(__blockID, 0);
                     break;
                 }
                 case Bytecodes.LLOAD_1:
-                case Bytecodes.DLOAD_1:
                 {
                     loadTwo(__blockID, 1);
                     break;
                 }
                 case Bytecodes.LLOAD_2:
-                case Bytecodes.DLOAD_2:
                 {
                     loadTwo(__blockID, 2);
                     break;
                 }
                 case Bytecodes.LLOAD_3:
-                case Bytecodes.DLOAD_3:
                 {
                     loadTwo(__blockID, 3);
                     break;
@@ -157,7 +151,6 @@ public abstract class LocalLiveness
                     break;
                 }
                 case Bytecodes.ILOAD:
-                case Bytecodes.FLOAD:
                 case Bytecodes.ALOAD:
                 case Bytecodes.RET:
                 {
@@ -165,28 +158,24 @@ public abstract class LocalLiveness
                     break;
                 }
                 case Bytecodes.ILOAD_0:
-                case Bytecodes.FLOAD_0:
                 case Bytecodes.ALOAD_0:
                 {
                     loadOne(__blockID, 0);
                     break;
                 }
                 case Bytecodes.ILOAD_1:
-                case Bytecodes.FLOAD_1:
                 case Bytecodes.ALOAD_1:
                 {
                     loadOne(__blockID, 1);
                     break;
                 }
                 case Bytecodes.ILOAD_2:
-                case Bytecodes.FLOAD_2:
                 case Bytecodes.ALOAD_2:
                 {
                     loadOne(__blockID, 2);
                     break;
                 }
                 case Bytecodes.ILOAD_3:
-                case Bytecodes.FLOAD_3:
                 case Bytecodes.ALOAD_3:
                 {
                     loadOne(__blockID, 3);
@@ -194,65 +183,55 @@ public abstract class LocalLiveness
                 }
 
                 case Bytecodes.LSTORE:
-                case Bytecodes.DSTORE:
                 {
                     storeTwo(__blockID, __stream.readLocalIndex());
                     break;
                 }
                 case Bytecodes.LSTORE_0:
-                case Bytecodes.DSTORE_0:
                 {
                     storeTwo(__blockID, 0);
                     break;
                 }
                 case Bytecodes.LSTORE_1:
-                case Bytecodes.DSTORE_1:
                 {
                     storeTwo(__blockID, 1);
                     break;
                 }
                 case Bytecodes.LSTORE_2:
-                case Bytecodes.DSTORE_2:
                 {
                     storeTwo(__blockID, 2);
                     break;
                 }
                 case Bytecodes.LSTORE_3:
-                case Bytecodes.DSTORE_3:
                 {
                     storeTwo(__blockID, 3);
                     break;
                 }
                 case Bytecodes.ISTORE:
-                case Bytecodes.FSTORE:
                 case Bytecodes.ASTORE:
                 {
                     storeOne(__blockID, __stream.readLocalIndex());
                     break;
                 }
                 case Bytecodes.ISTORE_0:
-                case Bytecodes.FSTORE_0:
                 case Bytecodes.ASTORE_0:
                 {
                     storeOne(__blockID, 0);
                     break;
                 }
                 case Bytecodes.ISTORE_1:
-                case Bytecodes.FSTORE_1:
                 case Bytecodes.ASTORE_1:
                 {
                     storeOne(__blockID, 1);
                     break;
                 }
                 case Bytecodes.ISTORE_2:
-                case Bytecodes.FSTORE_2:
                 case Bytecodes.ASTORE_2:
                 {
                     storeOne(__blockID, 2);
                     break;
                 }
                 case Bytecodes.ISTORE_3:
-                case Bytecodes.FSTORE_3:
                 case Bytecodes.ASTORE_3:
                 {
                     storeOne(__blockID, 3);

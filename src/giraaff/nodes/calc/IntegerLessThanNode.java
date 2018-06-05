@@ -10,7 +10,6 @@ import jdk.vm.ci.meta.PrimitiveConstant;
 
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.calc.CanonicalCondition;
-import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.Node;
@@ -46,7 +45,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
 
     public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode __value = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, OP.getCondition(), false, __x, __y, __view);
+        LogicNode __value = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, OP.getCondition(), __x, __y, __view);
         if (__value != null)
         {
             return __value;
@@ -58,7 +57,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
     public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), OP.getCondition(), false, __forX, __forY, __view);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), OP.getCondition(), __forX, __forY, __view);
         if (__value != null)
         {
             return __value;
@@ -86,13 +85,9 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
     public static final class LessThanOp extends LowerOp
     {
         @Override
-        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, NodeView __view)
         {
-            if (__newX.stamp(__view) instanceof FloatStamp && __newY.stamp(__view) instanceof FloatStamp)
-            {
-                return new FloatLessThanNode(__newX, __newY, __unorderedIsTrue); // TODO Is the last arg supposed to be true?
-            }
-            else if (__newX.stamp(__view) instanceof IntegerStamp && __newY.stamp(__view) instanceof IntegerStamp)
+            if (__newX.stamp(__view) instanceof IntegerStamp && __newY.stamp(__view) instanceof IntegerStamp)
             {
                 return new IntegerLessThanNode(__newX, __newY);
             }
@@ -126,28 +121,12 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
 
             if (__cst == 0)
             {
-                if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
-                {
-                    return FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __a, __b, __mirrored ^ __normalizeNode.___isUnorderedLess, __view);
-                }
-                else
-                {
-                    return IntegerLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __a, __b, __view);
-                }
+                return IntegerLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __a, __b, __view);
             }
             else if (__cst == 1)
             {
                 // a <= b <=> !(a > b)
-                LogicNode __compare;
-                if (__normalizeNode.getX().getStackKind() == JavaKind.Double || __normalizeNode.getX().getStackKind() == JavaKind.Float)
-                {
-                    // since we negate, we have to reverse the unordered result
-                    __compare = FloatLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __b, __a, __mirrored == __normalizeNode.___isUnorderedLess, __view);
-                }
-                else
-                {
-                    __compare = IntegerLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __b, __a, __view);
-                }
+                LogicNode __compare = IntegerLessThanNode.create(__constantReflection, __metaAccess, __smallestCompareWidth, __b, __a, __view);
                 return LogicNegationNode.create(__compare);
             }
             else if (__cst <= -1)

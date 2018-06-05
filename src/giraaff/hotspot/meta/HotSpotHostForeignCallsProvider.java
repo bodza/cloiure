@@ -182,9 +182,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         registerForeignCall(JAVA_TIME_MILLIS, HotSpotRuntime.javaTimeMillisAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(JAVA_TIME_NANOS, HotSpotRuntime.javaTimeNanosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
-        registerForeignCall(Backend.ARITHMETIC_FREM, HotSpotRuntime.fremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(Backend.ARITHMETIC_DREM, HotSpotRuntime.dremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-
         registerForeignCall(LOAD_AND_CLEAR_EXCEPTION, HotSpotRuntime.loadAndClearExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
 
         registerForeignCall(ExceptionHandlerStub.EXCEPTION_HANDLER_FOR_PC, HotSpotRuntime.exceptionHandlerForPcAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
@@ -222,9 +219,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         registerArrayCopy(JavaKind.Char, HotSpotRuntime.jshortArraycopy, HotSpotRuntime.jshortAlignedArraycopy, HotSpotRuntime.jshortDisjointArraycopy, HotSpotRuntime.jshortAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Short, HotSpotRuntime.jshortArraycopy, HotSpotRuntime.jshortAlignedArraycopy, HotSpotRuntime.jshortDisjointArraycopy, HotSpotRuntime.jshortAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Int, HotSpotRuntime.jintArraycopy, HotSpotRuntime.jintAlignedArraycopy, HotSpotRuntime.jintDisjointArraycopy, HotSpotRuntime.jintAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Float, HotSpotRuntime.jintArraycopy, HotSpotRuntime.jintAlignedArraycopy, HotSpotRuntime.jintDisjointArraycopy, HotSpotRuntime.jintAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Long, HotSpotRuntime.jlongArraycopy, HotSpotRuntime.jlongAlignedArraycopy, HotSpotRuntime.jlongDisjointArraycopy, HotSpotRuntime.jlongAlignedDisjointArraycopy);
-        registerArrayCopy(JavaKind.Double, HotSpotRuntime.jlongArraycopy, HotSpotRuntime.jlongAlignedArraycopy, HotSpotRuntime.jlongDisjointArraycopy, HotSpotRuntime.jlongAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Object, HotSpotRuntime.oopArraycopy, HotSpotRuntime.oopAlignedArraycopy, HotSpotRuntime.oopDisjointArraycopy, HotSpotRuntime.oopAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Object, HotSpotRuntime.oopArraycopyUninit, HotSpotRuntime.oopAlignedArraycopyUninit, HotSpotRuntime.oopDisjointArraycopyUninit, HotSpotRuntime.oopAlignedDisjointArraycopyUninit, true);
 

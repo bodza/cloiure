@@ -45,9 +45,9 @@ import giraaff.phases.common.inlining.info.elem.Inlineable;
 import giraaff.phases.util.Providers;
 
 ///
-// Polymorphic inlining of m methods with n type checks (n &ge; m) in case that the profiling
-// information suggests a reasonable amount of different receiver types and different methods. If an
-// unknown type is encountered a deoptimization is triggered.
+// Polymorphic inlining of m methods with n type checks (n >= m) in case that the profiling
+// information suggests a reasonable amount of different receiver types and different methods.
+// If an unknown type is encountered a deoptimization is triggered.
 ///
 // @class MultiTypeGuardInlineInfo
 public final class MultiTypeGuardInlineInfo extends AbstractInlineInfo

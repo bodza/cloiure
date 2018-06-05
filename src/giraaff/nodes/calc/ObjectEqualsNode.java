@@ -43,7 +43,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
 
     public static LogicNode create(ValueNode __x, ValueNode __y, ConstantReflectionProvider __constantReflection, NodeView __view)
     {
-        LogicNode __result = CompareNode.tryConstantFold(CanonicalCondition.EQ, __x, __y, __constantReflection, false);
+        LogicNode __result = CompareNode.tryConstantFold(CanonicalCondition.EQ, __x, __y, __constantReflection);
         if (__result != null)
         {
             return __result;
@@ -61,7 +61,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
 
     public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode __result = OP.canonical(__constantReflection, __metaAccess, null, CanonicalCondition.EQ, false, __x, __y, __view);
+        LogicNode __result = OP.canonical(__constantReflection, __metaAccess, null, CanonicalCondition.EQ, __x, __y, __view);
         if (__result != null)
         {
             return __result;
@@ -73,7 +73,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     public ValueNode canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, false, __forX, __forY, __view);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), CanonicalCondition.EQ, __forX, __forY, __view);
         if (__value != null)
         {
             return __value;
@@ -85,7 +85,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     public static final class ObjectEqualsOp extends PointerEqualsOp
     {
         @Override
-        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, Constant __constant, ValueNode __nonConstant, boolean __mirrored, boolean __unorderedIsTrue, NodeView __view)
+        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, Constant __constant, ValueNode __nonConstant, boolean __mirrored, NodeView __view)
         {
             ResolvedJavaType __type = __constantReflection.asJavaType(__constant);
             if (__type != null && __nonConstant instanceof GetClassNode)
@@ -98,11 +98,11 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
                 }
                 return LogicConstantNode.forBoolean(false);
             }
-            return super.canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __constant, __nonConstant, __mirrored, __unorderedIsTrue, __view);
+            return super.canonicalizeSymmetricConstant(__constantReflection, __metaAccess, __smallestCompareWidth, __condition, __constant, __nonConstant, __mirrored, __view);
         }
 
         @Override
-        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, NodeView __view)
         {
             if (__newX.stamp(__view) instanceof ObjectStamp && __newY.stamp(__view) instanceof ObjectStamp)
             {

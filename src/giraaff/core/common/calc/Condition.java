@@ -363,27 +363,13 @@ public enum Condition
     // @return {@link Boolean#TRUE} if the comparison is known to be true, {@link Boolean#FALSE} if
     //         the comparison is known to be false
     ///
-    public boolean foldCondition(JavaConstant __lt, JavaConstant __rt, ConstantReflectionProvider __constantReflection)
-    {
-        return foldCondition(__lt, __rt, __constantReflection, false);
-    }
-
-    ///
-    // Attempts to fold a comparison between two constants and return the result.
-    //
-    // @param lt the constant on the left side of the comparison
-    // @param rt the constant on the right side of the comparison
-    // @param constantReflection needed to compare constants
-    // @param unorderedIsTrue true if an undecided float comparison should result in "true"
-    // @return true if the comparison is known to be true, false if the comparison is known to be false
-    ///
-    public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection, boolean __unorderedIsTrue)
+    public boolean foldCondition(Constant __lt, Constant __rt, ConstantReflectionProvider __constantReflection)
     {
         if (__lt instanceof PrimitiveConstant)
         {
             PrimitiveConstant __lp = (PrimitiveConstant) __lt;
             PrimitiveConstant __rp = (PrimitiveConstant) __rt;
-            return foldCondition(__lp, __rp, __unorderedIsTrue);
+            return foldCondition(__lp, __rp);
         }
         else
         {
@@ -409,10 +395,9 @@ public enum Condition
     //
     // @param lp the constant on the left side of the comparison
     // @param rp the constant on the right side of the comparison
-    // @param unorderedIsTrue true if an undecided float comparison should result in "true"
     // @return true if the comparison is known to be true, false if the comparison is known to be false
     ///
-    public boolean foldCondition(PrimitiveConstant __lp, PrimitiveConstant __rp, boolean __unorderedIsTrue)
+    public boolean foldCondition(PrimitiveConstant __lp, PrimitiveConstant __rp)
     {
         switch (__lp.getJavaKind())
         {
@@ -476,58 +461,6 @@ public enum Condition
                         return UnsignedMath.aboveThan(__x, __y);
                     case BT:
                         return UnsignedMath.belowThan(__x, __y);
-                    default:
-                        throw new GraalError("expected condition: %s", this);
-                }
-            }
-            case Float:
-            {
-                float __x = __lp.asFloat();
-                float __y = __rp.asFloat();
-                if (Float.isNaN(__x) || Float.isNaN(__y))
-                {
-                    return __unorderedIsTrue;
-                }
-                switch (this)
-                {
-                    case EQ:
-                        return __x == __y;
-                    case NE:
-                        return __x != __y;
-                    case LT:
-                        return __x < __y;
-                    case LE:
-                        return __x <= __y;
-                    case GT:
-                        return __x > __y;
-                    case GE:
-                        return __x >= __y;
-                    default:
-                        throw new GraalError("expected condition: %s", this);
-                }
-            }
-            case Double:
-            {
-                double __x = __lp.asDouble();
-                double __y = __rp.asDouble();
-                if (Double.isNaN(__x) || Double.isNaN(__y))
-                {
-                    return __unorderedIsTrue;
-                }
-                switch (this)
-                {
-                    case EQ:
-                        return __x == __y;
-                    case NE:
-                        return __x != __y;
-                    case LT:
-                        return __x < __y;
-                    case LE:
-                        return __x <= __y;
-                    case GT:
-                        return __x > __y;
-                    case GE:
-                        return __x >= __y;
                     default:
                         throw new GraalError("expected condition: %s", this);
                 }

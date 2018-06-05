@@ -20,7 +20,6 @@ import giraaff.asm.amd64.AMD64Assembler.AMD64MIOp;
 import giraaff.asm.amd64.AMD64Assembler.AMD64RMOp;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64Assembler.OperandSize;
-import giraaff.asm.amd64.AMD64Assembler.SSEOp;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.calc.Condition;
@@ -47,9 +46,6 @@ import giraaff.lir.amd64.AMD64ControlFlow;
 import giraaff.lir.amd64.AMD64ControlFlow.BranchOp;
 import giraaff.lir.amd64.AMD64ControlFlow.CondMoveOp;
 import giraaff.lir.amd64.AMD64ControlFlow.CondSetOp;
-import giraaff.lir.amd64.AMD64ControlFlow.FloatBranchOp;
-import giraaff.lir.amd64.AMD64ControlFlow.FloatCondMoveOp;
-import giraaff.lir.amd64.AMD64ControlFlow.FloatCondSetOp;
 import giraaff.lir.amd64.AMD64ControlFlow.ReturnOp;
 import giraaff.lir.amd64.AMD64ControlFlow.StrategySwitchOp;
 import giraaff.lir.amd64.AMD64ControlFlow.TableSwitchOp;
@@ -58,9 +54,6 @@ import giraaff.lir.amd64.AMD64Move;
 import giraaff.lir.amd64.AMD64Move.CompareAndSwapOp;
 import giraaff.lir.amd64.AMD64Move.MembarOp;
 import giraaff.lir.amd64.AMD64Move.StackLeaOp;
-import giraaff.lir.amd64.AMD64PauseOp;
-import giraaff.lir.amd64.AMD64ZapRegistersOp;
-import giraaff.lir.amd64.AMD64ZapStackOp;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGenerator;
 import giraaff.phases.util.Providers;
@@ -76,51 +69,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     public AMD64LIRGenerator(LIRKindTool __lirKindTool, AMD64ArithmeticLIRGenerator __arithmeticLIRGen, MoveFactory __moveFactory, Providers __providers, LIRGenerationResult __lirGenRes)
     {
         super(__lirKindTool, __arithmeticLIRGen, __moveFactory, __providers, __lirGenRes);
-    }
-
-    ///
-    // Checks whether the supplied constant can be used without loading it into a register for store
-    // operations, i.e., on the right hand side of a memory access.
-    //
-    // @param c The constant to check.
-    // @return True if the constant can be used directly, false if the constant needs to be in a register.
-    ///
-    protected static final boolean canStoreConstant(JavaConstant __c)
-    {
-        // there is no immediate move of 64-bit constants on Intel
-        switch (__c.getJavaKind())
-        {
-            case Long:
-                return NumUtil.isInt(__c.asLong());
-            case Double:
-                return false;
-            case Object:
-                return __c.isNull();
-            default:
-                return true;
-        }
-    }
-
-    @Override
-    protected JavaConstant zapValueForKind(PlatformKind __kind)
-    {
-        long __dead = 0xDEADDEADDEADDEADL;
-        switch ((AMD64Kind) __kind)
-        {
-            case BYTE:
-                return JavaConstant.forByte((byte) __dead);
-            case WORD:
-                return JavaConstant.forShort((short) __dead);
-            case DWORD:
-                return JavaConstant.forInt((int) __dead);
-            case QWORD:
-                return JavaConstant.forLong(__dead);
-            case SINGLE:
-                return JavaConstant.forFloat(Float.intBitsToFloat((int) __dead));
-            default:
-                // we don't support vector types, so just zap with double for all of them
-                return JavaConstant.forDouble(Double.longBitsToDouble(__dead));
-        }
     }
 
     public AMD64AddressValue asAddressValue(Value __address)
@@ -241,31 +189,10 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     }
 
     @Override
-    public void emitCompareBranch(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, boolean __unorderedIsTrue, LabelRef __trueLabel, LabelRef __falseLabel, double __trueLabelProbability)
+    public void emitCompareBranch(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, LabelRef __trueLabel, LabelRef __falseLabel, double __trueLabelProbability)
     {
-        Condition __finalCondition = emitCompare(__cmpKind, __left, __right, __cond);
-        if (__cmpKind == AMD64Kind.SINGLE || __cmpKind == AMD64Kind.DOUBLE)
-        {
-            append(new FloatBranchOp(__finalCondition, __unorderedIsTrue, __trueLabel, __falseLabel, __trueLabelProbability));
-        }
-        else
-        {
-            append(new BranchOp(__finalCondition, __trueLabel, __falseLabel, __trueLabelProbability));
-        }
-    }
-
-    public void emitCompareBranchMemory(AMD64Kind __cmpKind, Value __left, AMD64AddressValue __right, LIRFrameState __state, Condition __cond, boolean __unorderedIsTrue, LabelRef __trueLabel, LabelRef __falseLabel, double __trueLabelProbability)
-    {
-        boolean __mirrored = emitCompareMemory(__cmpKind, __left, __right, __state);
-        Condition __finalCondition = __mirrored ? __cond.mirror() : __cond;
-        if (__cmpKind.isXMM())
-        {
-            append(new FloatBranchOp(__finalCondition, __unorderedIsTrue, __trueLabel, __falseLabel, __trueLabelProbability));
-        }
-        else
-        {
-            append(new BranchOp(__finalCondition, __trueLabel, __falseLabel, __trueLabelProbability));
-        }
+        __cond = emitCompare(__cmpKind, __left, __right, __cond);
+        append(new BranchOp(__cond, __trueLabel, __falseLabel, __trueLabelProbability));
     }
 
     @Override
@@ -282,83 +209,22 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     }
 
     @Override
-    public Variable emitConditionalMove(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, boolean __unorderedIsTrue, Value __trueValue, Value __falseValue)
+    public Variable emitConditionalMove(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, Value __trueValue, Value __falseValue)
     {
-        boolean __isFloatComparison = __cmpKind == AMD64Kind.SINGLE || __cmpKind == AMD64Kind.DOUBLE;
+        __cond = emitCompare(__cmpKind, __left, __right, __cond);
 
-        Condition __finalCondition = __cond;
-        Value __finalTrueValue = __trueValue;
-        Value __finalFalseValue = __falseValue;
-        if (__isFloatComparison)
+        Variable __result = newVariable(__trueValue.getValueKind());
+        if (LIRValueUtil.isIntConstant(__trueValue, 1) && LIRValueUtil.isIntConstant(__falseValue, 0))
         {
-            // eliminate the parity check in case of a float comparison
-            Value __finalLeft = __left;
-            Value __finalRight = __right;
-            if (__unorderedIsTrue != AMD64ControlFlow.trueOnUnordered(__finalCondition))
-            {
-                if (__unorderedIsTrue == AMD64ControlFlow.trueOnUnordered(__finalCondition.mirror()))
-                {
-                    __finalCondition = __finalCondition.mirror();
-                    __finalLeft = __right;
-                    __finalRight = __left;
-                }
-                else if (__finalCondition != Condition.EQ && __finalCondition != Condition.NE)
-                {
-                    // negating EQ and NE does not make any sense as we would need to negate unorderedIsTrue
-                    // as well (otherwise, we would no longer fulfill the Java NaN semantics)
-                    __finalCondition = __finalCondition.negate();
-                    __finalTrueValue = __falseValue;
-                    __finalFalseValue = __trueValue;
-                }
-            }
-            emitRawCompare(__cmpKind, __finalLeft, __finalRight);
+            append(new CondSetOp(__result, __cond));
+        }
+        else if (LIRValueUtil.isIntConstant(__trueValue, 0) && LIRValueUtil.isIntConstant(__falseValue, 1))
+        {
+            append(new CondSetOp(__result, __cond.negate()));
         }
         else
         {
-            __finalCondition = emitCompare(__cmpKind, __left, __right, __cond);
-        }
-
-        boolean __isParityCheckNecessary = __isFloatComparison && __unorderedIsTrue != AMD64ControlFlow.trueOnUnordered(__finalCondition);
-        Variable __result = newVariable(__finalTrueValue.getValueKind());
-        if (!__isParityCheckNecessary && LIRValueUtil.isIntConstant(__finalTrueValue, 1) && LIRValueUtil.isIntConstant(__finalFalseValue, 0))
-        {
-            if (__isFloatComparison)
-            {
-                append(new FloatCondSetOp(__result, __finalCondition));
-            }
-            else
-            {
-                append(new CondSetOp(__result, __finalCondition));
-            }
-        }
-        else if (!__isParityCheckNecessary && LIRValueUtil.isIntConstant(__finalTrueValue, 0) && LIRValueUtil.isIntConstant(__finalFalseValue, 1))
-        {
-            if (__isFloatComparison)
-            {
-                if (__unorderedIsTrue == AMD64ControlFlow.trueOnUnordered(__finalCondition.negate()))
-                {
-                    append(new FloatCondSetOp(__result, __finalCondition.negate()));
-                }
-                else
-                {
-                    append(new FloatCondSetOp(__result, __finalCondition));
-                    Variable __negatedResult = newVariable(__result.getValueKind());
-                    append(new AMD64Binary.ConstOp(AMD64BinaryArithmetic.XOR, OperandSize.get(__result.getPlatformKind()), __negatedResult, __result, 1));
-                    __result = __negatedResult;
-                }
-            }
-            else
-            {
-                append(new CondSetOp(__result, __finalCondition.negate()));
-            }
-        }
-        else if (__isFloatComparison)
-        {
-            append(new FloatCondMoveOp(__result, __finalCondition, __unorderedIsTrue, load(__finalTrueValue), load(__finalFalseValue)));
-        }
-        else
-        {
-            append(new CondMoveOp(__result, __finalCondition, load(__finalTrueValue), loadNonConst(__finalFalseValue)));
+            append(new CondMoveOp(__result, __cond, load(__trueValue), loadNonConst(__falseValue)));
         }
         return __result;
     }
@@ -424,16 +290,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
             {
                 __size = OperandSize.QWORD;
                 break;
-            }
-            case SINGLE:
-            {
-                append(new AMD64BinaryConsumer.MemoryRMOp(SSEOp.UCOMIS, OperandSize.PS, asAllocatable(__a), __b, __state));
-                return false;
-            }
-            case DOUBLE:
-            {
-                append(new AMD64BinaryConsumer.MemoryRMOp(SSEOp.UCOMIS, OperandSize.PD, asAllocatable(__a), __b, __state));
-                return false;
             }
             default:
                 throw GraalError.shouldNotReachHere("unexpected kind: " + __cmpKind);
@@ -598,24 +454,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     protected void emitTableSwitch(int __lowKey, LabelRef __defaultTarget, LabelRef[] __targets, Value __key)
     {
         append(new TableSwitchOp(__lowKey, __defaultTarget, __targets, __key, newVariable(LIRKind.value(target().arch.getWordKind())), newVariable(__key.getValueKind())));
-    }
-
-    @Override
-    public void emitPause()
-    {
-        append(new AMD64PauseOp());
-    }
-
-    @Override
-    public SaveRegistersOp createZapRegisters(Register[] __zappedRegisters, JavaConstant[] __zapValues)
-    {
-        return new AMD64ZapRegistersOp(__zappedRegisters, __zapValues);
-    }
-
-    @Override
-    public LIRInstruction createZapArgumentSpace(StackSlot[] __zappedStack, JavaConstant[] __zapValues)
-    {
-        return new AMD64ZapStackOp(__zappedStack, __zapValues);
     }
 
     public void emitLFence()

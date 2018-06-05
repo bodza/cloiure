@@ -37,7 +37,7 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
 
     public static LogicNode create(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, ValueNode __x, ValueNode __y, NodeView __view)
     {
-        LogicNode __value = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, OP.getCondition(), false, __x, __y, __view);
+        LogicNode __value = OP.canonical(__constantReflection, __metaAccess, __smallestCompareWidth, OP.getCondition(), __x, __y, __view);
         if (__value != null)
         {
             return __value;
@@ -49,7 +49,7 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
     public Node canonical(CanonicalizerTool __tool, ValueNode __forX, ValueNode __forY)
     {
         NodeView __view = NodeView.from(__tool);
-        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), OP.getCondition(), false, __forX, __forY, __view);
+        ValueNode __value = OP.canonical(__tool.getConstantReflection(), __tool.getMetaAccess(), __tool.smallestCompareWidth(), OP.getCondition(), __forX, __forY, __view);
         if (__value != null)
         {
             return __value;
@@ -61,7 +61,7 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
     public static final class BelowOp extends LowerOp
     {
         @Override
-        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, boolean __unorderedIsTrue, NodeView __view)
+        protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, NodeView __view)
         {
             return new IntegerBelowNode(__newX, __newY);
         }

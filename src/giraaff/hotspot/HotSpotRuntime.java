@@ -427,11 +427,6 @@ public final class HotSpotRuntime
         javaTimeNanosAddress  = c.getAddress("os::javaTimeNanos");
 
     // @defs
-    public static final long
-        fremAddress = c.getAddress("SharedRuntime::frem"),
-        dremAddress = c.getAddress("SharedRuntime::drem");
-
-    // @defs
     public static final int
         verifiedEntryMark                       = c.getConstant("CodeInstaller::VERIFIED_ENTRY",                         Integer.class),
         unverifiedEntryMark                     = c.getConstant("CodeInstaller::UNVERIFIED_ENTRY",                       Integer.class),

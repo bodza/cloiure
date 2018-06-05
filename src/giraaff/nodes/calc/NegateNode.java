@@ -2,7 +2,6 @@ package giraaff.nodes.calc;
 
 import giraaff.core.common.type.ArithmeticOpTable;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Neg;
-import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -60,7 +59,7 @@ public final class NegateNode extends UnaryArithmeticNode<Neg> implements Narrow
         {
             return ((NegateNode) __forValue).getValue();
         }
-        if (__forValue instanceof SubNode && !(__forValue.stamp(__view) instanceof FloatStamp))
+        if (__forValue instanceof SubNode)
         {
             SubNode __sub = (SubNode) __forValue;
             return SubNode.create(__sub.getY(), __sub.getX(), __view);

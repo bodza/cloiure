@@ -26,7 +26,7 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 // conditional branch at the end of the block (because the moves must be inserted before all
 // branches, but after all compares).
 //
-// This optimization affects all kind of moves (reg-&gt;reg, reg-&gt;stack and stack-&gt;reg).
+// This optimization affects all kind of moves (reg->reg, reg->stack and stack->reg).
 // Because this optimization works best when a block contains only a few moves, it has a huge impact
 // on the number of blocks that are totally empty.
 ///

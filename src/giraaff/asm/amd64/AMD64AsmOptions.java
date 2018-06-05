@@ -15,8 +15,4 @@ public final class AMD64AsmOptions
     public static final boolean UseAddressNop = true;
     // @def
     public static final boolean UseIncDec = true;
-    // @def
-    public static final boolean UseXmmLoadAndClearUpper = true;
-    // @def
-    public static final boolean UseXmmRegToRegMoveAll = true;
 }

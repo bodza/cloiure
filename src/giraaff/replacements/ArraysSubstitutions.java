@@ -96,32 +96,4 @@ public final class ArraysSubstitutions
         }
         return ArrayEqualsNode.equals(__a, __a2, __a.length);
     }
-
-    @MethodSubstitution
-    public static boolean equals(float[] __a, float[] __a2)
-    {
-        if (__a == __a2)
-        {
-            return true;
-        }
-        if (__a == null || __a2 == null || __a.length != __a2.length)
-        {
-            return false;
-        }
-        return ArrayEqualsNode.equals(__a, __a2, __a.length);
-    }
-
-    @MethodSubstitution
-    public static boolean equals(double[] __a, double[] __a2)
-    {
-        if (__a == __a2)
-        {
-            return true;
-        }
-        if (__a == null || __a2 == null || __a.length != __a2.length)
-        {
-            return false;
-        }
-        return ArrayEqualsNode.equals(__a, __a2, __a.length);
-    }
 }

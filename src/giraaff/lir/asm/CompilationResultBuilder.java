@@ -283,56 +283,12 @@ public final class CompilationResultBuilder
     }
 
     ///
-    // Returns the float value of any constant that can be represented by a 32-bit float value.
-    ///
-    public float asFloatConst(Value __value)
-    {
-        JavaConstant __constant = LIRValueUtil.asJavaConstant(__value);
-        return __constant.asFloat();
-    }
-
-    ///
     // Returns the long value of any constant that can be represented by a 64-bit long value.
     ///
     public long asLongConst(Value __value)
     {
         JavaConstant __constant = LIRValueUtil.asJavaConstant(__value);
         return __constant.asLong();
-    }
-
-    ///
-    // Returns the double value of any constant that can be represented by a 64-bit float value.
-    ///
-    public double asDoubleConst(Value __value)
-    {
-        JavaConstant __constant = LIRValueUtil.asJavaConstant(__value);
-        return __constant.asDouble();
-    }
-
-    ///
-    // Returns the address of a float constant that is embedded as a data reference into the code.
-    ///
-    public AbstractAddress asFloatConstRef(JavaConstant __value)
-    {
-        return asFloatConstRef(__value, 4);
-    }
-
-    public AbstractAddress asFloatConstRef(JavaConstant __value, int __alignment)
-    {
-        return recordDataReferenceInCode(__value, __alignment);
-    }
-
-    ///
-    // Returns the address of a double constant that is embedded as a data reference into the code.
-    ///
-    public AbstractAddress asDoubleConstRef(JavaConstant __value)
-    {
-        return asDoubleConstRef(__value, 8);
-    }
-
-    public AbstractAddress asDoubleConstRef(JavaConstant __value, int __alignment)
-    {
-        return recordDataReferenceInCode(__value, __alignment);
     }
 
     ///

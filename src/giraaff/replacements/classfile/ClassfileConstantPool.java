@@ -96,11 +96,11 @@ final class ClassfileConstantPool implements ConstantPool
             case ClassfileConstant.CONSTANT_Integer:
                 return new ClassfileConstant.Primitive(__tag, JavaConstant.forInt(__stream.readInt()));
             case ClassfileConstant.CONSTANT_Float:
-                return new ClassfileConstant.Primitive(__tag, JavaConstant.forFloat(__stream.readFloat()));
+                throw GraalError.shouldNotReachHere();
             case ClassfileConstant.CONSTANT_Long:
                 return new ClassfileConstant.Primitive(__tag, JavaConstant.forLong(__stream.readLong()));
             case ClassfileConstant.CONSTANT_Double:
-                return new ClassfileConstant.Primitive(__tag, JavaConstant.forDouble(__stream.readDouble()));
+                throw GraalError.shouldNotReachHere();
             case ClassfileConstant.CONSTANT_NameAndType:
                 return new ClassfileConstant.NameAndType(__stream);
             case ClassfileConstant.CONSTANT_Utf8:

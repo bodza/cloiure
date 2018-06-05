@@ -11,11 +11,10 @@ import giraaff.nodeinfo.InputType;
 import giraaff.nodes.calc.FloatingNode;
 
 ///
-// {@code PhiNode}s represent the merging of edges at a control flow merges (
-// {@link AbstractMergeNode} or {@link LoopBeginNode}). For a {@link AbstractMergeNode}, the order
-// of the values corresponds to the order of the ends. For {@link LoopBeginNode}s, the first value
-// corresponds to the loop's predecessor, while the rest of the values correspond to the
-// {@link LoopEndNode}s.
+// {@code PhiNode}s represent the merging of edges at a control flow merges ({@link AbstractMergeNode}
+// or {@link LoopBeginNode}). For a {@link AbstractMergeNode}, the order of the values corresponds to the
+// order of the ends. For {@link LoopBeginNode}s, the first value corresponds to the loop's predecessor,
+// while the rest of the values correspond to the {@link LoopEndNode}s.
 ///
 // @class PhiNode
 public abstract class PhiNode extends FloatingNode implements Canonicalizable
